@@ -2,7 +2,7 @@
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "instanceId": "b1000000-0000-4000-a000-000000000001",
   "typeId": "2a000013-0000-4000-a000-000000000013",
-  "typeVersion": 1,
+  "typeVersion": 2,
   "typeNamespace": "com.semanticops.spec",
   "typeName": "table",
   "fieldValues": [
@@ -13,6 +13,13 @@
     {
       "fieldId": "1a000026-0000-4000-a000-000000000026",
       "value": "Cross-check: if a `supersedes` Relation would feel misleading — as if the group reversed itself when it only clarified — it is probably an edit. If a silent edit would feel misleading — as if the record was silently revised after the fact — it is probably a new Record."
+    },
+    {
+      "fieldId": "1a000032-0000-4000-a000-000000000032",
+      "entries": [
+        "Scenario",
+        "Guidance"
+      ]
     }
   ],
   "fieldGroups": [
@@ -22,84 +29,66 @@
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Scenario"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "Guidance"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Correcting how something is expressed (typo, phrasing)",
+                "Edit in-place"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Correcting how something is expressed (typo, phrasing)"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "Edit in-place"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Adding context that reinforces the existing understanding",
+                "Edit in-place"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Adding context that reinforces the existing understanding"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "Edit in-place"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Clarifying a detail that was ambiguous but understanding is unchanged",
+                "Edit in-place"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Clarifying a detail that was ambiguous but understanding is unchanged"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "Edit in-place"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Adding information that changes what was actually committed to",
+                "New Record + `refines` or `supersedes`"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Adding information that changes what was actually committed to"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "New Record + `refines` or `supersedes`"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Reversing or materially replacing a prior commitment",
+                "New Record + `supersedes`"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Reversing or materially replacing a prior commitment"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "New Record + `supersedes`"
-            }
-          ]
-        },
-        {
-          "fieldValues": [
-            {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Producing a more detailed version from a rough original"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "New Record + `refines`"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Producing a more detailed version from a rough original",
+                "New Record + `refines`"
+              ]
             }
           ]
         }

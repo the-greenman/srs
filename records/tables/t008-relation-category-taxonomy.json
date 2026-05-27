@@ -2,13 +2,20 @@
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "instanceId": "b1000000-0000-4000-a000-000000000008",
   "typeId": "2a000013-0000-4000-a000-000000000013",
-  "typeVersion": 1,
+  "typeVersion": 2,
   "typeNamespace": "com.semanticops.spec",
   "typeName": "table",
   "fieldValues": [
     {
       "fieldId": "1a000025-0000-4000-a000-000000000025",
       "value": "**Relation category taxonomy:**"
+    },
+    {
+      "fieldId": "1a000032-0000-4000-a000-000000000032",
+      "entries": [
+        "Category",
+        "Examples"
+      ]
     }
   ],
   "fieldGroups": [
@@ -18,108 +25,88 @@
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Category"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "Examples"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Composition",
+                "`contains`, `part-of`, `has-section`"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Composition"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "`contains`, `part-of`, `has-section`"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Refinement",
+                "`refines`, `expands`, `summarises`"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Refinement"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "`refines`, `expands`, `summarises`"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Dependency",
+                "`depends-on`, `requires`, `blocks`, `enables`"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Dependency"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "`depends-on`, `requires`, `blocks`, `enables`"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Sequence",
+                "`precedes`, `follows`, `overlaps`"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Sequence"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "`precedes`, `follows`, `overlaps`"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Derivation",
+                "`derived-from`, `extracted-from`, `based-on`"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Derivation"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "`derived-from`, `extracted-from`, `based-on`"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Evidence",
+                "`evidences`, `supports`, `contradicts`"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Evidence"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "`evidences`, `supports`, `contradicts`"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Governance",
+                "`supersedes`, `amends`, `ratifies`, `delegates`"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Governance"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "`supersedes`, `amends`, `ratifies`, `delegates`"
-            }
-          ]
-        },
-        {
-          "fieldValues": [
-            {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Association"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "`relates-to`, `links-to`"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Association",
+                "`relates-to`, `links-to`"
+              ]
             }
           ]
         }

@@ -23,13 +23,8 @@ const F_STATUS      = '1a000009-0000-4000-a000-000000000009';
 const F_SUMMARY     = '1a000011-0000-4000-a000-000000000011';
 const F_INTRO       = '1a000025-0000-4000-a000-000000000025';
 const F_OUTRO       = '1a000026-0000-4000-a000-000000000026';
-const COL_FIELDS    = [
-  '1a000027-0000-4000-a000-000000000027',
-  '1a000028-0000-4000-a000-000000000028',
-  '1a000029-0000-4000-a000-000000000029',
-  '1a000030-0000-4000-a000-000000000030',
-  '1a000031-0000-4000-a000-000000000031',
-];
+const F_COLUMNS     = '1a000032-0000-4000-a000-000000000032';
+const F_CELLS       = '1a000033-0000-4000-a000-000000000033';
 
 // --- Type IDs ---
 const T_SPECIFICATION = '2a000001-0000-4000-a000-000000000001';
@@ -48,31 +43,38 @@ function fv(record, fieldId) {
   return record.fieldValues?.find(f => f.fieldId === fieldId)?.value ?? '';
 }
 
-// Render a table record to markdown
+// Render a table record to markdown (v2: columns field + cells repeatable per row)
 function renderTable(tableRecord) {
   const intro = fv(tableRecord, F_INTRO);
   const outro = fv(tableRecord, F_OUTRO);
+
+  // columns: repeatable field → { fieldId, entries: [...] }
+  const columnsDef = tableRecord.fieldValues?.find(f => f.fieldId === F_COLUMNS);
+  const columns = columnsDef?.entries ?? [];
+
   const group = tableRecord.fieldGroups?.find(g => g.groupId === 'rows');
   const entries = group?.entries ?? [];
-  if (!entries.length) return '';
+  if (!entries.length && !columns.length) return '';
 
   let md = '';
   if (intro) md += `${intro}\n\n`;
 
-  const [header, ...rows] = entries;
-  const headerCols = COL_FIELDS.map(id => header.fieldValues?.find(f => f.fieldId === id)?.value ?? '').filter((v, i, a) => {
-    // Keep all non-empty cols and all cols up to the last non-empty col
-    const lastNonEmpty = a.reduceRight((acc, v, idx) => acc === -1 && v !== '' ? idx : acc, -1);
-    return i <= lastNonEmpty;
-  });
-  const colCount = headerCols.length;
+  // Determine column count
+  const colCount = columns.length || Math.max(
+    ...entries.map(e => e.fieldValues?.find(f => f.fieldId === F_CELLS)?.entries?.length ?? 0),
+    0
+  );
 
-  md += `| ${headerCols.join(' | ')} |\n`;
-  md += `| ${headerCols.map(() => '---').join(' | ')} |\n`;
+  if (columns.length) {
+    md += `| ${columns.join(' | ')} |\n`;
+    md += `| ${columns.map(() => '---').join(' | ')} |\n`;
+  }
 
-  for (const row of rows) {
-    const cols = COL_FIELDS.slice(0, colCount).map(id => row.fieldValues?.find(f => f.fieldId === id)?.value ?? '');
-    md += `| ${cols.join(' | ')} |\n`;
+  for (const entry of entries) {
+    const cells = entry.fieldValues?.find(f => f.fieldId === F_CELLS)?.entries ?? [];
+    // Pad to colCount if needed
+    const padded = Array.from({ length: colCount }, (_, i) => cells[i] ?? '');
+    md += `| ${padded.join(' | ')} |\n`;
   }
 
   if (outro) md += `\n${outro}\n`;

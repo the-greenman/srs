@@ -34,11 +34,8 @@
     "fields/default-value.json",
     "fields/intro.json",
     "fields/outro.json",
-    "fields/col-1.json",
-    "fields/col-2.json",
-    "fields/col-3.json",
-    "fields/col-4.json",
-    "fields/col-5.json"
+    "fields/columns.json",
+    "fields/cells.json"
   ],
   "types": [
     "types/specification.json",

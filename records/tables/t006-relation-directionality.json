@@ -2,7 +2,7 @@
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "instanceId": "b1000000-0000-4000-a000-000000000006",
   "typeId": "2a000013-0000-4000-a000-000000000013",
-  "typeVersion": 1,
+  "typeVersion": 2,
   "typeNamespace": "com.semanticops.spec",
   "typeName": "table",
   "fieldValues": [
@@ -13,6 +13,14 @@
     {
       "fieldId": "1a000026-0000-4000-a000-000000000026",
       "value": "This convention must be consistent across implementations. See Invariant 16."
+    },
+    {
+      "fieldId": "1a000032-0000-4000-a000-000000000032",
+      "entries": [
+        "Relation",
+        "source",
+        "target"
+      ]
     }
   ],
   "fieldGroups": [
@@ -22,112 +30,72 @@
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Relation"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "source"
-            },
-            {
-              "fieldId": "1a000029-0000-4000-a000-000000000029",
-              "value": "target"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "`supersedes`",
+                "the newer Record",
+                "the older Record"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "`supersedes`"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "the newer Record"
-            },
-            {
-              "fieldId": "1a000029-0000-4000-a000-000000000029",
-              "value": "the older Record"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "`contains`",
+                "the stage",
+                "the task inside it"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "`contains`"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "the stage"
-            },
-            {
-              "fieldId": "1a000029-0000-4000-a000-000000000029",
-              "value": "the task inside it"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "`depends-on`",
+                "the dependent task",
+                "the task it needs"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "`depends-on`"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "the dependent task"
-            },
-            {
-              "fieldId": "1a000029-0000-4000-a000-000000000029",
-              "value": "the task it needs"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "`refines`",
+                "the detailed version",
+                "the rough version"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "`refines`"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "the detailed version"
-            },
-            {
-              "fieldId": "1a000029-0000-4000-a000-000000000029",
-              "value": "the rough version"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "`derived-from`",
+                "the successor",
+                "the source Note or Record"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "`derived-from`"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "the successor"
-            },
-            {
-              "fieldId": "1a000029-0000-4000-a000-000000000029",
-              "value": "the source Note or Record"
-            }
-          ]
-        },
-        {
-          "fieldValues": [
-            {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "`evidences`"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "the source material"
-            },
-            {
-              "fieldId": "1a000029-0000-4000-a000-000000000029",
-              "value": "the claim it supports"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "`evidences`",
+                "the source material",
+                "the claim it supports"
+              ]
             }
           ]
         }

@@ -2,13 +2,20 @@
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "instanceId": "b1000000-0000-4000-a000-000000000004",
   "typeId": "2a000013-0000-4000-a000-000000000013",
-  "typeVersion": 1,
+  "typeVersion": 2,
   "typeNamespace": "com.semanticops.spec",
   "typeName": "table",
   "fieldValues": [
     {
       "fieldId": "1a000025-0000-4000-a000-000000000025",
       "value": "Start with the question: what does your implementation need to do?"
+    },
+    {
+      "fieldId": "1a000032-0000-4000-a000-000000000032",
+      "entries": [
+        "Need",
+        "Extensions"
+      ]
     }
   ],
   "fieldGroups": [
@@ -18,180 +25,154 @@
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Need"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "Extensions"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Define and exchange Field and Type definitions",
+                "Core only"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Define and exchange Field and Type definitions"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "Core only"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Track definition origin and imports",
+                "`ext:import-tracking`"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Track definition origin and imports"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "`ext:import-tracking`"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Publish a definition catalog",
+                "`ext:registry`"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Publish a definition catalog"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "`ext:registry`"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Governance with lifecycle states",
+                "`ext:lifecycle`"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Governance with lifecycle states"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "`ext:lifecycle`"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Present and export Records",
+                "`ext:views-l1`"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Present and export Records"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "`ext:views-l1`"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Assemble multi-Record documents",
+                "`ext:views-l2`"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Assemble multi-Record documents"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "`ext:views-l2`"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Facilitate structured deliberation",
+                "`ext:protocol`"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Facilitate structured deliberation"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "`ext:protocol`"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Live facilitation with context assembly",
+                "`ext:addressability`"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Live facilitation with context assembly"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "`ext:addressability`"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Extraction from source material",
+                "`ext:schema`"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Extraction from source material"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "`ext:schema`"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Specialise Types while preserving base processability",
+                "`ext:type-inheritance`"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Specialise Types while preserving base processability"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "`ext:type-inheritance`"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Lists of values within a Record",
+                "`ext:repeatable-fields`"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Lists of values within a Record"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "`ext:repeatable-fields`"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Structured repeatable context in a Record",
+                "`ext:field-groups`"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Structured repeatable context in a Record"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "`ext:field-groups`"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Complex conditional validation",
+                "`ext:cross-field-validation`"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Complex conditional validation"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "`ext:cross-field-validation`"
-            }
-          ]
-        },
-        {
-          "fieldValues": [
-            {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Cross-system Relation interoperability"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "`ext:recommended-relations`"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Cross-system Relation interoperability",
+                "`ext:recommended-relations`"
+              ]
             }
           ]
         }

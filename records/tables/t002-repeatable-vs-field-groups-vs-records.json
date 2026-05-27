@@ -2,13 +2,21 @@
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "instanceId": "b1000000-0000-4000-a000-000000000002",
   "typeId": "2a000013-0000-4000-a000-000000000013",
-  "typeVersion": 1,
+  "typeVersion": 2,
   "typeNamespace": "com.semanticops.spec",
   "typeName": "table",
   "fieldValues": [
     {
       "fieldId": "1a000026-0000-4000-a000-000000000026",
       "value": "A Field Group entry does not have its own `instanceId`, lifecycle state, or Relation endpoints. If a group entry will ever need to be referenced independently, related to other Records, or reused across multiple Records, it should be a separate Record connected by a `contains` or `derived-from` Relation."
+    },
+    {
+      "fieldId": "1a000032-0000-4000-a000-000000000032",
+      "entries": [
+        "Pattern",
+        "When to use",
+        "Example"
+      ]
     }
   ],
   "fieldGroups": [
@@ -18,64 +26,36 @@
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Pattern"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "When to use"
-            },
-            {
-              "fieldId": "1a000029-0000-4000-a000-000000000029",
-              "value": "Example"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Repeatable scalar (`ext:repeatable-fields`)",
+                "Multiple values of the same type, no pairing needed",
+                "Multiple assigned person names"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Repeatable scalar (`ext:repeatable-fields`)"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "Multiple values of the same type, no pairing needed"
-            },
-            {
-              "fieldId": "1a000029-0000-4000-a000-000000000029",
-              "value": "Multiple assigned person names"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Field Group (`ext:field-groups`)",
+                "Multiple structured entries that must be read together",
+                "Contacts with name + email"
+              ]
             }
           ]
         },
         {
           "fieldValues": [
             {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Field Group (`ext:field-groups`)"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "Multiple structured entries that must be read together"
-            },
-            {
-              "fieldId": "1a000029-0000-4000-a000-000000000029",
-              "value": "Contacts with name + email"
-            }
-          ]
-        },
-        {
-          "fieldValues": [
-            {
-              "fieldId": "1a000027-0000-4000-a000-000000000027",
-              "value": "Separate Records + Relations"
-            },
-            {
-              "fieldId": "1a000028-0000-4000-a000-000000000028",
-              "value": "Repeated items need their own identity, lifecycle, or reuse"
-            },
-            {
-              "fieldId": "1a000029-0000-4000-a000-000000000029",
-              "value": "Tasks assigned to roles"
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "entries": [
+                "Separate Records + Relations",
+                "Repeated items need their own identity, lifecycle, or reuse",
+                "Tasks assigned to roles"
+              ]
             }
           ]
         }
