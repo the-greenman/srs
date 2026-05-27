@@ -17,12 +17,17 @@
     {
       "fieldId": "1a000032-0000-4000-a000-000000000032",
       "entries": [
-        "Scenario",
-        "Guidance"
+        {
+          "value": "Scenario"
+        },
+        {
+          "value": "Guidance"
+        }
       ]
     }
   ],
-  "fieldGroups": [
+  "createdAt": "2026-05-27T00:00:00Z",
+  "groupValues": [
     {
       "groupId": "rows",
       "entries": [
@@ -31,8 +36,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Correcting how something is expressed (typo, phrasing)",
-                "Edit in-place"
+                {
+                  "value": "Correcting how something is expressed (typo, phrasing)"
+                },
+                {
+                  "value": "Edit in-place"
+                }
               ]
             }
           ]
@@ -42,8 +51,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Adding context that reinforces the existing understanding",
-                "Edit in-place"
+                {
+                  "value": "Adding context that reinforces the existing understanding"
+                },
+                {
+                  "value": "Edit in-place"
+                }
               ]
             }
           ]
@@ -53,8 +66,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Clarifying a detail that was ambiguous but understanding is unchanged",
-                "Edit in-place"
+                {
+                  "value": "Clarifying a detail that was ambiguous but understanding is unchanged"
+                },
+                {
+                  "value": "Edit in-place"
+                }
               ]
             }
           ]
@@ -64,8 +81,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Adding information that changes what was actually committed to",
-                "New Record + `refines` or `supersedes`"
+                {
+                  "value": "Adding information that changes what was actually committed to"
+                },
+                {
+                  "value": "New Record + `refines` or `supersedes`"
+                }
               ]
             }
           ]
@@ -75,8 +96,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Reversing or materially replacing a prior commitment",
-                "New Record + `supersedes`"
+                {
+                  "value": "Reversing or materially replacing a prior commitment"
+                },
+                {
+                  "value": "New Record + `supersedes`"
+                }
               ]
             }
           ]
@@ -86,14 +111,17 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Producing a more detailed version from a rough original",
-                "New Record + `refines`"
+                {
+                  "value": "Producing a more detailed version from a rough original"
+                },
+                {
+                  "value": "New Record + `refines`"
+                }
               ]
             }
           ]
         }
       ]
     }
-  ],
-  "createdAt": "2026-05-27T00:00:00Z"
+  ]
 }

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://scds.io/schema/2.0/typed-record.json",
+  "$schema": "https://srs.semanticops.com/schema/2.0/typed-record.json",
   "instanceId": "ea096096-9923-55c7-b877-86dda406228f",
   "title": "The pin board",
   "instanceType": "exercise",

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://scds.io/schema/2.0/source-document-meta.json",
+  "$schema": "https://srs.semanticops.com/schema/2.0/source-document-meta.json",
   "documentId": "c6198b5c-0dcb-540c-bb05-4af96b03e65d",
   "title": "Founding meeting transcript",
   "description": "Auto-transcribed recording of the founding meeting, Limehouse Town Hall back office, May 2026.",

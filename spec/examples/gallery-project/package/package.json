@@ -1,5 +1,5 @@
 {
-  "$schema": "https://scds.io/schema/2.0/package.json",
+  "$schema": "https://srs.semanticops.com/schema/2.0/package.json",
   "schemaVersion": "2.0",
   "packageId": "4afebafa-f24f-50b1-845f-7b782a56d873",
   "packageName": "governance-core",

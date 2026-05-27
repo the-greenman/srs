@@ -17,13 +17,20 @@
     {
       "fieldId": "1a000032-0000-4000-a000-000000000032",
       "entries": [
-        "Scenario",
-        "`instanceId`",
-        "Relation"
+        {
+          "value": "Scenario"
+        },
+        {
+          "value": "`instanceId`"
+        },
+        {
+          "value": "Relation"
+        }
       ]
     }
   ],
-  "fieldGroups": [
+  "createdAt": "2026-05-27T00:00:00Z",
+  "groupValues": [
     {
       "groupId": "rows",
       "entries": [
@@ -32,9 +39,15 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Pure formalisation (section names map directly to field names, content unchanged)",
-                "Keep",
-                "None required"
+                {
+                  "value": "Pure formalisation (section names map directly to field names, content unchanged)"
+                },
+                {
+                  "value": "Keep"
+                },
+                {
+                  "value": "None required"
+                }
               ]
             }
           ]
@@ -44,9 +57,15 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Content interpreted or restructured during formalisation",
-                "New",
-                "`refines` from new to old"
+                {
+                  "value": "Content interpreted or restructured during formalisation"
+                },
+                {
+                  "value": "New"
+                },
+                {
+                  "value": "`refines` from new to old"
+                }
               ]
             }
           ]
@@ -56,15 +75,20 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "One Note splits into multiple Records",
-                "New IDs for all",
-                "`derived-from` from each new Record to the original"
+                {
+                  "value": "One Note splits into multiple Records"
+                },
+                {
+                  "value": "New IDs for all"
+                },
+                {
+                  "value": "`derived-from` from each new Record to the original"
+                }
               ]
             }
           ]
         }
       ]
     }
-  ],
-  "createdAt": "2026-05-27T00:00:00Z"
+  ]
 }

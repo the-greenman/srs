@@ -5,7 +5,10 @@
   "name": "notes",
   "version": 1,
   "description": "Non-normative implementation guidance, edge cases, cross-references, or clarifying commentary.",
-  "aiGuidance": "Notes are non-normative. Use for implementation tips, edge cases, and cross-references that do not belong in the normative body.",
+  "aiGuidance": {
+    "purpose": "Non-normative implementation guidance, edge cases, cross-references, or clarifying commentary.",
+    "extraction": "Notes are non-normative. Use for implementation tips, edge cases, and cross-references that do not belong in the normative body."
+  },
   "valueType": "text",
   "contentFormat": "markdown",
   "editorHint": "textarea",

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://scds.io/schema/2.0/package.json",
+  "$id": "https://srs.semanticops.com/schema/2.0/package.json",
   "title": "SCDS Package",
   "description": "A distributable artefact containing Field and Type definitions. Self-contained when mode is 'bundled'; declares external dependencies when mode is 'standalone'.",
   "type": "object",

@@ -5,9 +5,18 @@
   "name": "conformance-level",
   "version": 1,
   "description": "The RFC 2119 conformance classification for a requirement.",
-  "aiGuidance": "MUST: absolute requirement, no deviation permitted. SHOULD: recommended; valid reasons to ignore exist. MAY: truly optional. MUST-NOT and SHOULD-NOT are the negatives. Use consistent classification — do not downgrade MUST to SHOULD for convenience.",
+  "aiGuidance": {
+    "purpose": "The RFC 2119 conformance classification for a requirement.",
+    "extraction": "MUST: absolute requirement, no deviation permitted. SHOULD: recommended; valid reasons to ignore exist. MAY: truly optional. MUST-NOT and SHOULD-NOT are the negatives. Use consistent classification — do not downgrade MUST to SHOULD for convenience."
+  },
   "valueType": "select",
-  "allowedValues": ["MUST", "SHOULD", "MAY", "MUST-NOT", "SHOULD-NOT"],
-  "editorHint": "select",
-  "createdAt": "2026-05-27T00:00:00Z"
+  "editorHint": "dropdown",
+  "createdAt": "2026-05-27T00:00:00Z",
+  "selectOptions": [
+    "MUST",
+    "SHOULD",
+    "MAY",
+    "MUST-NOT",
+    "SHOULD-NOT"
+  ]
 }

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://scds.io/schema/2.0/federation-registry.json",
+  "$schema": "https://srs.semanticops.com/schema/2.0/federation-registry.json",
   "registryId": "c1a2b3d4-e5f6-5789-a012-b34c56d78e90",
   "title": "LiMoMa local registry",
   "updatedAt": "2026-05-26T00:00:00Z",

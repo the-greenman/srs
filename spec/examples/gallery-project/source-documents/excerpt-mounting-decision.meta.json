@@ -1,5 +1,5 @@
 {
-  "$schema": "https://scds.io/schema/2.0/source-document-meta.json",
+  "$schema": "https://srs.semanticops.com/schema/2.0/source-document-meta.json",
   "documentId": "77645a93-3b41-55f3-8ccd-aeac8dc71217",
   "title": "Six-mil plug decision — founding meeting excerpt",
   "description": "Manually extracted passage from the founding meeting transcript. Covers the exchange where the group settled on 6mm wall plugs as the standard mounting method, from the bolt-system rejection through the final 'six mil' confirmation.",

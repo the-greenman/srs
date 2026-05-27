@@ -5,7 +5,10 @@
   "name": "content",
   "version": 1,
   "description": "The full prose body of a spec record in markdown. May contain normative statements (MUST/SHOULD/MAY), explanations, non-normative notes, code blocks, and tables.",
-  "aiGuidance": "Use RFC 2119 keywords (MUST, SHOULD, MAY, MUST NOT, SHOULD NOT) for normative statements within the body. Non-normative passages do not need special marking. Structure with markdown headings, lists, and code blocks as appropriate.",
+  "aiGuidance": {
+    "purpose": "The full prose body of a spec record in markdown. May contain normative statements (MUST/SHOULD/MAY), explanations, non-normative notes, code blocks, and tables.",
+    "extraction": "Use RFC 2119 keywords (MUST, SHOULD, MAY, MUST NOT, SHOULD NOT) for normative statements within the body. Non-normative passages do not need special marking. Structure with markdown headings, lists, and code blocks as appropriate."
+  },
   "valueType": "text",
   "contentFormat": "markdown",
   "editorHint": "textarea",

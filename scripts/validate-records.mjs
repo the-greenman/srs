@@ -1,54 +1,28 @@
 #!/usr/bin/env node
 /**
- * Validate all records in Tier 2 format
+ * Validate Tier 2 records using the repo's JSON schema.
+ *
+ * Usage:
+ *   node scripts/validate-records.mjs
+ *   node scripts/validate-records.mjs records
  */
 import { readFile, readdir } from 'fs/promises';
-import { join } from 'path';
+import { join, resolve } from 'path';
+import { loadSchema, validateJsonSchema } from './lib/json-schema-lite.mjs';
+
+const ROOT = resolve('.');
+const recordsDir = process.argv[2] ?? 'records';
 
 const errors = [];
 const warnings = [];
 
-async function loadJSON(path) {
+async function loadJson(path) {
   try {
-    const content = await readFile(path, 'utf-8');
-    return JSON.parse(content);
-  } catch (e) {
-    errors.push(`Failed to load ${path}: ${e.message}`);
+    return JSON.parse(await readFile(path, 'utf8'));
+  } catch (error) {
+    errors.push(`Failed to load ${path}: ${error.message}`);
     return null;
   }
-}
-
-async function validateRecord(path, record) {
-  const issues = [];
-
-  // Check Tier 2 format
-  if (!record.instanceId) issues.push('missing instanceId');
-  if (!record.typeId) issues.push('missing typeId');
-  if (!record.typeVersion) issues.push('missing typeVersion');
-  if (!record.typeNamespace) issues.push('missing typeNamespace');
-  if (!record.typeName) issues.push('missing typeName');
-
-  // Check fieldValues
-  if (!record.fieldValues || !Array.isArray(record.fieldValues)) {
-    issues.push('missing fieldValues array');
-  } else {
-    for (const fv of record.fieldValues) {
-      if (!fv.fieldId) issues.push('fieldValue missing fieldId');
-      if (!fv.hasOwnProperty('value')) issues.push('fieldValue missing value');
-    }
-  }
-
-  // Check sourceRefs
-  if (!record.sourceRefs || !Array.isArray(record.sourceRefs)) {
-    warnings.push(`${path}: missing sourceRefs (optional but recommended)`);
-  } else {
-    for (const sr of record.sourceRefs) {
-      if (!sr.sourceType) issues.push('sourceRef missing sourceType');
-      if (!sr.sourceId) issues.push('sourceRef missing sourceId');
-    }
-  }
-
-  return issues;
 }
 
 async function findRecordFiles(dir, basePath = '') {
@@ -60,8 +34,7 @@ async function findRecordFiles(dir, basePath = '') {
     const relativePath = basePath ? `${basePath}/${entry.name}` : entry.name;
 
     if (entry.isDirectory()) {
-      const subFiles = await findRecordFiles(fullPath, relativePath);
-      files.push(...subFiles);
+      files.push(...await findRecordFiles(fullPath, relativePath));
     } else if (entry.name.endsWith('.json')) {
       files.push({ fullPath, relativePath });
     }
@@ -70,54 +43,60 @@ async function findRecordFiles(dir, basePath = '') {
   return files;
 }
 
-async function validateRecords() {
-  console.log('Validating records...');
+function rel(path) {
+  return path.startsWith(`${ROOT}/`) ? path.slice(ROOT.length + 1) : path;
+}
 
-  const recordFiles = await findRecordFiles('records');
+async function main() {
+  console.log(`Validating records in ${recordsDir}...`);
+
+  const recordSchema = await loadSchema(join(ROOT, 'schemas/record.json'));
+  const recordFiles = await findRecordFiles(join(ROOT, recordsDir));
   console.log(`  Found ${recordFiles.length} record files`);
 
   let validCount = 0;
   let invalidCount = 0;
 
   for (const { fullPath, relativePath } of recordFiles) {
-    const record = await loadJSON(fullPath);
+    const record = await loadJson(fullPath);
     if (!record) {
       invalidCount++;
       continue;
     }
 
-    const issues = await validateRecord(relativePath, record);
-    if (issues.length > 0) {
-      errors.push(`${relativePath}: ${issues.join(', ')}`);
-      invalidCount++;
-    } else {
-      validCount++;
+    const schemaErrors = validateJsonSchema(record, recordSchema);
+    if (!record.sourceRefs) {
+      warnings.push(`${recordsDir}/${relativePath}: missing sourceRefs (optional but recommended)`);
     }
+
+    if (schemaErrors.length > 0) {
+      invalidCount++;
+      errors.push(...schemaErrors.map(error => `${recordsDir}/${relativePath}: ${error}`));
+      continue;
+    }
+
+    validCount++;
   }
 
-  // Report
   console.log(`\n  Valid: ${validCount}`);
   console.log(`  Invalid: ${invalidCount}`);
 
   if (errors.length > 0) {
     console.log(`\n  Errors (${errors.length}):`);
-    errors.forEach(e => console.log(`    ✗ ${e}`));
+    errors.forEach(error => console.log(`    ✗ ${error}`));
   }
 
   if (warnings.length > 0) {
     console.log(`\n  Warnings (${warnings.length}):`);
-    warnings.forEach(w => console.log(`    ⚠ ${w}`));
+    warnings.forEach(warning => console.log(`    ⚠ ${warning}`));
   }
 
   const valid = invalidCount === 0;
   console.log(`\n  ${valid ? '✓ All records are valid' : '✗ Record validation failed'}`);
-
-  return { errors, warnings, valid, validCount, invalidCount };
+  process.exit(valid ? 0 : 1);
 }
 
-validateRecords().then(result => {
-  process.exit(result.valid ? 0 : 1);
-}).catch(err => {
-  console.error('Error:', err);
+main().catch(error => {
+  console.error('Error:', error);
   process.exit(1);
 });

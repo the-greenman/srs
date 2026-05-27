@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://scds.io/schema/2.0/federation-registry.json",
+  "$id": "https://srs.semanticops.com/schema/2.0/federation-registry.json",
   "title": "SCDS Repository Registry (ext:federation)",
   "description": "Local file listing the SCDS document repositories known to this system or team. May be standalone or part of a federated hierarchy via childRegistries.",
   "type": "object",

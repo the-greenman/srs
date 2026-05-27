@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://scds.io/schema/2.0/federation-events.json",
+  "$id": "https://srs.semanticops.com/schema/2.0/federation-events.json",
   "title": "SCDS Federation Events File (ext:federation)",
   "description": "Holds FederationEvent records for a repository. Tracks merge, split, and import operations so structural provenance remains auditable without polluting the instance index.",
   "type": "object",

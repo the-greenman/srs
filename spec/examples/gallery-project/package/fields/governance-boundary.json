@@ -1,5 +1,5 @@
 {
-  "$schema": "https://scds.io/schema/2.0/field.json",
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
   "id": "3c39ee1f-6fe0-5da7-a0b6-928aa3a63211",
   "namespace": "governance",
   "name": "boundary",

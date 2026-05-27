@@ -1,5 +1,5 @@
 {
-  "$schema": "https://scds.io/schema/2.0/manifest.json",
+  "$schema": "https://srs.semanticops.com/schema/2.0/manifest.json",
   "formatVersion": "1.0",
   "scdsVersion": "2.0",
   "conformance": "SCDS 2.0 Core + ext:recommended-relations + ext:repository + ext:views-l1 + ext:views-l2 + ext:federation",

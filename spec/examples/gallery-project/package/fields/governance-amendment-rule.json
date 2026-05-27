@@ -1,5 +1,5 @@
 {
-  "$schema": "https://scds.io/schema/2.0/field.json",
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
   "id": "1f01bc6b-39c8-58d7-b1a3-79142623fece",
   "namespace": "governance",
   "name": "amendment_rule",

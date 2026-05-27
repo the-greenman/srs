@@ -1,5 +1,5 @@
 {
-  "$schema": "https://scds.io/schema/2.0/typed-record.json",
+  "$schema": "https://srs.semanticops.com/schema/2.0/typed-record.json",
   "instanceId": "ef5ff158-e660-5272-8fb9-c506828944cd",
   "title": "Painting the stairwell",
   "instanceType": "exercise",

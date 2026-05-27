@@ -5,7 +5,10 @@
   "name": "rationale",
   "version": 1,
   "description": "The reasoning behind a design decision, constraint, or normative requirement.",
-  "aiGuidance": "Explain why this is specified this way, not just what it says. Include trade-offs considered and alternatives rejected. Rationale is non-normative.",
+  "aiGuidance": {
+    "purpose": "The reasoning behind a design decision, constraint, or normative requirement.",
+    "extraction": "Explain why this is specified this way, not just what it says. Include trade-offs considered and alternatives rejected. Rationale is non-normative."
+  },
   "valueType": "text",
   "contentFormat": "markdown",
   "editorHint": "textarea",

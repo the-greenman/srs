@@ -1,5 +1,5 @@
 {
-  "$schema": "https://scds.io/schema/2.0/field.json",
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
   "id": "d25da548-79d6-555b-8878-f40b685b3955",
   "namespace": "governance",
   "name": "authority",

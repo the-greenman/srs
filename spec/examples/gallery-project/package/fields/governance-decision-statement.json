@@ -1,5 +1,5 @@
 {
-  "$schema": "https://scds.io/schema/2.0/field.json",
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
   "id": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
   "namespace": "governance",
   "name": "decision_statement",

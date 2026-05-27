@@ -2032,15 +2032,15 @@ Every JSON file in a repository should declare its schema via a `$schema` key as
 
 | File type | `$schema` value |
 |-----------|----------------|
-| `manifest.json` | `https://scds.io/schema/2.0/manifest.json` |
-| Notes (Tier 0) | `https://scds.io/schema/2.0/note.json` |
-| TypedRecords (Tier 1) | `https://scds.io/schema/2.0/typed-record.json` |
-| Records (Tier 2) | `https://scds.io/schema/2.0/record.json` |
-| Relations collection | `https://scds.io/schema/2.0/relations-collection.json` |
-| Source document sidecar | `https://scds.io/schema/2.0/source-document-meta.json` |
-| Field definition | `https://scds.io/schema/2.0/field.json` |
-| Type definition | `https://scds.io/schema/2.0/type.json` |
-| Package | `https://scds.io/schema/2.0/package.json` |
+| `manifest.json` | `https://srs.semanticops.com/schema/2.0/manifest.json` |
+| Notes (Tier 0) | `https://srs.semanticops.com/schema/2.0/note.json` |
+| TypedRecords (Tier 1) | `https://srs.semanticops.com/schema/2.0/typed-record.json` |
+| Records (Tier 2) | `https://srs.semanticops.com/schema/2.0/record.json` |
+| Relations collection | `https://srs.semanticops.com/schema/2.0/relations-collection.json` |
+| Source document sidecar | `https://srs.semanticops.com/schema/2.0/source-document-meta.json` |
+| Field definition | `https://srs.semanticops.com/schema/2.0/field.json` |
+| Type definition | `https://srs.semanticops.com/schema/2.0/type.json` |
+| Package | `https://srs.semanticops.com/schema/2.0/package.json` |
 
 **Domain schemas**: A package may supply additional domain schemas that validate type-specific field constraints. These narrow the structural Record schema with `allOf` and are placed in `package/schemas/`. A domain schema's `$id` should follow the pattern `https://scds.io/schema/domain/<namespace>/<typeName>/<version>.json`. Records conforming to a specific Type may declare the domain schema `$id` instead of the generic record schema URL.
 

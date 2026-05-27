@@ -13,13 +13,20 @@
     {
       "fieldId": "1a000032-0000-4000-a000-000000000032",
       "entries": [
-        "Pattern",
-        "When to use",
-        "Example"
+        {
+          "value": "Pattern"
+        },
+        {
+          "value": "When to use"
+        },
+        {
+          "value": "Example"
+        }
       ]
     }
   ],
-  "fieldGroups": [
+  "createdAt": "2026-05-27T00:00:00Z",
+  "groupValues": [
     {
       "groupId": "rows",
       "entries": [
@@ -28,9 +35,15 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Repeatable scalar (`ext:repeatable-fields`)",
-                "Multiple values of the same type, no pairing needed",
-                "Multiple assigned person names"
+                {
+                  "value": "Repeatable scalar (`ext:repeatable-fields`)"
+                },
+                {
+                  "value": "Multiple values of the same type, no pairing needed"
+                },
+                {
+                  "value": "Multiple assigned person names"
+                }
               ]
             }
           ]
@@ -40,9 +53,15 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Field Group (`ext:field-groups`)",
-                "Multiple structured entries that must be read together",
-                "Contacts with name + email"
+                {
+                  "value": "Field Group (`ext:field-groups`)"
+                },
+                {
+                  "value": "Multiple structured entries that must be read together"
+                },
+                {
+                  "value": "Contacts with name + email"
+                }
               ]
             }
           ]
@@ -52,15 +71,20 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Separate Records + Relations",
-                "Repeated items need their own identity, lifecycle, or reuse",
-                "Tasks assigned to roles"
+                {
+                  "value": "Separate Records + Relations"
+                },
+                {
+                  "value": "Repeated items need their own identity, lifecycle, or reuse"
+                },
+                {
+                  "value": "Tasks assigned to roles"
+                }
               ]
             }
           ]
         }
       ]
     }
-  ],
-  "createdAt": "2026-05-27T00:00:00Z"
+  ]
 }

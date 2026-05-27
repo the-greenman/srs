@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://scds.io/schema/2.0/field.json",
+  "$id": "https://srs.semanticops.com/schema/2.0/field.json",
   "title": "SCDS Field Definition",
   "description": "An atomic, reusable field definition. Fields are the shared vocabulary of SCDS — defined once, referenced across many Types.",
   "type": "object",

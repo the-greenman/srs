@@ -5,7 +5,10 @@
   "name": "allowed-values",
   "version": 1,
   "description": "The enumeration of valid values for a field or property being documented.",
-  "aiGuidance": "List each allowed value and its meaning. Use a markdown list or table. For select fields, this maps directly to the allowedValues array in the field definition.",
+  "aiGuidance": {
+    "purpose": "The enumeration of valid values for a field or property being documented.",
+    "extraction": "List each allowed value and its meaning. Use a markdown list or table. For select fields, this maps directly to the allowedValues array in the field definition."
+  },
   "valueType": "text",
   "contentFormat": "markdown",
   "editorHint": "textarea",

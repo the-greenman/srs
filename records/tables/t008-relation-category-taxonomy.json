@@ -13,12 +13,17 @@
     {
       "fieldId": "1a000032-0000-4000-a000-000000000032",
       "entries": [
-        "Category",
-        "Examples"
+        {
+          "value": "Category"
+        },
+        {
+          "value": "Examples"
+        }
       ]
     }
   ],
-  "fieldGroups": [
+  "createdAt": "2026-05-27T00:00:00Z",
+  "groupValues": [
     {
       "groupId": "rows",
       "entries": [
@@ -27,8 +32,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Composition",
-                "`contains`, `part-of`, `has-section`"
+                {
+                  "value": "Composition"
+                },
+                {
+                  "value": "`contains`, `part-of`, `has-section`"
+                }
               ]
             }
           ]
@@ -38,8 +47,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Refinement",
-                "`refines`, `expands`, `summarises`"
+                {
+                  "value": "Refinement"
+                },
+                {
+                  "value": "`refines`, `expands`, `summarises`"
+                }
               ]
             }
           ]
@@ -49,8 +62,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Dependency",
-                "`depends-on`, `requires`, `blocks`, `enables`"
+                {
+                  "value": "Dependency"
+                },
+                {
+                  "value": "`depends-on`, `requires`, `blocks`, `enables`"
+                }
               ]
             }
           ]
@@ -60,8 +77,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Sequence",
-                "`precedes`, `follows`, `overlaps`"
+                {
+                  "value": "Sequence"
+                },
+                {
+                  "value": "`precedes`, `follows`, `overlaps`"
+                }
               ]
             }
           ]
@@ -71,8 +92,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Derivation",
-                "`derived-from`, `extracted-from`, `based-on`"
+                {
+                  "value": "Derivation"
+                },
+                {
+                  "value": "`derived-from`, `extracted-from`, `based-on`"
+                }
               ]
             }
           ]
@@ -82,8 +107,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Evidence",
-                "`evidences`, `supports`, `contradicts`"
+                {
+                  "value": "Evidence"
+                },
+                {
+                  "value": "`evidences`, `supports`, `contradicts`"
+                }
               ]
             }
           ]
@@ -93,8 +122,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Governance",
-                "`supersedes`, `amends`, `ratifies`, `delegates`"
+                {
+                  "value": "Governance"
+                },
+                {
+                  "value": "`supersedes`, `amends`, `ratifies`, `delegates`"
+                }
               ]
             }
           ]
@@ -104,14 +137,17 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Association",
-                "`relates-to`, `links-to`"
+                {
+                  "value": "Association"
+                },
+                {
+                  "value": "`relates-to`, `links-to`"
+                }
               ]
             }
           ]
         }
       ]
     }
-  ],
-  "createdAt": "2026-05-27T00:00:00Z"
+  ]
 }

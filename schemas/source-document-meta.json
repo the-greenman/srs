@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://scds.io/schema/2.0/source-document-meta.json",
+  "$id": "https://srs.semanticops.com/schema/2.0/source-document-meta.json",
   "title": "SCDS Source Document Sidecar (ext:repository)",
   "description": "Metadata sidecar for a source document in source-documents/. The sidecar file has the same base name as the source file with .meta.json appended.",
   "type": "object",

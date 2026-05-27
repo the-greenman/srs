@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://scds.io/schema/2.0/record.json",
+  "$id": "https://srs.semanticops.com/schema/2.0/record.json",
   "title": "SCDS Record (Tier 2)",
   "description": "An instantiated Type with field values. A fully structured, settled instance. Intended for composition via allOf in domain schemas — $schema is not constrained here.",
   "type": "object",
@@ -33,7 +33,7 @@
     "groupValues": {
       "type": "array",
       "description": "ext:field-groups — grouped field value sets.",
-      "items": { "type": "object" }
+      "items": { "$ref": "#/$defs/FieldGroupValue" }
     },
     "sourceRefs": {
       "type": "array",
@@ -66,7 +66,7 @@
         "entries": {
           "type": "array",
           "description": "ext:repeatable-fields — repeatable value entries.",
-          "items": { "type": "object" }
+          "items": { "$ref": "#/$defs/FieldValueEntry" }
         },
         "source": {
           "type": "string",
@@ -76,6 +76,51 @@
         "sourceRefs": {
           "type": "array",
           "items": { "$ref": "#/$defs/SourceReference" }
+        }
+      }
+    },
+    "FieldValueEntry": {
+      "type": "object",
+      "required": ["value"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "number" },
+            { "type": "boolean" },
+            { "type": "array", "items": { "type": "string" } },
+            { "type": "null" }
+          ]
+        },
+        "source": {
+          "type": "string",
+          "enum": ["human", "ai", "imported", "derived"]
+        },
+        "editedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "FieldGroupValue": {
+      "type": "object",
+      "required": ["groupId", "entries"],
+      "additionalProperties": false,
+      "properties": {
+        "groupId": { "type": "string" },
+        "entries": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/FieldGroupEntry" }
+        }
+      }
+    },
+    "FieldGroupEntry": {
+      "type": "object",
+      "required": ["fieldValues"],
+      "additionalProperties": false,
+      "properties": {
+        "entryId": { "type": "string", "format": "uuid" },
+        "fieldValues": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/FieldValue" }
         }
       }
     },

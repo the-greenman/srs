@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://scds.io/schema/2.0/manifest.json",
+  "$id": "https://srs.semanticops.com/schema/2.0/manifest.json",
   "title": "SCDS Repository Manifest (ext:repository)",
   "description": "Root file for a SCDS ext:repository. Acts as the authoritative index and entry point for the repository. Every repository must have exactly one manifest.json at its root.",
   "type": "object",
@@ -9,7 +9,7 @@
   "properties": {
     "$schema": {
       "type": "string",
-      "const": "https://scds.io/schema/2.0/manifest.json"
+      "const": "https://srs.semanticops.com/schema/2.0/manifest.json"
     },
     "formatVersion": {
       "type": "string",

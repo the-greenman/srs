@@ -13,12 +13,17 @@
     {
       "fieldId": "1a000032-0000-4000-a000-000000000032",
       "entries": [
-        "Need",
-        "Extensions"
+        {
+          "value": "Need"
+        },
+        {
+          "value": "Extensions"
+        }
       ]
     }
   ],
-  "fieldGroups": [
+  "createdAt": "2026-05-27T00:00:00Z",
+  "groupValues": [
     {
       "groupId": "rows",
       "entries": [
@@ -27,8 +32,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Define and exchange Field and Type definitions",
-                "Core only"
+                {
+                  "value": "Define and exchange Field and Type definitions"
+                },
+                {
+                  "value": "Core only"
+                }
               ]
             }
           ]
@@ -38,8 +47,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Track definition origin and imports",
-                "`ext:import-tracking`"
+                {
+                  "value": "Track definition origin and imports"
+                },
+                {
+                  "value": "`ext:import-tracking`"
+                }
               ]
             }
           ]
@@ -49,8 +62,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Publish a definition catalog",
-                "`ext:registry`"
+                {
+                  "value": "Publish a definition catalog"
+                },
+                {
+                  "value": "`ext:registry`"
+                }
               ]
             }
           ]
@@ -60,8 +77,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Governance with lifecycle states",
-                "`ext:lifecycle`"
+                {
+                  "value": "Governance with lifecycle states"
+                },
+                {
+                  "value": "`ext:lifecycle`"
+                }
               ]
             }
           ]
@@ -71,8 +92,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Present and export Records",
-                "`ext:views-l1`"
+                {
+                  "value": "Present and export Records"
+                },
+                {
+                  "value": "`ext:views-l1`"
+                }
               ]
             }
           ]
@@ -82,8 +107,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Assemble multi-Record documents",
-                "`ext:views-l2`"
+                {
+                  "value": "Assemble multi-Record documents"
+                },
+                {
+                  "value": "`ext:views-l2`"
+                }
               ]
             }
           ]
@@ -93,8 +122,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Facilitate structured deliberation",
-                "`ext:protocol`"
+                {
+                  "value": "Facilitate structured deliberation"
+                },
+                {
+                  "value": "`ext:protocol`"
+                }
               ]
             }
           ]
@@ -104,8 +137,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Live facilitation with context assembly",
-                "`ext:addressability`"
+                {
+                  "value": "Live facilitation with context assembly"
+                },
+                {
+                  "value": "`ext:addressability`"
+                }
               ]
             }
           ]
@@ -115,8 +152,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Extraction from source material",
-                "`ext:schema`"
+                {
+                  "value": "Extraction from source material"
+                },
+                {
+                  "value": "`ext:schema`"
+                }
               ]
             }
           ]
@@ -126,8 +167,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Specialise Types while preserving base processability",
-                "`ext:type-inheritance`"
+                {
+                  "value": "Specialise Types while preserving base processability"
+                },
+                {
+                  "value": "`ext:type-inheritance`"
+                }
               ]
             }
           ]
@@ -137,8 +182,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Lists of values within a Record",
-                "`ext:repeatable-fields`"
+                {
+                  "value": "Lists of values within a Record"
+                },
+                {
+                  "value": "`ext:repeatable-fields`"
+                }
               ]
             }
           ]
@@ -148,8 +197,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Structured repeatable context in a Record",
-                "`ext:field-groups`"
+                {
+                  "value": "Structured repeatable context in a Record"
+                },
+                {
+                  "value": "`ext:field-groups`"
+                }
               ]
             }
           ]
@@ -159,8 +212,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Complex conditional validation",
-                "`ext:cross-field-validation`"
+                {
+                  "value": "Complex conditional validation"
+                },
+                {
+                  "value": "`ext:cross-field-validation`"
+                }
               ]
             }
           ]
@@ -170,14 +227,17 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Cross-system Relation interoperability",
-                "`ext:recommended-relations`"
+                {
+                  "value": "Cross-system Relation interoperability"
+                },
+                {
+                  "value": "`ext:recommended-relations`"
+                }
               ]
             }
           ]
         }
       ]
     }
-  ],
-  "createdAt": "2026-05-27T00:00:00Z"
+  ]
 }

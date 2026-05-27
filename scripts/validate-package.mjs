@@ -1,87 +1,146 @@
 #!/usr/bin/env node
 /**
- * Validate package structure
+ * Validate a package directory using the repo's JSON schemas plus manifest checks.
+ *
+ * Usage:
+ *   node scripts/validate-package.mjs
+ *   node scripts/validate-package.mjs package/spec-authoring-core
  */
-import { readFile, readdir } from 'fs/promises';
-import { join } from 'path';
+import { access, readdir, readFile } from 'fs/promises';
+import { join, resolve } from 'path';
+import { loadSchema, validateJsonSchema } from './lib/json-schema-lite.mjs';
+
+const ROOT = resolve('.');
+const packageDir = process.argv[2] ?? 'package/spec-authoring-core';
 
 const errors = [];
 const warnings = [];
 
-async function loadJSON(path) {
+async function loadJson(path) {
   try {
-    const content = await readFile(path, 'utf-8');
-    return JSON.parse(content);
-  } catch (e) {
-    errors.push(`Failed to load ${path}: ${e.message}`);
+    return JSON.parse(await readFile(path, 'utf8'));
+  } catch (error) {
+    errors.push(`Failed to load ${path}: ${error.message}`);
     return null;
   }
 }
 
-async function validatePackage() {
-  console.log('Validating package...');
-
-  // Load package.json
-  const pkg = await loadJSON('package/package.json');
-  if (!pkg) return { errors, warnings, valid: false };
-
-  // Check required fields
-  if (!pkg.id) warnings.push('package.json missing id');
-  if (!pkg.namespace) errors.push('package.json missing namespace');
-  if (!pkg.name) errors.push('package.json missing name');
-  if (!pkg.version) errors.push('package.json missing version');
-
-  // Validate fields
-  const fieldFiles = await readdir('package/fields');
-  const jsonFieldFiles = fieldFiles.filter(f => f.endsWith('.json'));
-
-  console.log(`  Checking ${jsonFieldFiles.length} field definitions...`);
-
-  for (const fieldFile of jsonFieldFiles) {
-    const field = await loadJSON(join('package/fields', fieldFile));
-    if (!field) continue;
-
-    if (!field.id) errors.push(`Field ${fieldFile} missing id`);
-    if (!field.namespace) errors.push(`Field ${fieldFile} missing namespace`);
-    if (!field.name) errors.push(`Field ${fieldFile} missing name`);
-    if (!field.valueType) errors.push(`Field ${fieldFile} missing valueType`);
-    if (!field.aiGuidance) warnings.push(`Field ${fieldFile} missing aiGuidance`);
+async function fileExists(path) {
+  try {
+    await access(path);
+    return true;
+  } catch {
+    return false;
   }
+}
 
-  // Validate types
-  const typeFiles = await readdir('package/types');
-  const jsonTypeFiles = typeFiles.filter(f => f.endsWith('.json'));
+function rel(path) {
+  return path.startsWith(`${ROOT}/`) ? path.slice(ROOT.length + 1) : path;
+}
 
-  console.log(`  Checking ${jsonTypeFiles.length} type definitions...`);
+function pushSchemaErrors(label, schemaErrors) {
+  for (const schemaError of schemaErrors) {
+    errors.push(`${label}: ${schemaError}`);
+  }
+}
 
-  for (const typeFile of jsonTypeFiles) {
-    const type = await loadJSON(join('package/types', typeFile));
-    if (!type) continue;
+async function validatePackageManifest(dirPath) {
+  const manifestPath = join(dirPath, 'package.json');
+  const manifest = await loadJson(manifestPath);
+  if (!manifest) return null;
 
-    if (!type.id) errors.push(`Type ${typeFile} missing id`);
-    if (!type.namespace) errors.push(`Type ${typeFile} missing namespace`);
-    if (!type.name) errors.push(`Type ${typeFile} missing name`);
-    if (!type.fields || !Array.isArray(type.fields)) {
-      errors.push(`Type ${typeFile} missing fields array`);
+  const requiredKeys = ['id', 'namespace', 'name', 'version', 'title', 'description', 'status', 'fields', 'types', 'views', 'createdAt'];
+  for (const key of requiredKeys) {
+    if (!(key in manifest)) {
+      errors.push(`${rel(manifestPath)}: missing ${key}`);
     }
   }
 
-  // Report
+  for (const listKey of ['fields', 'types', 'views']) {
+    if (listKey in manifest && !Array.isArray(manifest[listKey])) {
+      errors.push(`${rel(manifestPath)}: ${listKey} must be an array`);
+    }
+  }
+
+  return manifest;
+}
+
+async function validateManifestPaths(dirPath, manifest, subdir) {
+  const listed = new Set();
+  const manifestEntries = Array.isArray(manifest[subdir]) ? manifest[subdir] : [];
+
+  for (const relativePath of manifestEntries) {
+    const fullPath = join(dirPath, relativePath);
+    listed.add(relativePath);
+    if (!(await fileExists(fullPath))) {
+      errors.push(`${rel(join(dirPath, 'package.json'))}: listed ${subdir.slice(0, -1)} file missing: ${relativePath}`);
+    }
+  }
+
+  const folderPath = join(dirPath, subdir);
+  if (!(await fileExists(folderPath))) return listed;
+
+  const presentFiles = (await readdir(folderPath))
+    .filter(name => name.endsWith('.json'))
+    .map(name => `${subdir}/${name}`);
+
+  for (const presentFile of presentFiles) {
+    if (!listed.has(presentFile)) {
+      warnings.push(`${rel(join(dirPath, 'package.json'))}: ${presentFile} exists but is not listed in package.json`);
+    }
+  }
+
+  return listed;
+}
+
+async function main() {
+  console.log(`Validating package in ${packageDir}...`);
+
+  const [fieldSchema, typeSchema] = await Promise.all([
+    loadSchema(join(ROOT, 'schemas/field.json')),
+    loadSchema(join(ROOT, 'schemas/type.json')),
+  ]);
+
+  const dirPath = join(ROOT, packageDir);
+  const manifest = await validatePackageManifest(dirPath);
+  if (!manifest) {
+    process.exit(1);
+  }
+
+  await validateManifestPaths(dirPath, manifest, 'fields');
+  await validateManifestPaths(dirPath, manifest, 'types');
+  await validateManifestPaths(dirPath, manifest, 'views');
+
+  const fieldEntries = Array.isArray(manifest.fields) ? manifest.fields : [];
+  console.log(`  Checking ${fieldEntries.length} field definitions...`);
+  for (const relativePath of fieldEntries) {
+    const fullPath = join(dirPath, relativePath);
+    const field = await loadJson(fullPath);
+    if (!field) continue;
+    pushSchemaErrors(rel(fullPath), validateJsonSchema(field, fieldSchema));
+  }
+
+  const typeEntries = Array.isArray(manifest.types) ? manifest.types : [];
+  console.log(`  Checking ${typeEntries.length} type definitions...`);
+  for (const relativePath of typeEntries) {
+    const fullPath = join(dirPath, relativePath);
+    const type = await loadJson(fullPath);
+    if (!type) continue;
+    pushSchemaErrors(rel(fullPath), validateJsonSchema(type, typeSchema));
+  }
+
   console.log(`\n  Errors: ${errors.length}`);
-  errors.forEach(e => console.log(`    ✗ ${e}`));
+  errors.forEach(error => console.log(`    ✗ ${error}`));
 
   console.log(`  Warnings: ${warnings.length}`);
-  warnings.forEach(w => console.log(`    ⚠ ${w}`));
+  warnings.forEach(warning => console.log(`    ⚠ ${warning}`));
 
   const valid = errors.length === 0;
   console.log(`\n  ${valid ? '✓ Package is valid' : '✗ Package validation failed'}`);
-
-  return { errors, warnings, valid };
+  process.exit(valid ? 0 : 1);
 }
 
-validatePackage().then(result => {
-  process.exit(result.valid ? 0 : 1);
-}).catch(err => {
-  console.error('Error:', err);
+main().catch(error => {
+  console.error('Error:', error);
   process.exit(1);
 });

@@ -5,7 +5,10 @@
   "name": "invariant-number",
   "version": 1,
   "description": "The integer sequence number of this invariant within its specification.",
-  "aiGuidance": "Invariant numbers are positive integers assigned sequentially within a spec (1, 2, 3...). They are stable once assigned — do not renumber existing invariants when adding new ones.",
+  "aiGuidance": {
+    "purpose": "The integer sequence number of this invariant within its specification.",
+    "extraction": "Invariant numbers are positive integers assigned sequentially within a spec (1, 2, 3...). They are stable once assigned — do not renumber existing invariants when adding new ones."
+  },
   "valueType": "number",
   "editorHint": "singleline",
   "createdAt": "2026-05-27T00:00:00Z"

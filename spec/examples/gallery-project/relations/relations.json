@@ -1,5 +1,5 @@
 {
-  "$schema": "https://scds.io/schema/2.0/relations-collection.json",
+  "$schema": "https://srs.semanticops.com/schema/2.0/relations-collection.json",
   "relations": [
     {
       "relationId": "c9690f60-e4f2-5ea1-a106-62c2f98ef4a3",

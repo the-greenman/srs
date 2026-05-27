@@ -43,6 +43,10 @@ function fv(record, fieldId) {
   return record.fieldValues?.find(f => f.fieldId === fieldId)?.value ?? '';
 }
 
+function entryValues(entries = []) {
+  return entries.map(entry => (entry && typeof entry === 'object' && 'value' in entry ? entry.value : entry));
+}
+
 // Render a table record to markdown (v2: columns field + cells repeatable per row)
 function renderTable(tableRecord) {
   const intro = fv(tableRecord, F_INTRO);
@@ -50,9 +54,9 @@ function renderTable(tableRecord) {
 
   // columns: repeatable field → { fieldId, entries: [...] }
   const columnsDef = tableRecord.fieldValues?.find(f => f.fieldId === F_COLUMNS);
-  const columns = columnsDef?.entries ?? [];
+  const columns = entryValues(columnsDef?.entries ?? []);
 
-  const group = tableRecord.fieldGroups?.find(g => g.groupId === 'rows');
+  const group = tableRecord.groupValues?.find(g => g.groupId === 'rows');
   const entries = group?.entries ?? [];
   if (!entries.length && !columns.length) return '';
 
@@ -71,7 +75,7 @@ function renderTable(tableRecord) {
   }
 
   for (const entry of entries) {
-    const cells = entry.fieldValues?.find(f => f.fieldId === F_CELLS)?.entries ?? [];
+    const cells = entryValues(entry.fieldValues?.find(f => f.fieldId === F_CELLS)?.entries ?? []);
     // Pad to colCount if needed
     const padded = Array.from({ length: colCount }, (_, i) => cells[i] ?? '');
     md += `| ${padded.join(' | ')} |\n`;

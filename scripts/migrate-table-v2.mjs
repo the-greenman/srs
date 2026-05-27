@@ -3,8 +3,9 @@
  * Migrate table records from v1 (col-1..col-5) to v2 (columns + cells).
  *
  * v1: rows group entries each have col-1..col-5 fieldValues; first entry is header row.
- * v2: columns repeatable field on record; rows group entries each have a single cells
- *     repeatable field. No header row in the group — columns field IS the header.
+ * v2: columns repeatable field on record; rows groupValues entries each have a
+ *     single cells repeatable field. No header row in the group — columns field
+ *     IS the header.
  *
  * Run from srs/:
  *   node scripts/migrate-table-v2.mjs
@@ -44,9 +45,13 @@ function extractRowCells(entry) {
   return vals.slice(0, last + 1);
 }
 
+function wrapEntries(values) {
+  return values.map(value => ({ value }));
+}
+
 async function migrateRecord(relPath) {
   const rec = await loadJson(relPath);
-  const rowsGroup = rec.fieldGroups?.find(g => g.groupId === 'rows');
+  const rowsGroup = rec.fieldGroups?.find(g => g.groupId === 'rows') ?? rec.groupValues?.find(g => g.groupId === 'rows');
   if (!rowsGroup) {
     console.warn(`  ⚠ No rows group in ${relPath}, skipping`);
     return;
@@ -62,21 +67,23 @@ async function migrateRecord(relPath) {
     fv => !COL_IDS.includes(fv.fieldId)
   );
   if (columnNames.length > 0) {
-    newFieldValues.push({ fieldId: F_COLUMNS, entries: columnNames });
+    newFieldValues.push({ fieldId: F_COLUMNS, entries: wrapEntries(columnNames) });
   }
 
   // Build new rows group entries
   const newEntries = dataEntries.map(entry => {
     const cells = extractRowCells(entry);
-    return { fieldValues: [{ fieldId: F_CELLS, entries: cells }] };
+    return { fieldValues: [{ fieldId: F_CELLS, entries: wrapEntries(cells) }] };
   });
 
   const newRec = {
     ...rec,
     typeVersion: 2,
     fieldValues: newFieldValues,
-    fieldGroups: [{ groupId: 'rows', entries: newEntries }],
+    groupValues: [{ groupId: 'rows', entries: newEntries }],
   };
+
+  delete newRec.fieldGroups;
 
   await saveJson(relPath, newRec);
   console.log(`  ✓ ${relPath} (${columnNames.length} cols, ${newEntries.length} rows)`);

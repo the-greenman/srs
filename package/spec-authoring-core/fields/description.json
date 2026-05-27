@@ -5,7 +5,10 @@
   "name": "description",
   "version": 1,
   "description": "A detailed, multi-paragraph description of this record. May include markdown formatting.",
-  "aiGuidance": "Explain the what, why, and how. Can be multi-paragraph. Distinct from `content` in that it describes the record itself rather than forming the normative body of a spec section.",
+  "aiGuidance": {
+    "purpose": "A detailed, multi-paragraph description of this record. May include markdown formatting.",
+    "extraction": "Explain the what, why, and how. Can be multi-paragraph. Distinct from `content` in that it describes the record itself rather than forming the normative body of a spec section."
+  },
   "valueType": "text",
   "contentFormat": "markdown",
   "editorHint": "textarea",

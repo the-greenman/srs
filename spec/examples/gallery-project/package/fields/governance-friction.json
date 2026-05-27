@@ -1,5 +1,5 @@
 {
-  "$schema": "https://scds.io/schema/2.0/field.json",
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
   "id": "1a1c0a5d-a1df-5d03-95f2-32af73bb71da",
   "namespace": "governance",
   "name": "friction",

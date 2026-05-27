@@ -5,7 +5,10 @@
   "name": "examples",
   "version": 1,
   "description": "Concrete examples illustrating the concept, requirement, or type definition.",
-  "aiGuidance": "Examples are non-normative. Provide realistic, specific examples that demonstrate correct usage. Use code blocks, JSON snippets, or scenario descriptions as appropriate.",
+  "aiGuidance": {
+    "purpose": "Concrete examples illustrating the concept, requirement, or type definition.",
+    "extraction": "Examples are non-normative. Provide realistic, specific examples that demonstrate correct usage. Use code blocks, JSON snippets, or scenario descriptions as appropriate."
+  },
   "valueType": "text",
   "contentFormat": "markdown",
   "editorHint": "textarea",

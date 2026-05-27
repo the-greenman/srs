@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://scds.io/schema/2.0/typed-record.json",
+  "$id": "https://srs.semanticops.com/schema/2.0/typed-record.json",
   "title": "SCDS TypedRecord (Tier 1)",
   "description": "A structured instance with named, typed fields but no formal Type binding. Used for exploratory or in-progress work (e.g. exercises, inquiries).",
   "type": "object",

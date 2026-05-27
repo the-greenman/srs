@@ -5,7 +5,10 @@
   "name": "normative-statement",
   "version": 1,
   "description": "A single atomic normative requirement, expressed using RFC 2119 keywords.",
-  "aiGuidance": "Each statement should express exactly one requirement. Use MUST, MUST NOT, SHOULD, SHOULD NOT, or MAY. Be precise and testable — a conformance test should be derivable from this statement alone.",
+  "aiGuidance": {
+    "purpose": "A single atomic normative requirement, expressed using RFC 2119 keywords.",
+    "extraction": "Each statement should express exactly one requirement. Use MUST, MUST NOT, SHOULD, SHOULD NOT, or MAY. Be precise and testable — a conformance test should be derivable from this statement alone."
+  },
   "valueType": "text",
   "contentFormat": "markdown",
   "editorHint": "textarea",

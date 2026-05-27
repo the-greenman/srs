@@ -13,12 +13,17 @@
     {
       "fieldId": "1a000032-0000-4000-a000-000000000032",
       "entries": [
-        "SCDS concept",
-        "μDemocracy application"
+        {
+          "value": "SCDS concept"
+        },
+        {
+          "value": "μDemocracy application"
+        }
       ]
     }
   ],
-  "fieldGroups": [
+  "createdAt": "2026-05-27T00:00:00Z",
+  "groupValues": [
     {
       "groupId": "rows",
       "entries": [
@@ -27,8 +32,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Field",
-                "Semantic atom in a governance record"
+                {
+                  "value": "Field"
+                },
+                {
+                  "value": "Semantic atom in a governance record"
+                }
               ]
             }
           ]
@@ -38,8 +47,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Type",
-                "Decision, Proposal, Action, Role, Value, Principle, ..."
+                {
+                  "value": "Type"
+                },
+                {
+                  "value": "Decision, Proposal, Action, Role, Value, Principle, ..."
+                }
               ]
             }
           ]
@@ -49,8 +62,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Record",
-                "A captured governance artefact with provenance"
+                {
+                  "value": "Record"
+                },
+                {
+                  "value": "A captured governance artefact with provenance"
+                }
               ]
             }
           ]
@@ -60,8 +77,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Schema",
-                "Founding Document type; Decision Log type"
+                {
+                  "value": "Schema"
+                },
+                {
+                  "value": "Founding Document type; Decision Log type"
+                }
               ]
             }
           ]
@@ -71,8 +92,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Protocol",
-                "Democracy protocol: Brain Dump, Decomposition, Decision, Proposal, ..."
+                {
+                  "value": "Protocol"
+                },
+                {
+                  "value": "Democracy protocol: Brain Dump, Decomposition, Decision, Proposal, ..."
+                }
               ]
             }
           ]
@@ -82,8 +107,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Container",
-                "A group's governance workspace; a founding process scope"
+                {
+                  "value": "Container"
+                },
+                {
+                  "value": "A group's governance workspace; a founding process scope"
+                }
               ]
             }
           ]
@@ -93,8 +122,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Relation",
-                "`supersedes`, `derived-from`, `ratifies`, `depends-on`, ..."
+                {
+                  "value": "Relation"
+                },
+                {
+                  "value": "`supersedes`, `derived-from`, `ratifies`, `depends-on`, ..."
+                }
               ]
             }
           ]
@@ -104,8 +137,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "View",
-                "Facilitator view; summary view; export for ratification"
+                {
+                  "value": "View"
+                },
+                {
+                  "value": "Facilitator view; summary view; export for ratification"
+                }
               ]
             }
           ]
@@ -115,8 +152,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Document View",
-                "Assembled founding document; full decision log"
+                {
+                  "value": "Document View"
+                },
+                {
+                  "value": "Assembled founding document; full decision log"
+                }
               ]
             }
           ]
@@ -126,8 +167,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Address",
-                "Stable identifier for any governance element — Field, Record, stage, chunk"
+                {
+                  "value": "Address"
+                },
+                {
+                  "value": "Stable identifier for any governance element — Field, Record, stage, chunk"
+                }
               ]
             }
           ]
@@ -137,8 +182,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Attention State",
-                "Current focus of an active facilitated session"
+                {
+                  "value": "Attention State"
+                },
+                {
+                  "value": "Current focus of an active facilitated session"
+                }
               ]
             }
           ]
@@ -148,8 +197,12 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Revision",
-                "Auditable history of how a governance field arrived at its current value"
+                {
+                  "value": "Revision"
+                },
+                {
+                  "value": "Auditable history of how a governance field arrived at its current value"
+                }
               ]
             }
           ]
@@ -159,14 +212,17 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "Conversation layer",
-                "Session transcript; threaded discussion; facilitator annotations"
+                {
+                  "value": "Conversation layer"
+                },
+                {
+                  "value": "Session transcript; threaded discussion; facilitator annotations"
+                }
               ]
             }
           ]
         }
       ]
     }
-  ],
-  "createdAt": "2026-05-27T00:00:00Z"
+  ]
 }

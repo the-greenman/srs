@@ -26,11 +26,8 @@ async function saveJson(rel, obj) {
 const T_TABLE      = '2a000013-0000-4000-a000-000000000013';
 const F_INTRO      = '1a000025-0000-4000-a000-000000000025';
 const F_OUTRO      = '1a000026-0000-4000-a000-000000000026';
-const F_COL1       = '1a000027-0000-4000-a000-000000000027';
-const F_COL2       = '1a000028-0000-4000-a000-000000000028';
-const F_COL3       = '1a000029-0000-4000-a000-000000000029';
-// const F_COL4    = '1a000030-0000-4000-a000-000000000030';
-// const F_COL5    = '1a000031-0000-4000-a000-000000000031';
+const F_COLUMNS    = '1a000032-0000-4000-a000-000000000032';
+const F_CELLS      = '1a000033-0000-4000-a000-000000000033';
 
 function tableId(n) {
   const hex = n.toString(16).padStart(8, '0');
@@ -38,20 +35,26 @@ function tableId(n) {
 }
 // e.g. tableId(1) → b1000001-0000-4000-a000-000000000001
 
+function repeatableEntries(values) {
+  return values.map(value => ({ value }));
+}
+
 function makeTableRecord(id, rows, intro = '', outro = '') {
+  const [columnNames, ...dataRows] = rows;
   const fieldValues = [];
   if (intro) fieldValues.push({ fieldId: F_INTRO, value: intro });
   if (outro) fieldValues.push({ fieldId: F_OUTRO, value: outro });
+  if (columnNames?.length) {
+    fieldValues.push({ fieldId: F_COLUMNS, entries: repeatableEntries(columnNames) });
+  }
 
-  const fieldGroups = [{
+  const groupValues = [{
     groupId: 'rows',
-    entries: rows.map(cols => {
-      const fvs = [];
-      const fields = [F_COL1, F_COL2, F_COL3];
-      cols.forEach((val, i) => {
-        if (val !== undefined && val !== '') fvs.push({ fieldId: fields[i], value: val });
-      });
-      return { fieldValues: fvs };
+    entries: dataRows.map(cols => {
+      const cells = cols.filter(val => val !== undefined && val !== '');
+      return {
+        fieldValues: [{ fieldId: F_CELLS, entries: repeatableEntries(cells) }]
+      };
     })
   }];
 
@@ -59,11 +62,11 @@ function makeTableRecord(id, rows, intro = '', outro = '') {
     '$schema': 'https://srs.semanticops.com/schema/2.0/record.json',
     instanceId: id,
     typeId: T_TABLE,
-    typeVersion: 1,
+    typeVersion: 2,
     typeNamespace: 'com.semanticops.spec',
     typeName: 'table',
     fieldValues,
-    fieldGroups,
+    groupValues,
     createdAt: '2026-05-27T00:00:00Z'
   };
 }

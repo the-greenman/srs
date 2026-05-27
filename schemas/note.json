@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://scds.io/schema/2.0/note.json",
+  "$id": "https://srs.semanticops.com/schema/2.0/note.json",
   "title": "SCDS Note (Tier 0)",
   "description": "A lightweight instance with no Type binding. The lowest-ceremony entry point in SCDS.",
   "type": "object",

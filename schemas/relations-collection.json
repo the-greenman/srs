@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://scds.io/schema/2.0/relations-collection.json",
+  "$id": "https://srs.semanticops.com/schema/2.0/relations-collection.json",
   "title": "SCDS Relations Collection",
   "description": "Wrapper object for a repository's Relation records. Must be a JSON object with a $schema key and a relations array — never a bare array.",
   "type": "object",

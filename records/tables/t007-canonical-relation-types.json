@@ -17,13 +17,20 @@
     {
       "fieldId": "1a000032-0000-4000-a000-000000000032",
       "entries": [
-        "Canonical",
-        "Converse",
-        "Category"
+        {
+          "value": "Canonical"
+        },
+        {
+          "value": "Converse"
+        },
+        {
+          "value": "Category"
+        }
       ]
     }
   ],
-  "fieldGroups": [
+  "createdAt": "2026-05-27T00:00:00Z",
+  "groupValues": [
     {
       "groupId": "rows",
       "entries": [
@@ -32,9 +39,15 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "`contains`",
-                "`part-of`",
-                "Composition"
+                {
+                  "value": "`contains`"
+                },
+                {
+                  "value": "`part-of`"
+                },
+                {
+                  "value": "Composition"
+                }
               ]
             }
           ]
@@ -44,9 +57,15 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "`depends-on`",
-                "`required-by`",
-                "Dependency"
+                {
+                  "value": "`depends-on`"
+                },
+                {
+                  "value": "`required-by`"
+                },
+                {
+                  "value": "Dependency"
+                }
               ]
             }
           ]
@@ -56,9 +75,15 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "`supersedes`",
-                "`superseded-by`",
-                "Governance"
+                {
+                  "value": "`supersedes`"
+                },
+                {
+                  "value": "`superseded-by`"
+                },
+                {
+                  "value": "Governance"
+                }
               ]
             }
           ]
@@ -68,9 +93,15 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "`refines`",
-                "`refined-by`",
-                "Refinement"
+                {
+                  "value": "`refines`"
+                },
+                {
+                  "value": "`refined-by`"
+                },
+                {
+                  "value": "Refinement"
+                }
               ]
             }
           ]
@@ -80,9 +111,15 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "`derived-from`",
-                "`source-of`",
-                "Derivation"
+                {
+                  "value": "`derived-from`"
+                },
+                {
+                  "value": "`source-of`"
+                },
+                {
+                  "value": "Derivation"
+                }
               ]
             }
           ]
@@ -92,9 +129,15 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "`evidences`",
-                "`evidenced-by`",
-                "Evidence"
+                {
+                  "value": "`evidences`"
+                },
+                {
+                  "value": "`evidenced-by`"
+                },
+                {
+                  "value": "Evidence"
+                }
               ]
             }
           ]
@@ -104,15 +147,20 @@
             {
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
-                "`precedes`",
-                "`follows`",
-                "Sequence"
+                {
+                  "value": "`precedes`"
+                },
+                {
+                  "value": "`follows`"
+                },
+                {
+                  "value": "Sequence"
+                }
               ]
             }
           ]
         }
       ]
     }
-  ],
-  "createdAt": "2026-05-27T00:00:00Z"
+  ]
 }

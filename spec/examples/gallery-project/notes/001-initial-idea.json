@@ -1,5 +1,5 @@
 {
-  "$schema": "https://scds.io/schema/2.0/note.json",
+  "$schema": "https://srs.semanticops.com/schema/2.0/note.json",
   "instanceId": "e4f2a891-3c7d-4b5e-9f12-8a6d0b1c2e3f",
   "title": "Initial brain dump",
   "sections": [

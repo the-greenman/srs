@@ -1,5 +1,5 @@
 {
-  "$schema": "https://scds.io/schema/2.0/field.json",
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
   "id": "a952604c-d150-5315-bfc1-7229ddc1d636",
   "namespace": "governance",
   "name": "key_requirements",

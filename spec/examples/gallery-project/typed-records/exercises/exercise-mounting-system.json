@@ -1,5 +1,5 @@
 {
-  "$schema": "https://scds.io/schema/2.0/typed-record.json",
+  "$schema": "https://srs.semanticops.com/schema/2.0/typed-record.json",
   "instanceId": "4fdeca4e-8d90-58ab-b29f-9d4995a92ea5",
   "title": "Mounting system",
   "instanceType": "exercise",
