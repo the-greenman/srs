@@ -43,11 +43,12 @@ async function renderSpec() {
     return parseInt(orderA) - parseInt(orderB);
   });
 
-  // Load subsections
+  // Load subsections with their paths
   const subsections = [];
   for (const recordPath of manifest.instanceIndex) {
     if (recordPath.startsWith('subsections/')) {
       const record = await loadRecord(join('records', recordPath));
+      record._path = recordPath;
       subsections.push(record);
     }
   }
