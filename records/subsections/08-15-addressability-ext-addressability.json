@@ -1,0 +1,27 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "instanceId": "d95bae97-3af2-5e03-b290-4d9f19323b0b",
+  "typeId": "b01527f9-1a4c-5e5f-8a36-29e7ae7c51c4",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.srs",
+  "typeName": "meta.subsection",
+  "fieldValues": [
+    {
+      "fieldId": "96f04d9d-9432-5628-8664-0d92e50f6fd0",
+      "value": "Addressability (ext:addressability)"
+    },
+    {
+      "fieldId": "436786e4-d51e-5275-9654-bc4b5ee82b1a",
+      "value": "**33.** `Revision.priorRevisionId`, when present, must reference a `Revision.revisionId` for the same `fieldId` and `recordId`. Revision chains must be acyclic.\n\n**34.** `AttentionState.containerId` must reference a valid `Container.containerId`. Other Address components (`recordId`, `fieldId`, `protocolRunId`, `stageId`) are optional and may be absent when focus has not yet narrowed."
+    }
+  ],
+  "sourceRefs": [
+    {
+      "sourceType": "repository-document",
+      "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "relationType": "evidence",
+      "note": "Subsection 08-15 from srs-spec.md - coarse source anchoring during migration"
+    }
+  ],
+  "createdAt": "2026-05-27T00:00:00Z"
+}

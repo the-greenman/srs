@@ -1,0 +1,27 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "instanceId": "c9c16dcc-324a-5ab7-b7a5-d53ce48426bf",
+  "typeId": "b01527f9-1a4c-5e5f-8a36-29e7ae7c51c4",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.srs",
+  "typeName": "meta.subsection",
+  "fieldValues": [
+    {
+      "fieldId": "96f04d9d-9432-5628-8664-0d92e50f6fd0",
+      "value": "ext:views-l2"
+    },
+    {
+      "fieldId": "436786e4-d51e-5275-9654-bc4b5ee82b1a",
+      "value": "**Depends on**: `ext:views-l1`\n\n**Required for**: document projection — assembling multiple Records into a coherent document.\n\n#### `SectionSource`\n\nDefines how a section's instances are selected from a Container.\n\n```typescript\ntype SectionSource =\n  | {\n      type: \"fixed-instances\"\n      instanceIds: UUID[]\n      // Explicit list. For preamble, cover page, or curated sections.\n    }\n  | {\n      type: \"type-query\"\n      semanticObjectType: string\n      // For cross-system portability, use namespace/name format (e.g. \"core/decision\").\n      // A bare string like \"decision\" is a single-system convention.\n      lifecycleState?: string\n      containerIds?: UUID[]\n    }\n  | {\n      type: \"relation-query\"\n      fromInstanceId: UUID\n      relationType: string\n      direction?: \"forward\" | \"inverse\"  // default: \"forward\"\n    }\n  | {\n      type: \"container-subset\"\n      containerId: UUID\n      containerType?: string\n    }\n```\n\n#### `DocumentSection`\n\nOne section in a Document View.\n\n```typescript\n{\n  sectionId: string\n  title?: string\n  description?: string\n  order: integer   // min: 0\n\n  source: SectionSource\n\n  renderViewId?: UUID    // View (ext:views-l1) used to render each instance in this section\n  // When absent, implementations use a default rendering for the instance type.\n\n  ordering?: {\n    fieldId?: UUID\n    direction?: \"asc\" | \"desc\"  // default: \"asc\"\n  }\n\n  required?: boolean\n  emptyBehavior?: \"hide\" | \"show-placeholder\"\n}\n```\n\n#### `NavigationLink`\n\nAn assembly-time cross-section link in a Document View. Navigation links are reading aids for the rendered document, not semantic assertions about Records. They do not appear in the Relation graph.\n\n```typescript\n{\n  fromSectionId: string\n  toSectionId: string\n  label?: string\n  bidirectional?: boolean  // default: false\n}\n```\n\n#### `DocumentView`\n\nA versioned, Container-level projection. Defines how a Container's Records are assembled into a readable document.\n\n```typescript\n{\n  id: UUID\n  namespace: string\n  name: string\n  version: integer   // min: 1\n\n  description: string    // what kind of document this produces; intended audience\n\n  containerType?: string  // when set, intended for Containers of this type\n\n  sections: DocumentSection[]\n\n  navigationLinks?: NavigationLink[]\n\n  preamble?: string\n  // Template string rendered before all sections.\n  // Standard variables: {{container-title}}, {{date}}, {{container-id}}\n\n  format?: string   // e.g. \"markdown\", \"adoc\", \"html\"\n\n  aiGuidance?: AiGuidance\n  // purpose: what kind of document this View produces\n  // extraction: context for AI-assisted document-level tasks\n\n  tags?: string[]\n  createdAt: ISO8601\n  lineage?: Lineage\n  provenance?: Provenance\n}\n```\n\nA `DocumentView` may reference multiple `View` records (via `DocumentSection.renderViewId`) — one per instance type in the document. It orchestrates; it does not replace them.\n\n`DocumentSection.renderViewId` references a `View.id` (from `ext:views-l1`). A `DocumentView.id` is not a valid value for `renderViewId` — Document Views are not nestable.\n\nUse `navigationLinks` when a rendered document should include \"see also\" or related-section links. Use `Relation` only when the relationship is a semantic assertion about Records.\n\n---"
+    }
+  ],
+  "sourceRefs": [
+    {
+      "sourceType": "repository-document",
+      "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "relationType": "evidence",
+      "note": "Subsection 07-7 from srs-spec.md - coarse source anchoring during migration"
+    }
+  ],
+  "createdAt": "2026-05-27T00:00:00Z"
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "instanceId": "7bf07a79-5f0d-5a22-b0b4-4c45e2dd76df",
+  "typeId": "b01527f9-1a4c-5e5f-8a36-29e7ae7c51c4",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.srs",
+  "typeName": "meta.subsection",
+  "fieldValues": [
+    {
+      "fieldId": "96f04d9d-9432-5628-8664-0d92e50f6fd0",
+      "value": "What this specification does not define"
+    },
+    {
+      "fieldId": "436786e4-d51e-5275-9654-bc4b5ee82b1a",
+      "value": "- **Session** — live collaborative process model (future version)\n- **Registry protocol** — how registries communicate, authenticate, or federate; this specification defines data shapes only\n- **Universal semantic ontology** — domain-specific vocabularies are the responsibility of namespace authors"
+    }
+  ],
+  "sourceRefs": [
+    {
+      "sourceType": "repository-document",
+      "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "relationType": "evidence",
+      "note": "Subsection 01-2 from srs-spec.md - coarse source anchoring during migration"
+    }
+  ],
+  "createdAt": "2026-05-27T00:00:00Z"
+}

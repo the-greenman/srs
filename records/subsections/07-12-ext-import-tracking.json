@@ -1,0 +1,27 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "instanceId": "6bb0f695-e004-5f14-a067-5cf922da5494",
+  "typeId": "b01527f9-1a4c-5e5f-8a36-29e7ae7c51c4",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.srs",
+  "typeName": "meta.subsection",
+  "fieldValues": [
+    {
+      "fieldId": "96f04d9d-9432-5628-8664-0d92e50f6fd0",
+      "value": "ext:import-tracking"
+    },
+    {
+      "fieldId": "436786e4-d51e-5275-9654-bc4b5ee82b1a",
+      "value": "**Required for**: implementations that receive packages from upstream publishers and need to track update and conflict state.\n\n#### `ImportMode`\n\n```typescript\n\"upstream-tracked\" | \"local-copy\" | \"local-fork\"\n```\n\n| Mode | Meaning |\n|---|---|\n| `\"upstream-tracked\"` | Consumer expects updates from the source Package. Conflicts surfaced when local and upstream diverge. |\n| `\"local-copy\"` | Imported as a snapshot. No update tracking. |\n| `\"local-fork\"` | Deliberately diverged. Upstream lineage preserved for reference. |\n\n#### `ImportRecord`\n\nOne record per imported definition in a consumer's local registry.\n\n```typescript\n{\n  definitionId: UUID\n  definitionType: \"field\" | \"type\" | \"view\" | \"schema\" | \"protocol\"\n  namespace: string\n  name: string\n  version: integer\n\n  mode: ImportMode\n  importedAt: ISO8601\n\n  sourcePackageId: UUID\n  sourcePackageName: string\n  sourcePackageVersion: string\n\n  latestKnownUpstreamVersion?: integer\n  updateAvailable?: boolean\n  updateCheckedAt?: ISO8601\n\n  conflictState?: \"clean\" | \"local-ahead\" | \"upstream-ahead\" | \"diverged\"\n  conflictDetectedAt?: ISO8601\n\n  localVersion?: integer\n  localEditedAt?: ISO8601\n}\n```\n\n#### `ImportSummary`\n\nA consumer's complete picture of its imported definitions.\n\n```typescript\n{\n  generatedAt: ISO8601\n  fields: ImportRecord[]\n  types: ImportRecord[]\n  views: ImportRecord[]\n  schemas: ImportRecord[]\n  protocols: ImportRecord[]\n}\n```\n\n---"
+    }
+  ],
+  "sourceRefs": [
+    {
+      "sourceType": "repository-document",
+      "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "relationType": "evidence",
+      "note": "Subsection 07-12 from srs-spec.md - coarse source anchoring during migration"
+    }
+  ],
+  "createdAt": "2026-05-27T00:00:00Z"
+}
