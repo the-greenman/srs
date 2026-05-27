@@ -1,17 +1,17 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "instanceId": "fee1b9fe-314d-5bb8-9318-35d4f03fff0b",
-  "typeId": "b01527f9-1a4c-5e5f-8a36-29e7ae7c51c4",
+  "typeId": "2a000003-0000-4000-a000-000000000003",
   "typeVersion": 1,
-  "typeNamespace": "com.semanticops.srs",
-  "typeName": "meta.subsection",
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "subsection",
   "fieldValues": [
     {
-      "fieldId": "96f04d9d-9432-5628-8664-0d92e50f6fd0",
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
       "value": "Cross-field validation (ext:cross-field-validation)"
     },
     {
-      "fieldId": "436786e4-d51e-5275-9654-bc4b5ee82b1a",
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
       "value": "**10.** All `fieldId` values in any `CrossFieldRule` within `Type.validationRules[]` must appear in the Type's effective field list. Cross-field rules cannot reference Fields outside the Type.\n\n**11.** A `conditional-required` rule must supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. A `field-ordering` rule must supply `predicateFieldId`, `targetFieldId`, and `effect`. A `mutual-exclusion` rule must supply `fieldIds` with at least two entries."
     }
   ],

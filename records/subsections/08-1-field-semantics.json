@@ -1,17 +1,17 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "instanceId": "812a7f7f-cb3e-5927-bc10-a097ffe28178",
-  "typeId": "b01527f9-1a4c-5e5f-8a36-29e7ae7c51c4",
+  "typeId": "2a000003-0000-4000-a000-000000000003",
   "typeVersion": 1,
-  "typeNamespace": "com.semanticops.srs",
-  "typeName": "meta.subsection",
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "subsection",
   "fieldValues": [
     {
-      "fieldId": "96f04d9d-9432-5628-8664-0d92e50f6fd0",
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
       "value": "Field semantics"
     },
     {
-      "fieldId": "436786e4-d51e-5275-9654-bc4b5ee82b1a",
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
       "value": "**1.** `FieldAssignment.displayLabel` and `FieldAssignment.displayHint` are for rendering only. They must not affect AI guidance, extraction logic, `valueType` interpretation, or validation.\n\n**2.** A `Type` must not redefine, override, or duplicate the semantic content of any `Field` it includes. If different semantics are needed for a Field in a specific Type context, a distinct `Field` with its own identity and lineage must be created.\n\n**3.** A `Field`'s `aiGuidance` belongs to the Field. Type-level `aiGuidance` provides session framing only."
     }
   ],

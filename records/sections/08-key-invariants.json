@@ -1,17 +1,17 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "instanceId": "df42f888-4d95-5a51-963e-60d10c36533c",
-  "typeId": "5e816b81-134f-5f60-938c-700617fd79ae",
+  "typeId": "2a000002-0000-4000-a000-000000000002",
   "typeVersion": 1,
-  "typeNamespace": "com.semanticops.srs",
-  "typeName": "meta.section",
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "section",
   "fieldValues": [
     {
-      "fieldId": "96f04d9d-9432-5628-8664-0d92e50f6fd0",
-      "value": "08. Key Invariants"
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "Key Invariants"
     },
     {
-      "fieldId": "436786e4-d51e-5275-9654-bc4b5ee82b1a",
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
       "value": "Conforming implementations must uphold the following invariants."
     }
   ],

@@ -1,17 +1,17 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "instanceId": "e2439781-004a-5997-bfc8-9d405232e223",
-  "typeId": "b01527f9-1a4c-5e5f-8a36-29e7ae7c51c4",
+  "typeId": "2a000003-0000-4000-a000-000000000003",
   "typeVersion": 1,
-  "typeNamespace": "com.semanticops.srs",
-  "typeName": "meta.subsection",
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "subsection",
   "fieldValues": [
     {
-      "fieldId": "96f04d9d-9432-5628-8664-0d92e50f6fd0",
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
       "value": "ext:federation × ext:repository"
     },
     {
-      "fieldId": "436786e4-d51e-5275-9654-bc4b5ee82b1a",
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
       "value": "**Trigger**: an implementation declares both `ext:federation` and `ext:repository`.\n\n**Required behaviour**: the federation registry file and events file follow the same discovery and round-trip conventions as all other repository files.\n\nSpecifically:\n\n- If `manifest.json` declares `federationPath`, the file at that path must be present in any archive of the repository; an archive missing a declared `federationPath` file is malformed\n- If `manifest.json` declares `federationEventsPath`, the file at that path must likewise be present in any archive\n- Default paths (`federation/registry.json`, `federation/events.json`) are used when the corresponding manifest fields are absent; implementations must not fail if these files are absent at the default paths\n- `FederationEventsFile.repositoryId` must match `RepositoryManifest.repositoryId` in the same repository; a mismatch is a conflict subject to the same conflict-surfacing requirement as any other identity mismatch (Invariant 54)\n\n---"
     }
   ],

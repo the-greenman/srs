@@ -1,17 +1,17 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "instanceId": "4fe78bbb-e1e7-587a-a45e-69ada9a4b8c7",
-  "typeId": "b01527f9-1a4c-5e5f-8a36-29e7ae7c51c4",
+  "typeId": "2a000003-0000-4000-a000-000000000003",
   "typeVersion": 1,
-  "typeNamespace": "com.semanticops.srs",
-  "typeName": "meta.subsection",
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "subsection",
   "fieldValues": [
     {
-      "fieldId": "96f04d9d-9432-5628-8664-0d92e50f6fd0",
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
       "value": "Records"
     },
     {
-      "fieldId": "436786e4-d51e-5275-9654-bc4b5ee82b1a",
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
       "value": "**28.** `Record.typeId` and `Record.typeVersion` are the authoritative Type binding. `typeNamespace` and `typeName` are denormalised convenience fields. If they conflict with the resolved `Type`, the `typeId`/`typeVersion` identity takes precedence and the Record is considered invalid until corrected."
     }
   ],

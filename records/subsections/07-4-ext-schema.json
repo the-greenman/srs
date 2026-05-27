@@ -1,17 +1,17 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "instanceId": "3db80d07-9d40-59e9-97b7-516a5ae212af",
-  "typeId": "b01527f9-1a4c-5e5f-8a36-29e7ae7c51c4",
+  "typeId": "2a000003-0000-4000-a000-000000000003",
   "typeVersion": 1,
-  "typeNamespace": "com.semanticops.srs",
-  "typeName": "meta.subsection",
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "subsection",
   "fieldValues": [
     {
-      "fieldId": "96f04d9d-9432-5628-8664-0d92e50f6fd0",
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
       "value": "ext:schema"
     },
     {
-      "fieldId": "436786e4-d51e-5275-9654-bc4b5ee82b1a",
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
       "value": "**Required for**: extraction pipelines, founding document workflows, any system that needs to specify what a document type IS before assembling it.\n\n#### `RelationSpec`\n\nDeclares an expected Relation between two Record types within a Schema.\n\n```typescript\n{\n  relationType: string\n  sourceType: TypeRef\n  targetType: TypeRef\n  cardinality?: \"one-to-one\" | \"one-to-many\" | \"many-to-many\"\n  required?: boolean\n}\n```\n\n#### `Schema`\n\nThe definition of a complete document type — which Types it contains, what Relations exist between resulting Records, and what \"complete\" means. A Schema is the artefact handed to an extraction pipeline.\n\n```typescript\n{\n  id: UUID\n  namespace: string\n  name: string\n  version: integer   // min: 1\n\n  description: string\n\n  rootTypes: TypeRef[]        // Types to extract\n  structure: RelationSpec[]   // expected Relations between extracted Records\n  requiredTypes: TypeRef[]    // what \"complete\" means for this document type\n\n  aiGuidance?: AiGuidance\n  // purpose: what kind of document this Schema defines\n  // extraction: framing for extraction pipelines\n\n  tags?: string[]\n  createdAt: ISO8601\n  lineage?: Lineage\n  provenance?: Provenance\n}\n```\n\n**Schema vs View:**\n\n| | Schema | View / Document View |\n|---|---|---|\n| Question it answers | What IS this document type? What should be extracted? | How are existing Records assembled into readable output? |\n| Operates at | Definition time | Projection time |\n| Input | Source material (transcripts, conversations) | Existing Records in a Container |\n| Output | Extraction instructions → Records | Rendered document |\n\n---"
     }
   ],

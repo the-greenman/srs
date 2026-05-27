@@ -1,17 +1,17 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "instanceId": "8e3fb02c-3863-55a9-8bcd-0580e0c7b3a9",
-  "typeId": "b01527f9-1a4c-5e5f-8a36-29e7ae7c51c4",
+  "typeId": "2a000003-0000-4000-a000-000000000003",
   "typeVersion": 1,
-  "typeNamespace": "com.semanticops.srs",
-  "typeName": "meta.subsection",
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "subsection",
   "fieldValues": [
     {
-      "fieldId": "96f04d9d-9432-5628-8664-0d92e50f6fd0",
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
       "value": "Version semantics"
     },
     {
-      "fieldId": "436786e4-d51e-5275-9654-bc4b5ee82b1a",
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
       "value": "Version numbers are positive integers scoped to a definition's UUID lineage.\n\n| Change | Version action |\n|---|---|\n| Documentation, typo, formatting only | Optional bump |\n| `description`, `instructions`, or `aiGuidance.purpose` reworded without semantic change | Minor bump recommended |\n| `aiGuidance.extraction` or `aiGuidance.purpose` changed in meaning | Version bump required |\n| `valueType`, `selectOptions`, or `validationRules` changed | Version bump required |\n| `name` changed | New definition required (new UUID) |\n| `namespace` changed | New definition required (new UUID) |\n\nWhen in doubt: if a downstream consumer's AI extraction, validation, or governance logic would behave differently, a version bump is required.\n\n---"
     }
   ],

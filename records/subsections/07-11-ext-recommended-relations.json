@@ -1,17 +1,17 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "instanceId": "e327ca1f-4cc4-5322-b837-5a27906d5abf",
-  "typeId": "b01527f9-1a4c-5e5f-8a36-29e7ae7c51c4",
+  "typeId": "2a000003-0000-4000-a000-000000000003",
   "typeVersion": 1,
-  "typeNamespace": "com.semanticops.srs",
-  "typeName": "meta.subsection",
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "subsection",
   "fieldValues": [
     {
-      "fieldId": "96f04d9d-9432-5628-8664-0d92e50f6fd0",
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
       "value": "ext:recommended-relations"
     },
     {
-      "fieldId": "436786e4-d51e-5275-9654-bc4b5ee82b1a",
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
       "value": "**Required for**: cross-system federation; multi-publisher ecosystems where Relation type semantics must be interoperable.\n\nCanonical relation types and machine-readable Relation type definitions.\n\n**Canonical relation types** (use exact strings):\n\n| Canonical | Converse | Category |\n|---|---|---|\n| `contains` | `part-of` | Composition |\n| `depends-on` | `required-by` | Dependency |\n| `supersedes` | `superseded-by` | Governance |\n| `refines` | `refined-by` | Refinement |\n| `derived-from` | `source-of` | Derivation |\n| `evidences` | `evidenced-by` | Evidence |\n| `precedes` | `follows` | Sequence |\n\nImplementations must store only the canonical (forward) form and derive the inverse when needed.\n\n**Relation category taxonomy:**\n\n| Category | Examples |\n|---|---|\n| Composition | `contains`, `part-of`, `has-section` |\n| Refinement | `refines`, `expands`, `summarises` |\n| Dependency | `depends-on`, `requires`, `blocks`, `enables` |\n| Sequence | `precedes`, `follows`, `overlaps` |\n| Derivation | `derived-from`, `extracted-from`, `based-on` |\n| Evidence | `evidences`, `supports`, `contradicts` |\n| Governance | `supersedes`, `amends`, `ratifies`, `delegates` |\n| Association | `relates-to`, `links-to` |\n\n#### `RelationTypeDefinition`\n\nMachine-readable metadata for a `relationType` string.\n\n```typescript\n{\n  relationType: string      // exact string used in Relation.relationType\n  namespace: string\n  label?: string\n  description?: string\n  category?: \"composition\" | \"refinement\" | \"dependency\" | \"sequence\" | \"derivation\" | \"evidence\" | \"governance\" | \"association\"\n  canonicalDirection?: string   // e.g. \"source is the dependent task; target is the task it depends on\"\n  inverseType?: string\n}\n```\n\n`RelationTypeDefinition` is optional metadata. Implementations are not required to resolve `relationType` strings against a definition before accepting a Relation. Relation type definitions may be included in a Package or published separately.\n\n---"
     }
   ],

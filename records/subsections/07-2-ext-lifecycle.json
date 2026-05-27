@@ -1,17 +1,17 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "instanceId": "d5d3f88f-8cc6-5247-8d35-41b189804dc5",
-  "typeId": "b01527f9-1a4c-5e5f-8a36-29e7ae7c51c4",
+  "typeId": "2a000003-0000-4000-a000-000000000003",
   "typeVersion": 1,
-  "typeNamespace": "com.semanticops.srs",
-  "typeName": "meta.subsection",
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "subsection",
   "fieldValues": [
     {
-      "fieldId": "96f04d9d-9432-5628-8664-0d92e50f6fd0",
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
       "value": "ext:lifecycle"
     },
     {
-      "fieldId": "436786e4-d51e-5275-9654-bc4b5ee82b1a",
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
       "value": "**Required for**: governance tools, decision logs, any implementation where records progress through defined states.\n\nAdds lifecycle state declarations to `Type` and lifecycle state tracking to `Record`.\n\n#### `LifecycleState`\n\n```typescript\n{\n  name: string\n  description?: string\n  isInitial?: boolean   // valid starting state for new Records\n  isFinal?: boolean     // no transitions out; Record is settled\n}\n```\n\n#### `LifecycleTransition`\n\n```typescript\n{\n  name: string       // e.g. \"promote\", \"approve\", \"supersede\"\n  from: string       // must match a state name in the enclosing lifecycle\n  to: string\n  description?: string\n}\n```\n\n#### Type lifecycle block (added by this extension)\n\nWhen `ext:lifecycle` is in use, `Type` gains:\n\n```typescript\nlifecycle?: {\n  states: LifecycleState[]           // min 1 state\n  transitions: LifecycleTransition[]\n  initialState: string               // must reference a state name where isInitial === true\n}\n```\n\n#### Record lifecycle state (added by this extension)\n\n`Record.lifecycleState` becomes meaningful: must match a state name in the associated `Type.lifecycle.states[]` when the Type declares a lifecycle.\n\nThe `lifecycle` block declares vocabulary. Implementations decide enforcement strictness. A state with `isFinal: true` signals that no further transitions are expected; implementations may use this to lock Record content.\n\n---"
     }
   ],
