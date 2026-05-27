@@ -44,11 +44,14 @@
     "types/extension.json",
     "types/example.json",
     "types/requirement.json",
-    "types/field-definition.json"
+    "types/field-definition.json",
+    "types/design-note.json"
   ],
   "views": [
     "views/spec-document-view.json",
-    "views/extension-card-view.json"
+    "views/extension-card-view.json",
+    "views/rationale-document-view.json",
+    "views/unified-document-view.json"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
   "updatedAt": "2026-05-27T00:00:00Z"

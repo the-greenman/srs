@@ -1,0 +1,27 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "instanceId": "f1000026-0000-4000-a000-000000000026",
+  "typeId": "2a000012-0000-4000-a000-000000000012",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "design-note",
+  "fieldValues": [
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "Schema vs View — the extraction gap"
+    },
+    {
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
+      "value": "\nA View answers: given a Record that already exists, how do I render it for a specific audience?\n\nA Schema answers: given source material, what Records should I extract, and how do they relate?\n\nThese are complementary but distinct. A Document View cannot serve as an extraction schema because it assumes Records already exist. A Schema cannot serve as a Document View because it does not specify how to render field values for an audience.\n\nAn extraction pipeline uses Schema + Field `aiGuidance` + Protocol to produce Records. A rendering pipeline uses View + Document View to project those Records into readable form."
+    }
+  ],
+  "sourceRefs": [
+    {
+      "sourceType": "repository-document",
+      "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "relationType": "evidence",
+      "note": "Imported from scds-rationale.md: \"Schema vs View — the extraction gap\""
+    }
+  ],
+  "createdAt": "2026-05-27T00:00:00Z"
+}

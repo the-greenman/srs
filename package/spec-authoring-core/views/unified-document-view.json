@@ -1,0 +1,13 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/view.json",
+  "id": "3a000004-0000-4000-a000-000000000004",
+  "namespace": "com.semanticops.spec",
+  "title": "Unified Specification + Rationale View",
+  "description": "Renders the specification followed by the complete design rationale as a single unified document. Spec sections ordered by section-sequence; design notes ordered by design-note-sequence.",
+  "outputFormats": ["markdown", "html", "text"],
+  "rootType": "com.semanticops.spec/specification",
+  "ordering": {
+    "relationType": "section-sequence"
+  },
+  "createdAt": "2026-05-27T00:00:00Z"
+}

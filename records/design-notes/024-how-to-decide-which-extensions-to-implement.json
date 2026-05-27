@@ -1,0 +1,27 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "instanceId": "f1000024-0000-4000-a000-000000000024",
+  "typeId": "2a000012-0000-4000-a000-000000000012",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "design-note",
+  "fieldValues": [
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "How to decide which extensions to implement"
+    },
+    {
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
+      "value": "\nStart with the question: what does your implementation need to do?\n\n| Need | Extensions |\n|---|---|\n| Define and exchange Field and Type definitions | Core only |\n| Track definition origin and imports | `ext:import-tracking` |\n| Publish a definition catalog | `ext:registry` |\n| Governance with lifecycle states | `ext:lifecycle` |\n| Present and export Records | `ext:views-l1` |\n| Assemble multi-Record documents | `ext:views-l2` |\n| Facilitate structured deliberation | `ext:protocol` |\n| Live facilitation with context assembly | `ext:addressability` |\n| Extraction from source material | `ext:schema` |\n| Specialise Types while preserving base processability | `ext:type-inheritance` |\n| Lists of values within a Record | `ext:repeatable-fields` |\n| Structured repeatable context in a Record | `ext:field-groups` |\n| Complex conditional validation | `ext:cross-field-validation` |\n| Cross-system Relation interoperability | `ext:recommended-relations` |"
+    }
+  ],
+  "sourceRefs": [
+    {
+      "sourceType": "repository-document",
+      "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "relationType": "evidence",
+      "note": "Imported from scds-rationale.md: \"How to decide which extensions to implement\""
+    }
+  ],
+  "createdAt": "2026-05-27T00:00:00Z"
+}

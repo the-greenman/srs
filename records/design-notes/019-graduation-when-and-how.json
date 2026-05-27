@@ -1,0 +1,27 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "instanceId": "f1000019-0000-4000-a000-000000000019",
+  "typeId": "2a000012-0000-4000-a000-000000000012",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "design-note",
+  "fieldValues": [
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "Graduation: when and how"
+    },
+    {
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
+      "value": "\nGraduation is the act of replacing a lower-tier instance with a higher-tier equivalent as its structure stabilises.\n\n**Identity continuity:**\n\n| Scenario | `instanceId` | Relation |\n|---|---|---|\n| Pure formalisation (section names map directly to field names, content unchanged) | Keep | None required |\n| Content interpreted or restructured during formalisation | New | `refines` from new to old |\n| One Note splits into multiple Records | New IDs for all | `derived-from` from each new Record to the original |\n\n**Graduation is not always one-to-one.** A single meeting Note may graduate into one Decision Record, three Task Records, and two Risk Records. Each resulting Record receives its own `instanceId` and links to the original via `derived-from`. The original Note is preserved as the semantic root of the derived graph.\n\nImplementations may automate graduation suggestions by matching section or field names against `Field.name` values in available Type definitions."
+    }
+  ],
+  "sourceRefs": [
+    {
+      "sourceType": "repository-document",
+      "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "relationType": "evidence",
+      "note": "Imported from scds-rationale.md: \"Graduation: when and how\""
+    }
+  ],
+  "createdAt": "2026-05-27T00:00:00Z"
+}

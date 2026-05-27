@@ -197,6 +197,208 @@
       "from": "a4b5c6d7-e8f9-4a0b-1c2d-3e4f5a6b7c8d",
       "to": "4244a790-72ff-5e1c-9b60-d4b58b90f92c",
       "label": "RFC-004 proposes new ext:schema-notation extension"
+    },
+    {
+      "id": "rel-design-note-sequence",
+      "type": "design-note-sequence",
+      "description": "Ordered list of all design-note records for the SRS rationale document.",
+      "members": [
+        "f1000001-0000-4000-a000-000000000001",
+        "f1000002-0000-4000-a000-000000000002",
+        "f1000003-0000-4000-a000-000000000003",
+        "f1000004-0000-4000-a000-000000000004",
+        "f1000005-0000-4000-a000-000000000005",
+        "f1000006-0000-4000-a000-000000000006",
+        "f1000007-0000-4000-a000-000000000007",
+        "f1000008-0000-4000-a000-000000000008",
+        "f1000009-0000-4000-a000-000000000009",
+        "f1000010-0000-4000-a000-000000000010",
+        "f1000011-0000-4000-a000-000000000011",
+        "f1000012-0000-4000-a000-000000000012",
+        "f1000013-0000-4000-a000-000000000013",
+        "f1000014-0000-4000-a000-000000000014",
+        "f1000015-0000-4000-a000-000000000015",
+        "f1000016-0000-4000-a000-000000000016",
+        "f1000017-0000-4000-a000-000000000017",
+        "f1000018-0000-4000-a000-000000000018",
+        "f1000019-0000-4000-a000-000000000019",
+        "f1000020-0000-4000-a000-000000000020",
+        "f1000021-0000-4000-a000-000000000021",
+        "f1000022-0000-4000-a000-000000000022",
+        "f1000023-0000-4000-a000-000000000023",
+        "f1000024-0000-4000-a000-000000000024",
+        "f1000025-0000-4000-a000-000000000025",
+        "f1000026-0000-4000-a000-000000000026",
+        "f1000027-0000-4000-a000-000000000027",
+        "f1000028-0000-4000-a000-000000000028",
+        "f1000029-0000-4000-a000-000000000029",
+        "f1000030-0000-4000-a000-000000000030",
+        "f1000031-0000-4000-a000-000000000031",
+        "f1000032-0000-4000-a000-000000000032",
+        "f1000033-0000-4000-a000-000000000033",
+        "f1000034-0000-4000-a000-000000000034",
+        "f1000035-0000-4000-a000-000000000035",
+        "f1000036-0000-4000-a000-000000000036",
+        "f1000037-0000-4000-a000-000000000037",
+        "f1000038-0000-4000-a000-000000000038",
+        "f1000039-0000-4000-a000-000000000039",
+        "f1000040-0000-4000-a000-000000000040",
+        "f1000041-0000-4000-a000-000000000041"
+      ]
+    },
+    {
+      "id": "rel-explains-f1000003-0",
+      "type": "explains",
+      "from": "f1000003-0000-4000-a000-000000000003",
+      "to": "206b93e5-c3a4-516c-9e50-9c1be3a7f25c",
+      "note": "\"Why Field and Type are separate\" explains 206b93e5"
+    },
+    {
+      "id": "rel-explains-f1000003-1",
+      "type": "explains",
+      "from": "f1000003-0000-4000-a000-000000000003",
+      "to": "20ac347b-824d-5902-8dc6-6920d75b6dff",
+      "note": "\"Why Field and Type are separate\" explains 20ac347b"
+    },
+    {
+      "id": "rel-explains-f1000004-0",
+      "type": "explains",
+      "from": "f1000004-0000-4000-a000-000000000004",
+      "to": "20ac347b-824d-5902-8dc6-6920d75b6dff",
+      "note": "\"Why \"Type\" not \"Module\"\" explains 20ac347b"
+    },
+    {
+      "id": "rel-explains-f1000005-0",
+      "type": "explains",
+      "from": "f1000005-0000-4000-a000-000000000005",
+      "to": "48b8b950-3ace-5b3e-b6a9-561b21dcb560",
+      "note": "\"Why Record tiers exist (Note → Typed Record → Reco\" explains 48b8b950"
+    },
+    {
+      "id": "rel-explains-f1000005-1",
+      "type": "explains",
+      "from": "f1000005-0000-4000-a000-000000000005",
+      "to": "44a1638e-923e-5a23-ae71-8b85b29d7149",
+      "note": "\"Why Record tiers exist (Note → Typed Record → Reco\" explains 44a1638e"
+    },
+    {
+      "id": "rel-explains-f1000005-2",
+      "type": "explains",
+      "from": "f1000005-0000-4000-a000-000000000005",
+      "to": "b6ab8ae4-0041-5f4b-acf8-66204495d636",
+      "note": "\"Why Record tiers exist (Note → Typed Record → Reco\" explains b6ab8ae4"
+    },
+    {
+      "id": "rel-explains-f1000006-0",
+      "type": "explains",
+      "from": "f1000006-0000-4000-a000-000000000006",
+      "to": "d557206f-fd5f-5626-8f13-8781b684fd03",
+      "note": "\"Why Protocol replaces TemplateFacilitationStep\" explains d557206f"
+    },
+    {
+      "id": "rel-explains-f1000007-0",
+      "type": "explains",
+      "from": "f1000007-0000-4000-a000-000000000007",
+      "to": "d3b0ec85-760f-50d2-be4a-9edea5685740",
+      "note": "\"Why Schema is a new concept\" explains d3b0ec85"
+    },
+    {
+      "id": "rel-explains-f1000008-0",
+      "type": "explains",
+      "from": "f1000008-0000-4000-a000-000000000008",
+      "to": "a10d49a3-06ae-5690-ad9b-81edd6886b6d",
+      "note": "\"Why Address and AttentionState are needed\" explains a10d49a3"
+    },
+    {
+      "id": "rel-explains-f1000009-0",
+      "type": "explains",
+      "from": "f1000009-0000-4000-a000-000000000009",
+      "to": "a10d49a3-06ae-5690-ad9b-81edd6886b6d",
+      "note": "\"Why Revision is addressable\" explains a10d49a3"
+    },
+    {
+      "id": "rel-explains-f1000010-0",
+      "type": "explains",
+      "from": "f1000010-0000-4000-a000-000000000010",
+      "to": "206b93e5-c3a4-516c-9e50-9c1be3a7f25c",
+      "note": "\"Why `valueType` and `editorHint` are separate\" explains 206b93e5"
+    },
+    {
+      "id": "rel-explains-f1000011-0",
+      "type": "explains",
+      "from": "f1000011-0000-4000-a000-000000000011",
+      "to": "206b93e5-c3a4-516c-9e50-9c1be3a7f25c",
+      "note": "\"Why `displayLabel` must not affect extraction\" explains 206b93e5"
+    },
+    {
+      "id": "rel-explains-f1000011-1",
+      "type": "explains",
+      "from": "f1000011-0000-4000-a000-000000000011",
+      "to": "e1000001-0000-4000-a000-000000000001",
+      "note": "\"Why `displayLabel` must not affect extraction\" explains e1000001"
+    },
+    {
+      "id": "rel-explains-f1000012-0",
+      "type": "explains",
+      "from": "f1000012-0000-4000-a000-000000000012",
+      "to": "eddeaecc-f30e-5919-b5ae-0bd4e38161ab",
+      "note": "\"Why the directionality invariant matters\" explains eddeaecc"
+    },
+    {
+      "id": "rel-explains-f1000012-1",
+      "type": "explains",
+      "from": "f1000012-0000-4000-a000-000000000012",
+      "to": "e1000016-0000-4000-a000-000000000016",
+      "note": "\"Why the directionality invariant matters\" explains e1000016"
+    },
+    {
+      "id": "rel-explains-f1000013-0",
+      "type": "explains",
+      "from": "f1000013-0000-4000-a000-000000000013",
+      "to": "af489a79-3748-56a7-b21d-916da4a2ce08",
+      "note": "\"Why Containers and Relations are complementary\" explains af489a79"
+    },
+    {
+      "id": "rel-explains-f1000014-0",
+      "type": "explains",
+      "from": "f1000014-0000-4000-a000-000000000014",
+      "to": "6cb78382-35a5-5acc-a26c-774a2c288e23",
+      "note": "\"Why the conversation layer is a permanent boundary\" explains 6cb78382"
+    },
+    {
+      "id": "rel-explains-f1000025-0",
+      "type": "explains",
+      "from": "f1000025-0000-4000-a000-000000000025",
+      "to": "a10d49a3-06ae-5690-ad9b-81edd6886b6d",
+      "note": "\"Addressability as a prerequisite for live facilita\" explains a10d49a3"
+    },
+    {
+      "id": "rel-explains-f1000026-0",
+      "type": "explains",
+      "from": "f1000026-0000-4000-a000-000000000026",
+      "to": "d3b0ec85-760f-50d2-be4a-9edea5685740",
+      "note": "\"Schema vs View — the extraction gap\" explains d3b0ec85"
+    },
+    {
+      "id": "rel-explains-f1000027-0",
+      "type": "explains",
+      "from": "f1000027-0000-4000-a000-000000000027",
+      "to": "87e912b6-b3f3-5207-a71b-73ce5cd6b8b7",
+      "note": "\"`semanticObjectType` as a federation risk\" explains 87e912b6"
+    },
+    {
+      "id": "rel-explains-f1000028-0",
+      "type": "explains",
+      "from": "f1000028-0000-4000-a000-000000000028",
+      "to": "d557206f-fd5f-5626-8f13-8781b684fd03",
+      "note": "\"Protocol loose-to-tight spectrum\" explains d557206f"
+    },
+    {
+      "id": "rel-explains-f1000029-0",
+      "type": "explains",
+      "from": "f1000029-0000-4000-a000-000000000029",
+      "to": "c90aef1e-af6e-550e-ad07-1d5f1bfdf67f",
+      "note": "\"Why Type inheritance is conservative\" explains c90aef1e"
     }
   ]
 }

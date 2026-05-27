@@ -1,121 +1,169 @@
 #!/usr/bin/env node
 /**
- * Render SRS specification markdown from canonical records
+ * Render SRS documents from canonical records.
+ *
+ * Usage:
+ *   node scripts/render-spec.mjs                  # spec → spec/srs-spec.md
+ *   node scripts/render-spec.mjs --doc rationale  # rationale → spec/srs-rationale.md
+ *   node scripts/render-spec.mjs --doc unified    # both → spec/srs-unified.md
  */
-import { readFile, writeFile, readdir } from 'fs/promises';
-import { join } from 'path';
+import { readFile, writeFile } from 'fs/promises';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-async function loadRecord(path) {
-  const content = await readFile(path, 'utf-8');
-  return JSON.parse(content);
+const __dir = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(__dir, '..');
+
+// --- Field IDs (new com.semanticops.spec UUIDs) ---
+const F_TITLE       = '1a000001-0000-4000-a000-000000000001';
+const F_CONTENT     = '1a000002-0000-4000-a000-000000000002';
+const F_CANONICAL   = '1a000013-0000-4000-a000-000000000013';
+const F_VERSION     = '1a000010-0000-4000-a000-000000000010';
+const F_STATUS      = '1a000009-0000-4000-a000-000000000009';
+const F_SUMMARY     = '1a000011-0000-4000-a000-000000000011';
+
+// --- Type IDs ---
+const T_SPECIFICATION = '2a000001-0000-4000-a000-000000000001';
+
+// --- Parse CLI args ---
+const docArg = process.argv.indexOf('--doc');
+const doc = docArg !== -1 ? process.argv[docArg + 1] : 'spec';
+if (!['spec', 'rationale', 'unified'].includes(doc)) {
+  console.error(`Unknown --doc value: ${doc}. Use spec | rationale | unified`);
+  process.exit(1);
 }
 
-function getFieldValue(record, fieldId) {
-  const fv = record.fieldValues?.find(fv => fv.fieldId === fieldId);
-  return fv?.value || '';
+// --- Helpers ---
+function fv(record, fieldId) {
+  return record.fieldValues?.find(f => f.fieldId === fieldId)?.value ?? '';
 }
 
-// Field IDs
-const SECTION_TITLE_FIELD = '96f04d9d-9432-5628-8664-0d92e50f6fd0';
-const NORMATIVE_CONTENT_FIELD = '436786e4-d51e-5275-9654-bc4b5ee82b1a';
+async function loadJson(rel) {
+  const text = await readFile(join(ROOT, rel), 'utf8');
+  return JSON.parse(text);
+}
 
-async function renderSpec() {
-  console.log('Rendering SRS specification...');
-
-  // Load manifest
-  const manifest = await loadRecord('manifest.json');
-
-  // Load all section records
-  const sections = [];
-  for (const recordPath of manifest.instanceIndex) {
-    if (recordPath.startsWith('sections/')) {
-      const record = await loadRecord(join('records', recordPath));
-      sections.push(record);
-    }
+async function buildInstanceMap(instanceIndex) {
+  const map = new Map();
+  for (const path of instanceIndex) {
+    const record = await loadJson(`records/${path}`);
+    map.set(record.instanceId, record);
   }
+  return map;
+}
 
-  // Sort sections by title order (01, 02, etc.)
-  sections.sort((a, b) => {
-    const titleA = getFieldValue(a, SECTION_TITLE_FIELD);
-    const titleB = getFieldValue(b, SECTION_TITLE_FIELD);
-    const orderA = titleA.match(/^(\d+)/)?.[1] || '99';
-    const orderB = titleB.match(/^(\d+)/)?.[1] || '99';
-    return parseInt(orderA) - parseInt(orderB);
+// --- Spec document renderer ---
+function renderSpecDoc(specRecord, sectionSeqRelation, subsectionRelations, instanceMap) {
+  const title   = fv(specRecord, F_TITLE);
+  const version = fv(specRecord, F_VERSION);
+  const status  = fv(specRecord, F_STATUS);
+  const summary = fv(specRecord, F_SUMMARY);
+
+  let md = `# ${title}\n\n`;
+  md += `**Version**: ${version}\n`;
+  md += `**Status**: ${status}\n\n`;
+  if (summary) md += `${summary}\n\n`;
+  md += `> **Projection note**: This Markdown file is a rendered projection of the SRS repository. The records are the source of truth; if this file diverges from repository state, the repository wins.\n\n---\n\n`;
+
+  const sectionIds = sectionSeqRelation?.members ?? [];
+  sectionIds.forEach((sectionId, i) => {
+    const section = instanceMap.get(sectionId);
+    if (!section) return;
+    const sTitle   = fv(section, F_TITLE);
+    const sContent = fv(section, F_CONTENT);
+    md += `## ${i + 1}. ${sTitle}\n\n`;
+    if (sContent) md += `${sContent}\n\n`;
+
+    // Find subsections for this section
+    const subRel = subsectionRelations.find(r => r.from === sectionId);
+    if (subRel?.members?.length) {
+      subRel.members.forEach(subId => {
+        const sub = instanceMap.get(subId);
+        if (!sub) return;
+        const ssTitle   = fv(sub, F_TITLE);
+        const ssContent = fv(sub, F_CONTENT);
+        md += `### ${ssTitle}\n\n`;
+        if (ssContent) md += `${ssContent}\n\n`;
+      });
+    }
   });
 
-  // Load subsections with their paths
-  const subsections = [];
-  for (const recordPath of manifest.instanceIndex) {
-    if (recordPath.startsWith('subsections/')) {
-      const record = await loadRecord(join('records', recordPath));
-      record._path = recordPath;
-      subsections.push(record);
-    }
-  }
-
-  // Sort subsections by filename order (01-1, 01-2, etc.)
-  // Records are already in manifest order, no additional sort needed
-
-  // Build markdown
-  let md = `# SRS Specification
-
-**Version**: 2.0-draft
-**Status**: active draft
-**Scope**: field definitions (Field), type definitions (Type), records (Note / Typed Record / Record), relations, containers, distribution, and optional extensions covering addressability, lifecycle, protocol, schema, type inheritance, views, repeatable fields, field groups, cross-field validation, recommended relations, import tracking, and registry.
-
-> **Projection note**: This Markdown file is a rendered projection of the SRS repository in this directory. The records are the source of truth; if this file diverges from repository state, the repository wins.
-
-> **Migration note**: This document supersedes \`srs-schema.md\` (v1.0-draft). A vocabulary and structural mapping from v1 to v2 is in \`srs-schema-evolution.md\`. Design rationale, usage guidance, and commentary are in \`srs-rationale.md\`.
-
----
-
-`;
-
-  // Render sections
-  for (const section of sections) {
-    const title = getFieldValue(section, SECTION_TITLE_FIELD);
-    const content = getFieldValue(section, NORMATIVE_CONTENT_FIELD);
-
-    // Extract section number
-    const sectionMatch = title.match(/^(\d+)\.\s*(.+)/);
-    if (sectionMatch) {
-      const sectionNum = sectionMatch[1];
-      const sectionTitle = sectionMatch[2];
-      md += `## ${sectionNum}. ${sectionTitle}\n\n`;
-    } else {
-      md += `## ${title}\n\n`;
-    }
-
-    if (content) {
-      md += `${content}\n\n`;
-    }
-
-    // Find and render subsections for this section
-    const sectionOrderMatch = title.match(/^(\d+)/);
-    const sectionOrder = sectionOrderMatch ? sectionOrderMatch[1] : '';
-
-    for (const subsection of subsections) {
-      const subPath = subsection._path || '';
-      const subTitle = getFieldValue(subsection, SECTION_TITLE_FIELD);
-      const subContent = getFieldValue(subsection, NORMATIVE_CONTENT_FIELD);
-
-      // Check if subsection belongs to this section by path
-      if (subPath.includes(`${sectionOrder}-`)) {
-        md += `### ${subTitle}\n\n`;
-        if (subContent) {
-          md += `${subContent}\n\n`;
-        }
-      }
-    }
-  }
-
-  // Write output
-  await writeFile('spec/srs-spec.md', md);
-  console.log('  ✓ spec/srs-spec.md rendered');
-  console.log(`  ${sections.length} sections, ${subsections.length} subsections`);
+  return md;
 }
 
-renderSpec().catch(err => {
-  console.error('Error:', err);
-  process.exit(1);
-});
+// --- Rationale (design-note) renderer ---
+function renderRationaleDoc(specRecord, designNoteSeqRelation, instanceMap) {
+  const title   = fv(specRecord, F_TITLE);
+  const version = fv(specRecord, F_VERSION);
+  const status  = fv(specRecord, F_STATUS);
+  const summary = fv(specRecord, F_SUMMARY);
+
+  let md = `# ${title}\n\n`;
+  md += `**Version**: ${version}\n`;
+  md += `**Status**: ${status}\n\n`;
+  if (summary) md += `${summary}\n\n`;
+  md += `> This document is non-normative. Nothing here overrides the SRS specification.\n\n---\n\n`;
+
+  const noteIds = designNoteSeqRelation?.members ?? [];
+  noteIds.forEach(noteId => {
+    const note = instanceMap.get(noteId);
+    if (!note) return;
+    const nTitle   = fv(note, F_TITLE);
+    const nContent = fv(note, F_CONTENT);
+    md += `## ${nTitle}\n\n`;
+    if (nContent) md += `${nContent}\n\n`;
+  });
+
+  return md;
+}
+
+// --- Main ---
+async function main() {
+  const manifest  = await loadJson('manifest.json');
+  const relations = await loadJson('relations/relations.json');
+  const instanceMap = await buildInstanceMap(manifest.instanceIndex);
+
+  // Index relations by id and by type+from for fast lookup
+  const relById   = new Map(relations.relations.map(r => [r.id, r]));
+  const subRels   = relations.relations.filter(r => r.type === 'subsection-sequence');
+
+  const specRecord    = [...instanceMap.values()].find(r => r.typeId === T_SPECIFICATION && fv(r, F_CANONICAL) === 'com.semanticops.srs');
+  const rationaleSpec = [...instanceMap.values()].find(r => r.typeId === T_SPECIFICATION && fv(r, F_CANONICAL) === 'com.semanticops.srs.rationale');
+
+  const outputs = [];
+
+  if (doc === 'spec' || doc === 'unified') {
+    const sectionSeq = relById.get('rel-section-sequence');
+    const md = renderSpecDoc(specRecord, sectionSeq, subRels, instanceMap);
+    outputs.push({ path: 'spec/srs-spec.md', md });
+  }
+
+  if (doc === 'rationale' || doc === 'unified') {
+    const noteSeq = relById.get('rel-design-note-sequence');
+    const md = renderRationaleDoc(rationaleSpec, noteSeq, instanceMap);
+    outputs.push({ path: 'spec/srs-rationale.md', md });
+  }
+
+  if (doc === 'unified') {
+    const sectionSeq = relById.get('rel-section-sequence');
+    const noteSeq    = relById.get('rel-design-note-sequence');
+    const specMd     = renderSpecDoc(specRecord, sectionSeq, subRels, instanceMap);
+    const ratMd      = renderRationaleDoc(rationaleSpec, noteSeq, instanceMap);
+
+    // Strip the rationale header and merge as an appendix
+    const ratBody = ratMd.replace(/^#[^\n]+\n[\s\S]*?---\n\n/, '');
+    const unified =
+      specMd.trimEnd() +
+      '\n\n---\n\n# Design Rationale\n\n' +
+      `*Non-normative companion explaining design decisions. See [srs-rationale.md](srs-rationale.md) for the standalone document.*\n\n` +
+      ratBody;
+    outputs.push({ path: 'spec/srs-unified.md', md: unified });
+  }
+
+  for (const { path, md } of outputs) {
+    await writeFile(join(ROOT, path), md);
+    console.log(`✓ ${path}`);
+  }
+}
+
+main().catch(err => { console.error(err); process.exit(1); });

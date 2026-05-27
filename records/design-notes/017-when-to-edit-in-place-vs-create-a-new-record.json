@@ -1,0 +1,27 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "instanceId": "f1000017-0000-4000-a000-000000000017",
+  "typeId": "2a000012-0000-4000-a000-000000000012",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "design-note",
+  "fieldValues": [
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "When to edit in-place vs create a new Record"
+    },
+    {
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
+      "value": "\nThe underlying question: *Would a reasonable reader, encountering this Record a year later, recognise it as the same understanding they would have read before the change?*\n\n| Scenario | Guidance |\n|---|---|\n| Correcting how something is expressed (typo, phrasing) | Edit in-place |\n| Adding context that reinforces the existing understanding | Edit in-place |\n| Clarifying a detail that was ambiguous but understanding is unchanged | Edit in-place |\n| Adding information that changes what was actually committed to | New Record + `refines` or `supersedes` |\n| Reversing or materially replacing a prior commitment | New Record + `supersedes` |\n| Producing a more detailed version from a rough original | New Record + `refines` |\n\nCross-check: if a `supersedes` Relation would feel misleading — as if the group reversed itself when it only clarified — it is probably an edit. If a silent edit would feel misleading — as if the record was silently revised after the fact — it is probably a new Record."
+    }
+  ],
+  "sourceRefs": [
+    {
+      "sourceType": "repository-document",
+      "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "relationType": "evidence",
+      "note": "Imported from scds-rationale.md: \"When to edit in-place vs create a new Record\""
+    }
+  ],
+  "createdAt": "2026-05-27T00:00:00Z"
+}
