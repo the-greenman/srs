@@ -1,0 +1,13 @@
+{
+  "$schema": "https://scds.io/schema/2.0/source-document-meta.json",
+  "documentId": "c6198b5c-0dcb-540c-bb05-4af96b03e65d",
+  "title": "Founding meeting transcript",
+  "description": "Auto-transcribed recording of the founding meeting, Limehouse Town Hall back office, May 2026.",
+  "contentType": "text/plain",
+  "encoding": "utf-8",
+  "language": "en-GB",
+  "contentPath": "founding-meeting-transcript.txt",
+  "processingNote": "Auto-transcribed via speech-to-text. No speaker labels. Transcript not reviewed for accuracy.",
+  "createdAt": "2026-05-25T00:00:00Z",
+  "importedAt": "2026-05-25T01:30:00Z"
+}

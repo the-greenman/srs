@@ -1,0 +1,195 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/relations.json",
+  "repositoryId": "4172fada-bc38-5479-ac18-4be3194a68ca",
+  "relations": [
+    {
+      "id": "rel-section-sequence",
+      "type": "section-sequence",
+      "description": "Ordered list of top-level spec sections for document-view rendering.",
+      "members": [
+        "dd8920f0-458f-5b72-ad58-93229c777b87",
+        "5bc9b930-462d-535d-91c5-bd9e2b17c91c",
+        "63065301-6afc-5ae6-8d62-59cae1a3154c",
+        "74746626-1a15-5430-931e-90a147961265",
+        "5b507597-f824-576b-b577-fd8141f1eaf1",
+        "6cb78382-35a5-5acc-a26c-774a2c288e23",
+        "4244a790-72ff-5e1c-9b60-d4b58b90f92c",
+        "df42f888-4d95-5a51-963e-60d10c36533c",
+        "a1fc7f7c-dcba-5f4b-b9fd-04f91b2762b3",
+        "e538ea64-f93f-5c51-ade0-6cd358605e8c"
+      ]
+    },
+    {
+      "id": "rel-subsection-sequence-01",
+      "type": "subsection-sequence",
+      "from": "dd8920f0-458f-5b72-ad58-93229c777b87",
+      "members": [
+        "859c6150-4a5c-5229-934b-14223a072bdb",
+        "7bf07a79-5f0d-5a22-b0b4-4c45e2dd76df",
+        "6a164d5b-3d5f-5b40-9a8c-6aac72a3db9b",
+        "9a358922-04fb-5730-807c-592da5269f9f"
+      ],
+      "description": "Ordered list of subsection records for 01. Purpose and Scope."
+    },
+    {
+      "id": "rel-subsection-sequence-02",
+      "type": "subsection-sequence",
+      "from": "5bc9b930-462d-535d-91c5-bd9e2b17c91c",
+      "members": [
+        "a79c0adc-c4a3-516e-8305-640045eda858",
+        "b3bc0140-505a-5ab6-bfe1-4271e3c6b42f",
+        "d13710f4-628e-50a0-9f12-f297a93dc25f",
+        "7d22d50f-2dc2-51cb-ac43-dd1b0903d869"
+      ],
+      "description": "Ordered list of subsection records for 02. Namespace Format."
+    },
+    {
+      "id": "rel-subsection-sequence-03",
+      "type": "subsection-sequence",
+      "from": "63065301-6afc-5ae6-8d62-59cae1a3154c",
+      "members": [
+        "8e3fb02c-3863-55a9-8bcd-0580e0c7b3a9"
+      ],
+      "description": "Ordered list of subsection records for 03. Schema Notation."
+    },
+    {
+      "id": "rel-subsection-sequence-04",
+      "type": "subsection-sequence",
+      "from": "74746626-1a15-5430-931e-90a147961265",
+      "members": [
+        "32edcb34-791f-5bfe-a3a0-d8a2cbea4ea7",
+        "656e5bbb-c29a-5020-9984-121191a4cf68",
+        "4e1ca747-254d-5a7a-b0f2-d4f253189f98",
+        "d1f518cc-0e25-5045-ae3d-9d68443c8150",
+        "e9bb323b-dc48-5e6f-bb2a-3bd729ac70a6",
+        "9c202db2-d5c0-592f-b0da-7fd9f633a459"
+      ],
+      "description": "Ordered list of subsection records for 04. Foundation Group (Core)."
+    },
+    {
+      "id": "rel-subsection-sequence-05",
+      "type": "subsection-sequence",
+      "from": "5b507597-f824-576b-b577-fd8141f1eaf1",
+      "members": [
+        "9a4a70af-dbce-55e3-abee-175d2491f656",
+        "8ccf7519-68ac-532e-b32b-89c5007d4cf6",
+        "f7ffc0ea-89bb-548b-876b-d320c40c8c6a",
+        "60dc0cbb-6c52-559b-9014-2fe0c41bacd1"
+      ],
+      "description": "Ordered list of subsection records for 05. Distribution Group (Core)."
+    },
+    {
+      "id": "rel-subsection-sequence-06",
+      "type": "subsection-sequence",
+      "from": "6cb78382-35a5-5acc-a26c-774a2c288e23",
+      "members": [],
+      "description": "Ordered list of subsection records for 06. Conversation Layer."
+    },
+    {
+      "id": "rel-subsection-sequence-07",
+      "type": "subsection-sequence",
+      "from": "4244a790-72ff-5e1c-9b60-d4b58b90f92c",
+      "members": [
+        "214a7c1f-1bb4-5c86-932e-b47b4fc3b57b",
+        "d5d3f88f-8cc6-5247-8d35-41b189804dc5",
+        "ca3ea62e-effb-503f-ac04-22ce30ca4511",
+        "3db80d07-9d40-59e9-97b7-516a5ae212af",
+        "37e2f653-b3cc-5751-8f8f-2dfece3acf79",
+        "d3b0ec85-760f-50d2-be4a-9edea5685740",
+        "c9c16dcc-324a-5ab7-b7a5-d53ce48426bf",
+        "b9d40b80-3ca0-5daa-bd1f-6a8a47118156",
+        "7196cf13-e961-5b8e-bcc5-2f91b61aaf9a",
+        "6d8d7d1a-0611-57ac-b2c5-654c53c941a1",
+        "e327ca1f-4cc4-5322-b837-5a27906d5abf",
+        "6bb0f695-e004-5f14-a067-5cf922da5494",
+        "c90aef1e-af6e-550e-ad07-1d5f1bfdf67f",
+        "dd0ed2ae-ada5-570c-8882-2ac89ca49c0f",
+        "a75866ba-090f-5d62-9f7c-8e179ff1825f"
+      ],
+      "description": "Ordered list of subsection records for 07. Extensions."
+    },
+    {
+      "id": "rel-subsection-sequence-08",
+      "type": "subsection-sequence",
+      "from": "df42f888-4d95-5a51-963e-60d10c36533c",
+      "members": [
+        "812a7f7f-cb3e-5927-bc10-a097ffe28178",
+        "078b205b-a636-5f5c-b120-f84a7bcd5463",
+        "a848ecbd-c284-5754-b8cf-1a596de42242",
+        "fee1b9fe-314d-5bb8-9318-35d4f03fff0b",
+        "6a3ae7a9-bb3e-5dc3-9d4e-8a2cea41fb77",
+        "826039b6-5575-5071-bd10-3b0ef9b345a5",
+        "bf712f2b-715b-5ea6-8aac-9bb065605bdd",
+        "250ab2e5-095f-5448-99ab-4e419f27d844",
+        "84e538ce-2e65-5f5e-b73e-9d674d7a3af5",
+        "b8b7c8e0-9a24-585b-9192-75ad2b97cfd4",
+        "1373ac6c-4491-509d-90ff-40b111d844d6",
+        "4fe78bbb-e1e7-587a-a45e-69ada9a4b8c7",
+        "b8fa7bbe-4ce5-5081-81bb-0e65bbff94b7",
+        "90db4d42-c1c3-5d59-80e8-654e549eac71",
+        "d95bae97-3af2-5e03-b290-4d9f19323b0b",
+        "fe0810ac-5ba0-5a37-8ab2-a845ea96b3af",
+        "1623bc16-c479-5fd0-8014-36a81c692690",
+        "f3e0eeb6-0844-5d87-ba39-222ba4454eea",
+        "31bc8a13-bcef-5c71-826d-2fd5528ce021",
+        "cd8fdb47-61c6-51e5-8b9a-31f7745b1b42",
+        "38d8c953-8133-51c7-aa5f-05ef5d7bf44f",
+        "8c665338-6466-5721-83d8-42caefcd6506",
+        "40eb2d7e-30c4-5b7b-8626-78c4e8ce98ed"
+      ],
+      "description": "Ordered list of subsection records for 08. Key Invariants."
+    },
+    {
+      "id": "rel-subsection-sequence-08-5",
+      "type": "subsection-sequence",
+      "from": "a1fc7f7c-dcba-5f4b-b9fd-04f91b2762b3",
+      "members": [
+        "e2439781-004a-5997-bfc8-9d405232e223",
+        "1ff855f5-b20f-52c7-bc1d-c7e6311743a6"
+      ],
+      "description": "Ordered list of subsection records for 08.5 Extension Interactions."
+    },
+    {
+      "id": "rel-subsection-sequence-09",
+      "type": "subsection-sequence",
+      "from": "e538ea64-f93f-5c51-ade0-6cd358605e8c",
+      "members": [
+        "ab421ac0-561d-5ec0-87b0-09e8bc930a4d",
+        "95bef379-2358-5848-abb1-ff72cb07a25e",
+        "3ed5c3d1-96f9-5a4d-a603-602b44bdc6af",
+        "d311183c-c402-5096-b961-ed925167e3b8",
+        "8e7eb9f3-c773-5429-b4f8-2c68328928d9",
+        "a61d30ea-1d2b-5784-8589-9db7996f7122"
+      ],
+      "description": "Ordered list of subsection records for 09. Conformance."
+    },
+    {
+      "id": "rel-ext-deps-protocol",
+      "type": "extension-dependency",
+      "from": "d557206f-fd5f-5626-8f13-8781b684fd03",
+      "to": "ef180de4-5ec3-5e92-94e4-0077fdc12ebe",
+      "label": "ext:protocol recommends ext:lifecycle"
+    },
+    {
+      "id": "rel-ext-deps-views-l2",
+      "type": "extension-dependency",
+      "from": "87e912b6-b3f3-5207-a71b-73ce5cd6b8b7",
+      "to": "c5bb163b-93eb-5f79-8ee8-2ec0bc5df50b",
+      "label": "ext:views-l2 depends on ext:views-l1"
+    },
+    {
+      "id": "rel-rfc-001-section",
+      "type": "rfc-targets-section",
+      "from": "22aeac29-b51f-510e-bc99-aeb0020d2656",
+      "to": "87e912b6-b3f3-5207-a71b-73ce5cd6b8b7",
+      "label": "RFC-001 proposes changes to ext:views-l2"
+    },
+    {
+      "id": "rel-rfc-003-section",
+      "type": "rfc-targets-section",
+      "from": "f7f41817-fe5e-53e9-9bb4-eb313ae6c539",
+      "to": "5b507597-f824-576b-b577-fd8141f1eaf1",
+      "label": "RFC-003 proposes changes to Distribution Group"
+    }
+  ]
+}

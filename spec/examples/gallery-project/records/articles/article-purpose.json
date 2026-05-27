@@ -1,0 +1,41 @@
+{
+  "$schema": "https://scds.io/gallery-example/schemas/governance-article",
+  "instanceId": "96f9fe31-288c-5e88-a052-cc7531fca467",
+  "typeId": "a1142ac3-5385-5c0e-8630-1dd3432cdf7f",
+  "typeVersion": 1,
+  "typeNamespace": "governance",
+  "typeName": "article",
+  "fieldValues": [
+    {
+      "fieldId": "60be1468-01bc-5d12-9eea-628f02801893",
+      "value": "A-002",
+      "source": "human"
+    },
+    {
+      "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
+      "value": "What we are here to do",
+      "source": "human"
+    },
+    {
+      "fieldId": "8aa3eba2-204b-5ebd-ba7a-be0f066027d6",
+      "value": "LiMoMa exists to curate, install, and maintain a rotating display of artwork in the back stairwell and landings of the building. We select work, agree on placement, and manage the practical business of mounting and demounting. We are not a commercial gallery: we do not sell work on behalf of artists, take commission, or enter into financial relationships with artists in exchange for showing their work.",
+      "source": "human"
+    },
+    {
+      "fieldId": "3340532b-d845-5e54-92b3-819ed05365c5",
+      "value": "Stating what we are not — a commercial gallery — is as important as stating what we are. This protects artists who exhibit with us and is honest about our amateur, community basis.",
+      "source": "human"
+    },
+    {
+      "fieldId": "1f01bc6b-39c8-58d7-b1a3-79142623fece",
+      "value": "Unanimous agreement of all current members.",
+      "source": "human"
+    },
+    {
+      "fieldId": "aee7afe9-6650-5fa4-a61a-495c3b88994b",
+      "value": "active",
+      "source": "human"
+    }
+  ],
+  "createdAt": "2026-05-26T00:00:00Z"
+}

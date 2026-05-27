@@ -1,0 +1,15 @@
+{
+  "$schema": "https://scds.io/schema/2.0/field.json",
+  "id": "4b34847c-26d1-56be-bc10-844aeb704df7",
+  "namespace": "governance",
+  "name": "owner",
+  "version": 1,
+  "description": "Person, role, group, or function responsible for stewardship of this record.",
+  "aiGuidance": {
+    "purpose": "Identify who is responsible for this decision or its follow-through.",
+    "extraction": "Extract the name or role of the person or group accountable."
+  },
+  "valueType": "string",
+  "editorHint": "singleline",
+  "createdAt": "2026-05-25T00:00:00Z"
+}

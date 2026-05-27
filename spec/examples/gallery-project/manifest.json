@@ -1,0 +1,216 @@
+{
+  "$schema": "https://scds.io/schema/2.0/manifest.json",
+  "formatVersion": "1.0",
+  "scdsVersion": "2.0",
+  "conformance": "SCDS 2.0 Core + ext:recommended-relations + ext:repository + ext:views-l1 + ext:views-l2 + ext:federation",
+  "repositoryId": "f7e3b219-5a4c-4d8e-b023-9c1f0a2d3e4b",
+  "title": "LiMoMa — Limehouse Museum of Maybe Art",
+  "container": {
+    "containerId": "f7e3b219-5a4c-4d8e-b023-9c1f0a2d3e4b",
+    "title": "LiMoMa — Limehouse Museum of Maybe Art",
+    "containerType": "project",
+    "rootInstanceIds": [
+      "5e5e6620-37eb-507b-aa44-eadd823e7338",
+      "96f9fe31-288c-5e88-a052-cc7531fca467"
+    ],
+    "memberInstanceIds": [
+      "e4f2a891-3c7d-4b5e-9f12-8a6d0b1c2e3f",
+      "4fdeca4e-8d90-58ab-b29f-9d4995a92ea5",
+      "ef5ff158-e660-5272-8fb9-c506828944cd",
+      "ea096096-9923-55c7-b877-86dda406228f",
+      "a8310310-07c5-5431-bdda-4e8f879d8d9c",
+      "ff6546bf-8a61-5474-b03e-c30ee1300817",
+      "2b93ecef-7055-523b-945a-00efcd394772",
+      "6af80565-f999-5145-998a-8e6dff1c02b4",
+      "5e5e6620-37eb-507b-aa44-eadd823e7338",
+      "96f9fe31-288c-5e88-a052-cc7531fca467",
+      "3010705b-266d-5ace-891f-0f4dc685afc6",
+      "093e9b67-ff1f-5530-bd24-ffb35d55f931",
+      "7ac20908-fe9b-501b-b151-21b70f06c585",
+      "0f81d4a3-afe0-50e5-9203-05290e62a5c2",
+      "25cf7ece-8232-5964-9419-d5ca808829f2",
+      "6b4f7122-4d42-5275-ac2c-e60031aac299",
+      "ac813974-3f15-5572-a336-0e8444386f3e",
+      "eaecece4-fd2d-5e37-be46-f68ceadd0a6f",
+      "d14af813-7d17-588a-aa41-99e565e69372",
+      "ced6dad0-9ba7-574d-9bd6-f2af800b06c9"
+    ],
+    "createdAt": "2026-05-25T00:00:00Z",
+    "updatedAt": "2026-05-26T00:00:00Z"
+  },
+  "packageRef": {
+    "mode": "local",
+    "path": "package/package.json"
+  },
+  "instanceIndex": [
+    {
+      "instanceId": "e4f2a891-3c7d-4b5e-9f12-8a6d0b1c2e3f",
+      "tier": 0,
+      "path": "notes/001-initial-idea.json",
+      "title": "Initial brain dump"
+    },
+    {
+      "instanceId": "4fdeca4e-8d90-58ab-b29f-9d4995a92ea5",
+      "tier": 1,
+      "path": "typed-records/exercises/exercise-mounting-system.json",
+      "title": "Mounting system"
+    },
+    {
+      "instanceId": "ef5ff158-e660-5272-8fb9-c506828944cd",
+      "tier": 1,
+      "path": "typed-records/exercises/exercise-painting-stairwell.json",
+      "title": "Painting the stairwell"
+    },
+    {
+      "instanceId": "ea096096-9923-55c7-b877-86dda406228f",
+      "tier": 1,
+      "path": "typed-records/exercises/exercise-pin-board.json",
+      "title": "The pin board"
+    },
+    {
+      "instanceId": "a8310310-07c5-5431-bdda-4e8f879d8d9c",
+      "tier": 2,
+      "path": "records/decisions/decision-pilot-duration.json",
+      "typeId": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
+      "typeName": "decision",
+      "title": "Pilot duration and review"
+    },
+    {
+      "instanceId": "ff6546bf-8a61-5474-b03e-c30ee1300817",
+      "tier": 2,
+      "path": "records/decisions/decision-mounting-system.json",
+      "typeId": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
+      "typeName": "decision",
+      "title": "Mounting system"
+    },
+    {
+      "instanceId": "2b93ecef-7055-523b-945a-00efcd394772",
+      "tier": 2,
+      "path": "records/decisions/decision-eye-level.json",
+      "typeId": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
+      "typeName": "decision",
+      "title": "Eye level standard"
+    },
+    {
+      "instanceId": "6af80565-f999-5145-998a-8e6dff1c02b4",
+      "tier": 2,
+      "path": "records/decisions/decision-artist-liability.json",
+      "typeId": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
+      "typeName": "decision",
+      "title": "Artist liability"
+    },
+    {
+      "instanceId": "eaecece4-fd2d-5e37-be46-f68ceadd0a6f",
+      "tier": 2,
+      "path": "records/decisions/decision-phase-scope.json",
+      "typeId": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
+      "typeName": "decision",
+      "title": "Phase 1 scope"
+    },
+    {
+      "instanceId": "d14af813-7d17-588a-aa41-99e565e69372",
+      "tier": 2,
+      "path": "records/decisions/decision-curatorial-lead.json",
+      "typeId": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
+      "typeName": "decision",
+      "title": "Curatorial lead for Phase 1"
+    },
+    {
+      "instanceId": "ced6dad0-9ba7-574d-9bd6-f2af800b06c9",
+      "tier": 2,
+      "path": "records/decisions/decision-closure-obligations.json",
+      "typeId": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
+      "typeName": "decision",
+      "title": "Closure obligations"
+    },
+    {
+      "instanceId": "5e5e6620-37eb-507b-aa44-eadd823e7338",
+      "tier": 2,
+      "path": "records/articles/article-what-this-is.json",
+      "typeId": "a1142ac3-5385-5c0e-8630-1dd3432cdf7f",
+      "typeName": "article",
+      "title": "A-001 What this is"
+    },
+    {
+      "instanceId": "96f9fe31-288c-5e88-a052-cc7531fca467",
+      "tier": 2,
+      "path": "records/articles/article-purpose.json",
+      "typeId": "a1142ac3-5385-5c0e-8630-1dd3432cdf7f",
+      "typeName": "article",
+      "title": "A-002 What we are here to do"
+    },
+    {
+      "instanceId": "3010705b-266d-5ace-891f-0f4dc685afc6",
+      "tier": 2,
+      "path": "records/articles/article-members.json",
+      "typeId": "a1142ac3-5385-5c0e-8630-1dd3432cdf7f",
+      "typeName": "article",
+      "title": "A-003 Who we are"
+    },
+    {
+      "instanceId": "093e9b67-ff1f-5530-bd24-ffb35d55f931",
+      "tier": 2,
+      "path": "records/articles/article-decisions.json",
+      "typeId": "a1142ac3-5385-5c0e-8630-1dd3432cdf7f",
+      "typeName": "article",
+      "title": "A-004 How we make decisions"
+    },
+    {
+      "instanceId": "7ac20908-fe9b-501b-b151-21b70f06c585",
+      "tier": 2,
+      "path": "records/articles/article-care-of-building.json",
+      "typeId": "a1142ac3-5385-5c0e-8630-1dd3432cdf7f",
+      "typeName": "article",
+      "title": "A-005 Care of the building"
+    },
+    {
+      "instanceId": "0f81d4a3-afe0-50e5-9203-05290e62a5c2",
+      "tier": 2,
+      "path": "records/articles/article-on-ending.json",
+      "typeId": "a1142ac3-5385-5c0e-8630-1dd3432cdf7f",
+      "typeName": "article",
+      "title": "A-006 On ending"
+    },
+    {
+      "instanceId": "25cf7ece-8232-5964-9419-d5ca808829f2",
+      "tier": 2,
+      "path": "records/roles/role-building-authority.json",
+      "typeId": "e53dce11-6b83-5714-a8fe-f730edb500fa",
+      "typeName": "role",
+      "title": "R-001 Building Authority (Sam Hayder)"
+    },
+    {
+      "instanceId": "6b4f7122-4d42-5275-ac2c-e60031aac299",
+      "tier": 2,
+      "path": "records/roles/role-curatorial-lead.json",
+      "typeId": "e53dce11-6b83-5714-a8fe-f730edb500fa",
+      "typeName": "role",
+      "title": "R-002 Curatorial Lead (Immo Klink)"
+    },
+    {
+      "instanceId": "ac813974-3f15-5572-a336-0e8444386f3e",
+      "tier": 2,
+      "path": "records/roles/role-clerk.json",
+      "typeId": "e53dce11-6b83-5714-a8fe-f730edb500fa",
+      "typeName": "role",
+      "title": "R-003 Clerk (Peter Brownell)"
+    }
+  ],
+  "federationPath": "federation/registry.json",
+  "federationEventsPath": "federation/events.json",
+  "relationsPath": "relations/relations.json",
+  "sourceDocumentsPath": "source-documents/",
+  "aiGuidance": {
+    "summary": "LiMoMa (Limehouse Museum of Maybe Art) is a community gallery initiative using the back stairs and landings of Limehouse Town Hall to exhibit rotating artwork. The repository records the full governance structure established at the May 2026 founding meeting: six constitutional Articles (A-001 to A-006) define what LiMoMa is, its purpose, members, decision-making process, care of building obligations, and dissolution terms. Three Roles (R-001 Sam/Building Authority, R-002 Immo/Curatorial Lead, R-003 Peter/Clerk) define authority boundaries. Seven Decisions cover the pilot (6 months, back stairs only), mounting system (6mm plugs), eye level, artist liability, phase scope, curatorial lead appointment, and closure obligations. Three open Exercises record unresolved questions. Start with A-001 and A-002 for the constitutional frame.",
+    "suggestedEntryPoints": [
+      "records/articles/article-what-this-is.json",
+      "records/articles/article-purpose.json",
+      "records/roles/role-building-authority.json",
+      "records/decisions/decision-pilot-duration.json",
+      "relations/relations.json"
+    ],
+    "navigationHints": "The constitutional layer (Articles A-001 to A-006) is the semantic frame for all other records. Roles define who may decide what without group agreement. Decisions are the settled commitments extracted from or flowing from the founding meeting. Exercises are unresolved questions still open. Use the Foundation Document View (documentViews[0] in package.json) to render all four layers in order. Use relations/relations.json to trace derived-from and delegates chains between records."
+  },
+  "createdAt": "2026-05-25T00:00:00Z",
+  "updatedAt": "2026-05-26T00:00:00Z"
+}
