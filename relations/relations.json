@@ -399,6 +399,54 @@
       "from": "f1000029-0000-4000-a000-000000000029",
       "to": "c90aef1e-af6e-550e-ad07-1d5f1bfdf67f",
       "note": "\"Why Type inheritance is conservative\" explains c90aef1e"
+    },
+    {
+      "id": "rel-dn017-table",
+      "type": "contains",
+      "from": "f1000017-0000-4000-a000-000000000017",
+      "to": "b1000000-0000-4000-a000-000000000001"
+    },
+    {
+      "id": "rel-dn018-table",
+      "type": "contains",
+      "from": "f1000018-0000-4000-a000-000000000018",
+      "to": "b1000000-0000-4000-a000-000000000002"
+    },
+    {
+      "id": "rel-dn019-table",
+      "type": "contains",
+      "from": "f1000019-0000-4000-a000-000000000019",
+      "to": "b1000000-0000-4000-a000-000000000003"
+    },
+    {
+      "id": "rel-dn024-table",
+      "type": "contains",
+      "from": "f1000024-0000-4000-a000-000000000024",
+      "to": "b1000000-0000-4000-a000-000000000004"
+    },
+    {
+      "id": "rel-dn041-table",
+      "type": "contains",
+      "from": "f1000041-0000-4000-a000-000000000041",
+      "to": "b1000000-0000-4000-a000-000000000005"
+    },
+    {
+      "id": "rel-relation-directionality-table",
+      "type": "contains",
+      "from": "eddeaecc-f30e-5919-b5ae-0bd4e38161ab",
+      "to": "b1000000-0000-4000-a000-000000000006"
+    },
+    {
+      "id": "rel-recrel-canonical-table",
+      "type": "contains",
+      "from": "ed9f0446-800c-5428-8780-09bb499f76aa",
+      "to": "b1000000-0000-4000-a000-000000000007"
+    },
+    {
+      "id": "rel-recrel-taxonomy-table",
+      "type": "contains",
+      "from": "ed9f0446-800c-5428-8780-09bb499f76aa",
+      "to": "b1000000-0000-4000-a000-000000000008"
     }
   ]
 }

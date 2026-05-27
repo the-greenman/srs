@@ -1,0 +1,190 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "instanceId": "b1000000-0000-4000-a000-000000000005",
+  "typeId": "2a000013-0000-4000-a000-000000000013",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "table",
+  "fieldValues": [
+    {
+      "fieldId": "1a000025-0000-4000-a000-000000000025",
+      "value": "How the SCDS v2 vocabulary maps to the μDemocracy application layer. Reproduced from the v1→v2 conceptual remapping document for reference."
+    }
+  ],
+  "fieldGroups": [
+    {
+      "groupId": "rows",
+      "entries": [
+        {
+          "fieldValues": [
+            {
+              "fieldId": "1a000027-0000-4000-a000-000000000027",
+              "value": "SCDS concept"
+            },
+            {
+              "fieldId": "1a000028-0000-4000-a000-000000000028",
+              "value": "μDemocracy application"
+            }
+          ]
+        },
+        {
+          "fieldValues": [
+            {
+              "fieldId": "1a000027-0000-4000-a000-000000000027",
+              "value": "Field"
+            },
+            {
+              "fieldId": "1a000028-0000-4000-a000-000000000028",
+              "value": "Semantic atom in a governance record"
+            }
+          ]
+        },
+        {
+          "fieldValues": [
+            {
+              "fieldId": "1a000027-0000-4000-a000-000000000027",
+              "value": "Type"
+            },
+            {
+              "fieldId": "1a000028-0000-4000-a000-000000000028",
+              "value": "Decision, Proposal, Action, Role, Value, Principle, ..."
+            }
+          ]
+        },
+        {
+          "fieldValues": [
+            {
+              "fieldId": "1a000027-0000-4000-a000-000000000027",
+              "value": "Record"
+            },
+            {
+              "fieldId": "1a000028-0000-4000-a000-000000000028",
+              "value": "A captured governance artefact with provenance"
+            }
+          ]
+        },
+        {
+          "fieldValues": [
+            {
+              "fieldId": "1a000027-0000-4000-a000-000000000027",
+              "value": "Schema"
+            },
+            {
+              "fieldId": "1a000028-0000-4000-a000-000000000028",
+              "value": "Founding Document type; Decision Log type"
+            }
+          ]
+        },
+        {
+          "fieldValues": [
+            {
+              "fieldId": "1a000027-0000-4000-a000-000000000027",
+              "value": "Protocol"
+            },
+            {
+              "fieldId": "1a000028-0000-4000-a000-000000000028",
+              "value": "Democracy protocol: Brain Dump, Decomposition, Decision, Proposal, ..."
+            }
+          ]
+        },
+        {
+          "fieldValues": [
+            {
+              "fieldId": "1a000027-0000-4000-a000-000000000027",
+              "value": "Container"
+            },
+            {
+              "fieldId": "1a000028-0000-4000-a000-000000000028",
+              "value": "A group's governance workspace; a founding process scope"
+            }
+          ]
+        },
+        {
+          "fieldValues": [
+            {
+              "fieldId": "1a000027-0000-4000-a000-000000000027",
+              "value": "Relation"
+            },
+            {
+              "fieldId": "1a000028-0000-4000-a000-000000000028",
+              "value": "`supersedes`, `derived-from`, `ratifies`, `depends-on`, ..."
+            }
+          ]
+        },
+        {
+          "fieldValues": [
+            {
+              "fieldId": "1a000027-0000-4000-a000-000000000027",
+              "value": "View"
+            },
+            {
+              "fieldId": "1a000028-0000-4000-a000-000000000028",
+              "value": "Facilitator view; summary view; export for ratification"
+            }
+          ]
+        },
+        {
+          "fieldValues": [
+            {
+              "fieldId": "1a000027-0000-4000-a000-000000000027",
+              "value": "Document View"
+            },
+            {
+              "fieldId": "1a000028-0000-4000-a000-000000000028",
+              "value": "Assembled founding document; full decision log"
+            }
+          ]
+        },
+        {
+          "fieldValues": [
+            {
+              "fieldId": "1a000027-0000-4000-a000-000000000027",
+              "value": "Address"
+            },
+            {
+              "fieldId": "1a000028-0000-4000-a000-000000000028",
+              "value": "Stable identifier for any governance element — Field, Record, stage, chunk"
+            }
+          ]
+        },
+        {
+          "fieldValues": [
+            {
+              "fieldId": "1a000027-0000-4000-a000-000000000027",
+              "value": "Attention State"
+            },
+            {
+              "fieldId": "1a000028-0000-4000-a000-000000000028",
+              "value": "Current focus of an active facilitated session"
+            }
+          ]
+        },
+        {
+          "fieldValues": [
+            {
+              "fieldId": "1a000027-0000-4000-a000-000000000027",
+              "value": "Revision"
+            },
+            {
+              "fieldId": "1a000028-0000-4000-a000-000000000028",
+              "value": "Auditable history of how a governance field arrived at its current value"
+            }
+          ]
+        },
+        {
+          "fieldValues": [
+            {
+              "fieldId": "1a000027-0000-4000-a000-000000000027",
+              "value": "Conversation layer"
+            },
+            {
+              "fieldId": "1a000028-0000-4000-a000-000000000028",
+              "value": "Session transcript; threaded discussion; facilitator annotations"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "createdAt": "2026-05-27T00:00:00Z"
+}

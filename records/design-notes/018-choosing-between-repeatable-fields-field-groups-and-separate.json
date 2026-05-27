@@ -12,7 +12,7 @@
     },
     {
       "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": "\n| Pattern | When to use | Example |\n|---|---|---|\n| Repeatable scalar (`ext:repeatable-fields`) | Multiple values of the same type, no pairing needed | Multiple assigned person names |\n| Field Group (`ext:field-groups`) | Multiple structured entries that must be read together | Contacts with name + email |\n| Separate Records + Relations | Repeated items need their own identity, lifecycle, or reuse | Tasks assigned to roles |\n\nA Field Group entry does not have its own `instanceId`, lifecycle state, or Relation endpoints. If a group entry will ever need to be referenced independently, related to other Records, or reused across multiple Records, it should be a separate Record connected by a `contains` or `derived-from` Relation."
+      "value": ""
     }
   ],
   "sourceRefs": [

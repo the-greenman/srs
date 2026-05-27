@@ -21,9 +21,19 @@ const F_CANONICAL   = '1a000013-0000-4000-a000-000000000013';
 const F_VERSION     = '1a000010-0000-4000-a000-000000000010';
 const F_STATUS      = '1a000009-0000-4000-a000-000000000009';
 const F_SUMMARY     = '1a000011-0000-4000-a000-000000000011';
+const F_INTRO       = '1a000025-0000-4000-a000-000000000025';
+const F_OUTRO       = '1a000026-0000-4000-a000-000000000026';
+const COL_FIELDS    = [
+  '1a000027-0000-4000-a000-000000000027',
+  '1a000028-0000-4000-a000-000000000028',
+  '1a000029-0000-4000-a000-000000000029',
+  '1a000030-0000-4000-a000-000000000030',
+  '1a000031-0000-4000-a000-000000000031',
+];
 
 // --- Type IDs ---
 const T_SPECIFICATION = '2a000001-0000-4000-a000-000000000001';
+const T_TABLE         = '2a000013-0000-4000-a000-000000000013';
 
 // --- Parse CLI args ---
 const docArg = process.argv.indexOf('--doc');
@@ -36,6 +46,38 @@ if (!['spec', 'rationale', 'unified'].includes(doc)) {
 // --- Helpers ---
 function fv(record, fieldId) {
   return record.fieldValues?.find(f => f.fieldId === fieldId)?.value ?? '';
+}
+
+// Render a table record to markdown
+function renderTable(tableRecord) {
+  const intro = fv(tableRecord, F_INTRO);
+  const outro = fv(tableRecord, F_OUTRO);
+  const group = tableRecord.fieldGroups?.find(g => g.groupId === 'rows');
+  const entries = group?.entries ?? [];
+  if (!entries.length) return '';
+
+  let md = '';
+  if (intro) md += `${intro}\n\n`;
+
+  const [header, ...rows] = entries;
+  const headerCols = COL_FIELDS.map(id => header.fieldValues?.find(f => f.fieldId === id)?.value ?? '').filter((v, i, a) => {
+    // Keep all non-empty cols and all cols up to the last non-empty col
+    const lastNonEmpty = a.reduceRight((acc, v, idx) => acc === -1 && v !== '' ? idx : acc, -1);
+    return i <= lastNonEmpty;
+  });
+  const colCount = headerCols.length;
+
+  md += `| ${headerCols.join(' | ')} |\n`;
+  md += `| ${headerCols.map(() => '---').join(' | ')} |\n`;
+
+  for (const row of rows) {
+    const cols = COL_FIELDS.slice(0, colCount).map(id => row.fieldValues?.find(f => f.fieldId === id)?.value ?? '');
+    md += `| ${cols.join(' | ')} |\n`;
+  }
+
+  if (outro) md += `\n${outro}\n`;
+
+  return md;
 }
 
 async function loadJson(rel) {
@@ -52,8 +94,21 @@ async function buildInstanceMap(instanceIndex) {
   return map;
 }
 
+// Render inline tables contained by a given record
+function renderContainedTables(recordId, instanceMap, containsRels) {
+  let md = '';
+  const tableIds = containsRels.filter(r => r.from === recordId).map(r => r.to);
+  for (const tid of tableIds) {
+    const tableRecord = instanceMap.get(tid);
+    if (tableRecord?.typeId === T_TABLE) {
+      md += renderTable(tableRecord) + '\n\n';
+    }
+  }
+  return md;
+}
+
 // --- Spec document renderer ---
-function renderSpecDoc(specRecord, sectionSeqRelation, subsectionRelations, instanceMap) {
+function renderSpecDoc(specRecord, sectionSeqRelation, subsectionRelations, instanceMap, containsRels) {
   const title   = fv(specRecord, F_TITLE);
   const version = fv(specRecord, F_VERSION);
   const status  = fv(specRecord, F_STATUS);
@@ -73,6 +128,7 @@ function renderSpecDoc(specRecord, sectionSeqRelation, subsectionRelations, inst
     const sContent = fv(section, F_CONTENT);
     md += `## ${i + 1}. ${sTitle}\n\n`;
     if (sContent) md += `${sContent}\n\n`;
+    md += renderContainedTables(sectionId, instanceMap, containsRels);
 
     // Find subsections for this section
     const subRel = subsectionRelations.find(r => r.from === sectionId);
@@ -84,6 +140,7 @@ function renderSpecDoc(specRecord, sectionSeqRelation, subsectionRelations, inst
         const ssContent = fv(sub, F_CONTENT);
         md += `### ${ssTitle}\n\n`;
         if (ssContent) md += `${ssContent}\n\n`;
+        md += renderContainedTables(subId, instanceMap, containsRels);
       });
     }
   });
@@ -92,7 +149,7 @@ function renderSpecDoc(specRecord, sectionSeqRelation, subsectionRelations, inst
 }
 
 // --- Rationale (design-note) renderer ---
-function renderRationaleDoc(specRecord, designNoteSeqRelation, instanceMap) {
+function renderRationaleDoc(specRecord, designNoteSeqRelation, instanceMap, containsRels) {
   const title   = fv(specRecord, F_TITLE);
   const version = fv(specRecord, F_VERSION);
   const status  = fv(specRecord, F_STATUS);
@@ -112,6 +169,15 @@ function renderRationaleDoc(specRecord, designNoteSeqRelation, instanceMap) {
     const nContent = fv(note, F_CONTENT);
     md += `## ${nTitle}\n\n`;
     if (nContent) md += `${nContent}\n\n`;
+
+    // Render any contained table records
+    const tableIds = containsRels.filter(r => r.from === noteId).map(r => r.to);
+    for (const tid of tableIds) {
+      const tableRecord = instanceMap.get(tid);
+      if (tableRecord?.typeId === T_TABLE) {
+        md += renderTable(tableRecord) + '\n\n';
+      }
+    }
   });
 
   return md;
@@ -124,8 +190,9 @@ async function main() {
   const instanceMap = await buildInstanceMap(manifest.instanceIndex);
 
   // Index relations by id and by type+from for fast lookup
-  const relById   = new Map(relations.relations.map(r => [r.id, r]));
-  const subRels   = relations.relations.filter(r => r.type === 'subsection-sequence');
+  const relById     = new Map(relations.relations.map(r => [r.id, r]));
+  const subRels     = relations.relations.filter(r => r.type === 'subsection-sequence');
+  const containsRels = relations.relations.filter(r => r.type === 'contains' && r.from && r.to);
 
   const specRecord    = [...instanceMap.values()].find(r => r.typeId === T_SPECIFICATION && fv(r, F_CANONICAL) === 'com.semanticops.srs');
   const rationaleSpec = [...instanceMap.values()].find(r => r.typeId === T_SPECIFICATION && fv(r, F_CANONICAL) === 'com.semanticops.srs.rationale');
@@ -134,21 +201,21 @@ async function main() {
 
   if (doc === 'spec' || doc === 'unified') {
     const sectionSeq = relById.get('rel-section-sequence');
-    const md = renderSpecDoc(specRecord, sectionSeq, subRels, instanceMap);
+    const md = renderSpecDoc(specRecord, sectionSeq, subRels, instanceMap, containsRels);
     outputs.push({ path: 'spec/srs-spec.md', md });
   }
 
   if (doc === 'rationale' || doc === 'unified') {
     const noteSeq = relById.get('rel-design-note-sequence');
-    const md = renderRationaleDoc(rationaleSpec, noteSeq, instanceMap);
+    const md = renderRationaleDoc(rationaleSpec, noteSeq, instanceMap, containsRels);
     outputs.push({ path: 'spec/srs-rationale.md', md });
   }
 
   if (doc === 'unified') {
     const sectionSeq = relById.get('rel-section-sequence');
     const noteSeq    = relById.get('rel-design-note-sequence');
-    const specMd     = renderSpecDoc(specRecord, sectionSeq, subRels, instanceMap);
-    const ratMd      = renderRationaleDoc(rationaleSpec, noteSeq, instanceMap);
+    const specMd     = renderSpecDoc(specRecord, sectionSeq, subRels, instanceMap, containsRels);
+    const ratMd      = renderRationaleDoc(rationaleSpec, noteSeq, instanceMap, containsRels);
 
     // Strip the rationale header and merge as an appendix
     const ratBody = ratMd.replace(/^#[^\n]+\n[\s\S]*?---\n\n/, '');

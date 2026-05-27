@@ -12,7 +12,7 @@
     },
     {
       "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": "\nHow the SCDS v2 vocabulary maps to the μDemocracy application layer. Reproduced from the v1→v2 conceptual remapping document for reference.\n\n| SCDS concept | μDemocracy application |\n|---|---|\n| Field | Semantic atom in a governance record |\n| Type | Decision, Proposal, Action, Role, Value, Principle, ... |\n| Record | A captured governance artefact with provenance |\n| Schema | Founding Document type; Decision Log type |\n| Protocol | Democracy protocol: Brain Dump, Decomposition, Decision, Proposal, ... |\n| Container | A group's governance workspace; a founding process scope |\n| Relation | `supersedes`, `derived-from`, `ratifies`, `depends-on`, ... |\n| View | Facilitator view; summary view; export for ratification |\n| Document View | Assembled founding document; full decision log |\n| Address | Stable identifier for any governance element — Field, Record, stage, chunk |\n| Attention State | Current focus of an active facilitated session |\n| Revision | Auditable history of how a governance field arrived at its current value |\n| Conversation layer | Session transcript; threaded discussion; facilitator annotations |"
+      "value": ""
     }
   ],
   "sourceRefs": [

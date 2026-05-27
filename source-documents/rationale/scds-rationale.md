@@ -1,16 +1,13 @@
-# Semantic Record System — Design Rationale
+# SCDS Rationale
 
 **Version**: 2.0
-**Status**: active
+**Status**: informative companion to `scds-spec.md`
 
-Non-normative companion to the SRS specification. Explains the design decisions, core thesis, usage guidance, extension rationale, and future directions that inform the SRS 2.0 vocabulary.
-
-> This document is non-normative. Nothing here overrides the SRS specification.
+This document is non-normative. It explains design decisions, provides usage guidance, and records the reasoning behind choices made in the SCDS specification. Nothing in this document overrides `scds-spec.md`. Language like "must" and "must not" does not appear here; all normative requirements are in the spec.
 
 ---
 
-## Core Thesis
-
+## 1. Core Thesis
 
 Traditional document systems treat documents as primarily text.
 
@@ -38,10 +35,9 @@ SCDS assumes that understanding evolves. Records, Relations, and lifecycle state
 
 ---
 
-## Design Decisions
+## 2. Design Decisions
 
-## Why Field and Type are separate
-
+### 2.1 Why Field and Type are separate
 
 A form system where each template defines its own fields produces semantic silos: the "decision statement" in the Technology template and the "decision statement" in the Budget template are unrelated strings. They cannot be searched together, compared, or composed.
 
@@ -49,15 +45,13 @@ In SCDS, a Field is defined once. Any number of Types may include it. When two T
 
 This is a stronger constraint than it appears. It means a Type cannot secretly redefine what a Field means for its own purposes — it can only configure presentation. If a Type genuinely needs different semantics, it must use a different Field.
 
-## Why "Type" not "Module"
-
+### 2.2 Why "Type" not "Module"
 
 "Module" in v1 was accurate but implied a software analogy that didn't communicate the concept well to non-technical practitioners. "Module" suggests a composable software unit. "Type" says what it actually is: a type definition for a semantic object. A Decision is a Type. A Task is a Type. A Risk is a Type.
 
 The rename also makes the Record/Type relationship legible by analogy: a Record is an instance of a Type, just as a value is an instance of a type in any typed system.
 
-## Why Record tiers exist (Note → Typed Record → Record)
-
+### 2.3 Why Record tiers exist (Note → Typed Record → Record)
 
 Not all content arrives with full semantic formalisation. A meeting note, a brainstorm document, a rough plan — these are valid starting points that should be preserved and referenceable, even before anyone has decided what Types to extract from them.
 
@@ -65,8 +59,7 @@ The three tiers let a system capture content at whatever maturity level it has, 
 
 The tier model also makes SCDS progressively adoptable. A team can start at Tier 0 and arrive at Tier 2 as their understanding of the semantic structure matures, without ever having to restart from scratch.
 
-## Why Protocol replaces TemplateFacilitationStep
-
+### 2.4 Why Protocol replaces TemplateFacilitationStep
 
 `TemplateFacilitationStep` in v1 was field-ordering with AI guidance attached. It could specify which fields to present in which order, with optional framing. This was sufficient for a linear form-filling workflow.
 
@@ -82,8 +75,7 @@ The distinction is between a View (which fields to show, in what order, for pres
 
 A Record is the *compressed output* of a Protocol run. The Protocol is the process that produced the understanding; the Record is what that understanding looks like expressed in the standard vocabulary.
 
-## Why Schema is a new concept
-
+### 2.5 Why Schema is a new concept
 
 In v1, there was no way to specify what a document type *is* — what needs to be extracted from source material in order to build it. `DocumentTemplate` (now Document View) handled *assembly* of existing Records into readable output. But nothing owned the prior question: "Given a transcript of a governance meeting, what Types should I extract, how should they relate to each other, and what does 'complete' mean?"
 
@@ -91,8 +83,7 @@ Schema fills that gap. A Schema is the artefact you hand to an extraction pipeli
 
 The two are complementary: Schema → Records → Document View.
 
-## Why Address and AttentionState are needed
-
+### 2.6 Why Address and AttentionState are needed
 
 v1 noted "focus links" as a session-layer concern without defining a mechanism. The mechanism was absent.
 
@@ -104,8 +95,7 @@ Without co-addressability, the transcript/SCDS separation is clean in principle 
 
 **Multi-Container addressing**: A Record may belong to more than one Container simultaneously (a task may exist in both a project Container and a sprint Container). That Record therefore has multiple valid document-space Addresses — one per Container context. This is intentional: `containerId` in a document-space `Address` is not a uniqueness constraint, it is a *context specifier*. `AttentionState.containerId` records which Container was active during a live session, making the contextual anchor explicit. When a session-tagged transcript chunk is later queried, the Container in the `AttentionState` tells you not just *what Record* was being discussed but *in which context* it was being discussed.
 
-## Why Revision is addressable
-
+### 2.7 Why Revision is addressable
 
 In v1, field revision was an implementation concern. The spec described when to edit in-place versus create a new Record, but individual revisions were not addressable — you could not ask "what did this field say before the last Protocol run?" at the interoperability layer.
 
@@ -116,22 +106,19 @@ This matters for:
 
 `Revision` is the addressable audit trail. It does not replace the edit-in-place vs. new-Record judgment for minor corrections. That remains an implementation concern. Revision is the interoperability layer for cases where history itself is a first-class concern.
 
-## Why `valueType` and `editorHint` are separate
-
+### 2.8 Why `valueType` and `editorHint` are separate
 
 A Field with `valueType: "text"` might be edited via textarea in a web form, captured via voice in a mobile app, or extracted directly from a transcript with no editing UI. The semantic type is stable; the editing surface is a rendering decision.
 
 AI extraction logic, validation rules, and export formatting depend only on `valueType`. `editorHint` is a default that implementations and Views may override. Conflating the two would mean that changing the preferred editor for a field could inadvertently break AI extraction rules.
 
-## Why `displayLabel` must not affect extraction
-
+### 2.9 Why `displayLabel` must not affect extraction
 
 `displayLabel` lets a View relabel a Field for a specific audience without altering the Field's meaning. "Strategic question" might be displayed as "The decision we're making" in a facilitated view aimed at non-specialist participants.
 
 If `displayLabel` could affect extraction, two Views of the same Record could produce different extracted values for the same Field — because the AI was given different labels. Field semantics must be stable across views. The label controls what the human sees; the Field's `aiGuidance` controls what the AI does.
 
-## Why the directionality invariant matters
-
+### 2.10 Why the directionality invariant matters
 
 `sourceInstanceId` is the asserting instance; `targetInstanceId` is the related instance. "D-004 supersedes D-001" must always be represented as `source: D-004, target: D-001`.
 
@@ -139,8 +126,7 @@ Without this invariant, graph traversal breaks across system boundaries. If Syst
 
 The invariant does not assign agency or authority to the `source` slot — those are properties of the `relationType`. A `contains` Relation makes the source the container and the target the contained item. An `evidences` Relation makes the source the evidence and the target the claim it supports. Directionality is a slot convention; semantics come from the type.
 
-## Why Containers and Relations are complementary
-
+### 2.11 Why Containers and Relations are complementary
 
 A Relation graph answers "what is semantically connected to what?" but not "what should be exported or queried together?" These are different questions. A project may contain hundreds of Records connected by many Relations. The question "which Records are in scope for this export?" is a scoping question, not a semantic one.
 
@@ -148,8 +134,7 @@ Container provides the boundary. "These Records collectively form a unit for bou
 
 Relationship-first implementations derive Container membership by traversing `contains` Relations from root instances. Container-first implementations use explicit `memberInstanceIds`. Both strategies are valid; neither replaces the other.
 
-## Why the conversation layer is a permanent boundary
-
+### 2.12 Why the conversation layer is a permanent boundary
 
 SCDS captures negotiated semantic state. Transcripts capture raw material — speech, threads, annotations — from which semantic state is extracted or constructed. These are different things, and conflating them would harm both.
 
@@ -159,10 +144,9 @@ The boundary makes both layers better at what they do. The connection between th
 
 ---
 
-## Usage Guidance
+## 3. Usage Guidance
 
-## AI guidance composition order
-
+### 3.1 AI guidance composition order
 
 When assembling an AI prompt from multiple `aiGuidance` blocks:
 
@@ -176,12 +160,12 @@ This ordering ensures broad context (what kind of object this is) precedes narro
 
 This is a recommended default. Implementations that compose differently will produce different AI behaviour from the same definitions.
 
-## When to edit in-place vs create a new Record
+### 3.2 When to edit in-place vs create a new Record
 
 The underlying question: *Would a reasonable reader, encountering this Record a year later, recognise it as the same understanding they would have read before the change?*
 
 | Scenario | Guidance |
-| --- | --- |
+|---|---|
 | Correcting how something is expressed (typo, phrasing) | Edit in-place |
 | Adding context that reinforces the existing understanding | Edit in-place |
 | Clarifying a detail that was ambiguous but understanding is unchanged | Edit in-place |
@@ -191,26 +175,24 @@ The underlying question: *Would a reasonable reader, encountering this Record a 
 
 Cross-check: if a `supersedes` Relation would feel misleading — as if the group reversed itself when it only clarified — it is probably an edit. If a silent edit would feel misleading — as if the record was silently revised after the fact — it is probably a new Record.
 
-
-## Choosing between repeatable fields, field groups, and separate Records
+### 3.3 Choosing between repeatable fields, field groups, and separate Records
 
 | Pattern | When to use | Example |
-| --- | --- | --- |
+|---|---|---|
 | Repeatable scalar (`ext:repeatable-fields`) | Multiple values of the same type, no pairing needed | Multiple assigned person names |
 | Field Group (`ext:field-groups`) | Multiple structured entries that must be read together | Contacts with name + email |
 | Separate Records + Relations | Repeated items need their own identity, lifecycle, or reuse | Tasks assigned to roles |
 
 A Field Group entry does not have its own `instanceId`, lifecycle state, or Relation endpoints. If a group entry will ever need to be referenced independently, related to other Records, or reused across multiple Records, it should be a separate Record connected by a `contains` or `derived-from` Relation.
 
-
-## Graduation: when and how
+### 3.4 Graduation: when and how
 
 Graduation is the act of replacing a lower-tier instance with a higher-tier equivalent as its structure stabilises.
 
 **Identity continuity:**
 
 | Scenario | `instanceId` | Relation |
-| --- | --- | --- |
+|---|---|---|
 | Pure formalisation (section names map directly to field names, content unchanged) | Keep | None required |
 | Content interpreted or restructured during formalisation | New | `refines` from new to old |
 | One Note splits into multiple Records | New IDs for all | `derived-from` from each new Record to the original |
@@ -219,9 +201,7 @@ Graduation is the act of replacing a lower-tier instance with a higher-tier equi
 
 Implementations may automate graduation suggestions by matching section or field names against `Field.name` values in available Type definitions.
 
-
-## Relation taxonomy usage
-
+### 3.5 Relation taxonomy usage
 
 Use the canonical relation type strings from `ext:recommended-relations` for common relationships. Reserve custom `namespace/name` format for domain-specific relations.
 
@@ -251,8 +231,7 @@ Transcript seg  --evidences-->  Decision rationale
 
 Non-governance projects use the same Relation layer. `supersedes`, `delegates`, and `ratifies` apply when the semantic object type calls for them — they are one profile of the layer, not its primary purpose.
 
-## Protocol chaining and provenance traces
-
+### 3.6 Protocol chaining and provenance traces
 
 Loose Protocols produce open material. Tight Protocols converge on a specific Record. The output of one Protocol is the input context for the next.
 
@@ -268,8 +247,7 @@ When a Decision Record is challenged, you can traverse back through the full cha
 
 With `ext:addressability`, each stage's conversation chunks carry the `AttentionState` at the time they were produced. "What was being discussed when the options were evaluated?" is a queryable question.
 
-## Graceful degradation
-
+### 3.7 Graceful degradation
 
 In a federated ecosystem, implementations will often receive SCDS content that uses extensions they do not support. The useful default is: understand what you can, preserve what you cannot.
 
@@ -277,14 +255,14 @@ A conforming implementation should validate the core and extension content it re
 
 ---
 
-## Extension Design Notes
+## 4. Extension Design Notes
 
-## How to decide which extensions to implement
+### 4.1 How to decide which extensions to implement
 
 Start with the question: what does your implementation need to do?
 
 | Need | Extensions |
-| --- | --- |
+|---|---|
 | Define and exchange Field and Type definitions | Core only |
 | Track definition origin and imports | `ext:import-tracking` |
 | Publish a definition catalog | `ext:registry` |
@@ -300,9 +278,7 @@ Start with the question: what does your implementation need to do?
 | Complex conditional validation | `ext:cross-field-validation` |
 | Cross-system Relation interoperability | `ext:recommended-relations` |
 
-
-## Addressability as a prerequisite for live facilitation
-
+### 4.2 Addressability as a prerequisite for live facilitation
 
 `ext:addressability` is not just about naming things. It is the mechanism that makes the conversation layer useful. Without `AttentionState`, transcript chunks have no address-time connection to the Records they inform. Without `Revision`, the history of a field's value is an implementation detail not visible at the interoperability layer.
 
@@ -310,8 +286,7 @@ Any implementation that facilitates live sessions — where conversation materia
 
 **Diff rendering:** implementations rendering Revision history for governance review should support a diff view that shows field-level removals alongside additions, not only the current value. The Revision chain already provides the data needed for three useful modes: final (current value only), all markup (current value plus prior content shown as removed and new content as added), and original (the value at a specified Revision). This is a rendering pattern, not a separate data shape.
 
-## Schema vs View — the extraction gap
-
+### 4.3 Schema vs View — the extraction gap
 
 A View answers: given a Record that already exists, how do I render it for a specific audience?
 
@@ -321,8 +296,7 @@ These are complementary but distinct. A Document View cannot serve as an extract
 
 An extraction pipeline uses Schema + Field `aiGuidance` + Protocol to produce Records. A rendering pipeline uses View + Document View to project those Records into readable form.
 
-## `semanticObjectType` as a federation risk
-
+### 4.4 `semanticObjectType` as a federation risk
 
 `semanticObjectType` on `Type` and in `SectionSource.type-query` is a free-form string. The spec recommends `namespace/name` format for portable Document Views (Invariant 32) and treats bare strings as a single-system convention. This is the minimum rule needed to ship v2.
 
@@ -334,15 +308,13 @@ The current design is deliberately light. Possible futures in order of increasin
 
 The second option would require changing the type from `string` to `TypeRef | string` and a version bump. For now: prefer `namespace/name` format in any Type or SectionSource that will cross system boundaries, and treat bare strings as a scope boundary. Implementations should document which `semanticObjectType` values they recognise and what Types they map to.
 
-## Protocol loose-to-tight spectrum
-
+### 4.5 Protocol loose-to-tight spectrum
 
 The spectrum from loose to tight is not a quality ranking — it is a fitness question. A Brain Dump Protocol is the right tool when the problem space is not yet understood. A Decision Protocol is the right tool when the group is ready to converge. Starting with a tight Protocol before the problem is decomposed produces poor output because the epistemic prerequisites are not met.
 
 The `dependsOn` field on `ProtocolStage` makes this explicit. A stage that depends on decomposition results cannot run before those results exist. This is not just sequencing — it is a statement about what understanding is required before the next stage is meaningful.
 
-## Why Type inheritance is conservative
-
+### 4.6 Why Type inheritance is conservative
 
 `ext:type-inheritance` adds one formal mechanism: a Type may specialize one base Type and still be processable as that base Type. This solves the common case where a domain-specific Type needs to add fields to a shared Type without duplicating the whole definition.
 
@@ -352,38 +324,31 @@ The extension is intentionally narrow. It supports inherited fields, added field
 
 ---
 
-## Future Extensions
-
+## 5. Future Extensions
 
 The following capabilities are planned but out of scope for this version.
 
-## Session
-
+### Session
 
 A live collaborative process model with real-time facilitation, AI assistance, and collaborative editing. A Session produces or enriches Records but does not own them. Session-level Protocol management (tracking active stage, managing participant attention) is a natural successor to `ext:protocol` and `ext:addressability`. Deferred pending implementation experience.
 
-## Full projection surface
-
+### Full projection surface
 
 Document-level projection is addressed by `ext:views-l2`. The broader projection surface — dashboards, timelines, AI context packages, real-time views, and composite renderings that are not document-shaped — remains a future concern. Projections are read-only views; they do not modify Record state.
 
-## Revision history exchange format
-
+### Revision history exchange format
 
 A standard format for exchanging full Revision history between implementations, for cases where the history itself is a first-class interoperability concern. Natural extension of `ext:addressability`. Deferred pending stabilisation of the Container and Relation layers.
 
-## Graduation mapping record
-
+### Graduation mapping record
 
 A structured artefact recording how a Note or Typed Record was mapped to its Record successors — which section or field names were matched, merged, split, or interpreted. Useful for AI-assisted graduation review and audit. Deferred pending implementation experience.
 
-## Field domains
-
+### Field domains
 
 Named sets of Fields that travel together may become useful as Type libraries grow. For v2, ordinary shared base Types plus `ext:type-inheritance` cover the immediate reuse need with less machinery. Field domains are deferred until there is stronger evidence that reusable field sets need their own identity, versioning, and package dependency rules independent of Types.
 
-## View inheritance and composition
-
+### View inheritance and composition
 
 As View libraries mature, inheritance will become necessary. A lightweight ADR View and a governance ADR View share base configuration — field selection, ordering, `editorHint` overrides — while diverging on workflow framing and export layout.
 
@@ -393,34 +358,30 @@ A future version may define:
 
 Current design: `View` is a leaf type. Use Lineage tracking to record inheritance relationships.
 
-## Instance graph exchange format
-
+### Instance graph exchange format
 
 A standard envelope for exchanging a Container together with its full Record set, Relations, and source references. Natural successor to `Package` at the instance layer. Likely shape: `{ container, instances[], relations[], sourceRefs[] }`. Deferred pending stabilisation of `ext:views-l2` and implementation experience.
 
-## Field transclusion in Document Views
-
+### Field transclusion in Document Views
 
 Pulling a specific Field value inline into a Document View is useful, but a syntax such as `{{field:{recordId}/{fieldId}}}` makes a reusable Document View depend on concrete instance IDs. That weakens portability and should wait for an addressing model that can express reusable selection rules rather than binding a definition to one Record.
 
-## Conditional processing
-
+### Conditional processing
 
 Audience, platform, and output filtering may eventually allow one source Container to produce different projections for different readers. This is deferred because SectionSource queries already cover common projection differences, while a general condition evaluation model would add substantial complexity.
 
-## Sub-field addressing
-
+### Sub-field addressing
 
 Web UI comments and annotations attached to specific text within a Field value require addressing below the Field level. `ext:addressability` currently addresses at Field granularity. Sub-field text selection addressing is architecturally possible (the Address space accommodates it) but is deferred as a separate extension.
 
 ---
 
-## μDemocracy Mapping
+## 6. μDemocracy Mapping
 
 How the SCDS v2 vocabulary maps to the μDemocracy application layer. Reproduced from the v1→v2 conceptual remapping document for reference.
 
 | SCDS concept | μDemocracy application |
-| --- | --- |
+|---|---|
 | Field | Semantic atom in a governance record |
 | Type | Decision, Proposal, Action, Role, Value, Principle, ... |
 | Record | A captured governance artefact with provenance |
@@ -434,5 +395,3 @@ How the SCDS v2 vocabulary maps to the μDemocracy application layer. Reproduced
 | Attention State | Current focus of an active facilitated session |
 | Revision | Auditable history of how a governance field arrived at its current value |
 | Conversation layer | Session transcript; threaded discussion; facilitator annotations |
-
-

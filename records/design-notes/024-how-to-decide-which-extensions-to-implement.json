@@ -12,7 +12,7 @@
     },
     {
       "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": "\nStart with the question: what does your implementation need to do?\n\n| Need | Extensions |\n|---|---|\n| Define and exchange Field and Type definitions | Core only |\n| Track definition origin and imports | `ext:import-tracking` |\n| Publish a definition catalog | `ext:registry` |\n| Governance with lifecycle states | `ext:lifecycle` |\n| Present and export Records | `ext:views-l1` |\n| Assemble multi-Record documents | `ext:views-l2` |\n| Facilitate structured deliberation | `ext:protocol` |\n| Live facilitation with context assembly | `ext:addressability` |\n| Extraction from source material | `ext:schema` |\n| Specialise Types while preserving base processability | `ext:type-inheritance` |\n| Lists of values within a Record | `ext:repeatable-fields` |\n| Structured repeatable context in a Record | `ext:field-groups` |\n| Complex conditional validation | `ext:cross-field-validation` |\n| Cross-system Relation interoperability | `ext:recommended-relations` |"
+      "value": ""
     }
   ],
   "sourceRefs": [

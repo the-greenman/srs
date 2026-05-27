@@ -2592,11 +2592,10 @@ This is a recommended default. Implementations that compose differently will pro
 
 ## When to edit in-place vs create a new Record
 
-
 The underlying question: *Would a reasonable reader, encountering this Record a year later, recognise it as the same understanding they would have read before the change?*
 
 | Scenario | Guidance |
-|---|---|
+| --- | --- |
 | Correcting how something is expressed (typo, phrasing) | Edit in-place |
 | Adding context that reinforces the existing understanding | Edit in-place |
 | Clarifying a detail that was ambiguous but understanding is unchanged | Edit in-place |
@@ -2606,26 +2605,26 @@ The underlying question: *Would a reasonable reader, encountering this Record a 
 
 Cross-check: if a `supersedes` Relation would feel misleading — as if the group reversed itself when it only clarified — it is probably an edit. If a silent edit would feel misleading — as if the record was silently revised after the fact — it is probably a new Record.
 
+
 ## Choosing between repeatable fields, field groups, and separate Records
 
-
 | Pattern | When to use | Example |
-|---|---|---|
+| --- | --- | --- |
 | Repeatable scalar (`ext:repeatable-fields`) | Multiple values of the same type, no pairing needed | Multiple assigned person names |
 | Field Group (`ext:field-groups`) | Multiple structured entries that must be read together | Contacts with name + email |
 | Separate Records + Relations | Repeated items need their own identity, lifecycle, or reuse | Tasks assigned to roles |
 
 A Field Group entry does not have its own `instanceId`, lifecycle state, or Relation endpoints. If a group entry will ever need to be referenced independently, related to other Records, or reused across multiple Records, it should be a separate Record connected by a `contains` or `derived-from` Relation.
 
-## Graduation: when and how
 
+## Graduation: when and how
 
 Graduation is the act of replacing a lower-tier instance with a higher-tier equivalent as its structure stabilises.
 
 **Identity continuity:**
 
 | Scenario | `instanceId` | Relation |
-|---|---|---|
+| --- | --- | --- |
 | Pure formalisation (section names map directly to field names, content unchanged) | Keep | None required |
 | Content interpreted or restructured during formalisation | New | `refines` from new to old |
 | One Note splits into multiple Records | New IDs for all | `derived-from` from each new Record to the original |
@@ -2633,6 +2632,7 @@ Graduation is the act of replacing a lower-tier instance with a higher-tier equi
 **Graduation is not always one-to-one.** A single meeting Note may graduate into one Decision Record, three Task Records, and two Risk Records. Each resulting Record receives its own `instanceId` and links to the original via `derived-from`. The original Note is preserved as the semantic root of the derived graph.
 
 Implementations may automate graduation suggestions by matching section or field names against `Field.name` values in available Type definitions.
+
 
 ## Relation taxonomy usage
 
@@ -2695,11 +2695,10 @@ A conforming implementation should validate the core and extension content it re
 
 ## How to decide which extensions to implement
 
-
 Start with the question: what does your implementation need to do?
 
 | Need | Extensions |
-|---|---|
+| --- | --- |
 | Define and exchange Field and Type definitions | Core only |
 | Track definition origin and imports | `ext:import-tracking` |
 | Publish a definition catalog | `ext:registry` |
@@ -2714,6 +2713,7 @@ Start with the question: what does your implementation need to do?
 | Structured repeatable context in a Record | `ext:field-groups` |
 | Complex conditional validation | `ext:cross-field-validation` |
 | Cross-system Relation interoperability | `ext:recommended-relations` |
+
 
 ## Addressability as a prerequisite for live facilitation
 
@@ -2831,11 +2831,10 @@ Web UI comments and annotations attached to specific text within a Field value r
 
 ## μDemocracy Mapping
 
-
 How the SCDS v2 vocabulary maps to the μDemocracy application layer. Reproduced from the v1→v2 conceptual remapping document for reference.
 
 | SCDS concept | μDemocracy application |
-|---|---|
+| --- | --- |
 | Field | Semantic atom in a governance record |
 | Type | Decision, Proposal, Action, Role, Value, Principle, ... |
 | Record | A captured governance artefact with provenance |
@@ -2849,4 +2848,5 @@ How the SCDS v2 vocabulary maps to the μDemocracy application layer. Reproduced
 | Attention State | Current focus of an active facilitated session |
 | Revision | Auditable history of how a governance field arrived at its current value |
 | Conversation layer | Session transcript; threaded discussion; facilitator annotations |
+
 
