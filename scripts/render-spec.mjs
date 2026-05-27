@@ -52,15 +52,8 @@ async function renderSpec() {
     }
   }
 
-  // Sort subsections
-  subsections.sort((a, b) => {
-    const titleA = getFieldValue(a, SECTION_TITLE_FIELD);
-    const titleB = getFieldValue(b, SECTION_TITLE_FIELD);
-    // Extract numeric prefix like 01-1, 01-2
-    const matchA = recordPath.match(/^(\d+)-(\d+)/);
-    const matchB = recordPath.match(/^(\d+)-(\d+)/);
-    return 0; // Keep original order for now
-  });
+  // Sort subsections by filename order (01-1, 01-2, etc.)
+  // Records are already in manifest order, no additional sort needed
 
   // Build markdown
   let md = `# SRS Specification
