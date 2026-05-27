@@ -1,0 +1,11 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "1a000025-0000-4000-a000-000000000025",
+  "namespace": "com.semanticops.spec",
+  "name": "col-5",
+  "version": 1,
+  "description": "Column 5 value in a table row. Semantics defined by the table's context.",
+  "valueType": "string",
+  "editorHint": "singleline",
+  "createdAt": "2026-05-27T00:00:00Z"
+}
