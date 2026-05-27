@@ -24,12 +24,22 @@
     "fields/consequences.json",
     "fields/open-questions.json",
     "fields/affected-components.json",
-    "fields/dependency-refs.json"
+    "fields/dependency-refs.json",
+    "fields/accepted-revision.json",
+    "fields/decision-rationale.json",
+    "fields/implementation-status.json",
+    "fields/implemented-at.json",
+    "fields/implementation-commit.json",
+    "fields/proposal-artifact-path.json",
+    "fields/artifact-kind.json"
   ],
   "types": [
     "types/rfc.json",
     "types/rfc-change.json",
-    "types/rfc-revision.json"
+    "types/rfc-revision.json",
+    "types/rfc-decision.json",
+    "types/rfc-implementation.json",
+    "types/rfc-proposed-artifact.json"
   ],
   "views": [
     "views/rfc-document-view.json"

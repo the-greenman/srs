@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "1a000035-0000-4000-a000-000000000035",
+  "namespace": "com.semanticops.spec",
+  "name": "member-name",
+  "version": 1,
+  "description": "The machine-readable name of a member within a semantic schema definition.",
+  "aiGuidance": {
+    "purpose": "Names one property, field, or member of a semantic schema.",
+    "extraction": "Use the exact member name that renderers should project into target schema formats unless a projection package explicitly overrides it."
+  },
+  "valueType": "string",
+  "editorHint": "singleline",
+  "createdAt": "2026-05-27T00:00:00Z"
+}

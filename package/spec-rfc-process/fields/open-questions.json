@@ -5,7 +5,10 @@
   "name": "open-questions",
   "version": 1,
   "description": "Unresolved questions that must be answered before this RFC can be accepted.",
-  "aiGuidance": "List each question clearly. For each question, note whether a decision is required before acceptance or whether it can be deferred to a follow-on RFC. Remove questions as they are resolved.",
+  "aiGuidance": {
+    "purpose": "Unresolved questions that must be answered before this RFC can be accepted.",
+    "extraction": "List each question clearly. For each question, note whether a decision is required before acceptance or whether it can be deferred to a follow-on RFC. Remove questions as they are resolved."
+  },
   "valueType": "text",
   "contentFormat": "markdown",
   "editorHint": "textarea",

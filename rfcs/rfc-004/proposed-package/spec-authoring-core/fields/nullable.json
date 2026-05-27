@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "1a000038-0000-4000-a000-000000000038",
+  "namespace": "com.semanticops.spec",
+  "name": "nullable",
+  "version": 1,
+  "description": "Whether a schema member may explicitly have the value null.",
+  "aiGuidance": {
+    "purpose": "Distinguishes explicit null from absence.",
+    "extraction": "Set true only when null is a meaningful allowed value. Do not use nullable as a synonym for optional."
+  },
+  "valueType": "boolean",
+  "editorHint": "singleline",
+  "createdAt": "2026-05-27T00:00:00Z"
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "1a000034-0000-4000-a000-000000000034",
+  "namespace": "com.semanticops.spec",
+  "name": "schema-name",
+  "version": 1,
+  "description": "The machine-readable name of a semantic schema definition.",
+  "aiGuidance": {
+    "purpose": "Names the logical data shape being defined.",
+    "extraction": "Use a stable machine-readable name. Prefer lower-kebab-case or the naming convention of the surrounding specification."
+  },
+  "valueType": "string",
+  "editorHint": "singleline",
+  "createdAt": "2026-05-27T00:00:00Z"
+}

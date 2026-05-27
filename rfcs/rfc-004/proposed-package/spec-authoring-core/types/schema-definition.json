@@ -1,0 +1,77 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "id": "2a000014-0000-4000-a000-000000000014",
+  "namespace": "com.semanticops.spec",
+  "name": "schema-definition",
+  "version": 1,
+  "description": "A logical, target-neutral data shape definition used by ext:schema-notation.",
+  "fields": [
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Title"
+    },
+    {
+      "fieldId": "1a000014-0000-4000-a000-000000000014",
+      "order": 1,
+      "required": true,
+      "displayLabel": "Namespace"
+    },
+    {
+      "fieldId": "1a000034-0000-4000-a000-000000000034",
+      "order": 2,
+      "required": true,
+      "displayLabel": "Schema Name"
+    },
+    {
+      "fieldId": "1a000010-0000-4000-a000-000000000010",
+      "order": 3,
+      "required": true,
+      "displayLabel": "Version"
+    },
+    {
+      "fieldId": "1a000012-0000-4000-a000-000000000012",
+      "order": 4,
+      "required": true,
+      "displayLabel": "Description"
+    },
+    {
+      "fieldId": "1a000041-0000-4000-a000-000000000041",
+      "order": 5,
+      "required": false,
+      "displayLabel": "Semantic Purpose"
+    },
+    {
+      "fieldId": "1a000009-0000-4000-a000-000000000009",
+      "order": 6,
+      "required": false,
+      "displayLabel": "Status"
+    },
+    {
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
+      "order": 7,
+      "required": false,
+      "displayLabel": "Content"
+    },
+    {
+      "fieldId": "1a000005-0000-4000-a000-000000000005",
+      "order": 8,
+      "required": false,
+      "displayLabel": "Examples"
+    },
+    {
+      "fieldId": "1a000040-0000-4000-a000-000000000040",
+      "order": 9,
+      "required": false,
+      "displayLabel": "Deprecated"
+    },
+    {
+      "fieldId": "1a000006-0000-4000-a000-000000000006",
+      "order": 10,
+      "required": false,
+      "displayLabel": "Notes"
+    }
+  ],
+  "createdAt": "2026-05-27T00:00:00Z"
+}

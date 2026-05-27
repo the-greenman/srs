@@ -16,9 +16,9 @@ function getFieldValue(record, fieldId) {
 }
 
 // Field IDs
-const SECTION_TITLE_FIELD = '96f04d9d-9432-5628-8664-0d92e50f6fd0';
-const RFC_STATUS_FIELD = '9aede8b8-d6ea-5da2-b02f-82ab3e823ff9';
-const NORMATIVE_CONTENT_FIELD = '436786e4-d51e-5275-9654-bc4b5ee82b1a';
+const TITLE_FIELD = '1a000001-0000-4000-a000-000000000001';
+const CONTENT_FIELD = '1a000002-0000-4000-a000-000000000002';
+const RFC_STATUS_FIELD = '5a000002-0000-4000-a000-000000000002';
 
 async function renderRFCs() {
   console.log('Rendering RFCs...');
@@ -31,9 +31,9 @@ async function renderRFCs() {
 
   for (const rfcPath of rfcPaths) {
     const record = await loadRecord(join('records', rfcPath));
-    const title = getFieldValue(record, SECTION_TITLE_FIELD);
+    const title = getFieldValue(record, TITLE_FIELD);
     const status = getFieldValue(record, RFC_STATUS_FIELD);
-    const content = getFieldValue(record, NORMATIVE_CONTENT_FIELD);
+    const content = getFieldValue(record, CONTENT_FIELD);
 
     // Extract RFC number from title
     const rfcMatch = title.match(/RFC-(\d+)/);

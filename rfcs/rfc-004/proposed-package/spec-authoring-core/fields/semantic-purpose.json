@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "1a000041-0000-4000-a000-000000000041",
+  "namespace": "com.semanticops.spec",
+  "name": "semantic-purpose",
+  "version": 1,
+  "description": "The meaning and role of a schema definition or member, independent of rendered form.",
+  "aiGuidance": {
+    "purpose": "Explains what the schema element means in the domain model.",
+    "extraction": "Describe the semantic role rather than the syntax used by any target language or schema renderer."
+  },
+  "valueType": "text",
+  "contentFormat": "markdown",
+  "editorHint": "textarea",
+  "createdAt": "2026-05-27T00:00:00Z"
+}

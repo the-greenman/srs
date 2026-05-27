@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://scds.io/schema/domain/governance/decision/1.json",
+  "$id": "https://srs.semanticops.com/schema/domain/governance/decision/1.json",
   "title": "Domain Schema: governance/decision Record (v1)",
   "description": "Validates a Tier 2 Record whose typeId is 1fcad6a2-9f78-5e41-94ba-d82e88b822f3 (governance/decision v1). Composes the structural record.json schema with type-specific field constraints. Records pointing here as their $schema will pass both structural and domain validation.",
   "allOf": [

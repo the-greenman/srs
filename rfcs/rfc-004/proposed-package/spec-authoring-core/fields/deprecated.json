@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "1a000040-0000-4000-a000-000000000040",
+  "namespace": "com.semanticops.spec",
+  "name": "deprecated",
+  "version": 1,
+  "description": "Whether a schema definition or schema member is deprecated.",
+  "aiGuidance": {
+    "purpose": "Marks schema vocabulary that remains valid for compatibility but should no longer be used for new data.",
+    "extraction": "Set true only when the specification explicitly deprecates the schema or member."
+  },
+  "valueType": "boolean",
+  "editorHint": "singleline",
+  "createdAt": "2026-05-27T00:00:00Z"
+}

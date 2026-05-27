@@ -37,8 +37,14 @@
       "displayLabel": "Dependency Refs"
     },
     {
-      "fieldId": "1a000002-0000-4000-a000-000000000002",
+      "fieldId": "5a000016-0000-4000-a000-000000000016",
       "order": 5,
+      "required": false,
+      "displayLabel": "Proposal Artifact Path"
+    },
+    {
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
+      "order": 6,
       "required": true,
       "displayLabel": "Content"
     }

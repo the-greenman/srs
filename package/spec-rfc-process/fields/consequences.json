@@ -5,7 +5,10 @@
   "name": "consequences",
   "version": 1,
   "description": "The consequences of accepting this RFC — benefits, tradeoffs, and implementation impact.",
-  "aiGuidance": "Cover both positive consequences (benefits) and negative ones (tradeoffs, breaking changes, migration cost). Be specific about who is affected.",
+  "aiGuidance": {
+    "purpose": "The consequences of accepting this RFC — benefits, tradeoffs, and implementation impact.",
+    "extraction": "Cover both positive consequences (benefits) and negative ones (tradeoffs, breaking changes, migration cost). Be specific about who is affected."
+  },
   "valueType": "text",
   "contentFormat": "markdown",
   "editorHint": "textarea",

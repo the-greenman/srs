@@ -5,7 +5,10 @@
   "name": "revision-history",
   "version": 1,
   "description": "A summary of revisions made to this RFC, in reverse-chronological order.",
-  "aiGuidance": "Format as a markdown table with columns: Rev, Date, Summary. Record each substantive edit as a new row. Minor typo fixes do not warrant a new revision.",
+  "aiGuidance": {
+    "purpose": "A summary of revisions made to this RFC, in reverse-chronological order.",
+    "extraction": "Format as a markdown table with columns: Rev, Date, Summary. Record each substantive edit as a new row. Minor typo fixes do not warrant a new revision."
+  },
   "valueType": "text",
   "contentFormat": "markdown",
   "editorHint": "textarea",

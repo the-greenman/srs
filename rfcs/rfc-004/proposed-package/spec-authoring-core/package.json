@@ -1,0 +1,28 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/package.json",
+  "id": "4a000001-0000-4000-a000-000000000001",
+  "namespace": "com.semanticops.spec",
+  "name": "spec-authoring-core",
+  "version": "1.1.0-rfc-004",
+  "title": "Spec Authoring Core RFC-004 Proposal",
+  "description": "Proposed RFC-004 extension to spec-authoring-core. This package is proposal material only and must not be treated as active package state until RFC-004 is accepted and implemented.",
+  "status": "draft",
+  "fields": [
+    "fields/default-value.json",
+    "fields/schema-name.json",
+    "fields/member-name.json",
+    "fields/type-expression.json",
+    "fields/required.json",
+    "fields/nullable.json",
+    "fields/constraints.json",
+    "fields/deprecated.json",
+    "fields/semantic-purpose.json"
+  ],
+  "types": [
+    "types/schema-definition.json",
+    "types/schema-member.json"
+  ],
+  "views": [],
+  "createdAt": "2026-05-27T00:00:00Z",
+  "updatedAt": "2026-05-27T00:00:00Z"
+}

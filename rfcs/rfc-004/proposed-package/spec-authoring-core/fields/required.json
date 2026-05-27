@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "1a000037-0000-4000-a000-000000000037",
+  "namespace": "com.semanticops.spec",
+  "name": "required",
+  "version": 1,
+  "description": "Whether a schema member must be present.",
+  "aiGuidance": {
+    "purpose": "Distinguishes required members from members that may be absent.",
+    "extraction": "Set true only when the source specification requires the member to be present. Optional prose, question marks, or defaulted absence should normally be false."
+  },
+  "valueType": "boolean",
+  "editorHint": "singleline",
+  "createdAt": "2026-05-27T00:00:00Z"
+}

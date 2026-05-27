@@ -1,5 +1,5 @@
 {
-  "$schema": "https://scds.io/gallery-example/schemas/governance-role",
+  "$schema": "https://srs.semanticops.com/schema/domain/governance/role/1.json",
   "instanceId": "25cf7ece-8232-5964-9419-d5ca808829f2",
   "typeId": "e53dce11-6b83-5714-a8fe-f730edb500fa",
   "typeVersion": 1,

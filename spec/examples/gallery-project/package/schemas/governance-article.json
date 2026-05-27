@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://scds.io/gallery-example/schemas/governance-article",
+  "$id": "https://srs.semanticops.com/schema/domain/governance/article/1.json",
   "title": "Governance Article",
   "description": "Domain schema for governance/article typed records.",
   "allOf": [

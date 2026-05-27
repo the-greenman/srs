@@ -1,5 +1,5 @@
 {
-  "$schema": "https://scds.io/schema/domain/governance/decision/1.json",
+  "$schema": "https://srs.semanticops.com/schema/domain/governance/decision/1.json",
   "instanceId": "2b93ecef-7055-523b-945a-00efcd394772",
   "typeId": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
   "typeVersion": 1,

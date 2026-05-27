@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://scds.io/gallery-example/schemas/governance-role",
+  "$id": "https://srs.semanticops.com/schema/domain/governance/role/1.json",
   "title": "Governance Role",
   "description": "Domain schema for governance/role typed records.",
   "allOf": [

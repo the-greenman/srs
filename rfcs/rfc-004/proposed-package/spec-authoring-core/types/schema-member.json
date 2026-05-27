@@ -1,0 +1,71 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "id": "2a000015-0000-4000-a000-000000000015",
+  "namespace": "com.semanticops.spec",
+  "name": "schema-member",
+  "version": 1,
+  "description": "A stable, addressable member of a semantic schema definition.",
+  "fields": [
+    {
+      "fieldId": "1a000035-0000-4000-a000-000000000035",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Member Name"
+    },
+    {
+      "fieldId": "1a000036-0000-4000-a000-000000000036",
+      "order": 1,
+      "required": true,
+      "displayLabel": "Type Expression"
+    },
+    {
+      "fieldId": "1a000037-0000-4000-a000-000000000037",
+      "order": 2,
+      "required": true,
+      "displayLabel": "Required"
+    },
+    {
+      "fieldId": "1a000038-0000-4000-a000-000000000038",
+      "order": 3,
+      "required": false,
+      "displayLabel": "Nullable"
+    },
+    {
+      "fieldId": "1a000039-0000-4000-a000-000000000039",
+      "order": 4,
+      "required": false,
+      "displayLabel": "Constraints"
+    },
+    {
+      "fieldId": "1a000024-0000-4000-a000-000000000024",
+      "order": 5,
+      "required": false,
+      "displayLabel": "Default Value"
+    },
+    {
+      "fieldId": "1a000005-0000-4000-a000-000000000005",
+      "order": 6,
+      "required": false,
+      "displayLabel": "Examples"
+    },
+    {
+      "fieldId": "1a000040-0000-4000-a000-000000000040",
+      "order": 7,
+      "required": false,
+      "displayLabel": "Deprecated"
+    },
+    {
+      "fieldId": "1a000041-0000-4000-a000-000000000041",
+      "order": 8,
+      "required": false,
+      "displayLabel": "Semantic Purpose"
+    },
+    {
+      "fieldId": "1a000006-0000-4000-a000-000000000006",
+      "order": 9,
+      "required": false,
+      "displayLabel": "Notes"
+    }
+  ],
+  "createdAt": "2026-05-27T00:00:00Z"
+}

@@ -5,7 +5,10 @@
   "name": "proposed-change",
   "version": 1,
   "description": "The normative text of a proposed change to the specification.",
-  "aiGuidance": "Write in the imperative: 'Add the following to section X...' or 'Replace the current definition with...'. Be precise enough that the change can be applied mechanically.",
+  "aiGuidance": {
+    "purpose": "The normative text of a proposed change to the specification.",
+    "extraction": "Write in the imperative: 'Add the following to section X...' or 'Replace the current definition with...'. Be precise enough that the change can be applied mechanically."
+  },
   "valueType": "text",
   "contentFormat": "markdown",
   "editorHint": "textarea",

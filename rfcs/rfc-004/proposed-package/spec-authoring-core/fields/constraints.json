@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "1a000039-0000-4000-a000-000000000039",
+  "namespace": "com.semanticops.spec",
+  "name": "constraints",
+  "version": 1,
+  "description": "Portable validation constraints for a semantic schema member.",
+  "aiGuidance": {
+    "purpose": "Captures target-neutral constraints such as bounds, patterns, cardinality, uniqueness, or scalar format.",
+    "extraction": "Use structured JSON for constraints that are portable across render targets. Leave target-specific constraints to projection packages."
+  },
+  "valueType": "json",
+  "editorHint": "textarea",
+  "createdAt": "2026-05-27T00:00:00Z"
+}
