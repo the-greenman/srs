@@ -1,0 +1,27 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "instanceId": "5b507597-f824-576b-b577-fd8141f1eaf1",
+  "typeId": "5e816b81-134f-5f60-938c-700617fd79ae",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.srs",
+  "typeName": "meta.section",
+  "fieldValues": [
+    {
+      "fieldId": "96f04d9d-9432-5628-8664-0d92e50f6fd0",
+      "value": "05. Distribution Group (Core)"
+    },
+    {
+      "fieldId": "436786e4-d51e-5275-9654-bc4b5ee82b1a",
+      "value": "The Distribution group is required for all conforming implementations."
+    }
+  ],
+  "sourceRefs": [
+    {
+      "sourceType": "repository-document",
+      "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "relationType": "evidence",
+      "note": "Section 05 from srs-spec.md - coarse source anchoring during migration"
+    }
+  ],
+  "createdAt": "2026-05-27T00:00:00Z"
+}

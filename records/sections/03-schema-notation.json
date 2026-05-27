@@ -1,0 +1,27 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "instanceId": "63065301-6afc-5ae6-8d62-59cae1a3154c",
+  "typeId": "5e816b81-134f-5f60-938c-700617fd79ae",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.srs",
+  "typeName": "meta.section",
+  "fieldValues": [
+    {
+      "fieldId": "96f04d9d-9432-5628-8664-0d92e50f6fd0",
+      "value": "03. Schema Notation"
+    },
+    {
+      "fieldId": "436786e4-d51e-5275-9654-bc4b5ee82b1a",
+      "value": "Types are described using TypeScript-style notation. Optional fields are marked with `?`. All `UUID` values are RFC 4122 UUID strings. All `ISO8601` values are datetime strings with timezone offset. `integer` means a positive integer unless otherwise noted."
+    }
+  ],
+  "sourceRefs": [
+    {
+      "sourceType": "repository-document",
+      "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "relationType": "evidence",
+      "note": "Section 03 from srs-spec.md - coarse source anchoring during migration"
+    }
+  ],
+  "createdAt": "2026-05-27T00:00:00Z"
+}
