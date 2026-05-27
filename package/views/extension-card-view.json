@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/view.json",
+  "id": "5157b347-8bf0-52e4-b761-dfba589149fa",
+  "namespace": "com.semanticops.srs",
+  "title": "Extension Card View",
+  "description": "Renders each extension record as a self-contained reference card suitable for documentation.",
+  "outputFormats": [
+    "markdown",
+    "html"
+  ],
+  "rootType": "com.semanticops.srs/meta.extension",
+  "ordering": {
+    "field": "extension_id"
+  },
+  "createdAt": "2026-05-27T00:00:00Z"
+}
