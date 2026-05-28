@@ -59,8 +59,8 @@ async function renderRFCs() {
 ${content}
 `;
 
-    // Write to spec/rfcs/ directory
-    const outputPath = `spec/rfcs/rfc-${rfcNum}.md`;
+    // Write to docs/spec/rfcs/ directory
+    const outputPath = `docs/spec/rfcs/rfc-${rfcNum}.md`;
     await writeFile(outputPath, md);
     console.log(`  ✓ ${outputPath}`);
   }

@@ -1569,7 +1569,7 @@
     "renderedExports": [
       {
         "format": "markdown",
-        "outputPath": "../spec/srs-spec.md",
+        "outputPath": "../docs/spec/srs-spec.md",
         "view": "srs-spec-document-view"
       }
     ],

@@ -3,9 +3,9 @@
  * Render SRS documents from canonical records.
  *
  * Usage:
- *   node scripts/render-spec.mjs                  # spec → spec/srs-spec.md
- *   node scripts/render-spec.mjs --doc rationale  # rationale → spec/srs-rationale.md
- *   node scripts/render-spec.mjs --doc unified    # both → spec/srs-unified.md
+ *   node scripts/render-spec.mjs                  # spec → docs/spec/srs-spec.md
+ *   node scripts/render-spec.mjs --doc rationale  # rationale → docs/spec/srs-rationale.md
+ *   node scripts/render-spec.mjs --doc unified    # both → docs/spec/srs-unified.md
  */
 import { readFile, writeFile } from 'fs/promises';
 import { join, dirname } from 'path';
@@ -209,13 +209,13 @@ async function main() {
   if (doc === 'spec' || doc === 'unified') {
     const sectionSeq = relById.get('rel-section-sequence');
     const md = renderSpecDoc(specRecord, sectionSeq, subRels, instanceMap, containsRels);
-    outputs.push({ path: 'spec/srs-spec.md', md });
+    outputs.push({ path: 'docs/spec/srs-spec.md', md });
   }
 
   if (doc === 'rationale' || doc === 'unified') {
     const noteSeq = relById.get('rel-design-note-sequence');
     const md = renderRationaleDoc(rationaleSpec, noteSeq, instanceMap, containsRels);
-    outputs.push({ path: 'spec/srs-rationale.md', md });
+    outputs.push({ path: 'docs/spec/srs-rationale.md', md });
   }
 
   if (doc === 'unified') {
@@ -231,7 +231,7 @@ async function main() {
       '\n\n---\n\n# Design Rationale\n\n' +
       `*Non-normative companion explaining design decisions. See [srs-rationale.md](srs-rationale.md) for the standalone document.*\n\n` +
       ratBody;
-    outputs.push({ path: 'spec/srs-unified.md', md: unified });
+    outputs.push({ path: 'docs/spec/srs-unified.md', md: unified });
   }
 
   for (const { path, md } of outputs) {

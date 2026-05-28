@@ -329,7 +329,7 @@ async function main() {
     sourceOfTruth: "records",
     migrationImports: [
       {
-        source: "spec/srs-spec.md",
+        source: "docs/spec/srs-spec.md",
         importedAt: new Date().toISOString(),
         note: "Imported section and subsection content into canonical repository records.",
       },

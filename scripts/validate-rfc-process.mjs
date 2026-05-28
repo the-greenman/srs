@@ -48,7 +48,7 @@ function fieldValue(record, fieldId) {
 }
 
 function isActivePath(path) {
-  return path === 'package' || path.startsWith('package/') || path === 'schemas' || path.startsWith('schemas/');
+  return path === 'package' || path.startsWith('package/') || path === 'docs/schema' || path.startsWith('docs/schema/');
 }
 
 async function validatePackageWithSchemas(packageDir, fieldSchemaPath, typeSchemaPath) {
@@ -176,12 +176,12 @@ async function main() {
     await validatePackageWithSchemas(
       'rfcs/rfc-004/proposed-package/spec-authoring-core',
       join(ROOT, 'rfcs/rfc-004/proposed-schemas/field.json'),
-      join(ROOT, 'schemas/type.json'),
+      join(ROOT, 'docs/schema/2.0/type.json'),
     );
     await validatePackageWithSchemas(
       'rfcs/rfc-004/proposed-package/spec-authoring-json-schema',
       join(ROOT, 'rfcs/rfc-004/proposed-schemas/field.json'),
-      join(ROOT, 'schemas/type.json'),
+      join(ROOT, 'docs/schema/2.0/type.json'),
     );
   }
 

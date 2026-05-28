@@ -12,6 +12,7 @@ import { join, resolve } from 'path';
 import { loadSchema, validateJsonSchema } from './lib/json-schema-lite.mjs';
 
 const ROOT = resolve('.');
+const SCHEMA_DIR = join(ROOT, 'docs/schema/2.0');
 const SRS_REPO = join(ROOT, 'srs');
 const packageDir = process.argv[2] ?? 'package/spec-authoring-core';
 
@@ -85,9 +86,9 @@ async function main() {
   console.log(`Validating package in ${packageDir}...`);
 
   const [packageManifestSchema, fieldSchema, typeSchema] = await Promise.all([
-    loadSchema(join(SRS_REPO, 'schemas/package-manifest.json')),
-    loadSchema(join(SRS_REPO, 'schemas/field.json')),
-    loadSchema(join(SRS_REPO, 'schemas/type.json')),
+    loadSchema(join(SCHEMA_DIR, 'package-manifest.json')),
+    loadSchema(join(SCHEMA_DIR, 'field.json')),
+    loadSchema(join(SCHEMA_DIR, 'type.json')),
   ]);
 
   const dirPath = join(SRS_REPO, packageDir);

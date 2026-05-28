@@ -81,7 +81,7 @@ async function buildManifest() {
       renderedExports: [
         {
           view: 'srs-spec-document-view',
-          outputPath: 'spec/srs-spec.md',
+          outputPath: 'docs/spec/srs-spec.md',
           format: 'markdown'
         }
       ],
