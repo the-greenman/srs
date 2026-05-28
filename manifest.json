@@ -1530,10 +1530,41 @@
         "maintenance",
         "human-ai-collaboration"
       ]
+    },
+    {
+      "instanceId": "cdd08a86-4fb8-47a0-bcfd-1fd7b9449af9",
+      "tier": 0,
+      "path": "records/notes/tooling-design-principles-authority-and-determinism.json",
+      "title": "Tooling Design Principles: Authority and Determinism",
+      "tags": [
+        "design-principles",
+        "tooling",
+        "cli",
+        "library",
+        "authority",
+        "deterministic",
+        "dry-code",
+        "ai-native"
+      ]
     }
   ],
-  "srsVersion": "2.0-draft",
-  "repositoryId": "4172fada-bc38-5479-ac18-4be3194a68ca",
+  "$schema": "https://srs.semanticops.com/schema/2.0/manifest.json",
+  "relationsPath": "relations/relations.json",
+  "sourceDocumentIndex": [
+    "ai-sessions/chatgpt-origin.md.meta.json",
+    "ai-sessions/chatgpt-spec-review.md.meta.json",
+    "ai-sessions/claude-collaborative-document.md.meta.json",
+    "spec/srs-spec.md.meta.json"
+  ],
+  "sourceDocumentsPath": "source-documents",
+  "declaredExtensions": [
+    "ext:lifecycle",
+    "ext:addressability",
+    "ext:views-l1",
+    "ext:views-l2",
+    "ext:repository",
+    "ext:recommended-relations"
+  ],
   "packageRefs": [
     {
       "mode": "local",
@@ -1544,19 +1575,11 @@
       "path": "package/spec-rfc-process"
     }
   ],
-  "$schema": "https://srs.semanticops.com/schema/2.0/manifest.json",
-  "sourceDocumentsPath": "source-documents",
-  "declaredExtensions": [
-    "ext:lifecycle",
-    "ext:addressability",
-    "ext:views-l1",
-    "ext:views-l2",
-    "ext:repository",
-    "ext:recommended-relations"
-  ],
+  "srsVersion": "2.0-draft",
+  "repositoryId": "4172fada-bc38-5479-ac18-4be3194a68ca",
   "description": "The SRS specification, authored as an SRS repository. The rendered specification is a DocumentView export of the records in this repository.",
+  "title": "Semantic Record System Specification",
   "namespace": "com.semanticops.srs",
-  "relationsPath": "relations/relations.json",
   "meta": {
     "renderedExports": [
       {
@@ -1566,12 +1589,5 @@
       }
     ],
     "sourceOfTruth": "records"
-  },
-  "title": "Semantic Record System Specification",
-  "sourceDocumentIndex": [
-    "ai-sessions/chatgpt-origin.md.meta.json",
-    "ai-sessions/chatgpt-spec-review.md.meta.json",
-    "ai-sessions/claude-collaborative-document.md.meta.json",
-    "spec/srs-spec.md.meta.json"
-  ]
+  }
 }
