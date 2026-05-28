@@ -8,7 +8,7 @@
   "description": "Proposed RFC-004 extension to spec-authoring-core. This package is proposal material only and must not be treated as active package state until RFC-004 is accepted and implemented.",
   "status": "draft",
   "fields": [
-    "fields/default-value.json",
+    "fields/schema-default-value.json",
     "fields/schema-name.json",
     "fields/member-name.json",
     "fields/type-expression.json",

@@ -4,10 +4,10 @@
   "namespace": "com.semanticops.spec",
   "name": "deprecated",
   "version": 1,
-  "description": "Whether a schema definition or schema member is deprecated.",
+  "description": "Whether a semantic schema definition or schema member is deprecated.",
   "aiGuidance": {
-    "purpose": "Marks schema vocabulary that remains valid for compatibility but should no longer be used for new data.",
-    "extraction": "Set true only when the specification explicitly deprecates the schema or member."
+    "purpose": "Marks schema vocabulary that remains valid for compatibility but should no longer be used for new data. This is schema vocabulary deprecation, not the lifecycle timestamp `deprecatedAt` used by some structural schemas.",
+    "extraction": "Set true only when the specification explicitly deprecates this schema definition or schema member. Use lifecycle metadata or `deprecatedAt` separately when recording when deprecation occurred."
   },
   "valueType": "boolean",
   "editorHint": "singleline",

@@ -4,10 +4,10 @@
   "namespace": "com.semanticops.spec",
   "name": "required",
   "version": 1,
-  "description": "Whether a schema member must be present.",
+  "description": "Whether a semantic schema member must be present in instances of its parent schema.",
   "aiGuidance": {
-    "purpose": "Distinguishes required members from members that may be absent.",
-    "extraction": "Set true only when the source specification requires the member to be present. Optional prose, question marks, or defaulted absence should normally be false."
+    "purpose": "Distinguishes required schema members from schema members that may be absent. This is schema-member requiredness, not Type FieldAssignment.required.",
+    "extraction": "Set true only when the source specification requires this schema member/property to be present in the represented data shape. Do not use this field to describe whether an SRS Type includes a required FieldAssignment."
   },
   "valueType": "boolean",
   "editorHint": "singleline",

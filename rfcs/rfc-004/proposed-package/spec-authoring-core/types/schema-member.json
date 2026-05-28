@@ -37,10 +37,10 @@
       "displayLabel": "Constraints"
     },
     {
-      "fieldId": "1a000024-0000-4000-a000-000000000024",
+      "fieldId": "1a000042-0000-4000-a000-000000000042",
       "order": 5,
       "required": false,
-      "displayLabel": "Default Value"
+      "displayLabel": "Schema Default Value"
     },
     {
       "fieldId": "1a000005-0000-4000-a000-000000000005",

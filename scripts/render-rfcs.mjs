@@ -18,6 +18,7 @@ function getFieldValue(record, fieldId) {
 // Field IDs
 const TITLE_FIELD = '1a000001-0000-4000-a000-000000000001';
 const CONTENT_FIELD = '1a000002-0000-4000-a000-000000000002';
+const RFC_NUMBER_FIELD = '5a000001-0000-4000-a000-000000000001';
 const RFC_STATUS_FIELD = '5a000002-0000-4000-a000-000000000002';
 
 async function renderRFCs() {
@@ -29,8 +30,15 @@ async function renderRFCs() {
   // Find all RFC records
   const rfcPaths = manifest.instanceIndex.filter(p => p.startsWith('rfcs/'));
 
+  const rfcRecords = [];
   for (const rfcPath of rfcPaths) {
     const record = await loadRecord(join('records', rfcPath));
+    rfcRecords.push({ rfcPath, record });
+  }
+
+  rfcRecords.sort((a, b) => getFieldValue(a.record, RFC_NUMBER_FIELD).localeCompare(getFieldValue(b.record, RFC_NUMBER_FIELD)));
+
+  for (const { record } of rfcRecords) {
     const title = getFieldValue(record, TITLE_FIELD);
     const status = getFieldValue(record, RFC_STATUS_FIELD);
     const content = getFieldValue(record, CONTENT_FIELD);

@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://srs.semanticops.com/schema/2.0/package.json",
-  "title": "SCDS Package",
-  "description": "A distributable artefact containing Field and Type definitions. Self-contained when mode is 'bundled'; declares external dependencies when mode is 'standalone'.",
+  "title": "SRS Distribution Package Schema Candidate",
+  "description": "RFC-004 proposal copy of the distribution-oriented Package JSON Schema with the json Field.valueType added. This schema describes the bundled/standalone distribution shape from the SRS spec; it is not intended to validate this repository's lightweight local package manifests without a separate package-manifest migration RFC.",
   "type": "object",
   "required": ["schemaVersion", "packageId", "packageName", "packageVersion", "publishedAt", "mode", "fields", "types", "dependencyRefs"],
   "additionalProperties": false,

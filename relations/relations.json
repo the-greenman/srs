@@ -194,7 +194,7 @@
     {
       "id": "rel-rfc-004-section",
       "type": "rfc-targets-section",
-      "from": "a4b5c6d7-e8f9-4a0b-1c2d-3e4f5a6b7c8d",
+      "from": "a4b5c6d7-e8f9-4a0b-8c2d-3e4f5a6b7c8d",
       "to": "4244a790-72ff-5e1c-9b60-d4b58b90f92c",
       "label": "RFC-004 proposes new ext:schema-notation extension"
     },
@@ -447,6 +447,65 @@
       "type": "contains",
       "from": "ed9f0446-800c-5428-8780-09bb499f76aa",
       "to": "b1000000-0000-4000-a000-000000000008"
+    },
+    {
+      "id": "rel-rfc-004-change-sequence",
+      "type": "rfc-change-sequence",
+      "from": "a4b5c6d7-e8f9-4a0b-8c2d-3e4f5a6b7c8d",
+      "members": [
+        "f3d9302c-ae06-5311-8928-54f5f01d34b1",
+        "2925ab39-cbb1-58e2-8e56-7927d04e8890",
+        "95aaa3b5-1866-5fa8-857b-026db49abaaf",
+        "2e7aee83-a9e8-57a8-89bf-08917c91a69f",
+        "694cfd3c-91a7-52b5-8082-20ed49976366",
+        "29b41659-4cf6-58e3-87ad-9edf01c9309e",
+        "be9b259a-0697-5f8b-8a75-8c0c9f00d297",
+        "978704cf-a41a-5e7b-887f-6a328f7502d9",
+        "8149374a-c3ed-5efb-81cd-a99a00d61ba1"
+      ],
+      "description": "Ordered RFC-004 change records."
+    },
+    {
+      "id": "rel-rfc-004-revision-sequence",
+      "type": "rfc-revision-sequence",
+      "from": "a4b5c6d7-e8f9-4a0b-8c2d-3e4f5a6b7c8d",
+      "members": [
+        "17eab013-627d-5fd2-8441-467097843508",
+        "0f2a0ce5-cd4a-5f94-8b4e-c6b1dc600da6"
+      ],
+      "description": "Ordered RFC-004 revision records."
+    },
+    {
+      "id": "rel-rfc-004-artifact-sequence",
+      "type": "rfc-proposed-artifact-sequence",
+      "from": "a4b5c6d7-e8f9-4a0b-8c2d-3e4f5a6b7c8d",
+      "members": [
+        "4f3fdbd8-e155-51d6-8488-4708b2e5c1c4",
+        "4a12d726-5718-5215-8779-daf58477b50d",
+        "a0d914fc-2d96-576c-811b-1249e533091f",
+        "0ee9f736-c16b-5358-87d3-1c1ae7448b8d",
+        "4ed1593f-38ff-528c-846c-e961f0b55173",
+        "c7a59785-cbc5-5375-8180-0ddfe92d9abe",
+        "f01b93ad-0bb5-5069-8d3c-3ddef324e8eb",
+        "60f4c2b0-a514-53b5-8d8f-af072586d47d",
+        "14e86242-cc76-56a2-87b6-aaea17ef627e",
+        "6a8e6d05-111d-53f3-854c-a743c29a66b6",
+        "476e9067-bba3-5e82-89da-5c7218b8824e",
+        "8a4716e0-05cc-539b-8da8-ab0c884d7409",
+        "5303679e-54c2-5514-81cc-216efa2b95fd",
+        "ea30e14e-e860-5320-8424-e3287ff53287",
+        "20277726-5f1b-582a-8ada-b28609da6101",
+        "0912d44c-ea31-5ff1-8150-266239c49c36",
+        "0ace152b-c847-5541-8353-6bcbf0d6e5fd"
+      ],
+      "description": "RFC-004 proposed artifact records."
+    },
+    {
+      "id": "rel-rfc-002-section",
+      "type": "rfc-targets-section",
+      "from": "854eedf0-ddcf-5f17-bfef-28d27d1e9e6a",
+      "to": "4244a790-72ff-5e1c-9b60-d4b58b90f92c",
+      "label": "RFC-002 proposes new ext:themes-l1 extension"
     }
   ]
 }
