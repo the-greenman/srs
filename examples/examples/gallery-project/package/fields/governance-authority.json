@@ -1,0 +1,17 @@
+{
+  "$schema": "https://scds.io/schema/2.0/field.json",
+  "id": "d25da548-79d6-555b-8878-f40b685b3955",
+  "namespace": "governance",
+  "name": "authority",
+  "version": 1,
+  "description": "What this role may decide or act on without requiring group agreement.",
+  "aiGuidance": {
+    "purpose": "Define the scope of unilateral authority. What is this role holder empowered to decide alone?",
+    "extraction": "Extract the specific decisions, actions, or domains this role holder can act on independently.",
+    "negativeGuidance": "Do not conflate with boundary (what the role cannot do). Authority is what they can do."
+  },
+  "valueType": "text",
+  "contentFormat": "plain",
+  "editorHint": "textarea",
+  "createdAt": "2026-05-26T00:00:00Z"
+}

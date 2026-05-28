@@ -1,0 +1,41 @@
+{
+  "$schema": "https://scds.io/gallery-example/schemas/governance-article",
+  "instanceId": "093e9b67-ff1f-5530-bd24-ffb35d55f931",
+  "typeId": "a1142ac3-5385-5c0e-8630-1dd3432cdf7f",
+  "typeVersion": 1,
+  "typeNamespace": "governance",
+  "typeName": "article",
+  "fieldValues": [
+    {
+      "fieldId": "60be1468-01bc-5d12-9eea-628f02801893",
+      "value": "A-004",
+      "source": "human"
+    },
+    {
+      "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
+      "value": "How we make decisions",
+      "source": "human"
+    },
+    {
+      "fieldId": "8aa3eba2-204b-5ebd-ba7a-be0f066027d6",
+      "value": "Decisions are made by talk and agreement. We do not vote. Where we cannot agree, the matter stays open or is recorded as an exercise. Once a decision is agreed, it is written down in the decision log and does not change silently — a new decision supersedes an old one by name. These Articles may be amended by unanimous agreement of all current members. The Clerk is responsible for maintaining the coherence of the record.",
+      "source": "human"
+    },
+    {
+      "fieldId": "3340532b-d845-5e54-92b3-819ed05365c5",
+      "value": "Writing things down is the mechanism by which we hold ourselves accountable and remain honest with artists who exhibit with us.",
+      "source": "human"
+    },
+    {
+      "fieldId": "1f01bc6b-39c8-58d7-b1a3-79142623fece",
+      "value": "Unanimous agreement of all current members.",
+      "source": "human"
+    },
+    {
+      "fieldId": "aee7afe9-6650-5fa4-a61a-495c3b88994b",
+      "value": "active",
+      "source": "human"
+    }
+  ],
+  "createdAt": "2026-05-26T00:00:00Z"
+}

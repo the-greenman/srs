@@ -1,0 +1,24 @@
+{
+  "$schema": "https://scds.io/schema/2.0/field.json",
+  "id": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
+  "namespace": "governance",
+  "name": "decision_statement",
+  "version": 1,
+  "description": "What was decided.",
+  "aiGuidance": {
+    "purpose": "The settled commitment or direction of action, stated clearly enough that a non-participant could act on it.",
+    "extraction": "State only what was decided. Use plain language, present tense preferred. A decision statement should be complete without the rationale.",
+    "negativeGuidance": "Do not include rationale, alternatives, or context. Do not hedge or qualify.",
+    "examples": [
+      {
+        "description": "Extracting from informal agreement",
+        "input": "We agreed we'd go with the permanent fixings — six millimetre wall plugs, drilled once and left in.",
+        "output": "Permanent 6mm wall plugs with screws, drilled once and left in place."
+      }
+    ]
+  },
+  "valueType": "text",
+  "contentFormat": "plain",
+  "editorHint": "textarea",
+  "createdAt": "2026-05-25T00:00:00Z"
+}

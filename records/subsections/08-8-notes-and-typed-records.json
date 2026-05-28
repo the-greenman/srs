@@ -12,7 +12,7 @@
     },
     {
       "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": "**18.** `NoteSection.name` values must be unique within a `Note`.\n\n**19.** `TypedField.name` values must be unique within a `Typed Record`."
+      "value": "**18.** `NoteSection.name` values must be unique within a `Note`.\n\n**18a.** `Note.tags` values, when present, must be non-empty strings. Duplicate tag values within a single Note are permitted but have no additional meaning.\n\n**19.** `TypedField.name` values must be unique within a `Typed Record`."
     }
   ],
   "sourceRefs": [

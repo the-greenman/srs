@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Validate Tier 2 records using the repo's JSON schema.
+ * Validate instance files under records/ using their declared structural schema.
  *
  * Usage:
  *   node scripts/validate-records.mjs
@@ -48,11 +48,25 @@ function rel(path) {
 }
 
 async function main() {
-  console.log(`Validating records in ${recordsDir}...`);
+  console.log(`Validating instances in ${recordsDir}...`);
 
-  const recordSchema = await loadSchema(join(ROOT, 'schemas/record.json'));
+  const schemasByUrl = new Map([
+    [
+      'https://srs.semanticops.com/schema/2.0/record.json',
+      await loadSchema(join(ROOT, 'schemas/record.json'))
+    ],
+    [
+      'https://srs.semanticops.com/schema/2.0/note.json',
+      await loadSchema(join(ROOT, 'schemas/note.json'))
+    ],
+    [
+      'https://srs.semanticops.com/schema/2.0/typed-record.json',
+      await loadSchema(join(ROOT, 'schemas/typed-record.json'))
+    ]
+  ]);
+
   const recordFiles = await findRecordFiles(join(ROOT, recordsDir));
-  console.log(`  Found ${recordFiles.length} record files`);
+  console.log(`  Found ${recordFiles.length} instance files`);
 
   let validCount = 0;
   let invalidCount = 0;
@@ -64,7 +78,16 @@ async function main() {
       continue;
     }
 
-    const schemaErrors = validateJsonSchema(record, recordSchema);
+    const declaredSchema = record.$schema;
+    const schema = schemasByUrl.get(declaredSchema);
+
+    if (!schema) {
+      invalidCount++;
+      errors.push(`${recordsDir}/${relativePath}: unsupported or missing $schema: ${declaredSchema ?? '(missing)'}`);
+      continue;
+    }
+
+    const schemaErrors = validateJsonSchema(record, schema);
     if (!record.sourceRefs) {
       warnings.push(`${recordsDir}/${relativePath}: missing sourceRefs (optional but recommended)`);
     }
@@ -92,7 +115,7 @@ async function main() {
   }
 
   const valid = invalidCount === 0;
-  console.log(`\n  ${valid ? '✓ All records are valid' : '✗ Record validation failed'}`);
+  console.log(`\n  ${valid ? '✓ All instances are valid' : '✗ Instance validation failed'}`);
   process.exit(valid ? 0 : 1);
 }
 

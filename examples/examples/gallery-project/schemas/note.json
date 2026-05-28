@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://srs.semanticops.com/schema/2.0/note.json",
+  "$id": "https://scds.io/schema/2.0/note.json",
   "title": "SCDS Note (Tier 0)",
   "description": "A lightweight instance with no Type binding. The lowest-ceremony entry point in SCDS.",
   "type": "object",
@@ -13,11 +13,6 @@
       "format": "uuid"
     },
     "title": { "type": "string" },
-    "tags": {
-      "type": "array",
-      "items": { "type": "string", "minLength": 1 },
-      "description": "Free-form topic labels for discovery and filtering. Not semantically defined; use Relations for semantic claims."
-    },
     "sections": {
       "type": "array",
       "items": { "$ref": "#/$defs/NoteSection" },
@@ -56,11 +51,6 @@
           "type": "string",
           "enum": ["text", "markdown", "plain"],
           "description": "Hint only; default: text."
-        },
-        "tags": {
-          "type": "array",
-          "items": { "type": "string", "minLength": 1 },
-          "description": "Section-level topic labels; supplements or narrows Note-level tags."
         }
       }
     },
