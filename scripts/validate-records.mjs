@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
  * Validate instance files under records/ using their declared structural schema.
+ * Run from the repo root (parent of srs/).
  *
  * Usage:
  *   node scripts/validate-records.mjs
@@ -11,6 +12,7 @@ import { join, resolve } from 'path';
 import { loadSchema, validateJsonSchema } from './lib/json-schema-lite.mjs';
 
 const ROOT = resolve('.');
+const SRS_REPO = join(ROOT, 'srs');
 const recordsDir = process.argv[2] ?? 'records';
 
 const errors = [];
@@ -44,7 +46,7 @@ async function findRecordFiles(dir, basePath = '') {
 }
 
 function rel(path) {
-  return path.startsWith(`${ROOT}/`) ? path.slice(ROOT.length + 1) : path;
+  return path.startsWith(`${SRS_REPO}/`) ? path.slice(SRS_REPO.length + 1) : path;
 }
 
 async function main() {
@@ -53,19 +55,19 @@ async function main() {
   const schemasByUrl = new Map([
     [
       'https://srs.semanticops.com/schema/2.0/record.json',
-      await loadSchema(join(ROOT, 'schemas/record.json'))
+      await loadSchema(join(SRS_REPO, 'schemas/record.json'))
     ],
     [
       'https://srs.semanticops.com/schema/2.0/note.json',
-      await loadSchema(join(ROOT, 'schemas/note.json'))
+      await loadSchema(join(SRS_REPO, 'schemas/note.json'))
     ],
     [
       'https://srs.semanticops.com/schema/2.0/typed-record.json',
-      await loadSchema(join(ROOT, 'schemas/typed-record.json'))
+      await loadSchema(join(SRS_REPO, 'schemas/typed-record.json'))
     ]
   ]);
 
-  const recordFiles = await findRecordFiles(join(ROOT, recordsDir));
+  const recordFiles = await findRecordFiles(join(SRS_REPO, recordsDir));
   console.log(`  Found ${recordFiles.length} instance files`);
 
   let validCount = 0;

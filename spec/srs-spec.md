@@ -343,6 +343,7 @@ A named text section within a Note.
   label?: string
   content: string
   contentHint?: "text" | "markdown" | "plain"  // hint only; default: "text"
+  tags?: string[]       // section-level topic labels; supplements or narrows Note-level tags
 }
 ```
 
@@ -355,6 +356,7 @@ A lightweight instance with no Type binding.
   instanceId: UUID
 
   title?: string
+  tags?: string[]           // free-form topic labels; snake_case recommended
   sections: NoteSection[]
 
   graduatedAt?: ISO8601
@@ -370,6 +372,8 @@ A lightweight instance with no Type binding.
   meta?: Record<string, unknown>
 }
 ```
+
+`tags` are free-form labels that allow Notes to be grouped and discovered by topic across a repository. They carry no semantic identity — a tag is not a defined term and carries no lineage. Use tags for navigation and filtering; use Relations for semantic claims.
 
 #### `TypedField`
 
@@ -2185,6 +2189,8 @@ Conforming implementations must uphold the following invariants.
 ### Notes and Typed Records
 
 **18.** `NoteSection.name` values must be unique within a `Note`.
+
+**18a.** `Note.tags` values, when present, must be non-empty strings. Duplicate tag values within a single Note are permitted but have no additional meaning.
 
 **19.** `TypedField.name` values must be unique within a `Typed Record`.
 

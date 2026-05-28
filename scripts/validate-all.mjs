@@ -8,15 +8,16 @@ import { dirname, join } from 'path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const scripts = [
-  'validate-package.mjs',
-  'validate-records.mjs'
+const packages = [
+  'package',
+  'package/spec-authoring-core',
+  'package/spec-rfc-process',
 ];
 
-async function runScript(script) {
+async function runScript(script, args = []) {
   return new Promise((resolve) => {
     console.log(`\n${'='.repeat(60)}`);
-    const child = spawn('node', [join(__dirname, script)], {
+    const child = spawn('node', [join(__dirname, script), ...args], {
       stdio: 'inherit'
     });
 
@@ -31,10 +32,13 @@ async function validateAll() {
 
   let allValid = true;
 
-  for (const script of scripts) {
-    const valid = await runScript(script);
+  for (const pkg of packages) {
+    const valid = await runScript('validate-package.mjs', [pkg]);
     if (!valid) allValid = false;
   }
+
+  const recordsValid = await runScript('validate-records.mjs');
+  if (!recordsValid) allValid = false;
 
   console.log(`\n${'='.repeat(60)}`);
   console.log(allValid ? '\n✓ All validations passed' : '\n✗ Some validations failed');

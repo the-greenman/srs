@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Validate a package directory using the repo's JSON schemas plus manifest checks.
+ * Validate a package directory using the SRS repo's JSON schemas plus manifest checks.
+ * Run from the repo root (parent of srs/).
  *
  * Usage:
  *   node scripts/validate-package.mjs
@@ -11,6 +12,7 @@ import { join, resolve } from 'path';
 import { loadSchema, validateJsonSchema } from './lib/json-schema-lite.mjs';
 
 const ROOT = resolve('.');
+const SRS_REPO = join(ROOT, 'srs');
 const packageDir = process.argv[2] ?? 'package/spec-authoring-core';
 
 const errors = [];
@@ -35,7 +37,7 @@ async function fileExists(path) {
 }
 
 function rel(path) {
-  return path.startsWith(`${ROOT}/`) ? path.slice(ROOT.length + 1) : path;
+  return path.startsWith(`${SRS_REPO}/`) ? path.slice(SRS_REPO.length + 1) : path;
 }
 
 function pushSchemaErrors(label, schemaErrors) {
@@ -48,20 +50,6 @@ async function validatePackageManifest(dirPath) {
   const manifestPath = join(dirPath, 'package.json');
   const manifest = await loadJson(manifestPath);
   if (!manifest) return null;
-
-  const requiredKeys = ['id', 'namespace', 'name', 'version', 'title', 'description', 'status', 'fields', 'types', 'views', 'createdAt'];
-  for (const key of requiredKeys) {
-    if (!(key in manifest)) {
-      errors.push(`${rel(manifestPath)}: missing ${key}`);
-    }
-  }
-
-  for (const listKey of ['fields', 'types', 'views']) {
-    if (listKey in manifest && !Array.isArray(manifest[listKey])) {
-      errors.push(`${rel(manifestPath)}: ${listKey} must be an array`);
-    }
-  }
-
   return manifest;
 }
 
@@ -96,20 +84,26 @@ async function validateManifestPaths(dirPath, manifest, subdir) {
 async function main() {
   console.log(`Validating package in ${packageDir}...`);
 
-  const [fieldSchema, typeSchema] = await Promise.all([
-    loadSchema(join(ROOT, 'schemas/field.json')),
-    loadSchema(join(ROOT, 'schemas/type.json')),
+  const [packageManifestSchema, fieldSchema, typeSchema] = await Promise.all([
+    loadSchema(join(SRS_REPO, 'schemas/package-manifest.json')),
+    loadSchema(join(SRS_REPO, 'schemas/field.json')),
+    loadSchema(join(SRS_REPO, 'schemas/type.json')),
   ]);
 
-  const dirPath = join(ROOT, packageDir);
+  const dirPath = join(SRS_REPO, packageDir);
   const manifest = await validatePackageManifest(dirPath);
   if (!manifest) {
     process.exit(1);
   }
 
+  pushSchemaErrors(rel(join(dirPath, 'package.json')), validateJsonSchema(manifest, packageManifestSchema));
+
   await validateManifestPaths(dirPath, manifest, 'fields');
   await validateManifestPaths(dirPath, manifest, 'types');
   await validateManifestPaths(dirPath, manifest, 'views');
+  if (manifest.relationTypes) {
+    await validateManifestPaths(dirPath, manifest, 'relationTypes');
+  }
 
   const fieldEntries = Array.isArray(manifest.fields) ? manifest.fields : [];
   console.log(`  Checking ${fieldEntries.length} field definitions...`);

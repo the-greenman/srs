@@ -93,8 +93,9 @@ async function loadJson(rel) {
 
 async function buildInstanceMap(instanceIndex) {
   const map = new Map();
-  for (const path of instanceIndex) {
-    const record = await loadJson(`records/${path}`);
+  for (const entry of instanceIndex) {
+    const path = typeof entry === 'string' ? entry : entry.path;
+    const record = await loadJson(path);
     map.set(record.instanceId, record);
   }
   return map;
