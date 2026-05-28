@@ -7,7 +7,7 @@
   "description": "A single revision history entry for an RFC, recording what changed and when. Revisions are ordered via rfc-revision-sequence relations.",
   "fields": [
     {
-      "fieldId": "1a000007-0000-4000-a000-000000000007",
+      "fieldId": "5a000018-0000-4000-a000-000000000018",
       "order": 0,
       "required": true,
       "displayLabel": "Revision Number"

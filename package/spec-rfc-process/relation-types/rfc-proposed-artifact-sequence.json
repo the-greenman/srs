@@ -1,0 +1,9 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/relation-type.json",
+  "relationType": "rfc-proposed-artifact-sequence",
+  "namespace": "com.semanticops.spec",
+  "label": "RFC proposed artifact sequence",
+  "description": "Lists proposed artifacts belonging to an RFC.",
+  "category": "sequence",
+  "canonicalDirection": "source is the RFC; members are rfc-proposed-artifact records"
+}

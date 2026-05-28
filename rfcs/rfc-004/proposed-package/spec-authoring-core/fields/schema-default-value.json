@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "1a000042-0000-4000-a000-000000000042",
+  "namespace": "com.semanticops.spec",
+  "name": "schema-default-value",
+  "version": 1,
+  "description": "The structured default value for a semantic schema member.",
+  "aiGuidance": {
+    "purpose": "Captures the concrete JSON default value for a schema member, distinct from prose documentation of defaults on ordinary spec fields.",
+    "extraction": "Use this only for schema-member defaults. Store the exact JSON value when there is a concrete default. If the source says 'absent means X' rather than defining a concrete value, document that in notes or semantic-purpose instead of inventing a JSON default."
+  },
+  "valueType": "json",
+  "editorHint": "textarea",
+  "createdAt": "2026-05-27T00:00:00Z"
+}

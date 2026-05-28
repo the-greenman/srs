@@ -31,7 +31,8 @@
     "fields/implemented-at.json",
     "fields/implementation-commit.json",
     "fields/proposal-artifact-path.json",
-    "fields/artifact-kind.json"
+    "fields/artifact-kind.json",
+    "fields/revision-number.json"
   ],
   "types": [
     "types/rfc.json",
@@ -43,6 +44,12 @@
   ],
   "views": [
     "views/rfc-document-view.json"
+  ],
+  "relationTypes": [
+    "relation-types/rfc-targets-section.json",
+    "relation-types/rfc-change-sequence.json",
+    "relation-types/rfc-revision-sequence.json",
+    "relation-types/rfc-proposed-artifact-sequence.json"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
   "updatedAt": "2026-05-27T00:00:00Z"
