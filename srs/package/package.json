@@ -62,9 +62,9 @@
     "types/tag-definition.json",
     "types/meta.protocol.json"
   ],
-  "views": [
-    "views/srs-spec-document-view.json",
-    "views/extension-card-view.json"
+  "views": [],
+  "documentViews": [
+    "document-views/srs-spec-document-view.json"
   ],
   "relationTypes": [
     "relation-types/contains.json",

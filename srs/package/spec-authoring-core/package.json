@@ -54,7 +54,6 @@
   ],
   "views": [
     "views/spec-document-view.json",
-    "views/extension-card-view.json",
     "views/rationale-document-view.json",
     "views/unified-document-view.json"
   ],
