@@ -1,6 +1,6 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/relation-type.json",
-  "id": "b2000005-0000-4000-c000-000000000005",
+  "id": "b2000005-0000-4000-a000-000000000005",
   "version": 1,
   "relationType": "com.semanticops.srs/explains",
   "namespace": "com.semanticops.srs",
