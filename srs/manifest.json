@@ -118,7 +118,7 @@
       "instanceId": "b1000000-0000-4000-a000-000000000005",
       "tier": 2,
       "path": "records/tables/t005-democracy-mapping.json",
-      "title": "How the SCDS v2 vocabulary maps to the \u03bcDemocracy application layer. Reproduced from the v1\u2192v2 conceptual remapping document for reference."
+      "title": "How the SCDS v2 vocabulary maps to the μDemocracy application layer. Reproduced from the v1→v2 conceptual remapping document for reference."
     },
     {
       "instanceId": "b1000000-0000-4000-a000-000000000006",
@@ -220,13 +220,13 @@
       "instanceId": "22aeac29-b51f-510e-bc99-aeb0020d2656",
       "tier": 2,
       "path": "records/rfcs/rfc-001-views-l2-rendering.json",
-      "title": "RFC-001: Views L2 \u2014 Rendering Hierarchy and Default Rendering Baseline"
+      "title": "RFC-001: Views L2 — Rendering Hierarchy and Default Rendering Baseline"
     },
     {
       "instanceId": "854eedf0-ddcf-5f17-bfef-28d27d1e9e6a",
       "tier": 2,
       "path": "records/rfcs/rfc-002-themes-l1.json",
-      "title": "RFC-002: ext:themes-l1 \u2014 Visual Theming for Document Views"
+      "title": "RFC-002: ext:themes-l1 — Visual Theming for Document Views"
     },
     {
       "instanceId": "f7f41817-fe5e-53e9-9bb4-eb313ae6c539",
@@ -550,25 +550,25 @@
       "instanceId": "fe0810ac-5ba0-5a37-8ab2-a845ea96b3af",
       "tier": 2,
       "path": "records/subsections/08-16-distribution-views-l2-ext-views-l2.json",
-      "title": "Distribution \u2014 Views L2 (ext:views-l2)"
+      "title": "Distribution — Views L2 (ext:views-l2)"
     },
     {
       "instanceId": "1623bc16-c479-5fd0-8014-36a81c692690",
       "tier": 2,
       "path": "records/subsections/08-17-distribution-schema-ext-schema.json",
-      "title": "Distribution \u2014 Schema (ext:schema)"
+      "title": "Distribution — Schema (ext:schema)"
     },
     {
       "instanceId": "f3e0eeb6-0844-5d87-ba39-222ba4454eea",
       "tier": 2,
       "path": "records/subsections/08-18-distribution-protocol-ext-protocol.json",
-      "title": "Distribution \u2014 Protocol (ext:protocol)"
+      "title": "Distribution — Protocol (ext:protocol)"
     },
     {
       "instanceId": "31bc8a13-bcef-5c71-826d-2fd5528ce021",
       "tier": 2,
       "path": "records/subsections/08-19-field-semantics-content-format.json",
-      "title": "Field semantics \u2014 content format"
+      "title": "Field semantics — content format"
     },
     {
       "instanceId": "078b205b-a636-5f5c-b120-f84a7bcd5463",
@@ -616,13 +616,13 @@
       "instanceId": "e2439781-004a-5997-bfc8-9d405232e223",
       "tier": 2,
       "path": "records/subsections/08-5-1-ext-federation-ext-repository.json",
-      "title": "ext:federation \u00d7 ext:repository"
+      "title": "ext:federation × ext:repository"
     },
     {
       "instanceId": "1ff855f5-b20f-52c7-bc1d-c7e6311743a6",
       "tier": 2,
       "path": "records/subsections/08-5-2-ext-protocol-ext-addressability.json",
-      "title": "ext:protocol \u00d7 ext:addressability"
+      "title": "ext:protocol × ext:addressability"
     },
     {
       "instanceId": "6a3ae7a9-bb3e-5dc3-9d4e-8a2cea41fb77",
@@ -634,7 +634,7 @@
       "instanceId": "826039b6-5575-5071-bd10-3b0ef9b345a5",
       "tier": 2,
       "path": "records/subsections/08-6-distribution-views-ext-views-l1.json",
-      "title": "Distribution \u2014 Views (ext:views-l1)"
+      "title": "Distribution — Views (ext:views-l1)"
     },
     {
       "instanceId": "bf712f2b-715b-5ea6-8aac-9bb065605bdd",
@@ -1090,7 +1090,7 @@
       "instanceId": "f1000005-0000-4000-a000-000000000005",
       "tier": 2,
       "path": "records/design-notes/005-why-record-tiers-exist-note-typed-record-record.json",
-      "title": "Why Record tiers exist (Note \u2192 Typed Record \u2192 Record)"
+      "title": "Why Record tiers exist (Note → Typed Record → Record)"
     },
     {
       "instanceId": "f1000006-0000-4000-a000-000000000006",
@@ -1216,7 +1216,7 @@
       "instanceId": "f1000026-0000-4000-a000-000000000026",
       "tier": 2,
       "path": "records/design-notes/026-schema-vs-view-the-extraction-gap.json",
-      "title": "Schema vs View \u2014 the extraction gap"
+      "title": "Schema vs View — the extraction gap"
     },
     {
       "instanceId": "f1000027-0000-4000-a000-000000000027",
@@ -1306,7 +1306,7 @@
       "instanceId": "f1000041-0000-4000-a000-000000000041",
       "tier": 2,
       "path": "records/design-notes/041-democracy-mapping.json",
-      "title": "\u03bcDemocracy Mapping"
+      "title": "μDemocracy Mapping"
     },
     {
       "instanceId": "af489a79-3748-56a7-b21d-916da4a2ce08",
@@ -1590,8 +1590,61 @@
         "design-decision",
         "cardinality"
       ]
+    },
+    {
+      "instanceId": "3ac58ecc-dfc8-45cd-8ddb-2a3b429e768e",
+      "tier": 0,
+      "path": "records/notes/rfc-001-implementation-prerequisites.json",
+      "title": "RFC-001 Implementation Prerequisites",
+      "tags": [
+        "rfc-001",
+        "implementation",
+        "cli",
+        "views",
+        "schemas"
+      ]
+    },
+    {
+      "instanceId": "a3f7c9e1-2b4d-4f8a-9c1e-5d7b3a2f6e0c",
+      "tier": 2,
+      "path": "records/extensions/ext-themes-l1.json",
+      "title": "ext:themes-l1"
     }
   ],
+  "srsVersion": "2.0-draft",
+  "containerIndex": [
+    {
+      "containerId": "5c923d50-90ba-4fae-bf62-9af86324f30b",
+      "path": "containers/rfc001-implementation-5c923d50.json",
+      "title": "RFC001 Implementation"
+    },
+    {
+      "containerId": "ec796aad-8e4a-4b16-ad65-594675c048bd",
+      "path": "containers/rfc001-scratch-ec796aad.json",
+      "title": "RFC001 Scratch"
+    }
+  ],
+  "sourceDocumentIndex": [
+    "ai-sessions/chatgpt-origin.md.meta.json",
+    "ai-sessions/chatgpt-spec-review.md.meta.json",
+    "ai-sessions/claude-collaborative-document.md.meta.json",
+    "spec/srs-spec.md.meta.json"
+  ],
+  "$schema": "https://srs.semanticops.com/schema/2.0/manifest.json",
+  "relationsPath": "relations/relations.json",
+  "sourceDocumentsPath": "source-documents",
+  "declaredExtensions": [
+    "ext:addressability",
+    "ext:lifecycle",
+    "ext:recommended-relations",
+    "ext:repository",
+    "ext:themes-l1",
+    "ext:views-l1",
+    "ext:views-l2"
+  ],
+  "title": "Semantic Record System Specification",
+  "repositoryId": "4172fada-bc38-5479-ac18-4be3194a68ca",
+  "description": "The SRS specification, authored as an SRS repository. The rendered specification is a DocumentView export of the records in this repository.",
   "meta": {
     "renderedExports": [
       {
@@ -1602,25 +1655,7 @@
     ],
     "sourceOfTruth": "records"
   },
-  "relationsPath": "relations/relations.json",
-  "srsVersion": "2.0-draft",
-  "declaredExtensions": [
-    "ext:lifecycle",
-    "ext:addressability",
-    "ext:views-l1",
-    "ext:views-l2",
-    "ext:repository",
-    "ext:recommended-relations"
-  ],
-  "description": "The SRS specification, authored as an SRS repository. The rendered specification is a DocumentView export of the records in this repository.",
-  "title": "Semantic Record System Specification",
-  "sourceDocumentIndex": [
-    "ai-sessions/chatgpt-origin.md.meta.json",
-    "ai-sessions/chatgpt-spec-review.md.meta.json",
-    "ai-sessions/claude-collaborative-document.md.meta.json",
-    "spec/srs-spec.md.meta.json"
-  ],
-  "repositoryId": "4172fada-bc38-5479-ac18-4be3194a68ca",
+  "namespace": "com.semanticops.srs",
   "packageRefs": [
     {
       "mode": "local",
@@ -1630,8 +1665,5 @@
       "mode": "local",
       "path": "package/spec-rfc-process"
     }
-  ],
-  "sourceDocumentsPath": "source-documents",
-  "namespace": "com.semanticops.srs",
-  "$schema": "https://srs.semanticops.com/schema/2.0/manifest.json"
+  ]
 }
