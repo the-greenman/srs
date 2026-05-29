@@ -1,0 +1,65 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "id": "protocol-type-001",
+  "namespace": "com.semanticops.srs",
+  "name": "meta.protocol",
+  "version": 1,
+  "description": "A protocol defining a staged workflow for record processing.",
+  "fields": [
+    {
+      "fieldId": "protocol-id-001",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Protocol ID"
+    },
+    {
+      "fieldId": "protocol-ns-001",
+      "order": 1,
+      "required": true,
+      "displayLabel": "Namespace"
+    },
+    {
+      "fieldId": "protocol-name-001",
+      "order": 2,
+      "required": true,
+      "displayLabel": "Name"
+    },
+    {
+      "fieldId": "protocol-ver-001",
+      "order": 3,
+      "required": true,
+      "displayLabel": "Version"
+    },
+    {
+      "fieldId": "protocol-desc-001",
+      "order": 4,
+      "required": false,
+      "displayLabel": "Description"
+    },
+    {
+      "fieldId": "protocol-target-001",
+      "order": 5,
+      "required": true,
+      "displayLabel": "Target Type"
+    },
+    {
+      "fieldId": "protocol-stages-001",
+      "order": 6,
+      "required": true,
+      "displayLabel": "Stages"
+    },
+    {
+      "fieldId": "protocol-tags-001",
+      "order": 7,
+      "required": false,
+      "displayLabel": "Tags"
+    },
+    {
+      "fieldId": "protocol-created-001",
+      "order": 8,
+      "required": true,
+      "displayLabel": "Created At"
+    }
+  ],
+  "createdAt": "2026-05-29T00:00:00Z"
+}

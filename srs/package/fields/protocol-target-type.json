@@ -1,0 +1,12 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "protocol-target-001",
+  "namespace": "com.semanticops.srs",
+  "name": "protocol-target-type",
+  "version": 1,
+  "title": "Protocol Target Type",
+  "description": "The record type this protocol applies to.",
+  "valueType": "string",
+  "aiGuidance": {},
+  "createdAt": "2026-05-29T00:00:00Z"
+}

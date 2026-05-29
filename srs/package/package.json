@@ -37,7 +37,16 @@
     "fields/tag-label.json",
     "fields/tag-description.json",
     "fields/tag-roles.json",
-    "fields/tag-aliases.json"
+    "fields/tag-aliases.json",
+    "fields/protocol-id.json",
+    "fields/protocol-namespace.json",
+    "fields/protocol-name.json",
+    "fields/protocol-version.json",
+    "fields/protocol-description.json",
+    "fields/protocol-target-type.json",
+    "fields/protocol-stages.json",
+    "fields/protocol-tags.json",
+    "fields/protocol-created-at.json"
   ],
   "types": [
     "types/meta.specification.json",
@@ -50,7 +59,8 @@
     "types/meta.rfc.json",
     "types/meta.section.json",
     "types/meta.subsection.json",
-    "types/tag-definition.json"
+    "types/tag-definition.json",
+    "types/meta.protocol.json"
   ],
   "views": [
     "views/srs-spec-document-view.json",

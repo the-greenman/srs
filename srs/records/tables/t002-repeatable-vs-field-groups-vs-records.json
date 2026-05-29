@@ -22,6 +22,11 @@
         {
           "value": "Example"
         }
+      ],
+      "value": [
+        "Pattern",
+        "When to use",
+        "Example"
       ]
     }
   ],
@@ -44,6 +49,11 @@
                 {
                   "value": "Multiple assigned person names"
                 }
+              ],
+              "value": [
+                "Repeatable scalar (`ext:repeatable-fields`)",
+                "Multiple values of the same type, no pairing needed",
+                "Multiple assigned person names"
               ]
             }
           ]
@@ -62,6 +72,11 @@
                 {
                   "value": "Contacts with name + email"
                 }
+              ],
+              "value": [
+                "Field Group (`ext:field-groups`)",
+                "Multiple structured entries that must be read together",
+                "Contacts with name + email"
               ]
             }
           ]
@@ -80,6 +95,11 @@
                 {
                   "value": "Tasks assigned to roles"
                 }
+              ],
+              "value": [
+                "Separate Records + Relations",
+                "Repeated items need their own identity, lifecycle, or reuse",
+                "Tasks assigned to roles"
               ]
             }
           ]

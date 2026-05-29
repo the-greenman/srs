@@ -1,0 +1,12 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "protocol-ver-001",
+  "namespace": "com.semanticops.srs",
+  "name": "protocol-version",
+  "version": 1,
+  "title": "Protocol Version",
+  "description": "Version number of the protocol.",
+  "valueType": "number",
+  "aiGuidance": {},
+  "createdAt": "2026-05-29T00:00:00Z"
+}

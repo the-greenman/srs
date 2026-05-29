@@ -1,0 +1,12 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "protocol-desc-001",
+  "namespace": "com.semanticops.srs",
+  "name": "protocol-description",
+  "version": 1,
+  "title": "Protocol Description",
+  "description": "Description of the protocol purpose and behavior.",
+  "valueType": "string",
+  "aiGuidance": {},
+  "createdAt": "2026-05-29T00:00:00Z"
+}

@@ -26,6 +26,11 @@
         {
           "value": "target"
         }
+      ],
+      "value": [
+        "Relation",
+        "source",
+        "target"
       ]
     }
   ],
@@ -48,6 +53,11 @@
                 {
                   "value": "the older Record"
                 }
+              ],
+              "value": [
+                "`supersedes`",
+                "the newer Record",
+                "the older Record"
               ]
             }
           ]
@@ -66,6 +76,11 @@
                 {
                   "value": "the task inside it"
                 }
+              ],
+              "value": [
+                "`contains`",
+                "the stage",
+                "the task inside it"
               ]
             }
           ]
@@ -84,6 +99,11 @@
                 {
                   "value": "the task it needs"
                 }
+              ],
+              "value": [
+                "`depends-on`",
+                "the dependent task",
+                "the task it needs"
               ]
             }
           ]
@@ -102,6 +122,11 @@
                 {
                   "value": "the rough version"
                 }
+              ],
+              "value": [
+                "`refines`",
+                "the detailed version",
+                "the rough version"
               ]
             }
           ]
@@ -120,6 +145,11 @@
                 {
                   "value": "the source Note or Record"
                 }
+              ],
+              "value": [
+                "`derived-from`",
+                "the successor",
+                "the source Note or Record"
               ]
             }
           ]
@@ -138,6 +168,11 @@
                 {
                   "value": "the claim it supports"
                 }
+              ],
+              "value": [
+                "`evidences`",
+                "the source material",
+                "the claim it supports"
               ]
             }
           ]

@@ -26,6 +26,11 @@
         {
           "value": "Category"
         }
+      ],
+      "value": [
+        "Canonical",
+        "Converse",
+        "Category"
       ]
     }
   ],
@@ -48,6 +53,11 @@
                 {
                   "value": "Composition"
                 }
+              ],
+              "value": [
+                "`contains`",
+                "`part-of`",
+                "Composition"
               ]
             }
           ]
@@ -66,6 +76,11 @@
                 {
                   "value": "Dependency"
                 }
+              ],
+              "value": [
+                "`depends-on`",
+                "`required-by`",
+                "Dependency"
               ]
             }
           ]
@@ -84,6 +99,11 @@
                 {
                   "value": "Governance"
                 }
+              ],
+              "value": [
+                "`supersedes`",
+                "`superseded-by`",
+                "Governance"
               ]
             }
           ]
@@ -102,6 +122,11 @@
                 {
                   "value": "Refinement"
                 }
+              ],
+              "value": [
+                "`refines`",
+                "`refined-by`",
+                "Refinement"
               ]
             }
           ]
@@ -120,6 +145,11 @@
                 {
                   "value": "Derivation"
                 }
+              ],
+              "value": [
+                "`derived-from`",
+                "`source-of`",
+                "Derivation"
               ]
             }
           ]
@@ -138,6 +168,11 @@
                 {
                   "value": "Evidence"
                 }
+              ],
+              "value": [
+                "`evidences`",
+                "`evidenced-by`",
+                "Evidence"
               ]
             }
           ]
@@ -156,6 +191,11 @@
                 {
                   "value": "Sequence"
                 }
+              ],
+              "value": [
+                "`precedes`",
+                "`follows`",
+                "Sequence"
               ]
             }
           ]

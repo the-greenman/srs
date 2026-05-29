@@ -1,0 +1,12 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "protocol-tags-001",
+  "namespace": "com.semanticops.srs",
+  "name": "protocol-tags",
+  "version": 1,
+  "title": "Protocol Tags",
+  "description": "Tags associated with the protocol.",
+  "valueType": "multiselect",
+  "aiGuidance": {},
+  "createdAt": "2026-05-29T00:00:00Z"
+}

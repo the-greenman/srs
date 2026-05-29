@@ -19,6 +19,10 @@
         {
           "value": "Examples"
         }
+      ],
+      "value": [
+        "Category",
+        "Examples"
       ]
     }
   ],
@@ -38,6 +42,10 @@
                 {
                   "value": "`contains`, `part-of`, `has-section`"
                 }
+              ],
+              "value": [
+                "Composition",
+                "`contains`, `part-of`, `has-section`"
               ]
             }
           ]
@@ -53,6 +61,10 @@
                 {
                   "value": "`refines`, `expands`, `summarises`"
                 }
+              ],
+              "value": [
+                "Refinement",
+                "`refines`, `expands`, `summarises`"
               ]
             }
           ]
@@ -68,6 +80,10 @@
                 {
                   "value": "`depends-on`, `requires`, `blocks`, `enables`"
                 }
+              ],
+              "value": [
+                "Dependency",
+                "`depends-on`, `requires`, `blocks`, `enables`"
               ]
             }
           ]
@@ -83,6 +99,10 @@
                 {
                   "value": "`precedes`, `follows`, `overlaps`"
                 }
+              ],
+              "value": [
+                "Sequence",
+                "`precedes`, `follows`, `overlaps`"
               ]
             }
           ]
@@ -98,6 +118,10 @@
                 {
                   "value": "`derived-from`, `extracted-from`, `based-on`"
                 }
+              ],
+              "value": [
+                "Derivation",
+                "`derived-from`, `extracted-from`, `based-on`"
               ]
             }
           ]
@@ -113,6 +137,10 @@
                 {
                   "value": "`evidences`, `supports`, `contradicts`"
                 }
+              ],
+              "value": [
+                "Evidence",
+                "`evidences`, `supports`, `contradicts`"
               ]
             }
           ]
@@ -128,6 +156,10 @@
                 {
                   "value": "`supersedes`, `amends`, `ratifies`, `delegates`"
                 }
+              ],
+              "value": [
+                "Governance",
+                "`supersedes`, `amends`, `ratifies`, `delegates`"
               ]
             }
           ]
@@ -143,6 +175,10 @@
                 {
                   "value": "`relates-to`, `links-to`"
                 }
+              ],
+              "value": [
+                "Association",
+                "`relates-to`, `links-to`"
               ]
             }
           ]

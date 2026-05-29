@@ -19,6 +19,10 @@
         {
           "value": "Extensions"
         }
+      ],
+      "value": [
+        "Need",
+        "Extensions"
       ]
     }
   ],
@@ -38,6 +42,10 @@
                 {
                   "value": "Core only"
                 }
+              ],
+              "value": [
+                "Define and exchange Field and Type definitions",
+                "Core only"
               ]
             }
           ]
@@ -53,6 +61,10 @@
                 {
                   "value": "`ext:import-tracking`"
                 }
+              ],
+              "value": [
+                "Track definition origin and imports",
+                "`ext:import-tracking`"
               ]
             }
           ]
@@ -68,6 +80,10 @@
                 {
                   "value": "`ext:registry`"
                 }
+              ],
+              "value": [
+                "Publish a definition catalog",
+                "`ext:registry`"
               ]
             }
           ]
@@ -83,6 +99,10 @@
                 {
                   "value": "`ext:lifecycle`"
                 }
+              ],
+              "value": [
+                "Governance with lifecycle states",
+                "`ext:lifecycle`"
               ]
             }
           ]
@@ -98,6 +118,10 @@
                 {
                   "value": "`ext:views-l1`"
                 }
+              ],
+              "value": [
+                "Present and export Records",
+                "`ext:views-l1`"
               ]
             }
           ]
@@ -113,6 +137,10 @@
                 {
                   "value": "`ext:views-l2`"
                 }
+              ],
+              "value": [
+                "Assemble multi-Record documents",
+                "`ext:views-l2`"
               ]
             }
           ]
@@ -128,6 +156,10 @@
                 {
                   "value": "`ext:protocol`"
                 }
+              ],
+              "value": [
+                "Facilitate structured deliberation",
+                "`ext:protocol`"
               ]
             }
           ]
@@ -143,6 +175,10 @@
                 {
                   "value": "`ext:addressability`"
                 }
+              ],
+              "value": [
+                "Live facilitation with context assembly",
+                "`ext:addressability`"
               ]
             }
           ]
@@ -158,6 +194,10 @@
                 {
                   "value": "`ext:schema`"
                 }
+              ],
+              "value": [
+                "Extraction from source material",
+                "`ext:schema`"
               ]
             }
           ]
@@ -173,6 +213,10 @@
                 {
                   "value": "`ext:type-inheritance`"
                 }
+              ],
+              "value": [
+                "Specialise Types while preserving base processability",
+                "`ext:type-inheritance`"
               ]
             }
           ]
@@ -188,6 +232,10 @@
                 {
                   "value": "`ext:repeatable-fields`"
                 }
+              ],
+              "value": [
+                "Lists of values within a Record",
+                "`ext:repeatable-fields`"
               ]
             }
           ]
@@ -203,6 +251,10 @@
                 {
                   "value": "`ext:field-groups`"
                 }
+              ],
+              "value": [
+                "Structured repeatable context in a Record",
+                "`ext:field-groups`"
               ]
             }
           ]
@@ -218,6 +270,10 @@
                 {
                   "value": "`ext:cross-field-validation`"
                 }
+              ],
+              "value": [
+                "Complex conditional validation",
+                "`ext:cross-field-validation`"
               ]
             }
           ]
@@ -233,6 +289,10 @@
                 {
                   "value": "`ext:recommended-relations`"
                 }
+              ],
+              "value": [
+                "Cross-system Relation interoperability",
+                "`ext:recommended-relations`"
               ]
             }
           ]

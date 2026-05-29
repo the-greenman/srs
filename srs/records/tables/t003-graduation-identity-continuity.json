@@ -26,6 +26,11 @@
         {
           "value": "Relation"
         }
+      ],
+      "value": [
+        "Scenario",
+        "`instanceId`",
+        "Relation"
       ]
     }
   ],
@@ -48,6 +53,11 @@
                 {
                   "value": "None required"
                 }
+              ],
+              "value": [
+                "Pure formalisation (section names map directly to field names, content unchanged)",
+                "Keep",
+                "None required"
               ]
             }
           ]
@@ -66,6 +76,11 @@
                 {
                   "value": "`refines` from new to old"
                 }
+              ],
+              "value": [
+                "Content interpreted or restructured during formalisation",
+                "New",
+                "`refines` from new to old"
               ]
             }
           ]
@@ -84,6 +99,11 @@
                 {
                   "value": "`derived-from` from each new Record to the original"
                 }
+              ],
+              "value": [
+                "One Note splits into multiple Records",
+                "New IDs for all",
+                "`derived-from` from each new Record to the original"
               ]
             }
           ]

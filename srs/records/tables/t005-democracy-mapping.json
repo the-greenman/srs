@@ -8,7 +8,7 @@
   "fieldValues": [
     {
       "fieldId": "1a000025-0000-4000-a000-000000000025",
-      "value": "How the SCDS v2 vocabulary maps to the μDemocracy application layer. Reproduced from the v1→v2 conceptual remapping document for reference."
+      "value": "How the SCDS v2 vocabulary maps to the \u03bcDemocracy application layer. Reproduced from the v1\u2192v2 conceptual remapping document for reference."
     },
     {
       "fieldId": "1a000032-0000-4000-a000-000000000032",
@@ -17,8 +17,12 @@
           "value": "SCDS concept"
         },
         {
-          "value": "μDemocracy application"
+          "value": "\u03bcDemocracy application"
         }
+      ],
+      "value": [
+        "SCDS concept",
+        "\u03bcDemocracy application"
       ]
     }
   ],
@@ -38,6 +42,10 @@
                 {
                   "value": "Semantic atom in a governance record"
                 }
+              ],
+              "value": [
+                "Field",
+                "Semantic atom in a governance record"
               ]
             }
           ]
@@ -53,6 +61,10 @@
                 {
                   "value": "Decision, Proposal, Action, Role, Value, Principle, ..."
                 }
+              ],
+              "value": [
+                "Type",
+                "Decision, Proposal, Action, Role, Value, Principle, ..."
               ]
             }
           ]
@@ -68,6 +80,10 @@
                 {
                   "value": "A captured governance artefact with provenance"
                 }
+              ],
+              "value": [
+                "Record",
+                "A captured governance artefact with provenance"
               ]
             }
           ]
@@ -83,6 +99,10 @@
                 {
                   "value": "Founding Document type; Decision Log type"
                 }
+              ],
+              "value": [
+                "Schema",
+                "Founding Document type; Decision Log type"
               ]
             }
           ]
@@ -98,6 +118,10 @@
                 {
                   "value": "Democracy protocol: Brain Dump, Decomposition, Decision, Proposal, ..."
                 }
+              ],
+              "value": [
+                "Protocol",
+                "Democracy protocol: Brain Dump, Decomposition, Decision, Proposal, ..."
               ]
             }
           ]
@@ -113,6 +137,10 @@
                 {
                   "value": "A group's governance workspace; a founding process scope"
                 }
+              ],
+              "value": [
+                "Container",
+                "A group's governance workspace; a founding process scope"
               ]
             }
           ]
@@ -128,6 +156,10 @@
                 {
                   "value": "`supersedes`, `derived-from`, `ratifies`, `depends-on`, ..."
                 }
+              ],
+              "value": [
+                "Relation",
+                "`supersedes`, `derived-from`, `ratifies`, `depends-on`, ..."
               ]
             }
           ]
@@ -143,6 +175,10 @@
                 {
                   "value": "Facilitator view; summary view; export for ratification"
                 }
+              ],
+              "value": [
+                "View",
+                "Facilitator view; summary view; export for ratification"
               ]
             }
           ]
@@ -158,6 +194,10 @@
                 {
                   "value": "Assembled founding document; full decision log"
                 }
+              ],
+              "value": [
+                "Document View",
+                "Assembled founding document; full decision log"
               ]
             }
           ]
@@ -171,8 +211,12 @@
                   "value": "Address"
                 },
                 {
-                  "value": "Stable identifier for any governance element — Field, Record, stage, chunk"
+                  "value": "Stable identifier for any governance element \u2014 Field, Record, stage, chunk"
                 }
+              ],
+              "value": [
+                "Address",
+                "Stable identifier for any governance element \u2014 Field, Record, stage, chunk"
               ]
             }
           ]
@@ -188,6 +232,10 @@
                 {
                   "value": "Current focus of an active facilitated session"
                 }
+              ],
+              "value": [
+                "Attention State",
+                "Current focus of an active facilitated session"
               ]
             }
           ]
@@ -203,6 +251,10 @@
                 {
                   "value": "Auditable history of how a governance field arrived at its current value"
                 }
+              ],
+              "value": [
+                "Revision",
+                "Auditable history of how a governance field arrived at its current value"
               ]
             }
           ]
@@ -218,6 +270,10 @@
                 {
                   "value": "Session transcript; threaded discussion; facilitator annotations"
                 }
+              ],
+              "value": [
+                "Conversation layer",
+                "Session transcript; threaded discussion; facilitator annotations"
               ]
             }
           ]

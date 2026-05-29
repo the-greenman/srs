@@ -12,7 +12,7 @@
     },
     {
       "fieldId": "1a000026-0000-4000-a000-000000000026",
-      "value": "Cross-check: if a `supersedes` Relation would feel misleading — as if the group reversed itself when it only clarified — it is probably an edit. If a silent edit would feel misleading — as if the record was silently revised after the fact — it is probably a new Record."
+      "value": "Cross-check: if a `supersedes` Relation would feel misleading \u2014 as if the group reversed itself when it only clarified \u2014 it is probably an edit. If a silent edit would feel misleading \u2014 as if the record was silently revised after the fact \u2014 it is probably a new Record."
     },
     {
       "fieldId": "1a000032-0000-4000-a000-000000000032",
@@ -23,6 +23,10 @@
         {
           "value": "Guidance"
         }
+      ],
+      "value": [
+        "Scenario",
+        "Guidance"
       ]
     }
   ],
@@ -42,6 +46,10 @@
                 {
                   "value": "Edit in-place"
                 }
+              ],
+              "value": [
+                "Correcting how something is expressed (typo, phrasing)",
+                "Edit in-place"
               ]
             }
           ]
@@ -57,6 +65,10 @@
                 {
                   "value": "Edit in-place"
                 }
+              ],
+              "value": [
+                "Adding context that reinforces the existing understanding",
+                "Edit in-place"
               ]
             }
           ]
@@ -72,6 +84,10 @@
                 {
                   "value": "Edit in-place"
                 }
+              ],
+              "value": [
+                "Clarifying a detail that was ambiguous but understanding is unchanged",
+                "Edit in-place"
               ]
             }
           ]
@@ -87,6 +103,10 @@
                 {
                   "value": "New Record + `refines` or `supersedes`"
                 }
+              ],
+              "value": [
+                "Adding information that changes what was actually committed to",
+                "New Record + `refines` or `supersedes`"
               ]
             }
           ]
@@ -102,6 +122,10 @@
                 {
                   "value": "New Record + `supersedes`"
                 }
+              ],
+              "value": [
+                "Reversing or materially replacing a prior commitment",
+                "New Record + `supersedes`"
               ]
             }
           ]
@@ -117,6 +141,10 @@
                 {
                   "value": "New Record + `refines`"
                 }
+              ],
+              "value": [
+                "Producing a more detailed version from a rough original",
+                "New Record + `refines`"
               ]
             }
           ]

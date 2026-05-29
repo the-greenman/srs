@@ -1,0 +1,12 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "protocol-ns-001",
+  "namespace": "com.semanticops.srs",
+  "name": "protocol-namespace",
+  "version": 1,
+  "title": "Protocol Namespace",
+  "description": "Namespace for the protocol.",
+  "valueType": "string",
+  "aiGuidance": {},
+  "createdAt": "2026-05-29T00:00:00Z"
+}
