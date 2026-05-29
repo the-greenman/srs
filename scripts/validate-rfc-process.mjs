@@ -10,6 +10,7 @@ import { join, resolve } from 'path';
 import { loadSchema, validateJsonSchema } from './lib/json-schema-lite.mjs';
 
 const ROOT = resolve('.');
+const SCHEMA_DIR = join(ROOT, '../docs/schema/2.0');
 const RFC_TYPE_ID = '6a000001-0000-4000-a000-000000000001';
 const RFC_CHANGE_TYPE_ID = '6a000002-0000-4000-a000-000000000002';
 const RFC_REVISION_TYPE_ID = '6a000003-0000-4000-a000-000000000003';
@@ -58,9 +59,11 @@ async function validatePackageWithSchemas(packageDir, fieldSchemaPath, typeSchem
   const manifest = await loadJson(manifestPath);
   if (!manifest) return;
 
-  const [fieldSchema, typeSchema] = await Promise.all([
+  const relationTypeSchemaPath = join(SCHEMA_DIR, 'relation-type.json');
+  const [fieldSchema, typeSchema, relationTypeSchema] = await Promise.all([
     loadSchema(fieldSchemaPath),
     loadSchema(typeSchemaPath),
+    loadSchema(relationTypeSchemaPath),
   ]);
 
   for (const relativePath of manifest.fields ?? []) {
@@ -80,6 +83,15 @@ async function validatePackageWithSchemas(packageDir, fieldSchemaPath, typeSchem
       errors.push(`${rel(fullPath)}: ${schemaError}`);
     }
   }
+
+  for (const relativePath of manifest.relationTypes ?? []) {
+    const fullPath = join(ROOT, packageDir, relativePath);
+    const relationType = await loadJson(fullPath);
+    if (!relationType) continue;
+    for (const schemaError of validateJsonSchema(relationType, relationTypeSchema)) {
+      errors.push(`${rel(fullPath)}: ${schemaError}`);
+    }
+  }
 }
 
 async function main() {
@@ -90,8 +102,9 @@ async function main() {
   const relations = relationsCollection?.relations ?? [];
   const indexedRecords = new Map();
   const indexedRecordPaths = new Map();
-  for (const instancePath of manifest?.instanceIndex ?? []) {
-    const fullPath = join(ROOT, 'records', instancePath);
+  for (const indexEntry of manifest?.instanceIndex ?? []) {
+    const instancePath = typeof indexEntry === 'string' ? indexEntry : indexEntry.path;
+    const fullPath = join(ROOT, instancePath);
     const record = await loadJson(fullPath);
     if (record?.instanceId) {
       indexedRecords.set(record.instanceId, record);
@@ -127,7 +140,7 @@ async function main() {
     }
 
     for (const relationType of ['rfc-change-sequence', 'rfc-revision-sequence', 'rfc-proposed-artifact-sequence']) {
-      const sequence = relations.find(relation => relation.type === relationType && relation.from === record.instanceId);
+      const sequence = relations.find(relation => (relation.relationType ?? relation.type) === relationType && (relation.from ?? relation.sourceInstanceId) === record.instanceId);
       if (!sequence) continue;
       if (!Array.isArray(sequence.members) || sequence.members.length === 0) {
         errors.push(`relations/relations.json: ${sequence.id} must contain a non-empty members array`);
@@ -156,18 +169,20 @@ async function main() {
   const rfc004 = [...indexedRecords.values()].find(record => record.typeId === RFC_TYPE_ID && fieldValue(record, F_RFC_NUMBER) === '004');
   if (rfc004) {
     for (const relationType of ['rfc-change-sequence', 'rfc-revision-sequence', 'rfc-proposed-artifact-sequence']) {
-      if (!relations.some(relation => relation.type === relationType && relation.from === rfc004.instanceId)) {
+      if (!relations.some(relation => (relation.relationType ?? relation.type) === relationType && (relation.from ?? relation.sourceInstanceId) === rfc004.instanceId)) {
         errors.push(`relations/relations.json: RFC-004 is missing ${relationType}`);
       }
     }
   }
 
-  for (const relation of relations.filter(relation => relation.type === 'rfc-targets-section')) {
-    if (!indexedRecords.has(relation.from)) {
-      errors.push(`relations/relations.json: ${relation.id} has unknown RFC source ${relation.from}`);
+  for (const relation of relations.filter(relation => (relation.relationType ?? relation.type) === 'rfc-targets-section')) {
+    const from = relation.from ?? relation.sourceInstanceId;
+    const to = relation.to ?? relation.targetInstanceId;
+    if (!indexedRecords.has(from)) {
+      errors.push(`relations/relations.json: ${relation.id ?? relation.relationId} has unknown RFC source ${from}`);
     }
-    if (!indexedRecords.has(relation.to)) {
-      errors.push(`relations/relations.json: ${relation.id} has unknown target ${relation.to}`);
+    if (!indexedRecords.has(to)) {
+      errors.push(`relations/relations.json: ${relation.id ?? relation.relationId} has unknown target ${to}`);
     }
   }
 

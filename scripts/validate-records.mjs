@@ -51,6 +51,69 @@ function rel(path) {
   return path.startsWith(`${SRS_RECORDS_ROOT}/`) ? path.slice(SRS_RECORDS_ROOT.length + 1) : path;
 }
 
+async function loadInstalledRelationTypes() {
+  const manifestPath = join(SRS_RECORDS_ROOT, 'package/package.json');
+  let manifest;
+  try {
+    manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
+  } catch {
+    return new Map();
+  }
+  const defs = new Map();
+  for (const relativePath of manifest.relationTypes ?? []) {
+    try {
+      const def = JSON.parse(await readFile(join(SRS_RECORDS_ROOT, 'package', relativePath), 'utf8'));
+      if (def.relationType) defs.set(def.relationType, def);
+    } catch {
+      // missing file will be caught by validate-package
+    }
+  }
+  return defs;
+}
+
+async function validateRelations(relDefs) {
+  const manifestPath = join(SRS_RECORDS_ROOT, 'manifest.json');
+  let manifest;
+  try {
+    manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
+  } catch {
+    return;
+  }
+  const relationsPath = manifest.relationsPath ?? 'relations/relations.json';
+  const fullRelPath = join(SRS_RECORDS_ROOT, relationsPath);
+  let collection;
+  try {
+    collection = JSON.parse(await readFile(fullRelPath, 'utf8'));
+  } catch {
+    return;
+  }
+
+  const relations = collection.relations ?? [];
+  console.log(`  Checking ${relations.length} relations against installed definitions...`);
+
+  for (const relation of relations) {
+    const rt = relation.relationType;
+    if (!rt) {
+      errors.push(`${relationsPath}: relation ${relation.relationId ?? '(unknown)'} missing relationType`);
+      continue;
+    }
+    const def = relDefs.get(rt);
+    if (!def) {
+      errors.push(`${relationsPath}: relation ${relation.relationId}: relationType "${rt}" has no installed definition`);
+      continue;
+    }
+    const status = def.status ?? 'active';
+    if (status === 'retired') {
+      errors.push(`${relationsPath}: relation ${relation.relationId}: relationType "${rt}" definition is retired`);
+    } else if (status === 'deprecated' || status === 'tombstone') {
+      warnings.push(`${relationsPath}: relation ${relation.relationId}: relationType "${rt}" definition is ${status}`);
+    }
+    if (def.irreflexive && relation.sourceInstanceId === relation.targetInstanceId) {
+      errors.push(`${relationsPath}: relation ${relation.relationId}: relationType "${rt}" is irreflexive but source === target`);
+    }
+  }
+}
+
 async function main() {
   console.log(`Validating instances in ${recordsDir}...`);
 
@@ -69,7 +132,10 @@ async function main() {
     ]
   ]);
 
-  const recordFiles = await findRecordFiles(join(SRS_RECORDS_ROOT, recordsDir));
+  const [relDefs, recordFiles] = await Promise.all([
+    loadInstalledRelationTypes(),
+    findRecordFiles(join(SRS_RECORDS_ROOT, recordsDir)),
+  ]);
   console.log(`  Found ${recordFiles.length} instance files`);
 
   let validCount = 0;
@@ -104,6 +170,8 @@ async function main() {
 
     validCount++;
   }
+
+  await validateRelations(relDefs);
 
   console.log(`\n  Valid: ${validCount}`);
   console.log(`  Invalid: ${invalidCount}`);

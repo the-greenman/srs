@@ -85,10 +85,11 @@ async function validateManifestPaths(dirPath, manifest, subdir) {
 async function main() {
   console.log(`Validating package in ${packageDir}...`);
 
-  const [packageManifestSchema, fieldSchema, typeSchema] = await Promise.all([
+  const [packageManifestSchema, fieldSchema, typeSchema, relationTypeSchema] = await Promise.all([
     loadSchema(join(SCHEMA_DIR, 'package-manifest.json')),
     loadSchema(join(SCHEMA_DIR, 'field.json')),
     loadSchema(join(SCHEMA_DIR, 'type.json')),
+    loadSchema(join(SCHEMA_DIR, 'relation-type.json')),
   ]);
 
   const dirPath = join(SRS_REPO, packageDir);
@@ -102,9 +103,7 @@ async function main() {
   await validateManifestPaths(dirPath, manifest, 'fields');
   await validateManifestPaths(dirPath, manifest, 'types');
   await validateManifestPaths(dirPath, manifest, 'views');
-  if (manifest.relationTypes) {
-    await validateManifestPaths(dirPath, manifest, 'relationTypes');
-  }
+  await validateManifestPaths(dirPath, manifest, 'relationTypes');
 
   const fieldEntries = Array.isArray(manifest.fields) ? manifest.fields : [];
   console.log(`  Checking ${fieldEntries.length} field definitions...`);
@@ -122,6 +121,15 @@ async function main() {
     const type = await loadJson(fullPath);
     if (!type) continue;
     pushSchemaErrors(rel(fullPath), validateJsonSchema(type, typeSchema));
+  }
+
+  const relationTypeEntries = Array.isArray(manifest.relationTypes) ? manifest.relationTypes : [];
+  console.log(`  Checking ${relationTypeEntries.length} relation type definitions...`);
+  for (const relativePath of relationTypeEntries) {
+    const fullPath = join(dirPath, relativePath);
+    const relationType = await loadJson(fullPath);
+    if (!relationType) continue;
+    pushSchemaErrors(rel(fullPath), validateJsonSchema(relationType, relationTypeSchema));
   }
 
   console.log(`\n  Errors: ${errors.length}`);
