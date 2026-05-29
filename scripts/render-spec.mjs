@@ -12,7 +12,8 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const ROOT = join(__dir, '..');
+const ROOT     = join(__dir, '..', 'srs');   // SRS repo root (manifest, records, relations)
+const OUT_ROOT = join(__dir, '..');            // output root (docs/spec/)
 
 // --- Field IDs (new com.semanticops.spec UUIDs) ---
 const F_TITLE       = '1a000001-0000-4000-a000-000000000001';
@@ -28,6 +29,8 @@ const F_CELLS       = '1a000033-0000-4000-a000-000000000033';
 
 // --- Type IDs ---
 const T_SPECIFICATION = '2a000001-0000-4000-a000-000000000001';
+const T_SECTION       = '2a000002-0000-4000-a000-000000000002';
+const T_SUBSECTION    = '2a000003-0000-4000-a000-000000000003';
 const T_TABLE         = '2a000013-0000-4000-a000-000000000013';
 
 // --- Parse CLI args ---
@@ -101,10 +104,31 @@ async function buildInstanceMap(instanceIndex) {
   return map;
 }
 
+// Build a topologically-sorted chain from a set of node IDs using precedes edges.
+// Returns ordered array of IDs.
+function buildChain(nodeIds, precedesRels) {
+  const idSet = new Set(nodeIds);
+  const filtered = precedesRels.filter(
+    r => idSet.has(r.sourceInstanceId) && idSet.has(r.targetInstanceId)
+  );
+  const targets = new Set(filtered.map(r => r.targetInstanceId));
+  const roots = nodeIds.filter(id => !targets.has(id));
+  const next = new Map(filtered.map(r => [r.sourceInstanceId, r.targetInstanceId]));
+  const chain = [];
+  let cur = roots[0];
+  while (cur) {
+    chain.push(cur);
+    cur = next.get(cur);
+  }
+  return chain;
+}
+
 // Render inline tables contained by a given record
 function renderContainedTables(recordId, instanceMap, containsRels) {
   let md = '';
-  const tableIds = containsRels.filter(r => r.from === recordId).map(r => r.to);
+  const tableIds = containsRels
+    .filter(r => r.sourceInstanceId === recordId)
+    .map(r => r.targetInstanceId);
   for (const tid of tableIds) {
     const tableRecord = instanceMap.get(tid);
     if (tableRecord?.typeId === T_TABLE) {
@@ -115,7 +139,7 @@ function renderContainedTables(recordId, instanceMap, containsRels) {
 }
 
 // --- Spec document renderer ---
-function renderSpecDoc(specRecord, sectionSeqRelation, subsectionRelations, instanceMap, containsRels) {
+function renderSpecDoc(specRecord, instanceMap, precedesRels, containsRels) {
   const title   = fv(specRecord, F_TITLE);
   const version = fv(specRecord, F_VERSION);
   const status  = fv(specRecord, F_STATUS);
@@ -127,8 +151,13 @@ function renderSpecDoc(specRecord, sectionSeqRelation, subsectionRelations, inst
   if (summary) md += `${summary}\n\n`;
   md += `> **Projection note**: This Markdown file is a rendered projection of the SRS repository. The records are the source of truth; if this file diverges from repository state, the repository wins.\n\n---\n\n`;
 
-  const sectionIds = sectionSeqRelation?.members ?? [];
-  sectionIds.forEach((sectionId, i) => {
+  // Order sections by following the precedes chain among section records
+  const sectionIds = [...instanceMap.values()]
+    .filter(r => r.typeId === T_SECTION)
+    .map(r => r.instanceId);
+  const orderedSections = buildChain(sectionIds, precedesRels);
+
+  orderedSections.forEach((sectionId, i) => {
     const section = instanceMap.get(sectionId);
     if (!section) return;
     const sTitle   = fv(section, F_TITLE);
@@ -137,26 +166,29 @@ function renderSpecDoc(specRecord, sectionSeqRelation, subsectionRelations, inst
     if (sContent) md += `${sContent}\n\n`;
     md += renderContainedTables(sectionId, instanceMap, containsRels);
 
-    // Find subsections for this section
-    const subRel = subsectionRelations.find(r => r.from === sectionId);
-    if (subRel?.members?.length) {
-      subRel.members.forEach(subId => {
-        const sub = instanceMap.get(subId);
-        if (!sub) return;
-        const ssTitle   = fv(sub, F_TITLE);
-        const ssContent = fv(sub, F_CONTENT);
-        md += `### ${ssTitle}\n\n`;
-        if (ssContent) md += `${ssContent}\n\n`;
-        md += renderContainedTables(subId, instanceMap, containsRels);
-      });
-    }
+    // Find subsections contained by this section, ordered by precedes
+    const subIds = containsRels
+      .filter(r => r.sourceInstanceId === sectionId)
+      .map(r => r.targetInstanceId)
+      .filter(id => instanceMap.get(id)?.typeId === T_SUBSECTION);
+    const orderedSubs = buildChain(subIds, precedesRels);
+
+    orderedSubs.forEach(subId => {
+      const sub = instanceMap.get(subId);
+      if (!sub) return;
+      const ssTitle   = fv(sub, F_TITLE);
+      const ssContent = fv(sub, F_CONTENT);
+      md += `### ${ssTitle}\n\n`;
+      if (ssContent) md += `${ssContent}\n\n`;
+      md += renderContainedTables(subId, instanceMap, containsRels);
+    });
   });
 
   return md;
 }
 
 // --- Rationale (design-note) renderer ---
-function renderRationaleDoc(specRecord, designNoteSeqRelation, instanceMap, containsRels) {
+function renderRationaleDoc(specRecord, instanceMap, precedesRels, containsRels) {
   const title   = fv(specRecord, F_TITLE);
   const version = fv(specRecord, F_VERSION);
   const status  = fv(specRecord, F_STATUS);
@@ -168,23 +200,20 @@ function renderRationaleDoc(specRecord, designNoteSeqRelation, instanceMap, cont
   if (summary) md += `${summary}\n\n`;
   md += `> This document is non-normative. Nothing here overrides the SRS specification.\n\n---\n\n`;
 
-  const noteIds = designNoteSeqRelation?.members ?? [];
-  noteIds.forEach(noteId => {
+  // Design notes are contained by the rationale spec record, ordered by precedes
+  const noteIds = containsRels
+    .filter(r => r.sourceInstanceId === specRecord.instanceId)
+    .map(r => r.targetInstanceId);
+  const orderedNotes = buildChain(noteIds, precedesRels);
+
+  orderedNotes.forEach(noteId => {
     const note = instanceMap.get(noteId);
     if (!note) return;
     const nTitle   = fv(note, F_TITLE);
     const nContent = fv(note, F_CONTENT);
     md += `## ${nTitle}\n\n`;
     if (nContent) md += `${nContent}\n\n`;
-
-    // Render any contained table records
-    const tableIds = containsRels.filter(r => r.from === noteId).map(r => r.to);
-    for (const tid of tableIds) {
-      const tableRecord = instanceMap.get(tid);
-      if (tableRecord?.typeId === T_TABLE) {
-        md += renderTable(tableRecord) + '\n\n';
-      }
-    }
+    md += renderContainedTables(noteId, instanceMap, containsRels);
   });
 
   return md;
@@ -193,13 +222,12 @@ function renderRationaleDoc(specRecord, designNoteSeqRelation, instanceMap, cont
 // --- Main ---
 async function main() {
   const manifest  = await loadJson('manifest.json');
-  const relations = await loadJson('relations/relations.json');
+  const relFile   = await loadJson(manifest.relationsPath ?? 'relations/relations.json');
   const instanceMap = await buildInstanceMap(manifest.instanceIndex);
 
-  // Index relations by id and by type+from for fast lookup
-  const relById     = new Map(relations.relations.map(r => [r.id, r]));
-  const subRels     = relations.relations.filter(r => r.type === 'subsection-sequence');
-  const containsRels = relations.relations.filter(r => r.type === 'contains' && r.from && r.to);
+  const allRels     = relFile.relations ?? [];
+  const precedesRels = allRels.filter(r => r.relationType === 'precedes');
+  const containsRels = allRels.filter(r => r.relationType === 'contains');
 
   const specRecord    = [...instanceMap.values()].find(r => r.typeId === T_SPECIFICATION && fv(r, F_CANONICAL) === 'com.semanticops.srs');
   const rationaleSpec = [...instanceMap.values()].find(r => r.typeId === T_SPECIFICATION && fv(r, F_CANONICAL) === 'com.semanticops.srs.rationale');
@@ -207,24 +235,18 @@ async function main() {
   const outputs = [];
 
   if (doc === 'spec' || doc === 'unified') {
-    const sectionSeq = relById.get('rel-section-sequence');
-    const md = renderSpecDoc(specRecord, sectionSeq, subRels, instanceMap, containsRels);
+    const md = renderSpecDoc(specRecord, instanceMap, precedesRels, containsRels);
     outputs.push({ path: 'docs/spec/srs-spec.md', md });
   }
 
   if (doc === 'rationale' || doc === 'unified') {
-    const noteSeq = relById.get('rel-design-note-sequence');
-    const md = renderRationaleDoc(rationaleSpec, noteSeq, instanceMap, containsRels);
+    const md = renderRationaleDoc(rationaleSpec, instanceMap, precedesRels, containsRels);
     outputs.push({ path: 'docs/spec/srs-rationale.md', md });
   }
 
   if (doc === 'unified') {
-    const sectionSeq = relById.get('rel-section-sequence');
-    const noteSeq    = relById.get('rel-design-note-sequence');
-    const specMd     = renderSpecDoc(specRecord, sectionSeq, subRels, instanceMap, containsRels);
-    const ratMd      = renderRationaleDoc(rationaleSpec, noteSeq, instanceMap, containsRels);
-
-    // Strip the rationale header and merge as an appendix
+    const specMd = renderSpecDoc(specRecord, instanceMap, precedesRels, containsRels);
+    const ratMd  = renderRationaleDoc(rationaleSpec, instanceMap, precedesRels, containsRels);
     const ratBody = ratMd.replace(/^#[^\n]+\n[\s\S]*?---\n\n/, '');
     const unified =
       specMd.trimEnd() +
@@ -235,7 +257,7 @@ async function main() {
   }
 
   for (const { path, md } of outputs) {
-    await writeFile(join(ROOT, path), md);
+    await writeFile(join(OUT_ROOT, path), md);
     console.log(`✓ ${path}`);
   }
 }
