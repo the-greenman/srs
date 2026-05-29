@@ -14,6 +14,7 @@
         "type": "type-query",
         "semanticObjectType": "com.semanticops.srs/meta.section"
       },
+      "titleFieldId": "96f04d9d-9432-5628-8664-0d92e50f6fd0",
       "emptyBehavior": "hide"
     }
   ],
