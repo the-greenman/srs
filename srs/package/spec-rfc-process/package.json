@@ -42,8 +42,9 @@
     "types/rfc-implementation.json",
     "types/rfc-proposed-artifact.json"
   ],
-  "views": [
-    "views/rfc-document-view.json"
+  "views": [],
+  "documentViews": [
+    "document-views/rfc-document-view.json"
   ],
   "relationTypes": [
     "relation-types/rfc-targets-section.json",
