@@ -52,11 +52,12 @@
     "types/design-note.json",
     "types/table.json"
   ],
-  "views": [
-    "views/spec-document-view.json",
-    "views/rationale-document-view.json",
-    "views/unified-document-view.json"
+  "views": [],
+  "documentViews": [
+    "document-views/spec-document-view.json",
+    "document-views/rationale-document-view.json",
+    "document-views/unified-document-view.json"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-05-27T00:00:00Z"
+  "updatedAt": "2026-05-29T00:00:00Z"
 }
