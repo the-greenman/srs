@@ -1563,6 +1563,33 @@
       "tier": 2,
       "path": "records/design-notes/042-why-tags-exist.json",
       "title": "Why tags exist: from clustering to definitions"
+    },
+    {
+      "instanceId": "609370d7-03cf-4501-894a-02276621df8e",
+      "tier": 0,
+      "path": "records/notes/semantic-pipeline-from-transcripts.json",
+      "title": "Semantic Pipeline from Transcripts",
+      "tags": [
+        "semantic-pipeline",
+        "protocol",
+        "source-documents",
+        "transcripts",
+        "layered-extraction",
+        "human-ai-collaboration",
+        "provenance"
+      ]
+    },
+    {
+      "instanceId": "3718815c-d505-40c1-a754-b0ab29e90b8f",
+      "tier": 0,
+      "path": "records/notes/rfc-005-relation-type-cardinality-decision.json",
+      "title": "RFC-005 Relation Type Cardinality Decision",
+      "tags": [
+        "rfc-005",
+        "relation-types",
+        "design-decision",
+        "cardinality"
+      ]
     }
   ],
   "meta": {
