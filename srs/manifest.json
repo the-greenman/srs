@@ -472,7 +472,7 @@
       "instanceId": "3db80d07-9d40-59e9-97b7-516a5ae212af",
       "tier": 2,
       "path": "records/subsections/07-4-ext-schema.json",
-      "title": "ext:schema"
+      "title": "ext:blueprint"
     },
     {
       "instanceId": "37e2f653-b3cc-5751-8f8f-2dfece3acf79",
@@ -556,7 +556,7 @@
       "instanceId": "1623bc16-c479-5fd0-8014-36a81c692690",
       "tier": 2,
       "path": "records/subsections/08-17-distribution-schema-ext-schema.json",
-      "title": "Distribution — Schema (ext:schema)"
+      "title": "Distribution — Blueprint (ext:blueprint)"
     },
     {
       "instanceId": "f3e0eeb6-0844-5d87-ba39-222ba4454eea",
@@ -1102,7 +1102,7 @@
       "instanceId": "f1000007-0000-4000-a000-000000000007",
       "tier": 2,
       "path": "records/design-notes/007-why-schema-is-a-new-concept.json",
-      "title": "Why Schema is a new concept"
+      "title": "Why Blueprint is a new concept"
     },
     {
       "instanceId": "f1000008-0000-4000-a000-000000000008",
@@ -1216,7 +1216,7 @@
       "instanceId": "f1000026-0000-4000-a000-000000000026",
       "tier": 2,
       "path": "records/design-notes/026-schema-vs-view-the-extraction-gap.json",
-      "title": "Schema vs View — the extraction gap"
+      "title": "Blueprint vs View — the extraction gap"
     },
     {
       "instanceId": "f1000027-0000-4000-a000-000000000027",

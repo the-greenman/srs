@@ -8,11 +8,11 @@
   "fieldValues": [
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",
-      "value": "Why Schema is a new concept"
+      "value": "Why Blueprint is a new concept"
     },
     {
       "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": "\nIn v1, there was no way to specify what a document type *is* — what needs to be extracted from source material in order to build it. `DocumentTemplate` (now Document View) handled *assembly* of existing Records into readable output. But nothing owned the prior question: \"Given a transcript of a governance meeting, what Types should I extract, how should they relate to each other, and what does 'complete' mean?\"\n\nSchema fills that gap. A Schema is the artefact you hand to an extraction pipeline. It specifies root Types, expected Relations between extracted Records, and completeness criteria. The Extraction pipeline consults the Schema to know what to look for; the Document View consults existing Records to know what to render.\n\nThe two are complementary: Schema → Records → Document View."
+      "value": "\nIn v1, there was no way to specify what a document type *is* — what needs to be extracted from source material in order to build it. `DocumentTemplate` (now Document View) handled *assembly* of existing Records into readable output. But nothing owned the prior question: \"Given a transcript of a governance meeting, what Types should I extract, how should they relate to each other, and what does 'complete' mean?\"\n\nBlueprint fills that gap. A Blueprint is the artefact you hand to an extraction pipeline. It specifies root Types, expected Relations between extracted Records, and completeness criteria. The Extraction pipeline consults the Blueprint to know what to look for; the Document View consults existing Records to know what to render.\n\nThe two are complementary: Blueprint → Records → Document View."
     }
   ],
   "sourceRefs": [
@@ -20,7 +20,7 @@
       "sourceType": "repository-document",
       "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
       "relationType": "evidence",
-      "note": "Imported from scds-rationale.md: \"Why Schema is a new concept\""
+      "note": "Imported from scds-rationale.md: \"Why Schema is a new concept\" (renamed to Blueprint)"
     }
   ],
   "createdAt": "2026-05-27T00:00:00Z"

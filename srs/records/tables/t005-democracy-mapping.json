@@ -94,14 +94,14 @@
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
                 {
-                  "value": "Schema"
+                  "value": "Blueprint"
                 },
                 {
                   "value": "Founding Document type; Decision Log type"
                 }
               ],
               "value": [
-                "Schema",
+                "Blueprint",
                 "Founding Document type; Decision Log type"
               ]
             }

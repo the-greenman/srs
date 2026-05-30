@@ -8,11 +8,11 @@
   "fieldValues": [
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",
-      "value": "Distribution — Schema (ext:schema)"
+      "value": "Distribution — Blueprint (ext:blueprint)"
     },
     {
       "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": "**36.** Every `TypeRef.typeId` referenced in any `Schema.rootTypes[]`, `Schema.requiredTypes[]`, or in any `RelationSpec.sourceType` or `RelationSpec.targetType` within `Schema.structure[]`, for each Schema in `Package.schemas[]`, must appear in `Package.dependencyRefs` with `definitionType: \"type\"`. If `mode === \"bundled\"`, each such Type must be present in `Package.types[]`."
+      "value": "**36.** Every `TypeRef.typeId` referenced in any `Blueprint.rootTypes[]`, `Blueprint.requiredTypes[]`, or in any `RelationSpec.sourceType` or `RelationSpec.targetType` within `Blueprint.structure[]`, for each Blueprint in `Package.blueprints[]`, must appear in `Package.dependencyRefs` with `definitionType: \"type\"`. If `mode === \"bundled\"`, each such Type must be present in `Package.types[]`."
     }
   ],
   "sourceRefs": [

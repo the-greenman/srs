@@ -2,7 +2,7 @@
 
 **Version:** 0.1-draft  
 **Status:** example profile  
-**Conformance target:** `SRS 2.0 Core + ext:lifecycle + ext:protocol + ext:schema + ext:views-l1 + ext:views-l2 + ext:addressability + ext:recommended-relations + ext:repeatable-fields + ext:field-groups`
+**Conformance target:** `SRS 2.0 Core + ext:lifecycle + ext:protocol + ext:blueprint + ext:views-l1 + ext:views-l2 + ext:addressability + ext:recommended-relations + ext:repeatable-fields + ext:field-groups`
 
 ## 1. Purpose
 
@@ -39,7 +39,7 @@ A meeting is not the owner of a decision. A meeting is a context in which a deci
 |---|---|
 | `ext:lifecycle` | Decisions, exercises, articles, and ratifications need explicit states. |
 | `ext:protocol` | Governance work is deliberative and stage-based, not just form filling. |
-| `ext:schema` | A governance document needs a definition of what record types it contains. |
+| `ext:blueprint` | A governance document needs a definition of what record types it contains. |
 | `ext:views-l1` | Individual records need standard renderings and editing views. |
 | `ext:views-l2` | Governance documents are assembled from multiple records. |
 | `ext:addressability` | Conversation chunks need to be linked to active record and field focus. |
@@ -647,9 +647,9 @@ Used when a new governance repository is being established — typically at or s
 - If the group cannot agree on the dissolution clause (Article 6), record the unresolved question as an Exercise rather than forcing a premature commitment.
 - After drafting, read all Articles aloud or share for group review before marking them `active`.
 
-## 9. Schemas
+## 9. Blueprints
 
-## 9.1 Governance Foundation Document Schema
+## 9.1 Governance Foundation Document Blueprint
 
 Defines a full governance document consisting of Articles, Roles, Decisions, and Exercises.
 
@@ -693,7 +693,7 @@ ratification method
 supersession policy
 ```
 
-## 9.2 Meeting Summary Schema
+## 9.2 Meeting Summary Blueprint
 
 Defines a batch summary output for one meeting.
 
@@ -883,7 +883,7 @@ Sections:
 ## 12.3 Batch meeting summary
 
 1. Transcript is uploaded.
-2. Meeting Summary Schema defines target records to extract.
+2. Meeting Summary Blueprint defines target records to extract.
 3. AI extracts Agenda Items, Decisions, Exercises, Ratifications, and Agent Notes.
 4. Human reviewer approves, edits, or rejects extracted Records.
 5. Meeting Summary Document View renders a consistent summary.

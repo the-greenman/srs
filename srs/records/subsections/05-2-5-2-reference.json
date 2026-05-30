@@ -12,7 +12,7 @@
     },
     {
       "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": "A stable pointer to a specific definition version.\n\n```typescript\n{\n  id: UUID\n  namespace: string\n  name: string\n  version: integer   // min: 1\n  definitionType?: \"field\" | \"type\" | \"view\" | \"schema\" | \"protocol\"\n}\n```\n\nCanonical string form: `namespace/name@version`\n\n---"
+      "value": "A stable pointer to a specific definition version.\n\n```typescript\n{\n  id: UUID\n  namespace: string\n  name: string\n  version: integer   // min: 1\n  definitionType?: \"field\" | \"type\" | \"view\" | \"blueprint\" | \"protocol\"\n}\n```\n\nCanonical string form: `namespace/name@version`\n\n---"
     }
   ],
   "sourceRefs": [

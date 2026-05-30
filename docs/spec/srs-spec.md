@@ -46,7 +46,7 @@ SRS Core [+ ext:<name> ...]
 | Addressability | `ext:addressability` | — | For live facilitation, declare together with `ext:protocol` |
 | Lifecycle | `ext:lifecycle` | — | |
 | Protocol | `ext:protocol` | `ext:lifecycle` (recommended) | For live facilitation, declare together with `ext:addressability` |
-| Schema | `ext:schema` | — | |
+| Blueprint | `ext:blueprint` | — | |
 | Type Inheritance | `ext:type-inheritance` | — | |
 | Views L1 | `ext:views-l1` | — | |
 | Views L2 | `ext:views-l2` | `ext:views-l1` | |
@@ -629,7 +629,7 @@ The distributable artefact. Contains Field, Type, View, and Relation type defini
   types: Type[]
   views?: View[]             // ext:views-l1; omit if not in use
   documentViews?: DocumentView[]  // ext:views-l2; omit if not in use
-  schemas?: Schema[]         // ext:schema; omit if not in use
+  blueprints?: Blueprint[]   // ext:blueprint; omit if not in use
   protocols?: Protocol[]     // ext:protocol; omit if not in use
   relationTypes?: RelationTypeDefinition[]  // ext:recommended-relations
 
@@ -661,7 +661,7 @@ A stable pointer to a specific definition version.
   namespace: string
   name: string
   version: integer   // min: 1
-  definitionType?: "field" | "type" | "view" | "schema" | "protocol"
+  definitionType?: "field" | "type" | "view" | "blueprint" | "protocol"
 }
 ```
 
@@ -899,7 +899,7 @@ Replaces `TemplateFacilitationStep` from v1. Protocol is epistemically richer: s
 
 #### `TypeRef`
 
-A reference to a specific Type, used within Protocol and Schema.
+A reference to a specific Type, used within Protocol and Blueprint.
 
 ```typescript
 {
@@ -1022,13 +1022,13 @@ Views (`ext:views-l1`) no longer contain facilitation logic. A View is a present
 ---
 
 
-#### ext:schema
+#### ext:blueprint
 
 **Required for**: extraction pipelines, founding document workflows, any system that needs to specify what a document type IS before assembling it.
 
 #### `RelationSpec`
 
-Declares an expected Relation between two Record types within a Schema.
+Declares an expected Relation between two Record types within a Blueprint.
 
 ```typescript
 {
@@ -1040,9 +1040,9 @@ Declares an expected Relation between two Record types within a Schema.
 }
 ```
 
-#### `Schema`
+#### `Blueprint`
 
-The definition of a complete document type — which Types it contains, what Relations exist between resulting Records, and what "complete" means. A Schema is the artefact handed to an extraction pipeline.
+The definition of a complete document type — which Types it contains, what Relations exist between resulting Records, and what "complete" means. A Blueprint is the artefact handed to an extraction pipeline.
 
 ```typescript
 {
@@ -1058,7 +1058,7 @@ The definition of a complete document type — which Types it contains, what Rel
   requiredTypes: TypeRef[]    // what "complete" means for this document type
 
   aiGuidance?: AiGuidance
-  // purpose: what kind of document this Schema defines
+  // purpose: what kind of document type this Blueprint defines
   // extraction: framing for extraction pipelines
 
   tags?: string[]
@@ -1068,9 +1068,9 @@ The definition of a complete document type — which Types it contains, what Rel
 }
 ```
 
-**Schema vs View:**
+**Blueprint vs View:**
 
-| | Schema | View / Document View |
+| | Blueprint | View / Document View |
 |---|---|---|
 | Question it answers | What IS this document type? What should be extracted? | How are existing Records assembled into readable output? |
 | Operates at | Definition time | Projection time |
@@ -1696,7 +1696,7 @@ One record per imported definition in a consumer's local registry.
 ```typescript
 {
   definitionId: UUID
-  definitionType: "field" | "type" | "view" | "schema" | "protocol"
+  definitionType: "field" | "type" | "view" | "blueprint" | "protocol"
   namespace: string
   name: string
   version: integer
@@ -1730,7 +1730,7 @@ A consumer's complete picture of its imported definitions.
   fields: ImportRecord[]
   types: ImportRecord[]
   views: ImportRecord[]
-  schemas: ImportRecord[]
+  blueprints: ImportRecord[]
   protocols: ImportRecord[]
 }
 ```
@@ -2440,9 +2440,9 @@ Conforming implementations must uphold the following invariants.
 **35.** Every `DocumentSection.renderViewId` in any `DocumentView` within `Package.documentViews[]` must reference a `View.id` that appears in `Package.views[]` or `Package.dependencyRefs`. If `mode === "bundled"`, that `View` must be present in `Package.views[]`.
 
 
-#### Distribution — Schema (ext:schema)
+#### Distribution — Blueprint (ext:blueprint)
 
-**36.** Every `TypeRef.typeId` referenced in any `Schema.rootTypes[]`, `Schema.requiredTypes[]`, or in any `RelationSpec.sourceType` or `RelationSpec.targetType` within `Schema.structure[]`, for each Schema in `Package.schemas[]`, must appear in `Package.dependencyRefs` with `definitionType: "type"`. If `mode === "bundled"`, each such Type must be present in `Package.types[]`.
+**36.** Every `TypeRef.typeId` referenced in any `Blueprint.rootTypes[]`, `Blueprint.requiredTypes[]`, or in any `RelationSpec.sourceType` or `RelationSpec.targetType` within `Blueprint.structure[]`, for each Blueprint in `Package.blueprints[]`, must appear in `Package.dependencyRefs` with `definitionType: "type"`. If `mode === "bundled"`, each such Type must be present in `Package.types[]`.
 
 
 #### Distribution — Protocol (ext:protocol)

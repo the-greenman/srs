@@ -192,12 +192,12 @@
                   "value": "Extraction from source material"
                 },
                 {
-                  "value": "`ext:schema`"
+                  "value": "`ext:blueprint`"
                 }
               ],
               "value": [
                 "Extraction from source material",
-                "`ext:schema`"
+                "`ext:blueprint`"
               ]
             }
           ]
