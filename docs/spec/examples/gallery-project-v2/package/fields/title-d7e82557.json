@@ -1,0 +1,12 @@
+{
+  "aiGuidance": {
+    "purpose": ""
+  },
+  "createdAt": "2026-05-25T00:00:00Z",
+  "description": "Short human-readable name for the record.",
+  "id": "d7e82557-9045-5e92-a494-d99112bbec4a",
+  "name": "title",
+  "namespace": "governance",
+  "valueType": "string",
+  "version": 1
+}

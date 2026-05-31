@@ -1,0 +1,12 @@
+{
+  "aiGuidance": {
+    "purpose": ""
+  },
+  "createdAt": "2026-05-26T00:00:00Z",
+  "description": "The standards, values, constraints, and trade-offs used to evaluate options.",
+  "id": "a952604c-d150-5315-bfc1-7229ddc1d636",
+  "name": "key_requirements",
+  "namespace": "governance",
+  "valueType": "text",
+  "version": 1
+}

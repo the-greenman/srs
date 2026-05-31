@@ -1,0 +1,12 @@
+{
+  "aiGuidance": {
+    "purpose": ""
+  },
+  "createdAt": "2026-05-26T00:00:00Z",
+  "description": "Actions or tasks that emerge from the decision.",
+  "id": "4181f210-f4be-5587-950e-890eda2a5590",
+  "name": "next_steps",
+  "namespace": "governance",
+  "valueType": "text",
+  "version": 1
+}

@@ -1,0 +1,110 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/relations-collection.json",
+  "relations": [
+    {
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "33bafd90-6748-47dd-a302-3c06f22fbe05",
+      "relationType": "precedes",
+      "sourceInstanceId": "ad159754-2edd-4bf8-a70f-a29a617e5809",
+      "targetInstanceId": "31291422-cd8b-4840-b884-d55023d938cb"
+    },
+    {
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "96d89162-fbf7-4036-a38c-3b09452ec073",
+      "relationType": "precedes",
+      "sourceInstanceId": "31291422-cd8b-4840-b884-d55023d938cb",
+      "targetInstanceId": "7560efe9-27e3-4186-8b9d-6ab48283f1df"
+    },
+    {
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "ae90c407-4b89-444c-b55c-c47c321d620d",
+      "relationType": "precedes",
+      "sourceInstanceId": "7560efe9-27e3-4186-8b9d-6ab48283f1df",
+      "targetInstanceId": "0482c489-37b4-4342-adaa-36e69dc6f780"
+    },
+    {
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "9271b98a-0993-4c15-8a03-c500e8ce1c03",
+      "relationType": "precedes",
+      "sourceInstanceId": "0482c489-37b4-4342-adaa-36e69dc6f780",
+      "targetInstanceId": "c503fae5-c3ab-452e-a0b4-5682ca204288"
+    },
+    {
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "b5806157-21bf-4304-a6be-fb648f38e6a4",
+      "relationType": "precedes",
+      "sourceInstanceId": "c503fae5-c3ab-452e-a0b4-5682ca204288",
+      "targetInstanceId": "cc58c0dd-8e3a-4dc5-9b58-f3273911a9a9"
+    },
+    {
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "3163376c-b056-464a-87e9-f31f0067a1d3",
+      "relationType": "derived-from",
+      "sourceInstanceId": "448d64d4-ae82-4971-b027-3b78b9c7a90a",
+      "targetInstanceId": "0482c489-37b4-4342-adaa-36e69dc6f780"
+    },
+    {
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "74329aa8-bda6-4d4d-a67b-61466eb0028a",
+      "relationType": "derived-from",
+      "sourceInstanceId": "9054911c-5285-4c3e-8198-4b9650169001",
+      "targetInstanceId": "31291422-cd8b-4840-b884-d55023d938cb"
+    },
+    {
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "9f3638e9-08cd-483b-9f11-b8b2e791d7f6",
+      "relationType": "derived-from",
+      "sourceInstanceId": "a9ca11cf-fd34-4901-b5f6-51e20737cb56",
+      "targetInstanceId": "cc58c0dd-8e3a-4dc5-9b58-f3273911a9a9"
+    },
+    {
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "e458157d-6f9a-4c56-92d6-25954780c664",
+      "relationType": "evidences",
+      "sourceInstanceId": "eb4024a0-486f-4d64-a4e4-5d80297129d2",
+      "targetInstanceId": "c503fae5-c3ab-452e-a0b4-5682ca204288"
+    },
+    {
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "c7a2f118-c201-4296-8ed0-8aac2e86b9ef",
+      "relationType": "evidences",
+      "sourceInstanceId": "4a989562-4a9d-4c86-a365-91bf14d55f06",
+      "targetInstanceId": "c503fae5-c3ab-452e-a0b4-5682ca204288"
+    },
+    {
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "749dc20a-ba74-4f39-b619-5869a652e616",
+      "relationType": "evidences",
+      "sourceInstanceId": "9af57e54-03fb-4625-9a4c-8d2a254ff2b7",
+      "targetInstanceId": "c503fae5-c3ab-452e-a0b4-5682ca204288"
+    },
+    {
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "fa46f4c2-ef60-4f26-82bc-f28d3f99bf75",
+      "relationType": "delegates",
+      "sourceInstanceId": "0482c489-37b4-4342-adaa-36e69dc6f780",
+      "targetInstanceId": "8ed62308-f7b4-47e1-b1a2-5490908efd86"
+    },
+    {
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "e1967251-6eca-45e9-a95c-b6c6d36f9518",
+      "relationType": "delegates",
+      "sourceInstanceId": "0482c489-37b4-4342-adaa-36e69dc6f780",
+      "targetInstanceId": "5bbf9209-1dc9-44b2-b0a3-f2192db5a879"
+    },
+    {
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "a069348a-c079-43a3-afd8-5e2633c8993a",
+      "relationType": "evidences",
+      "sourceInstanceId": "dd715d4a-8640-4641-b79d-e44f728c547b",
+      "targetInstanceId": "8ed62308-f7b4-47e1-b1a2-5490908efd86"
+    },
+    {
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "783716de-7cf3-49c5-8c35-b2e46f247ea2",
+      "relationType": "evidences",
+      "sourceInstanceId": "3be7b057-9167-42a4-b0db-2a8b30666cef",
+      "targetInstanceId": "8ed62308-f7b4-47e1-b1a2-5490908efd86"
+    }
+  ]
+}

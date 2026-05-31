@@ -1,0 +1,12 @@
+{
+  "aiGuidance": {
+    "purpose": ""
+  },
+  "createdAt": "2026-05-26T00:00:00Z",
+  "description": "The specific pain, conflict, or gap that makes a decision necessary now.",
+  "id": "1a1c0a5d-a1df-5d03-95f2-32af73bb71da",
+  "name": "friction",
+  "namespace": "governance",
+  "valueType": "text",
+  "version": 1
+}

@@ -1,0 +1,35 @@
+{
+  "createdAt": "2026-05-31T14:55:35.200802911+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
+      "value": "R-003 Clerk"
+    },
+    {
+      "fieldId": "a6c19b95-4f8f-5b07-93f8-3426c545277e",
+      "value": "Peter Brownell"
+    },
+    {
+      "fieldId": "d25da548-79d6-555b-8878-f40b685b3955",
+      "value": "May write up and maintain the decision log, Articles, and role records. May flag when a proposed action appears inconsistent with a recorded decision or article. Responsible for ensuring that Article A-006 (On ending) obligations are discharged when the time comes."
+    },
+    {
+      "fieldId": "3c39ee1f-6fe0-5da7-a0b6-928aa3a63211",
+      "value": "Cannot decide what is shown or how it is installed. The Clerk's role is to maintain the record faithfully — not to determine its content. Cannot amend a decision unilaterally; can only record what the group has agreed."
+    },
+    {
+      "fieldId": "9a32dc01-f348-5e05-9f54-bb6d21239f04",
+      "value": "Established by Article A-004 (How we make decisions)."
+    },
+    {
+      "fieldId": "aee7afe9-6650-5fa4-a61a-495c3b88994b",
+      "value": "active"
+    }
+  ],
+  "instanceId": "448d64d4-ae82-4971-b027-3b78b9c7a90a",
+  "typeId": "e53dce11-6b83-5714-a8fe-f730edb500fa",
+  "typeName": "role",
+  "typeNamespace": "governance",
+  "typeVersion": 1,
+  "updatedAt": "2026-05-31T14:55:35.200804860+00:00"
+}

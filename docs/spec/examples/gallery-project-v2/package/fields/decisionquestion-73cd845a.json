@@ -1,0 +1,12 @@
+{
+  "aiGuidance": {
+    "purpose": ""
+  },
+  "createdAt": "2026-05-26T00:00:00Z",
+  "description": "The single concrete question this decision answers.",
+  "id": "73cd845a-3623-5bc6-8ade-42a7cd64740c",
+  "name": "decision_question",
+  "namespace": "governance",
+  "valueType": "string",
+  "version": 1
+}

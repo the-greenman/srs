@@ -1,0 +1,88 @@
+{
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "**/manifest.json"
+            ],
+            "url": "file:///home/greenman/dev/semanticops/srs-vscode/schemas/2.0/manifest.json"
+        },
+        {
+            "fileMatch": [
+                "**/records/*.json"
+            ],
+            "url": "file:///home/greenman/dev/semanticops/srs-vscode/schemas/2.0/record.json"
+        },
+        {
+            "fileMatch": [
+                "**/records/*.srsj"
+            ],
+            "url": "file:///home/greenman/dev/semanticops/srs-vscode/schemas/2.0/record.json"
+        },
+        {
+            "fileMatch": [
+                "**/notes/*.json"
+            ],
+            "url": "file:///home/greenman/dev/semanticops/srs-vscode/schemas/2.0/note.json"
+        },
+        {
+            "fileMatch": [
+                "**/notes/*.srsj"
+            ],
+            "url": "file:///home/greenman/dev/semanticops/srs-vscode/schemas/2.0/note.json"
+        },
+        {
+            "fileMatch": [
+                "**/typed-records/*.json"
+            ],
+            "url": "file:///home/greenman/dev/semanticops/srs-vscode/schemas/2.0/typed-record.json"
+        },
+        {
+            "fileMatch": [
+                "**/package/fields/*.json"
+            ],
+            "url": "file:///home/greenman/dev/semanticops/srs-vscode/schemas/2.0/field.json"
+        },
+        {
+            "fileMatch": [
+                "**/package/types/*.json"
+            ],
+            "url": "file:///home/greenman/dev/semanticops/srs-vscode/schemas/2.0/type.json"
+        },
+        {
+            "fileMatch": [
+                "**/package/views/*.json"
+            ],
+            "url": "file:///home/greenman/dev/semanticops/srs-vscode/schemas/2.0/view.json"
+        },
+        {
+            "fileMatch": [
+                "**/package/document-views/*.json"
+            ],
+            "url": "file:///home/greenman/dev/semanticops/srs-vscode/schemas/2.0/document-view.json"
+        },
+        {
+            "fileMatch": [
+                "**/package/package.json"
+            ],
+            "url": "file:///home/greenman/dev/semanticops/srs-vscode/schemas/2.0/package-manifest.json"
+        },
+        {
+            "fileMatch": [
+                "**/relations/relations.json"
+            ],
+            "url": "file:///home/greenman/dev/semanticops/srs-vscode/schemas/2.0/relations-collection.json"
+        },
+        {
+            "fileMatch": [
+                "**/containers/*.json"
+            ],
+            "url": "file:///home/greenman/dev/semanticops/srs-vscode/schemas/2.0/container.json"
+        },
+        {
+            "fileMatch": [
+                "**/*.meta.json"
+            ],
+            "url": "file:///home/greenman/dev/semanticops/srs-vscode/schemas/2.0/source-document-meta.json"
+        }
+    ]
+}

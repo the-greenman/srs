@@ -1,0 +1,12 @@
+{
+  "aiGuidance": {
+    "purpose": ""
+  },
+  "createdAt": "2026-05-25T00:00:00Z",
+  "description": "Options that were considered but not chosen.",
+  "id": "636ce948-2110-57b4-a3ed-04354ec17843",
+  "name": "alternatives_considered",
+  "namespace": "governance",
+  "valueType": "text",
+  "version": 1
+}

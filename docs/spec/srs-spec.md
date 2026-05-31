@@ -1949,7 +1949,7 @@ A conforming repository has the following root structure:
 
 ```
 <repository-root>/
-  .scds                          ← required marker (empty or format version on first line)
+  .srs                           ← required marker (empty or format version on first line)
   manifest.json                  ← required: root manifest and instance index
   source-documents/              ← raw source material with sidecar metadata
   notes/                         ← Tier 0 Note instances
@@ -1959,9 +1959,9 @@ A conforming repository has the following root structure:
   package/                       ← local Package, field, type, and view definitions
 ```
 
-The `.scds` marker file identifies the repository root. It may be empty or contain a single line with the format version (e.g. `1.0`). A reader must locate the marker before treating a directory as a repository.
+The `.srs` marker file identifies the repository root. It may be empty or contain a single line with the format version (e.g. `1.0`). A reader must locate the marker before treating a directory as a repository.
 
-Only `manifest.json` and `.scds` are required at root. Other folders are created as content is added. Implementations may add folders for application-local purposes; folder names defined by this extension are reserved.
+Only `manifest.json` and `.srs` are required at root. Other folders are created as content is added. Implementations may add folders for application-local purposes; folder names defined by this extension are reserved.
 
 Reserved content folders may contain implementation-defined subfolders. For example, a repository may store Tier 2 instances under `records/decisions/`, `records/articles/`, or `records/roles/` so long as every instance remains listed in `RepositoryManifest.instanceIndex` with its full relative path.
 
@@ -1989,7 +1989,7 @@ The root manifest. Must be present at `manifest.json` in the repository root.
 ```typescript
 {
   formatVersion: string      // SRS repository format version, e.g. "1.0"
-  scdsVersion: string        // SRS spec version, e.g. "2.0"
+  srsVersion: string         // SRS spec version, e.g. "2.0"
   conformance: string        // full conformance declaration string
 
   repositoryId: UUID         // stable identifier; does not change on export or copy
@@ -2215,12 +2215,12 @@ Every JSON file in a repository should declare its schema via a `$schema` key as
 
 An archive is a self-contained, shareable snapshot of a live repository.
 
-**Format**: ZIP file. Recommended file extension: `.scds`.
+**Format**: ZIP file. Recommended file extension: `.srs`.
 
 **Archive root**: The repository root maps to the ZIP root. `manifest.json` must be at the ZIP root, not inside a subdirectory.
 
 **Self-containment requirements**: A conforming archive must include:
-- `manifest.json` and the `.scds` marker
+- `manifest.json` and the `.srs` marker
 - All instance files referenced in the manifest instance index
 - All relation files declared in `relationsPath`
 - All source document content files and sidecars referenced by any `SourceReference` within any instance **or Relation** in the archive
@@ -2475,7 +2475,7 @@ Conforming implementations must uphold the following invariants.
 
 #### Repository (ext:repository)
 
-**45.** A conforming repository must have a `.scds` marker file and a `manifest.json` at its root. A directory without both is not a conforming repository.
+**45.** A conforming repository must have a `.srs` marker file and a `manifest.json` at its root. A directory without both is not a conforming repository.
 
 **46.** Every `instanceId` in `RepositoryManifest.instanceIndex` must resolve to a file at the declared `path`, and that file must contain an instance whose `instanceId` matches the index entry. An index entry whose `path` does not resolve, or whose file contains a different `instanceId`, is invalid.
 
@@ -2602,7 +2602,7 @@ An implementation declaring `ext:federation` must:
 #### ext:repository conformance requirements
 
 An implementation declaring `ext:repository` must:
-- Produce repositories with a `.scds` marker and `manifest.json` at root, with content in the prescribed folder layout
+- Produce repositories with a `.srs` marker and `manifest.json` at root, with content in the prescribed folder layout
 - Maintain a complete and accurate `instanceIndex` in the manifest; the index must reflect the actual files present
 - Produce archives that satisfy all self-containment requirements (Invariants 49 and 51)
 - Consume archives by parsing the manifest first and resolving all instances via the index before processing content

@@ -1,0 +1,12 @@
+{
+  "aiGuidance": {
+    "purpose": ""
+  },
+  "createdAt": "2026-05-25T00:00:00Z",
+  "description": "Background that makes the matter meaningful.",
+  "id": "9889052c-9313-5e2f-a2ac-15baa3c6983e",
+  "name": "context",
+  "namespace": "governance",
+  "valueType": "text",
+  "version": 1
+}
