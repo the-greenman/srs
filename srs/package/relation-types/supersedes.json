@@ -10,6 +10,5 @@
   "canonicalDirection": "source is the newer instance; target is the older instance being superseded",
   "inverseType": "superseded-by",
   "irreflexive": true,
-  "requireSameSemanticObjectType": true,
   "createdAt": "2026-05-29T00:00:00Z"
 }

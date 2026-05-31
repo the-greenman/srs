@@ -4,7 +4,7 @@
 
 ---
 
-**Status**: Draft (Revision 13)
+**Status**: Draft (Revision 14)
 **Affects**: Distribution Group (Core), `Relation`, `RelationTypeDefinition`, `Package`, `ext:recommended-relations`
 **Author**: Codex draft
 **Date**: 2026-05-29
@@ -28,6 +28,7 @@
 | 11 | 2026-05-29 | Fix contradictions: forced removal requires relation deletion/redaction not just rejection; E1 validation wired to status (active/deprecated/retired) with MUST semantics; deprecated write rejection is normative MUST not advisory should |
 | 12 | 2026-05-29 | Fix retired/tombstone contradiction: introduce tombstone status (resolves for historical reads, rejects writes) distinct from retired (does not resolve); forced removal fallback uses tombstone not retired; shape comment updated to MUST |
 | 13 | 2026-05-29 | Add tombstone to schema summary status enum; correct Rev 10 history entry to include tombstone |
+| 14 | 2026-05-31 | Remove `requireSameSemanticObjectType: true` from `supersedes` — cross-type supersession is valid (governance records superseding base-type records); add target version declaration (2.0 amendment); add spec record amendments table |
 
 ---
 
@@ -169,7 +170,7 @@ Canonical definitions:
 |---|---|---|---|---|
 | `contains` | `composition` | true | `part-of` | Source contains target |
 | `depends-on` | `dependency` | true | — | Source requires target |
-| `supersedes` | `governance` | true | `superseded-by` | Source replaces target; `requireSameSemanticObjectType: true` |
+| `supersedes` | `governance` | true | `superseded-by` | Source replaces target |
 | `refines` | `refinement` | true | — | Source is a more specific version of target |
 | `derived-from` | `derivation` | true | `source-of` | Source is derived work; target is source material |
 | `evidences` | `evidence` | true | — | Source is evidence for target |
@@ -287,7 +288,6 @@ The following are the normative definitions to be installed at `srs/srs/package/
   "canonicalDirection": "source is the newer instance; target is the older instance being superseded",
   "inverseType": "superseded-by",
   "irreflexive": true,
-  "requireSameSemanticObjectType": true,
   "createdAt": "2026-05-29T00:00:00Z"
 }
 ```
@@ -375,6 +375,14 @@ The following are the normative definitions to be installed at `srs/srs/package/
 | `srs/package/package.json` | Add `"relationTypes": ["relation-types/contains.json", ...]` |
 | `srs/package/relation-types/*.json` | Create 7 canonical definition files |
 
+### Spec record amendments required
+
+| Record | Required change |
+|---|---|
+| `srs/records/subsections/07-11-ext-recommended-relations` | Replace body with retirement notice: "Retired as of RFC-005. The canonical relation vocabulary is now provided as installed definitions in the `com.semanticops.srs` package. See §5 (Package). Remove the `RelationTypeDefinition is optional metadata` statement — it is directly contradicted by the mandatory lookup requirement." |
+| `srs/records/subsections/09-1-core-conformance-requirements` | Add requirement bullet: "Resolve every `Relation.relationType` against an installed `RelationTypeDefinition` in the effective package set before accepting a Relation write. A missing or conflicting definition is a validation error." |
+| `srs/records/subsections/09-2-extension-conformance-requirements` | Mark `ext:recommended-relations` as retired in any conformance table entry. |
+
 ---
 
 ## Deletion Semantics
@@ -396,6 +404,12 @@ When an instance is deleted, all Relations where it appears as `sourceInstanceId
 Implementations must perform this transition atomically with the instance deletion. A delete operation that removes the instance file and updates the manifest must also update the relations file in the same operation.
 
 `status: "rejected"` relations are excluded from active graph queries and do not count toward cardinality or cycle checks. They remain in the relations file and are visible to audit and history queries.
+
+---
+
+## Target Version
+
+This RFC targets **SRS 2.0**. It is a 2.0 amendment, not deferred to 2.1. Only two SRS repositories exist; both will be updated when the RFC is adopted. The core conformance requirements in §9 must be amended at adoption time to include mandatory definition lookup (see Spec Record Amendments below).
 
 ---
 
