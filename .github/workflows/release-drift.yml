@@ -1,0 +1,44 @@
+name: Release Drift
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check-release-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout srs
+        uses: actions/checkout@v4
+        with:
+          path: srs
+
+      - name: Checkout srs-rust
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/srs-rust
+          path: srs-rust
+
+      - name: Checkout srs-vscode
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/srs-vscode
+          path: srs-vscode
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build srs CLI
+        working-directory: srs-rust
+        run: cargo build -p srs
+
+      - name: Run release drift check
+        working-directory: srs
+        env:
+          SRS_CLI_PATH: ${{ github.workspace }}/srs-rust/target/debug/srs
+        run: node scripts/check-release-drift.mjs

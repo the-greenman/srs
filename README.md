@@ -41,21 +41,19 @@ Run from the `srs/` directory:
 
 ```bash
 node scripts/validate-all.mjs        # validate all spec records
-node scripts/render-spec.mjs         # render spec → docs/spec/srs-spec.md
-node scripts/render-spec.mjs --doc rationale   # render rationale
-node scripts/render-spec.mjs --doc unified     # render unified doc
-node scripts/render-rfcs.mjs         # render RFCs → docs/spec/rfcs/
+node scripts/check-release-drift.mjs # validate docs/schema mirrors are in sync
+node scripts/publish-spec.mjs        # render docs + sync schemas across sibling repos
 ```
 
 ## Active RFCs
 
 | RFC | Title | Status |
 |-----|-------|--------|
-| [RFC-001](docs/spec/rfcs/rfc-001.md) | Views L2 — Rendering Hierarchy and Default Rendering Baseline | draft |
-| [RFC-002](docs/spec/rfcs/rfc-002.md) | ext:themes-l1 — Visual Theming for Document Views | draft |
+| [RFC-001](docs/spec/rfcs/rfc-001.md) | Views L2 — Rendering Hierarchy and Default Rendering Baseline | accepted |
+| [RFC-002](docs/spec/rfcs/rfc-002.md) | ext:themes-l1 — Visual Theming for Document Views | accepted |
 | [RFC-003](docs/spec/rfcs/rfc-003.md) | Definition Distribution and Repository Slices | draft |
 | [RFC-004](docs/spec/rfcs/rfc-004.md) | Language-Neutral Schema Notation for Spec Records | draft |
 
 ## Authoring
 
-The rendered markdown files in `docs/spec/` are generated outputs. To change the specification, edit the source records in `srs/records/` and re-run the render scripts. The `instanceIndex` in `srs/manifest.json` is the authoritative list of which records belong to this repository.
+The rendered markdown files in `docs/spec/` are generated outputs. To change the specification, edit the source records in `srs/records/`, then run `node scripts/publish-spec.mjs`. Schema changes must be committed in `docs/schema/2.0` and mirrored into `../srs-rust` and `../srs-vscode` by the same publish step. The `instanceIndex` in `srs/manifest.json` is the authoritative list of which records belong to this repository.

@@ -1,19 +1,13 @@
 # Semantic Record System Specification
 
-**Version**: 2.0-draft
-**Status**: draft
+## Specification
 
-Defines an interoperable standard for semantic field and type definitions, records, relations, containers, and distribution — plus optional extensions covering addressability, lifecycle, protocol, schema, type inheritance, views, repeatable fields, field groups, cross-field validation, recommended relations, import tracking, and registry.
+### Purpose and Scope
 
-> **Projection note**: This Markdown file is a rendered projection of the SRS repository. The records are the source of truth; if this file diverges from repository state, the repository wins.
+**Content**: 
+#### What this specification defines
 
----
-
-## 1. Purpose and Scope
-
-### What this specification defines
-
-The Semantic Record System (SRS) specification defines an interoperable standard for semantic field and type definitions, records, relations, and the mechanisms by which these artefacts are created, shared, versioned, and distributed across independent implementations.
+**Content**: The Semantic Record System (SRS) specification defines an interoperable standard for semantic field and type definitions, records, relations, and the mechanisms by which these artefacts are created, shared, versioned, and distributed across independent implementations.
 
 This specification covers:
 
@@ -25,19 +19,19 @@ This specification covers:
 - **Distribution** — Package, Reference, Lineage, Provenance
 - **Extensions** — optional, independently adoptable capabilities declared by conforming implementations
 
-### What this specification does not define
+#### What this specification does not define
 
-- **Session** — live collaborative process model (future version)
+**Content**: - **Session** — live collaborative process model (future version)
 - **Registry protocol** — how registries communicate, authenticate, or federate; this specification defines data shapes only
 - **Universal semantic ontology** — domain-specific vocabularies are the responsibility of namespace authors
 
-### Relationship to implementing systems
+#### Relationship to implementing systems
 
-This specification is implementation-neutral. Implementations are expected to validate inputs against these schemas at their system boundaries. The specification does not constrain persistence technology, API design, UI rendering, or prompt assembly strategy.
+**Content**: This specification is implementation-neutral. Implementations are expected to validate inputs against these schemas at their system boundaries. The specification does not constrain persistence technology, API design, UI rendering, or prompt assembly strategy.
 
-### Extension conformance model
+#### Extension conformance model
 
-Implementations declare conformance as:
+**Content**: Implementations declare conformance as:
 
 ```
 SRS Core [+ ext:<name> ...]
@@ -69,11 +63,13 @@ Example declaration: `SRS Core + ext:lifecycle + ext:protocol + ext:views-l1 + e
 
 ---
 
-## 2. Namespace Format
 
-### Convention
+### Namespace Format
 
-Namespaces are dot-separated identifiers using lowercase alphanumeric characters and hyphens.
+**Content**: 
+#### Convention
+
+**Content**: Namespaces are dot-separated identifiers using lowercase alphanumeric characters and hyphens.
 
 ```
 <component>[.<component>]*
@@ -89,13 +85,13 @@ com.acme.hr
 org.cooperative-name
 ```
 
-### Reserved namespaces
+#### Reserved namespaces
 
-`core` is reserved for definitions maintained by the SRS standard. Implementations must not allow user-created definitions in the `core` namespace.
+**Content**: `core` is reserved for definitions maintained by the SRS standard. Implementations must not allow user-created definitions in the `core` namespace.
 
-### Reference format
+#### Reference format
 
-A specific version of a definition is referenced using the canonical form:
+**Content**: A specific version of a definition is referenced using the canonical form:
 
 ```
 namespace/name@version
@@ -110,19 +106,19 @@ com.acme.hr/headcount_impact@3
 
 The `/` and `@` characters are reserved separators. They must not appear within a namespace component or a name.
 
-### Name convention
+#### Name convention
 
-Field and Type names are programmatic keys in `snake_case`. Names are stable within a namespace and version lineage. A new name means a new definition.
+**Content**: Field and Type names are programmatic keys in `snake_case`. Names are stable within a namespace and version lineage. A new name means a new definition.
 
 ---
 
-## 3. Schema Notation
 
-Types are described using TypeScript-style notation. Optional fields are marked with `?`. All `UUID` values are RFC 4122 UUID strings. All `ISO8601` values are datetime strings with timezone offset. `integer` means a positive integer unless otherwise noted.
+### Schema Notation
 
-### Version semantics
+**Content**: Types are described using TypeScript-style notation. Optional fields are marked with `?`. All `UUID` values are RFC 4122 UUID strings. All `ISO8601` values are datetime strings with timezone offset. `integer` means a positive integer unless otherwise noted.
+#### Version semantics
 
-Version numbers are positive integers scoped to a definition's UUID lineage.
+**Content**: Version numbers are positive integers scoped to a definition's UUID lineage.
 
 | Change | Version action |
 |---|---|
@@ -137,13 +133,13 @@ When in doubt: if a downstream consumer's AI extraction, validation, or governan
 
 ---
 
-## 4. Foundation Group (Core)
 
-The Foundation group is required for all conforming implementations.
+### Foundation Group (Core)
 
-### Supporting types
+**Content**: The Foundation group is required for all conforming implementations.
+#### Supporting types
 
-#### `ValidationRule`
+**Content**: #### `ValidationRule`
 
 A constraint applied to a field value.
 
@@ -186,9 +182,9 @@ The minimum valid `AiGuidance` is `{ purpose: "..." }`.
 
 ---
 
-### Field
+#### Field
 
-The atomic reusable semantic unit. Fields are defined once and composed into Types. A Field's `aiGuidance`, `validationRules`, and `valueType` belong to the Field, not to any Type that includes it.
+**Content**: The atomic reusable semantic unit. Fields are defined once and composed into Types. A Field's `aiGuidance`, `validationRules`, and `valueType` belong to the Field, not to any Type that includes it.
 
 ```typescript
 {
@@ -245,9 +241,9 @@ The atomic reusable semantic unit. Fields are defined once and composed into Typ
 
 ---
 
-### Type
+#### Type
 
-A named, versioned composition of Fields for a specific semantic object type.
+**Content**: A named, versioned composition of Fields for a specific semantic object type.
 
 ```typescript
 {
@@ -321,9 +317,9 @@ A Record binds to a specific `typeVersion` at creation time. Existing Records do
 
 ---
 
-### Record tiers
+#### Record tiers
 
-SRS supports three semantic maturity tiers. Implementations are not required to support all three; they may begin at Tier 2.
+**Content**: SRS supports three semantic maturity tiers. Implementations are not required to support all three; they may begin at Tier 2.
 
 | Tier | Type | Structure | Semantics |
 |---|---|---|---|
@@ -501,9 +497,9 @@ An instantiated Type with field values.
 
 ---
 
-### Relation
+#### Relation
 
-A first-class typed link between instances. Relations allow implementations to construct semantic graphs for navigation, analysis, projection, and reasoning.
+**Content**: A first-class typed link between instances. Relations allow implementations to construct semantic graphs for navigation, analysis, projection, and reasoning.
 
 ```typescript
 {
@@ -557,9 +553,9 @@ Custom types not covered by these should use `namespace/name` format (e.g. `com.
 
 ---
 
-### Container
+#### Container
 
-A lightweight grouping boundary over a collection of instances. Containers answer scoping questions — which instances belong together, what constitutes "this project" — that the Relation graph alone cannot answer.
+**Content**: A lightweight grouping boundary over a collection of instances. Containers answer scoping questions — which instances belong together, what constitutes "this project" — that the Relation graph alone cannot answer.
 
 Containers are not semantic objects with Fields. They do not own semantic state; Records do. A `contains` Relation asserts "A is part of B" (a semantic claim); a Container asserts "these instances form a unit for boundary purposes" (a scope claim). Both are needed; neither replaces the other.
 
@@ -593,13 +589,13 @@ Containers are not semantic objects with Fields. They do not own semantic state;
 
 ---
 
-## 5. Distribution Group (Core)
 
-The Distribution group is required for all conforming implementations.
+### Distribution Group (Core)
 
-### Package
+**Content**: The Distribution group is required for all conforming implementations.
+#### Package
 
-The distributable artefact. Contains Field, Type, View, and Relation type definitions with a complete dependency manifest.
+**Content**: The distributable artefact. Contains Field, Type, View, and Relation type definitions with a complete dependency manifest.
 
 ```typescript
 {
@@ -638,9 +634,9 @@ The distributable artefact. Contains Field, Type, View, and Relation type defini
 
 ---
 
-### Reference
+#### Reference
 
-A stable pointer to a specific definition version.
+**Content**: A stable pointer to a specific definition version.
 
 ```typescript
 {
@@ -656,9 +652,9 @@ Canonical string form: `namespace/name@version`
 
 ---
 
-### Lineage
+#### Lineage
 
-Upstream and fork tracking for a specific definition version.
+**Content**: Upstream and fork tracking for a specific definition version.
 
 ```typescript
 {
@@ -678,9 +674,9 @@ Both may be present during a transition from tracking to forking.
 
 ---
 
-### Provenance
+#### Provenance
 
-Publisher and package origin metadata.
+**Content**: Publisher and package origin metadata.
 
 ```typescript
 {
@@ -695,9 +691,10 @@ Publisher and package origin metadata.
 
 ---
 
-## 6. Conversation Layer
 
-> **Standalone repository note**: The conversation layer is optional infrastructure. An implementation declaring only `SRS 2.0 Core + ext:repository` does not require a TSS, ext:protocol, ext:addressability, AttentionState, or any live conversation store. Source documents stored in `source-documents/` are sufficient evidence storage for standalone use. This section describes the full-stack integration model; implementers building file-based or offline repositories may skip it entirely.
+### Conversation Layer
+
+**Content**: > **Standalone repository note**: The conversation layer is optional infrastructure. An implementation declaring only `SRS 2.0 Core + ext:repository` does not require a TSS, ext:protocol, ext:addressability, AttentionState, or any live conversation store. Source documents stored in `source-documents/` are sufficient evidence storage for standalone use. This section describes the full-stack integration model; implementers building file-based or offline repositories may skip it entirely.
 
 The conversation layer is a permanent architectural boundary distinct from SRS. It captures raw multimodal source material; SRS captures negotiated semantic state. They reference each other bidirectionally via `SourceReference` (document → conversation) and `AttentionState` tags (conversation → document, via `ext:addressability`).
 
@@ -721,15 +718,14 @@ Transcript chunks referenced in `SourceReference` are source material — addres
 
 ---
 
-## 7. Extensions
+### Extensions
 
-Extensions are optional, independently adoptable. Each extension section declares its identifier, dependencies, and the types it defines.
+**Content**: Extensions are optional, independently adoptable. Each extension section declares its identifier, dependencies, and the types it defines.
 
 ---
+#### ext:addressability
 
-### ext:addressability
-
-**Required for**: any implementation with live facilitation or multi-session extraction.
+**Content**: **Required for**: any implementation with live facilitation or multi-session extraction.
 
 Defines a universal addressing scheme and the mechanisms that connect conversation material to document elements.
 
@@ -823,9 +819,9 @@ A conforming `ext:addressability` implementation must be able to assemble releva
 
 ---
 
-### ext:lifecycle
+#### ext:lifecycle
 
-**Required for**: governance tools, decision logs, any implementation where records progress through defined states.
+**Content**: **Required for**: governance tools, decision logs, any implementation where records progress through defined states.
 
 Adds lifecycle state declarations to `Type` and lifecycle state tracking to `Record`.
 
@@ -871,9 +867,9 @@ The `lifecycle` block declares vocabulary. Implementations decide enforcement st
 
 ---
 
-### ext:protocol
+#### ext:protocol
 
-**Required for**: facilitation tools, structured deliberation, any implementation that guides users through epistemic stages.
+**Content**: **Required for**: facilitation tools, structured deliberation, any implementation that guides users through epistemic stages.
 
 Replaces `TemplateFacilitationStep` from v1. Protocol is epistemically richer: stages have explicit dependencies, completion criteria, and may produce intermediate Records.
 
@@ -1001,9 +997,9 @@ Views (`ext:views-l1`) no longer contain facilitation logic. A View is a present
 
 ---
 
-### ext:blueprint
+#### ext:blueprint
 
-**Required for**: extraction pipelines, founding document workflows, any system that needs to specify what a document type IS before assembling it.
+**Content**: **Required for**: extraction pipelines, founding document workflows, any system that needs to specify what a document type IS before assembling it.
 
 #### `RelationSpec`
 
@@ -1058,9 +1054,9 @@ The definition of a complete document type — which Types it contains, what Rel
 
 ---
 
-### ext:type-inheritance
+#### ext:type-inheritance
 
-**Required for**: Type libraries that need formal specialization while preserving base-Type processability.
+**Content**: **Required for**: Type libraries that need formal specialization while preserving base-Type processability.
 
 Defines single inheritance for Types. A specializing Type inherits the fields and semantics of a base Type, may add fields, and remains processable as the base Type by systems that know the base Type but not the specialization.
 
@@ -1119,9 +1115,9 @@ A system that knows `core/decision` but not `org.example/governance_decision` ca
 
 ---
 
-### ext:views-l1
+#### ext:views-l1
 
-**Required for**: rendering and export workflows.
+**Content**: **Required for**: rendering and export workflows.
 
 Defines Views — versioned presentations over a field set.
 
@@ -1214,9 +1210,9 @@ Facilitation steps have been removed from View. Use `ext:protocol` Protocol stag
 
 ---
 
-### ext:views-l2
+#### ext:views-l2
 
-**Depends on**: `ext:views-l1`
+**Content**: **Depends on**: `ext:views-l1`
 
 **Required for**: document projection — assembling multiple Records into a coherent document.
 
@@ -1461,9 +1457,9 @@ When `ext:themes-l1` is declared and a variant name is supplied at render invoca
 3. If not found: fall back to `themeRef` (applying Rule [T-2]). If absent or format-incompatible, render without a theme.
 4. If no variant name is supplied: use `themeRef` (applying Rule [T-2]).
 
-### ext:repeatable-fields
+#### ext:repeatable-fields
 
-**Required for**: any Record type that needs lists of values within a single Field.
+**Content**: **Required for**: any Record type that needs lists of values within a single Field.
 
 Adds repeatability to `FieldAssignment` and defines `FieldValueEntry`.
 
@@ -1495,9 +1491,9 @@ A repeatable field entry does not create a new semantic instance. Use separate R
 
 ---
 
-### ext:field-groups
+#### ext:field-groups
 
-**Required for**: Record types where multiple Fields are semantically paired and repeat together as a unit.
+**Content**: **Required for**: Record types where multiple Fields are semantically paired and repeat together as a unit.
 
 Use when parallel `multiselect` arrays would lose pairing (e.g. a contact record with `name` + `email`). Preserves internal pairing across repeated items.
 
@@ -1560,9 +1556,9 @@ When `ext:field-groups` is in use, `Type` gains `fieldGroups?: FieldGroup[]` and
 
 ---
 
-### ext:cross-field-validation
+#### ext:cross-field-validation
 
-**Required for**: Types with constraints that span multiple Fields.
+**Content**: **Required for**: Types with constraints that span multiple Fields.
 
 `ValidationRule` handles single-field constraints. `CrossFieldRule` handles constraints that require evaluating more than one Field together.
 
@@ -1597,9 +1593,9 @@ When `ext:cross-field-validation` is in use, `Type` gains `validationRules?: Cro
 
 ---
 
-### ext:recommended-relations
+#### ext:recommended-relations
 
-**Required for**: cross-system federation; multi-publisher ecosystems where Relation type semantics must be interoperable.
+**Content**: **Required for**: cross-system federation; multi-publisher ecosystems where Relation type semantics must be interoperable.
 
 Canonical relation types and machine-readable Relation type definitions.
 
@@ -1650,9 +1646,9 @@ Machine-readable metadata for a `relationType` string.
 
 ---
 
-### ext:import-tracking
+#### ext:import-tracking
 
-**Required for**: implementations that receive packages from upstream publishers and need to track update and conflict state.
+**Content**: **Required for**: implementations that receive packages from upstream publishers and need to track update and conflict state.
 
 #### `ImportMode`
 
@@ -1714,9 +1710,9 @@ A consumer's complete picture of its imported definitions.
 
 ---
 
-### ext:registry
+#### ext:registry
 
-**Required for**: multi-publisher ecosystems; discoverable definition catalogs.
+**Content**: **Required for**: multi-publisher ecosystems; discoverable definition catalogs.
 
 #### `RegistryEntry`
 
@@ -1763,9 +1759,9 @@ Multiple Registries may coexist. A consumer may index multiple catalogs. The spe
 
 ---
 
-### ext:federation
+#### ext:federation
 
-**Required for**: implementations that maintain multiple SRS repositories within a single system, link instances across repository boundaries, or need to record merge, split, and import operations.
+**Content**: **Required for**: implementations that maintain multiple SRS repositories within a single system, link instances across repository boundaries, or need to record merge, split, and import operations.
 
 `ext:registry` covers catalogs of Field and Type definition packages. `ext:federation` covers catalogs of SRS document repositories — the repositories that hold Notes, Records, and Relations — and the cross-repository links between their instances.
 
@@ -1903,9 +1899,9 @@ federationEventsPath?: string
 
 ---
 
-### ext:repository
+#### ext:repository
 
-**Required for**: any implementation that stores SRS content as files, produces sharable SRS archives, or supports interoperable export and import.
+**Content**: **Required for**: any implementation that stores SRS content as files, produces sharable SRS archives, or supports interoperable export and import.
 
 Defines the **SRS Live Repository Format**: a normative directory layout, manifest, and file conventions for SRS content stored on a filesystem. The **SRS Archive** — the shareable export format — is a self-contained snapshot of a live repository packaged as a ZIP file. The live repository is the working format; the archive is the export. Both are defined here because an archive is structurally identical to a repository snapshot.
 
@@ -2266,103 +2262,103 @@ An importer must not mix strategies within a single copy operation.
 
 ---
 
-## 8. Key Invariants
 
-Conforming implementations must uphold the following invariants.
+### Key Invariants
 
-### Field semantics
+**Content**: Conforming implementations must uphold the following invariants.
+#### Field semantics
 
-**1.** `FieldAssignment.displayLabel` and `FieldAssignment.displayHint` are for rendering only. They must not affect AI guidance, extraction logic, `valueType` interpretation, or validation.
+**Content**: **1.** `FieldAssignment.displayLabel` and `FieldAssignment.displayHint` are for rendering only. They must not affect AI guidance, extraction logic, `valueType` interpretation, or validation.
 
 **2.** A `Type` must not redefine, override, or duplicate the semantic content of any `Field` it includes. If different semantics are needed for a Field in a specific Type context, a distinct `Field` with its own identity and lineage must be created.
 
 **3.** A `Field`'s `aiGuidance` belongs to the Field. Type-level `aiGuidance` provides session framing only.
 
-### Lifecycle (ext:lifecycle)
+#### Lifecycle (ext:lifecycle)
 
-**4.** `Type.lifecycle.initialState` must reference a `name` that appears in `lifecycle.states[]` and where `isInitial === true`.
+**Content**: **4.** `Type.lifecycle.initialState` must reference a `name` that appears in `lifecycle.states[]` and where `isInitial === true`.
 
 **5.** Every `from` and `to` value in `lifecycle.transitions[]` must reference a `name` that appears in `lifecycle.states[]`.
 
 **6.** `Record.lifecycleState`, when present, must reference a `name` in the associated `Type.lifecycle.states[]`.
 
-### Distribution
+#### Distribution
 
-**7.** Every `fieldId` referenced in any `FieldAssignment` within a `Package.types[]` must appear as the `id` of an entry in `Package.dependencyRefs`.
+**Content**: **7.** Every `fieldId` referenced in any `FieldAssignment` within a `Package.types[]` must appear as the `id` of an entry in `Package.dependencyRefs`.
 
 **8.** If `Package.mode === "bundled"`: every `Reference` in `dependencyRefs` must have a matching `Field` in `fields[]` (matched on `id` and `version`).
 
 **9.** `Field.id` is stable across versions. A new `id` means a new definition, not a new version of an existing one.
 
-### Cross-field validation (ext:cross-field-validation)
+#### Cross-field validation (ext:cross-field-validation)
 
-**10.** All `fieldId` values in any `CrossFieldRule` within `Type.validationRules[]` must appear in the Type's effective field list. Cross-field rules cannot reference Fields outside the Type.
+**Content**: **10.** All `fieldId` values in any `CrossFieldRule` within `Type.validationRules[]` must appear in the Type's effective field list. Cross-field rules cannot reference Fields outside the Type.
 
 **11.** A `conditional-required` rule must supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. A `field-ordering` rule must supply `predicateFieldId`, `targetFieldId`, and `effect`. A `mutual-exclusion` rule must supply `fieldIds` with at least two entries.
 
-### Views (ext:views-l1)
+#### Views (ext:views-l1)
 
-**12.** Every `fieldId` in `View.fieldViews[]` must reference a valid `Field.id` in the effective package set. View compatibility is field-centric (based on required field presence), not Type-bound.
+**Content**: **12.** Every `fieldId` in `View.fieldViews[]` must reference a valid `Field.id` in the effective package set. View compatibility is field-centric (based on required field presence), not Type-bound.
 
 **13.** `FieldView.displayLabel`, `FieldView.displayHint`, and `FieldView.editorHintOverride` are for rendering only. They must not affect AI guidance, extraction logic, `valueType` interpretation, or validation.
 
 **14.** A `View` must not override, redefine, or duplicate the semantic content of any `Field` or `Type` it references. View-level `aiGuidance` is workflow framing; it does not redefine Field extraction semantics.
 
-### Distribution — Views (ext:views-l1)
+#### Distribution — Views (ext:views-l1)
 
-**15.** Every `fieldId` referenced by any `View.fieldViews[]` entry in `Package.views[]` must appear in `Package.dependencyRefs` with `definitionType: "field"` or be present in `Package.fields[]`. If `mode === "bundled"`, that `Field` must be present in `fields[]`.
+**Content**: **15.** Every `fieldId` referenced by any `View.fieldViews[]` entry in `Package.views[]` must appear in `Package.dependencyRefs` with `definitionType: "field"` or be present in `Package.fields[]`. If `mode === "bundled"`, that `Field` must be present in `fields[]`.
 
-### Relations
+#### Relations
 
-**16.** In a `Relation`, `sourceInstanceId` is the asserting instance and `targetInstanceId` is the related instance. The Relation reads: "source [relationType] target." This convention must not be reversed.
+**Content**: **16.** In a `Relation`, `sourceInstanceId` is the asserting instance and `targetInstanceId` is the related instance. The Relation reads: "source [relationType] target." This convention must not be reversed.
 
 **17.** `Relation` is reserved for assertions that carry semantic consequence beyond simple mention or citation. Lightweight prose references that do not assert structural, causal, or governance relationships must not be modelled as `Relation` records.
 
-### Notes and Typed Records
+#### Notes and Typed Records
 
-**18.** `NoteSection.name` values must be unique within a `Note`.
+**Content**: **18.** `NoteSection.name` values must be unique within a `Note`.
 
 **18a.** `Note.tags` values, when present, must be non-empty strings. Duplicate tag values within a single Note are permitted but have no additional meaning.
 
 **19.** `TypedField.name` values must be unique within a `Typed Record`.
 
-### Containers
+#### Containers
 
-**20.** `Container.containerId` is not an instance ID. It must not appear in `Container.rootInstanceIds`, `Container.memberInstanceIds`, `Relation.sourceInstanceId`, or `Relation.targetInstanceId`.
+**Content**: **20.** `Container.containerId` is not an instance ID. It must not appear in `Container.rootInstanceIds`, `Container.memberInstanceIds`, `Relation.sourceInstanceId`, or `Relation.targetInstanceId`.
 
 **21.** `Container.rootInstanceIds` and `Container.memberInstanceIds`, when present, must reference valid SRS instance IDs (`Note.instanceId`, `Typed Record.instanceId`, or `Record.instanceId`).
 
-### Repeatability (ext:repeatable-fields)
+#### Repeatability (ext:repeatable-fields)
 
-**22.** If `FieldAssignment.repeatable` is false or absent, its corresponding `FieldValue` must use `value` and must not include `entries`.
+**Content**: **22.** If `FieldAssignment.repeatable` is false or absent, its corresponding `FieldValue` must use `value` and must not include `entries`.
 
 **23.** If `FieldAssignment.repeatable` is true, its corresponding `FieldValue` may use `entries`. If `minItems` is specified, `entries` must contain at least that many items. If `maxItems` is specified, `entries` must not exceed that count. For repeatable fields, `Field.validationRules` are evaluated against each `FieldValueEntry.value` individually, not against the array as a whole.
 
 **24.** `FieldAssignment.minItems` and `maxItems` are valid only when `repeatable === true`. They must be ignored when `repeatable` is false or absent.
 
-### Field groups (ext:field-groups)
+#### Field groups (ext:field-groups)
 
-**25.** Every `groupId` in `Record.groupValues[]` must reference a `groupId` declared in the associated `Type.fieldGroups[]`.
+**Content**: **25.** Every `groupId` in `Record.groupValues[]` must reference a `groupId` declared in the associated `Type.fieldGroups[]`.
 
 **26.** Within a `FieldGroupEntry.fieldValues[]`, every `fieldId` must appear in the enclosing `FieldGroup.fields[].fieldId`.
 
 **27.** A `FieldGroupValue.entries` list must satisfy `FieldGroup.minItems` and `maxItems` where specified.
 
-### Records
+#### Records
 
-**28.** `Record.typeId` and `Record.typeVersion` are the authoritative Type binding. `typeNamespace` and `typeName` are denormalised convenience fields. If they conflict with the resolved `Type`, the `typeId`/`typeVersion` identity takes precedence and the Record is considered invalid until corrected.
+**Content**: **28.** `Record.typeId` and `Record.typeVersion` are the authoritative Type binding. `typeNamespace` and `typeName` are denormalised convenience fields. If they conflict with the resolved `Type`, the `typeId`/`typeVersion` identity takes precedence and the Record is considered invalid until corrected.
 
-### Protocol (ext:protocol)
+#### Protocol (ext:protocol)
 
-**29.** Every `stageId` in `ProtocolStage.dependsOn[]` must reference a `stageId` declared in the enclosing `Protocol.stages[]`. A stage may not declare a dependency on itself.
+**Content**: **29.** Every `stageId` in `ProtocolStage.dependsOn[]` must reference a `stageId` declared in the enclosing `Protocol.stages[]`. A stage may not declare a dependency on itself.
 
 **30.** Every `fieldId` in `ProtocolStage.contributesTo[]` must reference a `fieldId` that appears in the stage's own `outputType`'s effective field list (when `outputType` is declared), or in `Protocol.targetType`'s effective field list (when `outputType` is absent). A single stage must not contribute to both its own `outputType` and the enclosing `Protocol.targetType`. When neither `outputType` nor `Protocol.targetType` is declared, `contributesTo` must be empty.
 
 **31.** For every pair of stages A and B within a `Protocol` where B.dependsOn includes A.stageId, B.order must be greater than A.order. `order` is display order; execution sequence is determined by `dependsOn` resolution. The two must not contradict each other.
 
-### Views L2 (ext:views-l2)
+#### Views L2 (ext:views-l2)
 
-**32.** Any `DocumentView` in `Package.documentViews[]` that contains a `SectionSource` with `type === "type-query"` must use `namespace/name` format for `semanticObjectType` (e.g. `"core/decision"`, not `"decision"`). Bare strings are acceptable only in single-system `DocumentView` records not included in a Package. Implementations receiving a `DocumentView` from a Package with a bare `semanticObjectType` in a `type-query` section should treat the portability of that section as undefined.
+**Content**: **32.** Any `DocumentView` in `Package.documentViews[]` that contains a `SectionSource` with `type === "type-query"` must use `namespace/name` format for `semanticObjectType` (e.g. `"core/decision"`, not `"decision"`). Bare strings are acceptable only in single-system `DocumentView` records not included in a Package. Implementations receiving a `DocumentView` from a Package with a bare `semanticObjectType` in a `type-query` section should treat the portability of that section as undefined.
 
 **[N]** When `DocumentSection.renderViewId` is absent, implementations MUST use the default rendering baseline: fields in effective-field-list order (by `fieldOrder` when `ext:type-inheritance` is active, otherwise by `FieldAssignment.order`), using `FieldAssignment.displayLabel` or `Field.name` as label, resolved from `FieldValue.value` for scalar fields and from `FieldValue.entries` for repeatable fields (when `ext:repeatable-fields` is declared), omitting absent fields. No L1 View influences this baseline.
 
@@ -2386,31 +2382,31 @@ Conforming implementations must uphold the following invariants.
 
 **[N+8]** `ThemeVariant.name` values MUST be unique within a `DocumentView.themeVariants` array. This is enforced at package validation time. When `ext:themes-l1` is declared and a variant name is supplied at render invocation: (1) if the variant is found and format-compatible, use it; (2) if found but format-incompatible, render without a theme — do NOT fall back to `themeRef`; (3) if not found, fall back to `themeRef`; (4) if no variant name is supplied, use `themeRef`.
 
-### Addressability (ext:addressability)
+#### Addressability (ext:addressability)
 
-**33.** `Revision.priorRevisionId`, when present, must reference a `Revision.revisionId` for the same `fieldId` and `recordId`. Revision chains must be acyclic.
+**Content**: **33.** `Revision.priorRevisionId`, when present, must reference a `Revision.revisionId` for the same `fieldId` and `recordId`. Revision chains must be acyclic.
 
 **34.** `AttentionState.containerId` must reference a valid `Container.containerId`. Other Address components (`recordId`, `fieldId`, `protocolRunId`, `stageId`) are optional and may be absent when focus has not yet narrowed.
 
-### Distribution — Views L2 (ext:views-l2)
+#### Distribution — Views L2 (ext:views-l2)
 
-**35.** Every `DocumentSection.renderViewId` in any `DocumentView` within `Package.documentViews[]` must reference a `View.id` that appears in `Package.views[]` or `Package.dependencyRefs`. If `mode === "bundled"`, that `View` must be present in `Package.views[]`.
+**Content**: **35.** Every `DocumentSection.renderViewId` in any `DocumentView` within `Package.documentViews[]` must reference a `View.id` that appears in `Package.views[]` or `Package.dependencyRefs`. If `mode === "bundled"`, that `View` must be present in `Package.views[]`.
 
-### Distribution — Blueprint (ext:blueprint)
+#### Distribution — Blueprint (ext:blueprint)
 
-**36.** Every `TypeRef.typeId` referenced in any `Blueprint.rootTypes[]`, `Blueprint.requiredTypes[]`, or in any `RelationSpec.sourceType` or `RelationSpec.targetType` within `Blueprint.structure[]`, for each Blueprint in `Package.blueprints[]`, must appear in `Package.dependencyRefs` with `definitionType: "type"`. If `mode === "bundled"`, each such Type must be present in `Package.types[]`.
+**Content**: **36.** Every `TypeRef.typeId` referenced in any `Blueprint.rootTypes[]`, `Blueprint.requiredTypes[]`, or in any `RelationSpec.sourceType` or `RelationSpec.targetType` within `Blueprint.structure[]`, for each Blueprint in `Package.blueprints[]`, must appear in `Package.dependencyRefs` with `definitionType: "type"`. If `mode === "bundled"`, each such Type must be present in `Package.types[]`.
 
-### Distribution — Protocol (ext:protocol)
+#### Distribution — Protocol (ext:protocol)
 
-**37.** Every `TypeRef.typeId` referenced in `Protocol.targetType` or in any `ProtocolStage.outputType`, for each Protocol in `Package.protocols[]`, must appear in `Package.dependencyRefs` with `definitionType: "type"`. Every `FieldRef.fieldId` in any `ProtocolStage.contributesTo[]` must appear in `Package.dependencyRefs` with `definitionType: "field"`. If `mode === "bundled"`, those Types must be in `Package.types[]` and those Fields in `Package.fields[]`.
+**Content**: **37.** Every `TypeRef.typeId` referenced in `Protocol.targetType` or in any `ProtocolStage.outputType`, for each Protocol in `Package.protocols[]`, must appear in `Package.dependencyRefs` with `definitionType: "type"`. Every `FieldRef.fieldId` in any `ProtocolStage.contributesTo[]` must appear in `Package.dependencyRefs` with `definitionType: "field"`. If `mode === "bundled"`, those Types must be in `Package.types[]` and those Fields in `Package.fields[]`.
 
-### Field semantics — content format
+#### Field semantics — content format
 
-**38.** `Field.contentFormat`, when present, is only meaningful when `valueType` is `"string"` or `"text"`. Implementations must ignore `contentFormat` on fields with any other `valueType`.
+**Content**: **38.** `Field.contentFormat`, when present, is only meaningful when `valueType` is `"string"` or `"text"`. Implementations must ignore `contentFormat` on fields with any other `valueType`.
 
-### Type inheritance (ext:type-inheritance)
+#### Type inheritance (ext:type-inheritance)
 
-**39.** `Type.extendsTypeId`, when present, must reference a valid `Type.id`. Inheritance chains must be acyclic; a Type may not directly or transitively extend itself.
+**Content**: **39.** `Type.extendsTypeId`, when present, must reference a valid `Type.id`. Inheritance chains must be acyclic; a Type may not directly or transitively extend itself.
 
 **40.** A specializing Type must not declare a `fieldId` in its own `fields[]` that duplicates any `fieldId` inherited from its base Type or any ancestor Type.
 
@@ -2420,13 +2416,13 @@ Conforming implementations must uphold the following invariants.
 
 **43.** When `ext:type-inheritance` is declared, `Package.dependencyRefs` must include a `Reference` for every Type in the transitive closure of base Types for any Type in `Package.types[]`. If `mode === "bundled"`, all such base Types must be present in `types[]`.
 
-### Views L2 navigation (ext:views-l2)
+#### Views L2 navigation (ext:views-l2)
 
-**44.** Every `NavigationLink.fromSectionId` and `NavigationLink.toSectionId` must reference a `sectionId` declared in the enclosing `DocumentView.sections[]`.
+**Content**: **44.** Every `NavigationLink.fromSectionId` and `NavigationLink.toSectionId` must reference a `sectionId` declared in the enclosing `DocumentView.sections[]`.
 
-### Repository (ext:repository)
+#### Repository (ext:repository)
 
-**45.** A conforming repository must have a `.srs` marker file and a `manifest.json` at its root. A directory without both is not a conforming repository.
+**Content**: **45.** A conforming repository must have a `.srs` marker file and a `manifest.json` at its root. A directory without both is not a conforming repository.
 
 **46.** Every `instanceId` in `RepositoryManifest.instanceIndex` must resolve to a file at the declared `path`, and that file must contain an instance whose `instanceId` matches the index entry. An index entry whose `path` does not resolve, or whose file contains a different `instanceId`, is invalid.
 
@@ -2448,9 +2444,9 @@ Conforming implementations must uphold the following invariants.
 
 **55.** A checksum value in `InstanceIndexEntry.checksum`, `SourceDocumentIndexEntry.sidecarChecksum`, `SourceDocumentIndexEntry.contentChecksum`, or `RelationsChecksumEntry.checksum` must use the format `<algorithm>:<hex-encoded-digest>`. A value that does not include the `<algorithm>:` prefix is invalid.
 
-### Federation (ext:federation)
+#### Federation (ext:federation)
 
-**56.** `Relation.sourceRepositoryId`, when present, must not equal the enclosing repository's own `repositoryId`. The absent-means-local convention handles intra-repository source references; using `sourceRepositoryId` to refer to the current repository is not conformant.
+**Content**: **56.** `Relation.sourceRepositoryId`, when present, must not equal the enclosing repository's own `repositoryId`. The absent-means-local convention handles intra-repository source references; using `sourceRepositoryId` to refer to the current repository is not conformant.
 
 **57.** `Relation.targetRepositoryId`, when present, must not equal the enclosing repository's own `repositoryId`. The absent-means-local convention handles intra-repository target references.
 
@@ -2466,13 +2462,13 @@ Conforming implementations must uphold the following invariants.
 
 ---
 
-## 9. Extension Interactions
 
-Cross-extension interactions are behavioural requirements that apply only when an implementation declares both named extensions.
+### Extension Interactions
 
-### ext:federation × ext:repository
+**Content**: Cross-extension interactions are behavioural requirements that apply only when an implementation declares both named extensions.
+#### ext:federation × ext:repository
 
-**Trigger**: an implementation declares both `ext:federation` and `ext:repository`.
+**Content**: **Trigger**: an implementation declares both `ext:federation` and `ext:repository`.
 
 **Required behaviour**: the federation registry file and events file follow the same discovery and round-trip conventions as all other repository files.
 
@@ -2485,9 +2481,9 @@ Specifically:
 
 ---
 
-### ext:protocol × ext:addressability
+#### ext:protocol × ext:addressability
 
-**Trigger**: an implementation declares both `ext:protocol` and `ext:addressability`.
+**Content**: **Trigger**: an implementation declares both `ext:protocol` and `ext:addressability`.
 
 **Required behaviour**: Protocol stage advancement updates `AttentionState`. When a Protocol run advances from one stage to another, the active `AttentionState` must reflect the new stage before any conversation material is tagged.
 
@@ -2501,9 +2497,10 @@ Conversation chunks produced while `AttentionState.stageId` is set are associate
 
 ---
 
-## 10. Conformance
 
-An implementation declares conformance using the following form:
+### Conformance
+
+**Content**: An implementation declares conformance using the following form:
 
 ```
 SRS <version> Core [+ ext:<name> ...]
@@ -2513,10 +2510,9 @@ Example:
 ```
 SRS 2.0 Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability + ext:recommended-relations
 ```
+#### Core conformance requirements
 
-### Core conformance requirements
-
-A core-conformant implementation must:
+**Content**: A core-conformant implementation must:
 - Accept and validate `Field`, `Type`, `Record` (Tier 2), `Relation`, and `Container` inputs against this specification
 - Enforce Invariants 1–3, 7–9, 16–21, 28, 38
 - Support the Foundation and Distribution groups in full
@@ -2525,25 +2521,25 @@ A core-conformant implementation must:
 
 Support for `Note` (Tier 0) and `Typed Record` (Tier 1) is optional at core conformance level.
 
-### Extension conformance requirements
+#### Extension conformance requirements
 
-An implementation declaring a given extension must:
+**Content**: An implementation declaring a given extension must:
 - Accept and validate all types defined by that extension
 - Enforce all invariants assigned to that extension
 - Respect the declared dependency chain (e.g., `ext:views-l2` requires `ext:views-l1` to also be declared)
 
-### ext:federation conformance requirements
+#### ext:federation conformance requirements
 
-An implementation declaring `ext:federation` must:
+**Content**: An implementation declaring `ext:federation` must:
 - Accept and preserve cross-repository qualifiers (`sourceRepositoryId`, `targetRepositoryId`) on `Relation` records without stripping them
 - Treat a `Relation` with an unresolvable `sourceRepositoryId` or `targetRepositoryId` as a valid citation with an unresolved location — not as an error
 - Produce and consume `RepositoryRegistry` and `FederationEventsFile` according to the structures defined in this section
 - Detect and surface cycles when following `childRegistries` chains; halt rather than loop
 - Enforce Invariants 56–62
 
-### ext:repository conformance requirements
+#### ext:repository conformance requirements
 
-An implementation declaring `ext:repository` must:
+**Content**: An implementation declaring `ext:repository` must:
 - Produce repositories with a `.srs` marker and `manifest.json` at root, with content in the prescribed folder layout
 - Maintain a complete and accurate `instanceIndex` in the manifest; the index must reflect the actual files present
 - Produce archives that satisfy all self-containment requirements (Invariants 49 and 51)
@@ -2554,9 +2550,9 @@ An implementation declaring `ext:repository` must:
 
 An implementation that can produce archives but not consume them (or vice versa) must declare this limitation explicitly. Partial repository support is not conformant.
 
-### ext:repository (self-contained) profile
+#### ext:repository (self-contained) profile
 
-A named stricter profile for standalone, offline-operable repositories:
+**Content**: A named stricter profile for standalone, offline-operable repositories:
 
 ```
 SRS 2.0 Core + ext:repository (self-contained)
@@ -2571,9 +2567,10 @@ An implementation declaring this profile must satisfy all `ext:repository` confo
 
 This profile is appropriate for: standalone tools, file-based backups, air-gapped or offline deployments, inter-organisational exchange, and any context where zero-dependency portability is required.
 
-### Interoperability note
+#### Interoperability note
 
-Two implementations at the same conformance level will produce compatible definitions for exchange. An implementation receiving a Package that includes types or fields from an extension it does not support should surface the unknown content, preserve it where possible, and pass it through rather than silently discard it.
+**Content**: Two implementations at the same conformance level will produce compatible definitions for exchange. An implementation receiving a Package that includes types or fields from an extension it does not support should surface the unknown content, preserve it where possible, and pass it through rather than silently discard it.
 
 Two implementations both declaring `ext:repository` must be able to exchange archives without data loss. An archive produced by one conforming implementation must be consumable by any other conforming implementation at the same SRS version.
+
 
