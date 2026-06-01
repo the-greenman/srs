@@ -12,7 +12,7 @@
     },
     {
       "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": "**15.** Every `typeId` referenced by any `View` in `Package.views[]` must appear in `Package.dependencyRefs` with `definitionType: \"type\"`. If `mode === \"bundled\"`, that `Type` must be present in `types[]`."
+      "value": "**15.** Every `fieldId` referenced by any `View.fieldViews[]` entry in `Package.views[]` must appear in `Package.dependencyRefs` with `definitionType: \"field\"` or be present in `Package.fields[]`. If `mode === \"bundled\"`, that `Field` must be present in `fields[]`."
     }
   ],
   "sourceRefs": [

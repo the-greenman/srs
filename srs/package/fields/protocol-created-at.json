@@ -1,12 +1,13 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
-  "id": "protocol-created-001",
+  "id": "b953f716-383a-4218-bebf-96e93c4747a4",
   "namespace": "com.semanticops.srs",
   "name": "protocol-created-at",
   "version": 1,
-  "title": "Protocol Created At",
   "description": "Timestamp when the protocol was created.",
   "valueType": "string",
-  "aiGuidance": {},
+  "aiGuidance": {
+    "purpose": "Capture the creation timestamp of the protocol definition."
+  },
   "createdAt": "2026-05-29T00:00:00Z"
 }

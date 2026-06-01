@@ -12,11 +12,11 @@
     },
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",
-      "value": "Every fieldId in View.fieldViews[] must appear in the bound Type's\u2026"
+      "value": "Every fieldId in View.fieldViews[] must reference a valid Field.id"
     },
     {
       "fieldId": "1a000003-0000-4000-a000-000000000003",
-      "value": "Every `fieldId` in `View.fieldViews[]` must appear in the bound Type's effective field list. A View cannot introduce Fields not in its Type."
+      "value": "Every `fieldId` in `View.fieldViews[]` must reference a valid `Field.id` in the effective package set. View compatibility is field-centric (based on required field presence), not Type-bound."
     },
     {
       "fieldId": "1a000021-0000-4000-a000-000000000021",
