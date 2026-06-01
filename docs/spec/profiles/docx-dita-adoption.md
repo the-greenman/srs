@@ -408,7 +408,7 @@ For SRS Document Views, SectionSource already handles including whole Records in
 
 **Extension to variable substitution syntax** (ext:views-l2):
 
-The existing preamble variable system (`{{container-title}}`, `{{date}}`, `{{container-id}}`) is extended with field transclusion:
+{% raw %}The existing preamble variable system (`{{container-title}}`, `{{date}}`, `{{container-id}}`) is extended with field transclusion:
 
 ```
 {{field:{recordId}/{fieldId}}}
@@ -441,6 +441,7 @@ preamble: |
   
   Ratified on: {{date}}
 ```
+{% endraw %}
 
 ---
 
