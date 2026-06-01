@@ -234,6 +234,12 @@
       "title": "ext:repository"
     },
     {
+      "instanceId": "e47a2b91-0c3d-4f5e-a6b7-8c9d0e1f2a3b",
+      "path": "records/extensions/ext-json-store.json",
+      "tier": 2,
+      "title": "ext:json-store"
+    },
+    {
       "instanceId": "c5bb163b-93eb-5f79-8ee8-2ec0bc5df50b",
       "path": "records/extensions/ext-views-l1.json",
       "tier": 2,
@@ -484,6 +490,12 @@
       "path": "records/subsections/07-15-ext-repository.json",
       "tier": 2,
       "title": "ext:repository"
+    },
+    {
+      "instanceId": "f58b3ca2-1d4e-5f6a-b7c8-9d0e1f2a3b4c",
+      "path": "records/subsections/07-16-ext-json-store.json",
+      "tier": 2,
+      "title": "ext:json-store"
     },
     {
       "instanceId": "d5d3f88f-8cc6-5247-8d35-41b189804dc5",
