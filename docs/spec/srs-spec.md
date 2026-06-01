@@ -2226,6 +2226,87 @@ An importer must not mix strategies within a single copy operation.
 
 ---
 
+#### ext:json-store
+
+**Content**: **Required for**: any implementation that stores an SRS repository as a single portable JSON file.
+
+**Depends on**: `ext:repository`
+
+Defines the **SRS JSON Store format** (`.srsj`): a single-file, self-contained serialization of a complete SRS repository. The JSON Store is an alternative to the filesystem layout defined by `ext:repository`. Both formats carry identical semantic content; an implementation must be able to convert between them losslessly.
+
+#### Purpose and trade-offs
+
+The JSON Store is valuable when portability matters more than human readability of individual files: emailing a repository, committing a snapshot to version control as a single artifact, embedding a repository in a test fixture, or transferring between systems without ZIP tooling.
+
+The filesystem layout (`ext:repository`) is preferred when independent inspection of individual records, partial checkout, or per-file storage history is valuable.
+
+#### File format
+
+A `.srsj` file is a pretty-printed UTF-8 JSON object with the following top-level structure:
+
+```json
+{
+  "srsj": "1",
+  "manifest": { ... },
+  "data": {
+    "package/package.json": { ... },
+    "package/fields/<id>.json": { ... },
+    "records/<type>/<slug>.json": { ... },
+    "relations/relations.json": { ... }
+  }
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `srsj` | string | Format version. Current value: `"1"`. Implementations must reject files with unrecognised versions. |
+| `manifest` | object | The `RepositoryManifest` object as defined by `ext:repository`. `manifest.instanceIndex` is authoritative. |
+| `data` | object | Flat key-value store. Keys are forward-slash-normalised relative paths as they would appear in a filesystem repository. Values are the parsed JSON content of each file. |
+
+The `.srsj` extension is conventional; an implementation may accept any filename. The extension must not be used as an authoritative indicator of format — implementations must inspect the `srsj` field to confirm the format and version.
+
+#### Path conventions in `data`
+
+Keys in `data` follow the same relative-path conventions as `ext:repository`:
+
+- `package/package.json` — package index
+- `package/fields/<filename>.json` — field definitions
+- `package/types/<filename>.json` — type definitions
+- `package/views/<filename>.json` — view definitions
+- `records/<subfolder>/<filename>.json` — Tier 2 Record instances
+- `notes/<filename>.json` — Tier 0 Note instances
+- `typed-records/<filename>.json` — Tier 1 TypedRecord instances
+- `relations/<filename>.json` — relation collections
+
+The `instanceIndex` in `manifest` is the authoritative list of members. A key present in `data` but absent from `instanceIndex` is not a repository member.
+
+#### Conformance requirements
+
+1. A conforming producer must write every instance listed in `manifest.instanceIndex` as an entry in `data` under its declared `path`.
+2. A conforming producer must write all relation files declared in `manifest.relationsPath` as entries in `data`.
+3. A conforming producer must write the local package under `package/package.json` when `packageRef.mode === "local"`.
+4. A conforming consumer must reject a `.srsj` file whose `srsj` value is not a recognised version string.
+5. A conforming consumer must apply the same identity-based import rules as `ext:repository` when loading a `.srsj` file into an existing store.
+6. A conforming implementation must be able to round-trip a repository between the JSON Store format and the filesystem layout without data loss.
+
+#### Source documents
+
+Binary source document content is not included in the JSON Store. An implementation converting from a filesystem repository to `.srsj` must omit source document content files and should surface the omission to the user. Source document sidecars (`.meta.json`) may be included in `data` if they are pure JSON; their content files must not be.
+
+#### Interoperability
+
+A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `ext:repository`, with the following differences:
+
+| | `.srsj` JSON Store | `.srs` ZIP Archive |
+|---|---|---|
+| Format | Single JSON file | ZIP of directory tree |
+| Manifest location | Top-level `manifest` key | `manifest.json` at ZIP root |
+| Instance storage | Embedded in `data` object | Individual files in ZIP |
+| Source document content | Not included | Included as files |
+| Primary use | Tooling, fixtures, snapshots | Sharing, export, long-term storage |
+
+---
+
 
 ### Key Invariants
 
