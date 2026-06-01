@@ -13,21 +13,21 @@
       "displayLabel": "Alternatives",
       "fieldId": "636ce948-2110-57b4-a3ed-04354ec17843",
       "order": 1,
-      "required": true,
+      "required": false,
       "visible": true
     },
     {
       "displayLabel": "Rationale",
       "fieldId": "3340532b-d845-5e54-92b3-819ed05365c5",
       "order": 2,
-      "required": true,
+      "required": false,
       "visible": true
     },
     {
       "displayLabel": "Revisit",
       "fieldId": "c04b7f84-9a55-5353-8c9f-2b62f6a1e34e",
       "order": 3,
-      "required": true,
+      "required": false,
       "visible": true
     }
   ],

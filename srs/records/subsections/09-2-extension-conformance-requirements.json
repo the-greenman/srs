@@ -12,7 +12,7 @@
     },
     {
       "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": "An implementation declaring a given extension must:\n- Accept and validate all types defined by that extension\n- Enforce all invariants assigned to that extension\n- Respect the declared dependency chain (e.g., `ext:views-l2` requires `ext:views-l1` to also be declared)"
+      "value": "An implementation declaring a given extension must:\n- Accept and validate all types defined by that extension\n- Enforce all invariants assigned to that extension\n- Respect the declared dependency chain (e.g., `ext:views-l2` requires `ext:views-l1` to also be declared)\n\n`ext:recommended-relations` is retired as of RFC-005. It no longer owns any normative semantics. Implementations must not treat it as a capability gate — the canonical relation vocabulary is now mandatory core behaviour provided by the `com.semanticops.srs` package."
     }
   ],
   "sourceRefs": [

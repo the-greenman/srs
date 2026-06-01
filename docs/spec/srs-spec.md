@@ -1604,56 +1604,11 @@ When `ext:cross-field-validation` is in use, `Type` gains `validationRules?: Cro
 
 #### ext:recommended-relations
 
-**Content**: **Required for**: cross-system federation; multi-publisher ecosystems where Relation type semantics must be interoperable.
+**Content**: **Retired as of RFC-005.** The canonical SRS relation vocabulary (`contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`) is now provided as installed `RelationTypeDefinition` records in the `com.semanticops.srs` package. See §5 (Package).
 
-Canonical relation types and machine-readable Relation type definitions.
+Implementations that previously declared `ext:recommended-relations` may remove it. The canonical definitions are unconditionally available to any repository using the SRS package.
 
-**Canonical relation types** (use exact strings):
-
-| Canonical | Converse | Category |
-|---|---|---|
-| `contains` | `part-of` | Composition |
-| `depends-on` | `required-by` | Dependency |
-| `supersedes` | `superseded-by` | Governance |
-| `refines` | `refined-by` | Refinement |
-| `derived-from` | `source-of` | Derivation |
-| `evidences` | `evidenced-by` | Evidence |
-| `precedes` | `follows` | Sequence |
-
-Implementations must store only the canonical (forward) form and derive the inverse when needed.
-
-**Relation category taxonomy:**
-
-| Category | Examples |
-|---|---|
-| Composition | `contains`, `part-of`, `has-section` |
-| Refinement | `refines`, `expands`, `summarises` |
-| Dependency | `depends-on`, `requires`, `blocks`, `enables` |
-| Sequence | `precedes`, `follows`, `overlaps` |
-| Derivation | `derived-from`, `extracted-from`, `based-on` |
-| Evidence | `evidences`, `supports`, `contradicts` |
-| Governance | `supersedes`, `amends`, `ratifies`, `delegates` |
-| Association | `relates-to`, `links-to` |
-
-#### `RelationTypeDefinition`
-
-Machine-readable metadata for a `relationType` string.
-
-```typescript
-{
-  relationType: string      // exact string used in Relation.relationType
-  namespace: string
-  label?: string
-  description?: string
-  category?: "composition" | "refinement" | "dependency" | "sequence" | "derivation" | "evidence" | "governance" | "association"
-  canonicalDirection?: string   // e.g. "source is the dependent task; target is the task it depends on"
-  inverseType?: string
-}
-```
-
-`RelationTypeDefinition` is optional metadata. Implementations are not required to resolve `relationType` strings against a definition before accepting a Relation. Relation type definitions may be included in a Package or published separately.
-
----
+The statement that "`RelationTypeDefinition` is optional metadata" is superseded. As of RFC-005, every `Relation.relationType` string must resolve to an installed `RelationTypeDefinition` in the effective package set before a Relation is accepted. A missing or conflicting definition is a validation error. See §9-1 (Core conformance requirements).
 
 #### ext:import-tracking
 
@@ -2533,6 +2488,7 @@ SRS 2.0 Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability 
 - Support the Foundation and Distribution groups in full
 - Implement the namespace format and reference format correctly
 - Not accept `relationType` strings that include `/` except in `namespace/name` format
+- Resolve every `Relation.relationType` against an installed `RelationTypeDefinition` in the effective package set before accepting a Relation write. A missing or conflicting definition is a validation error.
 
 Support for `Note` (Tier 0) and `Typed Record` (Tier 1) is optional at core conformance level.
 
@@ -2542,6 +2498,8 @@ Support for `Note` (Tier 0) and `Typed Record` (Tier 1) is optional at core conf
 - Accept and validate all types defined by that extension
 - Enforce all invariants assigned to that extension
 - Respect the declared dependency chain (e.g., `ext:views-l2` requires `ext:views-l1` to also be declared)
+
+`ext:recommended-relations` is retired as of RFC-005. It no longer owns any normative semantics. Implementations must not treat it as a capability gate — the canonical relation vocabulary is now mandatory core behaviour provided by the `com.semanticops.srs` package.
 
 #### ext:federation conformance requirements
 
