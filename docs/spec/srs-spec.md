@@ -1351,11 +1351,18 @@ A versioned, Container-level projection. Defines how a Container's Records are a
   // render a document title heading at level 1 + depthOffset containing container-title.
 
   format?: string
-  // Portable values: "markdown", "adoc", "html", "text".
+  // Portable values: "markdown", "adoc", "html", "text", "json".
   // Implementations MAY support additional values; non-portable values MUST NOT
   // cause a validation error. When absent, output format is implementation-defined.
   // DocumentView.format governs all section rendering; ExportConfig.format on a
   // referenced L1 View is ignored for section rendering.
+  //
+  // When format is "json", implementations MUST produce a structured JSON
+  // projection conforming to the document-view-output.json schema instead of
+  // rendered markup. In json mode: theme application, heading injection, and
+  // depthOffset do not apply; {{heading-N}} variables in preamble templates
+  // MUST be substituted as empty strings; containerId is resolved from the
+  // first container-subset SectionSource, or null when none is present.
 
   depthOffset?: integer   // min: 0; default: 0
   // Shifts all auto-rendered heading levels by this amount.
@@ -1443,8 +1450,10 @@ Standard variables in `DocumentView.preamble`:
 | `{{container-title}}` | Container title from manifest |
 | `{{container-id}}` | Container UUID |
 | `{{date}}` | Render date |
-| `{{heading-1}}` | Heading prefix at level `1 + depthOffset` |
-| `{{heading-2}}` | Heading prefix at level `2 + depthOffset` |
+| `{{heading-1}}` | Heading prefix at level `1 + depthOffset` (empty string in json mode) |
+| `{{heading-2}}` | Heading prefix at level `2 + depthOffset` (empty string in json mode) |
+
+In json mode all `{{heading-N}}` variables MUST resolve to `""`. Implementations MUST NOT emit the literal token.
 
 ---
 
@@ -2381,6 +2390,12 @@ An importer must not mix strategies within a single copy operation.
 **[N+7]** Implementations that do not declare `ext:themes-l1` MUST ignore `DocumentView.themeRef` and `DocumentView.themeVariants` and MUST NOT produce a validation error on their presence.
 
 **[N+8]** `ThemeVariant.name` values MUST be unique within a `DocumentView.themeVariants` array. This is enforced at package validation time. When `ext:themes-l1` is declared and a variant name is supplied at render invocation: (1) if the variant is found and format-compatible, use it; (2) if found but format-incompatible, render without a theme — do NOT fall back to `themeRef`; (3) if not found, fall back to `themeRef`; (4) if no variant name is supplied, use `themeRef`.
+
+**[N+9]** When `DocumentView.format` is `"json"`, implementations MUST produce a structured JSON projection conforming to `document-view-output.json` rather than rendered markup. The `rendered` output field MUST be an empty string. Theme application, heading injection, and `depthOffset` do not apply. `(empty)` placeholder strings MUST NOT appear in any field value in the projection.
+
+**[N+10]** When `DocumentView.format` is `"json"`, the root `containerId` in the projection MUST be the `containerId` from the first `SectionSource` with `type === "container-subset"` found across all sections (sorted by `DocumentSection.order`). When no such source is present, `containerId` MUST be `null`. When multiple `container-subset` sources have differing `containerId` values, implementations MUST use the first and SHOULD emit a diagnostic.
+
+**[N+11]** When `ExportConfig.preamble` is rendered in `"json"` mode, all `{{heading-N}}` variables MUST be substituted as empty strings. Implementations MUST NOT emit the literal token in any json-mode output.
 
 #### Addressability (ext:addressability)
 
