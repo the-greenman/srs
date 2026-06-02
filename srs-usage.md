@@ -1,0 +1,215 @@
+# SRS Agentic Usage Rules
+
+This document governs how AI agents interact with SRS repositories. It applies in any context — whether you are working inside `srs/` (the spec), a project repo, or any other directory that contains a `.srs/` marker.
+
+**The CLI is the only stable interface to SRS data.** Everything else — JSON files, directory layout, `manifest.json` structure — is a storage implementation detail that may change between backends (file, SQL, in-memory). Agent workflows that reach past the CLI are brittle and will break.
+
+---
+
+## 1. Recognising an SRS Repository
+
+A directory is an SRS repository when it contains a `.srs/` marker subdirectory. The presence of `records/`, `manifest.json`, or `package/` alone does not confirm an SRS repo — look for `.srs/`.
+
+When you encounter `.srs/`, stop and orient before doing anything:
+
+```bash
+srs repo map --repo <path> --pretty       # counts, relation summary, package info, description
+srs repo validate --repo <path> --pretty  # full validation; read diagnostics[] before proceeding
+```
+
+Never assume you understand the repo's content from its directory listing.
+
+---
+
+## 2. The CLI-First Rule
+
+**Do not create, edit, or delete SRS JSON files directly.** Use the CLI for all read and write operations.
+
+The only exception is when the CLI cannot yet express the operation — for example, a field or type definition that has no `create` command yet. In that case:
+1. Document why the CLI cannot be used.
+2. Make the minimal edit required.
+3. Immediately run `srs repo validate --repo <path>` and fix every diagnostic before continuing.
+
+This exception is narrow. If a CLI command exists for the operation, use it — even if direct file editing feels faster.
+
+### Why this matters
+
+- Writing a record file without registering it in `manifest.json → instanceIndex` creates a ghost file the system ignores.
+- Editing `typeId`, `fieldId`, or `relationId` values by hand bypasses referential integrity checks.
+- The file layout (`records/`, `package/`, `relations/`) is a FileStore detail. A future SQL-backed repo has no files; agent code that touches the filesystem directly will not port.
+
+---
+
+## 3. Discovery Ladder
+
+Always run discovery before writing. The ladder is:
+
+```bash
+# 1. Orientation — what is this repo, what's in it?
+srs repo map --repo <path> --pretty
+
+# 2. What types are available?
+srs type list --repo <path> --pretty
+
+# 3. What instances exist? (filter by type as needed)
+srs record list --repo <path> --pretty
+srs record list --repo <path> --type <namespace/name> --pretty
+srs note list --repo <path> --pretty
+
+# 4. Inspect a specific instance
+srs record get --repo <path> --id <instanceId> --pretty
+srs note get --repo <path> --id <instanceId> --pretty
+
+# 5. Inspect a type's field assignments (required before creating a record)
+srs type get --repo <path> --id <typeId> --pretty
+srs field list --repo <path> --pretty
+```
+
+Do not guess field IDs from filenames. Always resolve them from `srs type get` or `srs field list`. Field IDs are UUIDs — `fieldId` is the authoritative key, not `name`.
+
+---
+
+## 4. Write Workflows
+
+### Creating a Note (Tier 0)
+
+```bash
+srs note create --repo <path> <<'EOF'
+{
+  "instanceId": "<new-uuid4>",
+  "title": "My Note",
+  "sections": [
+    { "name": "body", "content": "Content here.", "label": "Body" }
+  ],
+  "tags": [],
+  "createdAt": "<iso8601>"
+}
+EOF
+```
+
+### Creating a Record (Tier 2)
+
+First resolve the type's field IDs:
+
+```bash
+srs type get --repo <path> --id <typeId> --pretty
+# read fieldAssignments[].fieldId for each field you need to populate
+```
+
+Then create:
+
+```bash
+srs record create --repo <path> --type <namespace/name> <<'EOF'
+{
+  "fieldValues": [
+    { "fieldId": "<uuid>", "value": "<value>" },
+    ...
+  ]
+}
+EOF
+```
+
+### Updating a Record
+
+Fetch the current state first, then send only the fields you are changing:
+
+```bash
+srs record get --repo <path> --id <instanceId> --pretty
+srs record update --repo <path> --id <instanceId> <<'EOF'
+{
+  "fieldValues": [
+    { "fieldId": "<uuid>", "value": "<new-value>" }
+  ]
+}
+EOF
+```
+
+### Asserting a Relation
+
+```bash
+srs relation create --repo <path> <<'EOF'
+{
+  "relationId": "<new-uuid4>",
+  "relationType": "depends-on",
+  "sourceInstanceId": "<uuid>",
+  "targetInstanceId": "<uuid>",
+  "createdAt": "<iso8601>"
+}
+EOF
+```
+
+Canonical relation types: `contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`.
+
+Relations are semantic claims, not ownership. Asserting a relation does not change lifecycle state on either endpoint.
+
+### Validate After Every Write Batch
+
+```bash
+srs repo validate --repo <path> --pretty
+```
+
+Check `payload.diagnostics` — a non-empty array means something is broken. Zero exit code does not mean zero errors; diagnostics are in the payload, not the exit code.
+
+---
+
+## 5. Common Traps
+
+### The instanceIndex trap
+`manifest.json → instanceIndex` is the authoritative membership list. A record file on disk that is not listed there does not exist to the system. The CLI manages this automatically. Direct file writes do not.
+
+### The typeId-wins rule
+A Record carries both `typeId`/`typeVersion` (authoritative) and `typeNamespace`/`typeName` (denormalized hints). If they conflict, `typeId` wins and the Record is invalid. Do not try to fix a broken Record by patching the name fields — fix the `typeId` or recreate the Record.
+
+### Relations are not inline
+Records do not contain their relations. Relations live in `relations/relations.json` (or the path declared in `manifest.json → relationsPath`). A record that looks complete when read in isolation may have significant relations elsewhere. Always run `srs relation list --repo <path>` when building a picture of a record's context.
+
+### repositoryId is immutable
+The `repositoryId` in `manifest.json` uniquely identifies this repository across all time and space. Never change it, even when copying or exporting a repo. If you need a new logical repo, create one with a new ID.
+
+### Field semantics are immutable
+Field definitions cannot be overridden by the Types that use them. `displayLabel` in a FieldAssignment is rendering-only — it does not change what a field means. If you need different semantics, you need a different Field with a new UUID.
+
+### Version lineage
+Changing a Field's `namespace` or `name` requires a new UUID — it is a new Field, not a new version of the old one. Version increments within the same UUID lineage only. The same applies to Types.
+
+---
+
+## 6. Reading CLI Output
+
+All commands return a JSON envelope:
+
+```json
+{ "ok": true, "command": "...", "version": "...", "payload": { ... } }
+```
+
+Always check `ok` before reading `payload`. On failure: `ok: false`, details in top-level `diagnostics[]`.
+
+Exit code `0` means the command ran. It does not mean the data is valid. Check `payload.diagnostics` (for `repo validate`) separately.
+
+Use `--pretty` for human reading. Omit it when piping to `jq` or a script.
+
+---
+
+## 7. Ordering: Read, Then Write
+
+Never write to an SRS repo without first reading the current state of what you intend to change. The sequence is always:
+
+1. `srs repo map` — orient
+2. `srs <entity> get` or `srs <entity> list` — read current state
+3. `srs <entity> create/update/delete` — write
+4. `srs repo validate` — confirm no diagnostics
+
+Multi-step operations (create a record and add it to a container, for example) should be treated as atomic from the agent's perspective: plan all steps before executing any, and validate once at the end.
+
+---
+
+## 8. When the CLI Cannot Help
+
+If a command is missing or broken, the correct response is:
+
+1. Note the gap explicitly in the task log or commit message.
+2. Make the minimal direct JSON edit required.
+3. Validate with `srs repo validate`.
+4. File the missing capability as a known gap — do not build workarounds that become load-bearing.
+
+Do not silently bypass the CLI. The gap is signal.
