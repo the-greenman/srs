@@ -18,6 +18,7 @@
     "ext:recommended-relations",
     "ext:repository",
     "ext:themes-l1",
+    "ext:type-inheritance",
     "ext:views-l1",
     "ext:views-l2"
   ],
