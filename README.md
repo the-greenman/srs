@@ -49,10 +49,10 @@ node scripts/publish-spec.mjs        # render docs + sync schemas across sibling
 
 | RFC | Title | Status |
 |-----|-------|--------|
-| [RFC-001](docs/spec/rfcs/rfc-001.md) | Views L2 — Rendering Hierarchy and Default Rendering Baseline | accepted |
-| [RFC-002](docs/spec/rfcs/rfc-002.md) | ext:themes-l1 — Visual Theming for Document Views | accepted |
 | [RFC-003](docs/spec/rfcs/rfc-003.md) | Definition Distribution and Repository Slices | draft |
 | [RFC-004](docs/spec/rfcs/rfc-004.md) | Language-Neutral Schema Notation for Spec Records | draft |
+
+RFC-001, RFC-002, and RFC-005 have been accepted and incorporated into the main specification.
 
 ## Authoring
 
