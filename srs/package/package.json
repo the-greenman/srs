@@ -46,7 +46,20 @@
     "fields/protocol-target-type.json",
     "fields/protocol-stages.json",
     "fields/protocol-tags.json",
-    "fields/protocol-created-at.json"
+    "fields/protocol-created-at.json",
+    "fields/term-key.json",
+    "fields/term-aliases.json",
+    "fields/term-roles.json",
+    "fields/term-properties.json",
+    "fields/vocabulary-mode.json",
+    "fields/vocabulary-extends-id.json",
+    "fields/vocabulary-extends-version.json",
+    "fields/promotion-window-until.json",
+    "fields/lifecycle-initial-state.json",
+    "fields/lifecycle-extends-id.json",
+    "fields/lifecycle-extends-version.json",
+    "fields/vocabulary-ref.json",
+    "fields/lifecycle-ref.json"
   ],
   "types": [
     "types/meta.specification.json",
@@ -60,7 +73,10 @@
     "types/meta.section.json",
     "types/meta.subsection.json",
     "types/tag-definition.json",
-    "types/meta.protocol.json"
+    "types/meta.protocol.json",
+    "types/meta.term.json",
+    "types/meta.vocabulary.json",
+    "types/meta.lifecycle.json"
   ],
   "views": [],
   "documentViews": [
@@ -85,5 +101,5 @@
     "spec-rfc-process/relation-types/rfc-targets-section.json"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-05-29T00:00:00Z"
+  "updatedAt": "2026-06-03T00:00:00Z"
 }

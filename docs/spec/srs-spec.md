@@ -239,6 +239,17 @@ The minimum valid `AiGuidance` is `{ purpose: "..." }`.
 
 `valueType` is the stable semantic data type. `editorHint` is a rendering default. AI extraction, validation, and export formatting must depend only on `valueType`. `contentFormat` refines how `string` and `text` values should be produced and rendered, but does not alter the `valueType`.
 
+#### `vocabularyRef` — binding select fields to shared vocabularies
+
+When `valueType` is `"select"` or `"multiselect"`, a Field declares exactly one of:
+
+```typescript
+selectOptions?: string[]   // inline anonymous closed vocabulary (sugar; retained for simple cases)
+vocabularyRef?: Reference  // bind to a named, installed Vocabulary (id + version)
+```
+
+`selectOptions` is formally sugar for an anonymous inline closed vocabulary. `vocabularyRef` is used when the value set is shared, extensible, or needs Term identity. A `vocabularyRef` MUST resolve to a `Vocabulary` with `mode: closed` (V3). Declaring both, or neither when `valueType` is `select`/`multiselect`, is a validation error (V3).
+
 ---
 
 #### Type
@@ -315,6 +326,20 @@ This is a recommended default, not a required invariant. Implementations that co
 **On instance migration when a Type version changes:**
 A Record binds to a specific `typeVersion` at creation time. Existing Records do not automatically migrate when a new Type version is published. Conformance is measured against the version the Record was instantiated under. When a Record is migrated and exchanged, it should carry the version it now conforms to, and the original Record should be preserved and linked via a `supersedes` Relation.
 
+#### `lifecycleRef` — referencing shared lifecycle definitions
+
+When `ext:lifecycle` is in use, a Type declares a lifecycle in exactly one of two mutually exclusive forms (V7):
+
+```typescript
+// Inline — simple cases; effective set is own states/transitions only:
+lifecycle?: { states: LifecycleState[]; transitions: LifecycleTransition[]; initialState: string }
+
+// Referenced — shared, installable Lifecycle:
+lifecycleRef?: Reference   // resolves to an installed Lifecycle (V8)
+```
+
+Declaring both is a validation error. An inline lifecycle cannot extend; use `lifecycleRef` when the same state machine is needed across multiple Types.
+
 ---
 
 #### Record tiers
@@ -369,7 +394,7 @@ A lightweight instance with no Type binding.
 }
 ```
 
-`tags` are free-form labels that allow Notes to be grouped and discovered by topic across a repository. They carry no semantic identity — a tag is not a defined term and carries no lineage. Use tags for navigation and filtering; use Relations for semantic claims.
+`tags` are free-form labels that allow Notes to be grouped and discovered by topic. A tag is a key that *may* resolve to a `Term` in an open `Vocabulary`, giving it a label, aliases, roles, and lineage — without changing the fact that the instance stores only the string (V2). Undefined tags in an open vocabulary are valid and unenriched. Use tags for navigation and filtering; use Relations for semantic claims.
 
 #### `TypedField`
 
@@ -588,6 +613,154 @@ Containers are not semantic objects with Fields. They do not own semantic state;
 `Container.containerId` is not an instance ID and must not appear in `Relation.sourceInstanceId` or `targetInstanceId`. See Invariant 19.
 
 ---
+
+#### Vocabulary and Term
+
+**Content**: SRS defines four controlled vocabularies — sets of strings that appear in instance data and must mean something stable. They share a common substrate: a `VocabularyEntry` contract satisfied by `Term`, `LifecycleState`, and `RelationTypeDefinition`.
+
+### `VocabularyEntry` (substrate contract)
+
+`VocabularyEntry` is a contract, not a serialised type. Every conforming entry carries:
+
+```typescript
+{
+  id: UUID                  // stable identity
+  version: integer          // min: 1
+  namespace: string
+  key: string               // the string in instance data — unified across all specialisations
+  label?: string            // optional in substrate; specialisations MAY tighten to required
+  description?: string      // optional in substrate; specialisations MAY tighten to required
+  aliases?: string[]        // alternate keys resolving to this entry
+  status?: "active" | "deprecated" | "tombstone" | "retired"   // absent = active (normative)
+  properties?: Record<string, unknown>   // arbitrary metadata; unknown top-level fields rejected
+  lineage?: Lineage
+  provenance?: Provenance
+  createdAt: ISO8601
+  updatedAt?: ISO8601
+}
+```
+
+**Absent `status` MUST be treated as `active`.** This is normative: all resolution rules (V1, V6, V9, V10) treat absent identically to `"active"`.
+
+**Entries are keyed, not named.** Entries carry `key`, not `name`, and are addressed within their container. They are not independently `Reference`-able. Containers (`Vocabulary`, `Lifecycle`) have `name` and are the `Reference` targets.
+
+**Required-field tightening.** `label` and `description` are optional so an emergent `Term` is valid before prose is written. A specialisation MAY tighten an optional substrate field to required; it MUST NOT relax a required one. `RelationTypeDefinition` requires both `label` and `description` (unchanged from RFC-005).
+
+**One forward-compatibility policy.** Unknown top-level fields are rejected; arbitrary entry metadata goes in `properties`.
+
+### `Vocabulary`
+
+A named, versioned set of `Term` entries.
+
+```typescript
+{
+  id: UUID
+  namespace: string
+  name: string
+  version: integer          // min: 1
+
+  mode: "open" | "closed"
+  // open   — instances define what exists; Vocabulary is a curation overlay
+  // closed — values MUST resolve to a Term (V1)
+
+  terms: Term[]
+
+  extendsVocabularyId?: UUID
+  extendsVocabularyVersion?: integer   // required when extendsVocabularyId is present
+
+  promotionWindow?: {
+    until: string            // ISO8601 date or target package version; required when present
+  }
+
+  description?: string
+  createdAt: ISO8601
+  lineage?: Lineage
+  provenance?: Provenance
+}
+```
+
+### `Term`
+
+The generalisation of `TagDefinition`. A defined option within a `Vocabulary`.
+
+```typescript
+{
+  id: UUID
+  version: integer
+  namespace: string
+  key: string
+  label?: string
+  description?: string
+  aliases?: string[]
+  roles?: string[]          // e.g. "foundation", "navigation"
+  status?: "active" | "deprecated" | "tombstone" | "retired"
+  properties?: Record<string, unknown>
+  lineage?: Lineage
+  provenance?: Provenance
+  createdAt: ISO8601
+  updatedAt?: ISO8601
+}
+```
+
+### The four vocabularies
+
+| Vocabulary | Binding scope | Container | Mode |
+|---|---|---|---|
+| Tags | ambient (whole repo) | `Vocabulary` (typically local, open) | `open` |
+| Relation types | repo-global (any edge) | `package.relationTypes[]` (flat global set) | closed-extensible |
+| Lifecycle states | type-bound, shareable | `Lifecycle` (inline or referenced) | `closed` |
+| Field values | field-bound | `Vocabulary` via `vocabularyRef` or inline `selectOptions` | `closed` (V3) |
+
+### Package integration
+
+Vocabularies are Foundation-group definition types installed in packages alongside fields, types, and relationTypes:
+- the distributable `Package` holds inline definitions: `vocabularies?: Vocabulary[]`
+- the repository `package/package.json` holds relative paths: `"vocabularies": ["vocabularies/foo.json", ...]`
+
+### Emergent vocabularies (open vocabularies)
+
+For an open vocabulary, the authoritative set of values is `DISTINCT(tag keys across instances)` — not the `terms[]`. The `Vocabulary` is a curation overlay that may lag usage or be empty.
+
+A conforming implementation MUST be able to compute the live tag set and classify each key as: **used-and-defined**, **used-but-undefined**, or **defined-but-unused**.
+
+**Emergence lifecycle** (mirrors tier graduation):
+1. Free string — exists, undefined, valid.
+2. Curate → `Term` — non-destructive; instance carries the same string.
+3. Alias-merge — a surviving Term absorbs another: absorbed key+aliases move to the survivor, absorbed entry removed (its `id` recorded in `properties.mergedFrom` and redirected); zero instance rewrites.
+4. Optional normalize — opt-in operation that rewrites instance strings to the canonical key.
+5. Optional close — promote `mode: open → closed` (V10).
+
+### Resolution invariants
+
+**V1 — Closed-vocabulary resolution.** Any value in a closed vocabulary must resolve to exactly one entry (matched by `key` or `alias`) in the effective entry set with `status` in {`active`, `deprecated`, `tombstone`} for reads and `active` for new writes.
+
+Applies to: `Relation.relationType`, `select`/`multiselect` field values, `Record.lifecycleState`.
+
+**V2 — Open-vocabulary resolution.** A value in an open vocabulary need not resolve; if it matches a `Term`, enrichment applies. When a value matches more than one entry (a warned V5 collision), resolution is deterministic: key match outranks alias match; ties broken by lexicographically smallest `id`.
+
+Applies to: `Note.tags`, `NoteSection.tags`.
+
+**V3 — Field binding exclusivity and closedness.** A `select`/`multiselect` Field must declare exactly one of `selectOptions` or `vocabularyRef`. A `vocabularyRef` on a `select`/`multiselect` Field MUST resolve to a `Vocabulary` with `mode: closed`.
+
+**V4 — Vocabulary reference resolution.** A `vocabularyRef` must resolve to an installed `Vocabulary` in the effective package set.
+
+**V5 — Effective entry set.** The effective entry set of a `Vocabulary` or `Lifecycle` is constructed as:
+1. Include entries with effective `status` in {`active`, `deprecated`, `tombstone`}. Exclude `retired` entirely (before uniqueness, before V1).
+2. Add transitively the entries of any extended container. The `extends*Version` must match the resolved upstream version; a mismatch is a hard validation error (not silent degradation).
+3. Check uniqueness: duplicate `id`s are an error. In closed vocabularies, the union of all `key`s and `aliases` must be globally unique (key/key, key/alias, alias/alias collisions are errors). In open vocabularies, collisions are warnings (resolved by V2 tie-break).
+
+Inline `Type.lifecycle` cannot extend; its effective set is its own `states`/`transitions`. V5 and V9 apply to inline lifecycles identically to referenced ones.
+
+Excluding `retired` before uniqueness frees a retired key for reuse by a new entry. `tombstone` remains in the effective set and keeps occupying its key. When retiring a key that will be reused, implementations MUST surface stale references to the retiring key for operator resolution before reuse.
+
+**V6 — Closed value status.** A value resolving to `deprecated` or `tombstone` follows RFC-005 E1 write semantics (resolves; new writes rejected). `retired` entries do not resolve under V1 — values referencing them are invalid as if absent.
+
+**V10 — Open→closed promotion.** Version-bumping change with a mandatory pre-flight classifying in-use keys as:
+- *will-be-invalid*: used-but-undefined, or resolving only to a `retired` entry (reads do NOT survive).
+- *read-only-after-close*: resolves to `deprecated` or `tombstone` (reads survive; new writes rejected).
+- *used-and-active*: fine.
+
+A grace window is declared in `Vocabulary.promotionWindow.until`. Until that bound, violations are warnings; after it, V1 applies unconditionally. Absent `promotionWindow` means the promotion takes effect immediately. There is no unbounded window.
 
 
 ### Distribution Group (Core)
@@ -823,47 +996,107 @@ A conforming `ext:addressability` implementation must be able to assemble releva
 
 **Content**: **Required for**: governance tools, decision logs, any implementation where records progress through defined states.
 
-Adds lifecycle state declarations to `Type` and lifecycle state tracking to `Record`.
+`ext:lifecycle` is fully integrated with the vocabulary substrate (RFC-006). `Lifecycle` is an installable, referenceable container — a `VocabularyEntry` specialisation whose container holds states and transitions. `LifecycleState` satisfies the `VocabularyEntry` substrate contract with `key` (was `name`) as its key-role field.
 
-#### `LifecycleState`
+#### `LifecycleState` (VocabularyEntry specialisation)
 
 ```typescript
 {
+  id: UUID                  // stable identity
+  version: integer
+  namespace: string
+  key: string               // was name; the string stored in Record.lifecycleState
+  label?: string
+  description?: string
+  aliases?: string[]
+  isInitial?: boolean       // valid starting state for new Records
+  isFinal?: boolean         // no outgoing transitions permitted (V9)
+  status?: "active" | "deprecated" | "tombstone" | "retired"   // absent = active
+  properties?: Record<string, unknown>
+  lineage?: Lineage
+  provenance?: Provenance
+  createdAt: ISO8601
+  updatedAt?: ISO8601
+}
+```
+
+#### `LifecycleTransition` (edge between state keys)
+
+```typescript
+{
+  id: UUID                  // stable identity for lossless future migration
+  name: string              // e.g. "promote", "approve", "supersede"
+  from: string              // a LifecycleState.key in the effective state set
+  to: string                // a LifecycleState.key in the effective state set
+  description?: string
+  properties?: Record<string, unknown>
+}
+```
+
+`LifecycleTransition` is an edge, not a `VocabularyEntry` (no `key`), but carries `id` so it is addressable. It follows the same forward-compatibility policy as substrate entries: unknown top-level fields rejected; arbitrary metadata in `properties`.
+
+#### `Lifecycle` container
+
+An installable, referenceable state machine — a closed vocabulary of states plus transitions.
+
+```typescript
+{
+  id: UUID
+  namespace: string
   name: string
-  description?: string
-  isInitial?: boolean   // valid starting state for new Records
-  isFinal?: boolean     // no transitions out; Record is settled
-}
-```
+  version: integer          // min: 1
 
-#### `LifecycleTransition`
-
-```typescript
-{
-  name: string       // e.g. "promote", "approve", "supersede"
-  from: string       // must match a state name in the enclosing lifecycle
-  to: string
-  description?: string
-}
-```
-
-#### Type lifecycle block (added by this extension)
-
-When `ext:lifecycle` is in use, `Type` gains:
-
-```typescript
-lifecycle?: {
-  states: LifecycleState[]           // min 1 state
+  states: LifecycleState[]
   transitions: LifecycleTransition[]
-  initialState: string               // must reference a state name where isInitial === true
+  initialState: string      // the key of the single isInitial state
+
+  extendsLifecycleId?: UUID
+  extendsLifecycleVersion?: integer   // required when extendsLifecycleId is present
+
+  description?: string
+  createdAt: ISO8601
+  lineage?: Lineage
+  provenance?: Provenance
 }
 ```
 
-#### Record lifecycle state (added by this extension)
+The distributable `Package` holds inline definitions: `lifecycles?: Lifecycle[]`. The repository `package/package.json` holds relative paths: `"lifecycles": ["lifecycles/foo.json", ...]`.
 
-`Record.lifecycleState` becomes meaningful: must match a state name in the associated `Type.lifecycle.states[]` when the Type declares a lifecycle.
+#### Type lifecycle declaration (added by this extension)
 
-The `lifecycle` block declares vocabulary. Implementations decide enforcement strictness. A state with `isFinal: true` signals that no further transitions are expected; implementations may use this to lock Record content.
+`Type` gains a lifecycle, declared in exactly one of two mutually exclusive forms (V7):
+
+```typescript
+// Inline (simple cases; cannot extend):
+lifecycle?: {
+  states: LifecycleState[]
+  transitions: LifecycleTransition[]
+  initialState: string
+}
+
+// Referenced (shared, installable):
+lifecycleRef?: Reference   // resolves to an installed Lifecycle (V8)
+```
+
+Declaring both is a validation error (V7). An inline lifecycle's effective state set is exactly its own `states`/`transitions`; V5 and V9 apply identically.
+
+#### Record lifecycle state
+
+`Record.lifecycleState` must resolve to a state `key` in the Type's effective state set under V1.
+
+#### Validation invariants (V7–V9)
+
+**V7 — Lifecycle exclusivity.** A Type declares exactly one of `lifecycle` or `lifecycleRef`.
+
+**V8 — Lifecycle reference resolution.** A `lifecycleRef` must resolve to an installed `Lifecycle` in the effective package set.
+
+**V9 — Lifecycle integrity.** Over the effective state set (V5):
+- Exactly one state MUST have `isInitial: true`; `initialState` MUST reference that state's `key`.
+- The initial state MUST have effective `status: active`. A lifecycle whose initial state is deprecated, tombstone, or retired is invalid.
+- Every `transition.from`/`transition.to` must reference a state `key` in the effective state set.
+- A state with `isFinal: true` MUST NOT appear as the `from` of any transition.
+- Transition `id`s must be unique within the effective transition set.
+- `Record.lifecycleState` resolves under V1.
 
 ---
 
@@ -1609,6 +1842,16 @@ When `ext:cross-field-validation` is in use, `Type` gains `validationRules?: Cro
 Implementations that previously declared `ext:recommended-relations` may remove it. The canonical definitions are unconditionally available to any repository using the SRS package.
 
 The statement that "`RelationTypeDefinition` is optional metadata" is superseded. As of RFC-005, every `Relation.relationType` string must resolve to an installed `RelationTypeDefinition` in the effective package set before a Relation is accepted. A missing or conflicting definition is a validation error. See §9-1 (Core conformance requirements).
+
+#### `RelationTypeDefinition` as a VocabularyEntry specialisation (RFC-006)
+
+`RelationTypeDefinition` satisfies the `VocabularyEntry` substrate contract. As of RFC-006, its key-role field is renamed from `relationType` to `key`. Instance-side reference fields (`Relation.relationType`) are unchanged.
+
+It gains `properties?: Record<string, unknown>` under the one forward-compatibility policy: unknown top-level fields are rejected; arbitrary entry metadata goes in `properties`.
+
+It **requires** both `label` and `description` (unchanged from RFC-005). The substrate making these optional in the general contract does not relax this obligation.
+
+The V1 mandatory resolution requirement (every `Relation.relationType` must resolve to an installed `RelationTypeDefinition`) is a named instance of the general closed-vocabulary resolution rule. See §9 (Conformance) and the Foundation Vocabulary and Term subsection.
 
 #### ext:import-tracking
 
@@ -2569,7 +2812,13 @@ SRS 2.0 Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability 
 - Support the Foundation and Distribution groups in full
 - Implement the namespace format and reference format correctly
 - Not accept `relationType` strings that include `/` except in `namespace/name` format
-- Resolve every `Relation.relationType` against an installed `RelationTypeDefinition` in the effective package set before accepting a Relation write. A missing or conflicting definition is a validation error.
+- **Closed-vocabulary resolution (V1):** Resolve every value participating in a closed vocabulary to exactly one installed entry in the effective entry set before accepting a write. Non-resolving values are validation errors. This rule applies to:
+  - `Relation.relationType` — resolved against the repo-global `RelationTypeDefinition` set (RFC-005 E1 is a named instance of V1)
+  - `select`/`multiselect` field values — resolved against the Field's effective closed `Vocabulary`
+  - `Record.lifecycleState` — resolved against the Type's effective lifecycle state set
+- Enforce the effective entry set construction (V5): retire entries excluded before uniqueness; `extends*Version` mismatches are hard errors.
+- Enforce inline and referenced lifecycle integrity (V9).
+- Enforce `select`/`multiselect` field binding exclusivity and closedness (V3).
 
 Support for `Note` (Tier 0) and `Typed Record` (Tier 1) is optional at core conformance level.
 

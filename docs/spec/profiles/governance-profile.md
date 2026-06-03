@@ -301,6 +301,199 @@ aiGuidance:
   purpose: Make the legitimacy of the role visible. Where does this authority come from?
 ```
 
+### `governance/thinking_reached`
+
+```yaml
+name: thinking_reached
+valueType: text
+description: Where the group's thinking has arrived — what is understood, partially agreed, or provisionally settled.
+aiGuidance:
+  purpose: Capture progress made so the exercise does not need to restart on next visit.
+  extraction: Extract what the group has concluded or converged on, even if no formal decision was made.
+  negativeGuidance: Do not record unresolved questions here. Those belong in unresolved_questions.
+```
+
+### `governance/tensions`
+
+```yaml
+name: tensions
+valueType: text
+description: Disagreements, competing values, or unresolved conflicts still present in the exercise.
+aiGuidance:
+  purpose: Name the tensions explicitly rather than glossing over disagreement.
+  extraction: Extract distinct positions, competing values, or structural conflicts. Do not try to resolve them here.
+```
+
+### `governance/unresolved_questions`
+
+```yaml
+name: unresolved_questions
+valueType: text
+description: Specific questions the group has not yet answered.
+aiGuidance:
+  purpose: Make the open questions visible and named so they can be answered on a future visit.
+  extraction: Prefer a list. Extract questions that were raised but not resolved. Do not include questions that were answered — those belong in thinking_reached.
+```
+
+### `governance/blocking`
+
+```yaml
+name: blocking
+valueType: text
+description: What prevents this exercise from closing or advancing — missing information, unresolved dependency, required decision, or something waiting on an external party.
+```
+
+### `governance/next_action`
+
+```yaml
+name: next_action
+valueType: string
+description: The next concrete step or the person responsible for moving this exercise forward.
+```
+
+### `governance/ratification_method`
+
+```yaml
+name: ratification_method
+valueType: string
+description: The method by which the decision was confirmed — vote, consensus, consent, delegated authority, unanimous agreement, etc.
+```
+
+### `governance/ratification_outcome`
+
+```yaml
+name: ratification_outcome
+valueType: select
+selectOptions:
+  - passed
+  - failed
+  - deferred
+  - withdrawn
+description: The formal outcome of the ratification process.
+```
+
+### `governance/threshold`
+
+```yaml
+name: threshold
+valueType: string
+description: The required threshold or consent rule — quorum needed, majority required, blocking objections allowed, etc.
+```
+
+### `governance/eligible_participants`
+
+```yaml
+name: eligible_participants
+valueType: string
+description: Who was entitled to participate in the ratification — all members, committee members, specific roles, etc.
+```
+
+### `governance/result_summary`
+
+```yaml
+name: result_summary
+valueType: text
+description: Human-readable summary of how the ratification proceeded and what the outcome was.
+```
+
+### `governance/ratified_at`
+
+```yaml
+name: ratified_at
+valueType: date
+description: Date or date-time at which ratification occurred.
+```
+
+### `governance/intended_outcome`
+
+```yaml
+name: intended_outcome
+valueType: select
+selectOptions:
+  - discuss
+  - decide
+  - review
+  - inform
+  - explore
+description: The type of outcome the group intends this agenda item to produce.
+```
+
+### `governance/review_subject`
+
+```yaml
+name: review_subject
+valueType: string
+description: Human-readable reference to the record or matter being reviewed.
+```
+
+### `governance/review_reason`
+
+```yaml
+name: review_reason
+valueType: text
+description: Why the review was triggered — scheduled date reached, trigger condition met, new evidence, challenge raised, or expiry.
+```
+
+### `governance/review_finding`
+
+```yaml
+name: review_finding
+valueType: select
+selectOptions:
+  - continue
+  - amend
+  - supersede
+  - close
+  - reopen
+description: The finding of the review — whether the reviewed record stands, needs change, is replaced, or is reopened.
+```
+
+### `governance/note_body`
+
+```yaml
+name: note_body
+valueType: text
+description: The body of the note — the recommendation, challenge, warning, or observation in full.
+aiGuidance:
+  purpose: Capture the substantive content clearly enough that a human can evaluate, accept, or dismiss it.
+  negativeGuidance: Do not summarise so heavily that a human cannot judge the note without returning to the source.
+```
+
+### `governance/note_type`
+
+```yaml
+name: note_type
+valueType: select
+selectOptions:
+  - clarification
+  - policy_warning
+  - split_suggestion
+  - contradiction
+  - evidence_request
+  - improvement
+description: The category of note — what kind of observation or recommendation this is.
+```
+
+### `governance/agent_identity`
+
+```yaml
+name: agent_identity
+valueType: string
+description: Who or what produced this note — an AI agent, a human participant, a policy system, or a review agent. Include agent name or model version where relevant.
+```
+
+### `governance/ratification_note`
+
+```yaml
+name: ratification_note
+valueType: text
+description: How this decision was confirmed — who agreed, by what method, under what authority. Plain prose. This is the default ratification record for most decisions.
+aiGuidance:
+  purpose: Capture the confirmation event in enough detail that a future reader knows the decision was legitimately made.
+  extraction: Note the method (consensus, vote, delegated authority, unanimous agreement), who participated, and any relevant conditions or caveats.
+  negativeGuidance: Do not leave this blank if ratification occurred. Even "agreed by the team at the 3 June meeting with no objections" is a valid record.
+```
+
 ## 6. Type definitions
 
 ## 6.1 Article
@@ -354,7 +547,11 @@ If the authority boundary changes materially, create a new Role Record and link 
 
 ## 6.3 Exercise
 
-An Exercise Record captures unresolved thinking. It is not a failed decision.
+An Exercise Record captures unresolved thinking. It is not a failed decision. It is not a next step. It is a live open question the group intends to return to.
+
+Deliberations frequently surface more than one question. The question that gets resolved becomes a Decision. The threads that remain open — adjacent concerns, structural questions, things that were named but not settled — belong in Exercises. Exercises prevent important unresolved matters from disappearing into notes or meeting memory.
+
+An Exercise may later produce a Decision (linked with `derived-from`). Until then it holds the group's current understanding without forcing premature closure.
 
 ### Fields
 
@@ -379,7 +576,9 @@ A Decision may be `derived-from` an Exercise. The Exercise remains part of the d
 
 ## 6.4 Decision
 
-A Decision is a settled commitment, choice, policy, or direction of action.
+A Decision is a settled commitment, choice, policy, or direction of action. A draft Decision is a deliberation in progress — the same record type, at an earlier lifecycle stage.
+
+Groups should start a Decision record as soon as they know what question they are trying to answer, even before they know the answer. The deliberation fields are filled in as thinking advances. Ratification moves the record to `ratified`. The record is immutable from that point; the governance log is a view of ratified and closed records.
 
 ### Fields
 
@@ -397,6 +596,7 @@ A Decision is a settled commitment, choice, policy, or direction of action.
 | `governance/revisit_when` | recommended | Review dates, triggers, or conditions that would invalidate the decision. |
 | `governance/next_steps` | no | Actions or tasks that emerge from this decision. |
 | `governance/owner` | no | Person, role, or group responsible for follow-through. |
+| `governance/ratification_note` | recommended | How the decision was confirmed — who agreed, by what method, under what authority. Plain prose. |
 | `governance/status` | yes | Draft, proposed, ratified, closed, superseded, rejected. |
 
 ### Lifecycle
@@ -405,7 +605,18 @@ A Decision is a settled commitment, choice, policy, or direction of action.
 draft → proposed → ratified → closed → superseded
 ```
 
+`draft` — deliberation in progress. Fields are being filled in. The record may be incomplete.
+`proposed` — deliberation complete; awaiting ratification.
+`ratified` — confirmed by the group's chosen method. Immutable from this point.
+`closed` — ratified and no longer active (superseded, completed, or expired).
+
 Closed Decisions are immutable in this profile. A material change creates a new Decision Record linked with `supersedes`, `amends`, or `refines`.
+
+### Ratification
+
+For most decisions, `ratification_note` is sufficient. It captures the method, participants, and outcome in plain prose.
+
+When auditability requires a structured record — formal votes with counts, consent processes with named objections, delegated authority that must be traceable — use a separate `governance/ratification` Record linked with `governance/ratifies`. This is an optional extension, not the default path.
 
 ### Minimal decision
 
@@ -417,11 +628,15 @@ decision_statement
 status
 ```
 
-A durable Decision should include context, friction, decision question, alternatives considered, key requirements, rationale, and revisit conditions.
+A shareable Decision adds `rationale`, `alternatives_considered`, and `ratification_note`.
 
-## 6.5 Ratification
+A durable Decision includes context, friction, decision question, alternatives considered, key requirements, rationale, dissent, revisit conditions, and ratification note.
 
-A Ratification Record captures how a Decision became legitimate in a particular governance context.
+## 6.5 Ratification (structured extension)
+
+For most decisions, `governance/ratification_note` on the Decision record is sufficient. Use a separate Ratification Record only when the governance context requires a structured, auditable ratification record — formal votes with counts, consent processes with named objections, delegated authority that must be traceable to a specific Article or Role.
+
+This type is a pluggable extension. Groups adopt it when their ratification processes mature beyond plain prose. It is not required for a valid Decision.
 
 ### Fields
 
@@ -438,10 +653,8 @@ A Ratification Record captures how a Decision became legitimate in a particular 
 ### Relations
 
 ```text
-Ratification --ratifies--> Decision
+Ratification --governance/ratifies--> Decision
 ```
-
-Ratification may be embedded as a Field Group for lightweight use, but should be a separate Record where auditability matters.
 
 ## 6.6 Agenda Item
 
@@ -580,7 +793,18 @@ Used when a decision is already clear and just needs recording.
 | `check_scope` | Is this one decision or several? | Decision draft or split suggestion |
 | `record_reason` | What minimal reason should future readers know? | Rationale |
 | `set_revisit` | What would make us revisit this? | Revisit condition |
-| `ratify` | How was this confirmed? | Ratification Record or ratification fields |
+| `ratify` | How was this confirmed? | `ratification_note` on the Decision record |
+
+If the group's governance requires a structured ratification record (formal vote counts, named consent process, traceable delegated authority), create a separate Ratification Record at this stage. Otherwise `ratification_note` is sufficient.
+
+### Two-artifact output
+
+A completed Decision Capture naturally produces two artefacts:
+
+1. **Decision Summary Card** (View 10.0) — for immediate sharing and communication. Four fields, table format. Can be produced as soon as `state_decision` and `record_reason` are complete.
+2. **Full Decision Record** — the same record, rendered with all fields. Stays in the governance repository for future reference and review.
+
+These are two views of one record, not two records.
 
 ## 8.4 Decision Deliberation Protocol
 
@@ -600,7 +824,7 @@ Used when a decision is not yet clear. This protocol moves a group through a rel
 | `review_triggers` | When should we look at this again? | `governance/revisit_when` | Specific dates, conditions, or signals that would reopen the question. |
 | `next_steps` | What's still left to do? | `governance/next_steps` | Actions with owners; may be empty. |
 
-After `next_steps`, ratification follows the standard pattern: the group confirms the decision using their chosen ratification method, producing a Ratification Record if auditability requires it.
+After `next_steps`, the group confirms the decision using their chosen method. Record this in `governance/ratification_note` on the Decision record. Move the record to `ratified`. A separate Ratification Record is only needed if the governance context requires structured auditability beyond plain prose.
 
 ### Facilitation notes
 
@@ -730,6 +954,23 @@ next actions or review points
 ```
 
 ## 10. Views
+
+## 10.0 Decision Summary Card
+
+The minimum readable form of a decision. Suitable for quick reference, sharing with people who were not present, and as the entry-level record in a decision log.
+
+```markdown
+| Question | Answer |
+|---|---|
+| **What was decided?** | {{decision_statement}} |
+| **Why?** | {{rationale}} |
+| **What wasn't chosen?** | {{alternatives_considered}} |
+| **When to revisit?** | {{revisit_when}} |
+```
+
+Rows where the field is absent are omitted. A card with only `decision_statement` is valid as a stub — it can be promoted to a full record when time allows.
+
+The Summary Card is not a replacement for the full Decision Record. It is a projection for communication. The full record provides the context, friction, decision question, key requirements, dissent, and next steps that keep the decision legible months later. Groups should aim to produce both: the card for immediate sharing, the full record for the governance archive.
 
 ## 10.1 Decision Log Entry View
 
