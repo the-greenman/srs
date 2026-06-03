@@ -24,7 +24,7 @@
     },
     "terms": {
       "type": "array",
-      "items": { "$ref": "term.json" }
+      "items": { "$ref": "#/$defs/Term" }
     },
     "extendsVocabularyId": {
       "type": "string",
@@ -54,5 +54,26 @@
       "items": { "type": "string" }
     },
     "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "Term": {
+      "type": "object",
+      "required": ["id", "version", "namespace", "key"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "format": "uuid" },
+        "version": { "type": "integer", "minimum": 1 },
+        "namespace": { "type": "string" },
+        "key": { "type": "string" },
+        "label": { "type": "string" },
+        "description": { "type": "string" },
+        "aliases": { "type": "array", "items": { "type": "string" } },
+        "roles": { "type": "array", "items": { "type": "string" } },
+        "status": { "type": "string", "enum": ["active", "deprecated", "tombstone", "retired"] },
+        "properties": { "type": "object", "additionalProperties": true },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    }
   }
 }
