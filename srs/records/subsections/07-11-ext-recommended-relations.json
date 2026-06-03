@@ -12,7 +12,7 @@
     },
     {
       "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": "**Retired as of RFC-005.** The canonical SRS relation vocabulary (`contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`) is now provided as installed `RelationTypeDefinition` records in the `com.semanticops.srs` package. See §5 (Package).\n\nImplementations that previously declared `ext:recommended-relations` may remove it. The canonical definitions are unconditionally available to any repository using the SRS package.\n\nThe statement that \"`RelationTypeDefinition` is optional metadata\" is superseded. As of RFC-005, every `Relation.relationType` string must resolve to an installed `RelationTypeDefinition` in the effective package set before a Relation is accepted. A missing or conflicting definition is a validation error. See §9-1 (Core conformance requirements)."
+      "value": "**Retired as of RFC-005.** The canonical SRS relation vocabulary (`contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`) is now provided as installed `RelationTypeDefinition` records in the `com.semanticops.srs` package. See \u00a75 (Package).\n\nImplementations that previously declared `ext:recommended-relations` may remove it. The canonical definitions are unconditionally available to any repository using the SRS package.\n\nThe statement that \"`RelationTypeDefinition` is optional metadata\" is superseded. As of RFC-005, every `Relation.relationType` string must resolve to an installed `RelationTypeDefinition` in the effective package set before a Relation is accepted. A missing or conflicting definition is a validation error. See \u00a79-1 (Core conformance requirements).\n\n#### `RelationTypeDefinition` as a VocabularyEntry specialisation (RFC-006)\n\n`RelationTypeDefinition` satisfies the `VocabularyEntry` substrate contract. As of RFC-006, its key-role field is renamed from `relationType` to `key`. Instance-side reference fields (`Relation.relationType`) are unchanged.\n\nIt gains `properties?: Record<string, unknown>` under the one forward-compatibility policy: unknown top-level fields are rejected; arbitrary entry metadata goes in `properties`.\n\nIt **requires** both `label` and `description` (unchanged from RFC-005). The substrate making these optional in the general contract does not relax this obligation.\n\nThe V1 mandatory resolution requirement (every `Relation.relationType` must resolve to an installed `RelationTypeDefinition`) is a named instance of the general closed-vocabulary resolution rule. See \u00a79 (Conformance) and the Foundation Vocabulary and Term subsection."
     }
   ],
   "sourceRefs": [
@@ -23,5 +23,6 @@
       "note": "Subsection 07-11 from srs-spec.md - coarse source anchoring during migration"
     }
   ],
-  "createdAt": "2026-05-27T00:00:00Z"
+  "createdAt": "2026-05-27T00:00:00Z",
+  "updatedAt": "2026-06-03T00:00:00Z"
 }

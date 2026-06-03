@@ -1295,6 +1295,20 @@
       "sourceInstanceId": "a75866ba-090f-5d62-9f7c-8e179ff1825f",
       "targetInstanceId": "f58b3ca2-1d4e-5f6a-b7c8-9d0e1f2a3b4c",
       "createdAt": "2026-06-01T00:00:00Z"
+    },
+    {
+      "relationId": "d0000390-0000-4000-a000-000000000390",
+      "relationType": "contains",
+      "sourceInstanceId": "74746626-1a15-5430-931e-90a147961265",
+      "targetInstanceId": "45cebefe-39ce-47d9-8753-b2b03ac25a18",
+      "createdAt": "2026-06-03T00:00:00Z"
+    },
+    {
+      "relationId": "d0000391-0000-4000-a000-000000000391",
+      "relationType": "precedes",
+      "sourceInstanceId": "9c202db2-d5c0-592f-b0da-7fd9f633a459",
+      "targetInstanceId": "45cebefe-39ce-47d9-8753-b2b03ac25a18",
+      "createdAt": "2026-06-03T00:00:00Z"
     }
   ]
 }
