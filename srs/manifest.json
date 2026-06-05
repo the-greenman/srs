@@ -148,7 +148,7 @@
       "instanceId": "b1000000-0000-4000-a000-000000000005",
       "path": "records/tables/t005-democracy-mapping.json",
       "tier": 2,
-      "title": "How the SCDS v2 vocabulary maps to the \u03bcDemocracy application layer. Reproduced from the v1\u2192v2 conceptual remapping document for reference."
+      "title": "How the SCDS v2 vocabulary maps to the μDemocracy application layer. Reproduced from the v1→v2 conceptual remapping document for reference."
     },
     {
       "instanceId": "b1000000-0000-4000-a000-000000000006",
@@ -255,14 +255,13 @@
     {
       "instanceId": "22aeac29-b51f-510e-bc99-aeb0020d2656",
       "path": "records/rfcs/rfc-001-views-l2-rendering.json",
-      "tier": 2,
-      "title": "RFC-001: Views L2 \u2014 Rendering Hierarchy and Default Rendering Baseline"
+      "tier": 2
     },
     {
       "instanceId": "854eedf0-ddcf-5f17-bfef-28d27d1e9e6a",
       "path": "records/rfcs/rfc-002-themes-l1.json",
       "tier": 2,
-      "title": "RFC-002: ext:themes-l1 \u2014 Visual Theming for Document Views"
+      "title": "RFC-002: ext:themes-l1 — Visual Theming for Document Views"
     },
     {
       "instanceId": "f7f41817-fe5e-53e9-9bb4-eb313ae6c539",
@@ -531,8 +530,7 @@
     {
       "instanceId": "c9c16dcc-324a-5ab7-b7a5-d53ce48426bf",
       "path": "records/subsections/07-7-ext-views-l2.json",
-      "tier": 2,
-      "title": "ext:views-l2"
+      "tier": 2
     },
     {
       "instanceId": "b9d40b80-3ca0-5daa-bd1f-6a8a47118156",
@@ -579,8 +577,7 @@
     {
       "instanceId": "90db4d42-c1c3-5d59-80e8-654e549eac71",
       "path": "records/subsections/08-14-views-l2-ext-views-l2.json",
-      "tier": 2,
-      "title": "Views L2 (ext:views-l2)"
+      "tier": 2
     },
     {
       "instanceId": "d95bae97-3af2-5e03-b290-4d9f19323b0b",
@@ -592,25 +589,25 @@
       "instanceId": "fe0810ac-5ba0-5a37-8ab2-a845ea96b3af",
       "path": "records/subsections/08-16-distribution-views-l2-ext-views-l2.json",
       "tier": 2,
-      "title": "Distribution \u2014 Views L2 (ext:views-l2)"
+      "title": "Distribution — Views L2 (ext:views-l2)"
     },
     {
       "instanceId": "1623bc16-c479-5fd0-8014-36a81c692690",
       "path": "records/subsections/08-17-distribution-schema-ext-schema.json",
       "tier": 2,
-      "title": "Distribution \u2014 Blueprint (ext:blueprint)"
+      "title": "Distribution — Blueprint (ext:blueprint)"
     },
     {
       "instanceId": "f3e0eeb6-0844-5d87-ba39-222ba4454eea",
       "path": "records/subsections/08-18-distribution-protocol-ext-protocol.json",
       "tier": 2,
-      "title": "Distribution \u2014 Protocol (ext:protocol)"
+      "title": "Distribution — Protocol (ext:protocol)"
     },
     {
       "instanceId": "31bc8a13-bcef-5c71-826d-2fd5528ce021",
       "path": "records/subsections/08-19-field-semantics-content-format.json",
       "tier": 2,
-      "title": "Field semantics \u2014 content format"
+      "title": "Field semantics — content format"
     },
     {
       "instanceId": "078b205b-a636-5f5c-b120-f84a7bcd5463",
@@ -658,13 +655,13 @@
       "instanceId": "e2439781-004a-5997-bfc8-9d405232e223",
       "path": "records/subsections/08-5-1-ext-federation-ext-repository.json",
       "tier": 2,
-      "title": "ext:federation \u00d7 ext:repository"
+      "title": "ext:federation × ext:repository"
     },
     {
       "instanceId": "1ff855f5-b20f-52c7-bc1d-c7e6311743a6",
       "path": "records/subsections/08-5-2-ext-protocol-ext-addressability.json",
       "tier": 2,
-      "title": "ext:protocol \u00d7 ext:addressability"
+      "title": "ext:protocol × ext:addressability"
     },
     {
       "instanceId": "6a3ae7a9-bb3e-5dc3-9d4e-8a2cea41fb77",
@@ -676,7 +673,7 @@
       "instanceId": "826039b6-5575-5071-bd10-3b0ef9b345a5",
       "path": "records/subsections/08-6-distribution-views-ext-views-l1.json",
       "tier": 2,
-      "title": "Distribution \u2014 Views (ext:views-l1)"
+      "title": "Distribution — Views (ext:views-l1)"
     },
     {
       "instanceId": "bf712f2b-715b-5ea6-8aac-9bb065605bdd",
@@ -1132,7 +1129,7 @@
       "instanceId": "f1000005-0000-4000-a000-000000000005",
       "path": "records/design-notes/005-why-record-tiers-exist-note-typed-record-record.json",
       "tier": 2,
-      "title": "Why Record tiers exist (Note \u2192 Typed Record \u2192 Record)"
+      "title": "Why Record tiers exist (Note → Typed Record → Record)"
     },
     {
       "instanceId": "f1000006-0000-4000-a000-000000000006",
@@ -1258,7 +1255,7 @@
       "instanceId": "f1000026-0000-4000-a000-000000000026",
       "path": "records/design-notes/026-schema-vs-view-the-extraction-gap.json",
       "tier": 2,
-      "title": "Blueprint vs View \u2014 the extraction gap"
+      "title": "Blueprint vs View — the extraction gap"
     },
     {
       "instanceId": "f1000027-0000-4000-a000-000000000027",
@@ -1348,7 +1345,7 @@
       "instanceId": "f1000041-0000-4000-a000-000000000041",
       "path": "records/design-notes/041-democracy-mapping.json",
       "tier": 2,
-      "title": "\u03bcDemocracy Mapping"
+      "title": "μDemocracy Mapping"
     },
     {
       "instanceId": "af489a79-3748-56a7-b21d-916da4a2ce08",
@@ -1654,10 +1651,8 @@
     },
     {
       "instanceId": "45cebefe-39ce-47d9-8753-b2b03ac25a18",
-      "tier": 2,
       "path": "records/subsections/04-7-vocabulary-term-substrate.json",
-      "typeId": "2a000003-0000-4000-a000-000000000003",
-      "typeName": "subsection",
+      "tier": 2,
       "title": "Vocabulary and Term"
     }
   ],
