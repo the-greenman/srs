@@ -1478,6 +1478,9 @@ type SectionSource =
       type: "container-subset"
       containerId: UUID
       containerType?: string
+      // Default ordering: when DocumentSection.ordering is absent, members are ordered
+      // by the precedes relation chain among them; createdAt ascending is the tiebreak
+      // for members not connected by any precedes relation.
     }
 ```
 
@@ -1500,9 +1503,12 @@ One section in a Document View.
   titleFieldId?: UUID
   // The fieldId whose value provides the per-record heading within this section.
   // Constraints:
-  //   - Must appear in the effective field list of every instance type in the section.
   //   - The referenced field must have valueType "string" or "text".
   //   - The referenced field must not be repeatable (FieldAssignment.repeatable !== true).
+  //   - When a record's type does not carry this field, the per-record heading is
+  //     omitted silently — this is not a render failure. This enables heterogeneous
+  //     sections (e.g. container-subset) where some record types carry the heading
+  //     field and others do not.
   // When absent, no per-record heading is emitted.
   // Enforced at render time; implementations SHOULD also enforce at package validation time
   // when the section source is statically determinable.
@@ -2650,7 +2656,7 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 
 **[N]** When `DocumentSection.renderViewId` is absent, implementations MUST use the default rendering baseline: fields in effective-field-list order (by `fieldOrder` when `ext:type-inheritance` is active, otherwise by `FieldAssignment.order`), using `FieldAssignment.displayLabel` or `Field.name` as label, resolved from `FieldValue.value` for scalar fields and from `FieldValue.entries` for repeatable fields (when `ext:repeatable-fields` is declared), omitting absent fields. No L1 View influences this baseline.
 
-**[N+1]** When `DocumentSection.titleFieldId` is set, it MUST reference a `fieldId` that (a) appears in the effective field list of every instance type in that section, (b) has `valueType` of `"string"` or `"text"`, and (c) is not repeatable. The section pipeline MUST NOT inject a structural per-record heading when `titleFieldId` is absent. This rule applies to the section pipeline's heading injection mechanism only — it does not constrain headings that may appear inside `ExportConfig.preamble` content. Enforced at render time; implementations SHOULD also enforce at package validation time when the section source is statically determinable.
+**[N+1]** When `DocumentSection.titleFieldId` is set, it MUST reference a `fieldId` where (a) the referenced field has `valueType` of `"string"` or `"text"`, and (b) the field is not repeatable. When a record's type does not carry the designated field, implementations MUST omit the per-record heading for that record — this is not a render failure. This enables heterogeneous sections (e.g. `container-subset`) where some record types carry the heading field and others do not. The section pipeline MUST NOT inject a structural per-record heading when `titleFieldId` is absent. This rule applies to the section pipeline's heading injection mechanism only — it does not constrain headings that may appear inside `ExportConfig.preamble` content. Enforced at render time; implementations SHOULD also enforce at package validation time when the section source is statically determinable.
 
 **[N+2]** When rendering for `format: "markdown"`, `"html"`, or `"adoc"`, section titles MUST render at heading level `2 + depthOffset`. When `titleFieldId` is set on a section, per-record headings MUST render at heading level `3 + depthOffset`. Field labels MUST NOT be rendered as headings. When `format` is absent or is an implementation-defined value, this rule does not apply.
 
@@ -2675,6 +2681,8 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 **[N+10]** When `DocumentView.format` is `"json"`, the root `containerId` in the projection MUST be the `containerId` from the first `SectionSource` with `type === "container-subset"` found across all sections (sorted by `DocumentSection.order`). When no such source is present, `containerId` MUST be `null`. When multiple `container-subset` sources have differing `containerId` values, implementations MUST use the first and SHOULD emit a diagnostic.
 
 **[N+11]** When `ExportConfig.preamble` is rendered in `"json"` mode, all `{{heading-N}}` variables MUST be substituted as empty strings. Implementations MUST NOT emit the literal token in any json-mode output.
+
+**[N+12]** When a `DocumentSection` has `source.type === "container-subset"` and declares no `ordering.fieldId`, implementations MUST order the member instances by the `precedes` relation chain among them (topological sort). Instances not connected by any `precedes` relation are ordered by `createdAt` ascending as a tiebreak. When `ordering.direction` is `"desc"`, this ordering is reversed.
 
 #### Addressability (ext:addressability)
 
