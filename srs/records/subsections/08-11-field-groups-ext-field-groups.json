@@ -1,10 +1,6 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "instanceId": "1373ac6c-4491-509d-90ff-40b111d844d6",
-  "typeId": "2a000003-0000-4000-a000-000000000003",
-  "typeVersion": 1,
-  "typeNamespace": "com.semanticops.spec",
-  "typeName": "subsection",
+  "createdAt": "2026-05-27T00:00:00Z",
   "fieldValues": [
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",
@@ -15,13 +11,22 @@
       "value": "**25.** Every `groupId` in `Record.groupValues[]` must reference a `groupId` declared in the associated `Type.fieldGroups[]`.\n\n**26.** Within a `FieldGroupEntry.fieldValues[]`, every `fieldId` must appear in the enclosing `FieldGroup.fields[].fieldId`.\n\n**27.** A `FieldGroupValue.entries` list must satisfy `FieldGroup.minItems` and `maxItems` where specified."
     }
   ],
+  "instanceId": "1373ac6c-4491-509d-90ff-40b111d844d6",
   "sourceRefs": [
     {
-      "sourceType": "repository-document",
-      "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "note": "Subsection 08-11 from srs-spec.md - coarse source anchoring during migration",
       "relationType": "evidence",
-      "note": "Subsection 08-11 from srs-spec.md - coarse source anchoring during migration"
+      "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "sourceType": "repository-document"
     }
   ],
-  "createdAt": "2026-05-27T00:00:00Z"
+  "tags": [
+    "concern:extensibility",
+    "construct:field",
+    "topic:conformance"
+  ],
+  "typeId": "2a000003-0000-4000-a000-000000000003",
+  "typeName": "subsection",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1
 }

@@ -1,40 +1,33 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "instanceId": "b1000000-0000-4000-a000-000000000005",
-  "typeId": "2a000013-0000-4000-a000-000000000013",
-  "typeVersion": 2,
-  "typeNamespace": "com.semanticops.spec",
-  "typeName": "table",
+  "createdAt": "2026-05-27T00:00:00Z",
   "fieldValues": [
     {
       "fieldId": "1a000025-0000-4000-a000-000000000025",
-      "value": "How the SCDS v2 vocabulary maps to the \u03bcDemocracy application layer. Reproduced from the v1\u2192v2 conceptual remapping document for reference."
+      "value": "How the SCDS v2 vocabulary maps to the μDemocracy application layer. Reproduced from the v1→v2 conceptual remapping document for reference."
     },
     {
-      "fieldId": "1a000032-0000-4000-a000-000000000032",
       "entries": [
         {
           "value": "SCDS concept"
         },
         {
-          "value": "\u03bcDemocracy application"
+          "value": "μDemocracy application"
         }
       ],
+      "fieldId": "1a000032-0000-4000-a000-000000000032",
       "value": [
         "SCDS concept",
-        "\u03bcDemocracy application"
+        "μDemocracy application"
       ]
     }
   ],
-  "createdAt": "2026-05-27T00:00:00Z",
   "groupValues": [
     {
-      "groupId": "rows",
       "entries": [
         {
           "fieldValues": [
             {
-              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
                 {
                   "value": "Field"
@@ -43,6 +36,7 @@
                   "value": "Semantic atom in a governance record"
                 }
               ],
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "value": [
                 "Field",
                 "Semantic atom in a governance record"
@@ -53,7 +47,6 @@
         {
           "fieldValues": [
             {
-              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
                 {
                   "value": "Type"
@@ -62,6 +55,7 @@
                   "value": "Decision, Proposal, Action, Role, Value, Principle, ..."
                 }
               ],
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "value": [
                 "Type",
                 "Decision, Proposal, Action, Role, Value, Principle, ..."
@@ -72,7 +66,6 @@
         {
           "fieldValues": [
             {
-              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
                 {
                   "value": "Record"
@@ -81,6 +74,7 @@
                   "value": "A captured governance artefact with provenance"
                 }
               ],
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "value": [
                 "Record",
                 "A captured governance artefact with provenance"
@@ -91,7 +85,6 @@
         {
           "fieldValues": [
             {
-              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
                 {
                   "value": "Blueprint"
@@ -100,6 +93,7 @@
                   "value": "Founding Document type; Decision Log type"
                 }
               ],
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "value": [
                 "Blueprint",
                 "Founding Document type; Decision Log type"
@@ -110,7 +104,6 @@
         {
           "fieldValues": [
             {
-              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
                 {
                   "value": "Protocol"
@@ -119,6 +112,7 @@
                   "value": "Democracy protocol: Brain Dump, Decomposition, Decision, Proposal, ..."
                 }
               ],
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "value": [
                 "Protocol",
                 "Democracy protocol: Brain Dump, Decomposition, Decision, Proposal, ..."
@@ -129,7 +123,6 @@
         {
           "fieldValues": [
             {
-              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
                 {
                   "value": "Container"
@@ -138,6 +131,7 @@
                   "value": "A group's governance workspace; a founding process scope"
                 }
               ],
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "value": [
                 "Container",
                 "A group's governance workspace; a founding process scope"
@@ -148,7 +142,6 @@
         {
           "fieldValues": [
             {
-              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
                 {
                   "value": "Relation"
@@ -157,6 +150,7 @@
                   "value": "`supersedes`, `derived-from`, `ratifies`, `depends-on`, ..."
                 }
               ],
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "value": [
                 "Relation",
                 "`supersedes`, `derived-from`, `ratifies`, `depends-on`, ..."
@@ -167,7 +161,6 @@
         {
           "fieldValues": [
             {
-              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
                 {
                   "value": "View"
@@ -176,6 +169,7 @@
                   "value": "Facilitator view; summary view; export for ratification"
                 }
               ],
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "value": [
                 "View",
                 "Facilitator view; summary view; export for ratification"
@@ -186,7 +180,6 @@
         {
           "fieldValues": [
             {
-              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
                 {
                   "value": "Document View"
@@ -195,6 +188,7 @@
                   "value": "Assembled founding document; full decision log"
                 }
               ],
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "value": [
                 "Document View",
                 "Assembled founding document; full decision log"
@@ -205,18 +199,18 @@
         {
           "fieldValues": [
             {
-              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
                 {
                   "value": "Address"
                 },
                 {
-                  "value": "Stable identifier for any governance element \u2014 Field, Record, stage, chunk"
+                  "value": "Stable identifier for any governance element — Field, Record, stage, chunk"
                 }
               ],
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "value": [
                 "Address",
-                "Stable identifier for any governance element \u2014 Field, Record, stage, chunk"
+                "Stable identifier for any governance element — Field, Record, stage, chunk"
               ]
             }
           ]
@@ -224,7 +218,6 @@
         {
           "fieldValues": [
             {
-              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
                 {
                   "value": "Attention State"
@@ -233,6 +226,7 @@
                   "value": "Current focus of an active facilitated session"
                 }
               ],
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "value": [
                 "Attention State",
                 "Current focus of an active facilitated session"
@@ -243,7 +237,6 @@
         {
           "fieldValues": [
             {
-              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
                 {
                   "value": "Revision"
@@ -252,6 +245,7 @@
                   "value": "Auditable history of how a governance field arrived at its current value"
                 }
               ],
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "value": [
                 "Revision",
                 "Auditable history of how a governance field arrived at its current value"
@@ -262,7 +256,6 @@
         {
           "fieldValues": [
             {
-              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "entries": [
                 {
                   "value": "Conversation layer"
@@ -271,6 +264,7 @@
                   "value": "Session transcript; threaded discussion; facilitator annotations"
                 }
               ],
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
               "value": [
                 "Conversation layer",
                 "Session transcript; threaded discussion; facilitator annotations"
@@ -278,7 +272,18 @@
             }
           ]
         }
-      ]
+      ],
+      "groupId": "rows"
     }
-  ]
+  ],
+  "instanceId": "b1000000-0000-4000-a000-000000000005",
+  "tags": [
+    "construct:reference",
+    "construct:vocabulary",
+    "topic:extensions"
+  ],
+  "typeId": "2a000013-0000-4000-a000-000000000013",
+  "typeName": "table",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 2
 }

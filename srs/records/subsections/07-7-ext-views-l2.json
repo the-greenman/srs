@@ -20,6 +20,12 @@
       "sourceType": "repository-document"
     }
   ],
+  "tags": [
+    "concern:extensibility",
+    "concern:rendering",
+    "construct:view",
+    "topic:extensions"
+  ],
   "typeId": "2a000003-0000-4000-a000-000000000003",
   "typeName": "subsection",
   "typeNamespace": "com.semanticops.spec",

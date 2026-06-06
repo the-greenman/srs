@@ -1,10 +1,6 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "instanceId": "694cfd3c-91a7-52b5-8082-20ed49976366",
-  "typeId": "6a000002-0000-4000-a000-000000000002",
-  "typeVersion": 1,
-  "typeNamespace": "com.semanticops.spec",
-  "typeName": "rfc-change",
+  "createdAt": "2026-05-27T00:00:00Z",
   "fieldValues": [
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",
@@ -23,13 +19,21 @@
       "value": "Structured JSON avoids inventing a string DSL and keeps the source renderable to multiple targets."
     }
   ],
-  "createdAt": "2026-05-27T00:00:00Z",
+  "instanceId": "694cfd3c-91a7-52b5-8082-20ed49976366",
   "sourceRefs": [
     {
-      "sourceType": "repository-document",
-      "sourceId": "a4b5c6d7-e8f9-4a0b-8c2d-3e4f5a6b7c8d",
+      "note": "Structured RFC-004 process record derived from the RFC-004 proposal content.",
       "relationType": "derived-from",
-      "note": "Structured RFC-004 process record derived from the RFC-004 proposal content."
+      "sourceId": "a4b5c6d7-e8f9-4a0b-8c2d-3e4f5a6b7c8d",
+      "sourceType": "repository-document"
     }
-  ]
+  ],
+  "tags": [
+    "construct:type",
+    "topic:rfc"
+  ],
+  "typeId": "6a000002-0000-4000-a000-000000000002",
+  "typeName": "rfc-change",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1
 }

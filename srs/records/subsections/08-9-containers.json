@@ -1,10 +1,6 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "instanceId": "84e538ce-2e65-5f5e-b73e-9d674d7a3af5",
-  "typeId": "2a000003-0000-4000-a000-000000000003",
-  "typeVersion": 1,
-  "typeNamespace": "com.semanticops.spec",
-  "typeName": "subsection",
+  "createdAt": "2026-05-27T00:00:00Z",
   "fieldValues": [
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",
@@ -15,13 +11,21 @@
       "value": "**20.** `Container.containerId` is not an instance ID. It must not appear in `Container.rootInstanceIds`, `Container.memberInstanceIds`, `Relation.sourceInstanceId`, or `Relation.targetInstanceId`.\n\n**21.** `Container.rootInstanceIds` and `Container.memberInstanceIds`, when present, must reference valid SRS instance IDs (`Note.instanceId`, `Typed Record.instanceId`, or `Record.instanceId`)."
     }
   ],
+  "instanceId": "84e538ce-2e65-5f5e-b73e-9d674d7a3af5",
   "sourceRefs": [
     {
-      "sourceType": "repository-document",
-      "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "note": "Subsection 08-9 from srs-spec.md - coarse source anchoring during migration",
       "relationType": "evidence",
-      "note": "Subsection 08-9 from srs-spec.md - coarse source anchoring during migration"
+      "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "sourceType": "repository-document"
     }
   ],
-  "createdAt": "2026-05-27T00:00:00Z"
+  "tags": [
+    "construct:container",
+    "topic:conformance"
+  ],
+  "typeId": "2a000003-0000-4000-a000-000000000003",
+  "typeName": "subsection",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1
 }

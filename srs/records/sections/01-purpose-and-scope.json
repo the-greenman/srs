@@ -1,10 +1,6 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "instanceId": "dd8920f0-458f-5b72-ad58-93229c777b87",
-  "typeId": "2a000002-0000-4000-a000-000000000002",
-  "typeVersion": 1,
-  "typeNamespace": "com.semanticops.spec",
-  "typeName": "section",
+  "createdAt": "2026-05-27T00:00:00Z",
   "fieldValues": [
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",
@@ -15,13 +11,20 @@
       "value": ""
     }
   ],
+  "instanceId": "dd8920f0-458f-5b72-ad58-93229c777b87",
   "sourceRefs": [
     {
-      "sourceType": "repository-document",
-      "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "note": "Section 01 from srs-spec.md - coarse source anchoring during migration",
       "relationType": "evidence",
-      "note": "Section 01 from srs-spec.md - coarse source anchoring during migration"
+      "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "sourceType": "repository-document"
     }
   ],
-  "createdAt": "2026-05-27T00:00:00Z"
+  "tags": [
+    "topic:meta"
+  ],
+  "typeId": "2a000002-0000-4000-a000-000000000002",
+  "typeName": "section",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1
 }

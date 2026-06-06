@@ -1,12 +1,10 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/package-manifest.json",
-  "id": "f6e5d4c3-b2a1-4f8e-9d7c-6b5a4a3b2c1d",
-  "namespace": "com.semanticops.srs",
-  "name": "srs-specification-package",
-  "version": "2.0.0",
-  "title": "SRS Specification Package",
+  "createdAt": "2026-05-27T00:00:00Z",
   "description": "Bundled local package containing all fields, types, and views for the SRS specification authoring.",
-  "status": "active",
+  "documentViews": [
+    "document-views/srs-spec-document-view.json"
+  ],
   "fields": [
     "fields/canonical-key.json",
     "fields/title.json",
@@ -61,27 +59,10 @@
     "fields/vocabulary-ref.json",
     "fields/lifecycle-ref.json"
   ],
-  "types": [
-    "types/meta.specification.json",
-    "types/meta.concept.json",
-    "types/meta.field-definition.json",
-    "types/meta.type-definition.json",
-    "types/meta.extension.json",
-    "types/meta.requirement.json",
-    "types/meta.example.json",
-    "types/meta.rfc.json",
-    "types/meta.section.json",
-    "types/meta.subsection.json",
-    "types/tag-definition.json",
-    "types/meta.protocol.json",
-    "types/meta.term.json",
-    "types/meta.vocabulary.json",
-    "types/meta.lifecycle.json"
-  ],
-  "views": [],
-  "documentViews": [
-    "document-views/srs-spec-document-view.json"
-  ],
+  "id": "f6e5d4c3-b2a1-4f8e-9d7c-6b5a4a3b2c1d",
+  "lifecycles": [],
+  "name": "srs-specification-package",
+  "namespace": "com.semanticops.srs",
   "relationTypes": [
     "relation-types/contains.json",
     "relation-types/depends-on.json",
@@ -100,6 +81,29 @@
     "spec-rfc-process/relation-types/rfc-proposed-artifact-sequence.json",
     "spec-rfc-process/relation-types/rfc-targets-section.json"
   ],
-  "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-06-03T00:00:00Z"
+  "status": "active",
+  "title": "SRS Specification Package",
+  "types": [
+    "types/meta.specification.json",
+    "types/meta.concept.json",
+    "types/meta.field-definition.json",
+    "types/meta.type-definition.json",
+    "types/meta.extension.json",
+    "types/meta.requirement.json",
+    "types/meta.example.json",
+    "types/meta.rfc.json",
+    "types/meta.section.json",
+    "types/meta.subsection.json",
+    "types/tag-definition.json",
+    "types/meta.protocol.json",
+    "types/meta.term.json",
+    "types/meta.vocabulary.json",
+    "types/meta.lifecycle.json"
+  ],
+  "updatedAt": "2026-06-03T00:00:00Z",
+  "version": "2.0.0",
+  "views": [],
+  "vocabularies": [
+    "vocabularies/spec-taxonomy-35ee9e9e.json"
+  ]
 }
