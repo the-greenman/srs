@@ -28,6 +28,11 @@
       "sourceType": "repository-document"
     }
   ],
+  "tags": [
+    "concern:rendering",
+    "construct:view",
+    "topic:rfc"
+  ],
   "typeId": "6a000001-0000-4000-a000-000000000001",
   "typeName": "rfc",
   "typeNamespace": "com.semanticops.spec",

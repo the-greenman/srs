@@ -1,10 +1,6 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "instanceId": "b3bc0140-505a-5ab6-bfe1-4271e3c6b42f",
-  "typeId": "2a000003-0000-4000-a000-000000000003",
-  "typeVersion": 1,
-  "typeNamespace": "com.semanticops.spec",
-  "typeName": "subsection",
+  "createdAt": "2026-05-27T00:00:00Z",
   "fieldValues": [
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",
@@ -15,13 +11,22 @@
       "value": "`core` is reserved for definitions maintained by the SRS standard. Implementations must not allow user-created definitions in the `core` namespace."
     }
   ],
+  "instanceId": "b3bc0140-505a-5ab6-bfe1-4271e3c6b42f",
   "sourceRefs": [
     {
-      "sourceType": "repository-document",
-      "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "note": "Subsection 02-2 from srs-spec.md - coarse source anchoring during migration",
       "relationType": "evidence",
-      "note": "Subsection 02-2 from srs-spec.md - coarse source anchoring during migration"
+      "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "sourceType": "repository-document"
     }
   ],
-  "createdAt": "2026-05-27T00:00:00Z"
+  "tags": [
+    "concern:identity",
+    "construct:reference",
+    "topic:meta"
+  ],
+  "typeId": "2a000003-0000-4000-a000-000000000003",
+  "typeName": "subsection",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1
 }

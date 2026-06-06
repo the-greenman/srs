@@ -1,10 +1,6 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "instanceId": "f1000035-0000-4000-a000-000000000035",
-  "typeId": "2a000012-0000-4000-a000-000000000012",
-  "typeVersion": 1,
-  "typeNamespace": "com.semanticops.spec",
-  "typeName": "design-note",
+  "createdAt": "2026-05-27T00:00:00Z",
   "fieldValues": [
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",
@@ -15,13 +11,21 @@
       "value": "\nNamed sets of Fields that travel together may become useful as Type libraries grow. For v2, ordinary shared base Types plus `ext:type-inheritance` cover the immediate reuse need with less machinery. Field domains are deferred until there is stronger evidence that reusable field sets need their own identity, versioning, and package dependency rules independent of Types."
     }
   ],
+  "instanceId": "f1000035-0000-4000-a000-000000000035",
   "sourceRefs": [
     {
-      "sourceType": "repository-document",
-      "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "note": "Imported from scds-rationale.md: \"Field domains\"",
       "relationType": "evidence",
-      "note": "Imported from scds-rationale.md: \"Field domains\""
+      "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "sourceType": "repository-document"
     }
   ],
-  "createdAt": "2026-05-27T00:00:00Z"
+  "tags": [
+    "construct:field",
+    "topic:foundation"
+  ],
+  "typeId": "2a000012-0000-4000-a000-000000000012",
+  "typeName": "design-note",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1
 }
