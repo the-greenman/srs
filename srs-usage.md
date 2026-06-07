@@ -220,8 +220,6 @@ srs vocabulary promote --repo <path> --id <vocabularyId>
 
 If promotion is blocked, the response has `"ok": false` and `payload.unresolvableKeys` lists the tag keys with no active term. Add terms for those keys (or accept that existing records will carry invalid tags after close) before retrying. If the vocabulary has a `promotionWindow.until` date that has not yet passed, promotion succeeds even with unresolvable keys (grace window).
 
-> **Note:** Structured error payload for blocked promotion requires srs-rust fix tracked in [srs-rust#78](https://github.com/the-greenman/srs-rust/issues/78). Until that ships, the unresolvable key names appear only in the count in `diagnostics[0]`, not as a structured list.
-
 ### Validate After Every Write Batch
 
 ```bash
