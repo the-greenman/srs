@@ -702,6 +702,35 @@ The generalisation of `TagDefinition`. A defined option within a `Vocabulary`.
 }
 ```
 
+### `RelationTypeDefinition`
+
+A substrate specialisation that gives semantic meaning and validation rules to a class of relations. `key` is the string stored in `Relation.relationType`; this unifies the key-role field across all three substrate specialisations (RFC-006). `label` and `description` are tightened to required.
+
+```typescript
+{
+  id: UUID
+  version: integer
+  namespace: string
+  key: string               // the string stored in Relation.relationType; was "relationType" pre-RFC-006
+  label: string             // required (tightened from substrate)
+  description: string       // required (tightened from substrate)
+  aliases?: string[]
+  status?: "active" | "deprecated" | "tombstone" | "retired"   // absent = active
+  properties?: Record<string, unknown>   // arbitrary metadata; unknown top-level fields rejected
+  category: "composition" | "refinement" | "dependency" | "sequence" | "derivation" | "evidence" | "governance" | "association" | "lifecycle" | "provenance" | "other"
+  canonicalDirection?: string
+  inverseType?: string      // key of the inverse RelationTypeDefinition
+  irreflexive?: boolean
+  allowedSourceTypes?: string[]
+  allowedTargetTypes?: string[]
+  requireSameSemanticObjectType?: boolean
+  createdAt: ISO8601
+  updatedAt?: ISO8601
+}
+```
+
+Relation type definitions live in `package.relationTypes[]` (distributable bundle) or `package/relation-types/` (repository layout). They are resolved repo-globally — all installed relation type definitions form a single flat namespace. Key uniqueness (V5) applies across this flat set.
+
 ### The four vocabularies
 
 | Vocabulary | Binding scope | Container | Mode |
@@ -788,7 +817,9 @@ A grace window is declared in `Vocabulary.promotionWindow.until`. Until that bou
   documentViews?: DocumentView[]  // ext:views-l2; omit if not in use
   blueprints?: Blueprint[]   // ext:blueprint; omit if not in use
   protocols?: Protocol[]     // ext:protocol; omit if not in use
-  relationTypes?: RelationTypeDefinition[]  // ext:recommended-relations
+  relationTypes?: RelationTypeDefinition[]  // relation type definitions
+  vocabularies?: Vocabulary[]               // RFC-006: named vocabulary definitions
+  lifecycles?: Lifecycle[]                  // RFC-006 ext:lifecycle: referenceable lifecycle definitions
 
   mode: "bundled" | "standalone"
 

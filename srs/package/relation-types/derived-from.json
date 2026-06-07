@@ -2,7 +2,7 @@
   "$schema": "https://srs.semanticops.com/schema/2.0/relation-type.json",
   "id": "b1c2d3e4-f5a6-4b7c-8d9e-0f1a2b3c4d5e",
   "version": 1,
-  "relationType": "derived-from",
+  "key": "derived-from",
   "namespace": "com.semanticops.srs",
   "label": "Derived from",
   "description": "Source instance was produced from or substantially informed by target instance. Provenance and derivation chain.",

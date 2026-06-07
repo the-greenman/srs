@@ -2,7 +2,7 @@
   "$schema": "https://srs.semanticops.com/schema/2.0/relation-type.json",
   "id": "a1000001-0000-4000-b000-000000000001",
   "version": 1,
-  "relationType": "com.semanticops.spec/rfc-change-sequence",
+  "key": "com.semanticops.spec/rfc-change-sequence",
   "namespace": "com.semanticops.spec",
   "label": "RFC change sequence",
   "description": "Orders rfc-change records belonging to an RFC.",

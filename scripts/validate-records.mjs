@@ -63,7 +63,8 @@ async function loadInstalledRelationTypes() {
   for (const relativePath of manifest.relationTypes ?? []) {
     try {
       const def = JSON.parse(await readFile(join(SRS_RECORDS_ROOT, 'package', relativePath), 'utf8'));
-      if (def.relationType) defs.set(def.relationType, def);
+      const defKey = def.key ?? def.relationType;
+      if (defKey) defs.set(defKey, def);
     } catch {
       // missing file will be caught by validate-package
     }

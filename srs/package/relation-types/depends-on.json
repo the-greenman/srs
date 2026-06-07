@@ -2,7 +2,7 @@
   "$schema": "https://srs.semanticops.com/schema/2.0/relation-type.json",
   "id": "7f8e9d0c-1b2a-4f3e-9d8c-7b6a5f4e3d2c",
   "version": 1,
-  "relationType": "depends-on",
+  "key": "depends-on",
   "namespace": "com.semanticops.srs",
   "label": "Depends on",
   "description": "Source instance requires target instance to be complete, valid, or usable. Target is a prerequisite.",
