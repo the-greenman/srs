@@ -2,6 +2,17 @@
 
 Generated outputs and reference material for the Semantic Record System specification.
 
+## Overview — start here
+
+New to SRS? These hand-written pages give the conceptual big picture before the normative
+detail.
+
+| Document | Description |
+|----------|-------------|
+| [overview/](overview/README.md) | The big picture — what SRS is and how the project fits together |
+| [overview/concepts.md](overview/concepts.md) | Key elements — Field, Type, Record, Relation, Container, Vocabulary, Extensions |
+| [overview/how-it-works.md](overview/how-it-works.md) | How the pieces fit together — repository layout, loading/validation pipeline, the three repos |
+
 ## Specification
 
 | Document | Description |
