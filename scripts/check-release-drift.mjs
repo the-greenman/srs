@@ -152,17 +152,25 @@ async function checkRustChecksums() {
   }
 }
 
+async function step(label, fn) {
+  process.stdout.write(`Checking ${label}... `);
+  await fn();
+  console.log("OK");
+}
+
 async function main() {
-  await run("node", ["scripts/validate-all.mjs"]);
-  await run(SRS_CLI, ["--repo", REPO_ROOT, "repo", "validate"]);
-  await checkRenderedDocsDrift();
-  await checkSchemaMirror(RUST_SCHEMA_DST, "srs-rust");
-  await checkSchemaMirror(VSCODE_SCHEMA_DST, "srs-vscode");
-  await checkRustChecksums();
-  console.log("OK: release artifacts are in sync.");
+  await step("package/instance validation", async () => {
+    await run("node", ["scripts/validate-all.mjs"]);
+    await run(SRS_CLI, ["--repo", REPO_ROOT, "repo", "validate"]);
+  });
+  await step("rendered docs", checkRenderedDocsDrift);
+  await step("srs-rust schema mirror", () => checkSchemaMirror(RUST_SCHEMA_DST, "srs-rust"));
+  await step("srs-vscode schema mirror", () => checkSchemaMirror(VSCODE_SCHEMA_DST, "srs-vscode"));
+  await step("Rust SHA256SUMS", checkRustChecksums);
+  console.log("\nOK: release artifacts are in sync.");
 }
 
 main().catch((error) => {
-  console.error(error.message);
+  console.log(`\nFAILED: ${error.message}`);
   process.exit(1);
 });

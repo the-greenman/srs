@@ -67,6 +67,32 @@ srs field list --repo <path> --pretty
 
 Do not guess field IDs from filenames. Always resolve them from `srs type get` or `srs field list`. Field IDs are UUIDs — `fieldId` is the authoritative key, not `name`.
 
+### Vocabulary and Lifecycle Discovery
+
+When a repo uses the vocabulary substrate (RFC-006), inspect vocabularies, lifecycles, and terms before writing tagged records or attempting a lifecycle transition:
+
+```bash
+# What vocabularies exist in the package?
+srs vocabulary list --repo <path> --pretty
+
+# Inspect a vocabulary (including all terms and their status)
+srs vocabulary get --repo <path> --id <vocabularyId> --pretty
+
+# List all terms across all vocabularies
+srs term list --repo <path> --pretty
+
+# Get a single term by ID
+srs term get --repo <path> --id <termId> --pretty
+
+# What lifecycles exist in the package?
+srs lifecycle list --repo <path> --pretty
+
+# Inspect a lifecycle (states, transitions, isInitial)
+srs lifecycle get --repo <path> --id <lifecycleId> --pretty
+```
+
+A vocabulary in `open` mode accepts any tag key. A vocabulary in `closed` mode only accepts keys that resolve to an active term. Check the vocabulary's `mode` field before tagging records.
+
 ---
 
 ## 4. Write Workflows
@@ -141,6 +167,60 @@ EOF
 Canonical relation types: `contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`.
 
 Relations are semantic claims, not ownership. Asserting a relation does not change lifecycle state on either endpoint.
+
+### Creating a Vocabulary (RFC-006)
+
+Pipe a Vocabulary JSON object to `srs vocabulary create`. The CLI assigns a UUID if `id` is empty:
+
+```bash
+srs vocabulary create --repo <path> <<'EOF'
+{
+  "id": "",
+  "version": 1,
+  "namespace": "com.example",
+  "name": "my-vocabulary",
+  "mode": "open",
+  "terms": []
+}
+EOF
+```
+
+`mode` is either `open` (any tag key accepted) or `closed` (only active terms accepted). Start with `open`; promote to `closed` once the term set is stable.
+
+You may include an initial `terms` array; the service assigns UUIDs to any term missing one. The example above starts with `"terms": []` and adds terms incrementally via `vocabulary term-create`.
+
+### Adding a Term to a Vocabulary (RFC-006)
+
+Use `vocabulary term-create` with the vocabulary's ID and pipe a Term JSON object. The CLI appends the term to the vocabulary file and returns both the term and the updated vocabulary:
+
+```bash
+srs vocabulary term-create --repo <path> --vocabulary-id <vocabularyId> <<'EOF'
+{
+  "id": "",
+  "version": 1,
+  "namespace": "com.example",
+  "key": "my-key",
+  "label": "My Key"
+}
+EOF
+```
+
+`key` must be unique within the vocabulary (no other active term may share the same key or alias). `status` may be omitted; absent status is treated as `active` by all resolution rules (V1, V6, V10).
+
+### Promoting a Vocabulary from Open to Closed (RFC-006 V10)
+
+Before promoting, run the V10 pre-flight to see which in-use tag keys would become invalid:
+
+```bash
+# V10 pre-flight is implicit in promote — it blocks if any in-use key
+# has no active term in the vocabulary. Promotion succeeds or fails
+# with a structured error payload listing the unresolvable keys.
+srs vocabulary promote --repo <path> --id <vocabularyId>
+```
+
+If promotion is blocked, the response has `"ok": false` and `payload.unresolvableKeys` lists the tag keys with no active term. Add terms for those keys (or accept that existing records will carry invalid tags after close) before retrying. If the vocabulary has a `promotionWindow.until` date that has not yet passed, promotion succeeds even with unresolvable keys (grace window).
+
+> **Note:** Structured error payload for blocked promotion requires srs-rust fix tracked in [srs-rust#78](https://github.com/the-greenman/srs-rust/issues/78). Until that ships, the unresolvable key names appear only in the count in `diagnostics[0]`, not as a structured list.
 
 ### Validate After Every Write Batch
 
