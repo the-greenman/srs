@@ -93,6 +93,37 @@ srs lifecycle get --repo <path> --id <lifecycleId> --pretty
 
 A vocabulary in `open` mode accepts any tag key. A vocabulary in `closed` mode only accepts keys that resolve to an active term. Check the vocabulary's `mode` field before tagging records.
 
+### Blueprint Discovery and Schema Projection
+
+When a repo's package declares Blueprints (multi-record document definitions), use the blueprint commands to inspect structure and generate validation schemas:
+
+```bash
+# What blueprints exist in the package?
+srs blueprint list --repo <path> --pretty
+
+# Inspect a blueprint's declared relation structure
+srs blueprint structure --repo <path> --id <blueprintId> --pretty
+
+# Emit a nested draft-07 JSON Schema for the whole document
+# (root type + child collections, each with $ref into definitions)
+srs blueprint schema --repo <path> --id <blueprintId> --pretty
+```
+
+`blueprint schema` composes per-type schemas (via `type schema`) into a single document schema.
+Property keys for child collections use lowerCamelCase of the relation type
+(e.g. relation type `"section-sequence"` → property key `"sectionSequence"`). Each child
+array property carries `x-srs-ordered-by` recording the original relation type string.
+
+To inspect the JSON Schema for a single type:
+
+```bash
+srs type schema --repo <path> --id <typeId> --pretty
+```
+
+The payload is `{ "payload": { "schema": { ... }, "diagnostics": [] } }`. Non-fatal warnings
+(unresolvable type references, unparseable cardinality) appear in `payload.diagnostics` rather
+than causing a command failure.
+
 ---
 
 ## 4. Write Workflows
