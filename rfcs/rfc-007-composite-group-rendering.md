@@ -2,7 +2,7 @@
 
 # RFC-007: Composite Group Rendering
 
-**Status**: In Progress (Revision 5)
+**Status**: Accepted (Revision 5)
 **Affects**: `ext:field-groups` (`FieldGroup.compositeRenderer`), `ext:themes-l1` (`ElementTemplates.groupFieldRowTemplates`, `ElementTemplates.compositeRendererConfig` — formerly `tableConfig`, renamed in Rev 3), `type.json` schema, `theme.json` schema
 **Author**: Peter Brownell
 **Date**: 2026-06-06
@@ -17,7 +17,7 @@
 | 2 | 2026-06-06 | Address review findings: add extensibility naming convention for `compositeRenderer` values; require diagnostic in [FG-Cx2]; close `widths` boundary ambiguity (≤/≥); clarify `tableConfig` scope to Theme instance; document `compositeRenderer` placement on Type not record; per-format `wrapperTemplate` defaults; rename `groupFieldTemplates` → `groupFieldRowTemplates`; add `[T-Cx*]` conformance rules |
 | 3 | 2026-06-06 | Generalise config surface: replace bespoke `tableConfig` with dispatch-keyed `compositeRendererConfig`; document three-part renderer definition; note `what`-on-Type / `how`-on-Theme separation in Alternatives |
 | 4 | 2026-06-07 | Address Rev 3 review findings: add `[FG-Cx0]` naming convention rule; tighten `[FG-Cx2]` "non-empty" + add other-entries-continue clause; rewrite `[T-Gx1]`; add `[T-Gx3]` (`groupFieldRowTemplates` vs `fieldRow`); add `[T-Cx4]` format detection; add `[T-Cx5]` unknown config properties; add multi-entry separation rule; specify `subheading` default HTML element; add `widths` out-of-range clamp rule; update implementor note (rename already in srs-rust#49); extend note to cover srs-vscode; add extension independence clause; clarify `captionTemplate` defaults per format; tighten schema changes table |
-| 5 | 2026-06-07 | Address Rev 4 review findings: specify absent-field token resolution in `wrapperTemplate`; add `[FG-Cx4]` for `widths` length mismatch; tighten `[FG-Cx0]` reverse-domain definition; implementation started, RFC file committed to branch rfc/007-composite-group-rendering |
+| 5 | 2026-06-07 | Address Rev 4 review findings: specify absent-field token resolution in `wrapperTemplate`; add `[FG-Cx4]` for `widths` length mismatch; tighten `[FG-Cx0]` reverse-domain definition; implementation started, RFC file committed to branch rfc/007-composite-group-rendering; spec records authored in `srs/srs/` |
 
 ---
 

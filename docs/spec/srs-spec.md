@@ -2669,9 +2669,15 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 
 **27.** A `FieldGroupValue.entries` list must satisfy `FieldGroup.minItems` and `maxItems` where specified.
 
+**[FG-Cx0]** Bare `compositeRenderer` identifiers (containing no `/` character) are reserved for SRS-defined renderers and MUST only be introduced by a ratified RFC. Vendor-defined renderer identifiers MUST use the form `{reverse-domain}/{name}` where `reverse-domain` is a dot-separated string with at least two labels (e.g. `"com.example"`) and `name` is a non-empty string with no `/` character (e.g. `"com.example/gantt"`). Single-label left-hand sides (e.g. `"example/gantt"`) MUST be treated as malformed and are subject to `[FG-Cx1]`. An identifier that is neither a bare SRS-reserved name nor a valid `{reverse-domain}/{name}` form MUST be treated as unrecognised; `[FG-Cx1]` applies.
+
 **[FG-Cx1]** When `FieldGroup.compositeRenderer` is set to a value not recognised by the implementation, the implementation MUST fall back to the default per-field rendering baseline and MUST emit a diagnostic identifying the unrecognised renderer value and the group. The fallback MUST NOT suppress group content.
 
-**[FG-Cx2]** For `compositeRenderer: "table"`, if a group entry contains neither a `columns` field nor a `rows` field with a non-empty value, the entry MUST be skipped and the implementation MUST emit a diagnostic identifying the group and the entry.
+**[FG-Cx2]** For `compositeRenderer: "table"`, if a group entry contains neither a `columns` field with at least one element nor a `rows` field with at least one element, that entry MUST be skipped and the implementation MUST emit a diagnostic identifying the group and the entry. Other entries in the same group that satisfy the field contract MUST continue to render normally.
+
+**[FG-Cx3]** Values in a `widths` array that fall outside [0.0, 1.0] MUST be clamped to [0.0, 1.0] before alignment or width calculation. Implementations SHOULD emit a diagnostic identifying the out-of-range value and the group entry.
+
+**[FG-Cx4]** When the `widths` array has fewer elements than `columns`, the remaining columns MUST use the default alignment (`---` in markdown; no `style` attribute in HTML). When `widths` has more elements than `columns`, the excess elements MUST be silently ignored. In either case, implementations SHOULD emit a diagnostic identifying the mismatch.
 
 #### Records
 
