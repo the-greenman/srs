@@ -2638,6 +2638,10 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 
 **27.** A `FieldGroupValue.entries` list must satisfy `FieldGroup.minItems` and `maxItems` where specified.
 
+**[FG-Cx1]** When `FieldGroup.compositeRenderer` is set to a value not recognised by the implementation, the implementation MUST fall back to the default per-field rendering baseline and MUST emit a diagnostic identifying the unrecognised renderer value and the group. The fallback MUST NOT suppress group content.
+
+**[FG-Cx2]** For `compositeRenderer: "table"`, if a group entry contains neither a `columns` field nor a `rows` field with a non-empty value, the entry MUST be skipped and the implementation MUST emit a diagnostic identifying the group and the entry.
+
 #### Records
 
 **Content**: **28.** `Record.typeId` and `Record.typeVersion` are the authoritative Type binding. `typeNamespace` and `typeName` are denormalised convenience fields. If they conflict with the resolved `Type`, the `typeId`/`typeVersion` identity takes precedence and the Record is considered invalid until corrected.
@@ -2689,6 +2693,10 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 **Content**: **33.** `Revision.priorRevisionId`, when present, must reference a `Revision.revisionId` for the same `fieldId` and `recordId`. Revision chains must be acyclic.
 
 **34.** `AttentionState.containerId` must reference a valid `Container.containerId`. Other Address components (`recordId`, `fieldId`, `protocolRunId`, `stageId`) are optional and may be absent when focus has not yet narrowed.
+
+**35.** `Revision.provenance`, when present, is a provenance metadata object. `provenance.lifecycleTransition`, when present, must be a non-empty string naming the lifecycle state entered at the time this revision snapshot was created. `provenance.transitionedAt`, when present, must be a valid ISO 8601 datetime string.
+
+**36.** A `Revision` with `provenance.lifecycleTransition` set is a lifecycle snapshot. Its field values represent the record's state at the moment of the named transition. This revision is the authoritative record of state at that transition point.
 
 #### Distribution — Views L2 (ext:views-l2)
 
@@ -2796,6 +2804,23 @@ Specifically:
 - `AttentionState.fieldId`, when a specific field is the current focus within a stage, is set accordingly
 
 Conversation chunks produced while `AttentionState.stageId` is set are associated with that stage. This makes stage-level Context Queries (`{runId}/{stageId}`) return the correct material.
+
+---
+
+#### ext:lifecycle × ext:addressability
+
+**Content**: **Trigger**: an implementation declares both `ext:lifecycle` and `ext:addressability`.
+
+**Required behaviour**: A lifecycle state transition on a Record MUST produce a `Revision` snapshot for each current field value at the moment of transition. The snapshot `Revision` MUST carry:
+
+- `provenance.lifecycleTransition` set to the name of the target lifecycle state
+- `provenance.transitionedAt` set to the transition timestamp
+
+This makes the record's field values at the moment of each lifecycle transition addressable — a consumer can reconstruct what the record looked like when it entered `active`, `archived`, or any other state, without timestamp correlation.
+
+**Invariant [LC-AX1]**: When a repository declares both `ext:lifecycle` and `ext:addressability`, every lifecycle state transition on a Record MUST be recorded as a `Revision` per field value with `provenance.lifecycleTransition` set. An implementation that performs a lifecycle transition without creating these snapshots is non-conformant.
+
+**Invariant [LC-AX2]**: The `Revision` snapshot created for a lifecycle transition MUST be created atomically with the transition — both the new `lifecycleState` value on the Record and the snapshot `Revision` records MUST be committed together. A record in state `active` with no corresponding `Revision` snapshot bearing `provenance.lifecycleTransition: "active"` is a conformance violation.
 
 ---
 
