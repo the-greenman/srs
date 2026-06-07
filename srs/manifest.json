@@ -2501,6 +2501,27 @@
       "tier": 2
     },
     {
+      "instanceId": "c4d5e6f7-a8b9-4cad-be2f-3a4b5c6d7e8f",
+      "path": "records/design-notes/043-ext-federation-ext-lifecycle-interaction.json",
+      "tags": [
+        "concern:extensibility",
+        "construct:lifecycle",
+        "topic:extensions"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "b3c4d5e6-f7a8-4b9c-ad1e-2f3a4b5c6d7e",
+      "path": "records/subsections/08-5-3-ext-lifecycle-ext-addressability.json",
+      "tags": [
+        "concern:extensibility",
+        "construct:lifecycle",
+        "construct:address",
+        "topic:extensions"
+      ],
+      "tier": 2
+    },
+    {
       "instanceId": "609370d7-03cf-4501-894a-02276621df8e",
       "path": "records/notes/semantic-pipeline-from-transcripts.json",
       "tags": [
