@@ -187,6 +187,8 @@ EOF
 
 `mode` is either `open` (any tag key accepted) or `closed` (only active terms accepted). Start with `open`; promote to `closed` once the term set is stable.
 
+You may include an initial `terms` array; the service assigns UUIDs to any term missing one. The example above starts with `"terms": []` and adds terms incrementally via `vocabulary term-create`.
+
 ### Adding a Term to a Vocabulary (RFC-006)
 
 Use `vocabulary term-create` with the vocabulary's ID and pipe a Term JSON object. The CLI appends the term to the vocabulary file and returns both the term and the updated vocabulary:
@@ -203,7 +205,7 @@ srs vocabulary term-create --repo <path> --vocabulary-id <vocabularyId> <<'EOF'
 EOF
 ```
 
-`key` must be unique within the vocabulary (no other active term may share the same key or alias). `status` defaults to `active` if omitted.
+`key` must be unique within the vocabulary (no other active term may share the same key or alias). `status` may be omitted; absent status is treated as `active` by all resolution rules (V1, V6, V10).
 
 ### Promoting a Vocabulary from Open to Closed (RFC-006 V10)
 
@@ -211,12 +213,14 @@ Before promoting, run the V10 pre-flight to see which in-use tag keys would beco
 
 ```bash
 # V10 pre-flight is implicit in promote — it blocks if any in-use key
-# has no active term in the vocabulary. Promotion succeeds or errors
-# with a list of unresolvable keys.
+# has no active term in the vocabulary. Promotion succeeds or fails
+# with a structured error payload listing the unresolvable keys.
 srs vocabulary promote --repo <path> --id <vocabularyId>
 ```
 
-If promotion is blocked, the error payload lists the unresolvable keys. Add terms for those keys (or accept that existing records will carry invalid tags after close) before retrying. If the vocabulary has an active `promotionWindow.until` date in the future, promotion is allowed even with unresolvable keys (grace window).
+If promotion is blocked, the response has `"ok": false` and `payload.unresolvableKeys` lists the tag keys with no active term. Add terms for those keys (or accept that existing records will carry invalid tags after close) before retrying. If the vocabulary has a `promotionWindow.until` date that has not yet passed, promotion succeeds even with unresolvable keys (grace window).
+
+> **Note:** Structured error payload for blocked promotion requires srs-rust fix tracked in [srs-rust#78](https://github.com/the-greenman/srs-rust/issues/78). Until that ships, the unresolvable key names appear only in the count in `diagnostics[0]`, not as a structured list.
 
 ### Validate After Every Write Batch
 
