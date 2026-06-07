@@ -254,16 +254,17 @@ Use plain `git commit` — never `--no-gpg-sign`.
 For every file listed in the RFC's Schema changes table:
 
 1. Edit `srs/docs/schema/2.0/<file>.json` on the RFC branch.
-2. Copy the updated file to `srs-rust/crates/srs-schema/schemas/2.0/<file>.json`.
-3. Copy the updated file to `srs-vscode/schemas/2.0/<file>.json` (if that path exists).
-4. Run the sync check from `srs-rust/`:
+2. From the `srs/` repo root, run the alignment script to sync mirrors and verify:
    ```bash
-   bash scripts/check-schema-sync.sh
+   node scripts/align-spec.mjs
    ```
-   It must exit 0. Fix any divergence before committing.
-5. Commit schema changes across all three repos in the same logical commit (or coordinated commits on sibling branches), with a message referencing the RFC issue number.
+   This copies the updated schemas to `srs-rust/crates/srs-schema/schemas/2.0/` and `srs-vscode/schemas/2.0/`, regenerates `SHA256SUMS`, and confirms all drift checks pass. It then prints which files changed in each repo.
+3. Follow the commit ordering printed by the script (see also `RELEASING.md`):
+   - Commit schema changes in `srs-rust` first (on a sibling branch `feat/<issue-N>-schemas` or equivalent)
+   - Commit schema changes in `srs-vscode` next
+   - Commit the schema source edit in `srs` last
 
-**Note:** schema changes in `srs-rust` and `srs-vscode` must be committed in those repos' own branches, not in the `srs` branch. Coordinate the branches so all three can be reviewed and merged together.
+**Note:** schema changes in `srs-rust` and `srs-vscode` must be committed in those repos' own branches, not in the `srs` branch. The srs drift CI checks out their HEAD — landing the mirror commits before the srs PR keeps checks green throughout.
 
 ### 5d — Update the RFC status
 
@@ -368,33 +369,31 @@ In `srs/rfcs/rfc-NNN-<slug>.md`, update:
 ```
 Add a revision history row: `N | <date> | Accepted; spec records authored in srs/srs`.
 
-### 6d — Publish (validate + render + sync schemas)
+### 6d — Align release artifacts (validate + render + sync schemas)
 
-Run the publish pipeline from the `srs/` repo root:
+Run the alignment pipeline from the `srs/` repo root:
 
 ```bash
-node scripts/publish-spec.mjs
+node scripts/align-spec.mjs
 ```
 
-This does everything in one pass:
-1. Runs `validate-all.mjs` — all validations must pass
-2. Runs `srs repo validate` — 0 errors required
-3. Renders all document views to `docs/spec/` via `srs render document-view`
-4. Syncs schemas from `srs/docs/schema/2.0/` to `srs-rust/crates/srs-schema/schemas/2.0/` and `srs-vscode/schemas/2.0/`
-5. Writes `SHA256SUMS` in the srs-rust schema directory
-6. Runs `check-release-drift.mjs` — must report **OK**
+This runs five steps in sequence: validates all records and packages, renders all document views to `docs/spec/`, syncs schemas to `srs-rust` and `srs-vscode` with updated `SHA256SUMS`, verifies all drift checks pass, then prints which files changed in each repo with commit instructions.
 
 If any step fails, fix the issue before committing.
 
 ### 6e — Commit
 
-Stage the records, updated RFC file, and the publish output together:
-```bash
-git add srs/records/ srs/relations/ rfcs/rfc-NNN-<slug>.md docs/spec/
-git commit -m "feat: RFC-NNN — author spec records and re-render (#<issue-N>)"
-```
+Follow the commit instructions printed by `align-spec.mjs`. Commit in this order (see `RELEASING.md` for the full rationale):
 
-Records, rendered spec, and schema sync are all committed together. Never commit records without also committing the re-rendered `docs/spec/` output.
+1. **srs-rust** — schema mirror: `git add crates/srs-schema/schemas/` → `git commit -m "chore: sync schemas from spec RFC-NNN (#<issue-N>)"`
+2. **srs-vscode** — schema mirror: `git add schemas/` → `git commit -m "chore: sync schemas from spec RFC-NNN (#<issue-N>)"`
+3. **srs** — records, RFC file, rendered docs:
+   ```bash
+   git add srs/records/ srs/relations/ rfcs/rfc-NNN-<slug>.md docs/spec/
+   git commit -m "feat: RFC-NNN — author spec records and re-render (#<issue-N>)"
+   ```
+
+Never commit records without the re-rendered `docs/spec/` output. Never open (or merge) the srs PR before the srs-rust and srs-vscode schema commits are merged — the release-drift CI checks their HEAD and will be red otherwise.
 
 ---
 
