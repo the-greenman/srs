@@ -2,7 +2,7 @@
 
 # RFC-008: Heterogeneous ContainerSubset Sections — `typeFilter` and `typeDispatch`
 
-**Status**: In Progress (Revision 4)
+**Status**: Accepted (Revision 5)
 **Affects**: `ext:views-l2` (`DocumentView.DocumentSection`, `SectionSource` `container-subset` variant), `document-view.json` schema. Builds on base-spec ordering Rule **[N+12]** and heterogeneous-heading Rule **[N+1]** (both `ext:views-l2`, from RFC-001).
 **Author**: Peter Brownell
 **Date**: 2026-06-07
@@ -17,6 +17,7 @@
 | 2 | 2026-06-07 | Address Spec Integrity + RFC Completeness review: align ordering with base-spec Rule [N+12] (topological sort + `createdAt` tiebreak) and drop the conflicting "transitive closure" framing; cite [N+12] as the ordering foundation; define "resolved type" as the `typeId`-resolved canonical `namespace/name` ([DV-Mx1]); add typeless-member (Tier 0/1) handling ([DV-Dx4], [DV-Fx5]); state `typeFilter` is `container-subset`-only and `typeDispatch` is source-agnostic; add titleFieldId/[N+1] interaction note; add "Relationship to RFC-007"; spell out inner schema shapes and value-constraint enforcement point; correct schema-sync script path; note deliberate B-first ordering |
 | 3 | 2026-06-07 | Address round-2 review (zero blocking): add [DV-Dx5] making source ordering normative (`container-subset` → [N+12]; `fixed-instances` → `instanceIds[]` order); specify fallback-`renderViewId` type-mismatch degradation in [DV-Dx3]; add unresolvable-`typeId` case to [DV-Fx5]; add packaged bare-key portability clause to [DV-Mx1]; cite base-spec baseline rule [N]; name the canonical schema file and note `check-schema-sync.sh` verifies both crate and vscode copies; add `titleFieldId`-description schema-drift fix to the Schema changes table |
 | 4 | 2026-06-07 | Accepted (zero blocking findings across two review rounds). Implementation started on branch `rfc/008-heterogeneous-container-subset-sections`: `document-view.json` schema edits landed (`typeDispatch`, `typeFilter`, `titleFieldId` drift fix) and synced to srs-rust + srs-vscode. Spec-record authoring + re-render (Stage 6) deferred until the in-progress RFC-006 work merges and the main spec tree is clean. |
+| 5 | 2026-06-07 | Stage 6: authored the changes as spec records in `srs/` — `ext:views-l2` subsections `07-7` (added `typeFilter`/`typeDispatch` to the `SectionSource`/`DocumentSection` definitions + "Heterogeneous Section Rendering" prose) and `08-14` (conformance rules `[N+13]`–`[N+24]`, each annotated with its RFC `[DV-*]` origin). Re-rendered `docs/spec/srs-spec.md`. The other projections (`srs-unified.md`, `srs-rationale.md`, `rfc-catalog.md`) carry pre-existing accumulated render drift and are left for the canonical `publish-spec.mjs` run on a clean main tree. |
 
 ---
 

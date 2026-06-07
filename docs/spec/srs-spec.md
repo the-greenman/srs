@@ -1509,6 +1509,10 @@ type SectionSource =
       type: "container-subset"
       containerId: UUID
       containerType?: string
+      typeFilter?: string[]   // RFC-008. namespace/name keys, version-independent.
+      // When present and non-empty, restricts members to the listed Types. Ordering is
+      // the container-wide precedes order (below) projected onto the survivors. Absent or
+      // empty = all members. Exclusive to container-subset.
       // Default ordering: when DocumentSection.ordering is absent, members are ordered
       // by the precedes relation chain among them; createdAt ascending is the tiebreak
       // for members not connected by any precedes relation.
@@ -1530,6 +1534,14 @@ One section in a Document View.
 
   renderViewId?: UUID    // View (ext:views-l1) used to render each instance in this section
   // When absent, implementations MUST use the default rendering baseline (see below).
+  // When typeDispatch matches the record's resolved type, it takes precedence over renderViewId.
+
+  typeDispatch?: { [typeKey: string]: UUID }   // RFC-008
+  // Maps a record's resolved type (namespace/name, version-independent) to the
+  // ext:views-l1 View used to render records of that Type within this section. Consulted
+  // before renderViewId; unmatched Types fall back to renderViewId then the default
+  // baseline. Lets one heterogeneous section render each Type with its own L1 View.
+  // typeDispatch never changes member order (order follows the source).
 
   titleFieldId?: UUID
   // The fieldId whose value provides the per-record heading within this section.
@@ -1662,6 +1674,17 @@ A `DocumentView` may reference one or more `View` records (via `DocumentSection.
 `DocumentSection.renderViewId` references a `View.id` (from `ext:views-l1`). A `DocumentView.id` is not a valid value for `renderViewId` — Document Views are not nestable.
 
 Use `navigationLinks` when a rendered document should include "see also" or related-section links. Use `Relation` only when the relationship is a semantic assertion about Records.
+
+---
+
+#### Heterogeneous Section Rendering
+
+A `container-subset` section can mix Record Types — it draws all Container members, ordered by the `precedes` chain (Rule [N+12]). Two optional fields make such sections precise:
+
+- **`typeFilter`** (on the `container-subset` source) restricts the section to a subset of member Types by `namespace/name`, preserving the container-wide `precedes` order projected onto the survivors — filter-then-project (Rule [N+21]).
+- **`typeDispatch`** (on `DocumentSection`) selects a different L1 View per Record Type within the one section, so interleaved Types each render with their own View (Rules [N+14]–[N+18]).
+
+A record's **resolved type** for both fields is the canonical `namespace/name` of the Type its `typeId` resolves to — not the denormalized `typeNamespace`/`typeName` hints — compared version-independently (Rule [N+13]). These compose with the per-record heading behaviour of `titleFieldId` (Rule [N+1]) for heterogeneous sections, and leave intra-record group rendering inside a dispatched L1 View unaffected.
 
 ---
 
@@ -2724,6 +2747,31 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 **[N+11]** When `ExportConfig.preamble` is rendered in `"json"` mode, all `{{heading-N}}` variables MUST be substituted as empty strings. Implementations MUST NOT emit the literal token in any json-mode output.
 
 **[N+12]** When a `DocumentSection` has `source.type === "container-subset"` and declares no `ordering.fieldId`, implementations MUST order the member instances by the `precedes` relation chain among them (topological sort). Instances not connected by any `precedes` relation are ordered by `createdAt` ascending as a tiebreak. When `ordering.direction` is `"desc"`, this ordering is reversed.
+
+**[N+13]** (RFC-008 [DV-Mx1]) For both `typeDispatch` and `typeFilter`, a record's *resolved type* used for matching MUST be the canonical `namespace/name` of the Type obtained by resolving the record's `typeId` against the package. Implementations MUST NOT match against the record's denormalized `typeNamespace`/`typeName` hints. Matching MUST compare `namespace/name` only and MUST ignore the Type version. A member with no `typeId` (Tier 0 Note, Tier 1 TypedRecord) has no resolved type. A bare `name` key or filter entry (no namespace) in a `DocumentView` included in a Package has undefined portability, mirroring Rule 32 for `semanticObjectType`.
+
+**[N+14]** (RFC-008 [DV-Dx1]) A `DocumentSection` MAY carry a `typeDispatch` object. Each key MUST be a record type identifier in `namespace/name` form; bare `name` keys are permitted only in single-system `DocumentView` records not included in a Package. Each value MUST be a UUID referencing an `ext:views-l1` `View`. The value-is-existing-view constraint is enforced at render/package-validation time, not by the schema (consistent with `renderViewId`).
+
+**[N+15]** (RFC-008 [DV-Dx2]) When rendering a record within a section, implementations MUST resolve the render view in order: (1) the `typeDispatch` entry whose key matches the record's resolved type (Rule [N+13]), when `typeDispatch` is present and contains such an entry; (2) `renderViewId`, when present; (3) the default rendering baseline (Rule [N]).
+
+**[N+16]** (RFC-008 [DV-Dx3]) A `typeDispatch` key matching no record in the section's resolved member set MUST be ignored without a diagnostic. A record whose resolved type matches no key falls through to Rule [N+15] steps (2)–(3). When a record reaches step (2) and the fallback `renderViewId` resolves to an L1 View bound to a different Type than the record, that View renders only the fields it can resolve (absent fields omitted, per Rule [N]); implementations SHOULD treat this as a degraded render rather than an error.
+
+**[N+17]** (RFC-008 [DV-Dx4]) A member with no resolvable Type (Tier 0 Note, Tier 1 TypedRecord, or a record whose `typeId` fails to resolve) MUST NOT match any `typeDispatch` key and MUST fall through to Rule [N+15] steps (2)–(3).
+
+**[N+18]** (RFC-008 [DV-Dx5]) `typeDispatch` MUST NOT change member ordering. Member order is determined solely by the section's source: Rule [N+12] for `container-subset`, and the declared `instanceIds[]` array order for `fixed-instances`.
+
+**[N+19]** (RFC-008 [DV-Fx1]) The `container-subset` `SectionSource` MAY carry a `typeFilter` array of `namespace/name` strings. `typeFilter` MUST NOT appear on any other `SectionSource` variant. When absent or empty, the resolved member set is every Container member, unchanged.
+
+**[N+20]** (RFC-008 [DV-Fx2]) When `typeFilter` is present and non-empty, the resolved member set MUST be restricted to Container members whose resolved type (Rule [N+13]) matches one of the listed keys.
+
+**[N+21]** (RFC-008 [DV-Fx3]) When a `typeFilter`-restricted `container-subset` section declares no `ordering.fieldId`, implementations MUST order the surviving members by projecting the Rule [N+12] order: compute the [N+12] order over the full Container member set, then remove the non-surviving members from that sequence. Removing a member that was a `precedes` bridge between two survivors MUST NOT reorder those survivors.
+
+**[N+22]** (RFC-008 [DV-Fx4]) When a section specifies both `typeFilter` and `ordering.fieldId`, implementations MUST apply `typeFilter` first and then sort the survivors by `ordering.fieldId`. Per Rule [N+12], `ordering.fieldId` supersedes the `precedes`-chain order; Rule [N+21] does not apply in that case.
+
+**[N+23]** (RFC-008 [DV-Fx5]) A member with no resolvable Type (Tier 0 Note, Tier 1 TypedRecord, or a record whose `typeId` fails to resolve) MUST NOT match any `typeFilter` key and is therefore excluded whenever `typeFilter` is present and non-empty.
+
+**[N+24]** (RFC-008 [DV-Cx1]) `typeFilter` and `typeDispatch` are independent optional capabilities. An implementation supporting `ext:views-l2` MUST accept a `DocumentView` using either, both, or neither, and MUST treat their absence as the pre-existing behaviour.
+
 
 #### Addressability (ext:addressability)
 
