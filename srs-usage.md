@@ -200,7 +200,7 @@ srs record validate --repo <path> <<'EOF'
 EOF
 ```
 
-`payload.ok` is `true` with an empty `payload.errors` when the input is valid; otherwise the envelope is `"ok": false` and the problems are listed in the top-level `diagnostics`. Nothing is written either way (the command runs and exits 0 regardless of validity — check `payload.ok`/`diagnostics`, not the exit code).
+`payload.ok` is `true` with an empty `payload.errors` when the input is valid; otherwise the envelope is `"ok": false` and **every** problem is listed in the top-level `diagnostics` — `validate` reports all violations at once (missing required fields, unknown fields, cardinality), so you can fix the whole input in one pass rather than one-error-at-a-time. Nothing is written either way (the command runs and exits 0 regardless of validity — check `payload.ok`/`diagnostics`, not the exit code).
 
 `record validate` runs **exactly the same validation** that `record create` / `record update` run before they persist — unknown fields, missing required fields, and repeatable/field-group cardinality. A passing `validate` therefore guarantees a passing write. (It does not add stricter checks such as enum or value-type conformance; those are not validated on the write path either.)
 
