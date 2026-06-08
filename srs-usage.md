@@ -57,11 +57,11 @@ srs record list --repo <path> --type <namespace/name> --pretty
 srs note list --repo <path> --pretty
 
 # 4. Inspect a specific instance
-srs record get --repo <path> --id <instanceId> --pretty
-srs note get --repo <path> --id <instanceId> --pretty
+srs record get --repo <path> <instanceId> --pretty
+srs note get --repo <path> <instanceId> --pretty
 
 # 5. Inspect a type's field assignments (required before creating a record)
-srs type get --repo <path> --id <typeId> --pretty
+srs type get --repo <path> <typeId> --pretty
 srs field list --repo <path> --pretty
 ```
 
@@ -76,7 +76,7 @@ When a repo uses the vocabulary substrate (RFC-006), inspect vocabularies, lifec
 srs vocabulary list --repo <path> --pretty
 
 # Inspect a vocabulary (including all terms and their status)
-srs vocabulary get --repo <path> --id <vocabularyId> --pretty
+srs vocabulary get --repo <path> <vocabularyId> --pretty
 
 # Classify in-use tag keys against an open vocabulary (V10 pre-flight, read-only)
 srs vocabulary derive-tag-set --repo <path> <vocabularyId> --pretty
@@ -85,13 +85,13 @@ srs vocabulary derive-tag-set --repo <path> <vocabularyId> --pretty
 srs term list --repo <path> --pretty
 
 # Get a single term by ID
-srs term get --repo <path> --id <termId> --pretty
+srs term get --repo <path> <termId> --pretty
 
 # What lifecycles exist in the package?
 srs lifecycle list --repo <path> --pretty
 
 # Inspect a lifecycle (states, transitions, isInitial)
-srs lifecycle get --repo <path> --id <lifecycleId> --pretty
+srs lifecycle get --repo <path> <lifecycleId> --pretty
 ```
 
 A vocabulary in `open` mode accepts any tag key. A vocabulary in `closed` mode only accepts keys that resolve to an active term. Check the vocabulary's `mode` field before tagging records.
@@ -105,11 +105,11 @@ When a repo's package declares Blueprints (multi-record document definitions), u
 srs blueprint list --repo <path> --pretty
 
 # Inspect a blueprint's declared relation structure
-srs blueprint structure --repo <path> --id <blueprintId> --pretty
+srs blueprint structure --repo <path> <blueprintId> --pretty
 
 # Emit a nested draft-07 JSON Schema for the whole document
 # (root type + child collections, each with $ref into definitions)
-srs blueprint schema --repo <path> --id <blueprintId> --pretty
+srs blueprint schema --repo <path> <blueprintId> --pretty
 ```
 
 `blueprint schema` composes per-type schemas (via `type schema`) into a single document schema.
@@ -120,7 +120,7 @@ array property carries `x-srs-ordered-by` recording the original relation type s
 To inspect the JSON Schema for a single type:
 
 ```bash
-srs type schema --repo <path> --id <typeId> --pretty
+srs type schema --repo <path> <typeId> --pretty
 ```
 
 The payload is `{ "payload": { "schema": { ... }, "diagnostics": [] } }`. Non-fatal warnings
@@ -152,7 +152,7 @@ EOF
 First resolve the type's field IDs:
 
 ```bash
-srs type get --repo <path> --id <typeId> --pretty
+srs type get --repo <path> <typeId> --pretty
 # read fieldAssignments[].fieldId for each field you need to populate
 ```
 
@@ -174,8 +174,8 @@ EOF
 Fetch the current state first, then send only the fields you are changing:
 
 ```bash
-srs record get --repo <path> --id <instanceId> --pretty
-srs record update --repo <path> --id <instanceId> <<'EOF'
+srs record get --repo <path> <instanceId> --pretty
+srs record update --repo <path> <instanceId> <<'EOF'
 {
   "fieldValues": [
     { "fieldId": "<uuid>", "value": "<new-value>" }
@@ -285,7 +285,7 @@ Before promoting, run `vocabulary derive-tag-set` (above) to see which in-use ta
 # V10 pre-flight is implicit in promote — it blocks if any in-use key
 # has no active term in the vocabulary. Promotion succeeds or fails
 # with a structured error payload listing the unresolvable keys.
-srs vocabulary promote --repo <path> --id <vocabularyId>
+srs vocabulary promote --repo <path> <vocabularyId>
 ```
 
 If promotion is blocked, the response has `"ok": false` and `payload.unresolvableKeys` lists the tag keys with no active term. Add terms for those keys (or accept that existing records will carry invalid tags after close) before retrying. If the vocabulary has a `promotionWindow.until` date that has not yet passed, promotion succeeds even with unresolvable keys (grace window).
