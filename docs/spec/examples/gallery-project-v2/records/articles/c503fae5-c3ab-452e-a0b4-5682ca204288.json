@@ -24,10 +24,6 @@
     {
       "fieldId": "0df40543-f72a-5471-a7f1-c85c1f1f93e4",
       "value": "Protected — requires Party Utility agreement to amend"
-    },
-    {
-      "fieldId": "aee7afe9-6650-5fa4-a61a-495c3b88994b",
-      "value": "active"
     }
   ],
   "instanceId": "c503fae5-c3ab-452e-a0b4-5682ca204288",
@@ -35,5 +31,6 @@
   "typeName": "article",
   "typeNamespace": "governance",
   "typeVersion": 1,
-  "updatedAt": "2026-05-31T14:55:35.188979267+00:00"
+  "updatedAt": "2026-06-08T21:05:17.566879595+00:00",
+  "lifecycleState": "ratified"
 }

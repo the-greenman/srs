@@ -32,10 +32,6 @@
     {
       "fieldId": "c04b7f84-9a55-5353-8c9f-2b62f6a1e34e",
       "value": "December 2026 pilot review — if Phase 1 is working, bring main hallway into scope for Phase 2."
-    },
-    {
-      "fieldId": "aee7afe9-6650-5fa4-a61a-495c3b88994b",
-      "value": "active"
     }
   ],
   "instanceId": "4a989562-4a9d-4c86-a365-91bf14d55f06",
@@ -43,5 +39,6 @@
   "typeName": "decision",
   "typeNamespace": "governance",
   "typeVersion": 1,
-  "updatedAt": "2026-05-31T14:55:35.216707675+00:00"
+  "updatedAt": "2026-06-08T21:05:17.881907273+00:00",
+  "lifecycleState": "ratified"
 }

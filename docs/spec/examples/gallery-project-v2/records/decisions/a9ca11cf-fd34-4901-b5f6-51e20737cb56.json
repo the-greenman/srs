@@ -20,10 +20,6 @@
     {
       "fieldId": "3340532b-d845-5e54-92b3-819ed05365c5",
       "value": "Specific timelines make the commitment real. Without them, 'we will return work' is a statement of intent that can drift indefinitely."
-    },
-    {
-      "fieldId": "aee7afe9-6650-5fa4-a61a-495c3b88994b",
-      "value": "active"
     }
   ],
   "instanceId": "a9ca11cf-fd34-4901-b5f6-51e20737cb56",
@@ -31,5 +27,6 @@
   "typeName": "decision",
   "typeNamespace": "governance",
   "typeVersion": 1,
-  "updatedAt": "2026-05-31T14:55:35.221996502+00:00"
+  "updatedAt": "2026-06-08T21:05:18.222683383+00:00",
+  "lifecycleState": "ratified"
 }
