@@ -78,6 +78,9 @@ srs vocabulary list --repo <path> --pretty
 # Inspect a vocabulary (including all terms and their status)
 srs vocabulary get --repo <path> --id <vocabularyId> --pretty
 
+# Classify in-use tag keys against an open vocabulary (V10 pre-flight, read-only)
+srs vocabulary derive-tag-set --repo <path> <vocabularyId> --pretty
+
 # List all terms across all vocabularies
 srs term list --repo <path> --pretty
 
@@ -238,9 +241,25 @@ EOF
 
 `key` must be unique within the vocabulary (no other active term may share the same key or alias). `status` may be omitted; absent status is treated as `active` by all resolution rules (V1, V6, V10).
 
+### Inspecting the Tag Set Before Promotion (RFC-006 V10)
+
+Run `vocabulary derive-tag-set` to see, without writing anything, how every in-use tag key would be classified if the vocabulary were closed. This is the explicit, read-only form of the V10 pre-flight that `promote` runs implicitly:
+
+```bash
+srs vocabulary derive-tag-set --repo <path> <vocabularyId>
+```
+
+The response carries the resolved `payload.vocabulary` and a sorted `payload.entries` array. Each entry has `key`, `usageCount`, and a `classification`:
+
+- `used-and-active` — the key resolves to an active term; fine after promotion.
+- `read-only-after-close` — the key resolves to a deprecated or tombstone term; existing reads survive, new writes are rejected after close.
+- `will-be-invalid` — the key has no active term; reads break after close. These are exactly the keys `promote` will block on.
+
+An unknown vocabulary id returns `"ok": false` with a diagnostic (the command ran; nothing was written).
+
 ### Promoting a Vocabulary from Open to Closed (RFC-006 V10)
 
-Before promoting, run the V10 pre-flight to see which in-use tag keys would become invalid:
+Before promoting, run `vocabulary derive-tag-set` (above) to see which in-use tag keys would become invalid:
 
 ```bash
 # V10 pre-flight is implicit in promote — it blocks if any in-use key
