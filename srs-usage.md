@@ -184,6 +184,26 @@ srs record update --repo <path> --id <instanceId> <<'EOF'
 EOF
 ```
 
+### Validating a Record Before Saving (preflight)
+
+Use `record validate` to check a record input **without persisting it**. This is the preflight for multi-record editors that save several records in a loop and want to confirm the whole document is valid before writing any of it. The input is self-contained — it carries its own `typeId`/`typeVersion`, so no record needs to exist yet:
+
+```bash
+srs record validate --repo <path> <<'EOF'
+{
+  "typeId": "<uuid>",
+  "typeVersion": 1,
+  "fieldValues": [
+    { "fieldId": "<uuid>", "value": "<value>" }
+  ]
+}
+EOF
+```
+
+`payload.ok` is `true` with an empty `payload.errors` when the input is valid; otherwise the envelope is `"ok": false` and the problems are listed in the top-level `diagnostics`. Nothing is written either way (the command runs and exits 0 regardless of validity — check `payload.ok`/`diagnostics`, not the exit code).
+
+`record validate` runs **exactly the same validation** that `record create` / `record update` run before they persist — unknown fields, missing required fields, and repeatable/field-group cardinality. A passing `validate` therefore guarantees a passing write. (It does not add stricter checks such as enum or value-type conformance; those are not validated on the write path either.)
+
 ### Asserting a Relation
 
 ```bash
