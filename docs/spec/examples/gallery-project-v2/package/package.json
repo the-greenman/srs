@@ -26,10 +26,12 @@
     "fields/roleholder-a6c19b95.json",
     "fields/authority-d25da548.json",
     "fields/boundary-3c39ee1f.json",
-    "fields/sourceofauthority-9a32dc01.json",
-    "fields/status-aee7afe9.json"
+    "fields/sourceofauthority-9a32dc01.json"
   ],
   "id": "90677fae-16a7-49ec-8aee-1872cbf8e381",
+  "lifecycles": [
+    "lifecycles/governance-lifecycle-3c504040.json"
+  ],
   "name": "governance-core",
   "namespace": "com.limoma",
   "relationTypes": [

@@ -10,21 +10,28 @@ via the WASM `SrsRepository.load(text)` method.
 To regenerate after changes to `gallery-project-v2/`:
 
     cd docs/spec/examples
+    rm -f gallery.srsj
     srs repo copy --from gallery-project-v2 --to gallery.srsj
     srs repo validate --repo gallery.srsj
 
 ## Contents
 
-17 instances, 0 errors:
+17 instances:
 
 - 6 Articles (constitutional layer: A-001 through A-006)
 - 3 Roles (authority boundaries: Building Authority, Curatorial Lead, Clerk)
 - 7 Decisions (settled commitments from the founding meeting)
 - 1 Note (initial brain dump, Tier 0)
 
-## Source note
+The 16 governance Records (Articles, Roles, Decisions) carry a `lifecycleState` of
+`ratified`, bound to the shared `governance/governance_lifecycle` Lifecycle via each
+Type's `lifecycleRef` (RFC-006). See `gallery-project-v2/migration-rfc006-lifecycle.md`.
 
-`gallery-project/` (v1) was the originally specified source but has a package format
-incompatibility (bundled inline field/type objects instead of file references) that
-prevents `srs repo copy` from loading it. `gallery-project-v2/` is the updated,
-well-formed version with the same governance content and validates cleanly.
+## Known limitation — `.srsj` lifecycle portability
+
+The source file-store repo (`gallery-project-v2/`) validates cleanly (0 diagnostics).
+The `.srsj` projection currently fails three V7 diagnostics because the JsonStore
+backend does not yet carry package-level `Lifecycle` (or `Vocabulary`) definitions, so
+`lifecycleRef` cannot resolve in the snapshot. Tracked in the-greenman/srs-rust#115.
+Once that lands, regenerating this snapshot will validate clean again. Validate the
+**source** repo (`gallery-project-v2/`) for a definitive result in the meantime.

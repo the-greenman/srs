@@ -78,16 +78,10 @@
       "order": 10,
       "repeatable": false,
       "required": false
-    },
-    {
-      "displayLabel": "Status",
-      "fieldId": "aee7afe9-6650-5fa4-a61a-495c3b88994b",
-      "order": 11,
-      "repeatable": false,
-      "required": true
     }
   ],
   "id": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
+  "lifecycleRef": "3c504040-7920-43aa-8fbd-eda21dc7c07b",
   "name": "decision",
   "namespace": "governance",
   "version": 1

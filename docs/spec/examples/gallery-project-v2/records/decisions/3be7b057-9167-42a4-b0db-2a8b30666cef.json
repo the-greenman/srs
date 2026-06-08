@@ -12,10 +12,6 @@
     {
       "fieldId": "3340532b-d845-5e54-92b3-819ed05365c5",
       "value": "Establishes a consistent baseline that removes ad-hoc judgement from each installation. Curatorial override preserved where needed."
-    },
-    {
-      "fieldId": "aee7afe9-6650-5fa4-a61a-495c3b88994b",
-      "value": "active"
     }
   ],
   "instanceId": "3be7b057-9167-42a4-b0db-2a8b30666cef",
@@ -23,5 +19,6 @@
   "typeName": "decision",
   "typeNamespace": "governance",
   "typeVersion": 1,
-  "updatedAt": "2026-05-31T14:55:35.210871569+00:00"
+  "updatedAt": "2026-06-08T21:05:17.769391769+00:00",
+  "lifecycleState": "ratified"
 }

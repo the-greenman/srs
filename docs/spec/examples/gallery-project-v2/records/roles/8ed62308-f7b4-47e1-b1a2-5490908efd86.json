@@ -22,10 +22,6 @@
       "value": "Delegated by the founding group at the founding meeting, May 2026. Role is Phase 1 scoped — to be reviewed at the pilot review in December 2026."
     },
     {
-      "fieldId": "aee7afe9-6650-5fa4-a61a-495c3b88994b",
-      "value": "active"
-    },
-    {
       "fieldId": "c04b7f84-9a55-5353-8c9f-2b62f6a1e34e",
       "value": "December 2026 pilot review."
     }
@@ -35,5 +31,6 @@
   "typeName": "role",
   "typeNamespace": "governance",
   "typeVersion": 1,
-  "updatedAt": "2026-05-31T14:55:35.198211261+00:00"
+  "updatedAt": "2026-06-08T21:05:18.757652487+00:00",
+  "lifecycleState": "ratified"
 }

@@ -20,10 +20,6 @@
     {
       "fieldId": "c04b7f84-9a55-5353-8c9f-2b62f6a1e34e",
       "value": "December 2026. The review meeting produces a new decision that either supersedes this one or records closure."
-    },
-    {
-      "fieldId": "aee7afe9-6650-5fa4-a61a-495c3b88994b",
-      "value": "active"
     }
   ],
   "instanceId": "9054911c-5285-4c3e-8198-4b9650169001",
@@ -31,5 +27,6 @@
   "typeName": "decision",
   "typeNamespace": "governance",
   "typeVersion": 1,
-  "updatedAt": "2026-05-31T14:55:35.204282404+00:00"
+  "updatedAt": "2026-06-08T21:05:17.994750915+00:00",
+  "lifecycleState": "ratified"
 }

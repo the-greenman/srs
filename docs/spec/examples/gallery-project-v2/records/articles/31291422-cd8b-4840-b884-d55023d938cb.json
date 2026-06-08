@@ -20,10 +20,6 @@
     {
       "fieldId": "1f01bc6b-39c8-58d7-b1a3-79142623fece",
       "value": "Unanimous agreement of all current members."
-    },
-    {
-      "fieldId": "aee7afe9-6650-5fa4-a61a-495c3b88994b",
-      "value": "active"
     }
   ],
   "instanceId": "31291422-cd8b-4840-b884-d55023d938cb",
@@ -31,5 +27,6 @@
   "typeName": "article",
   "typeNamespace": "governance",
   "typeVersion": 1,
-  "updatedAt": "2026-05-31T14:55:35.173952816+00:00"
+  "updatedAt": "2026-06-08T21:05:17.266092197+00:00",
+  "lifecycleState": "ratified"
 }

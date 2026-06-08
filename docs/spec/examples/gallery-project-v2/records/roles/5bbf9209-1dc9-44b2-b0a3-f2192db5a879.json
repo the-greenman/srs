@@ -20,10 +20,6 @@
     {
       "fieldId": "9a32dc01-f348-5e05-9f54-bb6d21239f04",
       "value": "Inherited from the Party Utility, who granted access to the back stairs and entrusted Sam with responsibility for the physical space."
-    },
-    {
-      "fieldId": "aee7afe9-6650-5fa4-a61a-495c3b88994b",
-      "value": "active"
     }
   ],
   "instanceId": "5bbf9209-1dc9-44b2-b0a3-f2192db5a879",
@@ -31,5 +27,6 @@
   "typeName": "role",
   "typeNamespace": "governance",
   "typeVersion": 1,
-  "updatedAt": "2026-05-31T14:55:35.195106870+00:00"
+  "updatedAt": "2026-06-08T21:05:18.642631786+00:00",
+  "lifecycleState": "ratified"
 }

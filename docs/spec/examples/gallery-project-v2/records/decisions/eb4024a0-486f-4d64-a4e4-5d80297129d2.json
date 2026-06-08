@@ -40,10 +40,6 @@
     {
       "fieldId": "4181f210-f4be-5587-950e-890eda2a5590",
       "value": "Brian to sketch mounting ideas and share with the group. Trial 6mm plugs in back stairwell as Phase 1 experiment. Fabricate decorative caps for unused fixings between shows. Phase 2 approach for main hallway to be decided separately."
-    },
-    {
-      "fieldId": "aee7afe9-6650-5fa4-a61a-495c3b88994b",
-      "value": "active"
     }
   ],
   "instanceId": "eb4024a0-486f-4d64-a4e4-5d80297129d2",
@@ -51,5 +47,6 @@
   "typeName": "decision",
   "typeNamespace": "governance",
   "typeVersion": 1,
-  "updatedAt": "2026-05-31T14:55:35.208195703+00:00"
+  "updatedAt": "2026-06-08T21:05:18.424529117+00:00",
+  "lifecycleState": "ratified"
 }

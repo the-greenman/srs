@@ -20,10 +20,6 @@
     {
       "fieldId": "9a32dc01-f348-5e05-9f54-bb6d21239f04",
       "value": "Established by Article A-004 (How we make decisions)."
-    },
-    {
-      "fieldId": "aee7afe9-6650-5fa4-a61a-495c3b88994b",
-      "value": "active"
     }
   ],
   "instanceId": "448d64d4-ae82-4971-b027-3b78b9c7a90a",
@@ -31,5 +27,6 @@
   "typeName": "role",
   "typeNamespace": "governance",
   "typeVersion": 1,
-  "updatedAt": "2026-05-31T14:55:35.200804860+00:00"
+  "updatedAt": "2026-06-08T21:05:18.539183633+00:00",
+  "lifecycleState": "ratified"
 }

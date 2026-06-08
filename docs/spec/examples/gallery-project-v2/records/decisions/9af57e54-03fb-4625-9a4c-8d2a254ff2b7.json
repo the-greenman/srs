@@ -16,10 +16,6 @@
     {
       "fieldId": "3340532b-d845-5e54-92b3-819ed05365c5",
       "value": "Artists must make their own insurance decisions. The project is not in a position to take on liability for others' work and is not a commercial operation. Informing artists upfront keeps the arrangement honest."
-    },
-    {
-      "fieldId": "aee7afe9-6650-5fa4-a61a-495c3b88994b",
-      "value": "active"
     }
   ],
   "instanceId": "9af57e54-03fb-4625-9a4c-8d2a254ff2b7",
@@ -27,5 +23,6 @@
   "typeName": "decision",
   "typeNamespace": "governance",
   "typeVersion": 1,
-  "updatedAt": "2026-05-31T14:55:35.213600816+00:00"
+  "updatedAt": "2026-06-08T21:05:18.116808017+00:00",
+  "lifecycleState": "ratified"
 }
