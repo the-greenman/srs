@@ -2,7 +2,7 @@
 
 # RFC-009: Root-record Type as the typing anchor for Containers, Document Views, and distributable units
 
-**Status**: Draft (Revision 3)
+**Status**: In Progress (Revision 3)
 **Affects**: `ext:views-l2` (`DocumentView`), `Container` (core), `document-view.json` schema, `container.json` schema, `manifest.json` schema
 **Author**: Peter Brownell
 **Date**: 2026-06-09
