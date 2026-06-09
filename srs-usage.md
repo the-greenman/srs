@@ -110,12 +110,22 @@ srs blueprint structure --repo <path> <blueprintId> --pretty
 # Emit a nested draft-07 JSON Schema for the whole document
 # (root type + child collections, each with $ref into definitions)
 srs blueprint schema --repo <path> <blueprintId> --pretty
+
+# Compose full layered AI guidance context for a Blueprint
+# (blueprint aiGuidance, each root type's aiGuidance + fields in order,
+#  structure RelationSpecs, and any targeting Protocol)
+srs blueprint brief --repo <path> <blueprintId> --pretty
 ```
 
 `blueprint schema` composes per-type schemas (via `type schema`) into a single document schema.
 Property keys for child collections use lowerCamelCase of the relation type
 (e.g. relation type `"section-sequence"` → property key `"sectionSequence"`). Each child
 array property carries `x-srs-ordered-by` recording the original relation type string.
+
+`blueprint brief` assembles guidance for AI extraction pipelines. The payload always includes
+both a `rendered` markdown string (human/LLM-readable) and all structured fields (`types`,
+`structure`, `protocol`, etc.) so callers can use either form. Non-fatal issues (unresolvable
+root types, no protocol found) appear in `payload.diagnostics`.
 
 To inspect the JSON Schema for a single type:
 
