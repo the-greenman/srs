@@ -310,7 +310,59 @@ Check `payload.diagnostics` — a non-empty array means something is broken. Zer
 
 ---
 
-## 5. Common Traps
+## 5. Repository Portability
+
+### Copying a Repository
+
+`repo copy` transfers all instances, relations, packages, and manifest from one store to another. Both paths must be explicit — `--repo` auto-detection is not used.
+
+```bash
+# File repo → file repo
+srs repo copy --from <source-path> --to <target-path>
+
+# File repo → single .srsj JSON bundle
+srs repo copy --from <source-path> --to <bundle.srsj>
+
+# .srsj bundle → file repo
+srs repo copy --from <bundle.srsj> --to <target-path>
+```
+
+`--from-store` and `--to-store` (`file` | `json`) override the store type when auto-inference is wrong. Auto-inference: a path ending in `.srsj` or pointing to an existing file → `json`; otherwise → `file`.
+
+The `repositoryId` is preserved across copies — the copy is the same logical repository in a different storage format, not a new one.
+
+### Diffing Two Repository Copies
+
+`repo diff` compares two SRS repositories keyed on stable `instance_id` and `relation_id`, not on file paths. This means a record that was renamed or moved within the repo will appear as a modification, not a remove+add, as long as its `instance_id` is unchanged.
+
+```bash
+srs repo diff --from <path-a> --to <path-b> --pretty
+```
+
+Accepts the same `--from-store` / `--to-store` overrides as `repo copy`. Typical round-trip workflow:
+
+```bash
+# Export to .srsj, edit, copy back, then diff to see what changed semantically
+srs repo copy --from my-repo --to /tmp/my-repo.srsj
+# ... edit /tmp/my-repo.srsj ...
+srs repo copy --from /tmp/my-repo.srsj --to /tmp/my-repo-edited
+srs repo diff --from my-repo --to /tmp/my-repo-edited --pretty
+```
+
+The `payload.summary` gives counts at a glance:
+
+```json
+{
+  "instancesAdded": 0, "instancesRemoved": 0, "instancesModified": 1,
+  "relationsAdded": 0,  "relationsRemoved": 0,  "relationsModified": 0
+}
+```
+
+`payload.instances.modified[]` entries carry the full `fromValue` and `toValue` so the caller can inspect what changed without a second round-trip. `payload.manifest` reports whether the namespace, srsVersion, or declared extensions differ.
+
+---
+
+## 6. Common Traps
 
 ### The instanceIndex trap
 `manifest.json → instanceIndex` is the authoritative membership list. A record file on disk that is not listed there does not exist to the system. The CLI manages this automatically. Direct file writes do not.
@@ -332,7 +384,7 @@ Changing a Field's `namespace` or `name` requires a new UUID — it is a new Fie
 
 ---
 
-## 6. Reading CLI Output
+## 7. Reading CLI Output
 
 All commands return a JSON envelope:
 
@@ -348,7 +400,7 @@ Use `--pretty` for human reading. Omit it when piping to `jq` or a script.
 
 ---
 
-## 7. Ordering: Read, Then Write
+## 8. Ordering: Read, Then Write
 
 Never write to an SRS repo without first reading the current state of what you intend to change. The sequence is always:
 
@@ -361,7 +413,7 @@ Multi-step operations (create a record and add it to a container, for example) s
 
 ---
 
-## 8. When the CLI Cannot Help
+## 9. When the CLI Cannot Help
 
 If a command is missing or broken, the correct response is:
 
