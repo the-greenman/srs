@@ -386,6 +386,11 @@ Field definitions cannot be overridden by the Types that use them. `displayLabel
 ### Version lineage
 Changing a Field's `namespace` or `name` requires a new UUID — it is a new Field, not a new version of the old one. Version increments within the same UUID lineage only. The same applies to Types.
 
+### containerType is an advisory hint, not the join (RFC-009)
+A `DocumentView` selects which `Container`s it applies to via `rootTypeRefs` — a list of version-exact `ExactTypeRef` (`{ typeId, typeVersion }`) anchors matched against a Container's root Record's resolved Type. `containerType` on both `DocumentView` and `Container` is a soft-deprecated, free-string back-compat hint; it is **not** the load-bearing join when `rootTypeRefs` is present. Two `repo validate` diagnostics are **advisory `Warning`s** — they do not make the repository or container invalid, and `ok`/exit code are unaffected:
+- **I-63** — a `rootTypeRefs` entry that does not resolve to a package Type (it is simply ignored for matching).
+- **I-64** — a Container whose `containerType` does not equal its root Record's resolved Type `name` (the hint is stale). Fix by updating `containerType` to the bare type name, or ignore it. Filter views by anchor with `srs document-view list --root-type <typeId>`.
+
 ---
 
 ## 7. Reading CLI Output
