@@ -181,18 +181,22 @@ EOF
 
 ### Updating a Record
 
-Fetch the current state first, then send only the fields you are changing:
+Fetch the current state first. Then send the **complete** `fieldValues` array — all fields, with changed values substituted. Omitting a field from `fieldValues` removes its value; required fields will fail validation if omitted:
 
 ```bash
 srs record get --repo <path> <instanceId> --pretty
+# edit the output: substitute the new value in the full fieldValues array
 srs record update --repo <path> <instanceId> <<'EOF'
 {
   "fieldValues": [
-    { "fieldId": "<uuid>", "value": "<new-value>" }
+    { "fieldId": "<uuid-of-field-1>", "value": "<unchanged-value>" },
+    { "fieldId": "<uuid-of-field-2>", "value": "<new-value>" }
   ]
 }
 EOF
 ```
+
+`groupValues` uses three-way semantics: **omit** (or `null`) to preserve existing groups; **empty array** (`[]`) to clear all groups; **non-empty array** to replace all groups. Tags follow the same three-way pattern.
 
 ### Validating a Record Before Saving (preflight)
 
