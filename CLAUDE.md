@@ -2,7 +2,36 @@
 
 The SRS canonical specification, authored as an SRS repository. This is the source of truth for the SRS data model. The rendered specification under `spec/` and `docs/` is a projection of the records — not the source.
 
-The top-level `semanticops/CLAUDE.md` contains the full SRS data model and CLI reference. `srs-usage.md` (this repo, alongside this file) contains the authoritative rules for working with any SRS repository as an agent — follow them here.
+`srs-usage.md` (this repo, alongside this file) contains the authoritative rules for working with any SRS repository as an agent — follow them here. The data model summary below is a quick reference; `srs-usage.md` has the full detail.
+
+This repo is part of a monorepo (`srs`, `srs-rust`, `srs-vscode`, `srs-web`) — when using Claude Code on the web, each repo is accessed independently.
+
+## SRS data model (quick reference)
+
+**Field** — atomic semantic unit. Has a stable UUID `id`, `namespace`, `name` (snake_case), `version` (integer), `valueType` (string|text|number|boolean|date|url|select|multiselect), and optional `aiGuidance`. Field semantics are immutable.
+
+**Type** — named, versioned composition of Fields. Contains `fields[]` as FieldAssignments: `{ fieldId, order, required, displayLabel? }`. `displayLabel` is rendering-only.
+
+**Record tiers:**
+- **Tier 0 (Note)**: free text sections, no type binding
+- **Tier 1 (TypedRecord)**: named fields with values, no Type binding
+- **Tier 2 (Record)**: instantiated Type via `typeId` + `typeVersion`; contains `fieldValues[]` mapping `fieldId → value`
+
+**Relation** — typed edge between two instance UUIDs. Canonical types: `contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`.
+
+**Container** — lightweight grouping boundary. Its `containerId` is distinct from instance IDs and must not appear as a Relation source/target.
+
+**Repository** — directory with `.srs/` marker + `manifest.json`. The `instanceIndex` in the manifest is the authoritative member list.
+
+## Git commit signing (local CLI use)
+
+All commits use an SSH signing key. Before committing, verify the key is loaded:
+
+```bash
+ssh-add -l | grep -q "SHA256:vHuO6si5w3RLL4IJZofWbyvEi42WA2fYX7bM" || echo "SIGNING KEY NOT LOADED"
+```
+
+If missing, stop and reload the key — do not bypass signing.
 
 ## What this repo is
 
