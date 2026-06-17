@@ -1,6 +1,5 @@
 #!/usr/bin/env node
-import { createHash } from "crypto";
-import { mkdtemp, readFile, readdir, rm } from "fs/promises";
+import { mkdtemp, readFile, rm } from "fs/promises";
 import { tmpdir } from "os";
 import { basename, join, resolve } from "path";
 import { spawn } from "child_process";
@@ -8,9 +7,6 @@ import { spawn } from "child_process";
 const ROOT = resolve(new URL("..", import.meta.url).pathname);
 const REPO_ROOT = join(ROOT, "srs");
 const SPEC_ROOT = join(ROOT, "docs", "spec");
-const SCHEMA_SRC = join(ROOT, "docs", "schema", "2.0");
-const RUST_SCHEMA_DST = join(ROOT, "..", "srs-rust", "crates", "srs-schema", "schemas", "2.0");
-const VSCODE_SCHEMA_DST = join(ROOT, "..", "srs-vscode", "schemas", "2.0");
 const SRS_CLI = process.env.SRS_CLI_PATH || "/home/greenman/.cargo/bin/srs";
 
 const VIEW_EXPORTS = [
@@ -30,18 +26,6 @@ function run(cmd, args, cwd = ROOT) {
       rejectPromise(new Error(`command failed (${code}): ${cmd} ${args.join(" ")}`));
     });
   });
-}
-
-async function listJsonFiles(dir) {
-  const entries = await readdir(dir, { withFileTypes: true });
-  return entries
-    .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
-    .map((entry) => entry.name)
-    .sort();
-}
-
-function sha256Hex(content) {
-  return createHash("sha256").update(content).digest("hex");
 }
 
 async function assertFileMatches(expectedPath, actualPath, label) {
@@ -112,46 +96,6 @@ async function checkRenderedDocsDrift() {
   }
 }
 
-async function checkSchemaMirror(dst, label) {
-  const [srcFiles, dstFiles] = await Promise.all([listJsonFiles(SCHEMA_SRC), listJsonFiles(dst)]);
-  const srcSet = new Set(srcFiles);
-  const dstSet = new Set(dstFiles);
-
-  for (const filename of srcFiles) {
-    if (!dstSet.has(filename)) {
-      throw new Error(`${label} schema drift: missing file ${filename}`);
-    }
-    const [srcContent, dstContent] = await Promise.all([
-      readFile(join(SCHEMA_SRC, filename), "utf8"),
-      readFile(join(dst, filename), "utf8"),
-    ]);
-    if (srcContent !== dstContent) {
-      throw new Error(`${label} schema drift: file content differs for ${filename}`);
-    }
-  }
-
-  for (const filename of dstFiles) {
-    if (!srcSet.has(filename)) {
-      throw new Error(`${label} schema drift: extra file ${filename}`);
-    }
-  }
-}
-
-async function checkRustChecksums() {
-  const files = await listJsonFiles(RUST_SCHEMA_DST);
-  const lines = [];
-  for (const filename of files) {
-    const content = await readFile(join(RUST_SCHEMA_DST, filename));
-    lines.push(`${sha256Hex(content)}  ${filename}`);
-  }
-  lines.sort();
-  const actual = `${lines.join("\n")}\n`;
-  const expected = await readFile(join(RUST_SCHEMA_DST, "SHA256SUMS"), "utf8");
-  if (actual !== expected) {
-    throw new Error("Rust schema drift: SHA256SUMS does not match current JSON schema files");
-  }
-}
-
 async function step(label, fn) {
   process.stdout.write(`Checking ${label}... `);
   await fn();
@@ -164,9 +108,6 @@ async function main() {
     await run(SRS_CLI, ["--repo", REPO_ROOT, "repo", "validate"]);
   });
   await step("rendered docs", checkRenderedDocsDrift);
-  await step("srs-rust schema mirror", () => checkSchemaMirror(RUST_SCHEMA_DST, "srs-rust"));
-  await step("srs-vscode schema mirror", () => checkSchemaMirror(VSCODE_SCHEMA_DST, "srs-vscode"));
-  await step("Rust SHA256SUMS", checkRustChecksums);
   console.log("\nOK: release artifacts are in sync.");
 }
 

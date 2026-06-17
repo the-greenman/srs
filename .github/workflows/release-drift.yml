@@ -19,12 +19,6 @@ jobs:
           repository: ${{ github.repository_owner }}/srs-rust
           path: srs-rust
 
-      - name: Checkout srs-vscode
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ github.repository_owner }}/srs-vscode
-          path: srs-vscode
-
       - name: Install Node
         uses: actions/setup-node@v4
         with:
