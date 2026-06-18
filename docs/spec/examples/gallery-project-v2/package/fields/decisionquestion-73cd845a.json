@@ -1,6 +1,13 @@
 {
   "aiGuidance": {
-    "purpose": ""
+    "examples": [
+      {
+        "description": "Meeting-frequency decision",
+        "output": "How often should we meet as a group?"
+      }
+    ],
+    "extraction": "Look for the moment someone names what is actually being decided: so the question is..., what we are deciding is..., or an implicit framing that narrows discussion to one choice point. If no explicit question was stated, infer the minimal question the decision statement answers.",
+    "purpose": "States the single concrete question this decision settles. A well-formed decision question is specific enough that the decision statement directly answers it."
   },
   "createdAt": "2026-05-26T00:00:00Z",
   "description": "The single concrete question this decision answers.",
