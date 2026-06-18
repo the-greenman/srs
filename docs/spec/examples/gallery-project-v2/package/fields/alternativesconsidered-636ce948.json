@@ -10,7 +10,7 @@
     "negativeGuidance": "Do not write none unless truly no alternatives were discussed — that is almost never accurate. Do not merge distinct alternatives into a single blended option.",
     "purpose": "Records the genuine options the group weighed before settling on a direction — including doing nothing. Alternatives show the decision was a real choice, not a foregone conclusion."
   },
-  "createdAt": "2026-05-26T00:00:00Z",
+  "createdAt": "2026-05-25T00:00:00Z",
   "description": "Genuine options the group considered, including doing nothing.",
   "id": "636ce948-2110-57b4-a3ed-04354ec17843",
   "name": "alternatives_considered",
