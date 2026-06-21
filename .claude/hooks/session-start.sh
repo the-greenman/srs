@@ -22,8 +22,6 @@ if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
 fi
 
 SRS_RUST_REPO="${SRS_RUST_REPO:-the-greenman/srs-rust}"
-# Pin the release the fast path pulls from. Bump when srs-rust cuts a new build.
-SRS_RELEASE_TAG="${SRS_RELEASE_TAG:-v0.1.0-build.2}"
 SRS_ASSET="${SRS_ASSET:-srs-x86_64-unknown-linux-gnu.tar.gz}"
 INSTALL_DIR="${HOME}/.cargo/bin"
 
@@ -44,12 +42,14 @@ mkdir -p "$INSTALL_DIR"
 
 # --- Fast path: prebuilt release binary -------------------------------------
 install_from_release() {
-  local base="https://github.com/${SRS_RUST_REPO}/releases/download/${SRS_RELEASE_TAG}"
+  # GitHub's /releases/latest/download/ redirect always resolves to the asset
+  # from the most recent (non-prerelease) release, so nothing needs pinning.
+  local base="https://github.com/${SRS_RUST_REPO}/releases/latest/download"
   local tmp
   tmp="$(mktemp -d)"
   trap 'rm -rf "$tmp"' RETURN
 
-  echo "Downloading srs ${SRS_RELEASE_TAG} (${SRS_ASSET})..."
+  echo "Downloading latest srs release (${SRS_ASSET})..."
   if ! curl -fsSL -o "${tmp}/srs.tar.gz" "${base}/${SRS_ASSET}"; then
     echo "Release download failed."
     return 1
