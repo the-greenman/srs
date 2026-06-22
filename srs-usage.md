@@ -335,6 +335,8 @@ srs repo copy --from <bundle.srsj> --to <target-path>
 
 The `repositoryId` is preserved across copies — the copy is the same logical repository in a different storage format, not a new one.
 
+`.srsj` writes are deterministic: entries are serialised in sorted key order, so re-exporting unchanged content reproduces the file byte-for-byte and a single-entry edit yields a single-entry diff. This makes committed `.srsj` bundles reviewable with `git diff` and safe to regenerate.
+
 ### Diffing Two Repository Copies
 
 `repo diff` compares two SRS repositories keyed on stable `instance_id` and `relation_id`, not on file paths. This means a record that was renamed or moved within the repo will appear as a modification, not a remove+add, as long as its `instance_id` is unchanged.
