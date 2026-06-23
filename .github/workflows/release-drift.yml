@@ -13,32 +13,24 @@ jobs:
         with:
           path: srs
 
-      - name: Checkout srs-rust
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ github.repository_owner }}/srs-rust
-          path: srs-rust
-
-      - name: Checkout srs-vscode
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ github.repository_owner }}/srs-vscode
-          path: srs-vscode
-
       - name: Install Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
 
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Build srs CLI
-        working-directory: srs-rust
-        run: cargo build -p srs
+      - name: Download srs CLI
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download \
+            --repo ${{ github.repository_owner }}/srs-rust \
+            --pattern "srs-x86_64-unknown-linux-gnu.tar.gz" \
+            --dir /tmp/srs-cli
+          tar -xzf /tmp/srs-cli/srs-x86_64-unknown-linux-gnu.tar.gz -C /tmp/srs-cli
+          chmod +x /tmp/srs-cli/srs
 
       - name: Run release drift check
         working-directory: srs
         env:
-          SRS_CLI_PATH: ${{ github.workspace }}/srs-rust/target/debug/srs
+          SRS_CLI_PATH: /tmp/srs-cli/srs
         run: node scripts/check-release-drift.mjs
