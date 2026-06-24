@@ -127,7 +127,10 @@ array property carries `x-srs-ordered-by` recording the original relation type s
 `blueprint brief` assembles guidance for AI extraction pipelines. The payload always includes
 both a `rendered` markdown string (human/LLM-readable) and all structured fields (`types`,
 `structure`, `protocol`, etc.) so callers can use either form. Non-fatal issues (unresolvable
-root types, no protocol found) appear in `payload.diagnostics`.
+root types, no protocol found) appear in `payload.diagnostics`. Each stage entry in
+`payload.protocol.stages[]` includes `stageId`, `name`, `purpose` (optional epistemic
+description), `order`, `dependsOn`, plus optional `question`, `completionCriteria`,
+`contributesTo`, `aiGuidance`, and `outputType`.
 
 To inspect the JSON Schema for a single type:
 
@@ -164,7 +167,7 @@ Payload shapes (all wrapped in the standard `{ "ok": true, "payload": { ... } }`
 
 - `protocol list` → `{ "protocols": [{ "protocolId", "namespace", "name", "version", "stageCount", "sourcePackage"? }] }`. The optional `sourcePackage` is present only when the protocol is defined in a sub-package (e.g. `package/ext`); it is omitted for protocols in the primary package.
 - `protocol get` / `protocol export` → `{ "protocol": { "protocolId", "protocolNamespace", "protocolName", "protocolVersion", "protocolDescription"?, "protocolTargetType", "protocolStages": [...], "protocolTags"?, "protocolCreatedAt" } }`. The `protocol` field is the raw stored JSON; `get` and `export` return identical shapes.
-- `protocol stages` → `{ "stages": [{ "stageId", "name", "order", "dependsOn": ["<stageId>", ...] }] }`.
+- `protocol stages` → `{ "stages": [{ "stageId", "name", "purpose"?, "order", "dependsOn": ["<stageId>", ...] }] }`. The optional `purpose` field carries the spec-defined epistemic description of what understanding the stage builds (`ProtocolStage.purpose`); it is omitted when absent.
 - `protocol validate` → `{ "protocolId", "valid": true/false, "diagnostics": ["<message>", ...] }`. A valid protocol has `valid: true` and an empty `diagnostics` array.
 
 ---
