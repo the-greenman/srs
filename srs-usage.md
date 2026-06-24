@@ -388,7 +388,12 @@ srs protocol export <protocolId> --repo source-repo --pretty | \
   jq '.payload' | \
   srs protocol update <protocolId> --repo target-repo
 
-# Does NOT work — import requires the bare object; strip the envelope first
+# Does NOT work for import — .payload gives { "protocol": {...} }, which import won't unwrap
+srs protocol export <protocolId> --repo source-repo --pretty | \
+  jq '.payload' | \
+  srs protocol import --repo target-repo
+
+# Works for import — strip to the bare Protocol object first
 srs protocol export <protocolId> --repo source-repo --pretty | \
   jq '.payload.protocol' | \
   srs protocol import --repo target-repo
