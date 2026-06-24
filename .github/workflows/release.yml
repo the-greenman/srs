@@ -1,0 +1,61 @@
+name: Release
+
+# Publish a GitHub Release with the canonical schema archive on every merge to
+# master. Each run produces a uniquely tagged release. The asset name is stable
+# so the /releases/latest/download/schemas-2.0.tar.gz URL never changes.
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Publish schema archive
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Package schemas
+        id: package
+        run: |
+          set -euo pipefail
+          sha_short=$(git rev-parse --short HEAD)
+          tag="schemas-build.${{ github.run_number }}"
+          archive="schemas-2.0.tar.gz"
+          tar -czf "$archive" -C docs/schema/2.0 .
+          sha256sum "$archive" > "$archive.sha256"
+          {
+            echo "sha_short=$sha_short"
+            echo "tag=$tag"
+            echo "archive=$archive"
+            echo "count=$(ls docs/schema/2.0/*.json | wc -l | tr -d ' ')"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.package.outputs.tag }}" \
+            "${{ steps.package.outputs.archive }}" \
+            "${{ steps.package.outputs.archive }}.sha256" \
+            --target "${{ github.sha }}" \
+            --title "SRS schemas build ${{ github.run_number }} (${{ steps.package.outputs.sha_short }})" \
+            --notes "Automated schema archive built from \`${{ github.sha }}\`.
+
+          Contains ${{ steps.package.outputs.count }} JSON Schema files from \`docs/schema/2.0/\`.
+
+          Stable download URL (always resolves to the newest build):
+          \`\`\`bash
+          gh release download --repo ${{ github.repository }} --pattern schemas-2.0.tar.gz
+          # or
+          curl -fsSL https://github.com/${{ github.repository }}/releases/latest/download/schemas-2.0.tar.gz | tar -xz
+          \`\`\`
+
+          A matching \`schemas-2.0.tar.gz.sha256\` is attached for verification." \
+            --latest
