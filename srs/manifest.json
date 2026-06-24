@@ -2580,6 +2580,99 @@
         "topic:foundation"
       ],
       "tier": 2
+    },
+    {
+      "instanceId": "875488ee-499e-460b-bb8e-979785877828",
+      "path": "records/rfcs/rfc-009-root-record-type-anchor.json",
+      "tier": 2,
+      "tags": [
+        "topic:rfc"
+      ]
+    },
+    {
+      "instanceId": "956c99fd-2a59-4b88-bf87-5f6aa56292ff",
+      "path": "records/rfcs/rfc-009-change-a-rootTypeRefs.json",
+      "tier": 2,
+      "tags": [
+        "topic:rfc"
+      ]
+    },
+    {
+      "instanceId": "3deb00d2-2302-4259-a697-7a83933c8609",
+      "path": "records/rfcs/rfc-009-change-b-containerType-hint.json",
+      "tier": 2,
+      "tags": [
+        "topic:rfc"
+      ]
+    },
+    {
+      "instanceId": "58054458-353c-4383-bf4b-b63901a75454",
+      "path": "records/rfcs/rfc-009-change-c-container-metadata.json",
+      "tier": 2,
+      "tags": [
+        "topic:rfc"
+      ]
+    },
+    {
+      "instanceId": "c59a36db-5866-4b72-bc90-f0afa4afa1e0",
+      "path": "records/rfcs/rfc-009-change-d-containers-for-instance.json",
+      "tier": 2,
+      "tags": [
+        "topic:rfc"
+      ]
+    },
+    {
+      "instanceId": "bfc32106-910e-4aa4-8cf0-a9e437c93dd9",
+      "path": "records/rfcs/rfc-009-change-e-blueprint-rootTypes.json",
+      "tier": 2,
+      "tags": [
+        "topic:rfc"
+      ]
+    },
+    {
+      "instanceId": "87c56422-8124-43e4-993b-00e909af573b",
+      "path": "records/invariants/invariant-063.json",
+      "tier": 2,
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ]
+    },
+    {
+      "instanceId": "ba699995-0306-4dcb-be1e-27f20eedcf1d",
+      "path": "records/invariants/invariant-064.json",
+      "tier": 2,
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ]
+    },
+    {
+      "instanceId": "be8125aa-ef62-4054-8c74-28e092111524",
+      "path": "records/invariants/invariant-065.json",
+      "tier": 2,
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ]
+    },
+    {
+      "instanceId": "13b3461c-ecba-4a88-877d-ae0ea8fae0c5",
+      "path": "records/invariants/invariant-066.json",
+      "tier": 2,
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ]
+    },
+    {
+      "instanceId": "ed28a13e-4549-470e-b539-46c6101da1c9",
+      "path": "records/invariants/invariant-078.json",
+      "tier": 2,
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ]
     }
   ],
   "meta": {
