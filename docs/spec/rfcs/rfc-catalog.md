@@ -1700,3 +1700,10 @@ This RFC does not propose a new universal sharing mechanism. It sharpens the one
 
 That separation aligns with both the current SRS spec and the older field-library architecture: reusable fields stay reusable, template-like compositions stay packageable, and repository content can move independently without being confused for a definition library.
 
+**Title**: RFC-009: Root-record Type as the typing anchor for Containers, Document Views, and distributable units
+**RFC Number**: 009
+**Status**: accepted
+**Author**: Peter Brownell
+**Affected Components**: ext:views-l2 (DocumentView), Container (core), ext:blueprint (Blueprint), document-view.json, container.json, manifest.json, blueprint.json
+**Content**: Adds UUID-based typed anchors to the Blueprint→View→Container linkage: DocumentView.rootTypeRefs (ExactTypeRef[]) for Container matching; Blueprint.rootTypes formally defined as ExactTypeRef[]; containers_for_instance as a normative core operation; Container metadata spec alignment (description, vocabulary-backed tags). Invariants I-63 through I-66 and I-78. Tracked in srs#39 (original), srs#67 (blueprint extension).
+
