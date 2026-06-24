@@ -1,5 +1,8 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/package-manifest.json",
+  "blueprints": [
+    "blueprints/decision-log-e2e09a77.json"
+  ],
   "createdAt": "2026-01-01T00:00:00Z",
   "description": "",
   "documentViews": [
