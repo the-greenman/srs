@@ -2742,6 +2742,10 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 
 **[N+9]** When `DocumentView.format` is `"json"`, implementations MUST produce a structured JSON projection conforming to `document-view-output.json` rather than rendered markup. The `rendered` output field MUST be an empty string. Theme application, heading injection, and `depthOffset` do not apply. `(empty)` placeholder strings MUST NOT appear in any field value in the projection.
 
+
+
+**[N+9a]** When producing a JSON projection (Rule [N+9]), implementations MUST include all fields present in the rendering View's `fieldViews[]` that carry a value, regardless of `FieldView.visible`. `visible` is a rendering annotation, not a data-inclusion gate; it applies to text rendering only. To exclude a field from the projection, omit it from `fieldViews[]` entirely.
+
 **[N+10]** When `DocumentView.format` is `"json"`, the root `containerId` in the projection MUST be the `containerId` from the first `SectionSource` with `type === "container-subset"` found across all sections (sorted by `DocumentSection.order`). When no such source is present, `containerId` MUST be `null`. When multiple `container-subset` sources have differing `containerId` values, implementations MUST use the first and SHOULD emit a diagnostic.
 
 **[N+11]** When `ExportConfig.preamble` is rendered in `"json"` mode, all `{{heading-N}}` variables MUST be substituted as empty strings. Implementations MUST NOT emit the literal token in any json-mode output.
