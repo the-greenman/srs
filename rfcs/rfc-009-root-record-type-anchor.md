@@ -1,9 +1,10 @@
 > **GitHub issue**: [the-greenman/srs#39](https://github.com/the-greenman/srs/issues/39)
+> **Extension tracked in**: [the-greenman/srs#67](https://github.com/the-greenman/srs/issues/67)
 
 # RFC-009: Root-record Type as the typing anchor for Containers, Document Views, and distributable units
 
-**Status**: In Progress (Revision 3)
-**Affects**: `ext:views-l2` (`DocumentView`), `Container` (core), `document-view.json` schema, `container.json` schema, `manifest.json` schema
+**Status**: Accepted (Revision 5)
+**Affects**: `ext:views-l2` (`DocumentView`), `Container` (core), `ext:blueprint` (`Blueprint`), `document-view.json` schema, `container.json` schema, `manifest.json` schema, `blueprint.json` schema (new)
 **Author**: Peter Brownell
 **Date**: 2026-06-09
 **Builds on**: RFC-006 (Vocabulary Substrate — Terms, Vocabularies, Lifecycles), RFC-008 (Heterogeneous ContainerSubset Sections — `typeDispatch`)
@@ -17,12 +18,14 @@
 | 1 | 2026-06-09 | Initial draft |
 | 2 | 2026-06-09 | Address review findings: add exact TypeRef JSON Schema shape to Schema changes table; tighten I-64 definition of "consistent" (bare `name`, not `namespace/name`); fix I-65 to cite Vocabulary (RFC-006) not ext:lifecycle; clarify rootInstanceIds-absent semantics; move containers_for_instance to core; strengthen DV-Rx2; move Change E to Rationale; reword DV-Rx1; fix Open Questions phrasing |
 | 3 | 2026-06-09 | Address Rev 2 review findings: rename document-view-scoped type `TypeRef` → `ExactTypeRef` to avoid name collision with existing spec-level `TypeRef` (Protocol/Blueprint, `typeVersion?: optional`); add RFC-008 to Builds on; clarify I-64 validity semantics (hint mismatch is diagnostic-only, Container stays valid); add migration note for I-64; split I-65 vocabulary rule from existing fieldValues prohibition (cross-reference only); reword DV-Rx2 "disqualify" → explicit non-match semantics; drop "primary" qualifier from Change B MUST NOT; add manifest.json to schema sync list; join note for ExactTypeRef schema fragments; rename section "Resolved Questions"; improve DV-Rx1 "fallback" wording |
+| 4 | 2026-06-24 | Add Change E: formally define Blueprint.rootTypes as ExactTypeRef[] to complete the fully UUID-anchored chain (Blueprint.rootTypes → DocumentView.rootTypeRefs → Container.rootInstanceIds); add conformance rule I-78; introduce blueprint.json schema (new file); extend Affects line; revise Alt D note; revise Abstract; add Problem 4 to Motivation. Tracked in srs#67. |
+| 5 | 2026-06-24 | Address Rev 4 review findings: renumber I-67 → I-78 (I-67–I-77 claimed by RFC-010); add no-overlap fallback spec to Change E discovery chain; add migration notes for optional-typeVersion rootTypes entries and for missing rootTypes key; clarify Change E typed chain is structural compatibility not provenance; add rootInstanceIds[0]-as-typing-anchor normative statement to Change A; fix I-63/I-78/I-66 "the Package" ambiguity for multi-package repos; simplify I-66 escape hatch; fix blueprint.json RelationSpec.relationType to cite com.semanticops.srs not retired ext:recommended-relations; add RelationSpec inline shape to schema changes table; note container.json additionalProperties gap; add "no open questions" statement; add RFC-P status note; fix DV-Rx1 "validation" → "matching"; update "New file" label in schema changes table. |
 
 ---
 
 ## Abstract
 
-The blueprint → view → container linkage is currently load-bearing on free-form strings: a Blueprint declares `name` ("guide"), a `DocumentView` declares `containerType: "guide"`, and a `Container` stores `containerType: "guide"`. Nothing validates these strings, nothing enforces referential integrity, a rename breaks the join silently, and namespace collisions are possible. This RFC adds `rootTypeRefs?: ExactTypeRef[]` to `DocumentView` as a validated, UUID-based typed anchor that replaces the string join. `containerType` is soft-deprecated to a validated hint; tools that predate this RFC may continue to use `containerType` string matching. This RFC also blesses the `containers_for_instance` reverse lookup as a normative operation, and reconciles the Container metadata drift in the Rust implementation (`description` and `tags` are already present in the deployed struct but absent from the spec Container definition).
+The blueprint → view → container linkage is currently load-bearing on free-form strings: a Blueprint declares `name` ("guide"), a `DocumentView` declares `containerType: "guide"`, and a `Container` stores `containerType: "guide"`. Nothing validates these strings, nothing enforces referential integrity, a rename breaks the join silently, and namespace collisions are possible. This RFC adds `rootTypeRefs?: ExactTypeRef[]` to `DocumentView` as a validated, UUID-based typed anchor that replaces the string join. `containerType` is soft-deprecated to a validated hint; tools that predate this RFC may continue to use `containerType` string matching. This RFC also formally defines `Blueprint.rootTypes` as `ExactTypeRef[]` (the same UUID-based shape), completing the fully typed chain: `Blueprint.rootTypes → DocumentView.rootTypeRefs → Container.rootInstanceIds` — no string joins anywhere in this linkage. Additionally, this RFC blesses the `containers_for_instance` reverse lookup as a normative operation, and reconciles the Container metadata drift in the Rust implementation (`description` and `tags` are already present in the deployed struct but absent from the spec Container definition).
 
 ---
 
@@ -49,6 +52,17 @@ The Rust `Container` struct has grown `description` and `tags` fields that the s
 ### Problem 3 — No normative `containers_for_instance` operation
 
 The reverse lookup "given an instance, which Containers include it?" is already implemented in srs-rust (`containers_for_instance`) and exposed via CLI (`srs container list --member <id>`) and WASM. Tools depend on this operation for discovery. However, the spec does not define its semantics, leaving the operation as an implementation detail rather than a guaranteed behaviour.
+
+### Problem 4 — Blueprint `rootTypes` uses weak TypeRef; the typed chain is incomplete
+
+Changes A–D remove string joins from the `DocumentView↔Container` side of the linkage but leave the `Blueprint` side under-specified. The `Blueprint.rootTypes` field exists in practice (Rust implementation, gallery examples) with the shape `{ typeId, typeVersion }`, but:
+
+- `typeVersion` is optional in the existing Blueprint TypeRef — allowing a Blueprint to declare a root type without pinning a version, which is inconsistent with the version-exact anchor semantics required by `DocumentView.rootTypeRefs` (Change A).
+- `Blueprint.rootTypes` has no normative conformance rule in the spec.
+- There is no schema file (`blueprint.json`) in the `docs/schema/2.0/` directory.
+- Without a normative definition, tools cannot rely on `Blueprint.rootTypes` for view discovery.
+
+The full typed chain — `Blueprint.rootTypes → DocumentView.rootTypeRefs → Container.rootInstanceIds` — remains partially string-based until `Blueprint.rootTypes` adopts `ExactTypeRef` semantics.
 
 ---
 
@@ -85,7 +99,7 @@ ExactTypeRef {
 
 **Multi-value semantics:** when `rootTypeRefs` contains multiple entries, a Container matches if its root Record's type matches **any** entry (OR semantics). This allows a DocumentView to apply to multiple related root types (e.g. a view suitable for both `guide@1` and `guide@2`).
 
-**Resolution semantics:** a DocumentView with `rootTypeRefs` present applies to a Container when the Container's `rootInstanceIds` is non-empty and the root Record (first entry of `rootInstanceIds`) has a `typeId`/`typeVersion` that matches one of the listed `ExactTypeRef` entries. When `rootInstanceIds` is **absent or empty**, no root-type restriction applies — the DocumentView applies to all Containers, the same as when `rootTypeRefs` is absent. Implementations SHOULD emit an informational diagnostic when `rootTypeRefs` is present but no root instance exists to validate against.
+**Resolution semantics:** a DocumentView with `rootTypeRefs` present applies to a Container when the Container's `rootInstanceIds` is non-empty and the root Record (first entry of `rootInstanceIds`) has a `typeId`/`typeVersion` that matches one of the listed `ExactTypeRef` entries. **The typing anchor is `rootInstanceIds[0]` — the first entry.** Matching against subsequent entries in `rootInstanceIds` for view selection is not performed. When `rootInstanceIds` is **absent or empty**, no root-type restriction applies — the DocumentView applies to all Containers, the same as when `rootTypeRefs` is absent. Implementations SHOULD emit an informational diagnostic when `rootTypeRefs` is present but no root instance exists to validate against.
 
 **Relationship to RFC-008 `typeDispatch`:** RFC-008 keys dispatch maps on `namespace/name` strings (version-independent) for render dispatch within a single section. `rootTypeRefs` keys on `typeId`+`typeVersion` (UUID-based, version-specific) for the DocumentView↔Container typed anchor. These are different concerns with different precision requirements: dispatch should survive type version bumps; the typed anchor is a validation claim resolved against a specific package version.
 
@@ -124,21 +138,48 @@ Add the following normative operation to the **core Container specification** (n
 
 This is a core operation, not an extension-gated one, because Containers are core entities and tools need reliable root-record→container discovery regardless of which optional extensions are declared.
 
+### Change E — Define `Blueprint.rootTypes` as `ExactTypeRef[]`
+
+The `Blueprint` entity (part of `ext:blueprint`) gains a formally normative definition of its `rootTypes` field, replacing the existing informal practice of using an optional-typeVersion TypeRef.
+
+**`rootTypes: ExactTypeRef[]`** — declares the Record Type(s) that this Blueprint produces as root Records when instantiated into a Container. Each entry MUST be an `ExactTypeRef` (both `typeId` and `typeVersion` required), using the same shape defined in Change A. A Blueprint with an empty `rootTypes` array is permitted — extraction-context blueprints may not prescribe a root type.
+
+**Typed discovery chain (normative):** The complete, UUID-anchored linkage for blueprint→view→container discovery is:
+1. `Blueprint.rootTypes` — declares the ExactTypeRef(s) of root Records this Blueprint produces.
+2. `DocumentView.rootTypeRefs` (Change A) — declares the ExactTypeRef(s) a DocumentView applies to.
+3. `Container.rootInstanceIds` — holds the actual root Record instance IDs.
+
+A DocumentView is a candidate for a Container created by a given Blueprint when any entry in `DocumentView.rootTypeRefs` matches any entry in `Blueprint.rootTypes` (matched on both `typeId` and `typeVersion`). Implementations SHOULD use this typed match as the primary means of DocumentView discovery; `containerType` string matching (pre-RFC-009 behaviour) MAY be used as a fallback when `rootTypeRefs` or `rootTypes` is absent on either side.
+
+**No-overlap fallback:** When the typed match produces no candidate DocumentViews, implementations SHOULD fall back to DocumentViews that carry no `rootTypeRefs` (which apply to all Containers per Change A's absent-`rootTypeRefs` semantics). A DocumentView that carries `rootTypeRefs` but has no matching entry for the Container's root type simply does not apply — it is not an error, and it is not included in the fallback set.
+
+**Structural compatibility, not provenance:** This typed match is a *structural compatibility* check — it determines which DocumentViews are type-compatible with a given Blueprint's output. It does not assert that a specific Blueprint instance created a specific Container; Container provenance is tracked separately via Relation edges or lineage fields. Implementations MUST NOT infer Container provenance from the typed match alone.
+
+**Migration — existing Blueprints with optional `typeVersion` in `rootTypes`:** Existing Blueprint files whose `rootTypes` entries carry only `typeId` (no `typeVersion`) will fail schema validation under `blueprint.json` and will not satisfy I-78. Implementations SHOULD load such Blueprints with a diagnostic, treat the offending entry as unresolvable (not usable for typed matching), and continue loading — the Blueprint is not wholly invalid because of one unresolvable entry. Authors SHOULD add the `typeVersion` integer to restore full ExactTypeRef conformance.
+
+**Migration — existing Blueprints that omit `rootTypes` entirely:** `blueprint.json` marks `rootTypes` as required (an empty array is valid). Existing Blueprint files that lack the `rootTypes` key entirely MUST add `rootTypes: []` to remain schema-valid.
+
+**Relationship to RFC-P (srs#42):** RFC-P adds `subBlueprintRefs` for multi-container composition and the broader Blueprint↔Container typed association for nesting. Change E is a narrower prerequisite: it establishes that `Blueprint.rootTypes` uses the same `ExactTypeRef` shape as `DocumentView.rootTypeRefs`, so the single-container linkage is fully typed before RFC-P layers composition on top. (RFC-P is a working title for a forthcoming RFC; it has not been formally numbered at the time of this writing.)
+
+**Schema:** A new `blueprint.json` schema file is introduced in `docs/schema/2.0/` (see Schema changes).
+
 ---
 
 ## Conformance Rules
 
-> **[I-63]** When `DocumentView.rootTypeRefs` is present and non-empty, each `ExactTypeRef` entry MUST resolve to a Type that exists in the Package (matched by both `typeId` and `typeVersion`). An `ExactTypeRef` entry that does not resolve MUST produce a diagnostic and MUST NOT be used for Container matching.
+> **[I-63]** When `DocumentView.rootTypeRefs` is present and non-empty, each `ExactTypeRef` entry MUST resolve to a Type that exists in the Package (the union of all packages in scope per the repository's `packageRef`/`packageRefs`; matched by both `typeId` and `typeVersion`). An `ExactTypeRef` entry that does not resolve MUST produce a diagnostic and MUST NOT be used for Container matching.
 
 > **[I-64]** When a Container has one or more `rootInstanceIds` and also carries `containerType`, implementations SHOULD emit a diagnostic if `containerType` does not equal the resolved root Type's `name` field (the local name within its namespace, not `namespace/name`). The root Record's Type is authoritative; a `containerType` mismatch does NOT make the Container invalid — it means the hint is stale. Containers with no `rootInstanceIds` may carry any `containerType` value without triggering this rule.
 
 > **[I-65]** When a `Vocabulary` in the repository package declares `Term` entries for a given tag key, Container `tags` bearing that key MUST resolve against those Terms per RFC-006 vocabulary resolution rules. Free-string tags are valid when no Vocabulary entry governs the key.
 
-> **[I-66]** All conforming SRS implementations that support Containers MUST implement the `containers_for_instance` operation as defined in Change D. The operation MUST return every Container satisfying at least one of the three inclusion conditions. The result set MUST be consistent with the repository's current state of `rootInstanceIds`, `memberInstanceIds`, and `contains` Relations.
+> **[I-66]** All conforming SRS implementations MUST implement the `containers_for_instance` operation as defined in Change D. The operation MUST return every Container satisfying at least one of the three inclusion conditions. The result set MUST be consistent with the repository's current state of `rootInstanceIds`, `memberInstanceIds`, and `contains` Relations.
 
-> **[DV-Rx1]** When a DocumentView declares `rootTypeRefs`, Container matching MUST use UUID-based `rootTypeRefs` validation. When `rootTypeRefs` is absent on a DocumentView, implementations MAY use `containerType` string matching for Container selection (pre-RFC-009 behavior).
+> **[DV-Rx1]** When a DocumentView declares `rootTypeRefs`, Container matching MUST use UUID-based `rootTypeRefs` matching. When `rootTypeRefs` is absent on a DocumentView, implementations SHOULD use `containerType` string matching for Container selection (pre-RFC-009 behavior).
 
 > **[DV-Rx2]** `DocumentView.rootTypeRefs` matching is NOT affected by the resolution order defined in RFC-008 [DV-Dx2]. RFC-009 `rootTypeRefs` governs which DocumentViews apply to a given Container (view selection); RFC-008 `typeDispatch` governs which L1 View renders a record within a section (render dispatch). These operate at different levels and do not interact. A type version change does **not** automatically invalidate a DocumentView. `rootTypeRefs` matching is version-exact: a DocumentView whose `rootTypeRefs` lists `guide@1` will not match Containers rooted in `guide@2` — it simply does not apply to them (it is not broken or invalid). To extend coverage to a new type version, the DocumentView author must explicitly add the new `ExactTypeRef` entry.
+
+> **[I-78]** Each entry in `Blueprint.rootTypes` MUST be an `ExactTypeRef`: both `typeId` (UUID) and `typeVersion` (integer ≥ 1) MUST be present. Implementations MUST resolve each entry against the Package (the union of all packages in scope per the repository's `packageRef`/`packageRefs`) at Blueprint load time; an entry whose `typeId`/`typeVersion` does not resolve MUST produce a diagnostic (see Change E migration notes for existing Blueprints with absent `typeVersion`). An empty `Blueprint.rootTypes` array is valid and produces no diagnostics.
 
 ---
 
@@ -149,12 +190,13 @@ The two fragments in the `document-view.json` row together form a single coheren
 | Schema file | Change |
 |---|---|
 | `document-view.json` | **(1)** Add `rootTypeRefs` optional property to the DocumentView object: `{ "type": "array", "items": { "$ref": "#/$defs/ExactTypeRef" }, "description": "When set, this DocumentView applies to Containers whose root Record's resolved Type (typeId + typeVersion) matches one of these refs (version-exact). When absent, no root-type restriction applies." }` **(2)** Add `ExactTypeRef` to `$defs` (note: distinct from the existing spec-level `TypeRef` in Protocol/Blueprint where typeVersion is optional): `{ "type": "object", "required": ["typeId", "typeVersion"], "additionalProperties": false, "properties": { "typeId": { "type": "string", "format": "uuid", "description": "Stable UUID of the Type." }, "typeVersion": { "type": "integer", "minimum": 1, "description": "Version of the Type this ref targets (required — version-exact anchor)." } } }` **(3)** Update `containerType` description to: "Soft-deprecated back-compat hint. When rootTypeRefs is present, MUST NOT be used for Container matching. Retained for pre-RFC-009 tools." |
-| `container.json` | **(1)** Update `tags` description to: "Vocabulary-backed topic labels. When a Vocabulary in the package declares Terms for a tag key, tags MUST resolve per RFC-006. Free-string tags are valid when no Vocabulary governs the key." **(2)** Update `containerType` description to: "Soft-deprecated hint. When rootInstanceIds is present, SHOULD equal the resolved root Type's name field (bare name, not namespace/name). A mismatch is diagnostic-only; the Container remains valid. See I-64." The `description` field is already present in the schema and requires no structural change. |
+| `container.json` | **(1)** Update `tags` description to: "Vocabulary-backed topic labels. When a Vocabulary in the package declares Terms for a tag key, tags MUST resolve per RFC-006. Free-string tags are valid when no Vocabulary governs the key." **(2)** Update `containerType` description to: "Soft-deprecated hint. When rootInstanceIds is present, SHOULD equal the resolved root Type's name field (bare name, not namespace/name). A mismatch is diagnostic-only; the Container remains valid. See I-64." The `description` field is already present in the schema and requires no structural change. **(3)** Add `"additionalProperties": false` to the root object — `container.json` is the only 2.0 entity schema that currently lacks this guard; adding it aligns it with `document-view.json`, `blueprint.json`, and all other entity schemas. |
 | `manifest.json` | Update `containerType` description in both the embedded Container object and `ContainerIndexEntry` to match the updated `container.json` description: "Soft-deprecated hint. When rootInstanceIds is present, SHOULD equal the resolved root Type's name field (bare name, not namespace/name). See I-64." |
+| `blueprint.json` | **New file (added in Rev 4).** Add `blueprint.json` to `docs/schema/2.0/`. The Blueprint object schema must include: `id` (UUID, required), `namespace` (string, required), `name` (string, required), `version` (integer ≥ 1, required), `description` (string, required), `rootTypes` (array of `ExactTypeRef`, required, may be empty — ExactTypeRef defined in `$defs` with both `typeId` UUID and `typeVersion` integer ≥ 1 required), `structure` (array of `RelationSpec`, optional — `RelationSpec` defined in `$defs` as: `{ relationType: string (required), sourceType: ExactTypeRef (required), targetType: ExactTypeRef (required), cardinality?: 'one-to-one' \| 'one-to-many' \| 'many-to-one' \| 'many-to-many', required?: boolean }`), `requiredTypes` (array of ExactTypeRef, optional), `aiGuidance` (object, optional), `tags` (array of strings, optional), `createdAt` (date-time, required), `lineage` (object, optional), `provenance` (object, optional). The `ExactTypeRef` `$defs` entry is the same shape as `document-view.json`; both schemas SHOULD be kept in sync, with unification into a shared `$defs` reference deferred to a future RFC. |
 
 Schema changes must be synced to:
 - `srs-rust/crates/srs-schema/schemas/2.0/` (via `scripts/check-schema-sync.sh`)
-- `srs-vscode/schemas/2.0/` (`document-view.json` update; `container.json` and `manifest.json` if present)
+- `srs-vscode/schemas/2.0/` (`document-view.json` update; `container.json`, `manifest.json`, and `blueprint.json` if present)
 
 **Note on spec records:** in addition to the JSON Schema files, the spec records in `srs/srs/records/` that describe the Container entity, the `ext:views-l2` extension, and the new invariants I-63 through I-66 must be created or updated when Stage 6 (authoring spec records) runs.
 
@@ -192,6 +234,14 @@ The fundamental prohibition stands: Containers carry no typed `fieldValues`, do 
 
 The three conditions for container inclusion (rootInstanceIds, memberInstanceIds, contains traversal) are all core Container and Relation concepts. Gating this operation behind `ext:repository` would mean that a system supporting Containers but not the repository layout extension could not reliably answer "which containers hold this instance?" — a fundamental navigation need. Core operations on core entities belong in the core spec.
 
+### Why Blueprint.rootTypes uses ExactTypeRef (required typeVersion) rather than optional TypeRef
+
+The existing spec-level `TypeRef` (used in Protocol and Blueprint contexts before this RFC) allows `typeVersion` to be optional — a loose reference sufficient when "any version of this Type" is intended. `Blueprint.rootTypes` requires `ExactTypeRef` for the same reason `DocumentView.rootTypeRefs` does: these entries are package-validation-time claims. A tool discovering DocumentViews for a Container created by a Blueprint needs to compare entries in both arrays. If one side has required versions and the other has optional versions, the comparison logic must accommodate partial-version entries — adding complexity for no benefit. The Container's root Record already binds to a specific `typeId`+`typeVersion` (a Record's type binding is always version-exact). Making `Blueprint.rootTypes` match that precision at the Blueprint authoring step keeps the full chain consistent: every ExactTypeRef in the chain can be resolved, compared, and validated against the Package without special-casing optional versions.
+
+### Why `blueprint.json` is a new file rather than an addition to an existing schema
+
+Blueprint is an independently declared `ext:blueprint` entity — its schema belongs alongside the other 2.0 entity schemas, not embedded in `package-manifest.json` (which only indexes paths to Blueprint files). A standalone `blueprint.json` follows the same convention as `document-view.json`, `container.json`, etc., and gives implementations a single canonical reference for Blueprint validation.
+
 ### Why the typed "head" Record pattern matters (informative)
 
 A distributable unit (guide, report, governance document) is a Container whose **root Record is a typed head Record** carrying distribution fields (title, version, author, theme reference, intended views). This pattern:
@@ -218,9 +268,9 @@ Define a new `ContainerType` entity analogous to `RelationTypeDefinition`, with 
 
 Remove `containerType` from both `Container` and `DocumentView` and require all tooling to use `rootTypeRefs` / root-record type resolution. **Rejected.** This is a breaking change for existing repositories and tooling. The soft-deprecation path (retain `containerType` as a validated hint) preserves back-compat while directing new authoring toward `rootTypeRefs`.
 
-### Alt D — Add `rootTypeRefs` to Blueprint (not DocumentView)
+### Alt D — Add `rootTypeRefs` to Blueprint instead of DocumentView
 
-Target the Blueprint struct directly, since the Blueprint defines the authoring side of the container→view join. **Rejected for this RFC.** The Blueprint↔Container typed association is a separate concern tracked in srs#42 (RFC-P). This RFC focuses on the DocumentView↔Container typed anchor.
+Target the Blueprint struct directly, since the Blueprint defines the authoring side of the container→view join. **Rejected as stated.** This RFC focuses on the DocumentView↔Container typed anchor. However, Change E (Rev 4) takes a complementary approach: both sides of the join now use `ExactTypeRef`. Blueprint does not get a new `rootTypeRefs` property; instead, the existing `rootTypes` field is formally defined as `ExactTypeRef[]`. This is a tightening of the constraint, not purely a formalisation — authors whose existing `rootTypes` entries omit `typeVersion` must add it (see Change E migration notes). The broader Blueprint↔Container composition (sub-blueprints, multi-container typing) remains in RFC-P (srs#42), which builds on this RFC's foundation.
 
 ### Alt E — Make I-64 a hard validity error (matching Invariant 28)
 
@@ -235,3 +285,8 @@ Invariant 28 makes Records invalid when `typeId`/`typeVersion` conflict with `ty
 | 1 | Should the RFC introduce a new named type or reuse the existing `TypeRef`? | New named `ExactTypeRef` in `document-view.json` `$defs`, distinct from the existing spec-level `TypeRef` (Protocol/Blueprint) where `typeVersion` is optional. `ExactTypeRef` requires `typeVersion` as a version-exact anchor. Future RFC may unify them if semantics converge. |
 | 2 | Should `rootTypeRefs` matching be version-exact or version-range? | Version-exact (matching both `typeId` and `typeVersion`). Version ranges add implementation complexity; multi-entry OR semantics handle the common "document view works for both v1 and v2" case. |
 | 3 | What happens when `rootInstanceIds` is absent? | No root-type restriction applies — same as when `rootTypeRefs` is absent. Implementations SHOULD warn when `rootTypeRefs` is present but unvalidatable. |
+| 4 | Should I-67 (Blueprint rootTypes rule) use a different number? | Renumbered to I-78 in Rev 5. I-67 through I-77 are claimed by RFC-010 (assisted three-way merge). |
+| 5 | What happens when the typed discovery match returns no DocumentViews? | Fall back to DocumentViews with no `rootTypeRefs` (which apply to all Containers). DocumentViews with non-matching `rootTypeRefs` are simply inapplicable — not an error. |
+| 6 | Are Blueprint.rootTypes entries structural compatibility claims or provenance assertions? | Structural compatibility only. Container provenance is tracked via Relation edges or lineage fields, not inferred from the typed match. |
+
+There are no open questions at this revision.
