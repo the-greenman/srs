@@ -98,6 +98,8 @@ A vocabulary in `open` mode accepts any tag key. A vocabulary in `closed` mode o
 
 ### Blueprint Discovery and Schema Projection
 
+Blueprint JSON files are validated against `docs/schema/2.0/blueprint.json` (RFC-009, `ext:blueprint`). Key constraint: `rootTypes` is `ExactTypeRef[]` — both `typeId` (UUID) and `typeVersion` (integer) are required. See [I-78 rules](#blueprintrootypes-must-be-exacttyperef-rfc-009-i-78-change-e) for migration guidance.
+
 When a repo's package declares Blueprints (multi-record document definitions), use the blueprint commands to inspect structure and generate validation schemas:
 
 ```bash
@@ -499,6 +501,24 @@ Changing a Field's `namespace` or `name` requires a new UUID — it is a new Fie
 A `DocumentView` selects which `Container`s it applies to via `rootTypeRefs` — a list of version-exact `ExactTypeRef` (`{ typeId, typeVersion }`) anchors matched against a Container's root Record's resolved Type. `containerType` on both `DocumentView` and `Container` is a soft-deprecated, free-string back-compat hint; it is **not** the load-bearing join when `rootTypeRefs` is present. Two `repo validate` diagnostics are **advisory `Warning`s** — they do not make the repository or container invalid, and `ok`/exit code are unaffected:
 - **I-63** — a `rootTypeRefs` entry that does not resolve to a package Type (it is simply ignored for matching).
 - **I-64** — a Container whose `containerType` does not equal its root Record's resolved Type `name` (the hint is stale). Fix by updating `containerType` to the bare type name, or ignore it. Filter views by anchor with `srs document-view list --root-type <typeId>`.
+
+### Container tags and vocabulary resolution (RFC-009 I-65)
+Container `tags` follow the same vocabulary resolution rules as Record tags (RFC-006). When a Vocabulary in the package declares Terms for a given tag key, Container tags bearing that key **MUST** resolve against those Terms. Free-string tags are valid when no Vocabulary governs the key.
+
+### `containers_for_instance` is a normative core operation (RFC-009 I-66)
+The reverse lookup `containers_for_instance(instanceId) → Container[]` is a **normative** SRS operation, not an implementation detail. A Container includes an instance if:
+1. the instance appears in `Container.rootInstanceIds`, or
+2. the instance appears in `Container.memberInstanceIds`, or
+3. a `contains` Relation exists from any of the Container's root instances to the queried instance (direct or transitive, per implementation policy).
+
+CLI: `srs container list --member <instanceId> --repo <path>`. The result is consistent with current `rootInstanceIds`, `memberInstanceIds`, and `contains` Relations in the repository.
+
+### Blueprint.rootTypes must be ExactTypeRef[] (RFC-009 I-78, Change E)
+`Blueprint.rootTypes` uses the same `ExactTypeRef` shape as `DocumentView.rootTypeRefs` — **both** `typeId` (UUID) and `typeVersion` (integer ≥ 1) are **required**. Each entry MUST resolve against the Package at Blueprint load time; an unresolvable entry produces a diagnostic but does not invalidate the whole Blueprint.
+
+This completes the fully UUID-anchored typed chain: `Blueprint.rootTypes → DocumentView.rootTypeRefs → Container.rootInstanceIds`. No string joins remain in this linkage.
+
+**Migration:** existing Blueprint files whose `rootTypes` entries carry only `typeId` (no `typeVersion`) will fail `blueprint.json` schema validation and produce a diagnostic. Add the `typeVersion` integer to restore full ExactTypeRef conformance. An empty `rootTypes: []` array is valid.
 
 ---
 
