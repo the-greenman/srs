@@ -137,6 +137,34 @@ The payload is `{ "payload": { "schema": { ... }, "diagnostics": [] } }`. Non-fa
 (unresolvable type references, unparseable cardinality) appear in `payload.diagnostics` rather
 than causing a command failure.
 
+### Protocol Discovery
+
+Protocols are package definitions — JSON files under `package/protocols/`, registered in `package.json → protocols[]`, parallel to blueprints. They are not instance Records and do not appear in `srs record list` output. The `protocol list` entries use **short field names** (`namespace`, `name`, `version`); the full Protocol JSON returned by `get`, `export`, `import`, and `update` uses **prefixed field names** (`protocolNamespace`, `protocolName`, `protocolVersion`). Do not confuse the two shapes when piping commands.
+
+```bash
+# What protocols exist in the package?
+srs protocol list --repo <path> --pretty
+
+# Get a protocol definition by ID (returns full Protocol JSON with prefixed names)
+srs protocol get <protocolId> --repo <path> --pretty
+
+# List stages for a protocol
+srs protocol stages <protocolId> --repo <path> --pretty
+
+# Validate a protocol definition (checks stage dependency invariants: no cycles, order consistent with dependsOn)
+srs protocol validate <protocolId> --repo <path> --pretty
+
+# Export a protocol definition as portable JSON (for import into another repo)
+srs protocol export <protocolId> --repo <path> --pretty
+```
+
+Payload shapes (all wrapped in the standard `{ "ok": true, "payload": { ... } }` envelope):
+
+- `protocol list` → `{ "protocols": [{ "protocolId", "namespace", "name", "version", "stageCount", "sourcePackage"? }] }`. The optional `sourcePackage` is present only when the protocol is defined in a sub-package (e.g. `package/ext`); it is omitted for protocols in the primary package.
+- `protocol get` / `protocol export` → `{ "protocol": { "protocolId", "protocolNamespace", "protocolName", "protocolVersion", "protocolDescription"?, "protocolTargetType", "protocolStages": [...], "protocolTags"?, "protocolCreatedAt" } }`. The `protocol` field is the raw stored JSON; `get` and `export` return identical shapes.
+- `protocol stages` → `{ "stages": [{ "stageId", "name", "order", "dependsOn": ["<stageId>", ...] }] }`.
+- `protocol validate` → `{ "protocolId", "valid": true/false, "diagnostics": ["<message>", ...] }`. A valid protocol has `valid: true` and an empty `diagnostics` array.
+
 ---
 
 ## 4. Write Workflows
@@ -303,6 +331,80 @@ srs vocabulary promote --repo <path> <vocabularyId>
 ```
 
 If promotion is blocked, the response has `"ok": false` and `payload.unresolvableKeys` lists the tag keys with no active term. Add terms for those keys (or accept that existing records will carry invalid tags after close) before retrying. If the vocabulary has a `promotionWindow.until` date that has not yet passed, promotion succeeds even with unresolvable keys (grace window).
+
+### Importing a Protocol Definition
+
+Protocols are package definitions (not instance Records). Use `protocol import` to register a new protocol in a repo's package, and `protocol update` to replace an existing one.
+
+**`protocol import`** reads a bare Protocol JSON object from stdin and writes it as a package definition:
+
+```bash
+srs protocol import --repo <path> <<'EOF'
+{
+  "protocolId": "<new-uuid4>",
+  "protocolNamespace": "com.example",
+  "protocolName": "my-extraction-protocol",
+  "protocolVersion": 1,
+  "protocolDescription": "Optional description of the protocol",
+  "protocolTargetType": "<typeId-uuid>",
+  "protocolStages": [
+    {
+      "stageId": "<uuid>",
+      "name": "Stage One",
+      "order": 1,
+      "dependsOn": []
+    },
+    {
+      "stageId": "<uuid>",
+      "name": "Stage Two",
+      "order": 2,
+      "dependsOn": ["<stage-one-stageId>"]
+    }
+  ],
+  "protocolTags": ["optional-tag"],
+  "protocolCreatedAt": "<iso8601>"
+}
+EOF
+```
+
+Use `--package <sub-path>` to import into a sub-package (e.g. `--package package/ext`); defaults to the primary package.
+
+`protocol import` accepts **only the bare Protocol JSON object** — it does not unwrap `{ "protocol": { ... } }` envelopes. Do not pipe the output of `protocol export` directly into `protocol import`.
+
+**`protocol update`** is a full replace. It accepts either the bare Protocol JSON object or a `{ "protocol": { ... } }` wrapper (so piping from `protocol export` works directly):
+
+```bash
+# Fetch current state first; then send the full Protocol JSON
+srs protocol get <protocolId> --repo <path> --pretty
+# edit the output, then:
+srs protocol update <protocolId> --repo <path> < updated-protocol.json
+```
+
+Export-pipe patterns:
+
+```bash
+# Works — update unwraps the { "protocol": {...} } envelope automatically
+srs protocol export <protocolId> --repo source-repo --pretty | \
+  jq '.payload' | \
+  srs protocol update <protocolId> --repo target-repo
+
+# Does NOT work — import requires the bare object; strip the envelope first
+srs protocol export <protocolId> --repo source-repo --pretty | \
+  jq '.payload.protocol' | \
+  srs protocol import --repo target-repo
+```
+
+Both `import` and `update` return `{ "protocol": { ... } }` — the stored Protocol JSON.
+
+**`protocol delete`** removes the definition file and its `package.json` entry:
+
+```bash
+srs protocol delete <protocolId> --repo <path> --pretty
+```
+
+Payload: `{ "protocolId": "<deleted-id>" }`.
+
+`protocol create` (a successor to `import` — pending srs-rust#177) will be documented here once it lands.
 
 ### Validate After Every Write Batch
 
