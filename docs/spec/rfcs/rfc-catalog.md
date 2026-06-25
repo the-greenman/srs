@@ -1707,3 +1707,10 @@ That separation aligns with both the current SRS spec and the older field-librar
 **Affected Components**: ext:views-l2 (DocumentView), Container (core), ext:blueprint (Blueprint), document-view.json, container.json, manifest.json, blueprint.json
 **Content**: Adds UUID-based typed anchors to the Blueprint→View→Container linkage: DocumentView.rootTypeRefs (ExactTypeRef[]) for Container matching; Blueprint.rootTypes formally defined as ExactTypeRef[]; containers_for_instance as a normative core operation; Container metadata spec alignment (description, vocabulary-backed tags). Invariants I-63 through I-66 and I-78. Tracked in srs#39 (original), srs#67 (blueprint extension).
 
+**Title**: RFC-M: DocumentView query extensions — lifecycle-state exclusion and repository-wide type queries
+**RFC Number**: M
+**Status**: draft
+**Author**: Peter Brownell
+**Affected Components**: ext:views-l2 (SectionSource.type-query), document-view.json
+**Content**: Adds three optional fields to SectionSource.type-query: lifecycleStates (multi-value inclusion filter), excludeLifecycleStates (exclusion filter), and containerScope (explicit | repository | subtree). Enables the decision-log pattern: rendering all non-superseded/non-abandoned decisions across a repository without listing every container ID. Tracked in the-greenman/srs#41.
+
