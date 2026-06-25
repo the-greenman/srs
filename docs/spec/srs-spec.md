@@ -1497,7 +1497,19 @@ type SectionSource =
       // For cross-system portability, use namespace/name format (e.g. "core/decision").
       // A bare string like "decision" is a single-system convention.
       lifecycleState?: string
+      // Single-state filter (back-compat). Prefer lifecycleStates for new DocumentViews.
+      lifecycleStates?: string[]
+      // RFC-M. When present and non-empty, restricts to Records whose lifecycleState
+      // matches any listed value (OR semantics). Requires ext:lifecycle. Invariant I-M1.
+      excludeLifecycleStates?: string[]
+      // RFC-M. When present and non-empty, excludes Records whose lifecycleState matches
+      // any listed value. Applied after lifecycleStates. Requires ext:lifecycle. Invariant I-M2.
       containerIds?: UUID[]
+      containerScope?: "explicit" | "repository" | "subtree"
+      // RFC-M. Controls which containers are queried. Default: "explicit" (scope to
+      // containerIds[]). "repository": all containers; containerIds[] ignored.
+      // "subtree": context container and its contains-reachable descendants.
+      // Absent is equivalent to "explicit". Invariant I-M3.
     }
   | {
       type: "relation-query"
@@ -2775,6 +2787,12 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 **[N+23]** (RFC-008 [DV-Fx5]) A member with no resolvable Type (Tier 0 Note, Tier 1 TypedRecord, or a record whose `typeId` fails to resolve) MUST NOT match any `typeFilter` key and is therefore excluded whenever `typeFilter` is present and non-empty.
 
 **[N+24]** (RFC-008 [DV-Cx1]) `typeFilter` and `typeDispatch` are independent optional capabilities. An implementation supporting `ext:views-l2` MUST accept a `DocumentView` using either, both, or neither, and MUST treat their absence as the pre-existing behaviour.
+
+**[N+25]** (RFC-M [DV-Lx1]) When `SectionSource.type-query` carries a non-empty `lifecycleStates` array, implementations MUST restrict the query result to Records whose `lifecycleState` matches any value in that array (OR semantics). A Record with no `lifecycleState` MUST be excluded. When `lifecycleStates` is absent or empty, all lifecycle states (including absent) are included. Implementations that do not declare `ext:lifecycle` MUST ignore `lifecycleStates` and MUST NOT produce a validation error on its presence. Invariant I-M1.
+
+**[N+26]** (RFC-M [DV-Lx2]) When `SectionSource.type-query` carries a non-empty `excludeLifecycleStates` array, implementations MUST exclude Records whose `lifecycleState` matches any listed value. When both `lifecycleStates` and `excludeLifecycleStates` are present and non-empty, inclusion (Rule [N+25]) MUST be applied first; exclusion is applied to the survivors. A Record with no `lifecycleState` is NOT excluded by `excludeLifecycleStates`. When `excludeLifecycleStates` is absent or empty, no exclusion is applied. Implementations that do not declare `ext:lifecycle` MUST ignore `excludeLifecycleStates` and MUST NOT produce a validation error on its presence. Invariant I-M2.
+
+**[N+27]** (RFC-M [DV-Sx1]) When `SectionSource.type-query` carries `containerScope`, implementations MUST apply the following scoping rules: (a) `"explicit"` (or absent) — scope to `containerIds[]`; absent `containerIds[]` with explicit scope produces an empty result. (b) `"repository"` — span all containers in the repository; `containerIds[]` MUST be ignored. (c) `"subtree"` — span the context container and all containers reachable by `contains` relations from each entry in `containerIds[]`; when `containerIds[]` is absent or empty, the context container is the subtree root. When the context container cannot be determined, treat as `"explicit"` with empty `containerIds[]` and emit a diagnostic. `containerScope` absent is equivalent to `"explicit"`. Invariant I-M3.
 
 
 #### Addressability (ext:addressability)
