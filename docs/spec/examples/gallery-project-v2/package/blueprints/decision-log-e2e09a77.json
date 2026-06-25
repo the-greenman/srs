@@ -1,7 +1,7 @@
 {
   "aiGuidance": {
     "extraction": "Extract every decision made or crystallised during the conversation. Each decision gets its own Record. Link a decision to the one it replaces with supersedes, and to decisions it relies on with depends-on.",
-    "purpose": "A decision log extracted from a meeting transcript. It defines a document type whose records are the settled decisions a group reached."
+    "purpose": "A decision log assembled from the decisions extracted out of a meeting transcript. Each decision becomes its own Record; supersession and dependency relations connect them over time."
   },
   "createdAt": "2026-06-21T00:00:00Z",
   "description": "A decision log assembled from the decisions extracted out of a meeting transcript. Each decision becomes its own Record; supersession and dependency relations connect them over time.",
@@ -16,7 +16,7 @@
   ],
   "rootTypes": [
     {
-      "typeId": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
+      "typeId": "5a061505-dd0e-4c8d-9e20-fa28a3c42b68",
       "typeVersion": 1
     }
   ],

@@ -1,6 +1,6 @@
 {
   "containerId": "138e2fac-6a8a-4a06-9511-5aefd99ceae9",
-  "containerType": "document",
+  "containerType": "decision_log",
   "createdAt": "2026-05-31T00:00:00Z",
   "memberInstanceIds": [
     "3be7b057-9167-42a4-b0db-2a8b30666cef",
@@ -12,7 +12,7 @@
     "eb4024a0-486f-4d64-a4e4-5d80297129d2"
   ],
   "rootInstanceIds": [
-    "9054911c-5285-4c3e-8198-4b9650169001"
+    "bf64442b-1e2b-4597-95e7-a665439c7f6f"
   ],
-  "title": "Decisions"
+  "title": "Decision Log"
 }
