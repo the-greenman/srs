@@ -43,11 +43,21 @@ All work happens in `srs/`. Run `git` from this directory (`/home/greenman/dev/s
 
 ### 2a — Assign RFC number
 
-List existing RFCs to find the next number:
+The `rfcs/` directory is the authoritative numbering registry. Find the highest assigned number from two sources and take the max:
+
 ```bash
-ls srs/rfcs/rfc-*.md srs/rfcs/rfc-*.md 2>/dev/null | grep -oP 'rfc-\K\d+' | sort -n | tail -1
+# 1. Highest number in rfcs/ markdown files
+ls rfcs/rfc-*.md 2>/dev/null | grep -oP 'rfc-\K\d+' | sort -n | tail -1
+
+# 2. Highest rfc-number field value in the SRS package records (catches fast-track RFCs
+#    that went straight to Stage 6 without a markdown draft)
+grep -r '"5a000001-0000-4000-a000-000000000001"' srs/package/records/ -A1 \
+  | grep '"value"' | grep -oP '"value": "\K\d+' | sort -n | tail -1
 ```
-Next number = that value + 1. Pad to three digits (e.g. `007`).
+
+Next number = max(result1, result2) + 1. Pad to three digits (e.g. `011`).
+
+**Important:** always create `rfcs/rfc-NNN-<slug>.md` (at minimum a stub) before the PR merges. This file is what future numbering checks read. Even for fast-track RFCs that skip Stages 2–4, the file must exist by Stage 6.
 
 ### 2b — Write the RFC draft
 
