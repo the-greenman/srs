@@ -18,11 +18,20 @@ All work happens in `srs/`. Run `git` from this directory (`/home/greenman/dev/s
 
 ## Stage 0 — Preflight
 
-1. Confirm the signing key is loaded:
+1. Confirm a commit-signing method is available (commits will fail otherwise). The required check depends on the environment:
    ```bash
-   ssh-add -l | grep -q "SHA256:vHuO6si5w3RLL4IJZofWbyvEi42WA2fYX7bM" || echo "SIGNING KEY NOT LOADED"
+   if ssh-add -l 2>/dev/null | grep -q "SHA256:vHuO6si5w3RLL4IJZofWbyvEi42WA2fYX7bM"; then
+     echo "OK: local SSH signing key loaded in agent"
+   elif [ ! -f "$HOME/.ssh/id_ed25519_git_signing.pub" ]; then
+     echo "OK: cloud/remote environment — platform provides its own commit signing, ssh-agent not used"
+   else
+     echo "SIGNING KEY NOT LOADED — local key file present but not in agent"
+   fi
    ```
-   If missing, **stop** and tell the user — do not bypass signing.
+   - **Local** (the signing key file exists under `~/.ssh`): the key must be loaded in the ssh-agent. If you see `SIGNING KEY NOT LOADED`, **stop** and tell the user — do not bypass signing.
+   - **Cloud / remote agent** (no local signing key file, e.g. a scheduled CCR run): the ssh-agent is not used — the platform signs commits with its own method. Proceed; do not stop on the ssh-agent check.
+
+   In both environments use plain `git commit` — never `--no-gpg-sign`.
 2. Confirm `gh auth status` succeeds. If not, stop.
 
 ## Stage 1 — Determine mode
@@ -251,19 +260,12 @@ Use plain `git commit` — never `--no-gpg-sign`.
 
 ### 5c — Update schema files (if schema changes are required)
 
-For every file listed in the RFC's Schema changes table:
+Edit the canonical schema in **this repo only**. For every file listed in the RFC's Schema changes table:
 
-1. Edit `srs/docs/schema/2.0/<file>.json` on the RFC branch.
-2. Copy the updated file to `srs-rust/crates/srs-schema/schemas/2.0/<file>.json`.
-3. Copy the updated file to `srs-vscode/schemas/2.0/<file>.json` (if that path exists).
-4. Run the sync check from `srs-rust/`:
-   ```bash
-   bash scripts/check-schema-sync.sh
-   ```
-   It must exit 0. Fix any divergence before committing.
-5. Commit schema changes across all three repos in the same logical commit (or coordinated commits on sibling branches), with a message referencing the RFC issue number.
+1. Edit `srs/docs/schema/2.0/<file>.json` on the RFC branch. This is the single source of truth.
+2. Commit it on the RFC branch with a message referencing the RFC issue number.
 
-**Note:** schema changes in `srs-rust` and `srs-vscode` must be committed in those repos' own branches, not in the `srs` branch. Coordinate the branches so all three can be reviewed and merged together.
+**Do not edit `srs-rust` or `srs-vscode` schema mirrors in this session, and do not coordinate sibling branches.** In a cloud session those repos are not checked out. When this PR merges, `srs` `release.yml` publishes `schemas-2.0.tar.gz`; each mirror repo refreshes itself from that artifact via its own `sync-schemas-from-spec.sh` / CI, and the release-drift CI enforces consistency. Optionally file a best-effort mirror-sync tracking issue in `the-greenman/srs-rust` and `the-greenman/srs-vscode` linking this RFC — do not reach into their trees.
 
 ### 5d — Update the RFC status
 
@@ -368,7 +370,7 @@ In `srs/rfcs/rfc-NNN-<slug>.md`, update:
 ```
 Add a revision history row: `N | <date> | Accepted; spec records authored in srs/srs`.
 
-### 6d — Publish (validate + render + sync schemas)
+### 6d — Publish (validate + render)
 
 Run the publish pipeline from the `srs/` repo root:
 
@@ -376,15 +378,15 @@ Run the publish pipeline from the `srs/` repo root:
 node scripts/publish-spec.mjs
 ```
 
-This does everything in one pass:
+The parts that matter for this single-repo session:
 1. Runs `validate-all.mjs` — all validations must pass
 2. Runs `srs repo validate` — 0 errors required
 3. Renders all document views to `docs/spec/` via `srs render document-view`
-4. Syncs schemas from `srs/docs/schema/2.0/` to `srs-rust/crates/srs-schema/schemas/2.0/` and `srs-vscode/schemas/2.0/`
-5. Writes `SHA256SUMS` in the srs-rust schema directory
-6. Runs `check-release-drift.mjs` — must report **OK**
+4. Runs `check-release-drift.mjs` — must report **OK** for the `srs` artifacts
 
-If any step fails, fix the issue before committing.
+**Sibling schema mirrors are not this session's responsibility.** In a cloud session `../srs-rust` and `../srs-vscode` are not checked out, so any mirror-sync step in `publish-spec.mjs` must be a no-op when the siblings are absent — do not treat a skipped sibling sync as a failure. The mirrors refresh from the `srs` release artifact through their own pipelines after this PR merges (see Stage 5c). If `publish-spec.mjs` hard-fails because a sibling is missing, that is a script bug — file a follow-up issue and continue with the `srs`-local validate + render; do not check out siblings to satisfy it.
+
+If a `srs`-local step (validate / render / release-drift) fails, fix the issue before committing.
 
 ### 6e — Commit
 

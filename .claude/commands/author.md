@@ -18,11 +18,20 @@ Run **autonomously** — do not pause for decisions you can resolve from context
 
 ## Stage 0 — Preflight
 
-1. Confirm the signing key is loaded:
+1. Confirm a commit-signing method is available (commits will fail otherwise). The required check depends on the environment:
    ```bash
-   ssh-add -l | grep -q "SHA256:vHuO6si5w3RLL4IJZofWbyvEi42WA2fYX7bM" || echo "SIGNING KEY NOT LOADED"
+   if ssh-add -l 2>/dev/null | grep -q "SHA256:vHuO6si5w3RLL4IJZofWbyvEi42WA2fYX7bM"; then
+     echo "OK: local SSH signing key loaded in agent"
+   elif [ ! -f "$HOME/.ssh/id_ed25519_git_signing.pub" ]; then
+     echo "OK: cloud/remote environment — platform provides its own commit signing, ssh-agent not used"
+   else
+     echo "SIGNING KEY NOT LOADED — local key file present but not in agent"
+   fi
    ```
-   If missing, **stop** and tell the user.
+   - **Local** (the signing key file exists under `~/.ssh`): the key must be loaded in the ssh-agent. If you see `SIGNING KEY NOT LOADED`, **stop** and tell the user — do not bypass signing.
+   - **Cloud / remote agent** (no local signing key file): the ssh-agent is not used — the platform signs commits with its own method. Proceed; do not stop on the ssh-agent check.
+
+   In both environments use plain `git commit` — never `--no-gpg-sign`.
 2. Confirm `gh auth status` succeeds. If not, stop.
 3. Identify the **target SRS repo** from `$ARGUMENTS` (may be a path like `docs/spec/examples/gallery-project-v2`, or derived from the issue). Confirm it is an SRS repo (`ls <path>/.srs/` must succeed and `manifest.json` must exist).
 
@@ -229,9 +238,7 @@ When the goal is to author **reference data proving a spec design** (like RFC-00
 
 All git operations run from the repo containing the target path. For examples in `srs/`, that is `/home/greenman/dev/semanticops/srs/`. Never `cd` to the `semanticops/` parent.
 
-```bash
-ssh-add -l | grep -q "SHA256:vHuO6si5w3RLL4IJZofWbyvEi42WA2fYX7bM" || echo "SIGNING KEY NOT LOADED — stop"
-```
+Commit signing was already confirmed in Stage 0 (local agent key or cloud platform signing). Use plain `git commit` — never `--no-gpg-sign`.
 
 ### 7b — Branch
 
