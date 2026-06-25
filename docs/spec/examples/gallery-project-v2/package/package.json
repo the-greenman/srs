@@ -51,7 +51,8 @@
   "types": [
     "types/decision-1fcad6a2.json",
     "types/article-a1142ac3.json",
-    "types/role-e53dce11.json"
+    "types/role-e53dce11.json",
+    "types/decisionlog-5a061505.json"
   ],
   "version": "1.0.0",
   "views": [

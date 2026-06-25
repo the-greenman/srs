@@ -103,6 +103,11 @@
       "instanceId": "a9ca11cf-fd34-4901-b5f6-51e20737cb56",
       "path": "records/decisions/a9ca11cf-fd34-4901-b5f6-51e20737cb56.json",
       "tier": 2
+    },
+    {
+      "instanceId": "bf64442b-1e2b-4597-95e7-a665439c7f6f",
+      "path": "records/decision-log/decision-log-bf64442b.json",
+      "tier": 2
     }
   ],
   "namespace": "com.limoma",

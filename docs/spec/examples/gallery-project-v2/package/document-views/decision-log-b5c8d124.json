@@ -5,6 +5,12 @@
   "id": "b5c8d124-2084-4a6b-a231-425e800e1e55",
   "name": "decision-log",
   "namespace": "governance",
+  "rootTypeRefs": [
+    {
+      "typeId": "5a061505-dd0e-4c8d-9e20-fa28a3c42b68",
+      "typeVersion": 1
+    }
+  ],
   "sections": [
     {
       "emptyBehavior": "hide",
