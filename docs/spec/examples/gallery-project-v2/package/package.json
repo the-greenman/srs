@@ -37,6 +37,9 @@
   ],
   "name": "governance-core",
   "namespace": "com.limoma",
+  "protocols": [
+    "protocols/decision-7a088176.json"
+  ],
   "relationTypes": [
     "relation-types/precedes-b24aaf29.json",
     "relation-types/derived-from-36b78f14.json",
