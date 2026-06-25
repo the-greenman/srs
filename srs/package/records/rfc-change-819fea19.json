@@ -3,7 +3,7 @@
   "fieldValues": [
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",
-      "value": "RFC-M Change A: Add lifecycleStates to SectionSource.type-query"
+      "value": "RFC-011 Change A: Add lifecycleStates to SectionSource.type-query"
     },
     {
       "fieldId": "5a000009-0000-4000-a000-000000000009",
@@ -11,7 +11,7 @@
     },
     {
       "fieldId": "5a000006-0000-4000-a000-000000000006",
-      "value": "Add optional lifecycleStates?: string[] to SectionSource.type-query. When present and non-empty, the query result MUST include only Records whose lifecycleState matches one of the listed values (multi-value OR semantics). When absent or empty, all lifecycle states are included. Requires ext:lifecycle to be declared; implementations that do not declare ext:lifecycle MUST treat this field as absent. Invariant I-M1."
+      "value": "Add optional lifecycleStates?: string[] to SectionSource.type-query. When present and non-empty, the query result MUST include only Records whose lifecycleState matches one of the listed values (multi-value OR semantics). When absent or empty, all lifecycle states are included. Requires ext:lifecycle to be declared; implementations that do not declare ext:lifecycle MUST treat this field as absent. Invariant I-011-1."
     },
     {
       "fieldId": "1a000004-0000-4000-a000-000000000004",
