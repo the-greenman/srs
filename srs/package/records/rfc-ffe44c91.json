@@ -3,11 +3,11 @@
   "fieldValues": [
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",
-      "value": "RFC-M: DocumentView query extensions — lifecycle-state exclusion and repository-wide type queries"
+      "value": "RFC-011: DocumentView query extensions — lifecycle-state exclusion and repository-wide type queries"
     },
     {
       "fieldId": "5a000001-0000-4000-a000-000000000001",
-      "value": "M"
+      "value": "011"
     },
     {
       "fieldId": "5a000002-0000-4000-a000-000000000002",

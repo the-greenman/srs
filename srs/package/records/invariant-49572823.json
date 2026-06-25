@@ -3,7 +3,7 @@
   "fieldValues": [
     {
       "fieldId": "1a000020-0000-4000-a000-000000000020",
-      "value": "M2"
+      "value": "011-2"
     },
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",
@@ -11,7 +11,7 @@
     },
     {
       "fieldId": "1a000003-0000-4000-a000-000000000003",
-      "value": "When SectionSource.type-query carries a non-empty excludeLifecycleStates array, implementations MUST exclude from the query result any Record whose lifecycleState matches any value in the array. When lifecycleStates and excludeLifecycleStates are both present and non-empty, inclusion filtering (I-M1) MUST be applied first; exclusion filtering is then applied to the survivors. A Record with no lifecycleState is not excluded by excludeLifecycleStates (only Records with a matching non-null lifecycleState are excluded). When excludeLifecycleStates is absent or empty, no exclusion is applied. Implementations that do not declare ext:lifecycle MUST ignore excludeLifecycleStates and MUST NOT produce a validation error on its presence."
+      "value": "When SectionSource.type-query carries a non-empty excludeLifecycleStates array, implementations MUST exclude from the query result any Record whose lifecycleState matches any value in the array. When lifecycleStates and excludeLifecycleStates are both present and non-empty, inclusion filtering (I-011-1) MUST be applied first; exclusion filtering is then applied to the survivors. A Record with no lifecycleState is not excluded by excludeLifecycleStates (only Records with a matching non-null lifecycleState are excluded). When excludeLifecycleStates is absent or empty, no exclusion is applied. Implementations that do not declare ext:lifecycle MUST ignore excludeLifecycleStates and MUST NOT produce a validation error on its presence."
     },
     {
       "fieldId": "1a000021-0000-4000-a000-000000000021",

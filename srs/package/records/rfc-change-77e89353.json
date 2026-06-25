@@ -3,7 +3,7 @@
   "fieldValues": [
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",
-      "value": "RFC-M Change C: Add containerScope to SectionSource.type-query"
+      "value": "RFC-011 Change C: Add containerScope to SectionSource.type-query"
     },
     {
       "fieldId": "5a000009-0000-4000-a000-000000000009",
@@ -11,7 +11,7 @@
     },
     {
       "fieldId": "5a000006-0000-4000-a000-000000000006",
-      "value": "Add optional containerScope?: \"explicit\" | \"repository\" | \"subtree\" to SectionSource.type-query. Default is \"explicit\" (existing behaviour: scope to containerIds[]). When \"repository\", the query spans all containers in the repository and containerIds[] is ignored. When \"subtree\", the query spans the container and all containers reachable by contains relations from the context container; containerIds[] constrains the subtree root when provided. Invariant I-M3."
+      "value": "Add optional containerScope?: \"explicit\" | \"repository\" | \"subtree\" to SectionSource.type-query. Default is \"explicit\" (existing behaviour: scope to containerIds[]). When \"repository\", the query spans all containers in the repository and containerIds[] is ignored. When \"subtree\", the query spans the container and all containers reachable by contains relations from the context container; containerIds[] constrains the subtree root when provided. Invariant I-011-3."
     },
     {
       "fieldId": "1a000004-0000-4000-a000-000000000004",
