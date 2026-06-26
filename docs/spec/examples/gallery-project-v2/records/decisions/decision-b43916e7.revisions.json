@@ -1,0 +1,137 @@
+{
+  "recordId": "b43916e7-2d2d-4251-94e2-d5eee14d47b2",
+  "revisions": [
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-06-26T09:13:42.960252797+00:00",
+      "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
+      "provenance": {
+        "lifecycleTransition": "proposed",
+        "transitionedAt": "2026-06-26T09:13:42.960252797+00:00"
+      },
+      "recordId": "b43916e7-2d2d-4251-94e2-d5eee14d47b2",
+      "revisionId": "9e79a9e3-519b-438b-abcd-1170d742ac9a",
+      "value": "Quorum: simple majority (old policy)"
+    },
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-06-26T09:13:42.960252797+00:00",
+      "fieldId": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
+      "provenance": {
+        "lifecycleTransition": "proposed",
+        "transitionedAt": "2026-06-26T09:13:42.960252797+00:00"
+      },
+      "recordId": "b43916e7-2d2d-4251-94e2-d5eee14d47b2",
+      "revisionId": "d180a733-d184-4375-97da-d7b8ff4ce25d",
+      "value": "Meetings require a simple majority of registered members to be quorate."
+    },
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-06-26T09:13:42.960252797+00:00",
+      "fieldId": "3340532b-d845-5e54-92b3-819ed05365c5",
+      "provenance": {
+        "lifecycleTransition": "proposed",
+        "transitionedAt": "2026-06-26T09:13:42.960252797+00:00"
+      },
+      "recordId": "b43916e7-2d2d-4251-94e2-d5eee14d47b2",
+      "revisionId": "40e790ba-3053-4183-8dde-3e911dbec6f5",
+      "value": "Ensures decisions have adequate representation before commitments are made."
+    },
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-06-26T09:13:42.985571720+00:00",
+      "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
+      "priorRevisionId": "9e79a9e3-519b-438b-abcd-1170d742ac9a",
+      "provenance": {
+        "lifecycleTransition": "ratified",
+        "transitionedAt": "2026-06-26T09:13:42.985571720+00:00"
+      },
+      "recordId": "b43916e7-2d2d-4251-94e2-d5eee14d47b2",
+      "revisionId": "48746f76-a3c4-4083-8b26-97d7b1f5b85d",
+      "value": "Quorum: simple majority (old policy)"
+    },
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-06-26T09:13:42.985571720+00:00",
+      "fieldId": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
+      "priorRevisionId": "d180a733-d184-4375-97da-d7b8ff4ce25d",
+      "provenance": {
+        "lifecycleTransition": "ratified",
+        "transitionedAt": "2026-06-26T09:13:42.985571720+00:00"
+      },
+      "recordId": "b43916e7-2d2d-4251-94e2-d5eee14d47b2",
+      "revisionId": "c8ff7a73-44b5-416d-b079-a100ecd316b3",
+      "value": "Meetings require a simple majority of registered members to be quorate."
+    },
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-06-26T09:13:42.985571720+00:00",
+      "fieldId": "3340532b-d845-5e54-92b3-819ed05365c5",
+      "priorRevisionId": "40e790ba-3053-4183-8dde-3e911dbec6f5",
+      "provenance": {
+        "lifecycleTransition": "ratified",
+        "transitionedAt": "2026-06-26T09:13:42.985571720+00:00"
+      },
+      "recordId": "b43916e7-2d2d-4251-94e2-d5eee14d47b2",
+      "revisionId": "f550b9ff-b21c-4b29-8fce-98635b7e235a",
+      "value": "Ensures decisions have adequate representation before commitments are made."
+    },
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-06-26T09:13:43.009382928+00:00",
+      "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
+      "priorRevisionId": "48746f76-a3c4-4083-8b26-97d7b1f5b85d",
+      "provenance": {
+        "lifecycleTransition": "superseded",
+        "transitionedAt": "2026-06-26T09:13:43.009382928+00:00"
+      },
+      "recordId": "b43916e7-2d2d-4251-94e2-d5eee14d47b2",
+      "revisionId": "44bdd3bf-49ee-4d1d-8040-790893f8fc71",
+      "value": "Quorum: simple majority (old policy)"
+    },
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-06-26T09:13:43.009382928+00:00",
+      "fieldId": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
+      "priorRevisionId": "c8ff7a73-44b5-416d-b079-a100ecd316b3",
+      "provenance": {
+        "lifecycleTransition": "superseded",
+        "transitionedAt": "2026-06-26T09:13:43.009382928+00:00"
+      },
+      "recordId": "b43916e7-2d2d-4251-94e2-d5eee14d47b2",
+      "revisionId": "13e80407-fbf8-418a-8283-c1ab88a3fff6",
+      "value": "Meetings require a simple majority of registered members to be quorate."
+    },
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-06-26T09:13:43.009382928+00:00",
+      "fieldId": "3340532b-d845-5e54-92b3-819ed05365c5",
+      "priorRevisionId": "f550b9ff-b21c-4b29-8fce-98635b7e235a",
+      "provenance": {
+        "lifecycleTransition": "superseded",
+        "transitionedAt": "2026-06-26T09:13:43.009382928+00:00"
+      },
+      "recordId": "b43916e7-2d2d-4251-94e2-d5eee14d47b2",
+      "revisionId": "bd3138a8-60e2-47c9-b2de-c9862bdfc58f",
+      "value": "Ensures decisions have adequate representation before commitments are made."
+    }
+  ]
+}

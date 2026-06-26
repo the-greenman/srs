@@ -23,10 +23,13 @@
     }
   ],
   "instanceId": "9054911c-5285-4c3e-8198-4b9650169001",
+  "lifecycleState": "ratified",
+  "tags": [
+    "governance"
+  ],
   "typeId": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
   "typeName": "decision",
   "typeNamespace": "governance",
   "typeVersion": 1,
-  "updatedAt": "2026-06-08T21:05:17.994750915+00:00",
-  "lifecycleState": "ratified"
+  "updatedAt": "2026-06-08T21:05:17.994750915+00:00"
 }

@@ -3,7 +3,7 @@
   "version": 1,
   "namespace": "governance",
   "name": "governance_lifecycle",
-  "description": "Shared governance lifecycle for Articles, Roles, and Decisions. A record is drafted, proposed to the group, and ratified once agreed. Ratified records either close (obligation discharged) or are superseded by a successor. closed and superseded are final.",
+  "description": "Shared governance lifecycle for Articles, Roles, and Decisions. A record is drafted, proposed to the group, and ratified once agreed. Ratified records either close (obligation discharged), are superseded by a successor, or are abandoned (withdrawn without a successor). closed, superseded, and abandoned are final.",
   "states": [
     {
       "id": "f439ed11-6ad7-466a-9544-c6f68946e7d1",
@@ -36,6 +36,13 @@
       "key": "superseded",
       "label": "Superseded",
       "description": "Replaced by a successor record.",
+      "isFinal": true
+    },
+    {
+      "id": "f21e3ef6-1ce2-4064-b4aa-e03840fe5fb8",
+      "key": "abandoned",
+      "label": "Abandoned",
+      "description": "Proposed or ratified record withdrawn without a successor.",
       "isFinal": true
     }
   ],
@@ -74,6 +81,27 @@
       "from": "ratified",
       "to": "closed",
       "description": "Conclude the matter with no successor."
+    },
+    {
+      "id": "e86df9c3-8feb-45ac-8366-4337df280fcb",
+      "name": "abandon",
+      "from": "draft",
+      "to": "abandoned",
+      "description": "Withdraw a draft without putting it to the group."
+    },
+    {
+      "id": "bc9db928-7ec0-41aa-8492-c51f406773cc",
+      "name": "abandon",
+      "from": "proposed",
+      "to": "abandoned",
+      "description": "Withdraw a proposal without ratifying it."
+    },
+    {
+      "id": "849318f7-c9e6-4ef5-86a6-b0d15ed55dfc",
+      "name": "abandon",
+      "from": "ratified",
+      "to": "abandoned",
+      "description": "Withdraw a ratified record without a successor."
     }
   ],
   "initialState": "draft",

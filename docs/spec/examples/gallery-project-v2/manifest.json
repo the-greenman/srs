@@ -72,21 +72,36 @@
     {
       "instanceId": "9054911c-5285-4c3e-8198-4b9650169001",
       "path": "records/decisions/9054911c-5285-4c3e-8198-4b9650169001.json",
+      "tags": [
+        "governance"
+      ],
       "tier": 2
     },
     {
       "instanceId": "eb4024a0-486f-4d64-a4e4-5d80297129d2",
       "path": "records/decisions/eb4024a0-486f-4d64-a4e4-5d80297129d2.json",
+      "tags": [
+        "space",
+        "installation"
+      ],
       "tier": 2
     },
     {
       "instanceId": "3be7b057-9167-42a4-b0db-2a8b30666cef",
       "path": "records/decisions/3be7b057-9167-42a4-b0db-2a8b30666cef.json",
+      "tags": [
+        "space",
+        "installation"
+      ],
       "tier": 2
     },
     {
       "instanceId": "9af57e54-03fb-4625-9a4c-8d2a254ff2b7",
       "path": "records/decisions/9af57e54-03fb-4625-9a4c-8d2a254ff2b7.json",
+      "tags": [
+        "artists",
+        "finance"
+      ],
       "tier": 2
     },
     {
@@ -97,6 +112,9 @@
     {
       "instanceId": "dd715d4a-8640-4641-b79d-e44f728c547b",
       "path": "records/decisions/dd715d4a-8640-4641-b79d-e44f728c547b.json",
+      "tags": [
+        "governance"
+      ],
       "tier": 2
     },
     {
@@ -108,6 +126,33 @@
       "instanceId": "bf64442b-1e2b-4597-95e7-a665439c7f6f",
       "path": "records/decision-log/decision-log-bf64442b.json",
       "tier": 2
+    },
+    {
+      "instanceId": "b43916e7-2d2d-4251-94e2-d5eee14d47b2",
+      "path": "records/decisions/decision-b43916e7.json",
+      "tags": [
+        "governance"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "2b9f2a47-8945-46f8-959c-d5da400c06e9",
+      "path": "records/decisions/decision-2b9f2a47.json",
+      "tags": [
+        "governance"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "e8e5ea7e-de96-4e94-b8d5-800df14b0b9e",
+      "path": "records/notes/tags-as-topic-convention-e8e5ea7e.json",
+      "tags": [
+        "convention",
+        "topic",
+        "browsing"
+      ],
+      "tier": 0,
+      "title": "tags-as-topic convention"
     }
   ],
   "namespace": "com.limoma",

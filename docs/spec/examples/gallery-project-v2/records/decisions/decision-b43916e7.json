@@ -1,0 +1,27 @@
+{
+  "createdAt": "2026-06-26T09:13:17.766477498+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
+      "value": "Quorum: simple majority (old policy)"
+    },
+    {
+      "fieldId": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
+      "value": "Meetings require a simple majority of registered members to be quorate."
+    },
+    {
+      "fieldId": "3340532b-d845-5e54-92b3-819ed05365c5",
+      "value": "Ensures decisions have adequate representation before commitments are made."
+    }
+  ],
+  "instanceId": "b43916e7-2d2d-4251-94e2-d5eee14d47b2",
+  "lifecycleState": "superseded",
+  "tags": [
+    "governance"
+  ],
+  "typeId": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
+  "typeName": "decision",
+  "typeNamespace": "governance",
+  "typeVersion": 1,
+  "updatedAt": "2026-06-26T09:13:43.009382928+00:00"
+}

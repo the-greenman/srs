@@ -3,11 +3,13 @@
   "containerType": "decision_log",
   "createdAt": "2026-05-31T00:00:00Z",
   "memberInstanceIds": [
+    "2b9f2a47-8945-46f8-959c-d5da400c06e9",
     "3be7b057-9167-42a4-b0db-2a8b30666cef",
     "4a989562-4a9d-4c86-a365-91bf14d55f06",
     "9054911c-5285-4c3e-8198-4b9650169001",
     "9af57e54-03fb-4625-9a4c-8d2a254ff2b7",
     "a9ca11cf-fd34-4901-b5f6-51e20737cb56",
+    "b43916e7-2d2d-4251-94e2-d5eee14d47b2",
     "dd715d4a-8640-4641-b79d-e44f728c547b",
     "eb4024a0-486f-4d64-a4e4-5d80297129d2"
   ],
