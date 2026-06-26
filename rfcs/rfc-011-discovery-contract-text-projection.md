@@ -2,7 +2,7 @@
 
 # RFC-011: Discovery Contract & Text Projection
 
-**Status**: Draft (Revision 4)
+**Status**: In Progress (Revision 4)
 **Affects**: `Field` (`valueType` searchability classification), `Record` (Tier 2), `TypedRecord` (Tier 1), `Note` (Tier 0), `Container`, `ext:lifecycle`, new `discovery.json` schema
 **Author**: Peter Brownell (scoped from srs-rust#213)
 **Date**: 2026-06-26
@@ -18,6 +18,7 @@
 | 2 | 2026-06-26 | Address review findings (blocking): fix Note text projection to use `sections[].content` directly (close OQ-1); add normative tag-authority statement (instance file is canonical); align `containerId` filter with RFC-009 I-66's three-condition membership definition (condition 1 — rootInstanceIds membership — was missing); define Tier 1 "declaration order" as `fields[]` array position; specify that select/multiselect projection emits stored value as-is (no alias resolution during projection). **Should-fix:** remove `ext:views-l1` from Affects (display labels downgraded to MAY, close OQ-2); change `TextSegment.fieldId` type from `UUID` to `string`; use `"typed-record-field"` sentinel for Tier 1 instead of empty string; add normative `ext:repeatable-fields` carve-out (close OQ-3); clarify `typeId`+`typeNamespace` contradiction semantics; add `discovery.json` schema property table; add fixture timeline (must ship with RFC merge); remove duplicate inline R1 from Change D; update R6 (RFC-009 aligned); update R9 (MAY). **Nits:** add `field.json` row to schema changes table; guarantee all 8 valueTypes in fixture; add invariant numbering note. |
 | 3 | 2026-06-26 | Address Rev 2 review findings. **Blocking:** add TypedRecord `title` field to Tier 1 projection (leading segment, sentinel `"typed-record-title"` — analogous to Note title treatment in Tier 0); fix Tier 1 step 1d (multiselect array path) to assign `fieldId = "typed-record-field"` and `fieldName = TypedField.name` explicitly (same sentinel as single-value fields). **Should-fix:** change R5 "must" → MUST; tighten R6 "sole authority" to permit explicit cache-then-fallback; add note on Tier 2 `fieldValues`-array-order vs `FieldAssignment.order` asymmetry; remove escape hatch from Change F (fixture MUST ship with RFC merge, no pre-fixture window); add tag-segment stored-value clarification to Alias-resolution rule. **Nits:** make Tier 2 step 1e explicit about fieldId/fieldName; add DiscoveryQuery.tier enum note; clarify TextSegment.text normalization timing (at match time, not segment construction); align expectedInstanceIds UUID format note; add discovery.json copy-before-check note. |
 | 4 | 2026-06-26 | Fix one remaining blocking gap: Tier 1 step 1d (multiselect array path) was missing `text = String(element)` — fieldId and fieldName were added in Rev 3 but the text value was omitted. Added; closes the Tier 1 identical-segment-stream gap. Also added 'or an empty array' to step 1c skip condition for consistency. |
+| 5 | 2026-06-26 | Implementation started; RFC file committed to branch rfc/011-discovery-contract-text-projection. |
 
 ---
 
