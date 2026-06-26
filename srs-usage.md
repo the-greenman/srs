@@ -513,6 +513,11 @@ The reverse lookup `containers_for_instance(instanceId) → Container[]` is a **
 
 CLI: `srs container list --member <instanceId> --repo <path>`. The result is consistent with current `rootInstanceIds`, `memberInstanceIds`, and `contains` Relations in the repository.
 
+### ext:discovery: structured filters are exact; contentMatch is a recall floor (RFC-012)
+When a repository declares `ext:discovery`, filter axes (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `tier`) are **exact-match predicates** — two implementations with identical data must return identical result sets. `contentMatch` is different: it guarantees a **recall floor** (NFC + lowercase substring containment) but permits extra results. The `containerId` filter uses the same three-condition membership definition as RFC-009 I-66 — see the `containers_for_instance` trap above.
+
+**Text Projection searchability**: only `string`, `text`, `url`, `select`, `multiselect` fields contribute segments. Fields with `valueType` of `number`, `boolean`, or `date` are excluded. Tags are always searchable (emitted after field segments). Normalization (NFC + case fold) is applied at match time, not at projection time.
+
 ### Blueprint.rootTypes must be ExactTypeRef[] (RFC-009 I-78, Change E)
 `Blueprint.rootTypes` uses the same `ExactTypeRef` shape as `DocumentView.rootTypeRefs` — **both** `typeId` (UUID) and `typeVersion` (integer ≥ 1) are **required**. Each entry MUST resolve against the Package at Blueprint load time; an unresolvable entry produces a diagnostic but does not invalidate the whole Blueprint.
 
