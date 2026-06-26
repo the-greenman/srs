@@ -1,6 +1,6 @@
 > **GitHub issue**: [the-greenman/srs#83](https://github.com/the-greenman/srs/issues/83)
 
-# RFC-011: Discovery Contract & Text Projection
+# RFC-012: Discovery Contract & Text Projection
 
 **Status**: In Progress (Revision 4)
 **Affects**: `Field` (`valueType` searchability classification), `Record` (Tier 2), `TypedRecord` (Tier 1), `Note` (Tier 0), `Container`, `ext:lifecycle`, new `discovery.json` schema
@@ -322,7 +322,7 @@ OR semantics would produce unexpectedly large result sets when multiple tags are
 
 ### Containment definition aligned to RFC-009 I-66
 
-RFC-009 I-66 defines the three-condition container membership predicate for the `containers_for_instance` reverse lookup. RFC-011 uses the same predicate in the forward direction: given a `containerId`, which instances are members? Reusing I-66 ensures the two operations are inverses of each other and prevents implementations from diverging on edge cases like root-instance membership (condition 1) or deep graph traversal (condition 3). Using a different definition for the filter would break the symmetry property.
+RFC-009 I-66 defines the three-condition container membership predicate for the `containers_for_instance` reverse lookup. RFC-012 uses the same predicate in the forward direction: given a `containerId`, which instances are members? Reusing I-66 ensures the two operations are inverses of each other and prevents implementations from diverging on edge cases like root-instance membership (condition 1) or deep graph traversal (condition 3). Using a different definition for the filter would break the symmetry property.
 
 ### Stored-value projection for select and multiselect
 
