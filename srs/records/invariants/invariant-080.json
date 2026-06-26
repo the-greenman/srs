@@ -1,0 +1,31 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-26T12:25:54Z",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-012-2"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "contentMatch provides a guaranteed-recall floor via substring containment after NFC + lowercasing"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "For a contentMatch predicate with normalized query string q, the implementation MUST include every instance whose Text Projection contains at least one segment whose normalized text contains q as a substring (NFC followed by Unicode simple lowercasing, then substring containment test). This is the guaranteed-recall floor — every instance reachable by this rule must appear in the result set."
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "ext:discovery"
+    },
+    {
+      "fieldId": "1a000004-0000-4000-a000-000000000004",
+      "value": "A recall-floor rule (rather than an exact definition of content matching) permits implementations to layer ranking, stemming, and semantic similarity on top while guaranteeing a minimum that can be tested via a conformance fixture."
+    }
+  ],
+  "instanceId": "b7518275-af83-4cfc-9da0-804a94eb0fb4",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1
+}

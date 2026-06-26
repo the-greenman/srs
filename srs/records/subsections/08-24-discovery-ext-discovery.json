@@ -1,0 +1,23 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-26T12:25:54Z",
+  "fieldValues": [
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "Discovery (ext:discovery)"
+    },
+    {
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
+      "value": "**[I-012-1]** An implementation that declares `ext:discovery` MUST include in its result set every instance that satisfies all specified structured filter predicates (typeId, typeNamespace, typeName, containerId, tag, lifecycleState, tier), and MUST NOT include any instance that fails any specified structured filter predicate. Structured-filter result sets are deterministic — two conforming implementations with identical data MUST return identical result sets.\n\n**[I-012-2]** For a `contentMatch` predicate with normalized query string `q`, the implementation MUST include every instance whose Text Projection contains at least one segment whose normalized text contains `q` as a substring (NFC + Unicode simple lowercasing, substring containment). This is the guaranteed-recall floor.\n\n**[I-012-3]** An implementation MAY include instances beyond the recall-floor set for content matching. Returning extra results does not violate conformance.\n\n**[I-012-4]** An implementation MAY rank results in any order. The recall-floor guarantee applies to inclusion only, not to rank position.\n\n**[I-012-5]** When both structured filters and `contentMatch` are specified, an instance MUST satisfy all structured filter predicates (exact-match semantics) AND the content-match recall-floor predicate. The structured-filter conditions impose an exact inclusion/exclusion constraint that `contentMatch` extra recall cannot override.\n\n**[I-012-6]** A `containerId` filter MUST use the three-condition membership definition of RFC-009 I-66: (1) `instanceId` in `Container.rootInstanceIds[]`, OR (2) `instanceId` in `Container.memberInstanceIds[]`, OR (3) reachable via transitive `contains` Relation traversal from any `rootInstanceIds[]` entry. The authoritative source for membership is the instance file and the relations file. An implementation MAY use `instanceIndex` as a cache for performance, but MUST treat the instance file and relations file as authoritative when they differ from the cache.\n\n**[I-012-7]** A `tag` predicate with multiple values MUST use AND semantics — all specified tags must be present on the instance. Both query tags and stored instance tags are canonicalized via RFC-006 key-or-alias resolution (when a Vocabulary is declared) before comparison. When no Vocabulary is declared, raw string comparison applies (case-sensitive).\n\n**[I-012-8]** The Text Projection MUST include searchable `valueType` fields only: `string`, `text`, `url`, `select`, `multiselect`. Fields with `valueType` of `number`, `boolean`, or `date` MUST NOT contribute segments to the Text Projection.\n\n**[I-012-9]** The Text Projection MUST include `tags` array entries as segments after field segments. An implementation MAY additionally include `FieldAssignment.displayLabel` values as segments after tags (this step is optional and not required for conformance).\n\n**[I-012-10]** Normalization MUST apply NFC followed by Unicode simple lowercasing (locale-independent; equivalent to `str.casefold()` in Python 3 or `String::to_lowercase()` in Rust). Implementations MUST NOT strip punctuation, diacritics, or whitespace during normalization. Additional transformations (stemming, tokenization, phonetic matching) are permitted for ranking and supplemental recall beyond the recall floor.\n\n**[I-012-11]** An implementation that declares `ext:discovery` MUST pass all structured-filter conformance scenarios (`exactMatch: true`) from the fixture at `srs/conformance/discovery/scenarios.json`. The result set for each such scenario MUST equal exactly the specified `expectedInstanceIds` set.\n\n**[I-012-12]** An implementation that declares `ext:discovery` MUST pass all content-match conformance scenarios (`exactMatch: false`) from the fixture at `srs/conformance/discovery/scenarios.json`. The result set for each such scenario MUST be a superset of the specified `expectedInstanceIds` set."
+    }
+  ],
+  "instanceId": "56ce56ed-bc78-462a-b926-dd0882a58cad",
+  "tags": [
+    "concern:validation",
+    "topic:conformance"
+  ],
+  "typeId": "2a000003-0000-4000-a000-000000000003",
+  "typeName": "subsection",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-26T12:25:54Z",
+  "fieldValues": [
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "ext:discovery"
+    },
+    {
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
+      "value": "**Required for**: any implementation that supports structured instance discovery queries, text-projection-based content matching, or both.\n\n**Depends on**: `ext:repository` (repository layout for instance enumeration)\n\nDefines the **Discovery Contract**: a portable, implementation-agnostic contract for finding SRS instances. An implementation that declares `ext:discovery` in `manifest.json → declaredExtensions` MUST conform to all twelve conformance rules of this extension (I-012-1 through I-012-12).\n\n#### DiscoveryQuery\n\nA `DiscoveryQuery` is a conjunction of zero or more structured filter predicates. An instance matches if and only if it satisfies all specified predicates; unspecified predicates are wildcards.\n\n| Axis | Type | Semantics |\n|---|---|---|\n| `typeId` | UUID | Exact match on `Record.typeId` (Tier 2 only) |\n| `typeNamespace` | string | Exact match on `Record.typeNamespace` |\n| `typeName` | string | Exact match on `Record.typeName` |\n| `containerId` | UUID | Membership per RFC-009 I-66: rootInstanceIds ∪ memberInstanceIds ∪ transitive `contains` traversal |\n| `tag` | string[] | AND-conjunction; RFC-006 vocabulary resolution applied at filter time |\n| `lifecycleState` | string | Exact match; requires `ext:lifecycle` |\n| `tier` | 0\\|1\\|2 | Instance tier: Note=0, TypedRecord=1, Record=2 |\n| `contentMatch` | string | Free-text recall-floor predicate (see Text Projection) |\n\n#### Text Projection\n\nThe **Text Projection** of an instance is a deterministic, ordered sequence of `TextSegment` structs derived at query time. Each segment has: `fieldId` (UUID or sentinel), `fieldName` (field name or sentinel), `text` (raw stored value).\n\n**Searchable valueTypes**: `string`, `text`, `url`, `select`, `multiselect`. Non-searchable (no segment emitted): `number`, `boolean`, `date`.\n\n**Tier 2 (Record)**: emit one segment per `fieldValues` entry (stored array order), searchable types only; after all field segments, emit one segment per tag. Display-label segments (from `FieldAssignment.displayLabel`) MAY be appended after tags — this step is optional.\n\n**Tier 0 (Note)**: if `title` is non-empty, emit a leading segment with sentinel `\"note-title\"`; then one segment per `sections[i].content` (with `fieldName = sections[i].name`); then tag segments.\n\n**Tier 1 (TypedRecord)**: if `title` is non-empty, emit a leading segment with sentinel `\"typed-record-title\"`; then one segment per `TypedField` in `fields[]` array-position order, searchable types only; for multiselect or JSON-array values, emit one segment per element; then tag segments.\n\n**ext:repeatable-fields carve-out**: Records that use the `entries[]` mechanism are explicitly out of scope for this extension; implementations MUST NOT index `entries[]` under `ext:discovery`.\n\n#### Normalization\n\nBefore text matching, all segment `text` values MUST be normalized: (1) apply NFC; (2) fold to lowercase via Unicode simple case folding. Punctuation, diacritics, and whitespace MUST NOT be stripped during normalization — this is a floor; implementations MAY apply additional transformations for ranking.\n\n#### Consistency rule\n\nStructured filter axes (typeId, typeNamespace, typeName, containerId, tag, lifecycleState, tier) are **exact-match predicates** — the result set is deterministic. Content matching (`contentMatch`) provides a **recall-floor guarantee**: the implementation MUST include every instance whose Text Projection contains the normalized query as a substring of at least one segment; additional results are permitted.\n\n#### Conformance fixture\n\nA reference fixture repository and `scenarios.json` live at `srs/conformance/discovery/`. An implementation declaring `ext:discovery` MUST pass all structured-filter scenarios (`exactMatch: true`) and all content-match scenarios (result MUST be a superset of `expectedInstanceIds`).\n\n---"
+    }
+  ],
+  "instanceId": "73b9b7e5-3798-43e6-b410-651122f7c51c",
+  "tags": [
+    "concern:extensibility",
+    "topic:extensions"
+  ],
+  "typeId": "2a000003-0000-4000-a000-000000000003",
+  "typeName": "subsection",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1
+}

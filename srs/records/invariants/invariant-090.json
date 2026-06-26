@@ -1,0 +1,31 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-26T12:25:54Z",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-012-12"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "ext:discovery implementors must return a superset of expected results for content-match fixture scenarios (exactMatch: false)"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "An implementation that declares ext:discovery MUST pass all content-match conformance scenarios (exactMatch: false) from the fixture at srs/conformance/discovery/scenarios.json. For each such scenario, the implementation's result set for the specified query MUST be a superset of the specified expectedInstanceIds set — every instance in expectedInstanceIds must appear in the result set, but the implementation may additionally return other instances."
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "ext:discovery"
+    },
+    {
+      "fieldId": "1a000004-0000-4000-a000-000000000004",
+      "value": "Content-match scenarios use superset (not exact) matching because I-012-3 explicitly permits extra results beyond the recall floor. The superset requirement is the minimum that can be guaranteed: every instance reachable by the NFC+lowercase substring test must appear."
+    }
+  ],
+  "instanceId": "86b1dfbe-39bd-4afa-ac2b-821b4603c018",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1
+}

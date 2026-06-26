@@ -1,0 +1,31 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-26T12:25:54Z",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-012-11"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "ext:discovery implementors must pass all structured-filter fixture scenarios (exactMatch: true)"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "An implementation that declares ext:discovery MUST pass all structured-filter conformance scenarios (exactMatch: true) from the fixture at srs/conformance/discovery/scenarios.json. For each such scenario, the implementation's result set for the specified query MUST equal exactly the specified expectedInstanceIds set — no extra instances and no missing instances."
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "ext:discovery"
+    },
+    {
+      "fieldId": "1a000004-0000-4000-a000-000000000004",
+      "value": "Structured-filter scenarios can be verified with exact-match semantics because structured filters are deterministic. Requiring exact match (not just superset) ensures that implementations do not inadvertently over-include instances by ignoring a filter axis."
+    }
+  ],
+  "instanceId": "f71f640a-874a-41b5-bcd5-c568185163fa",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1
+}

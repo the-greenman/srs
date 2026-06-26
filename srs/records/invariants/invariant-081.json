@@ -1,0 +1,31 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-26T12:25:54Z",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-012-3"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "Extra results beyond the recall floor are permitted for content matching"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "An implementation MAY include instances beyond the recall-floor set for content matching. Returning extra results (e.g. via stemming, phonetic matching, or semantic similarity) does not violate conformance. The recall floor is a minimum inclusion requirement, not a maximum."
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "ext:discovery"
+    },
+    {
+      "fieldId": "1a000004-0000-4000-a000-000000000004",
+      "value": "Allowing extra recall enables advanced engines (full-text, vector) to go beyond exact substring matching without violating the contract. The fixture scenarios for content matching use exactMatch: false precisely because of this permission."
+    }
+  ],
+  "instanceId": "694210c5-761c-4db2-828d-e76094a6c650",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1
+}

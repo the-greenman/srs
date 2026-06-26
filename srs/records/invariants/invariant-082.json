@@ -1,0 +1,31 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-26T12:25:54Z",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-012-4"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "Result ranking is implementation-defined"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "An implementation MAY rank results in any order. The recall-floor guarantee applies to inclusion only, not to rank position. A conforming implementation that places a guaranteed-recall-floor match last in its ranked output is still conformant."
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "ext:discovery"
+    },
+    {
+      "fieldId": "1a000004-0000-4000-a000-000000000004",
+      "value": "Ranking algorithm is an engine-level decision with no portable specification. Constraining rank order would over-specify the contract and prevent valid BM25, TF-IDF, or semantic ranking strategies."
+    }
+  ],
+  "instanceId": "c78a10b5-0ac2-40a5-a078-7af28429b440",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1
+}

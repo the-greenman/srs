@@ -2622,6 +2622,57 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 
 ---
 
+#### ext:discovery
+
+**Content**: **Required for**: any implementation that supports structured instance discovery queries, text-projection-based content matching, or both.
+
+**Depends on**: `ext:repository` (repository layout for instance enumeration)
+
+Defines the **Discovery Contract**: a portable, implementation-agnostic contract for finding SRS instances. An implementation that declares `ext:discovery` in `manifest.json → declaredExtensions` MUST conform to all twelve conformance rules of this extension (I-012-1 through I-012-12).
+
+#### DiscoveryQuery
+
+A `DiscoveryQuery` is a conjunction of zero or more structured filter predicates. An instance matches if and only if it satisfies all specified predicates; unspecified predicates are wildcards.
+
+| Axis | Type | Semantics |
+|---|---|---|
+| `typeId` | UUID | Exact match on `Record.typeId` (Tier 2 only) |
+| `typeNamespace` | string | Exact match on `Record.typeNamespace` |
+| `typeName` | string | Exact match on `Record.typeName` |
+| `containerId` | UUID | Membership per RFC-009 I-66: rootInstanceIds ∪ memberInstanceIds ∪ transitive `contains` traversal |
+| `tag` | string[] | AND-conjunction; RFC-006 vocabulary resolution applied at filter time |
+| `lifecycleState` | string | Exact match; requires `ext:lifecycle` |
+| `tier` | 0\|1\|2 | Instance tier: Note=0, TypedRecord=1, Record=2 |
+| `contentMatch` | string | Free-text recall-floor predicate (see Text Projection) |
+
+#### Text Projection
+
+The **Text Projection** of an instance is a deterministic, ordered sequence of `TextSegment` structs derived at query time. Each segment has: `fieldId` (UUID or sentinel), `fieldName` (field name or sentinel), `text` (raw stored value).
+
+**Searchable valueTypes**: `string`, `text`, `url`, `select`, `multiselect`. Non-searchable (no segment emitted): `number`, `boolean`, `date`.
+
+**Tier 2 (Record)**: emit one segment per `fieldValues` entry (stored array order), searchable types only; after all field segments, emit one segment per tag. Display-label segments (from `FieldAssignment.displayLabel`) MAY be appended after tags — this step is optional.
+
+**Tier 0 (Note)**: if `title` is non-empty, emit a leading segment with sentinel `"note-title"`; then one segment per `sections[i].content` (with `fieldName = sections[i].name`); then tag segments.
+
+**Tier 1 (TypedRecord)**: if `title` is non-empty, emit a leading segment with sentinel `"typed-record-title"`; then one segment per `TypedField` in `fields[]` array-position order, searchable types only; for multiselect or JSON-array values, emit one segment per element; then tag segments.
+
+**ext:repeatable-fields carve-out**: Records that use the `entries[]` mechanism are explicitly out of scope for this extension; implementations MUST NOT index `entries[]` under `ext:discovery`.
+
+#### Normalization
+
+Before text matching, all segment `text` values MUST be normalized: (1) apply NFC; (2) fold to lowercase via Unicode simple case folding. Punctuation, diacritics, and whitespace MUST NOT be stripped during normalization — this is a floor; implementations MAY apply additional transformations for ranking.
+
+#### Consistency rule
+
+Structured filter axes (typeId, typeNamespace, typeName, containerId, tag, lifecycleState, tier) are **exact-match predicates** — the result set is deterministic. Content matching (`contentMatch`) provides a **recall-floor guarantee**: the implementation MUST include every instance whose Text Projection contains the normalized query as a substring of at least one segment; additional results are permitted.
+
+#### Conformance fixture
+
+A reference fixture repository and `scenarios.json` live at `srs/conformance/discovery/`. An implementation declaring `ext:discovery` MUST pass all structured-filter scenarios (`exactMatch: true`) and all content-match scenarios (result MUST be a superset of `expectedInstanceIds`).
+
+---
+
 
 ### Key Invariants
 
@@ -2878,6 +2929,32 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 **62.** An implementation following `RepositoryRegistry.childRegistries` links must detect and halt on cycles. If resolving a child registry yields a `registryId` already encountered in the current resolution chain, the implementation must surface the cycle and stop rather than loop.
 
 ---
+
+#### Discovery (ext:discovery)
+
+**Content**: **[I-012-1]** An implementation that declares `ext:discovery` MUST include in its result set every instance that satisfies all specified structured filter predicates (typeId, typeNamespace, typeName, containerId, tag, lifecycleState, tier), and MUST NOT include any instance that fails any specified structured filter predicate. Structured-filter result sets are deterministic — two conforming implementations with identical data MUST return identical result sets.
+
+**[I-012-2]** For a `contentMatch` predicate with normalized query string `q`, the implementation MUST include every instance whose Text Projection contains at least one segment whose normalized text contains `q` as a substring (NFC + Unicode simple lowercasing, substring containment). This is the guaranteed-recall floor.
+
+**[I-012-3]** An implementation MAY include instances beyond the recall-floor set for content matching. Returning extra results does not violate conformance.
+
+**[I-012-4]** An implementation MAY rank results in any order. The recall-floor guarantee applies to inclusion only, not to rank position.
+
+**[I-012-5]** When both structured filters and `contentMatch` are specified, an instance MUST satisfy all structured filter predicates (exact-match semantics) AND the content-match recall-floor predicate. The structured-filter conditions impose an exact inclusion/exclusion constraint that `contentMatch` extra recall cannot override.
+
+**[I-012-6]** A `containerId` filter MUST use the three-condition membership definition of RFC-009 I-66: (1) `instanceId` in `Container.rootInstanceIds[]`, OR (2) `instanceId` in `Container.memberInstanceIds[]`, OR (3) reachable via transitive `contains` Relation traversal from any `rootInstanceIds[]` entry. The authoritative source for membership is the instance file and the relations file. An implementation MAY use `instanceIndex` as a cache for performance, but MUST treat the instance file and relations file as authoritative when they differ from the cache.
+
+**[I-012-7]** A `tag` predicate with multiple values MUST use AND semantics — all specified tags must be present on the instance. Both query tags and stored instance tags are canonicalized via RFC-006 key-or-alias resolution (when a Vocabulary is declared) before comparison. When no Vocabulary is declared, raw string comparison applies (case-sensitive).
+
+**[I-012-8]** The Text Projection MUST include searchable `valueType` fields only: `string`, `text`, `url`, `select`, `multiselect`. Fields with `valueType` of `number`, `boolean`, or `date` MUST NOT contribute segments to the Text Projection.
+
+**[I-012-9]** The Text Projection MUST include `tags` array entries as segments after field segments. An implementation MAY additionally include `FieldAssignment.displayLabel` values as segments after tags (this step is optional and not required for conformance).
+
+**[I-012-10]** Normalization MUST apply NFC followed by Unicode simple lowercasing (locale-independent; equivalent to `str.casefold()` in Python 3 or `String::to_lowercase()` in Rust). Implementations MUST NOT strip punctuation, diacritics, or whitespace during normalization. Additional transformations (stemming, tokenization, phonetic matching) are permitted for ranking and supplemental recall beyond the recall floor.
+
+**[I-012-11]** An implementation that declares `ext:discovery` MUST pass all structured-filter conformance scenarios (`exactMatch: true`) from the fixture at `srs/conformance/discovery/scenarios.json`. The result set for each such scenario MUST equal exactly the specified `expectedInstanceIds` set.
+
+**[I-012-12]** An implementation that declares `ext:discovery` MUST pass all content-match conformance scenarios (`exactMatch: false`) from the fixture at `srs/conformance/discovery/scenarios.json`. The result set for each such scenario MUST be a superset of the specified `expectedInstanceIds` set.
 
 
 ### Extension Interactions

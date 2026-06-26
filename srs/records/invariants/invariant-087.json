@@ -1,0 +1,31 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-26T12:25:54Z",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-012-9"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "Text Projection must include tags after field segments; display-label segments are optional"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "The Text Projection MUST include tags array entries as segments after all field segments, with fieldId = \"tag\" and fieldName = \"tag\", one segment per tag string in array order. An implementation MAY additionally include FieldAssignment.displayLabel values as segments appended after the tag segments, with fieldId = \"label\" and fieldName = \"label\" — this step is optional. Two conforming implementations may differ in whether they include display-label segments; this is explicitly permitted. Display-label segments, if emitted, are not required for recall-floor compliance."
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "ext:discovery"
+    },
+    {
+      "fieldId": "1a000004-0000-4000-a000-000000000004",
+      "value": "Tags are semantic metadata that users search by. Making them searchable is essential. Display labels are rendering-only metadata; emitting them is a useful heuristic (users may search by label) but loading FieldAssignments requires an additional package access that may not be cached, so it is optional to avoid penalizing lightweight engines."
+    }
+  ],
+  "instanceId": "11b0de01-9d54-49d8-9b0e-e7a86decc5bc",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1
+}

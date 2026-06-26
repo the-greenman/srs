@@ -1,0 +1,31 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-26T12:25:54Z",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-012-1"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "Structured filter axes are exact-match predicates with deterministic result sets"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "An implementation that declares ext:discovery MUST include in its result set every instance that satisfies all specified structured filter predicates (typeId, typeNamespace, typeName, containerId, tag, lifecycleState, tier), and MUST NOT include any instance that fails any specified structured filter predicate. Two conforming implementations with identical data MUST return identical result sets for identical structured-filter queries."
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "ext:discovery"
+    },
+    {
+      "fieldId": "1a000004-0000-4000-a000-000000000004",
+      "value": "Determinism is the core property that makes conformance testing possible. Without it, two implementations could both claim conformance while returning different results for the same query."
+    }
+  ],
+  "instanceId": "12c5464e-e423-4f35-9075-beaabe77c085",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1
+}

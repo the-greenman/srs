@@ -1,0 +1,31 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-26T12:25:54Z",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-012-10"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "Normalization is NFC followed by Unicode simple lowercasing; punctuation must not be stripped"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "Normalization MUST apply NFC (Unicode Normalization Form C) followed by Unicode simple case folding (locale-independent lowercasing; equivalent to str.casefold() in Python 3 or String::to_lowercase() in Rust). Implementations MUST NOT strip punctuation, diacritics, or whitespace during normalization. Normalization is applied at match time to both the query string and the segment text; it is not stored in the segment or in the index. Additional transformations (stemming, tokenization, phonetic matching) are permitted for ranking and supplemental recall beyond the recall floor."
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "ext:discovery"
+    },
+    {
+      "fieldId": "1a000004-0000-4000-a000-000000000004",
+      "value": "NFC ensures that visually identical strings with different Unicode representations (e.g. composed vs decomposed accents) compare equal. Case folding handles the common case of case-insensitive search. Not stripping punctuation preserves the recall floor for searches on specific tokens like URLs or code identifiers. Applying at match time (not index time) keeps the projection deterministic and allows implementations to re-run normalization with updated rules without re-indexing."
+    }
+  ],
+  "instanceId": "0875423d-33ac-468c-ab99-a874fcc5786e",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1
+}

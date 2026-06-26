@@ -1,0 +1,31 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-26T12:25:54Z",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-012-8"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "Text Projection includes only searchable valueType fields; number, boolean, date are excluded"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "The Text Projection MUST include only fields with searchable valueTypes: string, text, url, select, multiselect. Fields with valueType of number, boolean, or date MUST NOT contribute segments to the Text Projection. When a TypedRecord field has no valueType declared, the implementation MUST emit a segment only if the stored value is a JSON string or JSON array; all other non-string, non-array values are skipped."
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "ext:discovery"
+    },
+    {
+      "fieldId": "1a000004-0000-4000-a000-000000000004",
+      "value": "Boolean true/false and raw numbers are not useful search tokens and would produce false positives. Dates require range predicates not covered by this RFC. The searchability classification is class-wide (by valueType) rather than per-field, keeping projection stateless and avoiding the need for per-field searchability flags."
+    }
+  ],
+  "instanceId": "375df1b2-1196-4149-bf03-ef5a1ac42309",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1
+}

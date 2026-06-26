@@ -1,0 +1,31 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-26T12:25:54Z",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-012-6"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "containerId filter uses RFC-009 I-66 three-condition membership; instance file and relations file are authoritative"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "A containerId filter MUST use the three-condition membership definition of RFC-009 I-66: an instance is a member of a container if (1) its instanceId appears in Container.rootInstanceIds[], OR (2) its instanceId appears in Container.memberInstanceIds[], OR (3) it is reachable via transitive contains Relation traversal from any instance in Container.rootInstanceIds[]. The authoritative source for membership is the instance file and the relations file. An implementation MAY use the instanceIndex in manifest.json as a cache for performance, but MUST treat the instance file and relations file as authoritative when they differ from the cache."
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "ext:discovery (Container)"
+    },
+    {
+      "fieldId": "1a000004-0000-4000-a000-000000000004",
+      "value": "Reusing I-66's predicate ensures that containerId filter (forward: given a container, which instances?) and containers_for_instance reverse lookup (given an instance, which containers?) are exact inverses. Using a different definition would break this symmetry. The instanceIndex cache permission acknowledges that iterating relations for every query may be costly in large repositories."
+    }
+  ],
+  "instanceId": "f4e81a3c-f0c9-457c-aa60-97801601bb46",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1
+}

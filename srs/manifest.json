@@ -2708,6 +2708,135 @@
       "instanceId": "187b18d0-89ab-4591-a61f-273821f2412b",
       "path": "package/records/invariant-187b18d0.json",
       "tier": 2
+    },
+    {
+      "instanceId": "73b9b7e5-3798-43e6-b410-651122f7c51c",
+      "path": "records/subsections/07-17-ext-discovery.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "d5c6c79b-e385-4598-8a8f-602f8d3e9de3",
+      "path": "records/extensions/ext-discovery.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "56ce56ed-bc78-462a-b926-dd0882a58cad",
+      "path": "records/subsections/08-24-discovery-ext-discovery.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "12c5464e-e423-4f35-9075-beaabe77c085",
+      "path": "records/invariants/invariant-079.json",
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "b7518275-af83-4cfc-9da0-804a94eb0fb4",
+      "path": "records/invariants/invariant-080.json",
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "694210c5-761c-4db2-828d-e76094a6c650",
+      "path": "records/invariants/invariant-081.json",
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "c78a10b5-0ac2-40a5-a078-7af28429b440",
+      "path": "records/invariants/invariant-082.json",
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "5e193bda-e757-436c-b75f-1471cde83c62",
+      "path": "records/invariants/invariant-083.json",
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "f4e81a3c-f0c9-457c-aa60-97801601bb46",
+      "path": "records/invariants/invariant-084.json",
+      "tags": [
+        "concern:validation",
+        "topic:conformance",
+        "construct:container"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "609bd1b7-a116-4128-a9ec-1d86d3ed7989",
+      "path": "records/invariants/invariant-085.json",
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "375df1b2-1196-4149-bf03-ef5a1ac42309",
+      "path": "records/invariants/invariant-086.json",
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "11b0de01-9d54-49d8-9b0e-e7a86decc5bc",
+      "path": "records/invariants/invariant-087.json",
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "0875423d-33ac-468c-ab99-a874fcc5786e",
+      "path": "records/invariants/invariant-088.json",
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "f71f640a-874a-41b5-bcd5-c568185163fa",
+      "path": "records/invariants/invariant-089.json",
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "86b1dfbe-39bd-4afa-ac2b-821b4603c018",
+      "path": "records/invariants/invariant-090.json",
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "92c0280c-0490-4650-a24e-d11aa6d6dcdc",
+      "path": "records/rfcs/rfc-012-discovery-contract-text-projection.json",
+      "tier": 2
     }
   ],
   "meta": {

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-26T12:25:54Z",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-012-5"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "Structured filters and contentMatch are conjunctive; structured filters cannot be overridden by content-match recall"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "When both structured filters and contentMatch are specified in a DiscoveryQuery, an instance MUST satisfy all specified structured filter predicates (typeId, typeNamespace, typeName, containerId, tag, lifecycleState, tier) AND the contentMatch recall-floor predicate. The structured-filter conditions impose an exact inclusion/exclusion constraint. An instance that matches contentMatch but fails a structured filter predicate MUST NOT appear in the result set."
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "ext:discovery"
+    },
+    {
+      "fieldId": "1a000004-0000-4000-a000-000000000004",
+      "value": "Structured and content predicates belong to different regimes: structured filters are deterministic and exact; content matching is a probabilistic floor. The conjunction rule prevents content-match extra recall from leaking instances that should be excluded by a type or container filter — which would make the type filter semantically meaningless."
+    }
+  ],
+  "instanceId": "5e193bda-e757-436c-b75f-1471cde83c62",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-26T12:25:54Z",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-012-7"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "tag filter uses AND semantics with RFC-006 vocabulary resolution at filter time"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "A tag predicate with multiple values MUST use AND semantics — all specified tags must be present on the instance for it to match. Both query tag strings and stored instance tag strings are canonicalized via RFC-006 key-or-alias resolution (when a Vocabulary is declared for the repository) before comparison. Two tag strings are considered equal if and only if their canonical keys are equal. When no Vocabulary is declared, raw string comparison applies (case-sensitive exact match). RFC-006 resolution is a filter-time operation; the Text Projection emits stored tag values as-is without resolution."
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "ext:discovery (ext:vocabulary)"
+    },
+    {
+      "fieldId": "1a000004-0000-4000-a000-000000000004",
+      "value": "AND semantics prevent unexpectedly large result sets when multiple tags are specified — multi-tag queries intend narrowing. RFC-006 resolution at filter time (not projection time) keeps projection stateless while still permitting canonical-key matching across vocabulary aliases."
+    }
+  ],
+  "instanceId": "609bd1b7-a116-4128-a9ec-1d86d3ed7989",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1
+}

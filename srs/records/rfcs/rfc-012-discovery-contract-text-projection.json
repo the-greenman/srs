@@ -1,0 +1,35 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-26T12:25:54Z",
+  "fieldValues": [
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "RFC-012: Discovery Contract & Text Projection"
+    },
+    {
+      "fieldId": "5a000001-0000-4000-a000-000000000001",
+      "value": "012"
+    },
+    {
+      "fieldId": "5a000002-0000-4000-a000-000000000002",
+      "value": "accepted"
+    },
+    {
+      "fieldId": "5a000003-0000-4000-a000-000000000003",
+      "value": "Peter Brownell"
+    },
+    {
+      "fieldId": "5a000009-0000-4000-a000-000000000009",
+      "value": "new ext:discovery extension, discovery.json schema (new), field.json (searchability classification), manifest.json (declaredExtensions), Record (Tier 2), TypedRecord (Tier 1), Note (Tier 0), Container (containerId filter)"
+    },
+    {
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
+      "value": "Defines the Discovery Contract: structured DiscoveryQuery filter axes (typeId, typeNamespace, typeName, containerId, tag, lifecycleState, tier, contentMatch), a deterministic Text Projection algorithm (TextSegment structs) for all three instance tiers, NFC+lowercase normalization rules, and a conformance fixture specification. Introduces ext:discovery as an opt-in extension. Invariants I-012-1 through I-012-12. Tracked in srs#83."
+    }
+  ],
+  "instanceId": "92c0280c-0490-4650-a24e-d11aa6d6dcdc",
+  "typeId": "6a000001-0000-4000-a000-000000000001",
+  "typeName": "rfc",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1
+}
