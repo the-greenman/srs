@@ -158,6 +158,9 @@ srs protocol validate <protocolId> --repo <path> --pretty
 
 # Export a protocol definition as portable JSON (for import into another repo)
 srs protocol export <protocolId> --repo <path> --pretty
+
+# Find the first protocol whose target type matches a given typeId
+srs protocol find-by-target-type --type-id <typeId-uuid> --repo <path> --pretty
 ```
 
 Payload shapes (all wrapped in the standard `{ "ok": true, "payload": { ... } }` envelope):
@@ -166,6 +169,7 @@ Payload shapes (all wrapped in the standard `{ "ok": true, "payload": { ... } }`
 - `protocol get` / `protocol export` → `{ "protocol": { "protocolId", "protocolNamespace", "protocolName", "protocolVersion", "protocolDescription"?, "protocolTargetType", "protocolStages": [...], "protocolTags"?, "protocolCreatedAt" } }`. The `protocol` field is the raw stored JSON; `get` and `export` return identical shapes.
 - `protocol stages` → `{ "stages": [{ "stageId", "name", "order", "dependsOn": ["<stageId>", ...] }] }`.
 - `protocol validate` → `{ "protocolId", "valid": true/false, "diagnostics": ["<message>", ...] }`. A valid protocol has `valid: true` and an empty `diagnostics` array.
+- `protocol find-by-target-type` → `{ "protocolId", "protocolName", "stages": [...], "diagnostics": ["<message>", ...] }`. Returns the first protocol whose `protocolTargetType` matches the given type ID. Returns an error envelope if no protocol targets that type.
 
 ---
 
