@@ -1,0 +1,33 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/package-manifest.json",
+  "id": "0000pkg0-0000-4000-8000-000000000001",
+  "namespace": "com.example.discovery",
+  "name": "discovery-fixture",
+  "version": "1.0.0",
+  "title": "Discovery Conformance Fixture Package",
+  "description": "Provides field and type definitions for the ext:discovery conformance fixture (RFC-012). Defines three types covering all eight SRS valueTypes: article (string, text, url, select, multiselect, number, boolean, date), project (string, text, select), and metric (string, number, boolean, date).",
+  "status": "active",
+  "fields": [
+    "fields/article-title.json",
+    "fields/article-body.json",
+    "fields/article-source-url.json",
+    "fields/article-status.json",
+    "fields/article-topics.json",
+    "fields/article-word-count.json",
+    "fields/article-is-published.json",
+    "fields/article-publish-date.json",
+    "fields/project-name.json",
+    "fields/project-description.json",
+    "fields/project-priority.json",
+    "fields/metric-label.json",
+    "fields/metric-value.json",
+    "fields/metric-is-active.json",
+    "fields/metric-recorded-at.json"
+  ],
+  "types": [
+    "types/article.json",
+    "types/project.json",
+    "types/metric.json"
+  ],
+  "createdAt": "2026-06-27T00:00:00Z"
+}

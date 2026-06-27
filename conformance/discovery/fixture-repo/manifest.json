@@ -1,0 +1,122 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/manifest.json",
+  "srsVersion": "2.0",
+  "repositoryId": "0000repo-0000-4000-8000-000000000001",
+  "namespace": "com.example.discovery",
+  "title": "Discovery Contract Conformance Fixture",
+  "description": "Self-contained SRS repository used as the conformance fixture for ext:discovery (RFC-012). Contains 8 Tier 2 Records across 3 types (covering all 8 SRS valueTypes), 2 Tier 1 TypedRecords, 1 Tier 0 Note, 2 Containers, and instances with tags and lifecycleState set.",
+  "declaredExtensions": ["ext:lifecycle", "ext:discovery"],
+  "packageRef": {
+    "mode": "local",
+    "path": "package"
+  },
+  "containerIndex": [
+    {
+      "containerId": "0000c001-0000-4000-8000-000000000001",
+      "title": "Discovery Domain Articles",
+      "path": "containers/container-alpha.json"
+    },
+    {
+      "containerId": "0000c002-0000-4000-8000-000000000002",
+      "title": "Active Projects",
+      "path": "containers/container-beta.json"
+    }
+  ],
+  "instanceIndex": [
+    {
+      "instanceId": "00000001-0000-4000-8000-000000000001",
+      "tier": 2,
+      "path": "records/articles/article-1.json",
+      "title": "SRS Discovery Contract",
+      "typeId": "0000a001-0000-4000-8000-000000000001",
+      "typeName": "article",
+      "tags": ["searchable", "indexed"]
+    },
+    {
+      "instanceId": "00000001-0000-4000-8000-000000000002",
+      "tier": 2,
+      "path": "records/articles/article-2.json",
+      "title": "Text Projection Algorithm",
+      "typeId": "0000a001-0000-4000-8000-000000000001",
+      "typeName": "article",
+      "tags": ["searchable"]
+    },
+    {
+      "instanceId": "00000001-0000-4000-8000-000000000003",
+      "tier": 2,
+      "path": "records/articles/article-3.json",
+      "title": "Query Performance in SRS",
+      "typeId": "0000a001-0000-4000-8000-000000000001",
+      "typeName": "article",
+      "tags": ["indexed"]
+    },
+    {
+      "instanceId": "00000001-0000-4000-8000-000000000004",
+      "tier": 2,
+      "path": "records/articles/article-4.json",
+      "title": "Legacy Search Approach",
+      "typeId": "0000a001-0000-4000-8000-000000000001",
+      "typeName": "article",
+      "tags": []
+    },
+    {
+      "instanceId": "00000001-0000-4000-8000-000000000005",
+      "tier": 2,
+      "path": "records/articles/article-5.json",
+      "title": "Metrics and Flags",
+      "typeId": "0000a001-0000-4000-8000-000000000001",
+      "typeName": "article",
+      "tags": []
+    },
+    {
+      "instanceId": "00000002-0000-4000-8000-000000000001",
+      "tier": 2,
+      "path": "records/projects/project-1.json",
+      "title": "Searchable Index Project",
+      "typeId": "0000a002-0000-4000-8000-000000000002",
+      "typeName": "project",
+      "tags": ["searchable", "indexed"]
+    },
+    {
+      "instanceId": "00000002-0000-4000-8000-000000000002",
+      "tier": 2,
+      "path": "records/projects/project-2.json",
+      "title": "Conformance Fixtures",
+      "typeId": "0000a002-0000-4000-8000-000000000002",
+      "typeName": "project",
+      "tags": ["searchable"]
+    },
+    {
+      "instanceId": "00000003-0000-4000-8000-000000000001",
+      "tier": 2,
+      "path": "records/metrics/metric-1.json",
+      "title": "Indexed Record Count",
+      "typeId": "0000a003-0000-4000-8000-000000000003",
+      "typeName": "metric",
+      "tags": []
+    },
+    {
+      "instanceId": "00000004-0000-4000-8000-000000000001",
+      "tier": 1,
+      "path": "records/typed-records/typed-record-1.json",
+      "title": "Discovery Feature Planning Meeting",
+      "tags": ["searchable"]
+    },
+    {
+      "instanceId": "00000004-0000-4000-8000-000000000002",
+      "tier": 1,
+      "path": "records/typed-records/typed-record-2.json",
+      "title": "Implement ext:discovery",
+      "tags": []
+    },
+    {
+      "instanceId": "00000005-0000-4000-8000-000000000001",
+      "tier": 0,
+      "path": "records/notes/note-1.json",
+      "title": "Research Notes on Full-Text Search",
+      "tags": ["searchable"]
+    }
+  ],
+  "relationsPath": "relations/relations.json",
+  "createdAt": "2026-06-27T00:00:00Z"
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/note.json",
+  "instanceId": "00000005-0000-4000-8000-000000000001",
+  "title": "Research Notes on Full-Text Search",
+  "sections": [
+    {
+      "name": "background",
+      "label": "Background",
+      "content": "Full-text search requires a portable definition of searchable content."
+    },
+    {
+      "name": "findings",
+      "label": "Findings",
+      "content": "Substring matching after NFC normalization is the simplest universal floor."
+    }
+  ],
+  "tags": ["searchable"],
+  "createdAt": "2026-06-27T00:00:00Z"
+}

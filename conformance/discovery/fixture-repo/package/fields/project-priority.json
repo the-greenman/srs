@@ -1,0 +1,12 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f002-0000-4000-8000-000000000003",
+  "namespace": "com.example.discovery",
+  "name": "priority",
+  "version": 1,
+  "description": "Priority level for the project.",
+  "aiGuidance": { "purpose": "Categorical priority: low, medium, or high." },
+  "valueType": "select",
+  "allowedValues": ["low", "medium", "high"],
+  "createdAt": "2026-06-27T00:00:00Z"
+}

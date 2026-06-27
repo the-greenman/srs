@@ -1,0 +1,11 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f003-0000-4000-8000-000000000002",
+  "namespace": "com.example.discovery",
+  "name": "value",
+  "version": 1,
+  "description": "The numeric measurement value.",
+  "aiGuidance": { "purpose": "Numeric metric value. Non-searchable per ext:discovery valueType classification." },
+  "valueType": "number",
+  "createdAt": "2026-06-27T00:00:00Z"
+}
