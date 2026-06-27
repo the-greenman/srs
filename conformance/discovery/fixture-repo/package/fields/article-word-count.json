@@ -1,0 +1,11 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f001-0000-4000-8000-000000000006",
+  "namespace": "com.example.discovery",
+  "name": "word_count",
+  "version": 1,
+  "description": "Approximate word count of the article body.",
+  "aiGuidance": { "purpose": "Numeric word count. Non-searchable per ext:discovery valueType classification." },
+  "valueType": "number",
+  "createdAt": "2026-06-27T00:00:00Z"
+}

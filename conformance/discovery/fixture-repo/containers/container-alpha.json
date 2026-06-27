@@ -1,0 +1,12 @@
+{
+  "containerId": "0000c001-0000-4000-8000-000000000001",
+  "title": "Discovery Domain Articles",
+  "description": "Articles covering the SRS discovery contract domain.",
+  "containerType": "collection",
+  "memberInstanceIds": [
+    "00000001-0000-4000-8000-000000000001",
+    "00000001-0000-4000-8000-000000000002",
+    "00000001-0000-4000-8000-000000000003"
+  ],
+  "tags": ["discovery"]
+}

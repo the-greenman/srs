@@ -1,0 +1,12 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f001-0000-4000-8000-000000000004",
+  "namespace": "com.example.discovery",
+  "name": "status",
+  "version": 1,
+  "description": "Editorial status of the article.",
+  "aiGuidance": { "purpose": "Current editorial state: draft, published, or archived." },
+  "valueType": "select",
+  "allowedValues": ["draft", "published", "archived"],
+  "createdAt": "2026-06-27T00:00:00Z"
+}

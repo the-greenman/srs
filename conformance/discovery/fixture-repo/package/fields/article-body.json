@@ -1,0 +1,11 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f001-0000-4000-8000-000000000002",
+  "namespace": "com.example.discovery",
+  "name": "body",
+  "version": 1,
+  "description": "The main body text of the article.",
+  "aiGuidance": { "purpose": "Long-form prose content of the article." },
+  "valueType": "text",
+  "createdAt": "2026-06-27T00:00:00Z"
+}

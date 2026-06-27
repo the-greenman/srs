@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "instanceId": "00000001-0000-4000-8000-000000000002",
+  "typeId": "0000a001-0000-4000-8000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.example.discovery",
+  "typeName": "article",
+  "lifecycleState": "draft",
+  "fieldValues": [
+    { "fieldId": "0000f001-0000-4000-8000-000000000001", "value": "Text Projection Algorithm" },
+    { "fieldId": "0000f001-0000-4000-8000-000000000002", "value": "Text projection maps instance field values to searchable segments in the discovery contract." },
+    { "fieldId": "0000f001-0000-4000-8000-000000000003", "value": "https://example.com/text-projection" },
+    { "fieldId": "0000f001-0000-4000-8000-000000000004", "value": "draft" },
+    { "fieldId": "0000f001-0000-4000-8000-000000000005", "value": ["text", "segments"] },
+    { "fieldId": "0000f001-0000-4000-8000-000000000006", "value": 28 },
+    { "fieldId": "0000f001-0000-4000-8000-000000000007", "value": false },
+    { "fieldId": "0000f001-0000-4000-8000-000000000008", "value": null }
+  ],
+  "tags": ["searchable"],
+  "createdAt": "2026-06-27T00:00:00Z"
+}

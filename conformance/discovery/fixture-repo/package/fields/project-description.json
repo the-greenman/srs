@@ -1,0 +1,11 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f002-0000-4000-8000-000000000002",
+  "namespace": "com.example.discovery",
+  "name": "description",
+  "version": 1,
+  "description": "A summary of the project's goals and scope.",
+  "aiGuidance": { "purpose": "Long-form description of what the project aims to accomplish." },
+  "valueType": "text",
+  "createdAt": "2026-06-27T00:00:00Z"
+}

@@ -1,0 +1,219 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/discovery.json#/$defs/ConformanceScenario",
+  "scenarios": [
+    {
+      "name": "empty_query",
+      "description": "An empty DiscoveryQuery (no predicates specified) must match all instances in the repository.",
+      "query": {},
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000002",
+        "00000001-0000-4000-8000-000000000003",
+        "00000001-0000-4000-8000-000000000004",
+        "00000001-0000-4000-8000-000000000005",
+        "00000002-0000-4000-8000-000000000001",
+        "00000002-0000-4000-8000-000000000002",
+        "00000003-0000-4000-8000-000000000001",
+        "00000004-0000-4000-8000-000000000001",
+        "00000004-0000-4000-8000-000000000002",
+        "00000005-0000-4000-8000-000000000001"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "tier_filter_note",
+      "description": "A tier:0 filter returns only Note instances (Tier 0). Tier 1 and Tier 2 instances must not appear.",
+      "query": { "tier": 0 },
+      "expectedInstanceIds": [
+        "00000005-0000-4000-8000-000000000001"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "tier_filter_typed_record",
+      "description": "A tier:1 filter returns only TypedRecord instances (Tier 1). Tier 0 and Tier 2 instances must not appear.",
+      "query": { "tier": 1 },
+      "expectedInstanceIds": [
+        "00000004-0000-4000-8000-000000000001",
+        "00000004-0000-4000-8000-000000000002"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "tier_filter_record",
+      "description": "A tier:2 filter returns only Record instances (Tier 2). Tier 0 and Tier 1 instances must not appear.",
+      "query": { "tier": 2 },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000002",
+        "00000001-0000-4000-8000-000000000003",
+        "00000001-0000-4000-8000-000000000004",
+        "00000001-0000-4000-8000-000000000005",
+        "00000002-0000-4000-8000-000000000001",
+        "00000002-0000-4000-8000-000000000002",
+        "00000003-0000-4000-8000-000000000001"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "type_name_article",
+      "description": "A typeName:'article' filter returns exactly all Records whose typeNamespace-qualified type name is 'article'. Tier 0/1 instances and Records of other types must not appear.",
+      "query": { "typeName": "article" },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000002",
+        "00000001-0000-4000-8000-000000000003",
+        "00000001-0000-4000-8000-000000000004",
+        "00000001-0000-4000-8000-000000000005"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "type_namespace",
+      "description": "A typeNamespace:'com.example.discovery' filter returns all Tier 2 Records in that namespace. Tier 0/1 instances have no typeNamespace and must not appear.",
+      "query": { "typeNamespace": "com.example.discovery" },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000002",
+        "00000001-0000-4000-8000-000000000003",
+        "00000001-0000-4000-8000-000000000004",
+        "00000001-0000-4000-8000-000000000005",
+        "00000002-0000-4000-8000-000000000001",
+        "00000002-0000-4000-8000-000000000002",
+        "00000003-0000-4000-8000-000000000001"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "type_id_project",
+      "description": "A typeId filter matching the 'project' type UUID returns exactly the two project Records.",
+      "query": { "typeId": "0000a002-0000-4000-8000-000000000002" },
+      "expectedInstanceIds": [
+        "00000002-0000-4000-8000-000000000001",
+        "00000002-0000-4000-8000-000000000002"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "container_alpha",
+      "description": "A containerId filter for container-alpha returns only the three articles registered as members via memberInstanceIds. Instances not in that container must not appear.",
+      "query": { "containerId": "0000c001-0000-4000-8000-000000000001" },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000002",
+        "00000001-0000-4000-8000-000000000003"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "container_beta",
+      "description": "A containerId filter for container-beta returns only the two project Records registered as members via memberInstanceIds.",
+      "query": { "containerId": "0000c002-0000-4000-8000-000000000002" },
+      "expectedInstanceIds": [
+        "00000002-0000-4000-8000-000000000001",
+        "00000002-0000-4000-8000-000000000002"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "single_tag_searchable",
+      "description": "A tag filter for ['searchable'] returns all instances carrying that tag string. Instances without the tag must not appear.",
+      "query": { "tag": ["searchable"] },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000002",
+        "00000002-0000-4000-8000-000000000001",
+        "00000002-0000-4000-8000-000000000002",
+        "00000004-0000-4000-8000-000000000001",
+        "00000005-0000-4000-8000-000000000001"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "multi_tag_and",
+      "description": "A tag filter for ['searchable', 'indexed'] uses AND semantics: only instances carrying BOTH tags must be returned. Instances carrying only one of the two tags must not appear.",
+      "query": { "tag": ["searchable", "indexed"] },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000002-0000-4000-8000-000000000001"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "lifecycle_published",
+      "description": "A lifecycleState:'published' filter returns only Records in that lifecycle state. Records in other states and Tier 0/1 instances (which have no lifecycleState) must not appear.",
+      "query": { "lifecycleState": "published" },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000003"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "lifecycle_draft",
+      "description": "A lifecycleState:'draft' filter returns only Records in the draft state.",
+      "query": { "lifecycleState": "draft" },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000002",
+        "00000001-0000-4000-8000-000000000005"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "type_and_lifecycle_combined",
+      "description": "Combined typeName and lifecycleState predicates are evaluated as an AND conjunction. Only Records satisfying both must be returned.",
+      "query": { "typeName": "article", "lifecycleState": "draft" },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000002",
+        "00000001-0000-4000-8000-000000000005"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "content_match_discovery",
+      "description": "A contentMatch:'discovery' predicate must include every instance whose Text Projection contains a segment whose normalized text contains 'discovery' as a substring. The guaranteed-recall floor is articles 1, 2, and 4 (title/body contain 'discovery'), project-2 (description contains 'discovery'), typed-record-1 (title contains 'Discovery'), and typed-record-2 (title contains 'ext:discovery'). Implementations may return additional instances.",
+      "query": { "contentMatch": "discovery" },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000002",
+        "00000001-0000-4000-8000-000000000004",
+        "00000002-0000-4000-8000-000000000002",
+        "00000004-0000-4000-8000-000000000001",
+        "00000004-0000-4000-8000-000000000002"
+      ],
+      "exactMatch": false
+    },
+    {
+      "name": "content_match_indexing",
+      "description": "A contentMatch:'indexing' predicate must include every instance with a Text Projection segment containing 'indexing'. Articles 1 and 3 each have 'indexing' as a multiselect topics value. This tests that multiselect elements each contribute a separate segment.",
+      "query": { "contentMatch": "indexing" },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000003"
+      ],
+      "exactMatch": false
+    },
+    {
+      "name": "content_match_indexed_tag_and_label",
+      "description": "A contentMatch:'indexed' predicate must include instances where 'indexed' appears in tag segments (articles 1, 3 and project-1) and in the string label field of metric-1 ('Indexed Record Count'). This tests that both tag segments and string field segments are projected.",
+      "query": { "contentMatch": "indexed" },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000003",
+        "00000002-0000-4000-8000-000000000001",
+        "00000003-0000-4000-8000-000000000001"
+      ],
+      "exactMatch": false
+    },
+    {
+      "name": "content_match_combined_type_and_content",
+      "description": "Combined typeName and contentMatch predicates: must return only article instances (structured filter, exact) that also match the content floor for 'draft' (the select field value 'draft' is searchable). The floor is articles 2 and 5 (both have status field value 'draft').",
+      "query": { "typeName": "article", "contentMatch": "draft" },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000002",
+        "00000001-0000-4000-8000-000000000005"
+      ],
+      "exactMatch": false
+    }
+  ]
+}
