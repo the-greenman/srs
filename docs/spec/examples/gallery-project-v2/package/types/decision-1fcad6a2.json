@@ -78,6 +78,13 @@
       "order": 10,
       "repeatable": false,
       "required": false
+    },
+    {
+      "displayLabel": "External Links",
+      "fieldId": "7a3f8c2d-5e6b-4b1e-9d0a-8c2f3b5a6e4d",
+      "order": 11,
+      "repeatable": false,
+      "required": false
     }
   ],
   "id": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",

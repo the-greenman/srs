@@ -1,0 +1,12 @@
+{
+  "aiGuidance": {
+    "purpose": "Link to external sources such as meeting notes, research, or references that informed this decision."
+  },
+  "createdAt": "2026-06-27T00:00:00Z",
+  "description": "External references, links, or citations supporting this decision.",
+  "id": "7a3f8c2d-5e6b-4b1e-9d0a-8c2f3b5a6e4d",
+  "name": "external_links",
+  "namespace": "governance",
+  "valueType": "url",
+  "version": 1
+}
