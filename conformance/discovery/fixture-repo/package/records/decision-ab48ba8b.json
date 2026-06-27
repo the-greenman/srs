@@ -1,0 +1,28 @@
+{
+  "createdAt": "2026-06-27T15:16:25.720674764+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "f1001001-0000-4000-a000-000000000001",
+      "value": "Deploy to Amazon Web Services"
+    },
+    {
+      "fieldId": "f1001003-0000-4000-a000-000000000003",
+      "value": "https://aws.amazon.com/documentation/"
+    },
+    {
+      "fieldId": "f1001004-0000-4000-a000-000000000004",
+      "value": "high"
+    }
+  ],
+  "instanceId": "ab48ba8b-1438-4c2e-84cc-ead44f98af04",
+  "tags": [
+    "infrastructure",
+    "cloud"
+  ],
+  "lifecycleState": "superseded",
+  "typeId": "t1001001-0000-4000-a000-000000000001",
+  "typeName": "decision",
+  "typeNamespace": "com.srs.discovery.fixture",
+  "typeVersion": 1,
+  "updatedAt": "2026-06-27T15:16:25.720682795+00:00"
+}

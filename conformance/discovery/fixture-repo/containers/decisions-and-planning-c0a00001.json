@@ -1,0 +1,19 @@
+{
+  "containerId": "c0a00001-0000-4000-a000-000000000001",
+  "createdAt": "2026-06-27T00:00:00Z",
+  "description": "Container for architectural decisions and planning notes.",
+  "memberInstanceIds": [
+    "6d08578c-e4ac-4380-a2bc-7662d74211de",
+    "2e86e79c-bf8a-43e9-ae5c-5d307629e165",
+    "ab48ba8b-1438-4c2e-84cc-ead44f98af04",
+    "ce0da48c-7633-4ac3-a22b-410208bb3652",
+    "90ce99aa-7384-4372-bd7a-132a221a8d57",
+    "1a2b3c4d-0000-4000-a000-000000001001",
+    "b1b2c3d4-1234-4000-a000-000000001001"
+  ],
+  "tags": [
+    "decisions",
+    "planning"
+  ],
+  "title": "Decisions and Planning"
+}

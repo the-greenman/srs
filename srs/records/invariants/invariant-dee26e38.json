@@ -1,0 +1,33 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-27T15:35:06.767553020+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-84"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "ext:discovery containerId filter uses RFC-009 I-66 three-condition membership"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "A containerId filter predicate MUST use the three-condition membership definition of RFC-009 I-66: (1) instanceId in Container.rootInstanceIds[], OR (2) instanceId in Container.memberInstanceIds[], OR (3) reachable via transitive contains Relation traversal from any rootInstanceIds[] entry. The instance file and relations file are authoritative; an implementation MAY use instanceIndex as a performance cache but MUST treat instance file and relations file as authoritative when they conflict with the cache."
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "ext:discovery (DiscoveryQuery.containerId)"
+    }
+  ],
+  "instanceId": "dee26e38-cb53-48db-94b1-ef2f998d70c2",
+  "tags": [
+    "discovery",
+    "ext:discovery",
+    "rfc-012"
+  ],
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-06-27T15:35:06.767559487+00:00"
+}

@@ -1,0 +1,13 @@
+{
+  "aiGuidance": {
+    "purpose": "The calendar date of occurrence in ISO 8601 format."
+  },
+  "createdAt": "2026-06-27T00:00:00Z",
+  "description": "Date when this event occurred.",
+  "editorHint": "date-picker",
+  "id": "f1001007-0000-4000-a000-000000000007",
+  "name": "occurred_on",
+  "namespace": "com.srs.discovery.fixture",
+  "valueType": "date",
+  "version": 1
+}

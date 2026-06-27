@@ -1,0 +1,44 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-27T15:33:11.255678224+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "RFC-012: Discovery Contract and Text Projection"
+    },
+    {
+      "fieldId": "5a000001-0000-4000-a000-000000000001",
+      "value": "012"
+    },
+    {
+      "fieldId": "5a000002-0000-4000-a000-000000000002",
+      "value": "implemented"
+    },
+    {
+      "fieldId": "5a000003-0000-4000-a000-000000000003",
+      "value": "Claude (automated)"
+    },
+    {
+      "fieldId": "5a000009-0000-4000-a000-000000000009",
+      "value": "ext:discovery (new), DiscoveryQuery, TextSegment, Text Projection algorithm, conformance fixture, docs/schema/2.0/discovery.json"
+    },
+    {
+      "fieldId": "5a000016-0000-4000-a000-000000000016",
+      "value": "rfcs/rfc-012-discovery-contract-text-projection.md"
+    },
+    {
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
+      "value": "Defines the portable, implementation-agnostic discovery contract for SRS. Introduces ext:discovery, the DiscoveryQuery structured filter (typeId, typeNamespace, typeName, containerId, tag, lifecycleState, tier, contentMatch), and the Text Projection algorithm (ValueType-driven searchable fields, TextSegment model, NFC + Unicode simple lowercasing normalization). Twelve conformance rules R1-R12 establish exact-match guarantees for structured filters and guaranteed-recall-floor semantics for content matching. Conformance fixture at srs/conformance/discovery/ with 22 scenarios. Invariants I-079 through I-090. Tracked in the-greenman/srs#83."
+    }
+  ],
+  "instanceId": "70f10160-0b9f-428f-98e3-21faf85cf62a",
+  "tags": [
+    "rfc",
+    "discovery"
+  ],
+  "typeId": "6a000001-0000-4000-a000-000000000001",
+  "typeName": "rfc",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-06-27T15:33:11.255688733+00:00"
+}

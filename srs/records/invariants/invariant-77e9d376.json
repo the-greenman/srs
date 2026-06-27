@@ -1,0 +1,33 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-27T15:35:06.779295822+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-86"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "Text Projection includes searchable ValueTypes only"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "The Text Projection MUST include segments for fields with valueType string, text, url, select, or multiselect. Fields with valueType number, boolean, or date MUST NOT contribute any TextSegment to the Text Projection."
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "ext:discovery (Text Projection)"
+    }
+  ],
+  "instanceId": "77e9d376-b717-4011-8505-ec756af3e3a2",
+  "tags": [
+    "discovery",
+    "ext:discovery",
+    "rfc-012"
+  ],
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-06-27T15:35:06.779301111+00:00"
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-27T15:35:06.749518056+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-81"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "ext:discovery content-match extra recall is permitted"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "An implementation MAY include instances beyond the recall-floor set when evaluating a contentMatch predicate. Returning additional results (e.g. via stemming, phonetic matching, or semantic similarity) does not violate conformance."
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "ext:discovery (DiscoveryQuery.contentMatch)"
+    }
+  ],
+  "instanceId": "035007f6-11af-4841-9359-1b7bee309688",
+  "tags": [
+    "discovery",
+    "ext:discovery",
+    "rfc-012"
+  ],
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-06-27T15:35:06.749524428+00:00"
+}

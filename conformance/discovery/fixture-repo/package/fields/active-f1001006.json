@@ -1,0 +1,12 @@
+{
+  "aiGuidance": {
+    "purpose": "Boolean flag indicating active/inactive status."
+  },
+  "createdAt": "2026-06-27T00:00:00Z",
+  "description": "Whether this instance is currently active.",
+  "id": "f1001006-0000-4000-a000-000000000006",
+  "name": "active",
+  "namespace": "com.srs.discovery.fixture",
+  "valueType": "boolean",
+  "version": 1
+}

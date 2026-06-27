@@ -1,0 +1,32 @@
+{
+  "createdAt": "2026-06-27T15:16:13.499431092+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "f1001001-0000-4000-a000-000000000001",
+      "value": "Adopt PostgreSQL as primary database"
+    },
+    {
+      "fieldId": "f1001002-0000-4000-a000-000000000002",
+      "value": "We evaluated several database options and chose PostgreSQL for its ACID compliance, JSON support, and strong community ecosystem."
+    },
+    {
+      "fieldId": "f1001003-0000-4000-a000-000000000003",
+      "value": "https://www.postgresql.org/docs/"
+    },
+    {
+      "fieldId": "f1001004-0000-4000-a000-000000000004",
+      "value": "high"
+    }
+  ],
+  "instanceId": "6d08578c-e4ac-4380-a2bc-7662d74211de",
+  "tags": [
+    "database",
+    "infrastructure"
+  ],
+  "lifecycleState": "active",
+  "typeId": "t1001001-0000-4000-a000-000000000001",
+  "typeName": "decision",
+  "typeNamespace": "com.srs.discovery.fixture",
+  "typeVersion": 1,
+  "updatedAt": "2026-06-27T15:16:13.499446165+00:00"
+}

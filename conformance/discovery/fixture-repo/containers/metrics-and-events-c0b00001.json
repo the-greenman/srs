@@ -1,0 +1,16 @@
+{
+  "containerId": "c0b00001-0000-4000-a000-000000000002",
+  "createdAt": "2026-06-27T00:00:00Z",
+  "description": "Container for tracked metrics and milestone events.",
+  "memberInstanceIds": [
+    "e7c5ea63-f7eb-444e-b0b2-44851638825a",
+    "04e1039c-a067-41f1-8130-6c7cbc575de5",
+    "12742926-6ab7-4f3d-88d8-f03d2c041188",
+    "c1b2c3d4-1234-4000-a000-000000001002"
+  ],
+  "tags": [
+    "metrics",
+    "events"
+  ],
+  "title": "Metrics and Events"
+}

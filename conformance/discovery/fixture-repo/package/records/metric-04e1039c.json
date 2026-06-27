@@ -1,0 +1,23 @@
+{
+  "createdAt": "2026-06-27T15:16:35.025450491+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "f1001001-0000-4000-a000-000000000001",
+      "value": "API error rate"
+    },
+    {
+      "fieldId": "f1001005-0000-4000-a000-000000000005",
+      "value": 0.02
+    },
+    {
+      "fieldId": "f1001006-0000-4000-a000-000000000006",
+      "value": false
+    }
+  ],
+  "instanceId": "04e1039c-a067-41f1-8130-6c7cbc575de5",
+  "typeId": "t1001002-0000-4000-a000-000000000002",
+  "typeName": "metric",
+  "typeNamespace": "com.srs.discovery.fixture",
+  "typeVersion": 1,
+  "updatedAt": "2026-06-27T15:16:35.025457531+00:00"
+}

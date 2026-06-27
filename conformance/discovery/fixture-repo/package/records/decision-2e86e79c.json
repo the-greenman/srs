@@ -1,0 +1,26 @@
+{
+  "createdAt": "2026-06-27T15:16:25.700074670+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "f1001001-0000-4000-a000-000000000001",
+      "value": "Use React for frontend development"
+    },
+    {
+      "fieldId": "f1001002-0000-4000-a000-000000000002",
+      "value": "React provides a component-based architecture with a large ecosystem of libraries."
+    },
+    {
+      "fieldId": "f1001004-0000-4000-a000-000000000004",
+      "value": "medium"
+    }
+  ],
+  "instanceId": "2e86e79c-bf8a-43e9-ae5c-5d307629e165",
+  "tags": [
+    "frontend"
+  ],
+  "typeId": "t1001001-0000-4000-a000-000000000001",
+  "typeName": "decision",
+  "typeNamespace": "com.srs.discovery.fixture",
+  "typeVersion": 1,
+  "updatedAt": "2026-06-27T15:16:25.700086691+00:00"
+}

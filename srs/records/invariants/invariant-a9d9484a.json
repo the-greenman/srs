@@ -1,0 +1,33 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-27T15:35:06.761300929+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-83"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "ext:discovery structured filters and contentMatch compose with AND"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "When both structured filter predicates and a contentMatch predicate are specified in a DiscoveryQuery, an instance MUST satisfy all structured filter predicates AND the content-match recall-floor predicate. The structured-filter constraints cannot be overridden or weakened by content-match extra recall."
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "ext:discovery (DiscoveryQuery)"
+    }
+  ],
+  "instanceId": "a9d9484a-3366-4007-b2c1-6e0e4f3073a8",
+  "tags": [
+    "discovery",
+    "ext:discovery",
+    "rfc-012"
+  ],
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-06-27T15:35:06.761308916+00:00"
+}

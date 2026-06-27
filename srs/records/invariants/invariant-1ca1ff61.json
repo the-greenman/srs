@@ -1,0 +1,33 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-27T15:35:06.773260372+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-85"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "ext:discovery tag filter uses AND semantics and RFC-006 canonicalization"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "A tag predicate with multiple values MUST use AND semantics — the instance must carry ALL specified tag values. Both query tags and stored instance tags MUST be canonicalized via RFC-006 key-or-alias resolution when a Vocabulary is declared. When no Vocabulary is declared, raw case-sensitive string comparison applies."
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "ext:discovery (DiscoveryQuery.tag)"
+    }
+  ],
+  "instanceId": "1ca1ff61-cfd6-49f7-be33-ff8a74524944",
+  "tags": [
+    "discovery",
+    "ext:discovery",
+    "rfc-012"
+  ],
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-06-27T15:35:06.773264595+00:00"
+}

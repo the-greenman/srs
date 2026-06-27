@@ -1,0 +1,20 @@
+{
+  "aiGuidance": {
+    "purpose": "One or more categorical labels that classify this instance."
+  },
+  "allowedValues": [
+    "product",
+    "milestone",
+    "infrastructure",
+    "process",
+    "research"
+  ],
+  "createdAt": "2026-06-27T00:00:00Z",
+  "description": "Multi-value category labels.",
+  "editorHint": "multi-select",
+  "id": "f1001008-0000-4000-a000-000000000008",
+  "name": "categories",
+  "namespace": "com.srs.discovery.fixture",
+  "valueType": "multiselect",
+  "version": 1
+}

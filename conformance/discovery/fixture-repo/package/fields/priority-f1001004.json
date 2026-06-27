@@ -1,0 +1,18 @@
+{
+  "aiGuidance": {
+    "purpose": "Categorical urgency or importance rating."
+  },
+  "allowedValues": [
+    "high",
+    "medium",
+    "low"
+  ],
+  "createdAt": "2026-06-27T00:00:00Z",
+  "description": "Priority level: high, medium, or low.",
+  "editorHint": "dropdown",
+  "id": "f1001004-0000-4000-a000-000000000004",
+  "name": "priority",
+  "namespace": "com.srs.discovery.fixture",
+  "valueType": "select",
+  "version": 1
+}

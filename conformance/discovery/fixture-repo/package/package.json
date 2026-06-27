@@ -1,0 +1,30 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/package-manifest.json",
+  "blueprints": [],
+  "createdAt": "2026-01-01T00:00:00Z",
+  "description": "",
+  "documentViews": [],
+  "fields": [
+    "fields/title-f1001001.json",
+    "fields/body-f1001002.json",
+    "fields/reference-f1001003.json",
+    "fields/priority-f1001004.json",
+    "fields/count-f1001005.json",
+    "fields/active-f1001006.json",
+    "fields/occurredon-f1001007.json",
+    "fields/categories-f1001008.json"
+  ],
+  "id": "dc52e558-93cd-4139-963c-8853bb3eb1fe",
+  "name": "primary",
+  "namespace": "com.srs.discovery.fixture",
+  "relationTypes": [],
+  "status": "active",
+  "title": "primary",
+  "types": [
+    "types/decision-t1001001.json",
+    "types/metric-t1001002.json",
+    "types/event-t1001003.json"
+  ],
+  "version": "1.0.0",
+  "views": []
+}

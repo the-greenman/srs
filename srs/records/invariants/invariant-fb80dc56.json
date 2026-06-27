@@ -1,0 +1,33 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-27T15:35:06.743479753+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-80"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "ext:discovery content-match recall-floor guarantee"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "For a contentMatch predicate with normalized query string q, an implementation that declares ext:discovery MUST include every instance whose Text Projection contains at least one segment whose normalized text contains q as a substring (NFC + Unicode simple lowercasing applied to both q and segment text before comparison)."
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "ext:discovery (DiscoveryQuery.contentMatch)"
+    }
+  ],
+  "instanceId": "fb80dc56-bd79-4980-b247-23bce5f1e19d",
+  "tags": [
+    "discovery",
+    "ext:discovery",
+    "rfc-012"
+  ],
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-06-27T15:35:06.743484944+00:00"
+}

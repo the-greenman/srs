@@ -1,0 +1,38 @@
+{
+  "createdAt": "2026-06-27T00:00:00Z",
+  "description": "An architectural or product decision with rationale.",
+  "fields": [
+    {
+      "displayLabel": "Title",
+      "fieldId": "f1001001-0000-4000-a000-000000000001",
+      "order": 0,
+      "repeatable": false,
+      "required": true
+    },
+    {
+      "displayLabel": "Body",
+      "fieldId": "f1001002-0000-4000-a000-000000000002",
+      "order": 1,
+      "repeatable": false,
+      "required": false
+    },
+    {
+      "displayLabel": "Reference",
+      "fieldId": "f1001003-0000-4000-a000-000000000003",
+      "order": 2,
+      "repeatable": false,
+      "required": false
+    },
+    {
+      "displayLabel": "Priority",
+      "fieldId": "f1001004-0000-4000-a000-000000000004",
+      "order": 3,
+      "repeatable": false,
+      "required": false
+    }
+  ],
+  "id": "t1001001-0000-4000-a000-000000000001",
+  "name": "decision",
+  "namespace": "com.srs.discovery.fixture",
+  "version": 1
+}

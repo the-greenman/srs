@@ -1,0 +1,29 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/typed-record.json",
+  "instanceId": "b1b2c3d4-1234-4000-a000-000000001001",
+  "title": "Architecture principles",
+  "instanceType": "governance/principle",
+  "fields": [
+    {
+      "name": "concern",
+      "label": "Concern",
+      "valueType": "string",
+      "value": "Scalability"
+    },
+    {
+      "name": "decision",
+      "label": "Decision",
+      "valueType": "text",
+      "value": "Horizontal scaling is preferred over vertical scaling for stateless services."
+    },
+    {
+      "name": "status",
+      "label": "Status",
+      "valueType": "select",
+      "selectOptions": ["open", "decided", "reviewed"],
+      "value": "decided"
+    }
+  ],
+  "tags": ["architecture", "scalability"],
+  "createdAt": "2026-06-27T00:00:00Z"
+}

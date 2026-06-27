@@ -1,0 +1,31 @@
+{
+  "createdAt": "2026-06-27T00:00:00Z",
+  "description": "A quantitative measurement or indicator.",
+  "fields": [
+    {
+      "displayLabel": "Name",
+      "fieldId": "f1001001-0000-4000-a000-000000000001",
+      "order": 0,
+      "repeatable": false,
+      "required": true
+    },
+    {
+      "displayLabel": "Count",
+      "fieldId": "f1001005-0000-4000-a000-000000000005",
+      "order": 1,
+      "repeatable": false,
+      "required": false
+    },
+    {
+      "displayLabel": "Active",
+      "fieldId": "f1001006-0000-4000-a000-000000000006",
+      "order": 2,
+      "repeatable": false,
+      "required": false
+    }
+  ],
+  "id": "t1001002-0000-4000-a000-000000000002",
+  "name": "metric",
+  "namespace": "com.srs.discovery.fixture",
+  "version": 1
+}

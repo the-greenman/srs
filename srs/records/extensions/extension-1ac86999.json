@@ -1,0 +1,32 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-27T15:33:49.714235072+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000018-0000-4000-a000-000000000018",
+      "value": "ext:discovery"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "Discovery"
+    },
+    {
+      "fieldId": "1a000019-0000-4000-a000-000000000019",
+      "value": ""
+    },
+    {
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
+      "value": "**Required for**: any implementation that exposes a search or filter interface over repository contents.\n\nDefines the portable discovery contract: a DiscoveryQuery structured-filter API, the Text Projection algorithm for content matching, and a conformance fixture with deterministic scenarios.\n\n---\n\n#### DiscoveryQuery\n\nA conjunction of zero or more filter predicates. All properties are optional; absent predicates are wildcards.\n\n- `typeId` (string, UUID): exact match on Record.typeId\n- `typeNamespace` (string): exact match on Record.typeNamespace\n- `typeName` (string): exact match on Record.typeName\n- `containerId` (string, UUID): membership per RFC-009 I-66 three-condition rule\n- `tag` (string[]): AND-conjunction — instance must carry ALL specified tags\n- `lifecycleState` (string): requires ext:lifecycle; exact match on Record.lifecycleState\n- `tier` (0 | 1 | 2): instance tier — 0=Note, 1=TypedRecord, 2=Record\n- `contentMatch` (string): free-text; guaranteed-recall-floor (I-080)\n\nAll specified predicates are combined with AND. An empty query matches all instances.\n\n---\n\n#### Text Projection\n\nThe Text Projection is a derived, ordered list of TextSegment values computed at query time from an instance's stored fields. It is not stored.\n\nTextSegment fields:\n- `fieldId` (string): field definition UUID or sentinel (e.g. 'tag', 'note-title', 'typed-record-title', 'typed-record-field')\n- `fieldName` (string): field name (snake_case) or sentinel string\n- `text` (string): raw stored value; normalization applied at match time\n\nSearchable ValueTypes (MUST contribute segments): string, text, url, select, multiselect.\n\nNon-searchable ValueTypes (MUST NOT contribute segments): number, boolean, date.\n\nTags MUST be included as segments after field segments. Display labels (FieldAssignment.displayLabel) MAY be included after tags.\n\n---\n\n#### Normalization\n\nNormalization applies NFC followed by Unicode simple lowercasing. Implementations MUST NOT strip punctuation, diacritics, or whitespace during normalization. Additional stemming or tokenization is permitted for ranking but not required for the recall-floor guarantee.\n\n---\n\n#### Conformance\n\nImplementations declaring ext:discovery MUST satisfy all scenarios in srs/conformance/discovery/scenarios.json against the fixture at srs/conformance/discovery/fixture-repo/. exactMatch=true scenarios are exact inclusion/exclusion checks. exactMatch=false scenarios are recall-floor checks (the result set MUST be a superset of the expected set).\n\n---\n\n#### Consistency Rule for Accelerators\n\nStructured-filter predicates (typeId, typeNamespace, typeName, containerId, tag, lifecycleState, tier) impose exact-match constraints. contentMatch provides a recall floor only. When both are specified, an instance MUST satisfy all structured predicates AND the content-match recall floor. Content-match extra recall cannot override structured-filter exclusions."
+    }
+  ],
+  "instanceId": "1ac86999-3c7d-4a48-bc12-dcfc7b27136b",
+  "tags": [
+    "discovery",
+    "rfc-012"
+  ],
+  "typeId": "2a000008-0000-4000-a000-000000000008",
+  "typeName": "extension",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-06-27T15:33:49.714244995+00:00"
+}

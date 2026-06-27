@@ -1,0 +1,33 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-27T15:35:06.791204492+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-88"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "Text Projection normalization is NFC then Unicode simple lowercasing"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "Normalization applied during content-match comparison MUST consist of NFC Unicode normalization followed by Unicode simple lowercasing (not full/locale-specific casing). Implementations MUST NOT strip punctuation, diacritics, or whitespace during normalization. Additional stemming or tokenization is permitted for ranking but MUST NOT affect the guaranteed-recall-floor computation."
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "ext:discovery (Text Projection, normalization)"
+    }
+  ],
+  "instanceId": "2e3f1a6a-affc-41c5-9c8f-43bd89a586ff",
+  "tags": [
+    "discovery",
+    "ext:discovery",
+    "rfc-012"
+  ],
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-06-27T15:35:06.791206695+00:00"
+}

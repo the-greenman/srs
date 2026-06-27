@@ -1,0 +1,24 @@
+{
+  "createdAt": "2026-06-27T15:16:25.741064266+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "f1001001-0000-4000-a000-000000000001",
+      "value": "Adopt microservices architecture"
+    },
+    {
+      "fieldId": "f1001002-0000-4000-a000-000000000002",
+      "value": "Split the monolith into independently deployable services to improve scalability and team autonomy."
+    },
+    {
+      "fieldId": "f1001004-0000-4000-a000-000000000004",
+      "value": "low"
+    }
+  ],
+  "instanceId": "ce0da48c-7633-4ac3-a22b-410208bb3652",
+  "lifecycleState": "draft",
+  "typeId": "t1001001-0000-4000-a000-000000000001",
+  "typeName": "decision",
+  "typeNamespace": "com.srs.discovery.fixture",
+  "typeVersion": 1,
+  "updatedAt": "2026-06-27T15:16:25.741072072+00:00"
+}

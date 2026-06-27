@@ -1,0 +1,250 @@
+[
+  {
+    "name": "empty-query",
+    "description": "An empty DiscoveryQuery (no predicates) is a universal wildcard and must return all instances in the repository.",
+    "query": {},
+    "expectedInstanceIds": [
+      "3154f051-2c6d-4e44-a74d-947329c6f92d",
+      "6d08578c-e4ac-4380-a2bc-7662d74211de",
+      "2e86e79c-bf8a-43e9-ae5c-5d307629e165",
+      "ab48ba8b-1438-4c2e-84cc-ead44f98af04",
+      "ce0da48c-7633-4ac3-a22b-410208bb3652",
+      "90ce99aa-7384-4372-bd7a-132a221a8d57",
+      "e7c5ea63-f7eb-444e-b0b2-44851638825a",
+      "04e1039c-a067-41f1-8130-6c7cbc575de5",
+      "12742926-6ab7-4f3d-88d8-f03d2c041188",
+      "1a2b3c4d-0000-4000-a000-000000001001",
+      "b1b2c3d4-1234-4000-a000-000000001001",
+      "c1b2c3d4-1234-4000-a000-000000001002"
+    ],
+    "exactMatch": true
+  },
+  {
+    "name": "type-name-decision",
+    "description": "typeName='decision' must return exactly the 5 decision records and nothing else.",
+    "query": { "typeName": "decision" },
+    "expectedInstanceIds": [
+      "6d08578c-e4ac-4380-a2bc-7662d74211de",
+      "2e86e79c-bf8a-43e9-ae5c-5d307629e165",
+      "ab48ba8b-1438-4c2e-84cc-ead44f98af04",
+      "ce0da48c-7633-4ac3-a22b-410208bb3652",
+      "90ce99aa-7384-4372-bd7a-132a221a8d57"
+    ],
+    "exactMatch": true
+  },
+  {
+    "name": "type-name-metric",
+    "description": "typeName='metric' must return exactly the 2 metric records.",
+    "query": { "typeName": "metric" },
+    "expectedInstanceIds": [
+      "e7c5ea63-f7eb-444e-b0b2-44851638825a",
+      "04e1039c-a067-41f1-8130-6c7cbc575de5"
+    ],
+    "exactMatch": true
+  },
+  {
+    "name": "type-name-event",
+    "description": "typeName='event' must return exactly the 1 event record.",
+    "query": { "typeName": "event" },
+    "expectedInstanceIds": [
+      "12742926-6ab7-4f3d-88d8-f03d2c041188"
+    ],
+    "exactMatch": true
+  },
+  {
+    "name": "type-namespace-fixture",
+    "description": "typeNamespace='com.srs.discovery.fixture' must return exactly the 8 package-typed records; Notes and TypedRecords are excluded.",
+    "query": { "typeNamespace": "com.srs.discovery.fixture" },
+    "expectedInstanceIds": [
+      "6d08578c-e4ac-4380-a2bc-7662d74211de",
+      "2e86e79c-bf8a-43e9-ae5c-5d307629e165",
+      "ab48ba8b-1438-4c2e-84cc-ead44f98af04",
+      "ce0da48c-7633-4ac3-a22b-410208bb3652",
+      "90ce99aa-7384-4372-bd7a-132a221a8d57",
+      "e7c5ea63-f7eb-444e-b0b2-44851638825a",
+      "04e1039c-a067-41f1-8130-6c7cbc575de5",
+      "12742926-6ab7-4f3d-88d8-f03d2c041188"
+    ],
+    "exactMatch": true
+  },
+  {
+    "name": "container-decisions-and-planning",
+    "description": "containerId filter for 'Decisions and Planning' must return exactly its 7 member instances.",
+    "query": { "containerId": "c0a00001-0000-4000-a000-000000000001" },
+    "expectedInstanceIds": [
+      "6d08578c-e4ac-4380-a2bc-7662d74211de",
+      "2e86e79c-bf8a-43e9-ae5c-5d307629e165",
+      "ab48ba8b-1438-4c2e-84cc-ead44f98af04",
+      "ce0da48c-7633-4ac3-a22b-410208bb3652",
+      "90ce99aa-7384-4372-bd7a-132a221a8d57",
+      "1a2b3c4d-0000-4000-a000-000000001001",
+      "b1b2c3d4-1234-4000-a000-000000001001"
+    ],
+    "exactMatch": true
+  },
+  {
+    "name": "container-metrics-and-events",
+    "description": "containerId filter for 'Metrics and Events' must return exactly its 4 member instances.",
+    "query": { "containerId": "c0b00001-0000-4000-a000-000000000002" },
+    "expectedInstanceIds": [
+      "e7c5ea63-f7eb-444e-b0b2-44851638825a",
+      "04e1039c-a067-41f1-8130-6c7cbc575de5",
+      "12742926-6ab7-4f3d-88d8-f03d2c041188",
+      "c1b2c3d4-1234-4000-a000-000000001002"
+    ],
+    "exactMatch": true
+  },
+  {
+    "name": "tag-single-infrastructure",
+    "description": "tag=['infrastructure'] (AND-conjunction over one tag) must return exactly the 2 records carrying the 'infrastructure' tag.",
+    "query": { "tag": ["infrastructure"] },
+    "expectedInstanceIds": [
+      "6d08578c-e4ac-4380-a2bc-7662d74211de",
+      "ab48ba8b-1438-4c2e-84cc-ead44f98af04"
+    ],
+    "exactMatch": true
+  },
+  {
+    "name": "tag-conjunction-infrastructure-cloud",
+    "description": "tag=['infrastructure','cloud'] (AND-conjunction) must return only the single record carrying both tags.",
+    "query": { "tag": ["infrastructure", "cloud"] },
+    "expectedInstanceIds": [
+      "ab48ba8b-1438-4c2e-84cc-ead44f98af04"
+    ],
+    "exactMatch": true
+  },
+  {
+    "name": "tag-single-launch",
+    "description": "tag=['launch'] must return exactly the 1 record tagged 'launch'.",
+    "query": { "tag": ["launch"] },
+    "expectedInstanceIds": [
+      "12742926-6ab7-4f3d-88d8-f03d2c041188"
+    ],
+    "exactMatch": true
+  },
+  {
+    "name": "lifecycle-state-active",
+    "description": "lifecycleState='active' (requires ext:lifecycle) must return exactly the 1 record in the active state.",
+    "query": { "lifecycleState": "active" },
+    "expectedInstanceIds": [
+      "6d08578c-e4ac-4380-a2bc-7662d74211de"
+    ],
+    "exactMatch": true
+  },
+  {
+    "name": "lifecycle-state-superseded",
+    "description": "lifecycleState='superseded' must return exactly the 1 superseded record.",
+    "query": { "lifecycleState": "superseded" },
+    "expectedInstanceIds": [
+      "ab48ba8b-1438-4c2e-84cc-ead44f98af04"
+    ],
+    "exactMatch": true
+  },
+  {
+    "name": "lifecycle-state-draft",
+    "description": "lifecycleState='draft' must return exactly the 1 draft record.",
+    "query": { "lifecycleState": "draft" },
+    "expectedInstanceIds": [
+      "ce0da48c-7633-4ac3-a22b-410208bb3652"
+    ],
+    "exactMatch": true
+  },
+  {
+    "name": "tier-note",
+    "description": "tier=0 must return exactly the 2 Note instances (Tier 0).",
+    "query": { "tier": 0 },
+    "expectedInstanceIds": [
+      "3154f051-2c6d-4e44-a74d-947329c6f92d",
+      "1a2b3c4d-0000-4000-a000-000000001001"
+    ],
+    "exactMatch": true
+  },
+  {
+    "name": "tier-typed-record",
+    "description": "tier=1 must return exactly the 2 TypedRecord instances (Tier 1).",
+    "query": { "tier": 1 },
+    "expectedInstanceIds": [
+      "b1b2c3d4-1234-4000-a000-000000001001",
+      "c1b2c3d4-1234-4000-a000-000000001002"
+    ],
+    "exactMatch": true
+  },
+  {
+    "name": "tier-record",
+    "description": "tier=2 must return exactly the 8 Record instances (Tier 2).",
+    "query": { "tier": 2 },
+    "expectedInstanceIds": [
+      "6d08578c-e4ac-4380-a2bc-7662d74211de",
+      "2e86e79c-bf8a-43e9-ae5c-5d307629e165",
+      "ab48ba8b-1438-4c2e-84cc-ead44f98af04",
+      "ce0da48c-7633-4ac3-a22b-410208bb3652",
+      "90ce99aa-7384-4372-bd7a-132a221a8d57",
+      "e7c5ea63-f7eb-444e-b0b2-44851638825a",
+      "04e1039c-a067-41f1-8130-6c7cbc575de5",
+      "12742926-6ab7-4f3d-88d8-f03d2c041188"
+    ],
+    "exactMatch": true
+  },
+  {
+    "name": "combined-type-and-tag",
+    "description": "Conjunction of typeName='decision' and tag=['infrastructure'] must return only the 2 infrastructure decisions; the AND across predicates is enforced.",
+    "query": { "typeName": "decision", "tag": ["infrastructure"] },
+    "expectedInstanceIds": [
+      "6d08578c-e4ac-4380-a2bc-7662d74211de",
+      "ab48ba8b-1438-4c2e-84cc-ead44f98af04"
+    ],
+    "exactMatch": true
+  },
+  {
+    "name": "combined-container-and-lifecycle",
+    "description": "Conjunction of containerId='Decisions and Planning' and lifecycleState='active' must return only the 1 active decision in that container.",
+    "query": {
+      "containerId": "c0a00001-0000-4000-a000-000000000001",
+      "lifecycleState": "active"
+    },
+    "expectedInstanceIds": [
+      "6d08578c-e4ac-4380-a2bc-7662d74211de"
+    ],
+    "exactMatch": true
+  },
+  {
+    "name": "content-match-postgresql",
+    "description": "contentMatch='postgresql' (case-insensitive substring) must include the record whose title and body text contain 'PostgreSQL'. This is a recall-floor scenario: the implementation may return additional results.",
+    "query": { "contentMatch": "postgresql" },
+    "expectedInstanceIds": [
+      "6d08578c-e4ac-4380-a2bc-7662d74211de"
+    ],
+    "exactMatch": false
+  },
+  {
+    "name": "content-match-api",
+    "description": "contentMatch='api' must include records matching via title text ('API error rate') and via tag value ('api' on the GraphQL decision). Recall-floor guarantee.",
+    "query": { "contentMatch": "api" },
+    "expectedInstanceIds": [
+      "04e1039c-a067-41f1-8130-6c7cbc575de5",
+      "90ce99aa-7384-4372-bd7a-132a221a8d57"
+    ],
+    "exactMatch": false
+  },
+  {
+    "name": "content-match-architecture",
+    "description": "contentMatch='architecture' must include records matching via title ('Architecture principles', 'Adopt microservices architecture') and body text ('component-based architecture'). Recall-floor guarantee.",
+    "query": { "contentMatch": "architecture" },
+    "expectedInstanceIds": [
+      "b1b2c3d4-1234-4000-a000-000000001001",
+      "ce0da48c-7633-4ac3-a22b-410208bb3652",
+      "2e86e79c-bf8a-43e9-ae5c-5d307629e165"
+    ],
+    "exactMatch": false
+  },
+  {
+    "name": "content-match-infrastructure",
+    "description": "contentMatch='infrastructure' must include records matching via tag values (tag 'infrastructure' on two decisions). Demonstrates that tag segments participate in text projection. Recall-floor guarantee.",
+    "query": { "contentMatch": "infrastructure" },
+    "expectedInstanceIds": [
+      "6d08578c-e4ac-4380-a2bc-7662d74211de",
+      "ab48ba8b-1438-4c2e-84cc-ead44f98af04"
+    ],
+    "exactMatch": false
+  }
+]

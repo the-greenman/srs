@@ -1,0 +1,122 @@
+{
+  "containerIndex": [
+    {
+      "containerId": "c0a00001-0000-4000-a000-000000000001",
+      "path": "containers/decisions-and-planning-c0a00001.json",
+      "title": "Decisions and Planning"
+    },
+    {
+      "containerId": "c0b00001-0000-4000-a000-000000000002",
+      "path": "containers/metrics-and-events-c0b00001.json",
+      "title": "Metrics and Events"
+    }
+  ],
+  "declaredExtensions": [
+    "ext:discovery",
+    "ext:lifecycle"
+  ],
+  "description": "Self-contained fixture repository for RFC-012 ext:discovery conformance testing.",
+  "instanceIndex": [
+    {
+      "instanceId": "3154f051-2c6d-4e44-a74d-947329c6f92d",
+      "path": "records/notes/srs-discovery-conformance-fixture-3154f051.json",
+      "tags": [
+        "intent"
+      ],
+      "tier": 0,
+      "title": "SRS Discovery Conformance Fixture"
+    },
+    {
+      "instanceId": "6d08578c-e4ac-4380-a2bc-7662d74211de",
+      "path": "package/records/decision-6d08578c.json",
+      "tags": [
+        "database",
+        "infrastructure"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "2e86e79c-bf8a-43e9-ae5c-5d307629e165",
+      "path": "package/records/decision-2e86e79c.json",
+      "tags": [
+        "frontend"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "ab48ba8b-1438-4c2e-84cc-ead44f98af04",
+      "path": "package/records/decision-ab48ba8b.json",
+      "tags": [
+        "infrastructure",
+        "cloud"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "ce0da48c-7633-4ac3-a22b-410208bb3652",
+      "path": "package/records/decision-ce0da48c.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "90ce99aa-7384-4372-bd7a-132a221a8d57",
+      "path": "package/records/decision-90ce99aa.json",
+      "tags": [
+        "api",
+        "graphql"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "e7c5ea63-f7eb-444e-b0b2-44851638825a",
+      "path": "package/records/metric-e7c5ea63.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "04e1039c-a067-41f1-8130-6c7cbc575de5",
+      "path": "package/records/metric-04e1039c.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "12742926-6ab7-4f3d-88d8-f03d2c041188",
+      "path": "package/records/event-12742926.json",
+      "tags": [
+        "launch"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "1a2b3c4d-0000-4000-a000-000000001001",
+      "path": "records/notes/project-kickoff-notes-1a2b3c4d.json",
+      "tags": [
+        "kickoff",
+        "planning"
+      ],
+      "tier": 0,
+      "title": "Project kickoff notes"
+    },
+    {
+      "instanceId": "b1b2c3d4-1234-4000-a000-000000001001",
+      "path": "records/tier-1/architecture-principles-b1b2c3d4.json",
+      "tags": [
+        "architecture",
+        "scalability"
+      ],
+      "tier": 1,
+      "title": "Architecture principles"
+    },
+    {
+      "instanceId": "c1b2c3d4-1234-4000-a000-000000001002",
+      "path": "records/tier-1/q1-sprint-review-c1b2c3d4.json",
+      "tags": [
+        "sprint",
+        "q1"
+      ],
+      "tier": 1,
+      "title": "Q1 sprint review"
+    }
+  ],
+  "namespace": "com.srs.discovery.fixture",
+  "repositoryId": "e0f8e67c-40df-4c94-9378-bc282a54c57f",
+  "srsVersion": "2.0-draft",
+  "title": "SRS Discovery Conformance Fixture"
+}

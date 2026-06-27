@@ -2,7 +2,7 @@
 
 # RFC-012: Discovery Contract & Text Projection
 
-**Status**: In Progress (Revision 4)
+**Status**: Accepted (Revision 6)
 **Affects**: `Field` (`valueType` searchability classification), `Record` (Tier 2), `TypedRecord` (Tier 1), `Note` (Tier 0), `Container`, `ext:lifecycle`, new `discovery.json` schema
 **Author**: Peter Brownell (scoped from srs-rust#213)
 **Date**: 2026-06-26
@@ -19,6 +19,7 @@
 | 3 | 2026-06-26 | Address Rev 2 review findings. **Blocking:** add TypedRecord `title` field to Tier 1 projection (leading segment, sentinel `"typed-record-title"` — analogous to Note title treatment in Tier 0); fix Tier 1 step 1d (multiselect array path) to assign `fieldId = "typed-record-field"` and `fieldName = TypedField.name` explicitly (same sentinel as single-value fields). **Should-fix:** change R5 "must" → MUST; tighten R6 "sole authority" to permit explicit cache-then-fallback; add note on Tier 2 `fieldValues`-array-order vs `FieldAssignment.order` asymmetry; remove escape hatch from Change F (fixture MUST ship with RFC merge, no pre-fixture window); add tag-segment stored-value clarification to Alias-resolution rule. **Nits:** make Tier 2 step 1e explicit about fieldId/fieldName; add DiscoveryQuery.tier enum note; clarify TextSegment.text normalization timing (at match time, not segment construction); align expectedInstanceIds UUID format note; add discovery.json copy-before-check note. |
 | 4 | 2026-06-26 | Fix one remaining blocking gap: Tier 1 step 1d (multiselect array path) was missing `text = String(element)` — fieldId and fieldName were added in Rev 3 but the text value was omitted. Added; closes the Tier 1 identical-segment-stream gap. Also added 'or an empty array' to step 1c skip condition for consistency. |
 | 5 | 2026-06-26 | Implementation started; RFC file committed to branch rfc/011-discovery-contract-text-projection. |
+| 6 | 2026-06-27 | Stage 6 complete: discovery.json schema added; conformance fixture created at srs/conformance/discovery/ (12 instances, 22 scenarios); spec records authored — RFC-012 record, ext:discovery extension, invariants I-079 through I-090. |
 
 ---
 

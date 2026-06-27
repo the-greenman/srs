@@ -1,0 +1,28 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/typed-record.json",
+  "instanceId": "c1b2c3d4-1234-4000-a000-000000001002",
+  "title": "Q1 sprint review",
+  "instanceType": "process/review",
+  "fields": [
+    {
+      "name": "outcome",
+      "label": "Outcome",
+      "valueType": "string",
+      "value": "Delivered API redesign and authentication refactor on schedule."
+    },
+    {
+      "name": "rating",
+      "label": "Team satisfaction rating",
+      "valueType": "number",
+      "value": 4
+    },
+    {
+      "name": "completed",
+      "label": "Sprint completed",
+      "valueType": "boolean",
+      "value": true
+    }
+  ],
+  "tags": ["sprint", "q1"],
+  "createdAt": "2026-06-27T00:00:00Z"
+}

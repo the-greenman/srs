@@ -1,0 +1,12 @@
+{
+  "aiGuidance": {
+    "purpose": "A URL linking to supporting documentation or resources."
+  },
+  "createdAt": "2026-06-27T00:00:00Z",
+  "description": "External reference URL.",
+  "id": "f1001003-0000-4000-a000-000000000003",
+  "name": "reference",
+  "namespace": "com.srs.discovery.fixture",
+  "valueType": "url",
+  "version": 1
+}

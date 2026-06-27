@@ -1,0 +1,12 @@
+{
+  "aiGuidance": {
+    "purpose": "A numeric quantity associated with this instance."
+  },
+  "createdAt": "2026-06-27T00:00:00Z",
+  "description": "Numeric count or measurement value.",
+  "id": "f1001005-0000-4000-a000-000000000005",
+  "name": "count",
+  "namespace": "com.srs.discovery.fixture",
+  "valueType": "number",
+  "version": 1
+}

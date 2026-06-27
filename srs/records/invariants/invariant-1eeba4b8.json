@@ -1,0 +1,33 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-06-27T15:35:06.802886094+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-90"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "ext:discovery must pass all exactMatch:false conformance scenarios"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "An implementation that declares ext:discovery MUST pass all content-match conformance scenarios (exactMatch: false) from the fixture at srs/conformance/discovery/scenarios.json. For each such scenario, the result set MUST be a superset of the expectedInstanceIds set — every listed instance must appear in the result, but the implementation may return additional instances."
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "ext:discovery (conformance)"
+    }
+  ],
+  "instanceId": "1eeba4b8-c96c-44d4-9f9d-54d3bf030deb",
+  "tags": [
+    "discovery",
+    "ext:discovery",
+    "rfc-012"
+  ],
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-06-27T15:35:06.802888176+00:00"
+}

@@ -1,0 +1,29 @@
+{
+  "createdAt": "2026-06-27T15:16:35.045222985+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "f1001001-0000-4000-a000-000000000001",
+      "value": "Product launch v1.0"
+    },
+    {
+      "fieldId": "f1001007-0000-4000-a000-000000000007",
+      "value": "2026-01-15"
+    },
+    {
+      "fieldId": "f1001008-0000-4000-a000-000000000008",
+      "value": [
+        "product",
+        "milestone"
+      ]
+    }
+  ],
+  "instanceId": "12742926-6ab7-4f3d-88d8-f03d2c041188",
+  "tags": [
+    "launch"
+  ],
+  "typeId": "t1001003-0000-4000-a000-000000000003",
+  "typeName": "event",
+  "typeNamespace": "com.srs.discovery.fixture",
+  "typeVersion": 1,
+  "updatedAt": "2026-06-27T15:16:35.045231380+00:00"
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/note.json",
+  "createdAt": "2026-06-27T00:00:00Z",
+  "instanceId": "1a2b3c4d-0000-4000-a000-000000001001",
+  "sections": [
+    {
+      "content": "This repository tracks architectural decisions and technical choices for the srs discovery fixture project.",
+      "label": "Context",
+      "name": "context"
+    },
+    {
+      "content": "The primary goal is to demonstrate the discovery contract: type filters, container filters, tag filters, lifecycle state filters, and content matching.",
+      "label": "Goals",
+      "name": "goals"
+    }
+  ],
+  "tags": [
+    "kickoff",
+    "planning"
+  ],
+  "title": "Project kickoff notes"
+}

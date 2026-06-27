@@ -1,0 +1,23 @@
+{
+  "createdAt": "2026-06-27T15:16:25.759492486+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "f1001001-0000-4000-a000-000000000001",
+      "value": "Adopt GraphQL for the public API"
+    },
+    {
+      "fieldId": "f1001004-0000-4000-a000-000000000004",
+      "value": "high"
+    }
+  ],
+  "instanceId": "90ce99aa-7384-4372-bd7a-132a221a8d57",
+  "tags": [
+    "api",
+    "graphql"
+  ],
+  "typeId": "t1001001-0000-4000-a000-000000000001",
+  "typeName": "decision",
+  "typeNamespace": "com.srs.discovery.fixture",
+  "typeVersion": 1,
+  "updatedAt": "2026-06-27T15:16:25.759498464+00:00"
+}

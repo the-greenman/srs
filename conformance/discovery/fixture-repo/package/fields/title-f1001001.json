@@ -1,0 +1,13 @@
+{
+  "aiGuidance": {
+    "purpose": "The primary label or heading for this instance."
+  },
+  "createdAt": "2026-06-27T00:00:00Z",
+  "description": "Short descriptive title.",
+  "editorHint": "singleline",
+  "id": "f1001001-0000-4000-a000-000000000001",
+  "name": "title",
+  "namespace": "com.srs.discovery.fixture",
+  "valueType": "string",
+  "version": 1
+}

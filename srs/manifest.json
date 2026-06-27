@@ -2708,6 +2708,144 @@
       "instanceId": "187b18d0-89ab-4591-a61f-273821f2412b",
       "path": "package/records/invariant-187b18d0.json",
       "tier": 2
+    },
+    {
+      "instanceId": "70f10160-0b9f-428f-98e3-21faf85cf62a",
+      "path": "records/rfcs/rfc-70f10160.json",
+      "tags": [
+        "rfc",
+        "discovery"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "1ac86999-3c7d-4a48-bc12-dcfc7b27136b",
+      "path": "records/extensions/extension-1ac86999.json",
+      "tags": [
+        "discovery",
+        "rfc-012"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "6547de27-4ff6-4491-abf3-f193bbeadc8c",
+      "path": "records/invariants/invariant-6547de27.json",
+      "tags": [
+        "discovery",
+        "ext:discovery",
+        "rfc-012"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "fb80dc56-bd79-4980-b247-23bce5f1e19d",
+      "path": "records/invariants/invariant-fb80dc56.json",
+      "tags": [
+        "discovery",
+        "ext:discovery",
+        "rfc-012"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "035007f6-11af-4841-9359-1b7bee309688",
+      "path": "records/invariants/invariant-035007f6.json",
+      "tags": [
+        "discovery",
+        "ext:discovery",
+        "rfc-012"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "180bb053-c5bd-4726-aac7-90facb0844ad",
+      "path": "records/invariants/invariant-180bb053.json",
+      "tags": [
+        "discovery",
+        "ext:discovery",
+        "rfc-012"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "a9d9484a-3366-4007-b2c1-6e0e4f3073a8",
+      "path": "records/invariants/invariant-a9d9484a.json",
+      "tags": [
+        "discovery",
+        "ext:discovery",
+        "rfc-012"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "dee26e38-cb53-48db-94b1-ef2f998d70c2",
+      "path": "records/invariants/invariant-dee26e38.json",
+      "tags": [
+        "discovery",
+        "ext:discovery",
+        "rfc-012"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "1ca1ff61-cfd6-49f7-be33-ff8a74524944",
+      "path": "records/invariants/invariant-1ca1ff61.json",
+      "tags": [
+        "discovery",
+        "ext:discovery",
+        "rfc-012"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "77e9d376-b717-4011-8505-ec756af3e3a2",
+      "path": "records/invariants/invariant-77e9d376.json",
+      "tags": [
+        "discovery",
+        "ext:discovery",
+        "rfc-012"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "ec2deb58-8ab1-4cb8-a8e6-872603eb8624",
+      "path": "records/invariants/invariant-ec2deb58.json",
+      "tags": [
+        "discovery",
+        "ext:discovery",
+        "rfc-012"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "2e3f1a6a-affc-41c5-9c8f-43bd89a586ff",
+      "path": "records/invariants/invariant-2e3f1a6a.json",
+      "tags": [
+        "discovery",
+        "ext:discovery",
+        "rfc-012"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "a06ecd6d-7215-4bb1-bec4-b315563354e5",
+      "path": "records/invariants/invariant-a06ecd6d.json",
+      "tags": [
+        "discovery",
+        "ext:discovery",
+        "rfc-012"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "1eeba4b8-c96c-44d4-9f9d-54d3bf030deb",
+      "path": "records/invariants/invariant-1eeba4b8.json",
+      "tags": [
+        "discovery",
+        "ext:discovery",
+        "rfc-012"
+      ],
+      "tier": 2
     }
   ],
   "meta": {
