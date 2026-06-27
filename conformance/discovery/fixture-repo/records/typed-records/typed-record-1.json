@@ -1,0 +1,22 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/typed-record.json",
+  "instanceId": "00000004-0000-4000-8000-000000000001",
+  "title": "Discovery Feature Planning Meeting",
+  "instanceType": "meeting/notes",
+  "fields": [
+    {
+      "name": "agenda",
+      "label": "Agenda",
+      "valueType": "string",
+      "value": "Discuss text projection algorithm"
+    },
+    {
+      "name": "outcome",
+      "label": "Outcome",
+      "valueType": "string",
+      "value": "Agreed on substring recall floor"
+    }
+  ],
+  "tags": ["searchable"],
+  "createdAt": "2026-06-27T00:00:00Z"
+}

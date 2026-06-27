@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "instanceId": "00000001-0000-4000-8000-000000000005",
+  "typeId": "0000a001-0000-4000-8000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.example.discovery",
+  "typeName": "article",
+  "lifecycleState": "draft",
+  "fieldValues": [
+    { "fieldId": "0000f001-0000-4000-8000-000000000001", "value": "Metrics and Flags" },
+    { "fieldId": "0000f001-0000-4000-8000-000000000002", "value": "Numeric word counts and publication flags are not searchable text." },
+    { "fieldId": "0000f001-0000-4000-8000-000000000003", "value": "https://example.com/metrics-flags" },
+    { "fieldId": "0000f001-0000-4000-8000-000000000004", "value": "draft" },
+    { "fieldId": "0000f001-0000-4000-8000-000000000005", "value": ["metadata"] },
+    { "fieldId": "0000f001-0000-4000-8000-000000000006", "value": 99 },
+    { "fieldId": "0000f001-0000-4000-8000-000000000007", "value": false },
+    { "fieldId": "0000f001-0000-4000-8000-000000000008", "value": "2026-06-26" }
+  ],
+  "tags": [],
+  "createdAt": "2026-06-27T00:00:00Z"
+}

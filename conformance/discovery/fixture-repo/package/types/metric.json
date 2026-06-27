@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "id": "0000a003-0000-4000-8000-000000000003",
+  "namespace": "com.example.discovery",
+  "name": "metric",
+  "version": 1,
+  "description": "A metric instance. Contains string, number, boolean, and date fields. The number, boolean, and date fields are non-searchable per ext:discovery.",
+  "fields": [
+    { "fieldId": "0000f003-0000-4000-8000-000000000001", "order": 0, "required": true, "displayLabel": "Label" },
+    { "fieldId": "0000f003-0000-4000-8000-000000000002", "order": 1, "required": false, "displayLabel": "Value" },
+    { "fieldId": "0000f003-0000-4000-8000-000000000003", "order": 2, "required": false, "displayLabel": "Is Active" },
+    { "fieldId": "0000f003-0000-4000-8000-000000000004", "order": 3, "required": false, "displayLabel": "Recorded At" }
+  ],
+  "createdAt": "2026-06-27T00:00:00Z"
+}

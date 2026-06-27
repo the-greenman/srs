@@ -2708,6 +2708,17 @@
       "instanceId": "187b18d0-89ab-4591-a61f-273821f2412b",
       "path": "package/records/invariant-187b18d0.json",
       "tier": 2
+    },
+    {
+      "instanceId": "996e81fe-1c1f-4317-bd92-e9c8332905d8",
+      "path": "package/records/extension-996e81fe.json",
+      "tags": [
+        "concern:extensibility",
+        "construct:discovery",
+        "topic:extensions",
+        "topic:search"
+      ],
+      "tier": 2
     }
   ],
   "meta": {

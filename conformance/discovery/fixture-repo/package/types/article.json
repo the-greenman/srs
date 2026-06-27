@@ -1,0 +1,19 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "id": "0000a001-0000-4000-8000-000000000001",
+  "namespace": "com.example.discovery",
+  "name": "article",
+  "version": 1,
+  "description": "An article instance. Contains all eight SRS valueTypes to enable exhaustive searchability-classification testing.",
+  "fields": [
+    { "fieldId": "0000f001-0000-4000-8000-000000000001", "order": 0, "required": true, "displayLabel": "Title" },
+    { "fieldId": "0000f001-0000-4000-8000-000000000002", "order": 1, "required": false, "displayLabel": "Body" },
+    { "fieldId": "0000f001-0000-4000-8000-000000000003", "order": 2, "required": false, "displayLabel": "Source URL" },
+    { "fieldId": "0000f001-0000-4000-8000-000000000004", "order": 3, "required": false, "displayLabel": "Status" },
+    { "fieldId": "0000f001-0000-4000-8000-000000000005", "order": 4, "required": false, "displayLabel": "Topics" },
+    { "fieldId": "0000f001-0000-4000-8000-000000000006", "order": 5, "required": false, "displayLabel": "Word Count" },
+    { "fieldId": "0000f001-0000-4000-8000-000000000007", "order": 6, "required": false, "displayLabel": "Is Published" },
+    { "fieldId": "0000f001-0000-4000-8000-000000000008", "order": 7, "required": false, "displayLabel": "Publish Date" }
+  ],
+  "createdAt": "2026-06-27T00:00:00Z"
+}

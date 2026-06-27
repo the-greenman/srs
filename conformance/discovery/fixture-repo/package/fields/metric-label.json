@@ -1,0 +1,12 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f003-0000-4000-8000-000000000001",
+  "namespace": "com.example.discovery",
+  "name": "label",
+  "version": 1,
+  "description": "Human-readable label for the metric.",
+  "aiGuidance": { "purpose": "A short descriptive name identifying what is being measured." },
+  "valueType": "string",
+  "editorHint": "singleline",
+  "createdAt": "2026-06-27T00:00:00Z"
+}

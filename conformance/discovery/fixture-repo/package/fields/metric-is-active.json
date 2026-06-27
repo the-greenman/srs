@@ -1,0 +1,11 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f003-0000-4000-8000-000000000003",
+  "namespace": "com.example.discovery",
+  "name": "is_active",
+  "version": 1,
+  "description": "Whether this metric is currently being collected.",
+  "aiGuidance": { "purpose": "Boolean active flag. Non-searchable per ext:discovery valueType classification." },
+  "valueType": "boolean",
+  "createdAt": "2026-06-27T00:00:00Z"
+}

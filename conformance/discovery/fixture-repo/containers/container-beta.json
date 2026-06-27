@@ -1,0 +1,11 @@
+{
+  "containerId": "0000c002-0000-4000-8000-000000000002",
+  "title": "Active Projects",
+  "description": "Project instances currently in active development.",
+  "containerType": "collection",
+  "memberInstanceIds": [
+    "00000002-0000-4000-8000-000000000001",
+    "00000002-0000-4000-8000-000000000002"
+  ],
+  "tags": ["projects"]
+}

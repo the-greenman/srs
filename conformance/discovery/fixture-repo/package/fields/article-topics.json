@@ -1,0 +1,12 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f001-0000-4000-8000-000000000005",
+  "namespace": "com.example.discovery",
+  "name": "topics",
+  "version": 1,
+  "description": "Topic labels for the article. Multiple values allowed.",
+  "aiGuidance": { "purpose": "Categorical topic labels. Each element contributes a separate searchable segment." },
+  "valueType": "multiselect",
+  "allowedValues": ["search", "indexing", "text", "segments", "performance", "legacy", "metadata"],
+  "createdAt": "2026-06-27T00:00:00Z"
+}

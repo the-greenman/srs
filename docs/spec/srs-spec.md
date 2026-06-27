@@ -2622,6 +2622,85 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 
 ---
 
+#### Discovery
+
+**Extension ID**: ext:discovery
+**Depends On**: ext:lifecycle
+**Content**: **Required for**: any implementation that supports querying and filtering instances across a repository — CLI, web UI, search engine, or API.
+
+Defines the **Discovery Contract**: a portable, implementation-agnostic specification of how SRS repositories are queried. Covers structured filter axes, the Text Projection algorithm, normalization rules, and the consistency rule separating exact-match structured filters from the content-match recall floor.
+
+#### `DiscoveryQuery`
+
+```typescript
+{
+  typeId?:         UUID      // exact match on Record.typeId
+  typeNamespace?:  string    // exact match on Record.typeNamespace
+  typeName?:       string    // exact match on Record.typeName
+  containerId?:    UUID      // instance is a member of this container (RFC-009 I-66)
+  tag?:            string[]  // AND semantics: all tags must be present
+  lifecycleState?: string    // exact match on Record.lifecycleState (ext:lifecycle)
+  tier?:           0 | 1 | 2 // instance tier (Note=0, TypedRecord=1, Record=2)
+  contentMatch?:   string    // free-text recall-floor predicate
+}
+```
+
+An instance matches a `DiscoveryQuery` if and only if it satisfies all predicates whose values are specified. Unspecified predicates are wildcards.
+
+#### `TextSegment`
+
+```typescript
+{
+  fieldId:   string  // UUID for package-resolved fields; sentinel string for special segments
+  fieldName: string  // field name or sentinel
+  text:      string  // raw stored value (normalization applied at match time)
+}
+```
+
+Sentinels: `"note-title"`, `"note-section"`, `"typed-record-title"`, `"typed-record-field"`, `"tag"`, `"label"`.
+
+#### Searchable `valueType` classification
+
+Searchable (contribute segments): `string`, `text`, `url`, `select`, `multiselect`.
+
+Non-searchable (excluded from projection): `number`, `boolean`, `date`.
+
+#### Text Projection algorithm
+
+**Tier 2 (Record):** for each `fieldValue` in `fieldValues` array order — if `valueType` is searchable and value is non-empty, emit one `TextSegment` per value (one per array element for `multiselect`). After all field values, emit one segment per tag. Optionally emit `displayLabel` segments after tags.
+
+**Tier 0 (Note):** if `title` is non-empty, emit a leading `note-title` segment. For each `section[]` in order, emit a `note-section` segment if `content` is non-empty. After sections, emit tag segments.
+
+**Tier 1 (TypedRecord):** if `title` is non-empty, emit a leading `typed-record-title` segment. For each `TypedField` in `fields[]` array order — if `valueType` is searchable (or absent with a string/array value) and value is non-empty, emit one or more `typed-record-field` segments. After fields, emit tag segments.
+
+#### Normalization (applied at match time, not at segment construction time)
+
+1. Apply Unicode NFC.
+2. Fold to lowercase (Unicode simple case folding).
+3. Do not strip punctuation, diacritics, or whitespace.
+
+#### Consistency rule
+
+Structured filter axes (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `tier`) are **exact-match predicates**: two conforming implementations with identical data MUST return identical result sets.
+
+Content matching (`contentMatch`) is a **recall-floor rule**: implementations MUST include every instance whose Text Projection contains a segment whose normalized text contains the normalized query as a substring. Additional results and alternative ranking are explicitly permitted.
+
+When both structured filters and `contentMatch` are specified, an instance MUST satisfy both the exact-match structured predicates AND the content recall-floor predicate.
+
+#### Conformance fixture
+
+A self-contained fixture repository with expected result sets lives at:
+
+```
+srs/conformance/discovery/
+  fixture-repo/   # valid SRS repository with 8 Tier-2 Records, 2 Tier-1, 1 Tier-0, 2 Containers
+  scenarios.json  # named query scenarios with expectedInstanceIds and exactMatch flags
+```
+
+An implementation that declares `ext:discovery` MUST pass all fixture scenarios (exactMatch:true scenarios exactly; exactMatch:false scenarios as a superset).
+
+---
+
 
 ### Key Invariants
 

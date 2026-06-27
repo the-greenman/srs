@@ -1,0 +1,11 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f001-0000-4000-8000-000000000008",
+  "namespace": "com.example.discovery",
+  "name": "publish_date",
+  "version": 1,
+  "description": "The date on which the article was or will be published.",
+  "aiGuidance": { "purpose": "ISO 8601 date. Non-searchable per ext:discovery valueType classification." },
+  "valueType": "date",
+  "createdAt": "2026-06-27T00:00:00Z"
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f001-0000-4000-8000-000000000001",
+  "namespace": "com.example.discovery",
+  "name": "title",
+  "version": 1,
+  "description": "The title of the article.",
+  "aiGuidance": { "purpose": "A concise, human-readable title for the article." },
+  "valueType": "string",
+  "editorHint": "singleline",
+  "createdAt": "2026-06-27T00:00:00Z"
+}
