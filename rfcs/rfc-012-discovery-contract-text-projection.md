@@ -2,7 +2,7 @@
 
 # RFC-012: Discovery Contract & Text Projection
 
-**Status**: Accepted (Revision 6)
+**Status**: Accepted (Revision 7)
 **Affects**: `Field` (`valueType` searchability classification), `Record` (Tier 2), `TypedRecord` (Tier 1), `Note` (Tier 0), `Container`, `ext:lifecycle`, new `discovery.json` schema
 **Author**: Peter Brownell (scoped from srs-rust#213)
 **Date**: 2026-06-26
@@ -20,6 +20,7 @@
 | 4 | 2026-06-26 | Fix one remaining blocking gap: Tier 1 step 1d (multiselect array path) was missing `text = String(element)` — fieldId and fieldName were added in Rev 3 but the text value was omitted. Added; closes the Tier 1 identical-segment-stream gap. Also added 'or an empty array' to step 1c skip condition for consistency. |
 | 5 | 2026-06-26 | Implementation started; RFC file committed to branch rfc/011-discovery-contract-text-projection. |
 | 6 | 2026-06-27 | Accepted; `docs/schema/2.0/discovery.json` authored; conformance fixture created at `conformance/discovery/`; `ext:discovery` spec record authored in `srs/srs/`; spec re-rendered. |
+| 7 | 2026-06-28 | Additive, backward-compatible: add `excludeLifecycleStates: string[]` to `DiscoveryQuery` (parity with the RFC-011 `type-query` axis of the same name). Lets an authored view's default-hidden lifecycle states (e.g. `superseded`, `closed`) be applied at query time with a client-side runtime "show all" (empty list) override, so the interactive list path composes container resolve-view with a single discovery query rather than re-expressing lifecycle filtering in clients. Existing conformance scenarios unaffected (property is optional). |
 
 ---
 
@@ -67,6 +68,7 @@ DiscoveryQuery {
   containerId?:     UUID           // instance is a member of this container per RFC-009 I-66
   tag?:             string[]       // instance.tags contains ALL of the specified keys (AND semantics)
   lifecycleState?:  string         // exact match on Record.lifecycleState (ext:lifecycle)
+  excludeLifecycleStates?: string[] // exclude instances whose lifecycleState is any of these (ext:lifecycle)
   tier?:            0 | 1 | 2      // instance tier (Note=0, TypedRecord=1, Record=2)
   contentMatch?:    string         // free-text predicate (see Change B and Change D)
 }
@@ -79,6 +81,7 @@ DiscoveryQuery {
 - `containerId` — an instance is a member of a container when its `instanceId` satisfies at least one of the following three conditions (per RFC-009 I-66): (1) its `instanceId` appears in `Container.rootInstanceIds[]`; (2) its `instanceId` appears in `Container.memberInstanceIds[]`; (3) it is reachable via transitive `contains` Relation traversal from any instance in `Container.rootInstanceIds[]`. The authoritative source for membership is the instance file and the relations file — not the `instanceIndex` cache in `manifest.json`, which may be stale.
 - `tag` — matches instances whose `tags` array contains ALL of the requested tag strings. RFC-006 vocabulary resolution is applied before comparison: if the repository declares a `Vocabulary`, each query tag string is resolved to its canonical `key` (via key-or-alias lookup), and the instance's stored tag strings are each resolved to their canonical key before matching. Two tag strings are considered equal if and only if their canonical keys are equal. If no Vocabulary is declared for a tag key, the raw string is used for comparison (case-sensitive exact match).
 - `lifecycleState` — matches only instances where `lifecycleState` equals the specified string (case-sensitive). Instances without a `lifecycleState` field do not match a lifecycle predicate. Requires `ext:lifecycle`.
+- `excludeLifecycleStates` — excludes any instance whose `lifecycleState` matches one of the listed values (applied after `lifecycleState`). Carries the same exclusion semantics as the RFC-011 `type-query` SectionSource axis of the same name, so an authored view and a discovery query express default-hidden states (e.g. `superseded`, `closed`) identically; a client offers a runtime "show all" by passing an empty list. Instances without a `lifecycleState` field are never excluded by this axis. Requires `ext:lifecycle`.
 - `tier` — matches instances of exactly the specified tier. A `tier: 2` filter returns only Tier 2 Records.
 - `contentMatch` — applies the Text Projection (Change B) and Content Matching rule (Change D). When absent, no text predicate is applied.
 
@@ -168,7 +171,7 @@ The normalized form is the **canonical search string**. It is used for the recal
 
 ### Change D — Consistency rule: exact-match for structured filters, recall-floor for content
 
-**Structured filter axes** (typeId, typeNamespace, typeName, containerId, tag, lifecycleState, tier) are **exact-match predicates**. An implementation MUST include every instance that satisfies all specified structured filter predicates, and MUST NOT include any instance that fails any specified structured filter predicate. The structured-filter result is deterministic — two conforming implementations with identical data MUST return identical result sets.
+**Structured filter axes** (typeId, typeNamespace, typeName, containerId, tag, lifecycleState, excludeLifecycleStates, tier) are **exact-match predicates**. An implementation MUST include every instance that satisfies all specified structured filter predicates, and MUST NOT include any instance that fails any specified structured filter predicate. The structured-filter result is deterministic — two conforming implementations with identical data MUST return identical result sets.
 
 **Content matching** (the `contentMatch` predicate) is a **recall-floor rule**:
 
@@ -276,6 +279,7 @@ The initial fixture repo MUST contain at minimum:
 | `containerId` | string (uuid) | Instance is a member of this container (RFC-009 I-66) |
 | `tag` | string[] | AND-conjunction: all tags must be present on the instance |
 | `lifecycleState` | string | Exact match on Record.lifecycleState |
+| `excludeLifecycleStates` | string[] | Exclude instances whose lifecycleState matches any listed value (RFC-011 parity; applied after lifecycleState) |
 | `tier` | integer; enum: 0, 1, 2 | Instance tier filter (JSON Schema: `enum: [0, 1, 2]`, not min/max) |
 | `contentMatch` | string | Free-text recall-floor predicate |
 
