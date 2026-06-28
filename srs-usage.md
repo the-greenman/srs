@@ -172,6 +172,33 @@ Payload shapes (all wrapped in the standard `{ "ok": true, "payload": { ... } }`
 
 ---
 
+## 3b. Discovery and authored lists (`find` + `resolve-view`)
+
+`srs find` (ext:discovery, RFC-012) is the deterministic query primitive: filter records by structured axes and/or a content substring, recall-floor matching over every searchable text field (not just title).
+
+```bash
+# Structured + content query (all axes optional, AND-combined)
+srs find --repo <path> --type-namespace governance --type-name decision \
+  --text "budget" --tag finance \
+  --lifecycle-state ratified \
+  --exclude-lifecycle-state superseded --exclude-lifecycle-state closed \
+  --tier 2 --container <containerId> --pretty
+```
+
+`find` → `{ "result": { "hits": [{ "instanceId", "label", "typeNamespace", "typeName", "lifecycleState"?, "score"?, "snippet"?, "matchedFields": [...] }], "total", "diagnostics" } }`. `--tag` and `--exclude-lifecycle-state` are repeatable; `--exclude-lifecycle-state` drops records whose `lifecycleState` is in the set (records without a lifecycle state are never excluded).
+
+**Authored lists = `resolve-view` + `find`.** An interactive list (e.g. a governance decision log) is an *authored* view composed with a *runtime* query — never a bespoke client filter. `srs container resolve-view <containerId>` returns the authored columns, the ordered members, **and** the authored default-hidden lifecycle states:
+
+```
+container resolve-view <containerId> →
+  { "containerView": { "containerId", "documentViewId"?, "root"?, "members": [...],
+                       "columns": [...], "excludeLifecycleStates": [...], "diagnostics": [...] } }
+```
+
+`excludeLifecycleStates` is populated only when the governing `DocumentView` section is a `type-query` declaring `excludeLifecycleStates` (else `[]`). A client renders the **default-hidden** list by passing those states to `find --exclude-lifecycle-state`, and a **show-all** toggle simply drops them. Clients consume `excludeLifecycleStates` from `resolve-view` — they do not re-derive it from the DocumentView source. (See S12/S14 in `srs-rust/docs/dogfooding.md`.)
+
+---
+
 ## 4. Write Workflows
 
 ### Creating a Note (Tier 0)
