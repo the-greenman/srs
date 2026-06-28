@@ -1,0 +1,20 @@
+{
+  "createdAt": "2026-06-28T21:50:00.602193713+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
+      "value": "Approve 2026 Q1 budget"
+    },
+    {
+      "fieldId": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
+      "value": "Approve the Q1 operating budget as circulated."
+    }
+  ],
+  "instanceId": "2235c7d8-3f25-4774-bf2c-408e499bd8a6",
+  "lifecycleState": "closed",
+  "typeId": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
+  "typeName": "decision",
+  "typeNamespace": "governance",
+  "typeVersion": 1,
+  "updatedAt": "2026-06-28T21:50:00.625191537+00:00"
+}

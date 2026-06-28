@@ -1,0 +1,20 @@
+{
+  "createdAt": "2026-06-28T21:50:00.570223896+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
+      "value": "Original branding palette"
+    },
+    {
+      "fieldId": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
+      "value": "Use the teal/orange palette for all materials."
+    }
+  ],
+  "instanceId": "38501856-26a5-4227-a877-eada79ce591a",
+  "lifecycleState": "superseded",
+  "typeId": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
+  "typeName": "decision",
+  "typeNamespace": "governance",
+  "typeVersion": 1,
+  "updatedAt": "2026-06-28T21:50:00.595579137+00:00"
+}

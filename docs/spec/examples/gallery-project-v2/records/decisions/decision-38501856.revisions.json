@@ -1,0 +1,93 @@
+{
+  "recordId": "38501856-26a5-4227-a877-eada79ce591a",
+  "revisions": [
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-06-28T21:50:00.585452724+00:00",
+      "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
+      "provenance": {
+        "lifecycleTransition": "proposed",
+        "transitionedAt": "2026-06-28T21:50:00.585452724+00:00"
+      },
+      "recordId": "38501856-26a5-4227-a877-eada79ce591a",
+      "revisionId": "dd3ed3ba-fe91-49d1-87b3-1ccb922926f0",
+      "value": "Original branding palette"
+    },
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-06-28T21:50:00.585452724+00:00",
+      "fieldId": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
+      "provenance": {
+        "lifecycleTransition": "proposed",
+        "transitionedAt": "2026-06-28T21:50:00.585452724+00:00"
+      },
+      "recordId": "38501856-26a5-4227-a877-eada79ce591a",
+      "revisionId": "55647fdc-441e-4d59-ad25-0b0d6a4d8da5",
+      "value": "Use the teal/orange palette for all materials."
+    },
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-06-28T21:50:00.589779661+00:00",
+      "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
+      "priorRevisionId": "dd3ed3ba-fe91-49d1-87b3-1ccb922926f0",
+      "provenance": {
+        "lifecycleTransition": "ratified",
+        "transitionedAt": "2026-06-28T21:50:00.589779661+00:00"
+      },
+      "recordId": "38501856-26a5-4227-a877-eada79ce591a",
+      "revisionId": "1a2e01fa-ef21-4651-9a0f-19f9165aeab2",
+      "value": "Original branding palette"
+    },
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-06-28T21:50:00.589779661+00:00",
+      "fieldId": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
+      "priorRevisionId": "55647fdc-441e-4d59-ad25-0b0d6a4d8da5",
+      "provenance": {
+        "lifecycleTransition": "ratified",
+        "transitionedAt": "2026-06-28T21:50:00.589779661+00:00"
+      },
+      "recordId": "38501856-26a5-4227-a877-eada79ce591a",
+      "revisionId": "c252acd2-15a2-4bec-bed5-20513f6dc50d",
+      "value": "Use the teal/orange palette for all materials."
+    },
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-06-28T21:50:00.595579137+00:00",
+      "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
+      "priorRevisionId": "1a2e01fa-ef21-4651-9a0f-19f9165aeab2",
+      "provenance": {
+        "lifecycleTransition": "superseded",
+        "transitionedAt": "2026-06-28T21:50:00.595579137+00:00"
+      },
+      "recordId": "38501856-26a5-4227-a877-eada79ce591a",
+      "revisionId": "7af8aa4a-eb89-40dc-99b3-53ce5b31ab58",
+      "value": "Original branding palette"
+    },
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-06-28T21:50:00.595579137+00:00",
+      "fieldId": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
+      "priorRevisionId": "c252acd2-15a2-4bec-bed5-20513f6dc50d",
+      "provenance": {
+        "lifecycleTransition": "superseded",
+        "transitionedAt": "2026-06-28T21:50:00.595579137+00:00"
+      },
+      "recordId": "38501856-26a5-4227-a877-eada79ce591a",
+      "revisionId": "3653506a-12b7-41e8-84f3-d6e3cd274b8d",
+      "value": "Use the teal/orange palette for all materials."
+    }
+  ]
+}
