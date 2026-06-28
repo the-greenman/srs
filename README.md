@@ -13,7 +13,7 @@ srs/                  the SRS repository (records are the source of truth)
   records/            spec sections, subsections, design notes, RFCs, type definitions, ...
   package/            field and type definitions used by this repository
   relations/          relation files
-  manifest.json       repository manifest
+  manifest.json       repository manifest (includes the required root container — RFC-013)
 docs/
   spec/               rendered exports (generated — do not edit by hand)
     srs-spec.md       the specification
@@ -26,6 +26,8 @@ docs/
 scripts/              tooling for rendering, validating, and migrating records
 rfcs/                 RFC proposal artifacts (review material, not live package content)
 ```
+
+Every repository has a **required root container** (`manifest.container`, RFC-013): the repo's identity object and the top of structural navigation. Its `identityInstanceId` names the repository identity record (default: the Tier 0 root note); its non-identity members are the navigation sections, ordered by the `precedes` chain. Enforcement and `repo create` scaffolding land in the epic's Phase 1 — the constraint is defined in the spec now and dogfooded as the implementation catches up.
 
 ## Reading the spec
 
