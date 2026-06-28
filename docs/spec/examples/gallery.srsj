@@ -740,10 +740,10 @@
       "name": "governance-core",
       "namespace": "com.limoma",
       "relationTypes": [
-        "relation-types/derived-from-36b78f14.json",
-        "relation-types/precedes-b24aaf29.json",
         "relation-types/delegates-31c82363.json",
-        "relation-types/evidences-35c7aba2.json"
+        "relation-types/derived-from-36b78f14.json",
+        "relation-types/evidences-35c7aba2.json",
+        "relation-types/precedes-b24aaf29.json"
       ],
       "status": "active",
       "themes": [],
