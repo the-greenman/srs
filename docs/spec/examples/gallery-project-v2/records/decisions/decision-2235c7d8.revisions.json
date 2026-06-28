@@ -1,0 +1,93 @@
+{
+  "recordId": "2235c7d8-3f25-4774-bf2c-408e499bd8a6",
+  "revisions": [
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-06-28T21:50:00.616808626+00:00",
+      "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
+      "provenance": {
+        "lifecycleTransition": "proposed",
+        "transitionedAt": "2026-06-28T21:50:00.616808626+00:00"
+      },
+      "recordId": "2235c7d8-3f25-4774-bf2c-408e499bd8a6",
+      "revisionId": "491ce2dc-2c1a-42c5-9243-0fa3c6f0408f",
+      "value": "Approve 2026 Q1 budget"
+    },
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-06-28T21:50:00.616808626+00:00",
+      "fieldId": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
+      "provenance": {
+        "lifecycleTransition": "proposed",
+        "transitionedAt": "2026-06-28T21:50:00.616808626+00:00"
+      },
+      "recordId": "2235c7d8-3f25-4774-bf2c-408e499bd8a6",
+      "revisionId": "a1e07c64-70a3-4a43-b51d-195643d84fb1",
+      "value": "Approve the Q1 operating budget as circulated."
+    },
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-06-28T21:50:00.620830494+00:00",
+      "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
+      "priorRevisionId": "491ce2dc-2c1a-42c5-9243-0fa3c6f0408f",
+      "provenance": {
+        "lifecycleTransition": "ratified",
+        "transitionedAt": "2026-06-28T21:50:00.620830494+00:00"
+      },
+      "recordId": "2235c7d8-3f25-4774-bf2c-408e499bd8a6",
+      "revisionId": "f46e8db3-8946-4c7f-976e-ce9a88b5a225",
+      "value": "Approve 2026 Q1 budget"
+    },
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-06-28T21:50:00.620830494+00:00",
+      "fieldId": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
+      "priorRevisionId": "a1e07c64-70a3-4a43-b51d-195643d84fb1",
+      "provenance": {
+        "lifecycleTransition": "ratified",
+        "transitionedAt": "2026-06-28T21:50:00.620830494+00:00"
+      },
+      "recordId": "2235c7d8-3f25-4774-bf2c-408e499bd8a6",
+      "revisionId": "dfb52c6c-5fab-48d5-87cf-b487f405a8f5",
+      "value": "Approve the Q1 operating budget as circulated."
+    },
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-06-28T21:50:00.625191537+00:00",
+      "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
+      "priorRevisionId": "f46e8db3-8946-4c7f-976e-ce9a88b5a225",
+      "provenance": {
+        "lifecycleTransition": "closed",
+        "transitionedAt": "2026-06-28T21:50:00.625191537+00:00"
+      },
+      "recordId": "2235c7d8-3f25-4774-bf2c-408e499bd8a6",
+      "revisionId": "2ddfe404-09be-44af-b99c-6401f6b6f806",
+      "value": "Approve 2026 Q1 budget"
+    },
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-06-28T21:50:00.625191537+00:00",
+      "fieldId": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
+      "priorRevisionId": "dfb52c6c-5fab-48d5-87cf-b487f405a8f5",
+      "provenance": {
+        "lifecycleTransition": "closed",
+        "transitionedAt": "2026-06-28T21:50:00.625191537+00:00"
+      },
+      "recordId": "2235c7d8-3f25-4774-bf2c-408e499bd8a6",
+      "revisionId": "c8b6cabc-898a-4339-89a6-90d093589e60",
+      "value": "Approve the Q1 operating budget as circulated."
+    }
+  ]
+}

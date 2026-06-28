@@ -108,6 +108,21 @@
       "instanceId": "bf64442b-1e2b-4597-95e7-a665439c7f6f",
       "path": "records/decision-log/decision-log-bf64442b.json",
       "tier": 2
+    },
+    {
+      "instanceId": "2fba1783-f3f2-42a6-8d67-d39601e27241",
+      "path": "records/decisions/decision-2fba1783.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "38501856-26a5-4227-a877-eada79ce591a",
+      "path": "records/decisions/decision-38501856.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "2235c7d8-3f25-4774-bf2c-408e499bd8a6",
+      "path": "records/decisions/decision-2235c7d8.json",
+      "tier": 2
     }
   ],
   "namespace": "com.limoma",

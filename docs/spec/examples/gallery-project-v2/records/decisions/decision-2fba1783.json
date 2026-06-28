@@ -1,0 +1,20 @@
+{
+  "createdAt": "2026-06-28T21:50:00.555546787+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
+      "value": "Trial async standups"
+    },
+    {
+      "fieldId": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
+      "value": "Adopt async written standups for one month, then review."
+    }
+  ],
+  "instanceId": "2fba1783-f3f2-42a6-8d67-d39601e27241",
+  "lifecycleState": "draft",
+  "typeId": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
+  "typeName": "decision",
+  "typeNamespace": "governance",
+  "typeVersion": 1,
+  "updatedAt": "2026-06-28T21:50:00.555554186+00:00"
+}
