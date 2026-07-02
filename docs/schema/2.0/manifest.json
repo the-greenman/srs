@@ -44,14 +44,18 @@
       "items": { "$ref": "#/$defs/ContainerIndexEntry" },
       "description": "Index of all Containers in this repository."
     },
+    "upstreamPackage": {
+      "$ref": "#/$defs/UpstreamPackage",
+      "description": "Provenance stamp for a repository created by instantiating an upstream published Package. Normative when present: conformant tools MUST read and write this at the top level (not inside meta). Set at repository creation time; updated on each package upgrade. See RFC-014."
+    },
     "packageRef": {
       "$ref": "#/$defs/PackageRef",
-      "description": "Reference to the SRS Package that supplies field and type definitions (single package)."
+      "description": "Reference to the SRS Package that supplies field and type definitions (single package). Deprecated for multi-version repositories: use packageRefs instead (RFC-014 Change C). A manifest carrying both packageRef and packageRefs simultaneously is non-conformant."
     },
     "packageRefs": {
       "type": "array",
       "items": { "$ref": "#/$defs/PackageRef" },
-      "description": "References to one or more SRS Packages that supply field and type definitions. Use instead of packageRef when multiple packages are in scope."
+      "description": "References to one or more SRS Packages that supply field and type definitions. Use instead of packageRef for multi-package and multi-version repositories (see RFC-014 Change C)."
     },
     "instanceIndex": {
       "type": "array",
@@ -99,11 +103,11 @@
     },
     "meta": {
       "type": "object",
-      "description": "Implementation-local key-value pairs. Common keys: 'sourceOfTruth', 'renderedExports', 'upstreamPackage'. Cross-system keys should be namespaced.",
+      "description": "Implementation-local key-value pairs. Common keys: 'sourceOfTruth', 'renderedExports'. Cross-system keys should be namespaced. Note: 'upstreamPackage' was previously accepted here; see manifest.upstreamPackage (RFC-014). Since meta permits additional properties, existing manifests remain schema-valid, but conformant tools MUST NOT write meta.upstreamPackage.",
       "properties": {
         "upstreamPackage": {
           "$ref": "#/$defs/UpstreamPackage",
-          "description": "Provenance stamp for a repository initialised from a published upstream Package. Hook for the package-upgrade / drift story (ext:import-tracking, RFC-003)."
+          "description": "Deprecated (RFC-014). Write manifest.upstreamPackage instead. This definition is retained for schema-validity of pre-RFC-014 manifests only."
         }
       }
     },
@@ -185,15 +189,15 @@
         "packageId": {
           "type": "string",
           "format": "uuid",
-          "description": "Identifies the external package (external mode)."
+          "description": "Stable UUID of the package. For external mode: identifies the upstream package (required per RFC-014 R4a, tool-behavioral, not JSON Schema enforced). For local mode: optional; when set, allows same-logical-package identity check without reading the package manifest file."
         },
         "packageName": {
           "type": "string",
-          "description": "Human-readable name of the external package (external mode)."
+          "description": "Human-readable name of the package (any mode, optional)."
         },
         "packageVersion": {
           "type": "string",
-          "description": "Semver of the external package (external mode)."
+          "description": "Semver of the package (both local and external modes). SHOULD be set when the version is known."
         }
       }
     },

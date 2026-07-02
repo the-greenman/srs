@@ -2,7 +2,7 @@
 
 # RFC-014: Import Tracking & Package Binding
 
-**Status**: Draft (Revision 4)
+**Status**: In Progress (Revision 4)
 **Affects**: `Package`, `PackageRef`, `UpstreamPackage` in the Distribution Group; `ext:import-tracking` (repository-level divergence reporting); schema `manifest.json`
 **Author**: Peter Brownell (from issue the-greenman/srs#107)
 **Date**: 2026-07-02
