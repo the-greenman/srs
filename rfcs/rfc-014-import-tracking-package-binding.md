@@ -2,7 +2,7 @@
 
 # RFC-014: Import Tracking & Package Binding
 
-**Status**: Draft (Revision 3)
+**Status**: Draft (Revision 4)
 **Affects**: `Package`, `PackageRef`, `UpstreamPackage` in the Distribution Group; `ext:import-tracking` (repository-level divergence reporting); schema `manifest.json`
 **Author**: Peter Brownell (from issue the-greenman/srs#107)
 **Date**: 2026-07-02
@@ -17,6 +17,7 @@
 | 1 | 2026-07-02 | Initial draft |
 | 2 | 2026-07-02 | Address review findings: fix R1 trigger (tool-behaviour, not structural test); correct Change B (packageVersion is not new, remove external-mode restriction); add fallback algorithm for absent packageVersion in Change C; remove "upstream-ahead" from Change E scope (requires registry); clarify ImportSummary storage is implementation-defined; downgrade R8 to MAY and close OQ1; add Migration section and close OQ2; add R9; add packageId to local-mode PackageRef; add ConflictRecord relationship note; fix schema changes table; add srsVersion note; fix nits. |
 | 3 | 2026-07-02 | Address Revision 2 review findings: correct Change B (packageId already exists — update description, not add field); fix schema item (3) to cover both local and external modes; explicitly state upstreamPackage is not added to required array; add R4a (external-mode packageId MUST, behavioral); rewrite R6 to union resolution semantics with Invariant 50 inlined (removes per-version scoping and "created under that version"); fix R9 "invalid" → "non-conformant" with tool behavior clause and version-based end condition; add R10 (packageId linkage rule between upstreamPackage and PackageRef); add R1 read-time-validator exemption; add R4 offline fallback clause; add schema changes rows (5)(6)(7) for packageRefs, packageRef-singular fate, and packageName; update Change E ConflictRecord note to "not yet normative"; add [RESOLVED] markers; add manifest-only-validator exemption to Change C fallback; add conformance fixture structure specification. |
+| 4 | 2026-07-02 | Address Revision 3 completeness finding: add manifest-only-validator MAY-skip exemption to R10 (parallel to Change C's exemption for identity check); add R10 rationale entry; label muDemocracy.org fixture reference as informational. |
 
 ---
 
@@ -185,7 +186,7 @@ A divergence detected at the repository level SHOULD update `ImportRecord.confli
 
 > **[R9]** During a transition period, tools MUST read both `manifest.upstreamPackage` and `manifest.meta.upstreamPackage`, preferring the top-level location. A manifest that carries values at both locations is non-conformant (R7 prohibits writing `meta.upstreamPackage`; a manifest in that state is a migration error). A tool encountering both locations MUST treat this as a migration error: read the top-level value, silently ignore `meta.upstreamPackage`, and on next write complete the migration per the Migration section. The transition period ends when RFC-014 reaches 'Accepted' status and the conformance fixtures under `conformance/import-tracking/` are committed in RFC-014 format, or no later than the release of the first SRS tooling version that formally declares RFC-014 as stable; at that point, implementations MUST stop writing `meta.upstreamPackage` and MUST treat any manifest carrying it as requiring migration.
 
-> **[R10]** When `manifest.upstreamPackage` is set, there MUST exist at least one entry in `manifest.packageRefs` (or `manifest.packageRef`) whose `packageId` matches `manifest.upstreamPackage.packageId`. A manifest where no `PackageRef` entry's `packageId` matches `upstreamPackage.packageId` MUST be reported as a validation error.
+> **[R10]** When `manifest.upstreamPackage` is set, there MUST exist at least one entry in `manifest.packageRefs` (or `manifest.packageRef`) whose `packageId` matches `manifest.upstreamPackage.packageId`. A manifest where no `PackageRef` entry's `packageId` matches `upstreamPackage.packageId` MUST be reported as a validation error. Manifest-only validators MAY skip this check when no `PackageRef` entry carries `packageId` (i.e., all local-mode entries predate RFC-014 and omit the field), and SHOULD report the repository state as indeterminate rather than emitting a validation error in that case.
 
 ---
 
@@ -199,7 +200,7 @@ A divergence detected at the repository level SHOULD update `ImportRecord.confli
 
 **srsVersion note:** adding `upstreamPackage` as a top-level optional property is an additive change to the manifest schema. Repositories that do not use `upstreamPackage` are unaffected; a `srsVersion` bump is not required. Pre-RFC-014 manifests with only `meta.upstreamPackage` remain schema-valid (since `meta` has no `additionalProperties: false`), but conformant tools MUST NOT write to that location.
 
-**Conformance fixture:** a conformance fixture demonstrating a multi-version install MUST be authored under `conformance/import-tracking/` and committed with the schema changes as part of RFC acceptance. The fixture must include at minimum: (a) a `manifest.json` with two `PackageRef` entries for the same `packageId` at different `packageVersion` values, (b) at least one record file whose `typeId` resolves in the older package version directory but not the newer, and (c) a `README.md` summarizing what the fixture demonstrates. The muDemocracy.org governance upgrade (1.0.0 → 1.1.0, muDemocracy.org#55/#56) serves as the primary acceptance fixture.
+**Conformance fixture:** a conformance fixture demonstrating a multi-version install MUST be authored under `conformance/import-tracking/` and committed with the schema changes as part of RFC acceptance. The fixture must include at minimum: (a) a `manifest.json` with two `PackageRef` entries for the same `packageId` at different `packageVersion` values, (b) at least one record file whose `typeId` resolves in the older package version directory but not the newer, and (c) a `README.md` summarizing what the fixture demonstrates. The muDemocracy.org governance upgrade (1.0.0 → 1.1.0, muDemocracy.org#55/#56, informational reference) serves as the primary acceptance fixture.
 
 **Schema sync targets:**
 - `srs-rust/crates/srs-schema/schemas/2.0/` (via `scripts/sync-schemas-from-spec.sh`)
@@ -245,6 +246,10 @@ Divergence detection requires reading all definition files in the installed pack
 ### Why is `ImportSummary` storage left to implementations?
 
 Adding a manifest pointer for `ImportSummary` (e.g., `importTrackingPath`) would be the right long-term answer, but it adds another schema field and another manifest pointer to an RFC already introducing two new manifest-level fields. Deferring it keeps this RFC scoped to provenance and upgrade semantics, not tracking infrastructure. A follow-on RFC (or an extension to this one) should standardise the path.
+
+### Why does R10 require `upstreamPackage.packageId` to be echoed in a `PackageRef` entry?
+
+`upstreamPackage` names the logical package by `packageId`, `namespace`, and `version`. `packageRefs` is the list of installed versions of that package. Without R10 there is no machine-checkable link between these two manifest sections: a manifest could declare `upstreamPackage` for package X while listing only `PackageRef` entries for package Y, and no validator could detect the inconsistency without cross-referencing the package directory files. Using `packageId` as the linkage key — rather than `namespace` or `name`, which could theoretically change across major revisions — preserves the stable-UUID-as-identity-anchor principle throughout the manifest.
 
 ### Why is external-mode `packageId` a behavioral rule (R4a) rather than a JSON Schema `required` conditional?
 
