@@ -2,11 +2,11 @@
 
 # RFC-014: Import Tracking & Package Binding
 
-**Status**: Draft (Revision 1)
-**Affects**: `manifest.json` (new top-level `upstreamPackage` field; `PackageRef` gains `packageVersion` for local mode), `ext:import-tracking` (repository-level divergence reporting), Distribution Group (Core)
+**Status**: Draft (Revision 2)
+**Affects**: `Package`, `PackageRef`, `UpstreamPackage` in the Distribution Group; `ext:import-tracking` (repository-level divergence reporting); schema `manifest.json`
 **Author**: Peter Brownell (from issue the-greenman/srs#107)
 **Date**: 2026-07-02
-**Builds on**: RFC-003 (Definition Distribution — extracts only the import-tracking and package-binding sub-scope; `ext:registry`, `ext:federation`, and `ext:binding` remain in RFC-003 and are explicitly out of scope here)
+**Builds on**: RFC-003 (Definition Distribution — extracts only the import-tracking and package-binding sub-scope; `ext:registry`, `ext:federation`, and `ext:binding` remain in RFC-003 and are explicitly out of scope here. After this RFC is accepted, RFC-003 Changes C–G — `ConflictRecord`, ext:repository-slices, and distribution — remain unchanged in scope. Only the sub-scope described here moves to RFC-014.)
 
 ---
 
@@ -15,6 +15,7 @@
 | Rev | Date | Summary |
 |---|---|---|
 | 1 | 2026-07-02 | Initial draft |
+| 2 | 2026-07-02 | Address review findings: fix R1 trigger (tool-behaviour, not structural test); correct Change B (packageVersion is not new, remove external-mode restriction); add fallback algorithm for absent packageVersion in Change C; remove "upstream-ahead" from Change E scope (requires registry); clarify ImportSummary storage is implementation-defined; downgrade R8 to MAY and close OQ1; add Migration section and close OQ2; add R9; add packageId to local-mode PackageRef; add ConflictRecord relationship note; fix schema changes table; add srsVersion note; fix nits. |
 
 ---
 
@@ -36,12 +37,14 @@ This RFC formalises the minimum viable provenance and upgrade contract. It promo
 
 When `com.mudemocracy.governance@1.1.0` is published, a repository initialised from `1.0.0` has no spec-level guidance on how to proceed. Does the old package stay installed? Do existing records need to be migrated? May both versions co-exist? The current spec is silent. Without a clear answer, every implementation is forced to invent its own upgrade path, which makes migration coordination across tools fragile.
 
-### Problem 3 — Divergence detection has no formal trigger
+### Problem 3 — Divergence detection has no formal definition
 
-`ext:import-tracking` defines `ImportRecord.conflictState` with values including `"upstream-ahead"`, which is exactly the signal that indicates a newer upstream version is available. But nothing in the spec defines:
-- What event sets `conflictState` to `"upstream-ahead"` at the repository level
+`ext:import-tracking` defines `ImportRecord.conflictState: "diverged"`, which is exactly the signal that the locally installed definitions differ from the upstream published version. But nothing in the spec defines:
+- What "divergence" means at the repository level (locally detectable without a registry)
 - How the repository-level `upstreamPackage` connects to the per-definition `ImportRecord` table
-- What a conformant tool must do (or may do) when this signal is present
+- What a conformant tool may do when this signal is present
+
+(Note: detecting that a _newer_ version of the upstream package is available requires registry access and is out of scope for this RFC. That use case uses `conflictState: "upstream-ahead"` and belongs to `ext:registry` / RFC-003.)
 
 ---
 
@@ -61,27 +64,31 @@ Move `upstreamPackage` from `manifest.meta.upstreamPackage` to a first-class top
 }
 ```
 
-`upstreamPackage` is normative when present: every conformant tool MUST read it and MUST write it in a canonical location (`manifest.upstreamPackage`, not `manifest.meta.upstreamPackage`). `meta.upstreamPackage` is deprecated by this RFC; tools SHOULD read `meta.upstreamPackage` as a fallback for repositories authored before RFC-014 is adopted, but MUST NOT write it in new or updated manifests.
+`upstreamPackage` is normative when present: every conformant tool MUST read it and MUST write it at `manifest.upstreamPackage` (not `manifest.meta.upstreamPackage`). `meta.upstreamPackage` is deprecated by this RFC; see Migration.
 
-When is `upstreamPackage` required? Any repository initialised from a published upstream Package (one with a stable `packageId`, `namespace`, `name`, and `version`) MUST set `upstreamPackage` at creation time. Repositories whose package is purely local and has never been published do not set `upstreamPackage`.
+**When does a repository carry `upstreamPackage`?** A tool that creates a repository by instantiating a published upstream Package MUST set `upstreamPackage` at creation time. Repositories whose package is purely local-development and has never been installed from an upstream source do not set `upstreamPackage`. This is a tool-creation-time rule, not a structural constraint that a read-time validator can independently verify.
 
-### Change B — `PackageRef` gains `packageVersion` for all modes
+### Change B — Remove the `external`-mode restriction from `PackageRef.packageVersion`
 
-The existing `PackageRef` shape carries `packageVersion` only when `mode` is `"external"`. Local packages rely on reading the package manifest file to discover the version. This makes multi-version comparisons unnecessarily expensive and prevents quick manifest-level validation.
+`PackageRef.packageVersion` already exists in the manifest schema with description "Semver of the external package (external mode)." This RFC removes that restriction: `packageVersion` now applies to both `"local"` and `"external"` mode entries and SHOULD be set whenever the version is known.
 
-Extend `PackageRef` with an optional `packageVersion` field applicable to both `"local"` and `"external"` modes:
+The rationale for SHOULD (not MUST) for local-mode entries: existing local-mode repositories authored before RFC-014 omit `packageVersion` from their `PackageRef`; a MUST would make those manifests invalid. New tools SHOULD always write it.
+
+Updated description: "Semver of the package (both local and external modes). SHOULD be set when the version is known."
+
+Additionally, this RFC adds an optional `packageId` field to local-mode `PackageRef` entries so that the identity of the logical package is readable from the manifest without cross-file I/O:
 
 ```typescript
 "PackageRef": {
   mode:            "local" | "external"
-  path?:           string      // local mode: relative path to package directory
-  packageId?:      UUID        // external mode: identifies the package
-  packageName?:    string      // external mode: human-readable name
-  packageVersion?: string      // semver; SHOULD be set for both modes when the version is known
+  path?:           string   // local mode: relative path to package directory
+  packageId?:      UUID     // optional for local mode; required for external mode. Stable UUID of the package.
+  packageName?:    string   // human-readable name (any mode, optional)
+  packageVersion?: string   // semver; SHOULD be set for both modes when the version is known
 }
 ```
 
-When `packageVersion` is set on a local-mode `PackageRef`, a tool MUST validate that the version matches the `version` field in the local package manifest. A mismatch is a validation error.
+When `packageVersion` is set on a local-mode `PackageRef`, a tool MUST validate that the value matches the `version` field in the local package manifest. A mismatch MUST be reported as a validation error.
 
 ### Change C — Multi-version install semantics
 
@@ -89,22 +96,35 @@ When a new upstream package version is installed into a repository, the prior ve
 
 ```json
 "packageRefs": [
-  { "mode": "local", "path": "package/com.mudemocracy.governance/1.0.0", "packageVersion": "1.0.0" },
-  { "mode": "local", "path": "package/com.mudemocracy.governance/1.1.0", "packageVersion": "1.1.0" }
+  {
+    "mode": "local",
+    "path": "package/com.mudemocracy.governance/1.0.0",
+    "packageId": "b1234567-…",
+    "packageVersion": "1.0.0"
+  },
+  {
+    "mode": "local",
+    "path": "package/com.mudemocracy.governance/1.1.0",
+    "packageId": "b1234567-…",
+    "packageVersion": "1.1.0"
+  }
 ]
 ```
 
-The **current version** is the `PackageRef` whose `packageVersion` matches `upstreamPackage.version`. Older entries are retained to preserve the validity of records created under those definitions.
+The **current version** is identified as follows:
+1. If `packageVersion` is set on the entry, the entry whose `packageVersion` matches `upstreamPackage.version` is the current version.
+2. If `packageVersion` is absent on a local-mode entry, the tool reads the `version` field from the package manifest at `path` and compares it to `upstreamPackage.version`.
+3. When neither method yields a match, the repository is in an inconsistent state and MUST be reported as a validation error.
 
-Two `PackageRef` entries for the same logical package (same `namespace` + `name` or same `packageId`) at different `packageVersion` values constitute a **multi-version install**. A multi-version install is valid and MUST validate clean.
+**Identifying the same logical package across entries:** two `PackageRef` entries refer to the same logical package when they share the same `packageId`. For local-mode entries that do not set `packageId`, the tool reads the `id` field from each local package manifest to compare. Manifest-only validators MAY skip the multi-version identity check when `packageId` is absent on local-mode entries.
 
-**Identifying the same logical package across entries:** two `PackageRef` entries refer to the same logical package when their respective package manifests share the same `id` (UUID). The `packageId` field on an external-mode ref and the `id` in the local package manifest are the same identity anchor.
+**Migration from `packageRef` (singular) to `packageRefs`:** if the repository currently declares only the singular `packageRef`, the first multi-version install requires migrating to `packageRefs`: move the existing entry into `packageRefs[0]` and add the new entry as `packageRefs[1]`. The singular `packageRef` field is superseded by `packageRefs` for multi-version repositories.
 
 `manifest.upstreamPackage` is updated to the newly installed version at the completion of each upgrade:
 
 ```json
 "upstreamPackage": {
-  "packageId":   "…",
+  "packageId":   "b1234567-…",
   "namespace":   "com.mudemocracy.governance",
   "name":        "governance",
   "version":     "1.1.0",
@@ -120,37 +140,45 @@ This RFC makes the following explicit and normative:
 
 - **No auto-migration.** A tool MUST NOT rewrite any record's `typeId`, `fieldId`, or `fieldValues` as a consequence of installing a new package version. Existing records are valid under the version of the definition they reference.
 - **Intentional migration only.** A record may be migrated to a newer definition version by creating a new instance that supersedes or refines the old one, using the existing `supersedes` / `refines` relation vocabulary. The old instance continues to exist and remains valid until explicitly closed or superseded.
-- **Old definitions remain resolvable.** A tool reading a multi-version repository MUST be able to resolve a reference to a definition at any installed version. Removing a prior version's package directory while records still reference its definitions is a validation error.
+- **Old definitions remain resolvable.** A tool reading a multi-version repository MUST be able to resolve a reference to a definition at any installed version. A `typeId` or `fieldId` that cannot be resolved by any installed package version's directory is a validation error (see R6, which extends Invariant 50 to multi-version repositories).
 
 ### Change E — Repository-level divergence detection
 
-When `upstreamPackage` is set, a tool MAY detect whether the locally installed definitions at `upstreamPackage.version` differ from the published upstream package at that same version. This comparison is **divergence detection at the repository level**.
+When `upstreamPackage` is set, a tool MAY detect whether the locally installed definitions at `upstreamPackage.version` differ from the canonical content of the upstream package at that same version. This comparison is **divergence detection at the repository level.**
 
-**What divergence means:** the repository's local copy of a definition (field or type file) has content that differs from the canonical content of the upstream package at `upstreamPackage.version`. This may result from a local edit, a partial upgrade, or corruption.
+**What divergence means:** the repository's local copy of a definition file (field or type JSON) has content that differs from the canonical content of the upstream package as published at `upstreamPackage.version`. This may result from a local edit, a partial upgrade, or corruption.
 
-**How divergence is surfaced:** implementations that declare `ext:import-tracking` SHOULD represent per-definition divergence as `ImportRecord.conflictState: "diverged"` (local and upstream differ in an incompatible way) or `"upstream-ahead"` (upstream has a newer version available). These values are already defined by `ext:import-tracking` and require no extension to their shape.
+**Scope:** divergence detection is strictly local — it compares the installed definition files against a reference copy of the same version. Detecting that a _newer_ version of the upstream package is available requires registry access and is out of scope for this RFC (see Motivation Problem 3). The `conflictState: "upstream-ahead"` signal is not in scope for R8; it becomes applicable once `ext:registry` and RFC-003 are in scope.
 
-**The repository-level trigger:** when `upstreamPackage` is set and `ext:import-tracking` is declared, a tool SHOULD check for divergence on manifest load and populate the `ImportSummary` accordingly. This check is advisory — it does not prevent the repository from loading or validating — but its result SHOULD be surfaced to the user or agent.
+**Minimum detection approach:** a conforming implementation compares the content of each definition file in the installed package directory against a reference copy. The reference copy is either: (a) a byte-for-byte snapshot stored at install time in an implementation-defined location; or (b) re-fetched from the published source of `upstreamPackage` if network access is available. A tool that has no reference copy simply skips the check.
+
+**How divergence is surfaced:** implementations that declare `ext:import-tracking` MAY represent per-definition divergence as `ImportRecord.conflictState: "diverged"` (local and upstream differ). This value is already defined by `ext:import-tracking` and requires no extension to its shape.
+
+A divergence detected at the repository level SHOULD update `ImportRecord.conflictState` for each affected definition. Creating a corresponding `ConflictRecord` (RFC-003 Change C, `ext:import-tracking`) is recommended but deferred to RFC-003's scope.
+
+**Storage of `ImportSummary`:** the location of the `ImportSummary` file is implementation-defined and not standardised by this RFC. A future RFC should add a manifest pointer (e.g., `importTrackingPath`) alongside `relationsPath`; until then, tools may not assume they can read another tool's `ImportSummary`.
 
 ---
 
 ## Conformance Rules
 
-> **[R1]** A repository initialised from a published upstream Package MUST set `manifest.upstreamPackage` at creation time. The value MUST reflect the upstream `packageId`, `namespace`, `name`, and `version` installed.
+> **[R1]** A tool that creates a repository by instantiating an upstream published Package MUST set `manifest.upstreamPackage` at creation time. The value MUST reflect the upstream `packageId`, `namespace`, `name`, and `version` installed.
 
 > **[R2]** When a new upstream package version is installed, the tool MUST retain all prior `PackageRef` entries in `manifest.packageRefs` and MUST update `manifest.upstreamPackage.version` and `installedAt` to reflect the newly installed version.
 
 > **[R3]** A tool MUST NOT rewrite any record's `typeId`, `fieldId`, or `fieldValues` as a result of installing a new package version (no auto-migration).
 
-> **[R4]** When `PackageRef.packageVersion` is set for a local-mode entry, the tool MUST validate that the value matches the `version` field in the local package manifest. A mismatch MUST be reported as a validation error.
+> **[R4]** When `PackageRef.packageVersion` is set for any `PackageRef` entry, the tool MUST validate that the value matches the `version` field in the package manifest for that entry (read from `path` for local mode, or from registry metadata for external mode). A mismatch MUST be reported as a validation error.
 
 > **[R5]** A multi-version repository (two or more `PackageRef` entries for the same logical package at different versions) MUST validate clean against the SRS 2.0 schema. Records created under any installed version remain valid.
 
-> **[R6]** A tool MUST NOT remove a prior-version package directory from a multi-version install while records in the repository still reference definitions from that version.
+> **[R6]** A multi-version repository MUST satisfy Invariant 50 for each installed version independently: for each `PackageRef` entry, every `typeId` and `fieldId` referenced by records created under that version MUST resolve within that package directory. A tool MUST NOT remove a prior-version package directory if doing so would leave any such reference unresolvable. A validator MUST report an error for any unresolvable definition reference.
 
 > **[R7]** A tool writing or updating a manifest MUST write `upstreamPackage` at the top level of the manifest (not inside `meta`). Writing `meta.upstreamPackage` is deprecated and MUST NOT occur in tools conformant with RFC-014.
 
-> **[R8]** Implementations declaring `ext:import-tracking` SHOULD check for repository-level divergence on manifest load and SHOULD populate per-definition `ImportRecord.conflictState` accordingly.
+> **[R8]** Implementations declaring `ext:import-tracking` MAY check for repository-level divergence (see Change E). When they do, they SHOULD populate per-definition `ImportRecord.conflictState: "diverged"` for each definition whose locally installed content differs from the reference copy. This check is advisory and does not prevent the repository from loading or validating.
+
+> **[R9]** During a transition period, tools MUST read both `manifest.upstreamPackage` and `manifest.meta.upstreamPackage`, preferring the top-level location. A manifest that carries values at both locations is invalid (R7 prohibits writing `meta.upstreamPackage`; a manifest in that state is a migration error). The transition period ends when the acceptance fixtures (muDemocracy.org governance seed, muDemocracy.org#55/#56) are updated to RFC-014 format.
 
 ---
 
@@ -158,13 +186,34 @@ When `upstreamPackage` is set, a tool MAY detect whether the locally installed d
 
 | Schema file | Change |
 |---|---|
-| `manifest.json` | Add top-level `upstreamPackage` property (type `UpstreamPackage`, already defined in `$defs`). Keep `UpstreamPackage` $def unchanged. Add `packageVersion` to `PackageRef` applicable to `"local"` mode. Deprecate `meta.upstreamPackage` in description. |
+| `manifest.json` | (1) Add top-level `upstreamPackage` property (`$ref: "#/$defs/UpstreamPackage"`; the `UpstreamPackage` $def is unchanged). (2) Update `PackageRef.packageVersion` description from "Semver of the external package (external mode)" to "Semver of the package (both local and external modes). SHOULD be set when the version is known." (3) Add optional `packageId` (`format: uuid`) to `PackageRef` for local mode, with description "Stable UUID of the local package. Optional for local mode; when set, allows same-logical-package identity check without reading the package manifest file." (4) Remove `upstreamPackage` from `meta.properties` and update `meta.description` to add: "Note: `upstreamPackage` was previously accepted here; see `manifest.upstreamPackage` (RFC-014). Since `meta` permits additional properties, existing manifests remain schema-valid but conformant tools MUST NOT write `meta.upstreamPackage`." |
 
 `package-manifest.json`: no changes. Package identity (`id`, `namespace`, `name`, `version`) is already sufficient.
 
-Schema changes must be synced to:
+**srsVersion note:** adding `upstreamPackage` as a top-level optional property is an additive change to the manifest schema. Repositories that do not use `upstreamPackage` are unaffected; a `srsVersion` bump is not required. Pre-RFC-014 manifests with only `meta.upstreamPackage` remain schema-valid (since `meta` has no `additionalProperties: false`), but conformant tools MUST NOT write to that location.
+
+**Conformance fixture:** a conformance fixture demonstrating a multi-version install (two `PackageRef` entries for the same logical package at different `packageVersion` values, with records referencing definitions from the older version) MUST be authored under `conformance/import-tracking/` and committed with the schema changes as part of RFC acceptance. The muDemocracy.org governance upgrade (1.0.0 → 1.1.0, muDemocracy.org#55/#56) serves as the primary acceptance fixture.
+
+**Schema sync targets:**
 - `srs-rust/crates/srs-schema/schemas/2.0/` (via `scripts/sync-schemas-from-spec.sh`)
 - `srs-vscode/schemas/2.0/` (via `srs-vscode/scripts/sync-schemas-from-spec.sh`)
+
+---
+
+## Migration
+
+### Repositories using `meta.upstreamPackage` (pre-RFC-014)
+
+Repositories authored before this RFC carry `upstreamPackage` at `manifest.meta.upstreamPackage`. On first write or update of the manifest, a conformant tool MUST:
+1. Read the value from `meta.upstreamPackage`.
+2. Write it to the top-level `manifest.upstreamPackage`.
+3. Remove the key from `meta`.
+
+On read, tools MUST read `manifest.upstreamPackage` first and fall back to `meta.upstreamPackage` for pre-RFC-014 repositories (R9).
+
+### Repositories using `packageRef` (singular)
+
+A repository that currently uses the singular `packageRef` and has not yet undergone a multi-version upgrade may continue to use `packageRef` until it does. When the first multi-version upgrade occurs, the tool MUST migrate to `packageRefs`: move the existing entry to `packageRefs[0]`, write the new version as `packageRefs[1]`, and remove the singular `packageRef`.
 
 ---
 
@@ -176,15 +225,19 @@ Schema changes must be synced to:
 
 ### Why keep old `PackageRef` entries rather than replacing them on upgrade?
 
-Because records reference definition UUIDs, not package version strings. If the old package directory is removed, a record that references a definition from `governance@1.0.0` can no longer be resolved, which is a validation error. Keeping the old entry is the only way to guarantee that existing records remain valid without forcing a migration. This aligns with the SRS data model principle that stable UUIDs are permanent.
+Because records reference definition UUIDs, not package version strings. If the old package directory is removed, a record that references a definition from `governance@1.0.0` can no longer be resolved, which is a validation error under Invariant 50. Keeping the old entry is the only way to guarantee that existing records remain valid without forcing a migration. This aligns with the SRS data model principle that stable UUIDs are permanent.
 
 ### Why not specify auto-migration?
 
 Auto-migration requires that a newer field or type definition be semantically compatible with the older version — a claim that cannot be verified mechanically. SRS's existing `supersedes`/`refines` relation vocabulary is the correct mechanism for expressing intentional migration at record granularity, where the author makes the semantic judgement. Auto-migration by a tool would silently rewrite records, violating the stable-UUID guarantee and the "provenance in the file" commitment.
 
-### Why not define a divergence hash or checksum?
+### Why is R8 a MAY rather than a SHOULD?
 
-A checksum approach (store expected hash of each file at install time) would provide a strong divergence signal, but it would also require every install to compute and store checksums and every check to recompute them. This RFC intentionally keeps divergence detection as a SHOULD, leaving the detection mechanism to implementations. A future RFC may formalise a checksum-based approach as part of a more complete registry/upgrade workflow.
+Divergence detection requires reading all definition files in the installed package directory and comparing them against a reference copy. For large packages this is a non-trivial I/O cost on every manifest load. Making it SHOULD would impose this cost on all conformant implementations regardless of whether the user needs divergence detection. MAY leaves the capability to implementations that opt in, without penalising those that do not.
+
+### Why is `ImportSummary` storage left to implementations?
+
+Adding a manifest pointer for `ImportSummary` (e.g., `importTrackingPath`) would be the right long-term answer, but it adds another schema field and another manifest pointer to an RFC already introducing two new manifest-level fields. Deferring it keeps this RFC scoped to provenance and upgrade semantics, not tracking infrastructure. A follow-on RFC (or an extension to this one) should standardise the path.
 
 ---
 
@@ -192,20 +245,20 @@ A checksum approach (store expected hash of each file at install time) would pro
 
 ### Alt A — Keep `meta.upstreamPackage` and add normative language in prose only
 
-This would avoid the schema change but would not update validators or tools that skip non-normative `meta` entries. The problem is that tools reading the schema today see `meta` as "implementation-local" and cannot distinguish normative from optional fields within it. A top-level field is unambiguous.
+This would avoid the schema change but would not update validators or tools that skip non-normative `meta` entries. A top-level field is unambiguous and aligns with how other normative manifest pointers are declared.
 
 ### Alt B — Require a single installed version (replace on upgrade)
 
-Simpler manifest structure (one `PackageRef` per logical package), but requires either auto-migration or explicit acceptance that records become unresolvable. Both outcomes violate core SRS guarantees. Install-alongside preserves validity without forcing migration.
+Simpler manifest structure, but requires either auto-migration or explicit acceptance that records become unresolvable. Both outcomes violate core SRS guarantees. Install-alongside preserves validity without forcing migration.
 
 ### Alt C — Combine with full `ext:binding` (RFC-003 Change D)
 
-RFC-003 Change D defines a `BindingMode` mechanism for declared authoritative relationships with upstream sources. That is a richer (and more complex) capability than this RFC targets. The "Decision Log" release timeline requires the provenance stamp and upgrade model to be specified now; the binding relationship can wait for RFC-003's full adoption.
+RFC-003 Change D defines a `BindingMode` mechanism for declared authoritative relationships with upstream sources. That is a richer (and more complex) capability than this RFC targets. The Decision Log release timeline requires the provenance stamp and upgrade model to be specified now; the binding relationship can wait for RFC-003's full adoption. After RFC-014 is accepted, RFC-003 Changes C–G (ConflictRecord, ext:repository-slices, distribution) remain unchanged in scope.
 
 ---
 
 ## Open Questions
 
-1. **Divergence check timing:** this RFC says implementations SHOULD check on manifest load (R8). Should it instead be advisory (no SHOULD, purely capability)? The concern is that a SHOULD imposes a performance cost on every manifest load even when the user does not want it. **Resolution needed before Accepted.**
+1. **Divergence check timing:** ~~SHOULD check on manifest load~~ — resolved as MAY (R8). Performance concern is valid; detection is opt-in capability. No SHOULD.
 
-2. **Backward compatibility window for `meta.upstreamPackage`:** how long should tools continue to read `meta.upstreamPackage` as a fallback? The acceptance fixture (muDemocracy.org governance seed from muDemocracy.org#38) was authored before this RFC and uses `meta.upstreamPackage`. A migration path is needed. **Proposed:** tools MUST read both locations during a transition window; the seed is updated as part of the 1.1.0 upgrade fixture (muDemocracy.org#55, #56).
+2. **Backward compatibility window for `meta.upstreamPackage`:** resolved by Change A and R9. On write: MUST migrate to top-level. On read: MUST fall back to `meta.upstreamPackage` for pre-RFC-014 repos (R9). Remaining action: muDemocracy.org governance seed (muDemocracy.org#38) must be updated as part of the 1.1.0 upgrade fixture (muDemocracy.org#55, #56) before RFC acceptance.
