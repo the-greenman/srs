@@ -44,7 +44,6 @@ SRS Core [+ ext:<name> ...]
 | Addressability | `ext:addressability` | — | For live facilitation, declare together with `ext:protocol` |
 | Lifecycle | `ext:lifecycle` | — | |
 | Protocol | `ext:protocol` | `ext:lifecycle` (recommended) | For live facilitation, declare together with `ext:addressability` |
-| Blueprint | `ext:blueprint` | — | |
 | Type Inheritance | `ext:type-inheritance` | — | |
 | Views L1 | `ext:views-l1` | — | |
 | Views L2 | `ext:views-l2` | `ext:views-l1` | |
@@ -58,6 +57,8 @@ SRS Core [+ ext:<name> ...]
 | Repository | `ext:repository` | — | File-based live repository and archive (export/import) format |
 
 `ext:protocol` and `ext:addressability` are formally independent but are a functional co-dependency for live facilitation: a Protocol without `AttentionState` produces no live conversation tagging; `AttentionState` without Protocol stages has no stage context to capture. Implementations supporting live facilitation should declare both.
+
+**Blueprint is a core package definition**, not a declarable extension. `Blueprint` is included in `Package.blueprints[]` when needed; no `ext:blueprint` declaration is required or defined.
 
 Example declaration: `SRS Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability`
 
@@ -815,7 +816,7 @@ A grace window is declared in `Vocabulary.promotionWindow.until`. Until that bou
   types: Type[]
   views?: View[]             // ext:views-l1; omit if not in use
   documentViews?: DocumentView[]  // ext:views-l2; omit if not in use
-  blueprints?: Blueprint[]   // ext:blueprint; omit if not in use
+  blueprints?: Blueprint[]   // core; omit if not in use
   protocols?: Protocol[]     // ext:protocol; omit if not in use
   relationTypes?: RelationTypeDefinition[]  // relation type definitions
   vocabularies?: Vocabulary[]               // RFC-006: named vocabulary definitions

@@ -1709,7 +1709,7 @@ Merging `PageTemplates` and `ElementTemplates` into one object simplifies the sc
 
 **Title**: RFC-011: DocumentView query extensions — lifecycle-state exclusion and repository-wide type queries
 **RFC Number**: 011
-**Status**: draft
+**Status**: accepted
 **Author**: Peter Brownell
 **Affected Components**: ext:views-l2 (SectionSource.type-query), document-view.json
 **Content**: Adds three optional fields to SectionSource.type-query: lifecycleStates (multi-value inclusion filter), excludeLifecycleStates (exclusion filter), and containerScope (explicit | repository | subtree). Enables the decision-log pattern: rendering all non-superseded/non-abandoned decisions across a repository without listing every container ID. Tracked in the-greenman/srs#41.
