@@ -51,29 +51,31 @@ srs repo validate --repo packages/com.mudemocracy.governance/1.0.0/seed/empty-go
 #   → 0 errors, 0 instances, package resolves (4 types / 19 fields)
 ```
 
-### Provenance stamp — `meta.upstreamPackage`
+### Provenance stamp — `upstreamPackage` (RFC-014)
 
-The seed manifest records which upstream Package it was initialised from:
+The seed manifest records which upstream Package it was initialised from. As of RFC-014,
+`upstreamPackage` is a normative top-level field on `manifest.json` (the `meta.upstreamPackage`
+subkey is deprecated):
 
 ```json
-"meta": {
-  "upstreamPackage": {
-    "packageId": "1cd9622e-3d05-4214-a683-4cb81d0c44d9",
-    "namespace": "com.mudemocracy.governance",
-    "name": "governance",
-    "version": "1.0.0",
-    "installedAt": "2026-01-01T00:00:00Z"
-  }
+"upstreamPackage": {
+  "packageId": "1cd9622e-3d05-4214-a683-4cb81d0c44d9",
+  "namespace": "com.mudemocracy.governance",
+  "name": "governance",
+  "version": "1.0.0",
+  "installedAt": "2026-01-01T00:00:00Z",
+  "contentHash": "sha256:<hex-digest-of-package-content-at-install>"
 }
 ```
 
 This contract is defined in the repository-manifest schema
 (`docs/schema/2.0/manifest.json` → `$defs/UpstreamPackage`). It is a lightweight,
-repository-level **precursor** to the full per-definition `ext:import-tracking` model
-(RFC-003): it lets a consumer detect when a newer governance version is published so the
-document can be upgraded in place (the hook for #37).
+repository-level complement to the full per-definition `ext:import-tracking` model
+(RFC-003): it lets a consumer detect when a local package definition has drifted from the
+upstream snapshot recorded at install time (divergence detection via `contentHash`), enabling
+non-destructive package upgrades (the hook for #37).
 
-> **Known limitation.** `srs repo copy` does not yet preserve `manifest.meta` across
-> export/import — the engine has no import-tracking wiring (RFC-003 / #37). The build script
-> therefore stamps `meta.upstreamPackage` into the bundle after export. Round-trip
+> **Known limitation.** `srs repo copy` does not yet preserve the `upstreamPackage` stamp
+> across export/import — the engine has no import-tracking wiring (RFC-003 / #37). The build
+> script therefore stamps `upstreamPackage` into the bundle after export. Round-trip
 > preservation of the stamp through the engine is part of the #37 upgrade story, not this task.
