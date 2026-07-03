@@ -2723,38 +2723,38 @@
     {
       "instanceId": "583debe6-724f-4397-9b02-cc62c98e3e0a",
       "path": "records/invariants/invariant-079.json",
-      "tier": 2,
       "tags": [
         "concern:validation",
         "topic:conformance"
-      ]
+      ],
+      "tier": 2
     },
     {
       "instanceId": "80d769eb-12e0-40fe-ba4f-be9699184ad2",
       "path": "records/invariants/invariant-080.json",
-      "tier": 2,
       "tags": [
         "concern:validation",
         "topic:conformance"
-      ]
+      ],
+      "tier": 2
     },
     {
       "instanceId": "5d527a48-5a00-4fdc-a1e0-cf3bec546dcc",
       "path": "records/invariants/invariant-081.json",
-      "tier": 2,
       "tags": [
         "concern:validation",
         "topic:conformance"
-      ]
+      ],
+      "tier": 2
     },
     {
       "instanceId": "f64d7c25-9774-4edd-bd92-a31a8fce0d7d",
       "path": "records/invariants/invariant-082.json",
-      "tier": 2,
       "tags": [
         "concern:validation",
         "topic:conformance"
-      ]
+      ],
+      "tier": 2
     }
   ],
   "meta": {

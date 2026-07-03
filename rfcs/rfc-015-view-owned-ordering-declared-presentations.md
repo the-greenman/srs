@@ -2,7 +2,7 @@
 
 # RFC-015: View-Owned Ordering & Declared Root Presentations
 
-**Status**: Draft (Revision 2)
+**Status**: In Progress (Revision 2)
 **Affects**: `document-view.json` (`DocumentSection.ordering`, `container-subset` SectionSource), `manifest.json` (new top-level `renderedPresentations`), `ext:views-l2` (Rules [N+28]–[N+30]), `ext:repository` / `manifest.json` (Rule [N+31])
 **Author**: the-greenman (from epic the-greenman/srs#95, Phase 1 gate / issue #114)
 **Date**: 2026-07-03
@@ -15,7 +15,7 @@
 | Rev | Date | Summary |
 |---|---|---|
 | 1 | 2026-07-03 | Initial draft |
-| 2 | 2026-07-03 | Add `direction: "desc"` step (4) to Rule [N+29]; close OQ-1 (resolved). Fix RFC-014 dangling reference in Rationale. Promote OQ-2 resolution into Rule [N+31] (multi-package conflict + `viewId` failure); close OQ-2. Add Migration section. Add diagnostic asymmetry rationale. Add New Invariants note. Add RFC-013 OQ-1 acknowledgment. Fix `[N+20]–[N+21]` → `[N+19]–[N+21]` in Change B. Fix `direction` description in schema snippets. Fix Affects header for [N+31]. Fix MUST wording in Rule [N+29] step (2). |
+| 2 | 2026-07-03 | Add `direction: "desc"` step (4) to Rule [N+29]; close OQ-1 (resolved). Fix RFC-014 dangling reference in Rationale. Promote OQ-2 resolution into Rule [N+31] (multi-package conflict + `viewId` failure); close OQ-2. Add Migration section. Add diagnostic asymmetry rationale. Add New Invariants note. Add RFC-013 OQ-1 acknowledgment. Fix `[N+20]–[N+21]` → `[N+19]–[N+21]` in Change B. Fix `direction` description in schema snippets. Fix Affects header for [N+31]. Fix MUST wording in Rule [N+29] step (2). Implementation started; spec records authored in `srs/srs/`; PR opened as srs#115. |
 
 ---
 
