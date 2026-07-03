@@ -2573,6 +2573,16 @@
       "tier": 2
     },
     {
+      "instanceId": "2a5ae7ad-8b51-4fc4-8bc4-2a004ecae698",
+      "path": "records/extensions/ext-type-inheritance.json",
+      "tags": [
+        "concern:extensibility",
+        "construct:type",
+        "topic:extensions"
+      ],
+      "tier": 2
+    },
+    {
       "instanceId": "45cebefe-39ce-47d9-8753-b2b03ac25a18",
       "path": "records/subsections/04-7-vocabulary-term-substrate.json",
       "tags": [
