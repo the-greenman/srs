@@ -552,6 +552,34 @@ This completes the fully UUID-anchored typed chain: `Blueprint.rootTypes → Doc
 
 **Migration:** existing Blueprint files whose `rootTypes` entries carry only `typeId` (no `typeVersion`) will fail `blueprint.json` schema validation and produce a diagnostic. Add the `typeVersion` integer to restore full ExactTypeRef conformance. An empty `rootTypes: []` array is valid.
 
+### Presentational vs semantic ordering (RFC-015 [N+28]–[N+29])
+Do not create `precedes` relations to achieve a presentational goal. `precedes` is the SRS relation for semantic sequence — the kind of ordering where a different arrangement would be semantically *wrong* (e.g. Step 1 must precede Step 2). For purely presentational ordering (newest-first decisions, manual curation, display preference), use `ordering.memberOrder` on a `container-subset` DocumentView section:
+
+```json
+{
+  "sectionId": "decisions",
+  "source": { "type": "container-subset", "containerId": "<uuid>" },
+  "ordering": {
+    "memberOrder": ["<instanceId-1>", "<instanceId-2>", "<instanceId-3>"]
+  }
+}
+```
+
+`memberOrder` lists instanceIds in presentation order; container members not listed are appended in [N+12] order (topological then `createdAt` tiebreak). It MUST NOT be combined with `fieldId` on the same section. On non-`container-subset` sources it is ignored with a diagnostic.
+
+Creating `precedes` for presentation pollutes the semantic graph permanently — tooling cannot distinguish semantic from presentational `precedes` edges, and the relation persists even when the DocumentView is removed.
+
+### Declaring the default repository presentation (RFC-015 [N+31])
+When a repository has a canonical presentation, declare it in `manifest.json` so conformant viewers open it by default:
+
+```json
+"renderedPresentations": [
+  { "viewId": "<DocumentView-UUID>", "isDefault": true }
+]
+```
+
+The first entry with `isDefault: true` is the default; when none carry `isDefault`, the first entry is the default. When `renderedPresentations` is absent or empty, viewer falls back to implementation-defined selection. `viewId` MUST resolve to a DocumentView in the active package(s) — a resolution failure is a validation error. `format` and `outputPath` are informational hints for render tooling and do not affect viewer selection.
+
 ---
 
 ## 7. Reading CLI Output
