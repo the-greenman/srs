@@ -2809,6 +2809,15 @@
         "construct:lifecycle"
       ],
       "tier": 2
+    },
+    {
+      "instanceId": "388f28d9-21d2-46e7-8622-addd97b983f8",
+      "path": "records/rfcs/rfc-016-invariant-record-projection.json",
+      "tags": [
+        "concern:rendering",
+        "topic:rfc"
+      ],
+      "tier": 2
     }
   ],
   "meta": {

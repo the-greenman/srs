@@ -2,7 +2,7 @@
 
 # RFC-016: Invariant Record Projection
 
-**Status**: Draft (Revision 3)
+**Status**: Accepted (Revision 5)
 **Affects**: `com.semanticops.spec/invariant` (rendering); `scripts/publish-spec.mjs`; subsection body records (Phase 2)
 **Author**: design dialogue draft
 **Date**: 2026-07-04
@@ -16,6 +16,8 @@
 | 1 | 2026-07-04 | Initial draft |
 | 2 | 2026-07-04 | Address Stage 3 review: fix subsection fieldId (1a000002 not 1a000003); add field reference table; specify group normalization algorithm; clarify wholesale region replacement; drop **Content**: prefix; fix sort rule; fix R4 conditionality; canonicalize R5 field names; add R6 for absent group; note invariant-062 cleanup; fix abstract range |
 | 3 | 2026-07-04 | Address Stage 4 re-review: type-aware sort algorithm (JSON number vs I-NN string); clarify intro sentence is part of renderInvariants output; R5 covers absent Number field; EOF boundary case; full UUIDs; remove Rationale hedge |
+| 4 | 2026-07-04 | Implementation started; RFC file committed to branch rfc/016-invariant-record-projection |
+| 5 | 2026-07-04 | Accepted; spec records authored in srs/srs; pipeline passes end-to-end; I-63–I-84 visible in rendered views; updated check-release-drift.mjs to apply invariant injection before comparison |
 
 ---
 
