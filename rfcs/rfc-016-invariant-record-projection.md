@@ -2,7 +2,7 @@
 
 # RFC-016: Invariant Record Projection
 
-**Status**: Draft (Revision 1)
+**Status**: Draft (Revision 2)
 **Affects**: `com.semanticops.spec/invariant` (rendering); `scripts/publish-spec.mjs`; subsection body records (Phase 2)
 **Author**: design dialogue draft
 **Date**: 2026-07-04
@@ -14,12 +14,13 @@
 | Rev | Date | Summary |
 |---|---|---|
 | 1 | 2026-07-04 | Initial draft |
+| 2 | 2026-07-04 | Address Stage 3 review: fix subsection fieldId (1a000002 not 1a000003); add field reference table; specify group normalization algorithm; clarify wholesale region replacement; drop **Content**: prefix; fix sort rule; fix R4 conditionality; canonicalize R5 field names; add R6 for absent group; note invariant-062 cleanup; fix abstract range |
 
 ---
 
 ## Abstract
 
-The rendered "Key Invariants" section of `docs/spec/srs-spec.md` is currently populated from hand-written prose embedded in subsection body records, not from `com.semanticops.spec/invariant` records. This means invariants I-63–I-84 (added by RFC-009, RFC-013, and RFC-014) are invisible in every rendered view, and invariants 1–62 are duplicated — once as records and once as subsection prose — creating a silent divergence risk. This RFC establishes that the rendered invariant list MUST be a projection of `invariant` records, and specifies a two-phase implementation: a post-render injection script (Phase 1) that stops the bleeding immediately, followed by removal of the duplicate prose from subsection bodies (Phase 2).
+The rendered "Key Invariants" section of `docs/spec/srs-spec.md` is currently populated from hand-written prose embedded in subsection body records, not from `com.semanticops.spec/invariant` records. This means 11 invariant records — I-63–I-66, I-78–I-84 — added by RFC-009, RFC-013, and RFC-014 are invisible in every rendered view, and invariants 1–62 are duplicated — once as records and once as subsection prose — creating a silent divergence risk. This RFC establishes that the rendered invariant list MUST be a projection of `invariant` records, and specifies a two-phase implementation: a post-render injection script (Phase 1) that stops the bleeding immediately, followed by removal of the duplicate prose from subsection bodies (Phase 2, tracked separately).
 
 ---
 
@@ -27,13 +28,13 @@ The rendered "Key Invariants" section of `docs/spec/srs-spec.md` is currently po
 
 ### Problem 1 — Invariant records are not the source for the rendered Key Invariants section
 
-The `srs` specification repo's own principle is: "the records are the source of truth; the markdown is a projection." For the Key Invariants section this principle is violated. The current rendering pipeline (`srs render document-view` via the Rust CLI) emits the Key Invariants section from the body text of subsection records (e.g. `records/subsections/08-1-field-semantics.json`), which contain hand-written `**N.** ...` prose. The `com.semanticops.spec/invariant` records in `records/invariants/` are never read during rendering.
+The `srs` specification repo's own principle is: "the records are the source of truth; the markdown is a projection." For the Key Invariants section this principle is violated. The current rendering pipeline (`srs render document-view` via the Rust CLI) emits the Key Invariants section from the body text of subsection records (e.g. `records/subsections/08-1-field-semantics.json`), which contain hand-written `**N.** ...` prose in their Content field (`1a000002`). The `com.semanticops.spec/invariant` records in `records/invariants/` are never read during rendering.
 
 Consequence: invariants added via the RFC pipeline (which authors `invariant` records as directed) never reach the rendered spec. As of this writing, 11 invariant records — I-63–I-66, I-78–I-84 — are invisible to any reader of `docs/spec/srs-spec.md`.
 
 ### Problem 2 — Invariants 1–62 are duplicated and can diverge
 
-Invariants 1–62 are authored twice: as records in `records/invariants/invariant-001.json` … `invariant-062.json`, and again as inline prose in subsection bodies. The rendered output comes from the prose. The two copies can diverge silently — a change to a record body is not reflected in the rendered spec until the subsection prose is also updated. There is no validation that detects drift between the two.
+Invariants 1–62 are authored twice: as records in `records/invariants/invariant-001.json` … `invariant-062.json`, and again as inline prose in subsection Content bodies. The rendered output comes from the prose. The two copies can diverge silently — a change to a record body is not reflected in the rendered spec until the subsection prose is also updated. There is no validation that detects drift between the two.
 
 ---
 
@@ -41,49 +42,99 @@ Invariants 1–62 are authored twice: as records in `records/invariants/invarian
 
 ### Change A — Add `scripts/render-invariants.mjs`
 
-Add a new script that reads all `com.semanticops.spec/invariant` records from `srs/records/invariants/`, sorts them by `invariant-number`, groups them by the `group` field, and generates the full Key Invariants section as a markdown string.
+Add a new ESM module that reads all `com.semanticops.spec/invariant` records from `srs/records/invariants/`, sorts them by `invariant-number`, groups them by the `group` field, and exports an async function `renderInvariants(repoPath)` that returns the full Key Invariants region body as a markdown string.
 
-Sorting: normalize `invariant-number` values to integers for sort purposes. Integer values (1–62) sort before "I-NN" string values; for "I-NN" strings, sort numerically by the integer after the hyphen.
+#### Field reference table
 
-Grouping: records with the same `group` value are emitted under a `####` heading derived from that value. Groups appear in ascending order of their lowest-numbered invariant.
+All record field access uses these fieldIds from the `com.semanticops.spec/invariant` type:
 
-Output format per invariant:
+| Logical name | fieldId | displayLabel |
+|---|---|---|
+| `invariant-number` | `1a000020-0000-4000-a000-000000000020` | Number |
+| `constraint` | `1a000003-0000-4000-a000-000000000003` | Constraint |
+| `group` | `1a000021-0000-4000-a000-000000000021` | Applies To |
 
+#### Sorting
+
+Convert all `invariant-number` field values to an integer key: strip the `"I-"` prefix if present, parse the remainder as an integer. Sort records ascending by this key. Example: `"I-63"` → 63, `1` → 1.
+
+#### Group normalization
+
+The `group` field (`Applies To`) is an annotation field whose values may be multi-part strings containing semicolons, parenthetical qualifications, and RFC references unsuitable for use as `####` headings verbatim. Derive the display group label from the `group` value using this algorithm:
+
+1. If the value contains `;`, take the substring before the first `;` and trim whitespace.
+2. If the result contains `, ext:` or `, core`, take the substring before that delimiter and trim.
+3. The trimmed result is the display group label used as the `####` heading.
+
+Examples:
+- `"ext:import-tracking; ext:repository (packageRefs …); RFC-014 R6. …"` → `"ext:import-tracking"`
+- `"ext:repository (RepositoryManifest); RFC-013"` → `"ext:repository (RepositoryManifest)"`
+- `"Container (core), ext:vocabulary (RFC-006)"` → `"Container (core)"`
+- `"core — Field"` → `"core — Field"` (unchanged, no semicolon or `, ext:`)
+- `"ext:lifecycle"` → `"ext:lifecycle"` (unchanged)
+
+Records with the same normalized display group label are emitted under a shared `####` heading. Groups appear in ascending order of their lowest-numbered invariant member.
+
+#### Body value sanitization
+
+Before emitting a Constraint field value, strip any trailing markdown horizontal rule artifact: remove any trailing `\n\n---` or `\n---` sequence. (Known instance: `invariant-062.json` Constraint field ends with `\n\n---`; a separate data-cleanup step in Phase 1 implementation SHOULD also correct the record directly.)
+
+#### Output format
+
+The function returns a markdown string consisting of group headings and invariant items only — no `### Key Invariants` heading, no `---` boundary. Example:
+
+```markdown
+Conforming implementations must uphold the following invariants.
+#### core — Field
+
+**1.** `FieldAssignment.displayLabel` and `FieldAssignment.displayHint` are for rendering only…
+
+**2.** A `Type` must not redefine…
+
+#### ext:lifecycle
+
+**4.** `Type.lifecycle.initialState` must reference a `name`…
 ```
-**N.** <body>
-```
 
-or for I-NN-style numbers:
-
-```
-**I-NN.** <body>
-```
+Integer invariant-numbers render as `**N.**`; "I-NN"-form numbers render as `**I-NN.**`.
 
 ### Change B — Update `scripts/publish-spec.mjs` to call the projection
 
-After `renderDocumentViews()` runs, call the invariant projection step. The step reads each rendered markdown file listed in `VIEW_EXPORTS`, locates the "Key Invariants" heading region, replaces any existing inline `**N.**` prose blocks and `#### <group>` subheadings within that region with the output of `render-invariants.mjs`, and writes the file back in place.
+Import `renderInvariants` from `./render-invariants.mjs` as an ESM module (not via `run()`). Call it after `renderDocumentViews()` and before `syncSchemas()`. Errors thrown by `renderInvariants` propagate to `main()` and cause the pipeline to exit non-zero (satisfying [R5]).
 
-The region to replace is defined as: from the first `### Key Invariants` heading to the next `---` horizontal rule (exclusive). If no such region exists in a given view, the step emits a warning and skips that file.
+For each file in `VIEW_EXPORTS`, mark entries that are expected to contain a Key Invariants section with `requiresKeyInvariants: true`. Currently only the entry for `srs-spec.md` (`id: 3a000001-…`) and `srs-unified.md` (`id: 3a000004-…`) should be marked. After calling `renderInvariants`, for each view file:
+
+- If `requiresKeyInvariants: true` and the file has no `### Key Invariants` heading: throw an error (pipeline fails).
+- If `requiresKeyInvariants: false` (or unset) and the file has no heading: skip silently.
+- If the heading is present: perform wholesale replacement of the region body.
+
+**Region replacement algorithm:** Locate the first occurrence of `### Key Invariants` in the rendered markdown. The region body is everything after the end of that heading line up to (but not including) the next `---` horizontal rule at the start of a line. Replace the region body with the output of `renderInvariants`. The `### Key Invariants` heading line and the closing `---` are preserved unchanged.
+
+The injected output does not include `**Content**: ` prefixes (those are Rust CLI rendering artifacts from the subsection body approach). The new format emits invariant items directly, which is a deliberate formatting improvement.
 
 ### Change C — Remove inline invariant prose from subsection bodies (Phase 2)
 
-After Phase 1 is deployed and validated, remove the `**N.** ...` inline prose from all subsection body field values (`fieldId: 1a000003-0000-4000-a000-000000000003`) that currently embed it. The subsection body should retain only the introductory sentence ("Conforming implementations must uphold the following invariants.") and the `#### <group>` headings that serve as visual anchors; the invariant list itself is dropped from the body and comes entirely from records.
+After Phase 1 is deployed and validated, remove the `**N.** ...` inline prose from all subsection Content field values (`fieldId: 1a000002-0000-4000-a000-000000000002`) that currently embed it. The subsection Content should retain only the introductory sentence ("Conforming implementations must uphold the following invariants.") and the `#### <group>` headings that serve as visual anchors; the invariant list itself is dropped from the body and comes entirely from records.
 
-Phase 2 is independently shippable and may be deferred to a follow-up PR once Phase 1 is verified.
+Phase 2 work is tracked in [srs#117](https://github.com/the-greenman/srs/issues/117) and may be deferred to a follow-up PR once Phase 1 is verified.
 
 ---
 
 ## Conformance Rules
 
-> **[R1]** Every `com.semanticops.spec/invariant` record present in the repository MUST appear in the rendered "Key Invariants" section of each document view that contains a `### Key Invariants` heading.
+> **[R1]** Every `com.semanticops.spec/invariant` record present in the repository MUST appear in the rendered "Key Invariants" section of each document view marked `requiresKeyInvariants: true`.
 
-> **[R2]** The rendering order of invariants MUST be ascending by `invariant-number`, with integer values preceding "I-NN"-form values, and "I-NN" values sorted numerically.
+> **[R2]** The rendering order of invariants MUST be ascending by the integer key derived from `invariant-number` (strip `"I-"` prefix if present, parse as integer, sort numerically).
 
 > **[R3]** Each invariant MUST appear exactly once in the rendered Key Invariants section. No record may be duplicated.
 
-> **[R4]** After Phase 2, subsection body text (`fieldId: 1a000003-0000-4000-a000-000000000003`) MUST NOT contain inline `**N.**`-format invariant prose. Invariant records are the sole authoritative source.
+> **[R4]** Once Phase 2 has been applied to the repository, subsection Content field values (`fieldId: 1a000002-0000-4000-a000-000000000002`) MUST NOT contain inline `**N.**`-format invariant prose. Invariant records are the sole authoritative source. This rule is not testable until Phase 2 ships; [R1]–[R3] and [R5]–[R6] are testable immediately from Phase 1.
 
-> **[R5]** The `publish-spec.mjs` pipeline MUST fail with a non-zero exit code if the invariant projection step encounters a malformed `invariant-number` value or a record missing a required field (`invariant-number`, `body`).
+> **[R5]** The `publish-spec.mjs` pipeline MUST fail with a non-zero exit code if the invariant projection step encounters a malformed Number field value (`fieldId: 1a000020-0000-4000-a000-000000000020`) or a record missing the Constraint field (`fieldId: 1a000003-0000-4000-a000-000000000003`).
+
+> **[R6]** A record whose Applies To field (`fieldId: 1a000021-0000-4000-a000-000000000021`) is absent or empty MUST be emitted after all grouped records under an "Other" heading. It MUST NOT cause the pipeline to fail.
+
+> **[R7]** Constraint field values (`fieldId: 1a000003-0000-4000-a000-000000000003`) MUST NOT contain standalone markdown horizontal rules (`---` on its own line). The script MUST strip trailing `---` artifacts and SHOULD warn when it does so.
 
 ---
 
@@ -97,9 +148,11 @@ Phase 2 is independently shippable and may be deferred to a follow-up PR once Ph
 
 A script-based post-render injection (Change B) is chosen over modifying the Rust CLI (`srs render document-view`) for two reasons: (1) it confines the change to the `srs` repo, avoiding a coordinated cross-repo release; (2) the document view rendering infrastructure in the Rust CLI is not yet capable of type-aware collection steps — adding that capability is a larger architectural change that can follow independently once the bleeding is stopped.
 
-The two-phase approach (Phase 1: inject from records while keeping prose; Phase 2: remove prose) allows the fix to ship without a large-scale rewrite of subsection bodies in the same PR, reducing risk. Phase 1 alone satisfies R1–R3 and makes all invariants visible.
+The group normalization algorithm (split on `;`, then on `, ext:`/`, core`) is derived from the actual `group` field values present in the repository. Records 1–62 have clean single-category values (`"core — Field"`, `"ext:lifecycle"`) that pass through unchanged. Records I-63–I-84 use the field as an annotation field with multi-part references; the algorithm extracts the primary category, grouping I-83 and I-84 under `"ext:import-tracking"` and I-79–I-82 under `"ext:repository (RepositoryManifest)"` (or similar after first-segment extraction).
 
-The `group` field (`fieldId: 1a000021-0000-4000-a000-000000000021`) already exists on every invariant record and provides sufficient grouping information for rendering. No new field is required.
+The two-phase approach (Phase 1: inject from records while keeping prose; Phase 2: remove prose) allows the fix to ship without a large-scale rewrite of subsection bodies in the same PR, reducing risk. Phase 1 alone satisfies R1–R3.
+
+ESM integration (`import` rather than `run()`) is chosen so that `renderInvariants` errors propagate as exceptions within the same Node.js process, making R5 enforcement straightforward without subprocess exit-code handling.
 
 ---
 
@@ -117,8 +170,12 @@ Would make invariant membership in a section explicit in the record graph. Rejec
 
 Removes the duplication before adding the record-based projection. Rejected because this would cause a gap — rendered output would be missing invariants — between the prose removal and the script landing. Phase 1 first is the safe order.
 
+### Alt D — Add a dedicated heading-label field to the invariant type
+
+Would make heading generation explicit without normalization. Rejected because the current `group` field provides adequate information via the normalization algorithm specified in Change A, and adding a new field is a data-model change that outscopes the rendering fix.
+
 ---
 
 ## Open Questions
 
-**None.** The problem is fully characterized and both implementation phases are well-defined.
+**None.** All implementation choices are resolved in Revision 2.
