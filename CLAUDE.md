@@ -22,7 +22,7 @@ srs type list --repo srs/srs --pretty
 srs record list --repo srs/srs --type com.semanticops.spec/section --pretty
 
 # Render the spec to markdown
-node scripts/render-spec.mjs
+SRS_CLI_PATH=$(which srs) node scripts/publish-spec.mjs
 
 # Validate all records via Node scripts
 node scripts/validate-all.mjs
@@ -42,7 +42,7 @@ When adding a new section or subsection:
 1. Create the record via `srs record create`
 2. Assert a `precedes` relation to establish its position in document order
 3. Run `srs repo validate --repo srs/srs` — zero diagnostics before committing
-4. Re-render if the rendered spec is also being committed: `node scripts/render-spec.mjs`
+4. Re-render if the rendered spec is also being committed: `SRS_CLI_PATH=$(which srs) node scripts/publish-spec.mjs`
 
 ## Spec Independence
 
@@ -57,7 +57,7 @@ Do not create records or types under ad-hoc namespaces. Match the namespace to t
 
 ## Rendered Outputs
 
-`spec/` contains committed rendered exports. These are generated — do not edit them directly. Re-render with `node scripts/render-spec.mjs` after modifying records, then commit both the record changes and the updated rendered output together.
+`spec/` contains committed rendered exports. These are generated — do not edit them directly. Re-render with `SRS_CLI_PATH=$(which srs) node scripts/publish-spec.mjs` after modifying records, then commit both the record changes and the updated rendered output together.
 
 ## Project & priority management
 
