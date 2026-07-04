@@ -2705,212 +2705,126 @@ An implementation that declares `ext:discovery` MUST pass all fixture scenarios 
 
 ### Key Invariants
 
-**Content**: Conforming implementations must uphold the following invariants.
-#### Field semantics
+Conforming implementations must uphold the following invariants.
+#### core — Field
 
-**Content**: **1.** `FieldAssignment.displayLabel` and `FieldAssignment.displayHint` are for rendering only. They must not affect AI guidance, extraction logic, `valueType` interpretation, or validation.
+**1.** `FieldAssignment.displayLabel` and `FieldAssignment.displayHint` are for rendering only. They must not affect AI guidance, extraction logic, `valueType` interpretation, or validation.
 
 **2.** A `Type` must not redefine, override, or duplicate the semantic content of any `Field` it includes. If different semantics are needed for a Field in a specific Type context, a distinct `Field` with its own identity and lineage must be created.
 
 **3.** A `Field`'s `aiGuidance` belongs to the Field. Type-level `aiGuidance` provides session framing only.
 
-#### Lifecycle (ext:lifecycle)
+#### ext:lifecycle
 
-**Content**: **4.** `Type.lifecycle.initialState` must reference a `name` that appears in `lifecycle.states[]` and where `isInitial === true`.
+**4.** `Type.lifecycle.initialState` must reference a `name` that appears in `lifecycle.states[]` and where `isInitial === true`.
 
 **5.** Every `from` and `to` value in `lifecycle.transitions[]` must reference a `name` that appears in `lifecycle.states[]`.
 
 **6.** `Record.lifecycleState`, when present, must reference a `name` in the associated `Type.lifecycle.states[]`.
 
-#### Distribution
+#### core — Package
 
-**Content**: **7.** Every `fieldId` referenced in any `FieldAssignment` within a `Package.types[]` must appear as the `id` of an entry in `Package.dependencyRefs`.
+**7.** Every `fieldId` referenced in any `FieldAssignment` within a `Package.types[]` must appear as the `id` of an entry in `Package.dependencyRefs`.
 
 **8.** If `Package.mode === "bundled"`: every `Reference` in `dependencyRefs` must have a matching `Field` in `fields[]` (matched on `id` and `version`).
 
 **9.** `Field.id` is stable across versions. A new `id` means a new definition, not a new version of an existing one.
 
-#### Cross-field validation (ext:cross-field-validation)
+#### ext:cross-field-validation
 
-**Content**: **10.** All `fieldId` values in any `CrossFieldRule` within `Type.validationRules[]` must appear in the Type's effective field list. Cross-field rules cannot reference Fields outside the Type.
+**10.** All `fieldId` values in any `CrossFieldRule` within `Type.validationRules[]` must appear in the Type's effective field list. Cross-field rules cannot reference Fields outside the Type.
 
 **11.** A `conditional-required` rule must supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. A `field-ordering` rule must supply `predicateFieldId`, `targetFieldId`, and `effect`. A `mutual-exclusion` rule must supply `fieldIds` with at least two entries.
 
-#### Views (ext:views-l1)
+#### ext:views-l1
 
-**Content**: **12.** Every `fieldId` in `View.fieldViews[]` must reference a valid `Field.id` in the effective package set. View compatibility is field-centric (based on required field presence), not Type-bound.
+**12.** Every `fieldId` in `View.fieldViews[]` must reference a valid `Field.id` in the effective package set. View compatibility is field-centric (based on required field presence), not Type-bound.
 
 **13.** `FieldView.displayLabel`, `FieldView.displayHint`, and `FieldView.editorHintOverride` are for rendering only. They must not affect AI guidance, extraction logic, `valueType` interpretation, or validation.
 
 **14.** A `View` must not override, redefine, or duplicate the semantic content of any `Field` or `Type` it references. View-level `aiGuidance` is workflow framing; it does not redefine Field extraction semantics.
 
-#### Distribution — Views (ext:views-l1)
+#### ext:views-l1 — Distribution
 
-**Content**: **15.** Every `fieldId` referenced by any `View.fieldViews[]` entry in `Package.views[]` must appear in `Package.dependencyRefs` with `definitionType: "field"` or be present in `Package.fields[]`. If `mode === "bundled"`, that `Field` must be present in `fields[]`.
+**15.** Every `typeId` referenced by any `View` in `Package.views[]` must appear in `Package.dependencyRefs` with `definitionType: "type"`. If `mode === "bundled"`, that `Type` must be present in `types[]`.
 
-#### Relations
+#### core — Relation
 
-**Content**: **16.** In a `Relation`, `sourceInstanceId` is the asserting instance and `targetInstanceId` is the related instance. The Relation reads: "source [relationType] target." This convention must not be reversed.
+**16.** In a `Relation`, `sourceInstanceId` is the asserting instance and `targetInstanceId` is the related instance. The Relation reads: "source [relationType] target." This convention must not be reversed.
 
 **17.** `Relation` is reserved for assertions that carry semantic consequence beyond simple mention or citation. Lightweight prose references that do not assert structural, causal, or governance relationships must not be modelled as `Relation` records.
 
-#### Notes and Typed Records
+#### core — Note/TypedRecord
 
-**Content**: **18.** `NoteSection.name` values must be unique within a `Note`.
-
-**18a.** `Note.tags` values, when present, must be non-empty strings. Duplicate tag values within a single Note are permitted but have no additional meaning.
+**18.** `NoteSection.name` values must be unique within a `Note`.
 
 **19.** `TypedField.name` values must be unique within a `Typed Record`.
 
-#### Containers
+#### core — Container
 
-**Content**: **20.** `Container.containerId` is not an instance ID. It must not appear in `Container.rootInstanceIds`, `Container.memberInstanceIds`, `Relation.sourceInstanceId`, or `Relation.targetInstanceId`.
+**20.** `Container.containerId` is not an instance ID. It must not appear in `Container.rootInstanceIds`, `Container.memberInstanceIds`, `Relation.sourceInstanceId`, or `Relation.targetInstanceId`.
 
 **21.** `Container.rootInstanceIds` and `Container.memberInstanceIds`, when present, must reference valid SRS instance IDs (`Note.instanceId`, `Typed Record.instanceId`, or `Record.instanceId`).
 
-#### Repeatability (ext:repeatable-fields)
+#### ext:repeatable-fields
 
-**Content**: **22.** If `FieldAssignment.repeatable` is false or absent, its corresponding `FieldValue` must use `value` and must not include `entries`.
+**22.** If `FieldAssignment.repeatable` is false or absent, its corresponding `FieldValue` must use `value` and must not include `entries`.
 
 **23.** If `FieldAssignment.repeatable` is true, its corresponding `FieldValue` may use `entries`. If `minItems` is specified, `entries` must contain at least that many items. If `maxItems` is specified, `entries` must not exceed that count. For repeatable fields, `Field.validationRules` are evaluated against each `FieldValueEntry.value` individually, not against the array as a whole.
 
 **24.** `FieldAssignment.minItems` and `maxItems` are valid only when `repeatable === true`. They must be ignored when `repeatable` is false or absent.
 
-#### Field groups (ext:field-groups)
+#### ext:field-groups
 
-**Content**: **25.** Every `groupId` in `Record.groupValues[]` must reference a `groupId` declared in the associated `Type.fieldGroups[]`.
+**25.** Every `groupId` in `Record.groupValues[]` must reference a `groupId` declared in the associated `Type.fieldGroups[]`.
 
 **26.** Within a `FieldGroupEntry.fieldValues[]`, every `fieldId` must appear in the enclosing `FieldGroup.fields[].fieldId`.
 
 **27.** A `FieldGroupValue.entries` list must satisfy `FieldGroup.minItems` and `maxItems` where specified.
 
-**[FG-Cx0]** Bare `compositeRenderer` identifiers (containing no `/` character) are reserved for SRS-defined renderers and MUST only be introduced by a ratified RFC. Vendor-defined renderer identifiers MUST use the form `{reverse-domain}/{name}` where `reverse-domain` is a dot-separated string with at least two labels (e.g. `"com.example"`) and `name` is a non-empty string with no `/` character (e.g. `"com.example/gantt"`). Single-label left-hand sides (e.g. `"example/gantt"`) MUST be treated as malformed and are subject to `[FG-Cx1]`. An identifier that is neither a bare SRS-reserved name nor a valid `{reverse-domain}/{name}` form MUST be treated as unrecognised; `[FG-Cx1]` applies.
+#### core — Record
 
-**[FG-Cx1]** When `FieldGroup.compositeRenderer` is set to a value not recognised by the implementation, the implementation MUST fall back to the default per-field rendering baseline and MUST emit a diagnostic identifying the unrecognised renderer value and the group. The fallback MUST NOT suppress group content.
+**28.** `Record.typeId` and `Record.typeVersion` are the authoritative Type binding. `typeNamespace` and `typeName` are denormalised convenience fields. If they conflict with the resolved `Type`, the `typeId`/`typeVersion` identity takes precedence and the Record is considered invalid until corrected.
 
-**[FG-Cx2]** For `compositeRenderer: "table"`, if a group entry contains neither a `columns` field with at least one element nor a `rows` field with at least one element, that entry MUST be skipped and the implementation MUST emit a diagnostic identifying the group and the entry. Other entries in the same group that satisfy the field contract MUST continue to render normally.
+#### ext:protocol
 
-**[FG-Cx3]** Values in a `widths` array that fall outside [0.0, 1.0] MUST be clamped to [0.0, 1.0] before alignment or width calculation. Implementations SHOULD emit a diagnostic identifying the out-of-range value and the group entry.
-
-**[FG-Cx4]** When the `widths` array has fewer elements than `columns`, the remaining columns MUST use the default alignment (`---` in markdown; no `style` attribute in HTML). When `widths` has more elements than `columns`, the excess elements MUST be silently ignored. In either case, implementations SHOULD emit a diagnostic identifying the mismatch.
-
-#### Records
-
-**Content**: **28.** `Record.typeId` and `Record.typeVersion` are the authoritative Type binding. `typeNamespace` and `typeName` are denormalised convenience fields. If they conflict with the resolved `Type`, the `typeId`/`typeVersion` identity takes precedence and the Record is considered invalid until corrected.
-
-#### Protocol (ext:protocol)
-
-**Content**: **29.** Every `stageId` in `ProtocolStage.dependsOn[]` must reference a `stageId` declared in the enclosing `Protocol.stages[]`. A stage may not declare a dependency on itself.
+**29.** Every `stageId` in `ProtocolStage.dependsOn[]` must reference a `stageId` declared in the enclosing `Protocol.stages[]`. A stage may not declare a dependency on itself.
 
 **30.** Every `fieldId` in `ProtocolStage.contributesTo[]` must reference a `fieldId` that appears in the stage's own `outputType`'s effective field list (when `outputType` is declared), or in `Protocol.targetType`'s effective field list (when `outputType` is absent). A single stage must not contribute to both its own `outputType` and the enclosing `Protocol.targetType`. When neither `outputType` nor `Protocol.targetType` is declared, `contributesTo` must be empty.
 
 **31.** For every pair of stages A and B within a `Protocol` where B.dependsOn includes A.stageId, B.order must be greater than A.order. `order` is display order; execution sequence is determined by `dependsOn` resolution. The two must not contradict each other.
 
-#### Views L2 (ext:views-l2)
+#### ext:views-l2
 
-**Content**: **32.** Any `DocumentView` in `Package.documentViews[]` that contains a `SectionSource` with `type === "type-query"` must use `namespace/name` format for `semanticObjectType` (e.g. `"core/decision"`, not `"decision"`). Bare strings are acceptable only in single-system `DocumentView` records not included in a Package. Implementations receiving a `DocumentView` from a Package with a bare `semanticObjectType` in a `type-query` section should treat the portability of that section as undefined.
+**32.** Any `DocumentView` in `Package.documentViews[]` that contains a `SectionSource` with `type === "type-query"` must use `namespace/name` format for `semanticObjectType` (e.g. `"core/decision"`, not `"decision"`). Bare strings are acceptable only in single-system `DocumentView` records not included in a Package. Implementations receiving a `DocumentView` from a Package with a bare `semanticObjectType` in a `type-query` section should treat the portability of that section as undefined.
 
-**[N]** When `DocumentSection.renderViewId` is absent, implementations MUST use the default rendering baseline: fields in effective-field-list order (by `fieldOrder` when `ext:type-inheritance` is active, otherwise by `FieldAssignment.order`), using `FieldAssignment.displayLabel` or `Field.name` as label, resolved from `FieldValue.value` for scalar fields and from `FieldValue.entries` for repeatable fields (when `ext:repeatable-fields` is declared), omitting absent fields. No L1 View influences this baseline.
+**I-63.** When DocumentView.rootTypeRefs is present and non-empty, each ExactTypeRef entry MUST resolve to a Type that exists in the Package (the union of all packages in scope per packageRef/packageRefs; matched by both typeId and typeVersion). An entry that does not resolve MUST produce a diagnostic and MUST NOT be used for Container matching.
 
-**[N+1]** When `DocumentSection.titleFieldId` is set, it MUST reference a `fieldId` where (a) the referenced field has `valueType` of `"string"` or `"text"`, and (b) the field is not repeatable. When a record's type does not carry the designated field, implementations MUST omit the per-record heading for that record — this is not a render failure. This enables heterogeneous sections (e.g. `container-subset`) where some record types carry the heading field and others do not. The section pipeline MUST NOT inject a structural per-record heading when `titleFieldId` is absent. This rule applies to the section pipeline's heading injection mechanism only — it does not constrain headings that may appear inside `ExportConfig.preamble` content. Enforced at render time; implementations SHOULD also enforce at package validation time when the section source is statically determinable.
+#### ext:addressability
 
-**[N+2]** When rendering for `format: "markdown"`, `"html"`, or `"adoc"`, section titles MUST render at heading level `2 + depthOffset`. When `titleFieldId` is set on a section, per-record headings MUST render at heading level `3 + depthOffset`. Field labels MUST NOT be rendered as headings. When `format` is absent or is an implementation-defined value, this rule does not apply.
-
-**[N+3]** When `DocumentView.preamble` is absent and `format` is `"markdown"`, `"html"`, or `"adoc"`, implementations MUST render a document title heading at level `1 + depthOffset` containing the container title before the first section.
-
-**[N+4]** `depthOffset` MUST be a non-negative integer. Implementations MAY clamp computed heading levels that exceed the maximum supported by the target format and render such elements as formatted text.
-
-**[N+4b]** When `depthOffset` exceeds 4, implementations SHOULD emit a warning diagnostic. This MUST NOT cause a validation failure or prevent rendering.
-
-**[N+5]** `DocumentView.format` governs the output format for all section rendering. When a referenced L1 View's `exportConfig.format` differs, it is ignored for section rendering. `ExportConfig.format` applies to standalone record export only.
-
-**[N+6]** When `DocumentSection.renderViewId` is set, `ExportConfig.preamble`, `ExportConfig.fieldOrder`, and `ExportConfig.omitEmptyFields` MUST apply to section rendering. `ExportConfig.format` MUST be ignored in favour of `DocumentView.format`.
-
-**[N+6b]** When `ExportConfig.preamble` is rendered in standalone export context, implementations MUST substitute `{{heading-3}}` with the empty string. Implementations MUST NOT emit the literal `{{heading-3}}` token in any output.
-
-**[N+7]** Implementations that do not declare `ext:themes-l1` MUST ignore `DocumentView.themeRef` and `DocumentView.themeVariants` and MUST NOT produce a validation error on their presence.
-
-**[N+8]** `ThemeVariant.name` values MUST be unique within a `DocumentView.themeVariants` array. This is enforced at package validation time. When `ext:themes-l1` is declared and a variant name is supplied at render invocation: (1) if the variant is found and format-compatible, use it; (2) if found but format-incompatible, render without a theme — do NOT fall back to `themeRef`; (3) if not found, fall back to `themeRef`; (4) if no variant name is supplied, use `themeRef`.
-
-**[N+9]** When `DocumentView.format` is `"json"`, implementations MUST produce a structured JSON projection conforming to `document-view-output.json` rather than rendered markup. The `rendered` output field MUST be an empty string. Theme application, heading injection, and `depthOffset` do not apply. `(empty)` placeholder strings MUST NOT appear in any field value in the projection.
-
-
-
-**[N+9a]** When producing a JSON projection (Rule [N+9]), implementations MUST include all fields present in the rendering View's `fieldViews[]` that carry a value, regardless of `FieldView.visible`. `visible` is a rendering annotation, not a data-inclusion gate; it applies to text rendering only. To exclude a field from the projection, omit it from `fieldViews[]` entirely.
-
-**[N+10]** When `DocumentView.format` is `"json"`, the root `containerId` in the projection MUST be the `containerId` from the first `SectionSource` with `type === "container-subset"` found across all sections (sorted by `DocumentSection.order`). When no such source is present, `containerId` MUST be `null`. When multiple `container-subset` sources have differing `containerId` values, implementations MUST use the first and SHOULD emit a diagnostic.
-
-**[N+11]** When `ExportConfig.preamble` is rendered in `"json"` mode, all `{{heading-N}}` variables MUST be substituted as empty strings. Implementations MUST NOT emit the literal token in any json-mode output.
-
-**[N+12]** When a `DocumentSection` has `source.type === "container-subset"` and declares no `ordering.fieldId`, implementations MUST order the member instances by the `precedes` relation chain among them (topological sort). Instances not connected by any `precedes` relation are ordered by `createdAt` ascending as a tiebreak. When `ordering.direction` is `"desc"`, this ordering is reversed.
-
-**[N+13]** (RFC-008 [DV-Mx1]) For both `typeDispatch` and `typeFilter`, a record's *resolved type* used for matching MUST be the canonical `namespace/name` of the Type obtained by resolving the record's `typeId` against the package. Implementations MUST NOT match against the record's denormalized `typeNamespace`/`typeName` hints. Matching MUST compare `namespace/name` only and MUST ignore the Type version. A member with no `typeId` (Tier 0 Note, Tier 1 TypedRecord) has no resolved type. A bare `name` key or filter entry (no namespace) in a `DocumentView` included in a Package has undefined portability, mirroring Rule 32 for `semanticObjectType`.
-
-**[N+14]** (RFC-008 [DV-Dx1]) A `DocumentSection` MAY carry a `typeDispatch` object. Each key MUST be a record type identifier in `namespace/name` form; bare `name` keys are permitted only in single-system `DocumentView` records not included in a Package. Each value MUST be a UUID referencing an `ext:views-l1` `View`. The value-is-existing-view constraint is enforced at render/package-validation time, not by the schema (consistent with `renderViewId`).
-
-**[N+15]** (RFC-008 [DV-Dx2]) When rendering a record within a section, implementations MUST resolve the render view in order: (1) the `typeDispatch` entry whose key matches the record's resolved type (Rule [N+13]), when `typeDispatch` is present and contains such an entry; (2) `renderViewId`, when present; (3) the default rendering baseline (Rule [N]).
-
-**[N+16]** (RFC-008 [DV-Dx3]) A `typeDispatch` key matching no record in the section's resolved member set MUST be ignored without a diagnostic. A record whose resolved type matches no key falls through to Rule [N+15] steps (2)–(3). When a record reaches step (2) and the fallback `renderViewId` resolves to an L1 View bound to a different Type than the record, that View renders only the fields it can resolve (absent fields omitted, per Rule [N]); implementations SHOULD treat this as a degraded render rather than an error.
-
-**[N+17]** (RFC-008 [DV-Dx4]) A member with no resolvable Type (Tier 0 Note, Tier 1 TypedRecord, or a record whose `typeId` fails to resolve) MUST NOT match any `typeDispatch` key and MUST fall through to Rule [N+15] steps (2)–(3).
-
-**[N+18]** (RFC-008 [DV-Dx5]) `typeDispatch` MUST NOT change member ordering. Member order is determined solely by the section's source: Rule [N+12] for `container-subset`, and the declared `instanceIds[]` array order for `fixed-instances`.
-
-**[N+19]** (RFC-008 [DV-Fx1]) The `container-subset` `SectionSource` MAY carry a `typeFilter` array of `namespace/name` strings. `typeFilter` MUST NOT appear on any other `SectionSource` variant. When absent or empty, the resolved member set is every Container member, unchanged.
-
-**[N+20]** (RFC-008 [DV-Fx2]) When `typeFilter` is present and non-empty, the resolved member set MUST be restricted to Container members whose resolved type (Rule [N+13]) matches one of the listed keys.
-
-**[N+21]** (RFC-008 [DV-Fx3]) When a `typeFilter`-restricted `container-subset` section declares no `ordering.fieldId`, implementations MUST order the surviving members by projecting the Rule [N+12] order: compute the [N+12] order over the full Container member set, then remove the non-surviving members from that sequence. Removing a member that was a `precedes` bridge between two survivors MUST NOT reorder those survivors.
-
-**[N+22]** (RFC-008 [DV-Fx4]) When a section specifies both `typeFilter` and `ordering.fieldId`, implementations MUST apply `typeFilter` first and then sort the survivors by `ordering.fieldId`. Per Rule [N+12], `ordering.fieldId` supersedes the `precedes`-chain order; Rule [N+21] does not apply in that case.
-
-**[N+23]** (RFC-008 [DV-Fx5]) A member with no resolvable Type (Tier 0 Note, Tier 1 TypedRecord, or a record whose `typeId` fails to resolve) MUST NOT match any `typeFilter` key and is therefore excluded whenever `typeFilter` is present and non-empty.
-
-**[N+24]** (RFC-008 [DV-Cx1]) `typeFilter` and `typeDispatch` are independent optional capabilities. An implementation supporting `ext:views-l2` MUST accept a `DocumentView` using either, both, or neither, and MUST treat their absence as the pre-existing behaviour.
-
-**[N+25]** (RFC-011 [DV-Lx1]) When `SectionSource.type-query` carries a non-empty `lifecycleStates` array, implementations MUST restrict the query result to Records whose `lifecycleState` matches any value in that array (OR semantics). A Record with no `lifecycleState` MUST be excluded. When `lifecycleStates` is absent or empty, all lifecycle states (including absent) are included. Implementations that do not declare `ext:lifecycle` MUST ignore `lifecycleStates` and MUST NOT produce a validation error on its presence. Invariant I-011-1.
-
-**[N+26]** (RFC-011 [DV-Lx2]) When `SectionSource.type-query` carries a non-empty `excludeLifecycleStates` array, implementations MUST exclude Records whose `lifecycleState` matches any listed value. When both `lifecycleStates` and `excludeLifecycleStates` are present and non-empty, inclusion (Rule [N+25]) MUST be applied first; exclusion is applied to the survivors. A Record with no `lifecycleState` is NOT excluded by `excludeLifecycleStates`. When `excludeLifecycleStates` is absent or empty, no exclusion is applied. Implementations that do not declare `ext:lifecycle` MUST ignore `excludeLifecycleStates` and MUST NOT produce a validation error on its presence. Invariant I-011-2.
-
-**[N+27]** (RFC-011 [DV-Sx1]) When `SectionSource.type-query` carries `containerScope`, implementations MUST apply the following scoping rules: (a) `"explicit"` (or absent) — scope to `containerIds[]`; absent `containerIds[]` with explicit scope produces an empty result. (b) `"repository"` — span all containers in the repository; `containerIds[]` MUST be ignored. (c) `"subtree"` — span the context container and all containers reachable by `contains` relations from each entry in `containerIds[]`; when `containerIds[]` is absent or empty, the context container is the subtree root. When the context container cannot be determined, treat as `"explicit"` with empty `containerIds[]` and emit a diagnostic. `containerScope` absent is equivalent to `"explicit"`. Invariant I-011-3.
-
-
-**[N+28]** (RFC-015, Change A — Semantic-only `precedes`) `precedes` relations MUST be used only to express sequences where a different order would be semantically wrong (e.g. spec sections in document order, protocol stages in execution sequence). Implementations MUST NOT create `precedes` relations between instances whose ordering is presentational (layout, curation, display preference). A `precedes` relation between two container members MUST be interpreted as a semantic claim about their sequence, not as a rendering hint. Invariant I-015-1.
-
-**[N+29]** (RFC-015, Change B — `ordering.memberOrder`) When `DocumentSection.ordering.memberOrder` is present and the section's `source.type` is `container-subset`, implementations MUST apply it as the presentation sequence: (1) emit listed `instanceId`s that are current container members in the declared order; (2) skip listed `instanceId`s that are no longer container members — implementations MUST emit a diagnostic; this MUST NOT be treated as a validation failure; (3) append surviving container members not in `memberOrder` in Rule [N+12] order (topological sort by `precedes`, `createdAt` tiebreak); (4) when `ordering.direction` is `"desc"`, the entire output sequence produced by steps (1)–(3) MUST be reversed before emission. `memberOrder` MUST NOT be combined with `ordering.fieldId` on the same section — a section carrying both is invalid; implementations MUST report a validation error. `memberOrder` on a non-`container-subset` section MUST be ignored with a diagnostic and SHOULD be rejected at package-validation time. Invariant I-015-2.
-
-**[N+30]** (RFC-015, Change B — `memberOrder` with `typeFilter`) When both `typeFilter` and `memberOrder` are present on a `container-subset` section, `typeFilter` is applied first per Rules [N+19]–[N+21] to obtain the filtered member set; `memberOrder` is then applied over that filtered set. `memberOrder` entries naming members excluded by `typeFilter` are silently skipped (no diagnostic). Unlisted filtered survivors are appended in [N+12] order as per Rule [N+29] step (3). The `direction` reversal in Rule [N+29] step (4) applies to the combined result after `typeFilter` and `memberOrder` are both applied. Invariant I-015-3.
-
-
-#### Addressability (ext:addressability)
-
-**Content**: **33.** `Revision.priorRevisionId`, when present, must reference a `Revision.revisionId` for the same `fieldId` and `recordId`. Revision chains must be acyclic.
+**33.** `Revision.priorRevisionId`, when present, must reference a `Revision.revisionId` for the same `fieldId` and `recordId`. Revision chains must be acyclic.
 
 **34.** `AttentionState.containerId` must reference a valid `Container.containerId`. Other Address components (`recordId`, `fieldId`, `protocolRunId`, `stageId`) are optional and may be absent when focus has not yet narrowed.
 
-**35.** `Revision.provenance`, when present, is a provenance metadata object. `provenance.lifecycleTransition`, when present, must be a non-empty string naming the lifecycle state entered at the time this revision snapshot was created. `provenance.transitionedAt`, when present, must be a valid ISO 8601 datetime string.
+#### ext:views-l2 — Distribution
 
-**36.** A `Revision` with `provenance.lifecycleTransition` set is a lifecycle snapshot. Its field values represent the record's state at the moment of the named transition. This revision is the authoritative record of state at that transition point.
+**35.** Every `DocumentSection.renderViewId` in any `DocumentView` within `Package.documentViews[]` must reference a `View.id` that appears in `Package.views[]` or `Package.dependencyRefs`. If `mode === "bundled"`, that `View` must be present in `Package.views[]`.
 
-#### Distribution — Views L2 (ext:views-l2)
+#### ext:blueprint — Distribution
 
-**Content**: **35.** Every `DocumentSection.renderViewId` in any `DocumentView` within `Package.documentViews[]` must reference a `View.id` that appears in `Package.views[]` or `Package.dependencyRefs`. If `mode === "bundled"`, that `View` must be present in `Package.views[]`.
+**36.** Every `TypeRef.typeId` referenced in any `Blueprint.rootTypes[]`, `Blueprint.requiredTypes[]`, or in any `RelationSpec.sourceType` or `RelationSpec.targetType` within `Blueprint.structure[]`, for each Blueprint in `Package.blueprints[]`, must appear in `Package.dependencyRefs` with `definitionType: "type"`. If `mode === "bundled"`, each such Type must be present in `Package.types[]`.
 
-#### Distribution — Blueprint (ext:blueprint)
+#### ext:protocol — Distribution
 
-**Content**: **36.** Every `TypeRef.typeId` referenced in any `Blueprint.rootTypes[]`, `Blueprint.requiredTypes[]`, or in any `RelationSpec.sourceType` or `RelationSpec.targetType` within `Blueprint.structure[]`, for each Blueprint in `Package.blueprints[]`, must appear in `Package.dependencyRefs` with `definitionType: "type"`. If `mode === "bundled"`, each such Type must be present in `Package.types[]`.
+**37.** Every `TypeRef.typeId` referenced in `Protocol.targetType` or in any `ProtocolStage.outputType`, for each Protocol in `Package.protocols[]`, must appear in `Package.dependencyRefs` with `definitionType: "type"`. Every `FieldRef.fieldId` in any `ProtocolStage.contributesTo[]` must appear in `Package.dependencyRefs` with `definitionType: "field"`. If `mode === "bundled"`, those Types must be in `Package.types[]` and those Fields in `Package.fields[]`.
 
-#### Distribution — Protocol (ext:protocol)
+#### core — Field.contentFormat
 
-**Content**: **37.** Every `TypeRef.typeId` referenced in `Protocol.targetType` or in any `ProtocolStage.outputType`, for each Protocol in `Package.protocols[]`, must appear in `Package.dependencyRefs` with `definitionType: "type"`. Every `FieldRef.fieldId` in any `ProtocolStage.contributesTo[]` must appear in `Package.dependencyRefs` with `definitionType: "field"`. If `mode === "bundled"`, those Types must be in `Package.types[]` and those Fields in `Package.fields[]`.
+**38.** `Field.contentFormat`, when present, is only meaningful when `valueType` is `"string"` or `"text"`. Implementations must ignore `contentFormat` on fields with any other `valueType`.
 
-#### Field semantics — content format
+#### ext:type-inheritance
 
-**Content**: **38.** `Field.contentFormat`, when present, is only meaningful when `valueType` is `"string"` or `"text"`. Implementations must ignore `contentFormat` on fields with any other `valueType`.
-
-#### Type inheritance (ext:type-inheritance)
-
-**Content**: **39.** `Type.extendsTypeId`, when present, must reference a valid `Type.id`. Inheritance chains must be acyclic; a Type may not directly or transitively extend itself.
+**39.** `Type.extendsTypeId`, when present, must reference a valid `Type.id`. Inheritance chains must be acyclic; a Type may not directly or transitively extend itself.
 
 **40.** A specializing Type must not declare a `fieldId` in its own `fields[]` that duplicates any `fieldId` inherited from its base Type or any ancestor Type.
 
@@ -2920,13 +2834,13 @@ An implementation that declares `ext:discovery` MUST pass all fixture scenarios 
 
 **43.** When `ext:type-inheritance` is declared, `Package.dependencyRefs` must include a `Reference` for every Type in the transitive closure of base Types for any Type in `Package.types[]`. If `mode === "bundled"`, all such base Types must be present in `types[]`.
 
-#### Views L2 navigation (ext:views-l2)
+#### ext:views-l2 — Navigation
 
-**Content**: **44.** Every `NavigationLink.fromSectionId` and `NavigationLink.toSectionId` must reference a `sectionId` declared in the enclosing `DocumentView.sections[]`.
+**44.** Every `NavigationLink.fromSectionId` and `NavigationLink.toSectionId` must reference a `sectionId` declared in the enclosing `DocumentView.sections[]`.
 
-#### Repository (ext:repository)
+#### ext:repository
 
-**Content**: **45.** A conforming repository must have a `.srs` marker file and a `manifest.json` at its root. A directory without both is not a conforming repository.
+**45.** A conforming repository must have a `.srs` marker file and a `manifest.json` at its root. A directory without both is not a conforming repository.
 
 **46.** Every `instanceId` in `RepositoryManifest.instanceIndex` must resolve to a file at the declared `path`, and that file must contain an instance whose `instanceId` matches the index entry. An index entry whose `path` does not resolve, or whose file contains a different `instanceId`, is invalid.
 
@@ -2948,12 +2862,9 @@ An implementation that declares `ext:discovery` MUST pass all fixture scenarios 
 
 **55.** A checksum value in `InstanceIndexEntry.checksum`, `SourceDocumentIndexEntry.sidecarChecksum`, `SourceDocumentIndexEntry.contentChecksum`, or `RelationsChecksumEntry.checksum` must use the format `<algorithm>:<hex-encoded-digest>`. A value that does not include the `<algorithm>:` prefix is invalid.
 
-**[N+31]** (RFC-015, Change C — `renderedPresentations`) When `manifest.renderedPresentations` is present and non-empty, a conformant viewer MUST select as the default presentation the first entry whose `isDefault` is `true`. When no entry carries `isDefault: true`, the first entry in the array is the default. The selected DocumentView governs the repository's presentation. When a `renderedPresentations` entry's `viewId` does not resolve to a DocumentView in the active packages, implementations MUST skip that entry and MUST emit a diagnostic; if all entries fail to resolve, behaviour falls back to implementation-defined selection as if `renderedPresentations` were absent. When `viewId` resolves to DocumentViews in more than one active package, implementations MUST report a validation error (ambiguous view reference). When `renderedPresentations` is absent or empty, viewer behaviour falls back to implementation-defined selection (existing behaviour unchanged; no conformance obligation is added for the absent case). Invariant I-015-4.
+#### ext:federation
 
-
-#### Federation (ext:federation)
-
-**Content**: **56.** `Relation.sourceRepositoryId`, when present, must not equal the enclosing repository's own `repositoryId`. The absent-means-local convention handles intra-repository source references; using `sourceRepositoryId` to refer to the current repository is not conformant.
+**56.** `Relation.sourceRepositoryId`, when present, must not equal the enclosing repository's own `repositoryId`. The absent-means-local convention handles intra-repository source references; using `sourceRepositoryId` to refer to the current repository is not conformant.
 
 **57.** `Relation.targetRepositoryId`, when present, must not equal the enclosing repository's own `repositoryId`. The absent-means-local convention handles intra-repository target references.
 
@@ -2966,6 +2877,40 @@ An implementation that declares `ext:discovery` MUST pass all fixture scenarios 
 **61.** `RepositoryRegistry.entries` must not contain two entries with the same `repositoryId`. A registry file with duplicate `repositoryId` values in `entries[]` is malformed.
 
 **62.** An implementation following `RepositoryRegistry.childRegistries` links must detect and halt on cycles. If resolving a child registry yields a `registryId` already encountered in the current resolution chain, the implementation must surface the cycle and stop rather than loop.
+
+#### Container (core)
+
+**I-64.** When a Container has one or more rootInstanceIds and also carries containerType, implementations SHOULD emit a diagnostic if containerType does not equal the resolved root Type name field (the local name within its namespace, not namespace/name). The root Record Type is authoritative; a mismatch does NOT make the Container invalid. Containers with no rootInstanceIds may carry any containerType value without triggering this rule.
+
+**I-65.** When a Vocabulary in the repository package declares Term entries for a given tag key, Container tags bearing that key MUST resolve against those Terms per RFC-006 vocabulary resolution rules. Free-string tags are valid when no Vocabulary entry governs the key.
+
+**I-66.** All conforming SRS implementations MUST implement the containers_for_instance operation. Given an instanceId, it returns every Container whose rootInstanceIds, memberInstanceIds, or transitive contains-Relation traversal from rootInstanceIds includes the instance. The result set MUST be consistent with the current state of those fields and relations.
+
+#### ext:blueprint (Blueprint)
+
+**I-78.** Each entry in Blueprint.rootTypes MUST be an ExactTypeRef: both typeId (UUID) and typeVersion (integer >= 1) MUST be present. Implementations MUST resolve each entry against the Package (the union of all packages in scope per packageRef/packageRefs) at Blueprint load time; an entry that does not resolve MUST produce a diagnostic. An empty rootTypes array is valid and produces no diagnostics.
+
+#### ext:repository (RepositoryManifest)
+
+**I-79.** Every SRS repository manifest MUST embed exactly one root Container in manifest.container. The root Container MUST satisfy the core Container invariants unchanged: Invariant 20 (its containerId is not an instance ID and never appears in rootInstanceIds, memberInstanceIds, Relation.sourceInstanceId, or Relation.targetInstanceId) and Invariant 21 (every id in rootInstanceIds/memberInstanceIds references a valid SRS instance id).
+
+#### ext:repository (RepositoryManifest, Container)
+
+**I-80.** Every id in the root container's rootInstanceIds and memberInstanceIds MUST resolve to a member of the repository's authoritative instance set. The manifest instanceIndex is the cache of that set (RFC-012 R6), not an independent authority. This is the root-container specialization of core Invariant 21, stated separately so the required-root-container guarantee is self-contained.
+
+#### ext:repository (Container.identityInstanceId)
+
+**I-81.** When present on a Container, identityInstanceId MUST equal an id contained in that Container's rootInstanceIds or memberInstanceIds. On the root container it names the repository's identity record. If it resolves to no such member, the repository is invalid. Reassigning identityInstanceId to a different member MUST NOT change the repositoryId, the container's containerId, or any instance id; the new target must already be a member before the pointer moves to it, so the repository is never transiently invalid.
+
+#### ext:repository (Container, containerIndex)
+
+**I-82.** When containerIndex is non-empty, each non-identity section root of the root container (its navigation sections) SHOULD be the root of some Container listed in containerIndex. An absent or empty containerIndex suppresses this diagnostic. A section root with no corresponding section container is a diagnostic, not an error, and a consumer MUST still render it as a navigation leaf rather than dropping it.
+
+#### ext:import-tracking
+
+**I-83.** A tool MUST resolve every `typeId` and `fieldId` referenced by any Tier 2 Record against the union of all installed package version directories. This extends Invariant 50 to the multi-version case: a reference is resolved if it can be found in any installed version directory. A reference that cannot be found in any installed version directory MUST be reported as a validation error. A tool MUST NOT remove any prior-version package directory if doing so would leave any such reference unresolvable.
+
+**I-84.** When `manifest.upstreamPackage` is set, there MUST exist at least one entry in `manifest.packageRefs` (or `manifest.packageRef`) whose `packageId` matches `manifest.upstreamPackage.packageId`. A manifest where no `PackageRef` entry's `packageId` matches `upstreamPackage.packageId` MUST be reported as a validation error. Manifest-only validators MAY skip this check when no `PackageRef` entry carries `packageId` (i.e., all local-mode entries predate RFC-014 and omit the field), and SHOULD report the repository state as indeterminate rather than emitting a validation error in that case.
 
 ---
 
@@ -3109,110 +3054,18 @@ Two implementations both declaring `ext:repository` must be able to exchange arc
 
 ## Design Rationale
 
-### Instance graph exchange format
-
-**Content**: 
-A standard envelope for exchanging a Container together with its full Record set, Relations, and source references. Natural successor to `Package` at the instance layer. Likely shape: `{ container, instances[], relations[], sourceRefs[] }`. Deferred pending stabilisation of `ext:views-l2` and implementation experience.
-
-### Why Blueprint is a new concept
-
-**Content**: 
-In v1, there was no way to specify what a document type *is* — what needs to be extracted from source material in order to build it. `DocumentTemplate` (now Document View) handled *assembly* of existing Records into readable output. But nothing owned the prior question: "Given a transcript of a governance meeting, what Types should I extract, how should they relate to each other, and what does 'complete' mean?"
-
-Blueprint fills that gap. A Blueprint is the artefact you hand to an extraction pipeline. It specifies root Types, expected Relations between extracted Records, and completeness criteria. The Extraction pipeline consults the Blueprint to know what to look for; the Document View consults existing Records to know what to render.
-
-The two are complementary: Blueprint → Records → Document View.
-
-### Field transclusion in Document Views
-
-**Content**: 
-Pulling a specific Field value inline into a Document View is useful, but a syntax such as `{{field:{recordId}/{fieldId}}}` makes a reusable Document View depend on concrete instance IDs. That weakens portability and should wait for an addressing model that can express reusable selection rules rather than binding a definition to one Record.
-
-### Why Containers and Relations are complementary
-
-**Content**: 
-A Relation graph answers "what is semantically connected to what?" but not "what should be exported or queried together?" These are different questions. A project may contain hundreds of Records connected by many Relations. The question "which Records are in scope for this export?" is a scoping question, not a semantic one.
-
-Container provides the boundary. "These Records collectively form a unit for boundary purposes" is a scope claim. "Stage A contains Task B" is a semantic claim. A Container can hold Records that have no `contains` Relation between them — they are grouped for operational reasons, not because one is semantically inside the other.
-
-Relationship-first implementations derive Container membership by traversing `contains` Relations from root instances. Container-first implementations use explicit `memberInstanceIds`. Both strategies are valid; neither replaces the other.
-
-### Why Field and Type are separate
-
-**Content**: 
-A form system where each template defines its own fields produces semantic silos: the "decision statement" in the Technology template and the "decision statement" in the Budget template are unrelated strings. They cannot be searched together, compared, or composed.
-
-In SCDS, a Field is defined once. Any number of Types may include it. When two Types share a Field, any AI extraction logic, validation rules, or downstream analysis written for that Field applies consistently across both. The Field's identity is stable across all the contexts it appears in.
-
-This is a stronger constraint than it appears. It means a Type cannot secretly redefine what a Field means for its own purposes — it can only configure presentation. If a Type genuinely needs different semantics, it must use a different Field.
-
 ### Design Decisions
 
 **Content**: 
 
-### Why the directionality invariant matters
+### Addressability as a prerequisite for live facilitation
 
 **Content**: 
-`sourceInstanceId` is the asserting instance; `targetInstanceId` is the related instance. "D-004 supersedes D-001" must always be represented as `source: D-004, target: D-001`.
+`ext:addressability` is not just about naming things. It is the mechanism that makes the conversation layer useful. Without `AttentionState`, transcript chunks have no address-time connection to the Records they inform. Without `Revision`, the history of a field's value is an implementation detail not visible at the interoperability layer.
 
-Without this invariant, graph traversal breaks across system boundaries. If System A stores `supersedes` with the newer Record as source and System B stores it with the older Record as source, a federated query for "all Records that supersede D-001" returns different results from each system. The invariant is the minimum agreement required for semantic interoperability on Relation graphs.
+Any implementation that facilitates live sessions — where conversation material is produced while people are working on specific Records and Fields — should implement `ext:addressability`. Without it, context assembly is purely retrospective, and the quality of AI assistance degrades accordingly.
 
-The invariant does not assign agency or authority to the `source` slot — those are properties of the `relationType`. A `contains` Relation makes the source the container and the target the contained item. An `evidences` Relation makes the source the evidence and the target the claim it supports. Directionality is a slot convention; semantics come from the type.
-
-### Protocol chaining and provenance traces
-
-**Content**: 
-Loose Protocols produce open material. Tight Protocols converge on a specific Record. The output of one Protocol is the input context for the next.
-
-Example chain for a governance decision:
-```
-Brain Dump Protocol → unstructured Notes
-Decomposition Protocol → component Notes (derived-from Brain Dump Notes)
-Options Analysis Protocol → Options Analysis Record (derived-from Decomposition Notes)
-Decision Protocol → Decision Record (derived-from Options Analysis Record)
-```
-
-When a Decision Record is challenged, you can traverse back through the full chain: Decision ← Options Analysis ← Decomposition ← Brain Dump ← transcript chunks. The quality of the final Record is auditable because every stage of the process left addressable artefacts.
-
-With `ext:addressability`, each stage's conversation chunks carry the `AttentionState` at the time they were produced. "What was being discussed when the options were evaluated?" is a queryable question.
-
-### Revision history exchange format
-
-**Content**: 
-A standard format for exchanging full Revision history between implementations, for cases where the history itself is a first-class interoperability concern. Natural extension of `ext:addressability`. Deferred pending stabilisation of the Container and Relation layers.
-
-### Why Protocol replaces TemplateFacilitationStep
-
-**Content**: 
-`TemplateFacilitationStep` in v1 was field-ordering with AI guidance attached. It could specify which fields to present in which order, with optional framing. This was sufficient for a linear form-filling workflow.
-
-But the process of building a quality Record through group deliberation is not a form-filling workflow. It is an epistemically ordered process: you cannot meaningfully evaluate options before you have articulated criteria; you cannot propose a course of action before you have characterised the problem.
-
-Protocol stages have:
-- `dependsOn` — explicit epistemic dependencies, not just ordering. A stage may not proceed until its dependencies are sufficient.
-- `completionCriteria` — how to know a stage is adequate to proceed.
-- `outputType` — a stage may produce its own intermediate Record, not just fill fields in the final one.
-- `question` — the core epistemic question this stage answers.
-
-The distinction is between a View (which fields to show, in what order, for presentation purposes) and a Protocol (how to build understanding epistemically, stage by stage). These are separate concerns. Collapsing them into one construct produced a type that was adequate for neither.
-
-A Record is the *compressed output* of a Protocol run. The Protocol is the process that produced the understanding; the Record is what that understanding looks like expressed in the standard vocabulary.
-
-### μDemocracy Mapping
-
-**Content**: 
-
-### Protocol loose-to-tight spectrum
-
-**Content**: 
-The spectrum from loose to tight is not a quality ranking — it is a fitness question. A Brain Dump Protocol is the right tool when the problem space is not yet understood. A Decision Protocol is the right tool when the group is ready to converge. Starting with a tight Protocol before the problem is decomposed produces poor output because the epistemic prerequisites are not met.
-
-The `dependsOn` field on `ProtocolStage` makes this explicit. A stage that depends on decomposition results cannot run before those results exist. This is not just sequencing — it is a statement about what understanding is required before the next stage is meaningful.
-
-### Future Extensions
-
-**Content**: 
-The following capabilities are planned but out of scope for this version.
+**Diff rendering:** implementations rendering Revision history for governance review should support a diff view that shows field-level removals alongside additions, not only the current value. The Revision chain already provides the data needed for three useful modes: final (current value only), all markup (current value plus prior content shown as removed and new content as added), and original (the value at a specified Revision). This is a rendering pattern, not a separate data shape.
 
 ### Relation taxonomy usage
 
@@ -3245,6 +3098,258 @@ Transcript seg  --evidences-->  Decision rationale
 
 Non-governance projects use the same Relation layer. `supersedes`, `delegates`, and `ratifies` apply when the semantic object type calls for them — they are one profile of the layer, not its primary purpose.
 
+### Why Blueprint is a new concept
+
+**Content**: 
+In v1, there was no way to specify what a document type *is* — what needs to be extracted from source material in order to build it. `DocumentTemplate` (now Document View) handled *assembly* of existing Records into readable output. But nothing owned the prior question: "Given a transcript of a governance meeting, what Types should I extract, how should they relate to each other, and what does 'complete' mean?"
+
+Blueprint fills that gap. A Blueprint is the artefact you hand to an extraction pipeline. It specifies root Types, expected Relations between extracted Records, and completeness criteria. The Extraction pipeline consults the Blueprint to know what to look for; the Document View consults existing Records to know what to render.
+
+The two are complementary: Blueprint → Records → Document View.
+
+### Choosing between repeatable fields, field groups, and separate Records
+
+**Content**: 
+
+### `semanticObjectType` as a federation risk
+
+**Content**: 
+`semanticObjectType` on `Type` and in `SectionSource.type-query` is a free-form string. The spec recommends `namespace/name` format for portable Document Views (Invariant 32) and treats bare strings as a single-system convention. This is the minimum rule needed to ship v2.
+
+The risk: two systems can use the same bare string (`"decision"`, `"task"`) and mean different semantic Types. When graph traversal or document assembly crosses system boundaries, type-query portability becomes undefined wherever bare strings appear. This is where federation bugs will appear first.
+
+The current design is deliberately light. Possible futures in order of increasing strictness:
+- **Informative only** — `semanticObjectType` becomes advisory metadata with no query semantics; implementations must use explicit TypeRefs for cross-system queries
+- **Typed vocabulary** — `semanticObjectType` becomes a typed reference to a Type definition (a `TypeRef` rather than a bare string), giving it the same identity guarantees as a Field or Type reference
+
+The second option would require changing the type from `string` to `TypeRef | string` and a version bump. For now: prefer `namespace/name` format in any Type or SectionSource that will cross system boundaries, and treat bare strings as a scope boundary. Implementations should document which `semanticObjectType` values they recognise and what Types they map to.
+
+### μDemocracy Mapping
+
+**Content**: 
+
+### Full projection surface
+
+**Content**: 
+Document-level projection is addressed by `ext:views-l2`. The broader projection surface — dashboards, timelines, AI context packages, real-time views, and composite renderings that are not document-shaped — remains a future concern. Projections are read-only views; they do not modify Record state.
+
+### Why "Type" not "Module"
+
+**Content**: 
+"Module" in v1 was accurate but implied a software analogy that didn't communicate the concept well to non-technical practitioners. "Module" suggests a composable software unit. "Type" says what it actually is: a type definition for a semantic object. A Decision is a Type. A Task is a Type. A Risk is a Type.
+
+The rename also makes the Record/Type relationship legible by analogy: a Record is an instance of a Type, just as a value is an instance of a type in any typed system.
+
+### Why Type inheritance is conservative
+
+**Content**: 
+`ext:type-inheritance` adds one formal mechanism: a Type may specialize one base Type and still be processable as that base Type. This solves the common case where a domain-specific Type needs to add fields to a shared Type without duplicating the whole definition.
+
+The extension is intentionally narrow. It supports inherited fields, added fields, explicit ordering, and presentation/workflow overrides for inherited fields. It does not let a specializing Type change Field semantics or relax base requirements. That keeps the central promise intact: a system that understands the base Type can still process the base portion of a specialized Record.
+
+`Type.fieldOrder` and `ExportConfig.fieldOrder` share a name but operate at different layers. `Type.fieldOrder` is a Type-level ordering declaration over the full effective field list, including inherited fields. `ExportConfig.fieldOrder` is a View export setting that controls rendered output order for a particular presentation. Validators should apply the `fieldAssignmentOverrides` inherited-field restriction only to `fieldAssignmentOverrides`, not to `Type.fieldOrder`.
+
+---
+
+### When to edit in-place vs create a new Record
+
+**Content**: 
+
+### Why `displayLabel` must not affect extraction
+
+**Content**: 
+`displayLabel` lets a View relabel a Field for a specific audience without altering the Field's meaning. "Strategic question" might be displayed as "The decision we're making" in a facilitated view aimed at non-specialist participants.
+
+If `displayLabel` could affect extraction, two Views of the same Record could produce different extracted values for the same Field — because the AI was given different labels. Field semantics must be stable across views. The label controls what the human sees; the Field's `aiGuidance` controls what the AI does.
+
+### Graduation mapping record
+
+**Content**: 
+A structured artefact recording how a Note or Typed Record was mapped to its Record successors — which section or field names were matched, merged, split, or interpreted. Useful for AI-assisted graduation review and audit. Deferred pending implementation experience.
+
+### Revision history exchange format
+
+**Content**: 
+A standard format for exchanging full Revision history between implementations, for cases where the history itself is a first-class interoperability concern. Natural extension of `ext:addressability`. Deferred pending stabilisation of the Container and Relation layers.
+
+### Usage Guidance
+
+**Content**: 
+
+### Graduation: when and how
+
+**Content**: 
+
+### Why the directionality invariant matters
+
+**Content**: 
+`sourceInstanceId` is the asserting instance; `targetInstanceId` is the related instance. "D-004 supersedes D-001" must always be represented as `source: D-004, target: D-001`.
+
+Without this invariant, graph traversal breaks across system boundaries. If System A stores `supersedes` with the newer Record as source and System B stores it with the older Record as source, a federated query for "all Records that supersede D-001" returns different results from each system. The invariant is the minimum agreement required for semantic interoperability on Relation graphs.
+
+The invariant does not assign agency or authority to the `source` slot — those are properties of the `relationType`. A `contains` Relation makes the source the container and the target the contained item. An `evidences` Relation makes the source the evidence and the target the claim it supports. Directionality is a slot convention; semantics come from the type.
+
+### Blueprint vs View — the extraction gap
+
+**Content**: 
+A View answers: given a Record that already exists, how do I render it for a specific audience?
+
+A Blueprint answers: given source material, what Records should I extract, and how do they relate?
+
+These are complementary but distinct. A Document View cannot serve as an extraction blueprint because it assumes Records already exist. A Blueprint cannot serve as a Document View because it does not specify how to render field values for an audience.
+
+An extraction pipeline uses Blueprint + Field `aiGuidance` + Protocol to produce Records. A rendering pipeline uses View + Document View to project those Records into readable form.
+
+### Why Containers and Relations are complementary
+
+**Content**: 
+A Relation graph answers "what is semantically connected to what?" but not "what should be exported or queried together?" These are different questions. A project may contain hundreds of Records connected by many Relations. The question "which Records are in scope for this export?" is a scoping question, not a semantic one.
+
+Container provides the boundary. "These Records collectively form a unit for boundary purposes" is a scope claim. "Stage A contains Task B" is a semantic claim. A Container can hold Records that have no `contains` Relation between them — they are grouped for operational reasons, not because one is semantically inside the other.
+
+Relationship-first implementations derive Container membership by traversing `contains` Relations from root instances. Container-first implementations use explicit `memberInstanceIds`. Both strategies are valid; neither replaces the other.
+
+### View inheritance and composition
+
+**Content**: 
+As View libraries mature, inheritance will become necessary. A lightweight ADR View and a governance ADR View share base configuration — field selection, ordering, `editorHint` overrides — while diverging on workflow framing and export layout.
+
+A future version may define:
+- `extendsViewId?: UUID` — single inheritance; child View inherits all `fieldViews` from parent and overrides selectively
+- `composesViews?: UUID[]` — mixin composition; multiple Views contribute non-overlapping configuration
+
+Current design: `View` is a leaf type. Use Lineage tracking to record inheritance relationships.
+
+### Sub-field addressing
+
+**Content**: 
+Web UI comments and annotations attached to specific text within a Field value require addressing below the Field level. `ext:addressability` currently addresses at Field granularity. Sub-field text selection addressing is architecturally possible (the Address space accommodates it) but is deferred as a separate extension.
+
+---
+
+### Graceful degradation
+
+**Content**: 
+In a federated ecosystem, implementations will often receive SCDS content that uses extensions they do not support. The useful default is: understand what you can, preserve what you cannot.
+
+A conforming implementation should validate the core and extension content it recognises, surface unknown extension content clearly to users or downstream systems, and pass that unknown content through rather than silently discarding it. This is especially important for Records instantiated against a specializing Type: a system that knows only the base Type should still be able to read the inherited base fields correctly while preserving the specialization-specific fields.
+
+---
+
+### Field transclusion in Document Views
+
+**Content**: 
+Pulling a specific Field value inline into a Document View is useful, but a syntax such as `{{field:{recordId}/{fieldId}}}` makes a reusable Document View depend on concrete instance IDs. That weakens portability and should wait for an addressing model that can express reusable selection rules rather than binding a definition to one Record.
+
+### Future Extensions
+
+**Content**: 
+The following capabilities are planned but out of scope for this version.
+
+### Instance graph exchange format
+
+**Content**: 
+A standard envelope for exchanging a Container together with its full Record set, Relations, and source references. Natural successor to `Package` at the instance layer. Likely shape: `{ container, instances[], relations[], sourceRefs[] }`. Deferred pending stabilisation of `ext:views-l2` and implementation experience.
+
+### AI guidance composition order
+
+**Content**: 
+When assembling an AI prompt from multiple `aiGuidance` blocks:
+
+1. **Type framing** — establishes what semantic object type is being worked on
+2. **View framing** (if using `ext:views-l1`) — workflow-specific context for this View
+3. **Field extraction guidance** — specific instruction for populating each Field
+4. **Negative guidance** — constraints applied after the extraction instruction
+5. **Examples** — few-shot demonstrations last, as final grounding
+
+This ordering ensures broad context (what kind of object this is) precedes narrow directives (how to populate this specific Field). Template framing narrows the Type context — it does not replace it.
+
+This is a recommended default. Implementations that compose differently will produce different AI behaviour from the same definitions.
+
+### Why Record tiers exist (Note → Typed Record → Record)
+
+**Content**: 
+Not all content arrives with full semantic formalisation. A meeting note, a brainstorm document, a rough plan — these are valid starting points that should be preserved and referenceable, even before anyone has decided what Types to extract from them.
+
+The three tiers let a system capture content at whatever maturity level it has, and formalise later without losing provenance. The graduation path is one-way: Note → Typed Record → Record. It mirrors how understanding actually develops — rough first, then structured, then formally defined.
+
+The tier model also makes SCDS progressively adoptable. A team can start at Tier 0 and arrive at Tier 2 as their understanding of the semantic structure matures, without ever having to restart from scratch.
+
+### Session
+
+**Content**: 
+A live collaborative process model with real-time facilitation, AI assistance, and collaborative editing. A Session produces or enriches Records but does not own them. Session-level Protocol management (tracking active stage, managing participant attention) is a natural successor to `ext:protocol` and `ext:addressability`. Deferred pending implementation experience.
+
+### How to decide which extensions to implement
+
+**Content**: 
+
+### Why `valueType` and `editorHint` are separate
+
+**Content**: 
+A Field with `valueType: "text"` might be edited via textarea in a web form, captured via voice in a mobile app, or extracted directly from a transcript with no editing UI. The semantic type is stable; the editing surface is a rendering decision.
+
+AI extraction logic, validation rules, and export formatting depend only on `valueType`. `editorHint` is a default that implementations and Views may override. Conflating the two would mean that changing the preferred editor for a field could inadvertently break AI extraction rules.
+
+### Protocol loose-to-tight spectrum
+
+**Content**: 
+The spectrum from loose to tight is not a quality ranking — it is a fitness question. A Brain Dump Protocol is the right tool when the problem space is not yet understood. A Decision Protocol is the right tool when the group is ready to converge. Starting with a tight Protocol before the problem is decomposed produces poor output because the epistemic prerequisites are not met.
+
+The `dependsOn` field on `ProtocolStage` makes this explicit. A stage that depends on decomposition results cannot run before those results exist. This is not just sequencing — it is a statement about what understanding is required before the next stage is meaningful.
+
+### Field domains
+
+**Content**: 
+Named sets of Fields that travel together may become useful as Type libraries grow. For v2, ordinary shared base Types plus `ext:type-inheritance` cover the immediate reuse need with less machinery. Field domains are deferred until there is stronger evidence that reusable field sets need their own identity, versioning, and package dependency rules independent of Types.
+
+### Why Revision is addressable
+
+**Content**: 
+In v1, field revision was an implementation concern. The spec described when to edit in-place versus create a new Record, but individual revisions were not addressable — you could not ask "what did this field say before the last Protocol run?" at the interoperability layer.
+
+This matters for:
+- **Governance challenge**: if a Record is challenged, you need to trace which conversation produced each field value and which version was in place when a downstream decision was made.
+- **Context assembly**: when generating the next draft, knowing what changed between revision 2 and revision 3 — and what conversation produced that change — is more useful than knowing only the current value.
+- **Audit**: a complete audit trail requires addressable history, not just current state.
+
+`Revision` is the addressable audit trail. It does not replace the edit-in-place vs. new-Record judgment for minor corrections. That remains an implementation concern. Revision is the interoperability layer for cases where history itself is a first-class concern.
+
+### Conditional processing
+
+**Content**: 
+Audience, platform, and output filtering may eventually allow one source Container to produce different projections for different readers. This is deferred because SectionSource queries already cover common projection differences, while a general condition evaluation model would add substantial complexity.
+
+### Protocol chaining and provenance traces
+
+**Content**: 
+Loose Protocols produce open material. Tight Protocols converge on a specific Record. The output of one Protocol is the input context for the next.
+
+Example chain for a governance decision:
+```
+Brain Dump Protocol → unstructured Notes
+Decomposition Protocol → component Notes (derived-from Brain Dump Notes)
+Options Analysis Protocol → Options Analysis Record (derived-from Decomposition Notes)
+Decision Protocol → Decision Record (derived-from Options Analysis Record)
+```
+
+When a Decision Record is challenged, you can traverse back through the full chain: Decision ← Options Analysis ← Decomposition ← Brain Dump ← transcript chunks. The quality of the final Record is auditable because every stage of the process left addressable artefacts.
+
+With `ext:addressability`, each stage's conversation chunks carry the `AttentionState` at the time they were produced. "What was being discussed when the options were evaluated?" is a queryable question.
+
+### Why Address and AttentionState are needed
+
+**Content**: 
+v1 noted "focus links" as a session-layer concern without defining a mechanism. The mechanism was absent.
+
+Without co-addressability, the transcript/SCDS separation is clean in principle but broken in practice. There is no way to say "this conversation happened while we were focused on this Field." Retrospective `SourceReference` links help, but they require someone to explicitly annotate which conversation produced which value. For real-time facilitation, that annotation needs to happen live.
+
+`AttentionState` is the live cursor. Every transcript chunk produced while a Protocol stage is active carries the current `AttentionState` as a tag. Context assembly later queries by address: "all chunks where attention was on Field X in Record Y." The annotation is free because it was captured at production time.
+
+`Address` is the addressing scheme that makes co-addressability possible. A transcript chunk and a Field Revision are in the same address space — they can reference each other because both have resolvable addresses.
+
+**Multi-Container addressing**: A Record may belong to more than one Container simultaneously (a task may exist in both a project Container and a sprint Container). That Record therefore has multiple valid document-space Addresses — one per Container context. This is intentional: `containerId` in a document-space `Address` is not a uniqueness constraint, it is a *context specifier*. `AttentionState.containerId` records which Container was active during a live session, making the contextual anchor explicit. When a session-tagged transcript chunk is later queried, the Container in the `AttentionState` tells you not just *what Record* was being discussed but *in which context* it was being discussed.
+
 ### Why the conversation layer is a permanent boundary
 
 **Content**: 
@@ -3256,14 +3361,35 @@ The boundary makes both layers better at what they do. The connection between th
 
 ---
 
-### Why Record tiers exist (Note → Typed Record → Record)
+### Why Protocol replaces TemplateFacilitationStep
 
 **Content**: 
-Not all content arrives with full semantic formalisation. A meeting note, a brainstorm document, a rough plan — these are valid starting points that should be preserved and referenceable, even before anyone has decided what Types to extract from them.
+`TemplateFacilitationStep` in v1 was field-ordering with AI guidance attached. It could specify which fields to present in which order, with optional framing. This was sufficient for a linear form-filling workflow.
 
-The three tiers let a system capture content at whatever maturity level it has, and formalise later without losing provenance. The graduation path is one-way: Note → Typed Record → Record. It mirrors how understanding actually develops — rough first, then structured, then formally defined.
+But the process of building a quality Record through group deliberation is not a form-filling workflow. It is an epistemically ordered process: you cannot meaningfully evaluate options before you have articulated criteria; you cannot propose a course of action before you have characterised the problem.
 
-The tier model also makes SCDS progressively adoptable. A team can start at Tier 0 and arrive at Tier 2 as their understanding of the semantic structure matures, without ever having to restart from scratch.
+Protocol stages have:
+- `dependsOn` — explicit epistemic dependencies, not just ordering. A stage may not proceed until its dependencies are sufficient.
+- `completionCriteria` — how to know a stage is adequate to proceed.
+- `outputType` — a stage may produce its own intermediate Record, not just fill fields in the final one.
+- `question` — the core epistemic question this stage answers.
+
+The distinction is between a View (which fields to show, in what order, for presentation purposes) and a Protocol (how to build understanding epistemically, stage by stage). These are separate concerns. Collapsing them into one construct produced a type that was adequate for neither.
+
+A Record is the *compressed output* of a Protocol run. The Protocol is the process that produced the understanding; the Record is what that understanding looks like expressed in the standard vocabulary.
+
+### Extension Design Notes
+
+**Content**: 
+
+### Why Field and Type are separate
+
+**Content**: 
+A form system where each template defines its own fields produces semantic silos: the "decision statement" in the Technology template and the "decision statement" in the Budget template are unrelated strings. They cannot be searched together, compared, or composed.
+
+In SCDS, a Field is defined once. Any number of Types may include it. When two Types share a Field, any AI extraction logic, validation rules, or downstream analysis written for that Field applies consistently across both. The Field's identity is stable across all the contexts it appears in.
+
+This is a stronger constraint than it appears. It means a Type cannot secretly redefine what a Field means for its own purposes — it can only configure presentation. If a Type genuinely needs different semantics, it must use a different Field.
 
 ### Core Thesis
 
@@ -3293,187 +3419,6 @@ A Record captures what a group understood, agreed, or committed to at a point in
 SCDS assumes that understanding evolves. Records, Relations, and lifecycle states may be revised, superseded, refined, or contradicted without invalidating prior semantic state. A rough plan is a valid semantic object. A superseded decision is a valid semantic object. An abandoned hypothesis is a valid semantic object. Historical semantic state is not noise to be discarded — it is provenance, institutional memory, and the record of how understanding arrived at its current form.
 
 ---
-
-### Why `valueType` and `editorHint` are separate
-
-**Content**: 
-A Field with `valueType: "text"` might be edited via textarea in a web form, captured via voice in a mobile app, or extracted directly from a transcript with no editing UI. The semantic type is stable; the editing surface is a rendering decision.
-
-AI extraction logic, validation rules, and export formatting depend only on `valueType`. `editorHint` is a default that implementations and Views may override. Conflating the two would mean that changing the preferred editor for a field could inadvertently break AI extraction rules.
-
-### Why Revision is addressable
-
-**Content**: 
-In v1, field revision was an implementation concern. The spec described when to edit in-place versus create a new Record, but individual revisions were not addressable — you could not ask "what did this field say before the last Protocol run?" at the interoperability layer.
-
-This matters for:
-- **Governance challenge**: if a Record is challenged, you need to trace which conversation produced each field value and which version was in place when a downstream decision was made.
-- **Context assembly**: when generating the next draft, knowing what changed between revision 2 and revision 3 — and what conversation produced that change — is more useful than knowing only the current value.
-- **Audit**: a complete audit trail requires addressable history, not just current state.
-
-`Revision` is the addressable audit trail. It does not replace the edit-in-place vs. new-Record judgment for minor corrections. That remains an implementation concern. Revision is the interoperability layer for cases where history itself is a first-class concern.
-
-### `semanticObjectType` as a federation risk
-
-**Content**: 
-`semanticObjectType` on `Type` and in `SectionSource.type-query` is a free-form string. The spec recommends `namespace/name` format for portable Document Views (Invariant 32) and treats bare strings as a single-system convention. This is the minimum rule needed to ship v2.
-
-The risk: two systems can use the same bare string (`"decision"`, `"task"`) and mean different semantic Types. When graph traversal or document assembly crosses system boundaries, type-query portability becomes undefined wherever bare strings appear. This is where federation bugs will appear first.
-
-The current design is deliberately light. Possible futures in order of increasing strictness:
-- **Informative only** — `semanticObjectType` becomes advisory metadata with no query semantics; implementations must use explicit TypeRefs for cross-system queries
-- **Typed vocabulary** — `semanticObjectType` becomes a typed reference to a Type definition (a `TypeRef` rather than a bare string), giving it the same identity guarantees as a Field or Type reference
-
-The second option would require changing the type from `string` to `TypeRef | string` and a version bump. For now: prefer `namespace/name` format in any Type or SectionSource that will cross system boundaries, and treat bare strings as a scope boundary. Implementations should document which `semanticObjectType` values they recognise and what Types they map to.
-
-### AI guidance composition order
-
-**Content**: 
-When assembling an AI prompt from multiple `aiGuidance` blocks:
-
-1. **Type framing** — establishes what semantic object type is being worked on
-2. **View framing** (if using `ext:views-l1`) — workflow-specific context for this View
-3. **Field extraction guidance** — specific instruction for populating each Field
-4. **Negative guidance** — constraints applied after the extraction instruction
-5. **Examples** — few-shot demonstrations last, as final grounding
-
-This ordering ensures broad context (what kind of object this is) precedes narrow directives (how to populate this specific Field). Template framing narrows the Type context — it does not replace it.
-
-This is a recommended default. Implementations that compose differently will produce different AI behaviour from the same definitions.
-
-### When to edit in-place vs create a new Record
-
-**Content**: 
-
-### Sub-field addressing
-
-**Content**: 
-Web UI comments and annotations attached to specific text within a Field value require addressing below the Field level. `ext:addressability` currently addresses at Field granularity. Sub-field text selection addressing is architecturally possible (the Address space accommodates it) but is deferred as a separate extension.
-
----
-
-### Addressability as a prerequisite for live facilitation
-
-**Content**: 
-`ext:addressability` is not just about naming things. It is the mechanism that makes the conversation layer useful. Without `AttentionState`, transcript chunks have no address-time connection to the Records they inform. Without `Revision`, the history of a field's value is an implementation detail not visible at the interoperability layer.
-
-Any implementation that facilitates live sessions — where conversation material is produced while people are working on specific Records and Fields — should implement `ext:addressability`. Without it, context assembly is purely retrospective, and the quality of AI assistance degrades accordingly.
-
-**Diff rendering:** implementations rendering Revision history for governance review should support a diff view that shows field-level removals alongside additions, not only the current value. The Revision chain already provides the data needed for three useful modes: final (current value only), all markup (current value plus prior content shown as removed and new content as added), and original (the value at a specified Revision). This is a rendering pattern, not a separate data shape.
-
-### Usage Guidance
-
-**Content**: 
-
-### Why `displayLabel` must not affect extraction
-
-**Content**: 
-`displayLabel` lets a View relabel a Field for a specific audience without altering the Field's meaning. "Strategic question" might be displayed as "The decision we're making" in a facilitated view aimed at non-specialist participants.
-
-If `displayLabel` could affect extraction, two Views of the same Record could produce different extracted values for the same Field — because the AI was given different labels. Field semantics must be stable across views. The label controls what the human sees; the Field's `aiGuidance` controls what the AI does.
-
-### Blueprint vs View — the extraction gap
-
-**Content**: 
-A View answers: given a Record that already exists, how do I render it for a specific audience?
-
-A Blueprint answers: given source material, what Records should I extract, and how do they relate?
-
-These are complementary but distinct. A Document View cannot serve as an extraction blueprint because it assumes Records already exist. A Blueprint cannot serve as a Document View because it does not specify how to render field values for an audience.
-
-An extraction pipeline uses Blueprint + Field `aiGuidance` + Protocol to produce Records. A rendering pipeline uses View + Document View to project those Records into readable form.
-
-### Why "Type" not "Module"
-
-**Content**: 
-"Module" in v1 was accurate but implied a software analogy that didn't communicate the concept well to non-technical practitioners. "Module" suggests a composable software unit. "Type" says what it actually is: a type definition for a semantic object. A Decision is a Type. A Task is a Type. A Risk is a Type.
-
-The rename also makes the Record/Type relationship legible by analogy: a Record is an instance of a Type, just as a value is an instance of a type in any typed system.
-
-### Graduation: when and how
-
-**Content**: 
-
-### Session
-
-**Content**: 
-A live collaborative process model with real-time facilitation, AI assistance, and collaborative editing. A Session produces or enriches Records but does not own them. Session-level Protocol management (tracking active stage, managing participant attention) is a natural successor to `ext:protocol` and `ext:addressability`. Deferred pending implementation experience.
-
-### Extension Design Notes
-
-**Content**: 
-
-### Conditional processing
-
-**Content**: 
-Audience, platform, and output filtering may eventually allow one source Container to produce different projections for different readers. This is deferred because SectionSource queries already cover common projection differences, while a general condition evaluation model would add substantial complexity.
-
-### View inheritance and composition
-
-**Content**: 
-As View libraries mature, inheritance will become necessary. A lightweight ADR View and a governance ADR View share base configuration — field selection, ordering, `editorHint` overrides — while diverging on workflow framing and export layout.
-
-A future version may define:
-- `extendsViewId?: UUID` — single inheritance; child View inherits all `fieldViews` from parent and overrides selectively
-- `composesViews?: UUID[]` — mixin composition; multiple Views contribute non-overlapping configuration
-
-Current design: `View` is a leaf type. Use Lineage tracking to record inheritance relationships.
-
-### How to decide which extensions to implement
-
-**Content**: 
-
-### Graceful degradation
-
-**Content**: 
-In a federated ecosystem, implementations will often receive SCDS content that uses extensions they do not support. The useful default is: understand what you can, preserve what you cannot.
-
-A conforming implementation should validate the core and extension content it recognises, surface unknown extension content clearly to users or downstream systems, and pass that unknown content through rather than silently discarding it. This is especially important for Records instantiated against a specializing Type: a system that knows only the base Type should still be able to read the inherited base fields correctly while preserving the specialization-specific fields.
-
----
-
-### Choosing between repeatable fields, field groups, and separate Records
-
-**Content**: 
-
-### Graduation mapping record
-
-**Content**: 
-A structured artefact recording how a Note or Typed Record was mapped to its Record successors — which section or field names were matched, merged, split, or interpreted. Useful for AI-assisted graduation review and audit. Deferred pending implementation experience.
-
-### Why Address and AttentionState are needed
-
-**Content**: 
-v1 noted "focus links" as a session-layer concern without defining a mechanism. The mechanism was absent.
-
-Without co-addressability, the transcript/SCDS separation is clean in principle but broken in practice. There is no way to say "this conversation happened while we were focused on this Field." Retrospective `SourceReference` links help, but they require someone to explicitly annotate which conversation produced which value. For real-time facilitation, that annotation needs to happen live.
-
-`AttentionState` is the live cursor. Every transcript chunk produced while a Protocol stage is active carries the current `AttentionState` as a tag. Context assembly later queries by address: "all chunks where attention was on Field X in Record Y." The annotation is free because it was captured at production time.
-
-`Address` is the addressing scheme that makes co-addressability possible. A transcript chunk and a Field Revision are in the same address space — they can reference each other because both have resolvable addresses.
-
-**Multi-Container addressing**: A Record may belong to more than one Container simultaneously (a task may exist in both a project Container and a sprint Container). That Record therefore has multiple valid document-space Addresses — one per Container context. This is intentional: `containerId` in a document-space `Address` is not a uniqueness constraint, it is a *context specifier*. `AttentionState.containerId` records which Container was active during a live session, making the contextual anchor explicit. When a session-tagged transcript chunk is later queried, the Container in the `AttentionState` tells you not just *what Record* was being discussed but *in which context* it was being discussed.
-
-### Why Type inheritance is conservative
-
-**Content**: 
-`ext:type-inheritance` adds one formal mechanism: a Type may specialize one base Type and still be processable as that base Type. This solves the common case where a domain-specific Type needs to add fields to a shared Type without duplicating the whole definition.
-
-The extension is intentionally narrow. It supports inherited fields, added fields, explicit ordering, and presentation/workflow overrides for inherited fields. It does not let a specializing Type change Field semantics or relax base requirements. That keeps the central promise intact: a system that understands the base Type can still process the base portion of a specialized Record.
-
-`Type.fieldOrder` and `ExportConfig.fieldOrder` share a name but operate at different layers. `Type.fieldOrder` is a Type-level ordering declaration over the full effective field list, including inherited fields. `ExportConfig.fieldOrder` is a View export setting that controls rendered output order for a particular presentation. Validators should apply the `fieldAssignmentOverrides` inherited-field restriction only to `fieldAssignmentOverrides`, not to `Type.fieldOrder`.
-
----
-
-### Field domains
-
-**Content**: 
-Named sets of Fields that travel together may become useful as Type libraries grow. For v2, ordinary shared base Types plus `ext:type-inheritance` cover the immediate reuse need with less machinery. Field domains are deferred until there is stronger evidence that reusable field sets need their own identity, versioning, and package dependency rules independent of Types.
-
-### Full projection surface
-
-**Content**: 
-Document-level projection is addressed by `ext:views-l2`. The broader projection surface — dashboards, timelines, AI context packages, real-time views, and composite renderings that are not document-shaped — remains a future concern. Projections are read-only views; they do not modify Record state.
 
 ### Why tags exist: from clustering to definitions
 

@@ -12,7 +12,7 @@
     },
     {
       "fieldId": "1a000003-0000-4000-a000-000000000003",
-      "value": "An implementation following `RepositoryRegistry.childRegistries` links must detect and halt on cycles. If resolving a child registry yields a `registryId` already encountered in the current resolution chain, the implementation must surface the cycle and stop rather than loop.\n\n---"
+      "value": "An implementation following `RepositoryRegistry.childRegistries` links must detect and halt on cycles. If resolving a child registry yields a `registryId` already encountered in the current resolution chain, the implementation must surface the cycle and stop rather than loop."
     },
     {
       "fieldId": "1a000021-0000-4000-a000-000000000021",

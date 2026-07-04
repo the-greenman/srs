@@ -1,8 +1,9 @@
 #!/usr/bin/env node
-import { mkdtemp, readFile, readdir, rm } from "fs/promises";
+import { mkdtemp, readFile, readdir, rm, writeFile } from "fs/promises";
 import { tmpdir } from "os";
 import { basename, join, resolve } from "path";
 import { spawn } from "child_process";
+import { renderInvariants } from "./render-invariants.mjs";
 
 const ROOT = resolve(new URL("..", import.meta.url).pathname);
 const REPO_ROOT = join(ROOT, "srs");
@@ -10,9 +11,9 @@ const SPEC_ROOT = join(ROOT, "docs", "spec");
 const SRS_CLI = process.env.SRS_CLI_PATH || "/home/greenman/.cargo/bin/srs";
 
 const VIEW_EXPORTS = [
-  { id: "3a000001-0000-4000-a000-000000000001", output: join(SPEC_ROOT, "srs-spec.md") },
+  { id: "3a000001-0000-4000-a000-000000000001", output: join(SPEC_ROOT, "srs-spec.md"), requiresKeyInvariants: true },
   { id: "3a000003-0000-4000-a000-000000000003", output: join(SPEC_ROOT, "srs-rationale.md") },
-  { id: "3a000004-0000-4000-a000-000000000004", output: join(SPEC_ROOT, "srs-unified.md") },
+  { id: "3a000004-0000-4000-a000-000000000004", output: join(SPEC_ROOT, "srs-unified.md"), requiresKeyInvariants: true },
 ];
 
 function run(cmd, args, { cwd = ROOT, silent = false } = {}) {
@@ -78,11 +79,26 @@ function normalizeMarkdownForComparison(text) {
   return `${head.join("\n")}\n${sections.sort().join("\n")}`.trimEnd();
 }
 
+async function applyInvariantInjection(entries, injectedContent) {
+  for (const entry of entries) {
+    const content = await readFile(entry.output, "utf8");
+    const headingMatch = /^### Key Invariants$/m.exec(content);
+    if (!headingMatch) continue;
+    const headingEnd = headingMatch.index + headingMatch[0].length;
+    const rest = content.slice(headingEnd);
+    const closingMatch = /^---$/m.exec(rest);
+    const beforeRegion = content.slice(0, headingEnd);
+    const afterRegion = closingMatch ? rest.slice(closingMatch.index) : "";
+    const newContent = `${beforeRegion}\n\n${injectedContent.trimEnd()}\n\n${afterRegion}`;
+    await writeFile(entry.output, newContent, "utf8");
+  }
+}
+
 async function checkRenderedDocsDrift() {
   const tempDir = await mkdtemp(join(tmpdir(), "srs-render-check-"));
+  const tempEntries = VIEW_EXPORTS.map((e) => ({ ...e, output: join(tempDir, basename(e.output)) }));
   try {
-    for (const entry of VIEW_EXPORTS) {
-      const outPath = join(tempDir, basename(entry.output));
+    for (const entry of tempEntries) {
       await run(SRS_CLI, [
         "--repo",
         REPO_ROOT,
@@ -91,9 +107,13 @@ async function checkRenderedDocsDrift() {
         "--view",
         entry.id,
         "--output",
-        outPath,
+        entry.output,
       ], { silent: true });
-      await assertFileMatches(entry.output, outPath, "rendered document");
+    }
+    const injectedContent = await renderInvariants(REPO_ROOT);
+    await applyInvariantInjection(tempEntries, injectedContent);
+    for (let i = 0; i < VIEW_EXPORTS.length; i++) {
+      await assertFileMatches(VIEW_EXPORTS[i].output, tempEntries[i].output, "rendered document");
     }
   } finally {
     await rm(tempDir, { recursive: true, force: true });
