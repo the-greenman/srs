@@ -2777,20 +2777,38 @@
     {
       "instanceId": "7e9333f3-69cc-4e74-8eb3-1fe165f65617",
       "path": "records/invariants/invariant-083.json",
-      "tier": 2,
       "tags": [
         "concern:validation",
         "topic:conformance"
-      ]
+      ],
+      "tier": 2
     },
     {
       "instanceId": "eb04c8d1-20cb-497a-8f2f-f05fee219c7c",
       "path": "records/invariants/invariant-084.json",
-      "tier": 2,
       "tags": [
         "concern:validation",
         "topic:conformance"
-      ]
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "5c5422b9-ce31-466b-9f1f-30c60df6a1bd",
+      "path": "records/tier-2/rfc-5c5422b9.json",
+      "tags": [
+        "topic:cli",
+        "construct:lifecycle"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "5601eb2e-9744-4883-8a66-8beec5e2ff21",
+      "path": "records/tier-2/rfc-change-5601eb2e.json",
+      "tags": [
+        "topic:cli",
+        "construct:lifecycle"
+      ],
+      "tier": 2
     }
   ],
   "meta": {
