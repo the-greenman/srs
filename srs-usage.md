@@ -96,7 +96,45 @@ srs lifecycle list --repo <path> --pretty
 srs lifecycle get --repo <path> <lifecycleId> --pretty
 ```
 
-A vocabulary in `open` mode accepts any tag key. A vocabulary in `closed` mode only accepts keys that resolve to an active term. Check the vocabulary's `mode` field before tagging records.
+A vocabulary in `open` mode accepts any tag key.
+
+### Updating a Lifecycle (RFC-016)
+
+Use `srs lifecycle update` to modify an existing lifecycle definition (add states, change transitions, etc.). The command accepts **bare Lifecycle JSON only** — it does not unwrap a `{ "lifecycle": { ... } }` envelope. Fetch-edit-send pattern:
+
+```bash
+# 1. Fetch the current lifecycle and extract bare Lifecycle JSON
+srs lifecycle get --repo <path> <lifecycleId> --pretty | jq '.payload.lifecycle'
+
+# 2. Edit the extracted JSON (add/change states or transitions)
+#    Preserve existing state and transition `id` values — they are stable UUIDs (RFC-006 substrate).
+#    Preserve `createdAt` from the fetched definition.
+
+# 3. Send the full updated JSON back — bare Lifecycle JSON, not the CLI envelope
+srs lifecycle update --repo <path> <lifecycleId> <<'EOF'
+{
+  "id": "<lifecycleId>",
+  "version": 2,
+  "namespace": "com.example",
+  "name": "governance_lifecycle",
+  "states": [
+    { "id": "<state-uuid>", "version": 1, "namespace": "com.example", "key": "draft", "isInitial": true },
+    { "id": "<state-uuid-2>", "version": 1, "namespace": "com.example", "key": "ratified", "isFinal": true },
+    { "id": "<new-state-uuid>", "version": 1, "namespace": "com.example", "key": "abandoned", "isFinal": true }
+  ],
+  "transitions": [
+    { "id": "<transition-uuid>", "name": "ratify", "from": "draft", "to": "ratified" },
+    { "id": "<new-transition-uuid>", "name": "abandon", "from": "draft", "to": "abandoned" }
+  ],
+  "initialState": "draft",
+  "createdAt": "<original-iso8601>"
+}
+EOF
+```
+
+The command validates the full RFC-006 V9 lifecycle invariants (exactly-one initial state, initial state must be active, transition key references, `isFinal` states have no outgoing transitions, transition id uniqueness) before writing. Returns `{ "lifecycle": { ... } }` on success.
+
+**Extension cascade warning**: If you increment `version` on a lifecycle that other lifecycles extend via `extendsLifecycleId`, those extending lifecycles' `extendsLifecycleVersion` fields will become stale and will fail RFC-006 V5 hard-error validation on the next `srs repo validate`. Update `extendsLifecycleVersion` in any dependent lifecycles immediately after updating the base. A vocabulary in `closed` mode only accepts keys that resolve to an active term. Check the vocabulary's `mode` field before tagging records.
 
 ### Blueprint Discovery and Schema Projection
 
