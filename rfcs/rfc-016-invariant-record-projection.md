@@ -2,7 +2,7 @@
 
 # RFC-016: Invariant Record Projection
 
-**Status**: Draft (Revision 2)
+**Status**: Draft (Revision 3)
 **Affects**: `com.semanticops.spec/invariant` (rendering); `scripts/publish-spec.mjs`; subsection body records (Phase 2)
 **Author**: design dialogue draft
 **Date**: 2026-07-04
@@ -15,6 +15,7 @@
 |---|---|---|
 | 1 | 2026-07-04 | Initial draft |
 | 2 | 2026-07-04 | Address Stage 3 review: fix subsection fieldId (1a000002 not 1a000003); add field reference table; specify group normalization algorithm; clarify wholesale region replacement; drop **Content**: prefix; fix sort rule; fix R4 conditionality; canonicalize R5 field names; add R6 for absent group; note invariant-062 cleanup; fix abstract range |
+| 3 | 2026-07-04 | Address Stage 4 re-review: type-aware sort algorithm (JSON number vs I-NN string); clarify intro sentence is part of renderInvariants output; R5 covers absent Number field; EOF boundary case; full UUIDs; remove Rationale hedge |
 
 ---
 
@@ -48,15 +49,21 @@ Add a new ESM module that reads all `com.semanticops.spec/invariant` records fro
 
 All record field access uses these fieldIds from the `com.semanticops.spec/invariant` type:
 
-| Logical name | fieldId | displayLabel |
-|---|---|---|
-| `invariant-number` | `1a000020-0000-4000-a000-000000000020` | Number |
-| `constraint` | `1a000003-0000-4000-a000-000000000003` | Constraint |
-| `group` | `1a000021-0000-4000-a000-000000000021` | Applies To |
+| Logical name | fieldId | displayLabel | Value type |
+|---|---|---|---|
+| `invariant-number` | `1a000020-0000-4000-a000-000000000020` | Number | JSON integer for invariants 1–62; JSON string `"I-NN"` for later invariants |
+| `constraint` | `1a000003-0000-4000-a000-000000000003` | Constraint | string |
+| `group` | `1a000021-0000-4000-a000-000000000021` | Applies To | string |
 
 #### Sorting
 
-Convert all `invariant-number` field values to an integer key: strip the `"I-"` prefix if present, parse the remainder as an integer. Sort records ascending by this key. Example: `"I-63"` → 63, `1` → 1.
+The `invariant-number` field stores values as a JSON number for invariants 1–62 and as a JSON string for later invariants. The sort key derivation branches on the JSON type of the stored value:
+
+- **JSON number** (e.g., `1`, `62`): use the value directly as the integer sort key; render as `**N.**`.
+- **JSON string matching `^I-\d+$`** (e.g., `"I-63"`, `"I-84"`): strip the `"I-"` prefix and parse the remainder as an integer for the sort key; render as `**I-NN.**`.
+- **Any other value**: malformed — trigger [R5] pipeline failure.
+
+Sort records ascending by this integer key. Example: `"I-63"` → 63, JSON `1` → 1.
 
 #### Group normalization
 
@@ -81,7 +88,7 @@ Before emitting a Constraint field value, strip any trailing markdown horizontal
 
 #### Output format
 
-The function returns a markdown string consisting of group headings and invariant items only — no `### Key Invariants` heading, no `---` boundary. Example:
+The function returns a markdown string consisting of an introductory sentence, followed by group headings and invariant items — no `### Key Invariants` heading and no `---` boundary (those are preserved by Change B's region replacement). The intro sentence is part of the return value and replaces any intro text present in the region. Example:
 
 ```markdown
 Conforming implementations must uphold the following invariants.
@@ -102,13 +109,13 @@ Integer invariant-numbers render as `**N.**`; "I-NN"-form numbers render as `**I
 
 Import `renderInvariants` from `./render-invariants.mjs` as an ESM module (not via `run()`). Call it after `renderDocumentViews()` and before `syncSchemas()`. Errors thrown by `renderInvariants` propagate to `main()` and cause the pipeline to exit non-zero (satisfying [R5]).
 
-For each file in `VIEW_EXPORTS`, mark entries that are expected to contain a Key Invariants section with `requiresKeyInvariants: true`. Currently only the entry for `srs-spec.md` (`id: 3a000001-…`) and `srs-unified.md` (`id: 3a000004-…`) should be marked. After calling `renderInvariants`, for each view file:
+For each file in `VIEW_EXPORTS`, mark entries that are expected to contain a Key Invariants section with `requiresKeyInvariants: true`. Currently only the entry for `srs-spec.md` (`id: 3a000001-0000-4000-a000-000000000001`) and `srs-unified.md` (`id: 3a000004-0000-4000-a000-000000000004`) should be marked. After calling `renderInvariants`, for each view file:
 
 - If `requiresKeyInvariants: true` and the file has no `### Key Invariants` heading: throw an error (pipeline fails).
 - If `requiresKeyInvariants: false` (or unset) and the file has no heading: skip silently.
 - If the heading is present: perform wholesale replacement of the region body.
 
-**Region replacement algorithm:** Locate the first occurrence of `### Key Invariants` in the rendered markdown. The region body is everything after the end of that heading line up to (but not including) the next `---` horizontal rule at the start of a line. Replace the region body with the output of `renderInvariants`. The `### Key Invariants` heading line and the closing `---` are preserved unchanged.
+**Region replacement algorithm:** Locate the first occurrence of `### Key Invariants` in the rendered markdown. The region body is everything after the end of that heading line up to (but not including) the next `---` horizontal rule at the start of a line; if no closing `---` exists, the region extends to end of file. Replace the region body with the output of `renderInvariants`. The `### Key Invariants` heading line and the closing `---` (if present) are preserved unchanged.
 
 The injected output does not include `**Content**: ` prefixes (those are Rust CLI rendering artifacts from the subsection body approach). The new format emits invariant items directly, which is a deliberate formatting improvement.
 
@@ -130,7 +137,7 @@ Phase 2 work is tracked in [srs#117](https://github.com/the-greenman/srs/issues/
 
 > **[R4]** Once Phase 2 has been applied to the repository, subsection Content field values (`fieldId: 1a000002-0000-4000-a000-000000000002`) MUST NOT contain inline `**N.**`-format invariant prose. Invariant records are the sole authoritative source. This rule is not testable until Phase 2 ships; [R1]–[R3] and [R5]–[R6] are testable immediately from Phase 1.
 
-> **[R5]** The `publish-spec.mjs` pipeline MUST fail with a non-zero exit code if the invariant projection step encounters a malformed Number field value (`fieldId: 1a000020-0000-4000-a000-000000000020`) or a record missing the Constraint field (`fieldId: 1a000003-0000-4000-a000-000000000003`).
+> **[R5]** The `publish-spec.mjs` pipeline MUST fail with a non-zero exit code if the invariant projection step encounters any of: a record missing the Number field (`fieldId: 1a000020-0000-4000-a000-000000000020`), a malformed Number field value (not a JSON number and not a string matching `^I-\d+$`), or a record missing the Constraint field (`fieldId: 1a000003-0000-4000-a000-000000000003`).
 
 > **[R6]** A record whose Applies To field (`fieldId: 1a000021-0000-4000-a000-000000000021`) is absent or empty MUST be emitted after all grouped records under an "Other" heading. It MUST NOT cause the pipeline to fail.
 
@@ -148,7 +155,7 @@ Phase 2 work is tracked in [srs#117](https://github.com/the-greenman/srs/issues/
 
 A script-based post-render injection (Change B) is chosen over modifying the Rust CLI (`srs render document-view`) for two reasons: (1) it confines the change to the `srs` repo, avoiding a coordinated cross-repo release; (2) the document view rendering infrastructure in the Rust CLI is not yet capable of type-aware collection steps — adding that capability is a larger architectural change that can follow independently once the bleeding is stopped.
 
-The group normalization algorithm (split on `;`, then on `, ext:`/`, core`) is derived from the actual `group` field values present in the repository. Records 1–62 have clean single-category values (`"core — Field"`, `"ext:lifecycle"`) that pass through unchanged. Records I-63–I-84 use the field as an annotation field with multi-part references; the algorithm extracts the primary category, grouping I-83 and I-84 under `"ext:import-tracking"` and I-79–I-82 under `"ext:repository (RepositoryManifest)"` (or similar after first-segment extraction).
+The group normalization algorithm (split on `;`, then on `, ext:`/`, core`) is derived from the actual `group` field values present in the repository. Records 1–62 have clean single-category values (`"core — Field"`, `"ext:lifecycle"`) that pass through unchanged. Records I-63–I-84 use the field as an annotation field with multi-part references; the algorithm extracts the primary category, grouping I-83 and I-84 under `"ext:import-tracking"` and I-79–I-82 under `"ext:repository (RepositoryManifest)"`.
 
 The two-phase approach (Phase 1: inject from records while keeping prose; Phase 2: remove prose) allows the fix to ship without a large-scale rewrite of subsection bodies in the same PR, reducing risk. Phase 1 alone satisfies R1–R3.
 
