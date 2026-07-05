@@ -270,6 +270,41 @@ srs note create --repo <path> <<'EOF'
 EOF
 ```
 
+### Graduating a Note to a Record
+
+`srs note graduate` promotes a Tier-0 Note to a typed Tier-2 Record in one atomic step: the Record is created, `graduatedAt` is stamped on the Note, and both are returned in a single envelope.
+
+First resolve the target type's field IDs (same as for `record create`):
+
+```bash
+srs type get --repo <path> <typeId> --pretty
+# read fieldAssignments[].fieldId for each field you need to populate
+```
+
+Then graduate:
+
+```bash
+srs note graduate --repo <path> <noteId> --type <namespace/name> <<'EOF'
+{
+  "fieldValues": [
+    { "fieldId": "<uuid>", "value": "<value>" }
+  ]
+}
+EOF
+```
+
+The stdin shape is the same `CreateRecordInput` used by `record create`: `fieldValues`, optional `groupValues`, optional `tags`.
+
+The response `data` contains:
+- `note` — the original Note with `graduatedAt` stamped (ISO-8601 UTC)
+- `record` — the newly created typed Record
+
+On error (note not found, entity is not a Note, type not found, required field missing) neither write is applied.
+
+Optional:
+- `--type-version <N>` — pin a specific type version (default: latest)
+- `--container <id>` (global flag) — add the new Record to a container atomically
+
 ### Creating a Record (Tier 2)
 
 First resolve the type's field IDs:
