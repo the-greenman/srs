@@ -331,6 +331,26 @@ EOF
 
 `record validate` runs **exactly the same validation** that `record create` / `record update` run before they persist — unknown fields, missing required fields, and repeatable/field-group cardinality. A passing `validate` therefore guarantees a passing write. (It does not add stricter checks such as enum or value-type conformance; those are not validated on the write path either.)
 
+### Transitioning a Record's Lifecycle State
+
+Use `record transition` to move a record to a new lifecycle state. Inspect the lifecycle first to know valid state names and transition names (`srs lifecycle get --repo <path> <lifecycleId> --pretty`).
+
+```bash
+# Transition by target state name
+srs record transition --repo <path> <instanceId> <<'EOF'
+{ "to": "<state-name>" }
+EOF
+
+# Or transition by named transition
+srs record transition --repo <path> <instanceId> <<'EOF'
+{ "byTransition": "<transition-name>" }
+EOF
+```
+
+Returns `{ "record": <Record>, "warnings": [] }`. When the target state is a final state (marked `isFinal: true` in the lifecycle definition), a `LIFECYCLE_FINAL_STATE` warning appears in `payload.warnings` — this is non-fatal and the transition succeeds. The record is written; the warning is informational.
+
+The transition is validated against the lifecycle definition: the target state must exist, the transition must be allowed from the current state, and the record must already have a `lifecycleState` (records without a lifecycle assignment cannot be transitioned). A rejected transition returns `"ok": false` with a `diagnostics` entry.
+
 ### Asserting a Relation
 
 ```bash
