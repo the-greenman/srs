@@ -1,4 +1,4 @@
-> **GitHub issue**: [the-greenman/srs#121](https://github.com/the-greenman/srs/issues/121)
+> **GitHub issue**: [the-greenman/srs#101](https://github.com/the-greenman/srs/issues/101)
 
 # RFC-017: Decision-log Attachments, Base-package Settings, Archive Determinism, and srsj-gzip Retirement
 
