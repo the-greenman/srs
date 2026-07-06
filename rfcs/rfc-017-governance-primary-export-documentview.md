@@ -2,7 +2,7 @@
 
 # RFC-017: Governance Package — Primary-Export DocumentView and Seed Root Container
 
-**Status**: In Progress (Revision 3)
+**Status**: Accepted (Revision 3)
 **Affects**: `packages/com.mudemocracy.governance/1.0.0/` (new `governance-document` DocumentView; seed `manifest.container` + `renderedPresentations`)
 **Author**: the-greenman (from epic the-greenman/srs#95, Phase 3 / Gate C, issue #97)
 **Date**: 2026-07-06
