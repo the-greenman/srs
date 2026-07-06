@@ -1,5 +1,16 @@
 {
+  "$schema": "https://srs.semanticops.com/schema/2.0/manifest.json",
+  "container": {
+    "containerId": "4e4c9501-2709-4220-bb47-486f6f78a937",
+    "identityInstanceId": "ad159754-2edd-4bf8-a70f-a29a617e5809",
+    "title": "Limoma"
+  },
   "containerIndex": [
+    {
+      "containerId": "4e4c9501-2709-4220-bb47-486f6f78a937",
+      "path": "containers/root-4e4c9501.json",
+      "title": "Limoma"
+    },
     {
       "containerId": "f7562aa3-98c7-44be-b4c5-5474df6441f2",
       "path": "containers/articles-f7562aa3.json",
@@ -16,6 +27,7 @@
       "title": "Decisions"
     }
   ],
+  "createdAt": "2026-05-25T00:00:00Z",
   "instanceIndex": [
     {
       "instanceId": "e4f2a891-3c7d-4b5e-9f12-8a6d0b1c2e3f",
@@ -127,5 +139,6 @@
   ],
   "namespace": "com.limoma",
   "repositoryId": "8ae058dc-b52d-4e52-8e7e-969018532a04",
-  "srsVersion": "2.0-draft"
+  "srsVersion": "2.0-draft",
+  "title": "Limoma"
 }
