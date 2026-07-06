@@ -337,12 +337,12 @@ Use `record transition` to move a record to a new lifecycle state. Inspect the l
 
 ```bash
 # Transition by target state name
-srs record transition --repo <path> <instanceId> <<'EOF'
+srs record transition --repo <path> --id <instanceId> <<'EOF'
 { "to": "<state-name>" }
 EOF
 
 # Or transition by named transition
-srs record transition --repo <path> <instanceId> <<'EOF'
+srs record transition --repo <path> --id <instanceId> <<'EOF'
 { "byTransition": "<transition-name>" }
 EOF
 ```
