@@ -507,6 +507,31 @@ The `payload.summary` gives counts at a glance:
 
 `payload.instances.modified[]` entries carry the full `fromValue` and `toValue` so the caller can inspect what changed without a second round-trip. `payload.manifest` reports whether the namespace, srsVersion, or declared extensions differ.
 
+### Upgrading Instance File Paths In-Place
+
+`repo upgrade` normalises all instance file paths in a file-backed repository to the canonical `{slug}-{id8}.json` convention (ADR-008). Repositories created before this convention was introduced may have arbitrary file names in `instanceIndex`; `repo upgrade` renames the files, updates the manifest, and removes the old files atomically. Only valid for `--store file` repos.
+
+```bash
+srs repo upgrade --repo <path>
+```
+
+The payload reports each rename performed and the count of already-canonical paths:
+
+```json
+{
+  "renames": [
+    {
+      "instanceId": "aabbccdd-...",
+      "fromPath": "records/tier-2/old-name.json",
+      "toPath":   "records/tier-2/com-example-widget-aabbccdd.json"
+    }
+  ],
+  "alreadyCanonicalCount": 12
+}
+```
+
+`repo upgrade` is idempotent — running it twice on the same repo returns `renames: []` on the second call. Follow with `srs repo validate` to confirm zero diagnostics.
+
 ---
 
 ## 6. Common Traps
