@@ -63,17 +63,15 @@ subkey is deprecated):
   "namespace": "com.mudemocracy.governance",
   "name": "governance",
   "version": "1.0.0",
-  "installedAt": "2026-01-01T00:00:00Z",
-  "contentHash": "sha256:<hex-digest-of-package-content-at-install>"
+  "installedAt": "2026-01-01T00:00:00Z"
 }
 ```
 
 This contract is defined in the repository-manifest schema
-(`docs/schema/2.0/manifest.json` → `$defs/UpstreamPackage`). It is a lightweight,
+(`docs/schema/2.0/manifest.json` → `$defs/UpstreamPackage`). It is a normative
 repository-level complement to the full per-definition `ext:import-tracking` model
-(RFC-003): it lets a consumer detect when a local package definition has drifted from the
-upstream snapshot recorded at install time (divergence detection via `contentHash`), enabling
-non-destructive package upgrades (the hook for #37).
+(RFC-003): it records provenance and enables divergence detection via reference-copy
+comparison, supporting non-destructive package upgrades (the hook for #37).
 
 > **Known limitation.** `srs repo copy` does not yet preserve the `upstreamPackage` stamp
 > across export/import — the engine has no import-tracking wiring (RFC-003 / #37). The build
