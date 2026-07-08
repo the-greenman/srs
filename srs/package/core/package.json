@@ -1,0 +1,17 @@
+{
+  "blueprints": [],
+  "documentViews": [],
+  "fields": [
+    "fields/statement-3b000001.json",
+    "fields/title-3b000002.json"
+  ],
+  "id": "3a000001-0000-4000-a000-000000000001",
+  "name": "core",
+  "namespace": "com.semanticops.core",
+  "relationTypes": [],
+  "types": [
+    "types/purpose-3c000001.json"
+  ],
+  "version": "1.0.0",
+  "views": []
+}

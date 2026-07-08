@@ -2834,6 +2834,10 @@
   "packageRefs": [
     {
       "mode": "local",
+      "path": "package/core"
+    },
+    {
+      "mode": "local",
       "path": "package/spec-authoring-core"
     },
     {
