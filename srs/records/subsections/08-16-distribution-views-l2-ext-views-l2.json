@@ -8,7 +8,7 @@
     },
     {
       "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": "**35.** Every `DocumentSection.renderViewId` in any `DocumentView` within `Package.documentViews[]` must reference a `View.id` that appears in `Package.views[]` or `Package.dependencyRefs`. If `mode === \"bundled\"`, that `View` must be present in `Package.views[]`."
+      "value": ""
     }
   ],
   "instanceId": "fe0810ac-5ba0-5a37-8ab2-a845ea96b3af",

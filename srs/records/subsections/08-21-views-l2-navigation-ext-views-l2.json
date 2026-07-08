@@ -8,7 +8,7 @@
     },
     {
       "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": "**44.** Every `NavigationLink.fromSectionId` and `NavigationLink.toSectionId` must reference a `sectionId` declared in the enclosing `DocumentView.sections[]`."
+      "value": ""
     }
   ],
   "instanceId": "38d8c953-8133-51c7-aa5f-05ef5d7bf44f",

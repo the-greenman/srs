@@ -8,7 +8,7 @@
     },
     {
       "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": "**37.** Every `TypeRef.typeId` referenced in `Protocol.targetType` or in any `ProtocolStage.outputType`, for each Protocol in `Package.protocols[]`, must appear in `Package.dependencyRefs` with `definitionType: \"type\"`. Every `FieldRef.fieldId` in any `ProtocolStage.contributesTo[]` must appear in `Package.dependencyRefs` with `definitionType: \"field\"`. If `mode === \"bundled\"`, those Types must be in `Package.types[]` and those Fields in `Package.fields[]`."
+      "value": ""
     }
   ],
   "instanceId": "f3e0eeb6-0844-5d87-ba39-222ba4454eea",

@@ -8,7 +8,7 @@
     },
     {
       "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": "**38.** `Field.contentFormat`, when present, is only meaningful when `valueType` is `\"string\"` or `\"text\"`. Implementations must ignore `contentFormat` on fields with any other `valueType`."
+      "value": ""
     }
   ],
   "instanceId": "31bc8a13-bcef-5c71-826d-2fd5528ce021",

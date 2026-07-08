@@ -8,7 +8,7 @@
     },
     {
       "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": "**4.** `Type.lifecycle.initialState` must reference a `name` that appears in `lifecycle.states[]` and where `isInitial === true`.\n\n**5.** Every `from` and `to` value in `lifecycle.transitions[]` must reference a `name` that appears in `lifecycle.states[]`.\n\n**6.** `Record.lifecycleState`, when present, must reference a `name` in the associated `Type.lifecycle.states[]`."
+      "value": ""
     }
   ],
   "instanceId": "078b205b-a636-5f5c-b120-f84a7bcd5463",

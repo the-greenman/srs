@@ -2914,25 +2914,6 @@ Conforming implementations must uphold the following invariants.
 
 ---
 
-
-### Extension Interactions
-
-**Content**: Cross-extension interactions are behavioural requirements that apply only when an implementation declares both named extensions.
-#### ext:federation × ext:repository
-
-**Content**: **Trigger**: an implementation declares both `ext:federation` and `ext:repository`.
-
-**Required behaviour**: the federation registry file and events file follow the same discovery and round-trip conventions as all other repository files.
-
-Specifically:
-
-- If `manifest.json` declares `federationPath`, the file at that path must be present in any archive of the repository; an archive missing a declared `federationPath` file is malformed
-- If `manifest.json` declares `federationEventsPath`, the file at that path must likewise be present in any archive
-- Default paths (`federation/registry.json`, `federation/events.json`) are used when the corresponding manifest fields are absent; implementations must not fail if these files are absent at the default paths
-- `FederationEventsFile.repositoryId` must match `RepositoryManifest.repositoryId` in the same repository; a mismatch is a conflict subject to the same conflict-surfacing requirement as any other identity mismatch (Invariant 54)
-
----
-
 #### ext:protocol × ext:addressability
 
 **Content**: **Trigger**: an implementation declares both `ext:protocol` and `ext:addressability`.
