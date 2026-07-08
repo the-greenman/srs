@@ -8,7 +8,7 @@
     },
     {
       "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": "**28.** `Record.typeId` and `Record.typeVersion` are the authoritative Type binding. `typeNamespace` and `typeName` are denormalised convenience fields. If they conflict with the resolved `Type`, the `typeId`/`typeVersion` identity takes precedence and the Record is considered invalid until corrected."
+      "value": ""
     }
   ],
   "instanceId": "4fe78bbb-e1e7-587a-a45e-69ada9a4b8c7",
