@@ -13,6 +13,7 @@
   "createdAt": "2026-05-25T00:00:00Z",
   "description": "Genuine options the group considered, including doing nothing.",
   "id": "636ce948-2110-57b4-a3ed-04354ec17843",
+  "instructions": "List the options that had genuine support, including doing nothing. Do not write “none” or leave it blank — if there was no competing proposal, the real alternative was leaving things as they are, so state what would have happened if you had not decided. Keep distinct options distinct rather than blending them into one.",
   "name": "alternatives_considered",
   "namespace": "governance",
   "valueType": "text",

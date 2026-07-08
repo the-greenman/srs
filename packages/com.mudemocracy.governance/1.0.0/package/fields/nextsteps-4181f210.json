@@ -12,6 +12,7 @@
   "createdAt": "2026-05-26T00:00:00Z",
   "description": "Actions or tasks that emerge from the decision.",
   "id": "4181f210-f4be-5587-950e-890eda2a5590",
+  "instructions": "List the concrete tasks that follow from the decision, with an owner and a deadline where they were named — who is taking this on, and by when. There may be none, and that is fine; only record follow-up that was actually agreed.",
   "name": "next_steps",
   "namespace": "governance",
   "valueType": "text",

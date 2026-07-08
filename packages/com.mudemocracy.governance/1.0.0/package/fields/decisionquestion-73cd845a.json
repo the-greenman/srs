@@ -12,6 +12,7 @@
   "createdAt": "2026-05-26T00:00:00Z",
   "description": "The single concrete question this decision answers.",
   "id": "73cd845a-3623-5bc6-8ade-42a7cd64740c",
+  "instructions": "State the single concrete question this decision settles — specific enough that the decision statement is a direct answer to it. Try phrasing it as “Should we…?” or “How should we…?”. If you find you are only deciding the next task, step up to the higher-level question underneath it.",
   "name": "decision_question",
   "namespace": "governance",
   "valueType": "string",

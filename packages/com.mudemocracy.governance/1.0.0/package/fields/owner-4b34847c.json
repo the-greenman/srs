@@ -12,6 +12,7 @@
   "createdAt": "2026-05-25T00:00:00Z",
   "description": "Person, role, group, or function responsible for stewardship of this record.",
   "id": "4b34847c-26d1-56be-bc10-844aeb704df7",
+  "instructions": "Name the person or role who holds this decision — who is accountable for carrying it out and who can revisit it. A role title (“Coordination lead”) is often more durable than a person’s name, since it survives people coming and going.",
   "name": "owner",
   "namespace": "governance",
   "valueType": "string",

@@ -14,8 +14,8 @@
       "dependsOn": [],
       "name": "Background",
       "order": 1,
-      "purpose": "Establishes the history, constraints, and trigger event that make this decision matter — the scene before the problem itself is named.",
-      "question": "What is the history or circumstance that makes this decision necessary?",
+      "purpose": "Sets the scene: the history, prior agreements, and any limits the group is working within (budget, law, deadlines) that explain the environment it is in now — before the problem itself is named.",
+      "question": "What happened before this — the history or circumstances that make this decision necessary?",
       "stageId": "5e15928e-23b4-4057-a7a4-650d3a8ac0db"
     },
     {
@@ -29,8 +29,8 @@
       ],
       "name": "Friction",
       "order": 2,
-      "purpose": "Names the specific pain, conflict, or gap that is forcing a decision right now — the concrete thing that cannot be left unresolved.",
-      "question": "What is the specific problem, tension, or gap that makes this decision necessary today?",
+      "purpose": "Surfaces the specific pain, conflict, or gap forcing a decision now: the difference between where the group is and where it wants to be, and what happens if nothing is done.",
+      "question": "What is the problem we need to fix — the specific tension or gap that makes this decision necessary today?",
       "stageId": "611a1a55-a804-4d7f-9e6c-59b0d347d448"
     },
     {
@@ -44,8 +44,8 @@
       ],
       "name": "Decision question",
       "order": 3,
-      "purpose": "Narrows the discussion to one concrete choice point — the single question the decision statement will directly answer.",
-      "question": "What is the single concrete question this decision settles?",
+      "purpose": "Narrows the discussion to one clear, concrete question that forces a real choice — specific enough to be answered by the decision statement, and pitched at the real decision rather than just the next task.",
+      "question": "What exactly are we deciding — the single concrete choice this settles?",
       "stageId": "c5b159ef-e997-42ac-beef-70c1940a6755"
     },
     {
@@ -59,8 +59,8 @@
       ],
       "name": "Alternatives",
       "order": 4,
-      "purpose": "Records the genuine options the group weighed before settling on a direction — including doing nothing — to show the decision was a real choice, not a foregone conclusion.",
-      "question": "What options did the group genuinely consider, including the status quo?",
+      "purpose": "Records the genuine options the group weighed — including leaving things as they are — so the decision reads as a real choice rather than a foregone conclusion.",
+      "question": "What were our other choices, including doing nothing?",
       "stageId": "413d4b43-6fec-41d0-8867-a1949a3b58f8"
     },
     {
@@ -74,8 +74,8 @@
       ],
       "name": "Key requirements",
       "order": 5,
-      "purpose": "Captures the judging criteria, trade-offs acknowledged, and any recorded disagreement that shaped how the alternatives were evaluated.",
-      "question": "What standards, constraints, and trade-offs guided the evaluation of options?",
+      "purpose": "Captures the standards used to judge the options — the non-negotiables, how the choice sits against the group’s values, and what is being given up — along with any trade-offs and disagreement that shaped the evaluation.",
+      "question": "What matters most to us here — the standards and trade-offs we are judging against?",
       "stageId": "8e46b286-ef7d-4c1f-ac5d-45fba6f30dcc"
     },
     {
@@ -90,8 +90,8 @@
       ],
       "name": "Verdict",
       "order": 6,
-      "purpose": "Records the settled commitment — what the group agreed to do — in one concise, active-voice sentence.",
-      "question": "What did the group agree to do?",
+      "purpose": "Records the settled commitment in one short, active-voice sentence stating what the group will do, so the outcome is unmistakable.",
+      "question": "What is the decision — in one sentence?",
       "stageId": "4f3e5d2e-2236-46bf-b92a-b3f8fda44af1"
     },
     {
@@ -105,8 +105,8 @@
       ],
       "name": "Why",
       "order": 7,
-      "purpose": "Explains the deciding factor — why this option was chosen over the alternatives. Captures the outcome logic, not the deliberation process.",
-      "question": "Why did the group choose this option over the alternatives?",
+      "purpose": "Explains the reason for the choice: the deciding factor that made this option preferable, framed so someone who was not in the room understands the logic rather than the debate.",
+      "question": "Why does this option win — what was the deciding factor?",
       "stageId": "ae9bbedc-ea0e-4611-b3c9-445c954424c0"
     },
     {
@@ -120,8 +120,8 @@
       ],
       "name": "Review triggers",
       "order": 8,
-      "purpose": "Names the condition or event that should trigger a review of this decision — tied to the underlying reasoning so the review moment is meaningful.",
-      "question": "Under what conditions or at what event should this decision be revisited?",
+      "purpose": "Names the signs that the decision may no longer be working — the conditions or events that should trigger a review, tied to the underlying reasoning so the review moment is meaningful.",
+      "question": "When should we look at this again — what conditions would tell us it is not working?",
       "stageId": "d7451c29-44f5-43c2-92c2-dc2f0d3697fa"
     },
     {
@@ -135,8 +135,8 @@
       ],
       "name": "Next steps",
       "order": 9,
-      "purpose": "Lists concrete follow-up actions that emerge from the decision, with named owners and timing where stated.",
-      "question": "What concrete actions follow from this decision, and who owns them?",
+      "purpose": "Lists the concrete tasks that emerge from the decision, with named owners and timing where stated. There may be none.",
+      "question": "What is still left to do, and who owns it?",
       "stageId": "adb176b6-cc16-4ee9-b791-8dde3a6c18c4"
     }
   ],
