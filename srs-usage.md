@@ -235,7 +235,9 @@ container resolve-view <containerId> →
                        "columns": [...], "excludeLifecycleStates": [...], "diagnostics": [...] } }
 ```
 
-`excludeLifecycleStates` is populated only when the governing `DocumentView` section is a `type-query` declaring `excludeLifecycleStates` (else `[]`). A client renders the **default-hidden** list by passing those states to `find --exclude-lifecycle-state`, and a **show-all** toggle simply drops them. Clients consume `excludeLifecycleStates` from `resolve-view` — they do not re-derive it from the DocumentView source. (See S12/S14 in `srs-rust/docs/dogfooding.md`.)
+Each entry in `members` (and `root` when present) carries `{ "instanceId", "tier", "displayLabel", "isVisibleByDefault", "record" }`. `isVisibleByDefault` is `false` when the member's `lifecycleState` is in `excludeLifecycleStates`, and `true` otherwise (including when `lifecycleState` is absent). A web client uses this field to implement a "show all" toggle without re-querying the repository.
+
+`excludeLifecycleStates` is populated only when the governing `DocumentView` section is a `type-query` declaring `excludeLifecycleStates` (else `[]`). A client renders the **default-hidden** list by passing those states to `find --exclude-lifecycle-state`, and a **show-all** toggle simply drops them. Clients consume `excludeLifecycleStates` and `isVisibleByDefault` from `resolve-view` — they do not re-derive either from the DocumentView source. (See S14 in `srs-rust/docs/dogfooding.md`.)
 
 ---
 
