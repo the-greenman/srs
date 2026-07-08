@@ -12,6 +12,7 @@
   "createdAt": "2026-05-25T00:00:00Z",
   "description": "Short label for this record.",
   "id": "d7e82557-9045-5e92-a494-d99112bbec4a",
+  "instructions": "Give the decision a short, scannable label — a few words naming the topic, not a full sentence. Write it as the subject of the decision (e.g. “Meeting frequency for pilot”), not as “We will…”. It is what people see first in a list, so make it recognisable at a glance.",
   "name": "title",
   "namespace": "governance",
   "valueType": "string",

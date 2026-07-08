@@ -12,6 +12,7 @@
   "createdAt": "2026-05-25T00:00:00Z",
   "description": "The settled commitment in one active-voice sentence.",
   "id": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
+  "instructions": "Write the settled commitment as one clear sentence in the active voice — start with “We will…” or “We have decided to…” so the outcome is unmistakable. Capture what was agreed, not the discussion around it, and make it specific enough to act on: name the who, what, and when where they were agreed.",
   "name": "decision_statement",
   "namespace": "governance",
   "valueType": "text",

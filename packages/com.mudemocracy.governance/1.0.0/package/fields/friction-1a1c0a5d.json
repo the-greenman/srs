@@ -13,6 +13,7 @@
   "createdAt": "2026-05-26T00:00:00Z",
   "description": "The specific pain, conflict, or gap that makes a decision necessary now.",
   "id": "1a1c0a5d-a1df-5d03-95f2-32af73bb71da",
+  "instructions": "Name the specific tension, conflict, or gap that makes a decision necessary now — the concrete pain, not a wish. A good test: if you do nothing, what happens next? Describe the gap between where you are and where you want to be. Do not describe what you want to do about it yet — that comes later.",
   "name": "friction",
   "namespace": "governance",
   "valueType": "text",
