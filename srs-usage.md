@@ -500,6 +500,48 @@ srs repo validate --repo <path> --pretty
 
 Check `payload.diagnostics` — a non-empty array means something is broken. Zero exit code does not mean zero errors; diagnostics are in the payload, not the exit code.
 
+### Managing Declared Extensions
+
+The manifest `declaredExtensions` array records which SRS extensions a repository uses. Three commands manage it:
+
+```bash
+# List currently declared extensions
+srs repo extensions list --repo <path> --pretty
+
+# Declare that this repo uses an extension
+srs repo extensions enable --repo <path> --extension ext:lifecycle
+
+# Remove a declaration
+srs repo extensions disable --repo <path> --extension ext:lifecycle
+```
+
+### Checking Extension Conformance
+
+`repo extensions conformance` compares three sets and reports mismatches:
+
+- `declared` — what the manifest says is used (`manifest.extra.declaredExtensions`)
+- `supported` — what this build of the engine actively implements
+- `declaredButUnsupported` — declared but not implemented (may cause silent no-ops)
+- `usedButUndeclared` — detected in repo content but not declared (a documentation gap)
+
+```bash
+srs repo extensions conformance --repo <path> --pretty
+```
+
+Detection is content-based:
+
+| Extension | Detected when |
+|---|---|
+| `ext:lifecycle` | Any Tier-2 record has a `lifecycleState` field |
+| `ext:relations` | The relations collection is non-empty |
+| `ext:type-inheritance` | Any package type declares `extendsTypeId` |
+| `ext:field-groups` | Any package type declares `fieldGroups` |
+| `ext:addressability` | Any `.revisions.json` sidecar file exists |
+| `ext:repository` | Not detected (structural; always available) |
+| `ext:discovery` | Not detected (structural; always available) |
+
+A healthy repo should report empty `declaredButUnsupported` and empty `usedButUndeclared`. Run this command after importing a package or enabling a new extension to confirm the manifest is in sync with the repo content.
+
 ---
 
 ## 5. Repository Portability
