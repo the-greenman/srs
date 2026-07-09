@@ -65,7 +65,7 @@ srs type get --repo <path> <typeId> --pretty
 srs field list --repo <path> --pretty
 ```
 
-`srs record list` returns each record as `{ instanceId, displayLabel, record }`. `displayLabel` is the core-resolved human label (priority `title` → `name` → `label`, else the record's type name) — the **same** label `srs tree` shows. Render `displayLabel` directly for headings and list rows; do not re-derive a title from `record.fieldValues`.
+`srs record list` returns each record as `{ instanceId, displayLabel, record }`. `displayLabel` is the core-resolved human label — the **same** label `srs tree`, `srs find`, `srs repo navigation`, and `srs container resolve-view` show. Priority (RFC-020): the record's Type's effective `identityFieldId` (own or inherited via `ext:type-inheritance`), when set on a field with a non-empty value; otherwise a field named `title` → `name` → `label`; otherwise the record's type name. Render `displayLabel` directly for headings and list rows; do not re-derive a title from `record.fieldValues`.
 
 Do not guess field IDs from filenames. Always resolve them from `srs type get` or `srs field list`. Field IDs are UUIDs — `fieldId` is the authoritative key, not `name`.
 
