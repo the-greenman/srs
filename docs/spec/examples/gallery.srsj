@@ -1,6 +1,35 @@
 {
   "srsj": "1",
   "manifest": {
+    "$schema": "https://srs.semanticops.com/schema/2.0/manifest.json",
+    "container": {
+      "containerId": "4e4c9501-2709-4220-bb47-486f6f78a937",
+      "identityInstanceId": "ad159754-2edd-4bf8-a70f-a29a617e5809",
+      "title": "Limoma"
+    },
+    "containerIndex": [
+      {
+        "containerId": "4e4c9501-2709-4220-bb47-486f6f78a937",
+        "path": "containers/root-4e4c9501.json",
+        "title": "Limoma"
+      },
+      {
+        "containerId": "f7562aa3-98c7-44be-b4c5-5474df6441f2",
+        "path": "containers/articles-f7562aa3.json",
+        "title": "Articles"
+      },
+      {
+        "containerId": "b30db206-e9a7-4588-a9aa-53451aacd243",
+        "path": "containers/roles-b30db206.json",
+        "title": "Roles"
+      },
+      {
+        "containerId": "138e2fac-6a8a-4a06-9511-5aefd99ceae9",
+        "path": "containers/decisions-138e2fac.json",
+        "title": "Decisions"
+      }
+    ],
+    "createdAt": "2026-07-09T19:30:57.276438029+00:00",
     "instanceIndex": [
       {
         "instanceId": "e4f2a891-3c7d-4b5e-9f12-8a6d0b1c2e3f",
@@ -93,11 +122,27 @@
         "instanceId": "bf64442b-1e2b-4597-95e7-a665439c7f6f",
         "path": "records/tier-2/decision-log-bf64442b.json",
         "tier": 2
+      },
+      {
+        "instanceId": "2fba1783-f3f2-42a6-8d67-d39601e27241",
+        "path": "records/tier-2/decision-2fba1783.json",
+        "tier": 2
+      },
+      {
+        "instanceId": "38501856-26a5-4227-a877-eada79ce591a",
+        "path": "records/tier-2/decision-38501856.json",
+        "tier": 2
+      },
+      {
+        "instanceId": "2235c7d8-3f25-4774-bf2c-408e499bd8a6",
+        "path": "records/tier-2/decision-2235c7d8.json",
+        "tier": 2
       }
     ],
     "namespace": "com.limoma",
     "repositoryId": "8ae058dc-b52d-4e52-8e7e-969018532a04",
-    "srsVersion": "2.0-draft"
+    "srsVersion": "2.0-draft",
+    "title": "Limoma"
   },
   "data": {
     "containers/138e2fac-6a8a-4a06-9511-5aefd99ceae9.json": {
@@ -105,6 +150,9 @@
       "containerType": "decision_log",
       "createdAt": "2026-05-31T00:00:00Z",
       "memberInstanceIds": [
+        "2235c7d8-3f25-4774-bf2c-408e499bd8a6",
+        "2fba1783-f3f2-42a6-8d67-d39601e27241",
+        "38501856-26a5-4227-a877-eada79ce591a",
         "3be7b057-9167-42a4-b0db-2a8b30666cef",
         "4a989562-4a9d-4c86-a365-91bf14d55f06",
         "9054911c-5285-4c3e-8198-4b9650169001",
@@ -117,6 +165,18 @@
         "bf64442b-1e2b-4597-95e7-a665439c7f6f"
       ],
       "title": "Decision Log"
+    },
+    "containers/4e4c9501-2709-4220-bb47-486f6f78a937.json": {
+      "containerId": "4e4c9501-2709-4220-bb47-486f6f78a937",
+      "memberInstanceIds": [
+        "ad159754-2edd-4bf8-a70f-a29a617e5809",
+        "5bbf9209-1dc9-44b2-b0a3-f2192db5a879",
+        "bf64442b-1e2b-4597-95e7-a665439c7f6f"
+      ],
+      "rootInstanceIds": [
+        "ad159754-2edd-4bf8-a70f-a29a617e5809"
+      ],
+      "title": "Limoma"
     },
     "containers/b30db206-e9a7-4588-a9aa-53451aacd243.json": {
       "containerId": "b30db206-e9a7-4588-a9aa-53451aacd243",
@@ -151,6 +211,10 @@
     },
     "manifest.json": {
       "containerIndex": [
+        {
+          "containerId": "4e4c9501-2709-4220-bb47-486f6f78a937",
+          "title": "Limoma"
+        },
         {
           "containerId": "f7562aa3-98c7-44be-b4c5-5474df6441f2",
           "title": "Articles"
@@ -300,8 +364,16 @@
           "renderViewId": "faebd240-83c4-4bc8-a383-8335f841a234",
           "sectionId": "decisions",
           "source": {
-            "containerId": "138e2fac-6a8a-4a06-9511-5aefd99ceae9",
-            "type": "container-subset"
+            "containerIds": [
+              "138e2fac-6a8a-4a06-9511-5aefd99ceae9"
+            ],
+            "containerScope": "explicit",
+            "excludeLifecycleStates": [
+              "superseded",
+              "closed"
+            ],
+            "semanticObjectType": "governance/decision",
+            "type": "type-query"
           },
           "title": "Decision Log",
           "titleFieldId": "d7e82557-9045-5e92-a494-d99112bbec4a"
@@ -1291,6 +1363,66 @@
       "typeVersion": 1,
       "updatedAt": "2026-06-08T21:05:17.669351506+00:00"
     },
+    "records/tier-2/decision-2235c7d8.json": {
+      "createdAt": "2026-06-28T21:50:00.602193713+00:00",
+      "fieldValues": [
+        {
+          "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
+          "value": "Approve 2026 Q1 budget"
+        },
+        {
+          "fieldId": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
+          "value": "Approve the Q1 operating budget as circulated."
+        }
+      ],
+      "instanceId": "2235c7d8-3f25-4774-bf2c-408e499bd8a6",
+      "lifecycleState": "closed",
+      "typeId": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
+      "typeName": "decision",
+      "typeNamespace": "governance",
+      "typeVersion": 1,
+      "updatedAt": "2026-06-28T21:50:00.625191537+00:00"
+    },
+    "records/tier-2/decision-2fba1783.json": {
+      "createdAt": "2026-06-28T21:50:00.555546787+00:00",
+      "fieldValues": [
+        {
+          "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
+          "value": "Trial async standups"
+        },
+        {
+          "fieldId": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
+          "value": "Adopt async written standups for one month, then review."
+        }
+      ],
+      "instanceId": "2fba1783-f3f2-42a6-8d67-d39601e27241",
+      "lifecycleState": "draft",
+      "typeId": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
+      "typeName": "decision",
+      "typeNamespace": "governance",
+      "typeVersion": 1,
+      "updatedAt": "2026-06-28T21:50:00.555554186+00:00"
+    },
+    "records/tier-2/decision-38501856.json": {
+      "createdAt": "2026-06-28T21:50:00.570223896+00:00",
+      "fieldValues": [
+        {
+          "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
+          "value": "Original branding palette"
+        },
+        {
+          "fieldId": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
+          "value": "Use the teal/orange palette for all materials."
+        }
+      ],
+      "instanceId": "38501856-26a5-4227-a877-eada79ce591a",
+      "lifecycleState": "superseded",
+      "typeId": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
+      "typeName": "decision",
+      "typeNamespace": "governance",
+      "typeVersion": 1,
+      "updatedAt": "2026-06-28T21:50:00.595579137+00:00"
+    },
     "records/tier-2/decision-3be7b057.json": {
       "createdAt": "2026-05-31T14:55:35.210869640+00:00",
       "fieldValues": [
@@ -1658,6 +1790,13 @@
     "relations/relations-collection.json": {
       "$schema": "https://srs.semanticops.com/schema/2.0/relations-collection.json",
       "relations": [
+        {
+          "createdAt": "2026-05-25T00:00:00Z",
+          "relationId": "0d58b710-526e-416f-971a-585176d2acb2",
+          "relationType": "precedes",
+          "sourceInstanceId": "5bbf9209-1dc9-44b2-b0a3-f2192db5a879",
+          "targetInstanceId": "bf64442b-1e2b-4597-95e7-a665439c7f6f"
+        },
         {
           "createdAt": "2026-05-31T00:00:00Z",
           "relationId": "33bafd90-6748-47dd-a302-3c06f22fbe05",

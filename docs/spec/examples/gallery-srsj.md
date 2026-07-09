@@ -16,22 +16,46 @@ To regenerate after changes to `gallery-project-v2/`:
 
 ## Contents
 
-17 instances:
+20 instances, plus the RFC-013 root container:
 
 - 6 Articles (constitutional layer: A-001 through A-006)
 - 3 Roles (authority boundaries: Building Authority, Curatorial Lead, Clerk)
-- 7 Decisions (settled commitments from the founding meeting)
+- 10 Decisions + 1 Decision Log (settled commitments from the founding meeting,
+  migrated to the type-query decision log shape)
 - 1 Note (initial brain dump, Tier 0)
 
-The 16 governance Records (Articles, Roles, Decisions) carry a `lifecycleState` of
+`manifest.container` (RFC-013) is wired to the root container (`4e4c9501...`), whose
+identity record is Article A-001. Sub-containers exist for Articles, Roles, and the
+Decision Log.
+
+The governance Records (Articles, Roles, Decisions) carry a `lifecycleState` of
 `ratified`, bound to the shared `governance/governance_lifecycle` Lifecycle via each
 Type's `lifecycleRef` (RFC-006). See `gallery-project-v2/migration-rfc006-lifecycle.md`.
 
-## Known limitation — `.srsj` lifecycle portability
+`.srsj` lifecycle portability (package-level `Lifecycle`/`Vocabulary` definitions not
+carried by the JsonStore backend) was fixed in srs-rust#115 — this snapshot now
+validates clean (0 errors), matching the source repo.
 
-The source file-store repo (`gallery-project-v2/`) validates cleanly (0 diagnostics).
-The `.srsj` projection currently fails three V7 diagnostics because the JsonStore
-backend does not yet carry package-level `Lifecycle` (or `Vocabulary`) definitions, so
-`lifecycleRef` cannot resolve in the snapshot. Tracked in the-greenman/srs-rust#115.
-Once that lands, regenerating this snapshot will validate clean again. Validate the
-**source** repo (`gallery-project-v2/`) for a definitive result in the meantime.
+`srs repo copy` previously dropped `manifest.container`/`containerIndex` entirely on
+copy (fixed alongside this regen — srs-rust `fix/rfc013-container-copy-loss`): the
+target repo's placeholder root container (keyed off `repositoryId`) silently survived,
+breaking `repo navigation`/`srs-gov` with `container not found: <repositoryId>` even
+though `repo validate` reported clean. `srs repo navigation --repo gallery.srsj` now
+resolves the real root container.
+
+Regenerating with a container-resolution-capable build also surfaces a new warning
+that was previously masked because validation short-circuited on the unresolvable
+container: RFC-018 I-81 — the root container's `identityInstanceId` (Article A-001)
+resolves to type `governance/article`, but RFC-018 expects `com.semanticops.core/purpose`.
+Warning severity only (0 errors); left as-is pending a decision on whether this fixture
+should carry a dedicated purpose record instead of reusing Article A-001.
+
+## Known limitation — navigation with a member-root sub-container
+
+srs-rust#460 (open): `repository_navigation()` drops `sectionContainerId` for any
+sub-container whose `rootInstanceIds` entry is also present in its own
+`memberInstanceIds` — true here for the Articles and Roles containers (each one's root
+record is one of its own members). Consumers that call `repository_navigation()`
+directly (e.g. srs-web's `GovernanceShell`) will see an empty sidebar for those
+sections until #460 lands. `repo validate` and `repo copy` are unaffected — this is a
+navigation-service-only issue.
