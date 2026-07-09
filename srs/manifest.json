@@ -2833,6 +2833,21 @@
         "concern:audit"
       ],
       "tier": 2
+    },
+    {
+      "instanceId": "9d686444-89d9-4a30-a9c3-b08bd31b62ca",
+      "path": "records/invariants/invariant-085.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "890d7d54-81f6-4001-bf31-30b156844431",
+      "path": "records/invariants/invariant-086.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "818d636c-8347-46a1-a9a2-c99e2ee90d21",
+      "path": "records/invariants/invariant-087.json",
+      "tier": 2
     }
   ],
   "meta": {
@@ -2847,6 +2862,10 @@
   },
   "namespace": "com.semanticops.srs",
   "packageRefs": [
+    {
+      "mode": "local",
+      "path": "package/core"
+    },
     {
       "mode": "local",
       "path": "package/spec-authoring-core"
