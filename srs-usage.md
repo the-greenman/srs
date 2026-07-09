@@ -182,6 +182,13 @@ The payload is `{ "payload": { "schema": { ... }, "diagnostics": [] } }`. Non-fa
 (unresolvable type references, unparseable cardinality) appear in `payload.diagnostics` rather
 than causing a command failure.
 
+Each field property carries vendor keys: `x-srs-order`, `x-srs-field-id`, `x-srs-widget`
+(e.g. `"textarea"` for Text fields), `x-srs-ai-guidance` (structured `aiGuidance`, when not a
+plain string), `x-srs-description` (the field's own `description`, when non-empty), and
+`x-srs-instructions` (the field's `instructions`, when authored) — the last two let an editor
+show help text without colliding with `title` (the display label) or `description` (already
+occupied by string `aiGuidance`).
+
 ### Protocol Discovery
 
 Protocols are package definitions — JSON files under `package/protocols/`, registered in `package.json → protocols[]`, parallel to blueprints. They are not instance Records and do not appear in `srs record list` output. The `protocol list` entries use **short field names** (`namespace`, `name`, `version`); the full Protocol JSON returned by `get`, `export`, `import`, and `update` uses **prefixed field names** (`protocolNamespace`, `protocolName`, `protocolVersion`). Do not confuse the two shapes when piping commands.
