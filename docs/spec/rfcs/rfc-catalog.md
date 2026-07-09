@@ -2,6 +2,686 @@
 
 ## RFCs
 
+**Title**: RFC-002: ext:themes-l1 — Visual Theming for Document Views
+**RFC Number**: 002
+**Status**: accepted
+**Content**: **Affects**: defines new extension `ext:themes-l1`; `ext:views-l2` (`DocumentView.themeRef` defined in RFC-001 Change D)  
+**Applied with**: RFC-001 — co-application required; `ThemeReference` is defined in RFC-001 Change D  
+**Author**: Peter Brownell  
+**Date**: 2026-05-27  
+
+---
+
+## Revision history
+
+| Rev | Date | Summary |
+|---|---|---|
+| 1 | 2026-05-27 | Initial draft |
+| 2 | 2026-05-27 | Remove `ThemeReference` definition — moved to RFC-001 Change D; RFC-001 and RFC-002 are co-applied |
+| 3 | 2026-05-27 | Add `recordWrapperOverrides` and `sectionWrapperOverrides` to `ElementTemplates`; add `cssClassFields` to `Theme`; add normative CSS class injection section and class-naming convention |
+| 4 | 2026-05-27 | Add `"theme"` to `Reference.definitionType` and `ImportRecord.definitionType` base-spec enums; extend bundled-resolution rule to cover `themeVariants[]`; resolve fieldRow/L1-View open question with explicit composition rule |
+| 5 | 2026-05-29 | Make `Theme.targets` required (min 1 entry) — close open question 2; remove `{{heading-N}}` from element template variables (keep in `coverPage` only) — themes wrap structural content, not re-emit headings; add enforcement timing to Rule [T-7]; add note on `"pdf"`/`"docx"` as not-yet-portable pending RFC-001 follow-on |
+
+---
+
+## Abstract
+
+SRS `DocumentView` defines structural projection (what records go in the document, in what order, at what heading depth) but says nothing about visual presentation — brand identity, typography, stylesheets, cover pages, or asset references. This RFC defines `ext:themes-l1`, a new extension that attaches a `Theme` to a `DocumentView`. A `Theme` specifies assets, element templates, and stylesheets without touching the semantic structure. Implementations that do not support `ext:themes-l1` ignore the attachment and produce structurally correct but unstyled output.
+
+---
+
+## Motivation
+
+Three concerns exist in document rendering, and they need to stay in separate layers so each can evolve independently:
+
+| Layer | Controlled by | Concern |
+|---|---|---|
+| Structure | `ext:views-l2` `DocumentView` | What records, what sections, what order, what heading depth |
+| Element presentation | `ext:views-l1` `View` + `ExportConfig` | How a single record's fields are laid out and labelled |
+| Visual brand | `ext:themes-l1` `Theme` (this RFC) | Assets, stylesheets, cover page, typography, element wrapping |
+
+Without the third layer, branded output requires either embedding styling concerns inside `DocumentView` (mixing layers) or leaving them entirely outside the spec (no interoperability). `ext:themes-l1` gives implementations a defined, ignorable hook for visual identity that keeps structure and style cleanly separated.
+
+---
+
+## Design Principles
+
+**Themes are non-destructive.** A Theme wraps or decorates auto-rendered content; it does not replace or reorder it. Structural decisions remain in `DocumentView` and L1 Views.
+
+**Graceful degradation is required.** An implementation without `ext:themes-l1` support must produce valid structural output. `themeRef` on `DocumentView` is always optional.
+
+**Assets are named, not inline.** Images, fonts, and other assets are declared by name in the `Theme` and referenced in templates as `{{asset:name}}`. This decouples the template string from the asset's physical location, which may change across environments (local path vs CDN URL vs base64 inline).
+
+**Templates wrap; they do not replace.** Element templates receive the auto-rendered content of an element as `{{content}}` and wrap it in format-appropriate markup. They cannot suppress fields or reorder records — that would violate the structure layer.
+
+---
+
+## Proposed Changes
+
+### New extension: `ext:themes-l1`
+
+Add `ext:themes-l1` to the conformance extension table. Dependency: `ext:views-l2`.
+
+---
+
+### New type: `AssetDeclaration`
+
+```typescript
+{
+  type: "image" | "font" | "stylesheet" | "data"
+  mode: "local" | "remote" | "inline"
+
+  path?: string      // local path; required when mode === "local"
+  url?: string       // remote URL; required when mode === "remote"
+  data?: string      // when mode === "inline": base64 for binary types, raw text for stylesheet/data
+  mimeType?: string  // e.g. "image/png", "font/woff2", "text/css"
+}
+```
+
+Assets are declared in `Theme.assets` as a named dictionary. The name is the key used in template variables: an asset named `"logo"` is referenced in any template as `{{asset:logo}}`.
+
+---
+
+### New type: `PageTemplates`
+
+Templates for page-level chrome. Applicable to paginated output formats (`"pdf"`, `"docx"`). Ignored for non-paginated formats (`"html"`, `"markdown"`).
+
+```typescript
+{
+  coverPage?: string
+  // Rendered as the first page of the document.
+  // Available variables: all DocumentView preamble variables + {{asset:*}}
+
+  pageHeader?: string
+  // Repeated at the top of each page.
+  // Additional variable: {{page-number}}
+
+  pageFooter?: string
+  // Repeated at the bottom of each page.
+  // Additional variable: {{page-number}}
+}
+```
+
+---
+
+### New type: `ElementTemplates`
+
+Templates that wrap auto-rendered content at each structural level. Each template receives the auto-rendered content of that element as `{{content}}` and returns the full output for that element.
+
+```typescript
+{
+  documentWrapper?: string
+  // Wraps the entire rendered document body (after the cover page, if any).
+  // Available: {{content}}, {{container-title}}, {{date}}, {{asset:*}}
+
+  sectionWrapper?: string
+  // Wraps each section (heading + all records within it).
+  // Available: {{content}}, {{section-title}}, {{section-id}}, {{asset:*}}
+
+  sectionWrapperOverrides?: Array<{
+    sectionId: string   // matches DocumentSection.sectionId; case-sensitive
+    template: string    // same variables as sectionWrapper
+  }>
+  // Per-section overrides. When a section's sectionId matches, this template is used
+  // instead of sectionWrapper. When no match, sectionWrapper (if present) applies.
+  // sectionId values must be unique within sectionWrapperOverrides.
+
+  recordWrapper?: string
+  // Wraps each record (record heading + all field rows).
+  // Available: {{content}}, {{record-heading}}, {{type-namespace}}, {{type-name}}, {{asset:*}}
+  // {{record-heading}} is the value of titleFieldId for this section, or empty string.
+
+  recordWrapperOverrides?: Array<{
+    typeId: UUID      // matches Record.typeId; targets all records of this type
+    template: string  // same variables as recordWrapper
+  }>
+  // Per-type overrides. When a record's typeId matches, this template is used instead of
+  // recordWrapper. When no match, recordWrapper (if present) applies.
+  // typeId values must be unique within recordWrapperOverrides.
+
+  fieldRow?: string
+  // Wraps each field label + value pair.
+  // Available: {{field-label}}, {{field-value}}, {{field-name}}, {{content}}
+  // {{content}} is the default rendering of the label+value pair.
+}
+```
+
+Override precedence: a specific override (`sectionWrapperOverrides`, `recordWrapperOverrides`) always takes precedence over the corresponding universal template (`sectionWrapper`, `recordWrapper`). When neither an override nor a universal template is set, the element is rendered without wrapping.
+
+**`fieldRow` and L1 View composition**: When `DocumentSection.renderViewId` is set, `fieldRow` applies to each field row that the L1 View renders — after the L1 View's `ExportConfig.fieldOrder` has reordered fields and `ExportConfig.omitEmptyFields` has filtered absent ones. The L1 View determines which fields appear and in what order; `fieldRow` wraps each surviving field row independently. `fieldRow` does not apply to content emitted by `ExportConfig.preamble` (preamble content is L1 View chrome, not a field row).
+
+Element templates apply after the structural rendering baseline (RFC-001 Change A) and after any L1 View rendering. They receive finished content and wrap it — they do not re-render.
+
+---
+
+### New type: `StylesheetDeclaration`
+
+```typescript
+{
+  mode: "inline" | "local" | "remote"
+  content?: string   // inline CSS; required when mode === "inline"
+  path?: string      // local path; required when mode === "local"
+  url?: string       // remote URL; required when mode === "remote"
+}
+```
+
+---
+
+### New type: `TypographyHints`
+
+Informative declarations. Implementations map these to format-appropriate directives (CSS variables, document style settings, etc.). No normative rendering behaviour is derived from these values.
+
+```typescript
+{
+  baseFont?: string        // e.g. "Inter", "Georgia"
+  headingFont?: string
+  monoFont?: string
+  baseFontSize?: string    // e.g. "16px", "1rem", "11pt"
+  lineHeight?: string      // e.g. "1.5", "24px"
+}
+```
+
+---
+
+### New type: `Theme`
+
+```typescript
+{
+  id: UUID
+  namespace: string
+  name: string
+  version: integer   // min: 1
+
+  description: string
+  // What this theme is for; intended output format and audience.
+
+  targets: string[]   // required; min 1 entry
+  // Output formats this theme is designed for.
+  // Must reference portable format values from RFC-001 Change C ("markdown", "adoc", "html", "text").
+  // Note: "pdf" and "docx" are anticipated but not yet portable values — see Open Question 4.
+  // A Theme may target multiple formats; implementations apply it only when
+  // DocumentView.format is in this list. A Theme with an empty targets array is a validation error.
+
+  assets?: { [assetName: string]: AssetDeclaration }
+  // Named asset declarations. Names must be unique within the Theme.
+
+  cssClassFields?: UUID[]
+  // fieldIds whose values are injected as CSS classes on record wrapper elements.
+  // For each fieldId listed, if the record contains that field with a string, text,
+  // or select value, the class srs-field-{fieldName}-{normalisedValue} is added.
+  // Only applies to "html" and "pdf" output. Ignored for other formats.
+  // Only string, text, and select valueTypes are supported; other types are silently skipped.
+
+  pageTemplates?: PageTemplates
+  elementTemplates?: ElementTemplates
+  stylesheet?: StylesheetDeclaration
+
+  typography?: TypographyHints
+
+  tags?: string[]
+  createdAt: ISO8601
+  lineage?: Lineage
+  provenance?: Provenance
+}
+```
+
+---
+
+### `ThemeReference` (defined in RFC-001 Change D)
+
+`ThemeReference` is the type used by `DocumentView.themeRef`. It is defined in RFC-001 Change D and is not repeated here. `themeId` within a `ThemeReference` references `Theme.id` as defined in this RFC.
+
+---
+
+### `DocumentView.themeRef` (defined in RFC-001 Change D)
+
+`DocumentView.themeRef?: ThemeReference` is added to `DocumentView` by RFC-001 Change D. RFC-002 defines the `Theme` that is the target of the reference. The graceful-degradation rule (ignore when `ext:themes-l1` is not declared) is also in RFC-001 Rule [N+7].
+
+---
+
+### Modification to `Package`
+
+Add:
+
+```typescript
+themes?: Theme[]   // ext:themes-l1; omit if not in use
+```
+
+**Bundled-package theme resolution**: When `Package.mode === "bundled"`, every `ThemeReference` with `mode === "bundled"` that appears in `Package.documentViews[]` — whether in `DocumentView.themeRef` or in any entry of `DocumentView.themeVariants[]` — MUST be resolved to a `Theme` that appears in `Package.themes[]`. A `themeId` referenced in either location that is absent from `themes[]` is a validation error.
+
+#### Modifications to base-spec enums
+
+`Reference.definitionType` (base spec §5.2) gains a new portable value:
+
+```
+"field" | "type" | "view" | "schema" | "protocol" | "theme"
+```
+
+`ImportRecord.definitionType` (`ext:import-tracking`) gains the same addition, making theme definitions trackable in consumer registries.
+
+`dependencyRefs` may include `Reference` entries with `definitionType: "theme"` to declare theme dependencies for `standalone` packages.
+
+---
+
+## CSS class injection
+
+For `"html"` and `"pdf"` output formats, implementations MUST add semantic CSS classes to rendered wrapper elements. These classes enable the theme stylesheet to target any element by its structural position, type, or field state without requiring separate templates for each combination.
+
+#### Class name normalisation
+
+All identifier components (type namespace, type name, field name, field value, section ID) MUST be normalised before use in a CSS class name using the following rule:
+
+1. Convert to lowercase
+2. Replace underscores, spaces, and dots with hyphens
+3. Remove any character that is not alphanumeric or a hyphen
+4. Collapse consecutive hyphens to a single hyphen
+5. Trim leading and trailing hyphens
+
+Examples: `governance` → `governance`; `article_text` → `article-text`; `Phase 1 scope` → `phase-1-scope`; `active` → `active`.
+
+#### Classes applied per element
+
+| Element | Classes always applied | Classes conditionally applied |
+|---|---|---|
+| Document wrapper | `srs-document` | — |
+| Section wrapper | `srs-section`, `srs-section-{sectionId}` | — |
+| Record wrapper | `srs-record`, `srs-type-{typeNamespace}-{typeName}` | `srs-field-{fieldName}-{normalisedValue}` for each `cssClassFields` entry that has a matching non-empty string, text, or select value |
+| Field row | `srs-field`, `srs-fieldname-{fieldName}` | — |
+
+`{sectionId}`, `{typeNamespace}`, `{typeName}`, `{fieldName}`, and `{normalisedValue}` are all normalised per the rule above.
+
+#### Example
+
+A Decision record with `status: "superseded"` in a section with `sectionId: "decision-log"`, where `status` fieldId is listed in `Theme.cssClassFields`:
+
+- Section wrapper classes: `srs-section srs-section-decision-log`
+- Record wrapper classes: `srs-record srs-type-governance-decision srs-field-status-superseded`
+
+A stylesheet can then target `.srs-field-status-superseded { opacity: 0.5; }` without any template changes.
+
+**Namespaced type example**: A record with `typeNamespace: "com.semanticops.srs"` and `typeName: "meta.section"` produces the class `srs-type-com-semanticops-srs-meta-section` (dots normalised to hyphens per step 2 of the normalisation rule).
+
+---
+
+## Template variable reference
+
+The following variables are available in template strings across the extension. Variables not applicable to a given template context MUST resolve to an empty string (not an error).
+
+| Variable | Available in | Resolves to |
+|---|---|---|
+| `{{container-title}}` | All | Container title from manifest |
+| `{{container-id}}` | All | Container UUID |
+| `{{date}}` | All | Render date (ISO 8601 date, not datetime) |
+| `{{heading-1}}` | `coverPage` only | Heading prefix at level `1 + depthOffset` (RFC-001 Change B). Not available in element wrapper templates — structural headings are already inside `{{content}}` and must not be re-emitted. |
+| `{{asset:name}}` | All | Resolved asset reference — URL, data URI, or path depending on context |
+| `{{section-title}}` | `sectionWrapper`, `sectionWrapperOverrides` | Value of `DocumentSection.title` |
+| `{{section-id}}` | `sectionWrapper`, `sectionWrapperOverrides` | Value of `DocumentSection.sectionId` |
+| `{{record-heading}}` | `recordWrapper`, `recordWrapperOverrides` | Value of `titleFieldId` field for the current record, or empty string |
+| `{{type-namespace}}` | `recordWrapper`, `recordWrapperOverrides` | `Record.typeNamespace` |
+| `{{type-name}}` | `recordWrapper`, `recordWrapperOverrides` | `Record.typeName` |
+| `{{field-label}}` | `fieldRow` | Display label for the current field |
+| `{{field-value}}` | `fieldRow` | Rendered value of the current field |
+| `{{field-name}}` | `fieldRow` | `Field.name` for the current field |
+| `{{content}}` | All element templates | Auto-rendered content that this template wraps |
+| `{{page-number}}` | `pageHeader`, `pageFooter` | Current page number (paginated formats only) |
+
+`{{asset:name}}` resolution:
+- In `"html"` output: resolves to a data URI for `mode === "inline"`, an `href`/`src` URL for `mode === "remote"`, or a relative path for `mode === "local"`.
+- In `"pdf"` output: implementations embed the asset directly.
+- In `"markdown"` output: resolves to the URL or path string only (no embedding).
+
+---
+
+## Conformance rules
+
+**Rule [T-1]** (ext:themes-l1 — graceful degradation): Implementations that do not declare `ext:themes-l1` MUST ignore `DocumentView.themeRef` and MUST NOT produce a validation error when it is present.
+
+**Rule [T-1b]** (ext:themes-l1 — `targets` required): `Theme.targets` MUST contain at least one entry. A `Theme` with an absent or empty `targets` array is a validation error. This is enforced at package validation time.
+
+**Rule [T-2]** (ext:themes-l1 — targets matching): Implementations MUST apply a Theme only when `DocumentView.format` appears in `Theme.targets`. When the format does not match, the Theme MUST be ignored and structural output produced without it.
+
+**Rule [T-3]** (ext:themes-l1 — templates wrap, do not replace): Element templates receive auto-rendered content via `{{content}}`. Implementations MUST render the structural content first and pass it to the template; they MUST NOT suppress or reorder content through template evaluation.
+
+**Rule [T-4]** (ext:themes-l1 — asset name uniqueness): Asset names within a single `Theme.assets` dictionary MUST be unique. Asset names are case-sensitive.
+
+**Rule [T-5]** (ext:themes-l1 — bundled theme resolution): When `ThemeReference.mode === "bundled"`, the referenced `themeId` MUST appear in `Package.themes[]` if `Package.mode === "bundled"`. A missing theme in a bundled package is a validation error.
+
+**Rule [T-6]** (ext:themes-l1 — unknown variables): Template variables that are not defined in this spec and not recognised by the implementation MUST be passed through as literal text. They MUST NOT cause a rendering error.
+
+**Rule [T-6b]** (ext:themes-l1 — `{{heading-N}}` scope): `{{heading-1}}` is available only in `PageTemplates.coverPage`, resolving via `DocumentView.depthOffset` per RFC-001 Change B. In all element wrapper templates (`documentWrapper`, `sectionWrapper`, `sectionWrapperOverrides`, `recordWrapper`, `recordWrapperOverrides`, `fieldRow`, `pageHeader`, `pageFooter`), `{{heading-1}}`, `{{heading-2}}`, and `{{heading-3}}` MUST resolve to the empty string. Structural headings are delivered inside `{{content}}` and MUST NOT be re-emitted by wrapper templates.
+
+**Rule [T-7]** (ext:themes-l1 — override precedence): When `recordWrapperOverrides` contains an entry whose `typeId` matches the current record's `typeId`, that entry's template MUST be used instead of `recordWrapper`. When `sectionWrapperOverrides` contains an entry whose `sectionId` matches the current section's `sectionId`, that entry's template MUST be used instead of `sectionWrapper`. Override arrays MUST NOT contain duplicate `typeId` or `sectionId` values respectively. Duplicate detection is enforced at package validation time.
+
+**Rule [T-8]** (ext:themes-l1 — CSS class injection): For `"html"` and `"pdf"` output formats, implementations MUST apply the CSS classes defined in the class injection table to each rendered wrapper element. Class name components MUST be normalised using the five-step normalisation rule.
+
+**Rule [T-9]** (ext:themes-l1 — `cssClassFields` scope): Only fields with `valueType` of `"string"`, `"text"`, or `"select"` listed in `Theme.cssClassFields` generate CSS classes. Fields with other value types are silently skipped. Fields listed in `cssClassFields` that are absent or empty on a given record generate no class for that record.
+
+**Rule [T-10]** (ext:themes-l1 — `fieldRow` scope with L1 View): When `DocumentSection.renderViewId` is set, `fieldRow` MUST be applied to each field row that survives the L1 View's `ExportConfig.omitEmptyFields` filtering and is ordered by `ExportConfig.fieldOrder`. `fieldRow` MUST NOT wrap content emitted by `ExportConfig.preamble`.
+
+**Rule [T-11]** (ext:themes-l1 — base-spec enum extension): Implementations that support `ext:themes-l1` MUST accept `"theme"` as a valid value for `Reference.definitionType` and (when `ext:import-tracking` is also declared) for `ImportRecord.definitionType`. A `definitionType: "theme"` value in a received document MUST NOT cause a validation error.
+
+---
+
+## Rationale
+
+### Why templates wrap rather than replace
+
+Allowing templates to replace auto-rendered content would silently break the structural layer — fields could disappear, record order could change, and the semantic guarantees of `DocumentView` would be undermined. A theme is a presentation concern; a `DocumentView` is a semantic concern. The wrapping model enforces that separation mechanically.
+
+### Why assets are named rather than referenced inline
+
+Template strings are stored as JSON and distributed across systems. Embedding binary data or absolute paths directly in template strings makes them non-portable. A named asset dictionary allows the same template to work in a local development environment (local path), a CI pipeline (relative path), or a CDN-hosted production environment (URL) by changing the asset declaration, not the template.
+
+### Why `TypographyHints` is informative rather than normative
+
+Typography maps to very different constructs across output formats: CSS variables in HTML, document style settings in DOCX, font embedding in PDF. Requiring a specific rendering outcome for a typography hint would over-constrain implementations. The hints provide enough signal for a human-readable output without mandating a particular rendering mechanism.
+
+### Why `recordWrapperOverrides` rather than a single universal `recordWrapper` with conditionals
+
+A conditional template language inside a string (e.g. `{{#if type == "article"}}...{{/if}}`) would require specifying a template expression syntax, escaping rules, and evaluation semantics — a substantial addition for what is effectively a lookup table. An override array is a lookup table with no expression language, which is simpler to specify, simpler to implement, and simpler to audit. The CSS class injection mechanism handles value-driven styling (e.g. status-based) without any conditional template logic.
+
+### Why CSS class injection rather than exposing field values as template variables
+
+Making every field value available as a template variable would require either a fixed variable namespace per type (coupling the template language to specific field names) or a dynamic namespace that implementations must query per record. CSS classes solve the value-targeting problem cleanly for HTML/PDF output: the theme stylesheet handles the conditional styling, the implementation just emits normalised identifiers, and no template logic is needed.
+
+### Why `cssClassFields` is opt-in rather than injecting all field values
+
+Field values may be long prose, private content, or binary-encoded data. Blindly normalising all field values as CSS class components could produce unwieldy or unsafe class names. The `cssClassFields` array lets the theme author explicitly select the fields that are meaningful for styling purposes — typically status, lifecycle, and categorisation fields.
+
+### Why `ext:themes-l1` rather than inline styling on `DocumentView`
+
+If visual properties were placed directly on `DocumentView`, the same `DocumentView` would need to be duplicated for each branded variant — one for the governance team, one for external publication, one for print. With `themeRef`, the structural projection is authored once and visual themes are swapped without touching the record definitions.
+
+---
+
+## Alternatives considered
+
+**CSS class hints on `DocumentSection` and element templates**  
+Adding `cssClass?: string` fields to structural objects would let a renderer apply CSS without full template wrapping. Rejected: it only addresses HTML/CSS output and leaks format-specific concerns into the structural layer.
+
+**A Theme registry separate from Package**  
+Themes could be published to a separate registry (analogous to an npm registry) and referenced by name. Rejected for this RFC as premature: the Package distribution model (bundled/standalone) is already established and sufficient. A Theme registry could be a follow-on.
+
+**Single `pageAndElementTemplates` flat object**  
+Merging `PageTemplates` and `ElementTemplates` into one object simplifies the schema slightly but conflates page-level chrome (which only applies to paginated formats) with element-level wrapping (which applies to all formats). Keeping them separate makes the format-applicability rule easier to express and implement.
+
+---
+
+## Open questions
+
+1. **`fieldRow` and L1 View composition** — resolved in Rev 4. `fieldRow` wraps each field row that the L1 View renders (after `omitEmptyFields` and `fieldOrder` are applied). It does not wrap preamble content. See Rule [T-10].
+
+2. ~~**Should `Theme.targets` be required or optional?**~~ Resolved in Rev 5. `targets` is required with min 1 entry (Rule [T-1b]). Silent application to unintended formats is worse than the minor authoring cost of declaring targets explicitly.
+
+3. **Versioning and theme inheritance**: should a Theme be able to extend another Theme (analogous to `ext:type-inheritance`)? Useful for brand variants (light/dark, language editions) but adds meaningful schema complexity. Deferred to a follow-on RFC if the use case proves common.
+
+4. **`pdf` and `docx` in the format vocabulary**: RFC-001 Change C defined portable format values but excluded `"pdf"` and `"docx"` because they require richer rendering infrastructure. With `ext:themes-l1` now providing asset and stylesheet mechanisms, these formats become more tractable. A follow-on to RFC-001 should add them with appropriate conformance caveats. Until then, `"pdf"` and `"docx"` are implementation-defined values in `Theme.targets` — implementations that support them may use them, but they are not portable and MUST NOT cause a validation error in implementations that do not recognise them (per Rule [T-2], an unrecognised format simply means the theme is not applied).
+
+
+**Title**: RFC-004: Language-Neutral Schema Notation for Spec Records
+**RFC Number**: 004
+**Status**: draft
+**Proposal Artifact Path**: rfcs/rfc-004/
+**Content**: **Status**: Draft (Revision 2)
+**Affects**: Distribution Group - Package; new extension `ext:schema-notation`; `spec-authoring-core`; JSON Schema projection package
+**Author**: SemanticOps contributors
+**Date**: 2026-05-27
+
+---
+
+## Revision history
+
+| Rev | Date | Summary |
+|---|---|---|
+| 1 | 2026-05-27 | Initial draft: schema-member records with compact type-ref strings |
+| 2 | 2026-05-27 | Reframed schema notation as a semantic, target-neutral schema IR with JSON Schema as the first exact projection |
+
+---
+
+## Abstract
+
+SRS and TSS specifications contain formal data shapes: Field, Type, Record, Session, Event, Participant, Stream, and other implementation-facing entities. Today many of those shapes are written as TypeScript-style prose blocks embedded in text fields. That makes them readable, but not semantic SRS data.
+
+This RFC defines `ext:schema-notation`: a semantic, target-neutral schema definition model for spec authoring. The extension represents logical schemas, members, type expressions, constraints, defaults, examples, deprecation state, and semantic purpose as SRS records and field values. JSON Schema, TypeScript, protobuf, Rust structs, and other formats are projections from that shared semantic source; none of those target syntaxes is the source of truth.
+
+Revision 2 deliberately moves away from compact string `type-ref` expressions as the normative representation. Renderers may show compact strings for humans, but the normative source is structured `typeExpression` JSON.
+
+---
+
+## Motivation
+
+### Problem 1 - Schema prose is not SRS data
+
+TypeScript-style blocks in `content` fields are implementation-flavoured notation. SRS tools cannot reliably traverse them, cite individual members, validate them, or render them to other targets without ad-hoc parsing.
+
+### Problem 2 - Meaning must survive target projection
+
+A JSON Schema definition can validate JSON shape, but it cannot carry all the semantic intent needed by SRS authoring. Protobuf can express efficient wire contracts, but it requires target-specific concerns such as field numbers and `oneof` names. The source model must describe meaning first, then allow target packages to render appropriate forms.
+
+### Problem 3 - TSS needs the same source for multiple outputs
+
+TSS has data shapes such as `Session`, `Participant`, `Stream`, `Event`, and many event subtypes. A useful SRS-authored TSS spec should be able to render JSON Schema for validation and later render protobuf from as much of the same source as possible. That requires a portable semantic schema IR, not a JSON-Schema-only design.
+
+### Problem 4 - `ext:schema` is a different layer
+
+`ext:schema` describes runtime extraction and package structure: what records a package expects and how source material may be transformed into records. `ext:schema-notation` describes spec-level data shapes: the schemas that implementations should produce, consume, and validate. The two extensions are complementary and must not be conflated.
+
+---
+
+## Design Principles
+
+**Semantic first.** The extension describes meaning, not target form. Field numbers, JSON Schema keywords, TypeScript punctuation, and Rust derives are projection concerns.
+
+**Target-neutral core, target-specific packages.** The main extension defines portable schema meaning. Exact renderers live in projection packages such as `spec-authoring-json-schema` and a future `spec-authoring-protobuf`.
+
+**Structured type expressions.** Type meaning is represented as JSON data using explicit expression kinds. Compact strings are allowed as display conveniences only.
+
+**Addressable members.** Schema definitions and schema members are SRS records with stable identity, so invariants, examples, migration notes, and conformance rules can cite them directly.
+
+**Migration-friendly.** Existing prose blocks may coexist while structured schema records are introduced. Structured schema records become authoritative when a migration is complete.
+
+---
+
+## Proposed Changes
+
+### Change A - Add `json` as a core Field value type
+
+`Field.valueType` gains `json` for structured JSON values whose meaning is supplied by the field definition and validating schema. This is required for recursive or nested semantic values such as schema type expressions and portable constraint objects.
+
+`json` is not a target renderer. It is a storage primitive for structured semantic values inside SRS records.
+
+### Change B - New extension: `ext:schema-notation`
+
+Add the following extension entry:
+
+| Extension | Identifier | Depends on | Notes |
+|---|---|---|---|
+| Schema Notation | `ext:schema-notation` | none | Semantic schema IR for spec authoring and target projections |
+
+### Change C - New type: `schema-definition`
+
+`com.semanticops.spec/schema-definition` represents one logical data shape. It is not a JSON Schema object, TypeScript interface, or protobuf message, though projection packages may render it to those forms.
+
+Core fields:
+
+| Field | Meaning |
+|---|---|
+| `title` | Human-readable title |
+| `namespace` | Logical schema namespace |
+| `schema-name` | Stable machine-readable schema name |
+| `version-label` | Version of the schema definition |
+| `description` | Short description |
+| `semantic-purpose` | Domain meaning of this schema |
+| `status` | Draft, active, deprecated, etc. |
+| `content` | Optional prose guidance |
+| `examples` | Non-normative examples |
+| `deprecated` | Whether the schema remains only for compatibility |
+| `notes` | Editorial notes |
+
+Members are attached by `schema-member-sequence` relations.
+
+### Change D - New type: `schema-member`
+
+`com.semanticops.spec/schema-member` represents one addressable member of a schema definition.
+
+Core fields:
+
+| Field | Meaning |
+|---|---|
+| `member-name` | Stable member/property name |
+| `type-expression` | Structured semantic type expression JSON |
+| `required` | Whether the member must be present |
+| `nullable` | Whether explicit `null` is allowed |
+| `constraints` | Portable target-neutral constraints |
+| `schema-default-value` | Concrete JSON default value for this schema member |
+| `examples` | Non-normative examples |
+| `deprecated` | Whether the member remains only for compatibility |
+| `semantic-purpose` | Domain meaning of this member |
+| `notes` | Editorial notes |
+
+`required` and `nullable` are separate. Optional means the member may be absent. Nullable means the member may be present with the explicit value `null`.
+
+### Change E - Structured `typeExpression` JSON
+
+The normative source for member type meaning is a structured JSON value held in the `type-expression` field. It has a `kind` property and kind-specific properties.
+
+Supported expression kinds:
+
+| Kind | Meaning | Required portable properties |
+|---|---|---|
+| `scalar` | Portable primitive value | `name` |
+| `ref` | Reference to a named schema/type | `namespace`, `name`; optional `version` |
+| `array` | Ordered list of values | `items` |
+| `map` | Key/value object map | `values`; optional `keys` |
+| `object` | Inline anonymous object shape | `members` |
+| `union` | One of several alternatives | `variants` |
+| `literal` | One exact value | `value` |
+| `enum` | One of a finite set of values | `values` |
+| `unknown` | Preserved but unconstrained value | none |
+
+Portable scalar names:
+
+`string`, `text`, `integer`, `number`, `boolean`, `date`, `date-time`, `uuid`, `uri`, `duration-ms`, `json`.
+
+Inline `object` expressions are allowed only for genuinely local anonymous shapes. Reusable shapes must be separate `schema-definition` records referenced with `ref`.
+
+`union` must not be used to smuggle optionality. Nullability is represented by the member-level `nullable` field.
+
+### Change F - Portable constraints
+
+The generic IR defines only constraints that can reasonably project across multiple targets:
+
+- required and nullable state
+- numeric minimum and maximum
+- string minimum length, maximum length, and pattern
+- array minimum items, maximum items, and uniqueness
+- enum and literal values
+- scalar format
+- map key and value shape
+- cardinality where the target supports it
+
+Cross-field validation, conditional validation, and protocol-level invariants are out of scope for Revision 2. They remain prose or invariant records until a later RFC defines a semantic rule notation.
+
+### Change G - Relation semantics
+
+Add these relation types to the recommended relation vocabulary:
+
+| Relation type | Source | Target | Meaning |
+|---|---|---|---|
+| `schema-member-sequence` | `schema-definition` | ordered list of `schema-member` records | Declares the ordered members of a schema |
+| `defines-schema-for` | `schema-definition` | `type-definition` or other spec record | Declares that the schema formalizes the target record/type shape |
+
+When an existing `type-definition` has a related `schema-definition`, renderers that support `ext:schema-notation` should use the structured schema definition rather than any prose TypeScript block.
+
+### Change H - JSON Schema projection package
+
+Add `com.semanticops.spec/spec-authoring-json-schema` as a target projection package. It defines exact JSON Schema rendering rules and metadata; it does not own the semantic schema source.
+
+JSON Schema `$id` values follow:
+
+`https://srs.semanticops.com/schema/domain/<namespace>/<schemaName>/<version>.json`
+
+Projection rules:
+
+- A `schema-definition` renders as a JSON Schema object with `$id`, `title`, `type: "object"`, `properties`, and `required`.
+- A `schema-member` renders as one property.
+- `required: true` adds the member to the parent `required` array.
+- `nullable: true` adds `null` to the property shape but does not make it optional.
+- `ref` renders to `$ref`.
+- `union` renders to `oneOf`.
+- `literal` renders to `const`.
+- `enum` renders to `enum`.
+- `array` renders to `type: "array"` with `items`.
+- Portable constraints render to matching JSON Schema keywords where available.
+
+### Change I - Protobuf compatibility
+
+The semantic IR should be designed so protobuf can be rendered from the same source where portable constructs are used. However, protobuf-specific details are target metadata, not core schema meaning.
+
+The following are reserved for a future `spec-authoring-protobuf` package:
+
+- protobuf package names
+- message and field naming overrides
+- field numbers
+- reserved ranges
+- `oneof` naming
+- map encoding details
+- target-specific scalar mappings
+
+RFC-004 Revision 2 intentionally does not add protobuf fields to `spec-authoring-core`.
+
+---
+
+## Proposal Artifacts
+
+Proposal artifacts live under `rfcs/rfc-004/`. They are review material only and must not be loaded into active `package/` or `schemas/` directories until RFC-004 is accepted and implemented. The proposed `schema-default-value` field intentionally has a distinct identity from the active `default-value` field because concrete JSON schema-member defaults are not the same concept as prose documentation of ordinary field defaults.
+
+---
+
+## Migration Path
+
+Existing TypeScript prose blocks remain valid during migration. For a given spec entity:
+
+1. Create a `schema-definition` record for the logical shape.
+2. Create one `schema-member` record for each member.
+3. Link members to the schema with `schema-member-sequence`.
+4. Link the schema to the existing prose `type-definition` using `defines-schema-for`.
+5. Render JSON Schema from the structured schema definition and compare against any hand-authored schema.
+6. Once accepted, mark the prose TypeScript block as superseded or remove it from the type-definition content.
+
+TSS should be evaluated against this model before authoring all TSS schema records. The goal is to verify that `Session`, `Participant`, `Stream`, `Event`, event subtypes, merge records, and package records can be represented without making JSON Schema or protobuf the source of truth.
+
+---
+
+## Consequences
+
+### Benefits
+
+- Schema meaning is represented as SRS data rather than target syntax.
+- Individual schema members become addressable and citable.
+- JSON Schema can be rendered exactly from the semantic source.
+- Protobuf can later reuse the same source with target metadata layered separately.
+- TSS and SRS can share spec-authoring primitives without forcing TSS to become an SRS semantic object model.
+
+### Tradeoffs
+
+- Schema authoring produces more records than prose blocks.
+- Recursive or nested type expressions require `json` field values and schema-aware tooling.
+- Some validation concerns remain outside the generic IR until a future rule-notation RFC.
+- Projection packages must be maintained for exact target output.
+
+---
+
+## Open Questions
+
+1. Should `schema-definition` version use the existing `version-label` field long term, or should spec-authoring-core add a numeric schema version field?
+
+2. Should `type-expression` and `constraints` get dedicated JSON Schemas in the root `schemas/` directory, or should they remain specified textually until the first renderer is implemented?
+
+3. Should `defines-schema-for` point from schema to type-definition, or should the inverse relation also be recommended for easier traversal from prose type records?
+
+4. Which TSS shape should be migrated first as a proof case: `Session`, `Event`, or one narrow event subtype such as `MessageEvent`?
+
 **Title**: RFC-003: Definition Distribution and Repository Slices
 **RFC Number**: 003
 **Status**: draft
@@ -1020,686 +1700,6 @@ The baseline must be computable from the Type and Record alone. Ambient L1 Views
 2. ~~**`titleFieldId` in heterogeneous sections**~~: Resolved in Rev 9. Rule [N+1] is amended: when a record's type does not carry the designated `titleFieldId` field, the per-record heading is omitted silently — this is not a render failure. Rule [N+12] adds that `container-subset` sections order by `precedes` chain when no `ordering.fieldId` is declared.
 
 
-**Title**: RFC-002: ext:themes-l1 — Visual Theming for Document Views
-**RFC Number**: 002
-**Status**: accepted
-**Content**: **Affects**: defines new extension `ext:themes-l1`; `ext:views-l2` (`DocumentView.themeRef` defined in RFC-001 Change D)  
-**Applied with**: RFC-001 — co-application required; `ThemeReference` is defined in RFC-001 Change D  
-**Author**: Peter Brownell  
-**Date**: 2026-05-27  
-
----
-
-## Revision history
-
-| Rev | Date | Summary |
-|---|---|---|
-| 1 | 2026-05-27 | Initial draft |
-| 2 | 2026-05-27 | Remove `ThemeReference` definition — moved to RFC-001 Change D; RFC-001 and RFC-002 are co-applied |
-| 3 | 2026-05-27 | Add `recordWrapperOverrides` and `sectionWrapperOverrides` to `ElementTemplates`; add `cssClassFields` to `Theme`; add normative CSS class injection section and class-naming convention |
-| 4 | 2026-05-27 | Add `"theme"` to `Reference.definitionType` and `ImportRecord.definitionType` base-spec enums; extend bundled-resolution rule to cover `themeVariants[]`; resolve fieldRow/L1-View open question with explicit composition rule |
-| 5 | 2026-05-29 | Make `Theme.targets` required (min 1 entry) — close open question 2; remove `{{heading-N}}` from element template variables (keep in `coverPage` only) — themes wrap structural content, not re-emit headings; add enforcement timing to Rule [T-7]; add note on `"pdf"`/`"docx"` as not-yet-portable pending RFC-001 follow-on |
-
----
-
-## Abstract
-
-SRS `DocumentView` defines structural projection (what records go in the document, in what order, at what heading depth) but says nothing about visual presentation — brand identity, typography, stylesheets, cover pages, or asset references. This RFC defines `ext:themes-l1`, a new extension that attaches a `Theme` to a `DocumentView`. A `Theme` specifies assets, element templates, and stylesheets without touching the semantic structure. Implementations that do not support `ext:themes-l1` ignore the attachment and produce structurally correct but unstyled output.
-
----
-
-## Motivation
-
-Three concerns exist in document rendering, and they need to stay in separate layers so each can evolve independently:
-
-| Layer | Controlled by | Concern |
-|---|---|---|
-| Structure | `ext:views-l2` `DocumentView` | What records, what sections, what order, what heading depth |
-| Element presentation | `ext:views-l1` `View` + `ExportConfig` | How a single record's fields are laid out and labelled |
-| Visual brand | `ext:themes-l1` `Theme` (this RFC) | Assets, stylesheets, cover page, typography, element wrapping |
-
-Without the third layer, branded output requires either embedding styling concerns inside `DocumentView` (mixing layers) or leaving them entirely outside the spec (no interoperability). `ext:themes-l1` gives implementations a defined, ignorable hook for visual identity that keeps structure and style cleanly separated.
-
----
-
-## Design Principles
-
-**Themes are non-destructive.** A Theme wraps or decorates auto-rendered content; it does not replace or reorder it. Structural decisions remain in `DocumentView` and L1 Views.
-
-**Graceful degradation is required.** An implementation without `ext:themes-l1` support must produce valid structural output. `themeRef` on `DocumentView` is always optional.
-
-**Assets are named, not inline.** Images, fonts, and other assets are declared by name in the `Theme` and referenced in templates as `{{asset:name}}`. This decouples the template string from the asset's physical location, which may change across environments (local path vs CDN URL vs base64 inline).
-
-**Templates wrap; they do not replace.** Element templates receive the auto-rendered content of an element as `{{content}}` and wrap it in format-appropriate markup. They cannot suppress fields or reorder records — that would violate the structure layer.
-
----
-
-## Proposed Changes
-
-### New extension: `ext:themes-l1`
-
-Add `ext:themes-l1` to the conformance extension table. Dependency: `ext:views-l2`.
-
----
-
-### New type: `AssetDeclaration`
-
-```typescript
-{
-  type: "image" | "font" | "stylesheet" | "data"
-  mode: "local" | "remote" | "inline"
-
-  path?: string      // local path; required when mode === "local"
-  url?: string       // remote URL; required when mode === "remote"
-  data?: string      // when mode === "inline": base64 for binary types, raw text for stylesheet/data
-  mimeType?: string  // e.g. "image/png", "font/woff2", "text/css"
-}
-```
-
-Assets are declared in `Theme.assets` as a named dictionary. The name is the key used in template variables: an asset named `"logo"` is referenced in any template as `{{asset:logo}}`.
-
----
-
-### New type: `PageTemplates`
-
-Templates for page-level chrome. Applicable to paginated output formats (`"pdf"`, `"docx"`). Ignored for non-paginated formats (`"html"`, `"markdown"`).
-
-```typescript
-{
-  coverPage?: string
-  // Rendered as the first page of the document.
-  // Available variables: all DocumentView preamble variables + {{asset:*}}
-
-  pageHeader?: string
-  // Repeated at the top of each page.
-  // Additional variable: {{page-number}}
-
-  pageFooter?: string
-  // Repeated at the bottom of each page.
-  // Additional variable: {{page-number}}
-}
-```
-
----
-
-### New type: `ElementTemplates`
-
-Templates that wrap auto-rendered content at each structural level. Each template receives the auto-rendered content of that element as `{{content}}` and returns the full output for that element.
-
-```typescript
-{
-  documentWrapper?: string
-  // Wraps the entire rendered document body (after the cover page, if any).
-  // Available: {{content}}, {{container-title}}, {{date}}, {{asset:*}}
-
-  sectionWrapper?: string
-  // Wraps each section (heading + all records within it).
-  // Available: {{content}}, {{section-title}}, {{section-id}}, {{asset:*}}
-
-  sectionWrapperOverrides?: Array<{
-    sectionId: string   // matches DocumentSection.sectionId; case-sensitive
-    template: string    // same variables as sectionWrapper
-  }>
-  // Per-section overrides. When a section's sectionId matches, this template is used
-  // instead of sectionWrapper. When no match, sectionWrapper (if present) applies.
-  // sectionId values must be unique within sectionWrapperOverrides.
-
-  recordWrapper?: string
-  // Wraps each record (record heading + all field rows).
-  // Available: {{content}}, {{record-heading}}, {{type-namespace}}, {{type-name}}, {{asset:*}}
-  // {{record-heading}} is the value of titleFieldId for this section, or empty string.
-
-  recordWrapperOverrides?: Array<{
-    typeId: UUID      // matches Record.typeId; targets all records of this type
-    template: string  // same variables as recordWrapper
-  }>
-  // Per-type overrides. When a record's typeId matches, this template is used instead of
-  // recordWrapper. When no match, recordWrapper (if present) applies.
-  // typeId values must be unique within recordWrapperOverrides.
-
-  fieldRow?: string
-  // Wraps each field label + value pair.
-  // Available: {{field-label}}, {{field-value}}, {{field-name}}, {{content}}
-  // {{content}} is the default rendering of the label+value pair.
-}
-```
-
-Override precedence: a specific override (`sectionWrapperOverrides`, `recordWrapperOverrides`) always takes precedence over the corresponding universal template (`sectionWrapper`, `recordWrapper`). When neither an override nor a universal template is set, the element is rendered without wrapping.
-
-**`fieldRow` and L1 View composition**: When `DocumentSection.renderViewId` is set, `fieldRow` applies to each field row that the L1 View renders — after the L1 View's `ExportConfig.fieldOrder` has reordered fields and `ExportConfig.omitEmptyFields` has filtered absent ones. The L1 View determines which fields appear and in what order; `fieldRow` wraps each surviving field row independently. `fieldRow` does not apply to content emitted by `ExportConfig.preamble` (preamble content is L1 View chrome, not a field row).
-
-Element templates apply after the structural rendering baseline (RFC-001 Change A) and after any L1 View rendering. They receive finished content and wrap it — they do not re-render.
-
----
-
-### New type: `StylesheetDeclaration`
-
-```typescript
-{
-  mode: "inline" | "local" | "remote"
-  content?: string   // inline CSS; required when mode === "inline"
-  path?: string      // local path; required when mode === "local"
-  url?: string       // remote URL; required when mode === "remote"
-}
-```
-
----
-
-### New type: `TypographyHints`
-
-Informative declarations. Implementations map these to format-appropriate directives (CSS variables, document style settings, etc.). No normative rendering behaviour is derived from these values.
-
-```typescript
-{
-  baseFont?: string        // e.g. "Inter", "Georgia"
-  headingFont?: string
-  monoFont?: string
-  baseFontSize?: string    // e.g. "16px", "1rem", "11pt"
-  lineHeight?: string      // e.g. "1.5", "24px"
-}
-```
-
----
-
-### New type: `Theme`
-
-```typescript
-{
-  id: UUID
-  namespace: string
-  name: string
-  version: integer   // min: 1
-
-  description: string
-  // What this theme is for; intended output format and audience.
-
-  targets: string[]   // required; min 1 entry
-  // Output formats this theme is designed for.
-  // Must reference portable format values from RFC-001 Change C ("markdown", "adoc", "html", "text").
-  // Note: "pdf" and "docx" are anticipated but not yet portable values — see Open Question 4.
-  // A Theme may target multiple formats; implementations apply it only when
-  // DocumentView.format is in this list. A Theme with an empty targets array is a validation error.
-
-  assets?: { [assetName: string]: AssetDeclaration }
-  // Named asset declarations. Names must be unique within the Theme.
-
-  cssClassFields?: UUID[]
-  // fieldIds whose values are injected as CSS classes on record wrapper elements.
-  // For each fieldId listed, if the record contains that field with a string, text,
-  // or select value, the class srs-field-{fieldName}-{normalisedValue} is added.
-  // Only applies to "html" and "pdf" output. Ignored for other formats.
-  // Only string, text, and select valueTypes are supported; other types are silently skipped.
-
-  pageTemplates?: PageTemplates
-  elementTemplates?: ElementTemplates
-  stylesheet?: StylesheetDeclaration
-
-  typography?: TypographyHints
-
-  tags?: string[]
-  createdAt: ISO8601
-  lineage?: Lineage
-  provenance?: Provenance
-}
-```
-
----
-
-### `ThemeReference` (defined in RFC-001 Change D)
-
-`ThemeReference` is the type used by `DocumentView.themeRef`. It is defined in RFC-001 Change D and is not repeated here. `themeId` within a `ThemeReference` references `Theme.id` as defined in this RFC.
-
----
-
-### `DocumentView.themeRef` (defined in RFC-001 Change D)
-
-`DocumentView.themeRef?: ThemeReference` is added to `DocumentView` by RFC-001 Change D. RFC-002 defines the `Theme` that is the target of the reference. The graceful-degradation rule (ignore when `ext:themes-l1` is not declared) is also in RFC-001 Rule [N+7].
-
----
-
-### Modification to `Package`
-
-Add:
-
-```typescript
-themes?: Theme[]   // ext:themes-l1; omit if not in use
-```
-
-**Bundled-package theme resolution**: When `Package.mode === "bundled"`, every `ThemeReference` with `mode === "bundled"` that appears in `Package.documentViews[]` — whether in `DocumentView.themeRef` or in any entry of `DocumentView.themeVariants[]` — MUST be resolved to a `Theme` that appears in `Package.themes[]`. A `themeId` referenced in either location that is absent from `themes[]` is a validation error.
-
-#### Modifications to base-spec enums
-
-`Reference.definitionType` (base spec §5.2) gains a new portable value:
-
-```
-"field" | "type" | "view" | "schema" | "protocol" | "theme"
-```
-
-`ImportRecord.definitionType` (`ext:import-tracking`) gains the same addition, making theme definitions trackable in consumer registries.
-
-`dependencyRefs` may include `Reference` entries with `definitionType: "theme"` to declare theme dependencies for `standalone` packages.
-
----
-
-## CSS class injection
-
-For `"html"` and `"pdf"` output formats, implementations MUST add semantic CSS classes to rendered wrapper elements. These classes enable the theme stylesheet to target any element by its structural position, type, or field state without requiring separate templates for each combination.
-
-#### Class name normalisation
-
-All identifier components (type namespace, type name, field name, field value, section ID) MUST be normalised before use in a CSS class name using the following rule:
-
-1. Convert to lowercase
-2. Replace underscores, spaces, and dots with hyphens
-3. Remove any character that is not alphanumeric or a hyphen
-4. Collapse consecutive hyphens to a single hyphen
-5. Trim leading and trailing hyphens
-
-Examples: `governance` → `governance`; `article_text` → `article-text`; `Phase 1 scope` → `phase-1-scope`; `active` → `active`.
-
-#### Classes applied per element
-
-| Element | Classes always applied | Classes conditionally applied |
-|---|---|---|
-| Document wrapper | `srs-document` | — |
-| Section wrapper | `srs-section`, `srs-section-{sectionId}` | — |
-| Record wrapper | `srs-record`, `srs-type-{typeNamespace}-{typeName}` | `srs-field-{fieldName}-{normalisedValue}` for each `cssClassFields` entry that has a matching non-empty string, text, or select value |
-| Field row | `srs-field`, `srs-fieldname-{fieldName}` | — |
-
-`{sectionId}`, `{typeNamespace}`, `{typeName}`, `{fieldName}`, and `{normalisedValue}` are all normalised per the rule above.
-
-#### Example
-
-A Decision record with `status: "superseded"` in a section with `sectionId: "decision-log"`, where `status` fieldId is listed in `Theme.cssClassFields`:
-
-- Section wrapper classes: `srs-section srs-section-decision-log`
-- Record wrapper classes: `srs-record srs-type-governance-decision srs-field-status-superseded`
-
-A stylesheet can then target `.srs-field-status-superseded { opacity: 0.5; }` without any template changes.
-
-**Namespaced type example**: A record with `typeNamespace: "com.semanticops.srs"` and `typeName: "meta.section"` produces the class `srs-type-com-semanticops-srs-meta-section` (dots normalised to hyphens per step 2 of the normalisation rule).
-
----
-
-## Template variable reference
-
-The following variables are available in template strings across the extension. Variables not applicable to a given template context MUST resolve to an empty string (not an error).
-
-| Variable | Available in | Resolves to |
-|---|---|---|
-| `{{container-title}}` | All | Container title from manifest |
-| `{{container-id}}` | All | Container UUID |
-| `{{date}}` | All | Render date (ISO 8601 date, not datetime) |
-| `{{heading-1}}` | `coverPage` only | Heading prefix at level `1 + depthOffset` (RFC-001 Change B). Not available in element wrapper templates — structural headings are already inside `{{content}}` and must not be re-emitted. |
-| `{{asset:name}}` | All | Resolved asset reference — URL, data URI, or path depending on context |
-| `{{section-title}}` | `sectionWrapper`, `sectionWrapperOverrides` | Value of `DocumentSection.title` |
-| `{{section-id}}` | `sectionWrapper`, `sectionWrapperOverrides` | Value of `DocumentSection.sectionId` |
-| `{{record-heading}}` | `recordWrapper`, `recordWrapperOverrides` | Value of `titleFieldId` field for the current record, or empty string |
-| `{{type-namespace}}` | `recordWrapper`, `recordWrapperOverrides` | `Record.typeNamespace` |
-| `{{type-name}}` | `recordWrapper`, `recordWrapperOverrides` | `Record.typeName` |
-| `{{field-label}}` | `fieldRow` | Display label for the current field |
-| `{{field-value}}` | `fieldRow` | Rendered value of the current field |
-| `{{field-name}}` | `fieldRow` | `Field.name` for the current field |
-| `{{content}}` | All element templates | Auto-rendered content that this template wraps |
-| `{{page-number}}` | `pageHeader`, `pageFooter` | Current page number (paginated formats only) |
-
-`{{asset:name}}` resolution:
-- In `"html"` output: resolves to a data URI for `mode === "inline"`, an `href`/`src` URL for `mode === "remote"`, or a relative path for `mode === "local"`.
-- In `"pdf"` output: implementations embed the asset directly.
-- In `"markdown"` output: resolves to the URL or path string only (no embedding).
-
----
-
-## Conformance rules
-
-**Rule [T-1]** (ext:themes-l1 — graceful degradation): Implementations that do not declare `ext:themes-l1` MUST ignore `DocumentView.themeRef` and MUST NOT produce a validation error when it is present.
-
-**Rule [T-1b]** (ext:themes-l1 — `targets` required): `Theme.targets` MUST contain at least one entry. A `Theme` with an absent or empty `targets` array is a validation error. This is enforced at package validation time.
-
-**Rule [T-2]** (ext:themes-l1 — targets matching): Implementations MUST apply a Theme only when `DocumentView.format` appears in `Theme.targets`. When the format does not match, the Theme MUST be ignored and structural output produced without it.
-
-**Rule [T-3]** (ext:themes-l1 — templates wrap, do not replace): Element templates receive auto-rendered content via `{{content}}`. Implementations MUST render the structural content first and pass it to the template; they MUST NOT suppress or reorder content through template evaluation.
-
-**Rule [T-4]** (ext:themes-l1 — asset name uniqueness): Asset names within a single `Theme.assets` dictionary MUST be unique. Asset names are case-sensitive.
-
-**Rule [T-5]** (ext:themes-l1 — bundled theme resolution): When `ThemeReference.mode === "bundled"`, the referenced `themeId` MUST appear in `Package.themes[]` if `Package.mode === "bundled"`. A missing theme in a bundled package is a validation error.
-
-**Rule [T-6]** (ext:themes-l1 — unknown variables): Template variables that are not defined in this spec and not recognised by the implementation MUST be passed through as literal text. They MUST NOT cause a rendering error.
-
-**Rule [T-6b]** (ext:themes-l1 — `{{heading-N}}` scope): `{{heading-1}}` is available only in `PageTemplates.coverPage`, resolving via `DocumentView.depthOffset` per RFC-001 Change B. In all element wrapper templates (`documentWrapper`, `sectionWrapper`, `sectionWrapperOverrides`, `recordWrapper`, `recordWrapperOverrides`, `fieldRow`, `pageHeader`, `pageFooter`), `{{heading-1}}`, `{{heading-2}}`, and `{{heading-3}}` MUST resolve to the empty string. Structural headings are delivered inside `{{content}}` and MUST NOT be re-emitted by wrapper templates.
-
-**Rule [T-7]** (ext:themes-l1 — override precedence): When `recordWrapperOverrides` contains an entry whose `typeId` matches the current record's `typeId`, that entry's template MUST be used instead of `recordWrapper`. When `sectionWrapperOverrides` contains an entry whose `sectionId` matches the current section's `sectionId`, that entry's template MUST be used instead of `sectionWrapper`. Override arrays MUST NOT contain duplicate `typeId` or `sectionId` values respectively. Duplicate detection is enforced at package validation time.
-
-**Rule [T-8]** (ext:themes-l1 — CSS class injection): For `"html"` and `"pdf"` output formats, implementations MUST apply the CSS classes defined in the class injection table to each rendered wrapper element. Class name components MUST be normalised using the five-step normalisation rule.
-
-**Rule [T-9]** (ext:themes-l1 — `cssClassFields` scope): Only fields with `valueType` of `"string"`, `"text"`, or `"select"` listed in `Theme.cssClassFields` generate CSS classes. Fields with other value types are silently skipped. Fields listed in `cssClassFields` that are absent or empty on a given record generate no class for that record.
-
-**Rule [T-10]** (ext:themes-l1 — `fieldRow` scope with L1 View): When `DocumentSection.renderViewId` is set, `fieldRow` MUST be applied to each field row that survives the L1 View's `ExportConfig.omitEmptyFields` filtering and is ordered by `ExportConfig.fieldOrder`. `fieldRow` MUST NOT wrap content emitted by `ExportConfig.preamble`.
-
-**Rule [T-11]** (ext:themes-l1 — base-spec enum extension): Implementations that support `ext:themes-l1` MUST accept `"theme"` as a valid value for `Reference.definitionType` and (when `ext:import-tracking` is also declared) for `ImportRecord.definitionType`. A `definitionType: "theme"` value in a received document MUST NOT cause a validation error.
-
----
-
-## Rationale
-
-### Why templates wrap rather than replace
-
-Allowing templates to replace auto-rendered content would silently break the structural layer — fields could disappear, record order could change, and the semantic guarantees of `DocumentView` would be undermined. A theme is a presentation concern; a `DocumentView` is a semantic concern. The wrapping model enforces that separation mechanically.
-
-### Why assets are named rather than referenced inline
-
-Template strings are stored as JSON and distributed across systems. Embedding binary data or absolute paths directly in template strings makes them non-portable. A named asset dictionary allows the same template to work in a local development environment (local path), a CI pipeline (relative path), or a CDN-hosted production environment (URL) by changing the asset declaration, not the template.
-
-### Why `TypographyHints` is informative rather than normative
-
-Typography maps to very different constructs across output formats: CSS variables in HTML, document style settings in DOCX, font embedding in PDF. Requiring a specific rendering outcome for a typography hint would over-constrain implementations. The hints provide enough signal for a human-readable output without mandating a particular rendering mechanism.
-
-### Why `recordWrapperOverrides` rather than a single universal `recordWrapper` with conditionals
-
-A conditional template language inside a string (e.g. `{{#if type == "article"}}...{{/if}}`) would require specifying a template expression syntax, escaping rules, and evaluation semantics — a substantial addition for what is effectively a lookup table. An override array is a lookup table with no expression language, which is simpler to specify, simpler to implement, and simpler to audit. The CSS class injection mechanism handles value-driven styling (e.g. status-based) without any conditional template logic.
-
-### Why CSS class injection rather than exposing field values as template variables
-
-Making every field value available as a template variable would require either a fixed variable namespace per type (coupling the template language to specific field names) or a dynamic namespace that implementations must query per record. CSS classes solve the value-targeting problem cleanly for HTML/PDF output: the theme stylesheet handles the conditional styling, the implementation just emits normalised identifiers, and no template logic is needed.
-
-### Why `cssClassFields` is opt-in rather than injecting all field values
-
-Field values may be long prose, private content, or binary-encoded data. Blindly normalising all field values as CSS class components could produce unwieldy or unsafe class names. The `cssClassFields` array lets the theme author explicitly select the fields that are meaningful for styling purposes — typically status, lifecycle, and categorisation fields.
-
-### Why `ext:themes-l1` rather than inline styling on `DocumentView`
-
-If visual properties were placed directly on `DocumentView`, the same `DocumentView` would need to be duplicated for each branded variant — one for the governance team, one for external publication, one for print. With `themeRef`, the structural projection is authored once and visual themes are swapped without touching the record definitions.
-
----
-
-## Alternatives considered
-
-**CSS class hints on `DocumentSection` and element templates**  
-Adding `cssClass?: string` fields to structural objects would let a renderer apply CSS without full template wrapping. Rejected: it only addresses HTML/CSS output and leaks format-specific concerns into the structural layer.
-
-**A Theme registry separate from Package**  
-Themes could be published to a separate registry (analogous to an npm registry) and referenced by name. Rejected for this RFC as premature: the Package distribution model (bundled/standalone) is already established and sufficient. A Theme registry could be a follow-on.
-
-**Single `pageAndElementTemplates` flat object**  
-Merging `PageTemplates` and `ElementTemplates` into one object simplifies the schema slightly but conflates page-level chrome (which only applies to paginated formats) with element-level wrapping (which applies to all formats). Keeping them separate makes the format-applicability rule easier to express and implement.
-
----
-
-## Open questions
-
-1. **`fieldRow` and L1 View composition** — resolved in Rev 4. `fieldRow` wraps each field row that the L1 View renders (after `omitEmptyFields` and `fieldOrder` are applied). It does not wrap preamble content. See Rule [T-10].
-
-2. ~~**Should `Theme.targets` be required or optional?**~~ Resolved in Rev 5. `targets` is required with min 1 entry (Rule [T-1b]). Silent application to unintended formats is worse than the minor authoring cost of declaring targets explicitly.
-
-3. **Versioning and theme inheritance**: should a Theme be able to extend another Theme (analogous to `ext:type-inheritance`)? Useful for brand variants (light/dark, language editions) but adds meaningful schema complexity. Deferred to a follow-on RFC if the use case proves common.
-
-4. **`pdf` and `docx` in the format vocabulary**: RFC-001 Change C defined portable format values but excluded `"pdf"` and `"docx"` because they require richer rendering infrastructure. With `ext:themes-l1` now providing asset and stylesheet mechanisms, these formats become more tractable. A follow-on to RFC-001 should add them with appropriate conformance caveats. Until then, `"pdf"` and `"docx"` are implementation-defined values in `Theme.targets` — implementations that support them may use them, but they are not portable and MUST NOT cause a validation error in implementations that do not recognise them (per Rule [T-2], an unrecognised format simply means the theme is not applied).
-
-
-**Title**: RFC-004: Language-Neutral Schema Notation for Spec Records
-**RFC Number**: 004
-**Status**: draft
-**Proposal Artifact Path**: rfcs/rfc-004/
-**Content**: **Status**: Draft (Revision 2)
-**Affects**: Distribution Group - Package; new extension `ext:schema-notation`; `spec-authoring-core`; JSON Schema projection package
-**Author**: SemanticOps contributors
-**Date**: 2026-05-27
-
----
-
-## Revision history
-
-| Rev | Date | Summary |
-|---|---|---|
-| 1 | 2026-05-27 | Initial draft: schema-member records with compact type-ref strings |
-| 2 | 2026-05-27 | Reframed schema notation as a semantic, target-neutral schema IR with JSON Schema as the first exact projection |
-
----
-
-## Abstract
-
-SRS and TSS specifications contain formal data shapes: Field, Type, Record, Session, Event, Participant, Stream, and other implementation-facing entities. Today many of those shapes are written as TypeScript-style prose blocks embedded in text fields. That makes them readable, but not semantic SRS data.
-
-This RFC defines `ext:schema-notation`: a semantic, target-neutral schema definition model for spec authoring. The extension represents logical schemas, members, type expressions, constraints, defaults, examples, deprecation state, and semantic purpose as SRS records and field values. JSON Schema, TypeScript, protobuf, Rust structs, and other formats are projections from that shared semantic source; none of those target syntaxes is the source of truth.
-
-Revision 2 deliberately moves away from compact string `type-ref` expressions as the normative representation. Renderers may show compact strings for humans, but the normative source is structured `typeExpression` JSON.
-
----
-
-## Motivation
-
-### Problem 1 - Schema prose is not SRS data
-
-TypeScript-style blocks in `content` fields are implementation-flavoured notation. SRS tools cannot reliably traverse them, cite individual members, validate them, or render them to other targets without ad-hoc parsing.
-
-### Problem 2 - Meaning must survive target projection
-
-A JSON Schema definition can validate JSON shape, but it cannot carry all the semantic intent needed by SRS authoring. Protobuf can express efficient wire contracts, but it requires target-specific concerns such as field numbers and `oneof` names. The source model must describe meaning first, then allow target packages to render appropriate forms.
-
-### Problem 3 - TSS needs the same source for multiple outputs
-
-TSS has data shapes such as `Session`, `Participant`, `Stream`, `Event`, and many event subtypes. A useful SRS-authored TSS spec should be able to render JSON Schema for validation and later render protobuf from as much of the same source as possible. That requires a portable semantic schema IR, not a JSON-Schema-only design.
-
-### Problem 4 - `ext:schema` is a different layer
-
-`ext:schema` describes runtime extraction and package structure: what records a package expects and how source material may be transformed into records. `ext:schema-notation` describes spec-level data shapes: the schemas that implementations should produce, consume, and validate. The two extensions are complementary and must not be conflated.
-
----
-
-## Design Principles
-
-**Semantic first.** The extension describes meaning, not target form. Field numbers, JSON Schema keywords, TypeScript punctuation, and Rust derives are projection concerns.
-
-**Target-neutral core, target-specific packages.** The main extension defines portable schema meaning. Exact renderers live in projection packages such as `spec-authoring-json-schema` and a future `spec-authoring-protobuf`.
-
-**Structured type expressions.** Type meaning is represented as JSON data using explicit expression kinds. Compact strings are allowed as display conveniences only.
-
-**Addressable members.** Schema definitions and schema members are SRS records with stable identity, so invariants, examples, migration notes, and conformance rules can cite them directly.
-
-**Migration-friendly.** Existing prose blocks may coexist while structured schema records are introduced. Structured schema records become authoritative when a migration is complete.
-
----
-
-## Proposed Changes
-
-### Change A - Add `json` as a core Field value type
-
-`Field.valueType` gains `json` for structured JSON values whose meaning is supplied by the field definition and validating schema. This is required for recursive or nested semantic values such as schema type expressions and portable constraint objects.
-
-`json` is not a target renderer. It is a storage primitive for structured semantic values inside SRS records.
-
-### Change B - New extension: `ext:schema-notation`
-
-Add the following extension entry:
-
-| Extension | Identifier | Depends on | Notes |
-|---|---|---|---|
-| Schema Notation | `ext:schema-notation` | none | Semantic schema IR for spec authoring and target projections |
-
-### Change C - New type: `schema-definition`
-
-`com.semanticops.spec/schema-definition` represents one logical data shape. It is not a JSON Schema object, TypeScript interface, or protobuf message, though projection packages may render it to those forms.
-
-Core fields:
-
-| Field | Meaning |
-|---|---|
-| `title` | Human-readable title |
-| `namespace` | Logical schema namespace |
-| `schema-name` | Stable machine-readable schema name |
-| `version-label` | Version of the schema definition |
-| `description` | Short description |
-| `semantic-purpose` | Domain meaning of this schema |
-| `status` | Draft, active, deprecated, etc. |
-| `content` | Optional prose guidance |
-| `examples` | Non-normative examples |
-| `deprecated` | Whether the schema remains only for compatibility |
-| `notes` | Editorial notes |
-
-Members are attached by `schema-member-sequence` relations.
-
-### Change D - New type: `schema-member`
-
-`com.semanticops.spec/schema-member` represents one addressable member of a schema definition.
-
-Core fields:
-
-| Field | Meaning |
-|---|---|
-| `member-name` | Stable member/property name |
-| `type-expression` | Structured semantic type expression JSON |
-| `required` | Whether the member must be present |
-| `nullable` | Whether explicit `null` is allowed |
-| `constraints` | Portable target-neutral constraints |
-| `schema-default-value` | Concrete JSON default value for this schema member |
-| `examples` | Non-normative examples |
-| `deprecated` | Whether the member remains only for compatibility |
-| `semantic-purpose` | Domain meaning of this member |
-| `notes` | Editorial notes |
-
-`required` and `nullable` are separate. Optional means the member may be absent. Nullable means the member may be present with the explicit value `null`.
-
-### Change E - Structured `typeExpression` JSON
-
-The normative source for member type meaning is a structured JSON value held in the `type-expression` field. It has a `kind` property and kind-specific properties.
-
-Supported expression kinds:
-
-| Kind | Meaning | Required portable properties |
-|---|---|---|
-| `scalar` | Portable primitive value | `name` |
-| `ref` | Reference to a named schema/type | `namespace`, `name`; optional `version` |
-| `array` | Ordered list of values | `items` |
-| `map` | Key/value object map | `values`; optional `keys` |
-| `object` | Inline anonymous object shape | `members` |
-| `union` | One of several alternatives | `variants` |
-| `literal` | One exact value | `value` |
-| `enum` | One of a finite set of values | `values` |
-| `unknown` | Preserved but unconstrained value | none |
-
-Portable scalar names:
-
-`string`, `text`, `integer`, `number`, `boolean`, `date`, `date-time`, `uuid`, `uri`, `duration-ms`, `json`.
-
-Inline `object` expressions are allowed only for genuinely local anonymous shapes. Reusable shapes must be separate `schema-definition` records referenced with `ref`.
-
-`union` must not be used to smuggle optionality. Nullability is represented by the member-level `nullable` field.
-
-### Change F - Portable constraints
-
-The generic IR defines only constraints that can reasonably project across multiple targets:
-
-- required and nullable state
-- numeric minimum and maximum
-- string minimum length, maximum length, and pattern
-- array minimum items, maximum items, and uniqueness
-- enum and literal values
-- scalar format
-- map key and value shape
-- cardinality where the target supports it
-
-Cross-field validation, conditional validation, and protocol-level invariants are out of scope for Revision 2. They remain prose or invariant records until a later RFC defines a semantic rule notation.
-
-### Change G - Relation semantics
-
-Add these relation types to the recommended relation vocabulary:
-
-| Relation type | Source | Target | Meaning |
-|---|---|---|---|
-| `schema-member-sequence` | `schema-definition` | ordered list of `schema-member` records | Declares the ordered members of a schema |
-| `defines-schema-for` | `schema-definition` | `type-definition` or other spec record | Declares that the schema formalizes the target record/type shape |
-
-When an existing `type-definition` has a related `schema-definition`, renderers that support `ext:schema-notation` should use the structured schema definition rather than any prose TypeScript block.
-
-### Change H - JSON Schema projection package
-
-Add `com.semanticops.spec/spec-authoring-json-schema` as a target projection package. It defines exact JSON Schema rendering rules and metadata; it does not own the semantic schema source.
-
-JSON Schema `$id` values follow:
-
-`https://srs.semanticops.com/schema/domain/<namespace>/<schemaName>/<version>.json`
-
-Projection rules:
-
-- A `schema-definition` renders as a JSON Schema object with `$id`, `title`, `type: "object"`, `properties`, and `required`.
-- A `schema-member` renders as one property.
-- `required: true` adds the member to the parent `required` array.
-- `nullable: true` adds `null` to the property shape but does not make it optional.
-- `ref` renders to `$ref`.
-- `union` renders to `oneOf`.
-- `literal` renders to `const`.
-- `enum` renders to `enum`.
-- `array` renders to `type: "array"` with `items`.
-- Portable constraints render to matching JSON Schema keywords where available.
-
-### Change I - Protobuf compatibility
-
-The semantic IR should be designed so protobuf can be rendered from the same source where portable constructs are used. However, protobuf-specific details are target metadata, not core schema meaning.
-
-The following are reserved for a future `spec-authoring-protobuf` package:
-
-- protobuf package names
-- message and field naming overrides
-- field numbers
-- reserved ranges
-- `oneof` naming
-- map encoding details
-- target-specific scalar mappings
-
-RFC-004 Revision 2 intentionally does not add protobuf fields to `spec-authoring-core`.
-
----
-
-## Proposal Artifacts
-
-Proposal artifacts live under `rfcs/rfc-004/`. They are review material only and must not be loaded into active `package/` or `schemas/` directories until RFC-004 is accepted and implemented. The proposed `schema-default-value` field intentionally has a distinct identity from the active `default-value` field because concrete JSON schema-member defaults are not the same concept as prose documentation of ordinary field defaults.
-
----
-
-## Migration Path
-
-Existing TypeScript prose blocks remain valid during migration. For a given spec entity:
-
-1. Create a `schema-definition` record for the logical shape.
-2. Create one `schema-member` record for each member.
-3. Link members to the schema with `schema-member-sequence`.
-4. Link the schema to the existing prose `type-definition` using `defines-schema-for`.
-5. Render JSON Schema from the structured schema definition and compare against any hand-authored schema.
-6. Once accepted, mark the prose TypeScript block as superseded or remove it from the type-definition content.
-
-TSS should be evaluated against this model before authoring all TSS schema records. The goal is to verify that `Session`, `Participant`, `Stream`, `Event`, event subtypes, merge records, and package records can be represented without making JSON Schema or protobuf the source of truth.
-
----
-
-## Consequences
-
-### Benefits
-
-- Schema meaning is represented as SRS data rather than target syntax.
-- Individual schema members become addressable and citable.
-- JSON Schema can be rendered exactly from the semantic source.
-- Protobuf can later reuse the same source with target metadata layered separately.
-- TSS and SRS can share spec-authoring primitives without forcing TSS to become an SRS semantic object model.
-
-### Tradeoffs
-
-- Schema authoring produces more records than prose blocks.
-- Recursive or nested type expressions require `json` field values and schema-aware tooling.
-- Some validation concerns remain outside the generic IR until a future rule-notation RFC.
-- Projection packages must be maintained for exact target output.
-
----
-
-## Open Questions
-
-1. Should `schema-definition` version use the existing `version-label` field long term, or should spec-authoring-core add a numeric schema version field?
-
-2. Should `type-expression` and `constraints` get dedicated JSON Schemas in the root `schemas/` directory, or should they remain specified textually until the first renderer is implemented?
-
-3. Should `defines-schema-for` point from schema to type-definition, or should the inverse relation also be recommended for easier traversal from prose type records?
-
-4. Which TSS shape should be migrated first as a proof case: `Session`, `Event`, or one narrow event subtype such as `MessageEvent`?
-
 **Title**: RFC-009: Root-record Type as the typing anchor for Containers, Document Views, and distributable units
 **RFC Number**: 009
 **Status**: accepted
@@ -1755,4 +1755,20 @@ TSS should be evaluated against this model before authoring all TSS schema recor
 **Affected Components**: ext:lifecycle (CLI contract), srs-usage.md (agentic write-workflow reference)
 **Proposal Artifact Path**: rfcs/rfc-016-lifecycle-update-command.md
 **Content**: srs lifecycle supports list, get, and create but has no update subcommand. This forces direct JSON file editing to modify an existing lifecycle definition, violating the CLI-first rule in srs-usage.md. This RFC adds srs lifecycle update <lifecycleId> to the spec, modelling it on srs type update. No schema changes are required. Full-replace semantics: caller fetches, edits, and sends the complete lifecycle JSON back. Seven conformance rules covering schema validation, id-match, RFC-006 V9 integrity (isFinal, transition id uniqueness, initial-state active-status), and full-replace write semantics.
+
+**Title**: RFC-018: Repository Changelog Extension (`ext:changelog`)
+**RFC Number**: 018
+**Status**: in-progress
+**Author**: the-greenman
+**Affected Components**: `manifest.json` (new `changelogPath` property); new schema file `changelog.json` (ChangelogCollection + ChangelogEntry); `ext:changelog` extension declaration
+**Proposal Artifact Path**: rfcs/rfc-018-changelog-extension.md
+**Content**: Introduces `ext:changelog`, an opt-in extension that maintains a lightweight, append-only log of entity-level changes in an SRS repository.
+
+**Problems addressed:** (1) No way to determine what changed since a sync point — the `repo copy` round-trip workflow cannot distinguish actually modified records from path-changed files. (2) Sync and replication tooling must rely on git history, binding SRS to a specific VCS backend and breaking for `.srsj`/in-memory stores. (3) No normative record of operation provenance — no standard way to record who or what asserted a change.
+
+**Changes:** (A) New extension key `ext:changelog`; repositories opt in via `manifest.declaredExtensions`; implementation creates an empty changelog file on first declaration. (B) New `changelogPath` optional field on `manifest.json` (default: `changelog/changelog.json`). (C) New schema `changelog.json` defining `ChangelogCollection` and `ChangelogEntry` (`entryId` UUID4, `instanceId`, `changeKind` enum: `created`/`updated`/`deleted`/`note-created`/`note-updated`/`note-deleted`, `timestamp`, optional `assertedBy`; `noteId` required for note variants). (D) Normative `srs changelog list --repo <path> [--since <iso8601>] [--instance <uuid>]` CLI command.
+
+**Conformance rules:** R1–R10. Key rules: R1–R2 (maintain and append-on-write), R3 (UUID4 uniqueness), R4 (append-only immutability), R5 (no changelogPath without extension), R7 (noteId MUST when note variant), R9 (normative CLI query), R10 (SHOULD lock on write).
+
+**GitHub issue:** srs#141. Addresses srs#52 (spec gap: no changelog concept).
 

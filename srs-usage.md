@@ -613,6 +613,57 @@ The payload reports each rename performed and the count of already-canonical pat
 
 ---
 
+## 5b. Changelog (`ext:changelog`, RFC-018)
+
+Repositories that declare `"ext:changelog"` in `manifest.declaredExtensions` maintain an append-only log of every entity-level mutation. The implementation writes a `ChangelogEntry` automatically on every successful `record create/update/delete` and `note create/update/delete`. No agent action is required to produce entries.
+
+### Querying the changelog
+
+```bash
+srs changelog list --repo <path> [--since <iso8601>] [--instance <uuid>]
+```
+
+`--since` returns entries with `timestamp >= <iso8601>`. `--instance` returns entries for a specific `instanceId`. Both filters may be combined (AND semantics).
+
+```json
+{
+  "ok": true,
+  "command": "changelog list",
+  "payload": {
+    "entries": [
+      {
+        "entryId": "<uuid4>",
+        "instanceId": "<uuid>",
+        "changeKind": "updated",
+        "timestamp": "2026-07-09T08:00:00Z",
+        "assertedBy": "srs-cli/0.1.0"
+      }
+    ]
+  }
+}
+```
+
+`changeKind` is one of: `created`, `updated`, `deleted`, `note-created`, `note-updated`, `note-deleted`. Note variants always include a `noteId` field.
+
+### Round-trip sync pattern
+
+```bash
+# Before editing: capture a sync point
+SYNC_POINT=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+# Export, edit, copy back...
+srs repo copy --from my-repo --to /tmp/my-repo.srsj
+# ... edit ...
+srs repo copy --from /tmp/my-repo.srsj --to my-repo
+
+# After: query only what changed since the sync point
+srs changelog list --repo my-repo --since "$SYNC_POINT" --pretty
+```
+
+This is more reliable than `repo diff` for large repos because `changelog list` is O(1) per query regardless of repo size.
+
+---
+
 ## 6. Common Traps
 
 ### The instanceIndex trap
