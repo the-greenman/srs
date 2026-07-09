@@ -2,7 +2,7 @@
 
 # RFC-019: Cross-Field Validation Rules — `validationRules` on `Type` and `CrossFieldRule` Schema
 
-**Status**: In Progress (Revision 2)
+**Status**: Accepted (Revision 3)
 **Affects**: `docs/schema/2.0/type.json`; `ext:cross-field-validation` (extension record `c16793d7-005a-58d2-88d0-9e7d9b4967b1`); spec invariants I-10 (`e1000010`) and I-11 (`e1000011`)
 **Author**: the-greenman (from issue the-greenman/srs#139)
 **Date**: 2026-07-09
@@ -17,6 +17,7 @@
 | 1 | 2026-07-09 | Initial draft — formalises the `validationRules` property and `CrossFieldRule` shape. |
 | 2 | 2026-07-09 | Address review findings. **Blocking:** (a) add R0 extension declaration gate; qualify R1–R10 to implementations declaring `ext:cross-field-validation`; (b) add Spec Record Changes section enumerating new invariant records; (c) add explicit non-date/non-number → error clause to R4. **Should-fix:** add "non-empty" definition; add R10 for wrong-context field presence → error; add predicateFieldId valueType restriction to R6; add ext:type-inheritance non-inheritance clause as R11; cross-reference I-10 and I-11. **Nits:** fix "Temporal direction" → "Ordering direction"; add rationale for fail-all evaluation; add rationale for no JSON Schema if-then-else. |
 | 3 | 2026-07-09 | Implementation started; RFC file committed to branch `rfc/019-cross-field-validation-rules-schema`; schema fix applied ("Temporal direction" → "Ordering direction" in `CrossFieldRuleEffect`). |
+| 4 | 2026-07-09 | Accepted; spec records authored (I-85–I-93) in `srs/srs/records/tier-2/`; extension record `c16793d7` updated to reference RFC-019; spec rendered and release-drift check passed. |
 
 ---
 
