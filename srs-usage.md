@@ -208,6 +208,9 @@ srs protocol validate <protocolId> --repo <path> --pretty
 
 # Export a protocol definition as portable JSON (for import into another repo)
 srs protocol export <protocolId> --repo <path> --pretty
+
+# Find the first protocol whose target type matches a given typeId
+srs protocol find-by-target-type --type-id <typeId-uuid> --repo <path> --pretty
 ```
 
 Payload shapes (all wrapped in the standard `{ "ok": true, "payload": { ... } }` envelope):
@@ -216,6 +219,7 @@ Payload shapes (all wrapped in the standard `{ "ok": true, "payload": { ... } }`
 - `protocol get` / `protocol export` → `{ "protocol": { "protocolId", "protocolNamespace", "protocolName", "protocolVersion", "protocolDescription"?, "protocolTargetType", "protocolStages": [...], "protocolTags"?, "protocolCreatedAt" } }`. The `protocol` field is the raw stored JSON; `get` and `export` return identical shapes.
 - `protocol stages` → `{ "stages": [{ "stageId", "name", "purpose"?, "order", "dependsOn": ["<stageId>", ...] }] }`. The optional `purpose` field carries the spec-defined epistemic description of what understanding the stage builds (`ProtocolStage.purpose`); it is omitted when absent.
 - `protocol validate` → `{ "protocolId", "valid": true/false, "diagnostics": ["<message>", ...] }`. A valid protocol has `valid: true` and an empty `diagnostics` array.
+- `protocol find-by-target-type` → `{ "protocolId", "protocolName", "stages": [...], "diagnostics": ["<message>", ...] }`. Returns the first protocol whose `protocolTargetType` matches the given type ID. Returns an error envelope if no protocol targets that type.
 
 ---
 
@@ -265,6 +269,41 @@ srs note create --repo <path> <<'EOF'
 }
 EOF
 ```
+
+### Graduating a Note to a Record
+
+`srs note graduate` promotes a Tier-0 Note to a typed Tier-2 Record in one atomic step: the Record is created, `graduatedAt` is stamped on the Note, and both are returned in a single envelope.
+
+First resolve the target type's field IDs (same as for `record create`):
+
+```bash
+srs type get --repo <path> <typeId> --pretty
+# read fieldAssignments[].fieldId for each field you need to populate
+```
+
+Then graduate:
+
+```bash
+srs note graduate --repo <path> <noteId> --type <namespace/name> <<'EOF'
+{
+  "fieldValues": [
+    { "fieldId": "<uuid>", "value": "<value>" }
+  ]
+}
+EOF
+```
+
+The stdin shape is the same `CreateRecordInput` used by `record create`: `fieldValues`, optional `groupValues`, optional `tags`.
+
+The response `data` contains:
+- `note` — the original Note with `graduatedAt` stamped (ISO-8601 UTC)
+- `record` — the newly created typed Record
+
+On error (note not found, entity is not a Note, type not found, required field missing) neither write is applied.
+
+Optional:
+- `--type-version <N>` — pin a specific type version (default: latest)
+- `--container <id>` (global flag) — add the new Record to a container atomically
 
 ### Creating a Record (Tier 2)
 
@@ -326,6 +365,26 @@ EOF
 `payload.ok` is `true` with an empty `payload.errors` when the input is valid; otherwise the envelope is `"ok": false` and **every** problem is listed in the top-level `diagnostics` — `validate` reports all violations at once (missing required fields, unknown fields, cardinality), so you can fix the whole input in one pass rather than one-error-at-a-time. Nothing is written either way (the command runs and exits 0 regardless of validity — check `payload.ok`/`diagnostics`, not the exit code).
 
 `record validate` runs **exactly the same validation** that `record create` / `record update` run before they persist — unknown fields, missing required fields, and repeatable/field-group cardinality. A passing `validate` therefore guarantees a passing write. (It does not add stricter checks such as enum or value-type conformance; those are not validated on the write path either.)
+
+### Transitioning a Record's Lifecycle State
+
+Use `record transition` to move a record to a new lifecycle state. Inspect the lifecycle first to know valid state names and transition names (`srs lifecycle get --repo <path> <lifecycleId> --pretty`).
+
+```bash
+# Transition by target state name
+srs record transition --repo <path> --id <instanceId> <<'EOF'
+{ "to": "<state-name>" }
+EOF
+
+# Or transition by named transition
+srs record transition --repo <path> --id <instanceId> <<'EOF'
+{ "byTransition": "<transition-name>" }
+EOF
+```
+
+Returns `{ "record": <Record>, "warnings": [] }`. When the target state is a final state (marked `isFinal: true` in the lifecycle definition), a `LIFECYCLE_FINAL_STATE` warning appears in `payload.warnings` — this is non-fatal and the transition succeeds. The record is written; the warning is informational.
+
+The transition is validated against the lifecycle definition: the target state must exist, the transition must be allowed from the current state, and the record must already have a `lifecycleState` (records without a lifecycle assignment cannot be transitioned). A rejected transition returns `"ok": false` with a `diagnostics` entry.
 
 ### Asserting a Relation
 
@@ -500,6 +559,48 @@ srs repo validate --repo <path> --pretty
 
 Check `payload.diagnostics` — a non-empty array means something is broken. Zero exit code does not mean zero errors; diagnostics are in the payload, not the exit code.
 
+### Managing Declared Extensions
+
+The manifest `declaredExtensions` array records which SRS extensions a repository uses. Three commands manage it:
+
+```bash
+# List currently declared extensions
+srs repo extensions list --repo <path> --pretty
+
+# Declare that this repo uses an extension
+srs repo extensions enable --repo <path> --extension ext:lifecycle
+
+# Remove a declaration
+srs repo extensions disable --repo <path> --extension ext:lifecycle
+```
+
+### Checking Extension Conformance
+
+`repo extensions conformance` compares three sets and reports mismatches:
+
+- `declared` — what the manifest says is used (`manifest.extra.declaredExtensions`)
+- `supported` — what this build of the engine actively implements
+- `declaredButUnsupported` — declared but not implemented (may cause silent no-ops)
+- `usedButUndeclared` — detected in repo content but not declared (a documentation gap)
+
+```bash
+srs repo extensions conformance --repo <path> --pretty
+```
+
+Detection is content-based:
+
+| Extension | Detected when |
+|---|---|
+| `ext:lifecycle` | Any Tier-2 record has a `lifecycleState` field |
+| `ext:relations` | The relations collection is non-empty |
+| `ext:type-inheritance` | Any package type declares `extendsTypeId` |
+| `ext:field-groups` | Any package type declares `fieldGroups` |
+| `ext:addressability` | Any `.revisions.json` sidecar file exists |
+| `ext:repository` | Not detected (structural; always available) |
+| `ext:discovery` | Not detected (structural; always available) |
+
+A healthy repo should report empty `declaredButUnsupported` and empty `usedButUndeclared`. Run this command after importing a package or enabling a new extension to confirm the manifest is in sync with the repo content.
+
 ---
 
 ## 5. Repository Portability
@@ -610,6 +711,34 @@ The payload reports each rename performed and the count of already-canonical pat
 ```
 
 `repo upgrade` is idempotent — running it twice on the same repo returns `renames: []` on the second call. Follow with `srs repo validate` to confirm zero diagnostics.
+
+### Migrating Repository Identity
+
+`repo migrate-identity` ensures a repository has a `com.semanticops.core/purpose` record and that `manifest.container.identityInstanceId` points to it. Two cases are handled:
+
+**Case 1 — repo already has an `identityInstanceId` pointing to a Tier-0 note** (pre-dates the `purpose` type): the command promotes the note to a `com.semanticops.core/purpose` record, writes the new record, updates `identityInstanceId` in the manifest, and swaps the container membership.
+
+**Case 2 — repo has no `identityInstanceId`** (created before the identity feature was introduced): the command derives the purpose statement from `container.description` (trimmed, falling back to `container.title` if description is absent or empty) and creates a fresh `com.semanticops.core/purpose` record. The container's `identityInstanceId` and `memberInstanceIds` are both updated.
+
+```bash
+srs repo migrate-identity --repo <path>
+```
+
+Payload (`oldIdentityId` and `oldIdentityTier` are absent when there was no prior identity):
+
+```json
+{
+  "oldIdentityId": "aabbccdd-...",
+  "oldIdentityTier": 0,
+  "newIdentityId": "eeff0011-...",
+  "statement": "A concise statement of the repository's purpose",
+  "title": "Optional display title"
+}
+```
+
+`oldIdentityTier` is `0` for a Tier-0 note. A Tier-2 record that is not already a `purpose` type returns an error — manual migration is required in that case.
+
+The command returns an error (`"already a com.semanticops.core/purpose record; no migration needed"`) if the existing `identityInstanceId` already points to a `purpose` record — it does not silently no-op. After migration, run `srs repo validate --repo <path>` to confirm zero diagnostics.
 
 ---
 
