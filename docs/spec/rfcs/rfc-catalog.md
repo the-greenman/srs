@@ -2,11 +2,11 @@
 
 ## RFCs
 
-**Title**: RFC-002: ext:themes-l1 — Visual Theming for Document Views
-**RFC Number**: 002
+**Title**: RFC-001: Views L2 — Rendering Hierarchy and Default Rendering Baseline
+**RFC Number**: 001
 **Status**: accepted
-**Content**: **Affects**: defines new extension `ext:themes-l1`; `ext:views-l2` (`DocumentView.themeRef` defined in RFC-001 Change D)  
-**Applied with**: RFC-001 — co-application required; `ThemeReference` is defined in RFC-001 Change D  
+**Content**: **Affects**: `ext:views-l2`, `ext:views-l1` (`ExportConfig`)  
+**Applied with**: RFC-002 (`ext:themes-l1`) — see Change D  
 **Author**: Peter Brownell  
 **Date**: 2026-05-27  
 
@@ -17,670 +17,349 @@
 | Rev | Date | Summary |
 |---|---|---|
 | 1 | 2026-05-27 | Initial draft |
-| 2 | 2026-05-27 | Remove `ThemeReference` definition — moved to RFC-001 Change D; RFC-001 and RFC-002 are co-applied |
-| 3 | 2026-05-27 | Add `recordWrapperOverrides` and `sectionWrapperOverrides` to `ElementTemplates`; add `cssClassFields` to `Theme`; add normative CSS class injection section and class-naming convention |
-| 4 | 2026-05-27 | Add `"theme"` to `Reference.definitionType` and `ImportRecord.definitionType` base-spec enums; extend bundled-resolution rule to cover `themeVariants[]`; resolve fieldRow/L1-View open question with explicit composition rule |
-| 5 | 2026-05-29 | Make `Theme.targets` required (min 1 entry) — close open question 2; remove `{{heading-N}}` from element template variables (keep in `coverPage` only) — themes wrap structural content, not re-emit headings; add enforcement timing to Rule [T-7]; add note on `"pdf"`/`"docx"` as not-yet-portable pending RFC-001 follow-on |
+| 2 | 2026-05-27 | Fix model mismatch in Change A (FieldValue/FieldAssignment); remove View-dependent hidden-field rule; add `titleFieldId` to DocumentSection; remove phantom `DocumentSection.format` and dependent conformance rule |
+| 3 | 2026-05-27 | Add Change D: `themeRef` stub on `DocumentView` to reserve visual-layer attachment point ahead of RFC-002 |
+| 4 | 2026-05-27 | Fix format precedence (DocumentView.format vs ExportConfig.format); fix repeatable fields; add value-type constraint on `titleFieldId`; make absent-preamble document-title heading normative; clarify titleFieldId validation as render-time primary |
+| 5 | 2026-05-27 | Define `ThemeReference` inline in Change D (RFC-001 and RFC-002 are co-applied; RFC-001 must be self-contained as a pair); define full L1/L2 ExportConfig boundary rule; extend `{{heading-N}}` variables to `ExportConfig.preamble` in section context; close open question 1 |
+| 6 | 2026-05-27 | Add `ThemeVariant` and `themeVariants` to Change D — named theme switching; Rule [N+8] for variant selection |
+| 7 | 2026-05-27 | Scope Rule [N+1] to section pipeline heading only (not L1 preamble content); remove undefined `{{name}}` example; fix Rule [N+8] to distinguish variant-not-found (fall back to themeRef) from variant-found-but-format-incompatible (render without theme, no fallback) |
+| 8 | 2026-05-29 | Close open question 1 (add Rule [N+4b] warning for depthOffset > 4); add enforcement-timing note to ThemeVariant.name uniqueness; add Rule [N+6b] for {{heading-3}} in standalone export; clarify absent-format case in Rule [N+2]; clarify emptyBehavior/Change A interaction for L1 View path |
+| 9 | 2026-06-05 | Close open question 2: amend Rule [N+1] to allow per-record heading omission when record type lacks titleFieldId field (not a render failure); add Rule [N+12] for container-subset default ordering by precedes chain |
 
 ---
 
 ## Abstract
 
-SRS `DocumentView` defines structural projection (what records go in the document, in what order, at what heading depth) but says nothing about visual presentation — brand identity, typography, stylesheets, cover pages, or asset references. This RFC defines `ext:themes-l1`, a new extension that attaches a `Theme` to a `DocumentView`. A `Theme` specifies assets, element templates, and stylesheets without touching the semantic structure. Implementations that do not support `ext:themes-l1` ignore the attachment and produce structurally correct but unstyled output.
+`ext:views-l2` defines `DocumentView` as a projection mechanism but leaves several behaviours undefined: what "default rendering" means when no L1 View is referenced; what heading level structure a renderer should produce; which `ExportConfig` properties from a referenced L1 View survive in section rendering versus standalone export; and how a visual theme attaches to a document view. This RFC addresses all four, and defines `ThemeReference` for use by RFC-002 (`ext:themes-l1`).
 
 ---
 
 ## Motivation
 
-Three concerns exist in document rendering, and they need to stay in separate layers so each can evolve independently:
+### Problem 1 — "Default rendering" is referenced but undefined
 
-| Layer | Controlled by | Concern |
-|---|---|---|
-| Structure | `ext:views-l2` `DocumentView` | What records, what sections, what order, what heading depth |
-| Element presentation | `ext:views-l1` `View` + `ExportConfig` | How a single record's fields are laid out and labelled |
-| Visual brand | `ext:themes-l1` `Theme` (this RFC) | Assets, stylesheets, cover page, typography, element wrapping |
+`DocumentSection.renderViewId` is optional. The spec states:
 
-Without the third layer, branded output requires either embedding styling concerns inside `DocumentView` (mixing layers) or leaving them entirely outside the spec (no interoperability). `ext:themes-l1` gives implementations a defined, ignorable hook for visual identity that keeps structure and style cleanly separated.
+> When absent, implementations use a default rendering for the instance type.
 
----
+No definition of "default rendering" appears anywhere in the spec. Two conformant implementations will produce incompatible output for the same `DocumentView` — and neither is wrong, because there is no baseline to violate.
 
-## Design Principles
+### Problem 2 — No normative heading hierarchy
 
-**Themes are non-destructive.** A Theme wraps or decorates auto-rendered content; it does not replace or reorder it. Structural decisions remain in `DocumentView` and L1 Views.
+A `DocumentView` has a `preamble`, sections with titles, and records within each section. The natural hierarchy (document → section → record → field) is structurally implied by the data model but never made normative. A renderer has no rule for which heading level to assign to a section title versus a record title, and no mechanism for a document author to declare that the document is being embedded inside a larger one.
 
-**Graceful degradation is required.** An implementation without `ext:themes-l1` support must produce valid structural output. `themeRef` on `DocumentView` is always optional.
+### Problem 3 — `format` is an open string with no portable values or precedence rule
 
-**Assets are named, not inline.** Images, fonts, and other assets are declared by name in the `Theme` and referenced in templates as `{{asset:name}}`. This decouples the template string from the asset's physical location, which may change across environments (local path vs CDN URL vs base64 inline).
+`DocumentView.format` and `ExportConfig.format` are both left as open strings. This creates two interoperability gaps: implementations cannot agree on a shared vocabulary, and when an L1 View referenced from a `DocumentSection` carries its own `exportConfig.format`, there is no rule for which format governs.
 
-**Templates wrap; they do not replace.** Element templates receive the auto-rendered content of an element as `{{content}}` and wrap it in format-appropriate markup. They cannot suppress fields or reorder records — that would violate the structure layer.
+### Problem 4 — The L1/L2 rendering boundary is underspecified
+
+When `DocumentSection.renderViewId` is set, the spec says the L1 View is "used to render each instance in this section." But `ExportConfig` contains four properties (`format`, `preamble`, `fieldOrder`, `omitEmptyFields`), and there is no rule for which of them apply in section context versus standalone export context. Two conformant renderers can disagree.
 
 ---
 
 ## Proposed Changes
 
-### New extension: `ext:themes-l1`
+### Change A — Define the default rendering baseline
 
-Add `ext:themes-l1` to the conformance extension table. Dependency: `ext:views-l2`.
+Add the following subsection to `ext:views-l2`, immediately after the `DocumentSection` definition.
 
 ---
 
-### New type: `AssetDeclaration`
+#### Default Rendering
+
+When `DocumentSection.renderViewId` is absent, implementations MUST render each instance in the section using the following baseline. This baseline is View-agnostic: no L1 View influences field visibility or ordering in the default rendering path.
+
+**Step 1 — Determine the effective field list and ordering.**
+
+Use the Type's effective field list as defined in the spec. With `ext:type-inheritance`, the effective field list includes inherited fields. Ordering is determined as follows:
+
+- If the Type declares `fieldOrder` (requires `ext:type-inheritance`), use that ordering.
+- Otherwise, order fields ascending by `FieldAssignment.order` within the Type's effective field list.
+
+**Step 2 — Resolve field values.**
+
+For each field in the ordered effective field list, find the matching `FieldValue` in `Record.fieldValues[]` by `fieldId`. A field is considered present if:
+
+- `FieldValue.value` is non-null and non-empty-string, **or**
+- `ext:repeatable-fields` is declared and `FieldAssignment.repeatable === true` and `FieldValue.entries` is a non-empty array.
+
+Fields with neither a scalar value nor repeatable entries are considered absent.
+
+**Step 3 — Determine labels.**
+
+For each field, the display label is `FieldAssignment.displayLabel` from the Type's effective field list entry for that field. If `displayLabel` is absent, fall back to `Field.name`.
+
+**Step 4 — Render.**
+
+Render only fields that are present (Step 2). Fields that are absent are omitted unless `DocumentSection.emptyBehavior` is `"show-placeholder"` and the field is `required: true` in the Type, in which case implementations MAY render a placeholder.
+
+For repeatable fields (where `FieldAssignment.repeatable === true` and `ext:repeatable-fields` is declared), render each entry in `FieldValue.entries` in sequence. The specific presentation of multiple entries (comma-separated inline list, bulleted list, etc.) is implementation-defined for the default rendering baseline.
+
+The default rendering baseline is a floor, not a ceiling. An L1 View referenced via `renderViewId` always takes precedence and may override any of the above.
+
+**`emptyBehavior` in the L1 View path**: Step 4's `emptyBehavior: "show-placeholder"` rule applies only to the default rendering baseline (when `renderViewId` is absent). When `renderViewId` is set, empty field handling is governed by `ExportConfig.omitEmptyFields` on the referenced L1 View (see Change C, L1/L2 ExportConfig boundary rule). `DocumentSection.emptyBehavior` does not apply in the L1 View rendering path.
+
+---
+
+### Change B — Add `titleFieldId` and `depthOffset`
+
+#### B1 — Add `titleFieldId` to `DocumentSection`
+
+Add the following field to `DocumentSection`:
 
 ```typescript
-{
-  type: "image" | "font" | "stylesheet" | "data"
-  mode: "local" | "remote" | "inline"
-
-  path?: string      // local path; required when mode === "local"
-  url?: string       // remote URL; required when mode === "remote"
-  data?: string      // when mode === "inline": base64 for binary types, raw text for stylesheet/data
-  mimeType?: string  // e.g. "image/png", "font/woff2", "text/css"
-}
+titleFieldId?: UUID
+// The fieldId whose value provides the per-record heading within this section.
+// Constraints:
+//   - Must appear in the effective field list of every instance type in the section.
+//   - The referenced field must have valueType "string" or "text".
+//   - The referenced field must not be repeatable (FieldAssignment.repeatable !== true).
+// When absent, no per-record heading is emitted; instances render as a
+// sequential list with only field labels and values.
 ```
 
-Assets are declared in `Theme.assets` as a named dictionary. The name is the key used in template variables: an asset named `"logo"` is referenced in any template as `{{asset:logo}}`.
+The value-type and repeatability constraints ensure the heading value is always a single renderable string. A boolean, number, select, or repeatable field cannot produce an unambiguous heading.
 
----
+This is primarily a **render-time** validity check. For section sources that are statically determinable at package validation time (e.g. `type-query` where `semanticObjectType` resolves to a known Type in the Package), implementations SHOULD enforce this constraint during package validation. For dynamically resolved sources, validation is deferred to render time.
 
-### New type: `PageTemplates`
+#### B2 — Add `depthOffset` to `DocumentView`
 
-Templates for page-level chrome. Applicable to paginated output formats (`"pdf"`, `"docx"`). Ignored for non-paginated formats (`"html"`, `"markdown"`).
+Add the following field to `DocumentView`:
 
 ```typescript
-{
-  coverPage?: string
-  // Rendered as the first page of the document.
-  // Available variables: all DocumentView preamble variables + {{asset:*}}
-
-  pageHeader?: string
-  // Repeated at the top of each page.
-  // Additional variable: {{page-number}}
-
-  pageFooter?: string
-  // Repeated at the bottom of each page.
-  // Additional variable: {{page-number}}
-}
+depthOffset?: integer   // min: 0; default: 0
+// Shifts all auto-rendered heading levels by this amount.
+// At depthOffset 0 (default): document title H1, sections H2, records H3.
+// At depthOffset 1: H2, H3, H4 respectively.
+// Field labels are never rendered as headings regardless of depthOffset.
 ```
 
----
+#### Normative heading level table
 
-### New type: `ElementTemplates`
+For outputs where `DocumentView.format` is `"markdown"`, `"html"`, or `"adoc"`, implementations MUST apply the following heading levels:
 
-Templates that wrap auto-rendered content at each structural level. Each template receives the auto-rendered content of that element as `{{content}}` and returns the full output for that element.
-
-```typescript
-{
-  documentWrapper?: string
-  // Wraps the entire rendered document body (after the cover page, if any).
-  // Available: {{content}}, {{container-title}}, {{date}}, {{asset:*}}
-
-  sectionWrapper?: string
-  // Wraps each section (heading + all records within it).
-  // Available: {{content}}, {{section-title}}, {{section-id}}, {{asset:*}}
-
-  sectionWrapperOverrides?: Array<{
-    sectionId: string   // matches DocumentSection.sectionId; case-sensitive
-    template: string    // same variables as sectionWrapper
-  }>
-  // Per-section overrides. When a section's sectionId matches, this template is used
-  // instead of sectionWrapper. When no match, sectionWrapper (if present) applies.
-  // sectionId values must be unique within sectionWrapperOverrides.
-
-  recordWrapper?: string
-  // Wraps each record (record heading + all field rows).
-  // Available: {{content}}, {{record-heading}}, {{type-namespace}}, {{type-name}}, {{asset:*}}
-  // {{record-heading}} is the value of titleFieldId for this section, or empty string.
-
-  recordWrapperOverrides?: Array<{
-    typeId: UUID      // matches Record.typeId; targets all records of this type
-    template: string  // same variables as recordWrapper
-  }>
-  // Per-type overrides. When a record's typeId matches, this template is used instead of
-  // recordWrapper. When no match, recordWrapper (if present) applies.
-  // typeId values must be unique within recordWrapperOverrides.
-
-  fieldRow?: string
-  // Wraps each field label + value pair.
-  // Available: {{field-label}}, {{field-value}}, {{field-name}}, {{content}}
-  // {{content}} is the default rendering of the label+value pair.
-}
-```
-
-Override precedence: a specific override (`sectionWrapperOverrides`, `recordWrapperOverrides`) always takes precedence over the corresponding universal template (`sectionWrapper`, `recordWrapper`). When neither an override nor a universal template is set, the element is rendered without wrapping.
-
-**`fieldRow` and L1 View composition**: When `DocumentSection.renderViewId` is set, `fieldRow` applies to each field row that the L1 View renders — after the L1 View's `ExportConfig.fieldOrder` has reordered fields and `ExportConfig.omitEmptyFields` has filtered absent ones. The L1 View determines which fields appear and in what order; `fieldRow` wraps each surviving field row independently. `fieldRow` does not apply to content emitted by `ExportConfig.preamble` (preamble content is L1 View chrome, not a field row).
-
-Element templates apply after the structural rendering baseline (RFC-001 Change A) and after any L1 View rendering. They receive finished content and wrap it — they do not re-render.
-
----
-
-### New type: `StylesheetDeclaration`
-
-```typescript
-{
-  mode: "inline" | "local" | "remote"
-  content?: string   // inline CSS; required when mode === "inline"
-  path?: string      // local path; required when mode === "local"
-  url?: string       // remote URL; required when mode === "remote"
-}
-```
-
----
-
-### New type: `TypographyHints`
-
-Informative declarations. Implementations map these to format-appropriate directives (CSS variables, document style settings, etc.). No normative rendering behaviour is derived from these values.
-
-```typescript
-{
-  baseFont?: string        // e.g. "Inter", "Georgia"
-  headingFont?: string
-  monoFont?: string
-  baseFontSize?: string    // e.g. "16px", "1rem", "11pt"
-  lineHeight?: string      // e.g. "1.5", "24px"
-}
-```
-
----
-
-### New type: `Theme`
-
-```typescript
-{
-  id: UUID
-  namespace: string
-  name: string
-  version: integer   // min: 1
-
-  description: string
-  // What this theme is for; intended output format and audience.
-
-  targets: string[]   // required; min 1 entry
-  // Output formats this theme is designed for.
-  // Must reference portable format values from RFC-001 Change C ("markdown", "adoc", "html", "text").
-  // Note: "pdf" and "docx" are anticipated but not yet portable values — see Open Question 4.
-  // A Theme may target multiple formats; implementations apply it only when
-  // DocumentView.format is in this list. A Theme with an empty targets array is a validation error.
-
-  assets?: { [assetName: string]: AssetDeclaration }
-  // Named asset declarations. Names must be unique within the Theme.
-
-  cssClassFields?: UUID[]
-  // fieldIds whose values are injected as CSS classes on record wrapper elements.
-  // For each fieldId listed, if the record contains that field with a string, text,
-  // or select value, the class srs-field-{fieldName}-{normalisedValue} is added.
-  // Only applies to "html" and "pdf" output. Ignored for other formats.
-  // Only string, text, and select valueTypes are supported; other types are silently skipped.
-
-  pageTemplates?: PageTemplates
-  elementTemplates?: ElementTemplates
-  stylesheet?: StylesheetDeclaration
-
-  typography?: TypographyHints
-
-  tags?: string[]
-  createdAt: ISO8601
-  lineage?: Lineage
-  provenance?: Provenance
-}
-```
-
----
-
-### `ThemeReference` (defined in RFC-001 Change D)
-
-`ThemeReference` is the type used by `DocumentView.themeRef`. It is defined in RFC-001 Change D and is not repeated here. `themeId` within a `ThemeReference` references `Theme.id` as defined in this RFC.
-
----
-
-### `DocumentView.themeRef` (defined in RFC-001 Change D)
-
-`DocumentView.themeRef?: ThemeReference` is added to `DocumentView` by RFC-001 Change D. RFC-002 defines the `Theme` that is the target of the reference. The graceful-degradation rule (ignore when `ext:themes-l1` is not declared) is also in RFC-001 Rule [N+7].
-
----
-
-### Modification to `Package`
-
-Add:
-
-```typescript
-themes?: Theme[]   // ext:themes-l1; omit if not in use
-```
-
-**Bundled-package theme resolution**: When `Package.mode === "bundled"`, every `ThemeReference` with `mode === "bundled"` that appears in `Package.documentViews[]` — whether in `DocumentView.themeRef` or in any entry of `DocumentView.themeVariants[]` — MUST be resolved to a `Theme` that appears in `Package.themes[]`. A `themeId` referenced in either location that is absent from `themes[]` is a validation error.
-
-#### Modifications to base-spec enums
-
-`Reference.definitionType` (base spec §5.2) gains a new portable value:
-
-```
-"field" | "type" | "view" | "schema" | "protocol" | "theme"
-```
-
-`ImportRecord.definitionType` (`ext:import-tracking`) gains the same addition, making theme definitions trackable in consumer registries.
-
-`dependencyRefs` may include `Reference` entries with `definitionType: "theme"` to declare theme dependencies for `standalone` packages.
-
----
-
-## CSS class injection
-
-For `"html"` and `"pdf"` output formats, implementations MUST add semantic CSS classes to rendered wrapper elements. These classes enable the theme stylesheet to target any element by its structural position, type, or field state without requiring separate templates for each combination.
-
-#### Class name normalisation
-
-All identifier components (type namespace, type name, field name, field value, section ID) MUST be normalised before use in a CSS class name using the following rule:
-
-1. Convert to lowercase
-2. Replace underscores, spaces, and dots with hyphens
-3. Remove any character that is not alphanumeric or a hyphen
-4. Collapse consecutive hyphens to a single hyphen
-5. Trim leading and trailing hyphens
-
-Examples: `governance` → `governance`; `article_text` → `article-text`; `Phase 1 scope` → `phase-1-scope`; `active` → `active`.
-
-#### Classes applied per element
-
-| Element | Classes always applied | Classes conditionally applied |
+| Element | Heading level | Condition |
 |---|---|---|
-| Document wrapper | `srs-document` | — |
-| Section wrapper | `srs-section`, `srs-section-{sectionId}` | — |
-| Record wrapper | `srs-record`, `srs-type-{typeNamespace}-{typeName}` | `srs-field-{fieldName}-{normalisedValue}` for each `cssClassFields` entry that has a matching non-empty string, text, or select value |
-| Field row | `srs-field`, `srs-fieldname-{fieldName}` | — |
+| Document title | `1 + depthOffset` | When `preamble` is absent (see below) |
+| Section title | `2 + depthOffset` | When `DocumentSection.title` is set |
+| Per-record heading | `3 + depthOffset` | When `titleFieldId` is set on the section |
+| Field label | Formatted text (e.g. bold) — not a heading | Always |
 
-`{sectionId}`, `{typeNamespace}`, `{typeName}`, `{fieldName}`, and `{normalisedValue}` are all normalised per the rule above.
+**Default document title (when `preamble` is absent):** When `DocumentView.preamble` is absent and `format` is `"markdown"`, `"html"`, or `"adoc"`, implementations MUST render a document title heading at level `1 + depthOffset` containing `container-title` immediately before the first section.
 
-#### Example
+**When `preamble` is present:** The document title heading is the author's responsibility. The `{{heading-1}}` variable (defined below) is provided to keep the preamble consistent with `depthOffset` without hardcoding a heading level.
 
-A Decision record with `status: "superseded"` in a section with `sectionId: "decision-log"`, where `status` fieldId is listed in `Theme.cssClassFields`:
+For outputs where `format` is `"text"` or an implementation-defined value, heading level semantics do not apply.
 
-- Section wrapper classes: `srs-section srs-section-decision-log`
-- Record wrapper classes: `srs-record srs-type-governance-decision srs-field-status-superseded`
+#### Template variables for `DocumentView.preamble`
 
-A stylesheet can then target `.srs-field-status-superseded { opacity: 0.5; }` without any template changes.
+The following additional standard variables are added to `DocumentView.preamble`:
 
-**Namespaced type example**: A record with `typeNamespace: "com.semanticops.srs"` and `typeName: "meta.section"` produces the class `srs-type-com-semanticops-srs-meta-section` (dots normalised to hyphens per step 2 of the normalisation rule).
+| Variable | Resolves to |
+|---|---|
+| `{{heading-1}}` | Heading prefix at level `1 + depthOffset` |
+| `{{heading-2}}` | Heading prefix at level `2 + depthOffset` |
 
----
+In Markdown, `{{heading-1}}` at `depthOffset: 0` resolves to `#`. At `depthOffset: 1` it resolves to `##`.
 
-## Template variable reference
+A portable preamble template:
 
-The following variables are available in template strings across the extension. Variables not applicable to a given template context MUST resolve to an empty string (not an error).
+```
+{{heading-1}} {{container-title}}
 
-| Variable | Available in | Resolves to |
-|---|---|---|
-| `{{container-title}}` | All | Container title from manifest |
-| `{{container-id}}` | All | Container UUID |
-| `{{date}}` | All | Render date (ISO 8601 date, not datetime) |
-| `{{heading-1}}` | `coverPage` only | Heading prefix at level `1 + depthOffset` (RFC-001 Change B). Not available in element wrapper templates — structural headings are already inside `{{content}}` and must not be re-emitted. |
-| `{{asset:name}}` | All | Resolved asset reference — URL, data URI, or path depending on context |
-| `{{section-title}}` | `sectionWrapper`, `sectionWrapperOverrides` | Value of `DocumentSection.title` |
-| `{{section-id}}` | `sectionWrapper`, `sectionWrapperOverrides` | Value of `DocumentSection.sectionId` |
-| `{{record-heading}}` | `recordWrapper`, `recordWrapperOverrides` | Value of `titleFieldId` field for the current record, or empty string |
-| `{{type-namespace}}` | `recordWrapper`, `recordWrapperOverrides` | `Record.typeNamespace` |
-| `{{type-name}}` | `recordWrapper`, `recordWrapperOverrides` | `Record.typeName` |
-| `{{field-label}}` | `fieldRow` | Display label for the current field |
-| `{{field-value}}` | `fieldRow` | Rendered value of the current field |
-| `{{field-name}}` | `fieldRow` | `Field.name` for the current field |
-| `{{content}}` | All element templates | Auto-rendered content that this template wraps |
-| `{{page-number}}` | `pageHeader`, `pageFooter` | Current page number (paginated formats only) |
-
-`{{asset:name}}` resolution:
-- In `"html"` output: resolves to a data URI for `mode === "inline"`, an `href`/`src` URL for `mode === "remote"`, or a relative path for `mode === "local"`.
-- In `"pdf"` output: implementations embed the asset directly.
-- In `"markdown"` output: resolves to the URL or path string only (no embedding).
+Founded {{date}}. This document is the living record...
+```
 
 ---
 
-## Conformance rules
+### Change C — Define a controlled `format` vocabulary and precedence rule
 
-**Rule [T-1]** (ext:themes-l1 — graceful degradation): Implementations that do not declare `ext:themes-l1` MUST ignore `DocumentView.themeRef` and MUST NOT produce a validation error when it is present.
+Replace the current open-string description of `format` on `DocumentView` and `ExportConfig` with the following.
 
-**Rule [T-1b]** (ext:themes-l1 — `targets` required): `Theme.targets` MUST contain at least one entry. A `Theme` with an absent or empty `targets` array is a validation error. This is enforced at package validation time.
+#### Portable `format` values
 
-**Rule [T-2]** (ext:themes-l1 — targets matching): Implementations MUST apply a Theme only when `DocumentView.format` appears in `Theme.targets`. When the format does not match, the Theme MUST be ignored and structural output produced without it.
+The following values are portable across implementations:
 
-**Rule [T-3]** (ext:themes-l1 — templates wrap, do not replace): Element templates receive auto-rendered content via `{{content}}`. Implementations MUST render the structural content first and pass it to the template; they MUST NOT suppress or reorder content through template evaluation.
+| Value | Meaning |
+|---|---|
+| `"markdown"` | CommonMark-compatible Markdown |
+| `"adoc"` | AsciiDoc |
+| `"html"` | HTML (fragment or full document at implementation discretion) |
+| `"text"` | Plain text; no markup |
 
-**Rule [T-4]** (ext:themes-l1 — asset name uniqueness): Asset names within a single `Theme.assets` dictionary MUST be unique. Asset names are case-sensitive.
+`"json"` is intentionally excluded from the portable set in this RFC. A JSON projection format requires a normative output schema; that is deferred to a follow-on RFC.
 
-**Rule [T-5]** (ext:themes-l1 — bundled theme resolution): When `ThemeReference.mode === "bundled"`, the referenced `themeId` MUST appear in `Package.themes[]` if `Package.mode === "bundled"`. A missing theme in a bundled package is a validation error.
+Implementations MAY support additional format values. Non-portable values MUST be treated as opaque implementation hints by receivers that do not recognise them; they MUST NOT cause a validation error.
 
-**Rule [T-6]** (ext:themes-l1 — unknown variables): Template variables that are not defined in this spec and not recognised by the implementation MUST be passed through as literal text. They MUST NOT cause a rendering error.
+When `format` is absent from `DocumentView`, the output format is implementation-defined.
 
-**Rule [T-6b]** (ext:themes-l1 — `{{heading-N}}` scope): `{{heading-1}}` is available only in `PageTemplates.coverPage`, resolving via `DocumentView.depthOffset` per RFC-001 Change B. In all element wrapper templates (`documentWrapper`, `sectionWrapper`, `sectionWrapperOverrides`, `recordWrapper`, `recordWrapperOverrides`, `fieldRow`, `pageHeader`, `pageFooter`), `{{heading-1}}`, `{{heading-2}}`, and `{{heading-3}}` MUST resolve to the empty string. Structural headings are delivered inside `{{content}}` and MUST NOT be re-emitted by wrapper templates.
+#### L1/L2 ExportConfig boundary rule
 
-**Rule [T-7]** (ext:themes-l1 — override precedence): When `recordWrapperOverrides` contains an entry whose `typeId` matches the current record's `typeId`, that entry's template MUST be used instead of `recordWrapper`. When `sectionWrapperOverrides` contains an entry whose `sectionId` matches the current section's `sectionId`, that entry's template MUST be used instead of `sectionWrapper`. Override arrays MUST NOT contain duplicate `typeId` or `sectionId` values respectively. Duplicate detection is enforced at package validation time.
+When `DocumentSection.renderViewId` is set, the referenced L1 View's `ExportConfig` properties apply to section rendering as follows:
 
-**Rule [T-8]** (ext:themes-l1 — CSS class injection): For `"html"` and `"pdf"` output formats, implementations MUST apply the CSS classes defined in the class injection table to each rendered wrapper element. Class name components MUST be normalised using the five-step normalisation rule.
+| `ExportConfig` property | Behaviour in section rendering context |
+|---|---|
+| `format` | **Superseded.** `DocumentView.format` governs. `ExportConfig.format` applies to standalone record export only. |
+| `preamble` | **Applies.** Rendered before each record's field values within the section. |
+| `fieldOrder` | **Applies.** Overrides `FieldAssignment.order` for field rendering within the section. |
+| `omitEmptyFields` | **Applies.** Controls whether absent fields are rendered within the section. |
 
-**Rule [T-9]** (ext:themes-l1 — `cssClassFields` scope): Only fields with `valueType` of `"string"`, `"text"`, or `"select"` listed in `Theme.cssClassFields` generate CSS classes. Fields with other value types are silently skipped. Fields listed in `cssClassFields` that are absent or empty on a given record generate no class for that record.
+This boundary means a renderer using an L1 View inside a `DocumentView` section produces the same per-record layout as standalone export of that View, except that the output format is always governed by `DocumentView.format`.
 
-**Rule [T-10]** (ext:themes-l1 — `fieldRow` scope with L1 View): When `DocumentSection.renderViewId` is set, `fieldRow` MUST be applied to each field row that survives the L1 View's `ExportConfig.omitEmptyFields` filtering and is ordered by `ExportConfig.fieldOrder`. `fieldRow` MUST NOT wrap content emitted by `ExportConfig.preamble`.
+#### Template variables in `ExportConfig.preamble` when used in section context
 
-**Rule [T-11]** (ext:themes-l1 — base-spec enum extension): Implementations that support `ext:themes-l1` MUST accept `"theme"` as a valid value for `Reference.definitionType` and (when `ext:import-tracking` is also declared) for `ImportRecord.definitionType`. A `definitionType: "theme"` value in a received document MUST NOT cause a validation error.
+When `ExportConfig.preamble` renders inside a `DocumentView` section (i.e. when `renderViewId` is set), the following additional variable is available, resolving using the enclosing `DocumentView.depthOffset`:
+
+| Variable | Resolves to |
+|---|---|
+| `{{heading-3}}` | Heading prefix at level `3 + depthOffset` |
+
+The `{{heading-3}}` variable is available only when the preamble is rendered inside a `DocumentView` section; it resolves to an empty string in standalone export context. The existing `ExportConfig.preamble` standard variables (`{{instance-id}}`, `{{date}}`, `{{status}}`, `{{namespace}}`, `{{name}}`) continue to apply.
+
+**Heading content in L1 preambles and Rule [N+1]**: An `ExportConfig.preamble` that contains a heading marker (e.g. `{{heading-3}} {{instance-id}}`) is emitting *L1 View content*, not the section pipeline's structural per-record heading. Rule [N+1]'s prohibition on per-record headings when `titleFieldId` is absent applies only to the *section pipeline's structural heading injection mechanism* — it does not prohibit headings appearing inside `ExportConfig.preamble` content. L1 View authors who include heading markers in preambles are responsible for heading depth consistency; `{{heading-3}}` is provided for this purpose. When both `titleFieldId` is set and the L1 preamble includes a heading, a redundant double-heading will be produced — this is a View authoring error, not a spec violation.
+
+---
+
+### Change D — Define `ThemeReference` and reserve `themeRef` on `DocumentView`
+
+**Co-application note**: This change and RFC-002 (`ext:themes-l1`) are applied together. RFC-001 defines `ThemeReference` (the reference pointer type) because it appears on `DocumentView`, which is part of `ext:views-l2`. RFC-002 defines `Theme` (the target of the reference) and the full `ext:themes-l1` extension. Neither RFC is a complete spec delta without the other.
+
+#### New type: `ThemeReference`
+
+```typescript
+{
+  mode: "local" | "remote" | "bundled"
+
+  path?: string    // path to a Theme JSON file; required when mode === "local"
+  url?: string     // URL to a Theme JSON file; required when mode === "remote"
+  themeId?: UUID   // references Theme.id in Package.themes[]; required when mode === "bundled"
+}
+```
+
+Follows the same `mode`-based reference pattern as `packageRef` in the manifest.
+
+#### New type: `ThemeVariant`
+
+A named alternative theme that can be selected at render time instead of the default `themeRef`.
+
+```typescript
+{
+  name: string           // identifier used to request this variant; case-sensitive
+  description?: string   // human-readable note on intended use (e.g. "web", "print", "accessible")
+  themeRef: ThemeReference
+}
+```
+
+Variant names have no format constraints but MUST be unique within the enclosing `DocumentView.themeVariants` array. This uniqueness constraint is enforced at package validation time (it is statically determinable from the `DocumentView` definition).
+
+#### Additions to `DocumentView`
+
+```typescript
+themeRef?: ThemeReference
+// Default Theme (ext:themes-l1). Applied when no variant is selected at render time.
+// When ext:themes-l1 is not declared, implementations MUST ignore this field.
+// They MUST NOT error on its presence.
+
+themeVariants?: ThemeVariant[]
+// Named alternative themes. A caller selects a variant by name at render invocation.
+// When a requested variant name is not found, implementations SHOULD fall back to
+// themeRef and MAY emit a warning. When neither themeRef nor a matching variant is
+// present, the document renders without a theme.
+// When ext:themes-l1 is not declared, implementations MUST ignore this field.
+```
+
+---
+
+## Conformance Rules
+
+**Rule [N]** (ext:views-l2 — Default rendering): When `DocumentSection.renderViewId` is absent, implementations MUST use the default rendering baseline: fields in effective-field-list order (governed by `fieldOrder` when `ext:type-inheritance` is active, otherwise by `FieldAssignment.order`), using `FieldAssignment.displayLabel` or `Field.name` as label, resolved from `FieldValue.value` for scalar fields and from `FieldValue.entries` for repeatable fields (when `ext:repeatable-fields` is declared), omitting absent fields. No L1 View influences this baseline.
+
+**Rule [N+1]** (ext:views-l2 — `titleFieldId` constraints): When `DocumentSection.titleFieldId` is set, it MUST reference a `fieldId` that (a) appears in the effective field list of every instance type in that section, (b) has `valueType` of `"string"` or `"text"`, and (c) is not repeatable. The section pipeline MUST NOT inject a structural per-record heading when `titleFieldId` is absent. This rule applies to the section rendering pipeline's heading injection mechanism only; it does not constrain headings that may appear inside `ExportConfig.preamble` content when an L1 View is bound via `renderViewId`. This is enforced at render time; implementations SHOULD also enforce it at package validation time when the section source is statically determinable.
+
+**Rule [N+2]** (ext:views-l2 — Heading hierarchy): When rendering for `format: "markdown"`, `"html"`, or `"adoc"`, section titles MUST render at heading level `2 + depthOffset`. When `titleFieldId` is set on a section, per-record headings MUST render at heading level `3 + depthOffset`. Field labels MUST NOT be rendered as headings. When `format` is absent or is an implementation-defined value other than `"markdown"`, `"html"`, or `"adoc"`, this rule does not apply; heading level semantics are implementation-defined.
+
+**Rule [N+3]** (ext:views-l2 — Default document title): When `DocumentView.preamble` is absent and `format` is `"markdown"`, `"html"`, or `"adoc"`, implementations MUST render a document title heading at level `1 + depthOffset` containing the container title before the first section.
+
+**Rule [N+4]** (ext:views-l2 — `depthOffset` range): `depthOffset` MUST be a non-negative integer. Implementations MAY clamp computed heading levels that exceed the maximum supported by the target format and render such elements as formatted text.
+
+**Rule [N+4b]** (ext:views-l2 — `depthOffset` warning): When `depthOffset` exceeds 4, the per-record heading level reaches H7 or higher in the default configuration (`3 + depthOffset ≥ 7`). Implementations SHOULD emit a warning diagnostic when `depthOffset > 4`. This is a quality-of-authoring warning only; it MUST NOT cause a validation failure or prevent rendering.
+
+**Rule [N+5]** (ext:views-l2 — Format precedence): `DocumentView.format` governs the output format for all section rendering. When a referenced L1 View's `exportConfig.format` differs, it is ignored for section rendering. `ExportConfig.format` applies to standalone record export only.
+
+**Rule [N+6]** (ext:views-l2 — L1 ExportConfig in section context): When `DocumentSection.renderViewId` is set, `ExportConfig.preamble`, `ExportConfig.fieldOrder`, and `ExportConfig.omitEmptyFields` MUST apply to section rendering. `ExportConfig.format` MUST be ignored in favour of `DocumentView.format` (Rule [N+5]).
+
+**Rule [N+6b]** (ext:views-l2 — `{{heading-3}}` in standalone export): When `ExportConfig.preamble` is rendered in standalone export context (i.e. `renderViewId` is not set, or the View is exported directly rather than embedded in a `DocumentView` section), implementations MUST substitute `{{heading-3}}` with the empty string. Implementations MUST NOT emit the literal `{{heading-3}}` token in any output.
+
+**Rule [N+7]** (ext:views-l2 — `themeRef` graceful degradation): Implementations that do not declare `ext:themes-l1` MUST ignore `DocumentView.themeRef` and `DocumentView.themeVariants` and MUST NOT produce a validation error on their presence.
+
+**Rule [N+8]** (ext:views-l2 — theme variant selection): When `ext:themes-l1` is declared and a variant name is supplied at render invocation, implementations MUST apply the following resolution in order:
+
+1. Find the `ThemeVariant` in `DocumentView.themeVariants` whose `name` matches the requested name (case-sensitive).
+2. If found: resolve that variant's `ThemeReference` to a `Theme` and apply RFC-002 Rule [T-2] (targets check). If the format matches, use that Theme. If the format does not match, render **without a theme** — implementations MUST NOT fall back to `DocumentView.themeRef`.
+3. If not found: fall back to `DocumentView.themeRef` (applying Rule [T-2]). If `themeRef` is absent or format-incompatible, render without a theme.
+4. If no variant name is supplied: use `DocumentView.themeRef` (applying Rule [T-2]).
+
+`ThemeVariant.name` values MUST be unique within a `DocumentView.themeVariants` array. This is enforced at package validation time.
 
 ---
 
 ## Rationale
 
-### Why templates wrap rather than replace
+### Why `depthOffset` rather than explicit per-element levels?
 
-Allowing templates to replace auto-rendered content would silently break the structural layer — fields could disappear, record order could change, and the semantic guarantees of `DocumentView` would be undermined. A theme is a presentation concern; a `DocumentView` is a semantic concern. The wrapping model enforces that separation mechanically.
+`depthOffset` preserves the invariant that sections are always one level below the document and records always one level below sections. Explicit per-element levels would allow authors to violate this invariant, producing documents where heading levels do not reflect structural depth.
 
-### Why assets are named rather than referenced inline
+### Why `titleFieldId` on `DocumentSection` rather than on the Type?
 
-Template strings are stored as JSON and distributed across systems. Embedding binary data or absolute paths directly in template strings makes them non-portable. A named asset dictionary allows the same template to work in a local development environment (local path), a CI pipeline (relative path), or a CDN-hosted production environment (URL) by changing the asset declaration, not the template.
+A Type does not know how it will be assembled. Multiple `DocumentView` definitions could include the same Type in sections where different fields serve as the heading. Making the designation per-section keeps the Type semantically stable.
 
-### Why `TypographyHints` is informative rather than normative
+### Why restrict `titleFieldId` to scalar string/text fields?
 
-Typography maps to very different constructs across output formats: CSS variables in HTML, document style settings in DOCX, font embedding in PDF. Requiring a specific rendering outcome for a typography hint would over-constrain implementations. The hints provide enough signal for a human-readable output without mandating a particular rendering mechanism.
+A heading must be a single renderable string. Boolean, number, select, and repeatable fields cannot produce an unambiguous heading without additional normalisation logic. Restricting to scalar string/text eliminates ambiguity without practical loss — a record's human-readable identifier is almost always a string field.
 
-### Why `recordWrapperOverrides` rather than a single universal `recordWrapper` with conditionals
+### Why make the absent-preamble document title normative?
 
-A conditional template language inside a string (e.g. `{{#if type == "article"}}...{{/if}}`) would require specifying a template expression syntax, escaping rules, and evaluation semantics — a substantial addition for what is effectively a lookup table. An override array is a lookup table with no expression language, which is simpler to specify, simpler to implement, and simpler to audit. The CSS class injection mechanism handles value-driven styling (e.g. status-based) without any conditional template logic.
+Without this rule, the container title only appears as a heading if the author explicitly writes a preamble containing one. A document where the container title is absent or appears as plain text would silently contradict the heading hierarchy that sections and records follow.
 
-### Why CSS class injection rather than exposing field values as template variables
+### Why does `DocumentView.format` win over `ExportConfig.format`?
 
-Making every field value available as a template variable would require either a fixed variable namespace per type (coupling the template language to specific field names) or a dynamic namespace that implementations must query per record. CSS classes solve the value-targeting problem cleanly for HTML/PDF output: the theme stylesheet handles the conditional styling, the implementation just emits normalised identifiers, and no template logic is needed.
+`ExportConfig` is a record-export configuration. In standalone export, the record's format is self-determined. In section rendering, the record is a constituent of a larger document — the document format governs. Allowing `ExportConfig.format` to override `DocumentView.format` would make a section's output format dependent on an L1 View definition that could be updated independently of the `DocumentView`.
 
-### Why `cssClassFields` is opt-in rather than injecting all field values
+### Why do `preamble`, `fieldOrder`, and `omitEmptyFields` survive in section context?
 
-Field values may be long prose, private content, or binary-encoded data. Blindly normalising all field values as CSS class components could produce unwieldy or unsafe class names. The `cssClassFields` array lets the theme author explicitly select the fields that are meaningful for styling purposes — typically status, lifecycle, and categorisation fields.
+These properties control how the record's content is laid out and what it contains — they are presentation concerns that are equally valid whether the record is exported standalone or embedded in a section. The L1 View author defines the record layout once; it is consistent across both contexts. Only `format` is context-dependent.
 
-### Why `ext:themes-l1` rather than inline styling on `DocumentView`
+### Why define `ThemeReference` in RFC-001 rather than RFC-002?
 
-If visual properties were placed directly on `DocumentView`, the same `DocumentView` would need to be duplicated for each branded variant — one for the governance team, one for external publication, one for print. With `themeRef`, the structural projection is authored once and visual themes are swapped without touching the record definitions.
+`ThemeReference` appears on `DocumentView`, which is part of `ext:views-l2`. RFC-001 must be self-contained as a spec delta for `ext:views-l2`. `Theme` (the target of the reference) belongs in RFC-002 because it defines the full `ext:themes-l1` extension. The two types are split at the boundary between what belongs to the views layer and what belongs to the theming layer.
 
----
+### Why is default rendering View-agnostic?
 
-## Alternatives considered
-
-**CSS class hints on `DocumentSection` and element templates**  
-Adding `cssClass?: string` fields to structural objects would let a renderer apply CSS without full template wrapping. Rejected: it only addresses HTML/CSS output and leaks format-specific concerns into the structural layer.
-
-**A Theme registry separate from Package**  
-Themes could be published to a separate registry (analogous to an npm registry) and referenced by name. Rejected for this RFC as premature: the Package distribution model (bundled/standalone) is already established and sufficient. A Theme registry could be a follow-on.
-
-**Single `pageAndElementTemplates` flat object**  
-Merging `PageTemplates` and `ElementTemplates` into one object simplifies the schema slightly but conflates page-level chrome (which only applies to paginated formats) with element-level wrapping (which applies to all formats). Keeping them separate makes the format-applicability rule easier to express and implement.
+The baseline must be computable from the Type and Record alone. Ambient L1 Views could suppress fields, making the baseline non-deterministic from the document author's perspective.
 
 ---
 
-## Open questions
+## Alternatives Considered
 
-1. **`fieldRow` and L1 View composition** — resolved in Rev 4. `fieldRow` wraps each field row that the L1 View renders (after `omitEmptyFields` and `fieldOrder` are applied). It does not wrap preamble content. See Rule [T-10].
+**Per-section `headingDepth` instead of document-level `depthOffset`**: Removed the invariant that sections are at consistent depth relative to each other. Dropped.
 
-2. ~~**Should `Theme.targets` be required or optional?**~~ Resolved in Rev 5. `targets` is required with min 1 entry (Rule [T-1b]). Silent application to unintended formats is worse than the minor authoring cost of declaring targets explicitly.
+**Infer record title from first `required: true` string field**: Fragile and order-dependent. Explicit `titleFieldId` is unambiguous.
 
-3. **Versioning and theme inheritance**: should a Theme be able to extend another Theme (analogous to `ext:type-inheritance`)? Useful for brand variants (light/dark, language editions) but adds meaningful schema complexity. Deferred to a follow-on RFC if the use case proves common.
+**Use `instanceIndex[].title` from the manifest**: Ties rendering to the manifest, which is a container concern. `titleFieldId` keeps rendering self-contained within the Package and Record.
 
-4. **`pdf` and `docx` in the format vocabulary**: RFC-001 Change C defined portable format values but excluded `"pdf"` and `"docx"` because they require richer rendering infrastructure. With `ext:themes-l1` now providing asset and stylesheet mechanisms, these formats become more tractable. A follow-on to RFC-001 should add them with appropriate conformance caveats. Until then, `"pdf"` and `"docx"` are implementation-defined values in `Theme.targets` — implementations that support them may use them, but they are not portable and MUST NOT cause a validation error in implementations that do not recognise them (per Rule [T-2], an unrecognised format simply means the theme is not applied).
+**`ExportConfig.format` takes precedence in section context**: Would allow per-section format mixing. Rejected — format mixing at section granularity produces output most renderers cannot handle as a single document, and it makes the output format unpredictable from the `DocumentView` definition alone.
 
-
-**Title**: RFC-004: Language-Neutral Schema Notation for Spec Records
-**RFC Number**: 004
-**Status**: draft
-**Proposal Artifact Path**: rfcs/rfc-004/
-**Content**: **Status**: Draft (Revision 2)
-**Affects**: Distribution Group - Package; new extension `ext:schema-notation`; `spec-authoring-core`; JSON Schema projection package
-**Author**: SemanticOps contributors
-**Date**: 2026-05-27
-
----
-
-## Revision history
-
-| Rev | Date | Summary |
-|---|---|---|
-| 1 | 2026-05-27 | Initial draft: schema-member records with compact type-ref strings |
-| 2 | 2026-05-27 | Reframed schema notation as a semantic, target-neutral schema IR with JSON Schema as the first exact projection |
-
----
-
-## Abstract
-
-SRS and TSS specifications contain formal data shapes: Field, Type, Record, Session, Event, Participant, Stream, and other implementation-facing entities. Today many of those shapes are written as TypeScript-style prose blocks embedded in text fields. That makes them readable, but not semantic SRS data.
-
-This RFC defines `ext:schema-notation`: a semantic, target-neutral schema definition model for spec authoring. The extension represents logical schemas, members, type expressions, constraints, defaults, examples, deprecation state, and semantic purpose as SRS records and field values. JSON Schema, TypeScript, protobuf, Rust structs, and other formats are projections from that shared semantic source; none of those target syntaxes is the source of truth.
-
-Revision 2 deliberately moves away from compact string `type-ref` expressions as the normative representation. Renderers may show compact strings for humans, but the normative source is structured `typeExpression` JSON.
-
----
-
-## Motivation
-
-### Problem 1 - Schema prose is not SRS data
-
-TypeScript-style blocks in `content` fields are implementation-flavoured notation. SRS tools cannot reliably traverse them, cite individual members, validate them, or render them to other targets without ad-hoc parsing.
-
-### Problem 2 - Meaning must survive target projection
-
-A JSON Schema definition can validate JSON shape, but it cannot carry all the semantic intent needed by SRS authoring. Protobuf can express efficient wire contracts, but it requires target-specific concerns such as field numbers and `oneof` names. The source model must describe meaning first, then allow target packages to render appropriate forms.
-
-### Problem 3 - TSS needs the same source for multiple outputs
-
-TSS has data shapes such as `Session`, `Participant`, `Stream`, `Event`, and many event subtypes. A useful SRS-authored TSS spec should be able to render JSON Schema for validation and later render protobuf from as much of the same source as possible. That requires a portable semantic schema IR, not a JSON-Schema-only design.
-
-### Problem 4 - `ext:schema` is a different layer
-
-`ext:schema` describes runtime extraction and package structure: what records a package expects and how source material may be transformed into records. `ext:schema-notation` describes spec-level data shapes: the schemas that implementations should produce, consume, and validate. The two extensions are complementary and must not be conflated.
-
----
-
-## Design Principles
-
-**Semantic first.** The extension describes meaning, not target form. Field numbers, JSON Schema keywords, TypeScript punctuation, and Rust derives are projection concerns.
-
-**Target-neutral core, target-specific packages.** The main extension defines portable schema meaning. Exact renderers live in projection packages such as `spec-authoring-json-schema` and a future `spec-authoring-protobuf`.
-
-**Structured type expressions.** Type meaning is represented as JSON data using explicit expression kinds. Compact strings are allowed as display conveniences only.
-
-**Addressable members.** Schema definitions and schema members are SRS records with stable identity, so invariants, examples, migration notes, and conformance rules can cite them directly.
-
-**Migration-friendly.** Existing prose blocks may coexist while structured schema records are introduced. Structured schema records become authoritative when a migration is complete.
-
----
-
-## Proposed Changes
-
-### Change A - Add `json` as a core Field value type
-
-`Field.valueType` gains `json` for structured JSON values whose meaning is supplied by the field definition and validating schema. This is required for recursive or nested semantic values such as schema type expressions and portable constraint objects.
-
-`json` is not a target renderer. It is a storage primitive for structured semantic values inside SRS records.
-
-### Change B - New extension: `ext:schema-notation`
-
-Add the following extension entry:
-
-| Extension | Identifier | Depends on | Notes |
-|---|---|---|---|
-| Schema Notation | `ext:schema-notation` | none | Semantic schema IR for spec authoring and target projections |
-
-### Change C - New type: `schema-definition`
-
-`com.semanticops.spec/schema-definition` represents one logical data shape. It is not a JSON Schema object, TypeScript interface, or protobuf message, though projection packages may render it to those forms.
-
-Core fields:
-
-| Field | Meaning |
-|---|---|
-| `title` | Human-readable title |
-| `namespace` | Logical schema namespace |
-| `schema-name` | Stable machine-readable schema name |
-| `version-label` | Version of the schema definition |
-| `description` | Short description |
-| `semantic-purpose` | Domain meaning of this schema |
-| `status` | Draft, active, deprecated, etc. |
-| `content` | Optional prose guidance |
-| `examples` | Non-normative examples |
-| `deprecated` | Whether the schema remains only for compatibility |
-| `notes` | Editorial notes |
-
-Members are attached by `schema-member-sequence` relations.
-
-### Change D - New type: `schema-member`
-
-`com.semanticops.spec/schema-member` represents one addressable member of a schema definition.
-
-Core fields:
-
-| Field | Meaning |
-|---|---|
-| `member-name` | Stable member/property name |
-| `type-expression` | Structured semantic type expression JSON |
-| `required` | Whether the member must be present |
-| `nullable` | Whether explicit `null` is allowed |
-| `constraints` | Portable target-neutral constraints |
-| `schema-default-value` | Concrete JSON default value for this schema member |
-| `examples` | Non-normative examples |
-| `deprecated` | Whether the member remains only for compatibility |
-| `semantic-purpose` | Domain meaning of this member |
-| `notes` | Editorial notes |
-
-`required` and `nullable` are separate. Optional means the member may be absent. Nullable means the member may be present with the explicit value `null`.
-
-### Change E - Structured `typeExpression` JSON
-
-The normative source for member type meaning is a structured JSON value held in the `type-expression` field. It has a `kind` property and kind-specific properties.
-
-Supported expression kinds:
-
-| Kind | Meaning | Required portable properties |
-|---|---|---|
-| `scalar` | Portable primitive value | `name` |
-| `ref` | Reference to a named schema/type | `namespace`, `name`; optional `version` |
-| `array` | Ordered list of values | `items` |
-| `map` | Key/value object map | `values`; optional `keys` |
-| `object` | Inline anonymous object shape | `members` |
-| `union` | One of several alternatives | `variants` |
-| `literal` | One exact value | `value` |
-| `enum` | One of a finite set of values | `values` |
-| `unknown` | Preserved but unconstrained value | none |
-
-Portable scalar names:
-
-`string`, `text`, `integer`, `number`, `boolean`, `date`, `date-time`, `uuid`, `uri`, `duration-ms`, `json`.
-
-Inline `object` expressions are allowed only for genuinely local anonymous shapes. Reusable shapes must be separate `schema-definition` records referenced with `ref`.
-
-`union` must not be used to smuggle optionality. Nullability is represented by the member-level `nullable` field.
-
-### Change F - Portable constraints
-
-The generic IR defines only constraints that can reasonably project across multiple targets:
-
-- required and nullable state
-- numeric minimum and maximum
-- string minimum length, maximum length, and pattern
-- array minimum items, maximum items, and uniqueness
-- enum and literal values
-- scalar format
-- map key and value shape
-- cardinality where the target supports it
-
-Cross-field validation, conditional validation, and protocol-level invariants are out of scope for Revision 2. They remain prose or invariant records until a later RFC defines a semantic rule notation.
-
-### Change G - Relation semantics
-
-Add these relation types to the recommended relation vocabulary:
-
-| Relation type | Source | Target | Meaning |
-|---|---|---|---|
-| `schema-member-sequence` | `schema-definition` | ordered list of `schema-member` records | Declares the ordered members of a schema |
-| `defines-schema-for` | `schema-definition` | `type-definition` or other spec record | Declares that the schema formalizes the target record/type shape |
-
-When an existing `type-definition` has a related `schema-definition`, renderers that support `ext:schema-notation` should use the structured schema definition rather than any prose TypeScript block.
-
-### Change H - JSON Schema projection package
-
-Add `com.semanticops.spec/spec-authoring-json-schema` as a target projection package. It defines exact JSON Schema rendering rules and metadata; it does not own the semantic schema source.
-
-JSON Schema `$id` values follow:
-
-`https://srs.semanticops.com/schema/domain/<namespace>/<schemaName>/<version>.json`
-
-Projection rules:
-
-- A `schema-definition` renders as a JSON Schema object with `$id`, `title`, `type: "object"`, `properties`, and `required`.
-- A `schema-member` renders as one property.
-- `required: true` adds the member to the parent `required` array.
-- `nullable: true` adds `null` to the property shape but does not make it optional.
-- `ref` renders to `$ref`.
-- `union` renders to `oneOf`.
-- `literal` renders to `const`.
-- `enum` renders to `enum`.
-- `array` renders to `type: "array"` with `items`.
-- Portable constraints render to matching JSON Schema keywords where available.
-
-### Change I - Protobuf compatibility
-
-The semantic IR should be designed so protobuf can be rendered from the same source where portable constructs are used. However, protobuf-specific details are target metadata, not core schema meaning.
-
-The following are reserved for a future `spec-authoring-protobuf` package:
-
-- protobuf package names
-- message and field naming overrides
-- field numbers
-- reserved ranges
-- `oneof` naming
-- map encoding details
-- target-specific scalar mappings
-
-RFC-004 Revision 2 intentionally does not add protobuf fields to `spec-authoring-core`.
-
----
-
-## Proposal Artifacts
-
-Proposal artifacts live under `rfcs/rfc-004/`. They are review material only and must not be loaded into active `package/` or `schemas/` directories until RFC-004 is accepted and implemented. The proposed `schema-default-value` field intentionally has a distinct identity from the active `default-value` field because concrete JSON schema-member defaults are not the same concept as prose documentation of ordinary field defaults.
-
----
-
-## Migration Path
-
-Existing TypeScript prose blocks remain valid during migration. For a given spec entity:
-
-1. Create a `schema-definition` record for the logical shape.
-2. Create one `schema-member` record for each member.
-3. Link members to the schema with `schema-member-sequence`.
-4. Link the schema to the existing prose `type-definition` using `defines-schema-for`.
-5. Render JSON Schema from the structured schema definition and compare against any hand-authored schema.
-6. Once accepted, mark the prose TypeScript block as superseded or remove it from the type-definition content.
-
-TSS should be evaluated against this model before authoring all TSS schema records. The goal is to verify that `Session`, `Participant`, `Stream`, `Event`, event subtypes, merge records, and package records can be represented without making JSON Schema or protobuf the source of truth.
-
----
-
-## Consequences
-
-### Benefits
-
-- Schema meaning is represented as SRS data rather than target syntax.
-- Individual schema members become addressable and citable.
-- JSON Schema can be rendered exactly from the semantic source.
-- Protobuf can later reuse the same source with target metadata layered separately.
-- TSS and SRS can share spec-authoring primitives without forcing TSS to become an SRS semantic object model.
-
-### Tradeoffs
-
-- Schema authoring produces more records than prose blocks.
-- Recursive or nested type expressions require `json` field values and schema-aware tooling.
-- Some validation concerns remain outside the generic IR until a future rule-notation RFC.
-- Projection packages must be maintained for exact target output.
+**Define `ThemeReference` only in RFC-002**: Left RFC-001 with an unresolved type on `DocumentView`. Since the two RFCs are co-applied, `ThemeReference` belongs in RFC-001 where `DocumentView` is defined.
 
 ---
 
 ## Open Questions
 
-1. Should `schema-definition` version use the existing `version-label` field long term, or should spec-authoring-core add a numeric schema version field?
+1. ~~**Maximum `depthOffset` value**~~: Resolved in Rev 8. Rule [N+4b] adds a warning-level diagnostic when `depthOffset > 4`. No hard cap is imposed; clamping (Rule [N+4]) remains the fallback.
 
-2. Should `type-expression` and `constraints` get dedicated JSON Schemas in the root `schemas/` directory, or should they remain specified textually until the first renderer is implemented?
+2. ~~**`titleFieldId` in heterogeneous sections**~~: Resolved in Rev 9. Rule [N+1] is amended: when a record's type does not carry the designated `titleFieldId` field, the per-record heading is omitted silently — this is not a render failure. Rule [N+12] adds that `container-subset` sections order by `precedes` chain when no `ordering.fieldId` is declared.
 
-3. Should `defines-schema-for` point from schema to type-definition, or should the inverse relation also be recommended for easier traversal from prose type records?
-
-4. Which TSS shape should be migrated first as a proof case: `Session`, `Event`, or one narrow event subtype such as `MessageEvent`?
 
 **Title**: RFC-003: Definition Distribution and Repository Slices
 **RFC Number**: 003
@@ -1341,11 +1020,275 @@ This RFC does not propose a new universal sharing mechanism. It sharpens the one
 
 That separation aligns with both the current SRS spec and the older field-library architecture: reusable fields stay reusable, template-like compositions stay packageable, and repository content can move independently without being confused for a definition library.
 
-**Title**: RFC-001: Views L2 — Rendering Hierarchy and Default Rendering Baseline
-**RFC Number**: 001
+**Title**: RFC-004: Language-Neutral Schema Notation for Spec Records
+**RFC Number**: 004
+**Status**: draft
+**Proposal Artifact Path**: rfcs/rfc-004/
+**Content**: **Status**: Draft (Revision 2)
+**Affects**: Distribution Group - Package; new extension `ext:schema-notation`; `spec-authoring-core`; JSON Schema projection package
+**Author**: SemanticOps contributors
+**Date**: 2026-05-27
+
+---
+
+## Revision history
+
+| Rev | Date | Summary |
+|---|---|---|
+| 1 | 2026-05-27 | Initial draft: schema-member records with compact type-ref strings |
+| 2 | 2026-05-27 | Reframed schema notation as a semantic, target-neutral schema IR with JSON Schema as the first exact projection |
+
+---
+
+## Abstract
+
+SRS and TSS specifications contain formal data shapes: Field, Type, Record, Session, Event, Participant, Stream, and other implementation-facing entities. Today many of those shapes are written as TypeScript-style prose blocks embedded in text fields. That makes them readable, but not semantic SRS data.
+
+This RFC defines `ext:schema-notation`: a semantic, target-neutral schema definition model for spec authoring. The extension represents logical schemas, members, type expressions, constraints, defaults, examples, deprecation state, and semantic purpose as SRS records and field values. JSON Schema, TypeScript, protobuf, Rust structs, and other formats are projections from that shared semantic source; none of those target syntaxes is the source of truth.
+
+Revision 2 deliberately moves away from compact string `type-ref` expressions as the normative representation. Renderers may show compact strings for humans, but the normative source is structured `typeExpression` JSON.
+
+---
+
+## Motivation
+
+### Problem 1 - Schema prose is not SRS data
+
+TypeScript-style blocks in `content` fields are implementation-flavoured notation. SRS tools cannot reliably traverse them, cite individual members, validate them, or render them to other targets without ad-hoc parsing.
+
+### Problem 2 - Meaning must survive target projection
+
+A JSON Schema definition can validate JSON shape, but it cannot carry all the semantic intent needed by SRS authoring. Protobuf can express efficient wire contracts, but it requires target-specific concerns such as field numbers and `oneof` names. The source model must describe meaning first, then allow target packages to render appropriate forms.
+
+### Problem 3 - TSS needs the same source for multiple outputs
+
+TSS has data shapes such as `Session`, `Participant`, `Stream`, `Event`, and many event subtypes. A useful SRS-authored TSS spec should be able to render JSON Schema for validation and later render protobuf from as much of the same source as possible. That requires a portable semantic schema IR, not a JSON-Schema-only design.
+
+### Problem 4 - `ext:schema` is a different layer
+
+`ext:schema` describes runtime extraction and package structure: what records a package expects and how source material may be transformed into records. `ext:schema-notation` describes spec-level data shapes: the schemas that implementations should produce, consume, and validate. The two extensions are complementary and must not be conflated.
+
+---
+
+## Design Principles
+
+**Semantic first.** The extension describes meaning, not target form. Field numbers, JSON Schema keywords, TypeScript punctuation, and Rust derives are projection concerns.
+
+**Target-neutral core, target-specific packages.** The main extension defines portable schema meaning. Exact renderers live in projection packages such as `spec-authoring-json-schema` and a future `spec-authoring-protobuf`.
+
+**Structured type expressions.** Type meaning is represented as JSON data using explicit expression kinds. Compact strings are allowed as display conveniences only.
+
+**Addressable members.** Schema definitions and schema members are SRS records with stable identity, so invariants, examples, migration notes, and conformance rules can cite them directly.
+
+**Migration-friendly.** Existing prose blocks may coexist while structured schema records are introduced. Structured schema records become authoritative when a migration is complete.
+
+---
+
+## Proposed Changes
+
+### Change A - Add `json` as a core Field value type
+
+`Field.valueType` gains `json` for structured JSON values whose meaning is supplied by the field definition and validating schema. This is required for recursive or nested semantic values such as schema type expressions and portable constraint objects.
+
+`json` is not a target renderer. It is a storage primitive for structured semantic values inside SRS records.
+
+### Change B - New extension: `ext:schema-notation`
+
+Add the following extension entry:
+
+| Extension | Identifier | Depends on | Notes |
+|---|---|---|---|
+| Schema Notation | `ext:schema-notation` | none | Semantic schema IR for spec authoring and target projections |
+
+### Change C - New type: `schema-definition`
+
+`com.semanticops.spec/schema-definition` represents one logical data shape. It is not a JSON Schema object, TypeScript interface, or protobuf message, though projection packages may render it to those forms.
+
+Core fields:
+
+| Field | Meaning |
+|---|---|
+| `title` | Human-readable title |
+| `namespace` | Logical schema namespace |
+| `schema-name` | Stable machine-readable schema name |
+| `version-label` | Version of the schema definition |
+| `description` | Short description |
+| `semantic-purpose` | Domain meaning of this schema |
+| `status` | Draft, active, deprecated, etc. |
+| `content` | Optional prose guidance |
+| `examples` | Non-normative examples |
+| `deprecated` | Whether the schema remains only for compatibility |
+| `notes` | Editorial notes |
+
+Members are attached by `schema-member-sequence` relations.
+
+### Change D - New type: `schema-member`
+
+`com.semanticops.spec/schema-member` represents one addressable member of a schema definition.
+
+Core fields:
+
+| Field | Meaning |
+|---|---|
+| `member-name` | Stable member/property name |
+| `type-expression` | Structured semantic type expression JSON |
+| `required` | Whether the member must be present |
+| `nullable` | Whether explicit `null` is allowed |
+| `constraints` | Portable target-neutral constraints |
+| `schema-default-value` | Concrete JSON default value for this schema member |
+| `examples` | Non-normative examples |
+| `deprecated` | Whether the member remains only for compatibility |
+| `semantic-purpose` | Domain meaning of this member |
+| `notes` | Editorial notes |
+
+`required` and `nullable` are separate. Optional means the member may be absent. Nullable means the member may be present with the explicit value `null`.
+
+### Change E - Structured `typeExpression` JSON
+
+The normative source for member type meaning is a structured JSON value held in the `type-expression` field. It has a `kind` property and kind-specific properties.
+
+Supported expression kinds:
+
+| Kind | Meaning | Required portable properties |
+|---|---|---|
+| `scalar` | Portable primitive value | `name` |
+| `ref` | Reference to a named schema/type | `namespace`, `name`; optional `version` |
+| `array` | Ordered list of values | `items` |
+| `map` | Key/value object map | `values`; optional `keys` |
+| `object` | Inline anonymous object shape | `members` |
+| `union` | One of several alternatives | `variants` |
+| `literal` | One exact value | `value` |
+| `enum` | One of a finite set of values | `values` |
+| `unknown` | Preserved but unconstrained value | none |
+
+Portable scalar names:
+
+`string`, `text`, `integer`, `number`, `boolean`, `date`, `date-time`, `uuid`, `uri`, `duration-ms`, `json`.
+
+Inline `object` expressions are allowed only for genuinely local anonymous shapes. Reusable shapes must be separate `schema-definition` records referenced with `ref`.
+
+`union` must not be used to smuggle optionality. Nullability is represented by the member-level `nullable` field.
+
+### Change F - Portable constraints
+
+The generic IR defines only constraints that can reasonably project across multiple targets:
+
+- required and nullable state
+- numeric minimum and maximum
+- string minimum length, maximum length, and pattern
+- array minimum items, maximum items, and uniqueness
+- enum and literal values
+- scalar format
+- map key and value shape
+- cardinality where the target supports it
+
+Cross-field validation, conditional validation, and protocol-level invariants are out of scope for Revision 2. They remain prose or invariant records until a later RFC defines a semantic rule notation.
+
+### Change G - Relation semantics
+
+Add these relation types to the recommended relation vocabulary:
+
+| Relation type | Source | Target | Meaning |
+|---|---|---|---|
+| `schema-member-sequence` | `schema-definition` | ordered list of `schema-member` records | Declares the ordered members of a schema |
+| `defines-schema-for` | `schema-definition` | `type-definition` or other spec record | Declares that the schema formalizes the target record/type shape |
+
+When an existing `type-definition` has a related `schema-definition`, renderers that support `ext:schema-notation` should use the structured schema definition rather than any prose TypeScript block.
+
+### Change H - JSON Schema projection package
+
+Add `com.semanticops.spec/spec-authoring-json-schema` as a target projection package. It defines exact JSON Schema rendering rules and metadata; it does not own the semantic schema source.
+
+JSON Schema `$id` values follow:
+
+`https://srs.semanticops.com/schema/domain/<namespace>/<schemaName>/<version>.json`
+
+Projection rules:
+
+- A `schema-definition` renders as a JSON Schema object with `$id`, `title`, `type: "object"`, `properties`, and `required`.
+- A `schema-member` renders as one property.
+- `required: true` adds the member to the parent `required` array.
+- `nullable: true` adds `null` to the property shape but does not make it optional.
+- `ref` renders to `$ref`.
+- `union` renders to `oneOf`.
+- `literal` renders to `const`.
+- `enum` renders to `enum`.
+- `array` renders to `type: "array"` with `items`.
+- Portable constraints render to matching JSON Schema keywords where available.
+
+### Change I - Protobuf compatibility
+
+The semantic IR should be designed so protobuf can be rendered from the same source where portable constructs are used. However, protobuf-specific details are target metadata, not core schema meaning.
+
+The following are reserved for a future `spec-authoring-protobuf` package:
+
+- protobuf package names
+- message and field naming overrides
+- field numbers
+- reserved ranges
+- `oneof` naming
+- map encoding details
+- target-specific scalar mappings
+
+RFC-004 Revision 2 intentionally does not add protobuf fields to `spec-authoring-core`.
+
+---
+
+## Proposal Artifacts
+
+Proposal artifacts live under `rfcs/rfc-004/`. They are review material only and must not be loaded into active `package/` or `schemas/` directories until RFC-004 is accepted and implemented. The proposed `schema-default-value` field intentionally has a distinct identity from the active `default-value` field because concrete JSON schema-member defaults are not the same concept as prose documentation of ordinary field defaults.
+
+---
+
+## Migration Path
+
+Existing TypeScript prose blocks remain valid during migration. For a given spec entity:
+
+1. Create a `schema-definition` record for the logical shape.
+2. Create one `schema-member` record for each member.
+3. Link members to the schema with `schema-member-sequence`.
+4. Link the schema to the existing prose `type-definition` using `defines-schema-for`.
+5. Render JSON Schema from the structured schema definition and compare against any hand-authored schema.
+6. Once accepted, mark the prose TypeScript block as superseded or remove it from the type-definition content.
+
+TSS should be evaluated against this model before authoring all TSS schema records. The goal is to verify that `Session`, `Participant`, `Stream`, `Event`, event subtypes, merge records, and package records can be represented without making JSON Schema or protobuf the source of truth.
+
+---
+
+## Consequences
+
+### Benefits
+
+- Schema meaning is represented as SRS data rather than target syntax.
+- Individual schema members become addressable and citable.
+- JSON Schema can be rendered exactly from the semantic source.
+- Protobuf can later reuse the same source with target metadata layered separately.
+- TSS and SRS can share spec-authoring primitives without forcing TSS to become an SRS semantic object model.
+
+### Tradeoffs
+
+- Schema authoring produces more records than prose blocks.
+- Recursive or nested type expressions require `json` field values and schema-aware tooling.
+- Some validation concerns remain outside the generic IR until a future rule-notation RFC.
+- Projection packages must be maintained for exact target output.
+
+---
+
+## Open Questions
+
+1. Should `schema-definition` version use the existing `version-label` field long term, or should spec-authoring-core add a numeric schema version field?
+
+2. Should `type-expression` and `constraints` get dedicated JSON Schemas in the root `schemas/` directory, or should they remain specified textually until the first renderer is implemented?
+
+3. Should `defines-schema-for` point from schema to type-definition, or should the inverse relation also be recommended for easier traversal from prose type records?
+
+4. Which TSS shape should be migrated first as a proof case: `Session`, `Event`, or one narrow event subtype such as `MessageEvent`?
+
+**Title**: RFC-002: ext:themes-l1 — Visual Theming for Document Views
+**RFC Number**: 002
 **Status**: accepted
-**Content**: **Affects**: `ext:views-l2`, `ext:views-l1` (`ExportConfig`)  
-**Applied with**: RFC-002 (`ext:themes-l1`) — see Change D  
+**Content**: **Affects**: defines new extension `ext:themes-l1`; `ext:views-l2` (`DocumentView.themeRef` defined in RFC-001 Change D)  
+**Applied with**: RFC-001 — co-application required; `ThemeReference` is defined in RFC-001 Change D  
 **Author**: Peter Brownell  
 **Date**: 2026-05-27  
 
@@ -1356,348 +1299,405 @@ That separation aligns with both the current SRS spec and the older field-librar
 | Rev | Date | Summary |
 |---|---|---|
 | 1 | 2026-05-27 | Initial draft |
-| 2 | 2026-05-27 | Fix model mismatch in Change A (FieldValue/FieldAssignment); remove View-dependent hidden-field rule; add `titleFieldId` to DocumentSection; remove phantom `DocumentSection.format` and dependent conformance rule |
-| 3 | 2026-05-27 | Add Change D: `themeRef` stub on `DocumentView` to reserve visual-layer attachment point ahead of RFC-002 |
-| 4 | 2026-05-27 | Fix format precedence (DocumentView.format vs ExportConfig.format); fix repeatable fields; add value-type constraint on `titleFieldId`; make absent-preamble document-title heading normative; clarify titleFieldId validation as render-time primary |
-| 5 | 2026-05-27 | Define `ThemeReference` inline in Change D (RFC-001 and RFC-002 are co-applied; RFC-001 must be self-contained as a pair); define full L1/L2 ExportConfig boundary rule; extend `{{heading-N}}` variables to `ExportConfig.preamble` in section context; close open question 1 |
-| 6 | 2026-05-27 | Add `ThemeVariant` and `themeVariants` to Change D — named theme switching; Rule [N+8] for variant selection |
-| 7 | 2026-05-27 | Scope Rule [N+1] to section pipeline heading only (not L1 preamble content); remove undefined `{{name}}` example; fix Rule [N+8] to distinguish variant-not-found (fall back to themeRef) from variant-found-but-format-incompatible (render without theme, no fallback) |
-| 8 | 2026-05-29 | Close open question 1 (add Rule [N+4b] warning for depthOffset > 4); add enforcement-timing note to ThemeVariant.name uniqueness; add Rule [N+6b] for {{heading-3}} in standalone export; clarify absent-format case in Rule [N+2]; clarify emptyBehavior/Change A interaction for L1 View path |
-| 9 | 2026-06-05 | Close open question 2: amend Rule [N+1] to allow per-record heading omission when record type lacks titleFieldId field (not a render failure); add Rule [N+12] for container-subset default ordering by precedes chain |
+| 2 | 2026-05-27 | Remove `ThemeReference` definition — moved to RFC-001 Change D; RFC-001 and RFC-002 are co-applied |
+| 3 | 2026-05-27 | Add `recordWrapperOverrides` and `sectionWrapperOverrides` to `ElementTemplates`; add `cssClassFields` to `Theme`; add normative CSS class injection section and class-naming convention |
+| 4 | 2026-05-27 | Add `"theme"` to `Reference.definitionType` and `ImportRecord.definitionType` base-spec enums; extend bundled-resolution rule to cover `themeVariants[]`; resolve fieldRow/L1-View open question with explicit composition rule |
+| 5 | 2026-05-29 | Make `Theme.targets` required (min 1 entry) — close open question 2; remove `{{heading-N}}` from element template variables (keep in `coverPage` only) — themes wrap structural content, not re-emit headings; add enforcement timing to Rule [T-7]; add note on `"pdf"`/`"docx"` as not-yet-portable pending RFC-001 follow-on |
 
 ---
 
 ## Abstract
 
-`ext:views-l2` defines `DocumentView` as a projection mechanism but leaves several behaviours undefined: what "default rendering" means when no L1 View is referenced; what heading level structure a renderer should produce; which `ExportConfig` properties from a referenced L1 View survive in section rendering versus standalone export; and how a visual theme attaches to a document view. This RFC addresses all four, and defines `ThemeReference` for use by RFC-002 (`ext:themes-l1`).
+SRS `DocumentView` defines structural projection (what records go in the document, in what order, at what heading depth) but says nothing about visual presentation — brand identity, typography, stylesheets, cover pages, or asset references. This RFC defines `ext:themes-l1`, a new extension that attaches a `Theme` to a `DocumentView`. A `Theme` specifies assets, element templates, and stylesheets without touching the semantic structure. Implementations that do not support `ext:themes-l1` ignore the attachment and produce structurally correct but unstyled output.
 
 ---
 
 ## Motivation
 
-### Problem 1 — "Default rendering" is referenced but undefined
+Three concerns exist in document rendering, and they need to stay in separate layers so each can evolve independently:
 
-`DocumentSection.renderViewId` is optional. The spec states:
+| Layer | Controlled by | Concern |
+|---|---|---|
+| Structure | `ext:views-l2` `DocumentView` | What records, what sections, what order, what heading depth |
+| Element presentation | `ext:views-l1` `View` + `ExportConfig` | How a single record's fields are laid out and labelled |
+| Visual brand | `ext:themes-l1` `Theme` (this RFC) | Assets, stylesheets, cover page, typography, element wrapping |
 
-> When absent, implementations use a default rendering for the instance type.
+Without the third layer, branded output requires either embedding styling concerns inside `DocumentView` (mixing layers) or leaving them entirely outside the spec (no interoperability). `ext:themes-l1` gives implementations a defined, ignorable hook for visual identity that keeps structure and style cleanly separated.
 
-No definition of "default rendering" appears anywhere in the spec. Two conformant implementations will produce incompatible output for the same `DocumentView` — and neither is wrong, because there is no baseline to violate.
+---
 
-### Problem 2 — No normative heading hierarchy
+## Design Principles
 
-A `DocumentView` has a `preamble`, sections with titles, and records within each section. The natural hierarchy (document → section → record → field) is structurally implied by the data model but never made normative. A renderer has no rule for which heading level to assign to a section title versus a record title, and no mechanism for a document author to declare that the document is being embedded inside a larger one.
+**Themes are non-destructive.** A Theme wraps or decorates auto-rendered content; it does not replace or reorder it. Structural decisions remain in `DocumentView` and L1 Views.
 
-### Problem 3 — `format` is an open string with no portable values or precedence rule
+**Graceful degradation is required.** An implementation without `ext:themes-l1` support must produce valid structural output. `themeRef` on `DocumentView` is always optional.
 
-`DocumentView.format` and `ExportConfig.format` are both left as open strings. This creates two interoperability gaps: implementations cannot agree on a shared vocabulary, and when an L1 View referenced from a `DocumentSection` carries its own `exportConfig.format`, there is no rule for which format governs.
+**Assets are named, not inline.** Images, fonts, and other assets are declared by name in the `Theme` and referenced in templates as `{{asset:name}}`. This decouples the template string from the asset's physical location, which may change across environments (local path vs CDN URL vs base64 inline).
 
-### Problem 4 — The L1/L2 rendering boundary is underspecified
-
-When `DocumentSection.renderViewId` is set, the spec says the L1 View is "used to render each instance in this section." But `ExportConfig` contains four properties (`format`, `preamble`, `fieldOrder`, `omitEmptyFields`), and there is no rule for which of them apply in section context versus standalone export context. Two conformant renderers can disagree.
+**Templates wrap; they do not replace.** Element templates receive the auto-rendered content of an element as `{{content}}` and wrap it in format-appropriate markup. They cannot suppress fields or reorder records — that would violate the structure layer.
 
 ---
 
 ## Proposed Changes
 
-### Change A — Define the default rendering baseline
+### New extension: `ext:themes-l1`
 
-Add the following subsection to `ext:views-l2`, immediately after the `DocumentSection` definition.
-
----
-
-#### Default Rendering
-
-When `DocumentSection.renderViewId` is absent, implementations MUST render each instance in the section using the following baseline. This baseline is View-agnostic: no L1 View influences field visibility or ordering in the default rendering path.
-
-**Step 1 — Determine the effective field list and ordering.**
-
-Use the Type's effective field list as defined in the spec. With `ext:type-inheritance`, the effective field list includes inherited fields. Ordering is determined as follows:
-
-- If the Type declares `fieldOrder` (requires `ext:type-inheritance`), use that ordering.
-- Otherwise, order fields ascending by `FieldAssignment.order` within the Type's effective field list.
-
-**Step 2 — Resolve field values.**
-
-For each field in the ordered effective field list, find the matching `FieldValue` in `Record.fieldValues[]` by `fieldId`. A field is considered present if:
-
-- `FieldValue.value` is non-null and non-empty-string, **or**
-- `ext:repeatable-fields` is declared and `FieldAssignment.repeatable === true` and `FieldValue.entries` is a non-empty array.
-
-Fields with neither a scalar value nor repeatable entries are considered absent.
-
-**Step 3 — Determine labels.**
-
-For each field, the display label is `FieldAssignment.displayLabel` from the Type's effective field list entry for that field. If `displayLabel` is absent, fall back to `Field.name`.
-
-**Step 4 — Render.**
-
-Render only fields that are present (Step 2). Fields that are absent are omitted unless `DocumentSection.emptyBehavior` is `"show-placeholder"` and the field is `required: true` in the Type, in which case implementations MAY render a placeholder.
-
-For repeatable fields (where `FieldAssignment.repeatable === true` and `ext:repeatable-fields` is declared), render each entry in `FieldValue.entries` in sequence. The specific presentation of multiple entries (comma-separated inline list, bulleted list, etc.) is implementation-defined for the default rendering baseline.
-
-The default rendering baseline is a floor, not a ceiling. An L1 View referenced via `renderViewId` always takes precedence and may override any of the above.
-
-**`emptyBehavior` in the L1 View path**: Step 4's `emptyBehavior: "show-placeholder"` rule applies only to the default rendering baseline (when `renderViewId` is absent). When `renderViewId` is set, empty field handling is governed by `ExportConfig.omitEmptyFields` on the referenced L1 View (see Change C, L1/L2 ExportConfig boundary rule). `DocumentSection.emptyBehavior` does not apply in the L1 View rendering path.
+Add `ext:themes-l1` to the conformance extension table. Dependency: `ext:views-l2`.
 
 ---
 
-### Change B — Add `titleFieldId` and `depthOffset`
-
-#### B1 — Add `titleFieldId` to `DocumentSection`
-
-Add the following field to `DocumentSection`:
+### New type: `AssetDeclaration`
 
 ```typescript
-titleFieldId?: UUID
-// The fieldId whose value provides the per-record heading within this section.
-// Constraints:
-//   - Must appear in the effective field list of every instance type in the section.
-//   - The referenced field must have valueType "string" or "text".
-//   - The referenced field must not be repeatable (FieldAssignment.repeatable !== true).
-// When absent, no per-record heading is emitted; instances render as a
-// sequential list with only field labels and values.
+{
+  type: "image" | "font" | "stylesheet" | "data"
+  mode: "local" | "remote" | "inline"
+
+  path?: string      // local path; required when mode === "local"
+  url?: string       // remote URL; required when mode === "remote"
+  data?: string      // when mode === "inline": base64 for binary types, raw text for stylesheet/data
+  mimeType?: string  // e.g. "image/png", "font/woff2", "text/css"
+}
 ```
 
-The value-type and repeatability constraints ensure the heading value is always a single renderable string. A boolean, number, select, or repeatable field cannot produce an unambiguous heading.
+Assets are declared in `Theme.assets` as a named dictionary. The name is the key used in template variables: an asset named `"logo"` is referenced in any template as `{{asset:logo}}`.
 
-This is primarily a **render-time** validity check. For section sources that are statically determinable at package validation time (e.g. `type-query` where `semanticObjectType` resolves to a known Type in the Package), implementations SHOULD enforce this constraint during package validation. For dynamically resolved sources, validation is deferred to render time.
+---
 
-#### B2 — Add `depthOffset` to `DocumentView`
+### New type: `PageTemplates`
 
-Add the following field to `DocumentView`:
+Templates for page-level chrome. Applicable to paginated output formats (`"pdf"`, `"docx"`). Ignored for non-paginated formats (`"html"`, `"markdown"`).
 
 ```typescript
-depthOffset?: integer   // min: 0; default: 0
-// Shifts all auto-rendered heading levels by this amount.
-// At depthOffset 0 (default): document title H1, sections H2, records H3.
-// At depthOffset 1: H2, H3, H4 respectively.
-// Field labels are never rendered as headings regardless of depthOffset.
+{
+  coverPage?: string
+  // Rendered as the first page of the document.
+  // Available variables: all DocumentView preamble variables + {{asset:*}}
+
+  pageHeader?: string
+  // Repeated at the top of each page.
+  // Additional variable: {{page-number}}
+
+  pageFooter?: string
+  // Repeated at the bottom of each page.
+  // Additional variable: {{page-number}}
+}
 ```
 
-#### Normative heading level table
+---
 
-For outputs where `DocumentView.format` is `"markdown"`, `"html"`, or `"adoc"`, implementations MUST apply the following heading levels:
+### New type: `ElementTemplates`
 
-| Element | Heading level | Condition |
+Templates that wrap auto-rendered content at each structural level. Each template receives the auto-rendered content of that element as `{{content}}` and returns the full output for that element.
+
+```typescript
+{
+  documentWrapper?: string
+  // Wraps the entire rendered document body (after the cover page, if any).
+  // Available: {{content}}, {{container-title}}, {{date}}, {{asset:*}}
+
+  sectionWrapper?: string
+  // Wraps each section (heading + all records within it).
+  // Available: {{content}}, {{section-title}}, {{section-id}}, {{asset:*}}
+
+  sectionWrapperOverrides?: Array<{
+    sectionId: string   // matches DocumentSection.sectionId; case-sensitive
+    template: string    // same variables as sectionWrapper
+  }>
+  // Per-section overrides. When a section's sectionId matches, this template is used
+  // instead of sectionWrapper. When no match, sectionWrapper (if present) applies.
+  // sectionId values must be unique within sectionWrapperOverrides.
+
+  recordWrapper?: string
+  // Wraps each record (record heading + all field rows).
+  // Available: {{content}}, {{record-heading}}, {{type-namespace}}, {{type-name}}, {{asset:*}}
+  // {{record-heading}} is the value of titleFieldId for this section, or empty string.
+
+  recordWrapperOverrides?: Array<{
+    typeId: UUID      // matches Record.typeId; targets all records of this type
+    template: string  // same variables as recordWrapper
+  }>
+  // Per-type overrides. When a record's typeId matches, this template is used instead of
+  // recordWrapper. When no match, recordWrapper (if present) applies.
+  // typeId values must be unique within recordWrapperOverrides.
+
+  fieldRow?: string
+  // Wraps each field label + value pair.
+  // Available: {{field-label}}, {{field-value}}, {{field-name}}, {{content}}
+  // {{content}} is the default rendering of the label+value pair.
+}
+```
+
+Override precedence: a specific override (`sectionWrapperOverrides`, `recordWrapperOverrides`) always takes precedence over the corresponding universal template (`sectionWrapper`, `recordWrapper`). When neither an override nor a universal template is set, the element is rendered without wrapping.
+
+**`fieldRow` and L1 View composition**: When `DocumentSection.renderViewId` is set, `fieldRow` applies to each field row that the L1 View renders — after the L1 View's `ExportConfig.fieldOrder` has reordered fields and `ExportConfig.omitEmptyFields` has filtered absent ones. The L1 View determines which fields appear and in what order; `fieldRow` wraps each surviving field row independently. `fieldRow` does not apply to content emitted by `ExportConfig.preamble` (preamble content is L1 View chrome, not a field row).
+
+Element templates apply after the structural rendering baseline (RFC-001 Change A) and after any L1 View rendering. They receive finished content and wrap it — they do not re-render.
+
+---
+
+### New type: `StylesheetDeclaration`
+
+```typescript
+{
+  mode: "inline" | "local" | "remote"
+  content?: string   // inline CSS; required when mode === "inline"
+  path?: string      // local path; required when mode === "local"
+  url?: string       // remote URL; required when mode === "remote"
+}
+```
+
+---
+
+### New type: `TypographyHints`
+
+Informative declarations. Implementations map these to format-appropriate directives (CSS variables, document style settings, etc.). No normative rendering behaviour is derived from these values.
+
+```typescript
+{
+  baseFont?: string        // e.g. "Inter", "Georgia"
+  headingFont?: string
+  monoFont?: string
+  baseFontSize?: string    // e.g. "16px", "1rem", "11pt"
+  lineHeight?: string      // e.g. "1.5", "24px"
+}
+```
+
+---
+
+### New type: `Theme`
+
+```typescript
+{
+  id: UUID
+  namespace: string
+  name: string
+  version: integer   // min: 1
+
+  description: string
+  // What this theme is for; intended output format and audience.
+
+  targets: string[]   // required; min 1 entry
+  // Output formats this theme is designed for.
+  // Must reference portable format values from RFC-001 Change C ("markdown", "adoc", "html", "text").
+  // Note: "pdf" and "docx" are anticipated but not yet portable values — see Open Question 4.
+  // A Theme may target multiple formats; implementations apply it only when
+  // DocumentView.format is in this list. A Theme with an empty targets array is a validation error.
+
+  assets?: { [assetName: string]: AssetDeclaration }
+  // Named asset declarations. Names must be unique within the Theme.
+
+  cssClassFields?: UUID[]
+  // fieldIds whose values are injected as CSS classes on record wrapper elements.
+  // For each fieldId listed, if the record contains that field with a string, text,
+  // or select value, the class srs-field-{fieldName}-{normalisedValue} is added.
+  // Only applies to "html" and "pdf" output. Ignored for other formats.
+  // Only string, text, and select valueTypes are supported; other types are silently skipped.
+
+  pageTemplates?: PageTemplates
+  elementTemplates?: ElementTemplates
+  stylesheet?: StylesheetDeclaration
+
+  typography?: TypographyHints
+
+  tags?: string[]
+  createdAt: ISO8601
+  lineage?: Lineage
+  provenance?: Provenance
+}
+```
+
+---
+
+### `ThemeReference` (defined in RFC-001 Change D)
+
+`ThemeReference` is the type used by `DocumentView.themeRef`. It is defined in RFC-001 Change D and is not repeated here. `themeId` within a `ThemeReference` references `Theme.id` as defined in this RFC.
+
+---
+
+### `DocumentView.themeRef` (defined in RFC-001 Change D)
+
+`DocumentView.themeRef?: ThemeReference` is added to `DocumentView` by RFC-001 Change D. RFC-002 defines the `Theme` that is the target of the reference. The graceful-degradation rule (ignore when `ext:themes-l1` is not declared) is also in RFC-001 Rule [N+7].
+
+---
+
+### Modification to `Package`
+
+Add:
+
+```typescript
+themes?: Theme[]   // ext:themes-l1; omit if not in use
+```
+
+**Bundled-package theme resolution**: When `Package.mode === "bundled"`, every `ThemeReference` with `mode === "bundled"` that appears in `Package.documentViews[]` — whether in `DocumentView.themeRef` or in any entry of `DocumentView.themeVariants[]` — MUST be resolved to a `Theme` that appears in `Package.themes[]`. A `themeId` referenced in either location that is absent from `themes[]` is a validation error.
+
+#### Modifications to base-spec enums
+
+`Reference.definitionType` (base spec §5.2) gains a new portable value:
+
+```
+"field" | "type" | "view" | "schema" | "protocol" | "theme"
+```
+
+`ImportRecord.definitionType` (`ext:import-tracking`) gains the same addition, making theme definitions trackable in consumer registries.
+
+`dependencyRefs` may include `Reference` entries with `definitionType: "theme"` to declare theme dependencies for `standalone` packages.
+
+---
+
+## CSS class injection
+
+For `"html"` and `"pdf"` output formats, implementations MUST add semantic CSS classes to rendered wrapper elements. These classes enable the theme stylesheet to target any element by its structural position, type, or field state without requiring separate templates for each combination.
+
+#### Class name normalisation
+
+All identifier components (type namespace, type name, field name, field value, section ID) MUST be normalised before use in a CSS class name using the following rule:
+
+1. Convert to lowercase
+2. Replace underscores, spaces, and dots with hyphens
+3. Remove any character that is not alphanumeric or a hyphen
+4. Collapse consecutive hyphens to a single hyphen
+5. Trim leading and trailing hyphens
+
+Examples: `governance` → `governance`; `article_text` → `article-text`; `Phase 1 scope` → `phase-1-scope`; `active` → `active`.
+
+#### Classes applied per element
+
+| Element | Classes always applied | Classes conditionally applied |
 |---|---|---|
-| Document title | `1 + depthOffset` | When `preamble` is absent (see below) |
-| Section title | `2 + depthOffset` | When `DocumentSection.title` is set |
-| Per-record heading | `3 + depthOffset` | When `titleFieldId` is set on the section |
-| Field label | Formatted text (e.g. bold) — not a heading | Always |
+| Document wrapper | `srs-document` | — |
+| Section wrapper | `srs-section`, `srs-section-{sectionId}` | — |
+| Record wrapper | `srs-record`, `srs-type-{typeNamespace}-{typeName}` | `srs-field-{fieldName}-{normalisedValue}` for each `cssClassFields` entry that has a matching non-empty string, text, or select value |
+| Field row | `srs-field`, `srs-fieldname-{fieldName}` | — |
 
-**Default document title (when `preamble` is absent):** When `DocumentView.preamble` is absent and `format` is `"markdown"`, `"html"`, or `"adoc"`, implementations MUST render a document title heading at level `1 + depthOffset` containing `container-title` immediately before the first section.
+`{sectionId}`, `{typeNamespace}`, `{typeName}`, `{fieldName}`, and `{normalisedValue}` are all normalised per the rule above.
 
-**When `preamble` is present:** The document title heading is the author's responsibility. The `{{heading-1}}` variable (defined below) is provided to keep the preamble consistent with `depthOffset` without hardcoding a heading level.
+#### Example
 
-For outputs where `format` is `"text"` or an implementation-defined value, heading level semantics do not apply.
+A Decision record with `status: "superseded"` in a section with `sectionId: "decision-log"`, where `status` fieldId is listed in `Theme.cssClassFields`:
 
-#### Template variables for `DocumentView.preamble`
+- Section wrapper classes: `srs-section srs-section-decision-log`
+- Record wrapper classes: `srs-record srs-type-governance-decision srs-field-status-superseded`
 
-The following additional standard variables are added to `DocumentView.preamble`:
+A stylesheet can then target `.srs-field-status-superseded { opacity: 0.5; }` without any template changes.
 
-| Variable | Resolves to |
-|---|---|
-| `{{heading-1}}` | Heading prefix at level `1 + depthOffset` |
-| `{{heading-2}}` | Heading prefix at level `2 + depthOffset` |
-
-In Markdown, `{{heading-1}}` at `depthOffset: 0` resolves to `#`. At `depthOffset: 1` it resolves to `##`.
-
-A portable preamble template:
-
-```
-{{heading-1}} {{container-title}}
-
-Founded {{date}}. This document is the living record...
-```
+**Namespaced type example**: A record with `typeNamespace: "com.semanticops.srs"` and `typeName: "meta.section"` produces the class `srs-type-com-semanticops-srs-meta-section` (dots normalised to hyphens per step 2 of the normalisation rule).
 
 ---
 
-### Change C — Define a controlled `format` vocabulary and precedence rule
+## Template variable reference
 
-Replace the current open-string description of `format` on `DocumentView` and `ExportConfig` with the following.
+The following variables are available in template strings across the extension. Variables not applicable to a given template context MUST resolve to an empty string (not an error).
 
-#### Portable `format` values
+| Variable | Available in | Resolves to |
+|---|---|---|
+| `{{container-title}}` | All | Container title from manifest |
+| `{{container-id}}` | All | Container UUID |
+| `{{date}}` | All | Render date (ISO 8601 date, not datetime) |
+| `{{heading-1}}` | `coverPage` only | Heading prefix at level `1 + depthOffset` (RFC-001 Change B). Not available in element wrapper templates — structural headings are already inside `{{content}}` and must not be re-emitted. |
+| `{{asset:name}}` | All | Resolved asset reference — URL, data URI, or path depending on context |
+| `{{section-title}}` | `sectionWrapper`, `sectionWrapperOverrides` | Value of `DocumentSection.title` |
+| `{{section-id}}` | `sectionWrapper`, `sectionWrapperOverrides` | Value of `DocumentSection.sectionId` |
+| `{{record-heading}}` | `recordWrapper`, `recordWrapperOverrides` | Value of `titleFieldId` field for the current record, or empty string |
+| `{{type-namespace}}` | `recordWrapper`, `recordWrapperOverrides` | `Record.typeNamespace` |
+| `{{type-name}}` | `recordWrapper`, `recordWrapperOverrides` | `Record.typeName` |
+| `{{field-label}}` | `fieldRow` | Display label for the current field |
+| `{{field-value}}` | `fieldRow` | Rendered value of the current field |
+| `{{field-name}}` | `fieldRow` | `Field.name` for the current field |
+| `{{content}}` | All element templates | Auto-rendered content that this template wraps |
+| `{{page-number}}` | `pageHeader`, `pageFooter` | Current page number (paginated formats only) |
 
-The following values are portable across implementations:
-
-| Value | Meaning |
-|---|---|
-| `"markdown"` | CommonMark-compatible Markdown |
-| `"adoc"` | AsciiDoc |
-| `"html"` | HTML (fragment or full document at implementation discretion) |
-| `"text"` | Plain text; no markup |
-
-`"json"` is intentionally excluded from the portable set in this RFC. A JSON projection format requires a normative output schema; that is deferred to a follow-on RFC.
-
-Implementations MAY support additional format values. Non-portable values MUST be treated as opaque implementation hints by receivers that do not recognise them; they MUST NOT cause a validation error.
-
-When `format` is absent from `DocumentView`, the output format is implementation-defined.
-
-#### L1/L2 ExportConfig boundary rule
-
-When `DocumentSection.renderViewId` is set, the referenced L1 View's `ExportConfig` properties apply to section rendering as follows:
-
-| `ExportConfig` property | Behaviour in section rendering context |
-|---|---|
-| `format` | **Superseded.** `DocumentView.format` governs. `ExportConfig.format` applies to standalone record export only. |
-| `preamble` | **Applies.** Rendered before each record's field values within the section. |
-| `fieldOrder` | **Applies.** Overrides `FieldAssignment.order` for field rendering within the section. |
-| `omitEmptyFields` | **Applies.** Controls whether absent fields are rendered within the section. |
-
-This boundary means a renderer using an L1 View inside a `DocumentView` section produces the same per-record layout as standalone export of that View, except that the output format is always governed by `DocumentView.format`.
-
-#### Template variables in `ExportConfig.preamble` when used in section context
-
-When `ExportConfig.preamble` renders inside a `DocumentView` section (i.e. when `renderViewId` is set), the following additional variable is available, resolving using the enclosing `DocumentView.depthOffset`:
-
-| Variable | Resolves to |
-|---|---|
-| `{{heading-3}}` | Heading prefix at level `3 + depthOffset` |
-
-The `{{heading-3}}` variable is available only when the preamble is rendered inside a `DocumentView` section; it resolves to an empty string in standalone export context. The existing `ExportConfig.preamble` standard variables (`{{instance-id}}`, `{{date}}`, `{{status}}`, `{{namespace}}`, `{{name}}`) continue to apply.
-
-**Heading content in L1 preambles and Rule [N+1]**: An `ExportConfig.preamble` that contains a heading marker (e.g. `{{heading-3}} {{instance-id}}`) is emitting *L1 View content*, not the section pipeline's structural per-record heading. Rule [N+1]'s prohibition on per-record headings when `titleFieldId` is absent applies only to the *section pipeline's structural heading injection mechanism* — it does not prohibit headings appearing inside `ExportConfig.preamble` content. L1 View authors who include heading markers in preambles are responsible for heading depth consistency; `{{heading-3}}` is provided for this purpose. When both `titleFieldId` is set and the L1 preamble includes a heading, a redundant double-heading will be produced — this is a View authoring error, not a spec violation.
+`{{asset:name}}` resolution:
+- In `"html"` output: resolves to a data URI for `mode === "inline"`, an `href`/`src` URL for `mode === "remote"`, or a relative path for `mode === "local"`.
+- In `"pdf"` output: implementations embed the asset directly.
+- In `"markdown"` output: resolves to the URL or path string only (no embedding).
 
 ---
 
-### Change D — Define `ThemeReference` and reserve `themeRef` on `DocumentView`
+## Conformance rules
 
-**Co-application note**: This change and RFC-002 (`ext:themes-l1`) are applied together. RFC-001 defines `ThemeReference` (the reference pointer type) because it appears on `DocumentView`, which is part of `ext:views-l2`. RFC-002 defines `Theme` (the target of the reference) and the full `ext:themes-l1` extension. Neither RFC is a complete spec delta without the other.
+**Rule [T-1]** (ext:themes-l1 — graceful degradation): Implementations that do not declare `ext:themes-l1` MUST ignore `DocumentView.themeRef` and MUST NOT produce a validation error when it is present.
 
-#### New type: `ThemeReference`
+**Rule [T-1b]** (ext:themes-l1 — `targets` required): `Theme.targets` MUST contain at least one entry. A `Theme` with an absent or empty `targets` array is a validation error. This is enforced at package validation time.
 
-```typescript
-{
-  mode: "local" | "remote" | "bundled"
+**Rule [T-2]** (ext:themes-l1 — targets matching): Implementations MUST apply a Theme only when `DocumentView.format` appears in `Theme.targets`. When the format does not match, the Theme MUST be ignored and structural output produced without it.
 
-  path?: string    // path to a Theme JSON file; required when mode === "local"
-  url?: string     // URL to a Theme JSON file; required when mode === "remote"
-  themeId?: UUID   // references Theme.id in Package.themes[]; required when mode === "bundled"
-}
-```
+**Rule [T-3]** (ext:themes-l1 — templates wrap, do not replace): Element templates receive auto-rendered content via `{{content}}`. Implementations MUST render the structural content first and pass it to the template; they MUST NOT suppress or reorder content through template evaluation.
 
-Follows the same `mode`-based reference pattern as `packageRef` in the manifest.
+**Rule [T-4]** (ext:themes-l1 — asset name uniqueness): Asset names within a single `Theme.assets` dictionary MUST be unique. Asset names are case-sensitive.
 
-#### New type: `ThemeVariant`
+**Rule [T-5]** (ext:themes-l1 — bundled theme resolution): When `ThemeReference.mode === "bundled"`, the referenced `themeId` MUST appear in `Package.themes[]` if `Package.mode === "bundled"`. A missing theme in a bundled package is a validation error.
 
-A named alternative theme that can be selected at render time instead of the default `themeRef`.
+**Rule [T-6]** (ext:themes-l1 — unknown variables): Template variables that are not defined in this spec and not recognised by the implementation MUST be passed through as literal text. They MUST NOT cause a rendering error.
 
-```typescript
-{
-  name: string           // identifier used to request this variant; case-sensitive
-  description?: string   // human-readable note on intended use (e.g. "web", "print", "accessible")
-  themeRef: ThemeReference
-}
-```
+**Rule [T-6b]** (ext:themes-l1 — `{{heading-N}}` scope): `{{heading-1}}` is available only in `PageTemplates.coverPage`, resolving via `DocumentView.depthOffset` per RFC-001 Change B. In all element wrapper templates (`documentWrapper`, `sectionWrapper`, `sectionWrapperOverrides`, `recordWrapper`, `recordWrapperOverrides`, `fieldRow`, `pageHeader`, `pageFooter`), `{{heading-1}}`, `{{heading-2}}`, and `{{heading-3}}` MUST resolve to the empty string. Structural headings are delivered inside `{{content}}` and MUST NOT be re-emitted by wrapper templates.
 
-Variant names have no format constraints but MUST be unique within the enclosing `DocumentView.themeVariants` array. This uniqueness constraint is enforced at package validation time (it is statically determinable from the `DocumentView` definition).
+**Rule [T-7]** (ext:themes-l1 — override precedence): When `recordWrapperOverrides` contains an entry whose `typeId` matches the current record's `typeId`, that entry's template MUST be used instead of `recordWrapper`. When `sectionWrapperOverrides` contains an entry whose `sectionId` matches the current section's `sectionId`, that entry's template MUST be used instead of `sectionWrapper`. Override arrays MUST NOT contain duplicate `typeId` or `sectionId` values respectively. Duplicate detection is enforced at package validation time.
 
-#### Additions to `DocumentView`
+**Rule [T-8]** (ext:themes-l1 — CSS class injection): For `"html"` and `"pdf"` output formats, implementations MUST apply the CSS classes defined in the class injection table to each rendered wrapper element. Class name components MUST be normalised using the five-step normalisation rule.
 
-```typescript
-themeRef?: ThemeReference
-// Default Theme (ext:themes-l1). Applied when no variant is selected at render time.
-// When ext:themes-l1 is not declared, implementations MUST ignore this field.
-// They MUST NOT error on its presence.
+**Rule [T-9]** (ext:themes-l1 — `cssClassFields` scope): Only fields with `valueType` of `"string"`, `"text"`, or `"select"` listed in `Theme.cssClassFields` generate CSS classes. Fields with other value types are silently skipped. Fields listed in `cssClassFields` that are absent or empty on a given record generate no class for that record.
 
-themeVariants?: ThemeVariant[]
-// Named alternative themes. A caller selects a variant by name at render invocation.
-// When a requested variant name is not found, implementations SHOULD fall back to
-// themeRef and MAY emit a warning. When neither themeRef nor a matching variant is
-// present, the document renders without a theme.
-// When ext:themes-l1 is not declared, implementations MUST ignore this field.
-```
+**Rule [T-10]** (ext:themes-l1 — `fieldRow` scope with L1 View): When `DocumentSection.renderViewId` is set, `fieldRow` MUST be applied to each field row that survives the L1 View's `ExportConfig.omitEmptyFields` filtering and is ordered by `ExportConfig.fieldOrder`. `fieldRow` MUST NOT wrap content emitted by `ExportConfig.preamble`.
 
----
-
-## Conformance Rules
-
-**Rule [N]** (ext:views-l2 — Default rendering): When `DocumentSection.renderViewId` is absent, implementations MUST use the default rendering baseline: fields in effective-field-list order (governed by `fieldOrder` when `ext:type-inheritance` is active, otherwise by `FieldAssignment.order`), using `FieldAssignment.displayLabel` or `Field.name` as label, resolved from `FieldValue.value` for scalar fields and from `FieldValue.entries` for repeatable fields (when `ext:repeatable-fields` is declared), omitting absent fields. No L1 View influences this baseline.
-
-**Rule [N+1]** (ext:views-l2 — `titleFieldId` constraints): When `DocumentSection.titleFieldId` is set, it MUST reference a `fieldId` that (a) appears in the effective field list of every instance type in that section, (b) has `valueType` of `"string"` or `"text"`, and (c) is not repeatable. The section pipeline MUST NOT inject a structural per-record heading when `titleFieldId` is absent. This rule applies to the section rendering pipeline's heading injection mechanism only; it does not constrain headings that may appear inside `ExportConfig.preamble` content when an L1 View is bound via `renderViewId`. This is enforced at render time; implementations SHOULD also enforce it at package validation time when the section source is statically determinable.
-
-**Rule [N+2]** (ext:views-l2 — Heading hierarchy): When rendering for `format: "markdown"`, `"html"`, or `"adoc"`, section titles MUST render at heading level `2 + depthOffset`. When `titleFieldId` is set on a section, per-record headings MUST render at heading level `3 + depthOffset`. Field labels MUST NOT be rendered as headings. When `format` is absent or is an implementation-defined value other than `"markdown"`, `"html"`, or `"adoc"`, this rule does not apply; heading level semantics are implementation-defined.
-
-**Rule [N+3]** (ext:views-l2 — Default document title): When `DocumentView.preamble` is absent and `format` is `"markdown"`, `"html"`, or `"adoc"`, implementations MUST render a document title heading at level `1 + depthOffset` containing the container title before the first section.
-
-**Rule [N+4]** (ext:views-l2 — `depthOffset` range): `depthOffset` MUST be a non-negative integer. Implementations MAY clamp computed heading levels that exceed the maximum supported by the target format and render such elements as formatted text.
-
-**Rule [N+4b]** (ext:views-l2 — `depthOffset` warning): When `depthOffset` exceeds 4, the per-record heading level reaches H7 or higher in the default configuration (`3 + depthOffset ≥ 7`). Implementations SHOULD emit a warning diagnostic when `depthOffset > 4`. This is a quality-of-authoring warning only; it MUST NOT cause a validation failure or prevent rendering.
-
-**Rule [N+5]** (ext:views-l2 — Format precedence): `DocumentView.format` governs the output format for all section rendering. When a referenced L1 View's `exportConfig.format` differs, it is ignored for section rendering. `ExportConfig.format` applies to standalone record export only.
-
-**Rule [N+6]** (ext:views-l2 — L1 ExportConfig in section context): When `DocumentSection.renderViewId` is set, `ExportConfig.preamble`, `ExportConfig.fieldOrder`, and `ExportConfig.omitEmptyFields` MUST apply to section rendering. `ExportConfig.format` MUST be ignored in favour of `DocumentView.format` (Rule [N+5]).
-
-**Rule [N+6b]** (ext:views-l2 — `{{heading-3}}` in standalone export): When `ExportConfig.preamble` is rendered in standalone export context (i.e. `renderViewId` is not set, or the View is exported directly rather than embedded in a `DocumentView` section), implementations MUST substitute `{{heading-3}}` with the empty string. Implementations MUST NOT emit the literal `{{heading-3}}` token in any output.
-
-**Rule [N+7]** (ext:views-l2 — `themeRef` graceful degradation): Implementations that do not declare `ext:themes-l1` MUST ignore `DocumentView.themeRef` and `DocumentView.themeVariants` and MUST NOT produce a validation error on their presence.
-
-**Rule [N+8]** (ext:views-l2 — theme variant selection): When `ext:themes-l1` is declared and a variant name is supplied at render invocation, implementations MUST apply the following resolution in order:
-
-1. Find the `ThemeVariant` in `DocumentView.themeVariants` whose `name` matches the requested name (case-sensitive).
-2. If found: resolve that variant's `ThemeReference` to a `Theme` and apply RFC-002 Rule [T-2] (targets check). If the format matches, use that Theme. If the format does not match, render **without a theme** — implementations MUST NOT fall back to `DocumentView.themeRef`.
-3. If not found: fall back to `DocumentView.themeRef` (applying Rule [T-2]). If `themeRef` is absent or format-incompatible, render without a theme.
-4. If no variant name is supplied: use `DocumentView.themeRef` (applying Rule [T-2]).
-
-`ThemeVariant.name` values MUST be unique within a `DocumentView.themeVariants` array. This is enforced at package validation time.
+**Rule [T-11]** (ext:themes-l1 — base-spec enum extension): Implementations that support `ext:themes-l1` MUST accept `"theme"` as a valid value for `Reference.definitionType` and (when `ext:import-tracking` is also declared) for `ImportRecord.definitionType`. A `definitionType: "theme"` value in a received document MUST NOT cause a validation error.
 
 ---
 
 ## Rationale
 
-### Why `depthOffset` rather than explicit per-element levels?
+### Why templates wrap rather than replace
 
-`depthOffset` preserves the invariant that sections are always one level below the document and records always one level below sections. Explicit per-element levels would allow authors to violate this invariant, producing documents where heading levels do not reflect structural depth.
+Allowing templates to replace auto-rendered content would silently break the structural layer — fields could disappear, record order could change, and the semantic guarantees of `DocumentView` would be undermined. A theme is a presentation concern; a `DocumentView` is a semantic concern. The wrapping model enforces that separation mechanically.
 
-### Why `titleFieldId` on `DocumentSection` rather than on the Type?
+### Why assets are named rather than referenced inline
 
-A Type does not know how it will be assembled. Multiple `DocumentView` definitions could include the same Type in sections where different fields serve as the heading. Making the designation per-section keeps the Type semantically stable.
+Template strings are stored as JSON and distributed across systems. Embedding binary data or absolute paths directly in template strings makes them non-portable. A named asset dictionary allows the same template to work in a local development environment (local path), a CI pipeline (relative path), or a CDN-hosted production environment (URL) by changing the asset declaration, not the template.
 
-### Why restrict `titleFieldId` to scalar string/text fields?
+### Why `TypographyHints` is informative rather than normative
 
-A heading must be a single renderable string. Boolean, number, select, and repeatable fields cannot produce an unambiguous heading without additional normalisation logic. Restricting to scalar string/text eliminates ambiguity without practical loss — a record's human-readable identifier is almost always a string field.
+Typography maps to very different constructs across output formats: CSS variables in HTML, document style settings in DOCX, font embedding in PDF. Requiring a specific rendering outcome for a typography hint would over-constrain implementations. The hints provide enough signal for a human-readable output without mandating a particular rendering mechanism.
 
-### Why make the absent-preamble document title normative?
+### Why `recordWrapperOverrides` rather than a single universal `recordWrapper` with conditionals
 
-Without this rule, the container title only appears as a heading if the author explicitly writes a preamble containing one. A document where the container title is absent or appears as plain text would silently contradict the heading hierarchy that sections and records follow.
+A conditional template language inside a string (e.g. `{{#if type == "article"}}...{{/if}}`) would require specifying a template expression syntax, escaping rules, and evaluation semantics — a substantial addition for what is effectively a lookup table. An override array is a lookup table with no expression language, which is simpler to specify, simpler to implement, and simpler to audit. The CSS class injection mechanism handles value-driven styling (e.g. status-based) without any conditional template logic.
 
-### Why does `DocumentView.format` win over `ExportConfig.format`?
+### Why CSS class injection rather than exposing field values as template variables
 
-`ExportConfig` is a record-export configuration. In standalone export, the record's format is self-determined. In section rendering, the record is a constituent of a larger document — the document format governs. Allowing `ExportConfig.format` to override `DocumentView.format` would make a section's output format dependent on an L1 View definition that could be updated independently of the `DocumentView`.
+Making every field value available as a template variable would require either a fixed variable namespace per type (coupling the template language to specific field names) or a dynamic namespace that implementations must query per record. CSS classes solve the value-targeting problem cleanly for HTML/PDF output: the theme stylesheet handles the conditional styling, the implementation just emits normalised identifiers, and no template logic is needed.
 
-### Why do `preamble`, `fieldOrder`, and `omitEmptyFields` survive in section context?
+### Why `cssClassFields` is opt-in rather than injecting all field values
 
-These properties control how the record's content is laid out and what it contains — they are presentation concerns that are equally valid whether the record is exported standalone or embedded in a section. The L1 View author defines the record layout once; it is consistent across both contexts. Only `format` is context-dependent.
+Field values may be long prose, private content, or binary-encoded data. Blindly normalising all field values as CSS class components could produce unwieldy or unsafe class names. The `cssClassFields` array lets the theme author explicitly select the fields that are meaningful for styling purposes — typically status, lifecycle, and categorisation fields.
 
-### Why define `ThemeReference` in RFC-001 rather than RFC-002?
+### Why `ext:themes-l1` rather than inline styling on `DocumentView`
 
-`ThemeReference` appears on `DocumentView`, which is part of `ext:views-l2`. RFC-001 must be self-contained as a spec delta for `ext:views-l2`. `Theme` (the target of the reference) belongs in RFC-002 because it defines the full `ext:themes-l1` extension. The two types are split at the boundary between what belongs to the views layer and what belongs to the theming layer.
-
-### Why is default rendering View-agnostic?
-
-The baseline must be computable from the Type and Record alone. Ambient L1 Views could suppress fields, making the baseline non-deterministic from the document author's perspective.
+If visual properties were placed directly on `DocumentView`, the same `DocumentView` would need to be duplicated for each branded variant — one for the governance team, one for external publication, one for print. With `themeRef`, the structural projection is authored once and visual themes are swapped without touching the record definitions.
 
 ---
 
-## Alternatives Considered
+## Alternatives considered
 
-**Per-section `headingDepth` instead of document-level `depthOffset`**: Removed the invariant that sections are at consistent depth relative to each other. Dropped.
+**CSS class hints on `DocumentSection` and element templates**  
+Adding `cssClass?: string` fields to structural objects would let a renderer apply CSS without full template wrapping. Rejected: it only addresses HTML/CSS output and leaks format-specific concerns into the structural layer.
 
-**Infer record title from first `required: true` string field**: Fragile and order-dependent. Explicit `titleFieldId` is unambiguous.
+**A Theme registry separate from Package**  
+Themes could be published to a separate registry (analogous to an npm registry) and referenced by name. Rejected for this RFC as premature: the Package distribution model (bundled/standalone) is already established and sufficient. A Theme registry could be a follow-on.
 
-**Use `instanceIndex[].title` from the manifest**: Ties rendering to the manifest, which is a container concern. `titleFieldId` keeps rendering self-contained within the Package and Record.
-
-**`ExportConfig.format` takes precedence in section context**: Would allow per-section format mixing. Rejected — format mixing at section granularity produces output most renderers cannot handle as a single document, and it makes the output format unpredictable from the `DocumentView` definition alone.
-
-**Define `ThemeReference` only in RFC-002**: Left RFC-001 with an unresolved type on `DocumentView`. Since the two RFCs are co-applied, `ThemeReference` belongs in RFC-001 where `DocumentView` is defined.
+**Single `pageAndElementTemplates` flat object**  
+Merging `PageTemplates` and `ElementTemplates` into one object simplifies the schema slightly but conflates page-level chrome (which only applies to paginated formats) with element-level wrapping (which applies to all formats). Keeping them separate makes the format-applicability rule easier to express and implement.
 
 ---
 
-## Open Questions
+## Open questions
 
-1. ~~**Maximum `depthOffset` value**~~: Resolved in Rev 8. Rule [N+4b] adds a warning-level diagnostic when `depthOffset > 4`. No hard cap is imposed; clamping (Rule [N+4]) remains the fallback.
+1. **`fieldRow` and L1 View composition** — resolved in Rev 4. `fieldRow` wraps each field row that the L1 View renders (after `omitEmptyFields` and `fieldOrder` are applied). It does not wrap preamble content. See Rule [T-10].
 
-2. ~~**`titleFieldId` in heterogeneous sections**~~: Resolved in Rev 9. Rule [N+1] is amended: when a record's type does not carry the designated `titleFieldId` field, the per-record heading is omitted silently — this is not a render failure. Rule [N+12] adds that `container-subset` sections order by `precedes` chain when no `ordering.fieldId` is declared.
+2. ~~**Should `Theme.targets` be required or optional?**~~ Resolved in Rev 5. `targets` is required with min 1 entry (Rule [T-1b]). Silent application to unintended formats is worse than the minor authoring cost of declaring targets explicitly.
+
+3. **Versioning and theme inheritance**: should a Theme be able to extend another Theme (analogous to `ext:type-inheritance`)? Useful for brand variants (light/dark, language editions) but adds meaningful schema complexity. Deferred to a follow-on RFC if the use case proves common.
+
+4. **`pdf` and `docx` in the format vocabulary**: RFC-001 Change C defined portable format values but excluded `"pdf"` and `"docx"` because they require richer rendering infrastructure. With `ext:themes-l1` now providing asset and stylesheet mechanisms, these formats become more tractable. A follow-on to RFC-001 should add them with appropriate conformance caveats. Until then, `"pdf"` and `"docx"` are implementation-defined values in `Theme.targets` — implementations that support them may use them, but they are not portable and MUST NOT cause a validation error in implementations that do not recognise them (per Rule [T-2], an unrecognised format simply means the theme is not applied).
 
 
 **Title**: RFC-009: Root-record Type as the typing anchor for Containers, Document Views, and distributable units

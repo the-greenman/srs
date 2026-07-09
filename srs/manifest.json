@@ -2820,6 +2820,89 @@
       "tier": 2
     },
     {
+      "instanceId": "224c0363-fdb4-4fad-b13f-f4ed6a25c1d0",
+      "path": "records/tier-2/invariant-224c0363.json",
+      "tags": [
+        "concern:validation",
+        "topic:extensions",
+        "topic:conformance"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "4c9403e6-004b-4744-a0a3-e95271c77bc3",
+      "path": "records/tier-2/invariant-4c9403e6.json",
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "3c4b5e9c-98f8-4e0b-8808-2e8a15ad9628",
+      "path": "records/tier-2/invariant-3c4b5e9c.json",
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "94488cb9-8fe8-4c51-afa5-0c8b8bdb45c6",
+      "path": "records/tier-2/invariant-94488cb9.json",
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "deedaca2-4e41-44b4-be6e-2c9b76702f44",
+      "path": "records/tier-2/invariant-deedaca2.json",
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "b2ed8b1d-90b3-4107-bf08-8b3c05cc6fb6",
+      "path": "records/tier-2/invariant-b2ed8b1d.json",
+      "tags": [
+        "concern:validation",
+        "topic:conformance",
+        "construct:field"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "d4fbd56a-ff47-4953-83ed-5dc277f4c207",
+      "path": "records/tier-2/invariant-d4fbd56a.json",
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "c86855f1-3b63-49dd-b2a9-eaea83203591",
+      "path": "records/tier-2/invariant-c86855f1.json",
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "1b135eb4-7530-459f-a6c4-07151832f691",
+      "path": "records/tier-2/invariant-1b135eb4.json",
+      "tags": [
+        "concern:validation",
+        "topic:conformance"
+      ],
+      "tier": 2
+    },
+    {
       "instanceId": "2918c557-1a7d-4926-ac2f-808345c763f8",
       "path": "records/rfcs/rfc-2918c557.json",
       "tier": 2

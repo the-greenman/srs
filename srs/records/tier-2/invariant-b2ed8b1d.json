@@ -1,0 +1,33 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-07-09T12:34:00.282167842+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-90"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "conditional-required predicateFieldId MUST resolve to a field with valueType in {string, text, select, date, url}"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "A `CrossFieldRule` with `type: \"conditional-required\"` MUST supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. Additionally, the field identified by `predicateFieldId` MUST have a `valueType` in `{\"string\", \"text\", \"select\", \"date\", \"url\"}` — types whose stored `value` is always a JSON string, enabling meaningful string equality comparison. A rule that omits any of the three required fields, or whose `predicateFieldId` resolves to a field with any other `valueType`, MUST be reported as a Type-level validation error. (RFC-019 R6; normative extension of I-11.)"
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "ext:cross-field-validation"
+    }
+  ],
+  "instanceId": "b2ed8b1d-90b3-4107-bf08-8b3c05cc6fb6",
+  "tags": [
+    "concern:validation",
+    "topic:conformance",
+    "construct:field"
+  ],
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-07-09T12:34:00.282173379+00:00"
+}
