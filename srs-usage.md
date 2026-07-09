@@ -712,6 +712,34 @@ The payload reports each rename performed and the count of already-canonical pat
 
 `repo upgrade` is idempotent — running it twice on the same repo returns `renames: []` on the second call. Follow with `srs repo validate` to confirm zero diagnostics.
 
+### Migrating Repository Identity
+
+`repo migrate-identity` ensures a repository has a `com.semanticops.core/purpose` record and that `manifest.container.identityInstanceId` points to it. Two cases are handled:
+
+**Case 1 — repo already has an `identityInstanceId` pointing to a Tier-0 note** (pre-dates the `purpose` type): the command promotes the note to a `com.semanticops.core/purpose` record, writes the new record, updates `identityInstanceId` in the manifest, and swaps the container membership.
+
+**Case 2 — repo has no `identityInstanceId`** (created before the identity feature was introduced): the command derives the purpose statement from `container.description` (trimmed, falling back to `container.title` if description is absent or empty) and creates a fresh `com.semanticops.core/purpose` record. The container's `identityInstanceId` and `memberInstanceIds` are both updated.
+
+```bash
+srs repo migrate-identity --repo <path>
+```
+
+Payload (`oldIdentityId` and `oldIdentityTier` are absent when there was no prior identity):
+
+```json
+{
+  "oldIdentityId": "aabbccdd-...",
+  "oldIdentityTier": 0,
+  "newIdentityId": "eeff0011-...",
+  "statement": "A concise statement of the repository's purpose",
+  "title": "Optional display title"
+}
+```
+
+`oldIdentityTier` is `0` for a Tier-0 note. A Tier-2 record that is not already a `purpose` type returns an error — manual migration is required in that case.
+
+The command returns an error (`"already a com.semanticops.core/purpose record; no migration needed"`) if the existing `identityInstanceId` already points to a `purpose` record — it does not silently no-op. After migration, run `srs repo validate --repo <path>` to confirm zero diagnostics.
+
 ---
 
 ## 5b. Changelog (`ext:changelog`, RFC-018)
