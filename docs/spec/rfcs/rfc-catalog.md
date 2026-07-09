@@ -661,6 +661,270 @@ This RFC does not propose a new universal sharing mechanism. It sharpens the one
 
 That separation aligns with both the current SRS spec and the older field-library architecture: reusable fields stay reusable, template-like compositions stay packageable, and repository content can move independently without being confused for a definition library.
 
+**Title**: RFC-004: Language-Neutral Schema Notation for Spec Records
+**RFC Number**: 004
+**Status**: draft
+**Proposal Artifact Path**: rfcs/rfc-004/
+**Content**: **Status**: Draft (Revision 2)
+**Affects**: Distribution Group - Package; new extension `ext:schema-notation`; `spec-authoring-core`; JSON Schema projection package
+**Author**: SemanticOps contributors
+**Date**: 2026-05-27
+
+---
+
+## Revision history
+
+| Rev | Date | Summary |
+|---|---|---|
+| 1 | 2026-05-27 | Initial draft: schema-member records with compact type-ref strings |
+| 2 | 2026-05-27 | Reframed schema notation as a semantic, target-neutral schema IR with JSON Schema as the first exact projection |
+
+---
+
+## Abstract
+
+SRS and TSS specifications contain formal data shapes: Field, Type, Record, Session, Event, Participant, Stream, and other implementation-facing entities. Today many of those shapes are written as TypeScript-style prose blocks embedded in text fields. That makes them readable, but not semantic SRS data.
+
+This RFC defines `ext:schema-notation`: a semantic, target-neutral schema definition model for spec authoring. The extension represents logical schemas, members, type expressions, constraints, defaults, examples, deprecation state, and semantic purpose as SRS records and field values. JSON Schema, TypeScript, protobuf, Rust structs, and other formats are projections from that shared semantic source; none of those target syntaxes is the source of truth.
+
+Revision 2 deliberately moves away from compact string `type-ref` expressions as the normative representation. Renderers may show compact strings for humans, but the normative source is structured `typeExpression` JSON.
+
+---
+
+## Motivation
+
+### Problem 1 - Schema prose is not SRS data
+
+TypeScript-style blocks in `content` fields are implementation-flavoured notation. SRS tools cannot reliably traverse them, cite individual members, validate them, or render them to other targets without ad-hoc parsing.
+
+### Problem 2 - Meaning must survive target projection
+
+A JSON Schema definition can validate JSON shape, but it cannot carry all the semantic intent needed by SRS authoring. Protobuf can express efficient wire contracts, but it requires target-specific concerns such as field numbers and `oneof` names. The source model must describe meaning first, then allow target packages to render appropriate forms.
+
+### Problem 3 - TSS needs the same source for multiple outputs
+
+TSS has data shapes such as `Session`, `Participant`, `Stream`, `Event`, and many event subtypes. A useful SRS-authored TSS spec should be able to render JSON Schema for validation and later render protobuf from as much of the same source as possible. That requires a portable semantic schema IR, not a JSON-Schema-only design.
+
+### Problem 4 - `ext:schema` is a different layer
+
+`ext:schema` describes runtime extraction and package structure: what records a package expects and how source material may be transformed into records. `ext:schema-notation` describes spec-level data shapes: the schemas that implementations should produce, consume, and validate. The two extensions are complementary and must not be conflated.
+
+---
+
+## Design Principles
+
+**Semantic first.** The extension describes meaning, not target form. Field numbers, JSON Schema keywords, TypeScript punctuation, and Rust derives are projection concerns.
+
+**Target-neutral core, target-specific packages.** The main extension defines portable schema meaning. Exact renderers live in projection packages such as `spec-authoring-json-schema` and a future `spec-authoring-protobuf`.
+
+**Structured type expressions.** Type meaning is represented as JSON data using explicit expression kinds. Compact strings are allowed as display conveniences only.
+
+**Addressable members.** Schema definitions and schema members are SRS records with stable identity, so invariants, examples, migration notes, and conformance rules can cite them directly.
+
+**Migration-friendly.** Existing prose blocks may coexist while structured schema records are introduced. Structured schema records become authoritative when a migration is complete.
+
+---
+
+## Proposed Changes
+
+### Change A - Add `json` as a core Field value type
+
+`Field.valueType` gains `json` for structured JSON values whose meaning is supplied by the field definition and validating schema. This is required for recursive or nested semantic values such as schema type expressions and portable constraint objects.
+
+`json` is not a target renderer. It is a storage primitive for structured semantic values inside SRS records.
+
+### Change B - New extension: `ext:schema-notation`
+
+Add the following extension entry:
+
+| Extension | Identifier | Depends on | Notes |
+|---|---|---|---|
+| Schema Notation | `ext:schema-notation` | none | Semantic schema IR for spec authoring and target projections |
+
+### Change C - New type: `schema-definition`
+
+`com.semanticops.spec/schema-definition` represents one logical data shape. It is not a JSON Schema object, TypeScript interface, or protobuf message, though projection packages may render it to those forms.
+
+Core fields:
+
+| Field | Meaning |
+|---|---|
+| `title` | Human-readable title |
+| `namespace` | Logical schema namespace |
+| `schema-name` | Stable machine-readable schema name |
+| `version-label` | Version of the schema definition |
+| `description` | Short description |
+| `semantic-purpose` | Domain meaning of this schema |
+| `status` | Draft, active, deprecated, etc. |
+| `content` | Optional prose guidance |
+| `examples` | Non-normative examples |
+| `deprecated` | Whether the schema remains only for compatibility |
+| `notes` | Editorial notes |
+
+Members are attached by `schema-member-sequence` relations.
+
+### Change D - New type: `schema-member`
+
+`com.semanticops.spec/schema-member` represents one addressable member of a schema definition.
+
+Core fields:
+
+| Field | Meaning |
+|---|---|
+| `member-name` | Stable member/property name |
+| `type-expression` | Structured semantic type expression JSON |
+| `required` | Whether the member must be present |
+| `nullable` | Whether explicit `null` is allowed |
+| `constraints` | Portable target-neutral constraints |
+| `schema-default-value` | Concrete JSON default value for this schema member |
+| `examples` | Non-normative examples |
+| `deprecated` | Whether the member remains only for compatibility |
+| `semantic-purpose` | Domain meaning of this member |
+| `notes` | Editorial notes |
+
+`required` and `nullable` are separate. Optional means the member may be absent. Nullable means the member may be present with the explicit value `null`.
+
+### Change E - Structured `typeExpression` JSON
+
+The normative source for member type meaning is a structured JSON value held in the `type-expression` field. It has a `kind` property and kind-specific properties.
+
+Supported expression kinds:
+
+| Kind | Meaning | Required portable properties |
+|---|---|---|
+| `scalar` | Portable primitive value | `name` |
+| `ref` | Reference to a named schema/type | `namespace`, `name`; optional `version` |
+| `array` | Ordered list of values | `items` |
+| `map` | Key/value object map | `values`; optional `keys` |
+| `object` | Inline anonymous object shape | `members` |
+| `union` | One of several alternatives | `variants` |
+| `literal` | One exact value | `value` |
+| `enum` | One of a finite set of values | `values` |
+| `unknown` | Preserved but unconstrained value | none |
+
+Portable scalar names:
+
+`string`, `text`, `integer`, `number`, `boolean`, `date`, `date-time`, `uuid`, `uri`, `duration-ms`, `json`.
+
+Inline `object` expressions are allowed only for genuinely local anonymous shapes. Reusable shapes must be separate `schema-definition` records referenced with `ref`.
+
+`union` must not be used to smuggle optionality. Nullability is represented by the member-level `nullable` field.
+
+### Change F - Portable constraints
+
+The generic IR defines only constraints that can reasonably project across multiple targets:
+
+- required and nullable state
+- numeric minimum and maximum
+- string minimum length, maximum length, and pattern
+- array minimum items, maximum items, and uniqueness
+- enum and literal values
+- scalar format
+- map key and value shape
+- cardinality where the target supports it
+
+Cross-field validation, conditional validation, and protocol-level invariants are out of scope for Revision 2. They remain prose or invariant records until a later RFC defines a semantic rule notation.
+
+### Change G - Relation semantics
+
+Add these relation types to the recommended relation vocabulary:
+
+| Relation type | Source | Target | Meaning |
+|---|---|---|---|
+| `schema-member-sequence` | `schema-definition` | ordered list of `schema-member` records | Declares the ordered members of a schema |
+| `defines-schema-for` | `schema-definition` | `type-definition` or other spec record | Declares that the schema formalizes the target record/type shape |
+
+When an existing `type-definition` has a related `schema-definition`, renderers that support `ext:schema-notation` should use the structured schema definition rather than any prose TypeScript block.
+
+### Change H - JSON Schema projection package
+
+Add `com.semanticops.spec/spec-authoring-json-schema` as a target projection package. It defines exact JSON Schema rendering rules and metadata; it does not own the semantic schema source.
+
+JSON Schema `$id` values follow:
+
+`https://srs.semanticops.com/schema/domain/<namespace>/<schemaName>/<version>.json`
+
+Projection rules:
+
+- A `schema-definition` renders as a JSON Schema object with `$id`, `title`, `type: "object"`, `properties`, and `required`.
+- A `schema-member` renders as one property.
+- `required: true` adds the member to the parent `required` array.
+- `nullable: true` adds `null` to the property shape but does not make it optional.
+- `ref` renders to `$ref`.
+- `union` renders to `oneOf`.
+- `literal` renders to `const`.
+- `enum` renders to `enum`.
+- `array` renders to `type: "array"` with `items`.
+- Portable constraints render to matching JSON Schema keywords where available.
+
+### Change I - Protobuf compatibility
+
+The semantic IR should be designed so protobuf can be rendered from the same source where portable constructs are used. However, protobuf-specific details are target metadata, not core schema meaning.
+
+The following are reserved for a future `spec-authoring-protobuf` package:
+
+- protobuf package names
+- message and field naming overrides
+- field numbers
+- reserved ranges
+- `oneof` naming
+- map encoding details
+- target-specific scalar mappings
+
+RFC-004 Revision 2 intentionally does not add protobuf fields to `spec-authoring-core`.
+
+---
+
+## Proposal Artifacts
+
+Proposal artifacts live under `rfcs/rfc-004/`. They are review material only and must not be loaded into active `package/` or `schemas/` directories until RFC-004 is accepted and implemented. The proposed `schema-default-value` field intentionally has a distinct identity from the active `default-value` field because concrete JSON schema-member defaults are not the same concept as prose documentation of ordinary field defaults.
+
+---
+
+## Migration Path
+
+Existing TypeScript prose blocks remain valid during migration. For a given spec entity:
+
+1. Create a `schema-definition` record for the logical shape.
+2. Create one `schema-member` record for each member.
+3. Link members to the schema with `schema-member-sequence`.
+4. Link the schema to the existing prose `type-definition` using `defines-schema-for`.
+5. Render JSON Schema from the structured schema definition and compare against any hand-authored schema.
+6. Once accepted, mark the prose TypeScript block as superseded or remove it from the type-definition content.
+
+TSS should be evaluated against this model before authoring all TSS schema records. The goal is to verify that `Session`, `Participant`, `Stream`, `Event`, event subtypes, merge records, and package records can be represented without making JSON Schema or protobuf the source of truth.
+
+---
+
+## Consequences
+
+### Benefits
+
+- Schema meaning is represented as SRS data rather than target syntax.
+- Individual schema members become addressable and citable.
+- JSON Schema can be rendered exactly from the semantic source.
+- Protobuf can later reuse the same source with target metadata layered separately.
+- TSS and SRS can share spec-authoring primitives without forcing TSS to become an SRS semantic object model.
+
+### Tradeoffs
+
+- Schema authoring produces more records than prose blocks.
+- Recursive or nested type expressions require `json` field values and schema-aware tooling.
+- Some validation concerns remain outside the generic IR until a future rule-notation RFC.
+- Projection packages must be maintained for exact target output.
+
+---
+
+## Open Questions
+
+1. Should `schema-definition` version use the existing `version-label` field long term, or should spec-authoring-core add a numeric schema version field?
+
+2. Should `type-expression` and `constraints` get dedicated JSON Schemas in the root `schemas/` directory, or should they remain specified textually until the first renderer is implemented?
+
+3. Should `defines-schema-for` point from schema to type-definition, or should the inverse relation also be recommended for easier traversal from prose type records?
+
+4. Which TSS shape should be migrated first as a proof case: `Session`, `Event`, or one narrow event subtype such as `MessageEvent`?
+
 **Title**: RFC-001: Views L2 — Rendering Hierarchy and Default Rendering Baseline
 **RFC Number**: 001
 **Status**: accepted
@@ -1435,270 +1699,6 @@ Merging `PageTemplates` and `ElementTemplates` into one object simplifies the sc
 
 4. **`pdf` and `docx` in the format vocabulary**: RFC-001 Change C defined portable format values but excluded `"pdf"` and `"docx"` because they require richer rendering infrastructure. With `ext:themes-l1` now providing asset and stylesheet mechanisms, these formats become more tractable. A follow-on to RFC-001 should add them with appropriate conformance caveats. Until then, `"pdf"` and `"docx"` are implementation-defined values in `Theme.targets` — implementations that support them may use them, but they are not portable and MUST NOT cause a validation error in implementations that do not recognise them (per Rule [T-2], an unrecognised format simply means the theme is not applied).
 
-
-**Title**: RFC-004: Language-Neutral Schema Notation for Spec Records
-**RFC Number**: 004
-**Status**: draft
-**Proposal Artifact Path**: rfcs/rfc-004/
-**Content**: **Status**: Draft (Revision 2)
-**Affects**: Distribution Group - Package; new extension `ext:schema-notation`; `spec-authoring-core`; JSON Schema projection package
-**Author**: SemanticOps contributors
-**Date**: 2026-05-27
-
----
-
-## Revision history
-
-| Rev | Date | Summary |
-|---|---|---|
-| 1 | 2026-05-27 | Initial draft: schema-member records with compact type-ref strings |
-| 2 | 2026-05-27 | Reframed schema notation as a semantic, target-neutral schema IR with JSON Schema as the first exact projection |
-
----
-
-## Abstract
-
-SRS and TSS specifications contain formal data shapes: Field, Type, Record, Session, Event, Participant, Stream, and other implementation-facing entities. Today many of those shapes are written as TypeScript-style prose blocks embedded in text fields. That makes them readable, but not semantic SRS data.
-
-This RFC defines `ext:schema-notation`: a semantic, target-neutral schema definition model for spec authoring. The extension represents logical schemas, members, type expressions, constraints, defaults, examples, deprecation state, and semantic purpose as SRS records and field values. JSON Schema, TypeScript, protobuf, Rust structs, and other formats are projections from that shared semantic source; none of those target syntaxes is the source of truth.
-
-Revision 2 deliberately moves away from compact string `type-ref` expressions as the normative representation. Renderers may show compact strings for humans, but the normative source is structured `typeExpression` JSON.
-
----
-
-## Motivation
-
-### Problem 1 - Schema prose is not SRS data
-
-TypeScript-style blocks in `content` fields are implementation-flavoured notation. SRS tools cannot reliably traverse them, cite individual members, validate them, or render them to other targets without ad-hoc parsing.
-
-### Problem 2 - Meaning must survive target projection
-
-A JSON Schema definition can validate JSON shape, but it cannot carry all the semantic intent needed by SRS authoring. Protobuf can express efficient wire contracts, but it requires target-specific concerns such as field numbers and `oneof` names. The source model must describe meaning first, then allow target packages to render appropriate forms.
-
-### Problem 3 - TSS needs the same source for multiple outputs
-
-TSS has data shapes such as `Session`, `Participant`, `Stream`, `Event`, and many event subtypes. A useful SRS-authored TSS spec should be able to render JSON Schema for validation and later render protobuf from as much of the same source as possible. That requires a portable semantic schema IR, not a JSON-Schema-only design.
-
-### Problem 4 - `ext:schema` is a different layer
-
-`ext:schema` describes runtime extraction and package structure: what records a package expects and how source material may be transformed into records. `ext:schema-notation` describes spec-level data shapes: the schemas that implementations should produce, consume, and validate. The two extensions are complementary and must not be conflated.
-
----
-
-## Design Principles
-
-**Semantic first.** The extension describes meaning, not target form. Field numbers, JSON Schema keywords, TypeScript punctuation, and Rust derives are projection concerns.
-
-**Target-neutral core, target-specific packages.** The main extension defines portable schema meaning. Exact renderers live in projection packages such as `spec-authoring-json-schema` and a future `spec-authoring-protobuf`.
-
-**Structured type expressions.** Type meaning is represented as JSON data using explicit expression kinds. Compact strings are allowed as display conveniences only.
-
-**Addressable members.** Schema definitions and schema members are SRS records with stable identity, so invariants, examples, migration notes, and conformance rules can cite them directly.
-
-**Migration-friendly.** Existing prose blocks may coexist while structured schema records are introduced. Structured schema records become authoritative when a migration is complete.
-
----
-
-## Proposed Changes
-
-### Change A - Add `json` as a core Field value type
-
-`Field.valueType` gains `json` for structured JSON values whose meaning is supplied by the field definition and validating schema. This is required for recursive or nested semantic values such as schema type expressions and portable constraint objects.
-
-`json` is not a target renderer. It is a storage primitive for structured semantic values inside SRS records.
-
-### Change B - New extension: `ext:schema-notation`
-
-Add the following extension entry:
-
-| Extension | Identifier | Depends on | Notes |
-|---|---|---|---|
-| Schema Notation | `ext:schema-notation` | none | Semantic schema IR for spec authoring and target projections |
-
-### Change C - New type: `schema-definition`
-
-`com.semanticops.spec/schema-definition` represents one logical data shape. It is not a JSON Schema object, TypeScript interface, or protobuf message, though projection packages may render it to those forms.
-
-Core fields:
-
-| Field | Meaning |
-|---|---|
-| `title` | Human-readable title |
-| `namespace` | Logical schema namespace |
-| `schema-name` | Stable machine-readable schema name |
-| `version-label` | Version of the schema definition |
-| `description` | Short description |
-| `semantic-purpose` | Domain meaning of this schema |
-| `status` | Draft, active, deprecated, etc. |
-| `content` | Optional prose guidance |
-| `examples` | Non-normative examples |
-| `deprecated` | Whether the schema remains only for compatibility |
-| `notes` | Editorial notes |
-
-Members are attached by `schema-member-sequence` relations.
-
-### Change D - New type: `schema-member`
-
-`com.semanticops.spec/schema-member` represents one addressable member of a schema definition.
-
-Core fields:
-
-| Field | Meaning |
-|---|---|
-| `member-name` | Stable member/property name |
-| `type-expression` | Structured semantic type expression JSON |
-| `required` | Whether the member must be present |
-| `nullable` | Whether explicit `null` is allowed |
-| `constraints` | Portable target-neutral constraints |
-| `schema-default-value` | Concrete JSON default value for this schema member |
-| `examples` | Non-normative examples |
-| `deprecated` | Whether the member remains only for compatibility |
-| `semantic-purpose` | Domain meaning of this member |
-| `notes` | Editorial notes |
-
-`required` and `nullable` are separate. Optional means the member may be absent. Nullable means the member may be present with the explicit value `null`.
-
-### Change E - Structured `typeExpression` JSON
-
-The normative source for member type meaning is a structured JSON value held in the `type-expression` field. It has a `kind` property and kind-specific properties.
-
-Supported expression kinds:
-
-| Kind | Meaning | Required portable properties |
-|---|---|---|
-| `scalar` | Portable primitive value | `name` |
-| `ref` | Reference to a named schema/type | `namespace`, `name`; optional `version` |
-| `array` | Ordered list of values | `items` |
-| `map` | Key/value object map | `values`; optional `keys` |
-| `object` | Inline anonymous object shape | `members` |
-| `union` | One of several alternatives | `variants` |
-| `literal` | One exact value | `value` |
-| `enum` | One of a finite set of values | `values` |
-| `unknown` | Preserved but unconstrained value | none |
-
-Portable scalar names:
-
-`string`, `text`, `integer`, `number`, `boolean`, `date`, `date-time`, `uuid`, `uri`, `duration-ms`, `json`.
-
-Inline `object` expressions are allowed only for genuinely local anonymous shapes. Reusable shapes must be separate `schema-definition` records referenced with `ref`.
-
-`union` must not be used to smuggle optionality. Nullability is represented by the member-level `nullable` field.
-
-### Change F - Portable constraints
-
-The generic IR defines only constraints that can reasonably project across multiple targets:
-
-- required and nullable state
-- numeric minimum and maximum
-- string minimum length, maximum length, and pattern
-- array minimum items, maximum items, and uniqueness
-- enum and literal values
-- scalar format
-- map key and value shape
-- cardinality where the target supports it
-
-Cross-field validation, conditional validation, and protocol-level invariants are out of scope for Revision 2. They remain prose or invariant records until a later RFC defines a semantic rule notation.
-
-### Change G - Relation semantics
-
-Add these relation types to the recommended relation vocabulary:
-
-| Relation type | Source | Target | Meaning |
-|---|---|---|---|
-| `schema-member-sequence` | `schema-definition` | ordered list of `schema-member` records | Declares the ordered members of a schema |
-| `defines-schema-for` | `schema-definition` | `type-definition` or other spec record | Declares that the schema formalizes the target record/type shape |
-
-When an existing `type-definition` has a related `schema-definition`, renderers that support `ext:schema-notation` should use the structured schema definition rather than any prose TypeScript block.
-
-### Change H - JSON Schema projection package
-
-Add `com.semanticops.spec/spec-authoring-json-schema` as a target projection package. It defines exact JSON Schema rendering rules and metadata; it does not own the semantic schema source.
-
-JSON Schema `$id` values follow:
-
-`https://srs.semanticops.com/schema/domain/<namespace>/<schemaName>/<version>.json`
-
-Projection rules:
-
-- A `schema-definition` renders as a JSON Schema object with `$id`, `title`, `type: "object"`, `properties`, and `required`.
-- A `schema-member` renders as one property.
-- `required: true` adds the member to the parent `required` array.
-- `nullable: true` adds `null` to the property shape but does not make it optional.
-- `ref` renders to `$ref`.
-- `union` renders to `oneOf`.
-- `literal` renders to `const`.
-- `enum` renders to `enum`.
-- `array` renders to `type: "array"` with `items`.
-- Portable constraints render to matching JSON Schema keywords where available.
-
-### Change I - Protobuf compatibility
-
-The semantic IR should be designed so protobuf can be rendered from the same source where portable constructs are used. However, protobuf-specific details are target metadata, not core schema meaning.
-
-The following are reserved for a future `spec-authoring-protobuf` package:
-
-- protobuf package names
-- message and field naming overrides
-- field numbers
-- reserved ranges
-- `oneof` naming
-- map encoding details
-- target-specific scalar mappings
-
-RFC-004 Revision 2 intentionally does not add protobuf fields to `spec-authoring-core`.
-
----
-
-## Proposal Artifacts
-
-Proposal artifacts live under `rfcs/rfc-004/`. They are review material only and must not be loaded into active `package/` or `schemas/` directories until RFC-004 is accepted and implemented. The proposed `schema-default-value` field intentionally has a distinct identity from the active `default-value` field because concrete JSON schema-member defaults are not the same concept as prose documentation of ordinary field defaults.
-
----
-
-## Migration Path
-
-Existing TypeScript prose blocks remain valid during migration. For a given spec entity:
-
-1. Create a `schema-definition` record for the logical shape.
-2. Create one `schema-member` record for each member.
-3. Link members to the schema with `schema-member-sequence`.
-4. Link the schema to the existing prose `type-definition` using `defines-schema-for`.
-5. Render JSON Schema from the structured schema definition and compare against any hand-authored schema.
-6. Once accepted, mark the prose TypeScript block as superseded or remove it from the type-definition content.
-
-TSS should be evaluated against this model before authoring all TSS schema records. The goal is to verify that `Session`, `Participant`, `Stream`, `Event`, event subtypes, merge records, and package records can be represented without making JSON Schema or protobuf the source of truth.
-
----
-
-## Consequences
-
-### Benefits
-
-- Schema meaning is represented as SRS data rather than target syntax.
-- Individual schema members become addressable and citable.
-- JSON Schema can be rendered exactly from the semantic source.
-- Protobuf can later reuse the same source with target metadata layered separately.
-- TSS and SRS can share spec-authoring primitives without forcing TSS to become an SRS semantic object model.
-
-### Tradeoffs
-
-- Schema authoring produces more records than prose blocks.
-- Recursive or nested type expressions require `json` field values and schema-aware tooling.
-- Some validation concerns remain outside the generic IR until a future rule-notation RFC.
-- Projection packages must be maintained for exact target output.
-
----
-
-## Open Questions
-
-1. Should `schema-definition` version use the existing `version-label` field long term, or should spec-authoring-core add a numeric schema version field?
-
-2. Should `type-expression` and `constraints` get dedicated JSON Schemas in the root `schemas/` directory, or should they remain specified textually until the first renderer is implemented?
-
-3. Should `defines-schema-for` point from schema to type-definition, or should the inverse relation also be recommended for easier traversal from prose type records?
-
-4. Which TSS shape should be migrated first as a proof case: `Session`, `Event`, or one narrow event subtype such as `MessageEvent`?
 
 **Title**: RFC-009: Root-record Type as the typing anchor for Containers, Document Views, and distributable units
 **RFC Number**: 009
