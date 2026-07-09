@@ -497,6 +497,38 @@ Check `payload.diagnostics` — a non-empty array means something is broken. Zer
 
 ## 5. Repository Portability
 
+### Seeding a New Repository from a Governance Package
+
+Some governance packages ship as a pre-configured `.srsj` seed bundle that carries upstream provenance (`meta.upstreamPackage` in the manifest). After receiving the seed, re-stamp it with the new organization's identity before doing any further work:
+
+```bash
+srs repo init-new --repo <path-to-seed.srsj> \
+  --namespace com.example.myorg \
+  --title "My Organisation Governance" \
+  --description "Optional free-text description"
+```
+
+`--repository-id` is optional; if omitted, a fresh UUID v4 is minted automatically.
+
+The command:
+- Writes a new `repositoryId` (auto-generated or caller-supplied)
+- Updates `namespace`, `title`, and (if provided) `description` in the manifest
+- Stamps `meta.upstreamPackage.installedAt` with the current UTC timestamp, preserving all other provenance fields (`packageId`, `namespace`, `name`, `version`)
+
+Payload:
+```json
+{
+  "repositoryId": "<new-uuid>",
+  "namespace": "com.example.myorg",
+  "packageId": "<upstream-pkg-id>",
+  "packageVersion": "<upstream-pkg-version>"
+}
+```
+
+The store must already contain `meta.upstreamPackage` (written by the governance-seed install step). If it is absent, the command returns an error.
+
+---
+
 ### Copying a Repository
 
 `repo copy` transfers all instances, relations, packages, and manifest from one store to another. Both paths must be explicit — `--repo` auto-detection is not used.
