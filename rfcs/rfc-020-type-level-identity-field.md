@@ -2,7 +2,7 @@
 
 # RFC-020: Type-Level Identity Field (`identityFieldId`)
 
-**Status**: In Progress (Revision 4)
+**Status**: Accepted (Revision 5)
 **Affects**: `type.json` (`Type.identityFieldId`), `ext:type-inheritance` (new Rules [N+32]–[N+36]), Default Rendering Baseline / Heading Hierarchy spec prose (new Rule [N+37])
 **Builds on**: `ext:type-inheritance` (baseline spec — `extendsTypeId`, `fieldOrder`, `fieldAssignmentOverrides`, Invariants 39–42)
 **Author**: the-greenman (design decisions recorded via comments on the-greenman/srs#144)
@@ -18,6 +18,7 @@
 | 2 | 2026-07-09 | Review round 1 (Spec Integrity + RFC Completeness). Corrected Change B/Rationale: `fieldOrder` does **not** actually inherit across the ancestor chain (Inv 41 / `package.rs::effective_fields` only check the resolving Type's own `field_order`) — removed the false precedent claim; `identityFieldId`'s cascading inheritance is specified as new, self-contained behavior in [N+34], not a reuse of existing `fieldOrder` semantics. Removed the dangling "(Rule governing fieldOrder inheritance)" citation. Added Rule [N+37] and Change D addressing the previously-unaddressed interaction with the existing `titleFieldId`-driven Default Rendering Baseline / Heading Hierarchy. Added "Builds on" header line. |
 | 3 | 2026-07-09 | Review round 2 (Spec Integrity re-review — round-1 blocking finding confirmed resolved). New should-fix found: Change D's prose claimed coverage of `DocumentView` sections rendered via a dispatched L1 View, but [N+37] as drafted only covered the Default Rendering Baseline (`renderViewId` absent) path. Broadened Change D and Rule [N+37] to explicitly cover per-record heading emission regardless of which rendering path (baseline or dispatched L1 View) governs the section's field content, consistent with the existing note that heading behavior "leave[s] intra-record group rendering inside a dispatched L1 View unaffected" (i.e. heading is a section-level concept independent of the field-rendering mechanism). |
 | 4 | 2026-07-09 | Implementation started; RFC file committed to branch `rfc/020-type-level-identity-field`; `identityFieldId` added to `docs/schema/2.0/type.json`. |
+| 5 | 2026-07-09 | Accepted; spec records authored in `srs/srs/` — `ext:type-inheritance` extension prose (`records/extensions/ext-type-inheritance.json` and its duplicate source `records/subsections/07-5-ext-type-inheritance.json`) documents `identityFieldId` and Rules [N+32]–[N+36]; `ext:views-l2` subsection (`records/subsections/07-7-ext-views-l2.json`) documents the `titleFieldId` fallback and Rule [N+37]. `srs repo validate` unchanged at 2 pre-existing errors (manifest `container`/`createdAt`/`sourceDocumentIndex` migration debt, unrelated to this RFC — tracked separately, not introduced here). `docs/spec/srs-spec.md` re-rendered and confirmed deterministic across repeated renders; `docs/spec/srs-unified.md`, `docs/spec/srs-rationale.md`, and `docs/spec/rfcs/rfc-catalog.md` were found to reorder non-deterministically across repeated renders (pre-existing bug, unrelated to this RFC) and were left uncommitted — filed as a follow-up issue rather than included in this PR. |
 
 ---
 
