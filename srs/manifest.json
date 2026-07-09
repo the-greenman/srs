@@ -2903,6 +2903,21 @@
       "tier": 2
     },
     {
+      "instanceId": "2918c557-1a7d-4926-ac2f-808345c763f8",
+      "path": "records/rfcs/rfc-2918c557.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "86102577-a045-4087-8ddb-28ca721579a4",
+      "path": "records/extensions/extension-86102577.json",
+      "tags": [
+        "topic:extensions",
+        "concern:sync",
+        "concern:audit"
+      ],
+      "tier": 2
+    },
+    {
       "instanceId": "9d686444-89d9-4a30-a9c3-b08bd31b62ca",
       "path": "records/invariants/invariant-085.json",
       "tier": 2
