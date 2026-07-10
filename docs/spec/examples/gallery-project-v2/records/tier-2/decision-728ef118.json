@@ -1,0 +1,20 @@
+{
+  "createdAt": "2026-07-10T20:21:16.308769233+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
+      "value": "Revised branding palette"
+    },
+    {
+      "fieldId": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
+      "value": "Use the warm neutral palette for all materials, replacing the original teal/orange."
+    }
+  ],
+  "instanceId": "728ef118-d796-409d-a58d-2fb062a0b976",
+  "lifecycleState": "ratified",
+  "typeId": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
+  "typeName": "decision",
+  "typeNamespace": "governance",
+  "typeVersion": 1,
+  "updatedAt": "2026-07-10T20:21:16.308791238+00:00"
+}
