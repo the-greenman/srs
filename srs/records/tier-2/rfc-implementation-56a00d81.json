@@ -1,0 +1,36 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-07-10T20:55:46.341554889+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "RFC-022 reference implementation and consumers shipped"
+    },
+    {
+      "fieldId": "5a000013-0000-4000-a000-000000000013",
+      "value": "implemented"
+    },
+    {
+      "fieldId": "5a000014-0000-4000-a000-000000000014",
+      "value": "2026-07-10"
+    },
+    {
+      "fieldId": "5a000015-0000-4000-a000-000000000015",
+      "value": "srs-rust 41971b58 (#503) + fbe03ec7 (#505); srs b1705ebd (#161) + d309ab1b (#162); srs-web 88b83da3 (#206)"
+    },
+    {
+      "fieldId": "1a000011-0000-4000-a000-000000000011",
+      "value": "Schema + mirrors, srs-core RequiresRelation type, fulfillment-aware transition service with flip-last write ordering, requiresRelation on allowed-transitions, CLI stdin contract, transition_record WASM binding, repo validate warning, successor lifecycleState override validation (srs-rust#502), governance package 1.0.0 migration incl. previously missing supersedes relation type, gallery orphan healed, srs-web supersede routed through the fulfilled transition (srs-web#204). Released as v0.1.0-build.139."
+    },
+    {
+      "fieldId": "1a000006-0000-4000-a000-000000000006",
+      "value": "srs-vscode schema mirror sync outstanding. Follow-ups: srs#159 (declared visibility/settled property on LifecycleState); pure relational derivation recorded as long-term direction."
+    }
+  ],
+  "instanceId": "56a00d81-2f61-4b5d-8e0f-6d23d8edb2b7",
+  "typeId": "6a000005-0000-4000-a000-000000000005",
+  "typeName": "rfc-implementation",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-07-10T20:55:46.341569095+00:00"
+}

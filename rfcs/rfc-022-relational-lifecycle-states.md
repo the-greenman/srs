@@ -2,7 +2,7 @@
 
 # RFC-022: Relational lifecycle states — `requiresRelation` + transition fulfillment
 
-**Status**: In Progress (Revision 2)
+**Status**: Accepted (Revision 3)
 **Affects**: `ext:lifecycle` (LifecycleState, transition semantics), `lifecycle.json`, `type.json`, canonical CLI contract (`record transition`), `repo validate` diagnostics
 **Author**: design dialogue draft (issue #158 discussion)
 **Date**: 2026-07-10
@@ -15,6 +15,7 @@
 |---|---|---|
 | 1 | 2026-07-10 | Initial draft, consolidating the issue #158 proposal and its two review comments (relational-states / fulfillment design adopted over the transition-marker design). Renumbered from the issue's self-assigned RFC-021 — that number is taken by `rfc-021-blueprint-optional-schema.md`. |
 | 2 | 2026-07-10 | Implementation started; RFC file committed to branch `claude/fulfillment-implementation-plan-q4m4rd`. |
+| 3 | 2026-07-10 | Accepted; implemented across srs-rust (#503, #505), srs (#161, #162), srs-web (#206), released as v0.1.0-build.139. Spec records authored in `srs/`: `ext:lifecycle` extension text updated, invariants I-88/I-89/I-90, RFC record family (rfc 59e9d84f + change/decision/implementation children). |
 
 ---
 

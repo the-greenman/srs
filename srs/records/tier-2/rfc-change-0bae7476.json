@@ -1,0 +1,28 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-07-10T20:55:46.245806930+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "Add requiresRelation to LifecycleState and fulfillment to the transition operation"
+    },
+    {
+      "fieldId": "5a000009-0000-4000-a000-000000000009",
+      "value": "lifecycle.json ($defs.LifecycleState + $defs.RequiresRelation), type.json (inline LifecycleState copy), ext:lifecycle extension text, record transition CLI contract, allowed-transitions projection, repo validate"
+    },
+    {
+      "fieldId": "5a000006-0000-4000-a000-000000000006",
+      "value": "LifecycleState gains optional requiresRelation {relationType: string|string[] (required, any-of, no implicit default), direction: incoming|outgoing (default incoming)}. A Record may only occupy such a state when a satisfying Relation exists; transitions in are hard-rejected unless already satisfied or fulfilled atomically via the transition operation input fulfillment.newRecord / fulfillment.existingInstanceId (with optional relationType selector). Allowed-transitions options carry the target state declaration; validation emits warning-severity LIFECYCLE_RELATION_UNSATISFIED for at-rest violations. Conformance rules R1-R10; invariants I-88/I-89/I-90."
+    },
+    {
+      "fieldId": "1a000004-0000-4000-a000-000000000004",
+      "value": "The obligation lives on the state, not the transition edge: every path into the state inherits it (no door-dependent integrity) and at-rest orphan detection falls out of the same declared invariant. Extending the single transition write path avoids a verb per relation-obligation. Hard rejection is the load-bearing choice \u2014 advisory enforcement is exactly the per-client discipline whose failure produced orphan supersessions (srs-web#204)."
+    }
+  ],
+  "instanceId": "0bae7476-c8ae-4d89-b428-6abba6381f4b",
+  "typeId": "6a000002-0000-4000-a000-000000000002",
+  "typeName": "rfc-change",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-07-10T20:55:46.245822093+00:00"
+}

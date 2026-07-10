@@ -1,0 +1,32 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-07-10T20:55:46.294034394+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "RFC-022 accepted \u2014 relational-states design over transition-marker and new-verb alternatives"
+    },
+    {
+      "fieldId": "5a000002-0000-4000-a000-000000000002",
+      "value": "accepted"
+    },
+    {
+      "fieldId": "5a000011-0000-4000-a000-000000000011",
+      "value": "2"
+    },
+    {
+      "fieldId": "5a000004-0000-4000-a000-000000000004",
+      "value": "2026-07-10"
+    },
+    {
+      "fieldId": "5a000012-0000-4000-a000-000000000012",
+      "value": "Resolves the seven open questions of the original issue draft: obligation named on the state as a requiresRelation object (OQ1), relationType explicit with no implicit supersedes default (OQ2), no new CLI verb \u2014 fulfillment on record transition (OQ3), hard rejection with the already-satisfied escape hatch (OQ4), graceful per-lifecycle opt-in with the governance package migrated as the reference example (OQ5), warning-severity at-rest validation (OQ6), marked-projection design now with pure relational derivation recorded as the north star (OQ7)."
+    }
+  ],
+  "instanceId": "18146b96-957d-4191-9e40-f74527db1636",
+  "typeId": "6a000004-0000-4000-a000-000000000004",
+  "typeName": "rfc-decision",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-07-10T20:55:46.294050552+00:00"
+}

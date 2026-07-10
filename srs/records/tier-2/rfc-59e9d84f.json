@@ -1,0 +1,40 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-07-10T20:55:14.466483665+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "RFC-022: Relational lifecycle states \u2014 requiresRelation + transition fulfillment"
+    },
+    {
+      "fieldId": "5a000001-0000-4000-a000-000000000001",
+      "value": "022"
+    },
+    {
+      "fieldId": "5a000002-0000-4000-a000-000000000002",
+      "value": "implemented"
+    },
+    {
+      "fieldId": "5a000003-0000-4000-a000-000000000003",
+      "value": "the-greenman (design dialogue on the-greenman/srs#158)"
+    },
+    {
+      "fieldId": "5a000009-0000-4000-a000-000000000009",
+      "value": "ext:lifecycle (LifecycleState, transition semantics), lifecycle.json, type.json, canonical CLI contract (record transition), repo validate diagnostics"
+    },
+    {
+      "fieldId": "5a000016-0000-4000-a000-000000000016",
+      "value": "rfcs/rfc-022-relational-lifecycle-states.md"
+    },
+    {
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
+      "value": "Supersession is a compound semantic act \u2014 flip the predecessor to `superseded`, create a successor, assert a `supersedes` relation \u2014 that the model previously could not couple, so a bare state flip produced orphan supersessions: records marked superseded with no successor and no link (live example: the gallery decision 38501856, since healed). RFC-022 introduces relational states: a `LifecycleState` may declare `requiresRelation` ({relationType: string|string[], direction: incoming|outgoing default incoming}), meaning a Record may only occupy that state if a satisfying Relation exists (state \u21d2 relation; the converse direction stays valid, preserving the two-phase drafted-successor workflow). Transitions into such a state are hard-rejected unless already satisfied, or fulfilled atomically through the existing transition operation (`fulfillment.newRecord` | `fulfillment.existingInstanceId`); no new verb is introduced. Allowed-transitions projections expose the obligation structurally, ending state-name string-matching in clients; repository validation surfaces at-rest violations as warning diagnostics. Conformance rules R1\u2013R10 in the proposal artifact; spec invariants I-88, I-89, I-90. Alternatives considered and rejected: transition-level spawnsSuccessor marker (door-dependent invariant), a first-class supersede verb (forks the single write path), advisory-only enforcement (preserves the failure mode); pure relational derivation of superseded-class states is recorded as the long-term direction."
+    }
+  ],
+  "instanceId": "59e9d84f-f9ad-40b4-9a45-ec79e77ab73b",
+  "typeId": "6a000001-0000-4000-a000-000000000001",
+  "typeName": "rfc",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-07-10T20:55:14.466496667+00:00"
+}
