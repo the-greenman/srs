@@ -16,12 +16,15 @@ To regenerate after changes to `gallery-project-v2/`:
 
 ## Contents
 
-20 instances, plus the RFC-013 root container:
+21 instances, plus the RFC-013 root container:
 
 - 6 Articles (constitutional layer: A-001 through A-006)
 - 3 Roles (authority boundaries: Building Authority, Curatorial Lead, Clerk)
-- 10 Decisions + 1 Decision Log (settled commitments from the founding meeting,
-  migrated to the type-query decision log shape)
+- 11 Decisions + 1 Decision Log (settled commitments from the founding meeting,
+  migrated to the type-query decision log shape). "Revised branding palette"
+  supersedes "Original branding palette" via a `supersedes` relation, so the
+  RFC-022 `requiresRelation` declaration on the `superseded` state is satisfied —
+  the previously orphaned supersession (srs#158 / srs#160) is healed.
 - 1 Note (initial brain dump, Tier 0)
 
 `manifest.container` (RFC-013) is wired to the root container (`4e4c9501...`), whose

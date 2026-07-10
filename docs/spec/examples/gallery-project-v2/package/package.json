@@ -44,7 +44,8 @@
     "relation-types/precedes-b24aaf29.json",
     "relation-types/derived-from-36b78f14.json",
     "relation-types/evidences-35c7aba2.json",
-    "relation-types/delegates-31c82363.json"
+    "relation-types/delegates-31c82363.json",
+    "relation-types/supersedes-6e86ebd3.json"
   ],
   "status": "active",
   "title": "governance-core",

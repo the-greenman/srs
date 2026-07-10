@@ -36,7 +36,10 @@
       "key": "superseded",
       "label": "Superseded",
       "description": "Replaced by a successor record.",
-      "isFinal": true
+      "isFinal": true,
+      "requiresRelation": {
+        "relationType": "supersedes"
+      }
     }
   ],
   "transitions": [

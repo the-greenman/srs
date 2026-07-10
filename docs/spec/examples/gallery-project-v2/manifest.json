@@ -135,6 +135,11 @@
       "instanceId": "2235c7d8-3f25-4774-bf2c-408e499bd8a6",
       "path": "records/decisions/decision-2235c7d8.json",
       "tier": 2
+    },
+    {
+      "instanceId": "728ef118-d796-409d-a58d-2fb062a0b976",
+      "path": "records/tier-2/decision-728ef118.json",
+      "tier": 2
     }
   ],
   "namespace": "com.limoma",

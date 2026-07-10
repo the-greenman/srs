@@ -111,6 +111,9 @@ function build(outPath) {
         installedAt: STAMP_TIME,
       },
     };
+    // Newer CLIs stamp manifest.createdAt with the build wall-clock; pin it so
+    // the seed stays byte-for-byte reproducible.
+    if (bundle.manifest.createdAt) bundle.manifest.createdAt = STAMP_TIME;
     writeFileSync(outPath, stableStringify(bundle));
   } finally {
     rmSync(work, { recursive: true, force: true });
