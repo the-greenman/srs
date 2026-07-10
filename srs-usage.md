@@ -386,6 +386,29 @@ Returns `{ "record": <Record>, "warnings": [] }`. When the target state is a fin
 
 The transition is validated against the lifecycle definition: the target state must exist, the transition must be allowed from the current state, and the record must already have a `lifecycleState` (records without a lifecycle assignment cannot be transitioned). A rejected transition returns `"ok": false` with a `diagnostics` entry.
 
+#### Relational states and fulfillment (RFC-022)
+
+A lifecycle state may declare `requiresRelation` (e.g. `superseded` requiring an incoming `supersedes` relation). A bare transition into such a state is **rejected** with `LIFECYCLE_RELATION_REQUIRED` unless the obligation is already satisfied by the relation graph. To establish the relation atomically with the state change, supply `fulfillment`:
+
+```bash
+# One-shot supersede: spawn the successor, assert the relation, flip — all-or-nothing
+srs record transition --repo <path> --id <predecessorId> <<'EOF'
+{
+  "byTransition": "supersede",
+  "fulfillment": {
+    "newRecord": { "fieldValues": [ /* successor FieldValue[] */ ] }
+  }
+}
+EOF
+
+# Two-phase: adopt an already-drafted record as the successor
+srs record transition --repo <path> --id <predecessorId> <<'EOF'
+{ "byTransition": "supersede", "fulfillment": { "existingInstanceId": "<uuid>" } }
+EOF
+```
+
+`fulfillment.newRecord` creates the successor of the same type at the lifecycle's initial state (optional `typeVersion` override); `fulfillment.relationType` selects among an any-of declaration (defaults to the first declared). The result carries the artifacts: `{ "record", "warnings", "successor"?, "relation"? }`. A `fulfillment` supplied for a target state that declares no `requiresRelation` is rejected. Check `record allowed-transitions --id <instanceId>` first — each option carries the target state's `requiresRelation` declaration (route "needs a successor" from that structure, never by matching state names). `repo validate` reports records at rest violating an obligation as warning-severity `LIFECYCLE_RELATION_UNSATISFIED` diagnostics.
+
 ### Asserting a Relation
 
 ```bash
@@ -402,7 +425,7 @@ EOF
 
 Canonical relation types: `contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`.
 
-Relations are semantic claims, not ownership. Asserting a relation does not change lifecycle state on either endpoint.
+Relations are semantic claims, not ownership. Asserting a relation does not change lifecycle state on either endpoint. (The coupling runs the other way: a lifecycle state declaring `requiresRelation` cannot be *entered* without a satisfying relation — see "Relational states and fulfillment" above.)
 
 ### Creating a Vocabulary (RFC-006)
 

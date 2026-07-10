@@ -17,7 +17,7 @@ This repo is part of a monorepo (`srs`, `srs-rust`, `srs-vscode`, `srs-web`) —
 - **Tier 1 (TypedRecord)**: named fields with values, no Type binding
 - **Tier 2 (Record)**: instantiated Type via `typeId` + `typeVersion`; contains `fieldValues[]` mapping `fieldId → value`
 
-**Relation** — typed edge between two instance UUIDs. Canonical types: `contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`.
+**Relation** — typed edge between two instance UUIDs. Canonical types: `contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`. A lifecycle state may declare `requiresRelation` (RFC-022 relational state, e.g. `superseded` ⇒ incoming `supersedes`): entering it is rejected unless the relation exists or the transition is fulfilled atomically (`fulfillment.newRecord` / `existingInstanceId` on `record transition`).
 
 **Container** — lightweight grouping boundary. Its `containerId` is distinct from instance IDs and must not appear as a Relation source/target.
 
