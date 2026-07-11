@@ -1,0 +1,20 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-07-11T15:16:20.450265658+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "3b000001-0000-4000-a000-000000000001",
+      "value": "The canonical, machine-readable specification of the Semantic Record System (SRS). The records in this repository are the source of truth for the SRS data model; the rendered specification under spec/ and docs/ is a projection of them."
+    },
+    {
+      "fieldId": "3b000002-0000-4000-a000-000000000002",
+      "value": "Semantic Record System Specification"
+    }
+  ],
+  "instanceId": "9288ed3d-dba7-4a3a-9fbb-a77ff919816c",
+  "typeId": "3c000001-0000-4000-a000-000000000001",
+  "typeName": "purpose",
+  "typeNamespace": "com.semanticops.core",
+  "typeVersion": 1,
+  "updatedAt": "2026-07-11T15:16:20.450285360+00:00"
+}
