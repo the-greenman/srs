@@ -4,7 +4,7 @@
     "$schema": "https://srs.semanticops.com/schema/2.0/manifest.json",
     "container": {
       "containerId": "4e4c9501-2709-4220-bb47-486f6f78a937",
-      "identityInstanceId": "ad159754-2edd-4bf8-a70f-a29a617e5809",
+      "identityInstanceId": "1ad5532f-43c8-4ec7-8a45-39e97c60dbc6",
       "title": "Limoma"
     },
     "containerIndex": [
@@ -15,13 +15,13 @@
       },
       {
         "containerId": "f7562aa3-98c7-44be-b4c5-5474df6441f2",
-        "containerType": "document",
+        "containerType": "article",
         "path": "containers/f7562aa3-98c7-44be-b4c5-5474df6441f2.json",
         "title": "Articles"
       },
       {
         "containerId": "b30db206-e9a7-4588-a9aa-53451aacd243",
-        "containerType": "document",
+        "containerType": "role",
         "path": "containers/b30db206-e9a7-4588-a9aa-53451aacd243.json",
         "title": "Roles"
       },
@@ -145,6 +145,11 @@
         "instanceId": "728ef118-d796-409d-a58d-2fb062a0b976",
         "path": "records/tier-2/decision-728ef118.json",
         "tier": 2
+      },
+      {
+        "instanceId": "1ad5532f-43c8-4ec7-8a45-39e97c60dbc6",
+        "path": "records/tier-2/purpose-1ad5532f.json",
+        "tier": 2
       }
     ],
     "namespace": "com.limoma",
@@ -177,7 +182,9 @@
     },
     "containers/4e4c9501-2709-4220-bb47-486f6f78a937.json": {
       "containerId": "4e4c9501-2709-4220-bb47-486f6f78a937",
+      "identityInstanceId": "1ad5532f-43c8-4ec7-8a45-39e97c60dbc6",
       "memberInstanceIds": [
+        "1ad5532f-43c8-4ec7-8a45-39e97c60dbc6",
         "ad159754-2edd-4bf8-a70f-a29a617e5809",
         "5bbf9209-1dc9-44b2-b0a3-f2192db5a879",
         "bf64442b-1e2b-4597-95e7-a665439c7f6f"
@@ -189,7 +196,7 @@
     },
     "containers/b30db206-e9a7-4588-a9aa-53451aacd243.json": {
       "containerId": "b30db206-e9a7-4588-a9aa-53451aacd243",
-      "containerType": "document",
+      "containerType": "role",
       "createdAt": "2026-05-31T00:00:00Z",
       "memberInstanceIds": [
         "448d64d4-ae82-4971-b027-3b78b9c7a90a",
@@ -203,7 +210,7 @@
     },
     "containers/f7562aa3-98c7-44be-b4c5-5474df6441f2.json": {
       "containerId": "f7562aa3-98c7-44be-b4c5-5474df6441f2",
-      "containerType": "document",
+      "containerType": "article",
       "createdAt": "2026-05-31T00:00:00Z",
       "memberInstanceIds": [
         "0482c489-37b4-4342-adaa-36e69dc6f780",
@@ -1770,6 +1777,20 @@
       "typeNamespace": "governance",
       "typeVersion": 1,
       "updatedAt": "2026-06-25T16:10:09.498893750+00:00"
+    },
+    "records/tier-2/purpose-1ad5532f.json": {
+      "createdAt": "2026-07-11T00:00:00Z",
+      "fieldValues": [
+        {
+          "fieldId": "3b000001-0000-4000-a000-000000000001",
+          "value": "LiMoMa — the Limehouse Museum of Maybe Art — curates, installs, and maintains a rotating display of artwork in the back stairwell and landings of Limehouse Town Hall, operating as a voluntary association of members. The pilot runs for six months from June 2026."
+        }
+      ],
+      "instanceId": "1ad5532f-43c8-4ec7-8a45-39e97c60dbc6",
+      "typeId": "3c000001-0000-4000-a000-000000000001",
+      "typeName": "purpose",
+      "typeNamespace": "com.semanticops.core",
+      "typeVersion": 1
     },
     "records/tier-2/role-448d64d4.json": {
       "createdAt": "2026-05-31T14:55:35.200802911+00:00",
