@@ -793,6 +793,114 @@ This is more reliable than `repo diff` for large repos because `changelog list` 
 
 ---
 
+## 5c. Federation (`ext:federation`)
+
+Repositories that declare `"ext:federation"` in `manifest.declaredExtensions` can record cross-repository relationships and provenance events. Three CLI commands are available:
+
+### Resolving a repository by ID
+
+Given a `repositoryId` encountered in a cross-repo relation or imported document, look it up against the local federation registry (depth-first search across the root registry and any `childRegistries` chains):
+
+```bash
+srs federation resolve --repository-id <id> --repo <path>
+```
+
+Returns `found: true` with an `entry` block when the ID is known. Returns `found: false` (not an error — exit code 0) when the ID is not registered; unresolved cross-repository references are citations, not errors.
+
+```json
+{
+  "ok": true,
+  "command": "federation resolve",
+  "payload": {
+    "found": true,
+    "registryId": "<registry-uuid>",
+    "entry": {
+      "repositoryId": "<id>",
+      "title": "Alpha Repository",
+      "location": "https://alpha.example.com/repo"
+    }
+  }
+}
+```
+
+When `found: false`, `entry` is absent and `registryId` is the root registry's ID.
+
+### Listing federation events
+
+```bash
+srs federation events-list --repo <path> [--source <id>] [--target <id>] [--kind merge|split|import]
+```
+
+Returns the event log with `totalCount` (all stored events) and `filteredCount` (events matching the current filter). All filters are optional; when combined they are AND-semantics. Returns an empty list (not an error) when no events file exists yet.
+
+```json
+{
+  "ok": true,
+  "command": "federation events list",
+  "payload": {
+    "repositoryId": "<uuid>",
+    "totalCount": 3,
+    "filteredCount": 1,
+    "events": [
+      {
+        "eventId": "<id>",
+        "event": "merge",
+        "at": "2026-07-12T10:00:00Z",
+        "sourceRepositoryId": "<source-id>",
+        "targetRepositoryId": "<target-id>",
+        "affectedInstanceIds": ["<uuid>"]
+      }
+    ]
+  }
+}
+```
+
+### Appending a federation event
+
+Reads a `FederationEvent` from stdin as JSON and appends it to the repository's event log:
+
+```bash
+echo '{
+  "repositoryId": "<repo-uuid>",
+  "event": {
+    "eventId": "<unique-id>",
+    "event": "merge",
+    "at": "<iso8601>",
+    "sourceRepositoryId": "<source-repo-id>",
+    "targetRepositoryId": "<this-repo-id>",
+    "affectedInstanceIds": ["<instance-uuid>", "..."]
+  }
+}' | srs federation events-append --repo <path>
+```
+
+`event` is one of `merge`, `split`, or `import`. `affectedInstanceIds` is required (at least one instance ID per Invariant 59). Optional fields: `performedBy`, `strategy` (`preserve-ids` or `new-ids-with-lineage`), `note`.
+
+Returns `{ eventId, totalEvents }`.
+
+### Registry file format
+
+The federation registry lives at `federation/registry.json` by default (overridable via `manifest.federationPath`). There is no CLI command to create or edit it — write it directly:
+
+```json
+{
+  "registryId": "<uuid>",
+  "title": "My Team Registry",
+  "updatedAt": "<iso8601>",
+  "entries": [
+    {
+      "repositoryId": "<peer-repo-uuid>",
+      "title": "Peer Repository",
+      "location": "https://peer.example.com/repo"
+    }
+  ],
+  "childRegistries": ["path/to/child-registry.json"]
+}
+```
+
+`childRegistries` entries are paths relative to the parent registry file. The resolver traverses them depth-first and detects cycles (Invariant 62).
+
+---
+
 ## 6. Common Traps
 
 ### The instanceIndex trap
