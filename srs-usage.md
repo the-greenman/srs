@@ -598,6 +598,7 @@ Detection is content-based:
 | `ext:addressability` | Any `.revisions.json` sidecar file exists |
 | `ext:repository` | Not detected (structural; always available) |
 | `ext:discovery` | Not detected (structural; always available) |
+| `ext:registry` | Not detected (standalone catalog files, not SRS repo content) |
 
 A healthy repo should report empty `declaredButUnsupported` and empty `usedButUndeclared`. Run this command after importing a package or enabling a new extension to confirm the manifest is in sync with the repo content.
 
@@ -790,6 +791,80 @@ srs changelog list --repo my-repo --since "$SYNC_POINT" --pretty
 ```
 
 This is more reliable than `repo diff` for large repos because `changelog list` is O(1) per query regardless of repo size.
+
+---
+
+## 5c. Registry Catalog (`ext:registry`)
+
+A registry catalog is a **standalone JSON file** (not an SRS repository) that lists available packages for discovery and installation. It follows the `ext:registry` schema. The `srs registry` commands read catalog files directly — no `--repo` flag is needed.
+
+### Listing catalog entries
+
+```bash
+srs registry list --path /path/to/catalog.json --pretty
+# Optional filters (ANDed):
+srs registry list --path /path/to/catalog.json --publisher com.example --tag governance --pretty
+```
+
+Returns:
+```json
+{
+  "ok": true,
+  "command": "registry list",
+  "payload": {
+    "registryId": "<uuid>",
+    "registryName": "Example Registry",
+    "catalogVersion": "1.0.0",
+    "updatedAt": "2026-07-01T00:00:00Z",
+    "homepage": "https://example.com/registry",
+    "entries": [
+      {
+        "packageId": "<uuid>",
+        "packageName": "com.example.governance",
+        "packageVersion": "2.1.0",
+        "publisher": "com.example",
+        "description": "Governance types and protocols",
+        "publishedAt": "2026-06-01T00:00:00Z",
+        "tags": ["governance", "risk"],
+        "fieldCount": 12,
+        "typeCount": 5,
+        "downloadUrl": "https://example.com/packages/governance-2.1.0.tar.gz",
+        "checksum": "sha256:..."
+      }
+    ],
+    "totalCount": 42,
+    "filteredCount": 1
+  }
+}
+```
+
+`totalCount` is the unfiltered count; `filteredCount` is what matched. Optional fields (`description`, `homepage`, `tags`, `viewCount`, `schemaCount`, `protocolCount`, `relationTypeCount`, `downloadUrl`, `checksum`) are omitted when absent.
+
+`--publisher` matches the exact `publisher` field. `--tag` matches membership in `tags` (entry must carry the tag). Both filters may be combined (AND).
+
+### Getting a single entry
+
+```bash
+srs registry get --path /path/to/catalog.json --package-name com.example.governance --pretty
+```
+
+Returns:
+```json
+{
+  "ok": true,
+  "command": "registry get",
+  "payload": {
+    "registryId": "<uuid>",
+    "entry": { /* same shape as a single entry above */ }
+  }
+}
+```
+
+Returns an error envelope (`"ok": false`) when the package name is not found in the catalog — it does not return null.
+
+### Relationship to `srs package install`
+
+`srs registry` is discovery-only: it reads catalog files and returns structured metadata. To install a package from a registry entry, pass the `downloadUrl` from a registry entry to `srs package install --url <downloadUrl> --repo <path>`.
 
 ---
 
