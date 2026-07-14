@@ -2945,6 +2945,16 @@
       "instanceId": "9288ed3d-dba7-4a3a-9fbb-a77ff919816c",
       "path": "records/tier-2/purpose-9288ed3d.json",
       "tier": 2
+    },
+    {
+      "instanceId": "8b8377fc-7666-4f52-973c-d751d2d56264",
+      "path": "records/tables/t009-sourceref-graduation-mapping.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "991f4c9c-71bc-4190-97c0-4ad17544bb44",
+      "path": "records/invariants/invariant-088.json",
+      "tier": 2
     }
   ],
   "meta": {
