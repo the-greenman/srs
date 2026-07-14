@@ -11,17 +11,6 @@
       "value": "This convention must be consistent across implementations. See Invariant 16."
     },
     {
-      "entries": [
-        {
-          "value": "Relation"
-        },
-        {
-          "value": "source"
-        },
-        {
-          "value": "target"
-        }
-      ],
       "fieldId": "1a000032-0000-4000-a000-000000000032",
       "value": [
         "Relation",
@@ -36,17 +25,6 @@
         {
           "fieldValues": [
             {
-              "entries": [
-                {
-                  "value": "`supersedes`"
-                },
-                {
-                  "value": "the newer Record"
-                },
-                {
-                  "value": "the older Record"
-                }
-              ],
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "value": [
                 "`supersedes`",
@@ -59,17 +37,6 @@
         {
           "fieldValues": [
             {
-              "entries": [
-                {
-                  "value": "`contains`"
-                },
-                {
-                  "value": "the stage"
-                },
-                {
-                  "value": "the task inside it"
-                }
-              ],
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "value": [
                 "`contains`",
@@ -82,17 +49,6 @@
         {
           "fieldValues": [
             {
-              "entries": [
-                {
-                  "value": "`depends-on`"
-                },
-                {
-                  "value": "the dependent task"
-                },
-                {
-                  "value": "the task it needs"
-                }
-              ],
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "value": [
                 "`depends-on`",
@@ -105,17 +61,6 @@
         {
           "fieldValues": [
             {
-              "entries": [
-                {
-                  "value": "`refines`"
-                },
-                {
-                  "value": "the detailed version"
-                },
-                {
-                  "value": "the rough version"
-                }
-              ],
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "value": [
                 "`refines`",
@@ -128,17 +73,6 @@
         {
           "fieldValues": [
             {
-              "entries": [
-                {
-                  "value": "`derived-from`"
-                },
-                {
-                  "value": "the successor"
-                },
-                {
-                  "value": "the source Note or Record"
-                }
-              ],
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "value": [
                 "`derived-from`",
@@ -151,22 +85,23 @@
         {
           "fieldValues": [
             {
-              "entries": [
-                {
-                  "value": "`evidences`"
-                },
-                {
-                  "value": "the source material"
-                },
-                {
-                  "value": "the claim it supports"
-                }
-              ],
               "fieldId": "1a000033-0000-4000-a000-000000000033",
               "value": [
                 "`evidences`",
                 "the source material",
                 "the claim it supports"
+              ]
+            }
+          ]
+        },
+        {
+          "fieldValues": [
+            {
+              "fieldId": "1a000033-0000-4000-a000-000000000033",
+              "value": [
+                "`precedes`",
+                "the earlier item",
+                "the later item"
               ]
             }
           ]
@@ -183,5 +118,6 @@
   "typeId": "2a000013-0000-4000-a000-000000000013",
   "typeName": "table",
   "typeNamespace": "com.semanticops.spec",
-  "typeVersion": 2
+  "typeVersion": 2,
+  "updatedAt": "2026-07-14T10:58:53.803451642+00:00"
 }

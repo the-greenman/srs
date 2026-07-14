@@ -3,10 +3,10 @@
   "container": {
     "containerId": "6587bc86-9461-43f4-b790-504b2bcbddb5",
     "identityInstanceId": "9288ed3d-dba7-4a3a-9fbb-a77ff919816c",
-    "title": "Semantic Record System Specification",
     "memberInstanceIds": [
       "9288ed3d-dba7-4a3a-9fbb-a77ff919816c"
-    ]
+    ],
+    "title": "Semantic Record System Specification"
   },
   "containerIndex": [
     {
@@ -20,6 +20,7 @@
       "title": "RFC001 Scratch"
     }
   ],
+  "createdAt": "2026-05-28T00:00:00Z",
   "declaredExtensions": [
     "ext:addressability",
     "ext:lifecycle",
@@ -2975,33 +2976,32 @@
   "repositoryId": "4172fada-bc38-5479-ac18-4be3194a68ca",
   "sourceDocumentIndex": [
     {
+      "contentPath": "ai-sessions/chatgpt-origin.md",
       "documentId": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
       "sidecarPath": "ai-sessions/chatgpt-origin.md.meta.json",
-      "contentPath": "ai-sessions/chatgpt-origin.md",
       "title": "ChatGPT Origin Session"
     },
     {
+      "contentPath": "ai-sessions/chatgpt-spec-review.md",
       "documentId": "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
       "sidecarPath": "ai-sessions/chatgpt-spec-review.md.meta.json",
-      "contentPath": "ai-sessions/chatgpt-spec-review.md",
       "title": "ChatGPT Specification Review"
     },
     {
+      "contentPath": "ai-sessions/claude-collaborative-document.md",
       "documentId": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a",
       "sidecarPath": "ai-sessions/claude-collaborative-document.md.meta.json",
-      "contentPath": "ai-sessions/claude-collaborative-document.md",
       "title": "Claude Collaborative Document Session"
     },
     {
+      "contentPath": "spec/srs-spec.md",
       "documentId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
       "sidecarPath": "spec/srs-spec.md.meta.json",
-      "contentPath": "spec/srs-spec.md",
       "title": "SRS Specification"
     }
   ],
   "sourceDocumentsPath": "source-documents",
   "srsVersion": "2.0-draft",
   "title": "Semantic Record System Specification",
-  "updatedAt": "2026-06-03T00:00:00Z",
-  "createdAt": "2026-05-28T00:00:00Z"
+  "updatedAt": "2026-06-03T00:00:00Z"
 }

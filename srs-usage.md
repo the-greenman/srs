@@ -400,9 +400,40 @@ srs relation create --repo <path> <<'EOF'
 EOF
 ```
 
-Canonical relation types: `contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`.
-
 Relations are semantic claims, not ownership. Asserting a relation does not change lifecycle state on either endpoint.
+
+**Directionality.** Every relation reads `source [relationType] target` (Invariant 16). Store only the canonical forward form; inverses (`part-of`, `superseded-by`, `follows`, …) are derived by consumers, never asserted. The full convention:
+
+| relationType | sourceInstanceId | targetInstanceId |
+|---|---|---|
+| `supersedes` | the newer Record | the older Record |
+| `contains` | the whole (e.g. stage) | the part (e.g. task inside it) |
+| `depends-on` | the dependent item | the item it needs |
+| `refines` | the detailed version | the rough version |
+| `derived-from` | the successor | the source Note or Record |
+| `evidences` | the source material | the claim it supports |
+| `precedes` | the earlier item | the later item |
+
+**Choosing a type.** Every `relationType` must resolve to an installed `RelationTypeDefinition` in the effective package set (RFC-005) — the seven canonical types above ship in the core package. To use a domain-specific relation (`delegates`, `amends`, `com.acme.hr/transferred-to`), first install a namespaced definition via `srs relation-type create`; a string that resolves to nothing is a validation error, not a soft convention.
+
+**Ordering.** `precedes` is for *semantic* sequence only — where a different order would be wrong (spec sections, process steps). For presentational ordering use the view layer (`ordering.memberOrder`; see "Presentational vs semantic ordering" below). Never assert `precedes` to make a list look right.
+
+### Superseding a Record (use `record successor`, not a hand-assembled edge)
+
+Superseding is a compound act: create the replacement, link it, retire the old one. Do **not** hand-assert a `supersedes` relation and edit the ratified record — edit-in-place destroys the audit trail. Use the atomic operation:
+
+```bash
+srs record successor --repo <path> --id <predecessorId> <<'EOF'
+{
+  "relationType": "supersedes",
+  "fieldValues": [ { "fieldId": "<uuid>", "value": "<value>" }, ... ]
+}
+EOF
+```
+
+This creates the successor (in the type's initial lifecycle state), asserts the `supersedes` relation successor→predecessor, and returns both. `"relationType": "refines"` produces a refinement instead. The predecessor's lifecycle state is deliberately untouched — a drafted-but-unadopted successor is valid; transition the predecessor to its superseded state as a separate, explicit act (RFC-022 adds atomic transition fulfillment for this).
+
+**Relations vs `sourceRefs`.** A Relation connects two *instances* in the repository. A `sourceRefs[]` entry on a record is a *provenance pointer* to source material (a transcript chunk, an external or repository document) — it is not an edge, does not appear in `relation list`, and uses its own separate vocabulary. If both ends are instances in the index, use a Relation; if you are citing where content came from, use a sourceRef.
 
 ### Creating a Vocabulary (RFC-006)
 
