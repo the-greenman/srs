@@ -30,7 +30,8 @@
     "fields/roleholder-a6c19b95.json",
     "fields/authority-d25da548.json",
     "fields/boundary-3c39ee1f.json",
-    "fields/sourceofauthority-9a32dc01.json"
+    "fields/sourceofauthority-9a32dc01.json",
+    "fields/externallinks-fc434475.json"
   ],
   "id": "1cd9622e-3d05-4214-a683-4cb81d0c44d9",
   "lifecycles": [

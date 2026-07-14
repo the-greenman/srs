@@ -1,0 +1,61 @@
+{
+  "recordId": "d8599dd7-e8d7-45d1-a192-d1a0ac97f8d5",
+  "revisions": [
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-07-14T09:51:15.611457326+00:00",
+      "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
+      "provenance": {
+        "lifecycleTransition": "abandoned",
+        "transitionedAt": "2026-07-14T09:51:15.611457326+00:00"
+      },
+      "recordId": "d8599dd7-e8d7-45d1-a192-d1a0ac97f8d5",
+      "revisionId": "c2b92485-33a6-4499-99d2-3cab69fab395",
+      "value": "Fixed schedule for all working groups"
+    },
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-07-14T09:51:15.611457326+00:00",
+      "fieldId": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
+      "provenance": {
+        "lifecycleTransition": "abandoned",
+        "transitionedAt": "2026-07-14T09:51:15.611457326+00:00"
+      },
+      "recordId": "d8599dd7-e8d7-45d1-a192-d1a0ac97f8d5",
+      "revisionId": "0bbdd873-30ba-40c6-82ca-5ac6c3265949",
+      "value": "All working groups will meet on a fixed fortnightly schedule to be coordinated centrally."
+    },
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-07-14T09:51:15.611457326+00:00",
+      "fieldId": "3340532b-d845-5e54-92b3-819ed05365c5",
+      "provenance": {
+        "lifecycleTransition": "abandoned",
+        "transitionedAt": "2026-07-14T09:51:15.611457326+00:00"
+      },
+      "recordId": "d8599dd7-e8d7-45d1-a192-d1a0ac97f8d5",
+      "revisionId": "67d67656-174a-495e-b600-63d82e0848d7",
+      "value": "Intended to reduce scheduling overhead by standardising meeting cadence across groups."
+    },
+    {
+      "agent": {
+        "type": "Ai"
+      },
+      "createdAt": "2026-07-14T09:51:15.611457326+00:00",
+      "fieldId": "73cd845a-3623-5bc6-8ade-42a7cd64740c",
+      "provenance": {
+        "lifecycleTransition": "abandoned",
+        "transitionedAt": "2026-07-14T09:51:15.611457326+00:00"
+      },
+      "recordId": "d8599dd7-e8d7-45d1-a192-d1a0ac97f8d5",
+      "revisionId": "948a3c1e-79be-42ba-a066-05263ce6a2ab",
+      "value": "Can we reduce friction around scheduling if all working groups meet at the same time?"
+    }
+  ]
+}

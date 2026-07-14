@@ -18,9 +18,15 @@
       "renderViewId": "faebd240-83c4-4bc8-a383-8335f841a234",
       "sectionId": "decisions",
       "source": {
-        "containerIds": ["138e2fac-6a8a-4a06-9511-5aefd99ceae9"],
+        "containerIds": [
+          "138e2fac-6a8a-4a06-9511-5aefd99ceae9"
+        ],
         "containerScope": "explicit",
-        "excludeLifecycleStates": ["superseded", "closed"],
+        "excludeLifecycleStates": [
+          "superseded",
+          "closed",
+          "abandoned"
+        ],
         "semanticObjectType": "governance/decision",
         "type": "type-query"
       },
