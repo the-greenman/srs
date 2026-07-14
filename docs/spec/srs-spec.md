@@ -444,7 +444,7 @@ A pointer from a field value or instance back to source material.
 
 ```typescript
 {
-  sourceType: "transcript-chunk" | "transcript-segment" | "external-document"
+  sourceType: "transcript-chunk" | "transcript-segment" | "external-document" | "repository-document"
   sourceId: string
   sourceStandard?: string   // versioned standard the source conforms to
   streamId?: UUID           // for transcript sources: originating stream
@@ -532,7 +532,9 @@ An instantiated Type with field values.
   relationId: UUID
 
   relationType: string
-  // Free-form. See ext:recommended-relations for canonical types and conventions.
+  // Must resolve to an installed RelationTypeDefinition in the effective
+  // package set (RFC-005; conformance V1). Canonical types ship in the core
+  // package; custom types use namespace/name form and install their own definition.
 
   // source [relationType] target
   sourceInstanceId: UUID    // the asserting instance
@@ -611,7 +613,7 @@ Containers are not semantic objects with Fields. They do not own semantic state;
 }
 ```
 
-`Container.containerId` is not an instance ID and must not appear in `Relation.sourceInstanceId` or `targetInstanceId`. See Invariant 19.
+`Container.containerId` is not an instance ID and must not appear in `Relation.sourceInstanceId` or `targetInstanceId`. See Invariant 20.
 
 ---
 
