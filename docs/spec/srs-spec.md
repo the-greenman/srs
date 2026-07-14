@@ -449,7 +449,10 @@ A pointer from a field value or instance back to source material.
   sourceStandard?: string   // versioned standard the source conforms to
   streamId?: UUID           // for transcript sources: originating stream
 
-  relationType?: "evidence" | "derived-from" | "quoted-from" | "inspired-by" | "supersedes-context"
+  sourceRole?: "evidence" | "extracted-from" | "quoted-from" | "inspired-by"
+  // relationType is the DEPRECATED legacy alias of sourceRole (RFC-023):
+  // accepted on read during the migration window, mapped per RFC-023
+  // Change B, never written
 
   confidence?: number       // 0.0–1.0
   note?: string
@@ -457,6 +460,19 @@ A pointer from a field value or instance back to source material.
 ```
 
 `"transcript-chunk"` and `"transcript-segment"` are intended for implementations that have a stable conversation or time-stream layer with durable chunk or segment identifiers. A standalone repository that stores transcript exports, chat dumps, email threads, or similar source material directly under `source-documents/` should generally cite those files using `sourceType: "repository-document"` (see `ext:repository`) rather than inventing pseudo-chunk IDs.
+
+#### Graduation mapping (RFC-023)
+
+When source material referenced by a SourceReference is itself promoted to an instance in the repository, the provenance is re-expressed as a Relation edge. Two participants exist in every conversion: the **referencing instance** (the instance that carried the `sourceRefs[]` entry) and the **promoted instance** (the new instance created from the source material).
+
+| `sourceRole` | Relation edge | `sourceInstanceId` | `targetInstanceId` |
+|---|---|---|---|
+| `extracted-from` | `derived-from` | the referencing instance | the promoted instance |
+| `evidence` | `evidences` | the promoted instance | the referencing instance (direction flips) |
+| `quoted-from` | `derived-from` | the referencing instance | the promoted instance |
+| `inspired-by` | *(no canonical edge)* | — | — |
+
+An implementation that performs such a conversion must follow these semantics: the created Relation records the originating role in `meta["com.semanticops.srs/sourceRole"]` (required for `quoted-from` — it is the only carrier of the quotation distinction); `confidence` carries over and `note` maps to the Relation's `notes`; the converted SourceReference is removed in the same operation. SourceReferences carried on Relations are excluded — a Relation cannot be a Relation endpoint — and are retained unchanged. See RFC-023.
 
 #### `FieldValue`
 
@@ -2943,6 +2959,10 @@ Conforming implementations must uphold the following invariants.
 #### manifest.container.identityInstanceId
 
 **I-87.** `manifest.container.identityInstanceId`, when present, MUST reference a Tier-2 Record of type `com.semanticops.core/purpose`. This invariant layers on RFC-013 I-81 (membership requirement retained; I-81 is not superseded); RFC-018 adds the type constraint on top. During the RFC-018 migration grace period (R7), an implementation MUST emit a migration warning rather than a validation error for existing repositories whose `identityInstanceId` resolves to a record that is not a Tier-2 `com.semanticops.core/purpose` Record (including Tier-0 notes and Tier-1 TypedRecords of any type). All newly-created repositories (post-RFC-018) must satisfy this invariant immediately.
+
+#### SourceReference.sourceRole
+
+**I-88.** The `sourceRole` value set — the closed enum of the implemented schema revision, including values added by later accepted RFCs — MUST be disjoint under literal whole-key equality from the set of installed `RelationTypeDefinition` keys in the repository's effective package set. Relation-type creation MUST reject a definition whose key equals a `sourceRole` value; `repo validate` MUST report a pre-existing collision as `SOURCEROLE_RELATIONTYPE_COLLISION` (warning at rest). The legacy `relationType` enum on SourceReference is exempt. A namespaced key (e.g. `com.acme/evidence`) does not collide with a bare `sourceRole` value.
 
 ---
 
