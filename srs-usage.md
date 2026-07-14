@@ -433,7 +433,7 @@ EOF
 
 This creates the successor (in the type's initial lifecycle state), asserts the `supersedes` relation successor→predecessor, and returns both. `"relationType": "refines"` produces a refinement instead. The predecessor's lifecycle state is deliberately untouched — a drafted-but-unadopted successor is valid; transition the predecessor to its superseded state as a separate, explicit act (RFC-022 adds atomic transition fulfillment for this).
 
-**Relations vs `sourceRefs`.** A Relation connects two *instances* in the repository. A `sourceRefs[]` entry on a record is a *provenance pointer* to source material (a transcript chunk, an external or repository document) — it is not an edge, does not appear in `relation list`, and uses its own separate vocabulary. If both ends are instances in the index, use a Relation; if you are citing where content came from, use a sourceRef.
+**Relations vs `sourceRefs`.** A Relation connects two *instances* in the repository. A `sourceRefs[]` entry on a record is a *provenance pointer* to source material (a transcript chunk, an external or repository document) — it is not an edge, does not appear in `relation list`, and uses its own separate vocabulary: the `sourceRole` field (`evidence | extracted-from | quoted-from | inspired-by`, RFC-023 — deliberately disjoint from relation types; `relationType` on a sourceRef is the deprecated legacy alias). If both ends are instances in the index, use a Relation; if you are citing where content came from, use a sourceRef. When source material is later promoted to an instance, convert the sourceRef to its Relation edge per the graduation mapping in §4.4 (note: `evidence` → `evidences` flips direction).
 
 ### Creating a Vocabulary (RFC-006)
 
