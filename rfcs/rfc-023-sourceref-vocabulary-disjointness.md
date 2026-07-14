@@ -2,7 +2,7 @@
 
 # RFC-023: SourceReference vocabulary disjointness — `sourceRole` replaces `relationType`
 
-**Status**: Draft (Revision 3)
+**Status**: In Progress (Revision 4)
 **Affects**: `SourceReference` (Note, TypedRecord, Record, Relation), schemas `record.json` / `note.json` / `typed-record.json` / `relations-collection.json`, spec records defining the SourceReference shape (§4.4 record tiers, record-typed type definition) and prose referencing it, `repo validate` diagnostics, `relation-type create` validation; coordination requirement on RFC-017 (attachments); implements principle R7 of the relation-coherence epic (#171)
 **Author**: Peter Brownell (owner decisions recorded on #171); drafted by Claude
 **Date**: 2026-07-14
@@ -15,6 +15,7 @@
 |---|---|---|
 | 1 | 2026-07-14 | Initial draft from the R7 decision on epic #171 |
 | 2 | 2026-07-14 | Review round 1 (2 reviewers, 5 blocking + 9 should-fix): graduation-table directions rewritten with explicit role columns; migration window re-anchored to a spec-visible marker; new "Spec text changes" section (records are the source of truth); diagnostics named; quoted-from conversion semantics + sourceRef disposition defined; R5 comparison semantics pinned to literal key equality with legacy-enum exemption; RFC-017 coordination requirement made explicit; RFC-018 citation corrected; mirror-sync process aligned with the release-artifact pipeline; alternatives F/G added; nits (asymmetry, lossy R4, schema snippet, Provenance location, supersedes-context prose occurrences) |
+| 4 | 2026-07-14 | Implementation started; RFC file + schema changes committed to branch rfc/023-sourceref-vocabulary-disjointness |
 | 3 | 2026-07-14 | Review round 2 (zero blocking): Relation-borne sourceRefs excluded from graduation conversion (Change C / R6); R6 split — performing a conversion is MUST-level, offering one is SHOULD; the namespaced `meta` key acknowledged as a convention minted here (scoped to this key); mirror-sync flow evidenced against `release.yml` + the mirrors' sync scripts (the CLAUDE.md "mirrors-first" text is the stale artifact, corrected in the docs pass); nits: R5 wording, diagnostic stacking, `inspired-by` custom-edge disposition, invariants 048/051/052 data-migration parenthetical |
 
 ---
