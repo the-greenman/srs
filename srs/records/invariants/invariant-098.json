@@ -12,7 +12,7 @@
     },
     {
       "fieldId": "1a000003-0000-4000-a000-000000000003",
-      "value": "A Record MUST NOT rest in a lifecycle state that declares `requiresRelation` unless at least one Relation satisfies the obligation: its type equals one of the declared `relationType`(s) and the Record is the relation's target when `direction` is `incoming` (or omitted) or its source when `direction` is `outgoing`. An implementation MUST reject a lifecycle transition whose target state declares `requiresRelation` unless the operation, on completion, satisfies this invariant — either because a satisfying Relation already exists, or because the operation's fulfillment establishes one. The rejection MUST be machine-readable, identifying the target state key, the required relation type(s), and the direction. (RFC-022 R1–R3.)"
+      "value": "A Record MUST NOT rest in a lifecycle state that declares `requiresRelation` unless at least one Relation satisfies the obligation: its type equals one of the declared `relationType`(s) and the Record is the relation's target when `direction` is `incoming` (or omitted) or its source when `direction` is `outgoing`. When the state declares `enforcement: \"hard\"` (the default), an implementation MUST reject a lifecycle transition into it unless the operation, on completion, satisfies this occupancy requirement — either because a satisfying Relation already exists, or because the operation's fulfillment establishes one. The rejection MUST be machine-readable, identifying the target state key, the required relation type(s), and the direction. When the state declares `enforcement: \"advisory\"`, the transition MUST be permitted regardless of the obligation and the unsatisfied state surfaced only as an at-rest warning, never a rejection. (RFC-022 R1–R3, R2a.)"
     },
     {
       "fieldId": "1a000021-0000-4000-a000-000000000021",
@@ -24,5 +24,5 @@
   "typeName": "invariant",
   "typeNamespace": "com.semanticops.spec",
   "typeVersion": 1,
-  "updatedAt": "2026-07-14T15:00:00Z"
+  "updatedAt": "2026-07-14T15:30:00Z"
 }
