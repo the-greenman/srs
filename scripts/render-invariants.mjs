@@ -92,6 +92,21 @@ export async function renderInvariants(repoPath) {
 
   records.sort((a, b) => a.sortKey - b.sortKey);
 
+  // Invariant numbers must be unique. Duplicates previously went undetected
+  // because records created via `record create` landed in records/tier-2/
+  // (outside this scan) and repo validate does not check number uniqueness
+  // (srs#171 cleanup). Fail loudly here so it cannot recur silently.
+  const seen = new Map();
+  for (const rec of records) {
+    if (seen.has(rec.sortKey)) {
+      throw new Error(
+        `Duplicate invariant number ${rec.rawNum}: at least two invariant records ` +
+          `in records/invariants/ share it. Invariant numbers must be unique.`
+      );
+    }
+    seen.set(rec.sortKey, rec.rawNum);
+  }
+
   const groupOrder = [];
   const groups = new Map();
   let otherRecords = [];

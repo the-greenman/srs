@@ -2760,6 +2760,12 @@ Conforming implementations must uphold the following invariants.
 
 **6.** `Record.lifecycleState`, when present, must reference a `name` in the associated `Type.lifecycle.states[]`.
 
+**I-98.** A Record MUST NOT rest in a lifecycle state that declares `requiresRelation` unless at least one Relation satisfies the obligation: its type equals one of the declared `relationType`(s) and the Record is the relation's target when `direction` is `incoming` (or omitted) or its source when `direction` is `outgoing`. An implementation MUST reject a lifecycle transition whose target state declares `requiresRelation` unless the operation, on completion, satisfies this invariant — either because a satisfying Relation already exists, or because the operation's fulfillment establishes one. The rejection MUST be machine-readable, identifying the target state key, the required relation type(s), and the direction. (RFC-022 R1–R3.)
+
+**I-99.** A fulfillment supplied with a lifecycle transition MUST be applied as one all-or-nothing operation: `newRecord` creates a successor of the Record's Type in the effective lifecycle's initial state, asserts one Relation of the selected type oriented per `direction`, and transitions the Record; `existingInstanceId` asserts the Relation to the referenced instance (which MUST exist and MUST NOT be the Record itself) and transitions. If any step fails, no step's effect may remain observable. A file-backed implementation MAY realize this by write ordering in which the state change is committed last, provided every committed prefix is a valid repository under I-98. When the state declares an any-of `relationType` array, `fulfillment.relationType` MUST be one of the declared types, defaulting to the first; a `fulfillment` supplied for a target state that declares no `requiresRelation` MUST be rejected. (RFC-022 R4–R8.)
+
+**I-100.** Allowed-transitions projections MUST include the target state's `requiresRelation` declaration on each transition option whose target state declares one, so clients route successor-flow presentation from structure rather than state-name matching. Repository validation MUST emit a warning-severity diagnostic for every Record at rest that violates I-98, and MUST NOT treat such a violation as a hard validation error. Transitions whose target state declares no `requiresRelation` MUST behave exactly as before RFC-022. (RFC-022 R8–R10.)
+
 #### core — Package
 
 **7.** Every `fieldId` referenced in any `FieldAssignment` within a `Package.types[]` must appear as the `id` of an entry in `Package.dependencyRefs`.
@@ -2773,6 +2779,24 @@ Conforming implementations must uphold the following invariants.
 **10.** All `fieldId` values in any `CrossFieldRule` within `Type.validationRules[]` must appear in the Type's effective field list. Cross-field rules cannot reference Fields outside the Type.
 
 **11.** A `conditional-required` rule must supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. A `field-ordering` rule must supply `predicateFieldId`, `targetFieldId`, and `effect`. A `mutual-exclusion` rule must supply `fieldIds` with at least two entries.
+
+**I-89.** An SRS implementation that does not declare support for `ext:cross-field-validation` MUST treat `validationRules` as an unrecognized property and MUST ignore it. Conformance rules R1–R11 bind only implementations that declare support for `ext:cross-field-validation`. (RFC-019 R0.)
+
+**I-90.** A conforming implementation that declares support for `ext:cross-field-validation` MUST evaluate each `CrossFieldRule` in `validationRules` against every Record of the Type at record-write time (create and update). Evaluation order within the array is implementation-defined; all rules MUST be evaluated regardless of earlier failures (fail-all, not fail-first). (RFC-019 R2.)
+
+**I-91.** A `CrossFieldRule` with `type: "conditional-required"` fires when the field identified by `predicateFieldId` is non-empty and its stored value is equal to `predicateValue` (case-sensitive string equality). When the rule fires, the field identified by `targetFieldId` MUST be non-empty in the Record. A violation MUST be reported as a validation error. (RFC-019 R3.)
+
+**I-92.** A `CrossFieldRule` with `type: "field-ordering"` fires when both `predicateFieldId` and `targetFieldId` are non-empty. It applies only to fields whose `valueType` is `"date"` or `"number"`. When `effect` is `"must-precede"`, the predicate field value MUST be strictly less than the target field value (ISO 8601 lexicographic order for dates; numeric order for numbers). When `effect` is `"must-follow"`, the predicate field value MUST be strictly greater than the target field value. A violation MUST be reported as a validation error. If either field is non-empty but the other is absent or empty, the rule MUST NOT fire. A `field-ordering` rule whose `predicateFieldId` or `targetFieldId` resolves to a field with `valueType` other than `"date"` or `"number"` MUST be reported as a Type-level validation error. (RFC-019 R4.)
+
+**I-93.** A `CrossFieldRule` with `type: "mutual-exclusion"` MUST report a validation error if more than one field in `fieldIds` is non-empty in the Record. If zero or one field is non-empty, the rule passes. (RFC-019 R5.)
+
+**I-94.** A `CrossFieldRule` with `type: "conditional-required"` MUST supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. Additionally, the field identified by `predicateFieldId` MUST have a `valueType` in `{"string", "text", "select", "date", "url"}` — types whose stored `value` is always a JSON string, enabling meaningful string equality comparison. A rule that omits any of the three required fields, or whose `predicateFieldId` resolves to a field with any other `valueType`, MUST be reported as a Type-level validation error. (RFC-019 R6; normative extension of I-11.)
+
+**I-95.** A `CrossFieldRule` with a `type` value not in `["conditional-required", "field-ordering", "mutual-exclusion"]` MUST be reported as a Type-level validation error. Implementations MUST NOT silently ignore unknown rule types. (RFC-019 R9.)
+
+**I-96.** A `CrossFieldRule` that contains a property belonging to a different rule type MUST be reported as a Type-level validation error. Specifically: a `conditional-required` or `field-ordering` rule MUST NOT supply `fieldIds`; a `mutual-exclusion` rule MUST NOT supply `predicateFieldId`, `predicateValue`, `targetFieldId`, or `effect`. (RFC-019 R10.)
+
+**I-97.** `validationRules` are not inherited. A Type's `validationRules` array is the complete and exclusive set of cross-field rules evaluated for Records of that Type. When `ext:type-inheritance` is in use and Type B extends Type A, Type A's `validationRules` MUST NOT be evaluated for Records of Type B unless Type B's own `validationRules` explicitly restates them. (RFC-019 R11.)
 
 #### ext:views-l1
 
