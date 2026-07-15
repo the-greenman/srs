@@ -1,8 +1,8 @@
 > **GitHub issue**: [the-greenman/srs#125](https://github.com/the-greenman/srs/issues/125)
 
-# RFC-017: Governance Package — Primary-Export DocumentView and Seed Root Container
+# RFC-025: Governance Package — Primary-Export DocumentView and Seed Root Container
 
-**Status**: Accepted (Revision 3)
+**Status**: Accepted (Revision 4)
 **Affects**: `packages/com.mudemocracy.governance/1.0.0/` (new `governance-document` DocumentView; seed `manifest.container` + `renderedPresentations`)
 **Author**: the-greenman (from epic the-greenman/srs#95, Phase 3 / Gate C, issue #97)
 **Date**: 2026-07-06
@@ -16,6 +16,7 @@
 |---|---|---|
 | 1 | 2026-07-06 | Initial draft |
 | 2 | 2026-07-06 | Address Stage 3 review findings. Blocking: add `$schema`, `description`, `createdAt` to DocumentView properties table; add `order` integers and `titleFieldId` UUID to sections table; specify `articlenumber` fieldId UUID in ordering; add `title` to seed container JSON; add Rationale entry for stable root containerId. Should-fix: add seed `data` key name; add Migration section; reframe R1 with provenance anchor; promote R3 SHOULD→MUST for isDefault ordering; add R3 enforcement surface; add Rationale entry for decisions lifecycle decision. Nits: "absent" ordering terminology; acknowledge `identityInstanceId` omission; name `documentViews` array; trim R4. Declined: RFC-015 dependency flag (RFC-015 merged as PR #115 on 2026-07-03). |
+| 4 | 2026-07-14 | **Renumbered RFC-017 → RFC-025** (owner decision, srs#171): the number collided with the in-flight attachments RFC (srs#101), which keeps RFC-017 as the number the ecosystem already cites. Content unchanged. |
 | 3 | 2026-07-06 | Address Stage 3 Round 2 findings. Blocking: specify that seed's embedded `data["package/package.json"]["documentViews"]` must also be updated to include the new view path. Should-fix: scope R1's `containerId` requirement prospectively (applies to repos newly created from the updated seed); update Migration step 1 to distinguish RFC-017 full conformance (use `54432eb2-...`) from RFC-013-only conformance (any valid UUID). |
 
 ---
@@ -121,7 +122,7 @@ The embedded `data["package/package.json"]` entry MUST also have its `documentVi
 
 ## Conformance Rules
 
-> **[R1]** The `com.mudemocracy.governance` package seed MUST ship `manifest.container.containerId` equal to `54432eb2-7961-4538-ac16-9e25dcfa2f42`. Tools creating governance repositories from this seed MUST preserve that `containerId` in the initialised repository. A governance repository newly initialised from the seed at or after RFC-017 that does not carry this `containerId` is non-conformant under this RFC. Repositories that predate RFC-017 are subject to the Migration procedure (see below) — they achieve full RFC-017 conformance by adopting `containerId: "54432eb2-7961-4538-ac16-9e25dcfa2f42"`, but remain RFC-013-conformant with any valid `containerId`. (Note: RFC-013 I-79 makes `manifest.container` itself required for all SRS repositories, independent of this RFC.)
+> **[R1]** The `com.mudemocracy.governance` package seed MUST ship `manifest.container.containerId` equal to `54432eb2-7961-4538-ac16-9e25dcfa2f42`. Tools creating governance repositories from this seed MUST preserve that `containerId` in the initialised repository. A governance repository newly initialised from the seed at or after RFC-025 that does not carry this `containerId` is non-conformant under this RFC. Repositories that predate RFC-025 are subject to the Migration procedure (see below) — they achieve full RFC-025 conformance by adopting `containerId: "54432eb2-7961-4538-ac16-9e25dcfa2f42"`, but remain RFC-013-conformant with any valid `containerId`. (Note: RFC-013 I-79 makes `manifest.container` itself required for all SRS repositories, independent of this RFC.)
 >
 > **[R2]** The `governance-document` DocumentView (id `732a982b-3765-4f22-90e0-e456463bac54`) MUST NOT declare `rootTypeRefs`. Its selection MUST be driven exclusively by a `renderedPresentations` entry in the repository manifest, as specified by RFC-015 Rule [N+31].
 >
@@ -139,12 +140,12 @@ The embedded `data["package/package.json"]` entry MUST also have its `documentVi
 
 ## Migration
 
-### Existing governance repositories (pre-RFC-017)
+### Existing governance repositories (pre-RFC-025)
 
-Governance repositories created from the seed before RFC-017 is applied are already non-conformant under RFC-013 I-79 (missing `manifest.container`). R1's `containerId` requirement is **prospective** — it applies to repositories newly created from the updated seed, not to repositories that predate this RFC.
+Governance repositories created from the seed before RFC-025 is applied are already non-conformant under RFC-013 I-79 (missing `manifest.container`). R1's `containerId` requirement is **prospective** — it applies to repositories newly created from the updated seed, not to repositories that predate this RFC.
 
 For pre-existing governance repositories:
-1. **Add `manifest.container`**: Follow RFC-013's generic migration procedure — assign `containerId: "54432eb2-7961-4538-ac16-9e25dcfa2f42"` for full RFC-017 conformance, or any valid UUID for RFC-013 conformance only; populate `memberInstanceIds` from existing containers; set `identityInstanceId` to the `instanceId` of the Tier 0 root note.
+1. **Add `manifest.container`**: Follow RFC-013's generic migration procedure — assign `containerId: "54432eb2-7961-4538-ac16-9e25dcfa2f42"` for full RFC-025 conformance, or any valid UUID for RFC-013 conformance only; populate `memberInstanceIds` from existing containers; set `identityInstanceId` to the `instanceId` of the Tier 0 root note.
 2. **Add `renderedPresentations`**: Add an entry for `viewId: "732a982b-3765-4f22-90e0-e456463bac54"` with `isDefault: true`. This is a manifest-only edit; no records, relations, or instance data change.
 3. Run `srs repo validate` after both edits; 0 errors is the acceptance criterion.
 
