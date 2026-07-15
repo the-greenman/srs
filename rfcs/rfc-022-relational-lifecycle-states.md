@@ -2,7 +2,7 @@
 
 # RFC-022: Relational lifecycle states — `requiresRelation` + transition fulfillment
 
-**Status**: In Progress (Revision 2)
+**Status**: Accepted (Revision 4)
 **Affects**: `ext:lifecycle` (LifecycleState, transition semantics), `lifecycle.json`, `type.json`, canonical CLI contract (`record transition`), `repo validate` diagnostics
 **Author**: design dialogue draft (issue #158 discussion)
 **Date**: 2026-07-10
@@ -15,12 +15,14 @@
 |---|---|---|
 | 1 | 2026-07-10 | Initial draft, consolidating the issue #158 proposal and its two review comments (relational-states / fulfillment design adopted over the transition-marker design). Renumbered from the issue's self-assigned RFC-021 — that number is taken by `rfc-021-blueprint-optional-schema.md`. |
 | 2 | 2026-07-10 | Implementation started; RFC file committed to branch `claude/fulfillment-implementation-plan-q4m4rd`. |
+| 3 | 2026-07-10 | Accepted; implemented across srs-rust (#503, #505), srs (#161, #162), srs-web (#206). Three lifecycle invariants + `ext:lifecycle` text authored. *(The acceptance header and invariant records were orphaned on the branch above; the invariants were re-landed as I-98/I-99/I-100 by srs#177 during the invariant-numbering cleanup — the numbers I-88/I-89/I-90 first claimed for them collided with pre-existing records; see #171.)* |
+| 4 | 2026-07-14 | **Amendment (owner-directed, srs#171):** `requiresRelation` gains `enforcement: "hard" \| "advisory"` (default `hard`). Separates *definitional* relational states (hard — supersession) from *evidentiary/contextual* ones (advisory — e.g. ratification-needs-a-vote, relation may lag). Adds R2a; qualifies R2 to `hard`; incorporates the former Alt D as the advisory mode; adds Alt E (contextual case resolved by retype, a separate RFC). Schema: `enforcement` added to `RequiresRelation` in `lifecycle.json` + `type.json`. |
 
 ---
 
 ## Abstract
 
-Supersession is today a compound act — flip the predecessor to `superseded`, create a successor, assert a `supersedes` relation — that the model cannot couple, so a bare state flip produces **orphan supersessions**: records marked superseded with no successor and no link. This RFC introduces **relational states**: a `LifecycleState` may declare `requiresRelation`, meaning a record may only *be* in that state if a declared relation exists. Transitions into such a state are hard-enforced and may be **fulfilled** atomically through the existing transition operation (spawn a successor, adopt an existing record, or rely on an already-satisfied obligation). Validation surfaces at-rest violations as diagnostics.
+Supersession is today a compound act — flip the predecessor to `superseded`, create a successor, assert a `supersedes` relation — that the model cannot couple, so a bare state flip produces **orphan supersessions**: records marked superseded with no successor and no link. This RFC introduces **relational states**: a `LifecycleState` may declare `requiresRelation`, meaning a record may only *be* in that state if a declared relation exists. An `enforcement` strength (`hard`, the default, or `advisory`) selects whether entry is blocked until the obligation holds (definitional states like `superseded`) or merely permitted-and-flagged when it may legitimately lag (evidentiary states). Hard transitions may be **fulfilled** atomically through the existing transition operation (spawn a successor, adopt an existing record, or rely on an already-satisfied obligation). Validation surfaces at-rest violations as diagnostics.
 
 ---
 
@@ -50,6 +52,7 @@ With today's allowed-transitions projection (`{name, to, toIsFinal}`), a client 
 |---|---|---|---|
 | `relationType` | string \| string[] (each non-empty) | yes | The relation type(s) that satisfy the obligation (any-of when an array). No implicit default — the obligation's content is always explicit. |
 | `direction` | `"incoming"` \| `"outgoing"` | no (default `"incoming"`) | `incoming`: an edge whose **target** is the record (e.g. successor → predecessor `supersedes`). `outgoing`: an edge whose **source** is the record. |
+| `enforcement` | `"hard"` \| `"advisory"` | no (default `"hard"`) | **`hard`**: a transition into the state is rejected unless the obligation is satisfied/fulfilled (§Change B). **`advisory`**: the transition is permitted even when unsatisfied; the unsatisfied obligation is surfaced only as an at-rest warning, never a rejection. |
 
 ```jsonc
 // LifecycleState
@@ -58,10 +61,13 @@ With today's allowed-transitions projection (`{name, to, toIsFinal}`), a client 
   "isFinal": true,
   "requiresRelation": {
     "relationType": "supersedes",   // or ["supersedes", "replaces"]
-    "direction": "incoming"
+    "direction": "incoming",
+    "enforcement": "hard"           // default; omit for hard
   }
 }
 ```
+
+**Definitional vs contextual — what `enforcement` is for.** `hard` fits a **definitional** relational state, whose meaning *is* the relationship: a `superseded` record without a successor is not a valid superseded record, so entry must be blocked. `advisory` fits an **evidentiary/contextual** obligation that may legitimately lag — e.g. a `ratified` decision whose formal vote record is attached after the fact; the record is validly ratified now and flagged incomplete until the relation exists. Note that `requiresRelation` answers only *"does being in this state require this relation?"* — a property of the **state**. Whether the obligation *applies to a given record* is a contextual question `requiresRelation` does not model; that belongs to the Type/lifecycle the record is bound to (reached by **retype**, a separate RFC) or to the ratifying process. See the relational-states design note ([#158](https://github.com/the-greenman/srs/issues/158#issuecomment-4978979224)) and srs#171 principles R4 (definitional vs contextual coupling) and R11 (retype).
 
 **Semantics — the invariant is on the state, not the edge**: a record may only *be* in a state declaring `requiresRelation` if a satisfying relation exists. Every path into the state — any transition edge, any client, import, migration — inherits the obligation; a state reachable via two edges cannot have door-dependent integrity. The invariant direction is deliberately `state ⇒ relation`, **not** `relation ⇒ state`: a drafted successor with a `supersedes` relation to a still-`ratified` predecessor is valid ("a replacement exists but has not been adopted").
 
@@ -111,7 +117,9 @@ Repository validation (`repo validate`) checks the declared invariant at rest: a
 
 > **[R1]** A record MUST NOT rest in a lifecycle state declaring `requiresRelation` unless at least one relation satisfies the obligation: its `relationType` equals one of the declared type(s) and the record is the relation's **target** when `direction` is `incoming` (or omitted) or its **source** when `direction` is `outgoing`.
 >
-> **[R2]** An implementation MUST reject a lifecycle transition whose target state declares `requiresRelation` unless the operation, upon completion, satisfies R1 — either because a satisfying relation already exists, or because the operation's `fulfillment` establishes one.
+> **[R2]** An implementation MUST reject a lifecycle transition whose target state declares `requiresRelation` with `enforcement: "hard"` (the default) unless the operation, upon completion, satisfies R1 — either because a satisfying relation already exists, or because the operation's `fulfillment` establishes one.
+>
+> **[R2a]** When the target state declares `requiresRelation` with `enforcement: "advisory"`, an implementation MUST permit the transition regardless of whether the obligation is satisfied, MUST NOT require a `fulfillment`, and MUST record the resulting at-rest state so R10's warning fires while the obligation is unsatisfied. (`fulfillment` MAY still be supplied to establish the relation atomically.)
 >
 > **[R3]** The rejection in R2 MUST produce a machine-readable error identifying the target state key, the required relation type(s), and the direction.
 >
@@ -135,8 +143,8 @@ Repository validation (`repo validate`) checks the declared invariant at rest: a
 
 | Schema file | Change |
 |---|---|
-| `lifecycle.json` | `$defs.LifecycleState` gains optional `requiresRelation` object (`relationType`: string \| string[] of non-empty strings, required; `direction`: `"incoming"`/`"outgoing"`, optional, default `"incoming"`) |
-| `type.json` | identical `requiresRelation` addition to its inline `$defs.LifecycleState` (the `TypeLifecycle` copy) |
+| `lifecycle.json` | `$defs.RequiresRelation` — `relationType` (string \| string[], required), `direction` (`"incoming"`/`"outgoing"`, default `"incoming"`), **`enforcement` (`"hard"`/`"advisory"`, default `"hard"`) — added Rev 4**. Rev 3 added the object and `relationType`/`direction`; Rev 4 adds `enforcement`. |
+| `type.json` | identical `RequiresRelation` definition (referenced by the inline `TypeLifecycle` `LifecycleState`), including the Rev 4 `enforcement` addition |
 
 Schema changes must be synced to:
 - `srs-rust/crates/srs-schema/schemas/2.0/` (via `scripts/sync-schemas-from-spec.sh`)
@@ -150,7 +158,7 @@ Schema changes must be synced to:
 - **An object, not booleans.** `spawnsSuccessor: true` + `successorRelationType` bakes the supersede special case into the schema permanently. `requiresRelation` names the obligation (a relationship), not the mechanism (spawning), and has room for future growth (cardinality, `targetTypeRef`) without another schema change.
 - **No implicit relation-type default.** Defaulting to `supersedes` would re-encode the special case the object shape removes. Explicit `relationType` makes a domain's `replaces`-style vocabulary first-class without engine changes. (`direction` does default — `incoming` covers the successor pattern and is mechanism, not meaning.)
 - **Extend the one write path, no new verb.** A `record supersede` verb forks the just-consolidated transition path and does not scale — each future relation-obligation would demand another verb. `fulfillment` on `record transition` covers one-shot supersede, two-phase adopt, and import/migration with three input shapes.
-- **Hard rejection.** Advisory-only enforcement leaves the invariant to per-client discipline — and srs-web#204 is precisely a well-meaning client doing the bare flip. Because only lifecycles that declare the obligation are affected, the behaviour change is opt-in per lifecycle definition, not a breaking change to `set-lifecycle-state`.
+- **Hard by default, advisory as an opt-in mode.** `hard` is the default because the motivating case — supersession — is *definitional*: advisory-only enforcement leaves the invariant to per-client discipline, and srs-web#204 is precisely a well-meaning client doing the bare flip. But not every relational obligation is definitional; some are evidentiary and legitimately lag (ratification-needs-a-vote). Rather than force those into state-splitting or client discipline, `enforcement: "advisory"` expresses them directly — the state is valid without the relation but flagged incomplete. The at-rest severity is the single knob distinguishing the two modes; the write path is where they diverge (reject vs permit). Because only lifecycles that declare the obligation are affected, and `hard` is the default, this is opt-in per lifecycle definition, not a breaking change to `set-lifecycle-state`.
 - **`state ⇒ relation`, not the converse.** Keeping "drafted replacement exists, not yet adopted" valid preserves the existing `record successor` two-phase workflow and makes crash-ordering atomicity (R7) sound: every prefix of successor → relation → flip is valid.
 
 ---
@@ -169,9 +177,13 @@ The shape originally tracked by the-greenman/srs-rust#492. Rejected: it forks th
 
 The north-star end of the design space (issue OQ7): derive "is superseded" solely from the relation graph so state and relation can never desync — at the cost of changing every lifecycle consumer and read/filter surface (e.g. filters keyed on `lifecycleState`). Deferred: this RFC's marked-projection design is back-compatible and structurally prevents desync at the write path; the relational model remains recorded here as the long-term direction.
 
-### Alt D — Advisory enforcement (warn on bare flips, don't reject)
+### Alt D — Advisory enforcement *as the only mode* (warn on bare flips, never reject)
 
-Rejected: preserves the failure mode this RFC exists to eliminate; every client must independently re-implement discipline the model can supply once.
+Rejected **as the sole enforcement**: for a definitional state like `superseded` it preserves the exact failure mode this RFC exists to eliminate (srs-web#204), forcing every client to re-implement discipline the model can supply once. But advisory is the right behaviour for *evidentiary* obligations — so Rev 4 incorporates it as a per-state `enforcement: "advisory"` **mode** rather than rejecting it outright. `hard` remains the default.
+
+### Alt E — Model the contextual case by conditional `requiresRelation`
+
+Give `requiresRelation` a predicate so the obligation applies only when some record condition holds (e.g. `policy_class == "statutory"`). Rejected: it turns the lifecycle into a rules engine and re-encodes context that already lives elsewhere. The contextual case is resolved structurally instead — by **retype** to a specialist Type whose lifecycle makes the obligation definitional (a separate RFC) — leaving `requiresRelation` a clean per-state property with only an enforcement-strength dial.
 
 ---
 
