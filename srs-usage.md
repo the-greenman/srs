@@ -388,6 +388,8 @@ The transition is validated against the lifecycle definition: the target state m
 
 ### Asserting a Relation
 
+> The relation layer is governed by eleven ratified principles (**R1–R11**, spec §"Key Invariants → Relations"). The rules below are their agent-facing projection. The load-bearing ones for authoring: types must resolve to an installed definition (R3), never infer meaning by string-matching a type name (R5), `precedes` is semantic order only (R6), relations never mutate an endpoint (R4), and "a record became something else" is always a new instance linked by a relation, never an in-place retype (R11).
+
 ```bash
 srs relation create --repo <path> <<'EOF'
 {

@@ -2,929 +2,6 @@
 
 ## RFCs
 
-**Title**: RFC-003: Definition Distribution and Repository Slices
-**RFC Number**: 003
-**Status**: draft
-**Content**: **Status**: Draft (Revision 4)  
-**Affects**: Distribution Group (Core), `ext:import-tracking`, `ext:repository`, `ext:federation`, `ext:binding`, `ext:themes-l1`  
-**Author**: Codex draft  
-**Date**: 2026-05-27  
-
----
-
-## Revision history
-
-| Rev | Date | Summary |
-|---|---|---|
-| 1 | 2026-05-27 | Initial draft |
-| 2 | 2026-05-27 | Add declared binding modes, authoritative hierarchy semantics, and explicit conflict surfacing for imported and derived elements |
-| 3 | 2026-05-27 | Incorporate review refinements: clarify `entryRefs` locality, add inheritance closure, support explicit instance binding, move `ConflictRecord` to `ext:import-tracking`, and add repository-slice selection intent |
-| 4 | 2026-05-27 | Reconcile with RFC-002 themes: add `theme` to discovery/binding/closure rules, tighten `ConflictRecord` identity typing, define `autoUpdate` mode semantics, add tracked-mirror marker, and allow intentional source-document omission |
-
----
-
-## Abstract
-
-SRS already defines the core ingredients for sharing semantic definitions and exchanging repository content: `Package`, `Lineage`, `Provenance`, `ext:import-tracking`, `ext:registry`, `ext:repository`, and `ext:federation`. What remains underspecified is the practical distribution model: how reusable fields, "templates", and protocols should be packaged for reuse; how a subset of an existing repository should be exported as a portable artefact; and how consumers should distinguish "install this shared library" from "import this slice of semantic content".
-
-This RFC makes that distinction explicit.
-
-- **Reusable definitions** are shared as **Packages**
-- **Repository content** is shared as **Repository Archives** or **Repository Slices**
-- **Registries** catalog definition packages
-- **Bindings** determine whether upstream content is authoritative, tracked, or explicit-only
-- **Federation** and archive import rules govern repository-level exchange
-
-The RFC also introduces package entry points for discoverability and a new optional repository-slice descriptor so a partial export can be imported without pretending to be a full repository mirror.
-
----
-
-## Motivation
-
-### Problem 1 — "fields, templates, and protocols" are shareable, but the share unit is ambiguous
-
-Older planning documents describe a field library and decision templates as the reusable authoring surface:
-
-- fields are atomic reusable definitions
-- templates are curated compositions of fields
-- template-level prompt framing is distinct from field-level extraction semantics
-
-That model remains correct in spirit, but in SRS v2 the formal shareable artefact is not "a template" as a standalone core type. The current spec's reusable unit is `Package`, which may contain `Field`, `Type`, `View`, `DocumentView`, `Schema`, `Protocol`, and `RelationTypeDefinition`.
-
-Without a clear statement of this mapping, implementers will invent parallel export formats for "field libraries" and "template bundles" instead of using the Package system already present in the spec.
-
-### Problem 2 — subset export is implied, but not defined
-
-`ext:repository` defines a full archive as a self-contained snapshot of a live repository. Import and re-import are identity-based. This is correct for full exchange, but many real workflows require exporting only part of a repository:
-
-- a small library of reusable governance definitions
-- one protocol family
-- one document kit built from fields, views, and document views
-- a selected set of records and supporting evidence for handoff to another repository
-
-Today a producer can construct such an export ad hoc, but the spec does not say what closure rules apply, when a new `repositoryId` is required, or how the receiving side should interpret the result.
-
-### Problem 3 — distribution mechanism is described structurally but not operationally
-
-The spec defines `Registry` and `RepositoryRegistry` as data shapes, but does not yet say what a typical publishing pipeline looks like. As a result, it is unclear whether "distribution" means:
-
-- publishing a definition package to a registry
-- zipping a repository snapshot
-- exporting a subset as a new repository
-- or all three
-
-This RFC defines those roles cleanly without introducing a central service requirement.
-
-### Problem 4 — binding and override behaviour is not declared
-
-Real systems do not all relate to upstream content in the same way.
-
-- In a **governance hierarchy**, a subordinate repository may be bound to a core SRS such that core decisions, protocols, and other scoped content automatically become effective locally
-- In a **federated environment**, another group's content may be visible and discoverable, but adoption should happen only by explicit import
-- In both cases, a local repository may hold derived or forked elements that conflict with upstream changes
-
-The current spec has import modes and lineage, but it does not yet let a repository declare the governing relationship it wants with an upstream source, nor how conflicts should be surfaced when authority and local derivation collide.
-
----
-
-## Design Principles
-
-**Keep definitions separate from content.** Reusable semantic definitions are not the same thing as semantic instances. Packages and repositories must remain distinct artefact types.
-
-**Preserve existing identity rules.** Distribution must continue to rely on `id`, `version`, `instanceId`, `relationId`, `documentId`, `packageId`, and `repositoryId`, not filenames or storage paths.
-
-**Subset export must be closure-based.** A portable subset is not an arbitrary file copy; it is a selected root plus the dependencies required to make it valid and comprehensible elsewhere.
-
-**Local-first publication is valid.** A package registry may be a static JSON file in Git or object storage. A repository slice may be handed over as a `.srs` ZIP file with no server infrastructure.
-
-**"Template" remains an informal umbrella term.** The spec should not reintroduce a new core template type. In SRS v2, template-like behaviour is expressed through `Type`, `View`, `DocumentView`, `Schema`, and `Protocol`.
-
-**Binding must be declared, not assumed.** Consumers must be able to state whether an upstream source is authoritative, merely tracked, or only importable on explicit request.
-
-**Authority does not erase conflict.** Even when an upstream source has precedence, conflicting local content must remain visible and addressable rather than being silently discarded.
-
----
-
-## Proposed Changes
-
-### Change A — Clarify the reusable distribution model around `Package`
-
-Add the following normative clarification to the `Package` section in the Distribution Group.
-
-> `Package` is the primary reusable distribution unit for semantic definitions. A Package may contain any combination of Fields, Types, Views, DocumentViews, Schemas, Protocols, and Relation type definitions. Implementations that colloquially speak of "field libraries", "template libraries", "protocol packs", or "document kits" must express those libraries as Packages rather than as implementation-specific export formats.
-
-Add the following explanatory note:
-
-> In older field-library terminology, a "template" is usually not a single SRS construct. Depending on behaviour, it may correspond to a `Type`, `View`, `DocumentView`, `Schema`, `Protocol`, or a package-level combination of several of these. "Template" remains a valid user-facing label, but it is not introduced here as a new core schema type.
-
-This makes the mapping from the older field-library architecture to SRS explicit:
-
-- field library → `Package.fields[]`
-- reusable record template → `Type` plus optional `View`
-- reusable document template → `DocumentView`
-- reusable extraction kit → `Schema`
-- reusable facilitation pattern → `Protocol`
-
----
-
-### Change B — Add package entry points for discoverability and subset publication
-
-Extend `Reference.definitionType` and `ImportRecord.definitionType` so that, when this RFC is co-applied with RFC-002, the resulting portable vocabulary is:
-
-```typescript
-"field" | "type" | "view" | "document-view" | "schema" | "protocol" | "theme" | "relation-type"
-```
-
-This aligns the reference and import-tracking vocabularies with objects that are already package content and may reasonably appear in a package's public surface. In particular, visual themes introduced by RFC-002 `ext:themes-l1` are already first-class sharable artefacts and participate in the same package and registry mechanisms.
-
-Add the following optional field to `Package`:
-
-```typescript
-entryRefs?: Reference[]
-// Definitions intended as the package's direct public entry points.
-// Examples: a top-level Type, DocumentView, Schema, or Protocol that a consumer
-// would intentionally install, select, or build from.
-```
-
-`entryRefs` is not a dependency list. It is the authored public surface of the package.
-
-#### Semantics
-
-- A package may contain helper definitions that are not in `entryRefs`
-- Every `entryRefs[]` item must either:
-  - resolve to a definition present in the package's own content arrays, or
-  - appear in `dependencyRefs[]` when the package is exposing an externally supplied dependency
-- In `mode: "bundled"`, every locally defined `entryRefs[]` item must be present in the corresponding package content array
-- `entryRefs` may reference `field`, `type`, `view`, `document-view`, `schema`, `protocol`, `theme`, or `relation-type`
-
-#### Purpose
-
-`entryRefs` solves two related problems:
-
-1. It tells a registry consumer which definitions are meant to be selected directly
-2. It provides a clean starting set for subset package export
-
-For example, a governance package may contain twenty shared fields, four types, three single-record views, one `DocumentView`, and one `Protocol`, but expose only:
-
-- `governance/decision@2`
-- `governance/decision_record@1`
-- `governance/decision_protocol@1`
-
-as its public entry points.
-
-#### Registry surfacing
-
-Add the following optional field to `RegistryEntry`:
-
-```typescript
-entryRefs?: Reference[]
-// Optional copy of the package's public entry surface for lightweight discovery.
-// Allows clients to browse installable protocol/type/document-view entry points
-// without downloading the entire package first.
-
-declaredExtensions?: string[]
-// Optional list of SRS extensions the package's public surface depends on or enables.
-// Examples: "ext:protocol", "ext:views-l2", "ext:themes-l1".
-// Supports UI and AI discovery workflows such as "find packages that provide
-// sharable themes" or "find protocol packages for ext:protocol".
-
-providedDefinitionTypes?: Array<"field" | "type" | "view" | "document-view" | "schema" | "protocol" | "theme" | "relation-type">
-// Optional summary of definition kinds exposed by the package's public surface.
-// Examples: "protocol", "document-view", "theme".
-
-themeCount?: integer
-// Optional count of Theme definitions in the package.
-```
-
-Registry consumers should be able to filter by `entryRefs`, `declaredExtensions`, and `providedDefinitionTypes` without downloading full package payloads. This is intended to support both human-facing package browsers and AI-assisted discovery and installation workflows.
-
----
-
-### Change C — Define subset package export
-
-Add a new normative subsection under `Package` titled **Subset package export**.
-
-#### Subset package export
-
-A producer may create a new Package from a selected subset of definitions in one or more source packages. The export algorithm is:
-
-1. Select one or more root definitions, typically from `entryRefs`
-2. Compute the transitive dependency closure required for those roots to validate and render correctly
-3. Emit a new Package containing exactly that closure
-4. Preserve the original definition `id`, `namespace`, `name`, and `version` for all carried definitions
-5. Assign a new `packageId` and `packageVersion` to the exported package as a publication event
-
-#### Dependency closure rules
-
-- Exporting a `Type` includes all referenced `Field`s
-- When `ext:type-inheritance` is declared, exporting a derived `Type` includes the full transitive closure of its base Types and the Fields required by those base Types
-- Exporting a `View` includes its referenced `Type` and that Type's referenced `Field`s
-- Exporting a `DocumentView` includes any referenced `View`s, all `Type`s those Views require, all `Field`s those Types require, and any referenced `Theme`s reachable through `themeRef` or `themeVariants[]` when `ext:themes-l1` is declared
-- Exporting a `Schema` includes all referenced `Type`s and their dependent `Field`s
-- Exporting a `Protocol` includes `targetType`, all `outputType`s, all `contributesTo` field references, and their dependent Types/Fields
-
-#### Import semantics
-
-Import of subset packages uses the existing definition identity rules:
-
-- same `id` + `version`, same content → no-op
-- same `id` + `version`, different content → conflict
-- new `id` + `version` → insert
-
-#### Relationship to import tracking
-
-Consumers importing a subset package should record imported definitions in `ext:import-tracking` exactly as they would for a full package:
-
-- `upstream-tracked` when they expect updates from the source lineage
-- `local-copy` when they are taking a frozen snapshot
-- `local-fork` when they intend to diverge intentionally
-
-This RFC also extends `ext:import-tracking` with a shared conflict surface so plain import collisions and binding collisions use one canonical mechanism.
-
-#### `ConflictRecord`
-
-When `ext:import-tracking` is declared, implementations may persist conflicts detected during package import, repository import, or binding evaluation as:
-
-```typescript
-{
-  conflictId: UUID
-
-  targetKind: "definition" | "instance"
-  bindingId?: string
-
-  localIdentity:
-    | { definitionRef: Reference }
-    | { instanceId: UUID }
-  sourceIdentity?:
-    | { definitionRef: Reference }
-    | { instanceId: UUID }
-
-  conflictType: "same-identity-different-content" | "derived-divergence" | "authority-shadow" | "incompatible-upgrade"
-
-  effectiveResolution: "prefer-source" | "prefer-local" | "manual-pending"
-  status: "open" | "resolved" | "dismissed"
-
-  detectedAt: ISO8601
-  resolvedAt?: ISO8601
-  note?: string
-}
-```
-
-#### Conflict semantics
-
-- When `targetKind === "definition"`, identity must be expressed using `definitionRef`
-- When `targetKind === "instance"`, identity must be expressed using `instanceId`
-- `same-identity-different-content` means the same stable identity key resolved to different content
-- `derived-divergence` means a local element sharing lineage with an upstream element has materially diverged
-- `authority-shadow` means local content remains stored but is not effective because an authoritative source has precedence
-- `incompatible-upgrade` means an upstream change cannot be applied cleanly to the local dependent content
-
-Implementations may automatically choose an effective side according to binding or import policy, but they must still create and preserve a `ConflictRecord` until the divergence is acknowledged or resolved.
-
----
-
-### Change D — Define `ext:binding`
-
-Add a new optional extension:
-
-| Extension | Identifier | Depends on | Notes |
-|---|---|---|---|
-| Binding | `ext:binding` | `ext:import-tracking` | Declared binding mode, authoritative precedence, and conflict surfacing for imported definitions and repository content |
-
-This extension allows a repository to declare how it is bound to upstream packages and repositories.
-
-#### `BindingMode`
-
-```typescript
-"authoritative-upstream" | "tracked-upstream" | "explicit-import"
-```
-
-| Mode | Meaning |
-|---|---|
-| `"authoritative-upstream"` | Matching upstream content becomes locally effective automatically within the declared scope. Conflicts are still recorded and surfaced. |
-| `"tracked-upstream"` | Upstream updates are discovered and tracked, but do not become effective until explicitly accepted by the consumer. |
-| `"explicit-import"` | Upstream content is available only for deliberate manual import. No automatic tracking or adoption occurs. |
-
-#### `BindingResolution`
-
-```typescript
-"prefer-source" | "manual" | "prefer-local"
-```
-
-This field controls which side becomes the effective version when content in scope conflicts. It does not suppress conflict recording.
-
-#### `BindingScope`
-
-```typescript
-type BindingScope =
-  | {
-      targetKind: "definitions"
-      definitionTypes?: Array<"field" | "type" | "view" | "document-view" | "schema" | "protocol" | "theme" | "relation-type">
-      namespaces?: string[]
-      names?: string[]
-    }
-  | {
-      targetKind: "instances"
-      typeNamespace?: string
-      typeName?: string
-      typeId?: UUID
-      instanceIds?: UUID[]
-    }
-```
-
-#### `BindingSource`
-
-When `ext:binding` is declared, `RepositoryManifest` gains:
-
-```typescript
-bindings?: Array<{
-  bindingId: string
-
-  sourceKind: "package" | "repository"
-
-  sourcePackageId?: UUID
-  sourceRepositoryId?: UUID
-
-  mode: BindingMode
-  resolution: BindingResolution
-  autoUpdate?: boolean
-  // Meaning depends on mode; see auto-update behaviour table below.
-
-  scope: BindingScope[]
-
-  note?: string
-}>
-```
-
-`sourcePackageId` is used when the authority is a definition package. `sourceRepositoryId` is used when the authority is a repository, such as a core governance SRS containing authoritative decisions or protocols.
-
-#### Binding semantics
-
-Bindings are declarations of governing relationship, not just import history.
-
-- A repository may bind to a **core governance source** using `mode: "authoritative-upstream"` and `resolution: "prefer-source"`
-- A repository may bind to a **federated peer source** using `mode: "explicit-import"` and `resolution: "manual"`
-- A repository may track an evolving upstream package using `mode: "tracked-upstream"`
-
-#### Normative behaviour
-
-1. `authoritative-upstream` may automatically install or refresh newer upstream content for items in scope
-2. `tracked-upstream` may automatically detect updates, but must not make them effective without an explicit accept/promote action
-3. `explicit-import` must never change local effective content without an explicit import action
-4. No binding mode may silently delete local conflicting content
-5. Existing bound runs or records must not be silently rebound in place
-
-This last rule is especially important for facilitation. If a `ProtocolRun` started against protocol version 3, a later import of version 4 may become the effective default for future runs, but it must not mutate the already-running or already-recorded run.
-
-Conflicts produced under this extension must be recorded using `ext:import-tracking` `ConflictRecord`s.
-
-#### Auto-update behaviour
-
-| `mode` | `autoUpdate` | Required behaviour |
-|---|---|---|
-| `"authoritative-upstream"` | `true` | Implementation should automatically fetch/install updates for items in scope when reachable. Updated source content becomes effective per `resolution`. |
-| `"authoritative-upstream"` | `false` or absent | Implementation may require manual sync/fetch, but once the upstream update is accepted locally, source precedence still governs effective content. |
-| `"tracked-upstream"` | `true` | Implementation may automatically detect or fetch updates, but must keep them non-effective until an explicit accept/promote action occurs. |
-| `"tracked-upstream"` | `false` or absent | Update detection and fetch are manual. No upstream change becomes effective automatically. |
-| `"explicit-import"` | `true` | Invalid. Implementations must reject the binding or treat `autoUpdate` as `false` and surface a validation warning. |
-| `"explicit-import"` | `false` or absent | Only explicit import actions may create or update local content from the source. |
-
-#### Governance hierarchy example
-
-A local cooperative repository may declare:
-
-```json
-{
-  "bindings": [
-    {
-      "bindingId": "core-governance-protocols",
-      "sourceKind": "repository",
-      "sourceRepositoryId": "11111111-1111-1111-1111-111111111111",
-      "mode": "authoritative-upstream",
-      "resolution": "prefer-source",
-      "autoUpdate": true,
-      "scope": [
-        {
-          "targetKind": "definitions",
-          "definitionTypes": ["protocol"],
-          "namespaces": ["mudemocracy"]
-        },
-        {
-          "targetKind": "instances",
-          "typeNamespace": "governance",
-          "typeName": "decision",
-          "instanceIds": [
-            "33333333-3333-3333-3333-333333333333",
-            "44444444-4444-4444-4444-444444444444"
-          ]
-        }
-      ]
-    }
-  ]
-}
-```
-
-In this model, upstream governance decisions and protocols are authoritative for the declared scope. Local conflicting content may remain stored, but the effective content is the source-preferred version until the conflict is addressed.
-
-#### Federated example
-
-A repository consuming another group's protocol library in a federation may declare:
-
-```json
-{
-  "bindings": [
-    {
-      "bindingId": "community-protocols",
-      "sourceKind": "package",
-      "sourcePackageId": "22222222-2222-2222-2222-222222222222",
-      "mode": "explicit-import",
-      "resolution": "manual",
-      "scope": [
-        {
-          "targetKind": "definitions",
-          "definitionTypes": ["protocol"],
-          "namespaces": ["community.adr"]
-        }
-      ]
-    }
-  ]
-}
-```
-
-In this model, the peer library is visible and importable, but it has no automatic override power.
-
----
-
-### Change E — Define `ext:repository-slices`
-
-Add a new optional extension:
-
-| Extension | Identifier | Depends on | Notes |
-|---|---|---|---|
-| Repository Slices | `ext:repository-slices` | `ext:repository` | Portable subset export/import for repository content |
-
-This extension defines how a subset of repository content is exported as an importable artefact without claiming to be a full mirror of the source repository.
-
-#### New type: `RepositorySliceDescriptor`
-
-When `ext:repository-slices` is declared, `RepositoryManifest` gains:
-
-```typescript
-slice?: {
-  sourceRepositoryId: UUID
-  exportedAt: ISO8601
-  isTrackedMirror?: boolean
-  // When true, this slice intentionally preserves source repository identity semantics
-  // for mirror/sync workflows instead of minting a new independent repository identity.
-
-  rootInstanceIds: UUID[]
-  // The selected root instances that defined the slice.
-
-  selectionStrategy?: "manual-select" | "contains-closure" | "relation-closure" | "custom"
-  // Optional informative description of how the slice was chosen.
-  // Does not replace the authoritative exported instance set.
-
-  relationMode: "between-selected" | "outbound-closure"
-  // between-selected: include only Relations whose source and target are both in the slice
-  // outbound-closure: also include Relations from selected instances to external cited instances
-
-  idStrategy: "preserve-ids" | "new-ids-with-lineage"
-  // How instance identities in the slice relate to the source repository.
-
-  omitSourceDocuments?: boolean
-  // When true, the producer is intentionally omitting one or more repository-document
-  // sources from the slice. Receiving implementations must surface the slice as
-  // provenance-incomplete rather than treating missing sources as silent corruption.
-
-  note?: string
-}
-```
-
-#### Slice semantics
-
-A repository slice is still a conforming repository snapshot, but it is not required to represent the full source repository. It must:
-
-- include only the selected instance set plus required closure
-- include all source documents cited by included instances or Relations, unless `omitSourceDocuments === true`
-- include relation files consistent with `relationMode`
-- include a valid `packageRef`, and when `packageRef.mode === "local"`, the full local package required by the selected Tier 2 Records
-- include a manifest `instanceIndex` that lists only the instances in the slice repository
-
-#### Repository identity
-
-To avoid accidental sync semantics, a repository slice exported for handoff must mint a new `repositoryId` unless `slice.isTrackedMirror === true` and the producer is explicitly creating a tracked mirror of an existing repository. `slice.sourceRepositoryId` preserves the source identity.
-
-This preserves the current rule that `repositoryId` is the sync key while making slices safe to exchange as independent artefacts.
-
-#### Import modes for slices
-
-A consumer importing a repository slice may choose one of two behaviours:
-
-1. **Mount as independent repository**
-   The slice remains a standalone repository with its own `repositoryId`
-
-2. **Merge into an existing repository**
-   The consumer copies included instances into a local repository using either:
-   - `preserve-ids`
-   - `new-ids-with-lineage`
-
-When merged into an existing repository, the receiving repository should record a `FederationEvent` with `event: "import"`.
-
-When `new-ids-with-lineage` is used, the importer must create a `derived-from` Relation from each newly minted local instance to its original source instance. Implementations may use `refines` instead only when the import semantics are explicitly refinement rather than duplication. When `ext:federation` is declared, the Relation should preserve `targetRepositoryId` so the original source location remains addressable.
-
----
-
-### Change F — Define repository-slice closure rules
-
-Add the following normative closure rules to `ext:repository-slices`.
-
-#### Instance closure
-
-The producer selects one or more `rootInstanceIds`. The slice must contain:
-
-- the selected root instances
-- any selected descendant or explicitly included instances according to implementation policy
-- every included instance file referenced by `instanceIndex`
-
-The spec does not define one mandatory graph traversal policy beyond the selected roots; implementations may offer different selection UIs. What is normative is that the exported manifest precisely declares the resulting included set.
-
-#### Relation closure
-
-For `relationMode: "between-selected"`:
-
-- include only Relations whose `sourceInstanceId` and `targetInstanceId` are both included in the slice
-
-For `relationMode: "outbound-closure"`:
-
-- include all Relations from included instances to other included instances
-- include outbound Relations from included instances to excluded instances when those Relations are meaningful citations or dependency references
-- preserve cross-repository qualifiers when present
-
-#### Source-document closure
-
-Every `SourceReference` with `sourceType: "repository-document"` appearing in any included instance or included Relation must resolve within the slice archive unless `slice.omitSourceDocuments === true`. When `omitSourceDocuments` is true, the producer must surface the omission explicitly and the consumer must treat the slice as provenance-incomplete rather than silently valid.
-
----
-
-### Change G — Clarify the distribution mechanism
-
-Add the following non-normative guidance after `ext:registry` and `ext:federation`.
-
-#### Recommended distribution workflow
-
-**For reusable definitions:**
-
-1. Author or edit definitions locally
-2. Publish them as a `Package`
-3. Add a `RegistryEntry` with `downloadUrl`, `checksum`, `entryRefs`, and discovery metadata such as `declaredExtensions`
-4. Consumers declare binding mode for that source: authoritative, tracked, or explicit-import
-5. Consumers install or update the package through their local registry/import-tracking workflow
-
-**For hierarchical governance:**
-
-1. Declare a `BindingSource` pointing to the core repository or package
-2. Use `mode: "authoritative-upstream"` when the core source should become effective automatically
-3. Record and surface local derived conflicts rather than discarding them
-
-**For federated exchange:**
-
-1. Discover peer repositories or packages through federation or registries
-2. Use `mode: "explicit-import"` when peer content should be adopted only by explicit local choice
-3. Preserve conflict records for any imported derived divergence
-
-**For repository content handoff:**
-
-1. Export either a full repository archive or a repository slice
-2. Share the resulting `.srs` ZIP via filesystem, Git, object storage, or HTTP
-3. Consumers either mount it as a repository or merge it into an existing repository
-
-**For long-lived repository discovery:**
-
-1. Maintain a `RepositoryRegistry`
-2. Optionally federate registries via `childRegistries`
-3. Preserve unresolved external repository citations rather than rejecting them
-
-This makes the intended roles explicit:
-
-- `Registry` → catalogs reusable definition packages
-- `Registry` metadata → supports human and AI discovery by extension, entry point, and definition kind
-- `BindingSource` → declares whether an upstream source is authoritative, tracked, or explicit-only
-- `RepositoryRegistry` → catalogs repositories
-- `.srs` archive → shareable transport format for repository content
-
-No central service is required for any of the above.
-
----
-
-## Consequences
-
-### Benefits
-
-- Reuses the current Package/Registry/Import Tracking model instead of creating a parallel "template sharing" mechanism
-- Gives a clean answer to the field-library requirement that fields are atomic and templates are curated compositions
-- Adds an explicit answer for governance hierarchies versus federated peer exchange
-- Makes subset export portable and auditable
-- Preserves the identity-based import rules already defined by the spec
-- Makes conflict handling a first-class, addressable concern instead of an implementation footnote
-- Supports both offline file exchange and hosted distribution
-
-### Tradeoffs
-
-- Introduces one more optional extension: `ext:repository-slices`
-- Introduces one more optional extension: `ext:binding`
-- Requires producers to compute dependency closure deliberately rather than copying files loosely
-
----
-
-## Deferred Follow-Ons
-
-The following items are intentionally deferred rather than treated as blockers for this RFC:
-
-1. **Extension-expandable definition kinds**
-   A future RFC should decide whether `Reference.definitionType` remains a closed core enum extended piecemeal, or becomes an extension-expandable registry/open union so future packageable extension constructs can participate without repeated core amendments. The addition of `theme` in RFC-002 demonstrates that this pressure already exists.
-
-2. **Richer slice-selection expressions**
-   `selectionStrategy` is sufficient as informative metadata for now. A future RFC may define a richer machine-readable selection model, such as a closure DSL, query object, or standard traversal expression for reproducible repository-slice generation.
-
----
-
-## Summary
-
-This RFC does not propose a new universal sharing mechanism. It sharpens the ones SRS already has:
-
-- share reusable definitions as **Packages**
-- declare governing relationships through **Bindings**
-- track updates with **Import Tracking**
-- publish discoverability metadata with **Registry**
-- share content as **Repository Archives**
-- share subsets as **Repository Slices**
-
-That separation aligns with both the current SRS spec and the older field-library architecture: reusable fields stay reusable, template-like compositions stay packageable, and repository content can move independently without being confused for a definition library.
-
-**Title**: RFC-004: Language-Neutral Schema Notation for Spec Records
-**RFC Number**: 004
-**Status**: draft
-**Proposal Artifact Path**: rfcs/rfc-004/
-**Content**: **Status**: Draft (Revision 2)
-**Affects**: Distribution Group - Package; new extension `ext:schema-notation`; `spec-authoring-core`; JSON Schema projection package
-**Author**: SemanticOps contributors
-**Date**: 2026-05-27
-
----
-
-## Revision history
-
-| Rev | Date | Summary |
-|---|---|---|
-| 1 | 2026-05-27 | Initial draft: schema-member records with compact type-ref strings |
-| 2 | 2026-05-27 | Reframed schema notation as a semantic, target-neutral schema IR with JSON Schema as the first exact projection |
-
----
-
-## Abstract
-
-SRS and TSS specifications contain formal data shapes: Field, Type, Record, Session, Event, Participant, Stream, and other implementation-facing entities. Today many of those shapes are written as TypeScript-style prose blocks embedded in text fields. That makes them readable, but not semantic SRS data.
-
-This RFC defines `ext:schema-notation`: a semantic, target-neutral schema definition model for spec authoring. The extension represents logical schemas, members, type expressions, constraints, defaults, examples, deprecation state, and semantic purpose as SRS records and field values. JSON Schema, TypeScript, protobuf, Rust structs, and other formats are projections from that shared semantic source; none of those target syntaxes is the source of truth.
-
-Revision 2 deliberately moves away from compact string `type-ref` expressions as the normative representation. Renderers may show compact strings for humans, but the normative source is structured `typeExpression` JSON.
-
----
-
-## Motivation
-
-### Problem 1 - Schema prose is not SRS data
-
-TypeScript-style blocks in `content` fields are implementation-flavoured notation. SRS tools cannot reliably traverse them, cite individual members, validate them, or render them to other targets without ad-hoc parsing.
-
-### Problem 2 - Meaning must survive target projection
-
-A JSON Schema definition can validate JSON shape, but it cannot carry all the semantic intent needed by SRS authoring. Protobuf can express efficient wire contracts, but it requires target-specific concerns such as field numbers and `oneof` names. The source model must describe meaning first, then allow target packages to render appropriate forms.
-
-### Problem 3 - TSS needs the same source for multiple outputs
-
-TSS has data shapes such as `Session`, `Participant`, `Stream`, `Event`, and many event subtypes. A useful SRS-authored TSS spec should be able to render JSON Schema for validation and later render protobuf from as much of the same source as possible. That requires a portable semantic schema IR, not a JSON-Schema-only design.
-
-### Problem 4 - `ext:schema` is a different layer
-
-`ext:schema` describes runtime extraction and package structure: what records a package expects and how source material may be transformed into records. `ext:schema-notation` describes spec-level data shapes: the schemas that implementations should produce, consume, and validate. The two extensions are complementary and must not be conflated.
-
----
-
-## Design Principles
-
-**Semantic first.** The extension describes meaning, not target form. Field numbers, JSON Schema keywords, TypeScript punctuation, and Rust derives are projection concerns.
-
-**Target-neutral core, target-specific packages.** The main extension defines portable schema meaning. Exact renderers live in projection packages such as `spec-authoring-json-schema` and a future `spec-authoring-protobuf`.
-
-**Structured type expressions.** Type meaning is represented as JSON data using explicit expression kinds. Compact strings are allowed as display conveniences only.
-
-**Addressable members.** Schema definitions and schema members are SRS records with stable identity, so invariants, examples, migration notes, and conformance rules can cite them directly.
-
-**Migration-friendly.** Existing prose blocks may coexist while structured schema records are introduced. Structured schema records become authoritative when a migration is complete.
-
----
-
-## Proposed Changes
-
-### Change A - Add `json` as a core Field value type
-
-`Field.valueType` gains `json` for structured JSON values whose meaning is supplied by the field definition and validating schema. This is required for recursive or nested semantic values such as schema type expressions and portable constraint objects.
-
-`json` is not a target renderer. It is a storage primitive for structured semantic values inside SRS records.
-
-### Change B - New extension: `ext:schema-notation`
-
-Add the following extension entry:
-
-| Extension | Identifier | Depends on | Notes |
-|---|---|---|---|
-| Schema Notation | `ext:schema-notation` | none | Semantic schema IR for spec authoring and target projections |
-
-### Change C - New type: `schema-definition`
-
-`com.semanticops.spec/schema-definition` represents one logical data shape. It is not a JSON Schema object, TypeScript interface, or protobuf message, though projection packages may render it to those forms.
-
-Core fields:
-
-| Field | Meaning |
-|---|---|
-| `title` | Human-readable title |
-| `namespace` | Logical schema namespace |
-| `schema-name` | Stable machine-readable schema name |
-| `version-label` | Version of the schema definition |
-| `description` | Short description |
-| `semantic-purpose` | Domain meaning of this schema |
-| `status` | Draft, active, deprecated, etc. |
-| `content` | Optional prose guidance |
-| `examples` | Non-normative examples |
-| `deprecated` | Whether the schema remains only for compatibility |
-| `notes` | Editorial notes |
-
-Members are attached by `schema-member-sequence` relations.
-
-### Change D - New type: `schema-member`
-
-`com.semanticops.spec/schema-member` represents one addressable member of a schema definition.
-
-Core fields:
-
-| Field | Meaning |
-|---|---|
-| `member-name` | Stable member/property name |
-| `type-expression` | Structured semantic type expression JSON |
-| `required` | Whether the member must be present |
-| `nullable` | Whether explicit `null` is allowed |
-| `constraints` | Portable target-neutral constraints |
-| `schema-default-value` | Concrete JSON default value for this schema member |
-| `examples` | Non-normative examples |
-| `deprecated` | Whether the member remains only for compatibility |
-| `semantic-purpose` | Domain meaning of this member |
-| `notes` | Editorial notes |
-
-`required` and `nullable` are separate. Optional means the member may be absent. Nullable means the member may be present with the explicit value `null`.
-
-### Change E - Structured `typeExpression` JSON
-
-The normative source for member type meaning is a structured JSON value held in the `type-expression` field. It has a `kind` property and kind-specific properties.
-
-Supported expression kinds:
-
-| Kind | Meaning | Required portable properties |
-|---|---|---|
-| `scalar` | Portable primitive value | `name` |
-| `ref` | Reference to a named schema/type | `namespace`, `name`; optional `version` |
-| `array` | Ordered list of values | `items` |
-| `map` | Key/value object map | `values`; optional `keys` |
-| `object` | Inline anonymous object shape | `members` |
-| `union` | One of several alternatives | `variants` |
-| `literal` | One exact value | `value` |
-| `enum` | One of a finite set of values | `values` |
-| `unknown` | Preserved but unconstrained value | none |
-
-Portable scalar names:
-
-`string`, `text`, `integer`, `number`, `boolean`, `date`, `date-time`, `uuid`, `uri`, `duration-ms`, `json`.
-
-Inline `object` expressions are allowed only for genuinely local anonymous shapes. Reusable shapes must be separate `schema-definition` records referenced with `ref`.
-
-`union` must not be used to smuggle optionality. Nullability is represented by the member-level `nullable` field.
-
-### Change F - Portable constraints
-
-The generic IR defines only constraints that can reasonably project across multiple targets:
-
-- required and nullable state
-- numeric minimum and maximum
-- string minimum length, maximum length, and pattern
-- array minimum items, maximum items, and uniqueness
-- enum and literal values
-- scalar format
-- map key and value shape
-- cardinality where the target supports it
-
-Cross-field validation, conditional validation, and protocol-level invariants are out of scope for Revision 2. They remain prose or invariant records until a later RFC defines a semantic rule notation.
-
-### Change G - Relation semantics
-
-Add these relation types to the recommended relation vocabulary:
-
-| Relation type | Source | Target | Meaning |
-|---|---|---|---|
-| `schema-member-sequence` | `schema-definition` | ordered list of `schema-member` records | Declares the ordered members of a schema |
-| `defines-schema-for` | `schema-definition` | `type-definition` or other spec record | Declares that the schema formalizes the target record/type shape |
-
-When an existing `type-definition` has a related `schema-definition`, renderers that support `ext:schema-notation` should use the structured schema definition rather than any prose TypeScript block.
-
-### Change H - JSON Schema projection package
-
-Add `com.semanticops.spec/spec-authoring-json-schema` as a target projection package. It defines exact JSON Schema rendering rules and metadata; it does not own the semantic schema source.
-
-JSON Schema `$id` values follow:
-
-`https://srs.semanticops.com/schema/domain/<namespace>/<schemaName>/<version>.json`
-
-Projection rules:
-
-- A `schema-definition` renders as a JSON Schema object with `$id`, `title`, `type: "object"`, `properties`, and `required`.
-- A `schema-member` renders as one property.
-- `required: true` adds the member to the parent `required` array.
-- `nullable: true` adds `null` to the property shape but does not make it optional.
-- `ref` renders to `$ref`.
-- `union` renders to `oneOf`.
-- `literal` renders to `const`.
-- `enum` renders to `enum`.
-- `array` renders to `type: "array"` with `items`.
-- Portable constraints render to matching JSON Schema keywords where available.
-
-### Change I - Protobuf compatibility
-
-The semantic IR should be designed so protobuf can be rendered from the same source where portable constructs are used. However, protobuf-specific details are target metadata, not core schema meaning.
-
-The following are reserved for a future `spec-authoring-protobuf` package:
-
-- protobuf package names
-- message and field naming overrides
-- field numbers
-- reserved ranges
-- `oneof` naming
-- map encoding details
-- target-specific scalar mappings
-
-RFC-004 Revision 2 intentionally does not add protobuf fields to `spec-authoring-core`.
-
----
-
-## Proposal Artifacts
-
-Proposal artifacts live under `rfcs/rfc-004/`. They are review material only and must not be loaded into active `package/` or `schemas/` directories until RFC-004 is accepted and implemented. The proposed `schema-default-value` field intentionally has a distinct identity from the active `default-value` field because concrete JSON schema-member defaults are not the same concept as prose documentation of ordinary field defaults.
-
----
-
-## Migration Path
-
-Existing TypeScript prose blocks remain valid during migration. For a given spec entity:
-
-1. Create a `schema-definition` record for the logical shape.
-2. Create one `schema-member` record for each member.
-3. Link members to the schema with `schema-member-sequence`.
-4. Link the schema to the existing prose `type-definition` using `defines-schema-for`.
-5. Render JSON Schema from the structured schema definition and compare against any hand-authored schema.
-6. Once accepted, mark the prose TypeScript block as superseded or remove it from the type-definition content.
-
-TSS should be evaluated against this model before authoring all TSS schema records. The goal is to verify that `Session`, `Participant`, `Stream`, `Event`, event subtypes, merge records, and package records can be represented without making JSON Schema or protobuf the source of truth.
-
----
-
-## Consequences
-
-### Benefits
-
-- Schema meaning is represented as SRS data rather than target syntax.
-- Individual schema members become addressable and citable.
-- JSON Schema can be rendered exactly from the semantic source.
-- Protobuf can later reuse the same source with target metadata layered separately.
-- TSS and SRS can share spec-authoring primitives without forcing TSS to become an SRS semantic object model.
-
-### Tradeoffs
-
-- Schema authoring produces more records than prose blocks.
-- Recursive or nested type expressions require `json` field values and schema-aware tooling.
-- Some validation concerns remain outside the generic IR until a future rule-notation RFC.
-- Projection packages must be maintained for exact target output.
-
----
-
-## Open Questions
-
-1. Should `schema-definition` version use the existing `version-label` field long term, or should spec-authoring-core add a numeric schema version field?
-
-2. Should `type-expression` and `constraints` get dedicated JSON Schemas in the root `schemas/` directory, or should they remain specified textually until the first renderer is implemented?
-
-3. Should `defines-schema-for` point from schema to type-definition, or should the inverse relation also be recommended for easier traversal from prose type records?
-
-4. Which TSS shape should be migrated first as a proof case: `Session`, `Event`, or one narrow event subtype such as `MessageEvent`?
-
 **Title**: RFC-002: ext:themes-l1 — Visual Theming for Document Views
 **RFC Number**: 002
 **Status**: accepted
@@ -1699,6 +776,929 @@ The baseline must be computable from the Type and Record alone. Ambient L1 Views
 
 2. ~~**`titleFieldId` in heterogeneous sections**~~: Resolved in Rev 9. Rule [N+1] is amended: when a record's type does not carry the designated `titleFieldId` field, the per-record heading is omitted silently — this is not a render failure. Rule [N+12] adds that `container-subset` sections order by `precedes` chain when no `ordering.fieldId` is declared.
 
+
+**Title**: RFC-004: Language-Neutral Schema Notation for Spec Records
+**RFC Number**: 004
+**Status**: draft
+**Proposal Artifact Path**: rfcs/rfc-004/
+**Content**: **Status**: Draft (Revision 2)
+**Affects**: Distribution Group - Package; new extension `ext:schema-notation`; `spec-authoring-core`; JSON Schema projection package
+**Author**: SemanticOps contributors
+**Date**: 2026-05-27
+
+---
+
+## Revision history
+
+| Rev | Date | Summary |
+|---|---|---|
+| 1 | 2026-05-27 | Initial draft: schema-member records with compact type-ref strings |
+| 2 | 2026-05-27 | Reframed schema notation as a semantic, target-neutral schema IR with JSON Schema as the first exact projection |
+
+---
+
+## Abstract
+
+SRS and TSS specifications contain formal data shapes: Field, Type, Record, Session, Event, Participant, Stream, and other implementation-facing entities. Today many of those shapes are written as TypeScript-style prose blocks embedded in text fields. That makes them readable, but not semantic SRS data.
+
+This RFC defines `ext:schema-notation`: a semantic, target-neutral schema definition model for spec authoring. The extension represents logical schemas, members, type expressions, constraints, defaults, examples, deprecation state, and semantic purpose as SRS records and field values. JSON Schema, TypeScript, protobuf, Rust structs, and other formats are projections from that shared semantic source; none of those target syntaxes is the source of truth.
+
+Revision 2 deliberately moves away from compact string `type-ref` expressions as the normative representation. Renderers may show compact strings for humans, but the normative source is structured `typeExpression` JSON.
+
+---
+
+## Motivation
+
+### Problem 1 - Schema prose is not SRS data
+
+TypeScript-style blocks in `content` fields are implementation-flavoured notation. SRS tools cannot reliably traverse them, cite individual members, validate them, or render them to other targets without ad-hoc parsing.
+
+### Problem 2 - Meaning must survive target projection
+
+A JSON Schema definition can validate JSON shape, but it cannot carry all the semantic intent needed by SRS authoring. Protobuf can express efficient wire contracts, but it requires target-specific concerns such as field numbers and `oneof` names. The source model must describe meaning first, then allow target packages to render appropriate forms.
+
+### Problem 3 - TSS needs the same source for multiple outputs
+
+TSS has data shapes such as `Session`, `Participant`, `Stream`, `Event`, and many event subtypes. A useful SRS-authored TSS spec should be able to render JSON Schema for validation and later render protobuf from as much of the same source as possible. That requires a portable semantic schema IR, not a JSON-Schema-only design.
+
+### Problem 4 - `ext:schema` is a different layer
+
+`ext:schema` describes runtime extraction and package structure: what records a package expects and how source material may be transformed into records. `ext:schema-notation` describes spec-level data shapes: the schemas that implementations should produce, consume, and validate. The two extensions are complementary and must not be conflated.
+
+---
+
+## Design Principles
+
+**Semantic first.** The extension describes meaning, not target form. Field numbers, JSON Schema keywords, TypeScript punctuation, and Rust derives are projection concerns.
+
+**Target-neutral core, target-specific packages.** The main extension defines portable schema meaning. Exact renderers live in projection packages such as `spec-authoring-json-schema` and a future `spec-authoring-protobuf`.
+
+**Structured type expressions.** Type meaning is represented as JSON data using explicit expression kinds. Compact strings are allowed as display conveniences only.
+
+**Addressable members.** Schema definitions and schema members are SRS records with stable identity, so invariants, examples, migration notes, and conformance rules can cite them directly.
+
+**Migration-friendly.** Existing prose blocks may coexist while structured schema records are introduced. Structured schema records become authoritative when a migration is complete.
+
+---
+
+## Proposed Changes
+
+### Change A - Add `json` as a core Field value type
+
+`Field.valueType` gains `json` for structured JSON values whose meaning is supplied by the field definition and validating schema. This is required for recursive or nested semantic values such as schema type expressions and portable constraint objects.
+
+`json` is not a target renderer. It is a storage primitive for structured semantic values inside SRS records.
+
+### Change B - New extension: `ext:schema-notation`
+
+Add the following extension entry:
+
+| Extension | Identifier | Depends on | Notes |
+|---|---|---|---|
+| Schema Notation | `ext:schema-notation` | none | Semantic schema IR for spec authoring and target projections |
+
+### Change C - New type: `schema-definition`
+
+`com.semanticops.spec/schema-definition` represents one logical data shape. It is not a JSON Schema object, TypeScript interface, or protobuf message, though projection packages may render it to those forms.
+
+Core fields:
+
+| Field | Meaning |
+|---|---|
+| `title` | Human-readable title |
+| `namespace` | Logical schema namespace |
+| `schema-name` | Stable machine-readable schema name |
+| `version-label` | Version of the schema definition |
+| `description` | Short description |
+| `semantic-purpose` | Domain meaning of this schema |
+| `status` | Draft, active, deprecated, etc. |
+| `content` | Optional prose guidance |
+| `examples` | Non-normative examples |
+| `deprecated` | Whether the schema remains only for compatibility |
+| `notes` | Editorial notes |
+
+Members are attached by `schema-member-sequence` relations.
+
+### Change D - New type: `schema-member`
+
+`com.semanticops.spec/schema-member` represents one addressable member of a schema definition.
+
+Core fields:
+
+| Field | Meaning |
+|---|---|
+| `member-name` | Stable member/property name |
+| `type-expression` | Structured semantic type expression JSON |
+| `required` | Whether the member must be present |
+| `nullable` | Whether explicit `null` is allowed |
+| `constraints` | Portable target-neutral constraints |
+| `schema-default-value` | Concrete JSON default value for this schema member |
+| `examples` | Non-normative examples |
+| `deprecated` | Whether the member remains only for compatibility |
+| `semantic-purpose` | Domain meaning of this member |
+| `notes` | Editorial notes |
+
+`required` and `nullable` are separate. Optional means the member may be absent. Nullable means the member may be present with the explicit value `null`.
+
+### Change E - Structured `typeExpression` JSON
+
+The normative source for member type meaning is a structured JSON value held in the `type-expression` field. It has a `kind` property and kind-specific properties.
+
+Supported expression kinds:
+
+| Kind | Meaning | Required portable properties |
+|---|---|---|
+| `scalar` | Portable primitive value | `name` |
+| `ref` | Reference to a named schema/type | `namespace`, `name`; optional `version` |
+| `array` | Ordered list of values | `items` |
+| `map` | Key/value object map | `values`; optional `keys` |
+| `object` | Inline anonymous object shape | `members` |
+| `union` | One of several alternatives | `variants` |
+| `literal` | One exact value | `value` |
+| `enum` | One of a finite set of values | `values` |
+| `unknown` | Preserved but unconstrained value | none |
+
+Portable scalar names:
+
+`string`, `text`, `integer`, `number`, `boolean`, `date`, `date-time`, `uuid`, `uri`, `duration-ms`, `json`.
+
+Inline `object` expressions are allowed only for genuinely local anonymous shapes. Reusable shapes must be separate `schema-definition` records referenced with `ref`.
+
+`union` must not be used to smuggle optionality. Nullability is represented by the member-level `nullable` field.
+
+### Change F - Portable constraints
+
+The generic IR defines only constraints that can reasonably project across multiple targets:
+
+- required and nullable state
+- numeric minimum and maximum
+- string minimum length, maximum length, and pattern
+- array minimum items, maximum items, and uniqueness
+- enum and literal values
+- scalar format
+- map key and value shape
+- cardinality where the target supports it
+
+Cross-field validation, conditional validation, and protocol-level invariants are out of scope for Revision 2. They remain prose or invariant records until a later RFC defines a semantic rule notation.
+
+### Change G - Relation semantics
+
+Add these relation types to the recommended relation vocabulary:
+
+| Relation type | Source | Target | Meaning |
+|---|---|---|---|
+| `schema-member-sequence` | `schema-definition` | ordered list of `schema-member` records | Declares the ordered members of a schema |
+| `defines-schema-for` | `schema-definition` | `type-definition` or other spec record | Declares that the schema formalizes the target record/type shape |
+
+When an existing `type-definition` has a related `schema-definition`, renderers that support `ext:schema-notation` should use the structured schema definition rather than any prose TypeScript block.
+
+### Change H - JSON Schema projection package
+
+Add `com.semanticops.spec/spec-authoring-json-schema` as a target projection package. It defines exact JSON Schema rendering rules and metadata; it does not own the semantic schema source.
+
+JSON Schema `$id` values follow:
+
+`https://srs.semanticops.com/schema/domain/<namespace>/<schemaName>/<version>.json`
+
+Projection rules:
+
+- A `schema-definition` renders as a JSON Schema object with `$id`, `title`, `type: "object"`, `properties`, and `required`.
+- A `schema-member` renders as one property.
+- `required: true` adds the member to the parent `required` array.
+- `nullable: true` adds `null` to the property shape but does not make it optional.
+- `ref` renders to `$ref`.
+- `union` renders to `oneOf`.
+- `literal` renders to `const`.
+- `enum` renders to `enum`.
+- `array` renders to `type: "array"` with `items`.
+- Portable constraints render to matching JSON Schema keywords where available.
+
+### Change I - Protobuf compatibility
+
+The semantic IR should be designed so protobuf can be rendered from the same source where portable constructs are used. However, protobuf-specific details are target metadata, not core schema meaning.
+
+The following are reserved for a future `spec-authoring-protobuf` package:
+
+- protobuf package names
+- message and field naming overrides
+- field numbers
+- reserved ranges
+- `oneof` naming
+- map encoding details
+- target-specific scalar mappings
+
+RFC-004 Revision 2 intentionally does not add protobuf fields to `spec-authoring-core`.
+
+---
+
+## Proposal Artifacts
+
+Proposal artifacts live under `rfcs/rfc-004/`. They are review material only and must not be loaded into active `package/` or `schemas/` directories until RFC-004 is accepted and implemented. The proposed `schema-default-value` field intentionally has a distinct identity from the active `default-value` field because concrete JSON schema-member defaults are not the same concept as prose documentation of ordinary field defaults.
+
+---
+
+## Migration Path
+
+Existing TypeScript prose blocks remain valid during migration. For a given spec entity:
+
+1. Create a `schema-definition` record for the logical shape.
+2. Create one `schema-member` record for each member.
+3. Link members to the schema with `schema-member-sequence`.
+4. Link the schema to the existing prose `type-definition` using `defines-schema-for`.
+5. Render JSON Schema from the structured schema definition and compare against any hand-authored schema.
+6. Once accepted, mark the prose TypeScript block as superseded or remove it from the type-definition content.
+
+TSS should be evaluated against this model before authoring all TSS schema records. The goal is to verify that `Session`, `Participant`, `Stream`, `Event`, event subtypes, merge records, and package records can be represented without making JSON Schema or protobuf the source of truth.
+
+---
+
+## Consequences
+
+### Benefits
+
+- Schema meaning is represented as SRS data rather than target syntax.
+- Individual schema members become addressable and citable.
+- JSON Schema can be rendered exactly from the semantic source.
+- Protobuf can later reuse the same source with target metadata layered separately.
+- TSS and SRS can share spec-authoring primitives without forcing TSS to become an SRS semantic object model.
+
+### Tradeoffs
+
+- Schema authoring produces more records than prose blocks.
+- Recursive or nested type expressions require `json` field values and schema-aware tooling.
+- Some validation concerns remain outside the generic IR until a future rule-notation RFC.
+- Projection packages must be maintained for exact target output.
+
+---
+
+## Open Questions
+
+1. Should `schema-definition` version use the existing `version-label` field long term, or should spec-authoring-core add a numeric schema version field?
+
+2. Should `type-expression` and `constraints` get dedicated JSON Schemas in the root `schemas/` directory, or should they remain specified textually until the first renderer is implemented?
+
+3. Should `defines-schema-for` point from schema to type-definition, or should the inverse relation also be recommended for easier traversal from prose type records?
+
+4. Which TSS shape should be migrated first as a proof case: `Session`, `Event`, or one narrow event subtype such as `MessageEvent`?
+
+**Title**: RFC-003: Definition Distribution and Repository Slices
+**RFC Number**: 003
+**Status**: draft
+**Content**: **Status**: Draft (Revision 4)  
+**Affects**: Distribution Group (Core), `ext:import-tracking`, `ext:repository`, `ext:federation`, `ext:binding`, `ext:themes-l1`  
+**Author**: Codex draft  
+**Date**: 2026-05-27  
+
+---
+
+## Revision history
+
+| Rev | Date | Summary |
+|---|---|---|
+| 1 | 2026-05-27 | Initial draft |
+| 2 | 2026-05-27 | Add declared binding modes, authoritative hierarchy semantics, and explicit conflict surfacing for imported and derived elements |
+| 3 | 2026-05-27 | Incorporate review refinements: clarify `entryRefs` locality, add inheritance closure, support explicit instance binding, move `ConflictRecord` to `ext:import-tracking`, and add repository-slice selection intent |
+| 4 | 2026-05-27 | Reconcile with RFC-002 themes: add `theme` to discovery/binding/closure rules, tighten `ConflictRecord` identity typing, define `autoUpdate` mode semantics, add tracked-mirror marker, and allow intentional source-document omission |
+
+---
+
+## Abstract
+
+SRS already defines the core ingredients for sharing semantic definitions and exchanging repository content: `Package`, `Lineage`, `Provenance`, `ext:import-tracking`, `ext:registry`, `ext:repository`, and `ext:federation`. What remains underspecified is the practical distribution model: how reusable fields, "templates", and protocols should be packaged for reuse; how a subset of an existing repository should be exported as a portable artefact; and how consumers should distinguish "install this shared library" from "import this slice of semantic content".
+
+This RFC makes that distinction explicit.
+
+- **Reusable definitions** are shared as **Packages**
+- **Repository content** is shared as **Repository Archives** or **Repository Slices**
+- **Registries** catalog definition packages
+- **Bindings** determine whether upstream content is authoritative, tracked, or explicit-only
+- **Federation** and archive import rules govern repository-level exchange
+
+The RFC also introduces package entry points for discoverability and a new optional repository-slice descriptor so a partial export can be imported without pretending to be a full repository mirror.
+
+---
+
+## Motivation
+
+### Problem 1 — "fields, templates, and protocols" are shareable, but the share unit is ambiguous
+
+Older planning documents describe a field library and decision templates as the reusable authoring surface:
+
+- fields are atomic reusable definitions
+- templates are curated compositions of fields
+- template-level prompt framing is distinct from field-level extraction semantics
+
+That model remains correct in spirit, but in SRS v2 the formal shareable artefact is not "a template" as a standalone core type. The current spec's reusable unit is `Package`, which may contain `Field`, `Type`, `View`, `DocumentView`, `Schema`, `Protocol`, and `RelationTypeDefinition`.
+
+Without a clear statement of this mapping, implementers will invent parallel export formats for "field libraries" and "template bundles" instead of using the Package system already present in the spec.
+
+### Problem 2 — subset export is implied, but not defined
+
+`ext:repository` defines a full archive as a self-contained snapshot of a live repository. Import and re-import are identity-based. This is correct for full exchange, but many real workflows require exporting only part of a repository:
+
+- a small library of reusable governance definitions
+- one protocol family
+- one document kit built from fields, views, and document views
+- a selected set of records and supporting evidence for handoff to another repository
+
+Today a producer can construct such an export ad hoc, but the spec does not say what closure rules apply, when a new `repositoryId` is required, or how the receiving side should interpret the result.
+
+### Problem 3 — distribution mechanism is described structurally but not operationally
+
+The spec defines `Registry` and `RepositoryRegistry` as data shapes, but does not yet say what a typical publishing pipeline looks like. As a result, it is unclear whether "distribution" means:
+
+- publishing a definition package to a registry
+- zipping a repository snapshot
+- exporting a subset as a new repository
+- or all three
+
+This RFC defines those roles cleanly without introducing a central service requirement.
+
+### Problem 4 — binding and override behaviour is not declared
+
+Real systems do not all relate to upstream content in the same way.
+
+- In a **governance hierarchy**, a subordinate repository may be bound to a core SRS such that core decisions, protocols, and other scoped content automatically become effective locally
+- In a **federated environment**, another group's content may be visible and discoverable, but adoption should happen only by explicit import
+- In both cases, a local repository may hold derived or forked elements that conflict with upstream changes
+
+The current spec has import modes and lineage, but it does not yet let a repository declare the governing relationship it wants with an upstream source, nor how conflicts should be surfaced when authority and local derivation collide.
+
+---
+
+## Design Principles
+
+**Keep definitions separate from content.** Reusable semantic definitions are not the same thing as semantic instances. Packages and repositories must remain distinct artefact types.
+
+**Preserve existing identity rules.** Distribution must continue to rely on `id`, `version`, `instanceId`, `relationId`, `documentId`, `packageId`, and `repositoryId`, not filenames or storage paths.
+
+**Subset export must be closure-based.** A portable subset is not an arbitrary file copy; it is a selected root plus the dependencies required to make it valid and comprehensible elsewhere.
+
+**Local-first publication is valid.** A package registry may be a static JSON file in Git or object storage. A repository slice may be handed over as a `.srs` ZIP file with no server infrastructure.
+
+**"Template" remains an informal umbrella term.** The spec should not reintroduce a new core template type. In SRS v2, template-like behaviour is expressed through `Type`, `View`, `DocumentView`, `Schema`, and `Protocol`.
+
+**Binding must be declared, not assumed.** Consumers must be able to state whether an upstream source is authoritative, merely tracked, or only importable on explicit request.
+
+**Authority does not erase conflict.** Even when an upstream source has precedence, conflicting local content must remain visible and addressable rather than being silently discarded.
+
+---
+
+## Proposed Changes
+
+### Change A — Clarify the reusable distribution model around `Package`
+
+Add the following normative clarification to the `Package` section in the Distribution Group.
+
+> `Package` is the primary reusable distribution unit for semantic definitions. A Package may contain any combination of Fields, Types, Views, DocumentViews, Schemas, Protocols, and Relation type definitions. Implementations that colloquially speak of "field libraries", "template libraries", "protocol packs", or "document kits" must express those libraries as Packages rather than as implementation-specific export formats.
+
+Add the following explanatory note:
+
+> In older field-library terminology, a "template" is usually not a single SRS construct. Depending on behaviour, it may correspond to a `Type`, `View`, `DocumentView`, `Schema`, `Protocol`, or a package-level combination of several of these. "Template" remains a valid user-facing label, but it is not introduced here as a new core schema type.
+
+This makes the mapping from the older field-library architecture to SRS explicit:
+
+- field library → `Package.fields[]`
+- reusable record template → `Type` plus optional `View`
+- reusable document template → `DocumentView`
+- reusable extraction kit → `Schema`
+- reusable facilitation pattern → `Protocol`
+
+---
+
+### Change B — Add package entry points for discoverability and subset publication
+
+Extend `Reference.definitionType` and `ImportRecord.definitionType` so that, when this RFC is co-applied with RFC-002, the resulting portable vocabulary is:
+
+```typescript
+"field" | "type" | "view" | "document-view" | "schema" | "protocol" | "theme" | "relation-type"
+```
+
+This aligns the reference and import-tracking vocabularies with objects that are already package content and may reasonably appear in a package's public surface. In particular, visual themes introduced by RFC-002 `ext:themes-l1` are already first-class sharable artefacts and participate in the same package and registry mechanisms.
+
+Add the following optional field to `Package`:
+
+```typescript
+entryRefs?: Reference[]
+// Definitions intended as the package's direct public entry points.
+// Examples: a top-level Type, DocumentView, Schema, or Protocol that a consumer
+// would intentionally install, select, or build from.
+```
+
+`entryRefs` is not a dependency list. It is the authored public surface of the package.
+
+#### Semantics
+
+- A package may contain helper definitions that are not in `entryRefs`
+- Every `entryRefs[]` item must either:
+  - resolve to a definition present in the package's own content arrays, or
+  - appear in `dependencyRefs[]` when the package is exposing an externally supplied dependency
+- In `mode: "bundled"`, every locally defined `entryRefs[]` item must be present in the corresponding package content array
+- `entryRefs` may reference `field`, `type`, `view`, `document-view`, `schema`, `protocol`, `theme`, or `relation-type`
+
+#### Purpose
+
+`entryRefs` solves two related problems:
+
+1. It tells a registry consumer which definitions are meant to be selected directly
+2. It provides a clean starting set for subset package export
+
+For example, a governance package may contain twenty shared fields, four types, three single-record views, one `DocumentView`, and one `Protocol`, but expose only:
+
+- `governance/decision@2`
+- `governance/decision_record@1`
+- `governance/decision_protocol@1`
+
+as its public entry points.
+
+#### Registry surfacing
+
+Add the following optional field to `RegistryEntry`:
+
+```typescript
+entryRefs?: Reference[]
+// Optional copy of the package's public entry surface for lightweight discovery.
+// Allows clients to browse installable protocol/type/document-view entry points
+// without downloading the entire package first.
+
+declaredExtensions?: string[]
+// Optional list of SRS extensions the package's public surface depends on or enables.
+// Examples: "ext:protocol", "ext:views-l2", "ext:themes-l1".
+// Supports UI and AI discovery workflows such as "find packages that provide
+// sharable themes" or "find protocol packages for ext:protocol".
+
+providedDefinitionTypes?: Array<"field" | "type" | "view" | "document-view" | "schema" | "protocol" | "theme" | "relation-type">
+// Optional summary of definition kinds exposed by the package's public surface.
+// Examples: "protocol", "document-view", "theme".
+
+themeCount?: integer
+// Optional count of Theme definitions in the package.
+```
+
+Registry consumers should be able to filter by `entryRefs`, `declaredExtensions`, and `providedDefinitionTypes` without downloading full package payloads. This is intended to support both human-facing package browsers and AI-assisted discovery and installation workflows.
+
+---
+
+### Change C — Define subset package export
+
+Add a new normative subsection under `Package` titled **Subset package export**.
+
+#### Subset package export
+
+A producer may create a new Package from a selected subset of definitions in one or more source packages. The export algorithm is:
+
+1. Select one or more root definitions, typically from `entryRefs`
+2. Compute the transitive dependency closure required for those roots to validate and render correctly
+3. Emit a new Package containing exactly that closure
+4. Preserve the original definition `id`, `namespace`, `name`, and `version` for all carried definitions
+5. Assign a new `packageId` and `packageVersion` to the exported package as a publication event
+
+#### Dependency closure rules
+
+- Exporting a `Type` includes all referenced `Field`s
+- When `ext:type-inheritance` is declared, exporting a derived `Type` includes the full transitive closure of its base Types and the Fields required by those base Types
+- Exporting a `View` includes its referenced `Type` and that Type's referenced `Field`s
+- Exporting a `DocumentView` includes any referenced `View`s, all `Type`s those Views require, all `Field`s those Types require, and any referenced `Theme`s reachable through `themeRef` or `themeVariants[]` when `ext:themes-l1` is declared
+- Exporting a `Schema` includes all referenced `Type`s and their dependent `Field`s
+- Exporting a `Protocol` includes `targetType`, all `outputType`s, all `contributesTo` field references, and their dependent Types/Fields
+
+#### Import semantics
+
+Import of subset packages uses the existing definition identity rules:
+
+- same `id` + `version`, same content → no-op
+- same `id` + `version`, different content → conflict
+- new `id` + `version` → insert
+
+#### Relationship to import tracking
+
+Consumers importing a subset package should record imported definitions in `ext:import-tracking` exactly as they would for a full package:
+
+- `upstream-tracked` when they expect updates from the source lineage
+- `local-copy` when they are taking a frozen snapshot
+- `local-fork` when they intend to diverge intentionally
+
+This RFC also extends `ext:import-tracking` with a shared conflict surface so plain import collisions and binding collisions use one canonical mechanism.
+
+#### `ConflictRecord`
+
+When `ext:import-tracking` is declared, implementations may persist conflicts detected during package import, repository import, or binding evaluation as:
+
+```typescript
+{
+  conflictId: UUID
+
+  targetKind: "definition" | "instance"
+  bindingId?: string
+
+  localIdentity:
+    | { definitionRef: Reference }
+    | { instanceId: UUID }
+  sourceIdentity?:
+    | { definitionRef: Reference }
+    | { instanceId: UUID }
+
+  conflictType: "same-identity-different-content" | "derived-divergence" | "authority-shadow" | "incompatible-upgrade"
+
+  effectiveResolution: "prefer-source" | "prefer-local" | "manual-pending"
+  status: "open" | "resolved" | "dismissed"
+
+  detectedAt: ISO8601
+  resolvedAt?: ISO8601
+  note?: string
+}
+```
+
+#### Conflict semantics
+
+- When `targetKind === "definition"`, identity must be expressed using `definitionRef`
+- When `targetKind === "instance"`, identity must be expressed using `instanceId`
+- `same-identity-different-content` means the same stable identity key resolved to different content
+- `derived-divergence` means a local element sharing lineage with an upstream element has materially diverged
+- `authority-shadow` means local content remains stored but is not effective because an authoritative source has precedence
+- `incompatible-upgrade` means an upstream change cannot be applied cleanly to the local dependent content
+
+Implementations may automatically choose an effective side according to binding or import policy, but they must still create and preserve a `ConflictRecord` until the divergence is acknowledged or resolved.
+
+---
+
+### Change D — Define `ext:binding`
+
+Add a new optional extension:
+
+| Extension | Identifier | Depends on | Notes |
+|---|---|---|---|
+| Binding | `ext:binding` | `ext:import-tracking` | Declared binding mode, authoritative precedence, and conflict surfacing for imported definitions and repository content |
+
+This extension allows a repository to declare how it is bound to upstream packages and repositories.
+
+#### `BindingMode`
+
+```typescript
+"authoritative-upstream" | "tracked-upstream" | "explicit-import"
+```
+
+| Mode | Meaning |
+|---|---|
+| `"authoritative-upstream"` | Matching upstream content becomes locally effective automatically within the declared scope. Conflicts are still recorded and surfaced. |
+| `"tracked-upstream"` | Upstream updates are discovered and tracked, but do not become effective until explicitly accepted by the consumer. |
+| `"explicit-import"` | Upstream content is available only for deliberate manual import. No automatic tracking or adoption occurs. |
+
+#### `BindingResolution`
+
+```typescript
+"prefer-source" | "manual" | "prefer-local"
+```
+
+This field controls which side becomes the effective version when content in scope conflicts. It does not suppress conflict recording.
+
+#### `BindingScope`
+
+```typescript
+type BindingScope =
+  | {
+      targetKind: "definitions"
+      definitionTypes?: Array<"field" | "type" | "view" | "document-view" | "schema" | "protocol" | "theme" | "relation-type">
+      namespaces?: string[]
+      names?: string[]
+    }
+  | {
+      targetKind: "instances"
+      typeNamespace?: string
+      typeName?: string
+      typeId?: UUID
+      instanceIds?: UUID[]
+    }
+```
+
+#### `BindingSource`
+
+When `ext:binding` is declared, `RepositoryManifest` gains:
+
+```typescript
+bindings?: Array<{
+  bindingId: string
+
+  sourceKind: "package" | "repository"
+
+  sourcePackageId?: UUID
+  sourceRepositoryId?: UUID
+
+  mode: BindingMode
+  resolution: BindingResolution
+  autoUpdate?: boolean
+  // Meaning depends on mode; see auto-update behaviour table below.
+
+  scope: BindingScope[]
+
+  note?: string
+}>
+```
+
+`sourcePackageId` is used when the authority is a definition package. `sourceRepositoryId` is used when the authority is a repository, such as a core governance SRS containing authoritative decisions or protocols.
+
+#### Binding semantics
+
+Bindings are declarations of governing relationship, not just import history.
+
+- A repository may bind to a **core governance source** using `mode: "authoritative-upstream"` and `resolution: "prefer-source"`
+- A repository may bind to a **federated peer source** using `mode: "explicit-import"` and `resolution: "manual"`
+- A repository may track an evolving upstream package using `mode: "tracked-upstream"`
+
+#### Normative behaviour
+
+1. `authoritative-upstream` may automatically install or refresh newer upstream content for items in scope
+2. `tracked-upstream` may automatically detect updates, but must not make them effective without an explicit accept/promote action
+3. `explicit-import` must never change local effective content without an explicit import action
+4. No binding mode may silently delete local conflicting content
+5. Existing bound runs or records must not be silently rebound in place
+
+This last rule is especially important for facilitation. If a `ProtocolRun` started against protocol version 3, a later import of version 4 may become the effective default for future runs, but it must not mutate the already-running or already-recorded run.
+
+Conflicts produced under this extension must be recorded using `ext:import-tracking` `ConflictRecord`s.
+
+#### Auto-update behaviour
+
+| `mode` | `autoUpdate` | Required behaviour |
+|---|---|---|
+| `"authoritative-upstream"` | `true` | Implementation should automatically fetch/install updates for items in scope when reachable. Updated source content becomes effective per `resolution`. |
+| `"authoritative-upstream"` | `false` or absent | Implementation may require manual sync/fetch, but once the upstream update is accepted locally, source precedence still governs effective content. |
+| `"tracked-upstream"` | `true` | Implementation may automatically detect or fetch updates, but must keep them non-effective until an explicit accept/promote action occurs. |
+| `"tracked-upstream"` | `false` or absent | Update detection and fetch are manual. No upstream change becomes effective automatically. |
+| `"explicit-import"` | `true` | Invalid. Implementations must reject the binding or treat `autoUpdate` as `false` and surface a validation warning. |
+| `"explicit-import"` | `false` or absent | Only explicit import actions may create or update local content from the source. |
+
+#### Governance hierarchy example
+
+A local cooperative repository may declare:
+
+```json
+{
+  "bindings": [
+    {
+      "bindingId": "core-governance-protocols",
+      "sourceKind": "repository",
+      "sourceRepositoryId": "11111111-1111-1111-1111-111111111111",
+      "mode": "authoritative-upstream",
+      "resolution": "prefer-source",
+      "autoUpdate": true,
+      "scope": [
+        {
+          "targetKind": "definitions",
+          "definitionTypes": ["protocol"],
+          "namespaces": ["mudemocracy"]
+        },
+        {
+          "targetKind": "instances",
+          "typeNamespace": "governance",
+          "typeName": "decision",
+          "instanceIds": [
+            "33333333-3333-3333-3333-333333333333",
+            "44444444-4444-4444-4444-444444444444"
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+In this model, upstream governance decisions and protocols are authoritative for the declared scope. Local conflicting content may remain stored, but the effective content is the source-preferred version until the conflict is addressed.
+
+#### Federated example
+
+A repository consuming another group's protocol library in a federation may declare:
+
+```json
+{
+  "bindings": [
+    {
+      "bindingId": "community-protocols",
+      "sourceKind": "package",
+      "sourcePackageId": "22222222-2222-2222-2222-222222222222",
+      "mode": "explicit-import",
+      "resolution": "manual",
+      "scope": [
+        {
+          "targetKind": "definitions",
+          "definitionTypes": ["protocol"],
+          "namespaces": ["community.adr"]
+        }
+      ]
+    }
+  ]
+}
+```
+
+In this model, the peer library is visible and importable, but it has no automatic override power.
+
+---
+
+### Change E — Define `ext:repository-slices`
+
+Add a new optional extension:
+
+| Extension | Identifier | Depends on | Notes |
+|---|---|---|---|
+| Repository Slices | `ext:repository-slices` | `ext:repository` | Portable subset export/import for repository content |
+
+This extension defines how a subset of repository content is exported as an importable artefact without claiming to be a full mirror of the source repository.
+
+#### New type: `RepositorySliceDescriptor`
+
+When `ext:repository-slices` is declared, `RepositoryManifest` gains:
+
+```typescript
+slice?: {
+  sourceRepositoryId: UUID
+  exportedAt: ISO8601
+  isTrackedMirror?: boolean
+  // When true, this slice intentionally preserves source repository identity semantics
+  // for mirror/sync workflows instead of minting a new independent repository identity.
+
+  rootInstanceIds: UUID[]
+  // The selected root instances that defined the slice.
+
+  selectionStrategy?: "manual-select" | "contains-closure" | "relation-closure" | "custom"
+  // Optional informative description of how the slice was chosen.
+  // Does not replace the authoritative exported instance set.
+
+  relationMode: "between-selected" | "outbound-closure"
+  // between-selected: include only Relations whose source and target are both in the slice
+  // outbound-closure: also include Relations from selected instances to external cited instances
+
+  idStrategy: "preserve-ids" | "new-ids-with-lineage"
+  // How instance identities in the slice relate to the source repository.
+
+  omitSourceDocuments?: boolean
+  // When true, the producer is intentionally omitting one or more repository-document
+  // sources from the slice. Receiving implementations must surface the slice as
+  // provenance-incomplete rather than treating missing sources as silent corruption.
+
+  note?: string
+}
+```
+
+#### Slice semantics
+
+A repository slice is still a conforming repository snapshot, but it is not required to represent the full source repository. It must:
+
+- include only the selected instance set plus required closure
+- include all source documents cited by included instances or Relations, unless `omitSourceDocuments === true`
+- include relation files consistent with `relationMode`
+- include a valid `packageRef`, and when `packageRef.mode === "local"`, the full local package required by the selected Tier 2 Records
+- include a manifest `instanceIndex` that lists only the instances in the slice repository
+
+#### Repository identity
+
+To avoid accidental sync semantics, a repository slice exported for handoff must mint a new `repositoryId` unless `slice.isTrackedMirror === true` and the producer is explicitly creating a tracked mirror of an existing repository. `slice.sourceRepositoryId` preserves the source identity.
+
+This preserves the current rule that `repositoryId` is the sync key while making slices safe to exchange as independent artefacts.
+
+#### Import modes for slices
+
+A consumer importing a repository slice may choose one of two behaviours:
+
+1. **Mount as independent repository**
+   The slice remains a standalone repository with its own `repositoryId`
+
+2. **Merge into an existing repository**
+   The consumer copies included instances into a local repository using either:
+   - `preserve-ids`
+   - `new-ids-with-lineage`
+
+When merged into an existing repository, the receiving repository should record a `FederationEvent` with `event: "import"`.
+
+When `new-ids-with-lineage` is used, the importer must create a `derived-from` Relation from each newly minted local instance to its original source instance. Implementations may use `refines` instead only when the import semantics are explicitly refinement rather than duplication. When `ext:federation` is declared, the Relation should preserve `targetRepositoryId` so the original source location remains addressable.
+
+---
+
+### Change F — Define repository-slice closure rules
+
+Add the following normative closure rules to `ext:repository-slices`.
+
+#### Instance closure
+
+The producer selects one or more `rootInstanceIds`. The slice must contain:
+
+- the selected root instances
+- any selected descendant or explicitly included instances according to implementation policy
+- every included instance file referenced by `instanceIndex`
+
+The spec does not define one mandatory graph traversal policy beyond the selected roots; implementations may offer different selection UIs. What is normative is that the exported manifest precisely declares the resulting included set.
+
+#### Relation closure
+
+For `relationMode: "between-selected"`:
+
+- include only Relations whose `sourceInstanceId` and `targetInstanceId` are both included in the slice
+
+For `relationMode: "outbound-closure"`:
+
+- include all Relations from included instances to other included instances
+- include outbound Relations from included instances to excluded instances when those Relations are meaningful citations or dependency references
+- preserve cross-repository qualifiers when present
+
+#### Source-document closure
+
+Every `SourceReference` with `sourceType: "repository-document"` appearing in any included instance or included Relation must resolve within the slice archive unless `slice.omitSourceDocuments === true`. When `omitSourceDocuments` is true, the producer must surface the omission explicitly and the consumer must treat the slice as provenance-incomplete rather than silently valid.
+
+---
+
+### Change G — Clarify the distribution mechanism
+
+Add the following non-normative guidance after `ext:registry` and `ext:federation`.
+
+#### Recommended distribution workflow
+
+**For reusable definitions:**
+
+1. Author or edit definitions locally
+2. Publish them as a `Package`
+3. Add a `RegistryEntry` with `downloadUrl`, `checksum`, `entryRefs`, and discovery metadata such as `declaredExtensions`
+4. Consumers declare binding mode for that source: authoritative, tracked, or explicit-import
+5. Consumers install or update the package through their local registry/import-tracking workflow
+
+**For hierarchical governance:**
+
+1. Declare a `BindingSource` pointing to the core repository or package
+2. Use `mode: "authoritative-upstream"` when the core source should become effective automatically
+3. Record and surface local derived conflicts rather than discarding them
+
+**For federated exchange:**
+
+1. Discover peer repositories or packages through federation or registries
+2. Use `mode: "explicit-import"` when peer content should be adopted only by explicit local choice
+3. Preserve conflict records for any imported derived divergence
+
+**For repository content handoff:**
+
+1. Export either a full repository archive or a repository slice
+2. Share the resulting `.srs` ZIP via filesystem, Git, object storage, or HTTP
+3. Consumers either mount it as a repository or merge it into an existing repository
+
+**For long-lived repository discovery:**
+
+1. Maintain a `RepositoryRegistry`
+2. Optionally federate registries via `childRegistries`
+3. Preserve unresolved external repository citations rather than rejecting them
+
+This makes the intended roles explicit:
+
+- `Registry` → catalogs reusable definition packages
+- `Registry` metadata → supports human and AI discovery by extension, entry point, and definition kind
+- `BindingSource` → declares whether an upstream source is authoritative, tracked, or explicit-only
+- `RepositoryRegistry` → catalogs repositories
+- `.srs` archive → shareable transport format for repository content
+
+No central service is required for any of the above.
+
+---
+
+## Consequences
+
+### Benefits
+
+- Reuses the current Package/Registry/Import Tracking model instead of creating a parallel "template sharing" mechanism
+- Gives a clean answer to the field-library requirement that fields are atomic and templates are curated compositions
+- Adds an explicit answer for governance hierarchies versus federated peer exchange
+- Makes subset export portable and auditable
+- Preserves the identity-based import rules already defined by the spec
+- Makes conflict handling a first-class, addressable concern instead of an implementation footnote
+- Supports both offline file exchange and hosted distribution
+
+### Tradeoffs
+
+- Introduces one more optional extension: `ext:repository-slices`
+- Introduces one more optional extension: `ext:binding`
+- Requires producers to compute dependency closure deliberately rather than copying files loosely
+
+---
+
+## Deferred Follow-Ons
+
+The following items are intentionally deferred rather than treated as blockers for this RFC:
+
+1. **Extension-expandable definition kinds**
+   A future RFC should decide whether `Reference.definitionType` remains a closed core enum extended piecemeal, or becomes an extension-expandable registry/open union so future packageable extension constructs can participate without repeated core amendments. The addition of `theme` in RFC-002 demonstrates that this pressure already exists.
+
+2. **Richer slice-selection expressions**
+   `selectionStrategy` is sufficient as informative metadata for now. A future RFC may define a richer machine-readable selection model, such as a closure DSL, query object, or standard traversal expression for reproducible repository-slice generation.
+
+---
+
+## Summary
+
+This RFC does not propose a new universal sharing mechanism. It sharpens the ones SRS already has:
+
+- share reusable definitions as **Packages**
+- declare governing relationships through **Bindings**
+- track updates with **Import Tracking**
+- publish discoverability metadata with **Registry**
+- share content as **Repository Archives**
+- share subsets as **Repository Slices**
+
+That separation aligns with both the current SRS spec and the older field-library architecture: reusable fields stay reusable, template-like compositions stay packageable, and repository content can move independently without being confused for a definition library.
 
 **Title**: RFC-009: Root-record Type as the typing anchor for Containers, Document Views, and distributable units
 **RFC Number**: 009

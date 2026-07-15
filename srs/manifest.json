@@ -2955,6 +2955,11 @@
       "instanceId": "991f4c9c-71bc-4190-97c0-4ad17544bb44",
       "path": "records/invariants/invariant-088.json",
       "tier": 2
+    },
+    {
+      "instanceId": "59b6eaff-2f57-4ca7-accf-28ff82eb1e08",
+      "path": "records/design-notes/044-relation-design-principles.json",
+      "tier": 2
     }
   ],
   "meta": {
