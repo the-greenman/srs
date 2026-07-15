@@ -4,7 +4,7 @@
   "fieldValues": [
     {
       "fieldId": "1a000020-0000-4000-a000-000000000020",
-      "value": "I-93"
+      "value": "I-97"
     },
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",
@@ -28,5 +28,5 @@
   "typeName": "invariant",
   "typeNamespace": "com.semanticops.spec",
   "typeVersion": 1,
-  "updatedAt": "2026-07-09T12:34:17.157040414+00:00"
+  "updatedAt": "2026-07-14T15:00:00Z"
 }

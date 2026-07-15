@@ -1,25 +1,25 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "createdAt": "2026-07-09T12:33:50.521016438+00:00",
+  "createdAt": "2026-07-09T12:34:05.084906046+00:00",
   "fieldValues": [
     {
       "fieldId": "1a000020-0000-4000-a000-000000000020",
-      "value": "I-89"
+      "value": "I-95"
     },
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",
-      "value": "mutual-exclusion rule MUST report error if more than one listed field is non-empty"
+      "value": "CrossFieldRule with unrecognized type value MUST be reported as a Type-level error; unknown types MUST NOT be silently ignored"
     },
     {
       "fieldId": "1a000003-0000-4000-a000-000000000003",
-      "value": "A `CrossFieldRule` with `type: \"mutual-exclusion\"` MUST report a validation error if more than one field in `fieldIds` is non-empty in the Record. If zero or one field is non-empty, the rule passes. (RFC-019 R5.)"
+      "value": "A `CrossFieldRule` with a `type` value not in `[\"conditional-required\", \"field-ordering\", \"mutual-exclusion\"]` MUST be reported as a Type-level validation error. Implementations MUST NOT silently ignore unknown rule types. (RFC-019 R9.)"
     },
     {
       "fieldId": "1a000021-0000-4000-a000-000000000021",
       "value": "ext:cross-field-validation"
     }
   ],
-  "instanceId": "deedaca2-4e41-44b4-be6e-2c9b76702f44",
+  "instanceId": "d4fbd56a-ff47-4953-83ed-5dc277f4c207",
   "tags": [
     "concern:validation",
     "topic:conformance"
@@ -28,5 +28,5 @@
   "typeName": "invariant",
   "typeNamespace": "com.semanticops.spec",
   "typeVersion": 1,
-  "updatedAt": "2026-07-09T12:33:50.521024143+00:00"
+  "updatedAt": "2026-07-14T15:00:00Z"
 }
