@@ -231,7 +231,7 @@ echo '{"protocolId":"<uuid>","protocolVersion":1,"containerId":"<uuid>"}' | \
   srs protocol run create --repo <path> --pretty
 
 # Advance to the next stage (optionally marking current stage complete)
-echo '{"runId":"<uuid>","stageId":"<stageId>","completeCurrentStage":true}' | \
+echo '{"runId":"<uuid>","stageId":"<stageId>","completeCurrent":true}' | \
   srs protocol run advance --repo <path> --pretty
 
 # Get the current state of a run
@@ -266,7 +266,7 @@ srs protocol run abandon <runId> --repo <path> --pretty
 |---|---|---|---|
 | `runId` | string (UUID) | yes | ID of the run to advance |
 | `stageId` | string | yes | Stage ID to advance to |
-| `completeCurrentStage` | boolean | yes | Whether to mark the current stage Completed before advancing |
+| `completeCurrent` | boolean | yes | Whether to mark the current stage Completed before advancing |
 
 Payload shapes (all wrapped in the standard `{ "ok": true, "payload": { ... } }` envelope):
 
