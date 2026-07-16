@@ -1032,6 +1032,140 @@ All three commands return the standard error envelope when the record or revisio
 
 ---
 
+## 5e. Package Installation & Import Tracking
+
+This section documents the `srs package` sub-commands that install and track upstream package definitions. For registry-based discovery, see **5c. Registry Catalog**.
+
+### Installing a package
+
+`srs package install` copies every definition from an external package directory into a sub-package boundary inside the target repository, registers the boundary, and writes import records + reference copies for divergence tracking.
+
+```bash
+srs package install --source-dir /path/to/governance-package \
+  --repo /path/to/target-repo \
+  --boundary packages/ext          # optional; defaults to packages/<package-name>
+```
+
+`--strict` refuses to install if any definition would conflict with an existing same-key/different-UUID definition (the default is to flag conflicts but still succeed):
+
+```bash
+srs package install --source-dir /path/to/pkg --repo /path/to/repo --strict
+```
+
+The payload reports what was installed, skipped (idempotent re-run), and flagged as conflicts:
+
+```json
+{
+  "ok": true,
+  "command": "package install",
+  "payload": {
+    "boundaryPath": "packages/ext",
+    "packageId": "<uuid>",
+    "namespace": "com.example.governance",
+    "name": "governance",
+    "version": "2.1.0",
+    "installedAt": "2026-07-01T00:00:00Z",
+    "installed": 14,
+    "skippedIdentical": 0,
+    "conflicts": [],
+    "kinds": [
+      { "kind": "field", "installed": 8, "skippedIdentical": 0, "conflicts": 0 },
+      { "kind": "type",  "installed": 4, "skippedIdentical": 0, "conflicts": 0 },
+      { "kind": "blueprint", "installed": 2, "skippedIdentical": 0, "conflicts": 0 }
+    ]
+  }
+}
+```
+
+After install, the boundary directory contains `.srs-import/import-records.json` (provenance + divergence state) and `.srs-import/refs/` (reference copies of each installed definition). These are managed automatically — do not edit them directly.
+
+Re-running `package install` with the same source directory is idempotent: all definitions are skipped as identical and no import records are overwritten.
+
+### Registering a local package boundary
+
+`srs package import` registers an existing directory inside the repository as a named package boundary. Use this when the definitions are already in the repo (not copied from outside):
+
+```bash
+srs package import --path packages/my-pkg --mode upstream-tracked --repo /path/to/repo
+```
+
+`--mode` controls divergence tracking behaviour:
+
+| Mode | Meaning |
+|---|---|
+| `upstream-tracked` | Definitions came from an upstream source; divergence detection compares against reference copies |
+| `local-copy` | Definitions are a local copy; no reference copies; no divergence detection |
+| `local-fork` | Local fork of an upstream package; tracked but not expected to stay in sync |
+
+Payload:
+
+```json
+{
+  "ok": true,
+  "command": "package import",
+  "payload": {
+    "selector": "packages/my-pkg",
+    "id": "<boundary-uuid>",
+    "namespace": "com.example.my-pkg",
+    "name": "my-pkg"
+  }
+}
+```
+
+### Listing imported definitions with divergence state
+
+`srs package imports` aggregates every import record across all boundaries and runs live divergence detection — comparing each installed definition's current JSON against the reference copy written at install time:
+
+```bash
+srs package imports --repo /path/to/repo --pretty
+```
+
+Payload (top-level arrays by definition kind):
+
+```json
+{
+  "ok": true,
+  "command": "package imports",
+  "payload": {
+    "generatedAt": "2026-07-01T12:00:00Z",
+    "fields": [
+      {
+        "definitionId": "<uuid>",
+        "definitionType": "field",
+        "namespace": "com.example.governance",
+        "name": "decision_title",
+        "version": 1,
+        "mode": "upstream-tracked",
+        "importedAt": "2026-07-01T00:00:00Z",
+        "sourcePackageId": "<uuid>",
+        "sourcePackageName": "com.example.governance",
+        "sourcePackageVersion": "2.1.0",
+        "conflictState": "Clean"
+      }
+    ],
+    "types": [],
+    "views": [],
+    "blueprints": [],
+    "protocols": [],
+    "relationTypes": [],
+    "skippedDefinitions": []
+  }
+}
+```
+
+`conflictState` is one of:
+
+| Value | Meaning |
+|---|---|
+| `Clean` | Current definition matches the reference copy — no local changes |
+| `LocalAhead` | Current definition differs from the reference copy — locally edited |
+
+`conflictState` is omitted when divergence detection could not run (e.g. `mode` is `local-copy` or `local-fork`, or the reference copy is missing). `skippedDefinitions` lists definition IDs for which detection was skipped.
+
+Only boundaries with an `.srs-import/import-records.json` file are included. Boundaries registered with `package import` but without reference copies (local import modes) appear with the definitions listed but no `conflictState`.
+
+---
+
 ## 6. Common Traps
 
 ### The instanceIndex trap
