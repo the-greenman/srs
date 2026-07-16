@@ -221,6 +221,63 @@ Payload shapes (all wrapped in the standard `{ "ok": true, "payload": { ... } }`
 - `protocol validate` → `{ "protocolId", "valid": true/false, "diagnostics": ["<message>", ...] }`. A valid protocol has `valid: true` and an empty `diagnostics` array.
 - `protocol find-by-target-type` → `{ "protocolId", "protocolName", "stages": [...], "diagnostics": ["<message>", ...] }`. Returns the first protocol whose `protocolTargetType` matches the given type ID. Returns an error envelope if no protocol targets that type.
 
+### Protocol Run Execution
+
+Protocol runs are the execution state of a protocol: an in-progress facilitation session advancing through stages. Runs are stored in `runs/runs.json` at the repository root (created on first write; absent means no runs). They are distinct from protocol definitions — definitions are package-level; runs are instance-level, scoped to a specific container.
+
+```bash
+# Start a new run for a protocol within a container
+echo '{"protocolId":"<uuid>","protocolVersion":1,"containerId":"<uuid>"}' | \
+  srs protocol run create --repo <path> --pretty
+
+# Advance to the next stage (optionally marking current stage complete)
+echo '{"runId":"<uuid>","stageId":"<stageId>","completeCurrentStage":true}' | \
+  srs protocol run advance --repo <path> --pretty
+
+# Get the current state of a run
+srs protocol run get <runId> --repo <path> --pretty
+
+# List runs (all filters optional)
+srs protocol run list --repo <path> --pretty
+srs protocol run list --repo <path> --protocol-id <uuid> --pretty
+srs protocol run list --repo <path> --container-id <uuid> --pretty
+srs protocol run list --repo <path> --status Active --pretty
+
+# Complete a run (all Active stage states are marked Completed)
+srs protocol run complete <runId> --repo <path> --pretty
+
+# Abandon a run
+srs protocol run abandon <runId> --repo <path> --pretty
+```
+
+`protocol run create` accepts a JSON object on stdin:
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `protocolId` | string (UUID) | yes | The protocol definition to run |
+| `protocolVersion` | integer | yes | Version of the protocol definition |
+| `containerId` | string (UUID) | yes | Container this run operates within |
+| `targetRecordId` | string (UUID) | no | Record being produced by this run |
+| `initialStageId` | string | no | Stage ID to set as the opening stage |
+
+`protocol run advance` accepts a JSON object on stdin:
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `runId` | string (UUID) | yes | ID of the run to advance |
+| `stageId` | string | yes | Stage ID to advance to |
+| `completeCurrentStage` | boolean | yes | Whether to mark the current stage Completed before advancing |
+
+Payload shapes (all wrapped in the standard `{ "ok": true, "payload": { ... } }` envelope):
+
+- `protocol run create` / `advance` / `get` / `complete` / `abandon` → `{ "run": { ...ProtocolRun... } }`. The `run` field is the raw stored JSON: `runId`, `protocolId`, `protocolVersion`, `containerId`, `targetRecordId`?, `status` (`Active` | `Completed` | `Abandoned`), `attentionState` (current cursor: `containerId`, `recordId`?, `fieldId`?, `protocolRunId`?, `stageId`?), `stageStates[]` (per-stage status history), `startedAt`, `completedAt`?.
+- `protocol run list` → `{ "runs": [{ "runId", "protocolId", "containerId", "status", "currentStageId"?, "startedAt" }] }`.
+- `protocol run get` returns an error envelope if the run is not found.
+- `protocol run complete` / `abandon` return an error envelope if the run is not found or is not in `Active` status.
+- `protocol run advance` returns an error envelope if the run is not found or is not in `Active` status.
+
+Protocol run history for a record appears in `srs context record <recordId>` under the `protocolRunHistory` field (array of run summaries whose `targetRecordId` matches the record).
+
 ---
 
 ## 3b. Discovery and authored lists (`find` + `resolve-view`)
@@ -976,7 +1033,7 @@ Returns all field values, type metadata, display label, and all outbound relatio
 }
 ```
 
-`relations` contains only **outbound** edges (this record as source). Inbound edges are excluded — they are part of the stage-context pattern (#252). `protocolRunHistory` is always empty until protocol run logging is implemented.
+`relations` contains only **outbound** edges (this record as source). Inbound edges are excluded. `protocolRunHistory` contains summaries of all protocol runs whose `targetRecordId` matches this record — populated by `protocol run create` and `advance` (see §3a Protocol Run Execution).
 
 ### Revision trace
 
