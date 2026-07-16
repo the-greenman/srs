@@ -901,6 +901,137 @@ Returns an error envelope (`"ok": false`) when the package name is not found in 
 
 ---
 
+## 5d. Addressability Context Queries (`ext:addressability`)
+
+Repositories that declare `"ext:addressability"` (detected when any `.revisions.json` sidecar exists) support three context-assembly commands designed to give an AI agent a compact, query-ready snapshot of a record or field.
+
+### Field context
+
+```bash
+srs context field --repo <path> <record-id> <field-id>
+```
+
+Returns the current value, full revision history (oldest-first), field metadata (`name`, `namespace`, `aiGuidance`), and tagged-chunk placeholders for the named field on the named record.
+
+```json
+{
+  "ok": true,
+  "command": "context field",
+  "payload": {
+    "recordId": "<uuid>",
+    "fieldId": "<uuid>",
+    "fieldName": "title",
+    "fieldNamespace": "com.example",
+    "aiGuidance": null,
+    "currentValue": "First Decision",
+    "revisions": [
+      {
+        "revisionId": "<uuid>",
+        "recordId": "<uuid>",
+        "fieldId": "<uuid>",
+        "value": "First Decision",
+        "agent": { "type": "Human" },
+        "createdAt": "2026-07-01T00:00:00Z"
+      }
+    ],
+    "taggedChunks": []
+  }
+}
+```
+
+`aiGuidance` is `null` when the field has no AI guidance defined in the package, or when the field is not found in the package at all. `taggedChunks` is always empty until the stage-context store is implemented (#252).
+
+### Record context
+
+```bash
+srs context record --repo <path> <record-id>
+```
+
+Returns all field values, type metadata, display label, and all outbound relations for the named record.
+
+```json
+{
+  "ok": true,
+  "command": "context record",
+  "payload": {
+    "recordId": "<uuid>",
+    "typeId": "<uuid>",
+    "typeName": "decision",
+    "typeNamespace": "com.example",
+    "displayLabel": "First Decision",
+    "fieldValues": [
+      { "fieldId": "<uuid>", "value": "First Decision" }
+    ],
+    "relations": [
+      {
+        "id": "<uuid>",
+        "sourceId": "<uuid>",
+        "targetId": "<uuid>",
+        "relationTypeKey": "depends-on"
+      }
+    ],
+    "taggedChunks": [],
+    "protocolRunHistory": []
+  }
+}
+```
+
+`relations` contains only **outbound** edges (this record as source). Inbound edges are excluded — they are part of the stage-context pattern (#252). `protocolRunHistory` is always empty until protocol run logging is implemented.
+
+### Revision trace
+
+```bash
+srs context revision --repo <path> <record-id> <field-id> <revision-id>
+```
+
+Returns the named revision and its prior chain in oldest-first order.
+
+```json
+{
+  "ok": true,
+  "command": "context revision",
+  "payload": {
+    "recordId": "<uuid>",
+    "fieldId": "<uuid>",
+    "revision": {
+      "revisionId": "<uuid>",
+      "recordId": "<uuid>",
+      "fieldId": "<uuid>",
+      "value": "Updated Decision",
+      "priorRevisionId": "<uuid>",
+      "agent": { "type": "Human" },
+      "createdAt": "2026-07-02T00:00:00Z"
+    },
+    "priorChain": [
+      {
+        "revisionId": "<uuid>",
+        "recordId": "<uuid>",
+        "fieldId": "<uuid>",
+        "value": "First Decision",
+        "agent": { "type": "Human" },
+        "createdAt": "2026-07-01T00:00:00Z"
+      }
+    ]
+  }
+}
+```
+
+`priorChain` is ordered oldest-first (the root revision is first). An empty `priorChain` means the requested revision is the root. The chain walk is guarded against cycles in malformed sidecars.
+
+### Error: record or revision not found
+
+All three commands return the standard error envelope when the record or revision ID is not found in the repository:
+
+```json
+{
+  "ok": false,
+  "command": "context field",
+  "errors": ["Not found: records/<record-id>"]
+}
+```
+
+---
+
 ## 6. Common Traps
 
 ### The instanceIndex trap
