@@ -42,8 +42,10 @@ const STAMP_TIME = '2026-01-01T00:00:00Z';
 
 const checkMode = process.argv.includes('--check');
 
+const SRS_BIN = process.env.SRS_BIN || 'srs';
+
 function srs(args, opts = {}) {
-  const out = execFileSync('srs', args, { encoding: 'utf8', ...opts });
+  const out = execFileSync(SRS_BIN, args, { encoding: 'utf8', ...opts });
   return out.trim() ? JSON.parse(out) : null;
 }
 

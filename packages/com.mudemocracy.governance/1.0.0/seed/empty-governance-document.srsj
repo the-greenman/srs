@@ -609,7 +609,10 @@
           "id": "ec97cea2-9d19-4940-b101-75282f37fa50",
           "isFinal": true,
           "key": "superseded",
-          "label": "Superseded"
+          "label": "Superseded",
+          "requiresRelation": {
+            "relationType": "supersedes"
+          }
         },
         {
           "description": "Proposed or ratified record withdrawn without a successor.",
