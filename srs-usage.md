@@ -1032,6 +1032,48 @@ All three commands return the standard error envelope when the record or revisio
 
 ---
 
+## 5e. Source Documents (`srs attachment list`)
+
+Repositories can store source-document attachments (PDFs, DOCX files, transcripts, etc.) in a configurable directory (`sourceDocumentsPath` in `manifest.json`, defaulting to `source-documents/`). Each attachment may have an associated `.meta.json` sidecar that records provenance (`documentId`, checksums, etc.) via `sourceDocumentIndex` in the manifest.
+
+### Listing attachments
+
+```bash
+srs attachment list --repo <path> [--pretty]
+```
+
+Walks `source-documents/` recursively. Sidecar files (`.meta.json`) are excluded from the listing — their metadata is surfaced as fields on the corresponding content entry. Files not present in `manifest.sourceDocumentIndex` appear with only `path` populated.
+
+```json
+{
+  "ok": true,
+  "command": "attachment list",
+  "payload": {
+    "sourceDocumentsPath": "source-documents",
+    "entries": [
+      {
+        "path": "brief.pdf",
+        "documentId": "aabbccdd-...",
+        "title": "Project Brief",
+        "contentChecksum": "sha256:abc123",
+        "sidecarChecksum": "sha256:def456"
+      },
+      {
+        "path": "annexes/annex-a.pdf"
+      }
+    ]
+  }
+}
+```
+
+Fields present only when indexed (`documentId`, `title`, `contentChecksum`, `sidecarChecksum`) are omitted entirely for unindexed files — they are not null, they are absent.
+
+Subdirectory paths are returned relative to `sourceDocumentsPath`, with `/` as the separator (`annexes/annex-a.pdf`, not `source-documents/annexes/annex-a.pdf`).
+
+If `manifest.sourceDocumentsPath` is set to a non-default path, `sourceDocumentsPath` in the payload reflects that value.
+
+---
+
 ## 6. Common Traps
 
 ### The instanceIndex trap
