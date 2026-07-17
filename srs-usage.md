@@ -1032,7 +1032,7 @@ All three commands return the standard error envelope when the record or revisio
 
 ---
 
-## 5e. Source Documents (`srs attachment list` / `srs attachment add`)
+## 5e. Source Documents (`srs attachment list` / `srs attachment add` / `srs attachment link`)
 
 Repositories can store source-document attachments (PDFs, DOCX files, transcripts, etc.) in a configurable directory (`sourceDocumentsPath` in `manifest.json`, defaulting to `source-documents/`). Each attachment may have an associated `.meta.json` sidecar that records provenance (`documentId`, checksums, etc.) via `sourceDocumentIndex` in the manifest.
 
