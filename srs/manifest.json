@@ -2964,32 +2964,207 @@
     {
       "instanceId": "cd3c9215-04a8-4111-ab1d-582b8920b0df",
       "path": "records/invariants/invariant-098.json",
-      "tier": 2,
-      "title": "A Record MUST NOT occupy a lifecycle state declaring requiresRelation without a satisfying Relation",
       "tags": [
         "construct:lifecycle",
         "topic:invariants"
-      ]
+      ],
+      "tier": 2,
+      "title": "A Record MUST NOT occupy a lifecycle state declaring requiresRelation without a satisfying Relation"
     },
     {
       "instanceId": "9abb5b0d-933a-4cd2-8bea-576636aae836",
       "path": "records/invariants/invariant-099.json",
-      "tier": 2,
-      "title": "Transition fulfillment is all-or-nothing",
       "tags": [
         "construct:lifecycle",
         "topic:invariants"
-      ]
+      ],
+      "tier": 2,
+      "title": "Transition fulfillment is all-or-nothing"
     },
     {
       "instanceId": "443a2ec7-2873-4e73-885e-da0dcbbde91f",
       "path": "records/invariants/invariant-100.json",
-      "tier": 2,
-      "title": "requiresRelation is projected structurally and validated as a warning at rest",
       "tags": [
         "construct:lifecycle",
         "topic:invariants"
-      ]
+      ],
+      "tier": 2,
+      "title": "requiresRelation is projected structurally and validated as a warning at rest"
+    },
+    {
+      "instanceId": "747f61db-3ccf-4b5b-ae01-a99dd4f985f2",
+      "path": "records/tier-2/rfc-747f61db.json",
+      "tags": [
+        "construct:attachment",
+        "construct:archive",
+        "topic:schema"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "9aaa1a21-7227-4628-8292-3725fe3e8131",
+      "path": "records/tier-2/rfc-change-9aaa1a21.json",
+      "tags": [
+        "construct:attachment",
+        "topic:schema"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "ff2ef2e8-e078-4985-a7ef-32a949d81b53",
+      "path": "records/tier-2/rfc-change-ff2ef2e8.json",
+      "tags": [
+        "construct:attachment",
+        "construct:package"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "20e3ec0a-a334-4bbe-a8d5-448915737767",
+      "path": "records/tier-2/rfc-change-20e3ec0a.json",
+      "tags": [
+        "construct:attachment",
+        "construct:package"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "d975e060-9ba8-43ea-ae1b-6776ffe8145e",
+      "path": "records/tier-2/rfc-change-d975e060.json",
+      "tags": [
+        "construct:archive",
+        "topic:schema"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "40183288-f753-460b-af34-b7db33ae67bd",
+      "path": "records/tier-2/rfc-change-40183288.json",
+      "tags": [
+        "construct:attachment",
+        "construct:validation"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "5dca4f91-1977-439e-bdb6-ece11b45c42e",
+      "path": "records/tier-2/rfc-change-5dca4f91.json",
+      "tags": [
+        "construct:archive",
+        "topic:schema"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "d8192fc3-814c-4769-b0e1-02c23e7b2ea6",
+      "path": "records/tier-2/rfc-change-d8192fc3.json",
+      "tags": [
+        "construct:attachment",
+        "topic:schema"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "2be86c08-b427-4510-a1e8-25524f90ddaf",
+      "path": "records/tier-2/invariant-2be86c08.json",
+      "tags": [
+        "construct:attachment",
+        "topic:schema"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "d85abd4c-ca6b-4c36-939c-fde7ad373a00",
+      "path": "records/tier-2/invariant-d85abd4c.json",
+      "tags": [
+        "construct:attachment"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "6341bcaa-c496-46cd-b1cd-6b6bcbb5223c",
+      "path": "records/tier-2/invariant-6341bcaa.json",
+      "tags": [
+        "construct:attachment",
+        "construct:package"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "bfc2af4e-b5f8-47e9-b64d-aa0b39aba902",
+      "path": "records/tier-2/invariant-bfc2af4e.json",
+      "tags": [
+        "construct:attachment",
+        "construct:package"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "c348617e-60eb-4132-a399-48c39a57e8dc",
+      "path": "records/tier-2/invariant-c348617e.json",
+      "tags": [
+        "construct:archive"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "296c61be-9c7d-4f5d-88b2-e5c827595aaf",
+      "path": "records/tier-2/invariant-296c61be.json",
+      "tags": [
+        "construct:archive"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "6a7d674a-ea06-4c2f-bf05-905da2d7cc35",
+      "path": "records/tier-2/invariant-6a7d674a.json",
+      "tags": [
+        "construct:attachment",
+        "construct:validation"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "fcc662f0-f970-40f7-b7ad-2ecbecff8168",
+      "path": "records/tier-2/invariant-fcc662f0.json",
+      "tags": [
+        "construct:archive"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "83410026-2648-42ab-8bbb-9ed2031132d6",
+      "path": "records/tier-2/invariant-83410026.json",
+      "tags": [
+        "construct:attachment",
+        "topic:schema"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "5e89a360-7ec5-4b4d-b0f8-9323ffa3e549",
+      "path": "records/tier-2/invariant-5e89a360.json",
+      "tags": [
+        "construct:attachment"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "e0c51df4-be21-4d76-965b-5b1df3e0954c",
+      "path": "records/tier-2/invariant-e0c51df4.json",
+      "tags": [
+        "construct:attachment",
+        "construct:package"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "8b166381-c6e3-4db7-b193-bf635bd61249",
+      "path": "records/tier-2/invariant-8b166381.json",
+      "tags": [
+        "construct:attachment"
+      ],
+      "tier": 2
     }
   ],
   "meta": {

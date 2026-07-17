@@ -1,0 +1,31 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-07-17T01:41:43.780206302+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "value": "I-102"
+    },
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "attaches sourceId must resolve to sourceDocumentIndex entry"
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "value": "The `sourceId` of an `attaches` `SourceReference` MUST resolve to a `documentId` present in `sourceDocumentIndex` (or discoverable via a `.meta.json` sidecar scan of `sourceDocumentsPath`) in the same repository. Resolution is against the index/sidecar entry, not the content file. A `sourceId` that resolves to no such entry is non-conformant and MUST be reported with a diagnostic at validation time."
+    },
+    {
+      "fieldId": "1a000021-0000-4000-a000-000000000021",
+      "value": "Validators; repositories using sourceRole: attaches"
+    }
+  ],
+  "instanceId": "d85abd4c-ca6b-4c36-939c-fde7ad373a00",
+  "tags": [
+    "construct:attachment"
+  ],
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeName": "invariant",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-07-17T01:41:43.780213740+00:00"
+}

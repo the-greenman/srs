@@ -1,0 +1,32 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-07-17T01:40:19.857057050+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "RFC-017 Change B: Optional `com.semanticops.base` package with `attachment_policy` type"
+    },
+    {
+      "fieldId": "5a000009-0000-4000-a000-000000000009",
+      "value": "com.semanticops.base package (new, optional); attachment_policy type (new)"
+    },
+    {
+      "fieldId": "5a000006-0000-4000-a000-000000000006",
+      "value": "Define an optional package namespace `com.semanticops.base` that a repository MAY install. Its sole initial content is a `repo_settings` type with an optional `attachment_policy` record. The `attachment_policy` shape carries four optional fields: `allowedMimeTypes` (Text/JSON array), `maxPerFileBytes` (Number), `maxDocBytes` (Number), `maxTotalBytes` (Number). At most one `attachment_policy` record may exist per repository. Stable UUIDs for the four fields and the type MUST be assigned when the `com.semanticops.base` package records are created in the `srs/srs` repository; implementations MUST NOT mint independent UUID assignments."
+    },
+    {
+      "fieldId": "1a000004-0000-4000-a000-000000000004",
+      "value": "Making attachment policy part of the core package would couple the core model to the application layer and force all repositories — including those that never use attachments — to carry a settings record. An optional package keeps the core model minimal and ensures SRS continues to work with no configuration layer."
+    }
+  ],
+  "instanceId": "ff2ef2e8-e078-4985-a7ef-32a949d81b53",
+  "tags": [
+    "construct:attachment",
+    "construct:package"
+  ],
+  "typeId": "6a000002-0000-4000-a000-000000000002",
+  "typeName": "rfc-change",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-07-17T01:40:19.857064510+00:00"
+}
