@@ -1032,9 +1032,52 @@ All three commands return the standard error envelope when the record or revisio
 
 ---
 
-## 5e. Source Documents (`srs attachment list`)
+## 5e. Source Documents (`srs attachment list` / `srs attachment add`)
 
 Repositories can store source-document attachments (PDFs, DOCX files, transcripts, etc.) in a configurable directory (`sourceDocumentsPath` in `manifest.json`, defaulting to `source-documents/`). Each attachment may have an associated `.meta.json` sidecar that records provenance (`documentId`, checksums, etc.) via `sourceDocumentIndex` in the manifest.
+
+### Adding an attachment
+
+```bash
+srs attachment add <source-file> --repo <path> [--subdir <subdir>] [--title <title>] [--content-type <mime>] [--pretty]
+```
+
+Copies `<source-file>` into `source-documents/` (or `source-documents/<subdir>/` if `--subdir` is given), writes a `.meta.json` sidecar alongside it, and registers the entry in `manifest.sourceDocumentIndex`. Content type is inferred from the file extension if `--content-type` is not provided.
+
+```json
+{
+  "ok": true,
+  "command": "attachment add",
+  "payload": {
+    "documentId": "4c2d9057-3ef5-40ad-a7d0-0a791b1cc782",
+    "contentPath": "brief.pdf",
+    "sidecarPath": "brief.meta.json",
+    "sourceDocumentsPath": "source-documents",
+    "contentChecksum": "sha256:4e4c5515...",
+    "sidecarChecksum": "sha256:ba9cce92..."
+  }
+}
+```
+
+The sidecar file (`brief.meta.json`) contains:
+
+```json
+{
+  "documentId": "4c2d9057-3ef5-40ad-a7d0-0a791b1cc782",
+  "contentPath": "brief.pdf",
+  "contentType": "application/pdf",
+  "encoding": "binary",
+  "checksum": "sha256:4e4c5515..."
+}
+```
+
+**Validation rules:**
+- The source file must exist and be readable.
+- The file name must not be empty, must not contain path separators, and must not be `..`.
+- `--subdir` must be a relative path (no leading `/`, no `..` component).
+- If a file with the same destination path is already in `manifest.sourceDocumentIndex`, the command fails with `ok: false` and a diagnostic naming the duplicate path.
+
+Write order follows ADR-007: content file is written first, then the sidecar, then the manifest — so a partial write leaves files on disk without a dangling manifest entry.
 
 ### Listing attachments
 
