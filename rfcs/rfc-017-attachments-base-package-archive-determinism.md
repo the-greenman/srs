@@ -2,7 +2,7 @@
 
 # RFC-017: Decision-log Attachments, Base-package Settings, Archive Determinism, and srsj-gzip Retirement
 
-**Status**: In Progress (Revision 4)
+**Status**: Accepted (Revision 5)
 **Affects**: `SourceReference.sourceRole` enum (RFC-023) — new `attaches` value in all four SourceReference-bearing schemas (`record.json`, `note.json`, `typed-record.json`, `relations-collection.json`); `ext:repository` (archive determinism, attachment model, tombstone reference-only state, subdirectory support); `ext:json-store` (retire srsj-gzip); `docs/schema/2.0/source-document-meta.json` (subdirectory contentPath clarification)
 **Author**: the-greenman (from issue the-greenman/srs#101)
 **Date**: 2026-07-06
@@ -17,6 +17,7 @@
 | 2 | 2026-07-06 | Resolve Open Question 2. Attachment is modelled as a `SourceReference` (`sourceType: repository-document`, new `sourceRole: "attaches"`), not a `Relation` edge — source documents are not instances, so the `Relation.targetInstanceId` framing was a category error. This dissolves both open questions: no `com.semanticops.srs` v2.1.0 bump and no new canonical Relation type (OQ1), and no `Relation`-shape change (OQ2). Add the tombstone reference-only state: `sourceDocumentIndex` entries persist as durable pointers after content is pruned. Change A, Change G, and R1/R2 rewritten accordingly. |
 | 3 | 2026-07-14 | Rebased onto RFC-023 (SourceReference vocabulary disjointness): the field is `sourceRole` (renamed from `relationType`), the base enum is `[evidence, extracted-from, quoted-from, inspired-by]`, and the `attaches` addition now covers **all four** SourceReference-bearing schemas (Rev 2 touched only `record.json` + `relations-collection.json`). Noted invariant I-88 (RFC-023 SourceReference/Relation vocabulary disjointness) is satisfied by `attaches`; the legacy `relationType` alias does not gain `attaches`. Required by RFC-023's cross-RFC coordination section. |
 | 4 | 2026-07-17 | Review pass (Spec Integrity + Completeness reviewers): fix Change A to list all four SourceReference-bearing schemas (prose body was not updated when Rev 3 expanded scope); narrow [R6] byte-identity guarantee to within-implementation consistency (the cross-implementation claim contradicted [R5]'s implementation-defined Store/Deflate choice); add gzip magic-byte detection to Change F; upgrade Change E non-blocking-diagnostics emission from SHOULD to MUST; add UUID-assignment note to Change B; define "identical repository content" for [R6]; expand [R7] with explicit trigger conditions; add [R3]/[R4] cross-reference to [R11]; add `manifest.json` to schema changes table; correct Rationale srsj-gzip history; scope [R4] diagnostics clause. |
+| 5 | 2026-07-17 | Accepted; spec records authored in `srs/srs` — RFC record `747f61db`, Changes A–G, invariants I-101–I-112. PR #186 merged to master. |
 
 ---
 
