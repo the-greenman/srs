@@ -774,6 +774,68 @@ Payload (`oldIdentityId` and `oldIdentityTier` are absent when there was no prio
 
 The command returns an error (`"already a com.semanticops.core/purpose record; no migration needed"`) if the existing `identityInstanceId` already points to a `purpose` record — it does not silently no-op. After migration, run `srs repo validate --repo <path>` to confirm zero diagnostics.
 
+### Listing All Migrations
+
+`repo migrations` returns every known migration and its current applicability status for this repository. Use it to decide which migrations need to run before a repo is in its target state.
+
+```bash
+srs repo migrations --repo <path>
+```
+
+Payload:
+
+```json
+{
+  "migrations": [
+    {
+      "id": "migrate-identity",
+      "title": "Graduate identity to purpose record",
+      "description": "...",
+      "status": {
+        "needed": false,
+        "alreadyApplied": true,
+        "notApplicable": false
+      }
+    },
+    {
+      "id": "repo-upgrade",
+      "title": "Normalise instance file paths",
+      "description": "...",
+      "status": {
+        "needed": true,
+        "alreadyApplied": false,
+        "notApplicable": false
+      }
+    }
+  ]
+}
+```
+
+Exactly one of `needed`, `alreadyApplied`, or `notApplicable` is `true` per entry (exclusive-one invariant). `notApplicable` means the migration makes no sense for this repo (e.g. `migrate-identity` on a repo with no root container).
+
+### Applying a Migration by ID
+
+`repo apply-migration` runs a single migration identified by its `id` and returns a migration-specific result payload.
+
+```bash
+srs repo apply-migration --id <migration-id> --repo <path>
+```
+
+Payload (`payload` shape is migration-specific):
+
+```json
+{
+  "id": "repo-upgrade",
+  "payload": {
+    "renames": [...],
+    "totalInstances": 12,
+    "alreadyCanonicalCount": 10
+  }
+}
+```
+
+Returns an error if `--id` does not match a known migration. For `migrate-identity`, the inner `payload` matches the shape returned by `repo migrate-identity` directly. For `repo-upgrade`, it matches `repo upgrade`. Prefer the migration-specific commands (`repo upgrade`, `repo migrate-identity`) when targeting a single known migration; use `repo apply-migration` when the migration ID is determined dynamically (e.g. an agent iterating the output of `repo migrations`).
+
 ---
 
 ## 5b. Changelog (`ext:changelog`, RFC-018)
