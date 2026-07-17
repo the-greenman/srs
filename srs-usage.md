@@ -1032,7 +1032,7 @@ All three commands return the standard error envelope when the record or revisio
 
 ---
 
-## 5e. Source Documents (`srs attachment list` / `srs attachment add`)
+## 5e. Source Documents (`srs attachment list` / `srs attachment add` / `srs attachment link`)
 
 Repositories can store source-document attachments (PDFs, DOCX files, transcripts, etc.) in a configurable directory (`sourceDocumentsPath` in `manifest.json`, defaulting to `source-documents/`). Each attachment may have an associated `.meta.json` sidecar that records provenance (`documentId`, checksums, etc.) via `sourceDocumentIndex` in the manifest.
 
@@ -1114,6 +1114,35 @@ Fields present only when indexed (`documentId`, `title`, `contentChecksum`, `sid
 Subdirectory paths are returned relative to `sourceDocumentsPath`, with `/` as the separator (`annexes/annex-a.pdf`, not `source-documents/annexes/annex-a.pdf`).
 
 If `manifest.sourceDocumentsPath` is set to a non-default path, `sourceDocumentsPath` in the payload reflects that value.
+
+### Linking an attachment to a record
+
+After adding a source document, use `attachment link` to record that the document is materially attached to a specific record. This appends a `sourceRef` entry with `sourceRole: "attaches"` to the record (RFC-017).
+
+```bash
+srs attachment link <instance_id> <document_id> --repo <path> [--pretty]
+```
+
+`<document_id>` is the UUID assigned when the file was added (the `documentId` field in the `attachment add` payload). The document must already exist in `manifest.sourceDocumentIndex` — use `attachment add` first.
+
+```json
+{
+  "ok": true,
+  "command": "attachment link",
+  "payload": {
+    "instanceId": "aaaabbbb-0000-4000-8000-000000000001",
+    "documentId": "4c2d9057-3ef5-40ad-a7d0-0a791b1cc782",
+    "sourceRefsCount": 1
+  }
+}
+```
+
+**Validation rules:**
+- `<document_id>` must resolve in `manifest.sourceDocumentIndex` — the command returns `ok: false` if the document has not been indexed yet.
+- `<instance_id>` must be a tier-2 Record in the `instanceIndex` — Notes and TypedRecords are not supported.
+- Linking the same `(record, document)` pair twice returns `ok: false` (idempotent guard).
+
+The link is stored as a `sourceRef` on the record's `sourceRefs[]` array (not as a Relation edge — see "Relations vs sourceRefs" note above). `sourceRefsCount` in the payload reflects the total number of `sourceRefs` on the record after the operation.
 
 ---
 
