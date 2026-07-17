@@ -2,7 +2,7 @@
 
 # RFC-017: Decision-log Attachments, Base-package Settings, Archive Determinism, and srsj-gzip Retirement
 
-**Status**: Draft (Revision 3)
+**Status**: In Progress (Revision 4)
 **Affects**: `SourceReference.sourceRole` enum (RFC-023) — new `attaches` value in all four SourceReference-bearing schemas (`record.json`, `note.json`, `typed-record.json`, `relations-collection.json`); `ext:repository` (archive determinism, attachment model, tombstone reference-only state, subdirectory support); `ext:json-store` (retire srsj-gzip); `docs/schema/2.0/source-document-meta.json` (subdirectory contentPath clarification)
 **Author**: the-greenman (from issue the-greenman/srs#101)
 **Date**: 2026-07-06
@@ -14,8 +14,9 @@
 | Rev | Date | Summary |
 |---|---|---|
 | 1 | 2026-07-06 | Initial draft |
-| 3 | 2026-07-14 | Rebased onto RFC-023 (SourceReference vocabulary disjointness): the field is `sourceRole` (renamed from `relationType`), the base enum is `[evidence, extracted-from, quoted-from, inspired-by]`, and the `attaches` addition now covers **all four** SourceReference-bearing schemas (Rev 2 touched only `record.json` + `relations-collection.json`). Noted I-88 disjointness satisfaction; the legacy `relationType` alias does not gain `attaches`. Required by RFC-023's cross-RFC coordination section. |
 | 2 | 2026-07-06 | Resolve Open Question 2. Attachment is modelled as a `SourceReference` (`sourceType: repository-document`, new `sourceRole: "attaches"`), not a `Relation` edge — source documents are not instances, so the `Relation.targetInstanceId` framing was a category error. This dissolves both open questions: no `com.semanticops.srs` v2.1.0 bump and no new canonical Relation type (OQ1), and no `Relation`-shape change (OQ2). Add the tombstone reference-only state: `sourceDocumentIndex` entries persist as durable pointers after content is pruned. Change A, Change G, and R1/R2 rewritten accordingly. |
+| 3 | 2026-07-14 | Rebased onto RFC-023 (SourceReference vocabulary disjointness): the field is `sourceRole` (renamed from `relationType`), the base enum is `[evidence, extracted-from, quoted-from, inspired-by]`, and the `attaches` addition now covers **all four** SourceReference-bearing schemas (Rev 2 touched only `record.json` + `relations-collection.json`). Noted invariant I-88 (RFC-023 SourceReference/Relation vocabulary disjointness) is satisfied by `attaches`; the legacy `relationType` alias does not gain `attaches`. Required by RFC-023's cross-RFC coordination section. |
+| 4 | 2026-07-17 | Review pass (Spec Integrity + Completeness reviewers): fix Change A to list all four SourceReference-bearing schemas (prose body was not updated when Rev 3 expanded scope); narrow [R6] byte-identity guarantee to within-implementation consistency (the cross-implementation claim contradicted [R5]'s implementation-defined Store/Deflate choice); add gzip magic-byte detection to Change F; upgrade Change E non-blocking-diagnostics emission from SHOULD to MUST; add UUID-assignment note to Change B; define "identical repository content" for [R6]; expand [R7] with explicit trigger conditions; add [R3]/[R4] cross-reference to [R11]; add `manifest.json` to schema changes table; correct Rationale srsj-gzip history; scope [R4] diagnostics clause. |
 
 ---
 
@@ -72,8 +73,10 @@ Add `"attaches"` as a value in the `SourceReference.sourceRole` enum (the field 
 }
 ```
 
-This definition appears in two schema files and both MUST be updated identically:
+This definition appears in **all four SourceReference-bearing schemas** and all MUST be updated identically. Each schema carries its own local `$defs.SourceReference` copy (not a shared `$ref`), so the enum must not fork across them:
 - `docs/schema/2.0/record.json` — `SourceReference` on a Record's `sourceRefs[]`.
+- `docs/schema/2.0/note.json` — `SourceReference` on a Note's `sourceRefs[]`.
+- `docs/schema/2.0/typed-record.json` — `SourceReference` on a TypedRecord's `sourceRefs[]`.
 - `docs/schema/2.0/relations-collection.json` — `SourceReference` on a Relation's `sourceRefs[]`.
 
 An **attachment** is a `SourceReference` on a record with `sourceType: "repository-document"`, `sourceId` equal to the target source document's `documentId`, and `sourceRole: "attaches"`:
@@ -109,6 +112,8 @@ Define an optional package namespace `com.semanticops.base` that a repository MA
 
 At most one `attachment_policy` record of this type may exist per repository. An implementation encountering a second `attachment_policy` record MUST surface a diagnostic and treat the policy as absent.
 
+Stable UUIDs for the four fields (`allowedMimeTypes`, `maxPerFileBytes`, `maxDocBytes`, `maxTotalBytes`) and the `attachment_policy` type definition MUST be assigned when the `com.semanticops.base` package records are created in the `srs/srs` repository as part of implementing this RFC. Those records are authoritative; implementations MUST NOT mint independent UUID assignments for the canonical `com.semanticops.base` fields and types.
+
 ### Change C — No-base-package invariant
 
 SRS MUST operate with no `com.semanticops.base` package installed and no `attachment_policy` record present. When the base package is absent:
@@ -129,7 +134,7 @@ Strengthen the archive section of `ext:repository` to require deterministic arch
 4. **Omit host-metadata extra fields**: the `extra` field in each local file header and central directory entry MUST be empty (`0x0000` length). Host-originated extra fields (Info-ZIP, NTFS, Unix, WinZip AES) MUST NOT be written.
 5. **UTF-8 filenames**: the general-purpose bit flag byte 11 (Language encoding flag) MUST be set to 1 in all local file headers and central directory entries.
 
-A conforming `.srs` archive produced from identical repository content MUST produce an identical byte stream. Two implementations satisfying these rules, given the same repository content in the same logical order, MUST produce byte-for-byte equal archives.
+A conforming `.srs` archive producer, given identical repository content on repeated invocations, MUST produce an identical byte stream. (Cross-implementation byte identity is not guaranteed because the choice of Deflate vs. Store is implementation-defined per rule 3 above; see [R6].)
 
 ### Change E — Soft size-warning conformance
 
@@ -139,14 +144,14 @@ An implementation MAY enforce the limits in `attachment_policy` as hard rejectio
 - The aggregate content of all source documents exceeds `maxTotalBytes`.
 - An attached file's MIME type is not in `allowedMimeTypes`.
 
-Non-blocking diagnostics MUST NOT prevent the record from being stored or the repository from being exported. They SHOULD be surfaced in `srs repo validate` output. Hard caps are not part of this RFC and are explicitly deferred to a future extension.
+Non-blocking diagnostics MUST NOT prevent the record from being stored or the repository from being exported. They MUST be surfaced in `srs repo validate` output. Whether to emit a warning at the time of a write operation (e.g., `srs source import`) is implementation-defined; conformance is required at validate time. Hard caps are not part of this RFC and are explicitly deferred to a future extension.
 
 ### Change F — `ext:json-store` — retire srsj-gzip
 
 The concept of gzip-of-srsj (a gzip-compressed `.srsj` file) is retired. Normative text:
 
 - `.srsj` files MUST be plain UTF-8 JSON, not gzip-compressed.
-- An implementation MUST reject a file that is gzip-compressed and claims to be a `.srsj` JSON Store.
+- An implementation MUST reject a file that is gzip-compressed and claims to be a `.srsj` JSON Store. Detection is by content inspection: a file whose first two bytes are `0x1f 0x8b` MUST be treated as gzip-compressed regardless of its filename or MIME type.
 - Binary source-document content is not included in the JSON Store (unchanged from current spec). Implementors requiring binary portability MUST use the `.srs` ZIP archive defined by `ext:repository`.
 - This change supersedes issue srs#31.
 
@@ -174,13 +179,13 @@ The following normative clarifications apply to the attachment model:
 >
 > **[R3]** A conformant implementation MUST NOT refuse to load, validate, or export a repository solely because the `com.semanticops.base` package is absent or because no `attachment_policy` record is present.
 >
-> **[R4]** When no `attachment_policy` record exists, a conformant implementation MUST apply the no-policy defaults: all MIME types accepted, no size limits enforced, no size-related diagnostics emitted.
+> **[R4]** When no `attachment_policy` record exists, a conformant implementation MUST apply the no-policy defaults: all MIME types accepted, no size limits enforced, no size-or-MIME-type-policy diagnostics emitted.
 >
 > **[R5]** A conformant archive producer MUST produce deterministic ZIP archives: lexicographically sorted entries, zeroed timestamps, Deflate or Store compression only, empty extra fields, UTF-8 filename flag set.
 >
-> **[R6]** Given identical repository content, a conformant archive producer MUST produce a byte-for-byte identical `.srs` file across invocations and across conformant implementations.
+> **[R6]** Given identical repository content, a conformant archive producer MUST produce a byte-for-byte identical `.srs` file across invocations of the same implementation. Cross-implementation byte identity is not guaranteed because [R5] allows the producer to choose between Deflate and Store. For the purposes of this rule, two repositories have identical content if and only if the set of archive entries — identified by their forward-slash-normalised relative paths and byte contents — is identical; filesystem timestamps, permissions, and host metadata are excluded from this definition and MUST NOT influence archive output (see Change D).
 >
-> **[R7]** A conformant implementation MAY enforce `attachment_policy` limits as hard rejections. If it does not enforce them as hard limits, it MUST emit non-blocking warning diagnostics at `srs repo validate` time when limits are exceeded.
+> **[R7]** A conformant implementation MAY enforce `attachment_policy` limits as hard rejections. If it does not enforce them as hard limits, it MUST emit non-blocking warning diagnostics at `srs repo validate` time when limits are exceeded — specifically: when a source document content file exceeds `maxPerFileBytes` or `maxDocBytes`; when the aggregate byte size of all source document content files exceeds `maxTotalBytes`; or when an attached file's MIME type is not listed in `allowedMimeTypes`.
 >
 > **[R8]** A conformant implementation MUST reject a gzip-compressed file presented as a `.srsj` JSON Store.
 >
@@ -188,7 +193,7 @@ The following normative clarifications apply to the attachment model:
 >
 > **[R10]** A sidecar MUST reside in the same directory as the content file it describes. A `contentPath` that traverses upward (e.g., `../other/file.pdf`) is non-conformant.
 >
-> **[R11]** At most one `attachment_policy` record of the `com.semanticops.base/repo_settings` type MAY exist per repository. A conformant implementation encountering two or more MUST surface a diagnostic and treat the policy as absent.
+> **[R11]** At most one `attachment_policy` record of the `com.semanticops.base/repo_settings` type MAY exist per repository. A conformant implementation encountering two or more MUST surface a diagnostic and treat the policy as absent (i.e., apply the no-policy defaults specified in [R3] and [R4]: all MIME types accepted, no size limits enforced, no size-or-MIME-type-policy diagnostics emitted).
 >
 > **[R12]** A `sourceDocumentIndex` entry whose content file (at `contentPath`) is absent is a valid *tombstone* (reference-only) state. A conformant implementation MUST NOT reject, refuse to load, or refuse to export a repository solely because an indexed source document's content is missing, and an `attaches` `SourceReference` targeting a tombstoned `documentId` remains conformant under [R2]. An implementation MAY surface an informational (non-blocking) diagnostic that the content is unavailable.
 
@@ -202,7 +207,8 @@ The following normative clarifications apply to the attachment model:
 | `docs/schema/2.0/note.json` | same — all four SourceReference-bearing schemas carry the identical `$defs.SourceReference` (RFC-023); the enum must not fork across them |
 | `docs/schema/2.0/typed-record.json` | same |
 | `docs/schema/2.0/relations-collection.json` | same (Relations also carry `sourceRefs[]`) |
-| `docs/schema/2.0/source-document-meta.json` | Update `contentPath` description to explicitly state that forward-slash-separated sub-path segments are permitted and are resolved relative to `sourceDocumentsPath` (Change G). |
+| `docs/schema/2.0/source-document-meta.json` | Update `contentPath` description to explicitly permit forward-slash-separated sub-path segments (Change G). Suggested wording: "Relative path from sourceDocumentsPath to the document file. May contain forward-slash-separated sub-path segments (e.g., `audio/meeting.mp4`); MUST be resolved relative to sourceDocumentsPath." |
+| `docs/schema/2.0/manifest.json` | Add a `description` to `SourceDocumentIndexEntry.contentPath` (currently `"type": "string"` with no description). Use the same wording as the `source-document-meta.json` update above, since both fields represent the same path concept and validators consult the manifest index entry first (Change G). |
 
 No other files in `docs/schema/2.0/` require changes:
 - The deprecated legacy `relationType` alias retained by RFC-023's migration window does **not** gain `attaches` — `attaches` never existed as a legacy value, and writers emit `sourceRole` only (RFC-023 R1).
@@ -236,7 +242,7 @@ Schema changes must be synced to:
 
 **Soft warnings, not hard caps**: Hard size caps at the spec level would set arbitrary limits that may not suit all use cases (e.g., video-heavy documentary repositories). The spec establishes the warning mechanism and defers cap enforcement to the application layer or a future hard-cap extension.
 
-**srsj-gzip retirement**: The original motivation for gzip-of-srsj was compressing large repositories for transport. The deterministic `.srs` archive now fulfils that role with the added benefit of including binary source-document content (which `.srsj` explicitly excludes). Maintaining gzip-of-srsj requires implementations to detect the compression wrapper and adds surface for format confusion. No implementation currently relies on it.
+**srsj-gzip retirement**: Gzip-of-srsj was never formally specified; `ext:json-store` has always defined `.srsj` as "a pretty-printed UTF-8 JSON object" with no gzip variant in the spec record. Change F codifies explicit rejection of gzip-compressed input presented as `.srsj`, superseding the informal practice tracked in srs#31. No migration path is required because no conformant implementation ever accepted gzip `.srsj` files. The deterministic `.srs` archive now fulfils any transport-compression need with the added benefit of including binary source-document content (which `.srsj` explicitly excludes). Maintaining a gzip wrapper over `.srsj` would require implementations to detect and remove it, adding format-confusion surface for no remaining benefit.
 
 **Sidecar co-location rule**: Requiring the sidecar to reside in the same directory as its content file ensures that `source-documents/` subtrees are self-contained. A subtree at `source-documents/audio/` with its own sidecars can be moved or exported without path correction. Cross-directory `contentPath` would make the sidecar dependent on the parent directory's state.
 
