@@ -1144,6 +1144,43 @@ srs attachment link <instance_id> <document_id> --repo <path> [--pretty]
 
 The link is stored as a `sourceRef` on the record's `sourceRefs[]` array (not as a Relation edge — see "Relations vs sourceRefs" note above). `sourceRefsCount` in the payload reflects the total number of `sourceRefs` on the record after the operation.
 
+### Resolving attachments for a document view
+
+After rendering a `document_view` (which surfaces a list of record instance IDs), use `attachment resolve-view-attachments` to look up the source-document attachments for each record in one call. Input is read from stdin.
+
+```bash
+echo '{"instanceIds": ["<uuid1>", "<uuid2>"]}' | srs attachment resolve-view-attachments --repo <path> [--pretty]
+```
+
+Only tier-2 Records that have at least one `sourceRef` with `sourceRole: "attaches"` and `sourceType: "repository-document"` appear in the output. Records with no such refs are omitted.
+
+```json
+{
+  "ok": true,
+  "command": "attachment resolve-view-attachments",
+  "payload": {
+    "sourceDocumentsPath": "source-documents",
+    "records": [
+      {
+        "instanceId": "aaaabbbb-0000-4000-8000-000000000001",
+        "attachments": [
+          {
+            "documentId": "4c2d9057-3ef5-40ad-a7d0-0a791b1cc782",
+            "contentPath": "source-documents/transcript.pdf",
+            "sidecarPath": "source-documents/transcript.pdf.meta.json",
+            "title": "Phase 1 Transcript",
+            "contentChecksum": "sha256:abcdef...",
+            "sidecarChecksum": "sha256:123456..."
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+`sourceDocumentsPath` is the repository's configured source-documents base directory. All five fields other than `documentId` — `contentPath`, `sidecarPath`, `title`, `contentChecksum`, `sidecarChecksum` — are omitted when not present in the source document index (i.e., when a sourceRef points to a document that has been deleted or not yet indexed).
+
 ---
 
 ## 6. Common Traps
