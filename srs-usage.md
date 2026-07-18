@@ -1179,7 +1179,7 @@ Only tier-2 Records that have at least one `sourceRef` with `sourceRole: "attach
 }
 ```
 
-`sourceDocumentsPath` is the repository's configured source-documents base directory. `title`, `contentChecksum`, and `sidecarChecksum` are omitted when not present in the source document index.
+`sourceDocumentsPath` is the repository's configured source-documents base directory. All five fields other than `documentId` — `contentPath`, `sidecarPath`, `title`, `contentChecksum`, `sidecarChecksum` — are omitted when not present in the source document index (i.e., when a sourceRef points to a document that has been deleted or not yet indexed).
 
 ---
 
