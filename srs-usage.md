@@ -1181,6 +1181,42 @@ Only tier-2 Records that have at least one `sourceRef` with `sourceRole: "attach
 
 `sourceDocumentsPath` is the repository's configured source-documents base directory. All five fields other than `documentId` — `contentPath`, `sidecarPath`, `title`, `contentChecksum`, `sidecarChecksum` — are omitted when not present in the source document index (i.e., when a sourceRef points to a document that has been deleted or not yet indexed).
 
+### Reading the attachment policy
+
+```bash
+srs attachment policy-get --repo <path> [--pretty]
+```
+
+Returns the attachment policy derived from the optional `com.semanticops.base/repo_settings` record. When no such record exists in the repository, all limit fields are absent and `policyRecordPresent` is `false` — this is not an error; it means the repository imposes no limits.
+
+```json
+{
+  "ok": true,
+  "command": "attachment policy-get",
+  "payload": {
+    "policyRecordPresent": true,
+    "allowedMimeTypes": ["application/pdf", "text/plain"],
+    "maxPerFileBytes": 10485760,
+    "maxDocBytes": 52428800,
+    "maxTotalBytes": 104857600
+  }
+}
+```
+
+When no `repo_settings` record is present:
+
+```json
+{
+  "ok": true,
+  "command": "attachment policy-get",
+  "payload": {
+    "policyRecordPresent": false
+  }
+}
+```
+
+All limit fields (`allowedMimeTypes`, `maxPerFileBytes`, `maxDocBytes`, `maxTotalBytes`) are soft constraints — the CLI reads and reports them; enforcement is the caller's responsibility.
+
 ---
 
 ## 6. Common Traps
