@@ -65,7 +65,7 @@ srs type get --repo <path> <typeId> --pretty
 srs field list --repo <path> --pretty
 ```
 
-`srs record list` returns each record as `{ instanceId, displayLabel, record }`. `displayLabel` is the core-resolved human label — the **same** label `srs tree`, `srs find`, `srs repo navigation`, and `srs container resolve-view` show. Priority (RFC-020): the record's Type's effective `identityFieldId` (own or inherited via `ext:type-inheritance`), when set on a field with a non-empty value; otherwise a field named `title` → `name` → `label`; otherwise the record's type name. Render `displayLabel` directly for headings and list rows; do not re-derive a title from `record.fieldValues`.
+`srs record list` returns each record as `{ instanceId, displayLabel, record }`. `displayLabel` is the core-resolved human label — the **same** label `srs tree`, `srs find`, `srs repo navigation`, and `srs container resolve-view` show. Priority (RFC-020): the record's Type's effective `identityFieldId` (own or inherited via `ext:type-inheritance`), when set on a field with a non-empty value; otherwise a field named `title` → `heading` → `name` → `label`; otherwise the record's type name. Render `displayLabel` directly for headings and list rows; do not re-derive a title from `record.fieldValues`.
 
 Do not guess field IDs from filenames. Always resolve them from `srs type get` or `srs field list`. Field IDs are UUIDs — `fieldId` is the authoritative key, not `name`.
 
@@ -220,6 +220,63 @@ Payload shapes (all wrapped in the standard `{ "ok": true, "payload": { ... } }`
 - `protocol stages` → `{ "stages": [{ "stageId", "name", "purpose"?, "order", "dependsOn": ["<stageId>", ...] }] }`. The optional `purpose` field carries the spec-defined epistemic description of what understanding the stage builds (`ProtocolStage.purpose`); it is omitted when absent.
 - `protocol validate` → `{ "protocolId", "valid": true/false, "diagnostics": ["<message>", ...] }`. A valid protocol has `valid: true` and an empty `diagnostics` array.
 - `protocol find-by-target-type` → `{ "protocolId", "protocolName", "stages": [...], "diagnostics": ["<message>", ...] }`. Returns the first protocol whose `protocolTargetType` matches the given type ID. Returns an error envelope if no protocol targets that type.
+
+### Protocol Run Execution
+
+Protocol runs are the execution state of a protocol: an in-progress facilitation session advancing through stages. Runs are stored in `runs/runs.json` at the repository root (created on first write; absent means no runs). They are distinct from protocol definitions — definitions are package-level; runs are instance-level, scoped to a specific container.
+
+```bash
+# Start a new run for a protocol within a container
+echo '{"protocolId":"<uuid>","protocolVersion":1,"containerId":"<uuid>"}' | \
+  srs protocol run create --repo <path> --pretty
+
+# Advance to the next stage (optionally marking current stage complete)
+echo '{"runId":"<uuid>","stageId":"<stageId>","completeCurrent":true}' | \
+  srs protocol run advance --repo <path> --pretty
+
+# Get the current state of a run
+srs protocol run get <runId> --repo <path> --pretty
+
+# List runs (all filters optional)
+srs protocol run list --repo <path> --pretty
+srs protocol run list --repo <path> --protocol-id <uuid> --pretty
+srs protocol run list --repo <path> --container-id <uuid> --pretty
+srs protocol run list --repo <path> --status Active --pretty
+
+# Complete a run (all Active stage states are marked Completed)
+srs protocol run complete <runId> --repo <path> --pretty
+
+# Abandon a run
+srs protocol run abandon <runId> --repo <path> --pretty
+```
+
+`protocol run create` accepts a JSON object on stdin:
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `protocolId` | string (UUID) | yes | The protocol definition to run |
+| `protocolVersion` | integer | yes | Version of the protocol definition |
+| `containerId` | string (UUID) | yes | Container this run operates within |
+| `targetRecordId` | string (UUID) | no | Record being produced by this run |
+| `initialStageId` | string | no | Stage ID to set as the opening stage |
+
+`protocol run advance` accepts a JSON object on stdin:
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `runId` | string (UUID) | yes | ID of the run to advance |
+| `stageId` | string | yes | Stage ID to advance to |
+| `completeCurrent` | boolean | yes | Whether to mark the current stage Completed before advancing |
+
+Payload shapes (all wrapped in the standard `{ "ok": true, "payload": { ... } }` envelope):
+
+- `protocol run create` / `advance` / `get` / `complete` / `abandon` → `{ "run": { ...ProtocolRun... } }`. The `run` field is the raw stored JSON: `runId`, `protocolId`, `protocolVersion`, `containerId`, `targetRecordId`?, `status` (`Active` | `Completed` | `Abandoned`), `attentionState` (current cursor: `containerId`, `recordId`?, `fieldId`?, `protocolRunId`?, `stageId`?), `stageStates[]` (per-stage status history), `startedAt`, `completedAt`?.
+- `protocol run list` → `{ "runs": [{ "runId", "protocolId", "containerId", "status", "currentStageId"?, "startedAt" }] }`.
+- `protocol run get` returns an error envelope if the run is not found.
+- `protocol run complete` / `abandon` return an error envelope if the run is not found or is not in `Active` status.
+- `protocol run advance` returns an error envelope if the run is not found or is not in `Active` status.
+
+Protocol run history for a record appears in `srs context record <recordId>` under the `protocolRunHistory` field (array of run summaries whose `targetRecordId` matches the record).
 
 ---
 
@@ -774,6 +831,68 @@ Payload (`oldIdentityId` and `oldIdentityTier` are absent when there was no prio
 
 The command returns an error (`"already a com.semanticops.core/purpose record; no migration needed"`) if the existing `identityInstanceId` already points to a `purpose` record — it does not silently no-op. After migration, run `srs repo validate --repo <path>` to confirm zero diagnostics.
 
+### Listing All Migrations
+
+`repo migrations` returns every known migration and its current applicability status for this repository. Use it to decide which migrations need to run before a repo is in its target state.
+
+```bash
+srs repo migrations --repo <path>
+```
+
+Payload:
+
+```json
+{
+  "migrations": [
+    {
+      "id": "migrate-identity",
+      "title": "Graduate identity to purpose record",
+      "description": "...",
+      "status": {
+        "needed": false,
+        "alreadyApplied": true,
+        "notApplicable": false
+      }
+    },
+    {
+      "id": "repo-upgrade",
+      "title": "Normalise instance file paths",
+      "description": "...",
+      "status": {
+        "needed": true,
+        "alreadyApplied": false,
+        "notApplicable": false
+      }
+    }
+  ]
+}
+```
+
+Exactly one of `needed`, `alreadyApplied`, or `notApplicable` is `true` per entry (exclusive-one invariant). `notApplicable` means the migration makes no sense for this repo (e.g. `migrate-identity` on a repo with no root container).
+
+### Applying a Migration by ID
+
+`repo apply-migration` runs a single migration identified by its `id` and returns a migration-specific result payload.
+
+```bash
+srs repo apply-migration --id <migration-id> --repo <path>
+```
+
+Payload (`payload` shape is migration-specific):
+
+```json
+{
+  "id": "repo-upgrade",
+  "payload": {
+    "renames": [...],
+    "totalInstances": 12,
+    "alreadyCanonicalCount": 10
+  }
+}
+```
+
+Returns an error if `--id` does not match a known migration. For `migrate-identity`, the inner `payload` matches the shape returned by `repo migrate-identity` directly. For `repo-upgrade`, it matches `repo upgrade`. Prefer the migration-specific commands (`repo upgrade`, `repo migrate-identity`) when targeting a single known migration; use `repo apply-migration` when the migration ID is determined dynamically (e.g. an agent iterating the output of `repo migrations`).
+
 ---
 
 ## 5b. Changelog (`ext:changelog`, RFC-018)
@@ -976,7 +1095,7 @@ Returns all field values, type metadata, display label, and all outbound relatio
 }
 ```
 
-`relations` contains only **outbound** edges (this record as source). Inbound edges are excluded — they are part of the stage-context pattern (#252). `protocolRunHistory` is always empty until protocol run logging is implemented.
+`relations` contains only **outbound** edges (this record as source). Inbound edges are excluded. `protocolRunHistory` contains summaries of all protocol runs whose `targetRecordId` matches this record — populated by `protocol run create` and `advance` (see §3a Protocol Run Execution).
 
 ### Revision trace
 
@@ -1216,6 +1335,248 @@ When no `repo_settings` record is present:
 ```
 
 All limit fields (`allowedMimeTypes`, `maxPerFileBytes`, `maxDocBytes`, `maxTotalBytes`) are soft constraints — the CLI reads and reports them; enforcement is the caller's responsibility.
+
+---
+
+## 5f. Federation (`ext:federation`)
+
+Repositories that declare `"ext:federation"` in `manifest.declaredExtensions` can record cross-repository relationships and provenance events. Three CLI commands are available:
+
+### Resolving a repository by ID
+
+Given a `repositoryId` encountered in a cross-repo relation or imported document, look it up against the local federation registry (depth-first search across the root registry and any `childRegistries` chains):
+
+```bash
+srs federation resolve --repository-id <id> --repo <path>
+```
+
+Returns `found: true` with an `entry` block when the ID is known. Returns `found: false` (not an error — exit code 0) when the ID is not registered; unresolved cross-repository references are citations, not errors.
+
+```json
+{
+  "ok": true,
+  "command": "federation resolve",
+  "payload": {
+    "found": true,
+    "registryId": "<registry-uuid>",
+    "entry": {
+      "repositoryId": "<id>",
+      "title": "Alpha Repository",
+      "location": "https://alpha.example.com/repo"
+    }
+  }
+}
+```
+
+When `found: false`, `entry` is absent and `registryId` is the root registry's ID.
+
+### Listing federation events
+
+```bash
+srs federation events-list --repo <path> [--source <id>] [--target <id>] [--kind merge|split|import]
+```
+
+Returns the event log with `totalCount` (all stored events) and `filteredCount` (events matching the current filter). All filters are optional; when combined they are AND-semantics. Returns an empty list (not an error) when no events file exists yet.
+
+```json
+{
+  "ok": true,
+  "command": "federation events list",
+  "payload": {
+    "repositoryId": "<uuid>",
+    "totalCount": 3,
+    "filteredCount": 1,
+    "events": [
+      {
+        "eventId": "<id>",
+        "event": "merge",
+        "at": "2026-07-12T10:00:00Z",
+        "sourceRepositoryId": "<source-id>",
+        "targetRepositoryId": "<target-id>",
+        "affectedInstanceIds": ["<uuid>"]
+      }
+    ]
+  }
+}
+```
+
+### Appending a federation event
+
+Reads a `FederationEvent` from stdin as JSON and appends it to the repository's event log:
+
+```bash
+echo '{
+  "repositoryId": "<repo-uuid>",
+  "event": {
+    "eventId": "<unique-id>",
+    "event": "merge",
+    "at": "<iso8601>",
+    "sourceRepositoryId": "<source-repo-id>",
+    "targetRepositoryId": "<this-repo-id>",
+    "affectedInstanceIds": ["<instance-uuid>", "..."]
+  }
+}' | srs federation events-append --repo <path>
+```
+
+`event` is one of `merge`, `split`, or `import`. `affectedInstanceIds` is required (at least one instance ID per Invariant 59). Optional fields: `performedBy`, `strategy` (`preserve-ids` or `new-ids-with-lineage`), `note`.
+
+Returns `{ eventId, totalEvents }`.
+
+### Registry file format
+
+The federation registry lives at `federation/registry.json` by default (overridable via `manifest.federationPath`). There is no CLI command to create or edit it — write it directly:
+
+```json
+{
+  "registryId": "<uuid>",
+  "title": "My Team Registry",
+  "updatedAt": "<iso8601>",
+  "entries": [
+    {
+      "repositoryId": "<peer-repo-uuid>",
+      "title": "Peer Repository",
+      "location": "https://peer.example.com/repo"
+    }
+  ],
+  "childRegistries": ["path/to/child-registry.json"]
+}
+```
+
+`childRegistries` entries are paths relative to the parent registry file. The resolver traverses them depth-first and detects cycles (Invariant 62).
+
+---
+
+## 5g. Package Installation & Import Tracking
+
+This section documents the `srs package` sub-commands that install and track upstream package definitions. For registry-based discovery, see **5c. Registry Catalog**.
+
+### Installing a package
+
+`srs package install` copies every definition from an external package directory into a sub-package boundary inside the target repository, registers the boundary, and writes import records + reference copies for divergence tracking.
+
+```bash
+srs package install --source-dir /path/to/governance-package \
+  --repo /path/to/target-repo \
+  --boundary packages/ext          # optional; defaults to packages/<package-name>
+```
+
+`--strict` refuses to install if any definition would conflict with an existing same-key/different-UUID definition (the default is to flag conflicts but still succeed):
+
+```bash
+srs package install --source-dir /path/to/pkg --repo /path/to/repo --strict
+```
+
+The payload reports what was installed, skipped (idempotent re-run), and flagged as conflicts:
+
+```json
+{
+  "ok": true,
+  "command": "package install",
+  "payload": {
+    "boundaryPath": "packages/ext",
+    "packageId": "<uuid>",
+    "namespace": "com.example.governance",
+    "name": "governance",
+    "version": "2.1.0",
+    "installedAt": "2026-07-01T00:00:00Z",
+    "installed": 14,
+    "skippedIdentical": 0,
+    "conflicts": [],
+    "kinds": [
+      { "kind": "field", "installed": 8, "skippedIdentical": 0, "conflicts": 0 },
+      { "kind": "type",  "installed": 4, "skippedIdentical": 0, "conflicts": 0 },
+      { "kind": "blueprint", "installed": 2, "skippedIdentical": 0, "conflicts": 0 }
+    ]
+  }
+}
+```
+
+After install, the boundary directory contains `.srs-import/import-records.json` (provenance + divergence state) and `.srs-import/refs/` (reference copies of each installed definition). These are managed automatically — do not edit them directly.
+
+Re-running `package install` with the same source directory is idempotent: all definitions are skipped as identical and no import records are overwritten.
+
+### Registering a local package boundary
+
+`srs package import` registers an existing directory inside the repository as a named package boundary. Use this when the definitions are already in the repo (not copied from outside):
+
+```bash
+srs package import --path packages/my-pkg --mode upstream-tracked --repo /path/to/repo
+```
+
+`--mode` controls divergence tracking behaviour:
+
+| Mode | Meaning |
+|---|---|
+| `upstream-tracked` | Definitions came from an upstream source; divergence detection compares against reference copies |
+| `local-copy` | Definitions are a local copy; no reference copies; no divergence detection |
+| `local-fork` | Local fork of an upstream package; tracked but not expected to stay in sync |
+
+Payload:
+
+```json
+{
+  "ok": true,
+  "command": "package import",
+  "payload": {
+    "selector": "packages/my-pkg",
+    "id": "<boundary-uuid>",
+    "namespace": "com.example.my-pkg",
+    "name": "my-pkg"
+  }
+}
+```
+
+### Listing imported definitions with divergence state
+
+`srs package imports` aggregates every import record across all boundaries and runs live divergence detection — comparing each installed definition's current JSON against the reference copy written at install time:
+
+```bash
+srs package imports --repo /path/to/repo --pretty
+```
+
+Payload (top-level arrays by definition kind):
+
+```json
+{
+  "ok": true,
+  "command": "package imports",
+  "payload": {
+    "generatedAt": "2026-07-01T12:00:00Z",
+    "fields": [
+      {
+        "definitionId": "<uuid>",
+        "definitionType": "field",
+        "namespace": "com.example.governance",
+        "name": "decision_title",
+        "version": 1,
+        "mode": "upstream-tracked",
+        "importedAt": "2026-07-01T00:00:00Z",
+        "sourcePackageId": "<uuid>",
+        "sourcePackageName": "com.example.governance",
+        "sourcePackageVersion": "2.1.0",
+        "conflictState": "Clean"
+      }
+    ],
+    "types": [],
+    "views": [],
+    "blueprints": [],
+    "protocols": [],
+    "relationTypes": [],
+    "skippedDefinitions": []
+  }
+}
+```
+
+`conflictState` is one of:
+
+| Value | Meaning |
+|---|---|
+| `Clean` | Current definition matches the reference copy — no local changes |
+| `LocalAhead` | Current definition differs from the reference copy — locally edited |
+
+`conflictState` is omitted when divergence detection could not run (e.g. `mode` is `local-copy` or `local-fork`, or the reference copy is missing). `skippedDefinitions` lists definition IDs for which detection was skipped.
+
+Only boundaries with an `.srs-import/import-records.json` file are included. Boundaries registered with `package import` but without reference copies (local import modes) appear with the definitions listed but no `conflictState`.
 
 ---
 
