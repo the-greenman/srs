@@ -1263,6 +1263,39 @@ srs attachment link <instance_id> <document_id> --repo <path> [--pretty]
 
 The link is stored as a `sourceRef` on the record's `sourceRefs[]` array (not as a Relation edge — see "Relations vs sourceRefs" note above). `sourceRefsCount` in the payload reflects the total number of `sourceRefs` on the record after the operation.
 
+### Listing attachments for a single record
+
+Use `record attachments` to retrieve all source-document attachments linked to a specific record. This is the single-record complement to `attachment resolve-view-attachments` — use it when you have one `instanceId` rather than a view-rendered list.
+
+```bash
+srs record attachments --id <instanceId> --repo <path> [--pretty]
+```
+
+Only `sourceRef` entries with `sourceRole: "attaches"` and `sourceType: "repository-document"` are included. Returns `ok: false` with a diagnostic when the record does not exist.
+
+```json
+{
+  "ok": true,
+  "command": "record attachments",
+  "payload": {
+    "instanceId": "aaaabbbb-0000-4000-8000-000000000001",
+    "sourceDocumentsPath": "source-documents",
+    "attachments": [
+      {
+        "documentId": "4c2d9057-3ef5-40ad-a7d0-0a791b1cc782",
+        "contentPath": "source-documents/brief.pdf",
+        "sidecarPath": "source-documents/brief.pdf.meta.json",
+        "title": "Project Brief",
+        "contentChecksum": "sha256:4e4c5515...",
+        "sidecarChecksum": "sha256:ba9cce92..."
+      }
+    ]
+  }
+}
+```
+
+All fields other than `documentId` — `contentPath`, `sidecarPath`, `title`, `contentChecksum`, `sidecarChecksum` — are omitted when not present in the source document index (i.e., when a `sourceRef` points to a document that has been removed from or not yet added to the index).
+
 ### Resolving attachments for a document view
 
 After rendering a `document_view` (which surfaces a list of record instance IDs), use `attachment resolve-view-attachments` to look up the source-document attachments for each record in one call. Input is read from stdin.
