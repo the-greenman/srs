@@ -1218,10 +1218,12 @@ Walks `source-documents/` recursively. Sidecar files (`.meta.json`) are excluded
         "documentId": "aabbccdd-...",
         "title": "Project Brief",
         "contentChecksum": "sha256:abc123",
-        "sidecarChecksum": "sha256:def456"
+        "sidecarChecksum": "sha256:def456",
+        "sizeBytes": 142857
       },
       {
-        "path": "annexes/annex-a.pdf"
+        "path": "annexes/annex-a.pdf",
+        "sizeBytes": 204800
       }
     ]
   }
@@ -1229,6 +1231,8 @@ Walks `source-documents/` recursively. Sidecar files (`.meta.json`) are excluded
 ```
 
 Fields present only when indexed (`documentId`, `title`, `contentChecksum`, `sidecarChecksum`) are omitted entirely for unindexed files — they are not null, they are absent.
+
+`sizeBytes` is the on-disk byte count of the content file. It is omitted when the size cannot be determined (for example, when reading from a non-filesystem-backed store).
 
 Subdirectory paths are returned relative to `sourceDocumentsPath`, with `/` as the separator (`annexes/annex-a.pdf`, not `source-documents/annexes/annex-a.pdf`).
 
