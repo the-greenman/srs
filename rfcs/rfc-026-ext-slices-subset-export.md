@@ -2,7 +2,7 @@
 
 # RFC-026: ext:slices — Record Slices (Subset Export)
 
-**Status**: Draft (Revision 2)
+**Status**: Draft (Revision 3)
 **Affects**: `ext:repository` (new optional `slice` manifest block); `docs/schema/2.0/manifest.json` (add `slice` property and `$defs.Slice`, `$defs.SliceSpec`, `$defs.SliceExternalRef`)
 **Author**: the-greenman (from issue the-greenman/srs#194)
 **Date**: 2026-07-20
@@ -15,6 +15,7 @@
 | Rev | Date | Summary |
 |---|---|---|
 | 1 | 2026-07-20 | Initial draft |
+| 3 | 2026-07-20 | Fix new blocking issue from round 2 review: Change C item 5 sub-container rule — mixed-membership sub-containers MUST be excluded entirely (mirrors Change D item 6 rule). |
 | 2 | 2026-07-20 | Address Stage 3 review findings. Blocking: (SI-1/C-11) qualify backward-compatibility claim — pre-RFC-026 validators will reject the `slice` property; (SI-2/C-2) add normative rule for `manifest.container` in package-boundary slices (filter source root's memberInstanceIds to included set); (SI-3/C-4) fix Change D item 2 — replace undefined "transitive contains relations from root container" with memberInstanceIds/rootInstanceIds traversal; (SI-6/C-1) redefine package-boundary `spec.id` as `PackageRef.packageId`, closure as Tier 2 Records by typeId namespace — remove ADR-033/PackageBoundarySnapshot references; (SI-7/C-3) add normative statement that closure root becomes `manifest.container` in container slices. Should-fix: (SI-4) add `manifest.properties` entry to schema diff; (SI-5) add `relationId` to `SliceExternalRef`; (C-5) add validator-directed conformance rule (R14); (C-6) add RFC-005 non-applicability note for `externalRelationRefs.relationType`; (C-7) add Field definition completeness rule for Type FieldAssignments; (C-8) fix Alt C RFC citation (RFC-005, not RFC-022). Nits: (SI-8) elevate Change C/D sub-steps to MUST language; (SI-9) add relationType format guidance; (SI-10/C-9/C-10) fix R8 producer-side scoping and both-endpoints clause, add tombstone handling, close OQ2 as resolved. |
 
 ---
@@ -97,7 +98,7 @@ A package-boundary slice exports the type and field definitions of one installed
 
 4. **Source documents** — all `sourceDocumentIndex` entries referenced by included instances (via `sourceRefs[]` with `sourceType: "repository-document"`) MUST be included. Their `contentPath` files MUST be included unless the entry is in the tombstone state (content absent per RFC-017 R12), in which case the index entry MUST be included and the absent content file MUST be omitted.
 
-5. **`manifest.container`** — the slice archive's `manifest.container` MUST be a copy of the source repository's root container with `memberInstanceIds` and `rootInstanceIds` filtered to the set of included instances. The `containerId` is preserved from the source. Any `containerIndex` entries whose members are entirely outside the included set MUST be excluded.
+5. **`manifest.container`** — the slice archive's `manifest.container` MUST be a copy of the source repository's root container with `memberInstanceIds` and `rootInstanceIds` filtered to the set of included instances. The `containerId` is preserved from the source. Any `containerIndex` entry MUST be excluded unless all of its `rootInstanceIds` and `memberInstanceIds` are within the included instance set. A sub-container with mixed membership (some members inside the boundary, some outside) MUST be excluded entirely; its member instances are still included, but the sub-container grouping boundary is not exported.
 
 The exported archive MUST pass `srs repo validate` with the relaxations specified in Change F.
 
