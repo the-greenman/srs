@@ -956,6 +956,8 @@ A registry catalog is a **standalone JSON file** (not an SRS repository) that li
 srs registry list --path /path/to/catalog.json --pretty
 # Optional filters (ANDed):
 srs registry list --path /path/to/catalog.json --publisher com.example --tag governance --pretty
+# --tag is repeatable; all listed tags must be present (AND-conjunction):
+srs registry list --path /path/to/catalog.json --tag governance --tag risk --pretty
 ```
 
 Returns:
@@ -992,7 +994,7 @@ Returns:
 
 `totalCount` is the unfiltered count; `filteredCount` is what matched. Optional fields (`description`, `homepage`, `tags`, `viewCount`, `schemaCount`, `protocolCount`, `relationTypeCount`, `downloadUrl`, `checksum`) are omitted when absent.
 
-`--publisher` matches the exact `publisher` field. `--tag` matches membership in `tags` (entry must carry the tag). Both filters may be combined (AND).
+`--publisher` matches the exact `publisher` field. `--tag` matches membership in `tags` (entry must carry the tag) and is **repeatable** — passing multiple `--tag` flags requires every listed tag to be present (AND-conjunction). All filters may be combined.
 
 ### Getting a single entry
 
