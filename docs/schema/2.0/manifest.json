@@ -484,7 +484,7 @@
         "externalRelationRefs": {
           "type": "array",
           "items": { "$ref": "#/$defs/SliceExternalRef" },
-          "description": "Relations cut at export because exactly one endpoint fell outside the closure. Provenance only — not a validation error (RFC-026 R9). Relations where both endpoints are outside the closure are omitted entirely."
+          "description": "Relations cut at export because exactly one endpoint fell outside the closure. Provenance only — not a validation error (RFC-026 R8). Relations where both endpoints are outside the closure are omitted entirely."
         }
       }
     },
@@ -496,13 +496,13 @@
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["package", "container"],
-          "description": "Closure rule: 'package' = package-boundary closure (Tier 2 Records by typeId namespace, identified by PackageRef.packageId); 'container' = container-membership closure."
+          "enum": ["container"],
+          "description": "Closure rule. 'container' = container-membership closure (records, relations, definitions, and source documents reachable from a container). Package export is not a slice: a package's definitions are distributed as a package-bundle.json (RFC-003), not as a slice type."
         },
         "id": {
           "type": "string",
           "format": "uuid",
-          "description": "The boundary UUID: a PackageRef.packageId for type 'package'; a containerId for type 'container'."
+          "description": "The boundary UUID: a containerId present in the source repository's containerIndex."
         }
       }
     },
