@@ -3251,6 +3251,24 @@
         "topic:rfc"
       ],
       "tier": 2
+    },
+    {
+      "instanceId": "212379f4-4bb7-465f-94e6-ffd037a718b4",
+      "path": "records/extensions/extension-212379f4.json",
+      "tags": [
+        "concern:export",
+        "concern:slices",
+        "topic:extensions"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "efda4896-665b-4155-a7e3-d4c636e6b5ae",
+      "path": "records/rfcs/rfc-efda4896.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
     }
   ],
   "meta": {
