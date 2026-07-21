@@ -2,7 +2,7 @@
 
 # RFC-015: View-Owned Ordering & Declared Root Presentations
 
-**Status**: In Progress (Revision 2)
+**Status**: Accepted (Revision 2)
 **Affects**: `document-view.json` (`DocumentSection.ordering`, `container-subset` SectionSource), `manifest.json` (new top-level `renderedPresentations`), `ext:views-l2` (Rules [N+28]–[N+30]), `ext:repository` / `manifest.json` (Rule [N+31])
 **Author**: the-greenman (from epic the-greenman/srs#95, Phase 1 gate / issue #114)
 **Date**: 2026-07-03

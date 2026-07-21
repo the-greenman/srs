@@ -40,6 +40,12 @@ async function validateAll() {
   const recordsValid = await runScript('validate-records.mjs');
   if (!recordsValid) allValid = false;
 
+  const rfcProcessValid = await runScript('validate-rfc-process.mjs');
+  if (!rfcProcessValid) allValid = false;
+
+  const rfcIntegrationValid = await runScript('check-rfc-integration.mjs');
+  if (!rfcIntegrationValid) allValid = false;
+
   console.log(`\n${'='.repeat(60)}`);
   console.log(allValid ? '\n✓ All validations passed' : '\n✗ Some validations failed');
   process.exit(allValid ? 0 : 1);

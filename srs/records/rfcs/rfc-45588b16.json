@@ -1,0 +1,43 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-07-21T17:31:55.357776690+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "RFC-019: Cross-Field Validation Rules — validationRules on Type and CrossFieldRule Schema"
+    },
+    {
+      "fieldId": "5a000001-0000-4000-a000-000000000001",
+      "value": "019"
+    },
+    {
+      "fieldId": "5a000002-0000-4000-a000-000000000002",
+      "value": "accepted"
+    },
+    {
+      "fieldId": "5a000003-0000-4000-a000-000000000003",
+      "value": "the-greenman"
+    },
+    {
+      "fieldId": "5a000009-0000-4000-a000-000000000009",
+      "value": "`CrossFieldRule`/`CrossFieldRuleEffect` $defs + `validationRules` on `type.json` (`ext:cross-field-validation`); invariants I-89–I-97.\n\n<!-- srs-integration:v1\next:cross-field-validation\nschema:type.json\nI-89\nI-90\nI-91\nI-92\nI-93\nI-94\nI-95\nI-96\nI-97\n-->"
+    },
+    {
+      "fieldId": "5a000016-0000-4000-a000-000000000016",
+      "value": "rfcs/rfc-019-cross-field-validation-rules-schema.md"
+    },
+    {
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
+      "value": "Formalizes the JSON Schema `$defs` for `CrossFieldRule`/`CrossFieldRuleEffect` and the `validationRules` property on `type.json` for `ext:cross-field-validation`, and adds spec invariant records pinning the rule types and evaluation semantics. Full text: rfcs/rfc-019-cross-field-validation-rules-schema.md."
+    }
+  ],
+  "instanceId": "45588b16-862b-486e-a13f-1607943a7a1f",
+  "tags": [
+    "topic:rfc"
+  ],
+  "typeId": "6a000001-0000-4000-a000-000000000001",
+  "typeName": "rfc",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-07-21T17:31:55.357779081+00:00"
+}

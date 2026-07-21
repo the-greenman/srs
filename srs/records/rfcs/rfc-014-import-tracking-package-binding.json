@@ -12,7 +12,7 @@
     },
     {
       "fieldId": "5a000002-0000-4000-a000-000000000002",
-      "value": "in-progress"
+      "value": "accepted"
     },
     {
       "fieldId": "5a000003-0000-4000-a000-000000000003",
@@ -20,7 +20,7 @@
     },
     {
       "fieldId": "5a000009-0000-4000-a000-000000000009",
-      "value": "`Package`, `PackageRef`, `UpstreamPackage` (Distribution Group); `ext:import-tracking`; `manifest.json` schema"
+      "value": "`Package`, `PackageRef`, `UpstreamPackage` (Distribution Group); `ext:import-tracking`; `manifest.json` schema\n\n<!-- srs-integration:v1\next:import-tracking\nschema:manifest.json\nI-83\nI-84\n-->"
     },
     {
       "fieldId": "5a000016-0000-4000-a000-000000000016",

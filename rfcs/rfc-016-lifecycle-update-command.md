@@ -2,7 +2,7 @@
 
 # RFC-016: Lifecycle Update Command
 
-**Status**: In Progress (Revision 2)
+**Status**: Accepted (Revision 2)
 **Affects**: `ext:lifecycle` (CLI contract), `srs-usage.md` (agentic write-workflow reference)
 **Author**: the-greenman (from issue the-greenman/srs#81)
 **Date**: 2026-07-04

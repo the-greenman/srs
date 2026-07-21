@@ -1,0 +1,43 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-07-21T17:31:55.327344033+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "RFC-008: Heterogeneous ContainerSubset Sections — typeFilter and typeDispatch"
+    },
+    {
+      "fieldId": "5a000001-0000-4000-a000-000000000001",
+      "value": "008"
+    },
+    {
+      "fieldId": "5a000002-0000-4000-a000-000000000002",
+      "value": "accepted"
+    },
+    {
+      "fieldId": "5a000003-0000-4000-a000-000000000003",
+      "value": "Peter Brownell"
+    },
+    {
+      "fieldId": "5a000009-0000-4000-a000-000000000009",
+      "value": "`typeDispatch` on `DocumentSection` + `typeFilter` on `container-subset` source (both `ext:views-l2`).\n\n<!-- srs-integration:v1\next:views-l2\nschema:document-view.json\n-->"
+    },
+    {
+      "fieldId": "5a000016-0000-4000-a000-000000000016",
+      "value": "rfcs/rfc-008-heterogeneous-container-subset-sections.md"
+    },
+    {
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
+      "value": "Adds two backward-compatible optional fields under `ext:views-l2` — `typeDispatch` on `DocumentSection` (per-type L1 view selection) and `typeFilter` on the `container-subset` source — to allow heterogeneous cross-type sections that preserve `precedes` reading order. Full text: rfcs/rfc-008-heterogeneous-container-subset-sections.md."
+    }
+  ],
+  "instanceId": "804a3c7b-0bf1-4c5b-99e8-80a605727d30",
+  "tags": [
+    "topic:rfc"
+  ],
+  "typeId": "6a000001-0000-4000-a000-000000000001",
+  "typeName": "rfc",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-07-21T17:31:55.327346376+00:00"
+}

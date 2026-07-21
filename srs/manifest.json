@@ -2992,16 +2992,6 @@
       "title": "requiresRelation is projected structurally and validated as a warning at rest"
     },
     {
-      "instanceId": "747f61db-3ccf-4b5b-ae01-a99dd4f985f2",
-      "path": "records/tier-2/rfc-747f61db.json",
-      "tags": [
-        "construct:attachment",
-        "construct:archive",
-        "topic:schema"
-      ],
-      "tier": 2
-    },
-    {
       "instanceId": "9aaa1a21-7227-4628-8292-3725fe3e8131",
       "path": "records/tier-2/rfc-change-9aaa1a21.json",
       "tags": [
@@ -3163,6 +3153,102 @@
       "path": "records/tier-2/invariant-8b166381.json",
       "tags": [
         "construct:attachment"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "feefb111-4b60-47e5-badc-2a55e091bd19",
+      "path": "records/rfcs/rfc-feefb111.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "4335c283-9953-4fa7-95d7-ff5e7a4980a8",
+      "path": "records/rfcs/rfc-4335c283.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "804a3c7b-0bf1-4c5b-99e8-80a605727d30",
+      "path": "records/rfcs/rfc-804a3c7b.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "7eb1d105-14cb-472b-86b6-cebd314af4fd",
+      "path": "records/rfcs/rfc-7eb1d105.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "0c185e05-99c7-4c04-aaf6-73af30eac451",
+      "path": "records/rfcs/rfc-0c185e05.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "1dc3f032-a93b-45fa-831e-5486bcb57460",
+      "path": "records/rfcs/rfc-1dc3f032.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "88f29903-f2f8-4314-bae1-5abfd96d2808",
+      "path": "records/rfcs/rfc-88f29903.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "45588b16-862b-486e-a13f-1607943a7a1f",
+      "path": "records/rfcs/rfc-45588b16.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "e71909eb-37f2-4e2b-8d62-fc18e840bace",
+      "path": "records/rfcs/rfc-e71909eb.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "4ac085fc-e143-4524-bbb4-a310e51a6c4d",
+      "path": "records/rfcs/rfc-4ac085fc.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "85115518-e056-4c27-bbe7-f6ffa6c1f24f",
+      "path": "records/rfcs/rfc-85115518.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "ed721ef6-a0cc-4cdf-9840-45e75db0048e",
+      "path": "records/rfcs/rfc-ed721ef6.json",
+      "tags": [
+        "topic:rfc"
       ],
       "tier": 2
     }

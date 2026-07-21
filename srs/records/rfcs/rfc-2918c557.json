@@ -12,7 +12,7 @@
     },
     {
       "fieldId": "5a000002-0000-4000-a000-000000000002",
-      "value": "in-progress"
+      "value": "accepted"
     },
     {
       "fieldId": "5a000003-0000-4000-a000-000000000003",
@@ -20,7 +20,7 @@
     },
     {
       "fieldId": "5a000009-0000-4000-a000-000000000009",
-      "value": "`manifest.json` (new `changelogPath` property); new schema file `changelog.json` (ChangelogCollection + ChangelogEntry); `ext:changelog` extension declaration"
+      "value": "`manifest.json` (new `changelogPath` property); new schema file `changelog.json` (ChangelogCollection + ChangelogEntry); `ext:changelog` extension declaration\n\n<!-- srs-integration:v1\next:changelog\nschema:changelog.json\nschema:manifest.json\n-->"
     },
     {
       "fieldId": "5a000016-0000-4000-a000-000000000016",

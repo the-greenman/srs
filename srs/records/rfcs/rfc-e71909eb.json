@@ -1,0 +1,43 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-07-21T17:31:55.366423608+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "RFC-020: Type-Level Identity Field (identityFieldId)"
+    },
+    {
+      "fieldId": "5a000001-0000-4000-a000-000000000001",
+      "value": "020"
+    },
+    {
+      "fieldId": "5a000002-0000-4000-a000-000000000002",
+      "value": "accepted"
+    },
+    {
+      "fieldId": "5a000003-0000-4000-a000-000000000003",
+      "value": "the-greenman"
+    },
+    {
+      "fieldId": "5a000009-0000-4000-a000-000000000009",
+      "value": "`identityFieldId` on `Type` (`type.json`); inheritance + views-l2 fallback prose (`ext:type-inheritance`, `ext:views-l2`).\n\n<!-- srs-integration:v1\nschema:type.json\next:type-inheritance\next:views-l2\n-->"
+    },
+    {
+      "fieldId": "5a000016-0000-4000-a000-000000000016",
+      "value": "rfcs/rfc-020-type-level-identity-field.md"
+    },
+    {
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
+      "value": "Adds an optional, inheritable, overridable `identityFieldId` to `Type`, naming one field of the effective field set as the record's identity/display field, giving clients a schema-driven display-label source. Full text: rfcs/rfc-020-type-level-identity-field.md."
+    }
+  ],
+  "instanceId": "e71909eb-37f2-4e2b-8d62-fc18e840bace",
+  "tags": [
+    "topic:rfc"
+  ],
+  "typeId": "6a000001-0000-4000-a000-000000000001",
+  "typeName": "rfc",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-07-21T17:31:55.366427471+00:00"
+}
