@@ -689,6 +689,7 @@ Detection is content-based:
 | `ext:repository` | Not detected (structural; always available) |
 | `ext:discovery` | Not detected (structural; always available) |
 | `ext:registry` | Not detected (standalone catalog files, not SRS repo content) |
+| `ext:slices` | Not detected in the source repo — declared only in the **slice archive's** own manifest |
 
 A healthy repo should report empty `declaredButUnsupported` and empty `usedButUndeclared`. Run this command after importing a package or enabling a new extension to confirm the manifest is in sync with the repo content.
 
@@ -1617,6 +1618,53 @@ Payload (top-level arrays by definition kind):
 `conflictState` is omitted when divergence detection could not run (e.g. `mode` is `local-copy` or `local-fork`, or the reference copy is missing). `skippedDefinitions` lists definition IDs for which detection was skipped.
 
 Only boundaries with an `.srs-import/import-records.json` file are included. Boundaries registered with `package import` but without reference copies (local import modes) appear with the definitions listed but no `conflictState`.
+
+---
+
+## 5h. Container Slice Export (`ext:slices`, RFC-026)
+
+A **slice** is a valid `.srs` archive whose content is a defined subset of a source repository. It uses the RFC-017 archive format — any SRS tool can open, validate, and render it. Only **container-membership closure** is defined (RFC-026); package export is a different artifact class (`package-bundle.json`, RFC-003); record-level closure is deferred.
+
+### What `ext:slices` means in a manifest
+
+A slice archive declares `"ext:slices"` in its own `manifest.declaredExtensions`. The source repository does **not** need to declare it. The slice archive also carries a `slice` block in its manifest:
+
+```json
+"slice": {
+  "origin": { "repositoryId": "<source-repo-uuid>" },
+  "spec": { "type": "container", "id": "<containerId-uuid>" },
+  "exportedAt": "<ISO-8601>",
+  "externalRelationRefs": [
+    {
+      "relationId": "<uuid>",
+      "sourceInstanceId": "<uuid>",
+      "targetInstanceId": "<uuid>",
+      "relationType": "depends-on"
+    }
+  ]
+}
+```
+
+The slice archive's `manifest.repositoryId` is a **new UUID** — distinct from `slice.origin.repositoryId`. A slice is a standalone artifact.
+
+### Validation relaxations when `slice` is present
+
+An RFC-026-aware validator MUST NOT treat the following as errors when the manifest contains a `slice` block:
+
+- `externalRelationRefs` entries whose `sourceInstanceId`/`targetInstanceId` are absent from `instanceIndex` — these are provenance records of cross-boundary relations that were cut at export time.
+- Type/field definitions not referenced by any included instance — the `package/` directory contains only definitions needed by the included content.
+- An incomplete `containerIndex` — only the exported sub-hierarchy is required.
+- `sourceDocumentIndex` entries with an absent `contentPath` file (tombstone state per RFC-017 R12).
+
+The following remain errors regardless of slice status: dangling edges in the relations collection (they must go into `externalRelationRefs`, not the relations file); unresolvable `typeId`/`fieldId` references on included instances; instance schema validation errors.
+
+### `externalRelationRefs` — what they mean
+
+When a relation connects an included instance to an excluded instance, the producer removes it from the relations collection and records it in `slice.externalRelationRefs[]`. This is provenance data, not a defect — a non-empty list means "this slice has N cross-boundary relations to the source repository." The `relationType` values are provenance copies only; they are not subject to RFC-005 definition-lookup in the slice archive.
+
+### CLI commands (pending implementation — srs-rust#631, #633)
+
+Container slice export will be surfaced as `srs archive pack --container <containerId> --output <file>.srs` (tracking issue srs-rust#633), using the slices engine (srs-rust#631). The payload will carry the closure type, included instance count, and dangling-edge count. Until those issues land, no CLI command produces or validates slice archives.
 
 ---
 
