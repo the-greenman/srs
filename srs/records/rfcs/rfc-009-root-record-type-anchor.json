@@ -20,11 +20,15 @@
     },
     {
       "fieldId": "5a000009-0000-4000-a000-000000000009",
-      "value": "ext:views-l2 (DocumentView), Container (core), ext:blueprint (Blueprint), document-view.json, container.json, manifest.json, blueprint.json"
+      "value": "ext:views-l2 (DocumentView), Container (core), ext:blueprint (Blueprint), document-view.json, container.json, manifest.json, blueprint.json\n\n<!-- srs-integration:v1\next:views-l2\nschema:document-view.json\nschema:container.json\nschema:manifest.json\nschema:blueprint.json\nI-63\nI-64\nI-65\nI-66\nI-78\n-->"
     },
     {
       "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": "Adds UUID-based typed anchors to the Blueprint\u2192View\u2192Container linkage: DocumentView.rootTypeRefs (ExactTypeRef[]) for Container matching; Blueprint.rootTypes formally defined as ExactTypeRef[]; containers_for_instance as a normative core operation; Container metadata spec alignment (description, vocabulary-backed tags). Invariants I-63 through I-66 and I-78. Tracked in srs#39 (original), srs#67 (blueprint extension)."
+      "value": "Adds UUID-based typed anchors to the Blueprint→View→Container linkage: DocumentView.rootTypeRefs (ExactTypeRef[]) for Container matching; Blueprint.rootTypes formally defined as ExactTypeRef[]; containers_for_instance as a normative core operation; Container metadata spec alignment (description, vocabulary-backed tags). Invariants I-63 through I-66 and I-78. Tracked in srs#39 (original), srs#67 (blueprint extension)."
+    },
+    {
+      "fieldId": "5a000016-0000-4000-a000-000000000016",
+      "value": "rfcs/rfc-009-root-record-type-anchor.md"
     }
   ],
   "instanceId": "875488ee-499e-460b-bb8e-979785877828",

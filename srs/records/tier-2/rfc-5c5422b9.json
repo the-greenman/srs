@@ -12,7 +12,7 @@
     },
     {
       "fieldId": "5a000002-0000-4000-a000-000000000002",
-      "value": "in-progress"
+      "value": "accepted"
     },
     {
       "fieldId": "5a000003-0000-4000-a000-000000000003",
@@ -20,7 +20,7 @@
     },
     {
       "fieldId": "5a000009-0000-4000-a000-000000000009",
-      "value": "ext:lifecycle (CLI contract), srs-usage.md (agentic write-workflow reference)"
+      "value": "ext:lifecycle (CLI contract), srs-usage.md (agentic write-workflow reference)\n\n<!-- srs-integration:v1\ntooling-only\n-->"
     },
     {
       "fieldId": "5a000016-0000-4000-a000-000000000016",

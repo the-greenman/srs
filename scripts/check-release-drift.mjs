@@ -14,6 +14,7 @@ const VIEW_EXPORTS = [
   { id: "3a000001-0000-4000-a000-000000000001", output: join(SPEC_ROOT, "srs-spec.md"), requiresKeyInvariants: true },
   { id: "3a000003-0000-4000-a000-000000000003", output: join(SPEC_ROOT, "srs-rationale.md") },
   { id: "3a000004-0000-4000-a000-000000000004", output: join(SPEC_ROOT, "srs-unified.md"), requiresKeyInvariants: true },
+  { id: "7a000001-0000-4000-a000-000000000001", output: join(SPEC_ROOT, "rfcs", "rfc-catalog.md") },
 ];
 
 function run(cmd, args, { cwd = ROOT, silent = false } = {}) {
@@ -131,6 +132,7 @@ async function main() {
     await run("node", ["scripts/validate-all.mjs"]);
     await run(SRS_CLI, ["--repo", REPO_ROOT, "repo", "validate"], { silent: true });
   });
+  await step("RFC integration", () => run("node", ["scripts/check-rfc-integration.mjs"], { silent: true }));
   await step("rendered docs", checkRenderedDocsDrift);
   console.log("\nOK: release artifacts are in sync.");
 }

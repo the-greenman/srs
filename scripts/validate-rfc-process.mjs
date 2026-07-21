@@ -2,28 +2,37 @@
 /**
  * Validate RFC process boundaries.
  *
- * Draft/proposed RFC artifacts must live outside active package/schema roots.
- * RFC-owned proposed packages may be validated with RFC-owned proposed schemas.
+ * This is the structural companion to scripts/check-rfc-integration.mjs (the drift gate).
+ * It enforces the *boundary* rules that keep RFC proposal material separate from active spec
+ * state, and validates the RFC-004 proposed-package fixture (the demonstration that a proposed
+ * package can be validated against proposed schemas without touching live schemas):
+ *
+ *   1. A proposal-artifact-path (5a000016) must never point at active package/ or docs/schema/
+ *      state — proposals live under rfcs/, active spec lives under package/ + docs/schema/.
+ *   2. Any rfc-targets-section relation must reference indexed instances on both ends.
+ *   3. The rfcs/rfc-004 proposed-package validates against its proposed schemas.
+ *
+ * Self-locating (runs from anywhere). The stale sequence/hyperedge checks that assumed a
+ * members[] relation format were removed — the live relation model is binary
+ * (sourceInstanceId/targetInstanceId) and no rfc-*-sequence relations exist.
  */
 import { access, readdir, readFile } from 'fs/promises';
 import { join, resolve } from 'path';
 import { loadSchema, validateJsonSchema } from './lib/json-schema-lite.mjs';
 
-const ROOT = resolve('.');
-const SCHEMA_DIR = join(ROOT, '../docs/schema/2.0');
+const SRS_ROOT = resolve(new URL('..', import.meta.url).pathname); // the srs repo root
+const REPO_ROOT = join(SRS_ROOT, 'srs'); // the self-describing spec repo
+const SCHEMA_DIR = join(SRS_ROOT, 'docs', 'schema', '2.0');
+
 const RFC_TYPE_ID = '6a000001-0000-4000-a000-000000000001';
-const RFC_CHANGE_TYPE_ID = '6a000002-0000-4000-a000-000000000002';
-const RFC_REVISION_TYPE_ID = '6a000003-0000-4000-a000-000000000003';
-const RFC_PROPOSED_ARTIFACT_TYPE_ID = '6a000006-0000-4000-a000-000000000006';
 const F_RFC_NUMBER = '5a000001-0000-4000-a000-000000000001';
-const F_STATUS = '5a000002-0000-4000-a000-000000000002';
 const F_PROPOSAL_ARTIFACT_PATH = '5a000016-0000-4000-a000-000000000016';
 
 const errors = [];
 const warnings = [];
 
 function rel(path) {
-  return path.startsWith(`${ROOT}/`) ? path.slice(ROOT.length + 1) : path;
+  return path.startsWith(`${SRS_ROOT}/`) ? path.slice(SRS_ROOT.length + 1) : path;
 }
 
 async function loadJson(path) {
@@ -48,12 +57,14 @@ function fieldValue(record, fieldId) {
   return record.fieldValues?.find(field => field.fieldId === fieldId)?.value;
 }
 
+// A proposal artifact path (ROOT-relative) must not live inside the active spec's package or
+// schema roots. Proposals live under rfcs/; active spec state lives under package/ + docs/schema/.
 function isActivePath(path) {
   return path === 'package' || path.startsWith('package/') || path === 'docs/schema' || path.startsWith('docs/schema/');
 }
 
 async function validatePackageWithSchemas(packageDir, fieldSchemaPath, typeSchemaPath) {
-  const manifestPath = join(ROOT, packageDir, 'package.json');
+  const manifestPath = join(SRS_ROOT, packageDir, 'package.json');
   if (!(await exists(manifestPath))) return;
 
   const manifest = await loadJson(manifestPath);
@@ -67,7 +78,7 @@ async function validatePackageWithSchemas(packageDir, fieldSchemaPath, typeSchem
   ]);
 
   for (const relativePath of manifest.fields ?? []) {
-    const fullPath = join(ROOT, packageDir, relativePath);
+    const fullPath = join(SRS_ROOT, packageDir, relativePath);
     const field = await loadJson(fullPath);
     if (!field) continue;
     for (const schemaError of validateJsonSchema(field, fieldSchema)) {
@@ -76,7 +87,7 @@ async function validatePackageWithSchemas(packageDir, fieldSchemaPath, typeSchem
   }
 
   for (const relativePath of manifest.types ?? []) {
-    const fullPath = join(ROOT, packageDir, relativePath);
+    const fullPath = join(SRS_ROOT, packageDir, relativePath);
     const type = await loadJson(fullPath);
     if (!type) continue;
     for (const schemaError of validateJsonSchema(type, typeSchema)) {
@@ -85,7 +96,7 @@ async function validatePackageWithSchemas(packageDir, fieldSchemaPath, typeSchem
   }
 
   for (const relativePath of manifest.relationTypes ?? []) {
-    const fullPath = join(ROOT, packageDir, relativePath);
+    const fullPath = join(SRS_ROOT, packageDir, relativePath);
     const relationType = await loadJson(fullPath);
     if (!relationType) continue;
     for (const schemaError of validateJsonSchema(relationType, relationTypeSchema)) {
@@ -97,106 +108,60 @@ async function validatePackageWithSchemas(packageDir, fieldSchemaPath, typeSchem
 async function main() {
   console.log('Validating RFC process boundaries...');
 
-  const manifest = await loadJson(join(ROOT, 'manifest.json'));
-  const relationsCollection = await loadJson(join(ROOT, 'relations/relations.json'));
+  const manifest = await loadJson(join(REPO_ROOT, 'manifest.json'));
+  const relationsCollection = await loadJson(join(REPO_ROOT, 'relations/relations.json'));
   const relations = relationsCollection?.relations ?? [];
+
   const indexedRecords = new Map();
-  const indexedRecordPaths = new Map();
   for (const indexEntry of manifest?.instanceIndex ?? []) {
     const instancePath = typeof indexEntry === 'string' ? indexEntry : indexEntry.path;
-    const fullPath = join(ROOT, instancePath);
-    const record = await loadJson(fullPath);
-    if (record?.instanceId) {
-      indexedRecords.set(record.instanceId, record);
-      indexedRecordPaths.set(record.instanceId, instancePath);
-    }
+    const record = await loadJson(join(REPO_ROOT, instancePath));
+    if (record?.instanceId) indexedRecords.set(record.instanceId, record);
   }
 
-  const rfcDir = join(ROOT, 'records/rfcs');
+  // 1. Boundary rule: proposal artifacts must not point at active package/schema state.
+  const rfcDir = join(REPO_ROOT, 'records/rfcs');
   const filenames = (await readdir(rfcDir)).filter(name => name.endsWith('.json'));
-
   for (const filename of filenames) {
     const fullPath = join(rfcDir, filename);
     const record = await loadJson(fullPath);
     if (!record || record.typeId !== RFC_TYPE_ID) continue;
 
-    const status = fieldValue(record, F_STATUS);
-    const rfcNumber = fieldValue(record, F_RFC_NUMBER);
-    const artifactPath = fieldValue(record, F_PROPOSAL_ARTIFACT_PATH);
-
-    if (!rfcNumber) {
+    if (!fieldValue(record, F_RFC_NUMBER)) {
       errors.push(`${rel(fullPath)}: missing rfc-number`);
     }
 
+    const artifactPath = fieldValue(record, F_PROPOSAL_ARTIFACT_PATH);
     if (artifactPath && isActivePath(artifactPath)) {
       errors.push(`${rel(fullPath)}: proposal artifact path must not point at active package/schema state: ${artifactPath}`);
     }
+  }
 
-    if (['draft', 'proposed', 'accepted'].includes(status) && artifactPath) {
-      const fullArtifactPath = join(ROOT, artifactPath);
-      if (!(await exists(fullArtifactPath))) {
-        errors.push(`${rel(fullPath)}: proposal artifact path does not exist: ${artifactPath}`);
-      }
+  // 2. rfc-targets-section relations (binary) must resolve on both ends.
+  for (const relation of relations.filter(r => (r.relationType ?? r.type) === 'rfc-targets-section')) {
+    const source = relation.sourceInstanceId;
+    const target = relation.targetInstanceId;
+    const id = relation.relationId ?? '(unknown)';
+    if (!indexedRecords.has(source)) {
+      errors.push(`relations/relations.json: ${id} has unknown RFC source ${source}`);
     }
-
-    for (const relationType of ['rfc-change-sequence', 'rfc-revision-sequence', 'rfc-proposed-artifact-sequence']) {
-      const sequence = relations.find(relation => (relation.relationType ?? relation.type) === relationType && (relation.from ?? relation.sourceInstanceId) === record.instanceId);
-      if (!sequence) continue;
-      if (!Array.isArray(sequence.members) || sequence.members.length === 0) {
-        errors.push(`relations/relations.json: ${sequence.id} must contain a non-empty members array`);
-        continue;
-      }
-
-      const expectedType = {
-        'rfc-change-sequence': RFC_CHANGE_TYPE_ID,
-        'rfc-revision-sequence': RFC_REVISION_TYPE_ID,
-        'rfc-proposed-artifact-sequence': RFC_PROPOSED_ARTIFACT_TYPE_ID,
-      }[relationType];
-
-      for (const memberId of sequence.members) {
-        const member = indexedRecords.get(memberId);
-        if (!member) {
-          errors.push(`relations/relations.json: ${sequence.id} references unknown member ${memberId}`);
-          continue;
-        }
-        if (member.typeId !== expectedType) {
-          errors.push(`relations/relations.json: ${sequence.id} member ${memberId} has wrong type ${member.typeName}`);
-        }
-      }
+    if (!indexedRecords.has(target)) {
+      errors.push(`relations/relations.json: ${id} has unknown target ${target}`);
     }
   }
 
-  const rfc004 = [...indexedRecords.values()].find(record => record.typeId === RFC_TYPE_ID && fieldValue(record, F_RFC_NUMBER) === '004');
-  if (rfc004) {
-    for (const relationType of ['rfc-change-sequence', 'rfc-revision-sequence', 'rfc-proposed-artifact-sequence']) {
-      if (!relations.some(relation => (relation.relationType ?? relation.type) === relationType && (relation.from ?? relation.sourceInstanceId) === rfc004.instanceId)) {
-        errors.push(`relations/relations.json: RFC-004 is missing ${relationType}`);
-      }
-    }
-  }
-
-  for (const relation of relations.filter(relation => (relation.relationType ?? relation.type) === 'rfc-targets-section')) {
-    const from = relation.from ?? relation.sourceInstanceId;
-    const to = relation.to ?? relation.targetInstanceId;
-    if (!indexedRecords.has(from)) {
-      errors.push(`relations/relations.json: ${relation.id ?? relation.relationId} has unknown RFC source ${from}`);
-    }
-    if (!indexedRecords.has(to)) {
-      errors.push(`relations/relations.json: ${relation.id ?? relation.relationId} has unknown target ${to}`);
-    }
-  }
-
-  const rfc004Root = join(ROOT, 'rfcs/rfc-004');
+  // 3. RFC-004 proposed-package fixture validates against its proposed schemas.
+  const rfc004Root = join(SRS_ROOT, 'rfcs/rfc-004');
   if (await exists(rfc004Root)) {
     await validatePackageWithSchemas(
       'rfcs/rfc-004/proposed-package/spec-authoring-core',
-      join(ROOT, 'rfcs/rfc-004/proposed-schemas/field.json'),
-      join(ROOT, 'docs/schema/2.0/type.json'),
+      join(SRS_ROOT, 'rfcs/rfc-004/proposed-schemas/field.json'),
+      join(SCHEMA_DIR, 'type.json'),
     );
     await validatePackageWithSchemas(
       'rfcs/rfc-004/proposed-package/spec-authoring-json-schema',
-      join(ROOT, 'rfcs/rfc-004/proposed-schemas/field.json'),
-      join(ROOT, 'docs/schema/2.0/type.json'),
+      join(SRS_ROOT, 'rfcs/rfc-004/proposed-schemas/field.json'),
+      join(SCHEMA_DIR, 'type.json'),
     );
   }
 

@@ -389,10 +389,12 @@ node scripts/publish-spec.mjs
 ```
 
 The parts that matter for this single-repo session:
-1. Runs `validate-all.mjs` — all validations must pass
+1. Runs `validate-all.mjs` — all validations must pass (this now includes `check-rfc-integration.mjs`, the RFC → canonical-spec drift gate, and `validate-rfc-process.mjs`)
 2. Runs `srs repo validate` — 0 errors required
-3. Renders all document views to `docs/spec/` via `srs render document-view`
+3. Renders all document views to `docs/spec/` (incl. `docs/spec/rfcs/rfc-catalog.md`) via `srs render document-view`
 4. Runs `check-release-drift.mjs` — must report **OK** for the `srs` artifacts
+
+The RFC integration gate (`scripts/check-rfc-integration.mjs`, issue #204) will **fail** here if this RFC is `accepted`/`implemented` but its record declares no resolving integration manifest (see 6f), or if the `.md` `**Status**:` line disagrees with the record `rfc-status`. Fix the record — do not weaken the gate.
 
 **Sibling schema mirrors are not this session's responsibility.** In a cloud session `../srs-rust` and `../srs-vscode` are not checked out, so any mirror-sync step in `publish-spec.mjs` must be a no-op when the siblings are absent — do not treat a skipped sibling sync as a failure. The mirrors refresh from the `srs` release artifact through their own pipelines after this PR merges (see Stage 5c). If `publish-spec.mjs` hard-fails because a sibling is missing, that is a script bug — file a follow-up issue and continue with the `srs`-local validate + render; do not check out siblings to satisfy it.
 
@@ -407,6 +409,25 @@ git commit -m "feat: RFC-NNN — author spec records and re-render (#<issue-N>)"
 ```
 
 Records, rendered spec, and schema sync are all committed together. Never commit records without also committing the re-rendered `docs/spec/` output.
+
+### 6f — Declare the integration manifest (required on acceptance)
+
+**Canonical model (issue #204):** the `rfcs/rfc-NNN-*.md` file is the RFC **proposal and design history**; the canonical spec is `srs/srs` records + `docs/schema/2.0` schemas. The RFC **record** is a lightweight **stub** — metadata + `proposal-artifact-path` pointing back at the `.md` + an integration manifest. It must never embed the full RFC body.
+
+When an RFC reaches `accepted`/`implemented`, declare **what it folded into the canonical spec** as a machine-checkable manifest block appended to the record's `affected-components` field (fieldId `5a000009`), inside an HTML comment so it stays invisible in the rendered catalog:
+
+```
+<!-- srs-integration:v1
+ext:changelog
+schema:changelog.json
+type:com.semanticops.spec/changelog-entry
+I-90
+-->
+```
+
+Token grammar (one per line): `I-<n>` (invariant record), `ext:<name>` (extension record), `schema:<file>.json` (file in `docs/schema/2.0/`), `type:<ns>/<name>` (type-definition record or installed package Type), `section:<slug>` / `subsection:<slug>` (by title slug). Use the special token `tooling-only` when the RFC changes only tooling / rendering / CLI / a downstream package and folds **no** record or schema artifact into the canonical spec. Every declared token MUST resolve; the manifest need not be exhaustive (declaring what is folded is your responsibility — the gate is a floor, not a completeness proof).
+
+If a genuinely-accepted RFC cannot be fully folded now, grandfather it in `rfcs/integration-allowlist.json` with a follow-up issue (this skips only the completeness check; status/consistency checks stay live) — do not leave the gate red.
 
 ---
 

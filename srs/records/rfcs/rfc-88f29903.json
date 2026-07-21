@@ -1,0 +1,43 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-07-21T17:31:55.352593514+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "RFC-017: Decision-log Attachments, Base-package Settings, Archive Determinism, and srsj-gzip Retirement"
+    },
+    {
+      "fieldId": "5a000001-0000-4000-a000-000000000001",
+      "value": "017"
+    },
+    {
+      "fieldId": "5a000002-0000-4000-a000-000000000002",
+      "value": "accepted"
+    },
+    {
+      "fieldId": "5a000003-0000-4000-a000-000000000003",
+      "value": "the-greenman"
+    },
+    {
+      "fieldId": "5a000009-0000-4000-a000-000000000009",
+      "value": "`attaches` sourceRole value + contentPath across SourceReference schemas landed. Invariants I-101–I-112 still in records/tier-2 staging and the `com.semanticops.base` settings type not yet folded (grandfathered — see #207).\n\n<!-- srs-integration:v1\nschema:record.json\nschema:note.json\nschema:typed-record.json\nschema:relations-collection.json\nschema:source-document-meta.json\nschema:manifest.json\n-->"
+    },
+    {
+      "fieldId": "5a000016-0000-4000-a000-000000000016",
+      "value": "rfcs/rfc-017-attachments-base-package-archive-determinism.md"
+    },
+    {
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
+      "value": "Defines the attachment model for decision-log repositories — an `attaches` value on the `SourceReference.sourceRole` enum, an optional `com.semanticops.base` package with `attachment_policy` settings, deterministic-ZIP archive requirements, srsj-gzip retirement, and a tombstone reference-only state. Full text: rfcs/rfc-017-attachments-base-package-archive-determinism.md."
+    }
+  ],
+  "instanceId": "88f29903-f2f8-4314-bae1-5abfd96d2808",
+  "tags": [
+    "topic:rfc"
+  ],
+  "typeId": "6a000001-0000-4000-a000-000000000001",
+  "typeName": "rfc",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-07-21T17:31:55.352597696+00:00"
+}

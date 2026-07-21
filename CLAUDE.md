@@ -39,6 +39,27 @@ If missing, stop and reload the key — do not bypass signing.
 
 **The records are the source of truth. The markdown is a projection.**
 
+## RFC → canonical-spec integration (issue #204)
+
+An RFC lives in two places, with a clear canonical split:
+
+- **`rfcs/rfc-NNN-*.md`** — the RFC **proposal and design history** (the full text). Not canonical spec.
+- **`srs/records/` + `docs/schema/2.0/`** — the **canonical spec**. When an RFC is accepted, its normative changes MUST be folded in here.
+
+Every RFC is also a **stub record** (type `com.semanticops.spec/rfc`) — metadata + `proposal-artifact-path` pointing at its `.md` + an integration manifest. A stub record never embeds the full RFC body.
+
+An accepted/implemented RFC declares what it folded in as a machine-checkable manifest block appended to its `affected-components` field, inside an HTML comment:
+
+```
+<!-- srs-integration:v1
+ext:changelog
+schema:changelog.json
+I-90
+-->
+```
+
+Tokens: `I-<n>`, `ext:<name>`, `schema:<file>.json`, `type:<ns>/<name>`, `section:<slug>`, `subsection:<slug>`, or `tooling-only` (no record/schema artifact — tooling/CLI/downstream-package only). `scripts/check-rfc-integration.mjs` enforces that every accepted RFC declares a non-empty manifest whose tokens all resolve, and that the `.md` `**Status**:` line matches the record `rfc-status`. Genuinely-incomplete folds are grandfathered in `rfcs/integration-allowlist.json` with a follow-up issue. See `.claude/commands/rfc.md` Stage 6.
+
 ## Commands
 
 ```bash
@@ -53,8 +74,11 @@ srs record list --repo srs/srs --type com.semanticops.spec/section --pretty
 # Render the spec to markdown
 SRS_CLI_PATH=$(which srs) node scripts/publish-spec.mjs
 
-# Validate all records via Node scripts
+# Validate all records via Node scripts (includes the RFC integration + process checks)
 node scripts/validate-all.mjs
+
+# RFC → canonical-spec drift gate on its own (issue #204)
+node scripts/check-rfc-integration.mjs
 ```
 
 ## Working with Spec Content

@@ -2,7 +2,7 @@
 
 # RFC-018: Repository Changelog Extension (`ext:changelog`)
 
-**Status**: In Progress (Revision 3)
+**Status**: Accepted (Revision 3)
 **Affects**: `manifest.json` (new `changelogPath` property); new schema file `changelog.json`; `ext:changelog` extension declaration
 **Author**: the-greenman (from issue the-greenman/srs#52)
 **Date**: 2026-07-09

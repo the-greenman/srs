@@ -1,0 +1,13 @@
+{
+  "$comment": "Grandfathered accepted/implemented RFCs whose primary normative artifact is not yet folded into the canonical spec (issue #204). Each MUST cite a follow-up issue tracking the fold. Allowlisting skips ONLY the integration-completeness check (that every declared manifest token resolves and the manifest is non-empty); status legality, proposal-artifact-path existence, and .md<->record status consistency stay enforced. New accepted RFCs may NOT be added here without review — the gate (scripts/check-rfc-integration.mjs) hard-fails otherwise. Remove an entry once its follow-up lands and the RFC's manifest fully resolves.",
+  "grandfathered": {
+    "012": {
+      "issue": "the-greenman/srs#206",
+      "reason": "discovery.json schema + conformance fixture folded; ext:discovery extension record and R1-R12 invariants not yet authored"
+    },
+    "017": {
+      "issue": "the-greenman/srs#207",
+      "reason": "attaches sourceRole + contentPath schema changes folded; invariants I-101-I-112 still in records/tier-2 staging and com.semanticops.base settings type not yet folded"
+    }
+  }
+}
