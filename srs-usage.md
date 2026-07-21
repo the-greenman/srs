@@ -895,6 +895,46 @@ Returns an error if `--id` does not match a known migration. For `migrate-identi
 
 ---
 
+### Packing a Repository into a `.srs` Archive
+
+`archive pack` serializes the full repository — instances, relations, manifest, package, and source-document attachments — into a single deterministic `.srs` ZIP archive (SRSzip, ADR-033). Re-packing the same repository state always produces byte-identical output.
+
+```bash
+srs archive pack --output my-repo.srs --repo <path>
+```
+
+Payload:
+```json
+{
+  "outputPath": "my-repo.srs",
+  "fileSizeBytes": 42317
+}
+```
+
+`--repo` defaults to the current working directory. The `.srs` file is created at `--output`; existing files are overwritten.
+
+---
+
+### Unpacking a `.srs` Archive
+
+`archive unpack` extracts a `.srs` archive into a new file-tree repository at `--target`. The target directory must not already contain an SRS repository.
+
+```bash
+srs archive unpack my-repo.srs --target ./restored-repo
+```
+
+Payload:
+```json
+{
+  "targetDir": "./restored-repo",
+  "repositoryId": "<uuid-of-the-repository>"
+}
+```
+
+The unpacked repository is a full file-tree layout: `.srs/`, `manifest.json`, instance files, `relations/`, `package/`, and `source-documents/` (if present in the archive).
+
+---
+
 ## 5b. Changelog (`ext:changelog`, RFC-018)
 
 Repositories that declare `"ext:changelog"` in `manifest.declaredExtensions` maintain an append-only log of every entity-level mutation. The implementation writes a `ChangelogEntry` automatically on every successful `record create/update/delete` and `note create/update/delete`. No agent action is required to produce entries.
