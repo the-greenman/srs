@@ -343,3 +343,16 @@ tooling-only
 **Proposal Artifact Path**: rfcs/rfc-025-governance-primary-export-documentview.md
 **Content**: Adds a `governance-document` DocumentView to the `com.mudemocracy.governance` package and fixes the empty-governance seed to ship a conforming root container plus a `renderedPresentations` default. Introduces no new spec types or schema fields. Full text: rfcs/rfc-025-governance-primary-export-documentview.md.
 
+**Title**: RFC-026: ext:slices — Container Slices (Subset Repository Export)
+**RFC Number**: 026
+**Status**: accepted
+**Author**: the-greenman (from issue the-greenman/srs#194)
+**Affected Components**: `ext:slices` extension; optional `slice` block in `manifest.json` (`Slice`, `SliceSpec`, `SliceExternalRef` $defs); container-membership closure rules R1–R14; validation relaxations for slice archives.
+
+<!-- srs-integration:v1
+ext:slices
+schema:manifest.json
+-->
+**Proposal Artifact Path**: rfcs/rfc-026-ext-slices-subset-export.md
+**Content**: Defines `ext:slices` — a normative extension for container-membership slice export as a valid `.srs` archive. A container slice carries the records reachable from a container's membership, their type/field definitions, intra-slice relations, and referenced source documents. Dangling cross-boundary relations are preserved in `slice.externalRelationRefs[]` (not silently dropped), following the `ext:federation` graceful-degradation precedent. Schema change: `docs/schema/2.0/manifest.json` gains an optional `slice` property with `$defs.Slice`, `$defs.SliceSpec` (type enum: `["container"]`), and `$defs.SliceExternalRef`. Package export — distributing a package's definitions as a `package-bundle.json` — is explicitly excluded from this RFC's scope (RFC-003). Full text: rfcs/rfc-026-ext-slices-subset-export.md.
+

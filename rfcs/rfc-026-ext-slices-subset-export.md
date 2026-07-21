@@ -2,7 +2,7 @@
 
 # RFC-026: ext:slices — Container Slices (Subset Repository Export)
 
-**Status**: Draft (Revision 5)
+**Status**: Accepted (Revision 6)
 **Affects**: `ext:repository` (new optional `slice` manifest block); `docs/schema/2.0/manifest.json` (add `slice` property and `$defs.Slice`, `$defs.SliceSpec`, `$defs.SliceExternalRef`)
 **Author**: the-greenman (from issue the-greenman/srs#194)
 **Date**: 2026-07-20
@@ -14,6 +14,7 @@
 
 | Rev | Date | Summary |
 |---|---|---|
+| 6 | 2026-07-21 | Accepted; spec records authored in `srs/srs` — `ext:slices` extension record (`212379f4`), RFC-026 stub record (`efda4896`). |
 | 5 | 2026-07-21 | **Remove package-boundary closure entirely; a package export is not a repository slice.** RFC-026 now defines container-membership closure only. Package export (distributing a package's *definitions* as a `package-bundle.json`) is a different artifact class, homed in RFC-003 (Subset package export). Changes: drop Change C (package closure) and renumber (container closure → C, dangling-edge policy → D, validation semantics → E); narrow `SliceSpec.type` to `["container"]`; remove the package conformance rule and the package branch of the `manifest.container` rule; update abstract, motivation, rationale, alternatives, and open questions. Supersedes the never-published Rev 4 (package-definitions-only-as-slice), which mis-modelled a package bundle as a records-free `.srs` repository. |
 | 3 | 2026-07-20 | Fix new blocking issue from round 2 review: Change C item 5 sub-container rule — mixed-membership sub-containers MUST be excluded entirely (mirrors Change D item 6 rule). |
 | 2 | 2026-07-20 | Address Stage 3 review findings. Blocking: (SI-1/C-11) qualify backward-compatibility claim — pre-RFC-026 validators will reject the `slice` property; (SI-2/C-2) add normative rule for `manifest.container` in package-boundary slices (filter source root's memberInstanceIds to included set); (SI-3/C-4) fix Change D item 2 — replace undefined "transitive contains relations from root container" with memberInstanceIds/rootInstanceIds traversal; (SI-6/C-1) redefine package-boundary `spec.id` as `PackageRef.packageId`, closure as Tier 2 Records by typeId namespace — remove ADR-033/PackageBoundarySnapshot references; (SI-7/C-3) add normative statement that closure root becomes `manifest.container` in container slices. Should-fix: (SI-4) add `manifest.properties` entry to schema diff; (SI-5) add `relationId` to `SliceExternalRef`; (C-5) add validator-directed conformance rule (R14); (C-6) add RFC-005 non-applicability note for `externalRelationRefs.relationType`; (C-7) add Field definition completeness rule for Type FieldAssignments; (C-8) fix Alt C RFC citation (RFC-005, not RFC-022). Nits: (SI-8) elevate Change C/D sub-steps to MUST language; (SI-9) add relationType format guidance; (SI-10/C-9/C-10) fix R8 producer-side scoping and both-endpoints clause, add tombstone handling, close OQ2 as resolved. |
