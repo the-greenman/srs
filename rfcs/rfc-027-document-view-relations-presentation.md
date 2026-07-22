@@ -2,7 +2,7 @@
 
 # RFC-027: Per-record relation display in document views (`relationsPresentation`)
 
-**Status**: Draft (Revision 3)
+**Status**: In Progress (Revision 4)
 **Affects**: `ext:views-l2` (`DocumentSection`), `document-view.json` schema, `document-view-output.json` schema
 **Builds on**: RFC-005 (installed `RelationTypeDefinition`s — `label`, `inverseType`, definition `status`), RFC-008 (heterogeneous container-subset sections), RFC-015 (ordering/presentation layering, Rule [N+28]), RFC-020 (`Type.identityFieldId`, Rules [N+32]–[N+37]), RFC-022 (relational lifecycle / supersession)
 **Author**: Peter Brownell (seeded from the-greenman/srs#212)
@@ -16,6 +16,7 @@
 |---|---|---|
 | 1 | 2026-07-22 | Initial draft |
 | 2 | 2026-07-22 | Review round 1 (Spec Integrity + RFC Completeness; 5 blocking, 10 should-fix). Inverse-label ladder rebuilt on the RFC-005 Rev-7 fact that `inverseType` values are query labels, not installed definitions (humanization rule added); JSON projection shape specified and `document-view-output.json` added to Schema changes + Affects; spec-side display-label ladder for related instances (RFC-020 identity field → section `titleFieldId` → `instanceId`); Tier 0/1 member placement defined; per-format row rule tightened + normative markdown form; definition-`status` interplay (RFC-005) and RFC-026 slice interaction specified; code-point collation; dedupe rules; `label` property made explicitly reserved/ignored; worked example added; I-027-2 split into authoring vs render-time rules; new I-027-8; supersession claims qualified (`directions` opt-in); anchors non-goal recorded; Spec record amendments section added. |
+| 4 | 2026-07-22 | Implementation started; RFC file + schema changes committed to branch rfc/027-relations-presentation |
 | 3 | 2026-07-22 | Review round 2 (1 blocking, 6 should-fix, 8 nits; all round-1 blockers confirmed resolved). JSON-projection rules scoped to members projectable as `ProjectedRecord` — Tier 0/1 members (which the output schema cannot represent) are outside the JSON projection's `relations` property; RFC-026 rule-9 MAY removed (cut edges simply do not render); rule-5 step 1 restricted to non-empty string values and reworded to effective (declared-or-inherited, [N+34]) identity fields; rule-5 vs [N+37] precedence inversion explained in Rationale; worked example gains its effective-package-set assumption (canonical definitions resolve; governance 1.1.0 updates its package at adoption) and required `order`; dangling [I-027-2] citations fixed ([I-027-2a]/[I-027-2b]); humanization pinned to Unicode default case conversion; [I-027-4] clarified as Relation-`status`-not-lifecycle; [I-027-2a] timing pinned to repository validation; field groups attributed to Tier 2 only; stale revision self-references removed. |
 
 ---
