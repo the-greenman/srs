@@ -783,6 +783,8 @@ The `payload.summary` gives counts at a glance:
 
 `repo upgrade` normalises all instance file paths in a file-backed repository to the canonical `{slug}-{id8}.json` convention (ADR-008). Repositories created before this convention was introduced may have arbitrary file names in `instanceIndex`; `repo upgrade` renames the files, updates the manifest, and removes the old files atomically. Only valid for `--store file` repos.
 
+When two or more instances share the same `{slug}-{id8}` short form — e.g. deterministic UUIDs whose first 8 hex characters match — every instance in that colliding group widens to its full-id form `{slug}-{full-uuid}.json` so each file stays unique. This keeps `repo upgrade` (and `repo copy` / `.srsj` load) safe on repositories with prefix-colliding UUIDs (srs-rust#696).
+
 ```bash
 srs repo upgrade --repo <path>
 ```
