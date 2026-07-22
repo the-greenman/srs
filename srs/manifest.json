@@ -3269,6 +3269,14 @@
         "topic:rfc"
       ],
       "tier": 2
+    },
+    {
+      "instanceId": "48838a46-5bc6-4b14-a2c2-0b471c6d4d9e",
+      "path": "records/tier-2/rfc-48838a46.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
     }
   ],
   "meta": {
