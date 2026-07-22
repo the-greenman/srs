@@ -1668,6 +1668,57 @@ Container slice export will be surfaced as `srs archive pack --container <contai
 
 ---
 
+## 5i. MCP Server (`srs mcp serve`)
+
+The `srs` binary can serve one repository over the Model Context Protocol (stdio), making every MCP client (Claude Code, Cursor, Copilot, Goose, …) an SRS client with the same validated write contract the CLI enforces. The server is a thin adapter over the same repository services — CLI and MCP always agree.
+
+```bash
+srs mcp serve --repo <path>      # stdio MCP server; --repo auto-detects from cwd if omitted
+```
+
+**This command does not emit the JSON envelope** — stdout carries MCP JSON-RPC for the connected client, and pre-serve failures (no repository found) go to stderr with a non-zero exit. One repository per server process. The global `--pretty` and `--container` flags parse but are ignored.
+
+Client configuration (Claude Code `.mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "my-srs-repo": {
+      "command": "srs",
+      "args": ["mcp", "serve", "--repo", "/absolute/path/to/repo"]
+    }
+  }
+}
+```
+
+### Resources (read surface)
+
+The URI scheme is implementation tooling (srs-rust ADR-037), built from existing SRS identifiers:
+
+| URI | Content |
+|---|---|
+| `srs://<repositoryId>/map` | Repo map: counts, package info, relation summary (JSON — same shape as `repo map`) |
+| `srs://<repositoryId>/navigation` | Identity record + ordered navigation sections (JSON — same as `repo navigation`) |
+| `srs://<repositoryId>/record/{instanceId}` | One record, any tier (JSON; exposed as a resource template) |
+| `srs://<repositoryId>/container/<containerId>` | Container resolve-view: authored columns + ordered members (JSON — same as `container resolve-view`) |
+| `srs://<repositoryId>/view/<documentViewId>` | Rendered document view (markdown — same as `render document-view`) |
+
+Containers and document views are enumerated in `resources/list`; records are read through the template (discover instanceIds via the `find` tool or container resources).
+
+### Tools
+
+The tool set mirrors the discovery ladder and write workflows in this document. Descriptions below are the canonical tool descriptions (single-sourced from `srs-mcp`'s `tools.rs`):
+
+- **`repo_validate`** — validate the whole repository and return the diagnostics array plus a summary. Run after every write batch; an empty diagnostics array means the repository is consistent. Diagnostics are data, not an error.
+- **`find`** — the deterministic discovery query (ext:discovery): all axes optional and AND-combined (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `excludeLifecycleStates`, `tier`, `contentMatch`). Serves Tier 2 in this build; other tier values return zero hits with a diagnostic.
+- **`record_create`** — create a typed Tier-2 Record (`type` = `namespace/name`, `fieldValues` keyed by fieldId UUID). Validation is enforced: missing required or unknown fields are rejected with diagnostics and **nothing is written**. Optional `containerId` adds to a container atomically.
+- **`relation_create`** — assert a typed binary relation (`source [relationType] target`, forward form only). The `relationType` must resolve to an installed `RelationTypeDefinition` (RFC-005/R3) — an unknown type is a validation error.
+- **`note_create`** — create a Tier-0 Note (free-text sections). Optional `containerId` adds to a container atomically.
+
+A **rejected write is a tool-level result** (`isError: true` with the service diagnostics as text), not a protocol error — agents read the diagnostics and correct the input, exactly as with the CLI envelope. Update/successor/transition/graduate tools are a tracked follow-up (srs-rust#680).
+
+---
+
 ## 6. Common Traps
 
 ### The instanceIndex trap
