@@ -356,3 +356,18 @@ schema:manifest.json
 **Proposal Artifact Path**: rfcs/rfc-026-ext-slices-subset-export.md
 **Content**: Defines `ext:slices` — a normative extension for container-membership slice export as a valid `.srs` archive. A container slice carries the records reachable from a container's membership, their type/field definitions, intra-slice relations, and referenced source documents. Dangling cross-boundary relations are preserved in `slice.externalRelationRefs[]` (not silently dropped), following the `ext:federation` graceful-degradation precedent. Schema change: `docs/schema/2.0/manifest.json` gains an optional `slice` property with `$defs.Slice`, `$defs.SliceSpec` (type enum: `["container"]`), and `$defs.SliceExternalRef`. Package export — distributing a package's definitions as a `package-bundle.json` — is explicitly excluded from this RFC's scope (RFC-003). Full text: rfcs/rfc-026-ext-slices-subset-export.md.
 
+**Title**: RFC-027: Per-record relation display in document views (relationsPresentation)
+**RFC Number**: 027
+**Status**: accepted
+**Author**: the-greenman (from issue the-greenman/srs#212)
+**Affected Components**: `ext:views-l2` `DocumentSection.relationsPresentation` (RelationsPresentation, RelationPresentationEntry $defs in document-view.json); JSON projection ProjectedRecord.relations (ProjectedRelationRow, ProjectedRelationTarget $defs in document-view-output.json); rendering rules [I-027-1]-[I-027-8]; ext:views-l2 subsection amended.
+
+<!-- srs-integration:v1
+ext:views-l2
+schema:document-view.json
+schema:document-view-output.json
+subsection:ext-views-l2
+-->
+**Proposal Artifact Path**: rfcs/rfc-027-document-view-relations-presentation.md
+**Content**: Adds one optional property to DocumentSection in ext:views-l2: `relationsPresentation`. When present, each member the section renders is followed by a deterministic links block listing the member's Relations of the declared types — forward edges under a forward label, incoming edges (opt-in via `directions`) under an inverse label. Forward labels default to the installed RelationTypeDefinition label; inverse labels default to a mechanical humanization of the definition's declared inverseType query label (RFC-005); either can be overridden per view. Only stored forward edges are read (Invariant 16); edges display only when their own status is absent or active. Schema changes: `document-view.json` gains RelationsPresentation / RelationPresentationEntry $defs on DocumentSection; `document-view-output.json` gains ProjectedRecord.relations with ProjectedRelationRow / ProjectedRelationTarget $defs. Serves the decision-log links-in-export residual (muDemocracy.org#48 → srs#212) and the rendered supersession audit trail (muDemocracy.org#58). Full text: rfcs/rfc-027-document-view-relations-presentation.md.
+

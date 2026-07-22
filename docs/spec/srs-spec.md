@@ -1612,8 +1612,60 @@ One section in a Document View.
 
   required?: boolean
   emptyBehavior?: "hide" | "show-placeholder"
+
+  relationsPresentation?: RelationsPresentation   // RFC-027
+  // When present, render a deterministic per-member links block (the member's
+  // Relations of the declared types) after each member this section renders — all
+  // SectionSource variants, all member tiers. Independent of emptyBehavior.
+  // See RelationsPresentation below. Rules [I-027-1]-[I-027-8] (RFC-027).
 }
 ```
+
+#### `RelationsPresentation` (RFC-027)
+
+Opt-in per-section display of each rendered member's Relations as a links block.
+
+```typescript
+{
+  include: RelationPresentationEntry[]
+  // min 1; display order. Duplicate relationType entries are a repository-validation
+  // diagnostic; a renderer encountering them renders each independently.
+  label?: string
+  // Reserved for a future grouped/headed presentation. No rendering behaviour is
+  // defined; implementations MUST ignore it when rendering.
+}
+
+// RelationPresentationEntry
+{
+  relationType: string
+  // Bare canonical key (e.g. "supersedes") or namespace/name for custom types.
+  // Expected to resolve to an installed RelationTypeDefinition (RFC-005); checked at
+  // repository validation time. At render time a non-resolving, retired-only, or
+  // conflict-ambiguous entry is skipped with a diagnostic; entries resolving to
+  // active/deprecated/tombstone definitions display (rendering is a historical read).
+  // None of these conditions may abort the render.
+  directions?: "forward" | "inverse" | "both"   // default: "forward"
+  // Display-only: inverse Relations are never stored or synthesised (Invariant 16).
+  forwardLabel?: string
+  // Override for edges where the member is the source. Default ladder: installed
+  // definition label, then humanized relation type key.
+  inverseLabel?: string
+  // Override for edges where the member is the target. Default ladder: humanized
+  // declared inverseType query label (RFC-005), then forward label + " (incoming)".
+}
+```
+
+Rendering rules (normative statements [I-027-1]-[I-027-8] in RFC-027):
+
+- **Edge selection.** Edges display only when their own `status` is absent or `"active"` — the filter never reads the related record's `lifecycleState`. A lifecycle-superseded record's active edges display normally.
+- **Placement.** The block renders after the member's rendered content (fields and field groups for Tier 2; fields for Tier 1; body content for Tier 0) and before nested subsection members. When no edge survives selection, the block is omitted entirely for that member, regardless of `emptyBehavior`.
+- **Rows.** One row per (entry, direction) with at least one edge: the resolved label followed by the related instances' display labels, comma-joined. Markdown normative form: `**<label>**: <display label>, <display label>`. Other formats use the same label/value markup that implementation emits for a field row. Related-instance display labels resolve by: the value of the instance's effective `identityFieldId` (RFC-020, declared or inherited per [N+34]) when it resolves to a non-empty string → the instance's value for the section's `titleFieldId` when a non-empty string → the `instanceId`. Tier 0/1 related instances always fall through to `instanceId`.
+- **Determinism.** Rows follow `include[]` order, forward before inverse per entry; within a row, instances order by display label then `instanceId`, both in Unicode code point order; a related instance repeated within one (entry, direction) renders once.
+- **JSON projection.** Members that project as `ProjectedRecord` carry `relations: ProjectedRelationRow[]` (`document-view-output.json`) preserving row order; members with no surviving edges omit the property. Tier 0/1 members are outside the JSON projection's `relations` property; their rendered-format blocks are unaffected.
+- **Sliced repositories.** Cross-boundary Relations moved to `slice.externalRelationRefs[]` (RFC-026 R6) do not render.
+- **Humanization** (for default labels): take the key's name segment (after the last `/` for namespaced keys), replace every `-` and `_` with a single space, uppercase the first character using Unicode default (locale-independent) case conversion. `superseded-by` → `Superseded by`.
+
+Link labels prefer the identity field over the section's `titleFieldId` — the reverse of the [N+37] heading precedence — because a related instance need not be a member of the rendering section. Rows emit plain display labels, not hyperlinks; anchor emission awaits a spec-level record-anchor convention.
 
 #### `NavigationLink`
 
