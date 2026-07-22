@@ -41,6 +41,12 @@ detail.
 
 JSON Schema definitions for SRS data structures are in [schema/](schema/).
 
+## Research
+
+| Document | Description |
+|----------|-------------|
+| [research/spec-driven-development-landscape.md](research/spec-driven-development-landscape.md) | Survey of the spec-driven development tooling landscape (July 2026) and where SRS sits in it |
+
 ---
 
 All documents in `spec/` are generated from source records in `srs/srs/records/`. Do not edit them by hand — run `node scripts/render-spec.mjs` from the `srs/` directory to regenerate.
