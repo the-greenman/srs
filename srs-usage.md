@@ -898,7 +898,9 @@ Returns an error if `--id` does not match a known migration. For `migrate-identi
 
 ### Packing a Repository into a `.srs` Archive
 
-`archive pack` serializes the full repository — instances, relations, manifest, package, and source-document attachments — into a single deterministic `.srs` ZIP archive (SRSzip, ADR-033). Re-packing the same repository state always produces byte-identical output.
+`archive pack` serializes the full repository — instances, relations, manifest, the package **including every per-definition file** (fields, types, relation types, views, themes, …, across all package boundaries), and source-document attachments — into a single deterministic `.srs` ZIP archive (SRSzip, ADR-033/ADR-039). The archive is a byte-faithful zip of the exploded file tree: unpacking reproduces the packed files at their original paths. Re-packing the same repository state always produces byte-identical output. A referenced definition file that is missing on disk fails the pack with an error naming the path.
+
+Archives produced by pre-ADR-039 versions (which carried a `package/package.snapshot.json` instead of per-definition files) still **open** — they load through a legacy migration ramp and are written in the current format on the next save/export. New archives never contain a snapshot file.
 
 ```bash
 srs archive pack --output my-repo.srs --repo <path>
