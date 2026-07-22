@@ -46,6 +46,8 @@ JSON Schema definitions for SRS data structures are in [schema/](schema/).
 | Document | Description |
 |----------|-------------|
 | [research/spec-driven-development-landscape.md](research/spec-driven-development-landscape.md) | Survey of the spec-driven development tooling landscape (July 2026) and where SRS sits in it |
+| [research/semantic-document-landscape.md](research/semantic-document-landscape.md) | Survey of portable-semantic-document analogs across three lineages (July 2026) — SRS's neighbors, the empty quadrant, and the June 2026 entrants |
+| [research/alignment-opportunities.md](research/alignment-opportunities.md) | Actionable register derived from both surveys: adoption/alignment candidates, prioritized and weighted, with compatibility flags — consulted by /ship and /rfc |
 
 ---
 
