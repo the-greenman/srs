@@ -1,0 +1,19 @@
+{
+  "blueprints": [],
+  "documentViews": [],
+  "fields": [
+    "fields/allowedmimetypes-8912f486.json",
+    "fields/maxperfilebytes-f1bce663.json",
+    "fields/maxdocbytes-78cbbc28.json",
+    "fields/maxtotalbytes-7db68d66.json"
+  ],
+  "id": "03c4434f-6f01-4353-b672-a629254ddcc9",
+  "name": "base",
+  "namespace": "com.semanticops.base",
+  "relationTypes": [],
+  "types": [
+    "types/reposettings-849dab3d.json"
+  ],
+  "version": "1.0.0",
+  "views": []
+}

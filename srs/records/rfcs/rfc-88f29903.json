@@ -20,7 +20,7 @@
     },
     {
       "fieldId": "5a000009-0000-4000-a000-000000000009",
-      "value": "`attaches` sourceRole value + contentPath across SourceReference schemas landed. Invariants I-101–I-112 still in records/tier-2 staging and the `com.semanticops.base` settings type not yet folded (grandfathered — see #207).\n\n<!-- srs-integration:v1\nschema:record.json\nschema:note.json\nschema:typed-record.json\nschema:relations-collection.json\nschema:source-document-meta.json\nschema:manifest.json\n-->"
+      "value": "`attaches` sourceRole value + contentPath across SourceReference schemas landed. Invariants I-101–I-112 relocated to records/invariants/ and the `com.semanticops.base` `repo_settings` type (attachment_policy settings) authored in package/base (#207).\n\n<!-- srs-integration:v1\nschema:record.json\nschema:note.json\nschema:typed-record.json\nschema:relations-collection.json\nschema:source-document-meta.json\nschema:manifest.json\ntype:com.semanticops.base/repo_settings\nI-101\nI-102\nI-103\nI-104\nI-105\nI-106\nI-107\nI-108\nI-109\nI-110\nI-111\nI-112\n-->"
     },
     {
       "fieldId": "5a000016-0000-4000-a000-000000000016",
@@ -28,7 +28,7 @@
     },
     {
       "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": "Defines the attachment model for decision-log repositories — an `attaches` value on the `SourceReference.sourceRole` enum, an optional `com.semanticops.base` package with `attachment_policy` settings, deterministic-ZIP archive requirements, srsj-gzip retirement, and a tombstone reference-only state. Full text: rfcs/rfc-017-attachments-base-package-archive-determinism.md."
+      "value": "Defines the attachment model for decision-log repositories — an `attaches` value on the `SourceReference.sourceRole` enum, an optional `com.semanticops.base` package with `repo_settings` (attachment_policy) settings, deterministic-ZIP archive requirements, srsj-gzip retirement, and a tombstone reference-only state. Schema changes, invariants I-101–I-112, and the `com.semanticops.base/repo_settings` type are all folded into the canonical spec. Full text: rfcs/rfc-017-attachments-base-package-archive-determinism.md."
     }
   ],
   "instanceId": "88f29903-f2f8-4314-bae1-5abfd96d2808",
@@ -39,5 +39,5 @@
   "typeName": "rfc",
   "typeNamespace": "com.semanticops.spec",
   "typeVersion": 1,
-  "updatedAt": "2026-07-21T17:31:55.352597696+00:00"
+  "updatedAt": "2026-07-23T18:43:06.720733361+00:00"
 }

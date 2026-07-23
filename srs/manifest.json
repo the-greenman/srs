@@ -3116,7 +3116,7 @@
     },
     {
       "instanceId": "2be86c08-b427-4510-a1e8-25524f90ddaf",
-      "path": "records/tier-2/invariant-2be86c08.json",
+      "path": "records/invariants/invariant-2be86c08.json",
       "tags": [
         "construct:attachment",
         "topic:schema"
@@ -3125,7 +3125,7 @@
     },
     {
       "instanceId": "d85abd4c-ca6b-4c36-939c-fde7ad373a00",
-      "path": "records/tier-2/invariant-d85abd4c.json",
+      "path": "records/invariants/invariant-d85abd4c.json",
       "tags": [
         "construct:attachment"
       ],
@@ -3133,7 +3133,7 @@
     },
     {
       "instanceId": "6341bcaa-c496-46cd-b1cd-6b6bcbb5223c",
-      "path": "records/tier-2/invariant-6341bcaa.json",
+      "path": "records/invariants/invariant-6341bcaa.json",
       "tags": [
         "construct:attachment",
         "construct:package"
@@ -3142,7 +3142,7 @@
     },
     {
       "instanceId": "bfc2af4e-b5f8-47e9-b64d-aa0b39aba902",
-      "path": "records/tier-2/invariant-bfc2af4e.json",
+      "path": "records/invariants/invariant-bfc2af4e.json",
       "tags": [
         "construct:attachment",
         "construct:package"
@@ -3151,7 +3151,7 @@
     },
     {
       "instanceId": "c348617e-60eb-4132-a399-48c39a57e8dc",
-      "path": "records/tier-2/invariant-c348617e.json",
+      "path": "records/invariants/invariant-c348617e.json",
       "tags": [
         "construct:archive"
       ],
@@ -3159,7 +3159,7 @@
     },
     {
       "instanceId": "296c61be-9c7d-4f5d-88b2-e5c827595aaf",
-      "path": "records/tier-2/invariant-296c61be.json",
+      "path": "records/invariants/invariant-296c61be.json",
       "tags": [
         "construct:archive"
       ],
@@ -3167,7 +3167,7 @@
     },
     {
       "instanceId": "6a7d674a-ea06-4c2f-bf05-905da2d7cc35",
-      "path": "records/tier-2/invariant-6a7d674a.json",
+      "path": "records/invariants/invariant-6a7d674a.json",
       "tags": [
         "construct:attachment",
         "construct:validation"
@@ -3176,7 +3176,7 @@
     },
     {
       "instanceId": "fcc662f0-f970-40f7-b7ad-2ecbecff8168",
-      "path": "records/tier-2/invariant-fcc662f0.json",
+      "path": "records/invariants/invariant-fcc662f0.json",
       "tags": [
         "construct:archive"
       ],
@@ -3184,7 +3184,7 @@
     },
     {
       "instanceId": "83410026-2648-42ab-8bbb-9ed2031132d6",
-      "path": "records/tier-2/invariant-83410026.json",
+      "path": "records/invariants/invariant-83410026.json",
       "tags": [
         "construct:attachment",
         "topic:schema"
@@ -3193,7 +3193,7 @@
     },
     {
       "instanceId": "5e89a360-7ec5-4b4d-b0f8-9323ffa3e549",
-      "path": "records/tier-2/invariant-5e89a360.json",
+      "path": "records/invariants/invariant-5e89a360.json",
       "tags": [
         "construct:attachment"
       ],
@@ -3201,7 +3201,7 @@
     },
     {
       "instanceId": "e0c51df4-be21-4d76-965b-5b1df3e0954c",
-      "path": "records/tier-2/invariant-e0c51df4.json",
+      "path": "records/invariants/invariant-e0c51df4.json",
       "tags": [
         "construct:attachment",
         "construct:package"
@@ -3210,7 +3210,7 @@
     },
     {
       "instanceId": "8b166381-c6e3-4db7-b193-bf635bd61249",
-      "path": "records/tier-2/invariant-8b166381.json",
+      "path": "records/invariants/invariant-8b166381.json",
       "tags": [
         "construct:attachment"
       ],
@@ -3411,6 +3411,10 @@
   },
   "namespace": "com.semanticops.srs",
   "packageRefs": [
+    {
+      "mode": "local",
+      "path": "package/base"
+    },
     {
       "mode": "local",
       "path": "package/core"
