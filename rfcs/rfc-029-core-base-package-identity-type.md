@@ -1,8 +1,8 @@
 > **GitHub issue**: [the-greenman/srs#134](https://github.com/the-greenman/srs/issues/134)
 
-# RFC-018: Core Base Package and Required `com.semanticops.core/purpose` Identity Type
+# RFC-029: Core Base Package and Required `com.semanticops.core/purpose` Identity Type
 
-**Status**: Accepted (Revision 4)
+**Status**: Accepted (Revision 5)
 **Affects**: `com.semanticops.core` namespace (new); `purpose` Type (new Tier-2 type); `manifest.json` Container `identityInstanceId` description; `container.json` `identityInstanceId` description; `ext:repository` (`repo create` behaviour); invariants I-85 (`9d686444`), I-86 (`890d7d54`), I-87 (`818d636c`); RFC-013 I-81 (retained, I-87 layers on top)
 **Author**: the-greenman (from issue the-greenman/srs#134)
 **Date**: 2026-07-08
@@ -19,6 +19,7 @@
 | 2 | 2026-07-08 | Address review findings. **Blocking:** (a) Resolve R5/R7 contradiction — R7 now explicitly overrides R5 during migration grace period; (b) add RFC-014 R6 integration clause to Change A and R1; (c) replace pre-assigned invariant numbers I-85–I-87 with provisional labels I-CORE-A/B/C; (d) add missing rationale and Alt E for `com.semanticops.core` vs `com.semanticops.srs` namespace choice. **Should-fix:** extend R7 grace to all non-purpose identities (not just Tier-0 notes); qualify `container.json` description update to root container only; remove untestable truncation from R8; add R6 no-intent-text behaviour; fix Change C bullet conflict with Change D; add `--intent` citation for R6; add migration command signature; scope R2 namespace reservation; clarify I-81 vs I-CORE-C layering; close identityInstanceId optional-but-required gap; replace "Stage 6" references with concrete deliverable text. **Nits:** affirm core bundle conforms to `package-bundle.json`; improve R8 behavioural description; standardize Force column; open OQ-1 for packageId; add Non-Goals section; add `title` usage guidance; clarify R4 whitespace rule; add Tier-2 justification. |
 | 3 | 2026-07-08 | Implementation started; RFC file committed to branch `rfc/018-core-base-package-identity-type`; schema descriptions updated in `docs/schema/2.0/manifest.json` and `docs/schema/2.0/container.json` to reference RFC-018 and qualify the type constraint to the root container only. |
 | 4 | 2026-07-08 | Accepted; spec records authored in `srs/srs/` — invariants I-85 (`9d686444`), I-86 (`890d7d54`), I-87 (`818d636c`) as `com.semanticops.spec/invariant` records under `records/invariants/`; `srs repo validate` clean (0 errors, 5 pre-existing warnings). Provisional labels I-CORE-A/B/C → permanent I-85, I-86, I-87. |
+| 5 | 2026-07-23 | Renumbered RFC-018 → RFC-029 to resolve a number collision with RFC-018 (Repository Changelog Extension), which had already claimed 018 with its own accepted, record-backed proposal (the-greenman/srs#209). File renamed `rfc-018-core-base-package-identity-type.md` → `rfc-029-core-base-package-identity-type.md`; self-references throughout updated to RFC-029; `docs/schema/2.0/manifest.json` and `container.json` `identityInstanceId` descriptions updated from RFC-018 to RFC-029; a stub `com.semanticops.spec/rfc` record authored for this RFC under number 029 (no such record previously existed under 018). |
 
 ---
 
@@ -40,7 +41,7 @@ A repository that wants to upgrade its identity from a Tier-0 note to a typed re
 
 ### Problem 3 — Type resolution fails for `identityInstanceId` in the reference implementation
 
-`repository_navigation` (srs-rust) and the WASM bindings cannot return a typed identity record when `identityInstanceId` points at a Tier-0 note, because the note has no type and none can be inferred. This makes identity resolution a special code path rather than an ordinary `resolve_type`/`record_get` call. RFC-018 removes the special path by making identity a real typed record.
+`repository_navigation` (srs-rust) and the WASM bindings cannot return a typed identity record when `identityInstanceId` points at a Tier-0 note, because the note has no type and none can be inferred. This makes identity resolution a special code path rather than an ordinary `resolve_type`/`record_get` call. RFC-029 removes the special path by making identity a real typed record.
 
 ---
 
@@ -53,7 +54,7 @@ Introduce the `com.semanticops.core` namespace as a **reserved core namespace**.
 The **core base package** is an always-available package artifact:
 
 - It is embedded in every conforming SRS implementation (analogous to how `srs-rust` embeds `governance-seed.srsj` via `include_str!`, built deterministically from the spec records in `srs/srs/`).
-- At repository load time, a conforming implementation MUST implicitly merge the core package's field and type definitions into the package union **before** any type resolution. Specifically, the core base package's definitions MUST be treated as logically present in the RFC-014 R6 union (the union of all installed package version directories) even though no `packageRef` entry points to them. `com.semanticops.core/*` `typeId`s and `fieldId`s MUST resolve against this implicitly merged union exactly as if they appeared in an explicit local package. A validator applying RFC-014 R6 MUST include the core package in the resolution union; failure to do so is non-conformance with RFC-018, not a validation error on the repository.
+- At repository load time, a conforming implementation MUST implicitly merge the core package's field and type definitions into the package union **before** any type resolution. Specifically, the core base package's definitions MUST be treated as logically present in the RFC-014 R6 union (the union of all installed package version directories) even though no `packageRef` entry points to them. `com.semanticops.core/*` `typeId`s and `fieldId`s MUST resolve against this implicitly merged union exactly as if they appeared in an explicit local package. A validator applying RFC-014 R6 MUST include the core package in the resolution union; failure to do so is non-conformance with RFC-029, not a validation error on the repository.
 - A repository declaring any Type or Field under the `com.semanticops.core` namespace in a local or external package MUST be rejected with a conflict error. Core namespace definitions are exclusively the implementation's responsibility.
 - The canonical definition of the core base package is the SRS records authored in `srs/srs/` (tracked in srs-rust#135). The artifact consumed by implementations is a deterministic `.srsj` export of those records, valid against `docs/schema/2.0/package-bundle.json` with `mode: bundled`; its `packageId` UUID is minted when those records are authored (see Open Questions OQ-1). The artifact is rebuilt whenever the spec records change and verified by a `--check` rebuild test.
 - The core bundle is a valid instance of `docs/schema/2.0/package-bundle.json`. Implementations MUST validate it against that schema during build, not at repository load time.
@@ -92,7 +93,7 @@ The core base package defines a single Tier-2 type:
 
 RFC-013 I-81 requires `identityInstanceId` to resolve to a member of the root container. This RFC **layers an additional constraint** on top: `identityInstanceId` on the root container MUST reference a Tier-2 Record of type `com.semanticops.core/purpose`.
 
-**I-81 is not modified.** It continues to state the membership requirement. I-87 (this RFC) is a separate, additive invariant that constrains the target's type. Both I-81 and I-87 apply simultaneously to `identityInstanceId` on a root container under RFC-018.
+**I-81 is not modified.** It continues to state the membership requirement. I-87 (this RFC) is a separate, additive invariant that constrains the target's type. Both I-81 and I-87 apply simultaneously to `identityInstanceId` on a root container under RFC-029.
 
 The existing RFC-013 properties are **preserved**:
 - The pointer is reassignable at any time (RFC-013 R8).
@@ -100,16 +101,16 @@ The existing RFC-013 properties are **preserved**:
 - `identityInstanceId` is carried on the Container, not the manifest.
 - Core Container invariants 20–21 are unchanged.
 
-**`identityInstanceId` remains an optional field** in both schemas. R5 (type constraint) applies only when the field is present. A repository with a root container and no `identityInstanceId` field set is valid under RFC-018; the grace rule R7 applies only where `identityInstanceId` is present but resolves to a non-`purpose` record.
+**`identityInstanceId` remains an optional field** in both schemas. R5 (type constraint) applies only when the field is present. A repository with a root container and no `identityInstanceId` field set is valid under RFC-029; the grace rule R7 applies only where `identityInstanceId` is present but resolves to a non-`purpose` record.
 
-What RFC-018 **supersedes** in RFC-013:
+What RFC-029 **supersedes** in RFC-013:
 - Change B default: "A conforming `repo create` MUST set `identityInstanceId` to a `purpose` Record, not to a Tier-0 note." (A `repo create` implementation MAY still create a Tier-0 root note for use as a navigation section; it MUST NOT set `identityInstanceId` to it — see Change D step 4.)
 - Alt C (rejected): "A new universal repository identity Type and base package" → **superseded**: Alt C is the accepted design.
 - Non-Goal: "No new identity Type and no base package" → **removed**.
 
 ### Change D — `repo create` produces a `purpose` Record as the identity
 
-`repo create` (the `ext:repository` initialisation command) currently creates a Tier-0 root note as the initial identity record. RFC-018 changes this:
+`repo create` (the `ext:repository` initialisation command) currently creates a Tier-0 root note as the initial identity record. RFC-029 changes this:
 
 1. `repo create` MUST create a Tier-2 `purpose` Record using the intent text supplied via the `--intent <text>` argument (as defined in the `ext:repository` spec) as the `statement`. The `purpose` Record's `title` SHOULD be set to the repository name (the value passed to `--name` or equivalent).
 2. If no `--intent` text is supplied at invocation time, the implementation MUST either prompt the user interactively for a purpose statement or halt with an error before creating the repository. It MUST NOT initialize the repository with an empty or whitespace-only `statement`.
@@ -121,7 +122,7 @@ What RFC-018 **supersedes** in RFC-013:
 
 ## Conformance Rules
 
-> **[R1]** A conforming SRS implementation MUST include the core base package's definitions in the package union resolved by RFC-014 R6 for every repository, without requiring any `packageRef` or `packageRefs` declaration in the manifest. `com.semanticops.core/*` types and fields MUST resolve against this union exactly as if they appeared in an explicit local package. An implementation that fails to resolve core types in a structurally valid repository is non-conformant with RFC-018.
+> **[R1]** A conforming SRS implementation MUST include the core base package's definitions in the package union resolved by RFC-014 R6 for every repository, without requiring any `packageRef` or `packageRefs` declaration in the manifest. `com.semanticops.core/*` types and fields MUST resolve against this union exactly as if they appeared in an explicit local package. An implementation that fails to resolve core types in a structurally valid repository is non-conformant with RFC-029.
 
 > **[R2]** A repository MUST NOT declare any Type or Field under the `com.semanticops.core` namespace in a local or external package. An implementation MUST reject the repository load with a conflict error if any such declaration is encountered. This reservation covers the `com.semanticops.core` namespace only; other `com.semanticops.*` sub-namespaces are not affected.
 
@@ -129,11 +130,11 @@ What RFC-018 **supersedes** in RFC-013:
 
 > **[R4]** A `purpose` Record's `statement` field value MUST be non-empty. Implementations SHOULD trim leading and trailing whitespace before storing `statement`; the validation rule is applied to the stored value as-is. A stored value that is empty or consists solely of whitespace is a validation error.
 
-> **[R5]** `manifest.container.identityInstanceId`, when present, MUST reference a Tier-2 Record of type `com.semanticops.core/purpose`. An implementation MUST report a validation error if `identityInstanceId` resolves to a record of any other tier or type, subject to the migration grace rule in R7. (Layers on RFC-013 I-81: the membership requirement of I-81 is retained; RFC-018 adds a type constraint on top.)
+> **[R5]** `manifest.container.identityInstanceId`, when present, MUST reference a Tier-2 Record of type `com.semanticops.core/purpose`. An implementation MUST report a validation error if `identityInstanceId` resolves to a record of any other tier or type, subject to the migration grace rule in R7. (Layers on RFC-013 I-81: the membership requirement of I-81 is retained; RFC-029 adds a type constraint on top.)
 
 > **[R6]** A repository initialized by `repo create` MUST have `manifest.container.identityInstanceId` set to a `purpose` Record created at initialization time. The `purpose` Record's `statement` MUST be the value of the `--intent` argument passed to `repo create` (as defined in the `ext:repository` spec); its `title` SHOULD be the repository name. If no `--intent` value is supplied, the implementation MUST prompt the user or halt with an error — it MUST NOT create the repository with an empty or whitespace-only `statement`. (Supersedes RFC-013 Change B default.)
 
-> **[R7]** **Migration grace rule (overrides R5 for existing repositories).** Notwithstanding R5, during the migration grace period established by RFC-018: an implementation MUST emit a migration warning in place of the R5 validation error for any existing repository whose `identityInstanceId` is present but resolves to a record that is not a Tier-2 `com.semanticops.core/purpose` Record (including Tier-0 notes and Tier-1 TypedRecords of any type). All other R5 constraints — non-purpose targets in newly created repositories, and `identityInstanceId` values that fail I-81 membership — remain hard errors. This grace rule expires when a migration deadline is established by a future RFC or platform announcement; no deadline is set by RFC-018 itself.
+> **[R7]** **Migration grace rule (overrides R5 for existing repositories).** Notwithstanding R5, during the migration grace period established by RFC-029: an implementation MUST emit a migration warning in place of the R5 validation error for any existing repository whose `identityInstanceId` is present but resolves to a record that is not a Tier-2 `com.semanticops.core/purpose` Record (including Tier-0 notes and Tier-1 TypedRecords of any type). All other R5 constraints — non-purpose targets in newly created repositories, and `identityInstanceId` values that fail I-81 membership — remain hard errors. This grace rule expires when a migration deadline is established by a future RFC or platform announcement; no deadline is set by RFC-029 itself.
 
 > **[R8]** A conforming implementation MUST expose a deterministic migration operation — a CLI command, API call, or equivalent — that accepts a repository with a non-`purpose` `identityInstanceId` and produces a repository where: (a) a new Tier-2 `purpose` Record exists with its `statement` set to the full text of the previous identity record's body (verbatim, without truncation or summarization), (b) `identityInstanceId` is repointed to the new `purpose` Record's `instanceId`, and (c) `srs repo validate` reports 0 errors. The proposed CLI form is `srs repo migrate-identity [--repo <path>]` (non-normative example; final command name is implementation-defined). The new `purpose` Record's `instanceId` MUST be freshly minted; the previous identity record's `instanceId` is not reused. The previous identity record MAY be retained as a navigation section member or removed; this is implementation policy. Implementation tracked in srs-rust#426.
 
@@ -145,7 +146,7 @@ What RFC-018 **supersedes** in RFC-013:
 |---|---|---|---|
 | **I-85** | `com.semanticops.core/*` types and fields MUST resolve in every conforming repository without any package declaration. An implementation that fails to resolve them in a structurally valid repository is non-conformant. | MUST — implementation conformance | `9d686444-89d9-4a30-a9c3-b08bd31b62ca` |
 | **I-86** | No Type or Field with namespace `com.semanticops.core` MAY be declared in any local or external package installed by a repository. An implementation MUST reject the load with a conflict error on such a declaration. | MUST NOT — validation error | `890d7d54-81f6-4001-bf31-30b156844431` |
-| **I-87** | `manifest.container.identityInstanceId`, when present, MUST reference a Tier-2 Record of type `com.semanticops.core/purpose`. Layers on RFC-013 I-81 (membership requirement retained; RFC-018 adds the type constraint). During the migration grace period (RFC-018 R7), an implementation MUST emit a migration warning rather than a validation error for existing repositories whose `identityInstanceId` resolves to a non-`purpose` record. | MUST — validation error (see R7 grace period) | `818d636c-8347-46a1-a9a2-c99e2ee90d21` |
+| **I-87** | `manifest.container.identityInstanceId`, when present, MUST reference a Tier-2 Record of type `com.semanticops.core/purpose`. Layers on RFC-013 I-81 (membership requirement retained; RFC-029 adds the type constraint). During the migration grace period (RFC-029 R7), an implementation MUST emit a migration warning rather than a validation error for existing repositories whose `identityInstanceId` resolves to a non-`purpose` record. | MUST — validation error (see R7 grace period) | `818d636c-8347-46a1-a9a2-c99e2ee90d21` |
 
 ---
 
@@ -165,8 +166,8 @@ This RFC deliberately does not introduce, and the following are out of scope:
 
 | Schema file | Change |
 |---|---|
-| `docs/schema/2.0/manifest.json` | Update `$defs/Container.properties.identityInstanceId` description to reference RFC-018 and the `com.semanticops.core/purpose` type constraint on the root container. |
-| `docs/schema/2.0/container.json` | Update `properties.identityInstanceId` description: add "RFC-018 additionally requires that on the root container (`manifest.container`), this MUST reference a Tier-2 Record of type `com.semanticops.core/purpose`. For non-root containers this type constraint does not apply." |
+| `docs/schema/2.0/manifest.json` | Update `$defs/Container.properties.identityInstanceId` description to reference RFC-029 and the `com.semanticops.core/purpose` type constraint on the root container. |
+| `docs/schema/2.0/container.json` | Update `properties.identityInstanceId` description: add "RFC-029 additionally requires that on the root container (`manifest.container`), this MUST reference a Tier-2 Record of type `com.semanticops.core/purpose`. For non-root containers this type constraint does not apply." |
 
 No new schema files are required. The `purpose` type shape is defined as SRS Field and Type records authored in `srs/srs/` (tracked in srs-rust#135), not as JSON Schema artifacts. The core base package bundle artifact (`.srsj` export of those records) is a valid instance of `docs/schema/2.0/package-bundle.json` with `mode: bundled`; no additional schema file is needed.
 
@@ -188,7 +189,7 @@ Per the `/rfc` single-repo workflow, this session edits only the canonical schem
 
 **Why tighten `identityInstanceId` to a specific type rather than leave it open.** RFC-013's membership-only constraint leaves the implementation unable to resolve identity in a type-driven way. Code that retrieves the identity record must branch on "is this a Note or a TypedRecord?" before it can do anything useful. A typed constraint turns identity resolution into an ordinary `resolve_type` + `record_get` call, eliminating the special path.
 
-**Why a grace rule (R7) rather than a hard error for existing non-`purpose` identities.** Existing conformant RFC-013 repositories should not suddenly break when RFC-018 is adopted. R7 gives implementations time to ship a migration operation (R8, tracked in srs-rust#426) before enforcement is tightened.
+**Why a grace rule (R7) rather than a hard error for existing non-`purpose` identities.** Existing conformant RFC-013 repositories should not suddenly break when RFC-029 is adopted. R7 gives implementations time to ship a migration operation (R8, tracked in srs-rust#426) before enforcement is tightened.
 
 **Why R8 requires verbatim note text (no truncation).** The `statement` field is declared as `text` with no length cap; a long statement is still a valid statement. Allowing discretionary truncation would make migration non-reproducible — two conformant tools could produce different `statement` values from the same note body, which is unacceptable for a deterministic migration.
 
@@ -220,7 +221,7 @@ Add the `purpose` type to the existing `com.semanticops.srs` namespace. **Reject
 
 ## Migration
 
-Existing repositories that were conformant under RFC-013 (with a Tier-0 note or any other non-`purpose` record as `identityInstanceId`) are non-conformant under RFC-018 until migrated. The R7 grace rule prevents hard errors until migration. The migration is one-time and mechanical, executed by `srs repo migrate-identity` (R8):
+Existing repositories that were conformant under RFC-013 (with a Tier-0 note or any other non-`purpose` record as `identityInstanceId`) are non-conformant under RFC-029 until migrated. The R7 grace rule prevents hard errors until migration. The migration is one-time and mechanical, executed by `srs repo migrate-identity` (R8):
 
 1. Create a new Tier-2 `purpose` Record: `statement` = existing identity record's full body text (verbatim), `title` = existing record's title (or repository manifest `title` if absent).
 2. Add the new `purpose` Record to the root container's membership (`rootInstanceIds` or `memberInstanceIds`) **before** updating `identityInstanceId` (so I-81 remains satisfied at all steps).

@@ -3417,6 +3417,16 @@
       "instanceId": "0b8f008f-0bd1-4fe4-803b-9a7bb1a92acf",
       "path": "records/invariants/invariant-0b8f008f.json",
       "tier": 2
+    },
+    {
+      "instanceId": "5e7e508f-1728-4364-8dd3-e1e96f46e606",
+      "path": "records/tier-2/rfc-5e7e508f.json",
+      "tags": [
+        "topic:rfc",
+        "construct:package",
+        "concern:identity"
+      ],
+      "tier": 2
     }
   ],
   "meta": {

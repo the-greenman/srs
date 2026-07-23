@@ -98,7 +98,7 @@ srs lifecycle get --repo <path> <lifecycleId> --pretty
 
 A vocabulary in `open` mode accepts any tag key.
 
-### Updating a Lifecycle (RFC-016)
+### Updating a Lifecycle (RFC-028)
 
 Use `srs lifecycle update` to modify an existing lifecycle definition (add states, change transitions, etc.). The command accepts **bare Lifecycle JSON only** — it does not unwrap a `{ "lifecycle": { ... } }` envelope. Fetch-edit-send pattern:
 
