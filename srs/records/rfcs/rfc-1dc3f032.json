@@ -20,7 +20,7 @@
     },
     {
       "fieldId": "5a000009-0000-4000-a000-000000000009",
-      "value": "`ordering.memberOrder` on `container-subset` sections + `renderedPresentations` on the manifest. Invariants [N+28]–[N+31] not yet assigned I-numbers (issue #204 follow-up).\n\n<!-- srs-integration:v1\nschema:document-view.json\nschema:manifest.json\n-->"
+      "value": "`ordering.memberOrder` on `container-subset` sections + `renderedPresentations` on the manifest. Invariants I-125–I-128 (RFC-015 Rules [N+28]-[N+31]).\n\n<!-- srs-integration:v1\nschema:document-view.json\nschema:manifest.json\nI-125\nI-126\nI-127\nI-128\n-->"
     },
     {
       "fieldId": "5a000016-0000-4000-a000-000000000016",
@@ -39,5 +39,5 @@
   "typeName": "rfc",
   "typeNamespace": "com.semanticops.spec",
   "typeVersion": 1,
-  "updatedAt": "2026-07-21T17:31:55.346818285+00:00"
+  "updatedAt": "2026-07-23T20:48:57.014945806+00:00"
 }

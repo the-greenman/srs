@@ -3397,6 +3397,26 @@
       "instanceId": "ed385e02-c82a-451e-8973-6aa87f01cfd1",
       "path": "records/invariants/invariant-ed385e02.json",
       "tier": 2
+    },
+    {
+      "instanceId": "6970c1bc-42b1-4c4c-b59e-3600f8236f3d",
+      "path": "records/invariants/invariant-6970c1bc.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "20bd523e-fe89-4e1b-b7a0-e499cbc96820",
+      "path": "records/invariants/invariant-20bd523e.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "ab24cfd9-a1f3-45c4-aa69-c902cb4928bd",
+      "path": "records/invariants/invariant-ab24cfd9.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "0b8f008f-0bd1-4fe4-803b-9a7bb1a92acf",
+      "path": "records/invariants/invariant-0b8f008f.json",
+      "tier": 2
     }
   ],
   "meta": {

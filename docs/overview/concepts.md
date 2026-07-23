@@ -186,7 +186,7 @@ inline `selectOptions` list), so option sets become named, shareable, and versio
 
 > **Supersedes (RFC-006):** `TagDefinition` → **`Term`**; `tagKey` → **`key`**; inline
 > `selectOptions` → **`vocabularyRef`**; inline `Type.lifecycle` → **`lifecycleRef`**.
-> The legacy `tag-definition` type still exists for compatibility but `Term`/`Vocabulary`
+> The legacy `tag-definition` package type has been retired; `Term`/`Vocabulary`
 > is the model going forward.
 
 ## Lifecycle — state machines as a closed vocabulary
