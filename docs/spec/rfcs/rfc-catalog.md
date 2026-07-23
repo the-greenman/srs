@@ -21,6 +21,7 @@ schema:view.json
 ext:themes-l1
 schema:theme.json
 schema:package-manifest.json
+schema:package-bundle.json
 -->
 **Proposal Artifact Path**: rfcs/rfc-002.md
 **Content**: Defines the `ext:themes-l1` extension, attaching a non-destructive `Theme` (assets, element/page templates, stylesheet, CSS-class injection) to a `DocumentView`, with graceful degradation for implementations that do not support it. Full text: rfcs/rfc-002.md.
@@ -249,11 +250,15 @@ I-82
 **RFC Number**: 015
 **Status**: accepted
 **Author**: the-greenman
-**Affected Components**: `ordering.memberOrder` on `container-subset` sections + `renderedPresentations` on the manifest. Invariants [N+28]–[N+31] not yet assigned I-numbers (issue #204 follow-up).
+**Affected Components**: `ordering.memberOrder` on `container-subset` sections + `renderedPresentations` on the manifest. Invariants I-125–I-128 (RFC-015 Rules [N+28]-[N+31]).
 
 <!-- srs-integration:v1
 schema:document-view.json
 schema:manifest.json
+I-125
+I-126
+I-127
+I-128
 -->
 **Proposal Artifact Path**: rfcs/rfc-015-view-owned-ordering-declared-presentations.md
 **Content**: Separates semantic order (`precedes`) from presentational order via a view-owned `ordering.memberOrder` list on `container-subset` DocumentView sections and a normative `renderedPresentations` array on the manifest declaring the default presentation. Full text: rfcs/rfc-015-view-owned-ordering-declared-presentations.md.

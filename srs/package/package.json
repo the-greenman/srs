@@ -85,7 +85,6 @@
     "types/meta.rfc.json",
     "types/meta.section.json",
     "types/meta.subsection.json",
-    "types/tag-definition.json",
     "types/meta.term.json",
     "types/meta.vocabulary.json",
     "types/meta.lifecycle.json"

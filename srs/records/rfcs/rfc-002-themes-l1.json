@@ -24,7 +24,7 @@
     },
     {
       "fieldId": "5a000009-0000-4000-a000-000000000009",
-      "value": "<!-- srs-integration:v1\next:themes-l1\nschema:theme.json\nschema:package-manifest.json\n-->"
+      "value": "<!-- srs-integration:v1\next:themes-l1\nschema:theme.json\nschema:package-manifest.json\nschema:package-bundle.json\n-->"
     }
   ],
   "instanceId": "854eedf0-ddcf-5f17-bfef-28d27d1e9e6a",
@@ -45,5 +45,6 @@
   "typeId": "6a000001-0000-4000-a000-000000000001",
   "typeName": "rfc",
   "typeNamespace": "com.semanticops.spec",
-  "typeVersion": 1
+  "typeVersion": 1,
+  "updatedAt": "2026-07-23T20:48:53.073689203+00:00"
 }

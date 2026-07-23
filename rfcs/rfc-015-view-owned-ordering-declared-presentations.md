@@ -16,6 +16,7 @@
 |---|---|---|
 | 1 | 2026-07-03 | Initial draft |
 | 2 | 2026-07-03 | Add `direction: "desc"` step (4) to Rule [N+29]; close OQ-1 (resolved). Fix RFC-014 dangling reference in Rationale. Promote OQ-2 resolution into Rule [N+31] (multi-package conflict + `viewId` failure); close OQ-2. Add Migration section. Add diagnostic asymmetry rationale. Add New Invariants note. Add RFC-013 OQ-1 acknowledgment. Fix `[N+20]–[N+21]` → `[N+19]–[N+21]` in Change B. Fix `direction` description in schema snippets. Fix Affects header for [N+31]. Fix MUST wording in Rule [N+29] step (2). Implementation started; spec records authored in `srs/srs/`; PR opened as srs#115. |
+| 3 | 2026-07-23 | Fold residue: Rules [N+28]–[N+31] assigned permanent invariant numbers I-125–I-128 and authored as `com.semanticops.spec/invariant` records (`srs/srs/records/invariants/`). RFC record's integration manifest updated accordingly. |
 
 ---
 
