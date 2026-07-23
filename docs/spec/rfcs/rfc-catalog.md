@@ -262,7 +262,7 @@ schema:manifest.json
 **RFC Number**: 017
 **Status**: accepted
 **Author**: the-greenman
-**Affected Components**: `attaches` sourceRole value + contentPath across SourceReference schemas landed. Invariants I-101–I-112 still in records/tier-2 staging and the `com.semanticops.base` settings type not yet folded (grandfathered — see #207).
+**Affected Components**: `attaches` sourceRole value + contentPath across SourceReference schemas landed. Invariants I-101–I-112 relocated to records/invariants/ and the `com.semanticops.base` `repo_settings` type (attachment_policy settings) authored in package/base (#207).
 
 <!-- srs-integration:v1
 schema:record.json
@@ -271,9 +271,22 @@ schema:typed-record.json
 schema:relations-collection.json
 schema:source-document-meta.json
 schema:manifest.json
+type:com.semanticops.base/repo_settings
+I-101
+I-102
+I-103
+I-104
+I-105
+I-106
+I-107
+I-108
+I-109
+I-110
+I-111
+I-112
 -->
 **Proposal Artifact Path**: rfcs/rfc-017-attachments-base-package-archive-determinism.md
-**Content**: Defines the attachment model for decision-log repositories — an `attaches` value on the `SourceReference.sourceRole` enum, an optional `com.semanticops.base` package with `attachment_policy` settings, deterministic-ZIP archive requirements, srsj-gzip retirement, and a tombstone reference-only state. Full text: rfcs/rfc-017-attachments-base-package-archive-determinism.md.
+**Content**: Defines the attachment model for decision-log repositories — an `attaches` value on the `SourceReference.sourceRole` enum, an optional `com.semanticops.base` package with `repo_settings` (attachment_policy) settings, deterministic-ZIP archive requirements, srsj-gzip retirement, and a tombstone reference-only state. Schema changes, invariants I-101–I-112, and the `com.semanticops.base/repo_settings` type are all folded into the canonical spec. Full text: rfcs/rfc-017-attachments-base-package-archive-determinism.md.
 
 **Title**: RFC-019: Cross-Field Validation Rules — validationRules on Type and CrossFieldRule Schema
 **RFC Number**: 019

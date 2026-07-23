@@ -3040,6 +3040,48 @@ Conforming implementations must uphold the following invariants.
 
 **I-88.** The `sourceRole` value set — the closed enum of the implemented schema revision, including values added by later accepted RFCs — MUST be disjoint under literal whole-key equality from the set of installed `RelationTypeDefinition` keys in the repository's effective package set. Relation-type creation MUST reject a definition whose key equals a `sourceRole` value; `repo validate` MUST report a pre-existing collision as `SOURCEROLE_RELATIONTYPE_COLLISION` (warning at rest). The legacy `relationType` enum on SourceReference is exempt. A namespaced key (e.g. `com.acme/evidence`) does not collide with a bare `sourceRole` value.
 
+#### Validators, importers
+
+**I-101.** A conformant implementation MUST accept `"attaches"` as a value of `SourceReference.sourceRole`. An attachment is a `SourceReference` with `sourceType: "repository-document"`, `sourceRole: "attaches"`, and `sourceId` equal to a source document's `documentId`. Attachment MUST NOT be modelled as a `Relation` edge; there is no `attaches` canonical `Relation` type.
+
+#### Validators
+
+**I-102.** The `sourceId` of an `attaches` `SourceReference` MUST resolve to a `documentId` present in `sourceDocumentIndex` (or discoverable via a `.meta.json` sidecar scan of `sourceDocumentsPath`) in the same repository. Resolution is against the index/sidecar entry, not the content file. A `sourceId` that resolves to no such entry is non-conformant and MUST be reported with a diagnostic at validation time.
+
+**I-111.** At most one `attachment_policy` record of the `com.semanticops.base/repo_settings` type MAY exist per repository. A conformant implementation encountering two or more MUST surface a diagnostic and treat the policy as absent (applying the no-policy defaults: all MIME types accepted, no size limits enforced, no size-or-MIME-type-policy diagnostics emitted).
+
+#### All implementations
+
+**I-103.** A conformant implementation MUST NOT refuse to load, validate, or export a repository solely because the `com.semanticops.base` package is absent or because no `attachment_policy` record is present.
+
+**I-104.** When no `attachment_policy` record exists, a conformant implementation MUST apply the no-policy defaults: all MIME types accepted, no size limits enforced, no size-or-MIME-type-policy diagnostics emitted.
+
+#### ext:repository archive producers
+
+**I-105.** A conformant archive producer MUST produce deterministic ZIP archives: entries sorted byte-lexicographically by forward-slash-normalised path, `last mod` timestamps zeroed (`0x0000`), compression method Deflate (8) or Store (0) only with consistent per-file choice across invocations, `extra` fields empty, Language encoding flag (bit 11) set to 1.
+
+**I-106.** Given identical repository content, a conformant archive producer MUST produce a byte-for-byte identical `.srs` file across invocations of the same implementation. Cross-implementation byte identity is not guaranteed (I-105 allows implementation-defined Store/Deflate choice). Identical content means identical archive entry paths (forward-slash-normalised) and byte contents; filesystem timestamps, permissions, and host metadata are excluded and MUST NOT influence archive output.
+
+#### `srs repo validate`
+
+**I-107.** A conformant implementation MAY enforce `attachment_policy` limits as hard rejections. If it does not, it MUST emit non-blocking warning diagnostics at `srs repo validate` time when: a source document content file exceeds `maxPerFileBytes` or `maxDocBytes`; aggregate source-document bytes exceed `maxTotalBytes`; an attached file's MIME type is not listed in `allowedMimeTypes`. Non-blocking diagnostics MUST NOT prevent record storage or repository export.
+
+#### ext:json-store importers and validators
+
+**I-108.** A conformant implementation MUST reject a gzip-compressed file presented as a `.srsj` JSON Store. Detection is by content inspection: a file whose first two bytes are `0x1f 0x8b` MUST be treated as gzip-compressed regardless of its filename or MIME type.
+
+#### ext:repository source-document resolution
+
+**I-109.** `contentPath` in a source-document sidecar MAY contain forward-slash-separated sub-path segments. A conformant implementation MUST resolve `contentPath` relative to `sourceDocumentsPath`.
+
+#### ext:repository source-document sidecars
+
+**I-110.** A sidecar MUST reside in the same directory as the content file it describes. A `contentPath` that traverses upward (e.g., `../other/file.pdf`) is non-conformant.
+
+#### ext:repository validators, exporters
+
+**I-112.** A `sourceDocumentIndex` entry whose content file (at `contentPath`) is absent is a valid tombstone (reference-only) state. A conformant implementation MUST NOT reject, refuse to load, or refuse to export a repository solely because an indexed source document's content is missing. An `attaches` `SourceReference` targeting a tombstoned `documentId` remains conformant (I-102). An implementation MAY surface an informational non-blocking diagnostic that the content is unavailable.
+
 #### ext:discovery
 
 **I-113.** An implementation that declares `ext:discovery` MUST include in its DiscoveryQuery result set every instance that satisfies all specified structured filter predicates (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `excludeLifecycleStates`, `tier`), and MUST NOT include any instance that fails any specified structured filter predicate. (RFC-012 R1.)
