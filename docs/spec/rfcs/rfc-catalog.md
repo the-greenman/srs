@@ -207,13 +207,26 @@ schema:document-view.json
 **RFC Number**: 012
 **Status**: accepted
 **Author**: Peter Brownell
-**Affected Components**: `discovery.json` schema + conformance fixture landed. `ext:discovery` extension record and R1–R12 invariants NOT yet folded (grandfathered — see #206).
+**Affected Components**: `discovery.json` schema + conformance fixture landed. `ext:discovery` extension record and I-113–I-124 invariants (R1–R12) authored (#206).
 
 <!-- srs-integration:v1
 schema:discovery.json
+ext:discovery
+I-113
+I-114
+I-115
+I-116
+I-117
+I-118
+I-119
+I-120
+I-121
+I-122
+I-123
+I-124
 -->
 **Proposal Artifact Path**: rfcs/rfc-012-discovery-contract-text-projection.md
-**Content**: Defines a portable Discovery Contract (structured filter axes), a deterministic Text Projection, normalization rules, and an opt-in `ext:discovery` extension, plus a conformance fixture. The `discovery.json` schema and `conformance/discovery/` fixture landed; the `ext:discovery` extension record and R1–R12 global invariants are not yet authored. Full text: rfcs/rfc-012-discovery-contract-text-projection.md.
+**Content**: Defines a portable Discovery Contract (structured filter axes), a deterministic Text Projection, normalization rules, and an opt-in `ext:discovery` extension, plus a conformance fixture. The `discovery.json` schema, `conformance/discovery/` fixture, `ext:discovery` extension record, and I-113–I-124 invariants are all folded into the canonical spec. Full text: rfcs/rfc-012-discovery-contract-text-projection.md.
 
 **Title**: RFC-013: Required Root Container & Structural Navigation
 **RFC Number**: 013
