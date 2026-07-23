@@ -2,7 +2,7 @@
 
 # RFC-012: Discovery Contract & Text Projection
 
-**Status**: Accepted (Revision 7)
+**Status**: Accepted (Revision 8)
 **Affects**: `Field` (`valueType` searchability classification), `Record` (Tier 2), `TypedRecord` (Tier 1), `Note` (Tier 0), `Container`, `ext:lifecycle`, new `discovery.json` schema
 **Author**: Peter Brownell (scoped from srs-rust#213)
 **Date**: 2026-06-26
@@ -21,6 +21,7 @@
 | 5 | 2026-06-26 | Implementation started; RFC file committed to branch rfc/011-discovery-contract-text-projection. |
 | 6 | 2026-06-27 | Accepted; `docs/schema/2.0/discovery.json` authored; conformance fixture created at `conformance/discovery/`; `ext:discovery` spec record authored in `srs/srs/`; spec re-rendered. |
 | 7 | 2026-06-28 | Additive, backward-compatible: add `excludeLifecycleStates: string[]` to `DiscoveryQuery` (parity with the RFC-011 `type-query` axis of the same name). Lets an authored view's default-hidden lifecycle states (e.g. `superseded`, `closed`) be applied at query time with a client-side runtime "show all" (empty list) override, so the interactive list path composes container resolve-view with a single discovery query rather than re-expressing lifecycle filtering in clients. Existing conformance scenarios unaffected (property is optional). |
+| 8 | 2026-07-23 | Fold completion (#206): authored the `ext:discovery` extension record (`records/extensions/extension-8239da34.json`) and R1–R12 as invariant records I-113–I-124 (`records/invariants/`), the two normative artifacts left un-folded after Rev 6. RFC-012's integration manifest now declares `schema:discovery.json`, `ext:discovery`, and `I-113`–`I-124`, and resolves without the `rfcs/integration-allowlist.json` grandfather entry. No change to the contract itself. |
 
 ---
 

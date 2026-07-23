@@ -2798,7 +2798,7 @@
     },
     {
       "instanceId": "996e81fe-1c1f-4317-bd92-e9c8332905d8",
-      "path": "package/records/extension-996e81fe.json",
+      "path": "records/extensions/extension-996e81fe.json",
       "tags": [
         "concern:extensibility",
         "construct:discovery",
@@ -3336,6 +3336,66 @@
       "tags": [
         "topic:rfc"
       ],
+      "tier": 2
+    },
+    {
+      "instanceId": "0e6bca40-c267-4c3f-ac36-947e63e66917",
+      "path": "records/invariants/invariant-0e6bca40.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "ae111a90-1b1d-4ac9-a9a1-4248af051942",
+      "path": "records/invariants/invariant-ae111a90.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "dcc49425-990e-4e85-8823-1359be6c91f0",
+      "path": "records/invariants/invariant-dcc49425.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "6debe8a7-d937-4ee5-97e5-4432c87f14d4",
+      "path": "records/invariants/invariant-6debe8a7.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "5840eeb0-ed2c-4e2e-9430-5be5265396d7",
+      "path": "records/invariants/invariant-5840eeb0.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "fed0ec5e-d150-4282-9af2-d1c4fc4d2364",
+      "path": "records/invariants/invariant-fed0ec5e.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "7110cc58-63e2-4cd5-8cef-e1ab9457f952",
+      "path": "records/invariants/invariant-7110cc58.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "99dc528c-1440-4012-a4f5-51d97b91cf9e",
+      "path": "records/invariants/invariant-99dc528c.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "93320c14-fd67-4401-8309-34352d15f298",
+      "path": "records/invariants/invariant-93320c14.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "b3eb90e9-5e18-44a4-9751-4d453c37e65b",
+      "path": "records/invariants/invariant-b3eb90e9.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "e2788042-b58c-4013-8794-7fb4e6bafc9a",
+      "path": "records/invariants/invariant-e2788042.json",
+      "tier": 2
+    },
+    {
+      "instanceId": "ed385e02-c82a-451e-8973-6aa87f01cfd1",
+      "path": "records/invariants/invariant-ed385e02.json",
       "tier": 2
     }
   ],
