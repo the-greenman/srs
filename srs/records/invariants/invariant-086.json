@@ -16,7 +16,7 @@
     },
     {
       "fieldId": "1a000021-0000-4000-a000-000000000021",
-      "value": "com.semanticops.core namespace; ext:repository; RFC-018 R2; package loading (load_package conflict detection)."
+      "value": "com.semanticops.core namespace; ext:repository; RFC-029 R2; package loading (load_package conflict detection)."
     },
     {
       "fieldId": "1a000004-0000-4000-a000-000000000004",
@@ -28,5 +28,5 @@
   "typeName": "invariant",
   "typeNamespace": "com.semanticops.spec",
   "typeVersion": 1,
-  "updatedAt": "2026-07-08T22:25:45.835500718+00:00"
+  "updatedAt": "2026-07-23T22:47:41.489335382+00:00"
 }

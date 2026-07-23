@@ -4,7 +4,7 @@
   "fieldValues": [
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",
-      "value": "RFC-016 Change A: Add srs lifecycle update <lifecycleId> command"
+      "value": "RFC-028 Change A: Add srs lifecycle update <lifecycleId> command"
     },
     {
       "fieldId": "5a000009-0000-4000-a000-000000000009",
@@ -28,5 +28,5 @@
   "typeName": "rfc-change",
   "typeNamespace": "com.semanticops.spec",
   "typeVersion": 1,
-  "updatedAt": "2026-07-04T11:23:08.503647641+00:00"
+  "updatedAt": "2026-07-23T22:47:14.219533255+00:00"
 }

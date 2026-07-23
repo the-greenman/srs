@@ -1,8 +1,8 @@
 > **GitHub issue**: [the-greenman/srs#119](https://github.com/the-greenman/srs/issues/119)
 
-# RFC-016: Lifecycle Update Command
+# RFC-028: Lifecycle Update Command
 
-**Status**: Accepted (Revision 2)
+**Status**: Accepted (Revision 4)
 **Affects**: `ext:lifecycle` (CLI contract), `srs-usage.md` (agentic write-workflow reference)
 **Author**: the-greenman (from issue the-greenman/srs#81)
 **Date**: 2026-07-04
@@ -16,6 +16,7 @@
 | 1 | 2026-07-04 | Initial draft |
 | 2 | 2026-07-04 | Address review findings: expand R5 to cover all RFC-006 V9 obligations (blocking); fix Behaviour §4/R5 cardinality contradiction; add R2/R5 two-pass clarification; add R8 (stable UUID SHOULD); add extension-cascade behaviour note; specify bare-JSON-only input; add Documentation Changes section; add usage-pattern jq extraction step; add `extendsLifecycleId` scope note; fix R5 `===` notation; add `createdAt` preservation note; address LifecycleState substrate compliance. |
 | 3 | 2026-07-04 | Implementation started; spec records authored in `srs/srs/` (RFC record `5c5422b9`, Change A `5601eb2e`); PR opened on branch `rfc/016-lifecycle-update-command`. |
+| 4 | 2026-07-23 | Renumbered RFC-016 → RFC-028 to resolve a number collision with RFC-016 (Invariant Record Projection), which had already claimed 016 with its own accepted, record-backed proposal (the-greenman/srs#209). File renamed `rfc-016-lifecycle-update-command.md` → `rfc-028-lifecycle-update-command.md`; existing spec record `5c5422b9` updated in place (title, RFC Number, Proposal Artifact Path fields) rather than recreated. |
 
 ---
 

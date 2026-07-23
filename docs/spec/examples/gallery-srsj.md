@@ -48,8 +48,8 @@ resolves the real root container.
 
 Regenerating with a container-resolution-capable build also surfaces a new warning
 that was previously masked because validation short-circuited on the unresolvable
-container: RFC-018 I-81 — the root container's `identityInstanceId` (Article A-001)
-resolves to type `governance/article`, but RFC-018 expects `com.semanticops.core/purpose`.
+container: RFC-029 I-81 — the root container's `identityInstanceId` (Article A-001)
+resolves to type `governance/article`, but RFC-029 expects `com.semanticops.core/purpose`.
 Warning severity only (0 errors); left as-is pending a decision on whether this fixture
 should carry a dedicated purpose record instead of reusing Article A-001.
 

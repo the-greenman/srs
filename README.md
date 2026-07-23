@@ -50,7 +50,7 @@ conformance/          discovery conformance scenarios + fixture repo
 srs-usage.md          authoritative agent rules for working with any SRS repository
 ```
 
-Every repository has a **required root container** (`manifest.container`, RFC-013): the repo's identity object and the top of structural navigation. Its `identityInstanceId` names the repository identity record — on the root container this MUST be a Tier-2 Record of type `com.semanticops.core/purpose` (RFC-018); its non-identity members are the navigation sections, ordered by the `precedes` chain. Enforcement and `repo create` scaffolding land in the epic's Phase 1 — the constraint is defined in the spec now and dogfooded as the implementation catches up.
+Every repository has a **required root container** (`manifest.container`, RFC-013): the repo's identity object and the top of structural navigation. Its `identityInstanceId` names the repository identity record — on the root container this MUST be a Tier-2 Record of type `com.semanticops.core/purpose` (RFC-029); its non-identity members are the navigation sections, ordered by the `precedes` chain. Enforcement and `repo create` scaffolding land in the epic's Phase 1 — the constraint is defined in the spec now and dogfooded as the implementation catches up.
 
 ## Reading the spec
 

@@ -118,8 +118,8 @@ tooling-only
 
 **GitHub issue:** srs#116. Closes srs#99.
 
-**Title**: RFC-016: Lifecycle Update Command
-**RFC Number**: 016
+**Title**: RFC-028: Lifecycle Update Command
+**RFC Number**: 028
 **Status**: accepted
 **Author**: the-greenman (from issue the-greenman/srs#81)
 **Affected Components**: ext:lifecycle (CLI contract), srs-usage.md (agentic write-workflow reference)
@@ -127,7 +127,7 @@ tooling-only
 <!-- srs-integration:v1
 tooling-only
 -->
-**Proposal Artifact Path**: rfcs/rfc-016-lifecycle-update-command.md
+**Proposal Artifact Path**: rfcs/rfc-028-lifecycle-update-command.md
 **Content**: srs lifecycle supports list, get, and create but has no update subcommand. This forces direct JSON file editing to modify an existing lifecycle definition, violating the CLI-first rule in srs-usage.md. This RFC adds srs lifecycle update <lifecycleId> to the spec, modelling it on srs type update. No schema changes are required. Full-replace semantics: caller fetches, edits, and sends the complete lifecycle JSON back. Seven conformance rules covering schema validation, id-match, RFC-006 V9 integrity (isFinal, transition id uniqueness, initial-state active-status), and full-replace write semantics.
 
 **Title**: RFC-018: Repository Changelog Extension (`ext:changelog`)
@@ -401,4 +401,21 @@ subsection:ext-views-l2
 -->
 **Proposal Artifact Path**: rfcs/rfc-027-document-view-relations-presentation.md
 **Content**: Adds one optional property to DocumentSection in ext:views-l2: `relationsPresentation`. When present, each member the section renders is followed by a deterministic links block listing the member's Relations of the declared types — forward edges under a forward label, incoming edges (opt-in via `directions`) under an inverse label. Forward labels default to the installed RelationTypeDefinition label; inverse labels default to a mechanical humanization of the definition's declared inverseType query label (RFC-005); either can be overridden per view. Only stored forward edges are read (Invariant 16); edges display only when their own status is absent or active. Schema changes: `document-view.json` gains RelationsPresentation / RelationPresentationEntry $defs on DocumentSection; `document-view-output.json` gains ProjectedRecord.relations with ProjectedRelationRow / ProjectedRelationTarget $defs. Serves the decision-log links-in-export residual (muDemocracy.org#48 → srs#212) and the rendered supersession audit trail (muDemocracy.org#58). Full text: rfcs/rfc-027-document-view-relations-presentation.md.
+
+**Title**: RFC-029: Core Base Package and Required com.semanticops.core/purpose Identity Type
+**RFC Number**: 029
+**Status**: accepted
+**Author**: the-greenman (from issue the-greenman/srs#134)
+**Affected Components**: com.semanticops.core namespace (new); com.semanticops.core/purpose Type (new Tier-2 type); manifest.json/container.json identityInstanceId descriptions; ext:repository (repo create behaviour); invariants I-85, I-86, I-87; RFC-013 I-81 (retained, layered)
+
+<!-- srs-integration:v1
+type:com.semanticops.core/purpose
+schema:manifest.json
+schema:container.json
+I-85
+I-86
+I-87
+-->
+**Proposal Artifact Path**: rfcs/rfc-029-core-base-package-identity-type.md
+**Content**: RFC-013 introduced identityInstanceId as a pointer from the root container to the repository's identity record, defaulting to an un-navigable, non-semantic Tier-0 root note. This RFC introduces a minimal com.semanticops.core/purpose Tier-2 type -- carrying a required statement field and an optional title field -- defined in an always-available core base package that every conforming SRS implementation implicitly merges into every repository's resolved package (RFC-014 R6 union), without requiring any packageRef declaration. identityInstanceId on the root container is tightened to MUST reference a Tier-2 purpose Record, superseding RFC-013's Tier-0-note default, subject to a migration grace period (R7) for existing repositories. This record was authored under issue the-greenman/srs#209 (renumbered from RFC-018 to resolve a number collision with RFC-018: Repository Changelog Extension); the RFC was originally accepted and implemented under the 018 number in July 2026 (see revision history in rfcs/rfc-029-core-base-package-identity-type.md).
 
