@@ -1732,6 +1732,57 @@ A **rejected write is a tool-level result** (`isError: true` with the service di
 
 ---
 
+## 5j. OKF Bundle Export (`srs render okf-bundle`)
+
+`srs render okf-bundle` exports a container as a **Google Open Knowledge Format (OKF) v0.1** folder: one Markdown file per member instance plus an `index.md` listing them. The file order respects `precedes` relations among members; ties use insertion order.
+
+```bash
+srs render okf-bundle \
+  --repo <path> \
+  --container <containerId> \
+  --output <output-dir>
+```
+
+The output directory is created if absent. All member instances are written; members not found in the store produce a diagnostic entry rather than an error, so partial containers export cleanly.
+
+**File layout:**
+
+```
+<output-dir>/
+  index.md                     # container title + bullet list of links
+  <slug>-<id8>.md              # one file per instance (slug = display-label slugified)
+  <id8>.md                     # (when slug is empty — label has no alphanumeric chars)
+```
+
+Each instance file has a YAML frontmatter block followed by a Markdown heading and (for Notes) section content:
+
+```yaml
+---
+srs_id: <instanceId>
+type: <namespace>/<typeName>    # or "note" for Tier-0 Notes
+<fieldName>: <value>            # one line per field (JSON-serialised value; strings are quoted)
+---
+# <displayLabel>
+
+<note section content...>
+```
+
+**Payload (`render-okf-bundle`):**
+
+```json
+{
+  "fileCount": 4,
+  "outputDir": "/tmp/my-okf-export",
+  "diagnostics": []
+}
+```
+
+`fileCount` includes `index.md`. `diagnostics` carries the IDs of any member instances that were not found in the store (soft errors — the bundle is still written for all resolved members).
+
+**Negative case:** a `--container` that does not exist returns `ok: false` with a `ContainerNotFound` error, and no output directory is created.
+
+---
+
 ## 6. Common Traps
 
 ### The instanceIndex trap
