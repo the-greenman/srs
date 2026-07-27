@@ -1,0 +1,45 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-07-27T21:53:26.175238497+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "RFC-030: Rename Field's normative `selectOptions` property to `allowedValues`"
+    },
+    {
+      "fieldId": "5a000001-0000-4000-a000-000000000001",
+      "value": "030"
+    },
+    {
+      "fieldId": "5a000002-0000-4000-a000-000000000002",
+      "value": "accepted"
+    },
+    {
+      "fieldId": "5a000003-0000-4000-a000-000000000003",
+      "value": "the-greenman (from issue the-greenman/srs#232)"
+    },
+    {
+      "fieldId": "5a000009-0000-4000-a000-000000000009",
+      "value": "com.semanticops.spec/field type-definition record; §04-2-4-2 Field subsection; §03-1 Version semantics subsection; §04-7 Vocabulary and Term subsection (invariant V3); docs/schema/2.0/package-bundle.json (embedded Field shape)\n\n<!-- srs-integration:v1\ntype:com.semanticops.spec/field\nsubsection:field\nsubsection:version-semantics\nsubsection:vocabulary-and-term\nschema:package-bundle.json\n-->"
+    },
+    {
+      "fieldId": "5a000016-0000-4000-a000-000000000016",
+      "value": "rfcs/rfc-030-field-allowed-values-rename.md"
+    },
+    {
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
+      "value": "The normative spec named a Field (Tier 2) property `selectOptions`, while the JSON Schema (docs/schema/2.0/field.json), the reference Rust engine (srs-core::Field::allowed_values), and every published Field instance already used `allowedValues`. This RFC corrects the spec prose -- and a second, previously-unnoticed schema drift in docs/schema/2.0/package-bundle.json's embedded Field shape -- to the already-shipped name `allowedValues`, with no breaking change to any schema, engine, or instance data. TypedField (Tier 1) is unrelated and untouched -- its `selectOptions` property is correctly named in both spec and schema. This RFC renames text originally authored by RFC-006 (vocabulary/Term substrate) without altering its exclusivity or resolution semantics."
+    }
+  ],
+  "instanceId": "2a0fd144-337f-4f14-ada3-5c190c2c2e9e",
+  "tags": [
+    "topic:rfc",
+    "construct:field",
+    "concern:naming"
+  ],
+  "typeId": "6a000001-0000-4000-a000-000000000001",
+  "typeName": "rfc",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 1,
+  "updatedAt": "2026-07-27T21:53:26.175248095+00:00"
+}
