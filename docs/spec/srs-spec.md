@@ -126,7 +126,7 @@ The `/` and `@` characters are reserved separators. They must not appear within 
 | Documentation, typo, formatting only | Optional bump |
 | `description`, `instructions`, or `aiGuidance.purpose` reworded without semantic change | Minor bump recommended |
 | `aiGuidance.extraction` or `aiGuidance.purpose` changed in meaning | Version bump required |
-| `valueType`, `selectOptions`, or `validationRules` changed | Version bump required |
+| `valueType`, `allowedValues`, or `validationRules` changed | Version bump required |
 | `name` changed | New definition required (new UUID) |
 | `namespace` changed | New definition required (new UUID) |
 
@@ -202,7 +202,7 @@ The minimum valid `AiGuidance` is `{ purpose: "..." }`.
 
   // Value semantics — stable across renderers
   valueType: "string" | "text" | "number" | "boolean" | "date" | "url" | "select" | "multiselect"
-  selectOptions?: string[]   // required when valueType is "select" or "multiselect"
+  allowedValues?: string[]   // required when valueType is "select" or "multiselect"
   validationRules?: ValidationRule[]
   contentFormat?: "plain" | "markdown"
   // Meaningful only when valueType is "string" or "text". Default: "plain".
@@ -235,8 +235,8 @@ The minimum valid `AiGuidance` is `{ purpose: "..." }`.
 | `"boolean"` | True/false |
 | `"date"` | ISO 8601 date or datetime |
 | `"url"` | A URL string |
-| `"select"` | One value from `selectOptions` |
-| `"multiselect"` | One or more values from `selectOptions` |
+| `"select"` | One value from `allowedValues` |
+| `"multiselect"` | One or more values from `allowedValues` |
 
 `valueType` is the stable semantic data type. `editorHint` is a rendering default. AI extraction, validation, and export formatting must depend only on `valueType`. `contentFormat` refines how `string` and `text` values should be produced and rendered, but does not alter the `valueType`.
 
@@ -245,11 +245,11 @@ The minimum valid `AiGuidance` is `{ purpose: "..." }`.
 When `valueType` is `"select"` or `"multiselect"`, a Field declares exactly one of:
 
 ```typescript
-selectOptions?: string[]   // inline anonymous closed vocabulary (sugar; retained for simple cases)
+allowedValues?: string[]   // inline anonymous closed vocabulary (sugar; retained for simple cases)
 vocabularyRef?: Reference  // bind to a named, installed Vocabulary (id + version)
 ```
 
-`selectOptions` is formally sugar for an anonymous inline closed vocabulary. `vocabularyRef` is used when the value set is shared, extensible, or needs Term identity. A `vocabularyRef` MUST resolve to a `Vocabulary` with `mode: closed` (V3). Declaring both, or neither when `valueType` is `select`/`multiselect`, is a validation error (V3).
+`allowedValues` is formally sugar for an anonymous inline closed vocabulary. `vocabularyRef` is used when the value set is shared, extensible, or needs Term identity. A `vocabularyRef` MUST resolve to a `Vocabulary` with `mode: closed` (V3). Declaring both, or neither when `valueType` is `select`/`multiselect`, is a validation error (V3).
 
 ---
 
@@ -757,7 +757,7 @@ Relation type definitions live in `package.relationTypes[]` (distributable bundl
 | Tags | ambient (whole repo) | `Vocabulary` (typically local, open) | `open` |
 | Relation types | repo-global (any edge) | `package.relationTypes[]` (flat global set) | closed-extensible |
 | Lifecycle states | type-bound, shareable | `Lifecycle` (inline or referenced) | `closed` |
-| Field values | field-bound | `Vocabulary` via `vocabularyRef` or inline `selectOptions` | `closed` (V3) |
+| Field values | field-bound | `Vocabulary` via `vocabularyRef` or inline `allowedValues` | `closed` (V3) |
 
 ### Package integration
 
@@ -788,7 +788,7 @@ Applies to: `Relation.relationType`, `select`/`multiselect` field values, `Recor
 
 Applies to: `Note.tags`, `NoteSection.tags`.
 
-**V3 — Field binding exclusivity and closedness.** A `select`/`multiselect` Field must declare exactly one of `selectOptions` or `vocabularyRef`. A `vocabularyRef` on a `select`/`multiselect` Field MUST resolve to a `Vocabulary` with `mode: closed`.
+**V3 — Field binding exclusivity and closedness.** A `select`/`multiselect` Field must declare exactly one of `allowedValues` or `vocabularyRef`. A `vocabularyRef` on a `select`/`multiselect` Field MUST resolve to a `Vocabulary` with `mode: closed`.
 
 **V4 — Vocabulary reference resolution.** A `vocabularyRef` must resolve to an installed `Vocabulary` in the effective package set.
 

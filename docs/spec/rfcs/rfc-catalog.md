@@ -419,3 +419,19 @@ I-87
 **Proposal Artifact Path**: rfcs/rfc-029-core-base-package-identity-type.md
 **Content**: RFC-013 introduced identityInstanceId as a pointer from the root container to the repository's identity record, defaulting to an un-navigable, non-semantic Tier-0 root note. This RFC introduces a minimal com.semanticops.core/purpose Tier-2 type -- carrying a required statement field and an optional title field -- defined in an always-available core base package that every conforming SRS implementation implicitly merges into every repository's resolved package (RFC-014 R6 union), without requiring any packageRef declaration. identityInstanceId on the root container is tightened to MUST reference a Tier-2 purpose Record, superseding RFC-013's Tier-0-note default, subject to a migration grace period (R7) for existing repositories. This record was authored under issue the-greenman/srs#209 (renumbered from RFC-018 to resolve a number collision with RFC-018: Repository Changelog Extension); the RFC was originally accepted and implemented under the 018 number in July 2026 (see revision history in rfcs/rfc-029-core-base-package-identity-type.md).
 
+**Title**: RFC-030: Rename Field's normative `selectOptions` property to `allowedValues`
+**RFC Number**: 030
+**Status**: accepted
+**Author**: the-greenman (from issue the-greenman/srs#232)
+**Affected Components**: com.semanticops.spec/field type-definition record; §04-2-4-2 Field subsection; §03-1 Version semantics subsection; §04-7 Vocabulary and Term subsection (invariant V3); docs/schema/2.0/package-bundle.json (embedded Field shape)
+
+<!-- srs-integration:v1
+type:com.semanticops.spec/field
+subsection:field
+subsection:version-semantics
+subsection:vocabulary-and-term
+schema:package-bundle.json
+-->
+**Proposal Artifact Path**: rfcs/rfc-030-field-allowed-values-rename.md
+**Content**: The normative spec named a Field (Tier 2) property `selectOptions`, while the JSON Schema (docs/schema/2.0/field.json), the reference Rust engine (srs-core::Field::allowed_values), and every published Field instance already used `allowedValues`. This RFC corrects the spec prose -- and a second, previously-unnoticed schema drift in docs/schema/2.0/package-bundle.json's embedded Field shape -- to the already-shipped name `allowedValues`, with no breaking change to any schema, engine, or instance data. TypedField (Tier 1) is unrelated and untouched -- its `selectOptions` property is correctly named in both spec and schema. This RFC renames text originally authored by RFC-006 (vocabulary/Term substrate) without altering its exclusivity or resolution semantics.
+
