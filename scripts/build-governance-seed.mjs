@@ -4,7 +4,7 @@
  *
  * The seed is the artifact srs-web bundles to let a clerk create a brand-new
  * governance document (the-greenman/muDemocracy.org#38, story #35): the canonical
- * com.mudemocracy.governance @1.0.0 package installed with ZERO records, stamped
+ * com.mudemocracy.governance @1.1.0 package installed with ZERO records, stamped
  * with upstream-package provenance (the hook for the upgrade/drift story #37).
  *
  * Strategy: drive the `srs` CLI to assemble a clean file repo (package at the
@@ -27,7 +27,7 @@ import { fileURLToPath } from 'node:url';
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = dirname(SCRIPT_DIR); // srs/
-const PKG_VERSION_DIR = join(REPO_ROOT, 'packages', 'com.mudemocracy.governance', '1.0.0');
+const PKG_VERSION_DIR = join(REPO_ROOT, 'packages', 'com.mudemocracy.governance', '1.1.0');
 const PACKAGE_DIR = join(PKG_VERSION_DIR, 'package');
 const SEED_DIR = join(PKG_VERSION_DIR, 'seed');
 const SEED_PATH = join(SEED_DIR, 'empty-governance-document.srsj');
@@ -36,8 +36,8 @@ const SEED_PATH = join(SEED_DIR, 'empty-governance-document.srsj');
 const PACKAGE_ID = '1cd9622e-3d05-4214-a683-4cb81d0c44d9';
 const PACKAGE_NAMESPACE = 'com.mudemocracy.governance';
 const PACKAGE_NAME = 'governance';
-const PACKAGE_VERSION = '1.0.0';
-const SEED_REPOSITORY_ID = '395ebea2-d8f6-497b-b18c-04c9eacafc94';
+const PACKAGE_VERSION = '1.1.0';
+const SEED_REPOSITORY_ID = 'e2e8489a-5ada-4309-9b26-90ccc263146d';
 const STAMP_TIME = '2026-01-01T00:00:00Z';
 
 const checkMode = process.argv.includes('--check');
