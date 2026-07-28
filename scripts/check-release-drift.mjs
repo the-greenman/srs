@@ -132,6 +132,7 @@ async function main() {
     await run("node", ["scripts/validate-all.mjs"]);
     await run(SRS_CLI, ["--repo", REPO_ROOT, "repo", "validate"], { silent: true });
   });
+  await step("IDL/schema conformance", () => run("node", ["scripts/check-idl-schema-conformance.mjs"], { silent: true }));
   await step("RFC integration", () => run("node", ["scripts/check-rfc-integration.mjs"], { silent: true }));
   await step("rendered docs", checkRenderedDocsDrift);
   console.log("\nOK: release artifacts are in sync.");

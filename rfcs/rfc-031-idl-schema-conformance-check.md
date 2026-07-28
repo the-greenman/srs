@@ -2,7 +2,7 @@
 
 # RFC-031: IDL/Schema conformance check — prose ↔ JSON Schema drift gate
 
-**Status**: Draft (Revision 4)
+**Status**: In Progress (Revision 4)
 **Affects**: Field, Type, Record, TypedRecord, Note, Relation, Container, Vocabulary, Term, RelationTypeDefinition, SourceReference, `scripts/check-release-drift.mjs`
 **Author**: Claude Code (agent), on behalf of the repository owner
 **Date**: 2026-07-28
