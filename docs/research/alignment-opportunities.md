@@ -198,6 +198,7 @@ track is the likely trigger).
 | 18 | **Frictionless Data Package** | `$schema` self-versioning on the manifest; the validate-CLI ergonomics that won institutional adoption | Manifest evolution; CLI UX polish |
 | 19 | **S1000D / DITA** | Applicability metadata (S1000D), specialization discipline (DITA) — and their ceremony cost as the anti-pattern boundary | Type-inheritance (ext:type-inheritance) and any conditional-content feature |
 | 20 | **TEI `@cert`/`@resp`** | The scholarly ancestor of relation provenance — vocabulary alignment for credibility with that audience | Documentation/positioning only |
+| 21 | **LinkML** | A single modeling language that describes a data model *including itself* (its own metamodel is expressed in LinkML) — the exact self-hosting move of epic #256. Directly-mapping constructs: `slot.range = class` (= RFC-032 `datatype:ref`), `inlined`/`inlined_as_list` (= `mode:inline` single/list), slot facets/constraints (= `fieldType.constraints`), inlined-as-dict (= `datatype:map`). Load-bearing: its **per-generator fidelity discipline** — `gen-json-schema`/`gen-protobuf`/`gen-pydantic`/… each faithfully express a documented *subset*. Borrow the discipline and the self-describing-metamodel pattern; do **not** adopt the toolchain. | Self-hosted meta-model + frozen-seed bootstrap (RFC-033); the per-emitter fidelity dashboard (`docs/schema/2.0/metamodel-fidelity.md`) |
 
 ## Priority summary
 
@@ -212,7 +213,7 @@ track is the likely trigger).
 | 6 | atproto lexicon-publishing pattern | 36 | NEXT | srs (registry/federation RFC) | recorded |
 | 7 | Portable Text content format | 30 | NEXT | srs RFC | awaiting editor demand |
 | 8–13 | Watch items | — | WATCH | — | signals named above |
-| 14–20 | Component sources | — | COMPONENT | — | consult in-context |
+| 14–21 | Component sources (incl. LinkML #21 — self-hosting + fidelity discipline, folded into RFC-033) | — | COMPONENT | srs | #21 folded into RFC-033 (#266) |
 
 **Explicitly identified for the roadmap now:** items 1–3. All three are presentation/adapter
 layer per capability-layering — no new semantics, no spec changes beyond (at most) a

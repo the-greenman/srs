@@ -3447,6 +3447,15 @@
       "instanceId": "6ecaf104-5188-4a6c-8d8a-084919ad2aad",
       "path": "records/tier-2/rfc-6ecaf104.json",
       "tier": 2
+    },
+    {
+      "instanceId": "68f19e31-7616-5675-ae53-1ff8880680db",
+      "path": "records/rfcs/rfc-033-self-host-metamodel.json",
+      "tier": 2,
+      "title": "RFC-033: Self-hosting the meta-model — the frozen-seed bootstrap package",
+      "tags": [
+        "topic:rfc"
+      ]
     }
   ],
   "meta": {
@@ -3476,6 +3485,10 @@
     {
       "mode": "local",
       "path": "package/spec-rfc-process"
+    },
+    {
+      "mode": "local",
+      "path": "package/metamodel"
     }
   ],
   "relationsPath": "relations/relations.json",
@@ -3515,6 +3528,7 @@
   ],
   "sourceDocumentsPath": "source-documents",
   "srsVersion": "2.0-draft",
+  "dataModelRevision": 1,
   "title": "Semantic Record System Specification",
   "updatedAt": "2026-06-03T00:00:00Z"
 }
