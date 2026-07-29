@@ -104,9 +104,12 @@ The spec must remain valid without any Rust or JS implementation present. Do not
 ## Namespaces in This Repo
 
 - `com.semanticops.srs` — core SRS model types (Field, Type, Record, Relation, etc.)
+  - `com.semanticops.srs/metamodel` (RFC-033) — the **self-hosted meta-model**: `Field`, `Type`, `FieldAssignment`, `FieldType`, `ExactTypeRef`, `AiGuidance`, etc. expressed as SRS Type/Field definitions under `srs/package/metamodel/`. This is the **frozen-seed source** for `docs/schema/2.0/{field,type}.json` — those hand-authored schemas remain the bootstrap fixed point (loaded as committed, never re-derived at runtime); the metamodel records are what they must stay consistent with (checked by `scripts/rfc-033-closure-test.mjs`; the #259 emitter regenerates the schemas). The package is generated deterministically by `scripts/gen-metamodel-package.mjs` (with `--check`); do not hand-edit `srs/package/metamodel/**` — edit the generator. `docs/schema/2.0/metamodel-fidelity.md` declares per-emitter authoritative-vs-approximated fidelity.
 - `com.semanticops.spec` — meta-types for authoring the specification itself (section, subsection, invariant, extension, etc.)
 
 Do not create records or types under ad-hoc namespaces. Match the namespace to the existing convention for the content you are adding.
+
+**`dataModelRevision` (RFC-033 / #265).** `manifest.json` and package manifests may carry an optional monotonic-integer `dataModelRevision` (absent ⇒ 0) stamping which data-model generation the data satisfies. RFC-032 (`valueType → fieldType`) is migration #1 → revision 1; the spec repo is stamped `dataModelRevision: 1`. Not dotted semver.
 
 ## Rendered Outputs
 
