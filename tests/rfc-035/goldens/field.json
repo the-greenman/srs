@@ -1,0 +1,305 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://srs.semanticops.com/schema/2.0/field.json",
+  "description": "The atomic semantic unit of SRS. A reusable field definition (RFC-033 self-hosted meta-model).",
+  "type": "object",
+  "required": [
+    "id",
+    "namespace",
+    "name",
+    "version",
+    "description",
+    "aiGuidance",
+    "fieldType",
+    "createdAt"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "namespace": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "instructions": {
+      "type": "string"
+    },
+    "aiGuidance": {
+      "$ref": "#/$defs/com.semanticops.srs__ai-guidance__v1",
+      "title": "AI Guidance"
+    },
+    "fieldType": {
+      "$ref": "#/$defs/com.semanticops.srs__field-type__v1",
+      "title": "Field Type"
+    },
+    "defaultValue": {},
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "lineage": {
+      "$ref": "#/$defs/com.semanticops.srs__lineage__v1"
+    },
+    "provenance": {
+      "$ref": "#/$defs/com.semanticops.srs__provenance__v1"
+    },
+    "deprecatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "com.semanticops.srs__ai-guidance__v1": {
+      "type": "object",
+      "required": [
+        "purpose"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "purpose": {
+          "type": "string"
+        },
+        "extraction": {
+          "type": "string"
+        },
+        "negativeGuidance": {
+          "type": "string",
+          "title": "Negative Guidance"
+        },
+        "examples": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/com.semanticops.srs__ai-guidance-example__v1"
+          }
+        }
+      }
+    },
+    "com.semanticops.srs__ai-guidance-example__v1": {
+      "type": "object",
+      "required": [
+        "output"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "input": {
+          "type": "string"
+        },
+        "output": {
+          "type": "string"
+        }
+      }
+    },
+    "com.semanticops.srs__field-type__v1": {
+      "type": "object",
+      "required": [
+        "datatype"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "datatype": {
+          "type": "string",
+          "enum": [
+            "string",
+            "number",
+            "integer",
+            "boolean",
+            "date",
+            "date-time",
+            "ref",
+            "dependent",
+            "map"
+          ]
+        },
+        "cardinality": {
+          "type": "string",
+          "enum": [
+            "single",
+            "list"
+          ]
+        },
+        "minItems": {
+          "type": "integer",
+          "minimum": 0,
+          "title": "Min Items"
+        },
+        "maxItems": {
+          "type": "integer",
+          "minimum": 0,
+          "title": "Max Items"
+        },
+        "valueDomain": {
+          "type": "string",
+          "enum": [
+            "open",
+            "closed"
+          ],
+          "title": "Value Domain"
+        },
+        "allowedValues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "Allowed Values"
+        },
+        "vocabularyRef": {
+          "type": "string",
+          "pattern": "^[^/@]+/[^/@]+@[0-9]+$",
+          "title": "Vocabulary Ref"
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "plain",
+            "markdown",
+            "uri",
+            "uuid",
+            "email"
+          ]
+        },
+        "constraints": {
+          "$ref": "#/$defs/com.semanticops.srs__field-type-constraints__v1"
+        },
+        "rangeType": {
+          "$ref": "#/$defs/com.semanticops.srs__exact-type-ref__v1",
+          "title": "Range Type"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "inline",
+            "reference"
+          ]
+        },
+        "dependsOn": {
+          "type": "string",
+          "title": "Depends On"
+        },
+        "valueRange": {
+          "type": "string",
+          "enum": [
+            "string",
+            "number",
+            "integer",
+            "boolean",
+            "date",
+            "date-time",
+            "open"
+          ],
+          "title": "Value Range"
+        }
+      }
+    },
+    "com.semanticops.srs__field-type-constraints__v1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "minLength": {
+          "type": "integer",
+          "minimum": 0,
+          "title": "Min Length"
+        },
+        "maxLength": {
+          "type": "integer",
+          "minimum": 0,
+          "title": "Max Length"
+        },
+        "pattern": {
+          "type": "string"
+        },
+        "minimum": {
+          "type": "number"
+        },
+        "maximum": {
+          "type": "number"
+        }
+      }
+    },
+    "com.semanticops.srs__exact-type-ref__v1": {
+      "type": "object",
+      "required": [
+        "typeId",
+        "typeVersion"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "typeId": {
+          "type": "string",
+          "format": "uuid",
+          "title": "Type Id"
+        },
+        "typeVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "title": "Type Version"
+        }
+      }
+    },
+    "com.semanticops.srs__lineage__v1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sourceDefinitionId": {
+          "type": "string",
+          "format": "uuid",
+          "title": "Source Definition Id"
+        },
+        "sourceVersion": {
+          "type": "integer",
+          "title": "Source Version"
+        },
+        "forkedFromDefinitionId": {
+          "type": "string",
+          "format": "uuid",
+          "title": "Forked-From Definition Id"
+        },
+        "forkedFromVersion": {
+          "type": "integer",
+          "title": "Forked-From Version"
+        }
+      }
+    },
+    "com.semanticops.srs__provenance__v1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "publisher": {
+          "type": "string"
+        },
+        "sourcePackage": {
+          "type": "string",
+          "title": "Source Package"
+        },
+        "packageVersion": {
+          "type": "string",
+          "title": "Package Version"
+        },
+        "importedAt": {
+          "type": "string",
+          "format": "date-time",
+          "title": "Imported At"
+        }
+      }
+    }
+  }
+}

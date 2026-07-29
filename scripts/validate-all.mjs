@@ -66,6 +66,15 @@ async function validateAll() {
   const closureHolds = await runScript('rfc-033-closure-test.mjs');
   if (!closureHolds) allValid = false;
 
+  // RFC-035 (JSON Schema emitter). Tier 1: the emitter's whole-entity output is byte-for-byte reproducible
+  // against its committed goldens (determinism). Tier 2: that output is `emitter ⊆ frozen seed` over the
+  // covered authoritative features (whole-entity closure — discharges RFC-033 [R4](b)). Node pipeline only
+  // (ADR-004: the binary can't load the fieldType metamodel package).
+  const emitterDeterministic = await runScript('../tests/rfc-035/run.mjs');
+  if (!emitterDeterministic) allValid = false;
+  const emitterClosureHolds = await runScript('rfc-035-closure-test.mjs');
+  if (!emitterClosureHolds) allValid = false;
+
   console.log(`\n${'='.repeat(60)}`);
   console.log(allValid ? '\n✓ All validations passed' : '\n✗ Some validations failed');
   process.exit(allValid ? 0 : 1);

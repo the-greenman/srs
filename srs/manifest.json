@@ -3456,6 +3456,15 @@
       "tags": [
         "topic:rfc"
       ]
+    },
+    {
+      "instanceId": "eec335c8-f6d6-5d6f-bf43-a3bb3871b542",
+      "path": "records/rfcs/rfc-035-schema-emitter.json",
+      "tier": 2,
+      "title": "RFC-035: JSON Schema emitter — projecting the self-hosted meta-model (records → 2020-12)",
+      "tags": [
+        "topic:rfc"
+      ]
     }
   ],
   "meta": {
