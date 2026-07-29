@@ -1,0 +1,17 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "f0000000-0000-4000-8000-000000000012",
+  "namespace": "com.semanticops.rfc032fixture",
+  "name": "state_vocab",
+  "version": 1,
+  "description": "Closed string domain bound to a configurable, package-managed Vocabulary; projects to a pure enum of its effective keys.",
+  "aiGuidance": {
+    "purpose": "Closed string domain bound to a configurable, package-managed Vocabulary; projects to a pure enum of its effective keys."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "vocabularyRef": "com.semanticops.rfc032fixture/lifecycle_state@1"
+  },
+  "createdAt": "2026-07-29T00:00:00Z"
+}

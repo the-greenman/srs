@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "f0000000-0000-4000-8000-000000000021",
+  "namespace": "com.semanticops.rfc032fixture",
+  "name": "counts_by_key",
+  "version": 1,
+  "description": "Scalar-valued map (string key -> integer).",
+  "aiGuidance": {
+    "purpose": "Scalar-valued map (string key -> integer)."
+  },
+  "fieldType": {
+    "datatype": "map",
+    "valueRange": "integer"
+  },
+  "createdAt": "2026-07-29T00:00:00Z"
+}

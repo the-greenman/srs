@@ -76,7 +76,7 @@
   "$defs": {
     "Field": {
       "type": "object",
-      "required": ["id", "namespace", "name", "version", "description", "aiGuidance", "valueType", "createdAt"],
+      "required": ["id", "namespace", "name", "version", "description", "aiGuidance", "fieldType", "createdAt"],
       "additionalProperties": true,
       "properties": {
         "id": { "type": "string", "format": "uuid" },
@@ -89,17 +89,17 @@
           "required": ["purpose"],
           "properties": { "purpose": { "type": "string" } }
         },
-        "valueType": {
-          "type": "string",
-          "enum": ["string", "text", "number", "boolean", "date", "url", "select", "multiselect"]
-        },
-        "contentFormat": {
-          "type": "string",
-          "enum": ["plain", "markdown"]
-        },
-        "allowedValues": {
-          "type": "array",
-          "items": { "type": "string" }
+        "fieldType": {
+          "type": "object",
+          "required": ["datatype"],
+          "additionalProperties": true,
+          "description": "RFC-032 decomposed value type — see field.json $defs.FieldType. Embedded loosely here (additionalProperties:true); the bundle schema mirrors field.json's Field shape.",
+          "properties": {
+            "datatype": {
+              "type": "string",
+              "enum": ["string", "number", "integer", "boolean", "date", "date-time", "ref", "dependent", "map"]
+            }
+          }
         },
         "editorHint": {
           "type": "string",

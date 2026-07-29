@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "f0000000-0000-4000-8000-000000000018",
+  "namespace": "com.semanticops.rfc032fixture",
+  "name": "reviewer_refs",
+  "version": 1,
+  "description": "Reference composite, list — target instance UUIDs.",
+  "aiGuidance": {
+    "purpose": "Reference composite, list — target instance UUIDs."
+  },
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "reference",
+    "cardinality": "list",
+    "rangeType": {
+      "typeId": "70000001-0000-4000-8000-000000000001",
+      "typeVersion": 1
+    }
+  },
+  "createdAt": "2026-07-29T00:00:00Z"
+}

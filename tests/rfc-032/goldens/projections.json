@@ -1,0 +1,122 @@
+{
+  "plain_string": {
+    "type": "string"
+  },
+  "markdown_body": {
+    "type": "string",
+    "contentMediaType": "text/markdown"
+  },
+  "homepage": {
+    "type": "string",
+    "format": "uri"
+  },
+  "title_constrained": {
+    "type": "string",
+    "minLength": 1,
+    "maxLength": 200
+  },
+  "code_pattern": {
+    "type": "string",
+    "pattern": "^[A-Z][A-Z0-9]*$"
+  },
+  "count": {
+    "type": "integer",
+    "minimum": 0
+  },
+  "ratio": {
+    "type": "number",
+    "minimum": 0,
+    "maximum": 1
+  },
+  "active": {
+    "type": "boolean"
+  },
+  "due_date": {
+    "type": "string",
+    "format": "date"
+  },
+  "created_at": {
+    "type": "string",
+    "format": "date-time"
+  },
+  "status_inline": {
+    "type": "string",
+    "enum": [
+      "draft",
+      "active",
+      "archived"
+    ]
+  },
+  "state_vocab": {
+    "type": "string",
+    "enum": [
+      "draft",
+      "active",
+      "archived"
+    ]
+  },
+  "keywords": {
+    "type": "array",
+    "items": {
+      "type": "string"
+    },
+    "minItems": 1,
+    "maxItems": 5
+  },
+  "relation_type_selector": {
+    "type": "array",
+    "items": {
+      "type": "string",
+      "enum": [
+        "supersedes",
+        "refines",
+        "depends-on"
+      ]
+    },
+    "minItems": 1
+  },
+  "guidance": {
+    "$ref": "#/$defs/com.semanticops.rfc032fixture__ai_guidance__v1"
+  },
+  "examples": {
+    "type": "array",
+    "items": {
+      "$ref": "#/$defs/com.semanticops.rfc032fixture__ai_guidance_example__v1"
+    }
+  },
+  "author_ref": {
+    "type": "string",
+    "format": "uuid",
+    "x-srs-range-type": "com.semanticops.rfc032fixture/author@1"
+  },
+  "reviewer_refs": {
+    "type": "array",
+    "items": {
+      "type": "string",
+      "format": "uuid",
+      "x-srs-range-type": "com.semanticops.rfc032fixture/author@1"
+    }
+  },
+  "default_holder": {},
+  "meta": {
+    "type": "object",
+    "additionalProperties": true
+  },
+  "counts_by_key": {
+    "type": "object",
+    "additionalProperties": {
+      "type": "integer"
+    }
+  },
+  "author_name": {
+    "type": "string",
+    "minLength": 1
+  },
+  "author_email": {
+    "type": "string",
+    "format": "email"
+  },
+  "example_output": {
+    "type": "string"
+  }
+}

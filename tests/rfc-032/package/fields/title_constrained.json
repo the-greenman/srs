@@ -1,0 +1,19 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "f0000000-0000-4000-8000-000000000004",
+  "namespace": "com.semanticops.rfc032fixture",
+  "name": "title_constrained",
+  "version": 1,
+  "description": "String length constraints (former minLength/maxLength ValidationRule).",
+  "aiGuidance": {
+    "purpose": "String length constraints (former minLength/maxLength ValidationRule)."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "constraints": {
+      "minLength": 1,
+      "maxLength": 200
+    }
+  },
+  "createdAt": "2026-07-29T00:00:00Z"
+}

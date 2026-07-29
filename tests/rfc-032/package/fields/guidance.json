@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "f0000000-0000-4000-8000-000000000015",
+  "namespace": "com.semanticops.rfc032fixture",
+  "name": "guidance",
+  "version": 1,
+  "description": "Inline composite, single (2-level nesting via ai_guidance.examples).",
+  "aiGuidance": {
+    "purpose": "Inline composite, single (2-level nesting via ai_guidance.examples)."
+  },
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "cardinality": "single",
+    "rangeType": {
+      "typeId": "70000002-0000-4000-8000-000000000002",
+      "typeVersion": 1
+    }
+  },
+  "createdAt": "2026-07-29T00:00:00Z"
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "f0000000-0000-4000-8000-000000000006",
+  "namespace": "com.semanticops.rfc032fixture",
+  "name": "count",
+  "version": 1,
+  "description": "Integer with a numeric lower bound (the meta-model's own version>=1 / order>=0 shape).",
+  "aiGuidance": {
+    "purpose": "Integer with a numeric lower bound (the meta-model's own version>=1 / order>=0 shape)."
+  },
+  "fieldType": {
+    "datatype": "integer",
+    "constraints": {
+      "minimum": 0
+    }
+  },
+  "createdAt": "2026-07-29T00:00:00Z"
+}

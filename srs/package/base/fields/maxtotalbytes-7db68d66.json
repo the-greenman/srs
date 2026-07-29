@@ -7,6 +7,8 @@
   "id": "7db68d66-f74c-402b-ad29-3003557c8136",
   "name": "max_total_bytes",
   "namespace": "com.semanticops.base",
-  "valueType": "number",
+  "fieldType": {
+    "datatype": "number"
+  },
   "version": 1
 }

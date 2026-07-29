@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "f0000000-0000-4000-8000-000000000010",
+  "namespace": "com.semanticops.rfc032fixture",
+  "name": "created_at",
+  "version": 1,
+  "description": "Date-time.",
+  "aiGuidance": {
+    "purpose": "Date-time."
+  },
+  "fieldType": {
+    "datatype": "date-time"
+  },
+  "createdAt": "2026-07-29T00:00:00Z"
+}

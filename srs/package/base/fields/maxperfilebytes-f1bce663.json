@@ -7,6 +7,8 @@
   "id": "f1bce663-5f2f-48da-b803-a728021f4d14",
   "name": "max_per_file_bytes",
   "namespace": "com.semanticops.base",
-  "valueType": "number",
+  "fieldType": {
+    "datatype": "number"
+  },
   "version": 1
 }

@@ -7,6 +7,9 @@
   "id": "8912f486-15bf-4407-af84-c27542f655dd",
   "name": "allowed_mime_types",
   "namespace": "com.semanticops.base",
-  "valueType": "text",
+  "fieldType": {
+    "datatype": "string",
+    "format": "plain"
+  },
   "version": 1
 }
