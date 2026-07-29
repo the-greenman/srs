@@ -40,8 +40,19 @@ fidelity discipline — see `docs/research/alignment-opportunities.md`, LinkML e
 
 ## Verification
 
-The **JSON Schema 2020-12** column is machine-checked by `scripts/rfc-033-closure-test.mjs` (run under
-`scripts/validate-all.mjs`): every *authoritative* row's `projectField` output matches the frozen seed's
-fragment (annotations stripped); every *approximated* row renders in the documented lossy shape and is asserted
-**not** to equal the seed. The `future` columns are declarative until their emitters land (#259 designs the IR
-so they slot in), at which point each MUST be filled in by the same discipline.
+The **JSON Schema 2020-12** column is machine-checked at two granularities (both run under
+`scripts/validate-all.mjs`):
+
+- **Per-field (RFC-033 [R4](a)):** `scripts/rfc-033-closure-test.mjs` — every *authoritative* row's
+  `projectField` output matches the frozen seed's fragment (annotations stripped); every *approximated* row
+  renders in the documented lossy shape and is asserted **not** to equal the seed.
+- **Whole-entity (RFC-035 [R4](b) / #259):** the reference emitter `scripts/lib/schema-emitter.mjs` assembles
+  the full `field.json`/`type.json` schemas from the metamodel records. `tests/rfc-035/run.mjs` (Tier 1) proves
+  the emitter's output is byte-for-byte reproducible; `scripts/rfc-035-closure-test.mjs` (Tier 2) proves it is
+  `emitter ⊆ frozen seed` over the covered authoritative features (full `$ref` resolution; the exclusion set
+  and the documented-divergence register are in `docs/schema/2.0/projection-rules.md`). This supersedes the
+  per-field `projectField` stand-in as the authoritative JSON-Schema-column check while keeping the per-field
+  test as the `fieldType`-unit check.
+
+The `future` columns (protobuf / TypeScript / Rust) are declarative until their emitters land; RFC-035's neutral
+IR is designed so they slot in, at which point each MUST be filled in by the same discipline.

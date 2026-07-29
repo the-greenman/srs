@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://srs.semanticops.com/schema/2.0/type.json",
+  "description": "A named, versioned composition of Fields (core definition facets; RFC-033 v1.0.0 defers lifecycle/inheritance/cross-field/field-groups/identity).",
+  "type": "object",
+  "required": [
+    "id",
+    "namespace",
+    "name",
+    "version",
+    "description",
+    "fields",
+    "createdAt"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "namespace": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "semanticObjectType": {
+      "type": "string",
+      "title": "Semantic Object Type"
+    },
+    "aiGuidance": {
+      "$ref": "#/$defs/com.semanticops.srs__ai-guidance__v1",
+      "title": "AI Guidance"
+    },
+    "fields": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/com.semanticops.srs__field-assignment__v1"
+      }
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "com.semanticops.srs__ai-guidance__v1": {
+      "type": "object",
+      "required": [
+        "purpose"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "purpose": {
+          "type": "string"
+        },
+        "extraction": {
+          "type": "string"
+        },
+        "negativeGuidance": {
+          "type": "string",
+          "title": "Negative Guidance"
+        },
+        "examples": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/com.semanticops.srs__ai-guidance-example__v1"
+          }
+        }
+      }
+    },
+    "com.semanticops.srs__ai-guidance-example__v1": {
+      "type": "object",
+      "required": [
+        "output"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "input": {
+          "type": "string"
+        },
+        "output": {
+          "type": "string"
+        }
+      }
+    },
+    "com.semanticops.srs__field-assignment__v1": {
+      "type": "object",
+      "required": [
+        "fieldId",
+        "order",
+        "required"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "fieldId": {
+          "type": "string",
+          "format": "uuid",
+          "x-srs-range-type": "com.semanticops.srs/field@1",
+          "title": "Field"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "displayLabel": {
+          "type": "string",
+          "title": "Display Label"
+        },
+        "defaultValue": {
+          "title": "Default Value"
+        }
+      }
+    }
+  }
+}
