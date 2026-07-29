@@ -435,3 +435,15 @@ schema:package-bundle.json
 **Proposal Artifact Path**: rfcs/rfc-030-field-allowed-values-rename.md
 **Content**: The normative spec named a Field (Tier 2) property `selectOptions`, while the JSON Schema (docs/schema/2.0/field.json), the reference Rust engine (srs-core::Field::allowed_values), and every published Field instance already used `allowedValues`. This RFC corrects the spec prose -- and a second, previously-unnoticed schema drift in docs/schema/2.0/package-bundle.json's embedded Field shape -- to the already-shipped name `allowedValues`, with no breaking change to any schema, engine, or instance data. TypedField (Tier 1) is unrelated and untouched -- its `selectOptions` property is correctly named in both spec and schema. This RFC renames text originally authored by RFC-006 (vocabulary/Term substrate) without altering its exclusivity or resolution semantics.
 
+**Title**: RFC-031: IDL/Schema conformance check — prose ↔ JSON Schema drift gate
+**RFC Number**: 031
+**Status**: accepted
+**Author**: Claude Code (agent), on behalf of the repository owner (from issue the-greenman/srs#238)
+**Affected Components**: tooling-only — adds scripts/check-idl-schema-conformance.mjs and scripts/idl-schema-conformance-allowlist.json, wired into scripts/check-release-drift.mjs; no docs/schema/2.0/*.json or record-shape changes.
+
+<!-- srs-integration:v1
+tooling-only
+-->
+**Proposal Artifact Path**: rfcs/rfc-031-idl-schema-conformance-check.md
+**Content**: Closes the-greenman/srs#238: nothing checked that the prose pseudo-IDL embedded in spec records and the docs/schema/2.0/*.json JSON Schema files agree. Adds a CI-gated conformance check (scripts/check-idl-schema-conformance.mjs) comparing property set, optionality, and (for primitives/arrays/enums) declared type across all 18 mapped entities, with an issue-linked allowlist for currently-known gaps. Schema-generation-from-records is evaluated and explicitly deferred (blocked by real architecture facts, not effort — see the RFC's Alt A). Reproduction against origin/master confirms it fires on the-greenman/srs#234 and #235, stays silent on the already-fixed #232. Eight follow-up issues (the-greenman/srs#247-254) and one (the-greenman/srs-rust#777) were filed for discrepancies the audit found. Full text: rfcs/rfc-031-idl-schema-conformance-check.md.
+
