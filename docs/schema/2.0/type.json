@@ -3,6 +3,7 @@
   "$id": "https://srs.semanticops.com/schema/2.0/type.json",
   "title": "SRS Type Definition",
   "description": "A named collection of FieldAssignments that defines the structure of a TypedRecord or Record. Types belong to a namespace and are versioned.",
+  "$comment": "RFC-033 frozen-seed fixed point: this hand-authored schema is the bootstrap base case, loaded as committed and never re-derived at runtime. Its record-level source is the com.semanticops.srs/metamodel package (the `type` + `field-assignment` Types; v1.0.0 covers the core definition facets, deferring lifecycle/type-inheritance/cross-field-validation/field-groups/identityFieldId). The #259 emitter regenerates this file from those records; docs/schema/2.0/metamodel-fidelity.md declares per-emitter fidelity.",
   "type": "object",
   "required": ["$schema", "id", "namespace", "name", "version", "description", "fields", "createdAt"],
   "additionalProperties": false,

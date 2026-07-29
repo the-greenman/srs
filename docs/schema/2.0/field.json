@@ -3,6 +3,7 @@
   "$id": "https://srs.semanticops.com/schema/2.0/field.json",
   "title": "SRS Field Definition",
   "description": "An atomic, reusable field definition. Fields are the shared vocabulary of SRS — defined once, referenced across many Types.",
+  "$comment": "RFC-033 frozen-seed fixed point: this hand-authored schema is the bootstrap base case, loaded as committed and never re-derived at runtime (a schema that defines Field cannot be parsed without the Field schema). Its record-level source is the com.semanticops.srs/metamodel package (the `field` Type + FieldType/ExactTypeRef/AiGuidance/AiGuidanceExample/Lineage/Provenance value-object Types); the #259 emitter regenerates this file from those records, and docs/schema/2.0/metamodel-fidelity.md declares which features round-trip authoritatively vs are approximated.",
   "type": "object",
   "required": ["id", "namespace", "name", "version", "description", "aiGuidance", "fieldType", "createdAt"],
   "additionalProperties": false,
