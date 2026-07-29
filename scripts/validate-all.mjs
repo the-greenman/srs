@@ -12,6 +12,7 @@ const packages = [
   'package',
   'package/spec-authoring-core',
   'package/spec-rfc-process',
+  'package/metamodel',
 ];
 
 async function runScript(script, args = []) {
@@ -56,6 +57,14 @@ async function validateAll() {
   // The migration must stay fully applied (no field left on the legacy valueType model).
   const migrationApplied = await runScript('migrate-rfc-032-field-type.mjs', ['--check']);
   if (!migrationApplied) allValid = false;
+
+  // RFC-033 (self-hosted meta-model). The frozen-seed metamodel package must stay in sync with its
+  // generator, and its fieldTypes must project (via the projectField stand-in) to the frozen seed's
+  // authoritative fragments — the bootstrap-closure demonstration for [R4](a). Node pipeline only.
+  const metamodelInSync = await runScript('gen-metamodel-package.mjs', ['--check']);
+  if (!metamodelInSync) allValid = false;
+  const closureHolds = await runScript('rfc-033-closure-test.mjs');
+  if (!closureHolds) allValid = false;
 
   console.log(`\n${'='.repeat(60)}`);
   console.log(allValid ? '\n✓ All validations passed' : '\n✗ Some validations failed');
