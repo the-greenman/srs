@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "f0000000-0000-4000-8000-000000000016",
+  "namespace": "com.semanticops.rfc032fixture",
+  "name": "examples",
+  "version": 1,
+  "description": "Inline composite, list.",
+  "aiGuidance": {
+    "purpose": "Inline composite, list."
+  },
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "cardinality": "list",
+    "rangeType": {
+      "typeId": "70000003-0000-4000-8000-000000000003",
+      "typeVersion": 1
+    }
+  },
+  "createdAt": "2026-07-29T00:00:00Z"
+}

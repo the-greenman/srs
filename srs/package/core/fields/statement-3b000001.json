@@ -9,6 +9,9 @@
   "id": "3b000001-0000-4000-a000-000000000001",
   "name": "statement",
   "namespace": "com.semanticops.core",
-  "valueType": "text",
+  "fieldType": {
+    "datatype": "string",
+    "format": "plain"
+  },
   "version": 1
 }

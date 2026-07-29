@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "f0000000-0000-4000-8000-000000000011",
+  "namespace": "com.semanticops.rfc032fixture",
+  "name": "status_inline",
+  "version": 1,
+  "description": "Closed string domain with an inline, field-fixed allowedValues set (former valueType:select).",
+  "aiGuidance": {
+    "purpose": "Closed string domain with an inline, field-fixed allowedValues set (former valueType:select)."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "draft",
+      "active",
+      "archived"
+    ]
+  },
+  "createdAt": "2026-07-29T00:00:00Z"
+}

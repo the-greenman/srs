@@ -1,0 +1,19 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "f0000000-0000-4000-8000-000000000014",
+  "namespace": "com.semanticops.rfc032fixture",
+  "name": "relation_type_selector",
+  "version": 1,
+  "description": "RequiresRelation.relationType declaration: a list of relation-type keys from a configurable closed vocabulary (min 1) — NOT instance UUID refs.",
+  "aiGuidance": {
+    "purpose": "RequiresRelation.relationType declaration: a list of relation-type keys from a configurable closed vocabulary (min 1) — NOT instance UUID refs."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "vocabularyRef": "com.semanticops.rfc032fixture/relation_type@1",
+    "cardinality": "list",
+    "minItems": 1
+  },
+  "createdAt": "2026-07-29T00:00:00Z"
+}

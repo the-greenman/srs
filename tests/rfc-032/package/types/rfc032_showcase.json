@@ -1,0 +1,116 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "id": "70000004-0000-4000-8000-000000000004",
+  "namespace": "com.semanticops.rfc032fixture",
+  "name": "rfc032_showcase",
+  "version": 1,
+  "description": "Exercises every fieldType mode.",
+  "fields": [
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000001",
+      "order": 0,
+      "required": false
+    },
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000002",
+      "order": 1,
+      "required": false
+    },
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000003",
+      "order": 2,
+      "required": false
+    },
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000004",
+      "order": 3,
+      "required": false
+    },
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000005",
+      "order": 4,
+      "required": false
+    },
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000006",
+      "order": 5,
+      "required": false
+    },
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000007",
+      "order": 6,
+      "required": false
+    },
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000008",
+      "order": 7,
+      "required": false
+    },
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000009",
+      "order": 8,
+      "required": false
+    },
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000010",
+      "order": 9,
+      "required": false
+    },
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000011",
+      "order": 10,
+      "required": false
+    },
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000012",
+      "order": 11,
+      "required": false
+    },
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000013",
+      "order": 12,
+      "required": false
+    },
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000014",
+      "order": 13,
+      "required": false
+    },
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000015",
+      "order": 14,
+      "required": false
+    },
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000016",
+      "order": 15,
+      "required": false
+    },
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000017",
+      "order": 16,
+      "required": false
+    },
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000018",
+      "order": 17,
+      "required": false
+    },
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000019",
+      "order": 18,
+      "required": false
+    },
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000020",
+      "order": 19,
+      "required": false
+    },
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000021",
+      "order": 20,
+      "required": false
+    }
+  ],
+  "createdAt": "2026-07-29T00:00:00Z"
+}

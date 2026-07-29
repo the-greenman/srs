@@ -8,60 +8,11 @@
  *                     with the 2-level AiGuidance case resolving via $defs/$ref.
  *
  * This is a stand-in for the #259 emitter over exactly the fixture shapes in RFC-032 §Testability.
- * It implements Change G's projection rules directly. No external deps.
+ * Change G's projection now lives in scripts/lib/rfc-032-fieldtype.mjs (the single source of truth
+ * shared with the migration and the conformance fixture); this file consumes it and checks the
+ * produced schema is well-formed and matches the paper-exercise expectation. No external deps.
  */
-
-// ---- Change G projection: fieldType -> JSON Schema fragment (within a Type's schema) -------------
-const SCALAR = {
-  string:   () => ({ type: "string" }),
-  number:   () => ({ type: "number" }),
-  integer:  () => ({ type: "integer" }),
-  boolean:  () => ({ type: "boolean" }),
-  date:     () => ({ type: "string", format: "date" }),
-  "date-time": () => ({ type: "string", format: "date-time" }),
-};
-const FORMAT = { plain: {}, markdown: { contentMediaType: "text/markdown" }, uri: { format: "uri" }, uuid: { format: "uuid" }, email: { format: "email" } };
-
-function rangeDefKey(ref) { return `${ref.ns}__${ref.name}__v${ref.version}`; } // injective on (ns,name,version)
-
-function projectScalar(ft) {
-  let s = SCALAR[ft.datatype]();
-  if (ft.datatype === "string" && ft.format && ft.format !== "plain") s = { ...s, ...FORMAT[ft.format] };
-  if (ft.constraints) {
-    const c = ft.constraints;
-    for (const k of ["minLength", "maxLength", "pattern", "minimum", "maximum"]) if (k in c) s[k] = c[k];
-  }
-  if (ft.datatype === "string" && ft.valueDomain === "closed") {
-    // configurable data range -> pure enum (allowedValues inline, or resolved Vocabulary keys)
-    s = { type: "string", enum: ft.allowedValues ?? ft._resolvedVocabKeys ?? [] };
-  }
-  return s;
-}
-
-function projectField(ft, $defs) {
-  let core;
-  if (ft.datatype === "ref") {
-    const key = rangeDefKey(ft.rangeType);
-    if (ft.mode === "reference") {
-      core = { type: "string", format: "uuid", "x-srs-range-type": `${ft.rangeType.ns}/${ft.rangeType.name}@${ft.rangeType.version}` };
-    } else {
-      core = { $ref: `#/$defs/${key}` }; // inline -> $ref into $defs (recursion-safe)
-    }
-  } else if (ft.datatype === "map") {
-    core = { type: "object", additionalProperties: ft.valueRange === "open" ? true : projectScalar({ datatype: ft.valueRange }) };
-  } else if (ft.datatype === "dependent") {
-    core = {}; // broad permissible value; conformance is a validation obligation (deliberately lossy)
-  } else {
-    core = projectScalar(ft);
-  }
-  if (ft.cardinality === "list") {
-    const arr = { type: "array", items: core };
-    if (ft.minItems != null) arr.minItems = ft.minItems;
-    if (ft.maxItems != null) arr.maxItems = ft.maxItems;
-    return arr;
-  }
-  return core;
-}
+import { projectField, rangeDefKey } from "./lib/rfc-032-fieldtype.mjs";
 
 // ---- well-formedness check for a produced JSON Schema fragment -----------------------------------
 const VALID_TYPES = new Set(["string", "number", "integer", "boolean", "object", "array", "null"]);
@@ -90,7 +41,7 @@ function checkWellFormed(node, $defs, path = "$") {
 
 // ---- the meta-model $defs (range Types), built from RFC-032 §Testability paper exercise ---------
 // Each range Type is itself a Type-of-Fields; we project its members to a $defs object schema.
-const T = (ns, name, version) => ({ ns, name, version });
+const T = (namespace, name, version) => ({ namespace, name, version });
 const typeToObjectSchema = (fields, $defs) => {
   const properties = {}, required = [];
   for (const f of fields) { properties[f.name] = projectField(f.ft, $defs); if (f.required) required.push(f.name); }

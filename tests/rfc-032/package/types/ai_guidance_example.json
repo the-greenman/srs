@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "id": "70000003-0000-4000-8000-000000000003",
+  "namespace": "com.semanticops.rfc032fixture",
+  "name": "ai_guidance_example",
+  "version": 1,
+  "description": "An AiGuidance example.",
+  "fields": [
+    {
+      "fieldId": "f0000000-0000-4000-8000-000000000024",
+      "order": 0,
+      "required": false
+    }
+  ],
+  "createdAt": "2026-07-29T00:00:00Z"
+}

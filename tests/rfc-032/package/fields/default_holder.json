@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "f0000000-0000-4000-8000-000000000019",
+  "namespace": "com.semanticops.rfc032fixture",
+  "name": "default_holder",
+  "version": 1,
+  "description": "Dependent value-of-self (the Field.defaultValue shape).",
+  "aiGuidance": {
+    "purpose": "Dependent value-of-self (the Field.defaultValue shape)."
+  },
+  "fieldType": {
+    "datatype": "dependent",
+    "dependsOn": "self"
+  },
+  "createdAt": "2026-07-29T00:00:00Z"
+}
