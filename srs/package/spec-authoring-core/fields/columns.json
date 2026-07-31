@@ -5,12 +5,13 @@
   "name": "columns",
   "version": 1,
   "fieldType": {
-    "datatype": "string"
+    "datatype": "string",
+    "cardinality": "list"
   },
   "editorHint": "singleline",
-  "description": "Ordered column name declarations for a table. Each entry names one column; position corresponds to cell values in row entries. Empty or absent means unlabeled columns. Requires ext:repeatable-fields.",
+  "description": "Ordered column name declarations for a table. Each entry names one column; position corresponds to cell values in row entries. Empty or absent means unlabeled columns.",
   "createdAt": "2026-05-27T00:00:00Z",
   "aiGuidance": {
-    "purpose": "Ordered column name declarations for a table. Each entry names one column; position corresponds to cell values in row entries. Empty or absent means unlabeled columns. Requires ext:repeatable-fields."
+    "purpose": "Ordered column name declarations for a table. Each entry names one column; position corresponds to cell values in row entries. Empty or absent means unlabeled columns."
   }
 }
