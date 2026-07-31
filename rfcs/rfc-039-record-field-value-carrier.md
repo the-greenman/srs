@@ -908,9 +908,11 @@ remove the four assignments) before Phase B. Filed as a Phase-B prerequisite, no
 
 The `srs-rust` counts are file-level matches, sufficient to size the work and to show that `srs-gov`
 — a crate named in neither this issue nor srs-rust's own crate-authority table — is in scope because
-it consumes `x-srs-field-id`. **`srs-web` carries no evidence at all**; it must be enumerated to the
-same standard before the cutover, since item 6 of this issue requires the blast radius resolved, and
-an asserted row is not a resolved one.
+it consumes `x-srs-field-id`. **`srs-web` and `srs-vscode` carry no evidence at all**, for the same
+reason muSrs's figures are quoted rather than measured: neither repository is in this session's
+scope, so enumerating them was not possible here. They must be enumerated to the `srs-rust` standard
+before the cutover — item 6 of this issue requires the blast radius *resolved*, and an asserted row
+is not a resolved one. Recorded as a gap with a named owner rather than presented as complete.
 
 **`x-srs-field-id` is retired.** Motivation calls it the bridge keyword that exists only to paper
 over the name-keyed-schema / UUID-keyed-instance mismatch. Once instances are name-keyed there is
