@@ -3501,6 +3501,18 @@
       ],
       "tier": 0,
       "title": "Test case: SemOps2 structure mapped onto SRS — one genuine gap (scoped uniqueness)"
+    },
+    {
+      "instanceId": "d28e2f8e-eff5-4aca-870c-151d0804d80d",
+      "path": "records/notes/field-evidence-a-disciplined-untyped-vault-converges-on-srs-and-drifts-anyway-the-okf-verdict-d28e2f8e.json",
+      "tags": [
+        "design-note",
+        "field-evidence",
+        "okf",
+        "landscape"
+      ],
+      "tier": 0,
+      "title": "Field evidence: a disciplined untyped vault converges on SRS and drifts anyway (the OKF verdict)"
     }
   ],
   "meta": {
