@@ -2,7 +2,7 @@
 
 # RFC-039: Name-keyed `fieldValues` — the recursive Record value carrier
 
-**Status**: Draft (Revision 3)
+**Status**: Draft (Revision 4)
 **Affects**: `Record` (Tier 2), `TypedRecord` (Tier 1), `FieldValue`, `FieldValueEntry`, `FieldGroupValue`/`FieldGroupEntry` (`ext:field-groups`), `ext:repeatable-fields`, `FieldAssignment.{repeatable,minItems,maxItems}`, `Type.fieldGroups`, `dataModelRevision`; `docs/schema/2.0/{record,typed-record,type}.json` and `docs/schema/2.0/projection-rules.md`. Builds on RFC-032 (Accepted — composite field range), RFC-035 (Accepted — schema emitter / projection rules; **this RFC narrows its [R4]** ([R2a]) to the in-scope meta-model Types), RFC-036 (Accepted — composite rendering), RFC-037 (Accepted Rev 3 — field-row baseline). Composed with RFC-038 (#296, Draft) in one first-party cutover. **Breaking (instance layer).**
 **Author**: the-greenman (epic-256 worker)
 **Date**: 2026-07-31
@@ -15,6 +15,7 @@
 |---|---|---|
 | 1 | 2026-07-31 | Initial draft. Phase A of #242: design and migration plan only, no implementation. |
 | 2 | 2026-07-31 | Review round 1. **Blocking fixes:** added **Change E.2** (the definition-layer `FieldGroup` → composite transform, with naming/UUID/version-bump rules — previously the instance transform referenced a Field key nothing produced); **removed `null`** from the value space ([R5]) because it falsified the by-construction claim against RFC-032 Change G's null-free projection (0/1318 in corpus); added **Change I** discharging RFC-036's `document-view-output.json` / `theme.json` / [CR-036-19] deferrals and RFC-037 [FR-037-14]'s alias sunset; added **Change J** + [R14] discharging the reference-integrity deferral three Accepted RFCs left to #242; added the **Fold-in targets** section (I-22–I-27 retired; new invariants owed; anticipated integration manifest); made the transform **total** over eight schema-legal branches; added the **muSrs corpus audit** prerequisite. **Corrected baseline** to **1318** values / **355** Tier-2 Records after finding a second record root (`package/records/`, 7 instances, no `$schema`) — [R13] now forbids glob enumeration. **Should-fixes:** [R16]–[R18] (uniform list-wrapping, what the projected schema describes, instance key order); blast radius evidenced for `srs-rust` (39 files / 6 crates, incl. `srs-gov`) and `srs-web` flagged unevidenced; `x-srs-field-id` retirement stated; RFC-019 conflict named; Change C rebuts the issue's actual third option; added **Cross-references**; OQ2 given a landing place; OQ1 declines RFC-033:407 explicitly rather than silently. |
+| 4 | 2026-07-31 | Review round 2, both reviewers (8 blocking). **The corpus section is now an exhaustive re-derivation** rather than a patch — *five* trees, 386 T2 / 2 T1 / 22 T0 / **1490** values — after two revisions running quoted `srs/`-scoped figures corpus-wide. New trees: **`tests/rfc-032/`**, which already stores 18 **name-keyed** values under the property **`values`** (non-conforming to `record.json`, and reconciled to `fieldValues` at Phase B), has **no manifest** so [R13] cannot see it, and carries RFC-032's undischarged inline-composite instance-golden deferral. **`null` is live after all** — 1 occurrence in the conformance fixture, not 0 — so [R5]'s "costs nothing" became a stated Phase-B deletion. **All 61 `entries` are dual-written with a sibling `value`, and `entries`-alone occurs 0 times**: `record.json`'s exclusivity is prose-only, so a transform written from it would abort on 100% of the population; added **[R20]** (take `value`, assert agreement, abort on divergence), rewrote Change D's evidence, made Phase 1 step 3 an assertion, and extended the round-trip criterion to a second, 30×-larger non-round-trippable class. `repeatable` re-scoped **8 → 34 across 7 Types**. **`table@2` is now deleted, not retained** — it fails [R7] in a stamped package and [R19] does not protect a version with zero referents; [R19]'s parenthetical corrected and RFC-005's tombstone precedent noted. **RFC-036 Open Question 3 decided** (*"Decide it at #242, not later"*) — row Type stays project-local, on RFC-036's own three constraints, instead of being taken silently by minting one. E.2's `R.name` rule contradicted its own example (`table-rows` vs `table-row`) and minted kebab against the convention → `table_rows`, inheriting OQ2. E.2 now mints schema-valid entities (required fields; `required` = `minItems ≥ 1`). [R9] extended to Tier 1. Steps 3/5 stated to run inside step 4's recursion (88% of `entries` are nested). **RFC-012 and RFC-031 conflicts** found and recorded — RFC-012's deliberate set-order signal is destroyed by [R18], stated as an accepted loss. `srs/scripts/**` added to the blast radius (13 scripts, 4 standing gates). muSrs flagged pre-RFC-032. Audit list extended to 8 items. Nits: [R16] dedup, `record.json` `{}`, `document-view-output` null branch, [R15] costs nothing, Abstract flags the two normative side-effects. |
 | 3 | 2026-07-31 | Spec-integrity review round 1 (4 blocking, all corpus-scope or transform-correctness). **The first-party corpus is four repositories, not one:** added `conformance/discovery/fixture-repo/` (8 T2 + **2 T1**, 54 values, 15 `valueType` Fields) and `docs/spec/examples/gallery-project-v2/` (22 T2, 100 values, 20 `valueType` Fields) — both **pre-RFC-032**, so the carrier transform cannot run on them until they are migrated (OQ7). This falsified the "0 Tier-1 TypedRecords" claim, which was `srs/srs`-scoped and read as global: **Change G is a live data migration, not schema-only**. Corrected `gallery.srsj` from "22 values" to **22 records / 100 values**, and withdrew the false claim that `.srsj` envelopes carry `dataModelRevision` — **none of the four does**, and no schema exists for the archive envelope at all. **Change E.2 was carrying a removed property into the Type it mints** (`G.fields[]` "unchanged" would copy `repeatable: true`), and no step stripped the **8 live `repeatable` occurrences across 3 Types** — two of which have no FieldGroup and would never have been visited; the transform is now split into an explicit **Phase 0 (definitions) → Phase 1 (instances) → Phase 2 (repository)**, resolving the circularity where step 1 resolved against the pre-bump Type version. **Should-fixes:** Tier 1 is name-*labelled*, not name-*keyed* (`fields` is an array) — Problem 2, Change G and the Rationale corrected, and OQ6 records that the tiers end up structurally more divergent; added **[R19]** (a referenced Type version MUST NOT be deleted) since the Record→Field edge is now Type-mediated; added the **valueless-`FieldValue`** row — the only non-zero case, 2 occurrences — and stated the one-way round-trip loss it causes; split **[R2] → [R2a]/[R2b]** (emitter-scope erratum vs instance rule) using `projection-rules.md`'s own defined term; stated the `mode`/`cardinality` facet defaults so Change B is total; corrected the `dependent` row's citation ([R6] → [R3]); rewrote the `package-bundle.json` row (nothing to remove — the real gap is `$defs.Type` being `additionalProperties: true`, so [R7] is unenforceable in bundles); [R7] now says revision is resolved from the enclosing manifest, since definition files carry no local discriminator. **Nits:** reconciled the carrier/row arithmetic to **23 carriers / 167 rows**; the sixth package manifest (`srs/package/package.json`); `projection-rules.md:80`; release-train numbering. |
 
 ---
@@ -23,7 +24,7 @@
 
 A Tier-2 `Record` stores its field values as an **array of `{fieldId, value}` pairs**. JSON Schema
 validates object properties **by name**, so a Type cannot project into a standard JSON Schema that
-validates its own Records — the encoding needed is a `contains` clause plus an `if`/`then` branch per
+validates its own Records' field values — the encoding needed is a `contains` clause plus an `if`/`then` branch per
 field, and field-id uniqueness is not expressible at all. This RFC replaces `fieldValues` with an
 **object keyed by `Field.name`**, whose value space is defined by a single recursive rule that is
 exactly RFC-032 `projectField`'s instance space. Scalars, lists, inline composites, and
@@ -36,6 +37,10 @@ composite Field over a minted range Type and strips the deprecated cardinality t
 pass over four first-party repositories — and is written to **abort rather than skip** on every
 schema-legal input the new shape cannot express. This is Phase A: the design and the migration plan
 only. The cutover is Phase B and lands atomically with RFC-038.
+
+Two side-effects are flagged for review rather than buried: this RFC **narrows an Accepted rule**
+(RFC-035 [R4], via [R2a]) and **establishes a `Field.name` uniqueness rule that does not exist today**
+([R4]).
 
 ---
 
@@ -95,10 +100,9 @@ Projecting `com.semanticops.spec/table@2` through the canonical RFC-035 emitter
 `rows` — the FieldGroup carrying every actual table row — **is absent**. `fieldGroups` is in the
 emitter's documented seed-only exclusion set, so a table's entire substance is invisible to its own
 canonical projection, and the schema asserts `additionalProperties: false` over what remains. Nine
-spec records and 65 rows are affected here (measured); the muSrs corpus has ~29 carriers and ~175
-rows over a **five-field** group (figures recorded on #242, not re-measured here — muSrs is outside
-this repository; its carrier/row figures reconcile to 14 carriers / 102 rows, giving 23 / 167 across
-both repositories). Any carrier design must be sized against muSrs's five-field `section.table`, not
+spec records and 65 rows are affected here (measured); muSrs adds **14 carriers / 102 rows** over a
+**five-field** group (recorded on #242, not re-measured here — muSrs is outside this repository),
+giving **23 carriers / 167 rows** across the two. Any carrier design must be sized against muSrs's five-field `section.table`, not
 the spec's simpler list-of-strings shape.
 
 The owner has recorded that *"tables are a pretty vital element in practice"* and that
@@ -182,6 +186,7 @@ Facet defaults apply before the table is read: an absent `cardinality` means `si
 | `datatype: ref`, `mode: reference`, `single` | instance-id string (uuid) |
 | `datatype: ref`, `mode: reference`, `list` | array of instance-id strings |
 | `datatype: map` | object, string keys → `valueRange` scalar (or unconstrained when `valueRange: "open"`) |
+| *any of the above with* `cardinality: "list"` | the row's shape, **array-wrapped** — the wrap applies uniformly, including to `map` and `dependent` ([R16]), exactly as `projectField` applies it |
 | `datatype: dependent` | a value conforming to the descriptor named by `dependsOn` ([R3] validation obligation) |
 
 **`null` is not a value.** `record.json` currently permits `null` in `FieldValue.value`'s `oneOf`.
@@ -192,8 +197,11 @@ carrying an explicit `null` would *not* validate against its Type's projected sc
 "valid by construction" would be false. The alternative repair — an erratum making every optional
 field project `type: [X, "null"]` — buys nothing and makes every generated schema uglier.
 
-This costs nothing: **0 of 1318 values in this repository are `null`**. See [R5], and Open Question 5
-for the muSrs check.
+This costs **one value**: across the 1490 first-party values in this repository, exactly one is
+`null` — `conformance/discovery/fixture-repo/records/articles/article-2.json`, field
+`0000f001-…-0000008`. Under [R5] its disposition is to **delete the pair** (an unset field is an
+absent key), which is a Phase-B prerequisite listed with the other two. `srs/` itself has **0 of
+1318**. See [R5] and Open Question 5.
 
 The third and fourth rows are the load-bearing ones and the reason this is stated recursively: an
 inline composite value **is** a `fieldValues` map, so the carrier nests to arbitrary depth with no
@@ -286,11 +294,29 @@ before Phase B runs.
 `FieldValue.entries` and `$defs.FieldValueEntry` are deleted. A repeatable field is
 `fieldType.cardinality: "list"` and its value is a JSON array — Change B row 2.
 
-This is safe to state unconditionally because it is measured: of the **61** `FieldValue.entries` uses
-in this repository (138 entry items), **61 are on Fields already declaring `cardinality: "list"`** and
-**0 are not**; entry objects carry **no** keys other than `value` (0 `source`, 0 `editedAt`). The
-transform `entries: [{value: v₁}, …, {value: vₙ}] → [v₁, …, vₙ]` is total, deterministic, and strands
-nothing. #276 is the reason the count is 61/0 rather than 61/2: it restored `cardinality: "list"` to
+This is measured, and the measurement contains a surprise the transform has to handle.
+
+Of the **61** `FieldValue.entries` uses in `srs/` (138 entry items), **61 are on Fields already
+declaring `cardinality: "list"`** and **0 are not**; entry objects carry **no** keys other than
+`value` (0 `source`, 0 `editedAt`). So far so clean. But **all 61 also carry a sibling `value` array**,
+and **0 carry `entries` alone**:
+
+```jsonc
+{ "entries": [{"value": "Scenario"}, {"value": "Guidance"}],
+  "fieldId": "1a000032-…",
+  "value": ["Scenario", "Guidance"] }          // ← dual-written, 61/61
+```
+
+`record.json` documents `value` as *"Non-repeatable value. **Mutually exclusive with entries**"* — but
+that exclusivity is **prose only**; no `oneOf`/`not` enforces it, and I-23 says merely that a
+repeatable field *"may use `entries`"*. So the dual encoding is not an anomaly, it is what the corpus
+consistently does.
+
+Two consequences. First, a transform written from the prose — `abort if both present` — would abort on
+**100%** of the `entries` population. Second, the pure-`entries` form that a naive `entries → array`
+step describes **occurs zero times**. The transform is therefore specified to take `value`, assert the
+`entries` projection agrees, and abort on divergence ([R20]); it is verified to agree in **61 of 61**
+cases here. muSrs is unaudited for both co-presence and divergence — audit item 7. #276 is the reason the count is 61/0 rather than 61/2: it restored `cardinality: "list"` to
 `com.semanticops.spec/{columns,cells}`, and `scripts/check-cardinality-coherence.mjs` is the standing
 guard.
 
@@ -310,11 +336,20 @@ Three facts make the removal clean, all verified in this repository:
 - The `rows` group's `minItems: 1` on `table@2` is the **only** `minItems`/`maxItems` anywhere in the
   corpus, and it counts row occurrences — so it transfers to the new Field's `fieldType.minItems`
   rather than being stranded. No `FieldAssignment` carries either of those two properties.
-- **`repeatable`, however, is live in 8 places**, and the definition transform must strip every one:
-  `com.semanticops.spec/table@2` (`columns` `true`, group `rows`'s `cells` `true`),
-  `com.semanticops.base/repo_settings@1` (×4 `false`), `com.semanticops.core/purpose@1` (×2 `false`).
-  Leaving any of them makes its Type schema-invalid the moment [R7] lands — including the two Types
-  that have no FieldGroup at all and would otherwise never be touched by the migration.
+  **This diverges from a settled input**, deliberately: #242's dispatch records that
+  `minItems`/`maxItems` *"leaves with `FieldGroup`; nothing to migrate onto a Field."* Discarding it
+  would silently drop a real constraint (a table must have ≥ 1 row), and `fieldType.minItems` is its
+  exact RFC-032 equivalent — so it is carried, not dropped. Flagged because it changes a
+  do-not-re-litigate point, not because the point was overlooked.
+- **`repeatable`, however, is live in 34 places across 7 first-party Types**, and the definition
+  transform must strip every one: **`srs/`** — `com.semanticops.spec/table@2` (×2),
+  `com.semanticops.base/repo_settings@1` (×4), `com.semanticops.core/purpose@1` (×2) = **8**;
+  **`gallery-project-v2`** — `governance/{article, decision, decision_log, role}@1` = **26**.
+  (`packages/**` holds a further 52, correctly out of scope as #286's.) Leaving any of the 34 makes
+  its Type schema-invalid the moment [R7] lands — including the **five** Types that have no FieldGroup
+  at all and would otherwise never be touched by the migration. Note that an RFC-032 pass does *not*
+  remove them: RFC-032 Change H deliberately **retained** the trio until this cutover, so they survive
+  Open Question 7's migration and land in a revision-2 repository still carrying it.
 - **No per-assignment cardinality override is owed.** RFC-032 [R8] Rev 6 errata and Invariant 2 settle
   that cardinality is Field-level by construction; `required` remains overridable, cardinality never was.
 - **0 Types use `extendsTypeId`** today, so no inherited group complicates the transform — though RFC-039 [R4]
@@ -333,7 +368,7 @@ For a `FieldGroup` `G` on Type `T`:
 | `G.groupId` | the new Field's `name`, **verbatim** ([R2b]) |
 | `T.namespace` | the new Field's `namespace` |
 | `G.fields[]` | the `FieldAssignment[]` of a **new range Type** `R`, carried over **with `repeatable`/`minItems`/`maxItems` stripped** — copying them unchanged would put properties [R7] removes into a freshly-minted Type, which `type.json`'s `additionalProperties: false` then rejects |
-| — | `R.name` = `<T.name>-<G.groupId>`; `R.namespace` = `T.namespace`; `R.version` = 1 |
+| — | `R.name` = `<T.name>_<G.groupId>` (snake_case, per the standing convention — see Open Question 2); `R.namespace` = `T.namespace`; `R.version` = 1 |
 | `G.repeatable: true` | new Field `fieldType.cardinality: "list"` (`false`/absent → `"single"`) |
 | `G.minItems` / `G.maxItems` | new Field `fieldType.minItems` / `maxItems` |
 | — | new Field `fieldType`: `{datatype: "ref", mode: "inline", rangeType: {typeId: R.id, typeVersion: 1}}` |
@@ -344,17 +379,50 @@ For a `FieldGroup` `G` on Type `T`:
 New `Field.id` and `Type.id` are freshly minted UUIDv4s recorded in the migration log, so the
 transform is auditable and re-runnable against its own record rather than by regeneration.
 
+**The minted entities must be schema-valid, which needs more than the table above.** `field.json`
+requires `id, namespace, name, version, description, aiGuidance, fieldType, createdAt`; `type.json`
+requires `$schema, id, namespace, name, version, description, fields, createdAt`; `FieldAssignment`
+requires `fieldId, order, required`. So the transform also sets: `version: 1` and `createdAt` (the
+migration timestamp) on both; `description`/`aiGuidance.purpose` carried from `G.label` where present,
+else a stated default; and `$schema` on `R`. **The new `FieldAssignment.required` on `T` is
+`G.minItems ≥ 1`** — this is substantive, not a default: with `minItems: 1` on the `fieldType` but
+`required: false` on the assignment, `table@3` would permit a table whose `rows` key is absent, which
+`table@2` plus I-27 did not.
+
+**Decision — the row Type stays project-local, discharging RFC-036 Open Question 3.** RFC-036 says of
+a canonical `Row` Type: *"The cost curve is cheap now → **cheapest at #242, when both corpora are
+rewritten anyway** → expensive after. **Decide it at #242, not later.**"* This RFC mints
+`com.semanticops.spec/table_rows@1`, so it takes that decision and records it rather than taking it
+silently. Project-local, for RFC-036's own three reasons: [CR-036-8]/[CR-036-10] bind renderer roles
+by `Field.name` **independently of namespace**, so two project-local row Types satisfy the contract
+with zero configuration and what is genuinely canonical is the *role contract*, not a Type; there is
+**no home** for a canonical Row today (RFC-029 [R3] freezes `com.semanticops.core`, and
+`com.semanticops.srs/metamodel` is generator-owned), so it would need a new distributable package;
+and muSrs is revision 0 and could not consume a rev-1 canonical Row anyway. The accepted cost is
+RFC-036's: two Types a future canonical Row would deprecate, retargetable as a mechanical rekey of
+23 records / 167 rows, with no Relation affected because inline composites are values, not instances.
+
 **`T` gets a version bump, and instances are rewritten to it.** The canonical version-semantics table
 (record `8e3fb02c-3863-55a9-8bcd-0580e0c7b3a9`) does not enumerate a Type `fields[]` change, but its
 catch-all governs: *"if a downstream consumer's AI extraction, validation, or governance logic would
 behave differently, a version bump is required."* Replacing a group with a composite Field changes
 validation, so it does. Concretely `com.semanticops.spec/table@2 → @3`, and the **9** table records
-have their `typeVersion` rewritten from 2 to 3 in the same transform step. `table@2` is retained, not
-deleted — it is the version the pre-cutover history validates against.
+have their `typeVersion` rewritten from 2 to 3 in the same transform step.
+
+**The superseded version is deleted, not retained.** Retaining it was the earlier plan, on the ground
+that it is what pre-cutover history validates against — but it does not survive this RFC's own rules.
+`table@2` carries `fieldGroups` and two `FieldAssignment.repeatable`, which [R7] rejects at
+`dataModelRevision ≥ 2`, and Phase 2 stamps the very package manifest it lives in; it also fails plain
+schema validation once `type.json` drops `$defs.FieldGroup` and the trio. And [R19] does not protect
+it: after Phase 1 rewrites all 9 records to `@3`, **zero instances reference `@2`**, so the rule is
+silent on it. Keeping it would leave the migrated repository holding a definition its own stamped
+revision forbids. Git history is the recovery mechanism for pre-cutover validation, per the same owner
+decision that sets the compatibility window to zero — which is what "retained for history" was
+reaching for anyway.
 
 Worked for `table@2`: `G = rows` (repeatable, `minItems: 1`, one field `cells`) becomes Field
 `com.semanticops.spec/rows` with `fieldType {datatype: ref, mode: inline, cardinality: list,
-minItems: 1, rangeType: table-row@1}`, over a new Type `com.semanticops.spec/table-row@1` whose sole
+minItems: 1, rangeType: table_rows@1}`, over a new Type `com.semanticops.spec/table_rows@1` whose sole
 assignment is `cells` (required, order 0). `displayLabel: "Rows"`, `order: 3`.
 
 ### Change F — `Field.name` uniqueness within a Type's effective field set
@@ -481,6 +549,9 @@ serialise."* The replacement shape is **no new construct at all**:
 - `ProjectedRecord.fields` is *already* an object (today *"keyed by fieldId"*). It becomes keyed by
   `Field.name`, matching [R1].
 - `orderedFieldKeys` carries `Field.name` values instead of field ids.
+- `fields`'s description — currently *"Values are raw JSON (string, number, boolean, array, **or
+  null**)"* — drops the null branch, which [R5] removes at the instance layer; leaving it would let
+  schema and instance drift apart at exactly the seam this RFC exists to close.
 - `fieldGroups`, `$defs.ProjectedFieldGroup`, and `$defs.ProjectedGroupEntry` are **removed with no
   successor**: a composite value is carried recursively by `fields` under its own key, exactly as in
   the instance. The projection inherits Change B's recursion instead of restating it.
@@ -558,9 +629,11 @@ Phase B authors one invariant record per rule that is a repository-checkable pro
 [R1] (object-keyed, keys resolve), [R2b] (verbatim instance keys), [R4] (effective-set name
 uniqueness), [R5] (`null` rejected), [R6] (`fieldMeta` key subset), [R7] (removed constructs
 rejected), [R9] (structural generation discrimination), [R14] (reference integrity), and [R19] (a
-referenced Type version is not deleted) — numbered from the current high water mark. [R2a] amends
-`projection-rules.md` rather than producing an invariant, and [R10]–[R13] govern the one-off
-migration rather than the steady state, so neither group needs a carrier record.
+referenced Type version is not deleted) — numbered from the current high water mark. Steady-state rules that also need carriers: **[R11]** (projection output shape), **[R16]**
+(uniform list-wrap), **[R17]** (what the projected schema covers) and **[R18]** (instance key order).
+[R2a] amends `projection-rules.md` rather than producing an invariant, and **[R10], [R12], [R13],
+[R20]** govern the one-off migration rather than the steady state, so neither group needs a carrier
+record.
 
 **Anticipated `srs-integration:v1` manifest at Phase B** (not declared now, because none of it
 resolves yet):
@@ -635,10 +708,12 @@ possible. #242 stays open through Phase B and is the follow-up the allowlist ent
 > **[R8]** A Tier-1 `TypedField` MUST carry an inline `fieldType` in place of `valueType`/`selectOptions`.
 > Its `datatype` MUST NOT be `ref` or `dependent`.
 >
-> **[R9]** A reader MUST determine instance generation structurally: an array `fieldValues` is
-> revision ≤ 1, an object `fieldValues` is revision ≥ 2. On encountering a generation it does not
-> support, it MUST emit a diagnostic naming the file and the expected `dataModelRevision` and MUST NOT
-> coerce, partially read, or silently skip the document.
+> **[R9]** A reader MUST determine instance generation structurally. For a Tier-2 `Record`: an array
+> `fieldValues` is revision ≤ 1, an object `fieldValues` is revision ≥ 2. For a Tier-1 `TypedRecord`
+> (which has no `fieldValues`): a `TypedField` carrying `valueType` is revision ≤ 1, one carrying
+> `fieldType` is revision ≥ 2. On encountering a generation it does not support, a reader MUST emit a
+> diagnostic naming the file and the expected `dataModelRevision` and MUST NOT coerce, partially read,
+> or silently skip the document.
 >
 > **[R10]** The migration transform MUST resolve every `fieldId` to a `Field.name`. An unresolvable
 > `fieldId` MUST abort the migration of that repository with a diagnostic naming the record, the
@@ -663,18 +738,25 @@ possible. #242 stays open through Phase B and is the follow-up the allowlist ent
 > `typeVersion`. A dangling or type-mismatched target MUST be reported as an error naming the
 > referring record, the key, and the target id. (Discharges RFC-032 OQ4, RFC-033:302, RFC-035:592.)
 >
-> **[R15]** `ext:field-groups` and `ext:repeatable-fields` are **retired**. A manifest at
+> **[R15]** `ext:field-groups` and `ext:repeatable-fields` are **retired**. (Costing nothing today:
+> **no** first-party manifest declares either, though `srs/` uses both constructs — a pre-existing
+> under-declaration, so Phase B has no declarations to remove, only the constructs.) A manifest at
 > `dataModelRevision ≥ 2` MUST NOT declare either; a reader encountering one MUST report an error
 > rather than ignore it, because a declaration implies constructs [R7] rejects.
 >
 > **[R16]** `cardinality: "list"` array-wraps **uniformly**, for every `datatype` including `map` and
-> `dependent`. `fieldMeta` is **not** part of a Type's projected JSON Schema and MUST NOT be emitted
-> into it; it is Record-envelope metadata, like `tags` and `meta`.
+> `dependent`, matching `projectField`'s unconditional wrap. The rows of Change B's table state the
+> `single` case; the wrap composes on top of them.
 >
 > **[R17]** A Type's projected JSON Schema describes the **`fieldValues` object**, not the whole
 > Record document. `instanceId`, `typeId`, `tags`, `meta`, `sourceRefs`, and `fieldMeta` are envelope
 > members governed by `record.json`, and are outside the projected schema's
 > `additionalProperties: false`.
+>
+> **[R20]** Where a legacy `FieldValue` carries both `value` and `entries`, the migration MUST take
+> `value`, MUST assert that the `entries` projection equals it, and MUST abort on divergence. It MUST
+> NOT silently prefer one carrier. (`record.json` declares the two mutually exclusive in prose only;
+> the corpus dual-writes them 61 times out of 61.)
 >
 > **[R18]** Instance `fieldValues` keys MUST be serialised in `FieldAssignment.order`, and nested
 > composite objects likewise, so that a re-run of the transform is byte-idempotent and diffs are
@@ -685,7 +767,10 @@ possible. #242 stays open through Phase B and is the follow-up the allowlist ent
 > Name-keying makes the Record→Field edge **Type-mediated**: `fieldId` is recovered from
 > `typeId` + `typeVersion` + key, so deleting the pinned Type version renders every instance of it
 > unreadable, where today each instance still carries exact `fieldId`s. [R1] and [R10] depend on this.
-> (Change E.2's "`table@2` is retained, not deleted" is an instance of this rule, not a courtesy.)
+> This rule governs versions with live referents only; a version left with **zero** referents by a
+> migration is outside it (Change E.2 deletes `table@2` on exactly that ground). Unlike RFC-005's
+> analogous rule for `RelationTypeDefinition`, this RFC defines no tombstone lifecycle or
+> forced-removal path; if one is wanted, RFC-005 §Deletion is the precedent to mirror.
 
 ---
 
@@ -693,7 +778,7 @@ possible. #242 stays open through Phase B and is the follow-up the allowlist ent
 
 | Schema file | Change |
 |---|---|
-| `record.json` | `fieldValues` array → object (Change A/B); add `fieldMeta` (Change C); remove `$defs.FieldValue`, `$defs.FieldValueEntry`, `$defs.FieldGroupValue`, `$defs.FieldGroupEntry`, and the `groupValues` property (Changes D/E); `$defs.SourceReference` retained, now referenced from `fieldMeta` and record-level `sourceRefs` |
+| `record.json` | `fieldValues` array → object (Change A/B) — it stays in `required`, and a Record with no values carries `{}`; add `fieldMeta` (Change C); remove `$defs.FieldValue`, `$defs.FieldValueEntry`, `$defs.FieldGroupValue`, `$defs.FieldGroupEntry`, and the `groupValues` property (Changes D/E); `$defs.SourceReference` retained, now referenced from `fieldMeta` and record-level `sourceRefs` |
 | `type.json` | remove `$defs.FieldGroup` and `Type.fieldGroups`; remove `FieldAssignment.{repeatable, minItems, maxItems}` (Change E) |
 | `typed-record.json` | replace `TypedField.valueType`/`selectOptions` with an inline `fieldType` restricted per [R8] (Change G) |
 | `manifest.json` | **none** — `dataModelRevision` is already an optional monotonic integer (RFC-033 / #265); Phase B stamps values, not shapes |
@@ -722,36 +807,58 @@ rules), **#286** (repair the migration transform; dispose the remaining pre-RFC-
 **#294/RFC-037 + srs-rust#782** (field-row path — Accepted Rev 3, implemented), **#295** (package-ID
 collision), and the muSrs revision-0 / `ext:themes-l1` / released-package-freeze decisions.
 
-### The first-party corpus is four repositories, not one
+### The first-party corpus — five trees, enumerated
 
-`srs/srs` is not the only SRS repository in this tree. Two others carry live instances — plus one
-bundle serialising one of them — and both of those repositories are **still pre-RFC-032** — which means the carrier transform, whose every step is keyed on
-`Field.fieldType`, **cannot run on them at all** until they are RFC-032-migrated first.
+Two revisions of this RFC quoted `srs/srs`-scoped measurements as if they were corpus-wide, and both
+times a review caught it. The table below is therefore the **authoritative baseline**, re-derived in
+one exhaustive pass over every instance-bearing tree in the repository, and every totality claim
+elsewhere in this RFC is scoped against it explicitly.
 
-| Repository | Instances | Values | Package Fields | Revision |
-|---|---|---|---|---|
-| `srs/` (the spec) | 355 T2, 19 T0, **0 T1** | **1318** | 150, all `fieldType` | 1 |
-| `conformance/discovery/fixture-repo/` | 8 T2, **2 T1**, 1 T0 | **54** | 15, **all `valueType`** | **absent ⇒ 0** |
-| `docs/spec/examples/gallery-project-v2/` | 22 T2, 2 T0 | **100** | 20, **all `valueType`** | **absent ⇒ 0** |
-| `docs/spec/examples/gallery.srsj` | 22 records (bundle of the above) | **100** | — | **absent ⇒ 0** |
+| Tree | T2 | T1 | T0 | Values | Groups | Package Fields | Revision |
+|---|---:|---:|---:|---:|---:|---|---|
+| `srs/` (the spec) | **355** | 0 | 19 | **1318** | 9 / 65 | 150, all `fieldType` | **1** |
+| `conformance/discovery/fixture-repo/` | 8 | **2** | 1 | **54** (50 T2 + 4 T1) | 0 | 15, **all `valueType`** | absent ⇒ 0 |
+| `docs/spec/examples/gallery-project-v2/` | 22 | 0 | 2 | **100** | 0 | 20, **all `valueType`** | absent ⇒ 0 |
+| `tests/rfc-032/` | 1 | 0 | 0 | **18** | 0 | 24, all `fieldType` | **no manifest** |
+| `docs/spec/examples/gallery.srsj` | 22 | 0 | 2 | **100** | 0 | 22 defs, 5 Types — **overlaps `gallery-project-v2`, not identical** | absent ⇒ 0 |
+| **muSrs** (`the-greenman/muDemocracy.org`) | — | — | — | ~235 | 14 / 102 | **pre-RFC-032, revision 0** | absent ⇒ 0 |
 
-Two consequences the earlier revisions of this RFC got wrong:
+**Totals in this repository: 386 Tier-2, 2 Tier-1, 22 Tier-0, 1490 field values.** muSrs is first-party
+but out of this session's scope; its figures are quoted from #242, not measured here.
 
-- **The RFC's "0 Tier-1 TypedRecords" claim was scoped to `srs/srs` and read as global.** The
-  conformance fixture has 2, with 4 `valueType`-bearing `TypedField`s. Change G is a live data
-  migration, not a schema-only change.
-- **Pre-RFC-032 disposal was scoped to `packages/**` (#286).** That boundary excludes both of these
-  paths, which are *source data*, not published packages and not render output. `gallery-project-v2`
-  is hand-authored (no generator in `scripts/`), and `check-cardinality-coherence.mjs` already reports
-  it as having *"not adopted RFC-032 at all"*.
+Four facts in that table change the plan, and each was missed by an earlier revision:
 
-**Phase B must therefore RFC-032-migrate both repositories before the carrier transform touches
-them**, or #286's scope must be widened to cover `conformance/**` and `docs/spec/examples/**`. That
-is a sequencing decision recorded here, not taken here — it belongs to #286.
+**Two trees are pre-RFC-032, so the transform cannot run on them at all.** Every step keys on
+`Field.fieldType`, which `conformance/discovery/fixture-repo/` and
+`docs/spec/examples/gallery-project-v2/` do not have. `check-cardinality-coherence.mjs` already
+reports the latter as *"not adopted RFC-032 at all"*. **muSrs is in the same position** — RFC-036
+records that *"its fields are still on the pre-RFC-032 `valueType` model … until muSrs completes the
+RFC-032 migration — which #242 does not currently scope."* All three need an RFC-032 pass **before**
+the carrier transform; see Open Question 7.
 
-### Prerequisite — the muSrs corpus audit
+**Tier 1 is not empty.** The conformance fixture holds **2 TypedRecords with 4 `valueType`-bearing
+`TypedField`s**, so Change G is a live data migration, not the schema-only change earlier revisions
+claimed.
 
-**Every totality claim in this RFC is measured over this repository only.** The landing is
+**`tests/rfc-032/` already implements a name-keyed carrier — under a different property name.** Its
+`records/showcase-instance.json` declares `$schema: …/record.json` and stores **18 name-keyed values
+under `values`**, not `fieldValues` (`plain_string`, `markdown_body`, `homepage`, …). It does not
+conform to `record.json` today, which requires `fieldValues` and sets `additionalProperties: false`.
+Phase B MUST reconcile this to **`fieldValues`** — the property name this RFC keeps — rather than
+leaving two spellings of the same idea in one repository. The tree has **no `manifest.json`**, so
+[R13]'s enumerate-from-`instanceIndex` rule cannot see it: it must be migrated by explicit path, and
+that exception must be written into the transform rather than discovered at cutover.
+
+**This tree also carries an RFC-032 obligation deferred to #242 by name.** RFC-032's fixture scope
+says *"**inline-composite instance** values have no conforming carrier until #242, so their instance
+goldens are **#242's acceptance**, not #257's."* Phase B therefore owes an inline-composite instance
+golden here, and it is added to the cutover evidence list below.
+
+### Prerequisite — the out-of-scope corpus audit
+
+**Every totality claim in this RFC is measured over this repository only** — and, within it, several
+were first written `srs/`-scoped and corrected twice; the corpus table above is the authoritative
+baseline. The landing is
 all-or-nothing over these four repositories *and* muSrs, so the deterministic-transform argument does
 not yet cover the muSrs share of the corpus at all. muSrs lives in `the-greenman/muDemocracy.org`,
 outside this session's repository scope.
@@ -764,7 +871,11 @@ written, because each one is a place where "0 occurrences here" is doing load-be
 3. entry-level `source`/`editedAt` on `entries` items (Change C claims 0 of 138);
 4. intra-Type `Field.name` collisions — RFC-039 [R4]'s feasibility (Change F claims 0 of 45 Types);
 5. `Field.name` spellings — Open Question 2's kebab-case count (33 here);
-6. unresolvable `fieldId`s and explicit `null`s ([R10], [R5] — one and zero here respectively).
+6. unresolvable `fieldId`s and explicit `null`s ([R10], [R5]);
+7. **co-presence of `value` and `entries`, and whether they agree** ([R20]) — 61/61 co-present and
+   61/61 agreeing here, so a muSrs disagreement would be silent data loss;
+8. whether muSrs has completed the RFC-032 migration **at all** — it has not, per RFC-036, and this
+   gates all seven measurements above.
 
 A non-zero result on any of them is a design input, not a migration detail: (1) and (6) would make
 the transform non-total as written, (4) would make RFC-039 [R4] unsatisfiable without renaming, and (2)/(3)
@@ -780,8 +891,11 @@ against the *post*-transform Types — a Record still pinned to `table@2` has no
 0a. Run Change E.2 for every `FieldGroup`: mint the range Type `R`, mint the new Field, add its
     `FieldAssignment` to `T`, and **bump `T`'s version** (`table@2 → @3`), retaining the old version.
 0b. **Strip `repeatable`/`minItems`/`maxItems` from every `FieldAssignment` in every first-party
-    Type** — 8 occurrences across 3 Types here, two of which have no FieldGroup and are otherwise
-    untouched. Missing one leaves that Type schema-invalid under [R7].
+    Type** — **34 occurrences across 7 Types** (8 in `srs/`, 26 in `gallery-project-v2`), five of
+    which have no FieldGroup and are otherwise untouched. Missing one leaves that Type schema-invalid
+    under [R7]. `gallery.srsj` carries 28 sites over 5 Types and must be migrated separately: it
+    **overlaps `gallery-project-v2` without being identical**, so migrating the tree does not yield a
+    migrated bundle.
 0c. Replace `TypedField.valueType`/`selectOptions` with an inline `fieldType` (Change G).
 
 **Phase 1 — instances (per file, enumerated from `instanceIndex` per [R13]):**
@@ -789,9 +903,14 @@ against the *post*-transform Types — a Record still pinned to `table@2` has no
 1. Rewrite `typeVersion` to the post-0a version where 0a bumped it, then resolve
    `typeId`@`typeVersion` → effective field set. **Abort on any unresolvable `fieldId`** ([R10]).
 2. `fieldValues[]` → object: for each pair, key = `Field.name`, value per Change B.
-3. `entries: [{value: v₁}…] → [v₁…]` — **only where the Field is `cardinality: list`**; abort otherwise (Change D).
+3. Where `entries` is present: **take the sibling `value`**, assert `[e.value for e in entries] == value`, abort on divergence ([R20]); drop `entries`. Where `entries` is present *without* a sibling
+   `value` (0 occurrences here), convert `entries → array`. Both paths require the Field to be
+   `cardinality: list`; abort otherwise (Change D).
 4. `groupValues[{groupId, entries[{fieldValues[]}]}]` → the group's new Field key → array of
-   recursively-transformed `fieldValues` objects (Change E).
+   recursively-transformed `fieldValues` objects (Change E). **"Recursively transformed" means steps
+   2, 3 and 5 applied at every depth** — 54 of the 61 `entries` and 121 of the 138 entry items live
+   *inside* `groupValues`, so a literal reading that treats steps 3 and 4 as siblings would leave 88%
+   of the population unconverted inside the composite it just built.
 5. Per-value `source`/`editedAt`/`sourceRefs` → `fieldMeta[key]` (Change C).
 
 **Phase 2 — repository-level:**
@@ -821,15 +940,23 @@ because the dropped data is absent from both sides.
 | `FieldGroupEntry.entryId` | **Dropped, with a logged notice.** It identifies a row within a group; the composite list's index carries position, and no `entryId` is referenced anywhere in the corpus. |
 | Unresolvable `typeId@typeVersion` at step 1 | **Abort**, naming the record and the reference. |
 | `entries` on a Field whose `cardinality` is **not** `list` | **Abort.** 61/61 are `list` here; muSrs is unaudited (Open Question 5), so step 3 is conditional, never unconditional. |
-| Explicit `null` value | **Abort.** [R5] removes `null`; 0 occurrences here, muSrs unaudited. |
+| Explicit `null` value | **Abort**, except for the one known occurrence, which is **deleted** as a Phase-B prerequisite. **1** in the first-party corpus (fixture-repo `article-2.json`), 0 in `srs/`; muSrs unaudited. |
+| **Both `value` and `entries` present** — schema-legal, since `record.json`'s exclusivity is prose only | **Take `value`; assert the `entries` projection agrees; abort on divergence** ([R20]). This is **not** a rare case: it is **61 of 61**, the entire `entries` population, and `entries`-alone occurs **0** times. |
 | **`FieldValue` with neither `value` nor `entries`** — schema-legal, since `FieldValue` requires only `fieldId` | **Key omitted, with a logged notice.** This is the one row that is **not** 0-occurrence: `rfc-003-distribution-and-slices.json` and `rfc-004-language-neutral-schema-notation.json` each carry a bare `{"fieldId": "5a000009…"}` for the optional `affected-components`. Under [R5] the alternatives are omit-the-key or emit `null`, and `null` is rejected — so omission is the only available reading. |
 
-**One case is deliberately not round-trippable.** A valueless pair maps to an omitted key, and
-old → new → old cannot reconstruct it: an absent key is indistinguishable from a pair that never
-existed. This is a **one-way loss of two no-op records**, accepted because the alternative is
-retaining `null` and thereby breaking [R3]'s by-construction guarantee for the entire corpus. The
-round-trip criterion below is therefore stated as *equivalence modulo valueless pairs*, and the
-transform MUST log each one it drops so the count is auditable rather than silent.
+**Two classes are deliberately not round-trippable, and the criterion says so.**
+
+1. **Valueless pairs (2).** A valueless pair maps to an omitted key, and old → new → old cannot
+   reconstruct it — an absent key is indistinguishable from a pair that never existed.
+2. **Dual-written `value`/`entries` (61).** The new shape has one array where the old had two
+   redundant encodings, so the round trip cannot recover *which* encodings were present. This class is
+   **30× larger** than the first and was missed until review round 2.
+
+Both are accepted: the alternative to (1) is retaining `null`, which breaks [R3]'s by-construction
+guarantee for the whole corpus, and the alternative to (2) is preserving a redundancy the RFC exists
+to remove. The cutover criterion is therefore **equivalence modulo valueless pairs and
+`value`/`entries` duplication**, and the transform MUST log every instance of both so the counts are
+auditable rather than silent.
 
 "Abort" means: fail the whole repository's migration with a diagnostic naming the record, the key,
 and the reason. **Never skip, never coerce, never partially migrate** — a partial migration is the
@@ -865,7 +992,11 @@ Field `f1a2b3c4-d5e6-4a7b-8c9d-0e1f2a3b4c5c` is referenced by four Types —
 `com.semanticops.srs/meta.{spec-part, concept, specification, requirement}@1` — and is **defined
 nowhere** in this repository. `srs repo validate` reports **0 errors** over it. Today it is inert,
 because instances carry the UUID and nothing must resolve it; under name-keying the transform *must*
-resolve `fieldId → name`, so it becomes a hard stop by [R10]. This is the same failure shape #276
+resolve `fieldId → name`. The hard stop is **RFC-039 [R4]**, not [R10]: no instance references this
+Field and none instantiates the four `meta.*` Types, so [R10] — which governs a `fieldId` found in a
+`fieldValues[]` pair — never fires. But the effective-field-set name-uniqueness check cannot be
+evaluated for a Type carrying an unresolvable `fieldId`, and Phase 0 must resolve every Type before
+any instance is touched. This is the same failure shape #276
 caught — invalid data that `repo validate` passes silently. It must be resolved (define the Field, or
 remove the four assignments) before Phase B. Filed as a Phase-B prerequisite, not fixed here.
 
@@ -886,6 +1017,12 @@ remove the four assignments) before Phase B. Filed as a Phase-B prerequisite, no
 - The 12 composite/table tests in `crates/srs-repository/src/render_service.rs` re-based onto structured input;
   `composite_table_no_raw_json_in_output` becomes trivially true.
 - A spec-side DocumentView fixture exercising the RFC-037 row baseline over a composite (inline, list) field.
+- **The inline-composite instance golden RFC-032 deferred here**: *"inline-composite instance values
+  have no conforming carrier until #242, so their instance goldens are #242's acceptance, not
+  #257's."* It belongs in `tests/rfc-032/`, whose `run.mjs` is already gated by `validate-all.mjs`.
+- **The RFC-033:407 metamodel round-trip**, if Open Question 1 is resolved in favour of accepting it —
+  the metamodel is the deepest inline-composite nest available and the strongest test of Change B's
+  recursion. Listed here so the obligation has a landing place either way.
 
 ### Blast-radius matrix
 
@@ -903,6 +1040,7 @@ remove the four assignments) before Phase B. Filed as a Phase-B prerequisite, no
 | `srs-rust` | **39 files across 6 crates** touch `field_values` (`srs-repository` 23, `srs-bindings` 5, `srs-cli` 3, `srs-core` 3, **`srs-gov` 3**, `srs-mcp` 2); **25** touch `group_values`; payload contract + golden schemas regenerate | fixtures; the 12 `render_service.rs` composite/table tests re-based | Phase B, same train |
 | `srs-rust` agent/tooling contract | `type_schema_service.rs` (`x-srs-field-id`), `CreateRecordInput` (`fieldValues`, `groupValues`), MCP `record_create` / `record_update` / `note_graduate` tool schemas | — | Phase B, same train |
 | `srs` agent docs | `srs-usage.md` — ~10 passages instructing `fieldValues` keyed by fieldId and `groupValues` in `CreateRecordInput` | — | Phase B, same train |
+| **`srs/scripts/**`** | **13 scripts** read `fieldValues`/`groupValues`; four are **standing gates**, not one-off migrations: `check-idl-schema-conformance.mjs`, `check-rfc-integration.mjs`, `validate-rfc-process.mjs`, `render-invariants.mjs` | — | Phase B — the cutover criterion *"`validate-all.mjs` green"* is unreachable without them |
 | `srs-web` | consumes catalog/render services — **not yet enumerated** | — | Phase B; enumerate before cutover |
 | `srs-vscode` | schema mirror | — | mirror pipeline |
 
@@ -1042,6 +1180,8 @@ narrowing [R4] documents what is true rather than changing behaviour.
 | **RFC-036** | Accepted | Change I discharges its `document-view-output.json`, `theme.json` [CR-036-18], and [CR-036-19] deferrals. Its `compositeRenderer` binding is where `FieldGroup.compositeRenderer` lands (Change E.2). |
 | **RFC-037** | Accepted (Rev 3) | [FR-037-14]'s unprefixed CSS alias sunset fires at this cutover (Change I). Its field-row form is what the Phase-B parity fixture exercises; not reopened. |
 | **RFC-019** | Accepted | **Conflict — Phase B must amend it.** Its Definitions block defines non-empty as *"its `FieldValue` entry is present in the Record's `fieldValues` **array** … when `ext:repeatable-fields` is declared and `FieldAssignment.repeatable` is `true` … its `entries` array is present"* — three constructs [R7] removes. `CrossFieldRule` addressing fields by `fieldId` is **unaffected** (it is a Type-level declaration, not an instance key). Only the non-empty definition needs rewriting, onto key presence + [R5]. |
+| **RFC-012** | Accepted (Rev 8) | **Conflict — Phase B must amend it.** Its Tier-2 text projection iterates *"each `fieldValue` in the instance's `fieldValues` **array**, in the order they appear"*, and makes that order load-bearing **on purpose**: *"stored array order is intentional (it reflects the order in which values were set) … that asymmetry is deliberate"* (`rfc-012:139`). Change A removes the array and [R18] mandates `FieldAssignment.order`, so **the set-order signal is destroyed and the deliberate asymmetry collapses**. This RFC accepts that: the signal is unrecoverable once values are keyed, no consumer is known to use it, and a projection whose output depends on write history is not reproducible from content — but it is a real capability being dropped, not an oversight. [R18] supersedes `rfc-012:139`. |
+| **RFC-031** | Accepted (Rev 4) | **Conflict — Phase B must amend it.** Its Change B mapping table carries `Record.FieldValue → record.json#/$defs/FieldValue`, hardcoded at `scripts/check-idl-schema-conformance.mjs:53`. [R7] deletes that `$def`, so the RFC-031 gate — wired into `check-release-drift` by its [R5] — **breaks at cutover**. The row is dropped rather than repointed: `FieldValue` ceases to be an entity. |
 | **RFC-022** | Accepted | `RequiresRelation` is Type-level and untouched. |
 | **RFC-023** | Accepted | `SourceReference` shape unchanged; it is now reached via `fieldMeta` as well as record-level `sourceRefs`. |
 | **RFC-017** | Accepted | `sourceRefs` as forward capability is the reason Change C relocates rather than deletes per-value provenance. |
