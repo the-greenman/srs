@@ -8,9 +8,11 @@ This repo is part of a monorepo (`srs`, `srs-rust`, `srs-vscode`, `srs-web`) —
 
 ## SRS data model (quick reference)
 
-**Field** — atomic semantic unit. Has a stable UUID `id`, `namespace`, `name` (snake_case), `version` (integer), `valueType` (string|text|number|boolean|date|url|select|multiselect), and optional `aiGuidance`. Field semantics are immutable.
+**Field** — atomic semantic unit. Has a stable UUID `id`, `namespace`, `name` (snake_case), `version` (integer), a `fieldType` (RFC-032: `datatype` × `cardinality` × value-domain × `format` × `constraints`, where `datatype` may be `ref` to another Type, `dependent`, or `map`), and optional `aiGuidance`. Field semantics are immutable. The pre-RFC-032 scalar `valueType` enum no longer exists.
 
 **Type** — named, versioned composition of Fields. Contains `fields[]` as FieldAssignments: `{ fieldId, order, required, displayLabel? }`. `displayLabel` is rendering-only.
+
+**Presentation is view-owned, never type-owned.** RFC-015 established it for ordering and RFC-036 for rendering: a composite-range Field is dispatched to a renderer by `FieldView.compositeRenderer` or a `DocumentSection`/`DocumentView` directive, not by anything on the Type. When adding a presentational capability, put it in the view layer and check it against RFC-015's test — if many concurrent arrangements over the same records are legitimate and none is a semantic claim, it is presentation.
 
 **Record tiers:**
 - **Tier 0 (Note)**: free text sections, no type binding
