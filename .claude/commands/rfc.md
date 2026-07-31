@@ -161,6 +161,15 @@ If none remain: **None.**
 - The Schema changes section must be complete — omitting a file here causes implementation drift.
 - The RFC must NOT include implementation details for `srs-rust` or `srs-vscode` — those follow once the RFC is accepted.
 
+**The RFC is a document for a human to decide from.** It is read by the owner in order to approve or reject a normative change to the specification, and it must work at that job on its own terms:
+
+- **Prose carries the argument; JSON never does.** Describe every change in words first. A JSON or schema fragment is admissible only as an *illustration* beneath an explanation that already stands without it, and only when the shape genuinely cannot be said in a sentence. An RFC whose Proposed Changes section is a sequence of JSON blocks has not explained anything — it has relocated the diff.
+- **State consequences, not just mechanics.** For each change, say what becomes possible, what becomes forbidden, and what it costs later. "Adds `fieldType.cardinality`" is a mechanic; "a Field can now declare that it holds a list, which means every existing Field definition must say which it is" is a consequence.
+- **Name what breaks, with counts.** "All 14 `com.mudemocracy/section.table` records", not "some records may be affected". If nothing breaks, say so explicitly and say why.
+- **Never make the reader open another file to understand a rule.** Quote what you are changing, including the prior text when you are changing it.
+
+This is not a presentation nicety. The whole point of the RFC gate is that a human understands the commitment before the specification makes it, and a document that can only be understood by cross-referencing generated artefacts defeats that gate while appearing to satisfy it.
+
 ### 2c — Spec integrity check (internal)
 
 Before filing, self-review the draft for these invariants:
@@ -217,6 +226,7 @@ Brief:
 > 3. **Rationale completeness** — is every significant design choice explained? Are obvious alternatives addressed?
 > 4. **Cross-RFC compatibility** — does this RFC build on or conflict with any prior RFC (001–006)?  Reference `srs/rfcs/` to check.
 > 5. **Section structure** — are any required sections (Abstract, Motivation, Proposed Changes, Conformance Rules, Schema changes, Rationale, Alternatives Considered, Open Questions) missing or empty?
+> 6. **Decidability by a human reader.** The owner reads this to approve or reject a normative change, so review it as that reader. Flag as `blocking`: any change whose *consequence* is never stated, only its mechanics; any JSON or schema block doing explanatory work that prose should be doing; any rule that cannot be understood without opening another file; any "what breaks" claim that is vague ("some records") where a count is obtainable. Ask directly: **after reading only this document, do I know what I am committing to and what it forecloses?** If not, say precisely where it fails.
 >
 > For each finding: severity, the specific section, and a concrete suggested fix.
 
@@ -294,29 +304,60 @@ git push -u origin rfc/NNN-<slug>
 
 ### 5e — Open a PR for the RFC branch
 
+**The governing rule: the PR body must be enough.**
+
+> A reader must be able to understand exactly what this RFC changes and what it implies **without opening a single file and without reading the diff.**
+
+The owner is approving a normative change to the specification. What gets presented for that approval must be the change *stated*, not the change *derivable*. An RFC diff is dominated by machine output — spec records, `relations/relations.json`, the re-rendered `docs/spec/` exports, schema files — and asking someone to reconstruct a normative argument from those is asking them to do the work the RFC was supposed to do.
+
+**No JSON in the PR body.** Not a pasted record, not a schema fragment, not rendered output. The single exception is a snippet of **ten lines or fewer** where the shape genuinely cannot be carried in prose — and it must sit *underneath* the prose that explains it, never in place of it. If you find yourself pasting a generated artifact, the explanation is missing.
+
+Write the body in this shape. Every section is required; a section with nothing to say says "None" rather than being dropped.
+
 ```bash
 gh pr create \
   --repo the-greenman/srs \
   --base master \
   --title "RFC-NNN: <Title>" \
-  --body "$(cat <<'EOF'
-Adds RFC-NNN and associated schema changes.
+  --body-file <path-to-body.md>
+```
 
-Closes #<issue-N>
+**`## What this changes`** — one paragraph, plain language, no jargon that the RFC itself introduces. Someone who has not read the RFC should finish this paragraph knowing what is different.
 
-## Schema changes
-<bullet list from the RFC's Schema changes table, or "None">
+**`## What you are approving`** — the *implications*, not the mechanics. What becomes possible, what becomes forbidden, what the specification now commits to that it did not before, and what that commitment costs later. If this RFC forecloses an option, say which. This is the section the owner is actually reading; write it last and write it hardest.
 
-## Review checklist
+**`## Normative rules`** — every rule added, changed, or removed, **quoted in full**, each followed by one line of what it means in practice. Mark each `NEW`, `CHANGED` (with the prior text quoted too), or `REMOVED`. A reviewer must never have to open the RFC to learn what a rule says.
+
+**`## Schema changes`** — a table in words, not JSON:
+
+| Schema | Change | Effect on existing data |
+|---|---|---|
+| `field.json` | `fieldType.cardinality` becomes required | Every existing Field definition must declare it; absent ⇒ invalid |
+
+"Effect on existing data" is the column that matters. `None` is a valid entry and a meaningful one.
+
+**`## What breaks`** — existing records, packages, repositories, and clients, named specifically, with counts where you have them ("all 14 `com.mudemocracy/section.table` records", not "some records"). Then the migration path, or an explicit statement that none is needed. If nothing breaks, say **"Nothing breaks"** and say why — a bare "None" here reads as unchecked.
+
+**`## Decisions you need to make`** — every open question, each with the options, their consequences, and your recommendation. If the RFC can be accepted without any owner input, say **"None — this is fully specified"**. Never bury a decision in an Open Questions section of a file the reviewer was not asked to open.
+
+**`## Reading the diff`** — tell the reviewer what to skip:
+
+> - **Read this:** `rfcs/rfc-NNN-<slug>.md` — the RFC itself.
+> - **Generated, no review needed:** `srs/records/**`, `relations/relations.json`, `docs/spec/**` (re-rendered exports), schema mirrors.
+> - **Worth a look:** `docs/schema/2.0/<file>.json` — hand-authored, N lines changed.
+
+**`## Review checklist`** — as before:
+
+```
 - [ ] Spec integrity review passed (zero blocking findings)
 - [ ] RFC Completeness review passed (zero blocking findings)
 - [ ] Schema sync check passes (scripts/check-schema-sync.sh exits 0)
 - [ ] All conformance rules are normative
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
-EOF
-)"
 ```
+
+Close with `Closes #<issue-N>` and the `🤖 Generated with [Claude Code](https://claude.com/claude-code)` line.
+
+**Before you open the PR, read your own body once as the owner.** If any sentence requires opening a file to act on, rewrite it. If the body is shorter than the RFC's own Abstract, you have summarised rather than explained.
 
 ---
 
@@ -484,5 +525,6 @@ When done, report:
 - Spec records created (instanceIds, if Stage 6 was reached)
 - Docs reconciled in Stage 7 (list files, including any edit to the non-committable `semanticops/CLAUDE.md`; or "none — no model-level change")
 - Any open questions remaining in the RFC
+- Confirmation that the PR body stands alone: every required section present, no generated artefact pasted, and no sentence that requires opening a file to act on
 
 If you stopped early, say exactly which stage and why.
