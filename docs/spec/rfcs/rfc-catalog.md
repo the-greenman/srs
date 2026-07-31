@@ -536,3 +536,25 @@ No schema file changes. Implementation is srs-rust#782; correcting empty-string 
 
 Full proposal and design history: `rfcs/rfc-037-normative-field-row-rendering-baseline.md`.
 
+**Title**: RFC-039: Name-keyed fieldValues — the recursive Record value carrier
+**RFC Number**: 039
+**Status**: accepted
+**Author**: the-greenman
+**Affected Components**: The Tier-2 `Record` instance carrier: `fieldValues` changes from an array of `{fieldId, value}` pairs to an object keyed by `Field.name` verbatim, whose value space is one recursive rule identical to RFC-032 `projectField`'s instance space — making a Record valid against its Type's projected JSON Schema by construction. Retires `FieldGroup`, `Type.fieldGroups`, `groupValues`, `ext:repeatable-fields` `entries`, and the deprecated `FieldAssignment.{repeatable,minItems,maxItems}` trio; relocates per-value provenance to a parallel `fieldMeta` sibling; reconciles Tier-1 `TypedField.valueType`/`selectOptions` to an inline `fieldType`. Narrows RFC-035 [R4]'s name projection to the in-scope meta-model Types and fixes verbatim `Field.name` keys for domain Types. Establishes `Field.name` uniqueness within a Type's effective field set. Discharges obligations RFC-032 (Change E, OQ4), RFC-033, RFC-035, RFC-036 (`document-view-output.json`, `theme.json` [CR-036-18], [CR-036-19], Open Question 3) and RFC-037 ([FR-037-14]) deferred to #242 by name; records conflicts with RFC-012 and RFC-031 for Phase B. Phase A is design and migration plan only — no schema file is edited and no data is migrated; the cutover is Phase B, composed with RFC-038 in one first-party release train.
+
+Phase A folds **no** canonical record or schema artifact — its normative changes land at the Phase-B cutover — so it carries no `srs-integration:v1` manifest and is grandfathered in `rfcs/integration-allowlist.json` against #242, per `.claude/commands/rfc.md` Stage 6f. The `tooling-only` token would be false here: this RFC has substantial schema impact, deferred rather than absent.
+**Proposal Artifact Path**: rfcs/rfc-039-record-field-value-carrier.md
+**Content**: Phase A of issue #242. A Tier-2 Record stores its field values as an array of `{fieldId, value}` pairs, and JSON Schema validates object properties by name — so a Type cannot project into a standard JSON Schema that validates its own Records' field values without a `contains` clause plus an `if`/`then` branch per field, with field-id uniqueness not expressible at all. This blocks epic #256's requirement that a Type project by direct implementation.
+
+RFC-039 replaces `fieldValues` with an object keyed by `Field.name` verbatim. Its value space is a single recursive rule that is exactly RFC-032 `projectField`'s instance space read from the value side, so instance shape and projected schema are one rule in two directions rather than two sources of truth. Scalars, lists, inline composites and lists of inline composites all become expressible — the last being the case tables need and the reason `FieldGroup`, `groupValues` and `entries` retire together.
+
+Grounding: the JSON property key for a domain Type is `Field.name` verbatim, evidenced by the reference emitter itself, and RFC-035 [R4]'s `snake_case` → `lowerCamelCase` transform is narrowed to the frozen-seed meta-model as an erratum — it is undefined over the 33 kebab-case names in the corpus. The mutable-attribute objection to name-keying does not survive the spec: a `Field.name` change requires a new UUID, so the name is as stable as the `fieldId` it replaces. No `Field.name` uniqueness rule exists at any scope today; this RFC establishes one at the weakest sufficient scope, the effective field set, with I-19 as the Tier-1 precedent.
+
+Per-value provenance moves to a parallel `fieldMeta` sibling rather than a wrapper (which would defeat the projection) or deletion (which would strand a designed-for capability). Record-level `sourceRefs` is used by 231 of 355 Tier-2 Records; per-value `source` once.
+
+The migration is specified in both layers and is written to abort rather than skip on every schema-legal input the new shape cannot express. The first-party corpus is five instance-bearing trees — 386 Tier-2, 2 Tier-1, 22 Tier-0, 1490 field values — of which two are still pre-RFC-032, as is muSrs. The compatibility window is zero-length by owner decision, recorded rather than drifted into; rollback is reverting the composed release train.
+
+Twenty conformance rules. The do-nothing alternative is evaluated and rejected on measured grounds.
+
+Full proposal and design history: `rfcs/rfc-039-record-field-value-carrier.md`.
+
