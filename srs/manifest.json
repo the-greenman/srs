@@ -3513,6 +3513,18 @@
       ],
       "tier": 0,
       "title": "Field evidence: a disciplined untyped vault converges on SRS and drifts anyway (the OKF verdict)"
+    },
+    {
+      "instanceId": "addba041-752f-4365-a70d-7ff65feee761",
+      "path": "records/notes/design-capture-directory-kind-scopes-via-typed-identity-records-the-structural-constraints-family-srs-267-addba041.json",
+      "tags": [
+        "design-note",
+        "containers",
+        "rfc-034",
+        "structural-constraints"
+      ],
+      "tier": 0,
+      "title": "Design capture: directory-kind scopes via typed identity records + the structural-constraints family (srs#267)"
     }
   ],
   "meta": {
