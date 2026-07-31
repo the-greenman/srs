@@ -29,6 +29,13 @@ function makeUuid(n) {
 
 // Semantic mapping: design-note title fragment → explains → spec entity UUIDs
 // These are filled in after UUIDs are known for the design notes
+//
+// STALE — do not re-run without rebuilding this map (#285). Every spec-entity id below targets a
+// `records/type-definitions/*.json` record. Those are unrendered shadow copies of the published
+// `records/subsections/*.json` prose; #275 retired the Field one (206b93e5…, now
+// 656e5bbb-c29a-5020-9984-121191a4cf68) and #285 covers the rest. This script is a one-shot import
+// that is not run by CI, hooks, or validate-all, and no `explains` relation exists in
+// relations/relations.json today — its output was never persisted, so nothing depends on the ids.
 const EXPLAINS_MAP = {
   'Why Field and Type are separate':         ['206b93e5-c3a4-516c-9e50-9c1be3a7f25c', '20ac347b-824d-5902-8dc6-6920d75b6dff'],
   'Why "Type" not "Module"':                 ['20ac347b-824d-5902-8dc6-6920d75b6dff'],
