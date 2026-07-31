@@ -57,6 +57,12 @@ async function validateAll() {
   // The migration must stay fully applied (no field left on the legacy valueType model).
   const migrationApplied = await runScript('migrate-rfc-032-field-type.mjs', ['--check']);
   if (!migrationApplied) allValid = false;
+  // ...and no Type may lean on the deprecated repeatable/minItems/maxItems trio for cardinality its
+  // Field does not declare (#276). Neither `repo validate` nor the migration --check sees this: the
+  // migration reads Field definitions alone and derives `list` only from legacy `multiselect`, so a
+  // Field made repeatable purely by assignment migrated to single-valued without complaint.
+  const cardinalityCoherent = await runScript('check-cardinality-coherence.mjs');
+  if (!cardinalityCoherent) allValid = false;
 
   // RFC-033 (self-hosted meta-model). The frozen-seed metamodel package must stay in sync with its
   // generator, and its fieldTypes must project (via the projectField stand-in) to the frozen seed's

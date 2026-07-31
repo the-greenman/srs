@@ -2,7 +2,7 @@
 
 # RFC-032: The Field type model — decomposed value type, composite range, maps, and FieldGroup subsumption
 
-**Status**: Accepted (Revision 5)
+**Status**: Accepted (Revision 6)
 **Affects**: Field, Type, FieldAssignment, FieldGroup (`ext:field-groups`), ValidationRule, `ext:repeatable-fields`, `RequiresRelation` (RFC-022), `CrossFieldRule` (RFC-019); `docs/schema/2.0/{field,type}.json`. Enables epic #256; folds in #239. **Breaking (definition layer; instance cutover gated with #242).**
 **Author**: Claude Code (agent), on behalf of the repository owner
 **Date**: 2026-07-29
@@ -18,6 +18,7 @@
 | 3 | 2026-07-29 | Re-review fixes + owner decision D6. **Added a `constraints` facet** (pattern/min/max length + numeric bounds — the axis Rev 2 dropped, and which the meta-model itself needs, e.g. `version ≥ 1`). **Added a bounded `map` datatype** (D6 — open key→value extension bags). `editorHint`/`compositeRenderer` explicitly declared **presentation, out of the type model**, consolidated by #262 (not "absorbed by the axes"). **FieldGroup subsumption defined here; actual removal + instance migration gated with #242** (the spec repo's own 14 field-group records have no carrier until then — the "no external consumers" claim was true, but the spec dogfoods FieldGroups). Added `dependent` to the datatype enum and split value-conformance from CrossFieldRule's conditional-requiredness. Defined the vocabulary ref via RFC-006's `Reference`; closed the `format` enum; trimmed Change G to the ref/dependent/map contract (cite RFC-004 for scalars); paper exercise now exercises CrossFieldRule, RequiresRelation, map, and a numeric-constraint case. |
 | 4 | 2026-07-29 | Third review round: **both reviewers CLEAN of blocking findings — converged.** Applied their should-fixes: retyped `RequiresRelation.relationType` to the configurable closed-vocabulary pattern (was wrongly a UUID ref); confirmed against RFC-019 that `CrossFieldRule.predicateValue` is a plain `string` (string-equality) — not polymorphic, closing the last stress-test of the "no sum types" claim; scoped the conformance fixture so #257 acceptance stays independent of #242 (instance records are scalar + reference-mode only); restricted `map.valueRange` to scalar\|open; renamed `datetime`→`date-time` (RFC-004 alignment); enum projection cites RFC-006 effective (active) Term keys; added the `relationType`→list migration row. Owner clarification folded in: configurable data ranges (package-managed allowed values) project to a pure runtime `enum`. |
 | 5 | 2026-07-29 | **Accepted + delivered** (Task #257). `docs/schema/2.0/{field,type}.json` edited to the `fieldType` model (Change A; `field.json` adds `$defs.FieldType` + `$defs.ExactTypeRef` byte-identical to `blueprint.json`; `type.json` normalizes `RequiresRelation.relationType` to a list and deprecates — does not remove — `FieldGroup`/`Type.fieldGroups`/`FieldAssignment.{repeatable,minItems,maxItems}`, the #242-gated cutover, since `FieldGroup.fields` reuse `FieldAssignment`). A deterministic, idempotent migration (`scripts/migrate-rfc-032-field-type.mjs` over the shared transform `scripts/lib/rfc-032-fieldtype.mjs`) rewrote all **95** legacy field definitions per Change H, each R1–R11-validated. Coverage: the paper proof (`scripts/rfc-032-paper-proof.mjs`, 11/11) and the migration + conformance harnesses (`scripts/rfc-032-migration-test.mjs`; `tests/rfc-032/run.mjs` — every mode, with committed Change-G projection goldens) all run under `scripts/validate-all.mjs`, which validates against the **runtime** schemas. Note (ADR-004): the embedded-schema `srs` binary cannot load the migrated package, so binary-backed render/validate/drift tooling and the rendered `docs/spec` outputs are intentionally stale until srs-rust adopts the new schema (release-artifact refresh). |
+| 6 | 2026-07-31 | **Errata (post-acceptance), from #276.** Two RFC-032 fold-in defects. (a) **Data:** the Change-H migration derived `cardinality: "list"` only from legacy `valueType: "multiselect"`, reading Field definitions in isolation — so `com.semanticops.spec/{columns,cells}`, whose list-ness was expressed *only* by assignment-level `repeatable: true` on `com.semanticops.spec/table@2`, migrated to single-valued while their 9 records hold arrays. Both Fields now declare `cardinality: "list"`; `scripts/check-cardinality-coherence.mjs` (wired into `validate-all.mjs`) fails any assignment carrying the deprecated `repeatable`/`minItems`/`maxItems` trio whose `fieldType`-model Field is not `cardinality: "list"`. (b) **Normative:** [R8] claimed `cardinality` "MAY be overridden per assignment via `FieldAssignmentOverride`", contradicting [R4] and describing a facet that construct does not carry; corrected to Field-level-only under Invariant 2, with `required` remaining overridable. The same claim is removed from `FieldAssignment.repeatable`'s description in `docs/schema/2.0/type.json`. |
 
 ---
 
@@ -244,8 +245,14 @@ with #242.
 > `required` single, OR `required` list with `minItems ≥ 1`). A cycle is broken by any `reference`-mode
 > edge, an `optional` field, or a list with `minItems` absent/0.
 >
-> **[R8]** `mode` is fixed per Field; `cardinality`/`required` MAY be overridden per assignment via
-> `FieldAssignmentOverride`, and [R7]'s analysis uses the effective post-override values.
+> **[R8]** `mode` and `cardinality` are fixed per Field and MUST NOT be overridden per assignment —
+> both are semantic content of the Field, and Invariant 2 forbids a Type redefining or overriding the
+> semantics of a Field it includes. `required` MAY be overridden per assignment via
+> `FieldAssignmentOverride` (a Type-context workflow constraint, not Field semantics), and [R7]'s
+> analysis uses the effective post-override values. *(Corrected in Rev 6: Rev 5 read "`cardinality`/
+> `required` MAY be overridden", which contradicted [R4]'s "sole cardinality mechanism" and described
+> a facet `FieldAssignmentOverride` has never carried — its members are `fieldId`, `displayLabel`,
+> `displayHint`, `required`.)*
 >
 > **[R9]** A `map` field's keys are strings; its values conform to `valueRange` (a **scalar** datatype)
 > or are unconstrained when `valueRange == "open"`. Composite (`ref`/`map`) value ranges are out of
