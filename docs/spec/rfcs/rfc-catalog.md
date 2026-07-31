@@ -511,3 +511,28 @@ I-13
 **Proposal Artifact Path**: rfcs/rfc-036-composite-rendering.md
 **Content**: Restores the rendering-dispatch capability that RFC-032 strands when it subsumes `FieldGroup` into composite range, and relocates it from the Type to the View — where RFC-015 places presentation and where `FieldView` already carries `displayHint`/`editorHintOverride`. Specifies the `table` renderer against a structured value shape (`columns: string[]`, `rows: ref(Row)[] inline`, `Row.cells: string[]`, `widths: number[]`) rather than JSON-in-text; specifies composite baseline rendering, which every fallback path depends on and which no document had defined; maps every RFC-007 rendering rule onto the new mechanism, including the one and a half that cease to be renderer concerns; and specifies the deterministic corpus migration. Design only — the inline-composite value carrier, the fixture and the migrations are #242. Full text: rfcs/rfc-036-composite-rendering.md.
 
+**Title**: RFC-037: Normative field-row rendering baseline
+**RFC Number**: 037
+**Status**: accepted
+**Author**: the-greenman
+**Affected Components**: The normative emitted form of a field row on the Default Rendering Baseline for `markdown`, `adoc`, `text` and `html`, scalar and multi-entry, together with the row-separation and block-list-termination rules without which a following row is swallowed as a CommonMark lazy continuation; cardinality-neutral entry ordering across `fieldType.cardinality: "list"` and the legacy `entries` path; composite-range fields carved out to RFC-036 Change C; Tier 1 and Tier 0 covered; empty-string and empty-sequence absence enforced as Step 2 already declares; the portable `(empty)` placeholder, promoting RFC-001 Step 4's MAY to a MUST; `[T-8]`'s rule text and injection table amended so `srs-fieldname-*` derives from `Field.name`, label/value classes join the contract with aliases sunset at the #242 cutover, and class emission no longer depends on `ext:themes-l1` being declared; relation rows given `srs-relationtype-*` in place of the field-identity class, making RFC-027's rule satisfiable and bounding its unbounded "other formats" clause; the terminal rung of RFC-036's row-template ladder, closing its Open Question 2.
+
+<!-- srs-integration:v1
+ext:views-l2
+ext:themes-l1
+-->
+**Proposal Artifact Path**: rfcs/rfc-037-normative-field-row-rendering-baseline.md
+**Content**: RFC-001 Change A fixes which fields render, in what order, and with what label, then stops: "Step 4 — Render" never says what a rendered field row is. RFC-002 specifies `ElementTemplates.fieldRow` purely as a wrapper receiving finished content, so the unwrapped element remains undefined. RFC-037 supplies that missing referent as normative per-format forms, and supplies the separation rules that make a sequence of rows well-formed.
+
+This repairs live defects rather than only filling a gap. RFC-027's Rows bullet requires other formats to use "the same label/value markup that implementation emits for a field row" — a referent that did not exist, over a format set left unbounded. RFC-036's row-template ladder bottoms out on the same undefined rung (its Open Question 2).
+
+Scalar rows are `**<label>**: <value>` in `markdown`, `*<label>*: <value>` in `adoc`, `<label>: <value>` in `text`, and a `div`/`strong`/`span` structure carrying `srs-field`, `srs-field-label` and `srs-field-value` in `html`. Multi-entry values render as block lists, never comma-joined, selected by cardinality rather than element count; continuation is two-space in `markdown`/`text` and a `+` list continuation in `adoc`, where indentation alone does not attach a block to a list item. Consecutive rows are blank-line separated and a block list is terminated before whatever follows. Scalar values are emitted verbatim and unindented.
+
+Label and value content is verbatim in the text formats — field values in this model routinely are markup — and escaped in `html`, where the baseline performs no markup conversion. Label resolution is unchanged and not humanised. The class identity `srs-fieldname-{fieldName}` is pinned to `Field.name`, never `FieldAssignment.displayLabel`, and is emitted whether or not `ext:themes-l1` is declared; a relation row carries `srs-relationtype-{relationTypeKey}` in its place. Unprefixed `field-label`/`field-value` survive as compatibility aliases and retire at the #242 cutover alongside the `[T-Gx*]`/`[T-Cx*]` retirement [CR-036-19] already schedules.
+
+Inter-element whitespace in the `html` form is not normative, following the precedent [CR-036-15] sets for pinned HTML output; a single-line serialisation is RECOMMENDED so conformance fixtures have a canonical form.
+
+No schema file changes. Implementation is srs-rust#782; correcting empty-string absence there is expected to remove 86 committed empty-value rows from `docs/spec/` on the next publication — a correction to the figure of 92 originally recorded on #294, which no measurement reproduces.
+
+Full proposal and design history: `rfcs/rfc-037-normative-field-row-rendering-baseline.md`.
+

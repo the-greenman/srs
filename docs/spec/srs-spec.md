@@ -1706,7 +1706,7 @@ Rendering rules (normative statements [I-027-1]-[I-027-8] in RFC-027):
 
 - **Edge selection.** Edges display only when their own `status` is absent or `"active"` — the filter never reads the related record's `lifecycleState`. A lifecycle-superseded record's active edges display normally.
 - **Placement.** The block renders after the member's rendered content (fields and field groups for Tier 2; fields for Tier 1; body content for Tier 0) and before nested subsection members. When no edge survives selection, the block is omitted entirely for that member, regardless of `emptyBehavior`.
-- **Rows.** One row per (entry, direction) with at least one edge: the resolved label followed by the related instances' display labels, comma-joined. Markdown normative form: `**<label>**: <display label>, <display label>`. Other formats use the same label/value markup that implementation emits for a field row. Related-instance display labels resolve by: the value of the instance's effective `identityFieldId` (RFC-020, declared or inherited per [N+34]) when it resolves to a non-empty string → the instance's value for the section's `titleFieldId` when a non-empty string → the `instanceId`. Tier 0/1 related instances always fall through to `instanceId`.
+- **Rows.** One row per (entry, direction) with at least one edge: the resolved label followed by the related instances' display labels, comma-joined. Markdown normative form: `**<label>**: <display label>, <display label>`. In `html`, `adoc` and `text` the row uses the same label/value markup the implementation emits for a field row in that format — defined by *Normative Field-Row Form* below (RFC-037 [FR-037-15]), which supplies the referent this rule has always pointed at. A relation row omits `srs-fieldname-*` and carries `srs-relationtype-{relationTypeKey}` in its place [FR-037-12]. For any other format the relation row form remains implementation-defined. Related-instance display labels resolve by: the value of the instance's effective `identityFieldId` (RFC-020, declared or inherited per [N+34]) when it resolves to a non-empty string → the instance's value for the section's `titleFieldId` when a non-empty string → the `instanceId`. Tier 0/1 related instances always fall through to `instanceId`.
 - **Determinism.** Rows follow `include[]` order, forward before inverse per entry; within a row, instances order by display label then `instanceId`, both in Unicode code point order; a related instance repeated within one (entry, direction) renders once.
 - **JSON projection.** Members that project as `ProjectedRecord` carry `relations: ProjectedRelationRow[]` (`document-view-output.json`) preserving row order; members with no surviving edges omit the property. Tier 0/1 members are outside the JSON projection's `relations` property; their rendered-format blocks are unaffected.
 - **Sliced repositories.** Cross-boundary Relations moved to `slice.externalRelationRefs[]` (RFC-026 R6) do not render.
@@ -1846,11 +1846,103 @@ When `DocumentSection.renderViewId` is absent, implementations MUST render each 
 
 **Step 3 — Labels.** Use `FieldAssignment.displayLabel`; fall back to `Field.name`.
 
-**Step 4 — Render.** Render only present fields. Absent fields are omitted unless `DocumentSection.emptyBehavior` is `"show-placeholder"` and the field is `required: true`, in which case implementations MAY render a placeholder. For repeatable fields, render each entry in `FieldValue.entries` in sequence; presentation (list vs inline) is implementation-defined.
+**Step 4 — Render.** Render only present fields. A field that Step 2 resolves as absent — including one whose `FieldValue.value` is an empty string, and one whose value sequence has no surviving entries — MUST NOT emit a row, and implementations MUST NOT emit a label with an empty value. The sole exception is `DocumentSection.emptyBehavior` `"show-placeholder"` with the field `required: true`, which MUST emit a row whose value position carries the literal placeholder `(empty)`. Multi-entry values render as a block list, never comma-joined. The emitted form of a field row, and the separation between consecutive rows, is normative per output format — see *Normative Field-Row Form* below (RFC-037).
 
 The baseline is a floor, not a ceiling. An L1 View via `renderViewId` always takes precedence.
 
 `emptyBehavior` in the L1 View path: when `renderViewId` is set, empty field handling is governed by `ExportConfig.omitEmptyFields` on the referenced L1 View. `DocumentSection.emptyBehavior` does not apply in the L1 View rendering path.
+
+---
+
+#### Normative Field-Row Form (RFC-037)
+
+The emitted form of a field row on the Default Rendering Baseline, and on RFC-036 Change C's
+composite baseline where that baseline emits an individual field row. These forms are the content
+`ElementTemplates.fieldRow` receives as `{{content}}`; a Theme may wrap the row and MUST NOT replace
+it ([T-3]), and when no `fieldRow` template resolves the forms below are emitted unwrapped. They are
+the terminal rung of RFC-036's row-template ladder (`compositeFieldRowTemplates` -> `fieldRow` ->
+baseline field-row form), closing RFC-036 Open Question 2.
+
+A Field whose `fieldType.datatype` is `ref` or `inline` is a composite and is rendered by RFC-036
+Change C, not by these rules; these rules govern the field rows *within* each composite block.
+
+**Value sequence.** A field renders as multi-entry when Step 2 finds it present through an ordered
+sequence. Both mechanisms are covered without preference: `fieldType.cardinality: "list"` (RFC-032
+[R4], values carried as an array in `FieldValue.value`) and the legacy `ext:repeatable-fields` path
+(`FieldValue.entries`). *Sequence order* means array index order on the former, `entries` order on
+the latter. Cardinality — not element count — selects the form: a one-element sequence renders in
+block form, so a Type's rendered shape does not vary with instance data.
+
+**Scalar rows.** For a present single-valued field, exactly one row, beginning on its own line:
+
+| Format | Normative row form |
+|---|---|
+| `markdown` | `**<label>**: <value>` |
+| `adoc` | `*<label>*: <value>` |
+| `text` | `<label>: <value>` |
+| `html` | `<div class="srs-field srs-fieldname-{name}"><strong class="srs-field-label field-label">{label}</strong>: <span class="srs-field-value field-value">{value}</span></div>` |
+
+In the three text formats the separator is a literal colon and single space (U+003A U+0020). In
+`html`, the element names, nesting, order, literal colon and `srs-`-prefixed class names are
+normative; inter-element whitespace is not, following the precedent [CR-036-15] sets for pinned HTML
+output. Implementations SHOULD emit the single-line form so conformance fixtures have a canonical
+serialisation. **These classes belong to the baseline's output specification, not to
+`ext:themes-l1`:** implementations MUST emit them whether or not that extension is declared and
+whether or not a Theme resolves.
+
+**Multi-entry rows.** A multi-entry value MUST render as a block list and MUST NOT be comma-joined.
+The label occupies its own line (in `html`, its own element) and retains its trailing colon:
+
+| Format | Label line | Entry marker |
+|---|---|---|
+| `markdown` | `**<label>**:` | `- ` |
+| `adoc` | `*<label>*:` | `* ` |
+| `text` | `<label>:` | `- ` |
+| `html` | `<strong class="srs-field-label field-label">{label}</strong>:` | one `<li class="srs-field-value field-value">` per entry inside an unclassed `<ul>` |
+
+In the text formats the list begins on the line immediately after the label line with no blank line
+between. An entry whose rendered value is empty is omitted from the list; a sequence with no
+surviving entries is absent and emits no row.
+
+**Row separation.** In `markdown`, `adoc` and `text`, implementations MUST emit a blank line between
+consecutive field rows, and MUST emit a blank line after a block list's final entry before any
+following row, heading or relations block. In `html` implementations MUST NOT insert a separator
+element between rows. This is structural, not cosmetic: without the blank line a following row is a
+CommonMark lazy continuation of the list's last item and is swallowed into it.
+
+**Continuation.** When a surviving entry's value spans several lines, every line after the first is
+indented two spaces in `markdown` and `text`. In `adoc`, indentation does not attach a block to a
+list item: implementations MUST emit a `+` continuation line before each subsequent block, and
+indentation is not normative there. Continuation applies to entries only — a single-valued field's
+value is emitted verbatim, and any further lines sit at column zero, unindented and unaltered.
+
+**Empty and placeholder.** A field Step 2 resolves as absent emits no row. When
+`DocumentSection.emptyBehavior` is `"show-placeholder"` and the field is `required: true`,
+implementations MUST emit a row carrying the literal `(empty)` — this supersedes Step 4's former
+MAY. The placeholder row takes scalar form regardless of cardinality. In `html` the value element
+additionally carries `srs-empty-value`. The rule does not reach the L1 View path, where
+`ExportConfig.omitEmptyFields` governs.
+
+**Class identity.** `{name}` in `srs-fieldname-{name}` is `Field.name` normalised by the
+`ext:themes-l1` five-step rule ([T-8]), never `FieldAssignment.displayLabel` — a rendering-only
+label must not move a stylesheet hook. A relation row has no `Field.name`: it omits
+`srs-fieldname-*` and carries `srs-relationtype-{relationTypeKey}` instead.
+
+**Content.** In `markdown`, `adoc` and `text` the rendered label and value are emitted verbatim and
+MUST NOT be escaped or altered, except for the continuation above — field values in this model
+routinely are markup. In `html`, label and value content MUST be escaped (`&`, `<`, `>`, `"`, `'`).
+The baseline performs no markup conversion, so a markdown-bearing value appears in `html` as literal
+source; converted output is a Theme or L1 View concern.
+
+**Labels.** Resolution stays exactly Step 3: `FieldAssignment.displayLabel`, falling back to raw
+`Field.name`, with no humanisation or case conversion. For a Tier 1 `TypedRecord` both the label and
+the identity class derive from the `TypedField` name, and the placeholder rule does not apply (there
+is no `required: true` to consult). Tier 0 Notes emit no field rows.
+
+**Conformance boundary.** These forms bind any implementation emitting a `DocumentView` in
+`markdown`, `adoc`, `text` or `html` through this baseline. They do not bind native application UI
+that is not emitting a `DocumentView`; a client-side `DocumentView` renderer in a covered format is
+not exempt.
 
 ---
 
@@ -1878,7 +1970,7 @@ For `format: "markdown"`, `"html"`, or `"adoc"`:
 | Document title | `1 + depthOffset` | When `preamble` is absent |
 | Section title | `2 + depthOffset` | When `DocumentSection.title` is set |
 | Per-record heading | `3 + depthOffset` | When `titleFieldId` is set on the section, or (RFC-020, Rule [N+37]) as a fallback when it is not — see below |
-| Field label | Bold/formatted text — not a heading | Always |
+| Field label | Bold/formatted text — not a heading; exact per-format form per *Normative Field-Row Form* (RFC-037) | Always |
 
 For `format: "text"` or implementation-defined values, heading level semantics do not apply.
 
