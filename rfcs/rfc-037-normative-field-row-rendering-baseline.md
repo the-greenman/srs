@@ -2,7 +2,7 @@
 
 # RFC-037: Normative field-row rendering baseline
 
-**Status**: Accepted (Revision 2)
+**Status**: Accepted (Revision 3)
 **Affects**: `ext:views-l2` (RFC-001 Change A, Default Rendering Baseline Step 4; Heading Hierarchy table; the RFC-027 Rows bullet), `ext:themes-l1` (RFC-002 Rule `[T-8]` and its class injection table, `ElementTemplates.fieldRow`), RFC-027 Change C rule 3, RFC-036 Change C (composite baseline boundary) and its Open Question 2
 **Implementation**: [the-greenman/srs-rust#782](https://github.com/the-greenman/srs-rust/issues/782)
 **Author**: the-greenman (design decisions of 2026-07-31 on #294); drafted by the epic-256 worker
@@ -16,6 +16,7 @@
 |---|---|---|
 | 1 | 2026-07-31 | Initial draft. Encodes the nine owner decisions of 2026-07-31 on #294. |
 | 2 | 2026-07-31 | Spec-integrity and completeness review. Adds Change 0 (exact Step 4 replacement text) and a fold-in target table; adds row separation and block-list termination (`[FR-037-7]`), without which a block list swallows the following row; makes entry ordering cardinality-neutral; carves composite-range fields out to RFC-036 Change C; covers Tier 1 and Tier 0; resolves the relation-row class contradiction via `srs-relationtype-*`; makes class emission independent of `ext:themes-l1`; amends `[T-8]`'s rule text, not only its table; drops "or replace" (contradicted `[T-3]`); corrects the export-diff count to 86 and states the measurement; declares the MAY→MUST placeholder promotion; adds `adoc` `+` continuation. Value stringification for non-string datatypes recorded as out of scope (Open Question 2). |
+| 3 | 2026-07-31 | Accepted after two review rounds. Corrects the composite carve-out, which named `inline` as a `datatype` (it is a `mode`) and stranded reference-mode `ref` fields with no defined row form, contradicting `[CR-036-3]`; unifies continuation indentation on two spaces and folds the blank-line entry case into `[FR-037-8]`; gives the `html` multi-entry row its enclosing `div` so it can carry the classes `[T-8]` requires; defines Tier 1 array values and `TypedField.label`; extends row separation to relation rows; scopes `[FR-037-19]` to `[FR-037-1]`'s paths; makes the five-step normalisation rule normative independently of `ext:themes-l1`. Spec records authored in `srs/srs/`: `records/subsections/07-7-ext-views-l2.json` (Step 4 replacement, Rows bullet, Heading Hierarchy row, new *Normative Field-Row Form* subsection) and `records/extensions/ext-themes-l1.json` (`[T-8]` rule text and injection table, `[FR-037-12]`–`[FR-037-14]`, `[FR-037-19]`). |
 
 ---
 
@@ -53,7 +54,7 @@ Either way the defect is the same and it is live: the referent does not exist. T
 
 ### Problem 3 — The only other normative pin is weak, and one format fails it
 
-The `ext:views-l2` Heading Hierarchy table (`docs/spec/srs-spec.md:1881`) states:
+The `ext:views-l2` Heading Hierarchy table (`docs/spec/srs-spec.md:1973` after this RFC's fold-in; `:1881` before it) states:
 
 > | Field label | Bold/formatted text — not a heading | Always |
 
@@ -93,7 +94,7 @@ Throughout, **row label** means the string resolved by RFC-001 Step 3 (`FieldAss
 
 The canonical Step 4 in `srs/records/subsections/07-7-ext-views-l2.json` is replaced in full. The existing text contradicts this RFC in two places — "implementations MAY render a placeholder" and "presentation (list vs inline) is implementation-defined" — and both must go rather than sit alongside the new rules. Replacement:
 
-> **Step 4 — Render.** Render only present fields. A field that Step 2 resolves as absent — including one whose `FieldValue.value` is an empty string, and one whose value sequence has no surviving entries — MUST NOT emit a row, and implementations MUST NOT emit a label with an empty value. The sole exception is `DocumentSection.emptyBehavior` `"show-placeholder"` with the field `required: true`, which MUST emit a row whose value position carries the literal placeholder `(empty)`. Multi-entry values render as a block list, never comma-joined. The emitted form of a field row, and the separation between consecutive rows, is normative per output format — see *Normative Field-Row Form* below (RFC-037).
+> **Step 4 — Render.** Render only present fields. A field that Step 2 resolves as absent — including one whose `FieldValue.value` is an empty string — MUST NOT emit a row, and neither MUST a field whose value sequence has no surviving entries. Implementations MUST NOT emit a label with an empty value. The sole exception is `DocumentSection.emptyBehavior` `"show-placeholder"` with the field `required: true`, which MUST emit a row whose value position carries the literal placeholder `(empty)`. Multi-entry values render as a block list, never comma-joined. The emitted form of a field row, and the separation between consecutive rows, is normative per output format — see *Normative Field-Row Form* below (RFC-037).
 
 ### Change A — Normative scalar field-row form
 
@@ -157,7 +158,7 @@ In `markdown`, `adoc`, and `text`, the entry list begins on the line immediately
 <div class="srs-field srs-fieldname-{name}"><strong class="srs-field-label field-label">{label}</strong>:<ul><li class="srs-field-value field-value">{entry}</li></ul></div>
 ```
 
-One `<li>` is emitted per surviving entry, in sequence order, each carrying the value class names. The `<ul>` element itself carries no class.
+The enclosing `<div>` is the same one Change A1 specifies, carrying `srs-field` and the identity class — a multi-entry row is still a field row and must carry what `[T-8]` requires of one. One `<li>` is emitted per surviving entry, in sequence order, each carrying the value class names. The `<ul>` element itself carries no class.
 
 > **Derived, not decided.** Decision 4 fixes the markup shape — "`<ul>` with one value-bearing `<li>` per entry" — and decision 3 fixes the class vocabulary, but neither states whether the `<li>` carries the value classes or whether the `<ul>` takes a class of its own. Spec research returned **UNRESOLVED**: the specification contains no `<ul>`/`<li>` token anywhere, and `[T-8]`'s injection table has no row below "Field row". This RFC composes the two decisions in the way that invents least — the `<li>` is the value-bearing element, so it takes the value role's classes, and no new class name is introduced for the `<ul>`. Flagged for review.
 
@@ -165,7 +166,9 @@ One `<li>` is emitted per surviving entry, in sequence order, each carrying the 
 
 When a surviving entry's rendered value spans more than one line, every line after the first MUST be indented to the entry's content column — two spaces in `markdown` and `text`. In `adoc`, indentation alone does not attach a following block to a list item; implementations MUST emit an AsciiDoc list continuation line (`+`) before each subsequent block of a multi-block entry, and indentation is not normative there.
 
-An entry whose rendered value contains a **blank line** is outside the block form: implementations MUST emit such an entry as a single item whose subsequent blocks are attached by the format's own continuation mechanism (`+` in `adoc`; four-space content indentation in `markdown` and `text`). This case is reachable because Change F requires values to be emitted verbatim.
+An entry whose rendered value contains a **blank line** stays a single list item: implementations MUST attach its subsequent blocks at the entry's content column — the same two spaces, not a deeper indent — with a `+` continuation line in `adoc`. No blank line terminates the item. This case is reachable because Change F requires values to be emitted verbatim.
+
+The indent is two spaces in every case, matching the width of the `- ` marker `[FR-037-5]` mandates. A deeper indent would be a different construct: at four spaces CommonMark reads the continuation as an indented code block, which is precisely the corruption this rule exists to avoid.
 
 Continuation indentation applies to **entries only**. A single-valued field's value is emitted verbatim after the label, and any lines it contains after the first are emitted at column zero, unindented and unaltered. Indenting a scalar value would corrupt every multi-line markdown body in this repository's own projection (`docs/spec/srs-spec.md:10-14`).
 
@@ -224,6 +227,8 @@ RFC-027's Rows bullet now has a defined referent. A relation row uses the label/
 
 **The identity class differs.** A relation row has no `Field.name`, so `srs-fieldname-*` has no legal value on it. On a relation row, implementations MUST omit `srs-fieldname-*` and emit `srs-relationtype-{relationTypeKey}` instead, normalised by the five-step rule. `srs-field` is retained, so a stylesheet can target both row kinds together. Relation-specific wrapper classes MAY be applied additively provided the label/value structure and punctuation are unchanged.
 
+The five-step rule has no replacement step for `/`, so step 3 deletes it and a namespaced key normalises without a separator — `core/depends-on` becomes `coredepends-on`. That is deterministic and therefore not an interoperability hazard, but it is ugly, and it is noted here so no implementer treats it as a bug to be fixed unilaterally.
+
 **Bounded to the four covered formats.** The record's clause says "other formats", which is unbounded. It is amended to name `html`, `adoc`, and `text` — the formats this RFC defines — and to state that for any other format the relation row form remains implementation-defined, consistent with Open Question 3.
 
 RFC-027 rule 3 comma-joins multiple related instances into one row. That is a relation-row rule, deliberately left intact, and is **not** overridden by Change B's prohibition on comma-joining, which governs multi-entry *field values*. Change B's ambiguity argument does not apply: a relation row's value is a set of resolved links, not independently authored strings.
@@ -244,7 +249,9 @@ These rules bind any implementation that emits a `DocumentView` in `markdown`, `
 
 This RFC makes no claim that independent native client DOM violates `capability-layering.md`. That document assigns format-specific rendering and UI layout to clients; divergence matters only where a surface claims to emit the normative `DocumentView` format.
 
-**Composite-range fields are carved out.** A Field whose `fieldType.datatype` is `ref`/`inline` — a composite — is rendered by RFC-036 Change C, which requires a heading plus one block per value with nested rows. Changes A and B do **not** apply to the composite field itself; they apply to the individual field rows *within* each composite block, which is exactly the terminal rung RFC-036's ladder points at. Without this carve-out `[FR-037-3]`'s "exactly one row per present field" would contradict RFC-036's "one block for a `single` field, *n* for a `list`".
+**Composite-range fields are carved out.** A composite is a Field whose `fieldType.datatype` is `"ref"` **and** whose `fieldType.mode` is `"inline"` — the pair `[CR-036-3]` requires. `mode` is a separate property from `datatype`; `inline` is a `mode` value and is not itself a datatype. A composite is rendered by RFC-036 Change C, which requires a heading plus one block per value with nested rows. Changes A and B do **not** apply to the composite field itself; they apply to the individual field rows *within* each composite block, which is exactly the terminal rung RFC-036's ladder points at. Without this carve-out `[FR-037-3]`'s "exactly one row per present field" would contradict RFC-036's "one block for a `single` field, *n* for a `list`".
+
+**A reference-mode `ref` field is not carved out.** `[CR-036-3]` is explicit that a Field which is not a `ref`+`inline` composite "MUST render the field by whatever rendering its `fieldType` normally receives — the composite baseline for a composite, **the ordinary field row otherwise**". A `ref` field with `mode: "reference"` therefore renders under Changes A and B like any other field. This matters in practice rather than in theory: RFC-032 records that reference-mode values are storable today while inline-composite values await the #242 cutover, so reference-mode is currently the *only* `ref` field that can exist in data. Carving it out would leave it with no defined row form under either RFC.
 
 **Tier 1 and Tier 0.** A Tier 1 `TypedRecord` carries name-keyed `TypedField` entries with no `FieldAssignment` and no `Field` UUID. For Tier 1 members the row label is the `TypedField` name, the identity class is derived from that same name, and `[FR-037-11]`'s placeholder rule does not apply because there is no `required: true` to consult. Tier 0 Notes have no fields and emit no field rows; RFC-027 relation rows still render for both tiers per Change E.
 
@@ -288,19 +295,19 @@ Integration manifest: `ext:views-l2`, `ext:themes-l1`.
 
 > **[FR-037-1]** These rules apply to any implementation emitting a `DocumentView` in `markdown`, `adoc`, `text`, or `html` via the Default Rendering Baseline (RFC-001 Change A), or via RFC-036 Change C's composite baseline where it emits an individual field row. They MUST NOT be construed to bind rendering surfaces that do not emit a `DocumentView`. A client-side `DocumentView` renderer in a covered format is not exempt.
 >
-> **[FR-037-2]** A Field whose `fieldType.datatype` is `ref` or `inline` is rendered by RFC-036 Change C and is outside `[FR-037-3]` and `[FR-037-5]`. These rules govern the field rows *within* a composite block, not the composite field itself.
+> **[FR-037-2]** A Field whose `fieldType.datatype` is `"ref"` **and** whose `fieldType.mode` is `"inline"` (the default when `mode` is absent) is a composite: it is rendered by RFC-036 Change C and is outside `[FR-037-3]`–`[FR-037-6]`, which govern the field rows *within* each composite block rather than the composite field itself. A `ref` Field whose `mode` is `"reference"` is **not** a composite and renders as an ordinary field row under these rules, per `[CR-036-3]`.
 >
 > **[FR-037-3]** For a present single-valued field, implementations MUST emit exactly one row, beginning on its own line: `markdown` — `**<label>**: <value>`; `adoc` — `*<label>*: <value>`; `text` — `<label>: <value>`; with a literal U+003A U+0020 separating label from value.
 >
 > **[FR-037-4]** For a present single-valued field in `html`, implementations MUST emit a `div` carrying `srs-field` and the identity class, containing a `strong` carrying `srs-field-label`, a literal colon, and a `span` carrying `srs-field-value`, in that order. Element names, nesting, order, the literal colon, and the `srs-`-prefixed class names are normative; inter-element whitespace is not. Implementations SHOULD emit the structure on a single line.
 >
-> **[FR-037-5]** For a present multi-entry field, implementations MUST render the value as a block list and MUST NOT comma-join entries. The label MUST occupy its own line (in `html`, its own `strong`) and MUST retain its trailing colon. Entry markers are `- ` in `markdown` and `text`, `* ` in `adoc`, and `<li>` in `html`. Entries MUST appear in sequence order — array index order where `fieldType.cardinality` is `"list"`, `FieldValue.entries` order on the `ext:repeatable-fields` path. A sequence of exactly one element MUST render in block form, not scalar form.
+> **[FR-037-5]** For a present multi-entry field, implementations MUST render the value as a block list and MUST NOT comma-join entries. In `markdown`, `adoc`, and `text` the label MUST occupy its own line, carrying no value; in `html` it occupies the `strong` element `[FR-037-6]` specifies. The label MUST retain its trailing colon in every format. Entry markers are `- ` in `markdown` and `text`, `* ` in `adoc`, and `<li>` in `html`. Entries MUST appear in sequence order — array index order where `fieldType.cardinality` is `"list"`, `FieldValue.entries` order on the `ext:repeatable-fields` path. A sequence of exactly one element MUST render in block form, not scalar form.
 >
-> **[FR-037-6]** In `html`, a multi-entry value MUST be emitted as a `ul` containing one `li` per surviving entry, each `li` carrying the field-value class names. The `ul` MUST NOT carry a class.
+> **[FR-037-6]** In `html`, a multi-entry row MUST be emitted inside the same `div` that `[FR-037-4]` specifies — carrying `srs-field` and the identity class — containing the `strong` label element, the literal colon, and then a `ul` holding one `li` per surviving entry, each `li` carrying the field-value class names. The `ul` MUST NOT carry a class. Without the enclosing `div` a multi-entry row would have no element able to carry the classes `[T-8]` requires of every field row.
 >
 > **[FR-037-7]** In `markdown`, `adoc`, and `text`, implementations MUST emit a blank line between consecutive field rows, and MUST emit a blank line after the final entry of a block list before any following row, heading, or relations block. In `html`, implementations MUST NOT insert a separator element between rows.
 >
-> **[FR-037-8]** When a surviving entry's rendered value spans multiple lines, implementations MUST indent every line after the first by two spaces in `markdown` and `text`. In `adoc`, implementations MUST emit a `+` list continuation line before each subsequent block of a multi-block entry; indentation is not normative in `adoc`. Implementations MUST NOT apply continuation indentation to a single-valued field's value, which MUST be emitted verbatim at column zero.
+> **[FR-037-8]** When a surviving entry's rendered value spans multiple lines, implementations MUST indent every line after the first by two spaces in `markdown` and `text` — the width of the `- ` marker, and never more, since four spaces would make the continuation an indented code block. An entry whose rendered value contains a blank line MUST remain a single list item, its subsequent blocks attached at that same content column; no blank line terminates the item. In `adoc`, implementations MUST emit a `+` list continuation line before each subsequent block of a multi-block entry; indentation is not normative in `adoc`. Implementations MUST NOT apply continuation indentation to a single-valued field's value, which MUST be emitted verbatim at column zero.
 >
 > **[FR-037-9]** An entry whose rendered value is empty MUST be omitted from the list. A field whose value sequence has no surviving entries MUST be treated as absent.
 >
@@ -310,19 +317,19 @@ Integration manifest: `ext:views-l2`, `ext:themes-l1`.
 >
 > **[FR-037-12]** On a field row the identity class is `srs-fieldname-{fieldName}`, whose `{fieldName}` component MUST be derived from `Field.name` and MUST NOT be derived from `FieldAssignment.displayLabel`. On a relation row implementations MUST omit `srs-fieldname-*` and MUST emit `srs-relationtype-{relationTypeKey}` instead. Both are normalised by the `[T-8]` five-step rule.
 >
-> **[FR-037-13]** Implementations MUST emit the field-row class vocabulary in baseline `html` output whether or not `ext:themes-l1` is declared and whether or not a Theme resolves. This broadens `[T-8]`'s scope, which is otherwise conditional on that extension.
+> **[FR-037-13]** Implementations MUST emit the field-row class vocabulary in baseline `html` output whether or not `ext:themes-l1` is declared and whether or not a Theme resolves. This broadens `[T-8]`'s scope, which is otherwise conditional on that extension. The five-step class-name normalisation rule is normative for this purpose independently of `ext:themes-l1`, so an implementation that does not declare the extension is not required to read it in order to comply.
 >
 > **[FR-037-14]** For `html` and `pdf` output, implementations MUST emit both the `srs-`-prefixed class names and their unprefixed aliases (`field-label`, `field-value`) until the #242 cutover, and MUST emit only the prefixed names thereafter. Stylesheets claiming conformance MUST NOT depend on the unprefixed aliases.
 >
-> **[FR-037-15]** Relation rows MUST use the row forms defined by `[FR-037-3]` and `[FR-037-4]`, with the resolved relation label in the label position, subject to the identity-class substitution in `[FR-037-12]`. RFC-027's comma-joining of multiple related instances within one row is unaffected by `[FR-037-5]`. For formats other than `markdown`, `adoc`, `text`, and `html`, the relation row form remains implementation-defined.
+> **[FR-037-15]** Relation rows MUST use the row forms defined by `[FR-037-3]` and `[FR-037-4]`, with the resolved relation label in the label position, subject to the identity-class substitution in `[FR-037-12]`. `[FR-037-7]`'s separation rule applies to consecutive relation rows within a links block, for the same reason it applies between field rows. RFC-027's comma-joining of multiple related instances within one row is unaffected by `[FR-037-5]`. For formats other than `markdown`, `adoc`, `text`, and `html`, the relation row form remains implementation-defined.
 >
 > **[FR-037-16]** In `markdown`, `adoc`, and `text`, implementations MUST emit rendered label and value content verbatim and MUST NOT escape or otherwise alter it, except for the continuation required by `[FR-037-8]`. In `html`, implementations MUST escape `&`, `<`, `>`, `"`, and `'` in label and value content.
 >
 > **[FR-037-17]** The baseline MUST NOT perform markup conversion on a field value. A markup-bearing value is emitted verbatim in the text formats and escaped as literal text in `html`.
 >
-> **[FR-037-18]** Label resolution MUST remain `FieldAssignment.displayLabel` falling back to raw `Field.name`. Implementations MUST NOT humanise or case-convert the fallback. For a Tier 1 `TypedRecord` the label and the identity class are both derived from the `TypedField` name; `[FR-037-11]` does not apply to Tier 1. Tier 0 Notes emit no field rows.
+> **[FR-037-18]** Label resolution MUST remain `FieldAssignment.displayLabel` falling back to raw `Field.name`. Implementations MUST NOT humanise or case-convert the fallback. For a Tier 1 `TypedRecord` the row label is `TypedField.label` falling back to `TypedField.name`, while the identity class is always derived from `TypedField.name` — the same label/identity split `[FR-037-12]` pins for Tier 2. A `TypedField` whose `value` is an array is multi-entry and renders in block form per `[FR-037-5]` in array index order; any other value is single-valued. `[FR-037-11]` does not apply to Tier 1, which has no `required: true` to consult. Tier 0 Notes emit no field rows.
 >
-> **[FR-037-19]** The forms defined by `[FR-037-3]`–`[FR-037-9]` are the content that `ElementTemplates.fieldRow` receives as `{{content}}`. A Theme MAY wrap the row through `fieldRow` and MUST NOT replace it, per `[T-3]`. When no `fieldRow` template resolves, implementations MUST emit these forms unwrapped. This satisfies the bottom rung of RFC-036's row-template ladder.
+> **[FR-037-19]** On the paths `[FR-037-1]` covers, the forms defined by `[FR-037-3]`–`[FR-037-9]` are the content that `ElementTemplates.fieldRow` receives as `{{content}}`. A Theme MAY wrap the row through `fieldRow` and MUST NOT replace it, per `[T-3]`. When no `fieldRow` template resolves, implementations MUST emit these forms unwrapped. This satisfies the bottom rung of RFC-036's row-template ladder. `[T-10]` also applies `fieldRow` on the L1 View path; the row form there is outside this RFC.
 
 ---
 
