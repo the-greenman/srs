@@ -6,6 +6,7 @@
 **Affects**: `ext:views-l2` (RFC-001 Change A, Default Rendering Baseline Step 4; Heading Hierarchy table), `ext:themes-l1` (RFC-002 Rule `[T-8]` CSS class injection, `ElementTemplates.fieldRow`), RFC-027 Change C rule 3 (relation row shape), RFC-036 composite row-template ladder (Open Question 2)
 **Author**: the-greenman (design decisions of 2026-07-31 on #294); drafted by the epic-256 worker
 **Date**: 2026-07-31
+**Implementation counterpart**: [the-greenman/srs-rust#782](https://github.com/the-greenman/srs-rust/issues/782) — implements all four formats, stable `Field.name` class identity, empty-string omission, the portable placeholder, valid block lists, and the shared relation-row primitive, with full per-format tests. No implementation work is carried out in this RFC's own change.
 
 ---
 
@@ -33,7 +34,7 @@ RFC-001's own problem statement is candid about this class of defect (`rfcs/rfc-
 
 > No definition of "default rendering" appears anywhere in the spec. Two conformant implementations will produce incompatible output for the same `DocumentView` — and neither is wrong, because there is no baseline to violate.
 
-RFC-001 closed that gap for selection, ordering, and labelling. It left the emitted form open. The current Step 4 text (`srs/records/subsections/07-7-ext-views-l2.json`, rendered at `docs/spec/srs-spec.md:1847`) says only which fields to render and that presentation of multiple entries "is implementation-defined".
+RFC-001 closed that gap for selection, ordering, and labelling. It left the emitted form open. The current Step 4 text (`srs/records/subsections/07-7-ext-views-l2.json`, rendered at `docs/spec/srs-spec.md:1849`) says only which fields to render and that presentation of multiple entries "is implementation-defined".
 
 `ext:themes-l1` does not close it either. `ElementTemplates.fieldRow` is specified purely as a **wrapper** — "Wraps each field label + value pair", receiving `{{content}}` — and RFC-002 is explicit that element templates "receive finished content and wrap it — they do not re-render" (Rule `[T-3]`). The unwrapped element that `{{content}}` carries is precisely the thing nothing defines. RFC-002 even states that "when neither is set, the element is rendered without wrapping", naming the unspecified case without specifying it.
 
