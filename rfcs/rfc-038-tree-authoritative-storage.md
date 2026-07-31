@@ -2,8 +2,8 @@
 
 # RFC-038: Tree-authoritative repositories and conflict-free Git storage
 
-**Status**: Draft (Revision 3)
-**Affects**: `RepositoryManifest` (`instanceIndex`, `containerIndex`, `sourceDocumentIndex`, `relationsChecksums`, `relationsPath`), `InstanceIndexEntry`, `ContainerIndexEntry`, `SourceDocumentIndexEntry`, `RelationsChecksumEntry`, `Relation` storage, `ext:repository` repository layout and archive format, `ext:json-store` (`.srsj`) membership and version gate, `ext:slices` (RFC-026 [R5], [R13]), `dataModelRevision`; `docs/schema/2.0/{manifest,relations-collection}.json` and a new `docs/schema/2.0/relation.json`. Resolves a standing contradiction between the manifest schema / `RepositoryManifest` prose and RFC-012 [R6] / RFC-013 [R2] / I-80 / I-118. **Amends Accepted RFC-039 [R13] and [R14]** and **Accepted RFC-026 [R5] and [R13]**. Composed with RFC-039 (Accepted Rev 6 — `#242`) in one first-party cutover at a single `dataModelRevision: 2`. **Breaking (storage layer).**
+**Status**: Draft (Revision 4)
+**Affects**: `RepositoryManifest` (`instanceIndex`, `containerIndex`, `sourceDocumentIndex`, `relationsChecksums`, `relationsPath`), `InstanceIndexEntry`, `ContainerIndexEntry`, `SourceDocumentIndexEntry`, `RelationsChecksumEntry`, `Relation` storage, `ext:repository` repository layout and archive format, `ext:json-store` (`.srsj`) membership and version gate, `ext:slices` (RFC-026 [R5], [R13]), `dataModelRevision`; `docs/schema/2.0/{manifest,relations-collection}.json` a new `docs/schema/2.0/relation.json`, and two further schemas recorded as owed and absent (a `.revisions.json` sidecar schema, and a `{srsj, manifest, data}` envelope schema that has never existed). Resolves a standing contradiction between the manifest schema / `RepositoryManifest` prose and RFC-012 [R6] / RFC-013 [R2] / I-80 / I-118. **Amends Accepted RFC-039 [R13] and [R14]** and **Accepted RFC-026 [R5] and [R13]**. Composed with RFC-039 (Accepted Rev 6 — `#242`) in one first-party cutover at a single `dataModelRevision: 2`. **Breaking (storage layer).**
 **Author**: the-greenman (epic-256 worker)
 **Date**: 2026-07-31
 
@@ -13,8 +13,9 @@
 
 | Rev | Date | Summary |
 |---|---|---|
+| 4 | 2026-07-31 | Review round 2, both reviewers (16 blocking). *(Rule numbers below are Rev-3 numbering unless marked.)* **A ratified invariant says the opposite of Change G**: **Invariant 52** requires every sidecar's `contentPath` to resolve and obliges a consumer to surface the failure — the direct negation of [R15]'s tombstone rule, and it was not on the rewrite list. Added, with a statement that exactly one rule governs sidecar-without-content afterwards. **RFC-012 [R6] was quoted from its tail**: it opens *"A `containerId` filter MUST use…"* and is a `DiscoveryQuery`-filter rule, not a general membership rule — so the general warrant is RFC-013 [R2] + I-80, with [R6]/I-118 as scoped corroboration. This is the citation-inflation class RFC-039's review rounds punished, caught here in this RFC's own Motivation. **The amendment set was under-inclusive by four RFCs' worth of rules** — added RFC-026 [R6], Change C steps 5–6 (step 6 *writes* `containerIndex`, which [R2] makes an error, so it needed a substantive rewrite rather than a pointer swap) and Change E item 4; RFC-013 [R6]/[R9]; RFC-017 [R2]/[R12]. The Abstract's "amends two Accepted RFCs" was itself an undercount. **Three rules were mutually unsatisfiable**: `relations-collection.json` "survives only inside snapshots" contradicted [R17]'s "same rules as a live repository" — collections are now retired in snapshots too; **the definition set had no discovery rule** and [R5]/[R17] used two different notions of "local package root" (presence- vs `packageRefs`-keyed, 234 vs **167** files), which mattered because **srs#307's Types and `canonical_key` both live in the 67-file undeclared root** — so Change A's "definition discovery unchanged" and Change H's "[R13] fails loudly on #307" could not both hold; definition discovery is now presence-keyed and the contradiction is stated. **The migration deadlocked on deletes**: an instance delete leaves dangling relation endpoints → [R13] error → [R24] fatal, while [R22] forbade fixing them; delete is now a scoped cascade. **The stamping window was invalid**: RFC-039 Phase 2 step 8 stamps generation 2 *before* this RFC strips `instanceIndex`, leaving the corpus stamped-and-unstripped across RFC-039's own count assertion — ordering is now pinned below step granularity with one shared stamping step. **The artifact inventory was wrong in three places and is now a single table**: 6 repository manifests (3 exploded + **3 embedded in `.srsj`**, all carrying `instanceIndex`), 8 in-scope package manifests (the fixture and gallery packages were missed), and the two `packages/**` governance manifests **deferred to #286** per RFC-039's stated scope, which Rev 3 contradicted. Also: [R8]'s "disjoint `required` sets" was false (all three schemas require `instanceId`) and is restated as the property that actually holds; [R9] gained the schema conjunct so the 3 `.revisions.json` files are errors as the prose already claimed; extension-owned locations (`changelogPath`, `federationPath`, `federationEventsPath`) added to [R5] as a sixth set, since [R10] otherwise made `ext:changelog` and `ext:federation` unimplementable; `.srs/` contents declared implementation-private; the `.srsj` envelope schema recorded as **owed and absent** (RFC-039 recorded the same gap), replacing a wrong `package-bundle.json` row; `relation.json` arithmetic reconciled to 17 properties / 5 required with `$schema`; four stale rule cross-references fixed; `srs-usage.md` §"The instanceIndex trap" and the `CLAUDE.md` path added to the retirement list; [R24]'s fatality blast radius moved into the Abstract. |
 | 3 | 2026-07-31 | Self-verification pass over Rev 2's own claims, before round-2 review returned. **Classification was still scoped to instance roots** while [R5] made five location classes discoverable — and **12 of 12 Containers declare no `$schema`**, so [R7]/[R8] are now written over reserved *locations* with a per-location admissible-entity set, or Change D's "nothing is skipped quietly" would have been false everywhere except instance roots. **Corrected counts** measured by shape rather than declaration: **150 Fields (not 146) and 45 Types (not 44)** — 4 Fields and 1 Type carry no `$schema`, so the `$schema`-keyed figures undercounted; `$schema` absence is now shown as a corpus-wide pattern rather than a Records quirk. **Invariant identifiers corrected**: the spec uses bare numbers for core invariants and `I-` prefixes for extension ones, so Rev 2's "I-46, I-49, I-50" named nothing — they are **Invariant 46, 49, 50** (contents verified). **Phase 2 step 13's ordering citation was wrong** — document order is Rule [N+12]'s `precedes` sort with a **`createdAt`** tiebreak, `instanceId` only secondary via RFC-013 [R5]; RFC-013's own Rev-3 history records that exact simplification being caught once before. **Phase 1 step 8 over-reached**: `core-bundle.srsj` has no `srsj`, no `manifest` and no `data`, so 3 of 4 artifacts take the bump, not 4. Added two positive evidence results — an independent implementation of [R3] returns **exactly the 375 instances `instanceIndex` lists**, and of 13 in-repo `package.json` files exactly **one** has a reserved directory beside it — plus an explicit note that **muSrs is unmeasured** (outside this repository) and cross-references to #285 and #272. |
-| 2 | 2026-07-31 | Review round 1, both reviewers (18 blocking). **The rule set was not closed over the entities a repository actually contains**: [R8] forbade validating or modifying `manifest.json`, `relations/`, `containers/`, `source-documents/` and all of `package/**` — **262 of 637 files in `srs/`** — while [R2], [R9], [R12] and [R13] each required exactly that. Rules are now stated over **five named authoritative sets** and a two-level location model (reserved *instance* roots vs reserved *repository* locations), which also closes the hole where Change J removed `containerIndex` while no rule made `containers/` discoverable — it is **not** in the spec's reserved-folder table, so containers were located only by the index being deleted. **Two Accepted-RFC conflicts were asserted away rather than stated**: RFC-039 [R13] *mandates* `instanceIndex` enumeration (Rev 1 cited it three times as if it were only an anti-glob rule) and [R14] resolves references against it; RFC-026 `ext:slices` [R5]/[R13] quantify over `containerIndex` and `instanceIndex`. Both are now stated as **amendments this RFC makes**, with RFC-039's own cession of placement/enumeration as the warrant. **Version discrimination (Required decision #9) was entirely missing** — now [R24], using the `.srsj` `srsj` version gate, which already requires readers to reject unrecognised versions; the previous silent-empty-repository failure mode is named. Added the `relation.json` wire shape in prose (16 properties, 4 required) rather than by reference; a diagnostic model with fatality semantics ([R25]); delete semantics; recognised-sidecar recognition as a closed list; the `allOf` domain-`$schema` branch that `record.json` explicitly sanctions; [R6]'s candidate set with its verified disjointness property. **Corrected counts:** relations **222 across 3 collections** (205 `srs/` + 17 gallery + 0 fixture), not 205 — Rev 1 quoted an `srs/`-scoped figure beside corpus-wide instance counts, the exact CC-10 failure; package manifests **13 in-repo / 8 first-party**, not 6; `base` and `core` each miss 5 required properties so [R3] would silently disqualify them. Retirement list extended from 5 sites to the full set (I-46, I-49, I-50, I-82, I-102, I-112 and 9 further prose sites), and **citations moved from generated-projection line numbers to stable invariant/section ids** — re-rendering shifted every `srs-spec.md` line by +37 mid-review, which is precisely why line numbers into a projection are not citations. |
+| 2 | 2026-07-31 | Review round 1, both reviewers (18 blocking). *(Rule numbers in this row are Rev-1 numbering.)* **The rule set was not closed over the entities a repository actually contains**: [R8] forbade validating or modifying `manifest.json`, `relations/`, `containers/`, `source-documents/` and all of `package/**` — **262 of 637 files in `srs/`** — while [R2], [R9], [R12] and [R13] each required exactly that. Rules are now stated over **five named authoritative sets** and a two-level location model (reserved *instance* roots vs reserved *repository* locations), which also closes the hole where Change J removed `containerIndex` while no rule made `containers/` discoverable — it is **not** in the spec's reserved-folder table, so containers were located only by the index being deleted. **Two Accepted-RFC conflicts were asserted away rather than stated**: RFC-039 [R13] *mandates* `instanceIndex` enumeration (Rev 1 cited it three times as if it were only an anti-glob rule) and [R14] resolves references against it; RFC-026 `ext:slices` [R5]/[R13] quantify over `containerIndex` and `instanceIndex`. Both are now stated as **amendments this RFC makes**, with RFC-039's own cession of placement/enumeration as the warrant. **Version discrimination (Required decision #9) was entirely missing** — now [R24], using the `.srsj` `srsj` version gate, which already requires readers to reject unrecognised versions; the previous silent-empty-repository failure mode is named. Added the `relation.json` wire shape in prose (16 properties, 4 required) rather than by reference; a diagnostic model with fatality semantics ([R25]); delete semantics; recognised-sidecar recognition as a closed list; the `allOf` domain-`$schema` branch that `record.json` explicitly sanctions; [R6]'s candidate set with its verified disjointness property. **Corrected counts:** relations **222 across 3 collections** (205 `srs/` + 17 gallery + 0 fixture), not 205 — Rev 1 quoted an `srs/`-scoped figure beside corpus-wide instance counts, the exact CC-10 failure; package manifests **13 in-repo / 8 first-party**, not 6; `base` and `core` each miss 5 required properties so [R3] would silently disqualify them. Retirement list extended from 5 sites to the full set (I-46, I-49, I-50, I-82, I-102, I-112 and 9 further prose sites), and **citations moved from generated-projection line numbers to stable invariant/section ids** — re-rendering shifted every `srs-spec.md` line by +37 mid-review, which is precisely why line numbers into a projection are not citations. |
 | 1 | 2026-07-31 | Initial draft. Design and migration plan only, per the process gate on #296. |
 
 ---
@@ -43,6 +44,16 @@ Note writes one file instead of two; creating one Relation writes one file inste
 (95,846 bytes, 3,560 lines, 375 indexed instances) or `srs/relations/relations.json`
 (57,709 bytes, 1,440 lines) when their semantic changes are independent — the failure PR #291
 reproduces today.
+
+**One consequence deserves stating in the abstract rather than being derived from a rule.** Under
+[R24] an error anywhere under a reserved repository location is **fatal to the load**: a single
+malformed JSON file under `records/`, `relations/`, `containers/`, `source-documents/` or a package
+root makes the repository refuse to open rather than open with one object missing. That is the
+deliberate consequence of tree authority — when the tree is the authority, a file that fails to parse
+is indistinguishable from a file that was never there, and silently loading a smaller repository is
+the failure this RFC exists to remove. It also means two conditions live in the corpus today
+(srs#307's dangling `fieldId`, and `base`/`core`'s non-conforming `package.json`) become load
+failures rather than warnings, which is why both are Phase-0 prerequisites rather than audit notes.
 
 Four findings changed the design and are flagged rather than buried. The discovery rule proposed in
 the issue's own option appraisal is **under-inclusive against the live corpus** and would lose 7
@@ -73,15 +84,24 @@ and in the JSON Store section (`ext:json-store`, §Path conventions in `data`):
 > The `instanceIndex` in `manifest` is the authoritative list of members. A key present in `data` but
 > absent from `instanceIndex` is not a repository member.
 
-**Membership is the tree.** RFC-012 [R6] (`rfcs/rfc-012-discovery-contract-text-projection.md:247`):
+**Membership is the tree.** The general warrant is RFC-013 [R2]
+(`rfcs/rfc-013-required-root-container.md:138`), which defines the repository's authoritative
+instance set as
 
-> The authoritative source for membership is the instance file and the relations file. An
-> implementation MAY use `instanceIndex` as a cache for performance, but MUST treat the instance file
-> and relations file as authoritative when they differ from the cache.
+> the union of the instance files declared by the repository; `instanceIndex` in `manifest.json` is
+> the cache of that set per RFC-012 R6, not an independent authority
 
-RFC-013 [R2] (`rfcs/rfc-013-required-root-container.md:138`) repeats it, and the invariants carry it
-into the normative spec as **I-80** ("The manifest instanceIndex is the cache of that set (RFC-012
-R6), not an independent authority") and **I-118**.
+and its invariant projection **I-80**: "The manifest instanceIndex is the cache of that set (RFC-012
+R6), not an independent authority."
+
+RFC-012 **[R6]** corroborates this but must be quoted honestly, because it is **not** a general
+membership rule. It opens *"A `containerId` filter MUST use the three-condition membership definition
+of RFC-009 I-66…"* and only then says "The authoritative source for membership is the instance file
+and the relations file. An implementation MAY use `instanceIndex` as a cache for performance, but
+MUST treat the instance file and relations file as authoritative when they differ from the cache."
+The authority sentences are the tail of a `DiscoveryQuery`-filter rule, and **I-118** is that same
+rule's invariant projection. So the ratified general statement is RFC-013 [R2] + I-80; RFC-012
+[R6] + I-118 are scoped corroboration. The contradiction below stands on the first pair alone.
 
 These cannot both hold. Take a valid instance file present in the tree and absent from the index: the
 `RepositoryManifest` prose says it is not a member; I-80 says the index is not an authority and the
@@ -150,7 +170,29 @@ Fields, Relations, Containers and sidecars, this RFC now names **five authoritat
 | **relation set** | Relation | `relations/` (Change E) |
 | **container set** | non-root Container | `containers/`, plus the inline root container |
 | **source-document set** | source documents | `.meta.json` sidecars under `sourceDocumentsPath` |
-| **definition set** | Field, Type, View, DocumentView, RelationType, Vocabulary, Blueprint | local package roots, resolved through each package manifest's declared arrays — **unchanged by this RFC** |
+| **definition set** | Field, Type, View, DocumentView, Theme, RelationType, Vocabulary, Lifecycle, Blueprint, Protocol | local package roots (defined below), resolved through each package manifest's declared arrays |
+| **extension set** | changelog, federation registry, federation events | the locations named by `changelogPath`, `federationPath`, `federationEventsPath` when the owning extension is declared |
+
+A **local package root** is defined once, here, and used identically by [R3], [R5] and [R17]: a
+directory inside the repository subtree containing a `package.json` that validates against
+`package-manifest.json`. It is **presence-keyed, not `packageRefs`-keyed** — the same argument as
+Change B, and it applies here with more force. The five declared `packageRefs` in `srs/` cover **167
+files**; `package/**` holds **234** non-record files; the difference is a **67-file undeclared root**
+at `srs/package/` holding 43 Fields, 14 Types, 7 RelationTypes, a DocumentView and a Vocabulary.
+
+That 67-file gap is not academic, and it resolves a contradiction that would otherwise sit between
+two of this RFC's own changes. **Both srs#307 Types and the `canonical_key` Field it should point at
+live in that undeclared root** — which is precisely why `srs repo validate` reports 0 errors over the
+dangling reference today: current discovery never loads them. So definition discovery **does change**
+under this RFC, and it has to: if it did not, Change H's requirement that [R13] "fail loudly" on
+srs#307 could not be met, because the objects involved would remain invisible.
+
+The definition **kinds** are taken from `package-manifest.json`'s own content arrays (`fields`,
+`types`, `views`, `documentViews`, `themes`, `relationTypes`, `vocabularies`, `lifecycles`,
+`blueprints`, `protocols`) rather than from a hand-kept list, so a kind cannot be added to a package
+manifest and be unrepresentable in the catalog. `srs/manifest.json` declares `ext:lifecycle` and
+`ext:themes-l1`, and `packages/com.mudemocracy.governance/1.1.0/package/` carries a lifecycle, a
+protocol and a blueprint, so all three of the kinds a hand-kept list would have missed are live.
 
 "Membership" in the sense the specification uses it — what I-80 and RFC-013 [R2] mean by "the
 repository's authoritative instance set" — is the instance set. The other four are what the
@@ -234,12 +276,15 @@ The `allOf` branch is not hypothetical: `record.json`'s own description sanction
 composition via allOf in domain schemas — `$schema` is not constrained here."* A domain schema that
 composes `record.json` is a conforming Record, and Revision 1 left it unclassified.
 
-**The candidate set is decidable, and it is worth saying why rather than assuming it.** `note.json`,
-`typed-record.json` and `record.json` are each `additionalProperties: false` with pairwise-disjoint
-`required` sets — `sections` / `fields` / `typeId`+`fieldValues` — so no object can satisfy two.
-Empirically all 29 no-`$schema` live Records match `record.json` and nothing else. This disjointness
-is a property a future schema edit could silently break, so it becomes a standing check rather than
-an assumption.
+**The candidate set is decidable, and the property that makes it so is narrower than "disjoint
+required sets".** All three of `note.json`, `typed-record.json` and `record.json` require
+`instanceId`, so their `required` sets are *not* disjoint and a check written that way would fail on
+day one. What actually holds is this: each has a required property — `sections`, `fields`,
+`typeId`/`fieldValues` respectively — that is **not a declared property of the other two**, and all
+three are `additionalProperties: false`, so presenting one schema's discriminator to another is a
+validation failure rather than an ignored extra key. That is the pairwise exclusion [R8] needs.
+Empirically all 29 no-`$schema` live Records match `record.json` and nothing else. It is a property a
+future schema edit could silently break, so it becomes a standing check rather than an assumption.
 
 Both halves are forced by the corpus, and the obvious simplification — "require `$schema`" — is not
 available.
@@ -309,8 +354,18 @@ exclusion from an authoring mistake.
 
 A Relation is stored as a standalone object at `relations/<relationId>.json`, one relation per file,
 declaring `$schema` of `relation.json` (required, `const`-pinned, as `container.json` pins its own).
-The collection format is retired as a **live** storage format; it survives only inside snapshots
-(Change I), where a single immutable document is the point.
+With `$schema` the entity is **17 properties, 5 required**; the 16/4 figures below are the inherited
+Relation shape before it is added.
+
+**The collection format is retired outright, in snapshots as well as live repositories.** Revision 3
+said it "survives only inside snapshots", which cannot hold alongside [R17]'s requirement that a
+snapshot be consumed "by the same rules as a live repository of the same generation" and Change I's
+"one code path" claim: a generation-2 snapshot carrying a collection would be invalid under [R11] the
+moment those rules were applied to it. So a generation-2 `.srs` or `.srsj` carries
+`relations/<relationId>.json` entries exactly as a live repository does. `relations-collection.json`
+is retained in `docs/schema/2.0/` only to describe generation-≤1 artifacts, which no conforming
+generation-2 reader loads. This is not hypothetical: `gallery.srsj` today carries exactly one
+`relations/relations.json` `data` key, and it is converted rather than preserved.
 
 **The wire shape, stated here so the reader need not open another file.** A Relation carries sixteen
 properties and `additionalProperties: false`. Four are required: `relationId` (uuid), `relationType`
@@ -356,8 +411,18 @@ object", and two consequences need stating.
 A deleted instance that is still named in the root container's `memberInstanceIds` leaves a dangling
 id, which I-80 makes an error. Deleting a root-container member is therefore **not** a routine
 unscoped operation: it is an explicit container-membership operation, and it writes the manifest. The
-routine-write isolation rule ([R21]) is scoped accordingly rather than making the repository
+routine-write isolation rule ([R22]) is scoped accordingly rather than making the repository
 un-fixable.
+
+**The larger case is relations, and it has to be answered or the model deadlocks.** Deleting one
+instance leaves every Relation naming it with a dangling endpoint. If that were a [R13] error and
+[R24] made it fatal, deleting a single record would render the repository unopenable — while [R22]
+forbade the delete from writing the relation files that would fix it. The resolution is that a
+delete is a **scoped cascade**: deleting an instance is permitted to remove the Relations incident to
+it, in the same operation, and those writes are part of the operation's declared target rather than a
+violation of [R22]. An instance delete that leaves incident Relations behind is the diagnosable
+state, not an unavoidable one. The same applies to a Container deleted while still referenced, and to
+a source document deleted while a `SourceReference` names it.
 
 There is no tombstone for a deleted instance, so re-importing an older archive resurrects it. That is
 a real behaviour change and it is deliberate: the alternative is a tombstone list, which is a shared
@@ -374,10 +439,24 @@ Measured over `srs@e0fb4b0`, that worry does not materialise: of 4 index entries
 content file present on disk — there are zero tombstones to preserve.** The migration has nothing to
 convert, and the "retain the index solely for tombstones" option is answered by a count.
 
-Note that I-112 is **not** a pre-existing warrant for the sidecar case, and Revision 1 cited it as
-though it were. I-112 says a *`sourceDocumentIndex` entry* whose content file is absent is a valid
-tombstone — it is keyed to the property being deleted. It must be **rewritten**, not merely
-inherited; so must I-102, which resolves `sourceId` against `sourceDocumentIndex`.
+**Two ratified invariants have to move for this to be legal, and one of them says the opposite of
+what this RFC needs.** I-112 says a *`sourceDocumentIndex` entry* whose content file is absent is a
+valid tombstone — it is keyed to the property being deleted, so it is not a pre-existing warrant for
+the sidecar case (Revision 1 cited it as though it were) and must be **rewritten**. More seriously,
+**Invariant 52** currently reads:
+
+> Every `SourceDocument` sidecar present under `sourceDocumentsPath` must have a `contentPath` that
+> resolves to an existing content file in the same directory. A sidecar whose `contentPath` does not
+> resolve is invalid. A conforming producer must not emit such a sidecar; a conforming consumer must
+> surface the resolution failure before proceeding.
+
+That is the direct negation of [R15]. Today the two coexist because they govern different things —
+I-112 permits an *index entry* without content, Invariant 52 forbids a *sidecar* without content.
+Moving tombstones onto sidecars collides the two. Invariant 52 is therefore rewritten, and after this
+RFC exactly one rule governs sidecar-without-content: the sidecar is a valid tombstone. Invariant 102
+is also rewritten, though it degrades rather than breaks — it already reads "present in
+`sourceDocumentIndex` (**or discoverable via a `.meta.json` sidecar scan of `sourceDocumentsPath`**)",
+so the fallback becomes the only clause.
 
 The scan surfaced a different discrepancy, which is the fail-closed audit case rather than a
 tombstone. `srs/source-documents/` holds 7 content files in three classes:
@@ -544,7 +623,7 @@ Enumeration is **materialised, not streaming**: a caller receives one complete c
 operation, because duplicate-id detection ([R12]) and the completeness assertions are set-level
 properties that a stream cannot decide. Diagnostics travel **with** the result rather than out of
 band — an enumeration returns entries and diagnostics together, which is what lets a validator report
-[R7]'s malformed-candidate errors from the same call that produced the catalog.
+[R9]'s malformed-candidate errors from the same call that produced the catalog.
 
 Paths do not appear in the semantic contract. A filesystem adapter walks reserved locations; a
 JSON-store adapter resolves `data` keys segment-wise; a database adapter issues a query and never
@@ -597,7 +676,7 @@ sub-containers; its **[R13]** requires a validator not to treat `externalRelatio
 The amendments: [R5]'s `spec.id` test resolves against the **container set**; Change C's traversal
 enumerates the container set rather than `containerIndex`; [R13]'s two tests resolve against the
 **instance set** and the container set. The slice-completeness property survives unchanged, because
-[R16] makes a snapshot's own enumerated contents authoritative for that snapshot — which is exactly
+[R17] makes a snapshot's own enumerated contents authoritative for that snapshot — which is exactly
 the closure `ext:slices` needs.
 
 ---
@@ -605,10 +684,11 @@ the closure `ext:slices` needs.
 ## Conformance Rules
 
 > **[R1]** A repository's authoritative content MUST be what the authoritative store reports, across
-> five sets: the **instance set**, **relation set**, **container set**, **source-document set**, and
-> **definition set**. `manifest.json` MUST NOT be treated as an authority for any of them. An
-> implementation MAY maintain a derived catalog but MUST treat the store as authoritative when they
-> differ.
+> six sets: the **instance set**, **relation set**, **container set**, **source-document set**,
+> **definition set**, and **extension set**. `manifest.json` MUST NOT be treated as an authority for
+> any of them, **except the root container**, which it carries inline at `manifest.container` and for
+> which it is authoritative (RFC-013 I-79). An implementation MAY maintain a derived catalog but MUST
+> treat the store as authoritative when they differ.
 
 > **[R2]** `manifest.json` MUST remain required, exactly one per repository, and MUST NOT contain
 > `instanceIndex`, `containerIndex`, `sourceDocumentIndex`, `relationsChecksums`, or `relationsPath`
@@ -629,10 +709,13 @@ the closure `ext:slices` needs.
 > package manifest at all (e.g. an npm manifest) MUST NOT anchor reserved roots and MUST NOT be
 > reported as an error.
 
-> **[R5]** The reserved **repository locations** are: `manifest.json` and the `.srs` marker at the
-> repository root; every reserved instance root; `relations/`; `containers/`; the directory named by
-> `sourceDocumentsPath`; and every local package root. Each MUST be discovered and validated as its
-> own entity kind.
+> **[R5]** The reserved **repository locations** are, all anchored at the repository root unless
+> stated otherwise: `manifest.json` and the `.srs` marker; every reserved instance root; `relations/`;
+> `containers/`; the directory named by `sourceDocumentsPath`; the locations named by `changelogPath`,
+> `federationPath` and `federationEventsPath` when the owning extension is declared; and every local
+> package root, wherever in the subtree it occurs. Each MUST be discovered and validated as its own
+> entity kind. The contents of the `.srs` directory are implementation-private: they MUST NOT be
+> validated as SRS entities and MUST be preserved unmodified.
 
 > **[R6]** The tier and kind of an object MUST be determined from its own content. An implementation
 > MUST NOT infer tier or kind from the name or position of the directory containing it.
@@ -650,14 +733,19 @@ the closure `ext:slices` needs.
 > instance root, `note.json`, `typed-record.json`, `record.json`; under `relations/`, `relation.json`;
 > under `containers/`, `container.json`; under `sourceDocumentsPath`, the source-document sidecar; under
 > a local package root, the definition entities that package's manifest declares. Within each
-> admissible set the schemas MUST remain pairwise non-overlapping (closed objects with disjoint
-> `required` sets); a change that breaks this property MUST be rejected.
+> admissible set the schemas MUST remain pairwise distinguishable: every schema MUST be
+> `additionalProperties: false` and MUST have at least one `required` property that is not a declared
+> property of any other schema in the set. A change that breaks this property MUST be rejected.
 
-> **[R9]** Every file under a reserved instance root MUST be a conforming instance, a recognised
-> sidecar, or an error. A recognised sidecar MUST have a name ending in a reserved sidecar suffix AND
-> a base name resolving to a discovered instance in the same directory; an orphaned sidecar MUST be an
-> error. Recognition MUST NOT be conditioned on `declaredExtensions`. Malformed, unrecognised, and
-> ambiguous files MUST each produce a diagnostic naming the file, and MUST NOT be skipped silently.
+> **[R9]** Every file under a reserved repository location MUST be an object conforming to an entity
+> admissible at that location, a recognised
+> sidecar, or an error. A recognised sidecar MUST satisfy all three of: a name ending in a reserved
+> sidecar suffix; a base name resolving to a discovered instance in the same directory; and validation
+> against the schema declared for that suffix. A file meeting the first two but with no declared
+> schema, or failing it, MUST be an error — recognition is not conferred by filename alone. An
+> orphaned sidecar MUST be an error. Recognition MUST NOT be conditioned on `declaredExtensions`.
+> Malformed, unrecognised, and ambiguous files MUST each produce a diagnostic naming the file, and
+> MUST NOT be skipped silently.
 
 > **[R10]** Files under no reserved repository location MUST NOT be discovered, MUST NOT be validated
 > as SRS entities, and MUST be preserved unmodified by any repository operation.
@@ -705,7 +793,10 @@ the closure `ext:slices` needs.
 > wall-clock timestamp MUST NOT be written into a deterministic export (ADR-039).
 
 > **[R19]** In `ext:json-store`, instance membership MUST be the set of `data` keys resolving under a
-> reserved instance root per [R3], determined by segment-wise resolution of the key. Other reserved
+> reserved instance root, determined by segment-wise resolution of the key. Because a `.srsj` document
+> has neither an `.srs` marker nor a `manifest.json` key, its anchors are stated directly rather than
+> by [R3]: the empty key prefix is the repository root, and a key `<p>/package.json` whose value
+> validates against `package-manifest.json` makes `<p>` a local package root. Other reserved
 > repository locations MUST be carried as repository content. An implementation MUST NOT determine
 > membership by glob or substring match over `data` keys (RFC-039 [R13]).
 
@@ -736,10 +827,16 @@ the closure `ext:slices` needs.
 > partial catalog as if complete. A `validate` operation MUST report all diagnostics rather than
 > stopping at the first.
 
-> **[R25]** Amendments to Accepted RFCs, effective at the cutover: RFC-039 [R13]'s enumeration source
-> becomes the authoritative store per [R1]; RFC-039 [R14]'s reference target becomes the authoritative
-> instance set; RFC-026 [R5]'s `spec.id` test and Change C traversal resolve against the container
-> set; RFC-026 [R13]'s tests resolve against the instance set and container set.
+> **[R25]** Amendments to Accepted RFCs, effective at the cutover. **RFC-039**: [R13]'s enumeration
+> source becomes the authoritative store per [R1]; [R14]'s reference target becomes the authoritative
+> instance set. **RFC-026**: [R5]'s `spec.id` test and Change C step 6's traversal resolve against the
+> container set, and step 6's *output* obligation becomes "included in the slice archive's container
+> set" rather than "in the slice archive's `containerIndex`", which [R2] would otherwise make an
+> error; [R6]'s endpoint test and [R13]'s tests resolve against the instance set and container set;
+> Change C step 5 and Change E item 4 resolve source documents against the source-document set.
+> **RFC-013**: [R6] and [R9] resolve containers against the container set rather than
+> `containerIndex`. **RFC-017**: [R2] and [R12] resolve source documents against sidecar discovery,
+> and [R12]'s tombstone is keyed to the sidecar rather than to a `sourceDocumentIndex` entry.
 
 ---
 
@@ -753,9 +850,9 @@ train with RFC-039.
 |---|---|---|
 | `manifest.json` | Remove `instanceIndex` from `required`; remove the `instanceIndex`, `containerIndex`, `sourceDocumentIndex`, `relationsChecksums`, `relationsPath` properties and the `InstanceIndexEntry`, `ContainerIndexEntry`, `SourceDocumentIndexEntry`, `RelationsChecksumEntry` `$defs`; retitle away from "authoritative index" | All 3 first-party repository manifests rewritten. `srs/manifest.json` loses ~3,400 of 3,560 lines |
 | `relation.json` | **New file.** Standalone single-Relation entity: the 16 properties of Change E, 4 required, `additionalProperties: false`, `$schema` required and `const`-pinned | **222 relations across 3 collections** become one file each: 205 (`srs/`), 17 (`gallery-project-v2/`), 0 (`fixture-repo/` — its collection is empty and is deleted) |
-| `relations-collection.json` | Retained for snapshot use only; documented as not a live storage format at `dataModelRevision ≥ 2` | The 3 live collection files are removed after conversion |
-| *revisions sidecar* | **New file, owed.** No schema exists for `.revisions.json` today | 3 files under `gallery-project-v2/records/**` are currently unclassifiable; [R9] makes them errors until this lands |
-| `package-bundle.json` | Confirm `.srsj` envelope carries `srsj: "2"` and an embedded `dataModelRevision` | 4 `.srsj` artifacts restamped |
+| `relations-collection.json` | Retained only to describe generation-≤1 artifacts; **not** a generation-2 format in live repositories *or* snapshots | The 3 live collection files are removed after conversion, including `gallery.srsj`'s embedded one |
+| *revisions sidecar* | **New file, owed.** No schema exists for `.revisions.json` today | 3 files under `gallery-project-v2/records/**` are unclassifiable; [R9]'s third conjunct makes them errors until this lands |
+| *`.srsj` envelope* | **New file, owed.** There is **no schema in `docs/schema/2.0/` for the `{srsj, manifest, data}` envelope at all** — RFC-039 recorded this same gap and deferred it. [R20]'s `srsj: "2"` requirement therefore has no schema home today | 3 `.srsj` artifacts restamped; whoever closes RFC-039's recorded gap owns this |
 
 **Invariants rewritten by this RFC** (beyond I-80 and I-118, whose substance is *ratified* but whose
 wording references a now-absent property). Note the spec uses two identifier conventions — bare
@@ -771,12 +868,21 @@ any Tier-2 Record "in the repository's instance index"), **I-82** (conditioned o
 is a generated projection of `srs/records/` — re-rendering during this review shifted every line in it
 by +37, which is why Revision 1's line citations were already stale when written:
 
-- `ext:repository` §`RepositoryManifest` — the membership sentence, the TS model block, and the three
-  Entry definitions;
+- `ext:repository` §`RepositoryManifest` — the membership sentence, the TS model block, the layout-tree
+  comment ("`manifest.json` ← required: root manifest and instance index"), and all **four** Entry
+  definitions;
+- `ext:repository` §Conformance requirements — the obligation to maintain "a complete and accurate
+  `instanceIndex`" and to resolve "all instances via the index" (normative spec, not agent guidance);
+- `ext:json-store` §File format — the AI-comprehension paragraph resting on "the `instanceIndex` in
+  `manifest.json`";
+- `srs-usage.md` §"The instanceIndex trap" — *"`manifest.json → instanceIndex` is the authoritative
+  membership list. A record file on disk that is not listed there does not exist to the system."*
+  `CLAUDE.md` names this file "the authoritative rules for working with any SRS repository as an
+  agent", so it is the most consequential first-party statement of the losing side;
 - `ext:repository` §Repository layout — the subfolder permission's `instanceIndex` condition; the
   folder-responsibility table gains `containers/`;
 - `ext:repository` §Relations storage — collection requirement;
-- `ext:repository` §Archive format — self-containment list, produce step 1, consume step 4;
+- `ext:repository` §Archive format — self-containment list, produce step 1, consume steps 4 and 5 ("Load relations from `relationsPath`");
 - `ext:repository` §Import / re-import semantics — checksum-based no-op optimisation;
 - `ext:json-store` §File format — the `srsj` version row and the `manifest.instanceIndex` row;
 - `ext:json-store` §Path conventions in `data` — the membership rule, and the tier-by-folder table
@@ -785,7 +891,7 @@ by +37, which is why Revision 1's line citations were already stale when written
   and `relationsPath`;
 - the canonical `$schema` URL table — gains a `relation.json` row;
 - agent guidance instructing maintenance of "a complete and accurate `instanceIndex`";
-- `srs/CLAUDE.md` — states "The `instanceIndex` in the manifest is the authoritative member list",
+- `CLAUDE.md` (repository root) — states "The `instanceIndex` in the manifest is the authoritative member list",
   i.e. first-party documentation asserting the losing side of the contradiction.
 
 Schema changes are synced to `srs-rust/crates/srs-schema/schemas/2.0/` and `srs-vscode/schemas/2.0/`
@@ -813,12 +919,22 @@ amendment was needed was false.
 Both land at a **single `dataModelRevision: 2`**, in the composed #242 / #296 release train tracked on
 #297. Neither ships alone, and this RFC does **not** take revision 3.
 
-**Ordering is pinned at step granularity**, because RFC-039 [R13] asserts a count against
-`instanceIndex` and this RFC's Phase 1 deletes it:
+**Ordering is pinned below step granularity**, because two steps collide. RFC-039 [R13] asserts a
+count against `instanceIndex`, which this RFC deletes; and RFC-039 Phase 2 **step 8** stamps
+`dataModelRevision: 2` on every manifest. If that stamp landed before this RFC's strip, the corpus
+would sit — for the duration of the migration, and across RFC-039's own count assertion — stamped
+generation 2 *and still carrying* `instanceIndex`, which [R2] makes an error and for which [R21]'s
+migrator exemption does not provide (it exempts reading generation-≤1 data, not this). The stamp is
+therefore **not** RFC-039 step 8's to apply; it is a single shared final step:
 
-1. RFC-039 Phase 0 (definitions) → Phase 1 (instances) → Phase 2 (repository) run **first and to
-   completion**, including [R13]'s count assertion, while `instanceIndex` still exists.
-2. Only then does RFC-038 Phase 1 below run, stripping the retired properties.
+1. RFC-039 Phase 0 (definitions) → Phase 1 (instances) → Phase 2 **steps 1–7 and 9–10** run first and
+   to completion, including [R13]'s count assertion, while `instanceIndex` still exists and the corpus
+   is still stamped generation ≤ 1.
+2. RFC-038 Phase 1 steps 7 and 9–10 below run, converting relations and stripping the retired
+   properties.
+3. **One shared stamping step** — RFC-038 Phase 1 step 8 — applies `dataModelRevision: 2` and
+   `srsj: "2"` across the whole inventory. RFC-039 Phase 2 step 8 is subsumed by it and does not run
+   separately; the corpus is never simultaneously stamped and un-stripped.
 
 ### Phase 0 — audit, before anything is written
 
@@ -828,8 +944,12 @@ Both land at a **single `dataModelRevision: 2`**, in the composed #242 / #296 re
    unresolved disagreement. (In `srs/` the diff is empty — index↔tree parity is exact at 375/375.)
 2. Resolve `spec/srs-purpose-and-scope.md` (Change G) — sidecar present, not indexed; it becomes a
    member unless deliberately removed.
-3. Resolve srs#307 (Change H) or record it as a known failure the new diagnostics will surface. It is
-   fixed on its own row, not here.
+3. Resolve srs#307 (Change H). It is fixed on its own row, but it **must** be fixed before the
+   cutover, not merely registered: [R13] makes it an error and [R24] makes an error under a reserved
+   location fatal, so a deferred #307 means the spec repository does not load. Revision 3 offered
+   "or record it as a known failure the new diagnostics will surface"; that option does not exist.
+   Bringing `base` and `core` into `package-manifest.json` conformance is a prerequisite for the same
+   reason — [R4] diagnoses them, and under [R24] that is fatal.
 4. Decide the 3 `.revisions.json` files: land the owed sidecar schema, or remove them. Under [R9] they
    are errors until one of those happens.
 5. Record baseline counts, identifier sets and content hashes for parity checking: **386 Tier-2, 2
@@ -844,19 +964,31 @@ Both land at a **single `dataModelRevision: 2`**, in the composed #242 / #296 re
 
 7. Write each relation in every collection to `relations/<relationId>.json`; verify the `relationId`
    set is unchanged and unique; delete the collection files.
-8. Strip the retired inventories from each manifest; stamp `dataModelRevision: 2` on every first-party
-   repository and package manifest, and `srsj: "2"` on the **3 of 4** `.srsj` artifacts that are
-   JSON-store documents (`gallery.srsj` and the two governance seeds — each currently `srsj: "1"`
-   with no `dataModelRevision` at either the top level or the inner manifest). `core-bundle.srsj` is a
-   package bundle with **no `srsj`, no `manifest` and no `data`**, so [R19] and [R20] do not reach it
-   and there is nothing to stamp. The first-party
-   manifest set is **8 package manifests** — the 6 under `srs/package/` (only `metamodel` is stamped
-   today) plus `packages/com.mudemocracy.governance/{1.0.0,1.1.0}/package/` — and **3 repository
-   manifests**. Of the 13 `package.json` files in the repo, the 3 under `rfcs/rfc-004/` are RFC
-   proposal fixtures and are explicitly out of scope; `base` and `core` must first be brought into
-   conformance ([R4]).
+8. **The single shared stamping step** (see the ordering above): strip the retired inventories from
+   every manifest and stamp the generation across the whole inventory. Because Revision 3 stated three
+   mutually inconsistent counts across four sections, the inventory is given once, as a table, and
+   this is the only place it appears:
+
+   | Artifact class | Count | Notes |
+   |---|---|---|
+   | Repository manifests, exploded | 3 | `srs/`, `conformance/discovery/fixture-repo/`, `docs/spec/examples/gallery-project-v2/` |
+   | Repository manifests, **embedded in `.srsj`** | 3 | `gallery.srsj` (24 `instanceIndex` + 4 `containerIndex`); both governance seeds (`instanceIndex: []`) — each needs stripping, not just stamping |
+   | Package manifests, first-party in-scope | 8 | 6 under `srs/package/` (only `metamodel` stamped today) + `conformance/discovery/fixture-repo/package/` + `docs/spec/examples/gallery-project-v2/package/` |
+   | Package manifests, **deferred to #286** | 2 | `packages/com.mudemocracy.governance/{1.0.0,1.1.0}/package/` |
+   | Package manifests, out of scope | 3 | `rfcs/rfc-004/**` — RFC proposal fixtures, not live packages |
+   | `.srsj` envelopes taking `srsj: "2"` | 3 | `gallery.srsj` + 2 governance seeds; each currently `srsj: "1"` with no `dataModelRevision` at top level or inner manifest |
+   | `.srsj` artifacts out of scope for [R19]/[R20] | 1 | `core-bundle.srsj` — no `srsj`, no `manifest`, no `data`; it is a package bundle |
+
+   **The `packages/**` boundary is deferred deliberately, and to reconcile with RFC-039.** RFC-039
+   records that "Published package trees under `packages/` are still pre-RFC-032 (`valueType`,
+   revision 0) and are **#286's** disposal scope, not this RFC's". Revision 3 claimed the two
+   governance package manifests for this cutover, which contradicted an Accepted RFC's stated scope;
+   they are deferred to #286 instead, and #286 must land before or with the cutover or those two
+   packages become unreadable under [R21].
+
 9. Bring `base` and `core` package manifests into conformance with `package-manifest.json` (5 missing
-   required properties each), so [R3] anchors them.
+   required properties each — `$schema`, `createdAt`, `description`, `status`, `title`), so [R3]
+   anchors them. **This runs before step 8**, despite the numbering, and before any stamping.
 10. Leave instance files where they are. **No instance moves**: all 375 indexed instances in `srs/` are
     already under a reserved instance root by [R3] — 368 under `records/**` and 7 under
     `package/records/**` via the package-manifest anchor. This is a verified property of the corpus,
