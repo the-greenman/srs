@@ -2,7 +2,7 @@
 
 # RFC-036: Composite rendering — view-owned renderer dispatch for composite-range fields
 
-**Status**: Accepted (Revision 5)
+**Status**: Accepted (Revision 6)
 **Affects**: `ext:views-l1` (`FieldView`, Invariant 13), `ext:views-l2` (`DocumentView`, `DocumentSection`), `ext:themes-l1` (`ElementTemplates`); supersedes **in part**, for composite-range fields only, RFC-007's `FieldGroup.compositeRenderer`; `docs/schema/2.0/{view,document-view,theme}.json`; description-only touch to `docs/schema/2.0/type.json`.
 **Builds on**: RFC-032 (Accepted Rev 6 — composite range), RFC-007 (Accepted Rev 5 — superseded in part), RFC-015 (Accepted — presentation is view-owned), RFC-008 (Accepted — `typeDispatch`), RFC-027 (Accepted — the `DocumentSection` presentation precedent), RFC-002 (Accepted — Theme resolution `[T-2]`), RFC-009 (Accepted — `ExactTypeRef`), RFC-033 (Accepted — the frozen bootstrap seed).
 **Author**: Claude Code (agent), on behalf of the repository owner
