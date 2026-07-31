@@ -28,7 +28,7 @@ schema:package-bundle.json
 
 **Title**: RFC-004: Language-Neutral Schema Notation for Spec Records
 **RFC Number**: 004
-**Status**: draft
+**Status**: superseded
 **Proposal Artifact Path**: rfcs/rfc-004.md
 **Content**: Draft: `ext:schema-notation`, a semantic, target-neutral schema definition model for spec authoring (JSON Schema / TypeScript / protobuf / Rust are projections). Carries the proposed-package / proposed-schemas boundary fixture under rfcs/rfc-004/. Full text: rfcs/rfc-004.md.
 
@@ -423,10 +423,9 @@ I-87
 **RFC Number**: 030
 **Status**: accepted
 **Author**: the-greenman (from issue the-greenman/srs#232)
-**Affected Components**: com.semanticops.spec/field type-definition record; §04-2-4-2 Field subsection; §03-1 Version semantics subsection; §04-7 Vocabulary and Term subsection (invariant V3); docs/schema/2.0/package-bundle.json (embedded Field shape)
+**Affected Components**: §04-2-4-2 Field subsection (the former com.semanticops.spec/field type-definition record was a duplicate of it and is retired — #275); §03-1 Version semantics subsection; §04-7 Vocabulary and Term subsection (invariant V3); docs/schema/2.0/package-bundle.json (embedded Field shape)
 
 <!-- srs-integration:v1
-type:com.semanticops.spec/field
 subsection:field
 subsection:version-semantics
 subsection:vocabulary-and-term
@@ -446,4 +445,49 @@ tooling-only
 -->
 **Proposal Artifact Path**: rfcs/rfc-031-idl-schema-conformance-check.md
 **Content**: Closes the-greenman/srs#238: nothing checked that the prose pseudo-IDL embedded in spec records and the docs/schema/2.0/*.json JSON Schema files agree. Adds a CI-gated conformance check (scripts/check-idl-schema-conformance.mjs) comparing property set, optionality, and (for primitives/arrays/enums) declared type across all 18 mapped entities, with an issue-linked allowlist for currently-known gaps. Schema-generation-from-records is evaluated and explicitly deferred (blocked by real architecture facts, not effort — see the RFC's Alt A). Reproduction against origin/master confirms it fires on the-greenman/srs#234 and #235, stays silent on the already-fixed #232. Eight follow-up issues (the-greenman/srs#247-254) and one (the-greenman/srs-rust#777) were filed for discrepancies the audit found. Full text: rfcs/rfc-031-idl-schema-conformance-check.md.
+
+**Title**: RFC-033: Self-hosting the meta-model — the frozen-seed bootstrap package
+**RFC Number**: 033
+**Status**: accepted
+**Author**: the-greenman
+**Affected Components**: Self-hosts the SRS meta-model as SRS Type records in the frozen `com.semanticops.srs/metamodel` package (10 Types + 55 Fields); adds optional `dataModelRevision` (folds #265) to manifest/package-manifest/package-bundle schemas; adds the per-emitter fidelity dashboard; supersedes RFC-004's schema-notation vocabulary (reuses its projection-rules).
+
+<!-- srs-integration:v1
+schema:manifest.json
+schema:package-manifest.json
+schema:package-bundle.json
+type:com.semanticops.srs/field
+type:com.semanticops.srs/type
+type:com.semanticops.srs/field-type
+type:com.semanticops.srs/field-assignment
+type:com.semanticops.srs/exact-type-ref
+-->
+**Proposal Artifact Path**: rfcs/rfc-033-self-host-metamodel-frozen-seed.md
+**Content**: Expresses Field, Type, FieldAssignment and their value-objects as SRS Type records in a frozen com.semanticops.srs/metamodel package; keeps docs/schema/2.0/{field,type}.json as the never-re-derived bootstrap fixed point; adds a monotonic dataModelRevision stamp (#265) and a per-emitter fidelity dashboard; supersedes RFC-004's schema-notation vocabulary while reusing its projection-rules. Full text: rfcs/rfc-033-self-host-metamodel-frozen-seed.md.
+
+**Title**: RFC-032: The Field type model — decomposed value type, composite range, maps, and FieldGroup subsumption
+**RFC Number**: 032
+**Status**: accepted
+**Author**: Claude Code (agent), on behalf of the repository owner (from issue the-greenman/srs#261; delivers Task #257, folds in #239)
+**Affected Components**: docs/schema/2.0/field.json (valueType → fieldType model, Changes A–D/F; retains editorHint; adds $defs.ExactTypeRef + $defs.FieldType); docs/schema/2.0/type.json (RequiresRelation.relationType → list, Change F; FieldGroup + Type.fieldGroups + FieldAssignment cardinality props deprecated, removal #242-gated per Change E); docs/schema/2.0/package-bundle.json (embedded Field shape kept in parity with field.json — required valueType → fieldType; per the RFC-030 bundle/field parity precedent, a consistency fold beyond the RFC .md schema-change list). Scoped folds: the self-describing meta-model spec records (com.semanticops.spec/field, com.semanticops.srs/type) are re-authored on the new model under #258 (meta-model authoring + bootstrap), not here — this RFC is the schema + expressiveness foundation. Deliberately NOT touched: typed-record.json TypedField.valueType (Tier-1 legacy instance carrier, reconciled with #242); the prose valueType references in theme.json / document-view.json (presentation, follow-up); and lifecycle.json's separate RequiresRelation copy, which keeps the string|array form so downstream string-form data (packages/com.mudemocracy.governance lifecycles) is not stranded — reconciling the type.json↔lifecycle.json RequiresRelation divergence + migrating that data to the list form is a tracked follow-up. Rendered docs/spec outputs regenerate once srs-rust adopts the new schema (release-artifact refresh, ADR-004): the embedded-schema `srs` binary cannot load the migrated package, so the binary-backed render/validate/drift tooling is intentionally stale until that rebuild; the Node validation pipeline (scripts/validate-all.mjs) validates against the runtime schemas and stays green.
+
+<!-- srs-integration:v1
+schema:field.json
+schema:type.json
+schema:package-bundle.json
+-->
+**Proposal Artifact Path**: rfcs/rfc-032-composite-field-range.md
+**Content**: To self-host its meta-model (epic #256), SRS must describe Field/Type in its own type system — but Field.valueType is a closed scalar enum that cannot express nested objects, lists, typed references, constraints, or open extension bags, and it conflates four axes (#239). This RFC replaces valueType with an orthogonal fieldType model (datatype × cardinality × value-domain × format × constraints) where datatype may be a reference to another Type (ref, inline or reference), a value-of-a-sibling-type (dependent), or an open string-keyed collection (map). It subsumes FieldGroup into the ref mechanism (actual removal + instance migration gated with #242) and resolves every apparent union as dependent-typing, cardinality, a discriminated family, or a map — no sum-type construct is added. Delivered here as a SCRIPTED, TESTED migration: docs/schema/2.0/{field,type}.json edited to the new model; a deterministic transform (scripts/migrate-rfc-032-field-type.mjs over scripts/lib/rfc-032-fieldtype.mjs) rewrote all 95 legacy field definitions per Change H (idempotent, R1–R11-validated, minimal-diff); a runnable paper proof (11/11), a per-row migration test (Change H), and a conformance fixture exercising every mode with committed Change-G projection goldens (tests/rfc-032/) all pass under scripts/validate-all.mjs. Breaking at the definition layer (owner: no external consumers; a stable public spec must not freeze a flawed model). Full text: rfcs/rfc-032-composite-field-range.md.
+
+**Title**: RFC-035: JSON Schema emitter — projecting the self-hosted meta-model (records → 2020-12)
+**RFC Number**: 035
+**Status**: accepted
+**Author**: the-greenman
+**Affected Components**: Defines the emitter that projects the self-hosted meta-model Type records to JSON Schema 2020-12 via a neutral IR, generalizing RFC-032's per-fieldType `projectField` to whole entities. Ships a Node reference emitter (`scripts/lib/schema-emitter.mjs`) verified two ways: Tier-1 byte-for-byte determinism goldens (`tests/rfc-035/`) and a Tier-2 `emitter ⊆ frozen seed` structural closure (`scripts/rfc-035-closure-test.mjs`, discharging RFC-033 [R4](b)). Relocates the normative `projection-rules.md` to `docs/schema/2.0/`. The `srs-projection` core service / `srs schema generate` CLI / WASM binding are specified but implemented at the #260 cutover (ADR-004). Tooling + docs only — no entity-schema or record artifact is folded into the canonical spec.
+
+<!-- srs-integration:v1
+tooling-only
+-->
+**Proposal Artifact Path**: rfcs/rfc-035-schema-emitter.md
+**Content**: The JSON Schema emitter for the self-hosted meta-model: meta-model Type records → a target-neutral IR → JSON Schema 2020-12 definition schemas, generalizing RFC-032 `projectField` to whole entities. Verification is two-tier — byte-for-byte determinism against the emitter's own goldens, plus an `emitter ⊆ seed` structural closure over the covered authoritative features (with a documented-divergence register and exclusion set). Relocates `projection-rules.md` to a live normative home and stamps `dataModelRevision` on the generated bundle. Node reference emitter now; srs-projection/CLI/WASM at the #260 cutover. Full text: rfcs/rfc-035-schema-emitter.md.
 
