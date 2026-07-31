@@ -266,7 +266,7 @@ Use plain `git commit` — never `--no-gpg-sign`. If the commit includes manual 
 git push -u origin data/<issue-N>-<slug>
 gh pr create \
   --repo the-greenman/srs \
-  --base main \
+  --base master \
   --title "data: <title> (#<issue-N>)" \
   --body "$(cat <<'EOF'
 Closes #<issue-N>

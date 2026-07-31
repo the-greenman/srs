@@ -297,7 +297,7 @@ git push -u origin rfc/NNN-<slug>
 ```bash
 gh pr create \
   --repo the-greenman/srs \
-  --base main \
+  --base master \
   --title "RFC-NNN: <Title>" \
   --body "$(cat <<'EOF'
 Adds RFC-NNN and associated schema changes.
@@ -322,7 +322,7 @@ EOF
 
 ## Stage 6 — Merge into spec: author records and re-render
 
-This stage runs **after the RFC branch PR is merged to main** (or as part of the same branch if the spec records can be written before the PR is opened — they may be committed on the same RFC branch).
+This stage runs **after the RFC branch PR is merged to master** (or as part of the same branch if the spec records can be written before the PR is opened — they may be committed on the same RFC branch).
 
 The goal: the RFC's proposed changes must be reflected as SRS records in `srs/srs/`, not just as a Markdown file in `rfcs/`. The spec is the records; the RFC file is a design document. Both must exist after acceptance.
 
