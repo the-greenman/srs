@@ -206,8 +206,8 @@ design merit rather than waved through. It is answered by separating **the asser
 **metadata about the assertion**:
 
 ```jsonc
-"fieldValues": { "proposal_artifact_path": "rfcs/rfc-004.md" },
-"fieldMeta":   { "proposal_artifact_path": { "source": "human" } }
+"fieldValues": { "proposal-artifact-path": "rfcs/rfc-004.md" },
+"fieldMeta":   { "proposal-artifact-path": { "source": "human" } }
 ```
 
 `fieldMeta` is an optional sibling object, keyed **identically** to `fieldValues`, whose values are
@@ -226,16 +226,25 @@ Why this rather than the alternatives:
 
 The corpus supports the shape rather than dictating it. Measured over this repository at
 `origin/master` `c9797f0`: **record-level `sourceRefs` is used 231 times**; **per-value `source` once**
-(RFC-004's `proposal_artifact_path`, value `"human"`); per-value `editedAt` and `sourceRefs`
+(RFC-004's `proposal-artifact-path`, value `"human"`); per-value `editedAt` and `sourceRefs`
 **never**. Provenance is already, overwhelmingly, a record-level idiom here — so `fieldMeta` codifies
 what practice already does while keeping the per-field granularity available for the case that
 motivated it. The migration is one value.
 
-**Granularity rule.** `fieldMeta` mirrors the keys of the **owning** `fieldValues` map only; it does
-not descend into inline-composite interiors. A nested composite's values inherit the provenance of
-the carrier field. This bounds the recursion and matches the corpus (zero per-value metadata inside
-`groupValues` today). A future recursive extension remains available additively under a reserved
-sub-key without a breaking change.
+**Granularity rule.** `fieldMeta` mirrors the keys of the **owning** `fieldValues` map only. It does
+**not** descend into inline-composite interiors, and it does **not** address individual items of a
+`cardinality: list` value — provenance attaches to the field, not to element *n*. A nested
+composite's values, and a list's items, inherit the provenance of their carrying field. This bounds
+the recursion to one level per Record and matches the corpus exactly: zero per-value metadata inside
+`groupValues`, and zero `source`/`editedAt` on any of the 138 `entries` items (which is what today's
+`FieldValueEntry.{source, editedAt}` would have carried). Nothing is stranded by dropping per-item
+granularity because nothing uses it. A recursive or per-item extension remains available additively
+under a reserved sub-key without a breaking change.
+
+The example above is also the entire migration: RFC-004's record is the single per-value `source` in
+the corpus. Note its key is `proposal-artifact-path` — kebab-case, as authored. Under [R2] the key is
+verbatim, which is why Open Question 2's spelling decision changes these strings and must be settled
+before Phase B runs.
 
 ### Change D — `ext:repeatable-fields` `entries` is removed; cardinality carries it
 
