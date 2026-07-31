@@ -422,8 +422,17 @@ neither has a Phase-A artifact.
 > Type that violates this at definition time, not at instance time.
 >
 > **[R5]** A `FieldAssignment` with `required: true` means its key MUST be present in `fieldValues`.
-> Absence of a key means the field is unset; a `null` value means explicitly-empty. Implementations
-> MUST NOT treat the two as interchangeable.
+> Key absence means the field is unset; an explicit `null` means the field is set to no value.
+> Implementations MUST NOT treat the two as interchangeable when reading or writing.
+>
+> **[R5a]** **Structural presence ([R5]) and rendering presence (RFC-001 Step 2) are distinct and MUST
+> NOT be conflated.** [R5] governs validity: a key is present or it is not. RFC-001 Step 2 governs
+> rendering: a value of `""`, or a sequence with no surviving entries, resolves as *absent* and emits
+> no row ([FR-037-9]). A `required` field whose value is `""` therefore **satisfies [R5] and is still
+> absent for rendering** — it validates, and it emits no row unless
+> `DocumentSection.emptyBehavior: "show-placeholder"` applies. Neither notion is changed by this RFC;
+> [R5a] exists because the carrier's key-presence model makes the two easy to confuse, and conflating
+> them would silently change either validation or rendering.
 >
 > **[R6]** `fieldMeta`, when present, MUST be an object whose keys are a **subset** of the sibling
 > `fieldValues` keys, and whose values are objects of `{source?, editedAt?, sourceRefs?}`. A
