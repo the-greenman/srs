@@ -1854,6 +1854,28 @@ When a repository has a canonical presentation, declare it in `manifest.json` so
 
 The first entry with `isDefault: true` is the default; when none carry `isDefault`, the first entry is the default. When `renderedPresentations` is absent or empty, viewer falls back to implementation-defined selection. `viewId` MUST resolve to a DocumentView in the active package(s) — a resolution failure is a validation error. `format` and `outputPath` are informational hints for render tooling and do not affect viewer selection.
 
+### Rendering a composite as a table — the dispatch goes on the View, never the Type (RFC-036)
+
+A structured composite is a Field with `fieldType.datatype: "ref"` and `mode: "inline"`; its `cardinality` decides whether it carries one value or a list. To render one as a table, **bind it in the View**, not in the Type:
+
+```jsonc
+// ext:views-l1 — FieldView, the most specific site
+{ "fieldId": "<composite-field-uuid>", "order": 0,
+  "compositeRenderer": { "renderer": "table" } }
+
+// ext:views-l2 — DocumentSection.compositeRenderers (primary), or DocumentView.compositeRenderers (default)
+{ "fieldId": "<composite-field-uuid>", "renderer": "table" }
+```
+
+Resolution is most-specific-wins: `FieldView` → `DocumentSection` → `DocumentView` → unbound. A `FieldView` carrying no `compositeRenderer` is *not* an override — it falls through. To cancel a broader binding, set `"renderer": "baseline"` explicitly.
+
+The `table` renderer expects the composite's `rangeType` to carry `rows` (a `ref`/`inline`/`list` field over a row Type whose `cells` is `string[]`), and optionally `columns` (`string[]`), `widths` (`number[]`, constrained to `[0,1]`), `subheading` and `label`. Roles bind by `Field.name` by default; pass an explicit `roles` map of role → `Field.id` when your field names differ. An unrecognised renderer, or an unsatisfied required role, falls back to composite **baseline** rendering with a diagnostic — it never suppresses content.
+
+Two traps worth stating plainly:
+
+- **Do not put table data in a text field as JSON.** The pre-RFC-036 pattern encoded `columns`/`rows` as JSON strings for the renderer to parse. Model the real structure instead — the type system can express it, and a serialised string in a text field is not an acceptable substitute.
+- **Do not reach for `FieldGroup`.** It is deprecated (RFC-032 Change E) and retires with its `compositeRenderer` at the #242 cutover. New authoring uses composite range plus a view-owned binding.
+
 ---
 
 ## 7. Reading CLI Output
