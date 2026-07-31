@@ -84,8 +84,10 @@ Projecting `com.semanticops.spec/table@2` through the canonical RFC-035 emitter
 `rows` — the FieldGroup carrying every actual table row — **is absent**. `fieldGroups` is in the
 emitter's documented seed-only exclusion set, so a table's entire substance is invisible to its own
 canonical projection, and the schema asserts `additionalProperties: false` over what remains. Nine
-spec records and 65 rows are affected here; the muSrs corpus has ~29 carriers and ~175 rows, over a
-five-field group.
+spec records and 65 rows are affected here (measured); the muSrs corpus has ~29 carriers and ~175
+rows over a **five-field** group (figures recorded on #242, not re-measured here — muSrs is outside
+this repository). Any carrier design must be sized against muSrs's five-field `section.table`, not
+the spec's simpler list-of-strings shape.
 
 The owner has recorded that *"tables are a pretty vital element in practice"* and that
 *"structured values should win over any JSON-in-text implementation"* (2026-07-31). Today the
@@ -522,10 +524,15 @@ remove the four assignments) before Phase B. Filed as a Phase-B prerequisite, no
 
 ### Conformance evidence required at cutover
 
-- Old → new → **round-trip equivalence** over every first-party value. Baseline for this repository:
-  **1284** `fieldValues` (recursive, including inside `groupValues`), **61** `entries` (138 items),
-  **9** `groupValues` carriers / **65** entries, **1** per-value `source`. muSrs adds ~235 values,
-  14 carriers, 30 entries, 102 rows, **0** ragged, **0** `widths`.
+- Old → new → **round-trip equivalence** over every first-party value. Baseline measured for **this
+  repository** at `origin/master` `c9797f0`: **1284** `fieldValues` (recursive, including inside
+  `groupValues`), **61** `entries` (138 items), **9** `groupValues` carriers / **65** entries, **1**
+  per-value `source`, **231** record-level `sourceRefs`, **348** Tier-2 Records / **19** Tier-0 Notes
+  / **0** Tier-1 TypedRecords. The muSrs side — ~235 values, 14 carriers, 30 entries, 102 rows, **0**
+  ragged, **0** uses of `widths` — is **quoted from the measurements recorded on #242 (2026-07-31)**,
+  not re-measured here: muSrs lives in `the-greenman/muDemocracy.org`, outside this session's
+  repository scope. Phase B MUST re-measure it against the tree it actually migrates, since the
+  round-trip proof is only as good as its baseline.
 - `srs repo validate` 0 errors, `validate-all.mjs` green, `check-release-drift` green after re-render.
 - `check-cardinality-coherence.mjs` — passes vacuously once the trio is gone; kept as the partial-deletion guard.
 - The 12 composite/table tests in `crates/srs-repository/src/render_service.rs` re-based onto structured input;
@@ -542,7 +549,7 @@ remove the four assignments) before Phase B. Filed as a Phase-B prerequisite, no
 | `srs` rendered exports (`docs/spec/`) | — | re-render; `check-release-drift` | Phase B |
 | `srs` `.srsj` artifacts | envelope stamp | `gallery.srsj` (22 values) | Phase B |
 | `packages/` published trees | pre-RFC-032, revision 0 | — | **#286**, not this RFC |
-| muSrs | `section.table` / `section.commentary` groups → composites | **~235 values, 14 carriers, 102 rows** | Phase B |
+| muSrs | `section.table` / `section.commentary` groups → composites | **~235 values, 14 carriers, 102 rows** (per #242; re-measure at Phase B) | Phase B |
 | `srs-rust` | core types, services, validation, render, projection, payload contract | fixtures | Phase B, same train |
 | `srs-web` | consumes catalog/render services | — | Phase B, same train |
 | `srs-vscode` | schema mirror | — | mirror pipeline |
