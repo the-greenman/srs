@@ -81,6 +81,7 @@
     }
   ],
   "createdAt": "2026-05-28T00:00:00Z",
+  "dataModelRevision": 1,
   "declaredExtensions": [
     "ext:addressability",
     "ext:lifecycle",
@@ -3442,29 +3443,38 @@
     {
       "instanceId": "68f19e31-7616-5675-ae53-1ff8880680db",
       "path": "records/rfcs/rfc-033-self-host-metamodel.json",
-      "tier": 2,
-      "title": "RFC-033: Self-hosting the meta-model — the frozen-seed bootstrap package",
       "tags": [
         "topic:rfc"
-      ]
+      ],
+      "tier": 2,
+      "title": "RFC-033: Self-hosting the meta-model — the frozen-seed bootstrap package"
     },
     {
       "instanceId": "eec335c8-f6d6-5d6f-bf43-a3bb3871b542",
       "path": "records/rfcs/rfc-035-schema-emitter.json",
-      "tier": 2,
-      "title": "RFC-035: JSON Schema emitter — projecting the self-hosted meta-model (records → 2020-12)",
       "tags": [
         "topic:rfc"
-      ]
+      ],
+      "tier": 2,
+      "title": "RFC-035: JSON Schema emitter — projecting the self-hosted meta-model (records → 2020-12)"
     },
     {
       "instanceId": "7d70dc5f-27a4-46a4-ade6-445a7e32be67",
       "path": "records/rfcs/rfc-036-composite-rendering.json",
-      "tier": 2,
-      "title": "RFC-036: Composite rendering — view-owned renderer dispatch for composite-range fields",
       "tags": [
         "topic:rfc"
-      ]
+      ],
+      "tier": 2,
+      "title": "RFC-036: Composite rendering — view-owned renderer dispatch for composite-range fields"
+    },
+    {
+      "instanceId": "302d7a03-bb9b-40e7-b7c8-c11eac9b21a2",
+      "path": "records/rfcs/rfc-037-normative-field-row-rendering-baseline.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2,
+      "title": "RFC-037: Normative field-row rendering baseline"
     }
   ],
   "meta": {
@@ -3537,7 +3547,6 @@
   ],
   "sourceDocumentsPath": "source-documents",
   "srsVersion": "2.0-draft",
-  "dataModelRevision": 1,
   "title": "Semantic Record System Specification",
   "updatedAt": "2026-06-03T00:00:00Z"
 }
