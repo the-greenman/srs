@@ -1222,7 +1222,8 @@ versions.
 | RFC / ADR | Relationship |
 |---|---|
 | RFC-012 [R6] | Ratified tree authority for membership; this RFC promotes it to the general rule and supplies enumeration |
-| RFC-013 [R2], I-79, I-80 | Required root container defined against the authoritative instance set; retained unchanged |
+| RFC-013 [R2], I-79, I-80 | Ratified warrant for tree authority; root container retained inline. **[R6] and [R9] amended** — both resolve containers against `containerIndex` ([R25]) |
+| RFC-017 | **Amended** — [R2] and [R12] quantify over `sourceDocumentIndex`; [R12] is the Accepted rule I-112 encodes ([R25]) |
 | RFC-026 (`ext:slices`) | **Amended** — [R5] and [R13] quantify over `containerIndex`/`instanceIndex` (Change M, [R25]) |
 | RFC-039 (#242, Accepted Rev 6) | **Amended** — [R13] and [R14] depend on `instanceIndex` (Change M, [R25]); composed cutover at a single `dataModelRevision: 2` |
 | RFC-033 / #265 | `dataModelRevision` as a monotonic integer generation stamp |
