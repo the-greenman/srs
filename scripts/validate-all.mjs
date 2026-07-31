@@ -38,6 +38,12 @@ async function validateAll() {
     if (!valid) allValid = false;
   }
 
+  // No two packages may claim one UUID (#295). validate-package.mjs checks each package in
+  // isolation, so a duplicated package id — RFC-033 Change A pinned one spec-authoring-core already
+  // held — passes every per-package check and surfaces only in whoever imports both.
+  const packageIdsUnique = await runScript('check-package-id-uniqueness.mjs');
+  if (!packageIdsUnique) allValid = false;
+
   const recordsValid = await runScript('validate-records.mjs');
   if (!recordsValid) allValid = false;
 

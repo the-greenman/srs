@@ -36,7 +36,12 @@ const hex6 = (n) => n.toString(16).padStart(6, '0');
 const hex12 = (n) => n.toString(16).padStart(12, '0');
 const fieldUuid = (n) => `4b${hex6(n)}-0000-4000-a000-${hex12(n)}`;
 const typeUuid = (n) => `4c${hex6(n)}-0000-4000-a000-${hex12(n)}`;
-const PACKAGE_ID = '4a000001-0000-4000-a000-000000000001';
+// RFC-033 Change A pinned `4a000001` without checking whether the shared 4a package series was
+// free — it was not, and the id collided with com.semanticops.spec/spec-authoring-core (#295).
+// Taken already: `4a000001` spec-authoring-core, `4a000002` spec-rfc-process, `4a000003` RFC-004's
+// proposed spec-authoring-json-schema (superseded, never installed — but a claimed id is not
+// recycled). `4a000004` is the first slot no tree in this repo has ever claimed.
+const PACKAGE_ID = '4a000004-0000-4000-a000-000000000004';
 
 // ---------------------------------------------------------------------------------------------
 // TYPES — the ten self-hosted meta-model entities (Change A table order pins the 4c numbering).
