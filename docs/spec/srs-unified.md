@@ -126,7 +126,7 @@ The `/` and `@` characters are reserved separators. They must not appear within 
 | Documentation, typo, formatting only | Optional bump |
 | `description`, `instructions`, or `aiGuidance.purpose` reworded without semantic change | Minor bump recommended |
 | `aiGuidance.extraction` or `aiGuidance.purpose` changed in meaning | Version bump required |
-| `valueType`, `allowedValues`, or `validationRules` changed | Version bump required |
+| `fieldType` changed — datatype, cardinality, value domain, format, or constraints | Version bump required |
 | `name` changed | New definition required (new UUID) |
 | `namespace` changed | New definition required (new UUID) |
 
@@ -185,7 +185,7 @@ The minimum valid `AiGuidance` is `{ purpose: "..." }`.
 
 #### Field
 
-**Content**: The atomic reusable semantic unit. Fields are defined once and composed into Types. A Field's `aiGuidance`, `validationRules`, and `valueType` belong to the Field, not to any Type that includes it.
+**Content**: The atomic reusable semantic unit. Fields are defined once and composed into Types. A Field's `aiGuidance` and `fieldType` — including every constraint the latter carries — belong to the Field, not to any Type that includes it.
 
 ```typescript
 {
@@ -201,16 +201,7 @@ The minimum valid `AiGuidance` is `{ purpose: "..." }`.
   aiGuidance: AiGuidance
 
   // Value semantics — stable across renderers
-  valueType: "string" | "text" | "number" | "boolean" | "date" | "url" | "select" | "multiselect"
-  allowedValues?: string[]   // required when valueType is "select" or "multiselect"
-  validationRules?: ValidationRule[]
-  contentFormat?: "plain" | "markdown"
-  // Meaningful only when valueType is "string" or "text". Default: "plain".
-  // Describes the content of the value, not the editing surface (see editorHint).
-  // "plain"    — unformatted prose; renderers must not interpret markup
-  // "markdown" — CommonMark subset; renderers should parse and display formatting
-  // AI extractors must produce output conforming to this format: a field with
-  // contentFormat "markdown" should receive structured markdown from extraction.
+  fieldType: FieldType
 
   // Editor hint — projection-specific default; implementations and Views may override
   editorHint?: "singleline" | "textarea" | "rich-text" | "date-picker" | "dropdown" | "multi-select" | "voice"
@@ -225,31 +216,87 @@ The minimum valid `AiGuidance` is `{ purpose: "..." }`.
 }
 ```
 
-**`valueType` semantics:**
+#### `FieldType` — the value semantics
+
+`fieldType` carries everything about what a Field's value *is*. It decomposes value semantics into orthogonal facets — **datatype × cardinality × value-domain × format × constraints** — so each axis varies independently, and adds three composite datatypes (`ref`, `dependent`, `map`) that let a Field's range be another Type.
+
+```typescript
+FieldType {
+  datatype: "string" | "number" | "integer" | "boolean" | "date" | "date-time" | "ref" | "dependent" | "map"
+
+  // Cardinality — the sole cardinality mechanism
+  cardinality?: "single" | "list"   // default: "single"
+  minItems?: integer                // cardinality "list" only; 0 ≤ minItems ≤ maxItems
+  maxItems?: integer                // cardinality "list" only
+
+  // Value domain — datatype "string" only
+  valueDomain?: "open" | "closed"   // default: "open"
+  allowedValues?: string[]          // valueDomain "closed"; mutually exclusive with vocabularyRef
+  vocabularyRef?: string            // valueDomain "closed"; namespace/name@version
+
+  // Semantic string format — datatype "string" only
+  format?: "plain" | "markdown" | "uri" | "uuid" | "email"
+
+  // Value constraints — minLength/maxLength/pattern (string); minimum/maximum (number/integer)
+  constraints?: object
+
+  // Composite range — datatype "ref" only
+  rangeType?: ExactTypeRef          // REQUIRED when datatype is "ref"; the Type this field's range is
+  mode?: "inline" | "reference"     // default: "inline"; fixed per Field
+
+  // Dependent typing — datatype "dependent" only
+  dependsOn?: string                // REQUIRED; "self", or a sibling field name whose type the value conforms to
+
+  // Open string-keyed collection — datatype "map" only
+  valueRange?: "string" | "number" | "integer" | "boolean" | "date" | "date-time" | "open"  // REQUIRED
+}
+```
+
+**`datatype` semantics:**
 
 | Value | Meaning |
 |---|---|
-| `"string"` | Short single-value text (typically one line) |
-| `"text"` | Potentially long multi-paragraph prose |
-| `"number"` | Numeric value |
+| `"string"` | Text of any length. Length, pattern, format, and value domain are separate facets, not distinct datatypes |
+| `"number"` | Numeric value, fractional permitted |
+| `"integer"` | Whole number |
 | `"boolean"` | True/false |
-| `"date"` | ISO 8601 date or datetime |
-| `"url"` | A URL string |
-| `"select"` | One value from `allowedValues` |
-| `"multiselect"` | One or more values from `allowedValues` |
+| `"date"` | ISO 8601 calendar date |
+| `"date-time"` | ISO 8601 date + time |
+| `"ref"` | The range is another Type — nested object(s) when `mode` is `"inline"`, target instance id(s) when `"reference"` |
+| `"dependent"` | The value conforms to the type descriptor named by `dependsOn` |
+| `"map"` | Open string-keyed collection whose values conform to `valueRange` |
 
-`valueType` is the stable semantic data type. `editorHint` is a rendering default. AI extraction, validation, and export formatting must depend only on `valueType`. `contentFormat` refines how `string` and `text` values should be produced and rendered, but does not alter the `valueType`.
+Cardinality is declared **only** here. A Field holding many values is `cardinality: "list"`; a Type that includes it must not restate or override that — Field semantics belong to the Field (Invariant 2).
 
-#### `vocabularyRef` — binding select fields to shared vocabularies
+A `reference`-mode value is a target instance id, and MUST NOT be interpreted as or require a `Relation`. Use `reference` for definitional composition, where the target's identity is part of the definition; model an assertion *between* instances — one needing provenance, lifecycle, or confidence — as a `Relation` instead.
 
-When `valueType` is `"select"` or `"multiselect"`, a Field declares exactly one of:
+#### `vocabularyRef` — binding closed string fields to shared vocabularies
+
+When `fieldType.valueDomain` is `"closed"`, a Field declares exactly one value source:
 
 ```typescript
 allowedValues?: string[]   // inline anonymous closed vocabulary (sugar; retained for simple cases)
-vocabularyRef?: Reference  // bind to a named, installed Vocabulary (id + version)
+vocabularyRef?: string     // namespace/name@version — bind to a named, installed Vocabulary
 ```
 
-`allowedValues` is formally sugar for an anonymous inline closed vocabulary. `vocabularyRef` is used when the value set is shared, extensible, or needs Term identity. A `vocabularyRef` MUST resolve to a `Vocabulary` with `mode: closed` (V3). Declaring both, or neither when `valueType` is `select`/`multiselect`, is a validation error (V3).
+`allowedValues` is formally sugar for an anonymous inline closed vocabulary: the value set is fixed by the Field definition, so changing it means a new Field version. `vocabularyRef` is a **configurable** data range — the value set is managed as package configuration and evolves without reversioning the Field — and is used when the set is shared, extensible, or needs Term identity. A `vocabularyRef` MUST resolve to a `Vocabulary` with `mode: closed`. Declaring both, or neither when `valueDomain` is `"closed"`, is a validation error.
+
+#### Historical: the pre-RFC-032 `valueType` model
+
+Before RFC-032, value semantics were a single closed enum, `valueType`, with the satellite properties `allowedValues`, `contentFormat`, `validationRules`, and a standalone `repeatable` cardinality. That enum conflated four axes at once, which is why every axis needing independent expression had to be bolted on separately. It is **removed**, not deprecated — a Field definition carrying `valueType` does not conform to this specification. Packages authored against the old model map across as:
+
+| Legacy `valueType` | Equivalent `fieldType` |
+|---|---|
+| `"string"` | `{ datatype: "string" }` (plus `format: "markdown"` if `contentFormat` was `"markdown"`) |
+| `"text"` | `{ datatype: "string", format: "plain" \| "markdown" }` |
+| `"number"` | `{ datatype: "number" }` |
+| `"boolean"` | `{ datatype: "boolean" }` |
+| `"date"` | `{ datatype: "date" }` |
+| `"url"` | `{ datatype: "string", format: "uri" }` |
+| `"select"` | `{ datatype: "string", valueDomain: "closed" }` + `allowedValues` or `vocabularyRef` |
+| `"multiselect"` | `{ datatype: "string", cardinality: "list", valueDomain: "closed" }` + `allowedValues` or `vocabularyRef` |
+
+`validationRules` entries become `fieldType.constraints` facets; an `enum` rule becomes `valueDomain: "closed"` with `allowedValues`. A `required` rule was never a Field-level concern and moves to the `FieldAssignment` that includes the Field.
 
 ---
 
@@ -302,7 +349,7 @@ A Field reference within a Type. Configures presentation without redefining fiel
   order: integer    // min: 0; display and processing order within the Type
   required?: boolean  // default: true
 
-  // Presentation-only — must NOT affect AI guidance, extraction, valueType, or validation
+  // Presentation-only — must NOT affect AI guidance, extraction, fieldType, or validation
   displayLabel?: string
   displayHint?: string
 }
@@ -1980,7 +2027,7 @@ When `ext:field-groups` is in use, `Type` gains `fieldGroups?: FieldGroup[]` and
   targetFieldId?: UUID
 
   // field-ordering: targetFieldId must precede or follow predicateFieldId
-  // Applies only to fields with valueType "date" or "number".
+  // Applies only to fields with datatype "date", "date-time", "number", or "integer".
   effect?: "must-precede" | "must-follow"
 
   // mutual-exclusion: at most one of the listed fields may have a non-empty value
@@ -2798,7 +2845,7 @@ An implementation that declares `ext:discovery` MUST pass all fixture scenarios 
 Conforming implementations must uphold the following invariants.
 #### core — Field
 
-**1.** `FieldAssignment.displayLabel` and `FieldAssignment.displayHint` are for rendering only. They must not affect AI guidance, extraction logic, `valueType` interpretation, or validation.
+**1.** `FieldAssignment.displayLabel` and `FieldAssignment.displayHint` are for rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or validation.
 
 **2.** A `Type` must not redefine, override, or duplicate the semantic content of any `Field` it includes. If different semantics are needed for a Field in a specific Type context, a distinct `Field` with its own identity and lineage must be created.
 
@@ -2838,7 +2885,7 @@ Conforming implementations must uphold the following invariants.
 
 **I-91.** A `CrossFieldRule` with `type: "conditional-required"` fires when the field identified by `predicateFieldId` is non-empty and its stored value is equal to `predicateValue` (case-sensitive string equality). When the rule fires, the field identified by `targetFieldId` MUST be non-empty in the Record. A violation MUST be reported as a validation error. (RFC-019 R3.)
 
-**I-92.** A `CrossFieldRule` with `type: "field-ordering"` fires when both `predicateFieldId` and `targetFieldId` are non-empty. It applies only to fields whose `valueType` is `"date"` or `"number"`. When `effect` is `"must-precede"`, the predicate field value MUST be strictly less than the target field value (ISO 8601 lexicographic order for dates; numeric order for numbers). When `effect` is `"must-follow"`, the predicate field value MUST be strictly greater than the target field value. A violation MUST be reported as a validation error. If either field is non-empty but the other is absent or empty, the rule MUST NOT fire. A `field-ordering` rule whose `predicateFieldId` or `targetFieldId` resolves to a field with `valueType` other than `"date"` or `"number"` MUST be reported as a Type-level validation error. (RFC-019 R4.)
+**I-92.** A `CrossFieldRule` with `type: "field-ordering"` fires when both `predicateFieldId` and `targetFieldId` are non-empty. It applies only to fields whose `fieldType.datatype` is `"date"`, `"date-time"`, `"number"`, or `"integer"`. When `effect` is `"must-precede"`, the predicate field value MUST be strictly less than the target field value (ISO 8601 lexicographic order for dates; numeric order for numbers). When `effect` is `"must-follow"`, the predicate field value MUST be strictly greater than the target field value. A violation MUST be reported as a validation error. If either field is non-empty but the other is absent or empty, the rule MUST NOT fire. A `field-ordering` rule whose `predicateFieldId` or `targetFieldId` resolves to a field with any other `fieldType.datatype` MUST be reported as a Type-level validation error. (RFC-019 R4.)
 
 **I-93.** A `CrossFieldRule` with `type: "mutual-exclusion"` MUST report a validation error if more than one field in `fieldIds` is non-empty in the Record. If zero or one field is non-empty, the rule passes. (RFC-019 R5.)
 
@@ -2854,7 +2901,7 @@ Conforming implementations must uphold the following invariants.
 
 **12.** Every `fieldId` in `View.fieldViews[]` must reference a valid `Field.id` in the effective package set. View compatibility is field-centric (based on required field presence), not Type-bound.
 
-**13.** `FieldView.displayLabel`, `FieldView.displayHint`, and `FieldView.editorHintOverride` are for rendering only. They must not affect AI guidance, extraction logic, `valueType` interpretation, or validation.
+**13.** `FieldView.displayLabel`, `FieldView.displayHint`, and `FieldView.editorHintOverride` are for rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or validation.
 
 **14.** A `View` must not override, redefine, or duplicate the semantic content of any `Field` or `Type` it references. View-level `aiGuidance` is workflow framing; it does not redefine Field extraction semantics.
 
@@ -2940,7 +2987,7 @@ Conforming implementations must uphold the following invariants.
 
 #### core — Field.contentFormat
 
-**38.** `Field.contentFormat`, when present, is only meaningful when `valueType` is `"string"` or `"text"`. Implementations must ignore `contentFormat` on fields with any other `valueType`.
+**38.** `Field.fieldType.format`, when present, is only meaningful when `fieldType.datatype` is `"string"`. Implementations must ignore `format` on fields with any other `datatype`.
 
 #### ext:type-inheritance
 
