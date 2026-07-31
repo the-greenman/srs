@@ -3456,6 +3456,15 @@
       "tags": [
         "topic:rfc"
       ]
+    },
+    {
+      "instanceId": "7d70dc5f-27a4-46a4-ade6-445a7e32be67",
+      "path": "records/rfcs/rfc-036-composite-rendering.json",
+      "tier": 2,
+      "title": "RFC-036: Composite rendering — view-owned renderer dispatch for composite-range fields",
+      "tags": [
+        "topic:rfc"
+      ]
     }
   ],
   "meta": {
