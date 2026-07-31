@@ -29,8 +29,13 @@ field, and field-id uniqueness is not expressible at all. This RFC replaces `fie
 exactly RFC-032 `projectField`'s instance space. Scalars, lists, inline composites, and
 **lists of inline composites** all become expressible, which retires `FieldGroup`, `groupValues`, and
 `ext:repeatable-fields` `entries` together. Per-value provenance moves to a parallel `fieldMeta`
-sibling rather than being deleted or wrapped. This is Phase A — the design and the migration plan;
-the cutover is Phase B and lands atomically with RFC-038.
+sibling rather than being deleted or wrapped.
+
+The migration is specified in both layers — a definition pass that converts each `FieldGroup` into a
+composite Field over a minted range Type and strips the deprecated cardinality trio, then an instance
+pass over four first-party repositories — and is written to **abort rather than skip** on every
+schema-legal input the new shape cannot express. This is Phase A: the design and the migration plan
+only. The cutover is Phase B and lands atomically with RFC-038.
 
 ---
 
