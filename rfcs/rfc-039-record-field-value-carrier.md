@@ -2,7 +2,7 @@
 
 # RFC-039: Name-keyed `fieldValues` — the recursive Record value carrier
 
-**Status**: Accepted (Revision 5)
+**Status**: Accepted (Revision 6)
 **Affects**: `Record` (Tier 2), `TypedRecord` (Tier 1), `FieldValue`, `FieldValueEntry`, `FieldGroupValue`/`FieldGroupEntry` (`ext:field-groups`), `ext:repeatable-fields`, `FieldAssignment.{repeatable,minItems,maxItems}`, `Type.fieldGroups`, `dataModelRevision`; `docs/schema/2.0/{record,typed-record,type}.json` and `docs/schema/2.0/projection-rules.md`. Builds on RFC-032 (Accepted — composite field range), RFC-035 (Accepted — schema emitter / projection rules; **this RFC narrows its [R4]** ([R2a]) to the in-scope meta-model Types), RFC-036 (Accepted — composite rendering), RFC-037 (Accepted Rev 3 — field-row baseline). Composed with RFC-038 (#296, Draft) in one first-party cutover. **Breaking (instance layer).**
 **Author**: the-greenman (epic-256 worker)
 **Date**: 2026-07-31
@@ -15,6 +15,7 @@
 |---|---|---|
 | 1 | 2026-07-31 | Initial draft. Phase A of #242: design and migration plan only, no implementation. |
 | 2 | 2026-07-31 | Review round 1. **Blocking fixes:** added **Change E.2** (the definition-layer `FieldGroup` → composite transform, with naming/UUID/version-bump rules — previously the instance transform referenced a Field key nothing produced); **removed `null`** from the value space ([R5]) because it falsified the by-construction claim against RFC-032 Change G's null-free projection (0/1318 in corpus); added **Change I** discharging RFC-036's `document-view-output.json` / `theme.json` / [CR-036-19] deferrals and RFC-037 [FR-037-14]'s alias sunset; added **Change J** + [R14] discharging the reference-integrity deferral three Accepted RFCs left to #242; added the **Fold-in targets** section (I-22–I-27 retired; new invariants owed; anticipated integration manifest); made the transform **total** over eight schema-legal branches; added the **muSrs corpus audit** prerequisite. **Corrected baseline** to **1318** values / **355** Tier-2 Records after finding a second record root (`package/records/`, 7 instances, no `$schema`) — [R13] now forbids glob enumeration. **Should-fixes:** [R16]–[R18] (uniform list-wrapping, what the projected schema describes, instance key order); blast radius evidenced for `srs-rust` (39 files / 6 crates, incl. `srs-gov`) and `srs-web` flagged unevidenced; `x-srs-field-id` retirement stated; RFC-019 conflict named; Change C rebuts the issue's actual third option; added **Cross-references**; OQ2 given a landing place; OQ1 declines RFC-033:407 explicitly rather than silently. |
+| 6 | 2026-07-31 | Owner review of the three previously-unsettled decisions. Corrected the emitter evidence: RFC-035's Node reference emitter applies its underscore transform without a domain/metamodel branch, while the separate Rust draft-07 domain service emits names verbatim; `proposal-artifact-path` alone cannot distinguish those policies. Alt D is technically implementable by defining a transform over both separators (0/45 current Type collisions), but remains rejected on design grounds. `Field.name` uniqueness now records RFC-032 `dependsOn` and schema property assembly as pre-existing consumers of the missing rule. Open Question 2 adds the grandfather option, removes the unsupported ten-year claim (the corpus reflects roughly one year of project work), distinguishes documentary convention from schema enforcement, records the existing Type-name exceptions, and expands rename cost to 34 assignments / 13 Type version bumps / 216 live Records. |
 | 5 | 2026-07-31 | Review round 3 — a narrow verification pass over Rev 4's new claims. **All nine numeric claim-sets re-derived independently and verified**, including the highest-risk one: an exhaustive scan of all 890 JSON/`.srsj` files confirms **there is no sixth instance-bearing tree** — the corpus enumeration is complete. One blocking finding, self-inflicted by Rev 4: Phase 0a still said `table@2` was *"retaining the old version"*, contradicting Change E.2's Rev-4 decision to delete it; deletion is now an explicit **Phase 2 step 10**. Should-fixes: Phase 1 step 4 said step **5** recurses, which [R6] forbids (step 5 is depth-0 only); Change B's table was not a partition despite claiming *"exactly one row"* — the list rows are removed and the [R16] wrap is stated as composing on top; "five Types with no FieldGroup" → **six**; three stale "four repositories" and one dangling section cross-reference from the four-tree → five-tree rescope; "six measurements" → **eight**, with item (7) added to the design-input triage; `[R1]–[R19]` → `[R1]–[R20]`; the corpus table now says why the `.srsj` row is not summed (its 24 instances are the same instances, id for id; the overlap is inexact only at the definition layer). Nits: [R20] reordered after [R19]; [R9]'s Tier-1 test restated as a bipartition on `fieldType` presence, closing a hole where a `TypedField` with neither facet is schema-legal; [R8] and the `typed-record.json` row now say `fieldType` joins `TypedField.required`; the three Phase-B prerequisites enumerated as a set. **Accepted** — zero blocking findings outstanding. |
 | 4 | 2026-07-31 | Review round 2, both reviewers (8 blocking). **The corpus section is now an exhaustive re-derivation** rather than a patch — *five* trees, 386 T2 / 2 T1 / 22 T0 / **1490** values — after two revisions running quoted `srs/`-scoped figures corpus-wide. New trees: **`tests/rfc-032/`**, which already stores 18 **name-keyed** values under the property **`values`** (non-conforming to `record.json`, and reconciled to `fieldValues` at Phase B), has **no manifest** so [R13] cannot see it, and carries RFC-032's undischarged inline-composite instance-golden deferral. **`null` is live after all** — 1 occurrence in the conformance fixture, not 0 — so [R5]'s "costs nothing" became a stated Phase-B deletion. **All 61 `entries` are dual-written with a sibling `value`, and `entries`-alone occurs 0 times**: `record.json`'s exclusivity is prose-only, so a transform written from it would abort on 100% of the population; added **[R20]** (take `value`, assert agreement, abort on divergence), rewrote Change D's evidence, made Phase 1 step 3 an assertion, and extended the round-trip criterion to a second, 30×-larger non-round-trippable class. `repeatable` re-scoped **8 → 34 across 7 Types**. **`table@2` is now deleted, not retained** — it fails [R7] in a stamped package and [R19] does not protect a version with zero referents; [R19]'s parenthetical corrected and RFC-005's tombstone precedent noted. **RFC-036 Open Question 3 decided** (*"Decide it at #242, not later"*) — row Type stays project-local, on RFC-036's own three constraints, instead of being taken silently by minting one. E.2's `R.name` rule contradicted its own example (`table-rows` vs `table-row`) and minted kebab against the convention → `table_rows`, inheriting OQ2. E.2 now mints schema-valid entities (required fields; `required` = `minItems ≥ 1`). [R9] extended to Tier 1. Steps 3/5 stated to run inside step 4's recursion (88% of `entries` are nested). **RFC-012 and RFC-031 conflicts** found and recorded — RFC-012's deliberate set-order signal is destroyed by [R18], stated as an accepted loss. `srs/scripts/**` added to the blast radius (13 scripts, 4 standing gates). muSrs flagged pre-RFC-032. Audit list extended to 8 items. Nits: [R16] dedup, `record.json` `{}`, `document-view-output` null branch, [R15] costs nothing, Abstract flags the two normative side-effects. |
 | 3 | 2026-07-31 | Spec-integrity review round 1 (4 blocking, all corpus-scope or transform-correctness). **The first-party corpus is four repositories, not one:** added `conformance/discovery/fixture-repo/` (8 T2 + **2 T1**, 54 values, 15 `valueType` Fields) and `docs/spec/examples/gallery-project-v2/` (22 T2, 100 values, 20 `valueType` Fields) — both **pre-RFC-032**, so the carrier transform cannot run on them until they are migrated (OQ7). This falsified the "0 Tier-1 TypedRecords" claim, which was `srs/srs`-scoped and read as global: **Change G is a live data migration, not schema-only**. Corrected `gallery.srsj` from "22 values" to **22 records / 100 values**, and withdrew the false claim that `.srsj` envelopes carry `dataModelRevision` — **none of the four does**, and no schema exists for the archive envelope at all. **Change E.2 was carrying a removed property into the Type it mints** (`G.fields[]` "unchanged" would copy `repeatable: true`), and no step stripped the **8 live `repeatable` occurrences across 3 Types** — two of which have no FieldGroup and would never have been visited; the transform is now split into an explicit **Phase 0 (definitions) → Phase 1 (instances) → Phase 2 (repository)**, resolving the circularity where step 1 resolved against the pre-bump Type version. **Should-fixes:** Tier 1 is name-*labelled*, not name-*keyed* (`fields` is an array) — Problem 2, Change G and the Rationale corrected, and OQ6 records that the tiers end up structurally more divergent; added **[R19]** (a referenced Type version MUST NOT be deleted) since the Record→Field edge is now Type-mediated; added the **valueless-`FieldValue`** row — the only non-zero case, 2 occurrences — and stated the one-way round-trip loss it causes; split **[R2] → [R2a]/[R2b]** (emitter-scope erratum vs instance rule) using `projection-rules.md`'s own defined term; stated the `mode`/`cardinality` facet defaults so Change B is total; corrected the `dependent` row's citation ([R6] → [R3]); rewrote the `package-bundle.json` row (nothing to remove — the real gap is `$defs.Type` being `additionalProperties: true`, so [R7] is unenforceable in bundles); [R7] now says revision is resolved from the enclosing manifest, since definition files carry no local discriminator. **Nits:** reconciled the carrier/row arithmetic to **23 carriers / 167 rows**; the sixth package manifest (`srs/package/package.json`); `projection-rules.md:80`; release-train numbering. |
@@ -153,18 +154,23 @@ metamodel-scoped in fact:
 - `projection-rules.md:80` scopes the guarantee to *"the in-scope **metamodel** field names"*, and
   RFC-035 `[R1]`/`[R5]` scope their obligations to *"in-scope meta-model Types"*. No sentence states
   that the transform binds domain Types.
-- **The reference emitter already emits domain names verbatim.** Projecting
-  `com.semanticops.spec/rfc@1` yields the property `proposal-artifact-path` — not
-  `proposalArtifactPath`.
+- **The two current emitters expose the ambiguity rather than resolving it.** RFC-035's designated
+  Node reference emitter (`scripts/lib/schema-emitter.mjs`) has no domain/metamodel branch: its
+  `jsonKey` function camel-cases underscores for every supplied Field and happens to leave hyphens
+  untouched. The separate Rust draft-07 `srs type schema` service emits domain `Field.name`s
+  verbatim. Its `proposal-artifact-path` output therefore demonstrates current domain-service
+  behaviour, but that kebab-case example alone cannot establish the RFC-035 reference policy.
 - **The transform is undefined over the corpus.** RFC-035 [R4] specifies `snake_case → lowerCamelCase`, but
   of 150 Field definitions, 59 are snake_case, 58 single-word, and **33 are kebab-case** — for which
   a snake_case-input transform has no defined behaviour.
 
-**Change A therefore narrows RFC-035 [R4] to the frozen-seed metamodel entities**, whose emitted
+**Change A therefore deliberately narrows RFC-035 [R4] to the frozen-seed metamodel entities**, whose emitted
 keys must match hand-authored JSON Schema spellings (`min_items` → `minItems`), and fixes verbatim
-keys everywhere else. This is an erratum-style clarification to an Accepted RFC, in the manner of
-RFC-032 Rev 6; without it, RFC-035 [R4] and this RFC would contradict each other, and the reference emitter
-would be non-conformant against RFC-035 [R4] today. See [R2a]/[R2b], Alt D, and Open Question 1.
+keys everywhere else. This is an erratum-style normative clarification to an Accepted RFC, in the
+manner of RFC-032 Rev 6; it aligns the future domain projection contract with the existing Rust
+domain service and with this RFC's carrier, rather than claiming the Node reference emitter already
+established that scope. Without it, RFC-035 [R4] and this RFC would contradict each other. See
+[R2a]/[R2b], Alt D, and Open Question 1.
 
 The payoff is the property the whole RFC turns on: instance keys and projected schema keys are
 identical **by construction**, with no transform to keep in step and no bridge keyword.
@@ -454,6 +460,12 @@ The rule has a direct precedent one tier down: **I-19** — *"`TypedField.name` 
 within a Typed Record"* — is the Tier-1 analogue of exactly this constraint. RFC-039 [R4] gives Tier 2 the
 rule Tier 1 has had all along.
 
+It also closes a latent Tier-2 gap that predates this carrier. RFC-032 `dependsOn` identifies a
+sibling descriptor by `Field.name`, which is ambiguous if two effective Fields share that name.
+RFC-035 and the existing Rust schema service assemble JSON object properties by Field name, where a
+duplicate would overwrite rather than remain independently addressable. Name-keying makes the gap
+unavoidable, but did not create it.
+
 Note also that `projection-rules.md:80` describes the override table as *"keyed by the globally-unique
 `Field.name`"*. That is a factual claim about the metamodel package, not a rule, and it is false
 globally — the 6 duplicate pairs above are the counterexample. [CR-036-17] (theme templates keyed by
@@ -666,8 +678,8 @@ possible. #242 stays open through Phase B and is the follow-up the allowlist ent
 > **[R2a]** *(Erratum to RFC-035 [R4] — emitter scope.)* The `snake_case → lowerCamelCase` name
 > projection and its override table (`projection-rules.md`) bind schema emission for the **in-scope
 > meta-model Types** only. A **domain Type** MUST project each property key as its `Field.name`
-> verbatim. This narrows RFC-035 [R4], whose unqualified phrasing the reference emitter already
-> contradicts for domain Types.
+> verbatim. This deliberately narrows RFC-035 [R4]'s unqualified phrasing and aligns the normative
+> domain projection with the existing Rust domain service and with [R2b].
 >
 > **[R2b]** *(Instance keys.)* A `fieldValues` key MUST be `Field.name` **verbatim**, with no case or
 > separator transformation, at every nesting depth. The name projection MUST NOT be applied to
@@ -1172,19 +1184,20 @@ Change E.
 ### Alt D — lowerCamelCase instance keys (the literal reading of RFC-035 [R4])
 
 Would unify instance keys with the metamodel's emitted JSON Schema keys and avoid narrowing an
-Accepted rule. Rejected on three grounds, in increasing order of severity:
+Accepted rule. It is technically implementable: a total transform can split both `_` and `-`, and
+that transform produces **0 collisions across the 45 current Types**. It is nevertheless rejected on
+design grounds:
 
 - It makes instance keys differ from the authored `Field.name`, so the round trip needs a transform
   to be kept in step — reintroducing in a new place the coupling this RFC removes.
 - The override table would have to become extensible per domain package, a new configuration surface
   with no consumer.
-- **It is not implementable over the corpus.** The transform is specified `snake_case →
-  lowerCamelCase`; 33 Field names are kebab-case, for which it has no defined behaviour. Adopting Alt
-  D would require first resolving Open Question 2 by renaming 33 Fields — 33 new UUIDs — making a
-  key-spelling choice into the largest migration in the epic.
+- RFC-035 currently defines only `snake_case → lowerCamelCase`; extending it to kebab-case would
+  be a new normalization rule, with its own injectivity obligation and future collision checks.
 
-The reference emitter already behaves as Change A specifies (`proposal-artifact-path`, verbatim), so
-narrowing [R4] documents what is true rather than changing behaviour.
+The existing Rust domain service already behaves as Change A specifies. The RFC-035 Node reference
+emitter does not encode that domain/metamodel distinction, so [R2a] is a real contract clarification,
+not a claim that both implementations already agree.
 
 ---
 
@@ -1229,13 +1242,29 @@ narrowing [R4] documents what is true rather than changing behaviour.
    `Field.name` from an internal label to a **wire key** in every instance file and every projected
    schema. Of 150 Field definitions, 59 are snake_case, 58 single-word, and **33 are kebab-case**
    (`proposal-artifact-path`, `rfc-status`, `tag-key`, …) — while `field.json` and record
-   `7d22d50f-2dc2-51cb-ac43-dd1b0903d869` both require **snake_case**. `srs repo validate` reports 0
-   errors over all 33. Two dispositions, and the choice is not this RFC's:
+   `7d22d50f-2dc2-51cb-ac43-dd1b0903d869` both state **snake_case**. The JSON Schema carries no
+   `pattern`, so `srs repo validate` reporting 0 errors over all 33 is expected; it is not evidence
+   that the spelling convention is enforced. Three dispositions are available, and the choice is
+   not this RFC's:
 
-   - **Accept kebab keys** and relax the convention text to match a decade of practice; or
+   - **Grandfather the 33 stable names (recommended)**: keep their UUIDs and verbatim wire keys, keep
+     snake_case as the recommendation for new Fields, and state that an existing Field MUST NOT be
+     renamed solely for orthographic normalization.
+   - **Accept kebab keys generally** and relax the convention text to match roughly one year of
+     project practice. The text must define the allowed grammar and canonical authoring style rather
+     than merely deleting `snake_case`.
    - **Rename the 33 Fields to snake_case** — which by the rule cited in the Rationale means **33 new
-     UUIDs and 33 new Field definitions**, plus reassignment in every referencing Type. That is
-     substantially larger than the carrier migration itself.
+     UUIDs and 33 new Field definitions**. The 33 Fields participate in **34 assignments across 13
+     Types**; changing those assignments requires new versions of all 13 Types under the same
+     version-semantics catch-all Change E.2 applies to `table`, and migration of **216 live Records
+     across the 7 affected instantiated Types**. The 33 old names currently occur in **614 values**.
+     This is definition and Type-lineage churn in addition to the carrier rewrite, not merely 33
+     string substitutions.
+
+   The shared convention currently speaks about both Field and Type names. Of the 45 Types, **17 are
+   kebab-case and 8 use dotted `meta.*` names**. Any convention change must therefore give Field and
+   Type names explicit, possibly different grammars; changing only the Field sentence would leave the
+   same canonical text false for 25 Types.
 
    Phase A does not depend on the answer — [R2b] says *verbatim `Field.name`*, whichever spelling
    wins. **Phase B does**, because the key strings differ. Must be settled before the transform runs.
