@@ -121,6 +121,8 @@ The rule, if you must apply it to newly discovered work:
 
 **Fires only when a PR merged since your last run.** If nothing merged, skip this stage in one line and move on — it is expensive and must not become a per-tick ritual.
 
+**Back-fill on first use.** This stage was added after the epic was already running, so on your first run that reaches it, also pass over every epic PR merged in the preceding 24 hours that never received one — at the time of writing, srs#299 (#295, the package-UUID repair) and srs#301 (#294, RFC-037). Those merges carry exactly the kind of findings this stage exists to capture, and marking their rows done without a pass would lose them permanently. Record in the ledger that the back-fill ran, so it happens once and not on every subsequent tick.
+
 Marking a row `done` is bookkeeping. It is not the question that matters. The question is:
 
 > **Given what just landed, is this epic still coherent — and what must the next task inherit?**
