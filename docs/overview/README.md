@@ -2,7 +2,8 @@
 
 > **New here? Start with this page**, then read [concepts.md](concepts.md) for the key
 > elements and [how-it-works.md](how-it-works.md) for how the pieces fit together and
-> how the tooling is built. For the normative detail, go to the
+> how the tooling is built. Prefer learning by doing? Build a repository step by step in
+> [first-repository.md](first-repository.md). For the normative detail, go to the
 > [specification](../spec/srs-spec.md).
 
 ## What is SRS?
