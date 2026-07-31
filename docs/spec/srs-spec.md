@@ -4,7 +4,6 @@
 
 ### Purpose and Scope
 
-**Content**: 
 #### What this specification defines
 
 **Content**: The Semantic Record System (SRS) specification defines an interoperable standard for semantic field and type definitions, records, relations, and the mechanisms by which these artefacts are created, shared, versioned, and distributed across independent implementations.
@@ -19,15 +18,18 @@ This specification covers:
 - **Distribution** — Package, Reference, Lineage, Provenance
 - **Extensions** — optional, independently adoptable capabilities declared by conforming implementations
 
+
 #### What this specification does not define
 
 **Content**: - **Session** — live collaborative process model (future version)
 - **Registry protocol** — how registries communicate, authenticate, or federate; this specification defines data shapes only
 - **Universal semantic ontology** — domain-specific vocabularies are the responsibility of namespace authors
 
+
 #### Relationship to implementing systems
 
 **Content**: This specification is implementation-neutral. Implementations are expected to validate inputs against these schemas at their system boundaries. The specification does not constrain persistence technology, API design, UI rendering, or prompt assembly strategy.
+
 
 #### Extension conformance model
 
@@ -65,9 +67,9 @@ Example declaration: `SRS Core + ext:lifecycle + ext:protocol + ext:views-l1 + e
 ---
 
 
+
 ### Namespace Format
 
-**Content**: 
 #### Convention
 
 **Content**: Namespaces are dot-separated identifiers using lowercase alphanumeric characters and hyphens.
@@ -86,9 +88,11 @@ com.acme.hr
 org.cooperative-name
 ```
 
+
 #### Reserved namespaces
 
 **Content**: `core` is reserved for definitions maintained by the SRS standard. Implementations must not allow user-created definitions in the `core` namespace.
+
 
 #### Reference format
 
@@ -107,6 +111,7 @@ com.acme.hr/headcount_impact@3
 
 The `/` and `@` characters are reserved separators. They must not appear within a namespace component or a name.
 
+
 #### Name convention
 
 **Content**: Field and Type names are programmatic keys in `snake_case`. Names are stable within a namespace and version lineage. A new name means a new definition.
@@ -114,9 +119,11 @@ The `/` and `@` characters are reserved separators. They must not appear within 
 ---
 
 
+
 ### Schema Notation
 
 **Content**: Types are described using TypeScript-style notation. Optional fields are marked with `?`. All `UUID` values are RFC 4122 UUID strings. All `ISO8601` values are datetime strings with timezone offset. `integer` means a positive integer unless otherwise noted.
+
 #### Version semantics
 
 **Content**: Version numbers are positive integers scoped to a definition's UUID lineage.
@@ -135,9 +142,11 @@ When in doubt: if a downstream consumer's AI extraction, validation, or governan
 ---
 
 
+
 ### Foundation Group (Core)
 
 **Content**: The Foundation group is required for all conforming implementations.
+
 #### Supporting types
 
 **Content**: #### `ValidationRule`
@@ -182,6 +191,7 @@ Structured AI guidance for a Field or Type.
 The minimum valid `AiGuidance` is `{ purpose: "..." }`.
 
 ---
+
 
 #### Field
 
@@ -300,6 +310,7 @@ Before RFC-032, value semantics were a single closed enum, `valueType`, with the
 
 ---
 
+
 #### Type
 
 **Content**: A named, versioned composition of Fields for a specific semantic object type.
@@ -389,6 +400,7 @@ lifecycleRef?: Reference   // resolves to an installed Lifecycle (V8)
 Declaring both is a validation error. An inline lifecycle cannot extend; use `lifecycleRef` when the same state machine is needed across multiple Types.
 
 ---
+
 
 #### Record tiers
 
@@ -586,6 +598,7 @@ An instantiated Type with field values.
 
 ---
 
+
 #### Relation
 
 **Content**: A first-class typed link between instances. Relations allow implementations to construct semantic graphs for navigation, analysis, projection, and reasoning.
@@ -644,6 +657,7 @@ Custom types not covered by these should use `namespace/name` format (e.g. `com.
 
 ---
 
+
 #### Container
 
 **Content**: A lightweight grouping boundary over a collection of instances. Containers answer scoping questions — which instances belong together, what constitutes "this project" — that the Relation graph alone cannot answer.
@@ -679,6 +693,7 @@ Containers are not semantic objects with Fields. They do not own semantic state;
 `Container.containerId` is not an instance ID and must not appear in `Relation.sourceInstanceId` or `targetInstanceId`. See Invariant 20.
 
 ---
+
 
 #### Vocabulary and Term
 
@@ -858,9 +873,11 @@ Excluding `retired` before uniqueness frees a retired key for reuse by a new ent
 A grace window is declared in `Vocabulary.promotionWindow.until`. Until that bound, violations are warnings; after it, V1 applies unconditionally. Absent `promotionWindow` means the promotion takes effect immediately. There is no unbounded window.
 
 
+
 ### Distribution Group (Core)
 
 **Content**: The Distribution group is required for all conforming implementations.
+
 #### Package
 
 **Content**: The distributable artefact. Contains Field, Type, View, and Relation type definitions with a complete dependency manifest.
@@ -904,6 +921,7 @@ A grace window is declared in `Vocabulary.promotionWindow.until`. Until that bou
 
 ---
 
+
 #### Reference
 
 **Content**: A stable pointer to a specific definition version.
@@ -921,6 +939,7 @@ A grace window is declared in `Vocabulary.promotionWindow.until`. Until that bou
 Canonical string form: `namespace/name@version`
 
 ---
+
 
 #### Lineage
 
@@ -944,6 +963,7 @@ Both may be present during a transition from tracking to forking.
 
 ---
 
+
 #### Provenance
 
 **Content**: Publisher and package origin metadata.
@@ -960,6 +980,7 @@ Both may be present during a transition from tracking to forking.
 `packageVersion` is distinct from `Field.version`. A package at `1.3.0` may contain `decision_statement@3` and `context@2`.
 
 ---
+
 
 
 ### Conversation Layer
@@ -988,11 +1009,13 @@ Transcript chunks referenced in `SourceReference` are source material — addres
 
 ---
 
+
 ### Extensions
 
 **Content**: Extensions are optional, independently adoptable. Each extension section declares its identifier, dependencies, and the types it defines.
 
 ---
+
 #### ext:addressability
 
 **Content**: **Required for**: any implementation with live facilitation or multi-session extraction.
@@ -1088,6 +1111,7 @@ A conforming `ext:addressability` implementation must be able to assemble releva
 5. Related Records via Relations — structural context
 
 ---
+
 
 #### ext:lifecycle
 
@@ -1196,6 +1220,7 @@ Declaring both is a validation error (V7). An inline lifecycle's effective state
 - `Record.lifecycleState` resolves under V1.
 
 ---
+
 
 #### ext:protocol
 
@@ -1327,6 +1352,7 @@ Views (`ext:views-l1`) no longer contain facilitation logic. A View is a present
 
 ---
 
+
 #### ext:blueprint
 
 **Content**: **Required for**: extraction pipelines, founding document workflows, any system that needs to specify what a document type IS before assembling it.
@@ -1383,6 +1409,7 @@ The definition of a complete document type — which Types it contains, what Rel
 | Output | Extraction instructions → Records | Rendered document |
 
 ---
+
 
 #### ext:type-inheritance
 
@@ -1462,6 +1489,7 @@ Type: org.example/governance_decision
 A system that knows `core/decision` but not `org.example/governance_decision` can still read the inherited decision fields. The specializing fields are unknown extension content to that system and should be preserved rather than discarded.
 
 ---
+
 
 #### ext:views-l1
 
@@ -1557,6 +1585,7 @@ A View may not reference unknown Fields: every `fieldId` in `View.fieldViews[]` 
 Facilitation steps have been removed from View. Use `ext:protocol` Protocol stages instead.
 
 ---
+
 
 #### ext:views-l2
 
@@ -2024,6 +2053,7 @@ When `ext:themes-l1` is declared and a variant name is supplied at render invoca
 3. If not found: fall back to `themeRef` (applying Rule [T-2]). If absent or format-incompatible, render without a theme.
 4. If no variant name is supplied: use `themeRef` (applying Rule [T-2]).
 
+
 #### ext:repeatable-fields
 
 **Content**: **Required for**: any Record type that needs lists of values within a single Field.
@@ -2057,6 +2087,7 @@ And `FieldValue.entries` becomes active: use `entries` when `repeatable === true
 A repeatable field entry does not create a new semantic instance. Use separate Records connected by Relations when repeated items need their own identity, lifecycle, or graph position.
 
 ---
+
 
 #### ext:field-groups
 
@@ -2123,6 +2154,7 @@ When `ext:field-groups` is in use, `Type` gains `fieldGroups?: FieldGroup[]` and
 
 ---
 
+
 #### ext:cross-field-validation
 
 **Content**: **Required for**: Types with constraints that span multiple Fields.
@@ -2160,6 +2192,7 @@ When `ext:cross-field-validation` is in use, `Type` gains `validationRules?: Cro
 
 ---
 
+
 #### ext:recommended-relations
 
 **Content**: **Retired as of RFC-005.** The canonical SRS relation vocabulary (`contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`) is now provided as installed `RelationTypeDefinition` records in the `com.semanticops.srs` package. See §5 (Package).
@@ -2177,6 +2210,7 @@ It gains `properties?: Record<string, unknown>` under the one forward-compatibil
 It **requires** both `label` and `description` (unchanged from RFC-005). The substrate making these optional in the general contract does not relax this obligation.
 
 The V1 mandatory resolution requirement (every `Relation.relationType` must resolve to an installed `RelationTypeDefinition`) is a named instance of the general closed-vocabulary resolution rule. See §9 (Conformance) and the Foundation Vocabulary and Term subsection.
+
 
 #### ext:import-tracking
 
@@ -2242,6 +2276,7 @@ A consumer's complete picture of its imported definitions.
 
 ---
 
+
 #### ext:registry
 
 **Content**: **Required for**: multi-publisher ecosystems; discoverable definition catalogs.
@@ -2290,6 +2325,7 @@ A registry's published index.
 Multiple Registries may coexist. A consumer may index multiple catalogs. The specification does not define registry authority, authentication, or federation.
 
 ---
+
 
 #### ext:federation
 
@@ -2430,6 +2466,7 @@ federationEventsPath?: string
 ```
 
 ---
+
 
 #### ext:repository
 
@@ -2794,6 +2831,7 @@ An importer must not mix strategies within a single copy operation.
 
 ---
 
+
 #### ext:json-store
 
 **Content**: **Required for**: any implementation that stores an SRS repository as a single portable JSON file.
@@ -2875,10 +2913,13 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 
 ---
 
+
 #### Discovery
 
 **Extension ID**: ext:discovery
+
 **Depends On**: ext:lifecycle
+
 **Content**: **Required for**: any implementation that supports querying and filtering instances across a repository — CLI, web UI, search engine, or API.
 
 Defines the **Discovery Contract**: a portable, implementation-agnostic specification of how SRS repositories are queried. Covers structured filter axes, the Text Projection algorithm, normalization rules, and the consistency rule separating exact-match structured filters from the content-match recall floor.
@@ -2953,6 +2994,7 @@ srs/conformance/discovery/
 An implementation that declares `ext:discovery` MUST pass all fixture scenarios (exactMatch:true scenarios exactly; exactMatch:false scenarios as a superset).
 
 ---
+
 
 
 ### Key Invariants
@@ -3280,6 +3322,7 @@ Conforming implementations must uphold the following invariants.
 
 ---
 
+
 #### ext:protocol × ext:addressability
 
 **Content**: **Trigger**: an implementation declares both `ext:protocol` and `ext:addressability`.
@@ -3295,6 +3338,7 @@ Specifically:
 Conversation chunks produced while `AttentionState.stageId` is set are associated with that stage. This makes stage-level Context Queries (`{runId}/{stageId}`) return the correct material.
 
 ---
+
 
 #### ext:lifecycle × ext:addressability
 
@@ -3314,6 +3358,7 @@ This makes the record's field values at the moment of each lifecycle transition 
 ---
 
 
+
 ### Conformance
 
 **Content**: An implementation declares conformance using the following form:
@@ -3326,6 +3371,7 @@ Example:
 ```
 SRS 2.0 Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability + ext:recommended-relations
 ```
+
 #### Core conformance requirements
 
 **Content**: A core-conformant implementation must:
@@ -3344,6 +3390,7 @@ SRS 2.0 Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability 
 
 Support for `Note` (Tier 0) and `Typed Record` (Tier 1) is optional at core conformance level.
 
+
 #### Extension conformance requirements
 
 **Content**: An implementation declaring a given extension must:
@@ -3353,6 +3400,7 @@ Support for `Note` (Tier 0) and `Typed Record` (Tier 1) is optional at core conf
 
 `ext:recommended-relations` is retired as of RFC-005. It no longer owns any normative semantics. Implementations must not treat it as a capability gate — the canonical relation vocabulary is now mandatory core behaviour provided by the `com.semanticops.srs` package.
 
+
 #### ext:federation conformance requirements
 
 **Content**: An implementation declaring `ext:federation` must:
@@ -3361,6 +3409,7 @@ Support for `Note` (Tier 0) and `Typed Record` (Tier 1) is optional at core conf
 - Produce and consume `RepositoryRegistry` and `FederationEventsFile` according to the structures defined in this section
 - Detect and surface cycles when following `childRegistries` chains; halt rather than loop
 - Enforce Invariants 56–62
+
 
 #### ext:repository conformance requirements
 
@@ -3374,6 +3423,7 @@ Support for `Note` (Tier 0) and `Typed Record` (Tier 1) is optional at core conf
 - Require no TSS, Protocol, Addressability infrastructure, or external registry when `PackageRef.mode === "local"`. The repository is fully operable with only its own files.
 
 An implementation that can produce archives but not consume them (or vice versa) must declare this limitation explicitly. Partial repository support is not conformant.
+
 
 #### ext:repository (self-contained) profile
 
@@ -3392,10 +3442,12 @@ An implementation declaring this profile must satisfy all `ext:repository` confo
 
 This profile is appropriate for: standalone tools, file-based backups, air-gapped or offline deployments, inter-organisational exchange, and any context where zero-dependency portability is required.
 
+
 #### Interoperability note
 
 **Content**: Two implementations at the same conformance level will produce compatible definitions for exchange. An implementation receiving a Package that includes types or fields from an extension it does not support should surface the unknown content, preserve it where possible, and pass it through rather than silently discard it.
 
 Two implementations both declaring `ext:repository` must be able to exchange archives without data loss. An archive produced by one conforming implementation must be consumable by any other conforming implementation at the same SRS version.
+
 
 
