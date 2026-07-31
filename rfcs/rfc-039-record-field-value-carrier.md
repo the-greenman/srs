@@ -356,6 +356,48 @@ and both `com.mudemocracy.governance` seed bundles (0 `fieldValues` — envelope
 pre-RFC-032 (`valueType`, revision 0) and are **#286's** disposal scope, not this RFC's — recorded here
 so the boundary is explicit rather than assumed.
 
+### Change I — the projection output and theme keys follow the carrier
+
+Four Accepted RFCs deferred obligations **to this issue by name**. They are discharged here rather
+than left to be rediscovered during Phase B.
+
+**`document-view-output.json`.** RFC-036's schema table records: *"`ProjectedRecord.fieldGroups` /
+`$defs.ProjectedFieldGroup` are keyed to `FieldGroup` and are removed with it at the #242 cutover,
+which owns the composite projection shape because it owns the value carrier the projection would
+serialise."* The replacement shape is **no new construct at all**:
+
+- `ProjectedRecord.fields` is *already* an object (today *"keyed by fieldId"*). It becomes keyed by
+  `Field.name`, matching [R1].
+- `orderedFieldKeys` carries `Field.name` values instead of field ids.
+- `fieldGroups`, `$defs.ProjectedFieldGroup`, and `$defs.ProjectedGroupEntry` are **removed with no
+  successor**: a composite value is carried recursively by `fields` under its own key, exactly as in
+  the instance. The projection inherits Change B's recursion instead of restating it.
+
+This is the same consolidation the carrier makes at the instance layer — one recursive shape rather
+than a parallel group construct — and it is why the obligation could not be discharged before the
+carrier existed.
+
+**`theme.json` — [CR-036-18].** `ElementTemplates.groupFieldRowTemplates` is retired with
+`FieldGroup`. [CR-036-18] imposes a migration obligation this RFC must carry: *"a migration that
+converts a group MUST carry every such key over to `compositeFieldRowTemplates`"*. Both maps are
+keyed by `Field.name`, so under Change A the carry-over is a key-for-key copy with no renaming. The
+Phase-B transform performs it, and MUST fail rather than drop a `groupFieldRowTemplates` key that
+matches no migrated field.
+
+**RFC-007 rule retirement — [CR-036-19].** `[FG-Cx0]`–`[FG-Cx4]`, `[T-Gx1]`–`[T-Gx3]` and
+`[T-Cx1]`–`[T-Cx5]` remain in force for `FieldGroup` *"until `FieldGroup` is removed at the #242
+cutover, at which point they are retired."* Change E removes `FieldGroup`, so Phase B retires them.
+
+**RFC-037 class aliases — [FR-037-14].** The unprefixed `field-label` / `field-value` CSS aliases are
+emitted alongside the `srs-`-prefixed names *"until the #242 cutover, and MUST emit only the prefixed
+names thereafter."* Phase B stops emitting them. This is a rendering-output change with no schema or
+instance component, listed so the cutover checklist is complete.
+
+**Not discharged here, and deliberately so.** RFC-036 also assigns #242 the muSrs
+`ext:themes-l1` manifest under-declaration and the `render_service.rs` `coerce_to_array` string-branch
+deletion. Both are Phase-B implementation tasks in the migration plan below, not design questions, and
+neither has a Phase-A artifact.
+
 ---
 
 ## Conformance Rules
@@ -401,6 +443,15 @@ so the boundary is explicit rather than assumed.
 > **[R10]** The migration transform MUST resolve every `fieldId` to a `Field.name`. An unresolvable
 > `fieldId` MUST abort the migration of that repository with a diagnostic naming the record, the
 > `fieldId`, and the Type — it MUST NOT be skipped, dropped, or key-substituted with the raw UUID.
+>
+> **[R11]** A DocumentView projection MUST key `ProjectedRecord.fields` and `orderedFieldKeys` by
+> `Field.name`, and MUST carry a composite value recursively under its own key. `ProjectedFieldGroup`
+> and `ProjectedGroupEntry` are REMOVED and have no successor construct.
+>
+> **[R12]** The migration MUST copy every `ElementTemplates.groupFieldRowTemplates` key to
+> `compositeFieldRowTemplates` ([CR-036-18]). A key matching no migrated field MUST abort the
+> migration with a diagnostic — it MUST NOT be silently dropped, because a dropped key is an
+> invisible rendering regression.
 
 ---
 
@@ -415,6 +466,8 @@ so the boundary is explicit rather than assumed.
 | `package-bundle.json` | **none to the shape** — `dataModelRevision` already present; the embedded `Field`/`Type`/`FieldAssignment` `$defs` must track `type.json`'s removals, verified by the existing sync check |
 | `field.json` | **none** — `fieldType` is unchanged by this RFC |
 | `projection-rules.md` | **normative text change** — scope the `snake_case → lowerCamelCase` name projection and its override table to the frozen-seed metamodel entities, and state verbatim `Field.name` keys for domain Types (Change A / [R2]); this is the erratum to RFC-035 [R4] |
+| `document-view-output.json` | re-key `ProjectedRecord.fields` and `orderedFieldKeys` from fieldId to `Field.name`; remove `ProjectedRecord.fieldGroups`, `$defs.ProjectedFieldGroup`, `$defs.ProjectedGroupEntry` with no successor construct (Change I; discharges RFC-036's deferral) |
+| `theme.json` | remove `ElementTemplates.groupFieldRowTemplates`, retired with `FieldGroup`; keys carry over to `compositeFieldRowTemplates` (Change I / [CR-036-18]) |
 
 Schema changes sync to `srs-rust/crates/srs-schema/schemas/2.0/` and `srs-vscode/schemas/2.0/`
 through the `schemas-2.0.tar.gz` release artifact and each mirror's own pipeline — **not** by editing
@@ -445,10 +498,17 @@ Deterministic, single-pass, per instance file:
 4. `groupValues[{groupId, entries[{fieldValues[]}]}]` → the group's new Field key → array of
    recursively-transformed `fieldValues` objects (Change E).
 5. Per-value `source`/`editedAt`/`sourceRefs` → `fieldMeta[key]` (Change C).
-6. Stamp `dataModelRevision: 2` on the repository manifest and every first-party package manifest.
+6. Copy every `groupFieldRowTemplates` key to `compositeFieldRowTemplates`; abort on an unmatched key ([R12]).
+7. Add the `ext:themes-l1` declaration missing from `muSrs/manifest.json` (RFC-036's deferral).
+8. Stamp `dataModelRevision: 2` on the repository manifest and every first-party package manifest.
 
 Steps 2–5 are byte-deterministic given a fixed key order; the emitter's ordering discipline
 (`projection-rules.md` "Ordering") is reused so re-running the transform is idempotent.
+
+Alongside them, Phase B retires what the carrier's removal releases: RFC-007's `[FG-Cx*]`,
+`[T-Gx*]` and `[T-Cx*]` rules ([CR-036-19]), RFC-037's unprefixed CSS aliases ([FR-037-14]), and
+`render_service.rs`'s `coerce_to_array` string branch — deleted rather than ported, since no field
+value is a JSON-bearing string once structure is expressible.
 
 ### Known blocker to fix before the transform runs
 
