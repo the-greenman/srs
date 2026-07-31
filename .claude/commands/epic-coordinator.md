@@ -117,6 +117,70 @@ The rule, if you must apply it to newly discovered work:
 
 > Auto-merge only a change that **regenerates, repairs, or migrates** existing artefacts. Hold for the owner anything that **adds or amends a conformance rule, changes an RFC's status, alters a schema's normative shape**, or carries an unresolved decision anywhere in its chain. When it is genuinely unclear, it is `owner-merge`.
 
+## Stage 3.5 — Post-merge coherence pass
+
+**Fires only when a PR merged since your last run.** If nothing merged, skip this stage in one line and move on — it is expensive and must not become a per-tick ritual.
+
+Marking a row `done` is bookkeeping. It is not the question that matters. The question is:
+
+> **Given what just landed, is this epic still coherent — and what must the next task inherit?**
+
+Every delivery on this epic so far has produced findings that changed downstream work. RFC-036 surfaced three things #242 must not miss and a theme-key rename that would have silently destroyed styling on 23 records. The #294 research overturned RFC-036's *own* open question about a canonical row Type, and found a live package-UUID collision on the way. #276 produced a post-acceptance errata to an Accepted RFC. None of that was predictable from the issue titles, and all of it was carried forward by a human writing a long reconciliation comment.
+
+**That carrying-forward is now your job.** A flow that delivers every task correctly and loses what each task learned will still drift — it will just drift with a tidy ledger.
+
+### 3.5a — Commission the coherence review
+
+Spawn a read-only agent (`Bash`, `Read`, `Grep`, `Glob`) for **each** PR merged since your last run. Give it: the PR number and repo, the epic number, and the ledger. Require it to read
+
+- the merged **diff** — what actually changed, not what the PR body claims;
+- the PR body and **every review comment**, including ones marked resolved;
+- **all comments on the closing issue**, especially any posted after the PR opened;
+- the **epic body** and the ledger;
+- the **issue bodies of every downstream row** not yet done.
+
+and return findings in exactly these six buckets, each item citing its evidence (`file:line`, comment URL, or issue number):
+
+1. **Epic-body claims now false** — statements the merge contradicts. Quote the stale text.
+2. **Downstream scope changes** — a later row whose work grew, shrank, or changed shape.
+3. **Dependency changes** — an edge that should be added or removed, including one the epic asserts but that no longer holds.
+4. **Merge-class changes** — a row that must move `auto-merge` → `owner-merge` because the ground shifted under it.
+5. **New work** — genuinely new tasks or defects, with enough detail to file.
+6. **Carried context** — durable findings a later task must honour or it will repeat a known mistake. This is the most valuable bucket and the easiest to under-fill. Prompt explicitly for it: *"what did this work learn that the next person would otherwise have to rediscover, or would get wrong?"*
+
+An empty bucket is a legitimate answer. A bucket filled with restatements of the PR title is not — push back and re-run rather than accepting narration.
+
+### 3.5b — Act on the findings
+
+- **Bucket 1** → edit the epic body. Correct the false claim; do not merely append a note beside it. A body that contradicts itself is worse than one that is simply out of date, because both readings look authoritative.
+- **Buckets 2, 3, 4** → update the affected ledger rows, and **comment on each affected downstream issue** so the change is visible where the work will happen, not only on the epic.
+- **Bucket 5** → file the issue, link it under the epic, add a ledger row, classify it. Never leave new work in prose — that is the exact failure this ledger replaced.
+- **Bucket 6** → append to the **Carried context** register (below), tagging which rows each finding binds.
+
+Then re-check the closure audit in the epic body: has this merge satisfied any checklist item, or invalidated one already ticked?
+
+### 3.5c — The Carried context register
+
+A standing section of the ledger. Append-only; entries are retired only when the rows they bind are all done.
+
+```
+### Carried context
+
+| Finding | Binds rows | Source | Detail |
+|---|---|---|---|
+```
+
+**Every dispatch brief must include the entries binding that row**, quoted in full. That is the mechanism by which a worker starting cold in a fresh cloud session inherits what previous sessions learned. Without it each worker re-derives context from the epic body alone — which is precisely how the RFC-036 theme-key rename came within one merge of being missed.
+
+When you dispatch, state the inherited context as constraints on *this* task, not as history.
+
+### What this stage must not become
+
+- **Not a rewrite of the epic.** Correct what is false; leave what is merely differently-worded.
+- **Not a second opinion on delivered work.** The PR merged. You are asking what it *changed*, not whether it should have.
+- **Not a licence to re-scope.** A downstream row's scope changes only when the merged work genuinely changed it. Record the evidence next to the change; if you cannot cite it, do not make it.
+- **Not silent.** If the pass finds nothing, say "coherence pass: no downstream impact" and mean it.
+
 ## Stage 4 — Foreign-work sweep
 
 Work on these issues can begin outside this flow — an owner session, another agent, a branch nobody labelled. If you dispatch a worker at something already underway, you get duplicated effort and a merge conflict at best, and silently discarded work at worst.
@@ -158,7 +222,8 @@ Otherwise take the **first ledger row** that is `pending`, whose predecessors in
    - **the merge class, stated plainly** — "this will be merged automatically once CI is green" or "this will be held for the owner to merge";
    - the acceptance criteria you expect, drawn from the issue and the epic body;
    - the gates it must pass (below);
-   - any decision already resolved on this issue, so the worker does not re-litigate it.
+   - any decision already resolved on this issue, so the worker does not re-litigate it;
+   - **every Carried context entry binding this row, quoted in full.** A worker starts in a fresh cloud session with no memory of previous ones. If a prior task learned something this one must honour, the dispatch brief is the only place it can arrive. State each as a constraint on *this* task, not as history.
 
 ### Gates every dispatch brief must name
 
@@ -203,6 +268,7 @@ States: `pending` · `dispatched` · `working` · `in-review` · `blocked-owner`
 
 Below the table, keep these standing sections:
 
+- **Carried context** — durable findings later rows must honour, from Stage 3.5c. Append-only; an entry retires only when every row it binds is done. Quoted into the dispatch brief of each row it binds.
 - **Decisions resolved** — the question, the verdict, and its spec citation or the owner's answer. Append-only; this is the epic's decision record.
 - **Open owner decisions** — what is blocked and since when.
 - **Foreign work seen** — from Stage 4.
@@ -241,6 +307,7 @@ Bias hard toward `UNRESOLVED`. This epic exists because a self-hosted model was 
 - Interlock state: running, or paused on which decision since when.
 - Ledger invariant failures, or "all three clean".
 - PRs merged this run, PRs held for the owner, PRs with red CI.
+- **Coherence pass:** for each merge since the last run — epic-body corrections made, downstream rows re-scoped or re-classed, new issues filed, and Carried context entries added. Or "no downstream impact". Never skip this line when a merge happened.
 - Foreign work seen — adopted, reported, or none visible (and note the local-work blind spot).
 - What you dispatched, to which repo, in which merge class — or why nothing was dispatched.
 - Stall resets performed, with reset counts.
