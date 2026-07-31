@@ -12,7 +12,7 @@
     },
     {
       "fieldId": "1a000003-0000-4000-a000-000000000003",
-      "value": "`FieldAssignment.displayLabel` and `FieldAssignment.displayHint` are for rendering only. They must not affect AI guidance, extraction logic, `valueType` interpretation, or validation."
+      "value": "`FieldAssignment.displayLabel` and `FieldAssignment.displayHint` are for rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or validation."
     },
     {
       "fieldId": "1a000021-0000-4000-a000-000000000021",

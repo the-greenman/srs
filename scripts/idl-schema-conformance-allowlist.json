@@ -1,5 +1,4 @@
 [
-  { "entity": "Field", "property": "vocabularyRef", "rule": "R1", "issue": 235 },
   { "entity": "Field", "property": "defaultValue", "rule": "R1", "issue": 234 },
   { "entity": "Field", "property": "deprecatedAt", "rule": "R1", "issue": 234 },
 

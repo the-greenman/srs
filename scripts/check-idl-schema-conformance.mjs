@@ -39,7 +39,14 @@ const F_BODY = "1a000002-0000-4000-a000-000000000002"; // pseudo-IDL prose field
 // parenthetical suffix), or null for a root-level entry (the first fenced block in the field
 // value, valid only when no heading of any kind precedes it - see RFC-031 Change A step 2).
 const MAPPING = [
-  { entity: "Field", prose: "records/type-definitions/field.json", header: null, schemaFile: "field.json", pointer: "#" },
+  // Field maps to the *rendered* subsection record, not a records/type-definitions/ shadow copy.
+  // Until #275 there were two Field prose records: this one (which the spec document publishes, via
+  // the precedes chain) and records/type-definitions/field.json (which participated in zero
+  // relations, so it never rendered — yet it was the only one this checker read). They had already
+  // drifted, and RFC-030 had to edit both by hand. The unrendered copy is retired; Note/NoteSection
+  // already mapped this way. The remaining six records/type-definitions/*.json shadow copies have
+  // the same defect and are tracked separately.
+  { entity: "Field", prose: "records/subsections/04-2-4-2-field.json", header: null, schemaFile: "field.json", pointer: "#" },
   { entity: "Type", prose: "records/type-definitions/type.json", header: null, schemaFile: "type.json", pointer: "#" },
   { entity: "Type.FieldAssignment", prose: "records/type-definitions/type.json", header: "FieldAssignment", schemaFile: "type.json", pointer: "#/$defs/FieldAssignment" },
   { entity: "Record", prose: "records/type-definitions/record.json", header: "Record", schemaFile: "record.json", pointer: "#" },
@@ -61,7 +68,7 @@ const MAPPING = [
 ];
 
 // RFC-031 R3: small, explicit type-token equivalence table.
-const NAMED_REF_TYPES = new Set(["Lineage", "Provenance", "AiGuidance"]);
+const NAMED_REF_TYPES = new Set(["Lineage", "Provenance", "AiGuidance", "FieldType"]);
 
 function typesEquivalent(idlToken, schemaProp) {
   const tok = idlToken.trim();

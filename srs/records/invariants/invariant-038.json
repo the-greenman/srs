@@ -8,11 +8,11 @@
     },
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",
-      "value": "Field.contentFormat, when present, is only meaningful when valueType…"
+      "value": "Field.fieldType.format, when present, is only meaningful when datatype…"
     },
     {
       "fieldId": "1a000003-0000-4000-a000-000000000003",
-      "value": "`Field.contentFormat`, when present, is only meaningful when `valueType` is `\"string\"` or `\"text\"`. Implementations must ignore `contentFormat` on fields with any other `valueType`."
+      "value": "`Field.fieldType.format`, when present, is only meaningful when `fieldType.datatype` is `\"string\"`. Implementations must ignore `format` on fields with any other `datatype`."
     },
     {
       "fieldId": "1a000021-0000-4000-a000-000000000021",
