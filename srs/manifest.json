@@ -81,6 +81,7 @@
     }
   ],
   "createdAt": "2026-05-28T00:00:00Z",
+  "dataModelRevision": 1,
   "declaredExtensions": [
     "ext:addressability",
     "ext:lifecycle",
@@ -3442,20 +3443,64 @@
     {
       "instanceId": "68f19e31-7616-5675-ae53-1ff8880680db",
       "path": "records/rfcs/rfc-033-self-host-metamodel.json",
-      "tier": 2,
-      "title": "RFC-033: Self-hosting the meta-model — the frozen-seed bootstrap package",
       "tags": [
         "topic:rfc"
-      ]
+      ],
+      "tier": 2,
+      "title": "RFC-033: Self-hosting the meta-model — the frozen-seed bootstrap package"
     },
     {
       "instanceId": "eec335c8-f6d6-5d6f-bf43-a3bb3871b542",
       "path": "records/rfcs/rfc-035-schema-emitter.json",
-      "tier": 2,
-      "title": "RFC-035: JSON Schema emitter — projecting the self-hosted meta-model (records → 2020-12)",
       "tags": [
         "topic:rfc"
-      ]
+      ],
+      "tier": 2,
+      "title": "RFC-035: JSON Schema emitter — projecting the self-hosted meta-model (records → 2020-12)"
+    },
+    {
+      "instanceId": "717118a7-80be-49a2-bbc6-05c123ffa958",
+      "path": "records/notes/design-capture-metamodel-v1-1-0-decisions-srs-273-717118a7.json",
+      "tags": [
+        "design-note",
+        "metamodel",
+        "epic-256"
+      ],
+      "tier": 0,
+      "title": "Design capture: metamodel v1.1.0 decisions (srs#273)"
+    },
+    {
+      "instanceId": "04ff8b51-c105-434d-8032-fe0269571efc",
+      "path": "records/notes/design-brief-core-relation-set-mechanism-backed-criterion-srs-171-pending-ratification-04ff8b51.json",
+      "tags": [
+        "design-note",
+        "relations",
+        "epic-171"
+      ],
+      "tier": 0,
+      "title": "Design brief: core relation set — mechanism-backed criterion (srs#171, pending ratification)"
+    },
+    {
+      "instanceId": "0a537413-558a-4c4f-9c26-a8cf9a20447e",
+      "path": "records/notes/design-capture-rag-stays-out-of-core-the-companion-standard-seam-0a537413.json",
+      "tags": [
+        "design-note",
+        "rag",
+        "scope"
+      ],
+      "tier": 0,
+      "title": "Design capture: RAG stays out of core — the companion-standard seam"
+    },
+    {
+      "instanceId": "324b33c2-d40c-478d-989b-6c9601ff30d0",
+      "path": "records/notes/test-case-semops2-structure-mapped-onto-srs-one-genuine-gap-scoped-uniqueness-324b33c2.json",
+      "tags": [
+        "design-note",
+        "test-case",
+        "expressiveness"
+      ],
+      "tier": 0,
+      "title": "Test case: SemOps2 structure mapped onto SRS — one genuine gap (scoped uniqueness)"
     }
   ],
   "meta": {
@@ -3528,7 +3573,6 @@
   ],
   "sourceDocumentsPath": "source-documents",
   "srsVersion": "2.0-draft",
-  "dataModelRevision": 1,
   "title": "Semantic Record System Specification",
   "updatedAt": "2026-06-03T00:00:00Z"
 }
