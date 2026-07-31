@@ -60,7 +60,7 @@
     "fields/display_label.json",
     "fields/assignment_default_value.json"
   ],
-  "id": "4a000001-0000-4000-a000-000000000001",
+  "id": "4a000004-0000-4000-a000-000000000004",
   "name": "metamodel",
   "namespace": "com.semanticops.srs",
   "status": "active",
