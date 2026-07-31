@@ -2,7 +2,7 @@
 
 # RFC-036: Composite rendering — view-owned renderer dispatch for composite-range fields
 
-**Status**: Draft (Revision 2)
+**Status**: Accepted (Revision 5)
 **Affects**: `ext:views-l1` (`FieldView`, Invariant 13), `ext:views-l2` (`DocumentView`, `DocumentSection`), `ext:themes-l1` (`ElementTemplates`); supersedes **in part**, for composite-range fields only, RFC-007's `FieldGroup.compositeRenderer`; `docs/schema/2.0/{view,document-view,theme}.json`; description-only touch to `docs/schema/2.0/type.json`.
 **Builds on**: RFC-032 (Accepted Rev 6 — composite range), RFC-007 (Accepted Rev 5 — superseded in part), RFC-015 (Accepted — presentation is view-owned), RFC-008 (Accepted — `typeDispatch`), RFC-027 (Accepted — the `DocumentSection` presentation precedent), RFC-002 (Accepted — Theme resolution `[T-2]`), RFC-009 (Accepted — `ExactTypeRef`), RFC-033 (Accepted — the frozen bootstrap seed).
 **Author**: Claude Code (agent), on behalf of the repository owner
@@ -16,6 +16,9 @@
 |---|---|---|
 | 1 | 2026-07-31 | Initial draft |
 | 2 | 2026-07-31 | Address Rev 1 review findings (8 blocking). Define composite baseline rendering normatively (new Change C) — it was the undefined fallback target of five MUST rules. Give `FieldGroup.label` a successor (`FieldAssignment.displayLabel`), without which the parity gate could not pass. Restate every RFC-007 per-format default in [CR-036-16] and make them apply without `ext:themes-l1`, which muSrs does not declare. Pad-only, never truncate — Rev 1's truncation destroyed record content. Strike the RFC-019 `CrossFieldRule` suggestion: `CrossFieldRule.type` is a closed enum with no arity predicate. Give the [CR-036-1] identifier regex and make every schema constraint well-formedness-only, so no runtime-fallback rule is pre-empted by a load failure (drops the `propertyNames` and `editorHintOverride` enum narrowings). Add the `DocumentSection` tier and a `"baseline"` unbind sentinel, per RFC-027's placement precedent. Add the diagnostic contract, the RFC-007 → RFC-036 rule mapping table, the theme-key and `FieldAssignment`-facet migration steps, tier and nesting scope, role-ambiguity tie-break, contract-matching semantics. Correct four misquotations, the `[R10]`-on-`ref` error, and the `section.commentary` row-Type claim; downgrade the byte-identical claim and enumerate all divergences. Rule IDs scoped `[CR-036-n]`. |
+| 3 | 2026-07-31 | Address Rev 2 review findings (3 blocking). Drop the false "no Theme in play" premise: muSrs under-declares `ext:themes-l1` in its manifest while wiring both themes through `themeRef`, so [CR-036-16]'s theme-independence clause now rests on `[T-Cx*]` retirement and RFC-002 `[T-2]` instead, and the manifest defect goes to #242. Reconcile [CR-036-9] and [CR-036-13], which gave opposite answers for a `widths` Field omitting `constraints`: a required `constraints` key is advisory and never fails the contract test. Match the reference implementation on the baseline empty-field rule (omit unconditionally) rather than deferring to an `ExportConfig` that the baseline path never has. Require the composite label heading on the **bound** path too ([CR-036-12], [CR-036-15]) — naming the successor was not enough to save the parity gate. Make `rangeType` presence-matched, since a binding site has no literal value to match. Parameterise Change C's heading by nesting depth and specify nested-composite expansion. Add the zero-effective-column skip, non-HTML format routing, `{{subheading}}`/`{{label}}` token resolution, and a fourth `table` divergence (`captionTemplate`'s three-way split). Split the presentation guarantee across Invariant 1 and Invariant 13 rather than piling `FieldAssignment` facets onto the FieldView invariant, and add `ext-field-groups.json` to the amendments. Attribute the `FieldGroup.label` heading to the reference implementation, not RFC-007; correct the Problem 4 framing (RFC-007 already said its defaults apply without `ext:themes-l1`); relabel three mapping rows as broadened; correct "the trio `[R4]` deletes" to Change H deprecates. Disclose the one non-additive schema change. New Open Question 3 on the undefined default field-row form. |
+| 4 | 2026-07-31 | Address Rev 3 review findings (1 blocking, found independently by both reviewers). [CR-036-16] said the `subheading` renders one level below the composite's heading while its own worked example said `<h4>`, i.e. the same level — the rule contradicted its example, and "plus one" would have moved 2 of the 30 muSrs table entries from `####` to `#####`, adding a fifth *observable* divergence that Change D and the parity gate both denied. Resolved by matching the reference implementation (same level), with the resulting label/subheading collision recorded as a deliberately preserved anomaly. Three accuracy fixes where Rev 3's own corrections had not propagated: the Rationale still argued from the retracted "no Theme in play" premise; [CR-036-20] was still headed "Amends Invariant 13" while listing a `FieldAssignment` facet, and omitted `FieldAssignment.displayHint`; Open Question 2 justified its urgency on muSrs, whose themes in fact cover every `items` row — the real dependency is #242's spec-side fixture. Softened Change D's absolute "no divergence" claim on the baseline path to three named inert differences (a `fieldRow` rung the reference omits, the `fieldId` tie-break, per-format separation). Scoped Change C's heading clamp to heading-bearing formats. |
+| 5 | 2026-07-31 | Accepted after three review rounds with zero surviving blocking findings. Spec records authored in `srs/srs/`: `ext-views-l1` (the binding, the composite baseline, the `table` roles, `[CR-036-1]`–`[CR-036-9]`, `[CR-036-21]`, `[CR-036-22]`), `ext-views-l2` (the section and document directives), `ext-themes-l1` (`compositeFieldRowTemplates`, `[CR-036-16]`–`[CR-036-19]`), `ext-field-groups` (supersession note), and the Invariant 1 / Invariant 13 amendments. Schema changes applied to `view.json`, `document-view.json`, `theme.json` and a description-only touch to `type.json`. |
 
 ---
 
@@ -118,12 +121,12 @@ the cutover, and the `table` config object needs a schema: `compositeRendererCon
 `ext:field-groups` in their `theme.json` descriptions when RFC-007 itself calls them `ext:themes-l1`
 additions.
 
-A subtlety that governs Change F. RFC-007's per-format output defaults — the `<figure>` wrapper, the
-`<figcaption>` caption, the markdown `*label*`, the `<h4>` subheading — are stated only as *defaults of
-`ext:themes-l1` config properties*. But `muSrs/manifest.json` does not declare `ext:themes-l1`, so the
-entire production corpus renders on exactly those defaults with no Theme in play. They are therefore not
-theme configuration at all; they are the renderer's output specification, and they must survive the
-retirement of the `[T-Cx*]` rules that currently house them.
+A subtlety that governs Change F. RFC-007's per-format output defaults are split across two homes: the
+`<h4>` subheading and the markdown/HTML output shapes sit in its Change A (`ext:field-groups`), while the
+`<figure>` wrapper, the `<figcaption>` caption and the markdown `*label*` are stated as *defaults of
+`ext:themes-l1` config properties* in `[T-Cx1]`–`[T-Cx5]`. RFC-007 was already clear that the former apply
+without `ext:themes-l1`. The problem is the latter: they are not really configuration, they are what the
+renderer emits when nothing configures it, and `[CR-036-19]` retires the rules that state them.
 
 ---
 
@@ -203,28 +206,47 @@ defined a *FieldGroup* baseline, and RFC-032, which replaced FieldGroup with com
 successor. It is specified here because five conformance rules depend on it, because `compositeFieldRowTemplates`
 configures it, and because it is the majority rendering path for the migrated corpus.
 
-For an unbound composite-range Field on a Tier 2 Record, implementations MUST render, in order:
+For a composite-range Field on a Tier 2 Record that is rendered by the baseline — whether **unbound** per
+[CR-036-6], or **fallen back** per [CR-036-7] or [CR-036-9] — implementations MUST render, in order:
 
-1. **A heading**, when a label resolves (see below), at heading level 4 shifted by
-   `DocumentView.depthOffset`, in the active output format.
+1. **A heading**, when a label resolves (see below), at heading level `4 + d` shifted by
+   `DocumentView.depthOffset`, where `d` is the composite's nesting depth (0 for a composite assigned
+   directly to the Record's Type). `depthOffset` is 0 when no DocumentView is in play. Implementations
+   MUST clamp the resulting level to 6 in heading-bearing formats (`html`, `markdown`, `adoc`); formats
+   with no heading construct, such as `text`, render the label without a level.
 2. **One block per value** in the field's value order — one block for a `single` field, *n* for a `list`.
 3. **Within each block, one field row per assignment** on the composite's `rangeType`, ascending by
    `FieldAssignment.order`, with `fieldId` ascending in code-point order as tie-break. A field with no
-   value is omitted when `ExportConfig.omitEmptyFields` is set, and rendered empty otherwise.
-4. **Blank-line separation** between consecutive blocks in text-like formats; no separator element in
-   HTML.
+   value, or whose value renders to nothing, MUST be omitted, unconditionally — this matches the reference
+   implementation, and `ExportConfig.omitEmptyFields` does not govern it. (On the unbound path there is
+   often no L1 View and therefore no `ExportConfig` at all; making the rule unconditional keeps the
+   fallback paths of [CR-036-7]/[CR-036-9], where a View does exist, from rendering differently.)
+4. **Separation** between consecutive blocks such that they do not run together: implementations SHOULD
+   emit a blank line in `markdown`, `adoc` and `text`, and MUST NOT insert a separator element in `html`.
+
+An assignment whose own `fieldType` is `ref`/`inline` is itself a composite: it MUST expand into a nested
+baseline block per this Change at nesting depth `d + 1`, not into a single field row. Nested composites
+are never bound ([CR-036-5]).
 
 Each field row's label resolves by the ladder `FieldAssignment.displayLabel` → `Field.name` → `fieldId`,
 and its template is `ElementTemplates.compositeFieldRowTemplates[Field.name]` when present, else
-`ElementTemplates.fieldRow`, else the implementation's default row form ([CR-036-17]).
+`ElementTemplates.fieldRow`, else the implementation's existing top-level field-row form, unchanged
+([CR-036-17]). That terminal form is deliberately not specified here: the base specification has never
+defined it — `ext:themes-l1` specifies `fieldRow` purely as a *wrapper* and says only that "when neither
+is set, the element is rendered without wrapping" — and closing a spec-wide gap of that size is not this
+RFC's business. It is noted as a follow-up in Open Question 3.
 
-**The composite's label — the successor to `FieldGroup.label`.** RFC-007 rendered `FieldGroup.label` as a
-heading before the group, in *both* the baseline and the `table` arms. Its successor is
+**The composite's label — the successor to `FieldGroup.label`.** The reference implementation renders
+`FieldGroup.label` as a heading before the group, in *both* the baseline and the `table` arms, at heading
+level 4 shifted by `depthOffset`. (RFC-007 itself never mentions `FieldGroup.label`; this is the shipped
+behaviour the migration must preserve, not a rule RFC-007 states.) Its successor is
 `FieldAssignment.displayLabel` on the composite field's assignment, overridable by `FieldView.displayLabel`.
 Both already exist and both are already rendering-only, so no new schema is required, and the corpus's
-"Tables"/"Items"/"Rows" headings survive the migration. This is distinct from the `table` renderer's
-`label` **role**, which is RFC-007's caption field: the assignment label names the *field*, the role names
-the *table*. They may both be present and both render.
+"Tables"/"Items"/"Rows" headings survive the migration. The heading is required on the **bound** path too,
+by [CR-036-12] and [CR-036-15] — without that, all 14 muSrs `section.table` records would lose their
+"Tables" heading at cutover. This is distinct from the `table` renderer's `label` **role**, which is
+RFC-007's caption field: the assignment label names the *field*, the role names the *table*. They may both
+be present and both render.
 
 ### Change D — the `table` renderer, specified against a structured value
 
@@ -250,18 +272,32 @@ renderer ([CR-036-9]).
 Output shapes are carried over from RFC-007 and its reference implementation. Markdown emits a GFM pipe
 table with `widths` reinterpreted as an alignment bucket (`≤ 0.3` → `:---`, `≥ 0.7` → `---:`, else `---`);
 HTML emits a `<table>` carrying `tableClass` and, when `widths` is present, a `<colgroup>`. `subheading`
-and `label` wrap per `wrapperTemplate` / `captionTemplate`. **Three divergences are specified
-deliberately** and are the complete list:
+and `label` wrap per `wrapperTemplate` / `captionTemplate`. **Four divergences from the reference
+implementation's current output are specified deliberately** and are the complete list for this renderer:
 
 1. **Headerless tables** (`columns` empty) get a header row of empty cells in markdown, so the output is a
    well-formed GFM table. RFC-007 permitted headerless tables under `[FG-Cx2]` but specified no output for
-   them; 11 of the 30 muSrs tables are headerless.
+   them; 11 of the 30 muSrs tables are headerless. This is the only divergence observable on the corpus.
 2. **Over-long rows widen the table** rather than being emitted ragged. The reference implementation emits
    exactly `row.len()` cells, which produces malformed GFM when rows disagree. The corpus has 0 ragged
-   rows, so this is unobservable on migration.
+   rows, so this is inert on migration.
 3. **`<colgroup>` cardinality is fixed** at the effective column count, with `<col>` elements beyond
    `widths` carrying no `style`. The reference implementation emits one `<col>` per `widths` element and
-   none for the remainder; RFC-007 specified neither.
+   none for the remainder; RFC-007 specified neither. No corpus entry uses `widths`, so this is inert.
+4. **`captionTemplate`'s default is three-way, not two-way.** [CR-036-16] restates RFC-007's split of
+   HTML / markdown / other formats; the reference implementation applies the markdown form to *every*
+   non-HTML format, so `text` and `adoc` output changes. No corpus view renders in those formats, so this
+   is inert.
+
+The baseline path of Change C introduces **no divergence observable on either corpus**, but it is not
+byte-for-byte identical to the reference in three inert respects, listed here so #242's gate is not
+surprised by them. It inserts a `fieldRow` rung the reference's group baseline omits — the reference calls
+its field-row formatter directly, consulting only `groupFieldRowTemplates` — which is what RFC-007
+`[T-Gx3]` implies by forbidding `fieldRow` *on rows that a template covers*, and is inert because muSrs's
+themes cover every `items` row and the srs repo declares no themes at all. It adds a `fieldId` code-point
+tie-break for equal `FieldAssignment.order`, which no `fieldGroups` entry in either repository exercises.
+And it specifies block separation per format where the reference emits a newline unconditionally. The
+empty-field rule, ordering, label ladder and heading level all match the reference exactly.
 
 ### Change E — `[FG-Cx3]` and half of `[FG-Cx2]` cease to be renderer concerns
 
@@ -296,9 +332,10 @@ The complete mapping, satisfying this issue's second acceptance criterion:
 | `[T-Gx2]` unknown template keys ignored | `[CR-036-17]` | Carried forward |
 | `[T-Gx3]` template beats `fieldRow` | `[CR-036-17]` | Carried forward |
 | `[T-Cx1]`/`[T-Cx2]` `tableClass` default / empty | `[CR-036-16]` | Carried forward |
-| `[T-Cx3]` config scoped to `table` groups | `[CR-036-16]` | Carried forward, re-scoped to bound fields |
+| `[T-Cx3]` config scoped to `table` groups | `[CR-036-16]` | Carried forward and **broadened** — re-scoped to bound fields, and to `tableClass`, which `[T-Cx3]` deliberately excluded |
 | `[T-Cx4]` `DocumentView.format` authoritative | `[CR-036-16]` | Carried forward |
-| `[T-Cx5]` unknown config properties ignored | `[CR-036-16]` | Carried forward |
+| RFC-007 Change A markdown/HTML output shapes, `<h4>` subheading | `[CR-036-12]`, `[CR-036-15]`, `[CR-036-16]` | Carried forward and **broadened** — heading level is now `depthOffset`-relative, which RFC-007 never addressed |
+| `[T-Cx5]` unknown config properties ignored | `[CR-036-16]` | Carried forward and **broadened** — also covers keys naming renderers the implementation does not know |
 
 ### Change F — `ext:themes-l1` reconciliation, and the defaults that are not theme config
 
@@ -321,11 +358,25 @@ re-keying a theme surface is a migration cost with no rendering benefit, and bec
 package-local where a renderer contract is not.
 
 RFC-007's **per-format output defaults are restated as renderer output specification** rather than as
-config defaults ([CR-036-16]), and apply whether or not `ext:themes-l1` is declared. This is not a
-formality: `muSrs/manifest.json` does not declare `ext:themes-l1`, so the entire production corpus renders
-on these defaults, and [CR-036-19] retires the `[T-Cx*]` rules that currently state them.
+config defaults ([CR-036-16]), and apply whether or not `ext:themes-l1` is declared or a Theme resolves.
+This restates rather than reverses RFC-007, whose extension-independence clause already said a repository
+without `ext:themes-l1` gets "the renderer's default output shapes", and whose `<h4>` subheading and
+markdown output shapes were stated in its Change A (`ext:field-groups`) rather than in its themes block.
+Relocating them matters for one reason: [CR-036-19] retires the `[T-Cx*]` rules that currently house half
+of them, so leaving them there would delete the corpus's actual output specification at the cutover. It
+also settles a case RFC-002 `[T-2]` leaves implicit — a Theme is ignored when `DocumentView.format` is
+absent from `Theme.targets`, and structural output must still be produced, which for a table means these
+shapes. One clause here is genuinely new rather than restated: the `subheading` heading level is specified
+relative to `DocumentView.depthOffset`, which RFC-007 never mentions. It matches the reference
+implementation.
 
-### Change G — `editorHint` consolidation, and the Invariant 13 amendment
+*(A corpus note, not a spec claim: `muSrs/manifest.json` omits `ext:themes-l1` from `declaredExtensions`
+while `package/document-views/guide-body-view-2aba4d85.json` carries both a `themeRef` and a
+`themeVariants` entry, and the reference implementation reads the active Theme regardless. That is a
+manifest under-declaration in the corpus, not evidence about the specification; #242 should fix the
+manifest as part of the migration.)*
+
+### Change G — `editorHint` consolidation, and the Invariant 1 / Invariant 13 amendments
 
 RFC-032 named this issue as the consolidation point for `editorHint` as well as `compositeRenderer`. The
 two are not symmetrical: `compositeRenderer` is an *output* concern that this RFC relocates, while
@@ -335,12 +386,15 @@ RFC-033 frozen bootstrap seed, loaded as committed and never re-derived; relocat
 would require regenerating the metamodel package and re-running RFC-035's closure test for no rendering
 benefit.
 
-What this RFC contributes is the missing discipline, as an amendment to **Invariant 13**, which today
-reads: "`FieldView.displayLabel`, `FieldView.displayHint`, and `FieldView.editorHintOverride` are for
-rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or
-validation." The amendment extends the guarantee to the new bindings and to Discovery Text Projection
-([CR-036-20]) and states the value set and precedence for `editorHintOverride`, which is today an
-unconstrained string where `Field.editorHint` is a closed enum ([CR-036-21]).
+What this RFC contributes is the missing discipline, split across the two invariants that already own the
+subject rather than piled onto one. **Invariant 13** owns the `FieldView` facets — "`FieldView.displayLabel`,
+`FieldView.displayHint`, and `FieldView.editorHintOverride` are for rendering only. They must not affect AI
+guidance, extraction logic, `fieldType` interpretation, or validation" — and gains
+`FieldView.compositeRenderer`, the `DocumentView`/`DocumentSection` directives, and Discovery Text
+Projection. **Invariant 1** already owns the `FieldAssignment` facets in identical words
+(`FieldAssignment.displayLabel`, `FieldAssignment.displayHint`) and gains Discovery Text Projection so the
+two do not drift ([CR-036-20]). [CR-036-21] then states the value set and precedence for
+`editorHintOverride`, today an unconstrained string where `Field.editorHint` is a closed enum.
 
 ### Change H — RFC-007 supersession schedule
 
@@ -373,7 +427,8 @@ updated to name this RFC as its successor — a description-only change, no shap
 > **[CR-036-3]** A binding or directive MUST reference a Field whose `fieldType.datatype` is `"ref"` and
 > whose `fieldType.mode` is `"inline"`. When it references any other Field, or a `fieldId` that does not
 > resolve in the effective package set, implementations MUST ignore the binding, MUST render the field by
-> its normal rendering, and MUST emit a diagnostic.
+> whatever rendering its `fieldType` normally receives — the composite baseline for a composite, the
+> ordinary field row otherwise — and MUST emit a diagnostic.
 
 > **[CR-036-4]** Composite rendering applies to **Tier 2** Records only. A binding whose `fieldId` does
 > not appear on the rendered instance's resolved Type MUST be ignored without a diagnostic — this is the
@@ -409,8 +464,13 @@ updated to name this RFC as its successor — a description-only change, no shap
 > `FieldAssignment.order`, with `fieldId` ascending in code-point order as tie-break, and MUST emit a
 > diagnostic. A `roles` entry naming a role the renderer does not define MUST be silently ignored.
 
-> **[CR-036-9]** A role Field satisfies the renderer's contract when its `fieldType` declares the keys the
-> contract specifies with the specified values. Additional `fieldType` keys MUST be ignored, and Fields
+> **[CR-036-9]** A role Field satisfies the renderer's contract when its `fieldType` declares every key the
+> contract specifies, matching the specified value where the contract gives a literal one. Two exceptions:
+> `rangeType` is **presence-matched** — the contract names a binding site, not a value, so the key MUST be
+> present and MUST resolve, and its resolved Type is what dependent roles are then looked up on (for
+> `table`, `cells` on the `rangeType` of the Field bound to `rows`); and a `constraints` key required by
+> the contract is **advisory** — its absence MUST NOT fail the contract test, and is handled by the rule
+> that requires it (for `widths`, [CR-036-13]). Additional `fieldType` keys MUST be ignored, and Fields
 > assigned to the owning Type that fill no role MUST be ignored, not rendered. When a **required** role
 > does not resolve, or resolves to a Field that does not satisfy the contract, the renderer is unsatisfied:
 > implementations MUST fall back to the composite baseline and MUST emit a diagnostic identifying the role,
@@ -424,8 +484,10 @@ updated to name this RFC as its successor — a description-only change, no shap
 > Change D. `rows` MUST be owned by the composite field's `rangeType`; `cells` MUST be owned by the
 > `rangeType` of the Field bound to `rows`. Implementations MUST NOT require any role Field to carry a
 > particular `namespace`. When both `columns` and `rows` are empty for a given table value, implementations
-> MUST skip that table and MUST emit a diagnostic identifying the field and the value's index; other
-> tables carried by the same field MUST continue to render. A non-empty `columns` with no rows renders as
+> MUST skip that table and MUST emit a diagnostic identifying the field and the value's index. The same
+> applies when the effective column count of [CR-036-11] is 0 — a table whose rows all carry empty `cells`
+> and which declares no `columns` has no well-formed output in any format. Other tables carried by the same
+> field MUST continue to render. A non-empty `columns` with no rows renders as
 > a header-only table; a non-empty `rows` with empty `columns` renders headerless.
 
 > **[CR-036-11]** The effective column count for a table value is the greater of the `columns` length and
@@ -442,13 +504,18 @@ updated to name this RFC as its successor — a description-only change, no shap
 > space. The delimiter cell for column *i* is ` :--- `, ` ---: ` or ` --- ` according to [CR-036-14].
 > When `columns` is empty, implementations MUST emit a header row of empty cells at the effective column
 > count, so that the output is a well-formed GFM table. Where a field carries multiple table values they
-> MUST be emitted in value order, separated by a blank line.
+> MUST be emitted in value order, separated by a blank line. When a label resolves for the composite field
+> per Change C, implementations MUST emit it as a heading before the renderer's output, at the same level
+> Change C specifies — the successor to the `FieldGroup.label` heading the reference implementation emits
+> on this path today. Output formats other than `html` — including `adoc` and `text` — use this rule.
 
 > **[CR-036-13]** A Field bound to the `widths` role MUST declare
 > `fieldType.constraints: { minimum: 0, maximum: 1 }`, and a value outside that range is a validation
-> error reported by the validation layer. A Field bound to `widths` that omits the constraint does not
-> unsatisfy the renderer; per [CR-036-9] it is an optional role and the implementation MUST emit a
-> diagnostic. Should an out-of-range value reach a renderer, the renderer MUST clamp it to `[0.0, 1.0]`
+> error reported by the validation layer. On a `cardinality: "list"` field the bound applies **per
+> element** — a clarification this RFC supplies, since RFC-032 states neither that a scalar `constraints`
+> block distributes over list elements nor that it does not. A Field bound to `widths` that omits the
+> constraint is still bound and its values are still used: per [CR-036-9] a missing `constraints` key is
+> advisory and MUST NOT fail the contract test, and the implementation MUST emit a diagnostic. Should an out-of-range value reach a renderer, the renderer MUST clamp it to `[0.0, 1.0]`
 > for output determinism and SHOULD emit a diagnostic. *(Replaces `[FG-Cx3]`.)*
 
 > **[CR-036-14]** Column *i*'s alignment derives from `widths[i]`: left (` :--- ` in markdown) when the
@@ -464,7 +531,11 @@ updated to name this RFC as its successor — a description-only change, no shap
 > `widths[i]` × 100 rounded half away from zero to an integer, and elements beyond `widths`'s length carry
 > no `style`. A `<thead>` MUST be emitted only when `columns` is non-empty and a `<tbody>` only when
 > `rows` is non-empty. All cell content MUST be HTML-escaped. Each table value MUST produce its own
-> top-level element with no separator element between them.
+> top-level element with no separator element between them. The composite field's resolved label, when one
+> resolves, MUST be emitted as a heading before the renderer's output, as in [CR-036-12]. This rule pins
+> the elements, `<colgroup>` cardinality, rounding and escaping; it does not pin inter-element whitespace,
+> so the migration parity gate is measured against the reference implementation's own output rather than
+> against a byte form this RFC determines.
 
 ### Theme surface
 
@@ -481,8 +552,17 @@ updated to name this RFC as its successor — a description-only change, no shap
 > | `wrapperTemplate` | Wraps one rendered table value. Tokens `{{subheading}}`, `{{label}}`, `{{table}}`; an absent optional value MUST resolve to the empty string | HTML: `<figure class="srs-table">{{subheading}}{{label}}{{table}}</figure>`. Other formats: no wrapper |
 > | `captionTemplate` | Renders the `label` role. Token `{{field-value}}` | HTML: `<figcaption>{{field-value}}</figcaption>`. Markdown: `*{{field-value}}*`. Other formats: `{{field-value}}` undecorated |
 >
-> The `subheading` role renders, when no `wrapperTemplate` applies, as a heading at level 4 shifted by
-> `DocumentView.depthOffset` (`<h4>` in HTML at `depthOffset` 0). **These defaults are the renderer's
+> `{{subheading}}` resolves to the **rendered** subheading and `{{label}}` to the **output of
+> `captionTemplate`**, both computed before wrapper substitution; `{{table}}` resolves to the table element
+> or GFM block. The `subheading` role renders as a heading at the level Change C specifies for the
+> composite's own heading — the **same** level, not one deeper (`<h4>` in HTML for a top-level composite at
+> `depthOffset` 0), matching the reference implementation, and subject to Change C's clamp. It renders at
+> that level whether or not a `wrapperTemplate` applies, since the wrapper substitutes the rendered result
+> rather than replacing it. That the composite's label and its subheading land on the same level is a
+> nesting anomaly inherited from the reference implementation and deliberately preserved: correcting it
+> would add a fifth divergence observable on 2 of the 30 muSrs table entries, which is not a trade this
+> RFC should make on a parity gate. A future RFC may. `"baseline"` is a dispatch sentinel, not a renderer, and a
+> `compositeRendererConfig` key of `"baseline"` MUST be ignored. **These defaults are the renderer's
 > output specification, not configuration defaults: implementations MUST apply them whether or not
 > `ext:themes-l1` is declared and whether or not a Theme resolves.**
 
@@ -508,9 +588,10 @@ updated to name this RFC as its successor — a description-only change, no shap
 > retired. A `FieldGroup` MUST NOT be the target of a binding ([CR-036-3]), and a composite-range field
 > MUST NOT be dispatched by `FieldGroup.compositeRenderer`; the two mechanisms MUST NOT interact.
 
-> **[CR-036-20]** *(Amends Invariant 13.)* `CompositeRendererBinding`, `CompositeRendererDirective`,
-> `FieldAssignment.displayLabel`, `FieldView.displayLabel`, `FieldView.displayHint`, `Field.editorHint`
-> and `FieldView.editorHintOverride` are presentation only. They MUST NOT affect a Record's validity, its
+> **[CR-036-20]** *(Amends Invariant 1 — the `FieldAssignment` facets — and Invariant 13 — the `FieldView`
+> facets.)* `CompositeRendererBinding`, `CompositeRendererDirective`, `FieldAssignment.displayLabel`,
+> `FieldAssignment.displayHint`, `FieldView.compositeRenderer`, `FieldView.displayLabel`,
+> `FieldView.displayHint`, `Field.editorHint` and `FieldView.editorHintOverride` are presentation only. They MUST NOT affect a Record's validity, its
 > field values, its `fieldType` interpretation, its Relations, its AI guidance or extraction logic, or its
 > Discovery Text Projection (`ext:discovery`). Two repositories differing only in these values MUST
 > produce identical validation results and identical Discovery output.
@@ -527,8 +608,9 @@ updated to name this RFC as its successor — a description-only change, no shap
 > index. Diagnostics raised by [CR-036-13]'s constraint bound are **validation-pass** diagnostics of
 > severity `error`; every other `[CR-036-n]` diagnostic is a **render-pass** diagnostic of severity
 > `warning`, except the duplicate-`fieldId` case in [CR-036-6], which is additionally reported at
-> validation time. Render-pass diagnostics MUST NOT cause a non-zero exit code, consistent with the
-> existing CLI contract.
+> validation time. No `[CR-036-n]` diagnostic of either pass causes a non-zero exit code: consistent with
+> the existing CLI contract, exit 0 means the command ran, not that the data is valid, and diagnostics are
+> reported in the payload for the caller to inspect.
 
 ---
 
@@ -544,10 +626,14 @@ updated to name this RFC as its successor — a description-only change, no shap
 | `record.json` | **None.** The inline-composite value carrier is #242. |
 | `document-view-output.json` | **None in this RFC.** `ProjectedRecord.fieldGroups` / `$defs.ProjectedFieldGroup` are keyed to `FieldGroup` and are removed with it at the #242 cutover, which owns the composite projection shape because it owns the value carrier the projection would serialise. |
 
-No constraint in this table can turn a currently-valid artefact invalid: every addition is a new optional
-property under an `additionalProperties: false` object, and the two grammars this RFC defines
-([CR-036-1], [CR-036-21]) are deliberately enforced outside JSON Schema so that malformed values degrade
-per [CR-036-7]/[CR-036-21] rather than failing a load.
+Every addition is a new optional property under an `additionalProperties: false` object, and the two
+grammars this RFC defines ([CR-036-1], [CR-036-21]) are deliberately enforced outside JSON Schema so that
+malformed values degrade per [CR-036-7]/[CR-036-21] rather than failing a load. One change is not purely
+additive and is called out rather than glossed: attaching `TableRendererConfig` at
+`compositeRendererConfig.properties.table` newly constrains a key that was previously unconstrained, so a
+Theme carrying, say, `table.tableClass: 123` would newly fail to load. `additionalProperties: true` is
+retained at both levels to keep the break as narrow as possible, and corpus impact is zero — no Theme in
+either repository declares `compositeRendererConfig` at all.
 
 ### Spec record amendments
 
@@ -558,7 +644,9 @@ The canonical spec is `srs/records/` as well as `docs/schema/2.0/`. This RFC fol
 | `srs/records/extensions/ext-views-l1.json` | `FieldView.compositeRenderer` + `CompositeRendererBinding`; `[CR-036-1]`–`[CR-036-9]`, `[CR-036-21]` |
 | `srs/records/extensions/ext-views-l2.json` | `DocumentSection.compositeRenderers`, `DocumentView.compositeRenderers`; `[CR-036-6]` |
 | `srs/records/extensions/ext-themes-l1.json` | `compositeFieldRowTemplates`; `groupFieldRowTemplates` deprecation; `[CR-036-16]`–`[CR-036-18]` |
-| `srs/records/invariants/invariant-013.json` | Extended per [CR-036-20] to cover the new bindings and Discovery Text Projection |
+| `srs/records/extensions/ext-field-groups.json` | `compositeRenderer`'s canonical shape block gains the supersession note, matching the `type.json` description so record and schema do not drift |
+| `srs/records/invariants/invariant-013.json` | Extended per [CR-036-20]: the `FieldView` facets gain `compositeRenderer` and the Discovery Text Projection guarantee |
+| `srs/records/invariants/invariant-001.json` | Extended per [CR-036-20]: the `FieldAssignment` facets gain the Discovery Text Projection guarantee, so I-1 and I-13 do not drift |
 
 Schema changes must be synced to `srs-rust/crates/srs-schema/schemas/2.0/` and `srs-vscode/schemas/2.0/`.
 Both mirrors refresh from the `schemas-2.0.tar.gz` release artifact published on merge to `master`; this
@@ -626,7 +714,8 @@ composite assignment ("Tables", "Items"), preserving the heading each record ren
 `fieldType.minItems`/`maxItems` — note muSrs's `tables.rows` member assignment carries `required: true`,
 which becomes `required` on the `rows` assignment within `table@1`. Member `order` is preserved as
 assignment `order` within the new Type. Member `repeatable`/`minItems`/`maxItems` are the trio RFC-032
-[R4] deletes; where a member was list-valued its Field already declares `cardinality: "list"`.
+Change H deprecates — they are retained on `FieldAssignment` until the #242 cutover removes them — and
+where a member was list-valued its Field already declares `cardinality: "list"`.
 
 **Value transform** — total and lossless. `columns` and `rows` are `JSON.parse`d (30/30 succeed), each
 parsed row becomes one `{ cells: [...] }` inline composite, and `subheading`/`label` copy verbatim.
@@ -646,11 +735,14 @@ those plus `commentary-term` and `commentary-body`. Once those groups are compos
 Both files MUST have the key renamed to `compositeFieldRowTemplates` in the same change that migrates the
 Types.
 
-**Parity gate.** `render document-view` output for the migrated records MUST be diff-clean against
-pre-migration output, with exactly the three divergences enumerated in Change D. Only the first is
-observable on this corpus: the 11 headerless tables gain a well-formed GFM header row of empty cells,
-where RFC-007 specified no output at all. There are 0 ragged rows, so the padding rule is inert, and
-`<colgroup>` is never emitted because no entry uses `widths`. Any other diff is a migration defect.
+**Parity gate.** `render document-view` output for the migrated records MUST be diff-clean against the
+**reference implementation's** pre-migration output, with exactly the four divergences enumerated in
+Change D. Only the first is observable on this corpus: the 11 headerless tables gain a well-formed GFM
+header row of empty cells, where RFC-007 specified no output at all. There are 0 ragged rows so the
+padding rule is inert; `<colgroup>` is never emitted because no entry uses `widths`; and no corpus view
+renders in `text` or `adoc`, so the `captionTemplate` split is inert. The baseline path — the `items`
+groups and all 9 spec tables — must be diff-clean with no *observable* divergence; Change D names three
+inert respects in which Change C is deliberately not byte-for-byte identical to the reference. Any other diff is a migration defect.
 
 ### Deferred to #242
 
@@ -660,8 +752,8 @@ nowhere to live until #242 provides it. Per the repository owner's scope boundar
 owns: the `record.json` inline-composite carrier; the executable fixture rendering a composite as a table;
 re-basing the `render_service.rs` composite/table tests onto structured input (under which
 `composite_table_no_raw_json_in_output` becomes trivially true and `coerce_to_array`'s string branch is
-deleted rather than ported); executing both migrations above including the theme-key rename; the
-spec-side parity fixture; the removal of `FieldGroup`, `groupValues`, `groupFieldRowTemplates` and
+deleted rather than ported); executing both migrations above including the theme-key rename and the
+`ext:themes-l1` declaration missing from `muSrs/manifest.json`; the spec-side parity fixture; the removal of `FieldGroup`, `groupValues`, `groupFieldRowTemplates` and
 `document-view-output.json`'s `ProjectedFieldGroup`, together with the composite projection shape that
 replaces it; and the retirement of RFC-007's rules per [CR-036-19].
 
@@ -709,10 +801,11 @@ record store the canonical projection must not silently drop content the Record 
 contradicted this RFC's own [CR-036-7] ("MUST NOT suppress the field's content"). Widening the table is
 lossless, keeps the GFM output well-formed, and is unobservable on a corpus with no ragged rows.
 
-**Why the RFC-007 output defaults are restated as renderer specification.** They read as `ext:themes-l1`
-config defaults, but muSrs — the only production consumer — does not declare `ext:themes-l1`, so those
-"defaults" *are* the rendering. Leaving them in the `[T-Cx*]` rules that [CR-036-19] retires would delete
-the corpus's actual output specification at the cutover.
+**Why the RFC-007 output defaults are restated as renderer specification.** Half of them are stated only
+as defaults of `ext:themes-l1` config properties, in the `[T-Cx*]` rules that [CR-036-19] retires — so
+leaving them there would delete the renderer's actual output specification at the cutover. They are not
+configuration in any case: they are what the renderer emits when nothing configures it, which RFC-002
+`[T-2]` requires to still be produced whenever a Theme is ignored on format mismatch.
 
 **Why `widths` keeps its name and its dual meaning.** RFC-007 considered renaming it `columnAlignments`
 and declined because deployed repositories carry `widths` as a numeric array. That reasoning holds, and
@@ -729,7 +822,7 @@ second decision.
 re-derived, so relocating a property would require regenerating the metamodel package and re-running
 RFC-035's closure test to no rendering end. The override already exists on `FieldView`; what was missing
 was the value set, the precedence and the non-semantic guarantee, and [CR-036-20]/[CR-036-21] supply them
-as an Invariant 13 amendment.
+as amendments to Invariants 1 and 13.
 
 ---
 
@@ -780,8 +873,8 @@ the whole rendering surface in one object. Rejected because a Theme is applied o
 `DocumentView.format` appears in `Theme.targets` (RFC-002 `[T-2]`, cited by RFC-007), and is otherwise
 ignored with structural output still produced. Dispatch would then depend on theme resolution, so an
 unmatched format would silently downgrade every table to baseline. Config may be format-conditional;
-dispatch must not be. The corpus makes the point concretely: muSrs declares no `ext:themes-l1` at all and
-still renders tables.
+dispatch must not be. RFC-007 made the same separation for the same reason, and its extension-independence
+clause is the precedent: a repository may dispatch a renderer while carrying no theme config at all.
 
 ### Alt F — keep JSON-in-text and port the parser
 
@@ -799,7 +892,17 @@ deterministic (30/30 parse, 0 ragged), the renderer loses a parsing path rather 
    conforming table render with no binding at all, which is strictly more convenient, but makes rendering
    sensitive to Type edits. This RFC deliberately specifies the explicit mechanism first; the question is
    left for a follow-up once #242 provides real usage evidence.
-2. **Should the `table` renderer's row Type be shipped canonically?** Both migrations in this RFC publish a
+2. **What is the specification's default field-row form?** Change C's template ladder ends at "the
+   implementation's existing top-level field-row form, unchanged", because the base specification has
+   never defined one — `ext:themes-l1` specifies `fieldRow` as a wrapper and says only that an element
+   with no wrapper "is rendered without wrapping". That gap predates this RFC and is spec-wide rather
+   than composite-specific, so closing it here would be scope creep. It is not on muSrs's critical path —
+   both muSrs themes declare `groupFieldRowTemplates` covering every row their `items` groups produce, so
+   the terminal rung is never reached there. It becomes load-bearing for the **spec-side** parity fixture
+   that #242 must build, since the srs repo declares no themes at all and every row of its 9 `table`
+   records would render through exactly this undefined form. It warrants its own issue before that
+   fixture is written.
+3. **Should the `table` renderer's row Type be shipped canonically?** Both migrations in this RFC publish a
    project-local row Type with an identical single `cells` field, so deferring guarantees two Types that a
    canonical `Row` would later deprecate — a cost this RFC accepts rather than overlooks, since the
    alternative is shipping a package artefact from a design-only RFC. Note the home is not obvious:

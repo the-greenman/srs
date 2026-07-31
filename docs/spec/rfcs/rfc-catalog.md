@@ -491,3 +491,23 @@ tooling-only
 **Proposal Artifact Path**: rfcs/rfc-035-schema-emitter.md
 **Content**: The JSON Schema emitter for the self-hosted meta-model: meta-model Type records → a target-neutral IR → JSON Schema 2020-12 definition schemas, generalizing RFC-032 `projectField` to whole entities. Verification is two-tier — byte-for-byte determinism against the emitter's own goldens, plus an `emitter ⊆ seed` structural closure over the covered authoritative features (with a documented-divergence register and exclusion set). Relocates `projection-rules.md` to a live normative home and stamps `dataModelRevision` on the generated bundle. Node reference emitter now; srs-projection/CLI/WASM at the #260 cutover. Full text: rfcs/rfc-035-schema-emitter.md.
 
+**Title**: RFC-036: Composite rendering — view-owned renderer dispatch for composite-range fields
+**RFC Number**: 036
+**Status**: accepted
+**Author**: the-greenman
+**Affected Components**: View-owned composite renderer dispatch (`FieldView.compositeRenderer`, `DocumentSection.compositeRenderers`, `DocumentView.compositeRenderers`); normative composite baseline rendering; the `table` renderer over a structured value shape; `ElementTemplates.compositeFieldRowTemplates` superseding `groupFieldRowTemplates`; the RFC-007 `[FG-Cx*]`/`[T-Gx*]`/`[T-Cx*]` retirement schedule; Invariant 1 and Invariant 13 extended to the new bindings and to Discovery Text Projection.
+
+<!-- srs-integration:v1
+ext:views-l1
+ext:views-l2
+ext:themes-l1
+ext:field-groups
+schema:view.json
+schema:document-view.json
+schema:theme.json
+I-1
+I-13
+-->
+**Proposal Artifact Path**: rfcs/rfc-036-composite-rendering.md
+**Content**: Restores the rendering-dispatch capability that RFC-032 strands when it subsumes `FieldGroup` into composite range, and relocates it from the Type to the View — where RFC-015 places presentation and where `FieldView` already carries `displayHint`/`editorHintOverride`. Specifies the `table` renderer against a structured value shape (`columns: string[]`, `rows: ref(Row)[] inline`, `Row.cells: string[]`, `widths: number[]`) rather than JSON-in-text; specifies composite baseline rendering, which every fallback path depends on and which no document had defined; maps every RFC-007 rendering rule onto the new mechanism, including the one and a half that cease to be renderer concerns; and specifies the deterministic corpus migration. Design only — the inline-composite value carrier, the fixture and the migrations are #242. Full text: rfcs/rfc-036-composite-rendering.md.
+
