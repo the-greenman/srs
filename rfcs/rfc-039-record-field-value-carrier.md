@@ -724,8 +724,8 @@ collision), and the muSrs revision-0 / `ext:themes-l1` / released-package-freeze
 
 ### The first-party corpus is four repositories, not one
 
-`srs/srs` is not the only SRS repository in this tree. Three others carry live instances, and two of
-them are **still pre-RFC-032** — which means the carrier transform, whose every step is keyed on
+`srs/srs` is not the only SRS repository in this tree. Two others carry live instances — plus one
+bundle serialising one of them — and both of those repositories are **still pre-RFC-032** — which means the carrier transform, whose every step is keyed on
 `Field.fieldType`, **cannot run on them at all** until they are RFC-032-migrated first.
 
 | Repository | Instances | Values | Package Fields | Revision |
@@ -751,9 +751,10 @@ is a sequencing decision recorded here, not taken here — it belongs to #286.
 
 ### Prerequisite — the muSrs corpus audit
 
-**Every totality claim in this RFC is measured over `srs` only.** The landing is all-or-nothing over
-`srs` *and* muSrs, so the deterministic-transform argument currently covers half the corpus it must
-convert. muSrs lives in `the-greenman/muDemocracy.org`, outside this session's repository scope.
+**Every totality claim in this RFC is measured over this repository only.** The landing is
+all-or-nothing over these four repositories *and* muSrs, so the deterministic-transform argument does
+not yet cover the muSrs share of the corpus at all. muSrs lives in `the-greenman/muDemocracy.org`,
+outside this session's repository scope.
 
 Phase B MUST re-run these six measurements over muSrs and record them **before** the transform is
 written, because each one is a place where "0 occurrences here" is doing load-bearing work:
@@ -761,12 +762,12 @@ written, because each one is a place where "0 occurrences here" is doing load-be
 1. `entries` on a Field whose `cardinality` is not `list` (Change D claims 61/61 here);
 2. per-value `source`/`editedAt`/`sourceRefs`, including inside `groupValues` (Change C claims 1/0/0);
 3. entry-level `source`/`editedAt` on `entries` items (Change C claims 0 of 138);
-4. intra-Type `Field.name` collisions — [R4]'s feasibility (Change F claims 0 of 45 Types);
+4. intra-Type `Field.name` collisions — RFC-039 [R4]'s feasibility (Change F claims 0 of 45 Types);
 5. `Field.name` spellings — Open Question 2's kebab-case count (33 here);
 6. unresolvable `fieldId`s and explicit `null`s ([R10], [R5] — one and zero here respectively).
 
 A non-zero result on any of them is a design input, not a migration detail: (1) and (6) would make
-the transform non-total as written, (4) would make [R4] unsatisfiable without renaming, and (2)/(3)
+the transform non-total as written, (4) would make RFC-039 [R4] unsatisfiable without renaming, and (2)/(3)
 would reopen Change C's granularity rule.
 
 ### The transform
