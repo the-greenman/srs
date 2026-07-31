@@ -2216,15 +2216,6 @@
       "tier": 2
     },
     {
-      "instanceId": "206b93e5-c3a4-516c-9e50-9c1be3a7f25c",
-      "path": "records/type-definitions/field.json",
-      "tags": [
-        "construct:field",
-        "topic:foundation"
-      ],
-      "tier": 2
-    },
-    {
       "instanceId": "48b8b950-3ace-5b3e-b6a9-561b21dcb560",
       "path": "records/type-definitions/record-note.json",
       "tags": [

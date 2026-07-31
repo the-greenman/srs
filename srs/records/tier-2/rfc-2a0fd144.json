@@ -20,7 +20,7 @@
     },
     {
       "fieldId": "5a000009-0000-4000-a000-000000000009",
-      "value": "com.semanticops.spec/field type-definition record; §04-2-4-2 Field subsection; §03-1 Version semantics subsection; §04-7 Vocabulary and Term subsection (invariant V3); docs/schema/2.0/package-bundle.json (embedded Field shape)\n\n<!-- srs-integration:v1\ntype:com.semanticops.spec/field\nsubsection:field\nsubsection:version-semantics\nsubsection:vocabulary-and-term\nschema:package-bundle.json\n-->"
+      "value": "§04-2-4-2 Field subsection (the former com.semanticops.spec/field type-definition record was a duplicate of it and is retired — #275); §03-1 Version semantics subsection; §04-7 Vocabulary and Term subsection (invariant V3); docs/schema/2.0/package-bundle.json (embedded Field shape)\n\n<!-- srs-integration:v1\nsubsection:field\nsubsection:version-semantics\nsubsection:vocabulary-and-term\nschema:package-bundle.json\n-->"
     },
     {
       "fieldId": "5a000016-0000-4000-a000-000000000016",
