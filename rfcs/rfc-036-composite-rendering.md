@@ -19,6 +19,7 @@
 | 3 | 2026-07-31 | Address Rev 2 review findings (3 blocking). Drop the false "no Theme in play" premise: muSrs under-declares `ext:themes-l1` in its manifest while wiring both themes through `themeRef`, so [CR-036-16]'s theme-independence clause now rests on `[T-Cx*]` retirement and RFC-002 `[T-2]` instead, and the manifest defect goes to #242. Reconcile [CR-036-9] and [CR-036-13], which gave opposite answers for a `widths` Field omitting `constraints`: a required `constraints` key is advisory and never fails the contract test. Match the reference implementation on the baseline empty-field rule (omit unconditionally) rather than deferring to an `ExportConfig` that the baseline path never has. Require the composite label heading on the **bound** path too ([CR-036-12], [CR-036-15]) — naming the successor was not enough to save the parity gate. Make `rangeType` presence-matched, since a binding site has no literal value to match. Parameterise Change C's heading by nesting depth and specify nested-composite expansion. Add the zero-effective-column skip, non-HTML format routing, `{{subheading}}`/`{{label}}` token resolution, and a fourth `table` divergence (`captionTemplate`'s three-way split). Split the presentation guarantee across Invariant 1 and Invariant 13 rather than piling `FieldAssignment` facets onto the FieldView invariant, and add `ext-field-groups.json` to the amendments. Attribute the `FieldGroup.label` heading to the reference implementation, not RFC-007; correct the Problem 4 framing (RFC-007 already said its defaults apply without `ext:themes-l1`); relabel three mapping rows as broadened; correct "the trio `[R4]` deletes" to Change H deprecates. Disclose the one non-additive schema change. New Open Question 3 on the undefined default field-row form. |
 | 4 | 2026-07-31 | Address Rev 3 review findings (1 blocking, found independently by both reviewers). [CR-036-16] said the `subheading` renders one level below the composite's heading while its own worked example said `<h4>`, i.e. the same level — the rule contradicted its example, and "plus one" would have moved 2 of the 30 muSrs table entries from `####` to `#####`, adding a fifth *observable* divergence that Change D and the parity gate both denied. Resolved by matching the reference implementation (same level), with the resulting label/subheading collision recorded as a deliberately preserved anomaly. Three accuracy fixes where Rev 3's own corrections had not propagated: the Rationale still argued from the retracted "no Theme in play" premise; [CR-036-20] was still headed "Amends Invariant 13" while listing a `FieldAssignment` facet, and omitted `FieldAssignment.displayHint`; Open Question 2 justified its urgency on muSrs, whose themes in fact cover every `items` row — the real dependency is #242's spec-side fixture. Softened Change D's absolute "no divergence" claim on the baseline path to three named inert differences (a `fieldRow` rung the reference omits, the `fieldId` tie-break, per-format separation). Scoped Change C's heading clamp to heading-bearing formats. |
 | 5 | 2026-07-31 | Accepted after three review rounds with zero surviving blocking findings. Spec records authored in `srs/srs/`: `ext-views-l1` (the binding, the composite baseline, the `table` roles, `[CR-036-1]`–`[CR-036-9]`, `[CR-036-21]`, `[CR-036-22]`), `ext-views-l2` (the section and document directives), `ext-themes-l1` (`compositeFieldRowTemplates`, `[CR-036-16]`–`[CR-036-19]`), `ext-field-groups` (supersession note), and the Invariant 1 / Invariant 13 amendments. Schema changes applied to `view.json`, `document-view.json`, `theme.json` and a description-only touch to `type.json`. |
+| 6 | 2026-07-31 | Correct Open Question 3 after researching it properly. Its named home was wrong: `com.semanticops.srs/metamodel` is generator-owned and CI-gated (`gen-metamodel-package.mjs --check`) and derivation-scoped to `field.json`/`type.json` properties, so a table row has no antecedent there and cannot be hand-added — a canonical Row needs a new distributable package under `packages/`. Dropped the "identity primitives" gloss on RFC-029, which scopes `com.semanticops.core` by *always-implicit availability*, not subject matter (its [R3] freezes v1.0.0 to `purpose`). Removed the claim that a design-only RFC cannot ship a package artefact — RFC-005 shipped seven canonical `RelationTypeDefinition`s normatively. Corrected the supersession framing: RFC-021 is blueprint `$schema` optionality and RFC-022 is Record lifecycle, so neither applies — there is **no** supersession path for Types. Added the two constraints that actually decide the question: this RFC's own [CR-036-8]/[CR-036-10] make a canonical Row functionally unnecessary, and muSrs is at `dataModelRevision` 0 so it could not consume one until it completes the RFC-032 migration. |
 
 ---
 
@@ -902,10 +903,34 @@ deterministic (30/30 parse, 0 ragged), the renderer loses a parsing path rather 
    that #242 must build, since the srs repo declares no themes at all and every row of its 9 `table`
    records would render through exactly this undefined form. It warrants its own issue before that
    fixture is written.
-3. **Should the `table` renderer's row Type be shipped canonically?** Both migrations in this RFC publish a
-   project-local row Type with an identical single `cells` field, so deferring guarantees two Types that a
-   canonical `Row` would later deprecate — a cost this RFC accepts rather than overlooks, since the
-   alternative is shipping a package artefact from a design-only RFC. Note the home is not obvious:
-   RFC-029 scopes `com.semanticops.core` to always-implicitly-available identity primitives and bars other
-   types without a new RFC, so the `packageRef`-resolved foundational package (`com.semanticops.srs`,
-   RFC-033 Change A) is the likelier candidate. Best decided with #242's migration in hand.
+3. **Should the `table` renderer's row Type be shipped canonically?** Both migrations publish a
+   project-local row Type with an identical single `cells` field, so deferring guarantees two Types a
+   canonical `Row` would later deprecate — a cost this RFC accepts rather than overlooks. Three
+   constraints bound the answer, and they are recorded here so the question is not reopened from
+   scratch:
+
+   - **This RFC's own rules make a canonical Row functionally unnecessary.** [CR-036-8] binds roles by
+     `Field.name` *independently of namespace*, [CR-036-10] states that implementations MUST NOT require
+     a role Field to carry a particular `namespace`, and `roles` supplies a UUID override for anything
+     else. Two project-local row Types satisfy the contract with zero configuration. What is genuinely
+     canonical here is the **role contract** ([CR-036-10] and Change D's role table), not a Type — a
+     shared Type would be a second, weaker expression of something already normative.
+   - **There is no home for it today.** RFC-029 [R3] freezes `com.semanticops.core` v1.0.0 to the
+     `purpose` Type and requires a new RFC for any addition; RFC-033 explicitly declines to make
+     `com.semanticops.srs` implicitly available, and `com.semanticops.srs/metamodel` is
+     generator-owned (`gen-metamodel-package.mjs --check` gates it in CI) and derivation-scoped to the
+     properties of `field.json`/`type.json`, so a table row has no antecedent there and cannot be
+     hand-added. A canonical Row would need a **new distributable package** under `packages/`,
+     following the RFC-029 / RFC-017 pattern — roughly six files. Note RFC-005 shipped seven canonical
+     `RelationTypeDefinition`s normatively from an RFC, so "a design-only RFC cannot ship a package
+     artefact" is a scope preference here, not a categorical bar.
+   - **muSrs could not consume one yet.** Its manifest carries no `dataModelRevision` (⇒ 0) and its
+     fields are still on the pre-RFC-032 `valueType` model, so a rev-1 canonical Row is unusable there
+     until muSrs completes the RFC-032 migration — which #242 does not currently scope.
+
+   Deferring is not free but the cost is bounded and non-stranding: inline composites are *values*, not
+   instances, so no Relation is affected, and `compositeFieldRowTemplates` is `Field.name`-keyed so
+   theme keys survive. Note there is **no supersession path for Types** — a canonical Row in a different
+   namespace is a new UUID lineage, not a version bump — so the retarget is a mechanical rekey of 23
+   records / 167 rows. The cost curve is *cheap now → cheapest at #242, when both corpora are rewritten
+   anyway → expensive after*. Decide it at #242, not later.
