@@ -3475,6 +3475,14 @@
       ],
       "tier": 2,
       "title": "RFC-037: Normative field-row rendering baseline"
+    },
+    {
+      "instanceId": "69b59f00-d472-4249-904c-bb26eba77bf7",
+      "path": "records/tier-2/rfc-69b59f00.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
     }
   ],
   "meta": {
