@@ -1670,9 +1670,9 @@ One section in a Document View.
 
   titleFieldId?: UUID
   // The fieldId whose value provides the per-record heading within this section.
-  // Constraints:
-  //   - The referenced field must have valueType "string" or "text".
-  //   - The referenced field must not be repeatable (FieldAssignment.repeatable !== true).
+  // Constraints (RFC-032 Rev-7 [N+1]):
+  //   - The referenced field must be effective-single.
+  //   - datatype string; valueDomain absent/open; format absent/plain/markdown.
   //   - When a record's type does not carry this field, the per-record heading is
   //     omitted silently — this is not a render failure. This enables heterogeneous
   //     sections (e.g. container-subset) where some record types carry the heading
@@ -2953,15 +2953,15 @@ An instance matches a `DiscoveryQuery` if and only if it satisfies all predicate
 
 Sentinels: `"note-title"`, `"note-section"`, `"typed-record-title"`, `"typed-record-field"`, `"tag"`, `"label"`.
 
-#### Searchable `valueType` classification
+#### Searchable Field classification (RFC-032 Rev 7)
 
-Searchable (contribute segments): `string`, `text`, `url`, `select`, `multiselect`.
+For Tier 2, a Field is searchable only when `fieldType.datatype == "string"` and `fieldType.format` is absent or one of `"plain"`, `"markdown"`, or `"uri"`. `valueDomain` and cardinality do not restrict searchability. `format: "uuid"`, `format: "email"`, and datatypes `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, and `map` are non-searchable. Inline-composite recursion is not defined.
 
-Non-searchable (excluded from projection): `number`, `boolean`, `date`.
+Tier-1 `TypedField.valueType` continues to use the legacy searchable set `{string, text, url, select, multiselect}` until the #242 Phase-B carrier cutover.
 
 #### Text Projection algorithm
 
-**Tier 2 (Record):** for each `fieldValue` in `fieldValues` array order — if `valueType` is searchable and value is non-empty, emit one `TextSegment` per value (one per array element for `multiselect`). After all field values, emit one segment per tag. Optionally emit `displayLabel` segments after tags.
+**Tier 2 (Record):** for each `fieldValue` in `fieldValues` array order — resolve the Field and apply the RFC-032 Rev-7 searchability predicate. If eligible and non-empty, emit one `TextSegment` for a single-cardinality value or one per array element for list cardinality, in order. After all field values, emit one segment per tag. Optionally emit `displayLabel` segments after tags.
 
 **Tier 0 (Note):** if `title` is non-empty, emit a leading `note-title` segment. For each `section[]` in order, emit a `note-section` segment if `content` is non-empty. After sections, emit tag segments.
 
@@ -3046,7 +3046,7 @@ Conforming implementations must uphold the following invariants.
 
 **I-93.** A `CrossFieldRule` with `type: "mutual-exclusion"` MUST report a validation error if more than one field in `fieldIds` is non-empty in the Record. If zero or one field is non-empty, the rule passes. (RFC-019 R5.)
 
-**I-94.** A `CrossFieldRule` with `type: "conditional-required"` MUST supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. Additionally, the field identified by `predicateFieldId` MUST have a `valueType` in `{"string", "text", "select", "date", "url"}` — types whose stored `value` is always a JSON string, enabling meaningful string equality comparison. A rule that omits any of the three required fields, or whose `predicateFieldId` resolves to a field with any other `valueType`, MUST be reported as a Type-level validation error. (RFC-019 R6; normative extension of I-11.)
+**I-94.** A `CrossFieldRule` with `type: "conditional-required"` MUST supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. The field identified by `predicateFieldId` MUST be effective-single (`fieldType.cardinality` absent/`"single"` and, until #242 Phase B, effective `FieldAssignment.repeatable !== true`) and its `fieldType.datatype` MUST be one of `{"string", "date", "date-time"}`. String `format` and `valueDomain` do not restrict eligibility. A rule that omits a required property, selects a list/repeatable field, or resolves to any other datatype MUST be reported as a Type-level validation error. Admission of `date-time` is intentional; the scalar requirement intentionally closes the legacy repeatable-date equality hole. (RFC-019 R6; RFC-032 Rev-7 erratum; normative extension of I-11.)
 
 **I-95.** A `CrossFieldRule` with a `type` value not in `["conditional-required", "field-ordering", "mutual-exclusion"]` MUST be reported as a Type-level validation error. Implementations MUST NOT silently ignore unknown rule types. (RFC-019 R9.)
 
@@ -3310,7 +3310,7 @@ Conforming implementations must uphold the following invariants.
 
 **I-119.** A `tag` predicate with multiple values MUST use AND semantics — all specified tags must be present on the instance. Both query tags and stored instance tags are canonicalized via RFC-006 key-or-alias resolution when a Vocabulary is declared for the tag key; when no Vocabulary is declared, raw string comparison applies (case-sensitive). (RFC-012 R7.)
 
-**I-120.** The Text Projection MUST include searchable `valueType` fields only (`string`, `text`, `url`, `select`, `multiselect`). Fields with `valueType` of `number`, `boolean`, or `date` MUST NOT contribute `TextSegment`s. (RFC-012 R8.)
+**I-120.** For Tier 2, the Text Projection MUST include a Field only when `fieldType.datatype == "string"` and `fieldType.format` is absent or one of `"plain"`, `"markdown"`, or `"uri"`. `valueDomain` does not affect searchability. A single-cardinality Field emits one segment; a list-cardinality Field emits one segment per array element in order. Fields with `format: "uuid"` or `format: "email"`, or datatype `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, or `map`, MUST NOT contribute `TextSegment`s. Tier-1 `TypedField.valueType` continues to use the legacy classification until the #242 Phase-B carrier cutover. (RFC-012 R8; RFC-032 Rev-7 erratum.)
 
 **I-121.** The Text Projection MUST include `tags` array entries as `TextSegment`s after field segments. An implementation MAY additionally include `FieldAssignment.displayLabel` values as segments after tags — this is not required, and two conforming implementations may differ on whether display-label segments are included. (RFC-012 R9.)
 

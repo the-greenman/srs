@@ -2,8 +2,8 @@
 
 # RFC-032: The Field type model — decomposed value type, composite range, maps, and FieldGroup subsumption
 
-**Status**: Accepted (Revision 6)
-**Affects**: Field, Type, FieldAssignment, FieldGroup (`ext:field-groups`), ValidationRule, `ext:repeatable-fields`, `RequiresRelation` (RFC-022), `CrossFieldRule` (RFC-019); `docs/schema/2.0/{field,type}.json`. Enables epic #256; folds in #239. **Breaking (definition layer; instance cutover gated with #242).**
+**Status**: Accepted (Revision 7)
+**Affects**: Field, Type, FieldAssignment, FieldGroup (`ext:field-groups`), ValidationRule, `ext:repeatable-fields`, `RequiresRelation` (RFC-022), `CrossFieldRule` (RFC-019), RFC-012 Text Projection, ext:themes-l1 `[T-9]`, ext:views-l2 `[N+1]`; `docs/schema/2.0/{field,type,theme,document-view}.json`. Enables epic #256; folds in #239. **Breaking (definition layer; instance cutover gated with #242).**
 **Author**: Claude Code (agent), on behalf of the repository owner
 **Date**: 2026-07-29
 
@@ -19,6 +19,7 @@
 | 4 | 2026-07-29 | Third review round: **both reviewers CLEAN of blocking findings — converged.** Applied their should-fixes: retyped `RequiresRelation.relationType` to the configurable closed-vocabulary pattern (was wrongly a UUID ref); confirmed against RFC-019 that `CrossFieldRule.predicateValue` is a plain `string` (string-equality) — not polymorphic, closing the last stress-test of the "no sum types" claim; scoped the conformance fixture so #257 acceptance stays independent of #242 (instance records are scalar + reference-mode only); restricted `map.valueRange` to scalar\|open; renamed `datetime`→`date-time` (RFC-004 alignment); enum projection cites RFC-006 effective (active) Term keys; added the `relationType`→list migration row. Owner clarification folded in: configurable data ranges (package-managed allowed values) project to a pure runtime `enum`. |
 | 5 | 2026-07-29 | **Accepted + delivered** (Task #257). `docs/schema/2.0/{field,type}.json` edited to the `fieldType` model (Change A; `field.json` adds `$defs.FieldType` + `$defs.ExactTypeRef` byte-identical to `blueprint.json`; `type.json` normalizes `RequiresRelation.relationType` to a list and deprecates — does not remove — `FieldGroup`/`Type.fieldGroups`/`FieldAssignment.{repeatable,minItems,maxItems}`, the #242-gated cutover, since `FieldGroup.fields` reuse `FieldAssignment`). A deterministic, idempotent migration (`scripts/migrate-rfc-032-field-type.mjs` over the shared transform `scripts/lib/rfc-032-fieldtype.mjs`) rewrote all **95** legacy field definitions per Change H, each R1–R11-validated. Coverage: the paper proof (`scripts/rfc-032-paper-proof.mjs`, 11/11) and the migration + conformance harnesses (`scripts/rfc-032-migration-test.mjs`; `tests/rfc-032/run.mjs` — every mode, with committed Change-G projection goldens) all run under `scripts/validate-all.mjs`, which validates against the **runtime** schemas. Note (ADR-004): the embedded-schema `srs` binary cannot load the migrated package, so binary-backed render/validate/drift tooling and the rendered `docs/spec` outputs are intentionally stale until srs-rust adopts the new schema (release-artifact refresh). |
 | 6 | 2026-07-31 | **Errata (post-acceptance), from #276. Ratified by the repository owner 2026-07-31** (the-greenman/srs#256) — the errata route is sanctioned for a post-acceptance correction of this kind: a normative statement that contradicted another rule in the same RFC and described a construct member that never existed. A correction of *substance* would still require a new RFC. Two RFC-032 fold-in defects. (a) **Data:** the Change-H migration derived `cardinality: "list"` only from legacy `valueType: "multiselect"`, reading Field definitions in isolation — so `com.semanticops.spec/{columns,cells}`, whose list-ness was expressed *only* by assignment-level `repeatable: true` on `com.semanticops.spec/table@2`, migrated to single-valued while their 9 records hold arrays. Both Fields now declare `cardinality: "list"`; `scripts/check-cardinality-coherence.mjs` (wired into `validate-all.mjs`) fails any assignment carrying the deprecated `repeatable`/`minItems`/`maxItems` trio whose `fieldType`-model Field is not `cardinality: "list"`. (b) **Normative:** [R8] claimed `cardinality` "MAY be overridden per assignment via `FieldAssignmentOverride`", contradicting [R4] and describing a facet that construct does not carry; corrected to Field-level-only under Invariant 2, with `required` remaining overridable. The same claim is removed from `FieldAssignment.repeatable`'s description in `docs/schema/2.0/type.json`. |
+| 7 | 2026-08-01 | **Erratum (post-acceptance), ratified by the repository owner 2026-08-01** (the-greenman/srs#284). RFC-032 collapsed five legacy string-like `valueType`s but failed to re-express four extension rules that selected subsets of that enum, and failed RFC-012's explicit obligation that a newly introduced ambiguous type classify its searchability. Change I supplies exact predicates for Text Projection, conditional-required, themes `[T-9]`, and views-l2 `titleFieldId`; classifies every new datatype and string format; preserves the Tier-1 `TypedField.valueType` rule until the #242 Phase-B carrier cutover; and defines fail-closed criteria for removing the temporary legacy `FieldAssignment.repeatable` conjunct. This substantive erratum is used, rather than a new RFC number, by explicit owner direction because it corrects RFC-032's fold-in only hours after acceptance and before its atomic instance cutover. |
 
 ---
 
@@ -202,6 +203,52 @@ Normative here are only the rows this RFC introduces; **scalar/format/list rows 
 | `validationRules[]` | → `constraints` / `valueDomain` / `FieldAssignment.required` (Change F) |
 | `RequiresRelation.relationType` (`string\|string[]` declaration) | → `{datatype:string, valueDomain:closed, vocabularyRef, cardinality:list, minItems:1}` (Change F; downstream packages only — no live spec-repo instances) |
 | (field-group) | `{datatype:ref, mode:inline, cardinality:single|list, rangeType:<group Type>}` — **instance cutover gated with #242** |
+
+### Change I — extension-rule subset predicates (Rev 7 erratum)
+
+RFC-032's datatype collapse does not license treating every `datatype: "string"` Field identically.
+The following predicates are the complete disposition of the four legacy subset rules. An absent
+`cardinality`, `format`, or `valueDomain` means its RFC-032 default: `single`, no specialised format,
+or `open`, respectively.
+
+During the pre-#242 transition, **effective-single** means both:
+
+1. `fieldType.cardinality` is absent or `"single"`; and
+2. the Field's effective `FieldAssignment.repeatable` is not `true`.
+
+After #242 Phase B removes `FieldAssignment.repeatable`, only condition 1 remains.
+
+| Rule | Exact Tier-2 predicate | Behavioural disposition |
+|---|---|---|
+| RFC-012 [R8] / I-120 Text Projection | `fieldType.datatype == "string"` AND `fieldType.format` is absent or one of `"plain"`, `"markdown"`, `"uri"`. `valueDomain` and cardinality do not restrict searchability; a list emits one segment per element in array order. | Preserves all eight legacy classifications. `format: "uuid"` and `format: "email"` are explicitly non-searchable rather than silently widened. `integer`, `date-time`, `ref` (both modes), `dependent`, and `map` are non-searchable. Inline-composite recursion is not defined by this erratum. |
+| RFC-019 [R6] / I-94 conditional-required predicate | effective-single AND `fieldType.datatype` is one of `"string"`, `"date"`, `"date-time"`. `format` and `valueDomain` do not restrict eligibility. | Intentionally widens the temporal set to `date-time`, following sibling I-92, and intentionally narrows the legacy repeatable-date hole so equality is always scalar. `integer`, `ref`, `dependent`, and `map` are excluded; reference-mode UUID storage does not make a `ref` eligible. |
+| ext:themes-l1 `[T-9]` CSS-class field | effective-single AND `fieldType.datatype == "string"` AND `fieldType.format` is absent or one of `"plain"`, `"markdown"`. `valueDomain` may be open or closed. | Preserves scalar legacy `string`, `text`, and `select`; excludes legacy `url`/`multiselect`, new `uuid`/`email`, and every non-string/composite datatype. The effective-single requirement intentionally closes the previously undefined array-to-one-CSS-class case. |
+| ext:views-l2 `[N+1]` `titleFieldId` | effective-single AND `fieldType.datatype == "string"` AND `fieldType.valueDomain` is absent or `"open"` AND `fieldType.format` is absent or one of `"plain"`, `"markdown"`. | Preserves scalar legacy `string`/`text`; excludes select/multiselect, URI/UUID/email strings, and every non-string/composite datatype. Both cardinality mechanisms are checked until the #242 cutover. |
+
+The Tier-1 Text Projection remains on `TypedField.valueType` for this transition. RFC-039 Phase B may
+replace that carrier atomically; this erratum neither requires nor forbids that later simplification.
+There are no known production Tier-1 consumers, but the two discovery conformance fixtures remain a
+useful regression surface until their explicit Phase-B disposition.
+
+**Removal gate for the legacy conjunct.** The `FieldAssignment.repeatable` half of effective-single
+MUST NOT be removed from prose, schema descriptions, validation, or rendering independently. It is
+removed only in the atomic #242 Phase-B change that proves all of the following:
+
+1. `FieldAssignment.repeatable`, `minItems`, and `maxItems`, `FieldGroup`, and the `entries` carrier
+   are absent from the final schemas and rejected on new input;
+2. an exhaustive scan of every first-party package, fixture, example, snapshot, and repository finds
+   zero remaining assignment-level cardinality properties;
+3. the migration maps every legacy repeatable assignment to a list-cardinality Field without losing
+   order, bounds, or values, and the old-to-new-to-old logical round-trip gate passes;
+4. I-94, `[T-9]`, `[N+1]`, and every implementation of them switch to cardinality-only in that same
+   atomic train, with no remaining code path reading `FieldValue.entries`; and
+5. tests reject the transition-only conflict (`fieldType.cardinality: "single"` plus
+   `FieldAssignment.repeatable: true`) before removal and cover scalar/list acceptance after removal.
+
+The ext:discovery fixture migration and expansion are Phase-B work owned alongside #286. It MUST
+preserve the eight legacy outcomes and add explicit cases for `integer`, `date-time`, `ref` inline,
+`ref` reference, `dependent`, `map`, `format: "uuid"`, and `format: "email"`. Composite search may be
+widened only by a later RFC that defines recursion, cycle handling, and nested `TextSegment` identity.
 
 `contentFormat`/`allowedValues`/`vocabularyRef`/`repeatable`/`minItems`/`maxItems` are absorbed into the
 facets. `editorHint` is retained (presentation; #262). A migration script rewrites Field/Type

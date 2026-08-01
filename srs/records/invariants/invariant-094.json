@@ -8,11 +8,11 @@
     },
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",
-      "value": "conditional-required predicateFieldId MUST resolve to a field with valueType in {string, text, select, date, url}"
+      "value": "conditional-required predicateFieldId MUST resolve to an effective-single string/date/date-time Field"
     },
     {
       "fieldId": "1a000003-0000-4000-a000-000000000003",
-      "value": "A `CrossFieldRule` with `type: \"conditional-required\"` MUST supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. Additionally, the field identified by `predicateFieldId` MUST have a `valueType` in `{\"string\", \"text\", \"select\", \"date\", \"url\"}` — types whose stored `value` is always a JSON string, enabling meaningful string equality comparison. A rule that omits any of the three required fields, or whose `predicateFieldId` resolves to a field with any other `valueType`, MUST be reported as a Type-level validation error. (RFC-019 R6; normative extension of I-11.)"
+      "value": "A `CrossFieldRule` with `type: \"conditional-required\"` MUST supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. The field identified by `predicateFieldId` MUST be effective-single (`fieldType.cardinality` absent/`\"single\"` and, until #242 Phase B, effective `FieldAssignment.repeatable !== true`) and its `fieldType.datatype` MUST be one of `{\"string\", \"date\", \"date-time\"}`. String `format` and `valueDomain` do not restrict eligibility. A rule that omits a required property, selects a list/repeatable field, or resolves to any other datatype MUST be reported as a Type-level validation error. Admission of `date-time` is intentional; the scalar requirement intentionally closes the legacy repeatable-date equality hole. (RFC-019 R6; RFC-032 Rev-7 erratum; normative extension of I-11.)"
     },
     {
       "fieldId": "1a000021-0000-4000-a000-000000000021",

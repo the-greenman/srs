@@ -2,8 +2,8 @@
 
 # RFC-012: Discovery Contract & Text Projection
 
-**Status**: Accepted (Revision 8)
-**Affects**: `Field` (`valueType` searchability classification), `Record` (Tier 2), `TypedRecord` (Tier 1), `Note` (Tier 0), `Container`, `ext:lifecycle`, new `discovery.json` schema
+**Status**: Accepted (Revision 9)
+**Affects**: `Field` (`fieldType` searchability classification; Tier-1 `TypedField.valueType` transitional carve-out), `Record` (Tier 2), `TypedRecord` (Tier 1), `Note` (Tier 0), `Container`, `ext:lifecycle`, new `discovery.json` schema
 **Author**: Peter Brownell (scoped from srs-rust#213)
 **Date**: 2026-06-26
 **Builds on**: RFC-006 (Vocabulary Substrate — tags, lifecycle states), RFC-009 (Root-record Type anchor — container typing and membership definition)
@@ -22,6 +22,7 @@
 | 6 | 2026-06-27 | Accepted; `docs/schema/2.0/discovery.json` authored; conformance fixture created at `conformance/discovery/`; `ext:discovery` spec record authored in `srs/srs/`; spec re-rendered. |
 | 7 | 2026-06-28 | Additive, backward-compatible: add `excludeLifecycleStates: string[]` to `DiscoveryQuery` (parity with the RFC-011 `type-query` axis of the same name). Lets an authored view's default-hidden lifecycle states (e.g. `superseded`, `closed`) be applied at query time with a client-side runtime "show all" (empty list) override, so the interactive list path composes container resolve-view with a single discovery query rather than re-expressing lifecycle filtering in clients. Existing conformance scenarios unaffected (property is optional). |
 | 8 | 2026-07-23 | Fold completion (#206): authored the `ext:discovery` extension record (`records/extensions/extension-8239da34.json`) and R1–R12 as invariant records I-113–I-124 (`records/invariants/`), the two normative artifacts left un-folded after Rev 6. RFC-012's integration manifest now declares `schema:discovery.json`, `ext:discovery`, and `I-113`–`I-124`, and resolves without the `rfcs/integration-allowlist.json` grandfather entry. No change to the contract itself. |
+| 9 | 2026-08-01 | RFC-032 Rev-7 erratum (#284): re-express Tier-2 searchability over `fieldType`; preserve all eight legacy outcomes; explicitly exclude UUID/email formats and the five new datatypes; define list segmentation; retain the legacy Tier-1 `TypedField.valueType` classification until its #242 Phase-B disposition. Fixture migration and exhaustive new-type coverage are tracked by #317 with #286. |
 
 ---
 
@@ -112,7 +113,7 @@ TextSegment {
 | `tags` array entry | `"tag"` | `"tag"` |
 | `FieldAssignment.displayLabel` | `"label"` | `"label"` |
 
-**Searchable valueType classification:**
+**Searchable Field classification (RFC-032 Rev 7):**
 
 | valueType | Searchable | Rationale |
 |---|---|---|
@@ -125,15 +126,23 @@ TextSegment {
 | `boolean` | NO | True/false is not a meaningful search token. |
 | `date` | NO | Date predicates (range, relative) are out of scope for this RFC. |
 
+For Tier 2, the legacy table is re-expressed exactly as: a Field is searchable when
+`fieldType.datatype == "string"` and `fieldType.format` is absent or one of `"plain"`, `"markdown"`,
+or `"uri"`. `valueDomain` and cardinality do not restrict searchability; a list contributes one
+segment per element. `format: "uuid"`, `format: "email"`, and datatypes `number`, `integer`,
+`boolean`, `date`, `date-time`, `ref`, `dependent`, and `map` are non-searchable. Inline composite
+recursion is not defined. The legacy table continues to govern Tier-1 `TypedField.valueType` until
+the #242 Phase-B carrier cutover.
+
 **Alias-resolution rule for select, multiselect, and tags:** the projection emits the **stored value as-is** for all three — field values for `select`/`multiselect`, and the raw tag string for `tags` array entries. Vocabulary resolution (RFC-006) is not applied during projection. This keeps projection stateless (no vocabulary load required) and ensures the segment stream is reproducible from the record file alone. Note: the `tag` filter axis (Change A) does apply RFC-006 resolution to both query and instance values — that is a filter-time operation, separate from projection. Callers who need canonical-key content matching may resolve query strings via the vocabulary and match against stored segment values.
 
 **Text Projection algorithm — Tier 2 (Record), in order:**
 
 1. For each `fieldValue` in the instance's `fieldValues` array, in the order they appear in the array:
    a. Resolve the field definition (by `fieldId`) from the package.
-   b. If the field's `valueType` is not searchable (per the table above), skip it.
+   b. If the field's `fieldType` is not searchable (per the RFC-032 Rev-7 predicate above), skip it.
    c. If the `value` is null, absent, or an empty string, skip it.
-   d. For `multiselect` (value is a JSON array): emit one `TextSegment` per array element, in array order, with `fieldId` = the field's UUID and `fieldName` = the field's `name`, and `text = String(element)`.
+   d. For `fieldType.cardinality == "list"` (value is a JSON array): emit one `TextSegment` per array element, in array order, with `fieldId` = the field's UUID and `fieldName` = the field's `name`, and `text = String(element)`.
    e. For all other searchable types: emit one `TextSegment` with `fieldId` = the field's UUID, `fieldName` = the field's `name`, and `text = String(value)`.
 
    Note: `fieldValues` stored array position is used here, not `FieldAssignment.order`. The two orderings can differ; stored array order is intentional (it reflects the order in which values were set). The optional display-label step (step 3) uses `FieldAssignment.order` for its own ordering — that asymmetry is deliberate.
@@ -248,7 +257,7 @@ The initial fixture repo MUST contain at minimum:
 
 > **[R7]** A `tag` predicate with multiple values MUST use AND semantics — all specified tags must be present on the instance. Both query tags and stored instance tags are canonicalized via RFC-006 key-or-alias resolution (when a Vocabulary is declared) before comparison. When no Vocabulary is declared, raw string comparison applies (case-sensitive).
 
-> **[R8]** The Text Projection MUST include searchable `valueType` fields only (`string`, `text`, `url`, `select`, `multiselect`). Fields with `valueType` of `number`, `boolean`, or `date` MUST NOT contribute segments.
+> **[R8]** For Tier 2, the Text Projection MUST include a Field only when `fieldType.datatype == "string"` and `fieldType.format` is absent or one of `"plain"`, `"markdown"`, or `"uri"`. `valueDomain` does not affect searchability. A single-cardinality Field emits one segment; a list-cardinality Field emits one segment per array element in order. Fields with `format: "uuid"` or `format: "email"`, or datatype `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, or `map`, MUST NOT contribute segments. Tier-1 `TypedField.valueType` continues to use the legacy classification until the #242 Phase-B carrier cutover. (RFC-032 Rev-7 erratum.)
 
 > **[R9]** The Text Projection MUST include `tags` array entries as segments after field segments. An implementation MAY additionally include `FieldAssignment.displayLabel` values as segments after tags (not required).
 
