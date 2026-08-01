@@ -2,7 +2,7 @@
 
 # RFC-038: Tree-authoritative repositories and conflict-free Git storage
 
-**Status**: Draft (Revision 6)
+**Status**: Draft (Revision 7)
 **Affects**: `RepositoryManifest` (`instanceIndex`, `containerIndex`, `sourceDocumentIndex`, `relationsChecksums`, `relationsPath`), `InstanceIndexEntry`, `ContainerIndexEntry`, `SourceDocumentIndexEntry`, `RelationsChecksumEntry`, `Relation` storage, `ext:repository` repository layout and archive format, `ext:json-store` (`.srsj`) membership and version gate, `ext:slices` (RFC-026 [R5], [R6], [R13]), `dataModelRevision`; `docs/schema/2.0/{manifest,relations-collection}.json` a new `docs/schema/2.0/relation.json`, and two further schemas recorded as owed and absent (a `.revisions.json` sidecar schema, and a `{srsj, manifest, data}` envelope schema that has never existed). Resolves a standing contradiction between the manifest schema / `RepositoryManifest` prose and RFC-012 [R6] / RFC-013 [R2] / I-80 / I-118. **Amends Accepted RFC-039 [R13]/[R14], RFC-026 [R5]/[R6]/[R13] and migration steps, RFC-013 [R6]/[R9], and RFC-017 [R2]/[R12].** Composed with RFC-039 (Accepted Rev 6 — `#242`) in one first-party cutover at a single `dataModelRevision: 2`. **Breaking (storage layer).**
 **Author**: the-greenman (epic-256 worker)
 **Date**: 2026-07-31
@@ -13,6 +13,7 @@
 
 | Rev | Date | Summary |
 |---|---|---|
+| 7 | 2026-08-01 | Owner direction resolves the remaining apparent migration choices: all first-party repositories and package artifacts migrate now, every migrated repository is made conformant, and no unmentioned repository population exists. The former owner-decision list is therefore a work list. The gallery is an intended repository and receives a marker; the discovery and RFC-032 fixtures remain test data rather than receiving invented repository identity. Revision history is preserved by adding its owed sidecar schema. `com.mudemocracy.governance` owns its namespace's 27 byte-identical definitions, so the duplicate copies leave the broad `com.mudemocracy` package. The two published governance packages join this cutover instead of waiting for #286. The only remaining owner act is formal RFC acceptance after review; no data-policy choice blocks migration. |
 | 6 | 2026-08-01 | Owner selected the explicit `muSrs` root reconciliation introduced in Revision 5. The generation-2 inline root keeps `identityInstanceId: dc2723e7-aca3-4562-b893-47bd24da629d`, the Tier-2 `com.semanticops.core/purpose` record required by RFC-029 I-87; retains the purpose and decision log only in `memberInstanceIds`; retains the intent Note and five guides only in `rootInstanceIds`; omits the misleading legacy `containerType: repository-root`; and removes the conflicting standalone Container. This preserves the standalone file's navigational content without preserving its invalid identity choice or its five duplicate membership declarations. The migration and acceptance test now state that exact expected object rather than deferring the choice to the migration operator. |
 | 5 | 2026-08-01 | Owner review cross-checked Revision 4 against the previously unmeasured `muSrs` migration target and found seven blocking gaps. **The sole migration inventory omitted `muSrs` entirely**: added its repository manifest, two package manifests and 21-relation collection, making the in-scope relation total 243 across 4 collections. **Its root Container exists twice with the same `containerId` and conflicting `identityInstanceId` values**: Phase 0 now requires an owner reconciliation, preserving the inline manifest Container as the sole generation-2 root representation. **Presence-keyed package discovery exposes 27 duplicated definitions** across `package/` and `packages/governance/`: [R12] now covers definition identifiers, [R13] requires exactly-one resolution, and Phase 0 removes or reconciles the duplicate declarations. **[R9] classified the Markdown payload of every source document as a fatal unrecognised file**: source-document content is now an opaque payload class, with sidecar candidates still closed and validated. **Every conforming `package.json` was inadmissible under its own local-package location**: package manifests are now explicitly admissible, declared definition paths are the definition candidates, and the most-specific nested reserved location wins. **[R17] said five sets after [R1] defined six**: all archive/catalog prose now includes the extension set. **Change F's delete cascade remained forbidden by [R22]**: the cascade exception is now normative and tested. |
 | 4 | 2026-07-31 | Review round 2, both reviewers (16 blocking). *(Rule numbers below are Rev-3 numbering unless marked.)* **A ratified invariant says the opposite of Change G**: **Invariant 52** requires every sidecar's `contentPath` to resolve and obliges a consumer to surface the failure — the direct negation of [R15]'s tombstone rule, and it was not on the rewrite list. Added, with a statement that exactly one rule governs sidecar-without-content afterwards. **RFC-012 [R6] was quoted from its tail**: it opens *"A `containerId` filter MUST use…"* and is a `DiscoveryQuery`-filter rule, not a general membership rule — so the general warrant is RFC-013 [R2] + I-80, with [R6]/I-118 as scoped corroboration. This is the citation-inflation class RFC-039's review rounds punished, caught here in this RFC's own Motivation. **The amendment set was under-inclusive by four RFCs' worth of rules** — added RFC-026 [R6], Change C steps 5–6 (step 6 *writes* `containerIndex`, which [R2] makes an error, so it needed a substantive rewrite rather than a pointer swap) and Change E item 4; RFC-013 [R6]/[R9]; RFC-017 [R2]/[R12]. The Abstract's "amends two Accepted RFCs" was itself an undercount. **Three rules were mutually unsatisfiable**: `relations-collection.json` "survives only inside snapshots" contradicted [R17]'s "same rules as a live repository" — collections are now retired in snapshots too; **the definition set had no discovery rule** and [R5]/[R17] used two different notions of "local package root" (presence- vs `packageRefs`-keyed, 234 vs **167** files), which mattered because **srs#307's Types and `canonical_key` both live in the 67-file undeclared root** — so Change A's "definition discovery unchanged" and Change H's "[R13] fails loudly on #307" could not both hold; definition discovery is now presence-keyed and the contradiction is stated. **The migration deadlocked on deletes**: an instance delete leaves dangling relation endpoints → [R13] error → [R24] fatal, while [R22] forbade fixing them; delete is now a scoped cascade. **The stamping window was invalid**: RFC-039 Phase 2 step 8 stamps generation 2 *before* this RFC strips `instanceIndex`, leaving the corpus stamped-and-unstripped across RFC-039's own count assertion — ordering is now pinned below step granularity with one shared stamping step. **The artifact inventory was wrong in three places and is now a single table**: 6 repository manifests (3 exploded + **3 embedded in `.srsj`**, all carrying `instanceIndex`), 8 in-scope package manifests (the fixture and gallery packages were missed), and the two `packages/**` governance manifests **deferred to #286** per RFC-039's stated scope, which Rev 3 contradicted. Also: [R8]'s "disjoint `required` sets" was false (all three schemas require `instanceId`) and is restated as the property that actually holds; [R9] gained the schema conjunct so the 3 `.revisions.json` files are errors as the prose already claimed; extension-owned locations (`changelogPath`, `federationPath`, `federationEventsPath`) added to [R5] as a sixth set, since [R10] otherwise made `ext:changelog` and `ext:federation` unimplementable; `.srs/` contents declared implementation-private; the `.srsj` envelope schema recorded as **owed and absent** (RFC-039 recorded the same gap), replacing a wrong `package-bundle.json` row; `relation.json` arithmetic reconciled to 17 properties / 5 required with `$schema`; four stale rule cross-references fixed; `srs-usage.md` §"The instanceIndex trap" and the `CLAUDE.md` path added to the retirement list; [R24]'s fatality blast radius moved into the Abstract. |
@@ -127,7 +128,7 @@ overlap, and a conflicting PR. Nothing about the six notes conflicts. The index 
 
 Relations have the same shape and a worse constant. `srs/relations/relations.json` is **57,709 bytes
 across 1,440 lines holding 205 relations** (99 `precedes`, 106 `contains`); across the in-scope live
-repositories there are **243 relations across 4 collections**. The relations-storage rule requires a collection object, so
+repositories there are **243 relations across 3 collections**. The relations-storage rule requires a collection object, so
 creating one relation rewrites the file that holds the other 204.
 
 `relationsPath` already accepts `string | string[]` and concatenates, so an implementation may
@@ -912,9 +913,9 @@ train with RFC-039.
 
 | Schema file | Change | Effect on existing data |
 |---|---|---|
-| `manifest.json` | Remove `instanceIndex` from `required`; remove the `instanceIndex`, `containerIndex`, `sourceDocumentIndex`, `relationsChecksums`, `relationsPath` properties and the `InstanceIndexEntry`, `ContainerIndexEntry`, `SourceDocumentIndexEntry`, `RelationsChecksumEntry` `$defs`; retitle away from "authoritative index" | All 4 exploded first-party repository manifests and 3 embedded manifests rewritten. `srs/manifest.json` loses ~3,400 of 3,560 lines |
-| `relation.json` | **New file.** Standalone single-Relation entity: the 16 properties of Change E, 4 required, `additionalProperties: false`, `$schema` required and `const`-pinned | **243 relations across 4 live collections** become one file each: 205 (`srs/`), 17 (`gallery-project-v2/`), 0 (`fixture-repo/` — its collection is empty and is deleted), 21 (`muSrs/`) |
-| `relations-collection.json` | Retained only to describe generation-≤1 artifacts; **not** a generation-2 format in live repositories *or* snapshots | The 4 live collection files are removed after conversion; `gallery.srsj`'s embedded collection is converted too |
+| `manifest.json` | Remove `instanceIndex` from `required`; remove the `instanceIndex`, `containerIndex`, `sourceDocumentIndex`, `relationsChecksums`, `relationsPath` properties and the `InstanceIndexEntry`, `ContainerIndexEntry`, `SourceDocumentIndexEntry`, `RelationsChecksumEntry` `$defs`; retitle away from "authoritative index" | All 3 exploded first-party repository manifests and 3 embedded manifests rewritten. `srs/manifest.json` loses ~3,400 of 3,560 lines |
+| `relation.json` | **New file.** Standalone single-Relation entity: the 16 properties of Change E, 4 required, `additionalProperties: false`, `$schema` required and `const`-pinned | **243 relations across 3 live collections** become one file each: 205 (`srs/`), 17 (`gallery-project-v2/`), and 21 (`muSrs/`) |
+| `relations-collection.json` | Retained only to describe generation-≤1 artifacts; **not** a generation-2 format in live repositories *or* snapshots | The 3 live collection files are removed after conversion; `gallery.srsj`'s embedded collection is converted too |
 | *revisions sidecar* | **New file, owed.** No schema exists for `.revisions.json` today | 3 files under `gallery-project-v2/records/**` are unclassifiable; [R9]'s third conjunct makes them errors until this lands |
 | *`.srsj` envelope* | **New file, owed.** There is **no schema in `docs/schema/2.0/` for the `{srsj, manifest, data}` envelope at all** — RFC-039 recorded this same gap and deferred it. [R20]'s `srsj: "2"` requirement therefore has no schema home today | 3 `.srsj` artifacts restamped; whoever closes RFC-039's recorded gap owns this |
 
@@ -967,10 +968,12 @@ merge **before** the `srs` schema PR — a rule already violated once, on RFC-03
 
 ## Migration plan
 
-The owner decision recorded on #296 fixes the boundary: there are **no SRS repositories in the wild**.
-No public upgrade command, no compatibility reader, no supported intermediate format, and no
-migration of third-party artifacts is owed. The corpus that must reach the final contract is the spec
-repository, muSrs in `muDemocracy.org`, and first-party fixtures, examples, seeds and mirrors.
+The owner direction fixes the boundary: there are **no SRS repositories in the wild** and no
+unmentioned repository population to defer. No public upgrade command, no compatibility reader, and
+no supported intermediate format is owed. The corpus that must reach the final contract is the spec
+repository, the gallery example, `muSrs` in `muDemocracy.org`, and the first-party package artifacts
+and snapshots they require. `conformance/discovery/fixture-repo/` and `tests/rfc-032/` remain test
+inputs, not repositories: neither receives invented root identity or a repository marker.
 
 ### Composition with RFC-039
 
@@ -1015,8 +1018,9 @@ therefore **not** RFC-039 step 8's to apply; it is a single shared final step:
    "or record it as a known failure the new diagnostics will surface"; that option does not exist.
    Bringing `base` and `core` into `package-manifest.json` conformance is a prerequisite for the same
    reason — [R4] diagnoses them, and under [R24] that is fatal.
-4. Decide the 3 `.revisions.json` files: land the owed sidecar schema, or remove them. Under [R9] they
-   are errors until one of those happens.
+4. Preserve the 3 `.revisions.json` histories by landing the owed `ext:addressability` sidecar schema.
+   The three files have one uniform envelope and entry shape; deleting valid history is not an
+   admissible migration action.
 5. Record baseline counts, identifier sets and content hashes for parity checking: **417 Tier-2, 2
    Tier-1, 23 Tier-0 instances** across the in-scope exploded repositories and **243 relations across
    4 collections**, measured per tree. Preserve both sides of every explicitly reconciled conflict in
@@ -1048,12 +1052,13 @@ therefore **not** RFC-039 step 8's to apply; it is a single shared final step:
    This keeps the RFC-029 I-87-conforming Tier-2 purpose identity, normalizes the overlapping member
    and root arrays, and deliberately omits `containerType`. Remove the standalone Container so the
    inline object is the sole generation-2 root representation. Its `package/` and `packages/governance/`
-   manifests also declare 27 duplicate definition ids (19 Fields, 4 Types, 1 View, 3 DocumentViews);
-   remove the duplicate declarations/files from the aggregate package or otherwise establish exactly
-   one owning package per id. Confirm `conformance/discovery/fixture-repo/` — which today fails `srs repo validate` outright for
-   a missing root container (RFC-013 I-79), independently of this RFC — is fixed or explicitly scoped
-   out. Decide the `.srs` markers for it and the gallery (Open Question 1), which [R3] makes a
-   prerequisite rather than a cosmetic gap.
+   manifests also declare 27 duplicate definition ids (19 Fields, 4 Types, 1 View, 3 DocumentViews).
+   They are byte-identical, and `com.mudemocracy.governance` is the namespace-specific owner: remove
+   the duplicate declarations and files from `muSrs/package/`; retain the canonical copies in
+   `muSrs/packages/governance/`. `conformance/discovery/fixture-repo/` remains outside the repository
+   model, so its deliberately incomplete root structure is not migrated. Add an empty `.srs` marker to
+   `docs/spec/examples/gallery-project-v2/`, whose manifest, inline root and package make it an
+   intended repository.
 
 ### Phase 1 — transform placement
 
@@ -1067,20 +1072,17 @@ therefore **not** RFC-039 step 8's to apply; it is a single shared final step:
 
    | Artifact class | Count | Notes |
    |---|---|---|
-   | Repository manifests, exploded | 4 | `srs/`, `conformance/discovery/fixture-repo/`, `docs/spec/examples/gallery-project-v2/`, `muDemocracy.org/muSrs/` |
+   | Repository manifests, exploded | 3 | `srs/`, `docs/spec/examples/gallery-project-v2/`, `muDemocracy.org/muSrs/` |
    | Repository manifests, **embedded in `.srsj`** | 3 | `gallery.srsj` (24 `instanceIndex` + 4 `containerIndex`); both governance seeds (`instanceIndex: []`) — each needs stripping, not just stamping |
-   | Package manifests, first-party in-scope | 10 | 6 under `srs/package/` (only `metamodel` stamped today) + fixture + gallery + `muSrs/package/` + `muSrs/packages/governance/` |
-   | Package manifests, **deferred to #286** | 2 | `packages/com.mudemocracy.governance/{1.0.0,1.1.0}/package/` |
+   | Package manifests, first-party in-scope | 11 | 6 under `srs/package/` + gallery + `muSrs/package/` + `muSrs/packages/governance/` + `packages/com.mudemocracy.governance/{1.0.0,1.1.0}/package/` |
    | Package manifests, out of scope | 3 | `rfcs/rfc-004/**` — RFC proposal fixtures, not live packages |
    | `.srsj` envelopes taking `srsj: "2"` | 3 | `gallery.srsj` + 2 governance seeds; each currently `srsj: "1"` with no `dataModelRevision` at top level or inner manifest |
    | `.srsj` artifacts out of scope for [R19]/[R20] | 1 | `core-bundle.srsj` — no `srsj`, no `manifest`, no `data`; it is a package bundle |
 
-   **The `packages/**` boundary is deferred deliberately, and to reconcile with RFC-039.** RFC-039
-   records that "Published package trees under `packages/` are still pre-RFC-032 (`valueType`,
-   revision 0) and are **#286's** disposal scope, not this RFC's". Revision 3 claimed the two
-   governance package manifests for this cutover, which contradicted an Accepted RFC's stated scope;
-   they are deferred to #286 instead, and #286 must land before or with the cutover or those two
-   packages become unreadable under [R21].
+   **The `packages/**` boundary joins this cutover.** The owner has ruled out a deferred repository
+   population. The two published governance packages are therefore migrated with their consumers,
+   superseding RFC-039's #286 scheduling note; they cannot remain pre-generation-2 while [R21] makes
+   that generation unreadable.
 
 9. Bring `base` and `core` package manifests into conformance with `package-manifest.json` (5 missing
    required properties each — `$schema`, `createdAt`, `description`, `status`, `title`), so [R3]
@@ -1170,9 +1172,9 @@ Migration-scope totals across the exploded repository trees are **417 Tier-2, 2 
 The pre-`muSrs` subtotal (**386 Tier-2, 2 Tier-1, 22 Tier-0**) matches RFC-039's independently-derived
 figures; Revision 5 adds the separately measured target rather than pretending it was included before.
 
-**Relations: 243 across 4 live collections** — 205 in `srs/` (99 `precedes`, 106 `contains`), 17 in
-`gallery-project-v2/`, 0 in `fixture-repo/` (its collection file exists and is empty), and 21 in
-`muSrs`; all 21 `muSrs` relation endpoints resolve against its 32-instance set.
+**Relations: 243 across 3 live collections** — 205 in `srs/` (99 `precedes`, 106 `contains`), 17 in
+`gallery-project-v2/`, and 21 in `muSrs`; all 21 `muSrs` relation endpoints resolve against its
+32-instance set.
 
 **Non-instance content is the majority of what a repository holds**, which is why [R5] and [R10] had
 to be separated. In `srs/`: 637 files, **375 inside reserved instance roots, 262 outside** (255 JSON
@@ -1223,7 +1225,7 @@ this RFC's rules, and only once it acquires a manifest, which is a Phase-0 decis
 
 Shared-file sizes: `srs/manifest.json` 95,846 bytes / 3,560 lines / 375 indexed instances / 12 indexed
 containers / 4 indexed source documents; `srs/relations/relations.json` 57,709 bytes / 1,440 lines.
-`relationsChecksums` is absent from all four exploded first-party repository manifests, so retiring it costs
+`relationsChecksums` is absent from all three exploded first-party repository manifests, so retiring it costs
 nothing anywhere.
 
 ---
@@ -1359,21 +1361,13 @@ versions.
 
 ---
 
-## Open Questions
+## Resolved migration dispositions
 
-1. **Do `conformance/discovery/fixture-repo/` and `docs/spec/examples/gallery-project-v2/` acquire
-   `.srs` markers?** The spec says a reader "must locate the marker before treating a directory as a
-   repository", and neither has one, yet both carry a manifest and both are loaded as repositories
-   today. Revision 1 called this a pre-existing inconsistency the RFC neither creates nor fixes; that
-   was wrong, because [R3] makes the marker the anchor that defines where reserved roots begin. It is
-   therefore a **Phase-0 prerequisite**, not a flag: without a decision, 11 instances in the fixture
-   and 24 in the gallery have no defined discovery anchor.
-
-2. **Does `tests/rfc-032/` become a repository?** It has no manifest, so it is invisible to
-   enumeration under both the current rules and this RFC's. It can be given a manifest and migrated,
-   or left as fixture data outside the repository model. Phase 0 decides; the choice affects only that
-   tree.
-
-3. **Who owns the `.revisions.json` sidecar schema?** [R9] needs it to classify 3 live files, and no
-   schema exists. It is listed as owed in Schema changes, but whether it lands in the Phase-B cutover
-   or as a separate `ext:addressability` change is not settled here.
+- `docs/spec/examples/gallery-project-v2/` is a repository and receives the required empty `.srs`
+  marker. Its existing manifest, inline root and local package demonstrate that intent.
+- `conformance/discovery/fixture-repo/` is fixture data, not a repository. Its intentionally absent
+  root Container is retained as fixture coverage rather than repaired by inventing a purpose Record.
+- `tests/rfc-032/` is unit-test input, not a repository: it has a test runner, goldens and one sample
+  instance but no manifest or repository boundary.
+- The uniform `.revisions.json` data is preserved and covered by a new `ext:addressability` schema in
+  this cutover. Schema ownership is an implementation task, not a policy decision.
