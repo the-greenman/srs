@@ -117,6 +117,8 @@ Do not create records or types under ad-hoc namespaces. Match the namespace to t
 
 `spec/` contains committed rendered exports. These are generated — do not edit them directly. Re-render with `SRS_CLI_PATH=$(which srs) node scripts/publish-spec.mjs` after modifying records, then commit both the record changes and the updated rendered output together.
 
+**Render with the pinned binary, not `which srs`.** The committed exports correspond to one specific `srs-rust` build, and an older binary renders the same records differently — producing a `docs/spec/... is stale` failure that names the records as the culprit when the binary is what changed. The authoritative pin is `SRS_RUST_CLI_TAG` in `.github/workflows/release-drift.yml`, declared once; that file also carries the procedure for advancing it (bump the tag and re-render in the same PR). `check-release-drift` is a required check and is **not** part of `validate-all.mjs`.
+
 ## Project & priority management
 
 Issues across the ecosystem are tracked on **Project #5 "SRS"** and prioritised **top-down from
