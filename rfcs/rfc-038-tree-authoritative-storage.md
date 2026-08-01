@@ -2,7 +2,7 @@
 
 # RFC-038: Tree-authoritative repositories and conflict-free Git storage
 
-**Status**: Draft (Revision 5)
+**Status**: Draft (Revision 6)
 **Affects**: `RepositoryManifest` (`instanceIndex`, `containerIndex`, `sourceDocumentIndex`, `relationsChecksums`, `relationsPath`), `InstanceIndexEntry`, `ContainerIndexEntry`, `SourceDocumentIndexEntry`, `RelationsChecksumEntry`, `Relation` storage, `ext:repository` repository layout and archive format, `ext:json-store` (`.srsj`) membership and version gate, `ext:slices` (RFC-026 [R5], [R6], [R13]), `dataModelRevision`; `docs/schema/2.0/{manifest,relations-collection}.json` a new `docs/schema/2.0/relation.json`, and two further schemas recorded as owed and absent (a `.revisions.json` sidecar schema, and a `{srsj, manifest, data}` envelope schema that has never existed). Resolves a standing contradiction between the manifest schema / `RepositoryManifest` prose and RFC-012 [R6] / RFC-013 [R2] / I-80 / I-118. **Amends Accepted RFC-039 [R13]/[R14], RFC-026 [R5]/[R6]/[R13] and migration steps, RFC-013 [R6]/[R9], and RFC-017 [R2]/[R12].** Composed with RFC-039 (Accepted Rev 6 — `#242`) in one first-party cutover at a single `dataModelRevision: 2`. **Breaking (storage layer).**
 **Author**: the-greenman (epic-256 worker)
 **Date**: 2026-07-31
@@ -13,6 +13,7 @@
 
 | Rev | Date | Summary |
 |---|---|---|
+| 6 | 2026-08-01 | Owner selected the explicit `muSrs` root reconciliation introduced in Revision 5. The generation-2 inline root keeps `identityInstanceId: dc2723e7-aca3-4562-b893-47bd24da629d`, the Tier-2 `com.semanticops.core/purpose` record required by RFC-029 I-87; retains the purpose and decision log only in `memberInstanceIds`; retains the intent Note and five guides only in `rootInstanceIds`; omits the misleading legacy `containerType: repository-root`; and removes the conflicting standalone Container. This preserves the standalone file's navigational content without preserving its invalid identity choice or its five duplicate membership declarations. The migration and acceptance test now state that exact expected object rather than deferring the choice to the migration operator. |
 | 5 | 2026-08-01 | Owner review cross-checked Revision 4 against the previously unmeasured `muSrs` migration target and found seven blocking gaps. **The sole migration inventory omitted `muSrs` entirely**: added its repository manifest, two package manifests and 21-relation collection, making the in-scope relation total 243 across 4 collections. **Its root Container exists twice with the same `containerId` and conflicting `identityInstanceId` values**: Phase 0 now requires an owner reconciliation, preserving the inline manifest Container as the sole generation-2 root representation. **Presence-keyed package discovery exposes 27 duplicated definitions** across `package/` and `packages/governance/`: [R12] now covers definition identifiers, [R13] requires exactly-one resolution, and Phase 0 removes or reconciles the duplicate declarations. **[R9] classified the Markdown payload of every source document as a fatal unrecognised file**: source-document content is now an opaque payload class, with sidecar candidates still closed and validated. **Every conforming `package.json` was inadmissible under its own local-package location**: package manifests are now explicitly admissible, declared definition paths are the definition candidates, and the most-specific nested reserved location wins. **[R17] said five sets after [R1] defined six**: all archive/catalog prose now includes the extension set. **Change F's delete cascade remained forbidden by [R22]**: the cascade exception is now normative and tested. |
 | 4 | 2026-07-31 | Review round 2, both reviewers (16 blocking). *(Rule numbers below are Rev-3 numbering unless marked.)* **A ratified invariant says the opposite of Change G**: **Invariant 52** requires every sidecar's `contentPath` to resolve and obliges a consumer to surface the failure — the direct negation of [R15]'s tombstone rule, and it was not on the rewrite list. Added, with a statement that exactly one rule governs sidecar-without-content afterwards. **RFC-012 [R6] was quoted from its tail**: it opens *"A `containerId` filter MUST use…"* and is a `DiscoveryQuery`-filter rule, not a general membership rule — so the general warrant is RFC-013 [R2] + I-80, with [R6]/I-118 as scoped corroboration. This is the citation-inflation class RFC-039's review rounds punished, caught here in this RFC's own Motivation. **The amendment set was under-inclusive by four RFCs' worth of rules** — added RFC-026 [R6], Change C steps 5–6 (step 6 *writes* `containerIndex`, which [R2] makes an error, so it needed a substantive rewrite rather than a pointer swap) and Change E item 4; RFC-013 [R6]/[R9]; RFC-017 [R2]/[R12]. The Abstract's "amends two Accepted RFCs" was itself an undercount. **Three rules were mutually unsatisfiable**: `relations-collection.json` "survives only inside snapshots" contradicted [R17]'s "same rules as a live repository" — collections are now retired in snapshots too; **the definition set had no discovery rule** and [R5]/[R17] used two different notions of "local package root" (presence- vs `packageRefs`-keyed, 234 vs **167** files), which mattered because **srs#307's Types and `canonical_key` both live in the 67-file undeclared root** — so Change A's "definition discovery unchanged" and Change H's "[R13] fails loudly on #307" could not both hold; definition discovery is now presence-keyed and the contradiction is stated. **The migration deadlocked on deletes**: an instance delete leaves dangling relation endpoints → [R13] error → [R24] fatal, while [R22] forbade fixing them; delete is now a scoped cascade. **The stamping window was invalid**: RFC-039 Phase 2 step 8 stamps generation 2 *before* this RFC strips `instanceIndex`, leaving the corpus stamped-and-unstripped across RFC-039's own count assertion — ordering is now pinned below step granularity with one shared stamping step. **The artifact inventory was wrong in three places and is now a single table**: 6 repository manifests (3 exploded + **3 embedded in `.srsj`**, all carrying `instanceIndex`), 8 in-scope package manifests (the fixture and gallery packages were missed), and the two `packages/**` governance manifests **deferred to #286** per RFC-039's stated scope, which Rev 3 contradicted. Also: [R8]'s "disjoint `required` sets" was false (all three schemas require `instanceId`) and is restated as the property that actually holds; [R9] gained the schema conjunct so the 3 `.revisions.json` files are errors as the prose already claimed; extension-owned locations (`changelogPath`, `federationPath`, `federationEventsPath`) added to [R5] as a sixth set, since [R10] otherwise made `ext:changelog` and `ext:federation` unimplementable; `.srs/` contents declared implementation-private; the `.srsj` envelope schema recorded as **owed and absent** (RFC-039 recorded the same gap), replacing a wrong `package-bundle.json` row; `relation.json` arithmetic reconciled to 17 properties / 5 required with `$schema`; four stale rule cross-references fixed; `srs-usage.md` §"The instanceIndex trap" and the `CLAUDE.md` path added to the retirement list; [R24]'s fatality blast radius moved into the Abstract. |
 | 3 | 2026-07-31 | Self-verification pass over Rev 2's own claims, before round-2 review returned. **Classification was still scoped to instance roots** while [R5] made five location classes discoverable — and **12 of 12 Containers declare no `$schema`**, so [R7]/[R8] are now written over reserved *locations* with a per-location admissible-entity set, or Change D's "nothing is skipped quietly" would have been false everywhere except instance roots. **Corrected counts** measured by shape rather than declaration: **150 Fields (not 146) and 45 Types (not 44)** — 4 Fields and 1 Type carry no `$schema`, so the `$schema`-keyed figures undercounted; `$schema` absence is now shown as a corpus-wide pattern rather than a Records quirk. **Invariant identifiers corrected**: the spec uses bare numbers for core invariants and `I-` prefixes for extension ones, so Rev 2's "I-46, I-49, I-50" named nothing — they are **Invariant 46, 49, 50** (contents verified). **Phase 2 step 13's ordering citation was wrong** — document order is Rule [N+12]'s `precedes` sort with a **`createdAt`** tiebreak, `instanceId` only secondary via RFC-013 [R5]; RFC-013's own Rev-3 history records that exact simplification being caught once before. **Phase 1 step 8 over-reached**: `core-bundle.srsj` has no `srsj`, no `manifest` and no `data`, so 3 of 4 artifacts take the bump, not 4. Added two positive evidence results — an independent implementation of [R3] returns **exactly the 375 instances `instanceIndex` lists**, and of 13 in-repo `package.json` files exactly **one** has a reserved directory beside it — plus an explicit note that **muSrs is unmeasured** (outside this repository) and cross-references to #285 and #272. |
@@ -627,12 +628,23 @@ stops being a proxy for "when did this repository last change". `formatVersion` 
 appear in the prose `RepositoryManifest` model but not in `manifest.json`; the schema is normative and
 neither is added.
 
-**The root container is retained and untouched.** `manifest.container` stays inline and canonical.
+**The root-container model is retained and untouched.** `manifest.container` stays inline and canonical;
+the `muSrs` correction below repairs conflicting corpus content without changing that model.
 Structural membership composition remains #267's, and this RFC neither changes `memberInstanceIds`
 semantics nor takes a position on them. It adds one requirement in the negative: a routine unscoped
 instance create MUST NOT modify the root container — otherwise the hotspot moves from `instanceIndex`
 to `container.memberInstanceIds` and nothing is fixed. Deliberate root-membership edits remain
 deliberate shared-file writes, and conflicting on those is correct.
+
+The `muSrs` migration has one explicit corpus repair rather than an open composition decision. Its
+inline root keeps `dc2723e7-aca3-4562-b893-47bd24da629d` as `identityInstanceId`: that instance is the
+Tier-2 `com.semanticops.core/purpose` record, so it satisfies RFC-029 I-87. The conflicting
+`09b3fbbc-d7af-4924-b0a9-4c09133e2550` instance is a Tier-0 Note and therefore cannot be the canonical
+root identity, but remains a root member. The standalone Container's five guides remain root members;
+because each was also listed as a member, the redundant member declarations are removed. The purpose
+and decision log remain ordinary members. `containerType: repository-root` is not retained: it is a
+legacy, soft-deprecated field and inaccurately describes a root whose `rootInstanceIds` contain
+multiple guides. Phase 0 records the exact resulting object.
 
 ### Change L — a backend-neutral catalog interface that returns identifiers, not paths
 
@@ -1009,11 +1021,33 @@ therefore **not** RFC-039 step 8's to apply; it is a single shared final step:
    Tier-1, 23 Tier-0 instances** across the in-scope exploded repositories and **243 relations across
    4 collections**, measured per tree. Preserve both sides of every explicitly reconciled conflict in
    the audit record so Phase 2 can distinguish an owner-approved correction from accidental loss.
-6. Resolve the `muSrs` non-instance conflicts before stamping: its inline root Container and
+6. Apply the owner-selected `muSrs` reconciliation before stamping. Its inline root Container and
    `containers/1706c6a2-a901-4503-98a3-876b9a437ec9.json` claim the same `containerId` but disagree on
-   `identityInstanceId` (`dc2723e7-…` inline, `09b3fbbc-…` in the file). The owner selects the canonical
-   content, folds any retained fields into `manifest.container`, and removes the file so the inline
-   object is the sole generation-2 root representation. Its `package/` and `packages/governance/`
+   `identityInstanceId`. Set `manifest.container` to exactly:
+
+   ```json
+   {
+     "containerId": "1706c6a2-a901-4503-98a3-876b9a437ec9",
+     "identityInstanceId": "dc2723e7-aca3-4562-b893-47bd24da629d",
+     "memberInstanceIds": [
+       "632e1331-7756-481d-84c5-3c34812bf55b",
+       "dc2723e7-aca3-4562-b893-47bd24da629d"
+     ],
+     "rootInstanceIds": [
+       "09b3fbbc-d7af-4924-b0a9-4c09133e2550",
+       "1ff0ab83-c1c8-4e23-b611-2e629d919307",
+       "30b82df3-1cf3-45e9-a1e5-1b8fe1d3497b",
+       "0b3cd130-0f39-4542-a64f-48135f35c246",
+       "0dff90b5-4534-4a2b-9f1a-28f35130e943",
+       "a44be813-d2b4-4214-aaa9-4b8a11ce206f"
+     ],
+     "title": "muDemocracy"
+   }
+   ```
+
+   This keeps the RFC-029 I-87-conforming Tier-2 purpose identity, normalizes the overlapping member
+   and root arrays, and deliberately omits `containerType`. Remove the standalone Container so the
+   inline object is the sole generation-2 root representation. Its `package/` and `packages/governance/`
    manifests also declare 27 duplicate definition ids (19 Fields, 4 Types, 1 View, 3 DocumentViews);
    remove the duplicate declarations/files from the aggregate package or otherwise establish exactly
    one owning package per id. Confirm `conformance/discovery/fixture-repo/` — which today fails `srs repo validate` outright for
@@ -1107,9 +1141,10 @@ procedure would be right for a public migration and is unnecessary for a first-p
     parsed as entities; malformed `.meta.json` candidates remain fatal.
 13. Deleting an instance with two incident Relations removes exactly the instance and those two
     relation files in one scoped cascade and leaves no [R13] diagnostic.
-14. The migrated `muSrs` enumerates 32 instances and 21 relations, contains one root-container
-    representation, has no duplicate definition identifiers, and carries generation 2 on its repository
-    and both package manifests.
+14. The migrated `muSrs` enumerates 32 instances and 21 relations; its sole root-container
+    representation equals the exact object in Phase 0 step 6 (including the Tier-2 purpose identity,
+    normalized membership arrays, and absence of `containerType`); it has no duplicate definition
+    identifiers and carries generation 2 on its repository and both package manifests.
 15. A snapshot containing declared changelog or federation data round-trips the extension set without
     loss, alongside the other five authoritative sets.
 
@@ -1170,7 +1205,11 @@ both genuinely fail `package-manifest.json`.
 with zero discovered-only, indexed-only or path-disagreement cases. It adds one exploded repository
 manifest, two conforming presence-discovered package manifests and one 21-relation collection. It also
 contains the two Phase-0 conflicts that changed Revision 5: a duplicate root `containerId` with
-conflicting `identityInstanceId`, and 27 duplicated definitions across the two package roots.
+conflicting `identityInstanceId`, and 27 duplicated definitions across the two package roots. Revision
+6 resolves the root conflict explicitly: the Tier-2 purpose (`dc2723e7-…`) is the identity, the Note
+(`09b3fbbc-…`) remains a root member, the five guides are root-only, and the purpose plus decision log
+are member-only. The duplicate-definition reconciliation remains a Phase-0 repository repair because
+canonical package ownership must be decided as each affected repository is migrated.
 
 **Snapshot artifacts (4):** `docs/spec/examples/gallery.srsj` (22 records / 100 field values),
 `packages/com.semanticops.core/1.0.0/core-bundle.srsj` (a package bundle — no `data`/`manifest`
