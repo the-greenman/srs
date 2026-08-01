@@ -78,9 +78,17 @@ Run from the `srs/` directory:
 node scripts/validate-all.mjs          # validate all spec records
 node scripts/check-release-drift.mjs   # verify docs/schema mirrors are in sync
 node scripts/publish-spec.mjs          # render docs + sync schemas across sibling repos
+node scripts/fetch-pinned-srs.mjs      # fetch the pinned srs CLI; prints the SRS_CLI_PATH to use
 ```
 
-Rendering uses the `srs` engine; point it at your CLI build with `SRS_CLI_PATH=$(which srs) node scripts/publish-spec.mjs`.
+Rendering uses the `srs` engine, and the committed exports correspond to **exactly** the `srs-rust` release named by `SRS_RUST_CLI_TAG` in [`.github/workflows/release-drift.yml`](.github/workflows/release-drift.yml) — not "that release or newer". Fetch that build and point `SRS_CLI_PATH` at it:
+
+```bash
+export $(node scripts/fetch-pinned-srs.mjs)   # reads the pinned tag, fetches it, sets SRS_CLI_PATH
+node scripts/publish-spec.mjs
+```
+
+Both scripts refuse to run with `SRS_CLI_PATH` unset and log the resolved binary's sha256 at startup. Do not use `which srs`: it resolves to whichever build was installed last, and `srs --version` reports `srs 0.1.0` for every build, so it cannot distinguish them.
 
 ## Authoring
 
@@ -89,7 +97,7 @@ The rendered markdown files in `docs/spec/` are **generated outputs** — never 
 1. Edit the source records under `srs/records/` (create/modify via the `srs` CLI where possible).
 2. For a new section/subsection, assert a `precedes` relation to place it in document order.
 3. Validate: `srs repo validate --repo srs/srs` — zero diagnostics before committing.
-4. Re-render: `SRS_CLI_PATH=$(which srs) node scripts/publish-spec.mjs`, and commit the record and rendered changes together.
+4. Re-render with the pinned CLI (see [Scripts](#scripts)) — `export $(node scripts/fetch-pinned-srs.mjs)` then `node scripts/publish-spec.mjs` — and commit the record and rendered changes together.
 
 Schema changes are committed in `docs/schema/2.0/` and mirrored into `../srs-rust` and `../srs-vscode` by the publish step. The `instanceIndex` in `srs/manifest.json` is the authoritative list of which records belong to this repository.
 

@@ -73,8 +73,9 @@ srs repo map --repo srs/srs --pretty
 srs type list --repo srs/srs --pretty
 srs record list --repo srs/srs --type com.semanticops.spec/section --pretty
 
-# Render the spec to markdown
-SRS_CLI_PATH=$(which srs) node scripts/publish-spec.mjs
+# Render the spec to markdown — requires the pinned CLI, see "Rendered Outputs"
+export $(node scripts/fetch-pinned-srs.mjs)
+node scripts/publish-spec.mjs
 
 # Validate all records via Node scripts (includes the RFC integration + process checks)
 node scripts/validate-all.mjs
@@ -97,7 +98,11 @@ When adding a new section or subsection:
 1. Create the record via `srs record create`
 2. Assert a `precedes` relation to establish its position in document order
 3. Run `srs repo validate --repo srs/srs` — zero diagnostics before committing
-4. Re-render if the rendered spec is also being committed: `SRS_CLI_PATH=$(which srs) node scripts/publish-spec.mjs`
+4. Re-render if the rendered spec is also being committed — with the **pinned** CLI (see [Rendered Outputs](#rendered-outputs)):
+   ```bash
+   export $(node scripts/fetch-pinned-srs.mjs)
+   node scripts/publish-spec.mjs
+   ```
 
 ## Spec Independence
 
@@ -115,9 +120,18 @@ Do not create records or types under ad-hoc namespaces. Match the namespace to t
 
 ## Rendered Outputs
 
-`spec/` contains committed rendered exports. These are generated — do not edit them directly. Re-render with `SRS_CLI_PATH=$(which srs) node scripts/publish-spec.mjs` after modifying records, then commit both the record changes and the updated rendered output together.
+`spec/` contains committed rendered exports. These are generated — do not edit them directly. Re-render after modifying records, then commit both the record changes and the updated rendered output together:
 
-**Render with the pinned binary, not `which srs`.** The committed exports correspond to one specific `srs-rust` build, and an older binary renders the same records differently — producing a `docs/spec/... is stale` failure that names the records as the culprit when the binary is what changed. The authoritative pin is `SRS_RUST_CLI_TAG` in `.github/workflows/release-drift.yml`, declared once; that file also carries the procedure for advancing it (bump the tag and re-render in the same PR). `check-release-drift` is a required check and is **not** part of `validate-all.mjs`.
+```bash
+export $(node scripts/fetch-pinned-srs.mjs)   # sets SRS_CLI_PATH to the pinned build
+node scripts/publish-spec.mjs
+```
+
+**Render with the pinned binary — the constraint is an equality, not a floor.** The committed exports correspond to **exactly** the `srs-rust` release named by `SRS_RUST_CLI_TAG` in `.github/workflows/release-drift.yml`, which is where the tag is declared and the only place it may be. Rendering with any other build — older *or* newer — produces a diff `check-release-drift` rejects, and the failure reads `docs/spec/... is stale`, naming the records as the culprit when the binary is what changed. So "install the latest `srs`" is wrong, not merely imprecise.
+
+`scripts/fetch-pinned-srs.mjs` reads that tag and fetches that release; `publish-spec.mjs` and `check-release-drift.mjs` refuse to run with `SRS_CLI_PATH` unset and log the resolved binary's sha256 at startup. Never use `which srs` — the binary on `PATH` is whichever was installed last, and `srs --version` prints `srs 0.1.0` for every build, so it cannot tell you which one you have. If a render looks wrong, **compare the sha256 before touching a record.**
+
+`release-drift.yml` also carries the procedure for advancing the pin (bump the tag and re-render in the same PR). `check-release-drift` is a required check and is **not** part of `validate-all.mjs`.
 
 ## Project & priority management
 
