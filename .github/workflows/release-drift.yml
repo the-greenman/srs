@@ -1,8 +1,53 @@
 name: Release Drift
 
+# `check-release-drift` is a REQUIRED check on every pull request in this
+# repository. It re-renders `docs/spec/**` with the `srs` CLI and compares the
+# result against the committed exports.
+#
+# The CLI therefore has to be PINNED. An unpinned download takes whatever
+# `srs-rust` last released, which means the behaviour of a required gate can
+# change with no commit to this repository — and when it does, the failure
+# reads as `docs/spec/srs-spec.md is stale — re-render to update`, naming the
+# records as the culprit when the real change was the binary. That is not
+# hypothetical: `v0.1.0-build.263` and `v0.1.0-build.265` produce materially
+# different output for the same records (build.265 is the first release
+# carrying RFC-037's renderer), so an unpinned run can fail a PR that changed
+# nothing. See issue #316.
+#
+# Do NOT "helpfully" unpin this for freshness. Freshness is not the goal; a
+# gate that changes behaviour only when someone commits a change is the goal.
+#
+# ---------------------------------------------------------------------------
+# How to advance the pin
+# ---------------------------------------------------------------------------
+# Advancing the pin and re-rendering `docs/spec/**` are two halves of one fact:
+# which `srs-rust` build the committed exports correspond to. Do them in the
+# same pull request, alongside the schema-mirror sync that already couples the
+# two repositories.
+#
+#   1. Pick the target `srs-rust` release tag and update SRS_RUST_CLI_TAG below
+#      — that is the only place it is declared.
+#   2. Fetch that exact build and re-render with it:
+#        gh release download <tag> --repo the-greenman/srs-rust \
+#          --pattern "srs-x86_64-unknown-linux-gnu.tar.gz" --dir /tmp/srs-cli
+#        tar -xzf /tmp/srs-cli/srs-x86_64-unknown-linux-gnu.tar.gz -C /tmp/srs-cli
+#        SRS_CLI_PATH=/tmp/srs-cli/srs node scripts/publish-spec.mjs
+#   3. Commit the SRS_RUST_CLI_TAG bump together with any resulting changes to
+#      `docs/spec/**`, stating the tag and why it is being advanced.
+#   4. `check-release-drift` passing on that PR is the proof the two agree.
+#
+# A bump with no render delta is fine and expected — it records that the newer
+# build was verified against these records.
+
 on:
   push:
   pull_request:
+
+env:
+  # The pinned `srs-rust` release supplying the `srs` CLI. Declared once here;
+  # the steps below read it. Floor is `v0.1.0-build.265` — `docs/spec/**` is
+  # rendered by RFC-037's renderer, which no earlier release carries.
+  SRS_RUST_CLI_TAG: v0.1.0-build.265
 
 jobs:
   check-release-drift:
@@ -18,16 +63,20 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Download srs CLI
+      - name: Download srs CLI (pinned)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release download \
+          gh release download "$SRS_RUST_CLI_TAG" \
             --repo ${{ github.repository_owner }}/srs-rust \
             --pattern "srs-x86_64-unknown-linux-gnu.tar.gz" \
             --dir /tmp/srs-cli
           tar -xzf /tmp/srs-cli/srs-x86_64-unknown-linux-gnu.tar.gz -C /tmp/srs-cli
           chmod +x /tmp/srs-cli/srs
+          # Record which binary this run used, so a drift failure can be told
+          # apart from a binary change by reading the log.
+          echo "srs-rust release: $SRS_RUST_CLI_TAG"
+          /tmp/srs-cli/srs --version
 
       - name: Run release drift check
         working-directory: srs
