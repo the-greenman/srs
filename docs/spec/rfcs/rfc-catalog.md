@@ -786,7 +786,7 @@ Full proposal and design history: `rfcs/rfc-039-record-field-value-carrier.md`.
 
 **RFC Number**: 038
 
-**Status**: draft
+**Status**: accepted
 
 **Author**: the-greenman
 
@@ -794,7 +794,7 @@ Full proposal and design history: `rfcs/rfc-039-record-field-value-carrier.md`.
 
 Amends standing rules and migration obligations across four Accepted RFCs: RFC-039 [R13]/[R14], RFC-026 [R5]/[R6]/[R13] and its migration steps, RFC-013 [R6]/[R9], and RFC-017 [R2]/[R12]. Establishes version discrimination via `dataModelRevision` plus an `srsj` bump to "2", closing a silent-empty-repository failure mode. Composed with RFC-039 in one first-party cutover at a single `dataModelRevision: 2`; neither ships alone. Revision 5 measures `muSrs`: 32/32 instance parity, 21 relations and two package manifests. Revision 6 fixes the root Container. Revision 7 treats every remaining item as a migration repair: gallery is the third repository and receives a marker; the discovery and RFC-032 fixtures stay test data; revision history receives its owed schema; the namespace-specific governance package owns its 27 byte-identical definitions; and the two published governance packages join the cutover. No data-policy choice remains before migration.
 
-Design and migration plan only — no schema file is edited and no data is migrated. The fold is the #297 ecosystem cutover, which states the split explicitly ("#296 owns the normative decision; this issue owns the coordinated cutover"), so this RFC folds no canonical record or schema artifact. It is recorded at `draft` status pending owner acceptance, so `check-rfc-integration.mjs` requires no integration manifest and no `rfcs/integration-allowlist.json` entry is added; when the owner accepts it, the grandfather route against #297 becomes the correct disposition, as RFC-039 took against #242.
+Accepted in Revision 7. The fold remains the #297 ecosystem cutover, which explicitly separates the normative decision (#296) from the coordinated implementation. RFC-038 is grandfathered against #297 in `rfcs/integration-allowlist.json`, matching RFC-039 against #242; remove that entry when the cutover folds this contract into canonical records, schemas, implementations, and migrated artifacts.
 
 **Proposal Artifact Path**: rfcs/rfc-038-tree-authoritative-storage.md
 
