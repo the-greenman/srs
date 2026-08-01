@@ -827,6 +827,16 @@ rules), **#286** (repair the migration transform; dispose the remaining pre-RFC-
 **#294/RFC-037 + srs-rust#782** (field-row path — Accepted Rev 3, implemented), **#295** (package-ID
 collision), and the muSrs revision-0 / `ext:themes-l1` / released-package-freeze decisions.
 
+**Rev-7 cardinality-removal gate inherited from RFC-032 Change I.** Landing #284 settles the
+predicates but does not itself remove their transition-only
+`FieldAssignment.repeatable !== true` conjunct. Phase B MUST cite evidence for all five Change-I
+removal conditions in its cutover PR: final-schema rejection of every legacy carrier; a zero-result
+first-party corpus scan; lossless ordered/bounded repeatable→list migration plus logical round trip;
+same-train conversion of I-94, `[T-9]`, `[N+1]`, and every implementation to cardinality-only; and
+tests covering the transition conflict before removal plus scalar/list acceptance after it. The
+conjunct remains normative if any one item is absent. The ext:discovery fixture part of that evidence
+is tracked by #317 under #286.
+
 ### The first-party corpus — five trees, enumerated
 
 Two revisions of this RFC quoted `srs/srs`-scoped measurements as if they were corpus-wide, and both

@@ -2,7 +2,7 @@
 
 # RFC-019: Cross-Field Validation Rules — `validationRules` on `Type` and `CrossFieldRule` Schema
 
-**Status**: Accepted (Revision 3)
+**Status**: Accepted (Revision 5)
 **Affects**: `docs/schema/2.0/type.json`; `ext:cross-field-validation` (extension record `c16793d7-005a-58d2-88d0-9e7d9b4967b1`); spec invariants I-10 (`e1000010`) and I-11 (`e1000011`)
 **Author**: the-greenman (from issue the-greenman/srs#139)
 **Date**: 2026-07-09
@@ -18,6 +18,7 @@
 | 2 | 2026-07-09 | Address review findings. **Blocking:** (a) add R0 extension declaration gate; qualify R1–R10 to implementations declaring `ext:cross-field-validation`; (b) add Spec Record Changes section enumerating new invariant records; (c) add explicit non-date/non-number → error clause to R4. **Should-fix:** add "non-empty" definition; add R10 for wrong-context field presence → error; add predicateFieldId valueType restriction to R6; add ext:type-inheritance non-inheritance clause as R11; cross-reference I-10 and I-11. **Nits:** fix "Temporal direction" → "Ordering direction"; add rationale for fail-all evaluation; add rationale for no JSON Schema if-then-else. |
 | 3 | 2026-07-09 | Implementation started; RFC file committed to branch `rfc/019-cross-field-validation-rules-schema`; schema fix applied ("Temporal direction" → "Ordering direction" in `CrossFieldRuleEffect`). |
 | 4 | 2026-07-09 | Accepted; spec records authored (I-85–I-93) in `srs/srs/records/tier-2/`; extension record `c16793d7` updated to reference RFC-019; spec rendered and release-drift check passed. |
+| 5 | 2026-08-01 | RFC-032 Rev-7 erratum (#284): replace R6's legacy `valueType` subset with an exact effective-single `fieldType.datatype ∈ {string,date,date-time}` predicate. Admission of `date-time` is intentional; requiring scalar cardinality intentionally closes the legacy repeatable-date equality hole. The assignment-level conjunct remains until the atomic #242 Phase-B removal gate passes. |
 
 ---
 
@@ -196,11 +197,14 @@ R0–R11 apply only to conforming implementations that declare support for `ext:
 
 > **[R6]** A `CrossFieldRule` with `type: "conditional-required"` MUST supply `predicateFieldId`,
 > `predicateValue`, and `targetFieldId`. Additionally, the field identified by `predicateFieldId`
-> MUST have a `valueType` in `{"string", "text", "select", "date", "url"}` (types whose stored
-> `value` is always a string, enabling meaningful string equality comparison). A rule that omits
-> any of the three required fields, or whose `predicateFieldId` resolves to a field with any other
-> `valueType`, MUST be reported as a Type-level validation error. (Normative restatement of I-11
-> `e1000011`, extending it with the `valueType` constraint.)
+> MUST be effective-single (RFC-032 Rev-7: `fieldType.cardinality` absent/`"single"` AND, until the
+> #242 Phase-B cutover, effective `FieldAssignment.repeatable !== true`) and MUST have
+> `fieldType.datatype` in `{"string", "date", "date-time"}`. String `format` and `valueDomain` do not
+> restrict eligibility. A rule that omits any required property, selects a list/repeatable field, or
+> resolves to any other datatype MUST be reported as a Type-level validation error. Admission of
+> `date-time` is an intentional widening consistent with sibling I-92; the scalar requirement
+> intentionally closes the legacy repeatable-date equality hole. (Normative restatement of I-11
+> `e1000011`, extending it with the RFC-032 Rev-7 predicate.)
 
 > **[R7]** A `CrossFieldRule` with `type: "field-ordering"` MUST supply `predicateFieldId`,
 > `targetFieldId`, and `effect`. A rule omitting any of these MUST be reported as a Type-level

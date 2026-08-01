@@ -8,11 +8,11 @@
     },
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",
-      "value": "Text Projection includes only searchable valueTypes"
+      "value": "Text Projection includes only Fields matching the RFC-032 searchability predicate"
     },
     {
       "fieldId": "1a000003-0000-4000-a000-000000000003",
-      "value": "The Text Projection MUST include searchable `valueType` fields only (`string`, `text`, `url`, `select`, `multiselect`). Fields with `valueType` of `number`, `boolean`, or `date` MUST NOT contribute `TextSegment`s. (RFC-012 R8.)"
+      "value": "For Tier 2, the Text Projection MUST include a Field only when `fieldType.datatype == \"string\"` and `fieldType.format` is absent or one of `\"plain\"`, `\"markdown\"`, or `\"uri\"`. `valueDomain` does not affect searchability. A single-cardinality Field emits one segment; a list-cardinality Field emits one segment per array element in order. Fields with `format: \"uuid\"` or `format: \"email\"`, or datatype `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, or `map`, MUST NOT contribute `TextSegment`s. Tier-1 `TypedField.valueType` continues to use the legacy classification until the #242 Phase-B carrier cutover. (RFC-012 R8; RFC-032 Rev-7 erratum.)"
     },
     {
       "fieldId": "1a000021-0000-4000-a000-000000000021",
