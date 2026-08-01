@@ -2,7 +2,7 @@
 
 # RFC-038: Tree-authoritative repositories and conflict-free Git storage
 
-**Status**: Accepted (Revision 8)
+**Status**: Accepted (Revision 9)
 **Affects**: `RepositoryManifest` (`instanceIndex`, `containerIndex`, `sourceDocumentIndex`, `relationsChecksums`, `relationsPath`), `InstanceIndexEntry`, `ContainerIndexEntry`, `SourceDocumentIndexEntry`, `RelationsChecksumEntry`, `Relation` storage, `ext:repository` repository layout and archive format, `ext:json-store` (`.srsj`) membership and version gate, `ext:slices` (RFC-026 [R5], [R6], [R13]), `dataModelRevision`; `docs/schema/2.0/{manifest,relations-collection,relation-type}.json` a new `docs/schema/2.0/relation.json`, and three further schemas recorded as owed and absent (a `.revisions.json` sidecar schema, a `protocol.json` definition schema, and a `{srsj, manifest, data}` envelope schema that has never existed). Resolves a standing contradiction between the manifest schema / `RepositoryManifest` prose and RFC-012 [R6] / RFC-013 [R2] / I-80 / I-118. **Amends Accepted RFC-039 [R13]/[R14], RFC-026 [R5]/[R6]/[R13] and migration steps, RFC-013 [R6]/[R9], and RFC-017 [R2]/[R12].** Composed with RFC-039 (Accepted Rev 6 — `#242`) in one first-party cutover at a single `dataModelRevision: 2`. **Breaking (storage layer).**
 **Author**: the-greenman (epic-256 worker)
 **Date**: 2026-07-31
@@ -13,6 +13,7 @@
 
 | Rev | Date | Summary |
 |---|---|---|
+| 9 | 2026-08-01 | Records the owner's disposition of **Phase 0 step 2**, the single item Revision 8 left open. `spec/srs-purpose-and-scope.md` — sidecar present, not indexed — is **moved**, as a legacy of very early work, rather than adopted: the content file and its `.meta.json` sidecar are relocated out of `sourceDocumentsPath` in Phase 0, so the index/tree disagreement resolves by removal from the source-document set and **the cutover adds no source-document membership anywhere**. `srs/`'s source-document set stays at the 4 already-indexed documents. Change G and Phase 0 step 2 both updated; the destination path is a #297 migration detail. This records a decision the owner made on PR #310 — it reopens nothing and adds no policy choice of its own, so the Revision-7 acceptance carries forward. **No open owner disposition remains.** |
 | 8 | 2026-08-01 | Review round 3 (5 blocking, all in the Phase-B contract tables rather than the design). **A third owed schema was missing and it is fatal to a repository this cutover pulls in**: `package-manifest.json` declares a `protocols` array, both `packages/com.mudemocracy.governance/{1.0.0,1.1.0}/package/package.json` declare `protocols/decision-7a088176.json`, that file declares no `$schema`, and **no protocol schema exists anywhere under `docs/schema/`** — so [R8] cannot be satisfied, [R9] makes it an error and [R24] makes it fatal, leaving both governance packages unloadable at the generation they are being stamped to. Added as an owed schema and a Phase-0 prerequisite. **`core-bundle.srsj` was excluded from stamping but not from [R21]**: [R21] binds "a repository **or** package", the bundle carries no `dataModelRevision` ⇒ generation 0, so every conforming reader would reject the published core package after the cutover. `package-bundle.json` already carries the property; the bundle joins the stamping inventory. **[R8]'s blanket `additionalProperties: false` requirement was already false in the corpus**: `relation-type.json` does not set it, and RelationType is a declared definition kind (23 in `srs/`, 5 in each governance package). The distinguishability conjunct is now scoped to admissible sets with more than one member — the property it was written for — and `relation-type.json` is added to the schema-change list so the blanket form becomes true. **The relation-collection count contradicted itself, 3 against 4**, in the exact CC-10 shape Revision 2 was punished for: 243 is 205 + 17 + 21 across **three non-empty** collections, and the fourth is the **empty** `conformance/discovery/fixture-repo/` collection that Revision 7's own dispositions exclude from migration — the migration steps were instructing conversion of a file the dispositions do not migrate. Every site now says three, and the empty fixture collection is named as excluded. **`relation.json` arithmetic was still 16/4 in the Schema-changes table** while Change E, [R11] and Revision 4's own history all say 17/5 with the pinned `$schema` — the table is the number an implementer copies. Also corrected without policy effect: the stale `tests/rfc-032/` "Phase-0 decision" sentence that Revision 7's dispositions had already answered; "222 small files" (Revision 2's figure) → 243; `gallery.srsj`'s relations `data` key, which is `relations/relations-collection.json`, not `relations/relations.json`; and the Corpus marker column for the gallery, whose `.srs` marker this PR adds. No normative decision is reopened and no policy choice is added; Phase 0 step 2 (`spec/srs-purpose-and-scope.md`) remains the one open owner disposition. |
 | 7 | 2026-08-01 | Owner direction resolves the remaining apparent migration choices: all first-party repositories and package artifacts migrate now, every migrated repository is made conformant, and no unmentioned repository population exists. The former owner-decision list is therefore a work list. The gallery is an intended repository and receives a marker; the discovery and RFC-032 fixtures remain test data rather than receiving invented repository identity. Revision history is preserved by adding its owed sidecar schema. `com.mudemocracy.governance` owns its namespace's 27 byte-identical definitions, so the duplicate copies leave the broad `com.mudemocracy` package. The two published governance packages join this cutover instead of waiting for #286. The only remaining owner act is formal RFC acceptance after review; no data-policy choice blocks migration. |
 | 6 | 2026-08-01 | Owner selected the explicit `muSrs` root reconciliation introduced in Revision 5. The generation-2 inline root keeps `identityInstanceId: dc2723e7-aca3-4562-b893-47bd24da629d`, the Tier-2 `com.semanticops.core/purpose` record required by RFC-029 I-87; retains the purpose and decision log only in `memberInstanceIds`; retains the intent Note and five guides only in `rootInstanceIds`; omits the misleading legacy `containerType: repository-root`; and removes the conflicting standalone Container. This preserves the standalone file's navigational content without preserving its invalid identity choice or its five duplicate membership declarations. The migration and acceptance test now state that exact expected object rather than deferring the choice to the migration operator. |
@@ -505,10 +506,16 @@ tombstone. `srs/source-documents/` holds 7 content files in three classes:
 | No sidecar, not indexed | 2 | `applications/scds_governance_application_profile.md`, `rationale/scds-rationale.md` |
 
 `spec/srs-purpose-and-scope.md` is precisely a case where index and tree disagree: index-authoritative
-rules say it is not a source document, sidecar-authoritative rules say it is. Under this RFC it
-becomes one. That is a real membership change to a first-party repository and it is a Phase-0 audit
-item rather than a side-effect. The two files with no sidecar are unmanaged raw material and stay
-that way.
+rules say it is not a source document, sidecar-authoritative rules say it is. Left alone it would
+become one under this RFC — a real membership change to a first-party repository, which is why it was
+raised as a Phase-0 disposition rather than allowed to happen as a side-effect.
+
+**The owner has disposed of it: it is moved, as a legacy of very early work.** It is therefore *not*
+adopted into the source-document set; it and its sidecar are relocated out of `sourceDocumentsPath`
+during Phase 0, so the disagreement resolves by removal from the set rather than by adoption, and no
+membership is added to the spec repository by the cutover. The destination is a migration detail for
+#297; what is settled here is that it does not become a member. The two files with no sidecar are
+unmanaged raw material and stay that way.
 
 ### Change H — duplicate and dangling identifiers become hard errors that name every locator
 
@@ -1025,8 +1032,11 @@ therefore **not** RFC-039 step 8's to apply; it is a single shared final step:
    object is reported and resolved explicitly. **Fail closed**: the migration does not proceed with an
    unresolved disagreement. In `srs/` the diff is empty at 375/375; in `muSrs` it is independently
    empty at **32/32**, with zero path disagreements.
-2. Resolve `spec/srs-purpose-and-scope.md` (Change G) — sidecar present, not indexed; it becomes a
-   member unless deliberately removed.
+2. **Resolved (owner disposition).** `spec/srs-purpose-and-scope.md` (Change G) — sidecar present,
+   not indexed — is **moved**, as a legacy of very early work. Relocate the content file and its
+   `.meta.json` sidecar out of `sourceDocumentsPath`; do **not** adopt it into the source-document
+   set. After this step the `srs/` source-document set is the 4 already-indexed documents, unchanged
+   by the cutover, and no source-document membership is added anywhere.
 3. Resolve srs#307 (Change H). It is fixed on its own row, but it **must** be fixed before the
    cutover, not merely registered: [R13] makes it an error and [R24] makes an error under a reserved
    location fatal, so a deferred #307 means the spec repository does not load. Revision 3 offered
