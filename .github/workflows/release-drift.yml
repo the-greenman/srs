@@ -74,9 +74,11 @@ jobs:
           tar -xzf /tmp/srs-cli/srs-x86_64-unknown-linux-gnu.tar.gz -C /tmp/srs-cli
           chmod +x /tmp/srs-cli/srs
           # Record which binary this run used, so a drift failure can be told
-          # apart from a binary change by reading the log.
+          # apart from a binary change by reading the log. `srs --version`
+          # reports "srs 0.1.0" for every build and cannot tell two releases
+          # apart — the tag and the checksum are what identify the binary.
           echo "srs-rust release: $SRS_RUST_CLI_TAG"
-          /tmp/srs-cli/srs --version
+          sha256sum /tmp/srs-cli/srs
 
       - name: Run release drift check
         working-directory: srs
