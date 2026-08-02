@@ -37,3 +37,37 @@
 - https://github.com/the-greenman/muDemocracy.org/issues/136
 
 **Review Trigger**: The first full public release triggers the precommitted temporal reversal: `public-standard` replaces `formation`, and Continuity becomes the default. After that trigger, a breaking standard change requires an explicit version boundary, migration and compatibility analysis, recovery evidence, and owner ratification.
+
+
+**Title**: Define the SRS decision-log inclusion boundary
+
+**Decision Status**: accepted
+
+**Decision Date**: 2026-08-02
+
+**Decision Rationale**: The decision log must preserve the reasoning that future contributors need without becoming an archaeological archive or a task list. The muDemocracy guide correctly tests durability, policy effect, trade-offs, and future review value, but its strategy/tactical/operational distinction is too coarse for technical governance. A tactical choice can be mechanically determined; an operational-looking choice can establish a reusable exception or conformance boundary.
+
+**Decision**: Maintain the SRS RFC decision log as a curated record of active consequential judgment. Record a decision when legitimate alternatives remained and the choice establishes, changes, applies with discretion, excepts, or supersedes guidance that future work may need to understand. Do not record a mechanical derivation: when competent contributors accepting the same governing decisions and evidence have only one valid outcome, record the task, implementation consequence, test, or pull request instead.
+
+**Scope**: SRS RFC decision log and consequential SRS technical decisions
+
+**Governing Values**:
+- semantic-integrity
+- shared-coherence
+
+**Alternatives Considered**: - Backfill every atomic research card, including mechanical derivations.
+- Treat tactical or operational work as sufficient reason to record a decision.
+- Record only RFC lifecycle outcomes, without reusable rationale or exceptions.
+- Leave the decision-log boundary implicit.
+
+**Accepted Costs**: The project accepts a small amount of classification and review work before recording a decision. The log will not be a complete chronology of tasks, PRs, or research cards; a contributor must follow evidence links when exhaustive history is needed.
+
+**Evidence**:
+- https://github.com/the-greenman/srs/issues/256
+- https://github.com/the-greenman/srs/pull/341
+- docs/research/epic-256-decision-map/methodology.md
+- docs/research/epic-256-decision-map/values-statement.md
+- https://github.com/the-greenman/muDemocracy.org/blob/master/muSrs/records/tier-2/section-table-a638cca2.json
+- https://github.com/the-greenman/muDemocracy.org/blob/master/muSrs/records/tier-2/section-table-b5a4b93a.json
+
+**Review Trigger**: Review this boundary when formal governance for SRS is adopted, or when the log shows either failure signal: it has become a task list, or recurring consequential choices lack a recorded rationale and cannot be classified consistently.

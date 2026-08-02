@@ -3507,6 +3507,15 @@
       "instanceId": "4071ab22-5043-460f-bae4-1270e955b4ef",
       "path": "records/tier-2/rfc-4071ab22.json",
       "tier": 2
+    },
+    {
+      "instanceId": "1e5df0d9-430f-4a5a-ae7a-b4cd21a7c72f",
+      "path": "records/tier-2/rfc-decision-1e5df0d9.json",
+      "tags": [
+        "topic:meta",
+        "topic:rfc"
+      ],
+      "tier": 2
     }
   ],
   "meta": {
