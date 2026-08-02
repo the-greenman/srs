@@ -456,6 +456,15 @@
       "tier": 2
     },
     {
+      "instanceId": "92ac4529-261f-4e60-9434-7245ad2716be",
+      "path": "records/rfc-decisions/foundational-values-and-phase.json",
+      "tags": [
+        "topic:meta",
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
       "instanceId": "dd8920f0-458f-5b72-ad58-93229c777b87",
       "path": "records/sections/01-purpose-and-scope.json",
       "tags": [
@@ -544,6 +553,16 @@
       "instanceId": "859c6150-4a5c-5229-934b-14223a072bdb",
       "path": "records/subsections/01-1-what-this-specification-defines.json",
       "tags": [
+        "topic:meta"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "fc31337a-1c61-4e86-9c0f-09f0e0ce56bf",
+      "path": "records/subsections/01-5-foundational-values-and-development-phase.json",
+      "tags": [
+        "concern:extensibility",
+        "concern:identity",
         "topic:meta"
       ],
       "tier": 2

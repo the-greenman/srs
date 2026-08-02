@@ -1,0 +1,895 @@
+[
+  {
+    "decision_id": "E256-A90",
+    "epic_row": "RFC A / #257",
+    "task_refs": [
+      "srs#257",
+      "srs#261",
+      "RFC-032"
+    ],
+    "decision_family": "A",
+    "title": "Replace the conflated Field valueType with an orthogonal fieldType model",
+    "decision_statement": "A Field declares one fieldType whose independent facets express datatype, cardinality, value domain, format, constraints, composite references, dependent values, and maps; the old valueType model is replaced rather than extended with more parallel properties.",
+    "status": "implemented",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-29",
+    "sources": [
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/rfcs/rfc-032-composite-field-range.md#change-a--the-fieldtype-model-replaces-valuetype",
+        "excerpt": "Accepted RFC-032 Change A replaces valueType with orthogonal fieldType facets and makes ref the composite range.",
+        "explicitness": "explicit",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      },
+      {
+        "kind": "canonical",
+        "authority_rank": 1,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/field.json#L35-L158",
+        "excerpt": "The effective Field schema requires fieldType and validates the accepted facet model.",
+        "explicitness": "explicit",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      }
+    ],
+    "alternatives": [
+      "Add compositeRange beside the existing valueType enum.",
+      "Add a free-JSON escape hatch or a general sum-type construct.",
+      "Retain FieldGroup as a parallel nesting mechanism."
+    ],
+    "accepted_cost": "A breaking definition-layer migration of all Field definitions, plus staged compatibility work for instance carriers and FieldGroup removal.",
+    "supersedes": [
+      "Field.valueType",
+      "ValidationRule",
+      "FieldGroup as the preferred nesting model"
+    ],
+    "derived_from": [
+      "RFC-032 owner decisions D1-D6",
+      "srs#239"
+    ],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "integrity",
+        "evidence_basis": "revealed-by-alternative",
+        "confidence": "high",
+        "counterfactual": "Keeping convenient legacy encodings would preserve ambiguity between datatype, cardinality, domain, and presentation.",
+        "counterpole_safeguard": "Presentation hints remain available but are explicitly kept outside the semantic type model.",
+        "shadow_signal": "The semantic model becomes too elaborate for ordinary authors or begins encoding presentation choices as type facets."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive",
+        "direction": "evolution",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Preserving the public legacy shape would freeze a model known to be unable to describe itself.",
+        "counterpole_safeguard": "The migration is deterministic and FieldGroup instance removal is gated until a conforming carrier exists.",
+        "shadow_signal": "Breaking migrations proceed without complete corpus scans, round trips, or gated compatibility seams."
+      },
+      "coherence_autonomy": {
+        "relevance": "supporting",
+        "direction": "coherence",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Parallel mechanisms would let packages express the same semantic concern through incompatible constructs.",
+        "counterpole_safeguard": "Open maps and package-managed vocabularies retain bounded extension points.",
+        "shadow_signal": "A single core vocabulary crowds out legitimate domain-owned types or extension bags."
+      }
+    },
+    "cube": {
+      "dimensionality": "vertex",
+      "coordinate": [
+        "Integrity",
+        "Evolution",
+        "Coherence"
+      ]
+    },
+    "exception_class": "none",
+    "review_state": "adjudicated",
+    "coding_notes": "One atomic commitment: replace the Field type-description mechanism. Later predicate ports and carrier migration are separate decisions. Reconciled from both calibration passes; exception classification is intentionally deferred until an epic-level bias is established."
+  },
+  {
+    "decision_id": "E256-A91",
+    "epic_row": "RFC B / #258",
+    "task_refs": [
+      "srs#258",
+      "RFC-033"
+    ],
+    "decision_family": "A",
+    "title": "Retain a frozen bootstrap seed while the metamodel self-hosts",
+    "decision_statement": "The committed Field and Type JSON Schemas remain the bootstrap fixed point loaded as-is and are never regenerated at runtime, even though their semantic definitions are also expressed as a self-hosted SRS metamodel package.",
+    "status": "implemented",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-29",
+    "sources": [
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/rfcs/rfc-033-self-host-metamodel-frozen-seed.md#change-b--frozen-seed-bootstrap-fixed-point-never-re-derived-at-runtime",
+        "excerpt": "Accepted RFC-033 makes field.json and type.json the fixed bootstrap seed and forbids runtime re-derivation.",
+        "explicitness": "explicit",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      },
+      {
+        "kind": "canonical",
+        "authority_rank": 1,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/field.json#L1-L8",
+        "excerpt": "The canonical Field schema identifies itself as the frozen-seed fixed point loaded as committed.",
+        "explicitness": "explicit",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      }
+    ],
+    "alternatives": [
+      "Regenerate the schemas from the metamodel every time the runtime starts.",
+      "Keep only hand-authored schemas and do not self-host the metamodel.",
+      "Treat the metamodel package as implicitly merged rather than normally package-resolved."
+    ],
+    "accepted_cost": "Temporary dual representation and explicit closure machinery are retained to avoid a circular loader dependency.",
+    "supersedes": [
+      "RFC-004 schema-definition/schema-member metamodel vocabulary"
+    ],
+    "derived_from": [
+      "RFC-032 fieldType expressiveness",
+      "RFC-029 foundational package identity"
+    ],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "integrity",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "A runtime-generated definition of Field would depend on parsing Field before Field has a trusted definition.",
+        "counterpole_safeguard": "The self-hosted records remain inspectable and are checked against the seed rather than hidden behind the bootstrap artifact.",
+        "shadow_signal": "Bootstrap caution becomes a permanent excuse for maintaining two drifting semantic authorities."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive",
+        "direction": "continuity",
+        "evidence_basis": "revealed-by-alternative",
+        "confidence": "high",
+        "counterfactual": "An immediate authorship flip would risk making existing readers unable to load the definitions needed to understand the flip.",
+        "counterpole_safeguard": "The design explicitly prepares a later authorship flip once closure and runtime support are proven.",
+        "shadow_signal": "The frozen seed survives after the closure and loader preconditions for evolution have been met."
+      },
+      "coherence_autonomy": {
+        "relevance": "supporting",
+        "direction": "coherence",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Different implementations could bootstrap from independently reconstructed metamodel shapes.",
+        "counterpole_safeguard": "The metamodel is a normal packageRef-resolved package rather than a globally implicit namespace override.",
+        "shadow_signal": "Foundational status turns into implicit global behavior that bypasses ordinary package resolution."
+      }
+    },
+    "cube": {
+      "dimensionality": "vertex",
+      "coordinate": [
+        "Integrity",
+        "Continuity",
+        "Coherence"
+      ]
+    },
+    "exception_class": "none",
+    "review_state": "adjudicated",
+    "coding_notes": "The atomic choice is the bootstrap fixed-point policy, not the independently reversible decision to express the metamodel as records. Reconciled from both calibration passes; exception classification is intentionally deferred until an epic-level bias is established."
+  },
+  {
+    "decision_id": "E256-A92",
+    "epic_row": "RFC C / #259",
+    "task_refs": [
+      "srs#259",
+      "srs#269",
+      "RFC-035"
+    ],
+    "decision_family": "A",
+    "title": "Generate schemas through a neutral deterministic emitter seam",
+    "decision_statement": "Metamodel Type and Field records are resolved into a target-neutral intermediate representation, from which deterministic target emitters produce schemas; the JSON Schema emitter reuses the shared per-field projection instead of defining a second semantic mapping.",
+    "status": "implemented",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-29",
+    "sources": [
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/rfcs/rfc-035-schema-emitter.md#change-a--the-neutral-ir-fieldtype-records--ir--target",
+        "excerpt": "Accepted RFC-035 requires a target-neutral record-to-IR front half and deterministic emitters that reuse projectField.",
+        "explicitness": "explicit",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      },
+      {
+        "kind": "implementation",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/scripts/lib/schema-emitter.mjs",
+        "excerpt": "The delivered reference emitter implements package loading, deterministic entity emission, and stamped bundle output.",
+        "explicitness": "inferred",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      }
+    ],
+    "alternatives": [
+      "Emit JSON Schema directly from projectField without a neutral IR.",
+      "Hand-maintain each target mapping independently.",
+      "Require literal byte identity against the hand-authored frozen seed despite intentional representation differences."
+    ],
+    "accepted_cost": "An explicit IR, fixed ordering contract, override register, goldens, and structural closure test add implementation machinery before a second target exists.",
+    "supersedes": [
+      "Independent target-specific schema mappings",
+      "RFC-033 R4(b) literal seed-byte-equality wording"
+    ],
+    "derived_from": [
+      "RFC-032 projection contract",
+      "RFC-033 closure obligation"
+    ],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "integrity",
+        "evidence_basis": "revealed-by-alternative",
+        "confidence": "high",
+        "counterfactual": "Independent emitters could make target syntax choose or silently alter semantic meaning.",
+        "counterpole_safeguard": "Target emitters retain freedom over target syntax after the shared semantic IR boundary.",
+        "shadow_signal": "The neutral IR accumulates target-specific details or suppresses meaning a target can faithfully express."
+      },
+      "continuity_evolution": {
+        "relevance": "supporting",
+        "direction": "evolution",
+        "evidence_basis": "explicit",
+        "confidence": "medium",
+        "counterfactual": "Keeping only the frozen hand-authored seed would block author-once multi-target generation.",
+        "counterpole_safeguard": "The emitter does not overwrite the bootstrap seed before the separately gated authorship flip.",
+        "shadow_signal": "New generation paths replace runtime artifacts before coverage and byte-parity gates pass."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "coherence",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Each language or output target would develop a separate interpretation of Field semantics.",
+        "counterpole_safeguard": "Additional emitters can be added independently without changing the front half.",
+        "shadow_signal": "Shared projection rules prevent target adapters from expressing legitimate target capabilities."
+      }
+    },
+    "cube": {
+      "dimensionality": "vertex",
+      "coordinate": [
+        "Integrity",
+        "Evolution",
+        "Coherence"
+      ]
+    },
+    "exception_class": "none",
+    "review_state": "adjudicated",
+    "coding_notes": "The neutral semantic seam and deterministic emission contract form one architecture decision; the later authorship flip is excluded. Reconciled from both calibration passes; exception classification is intentionally deferred until an epic-level bias is established."
+  },
+  {
+    "decision_id": "E256-B90",
+    "epic_row": "Rendering / #262",
+    "task_refs": [
+      "srs#262",
+      "srs#292",
+      "RFC-036"
+    ],
+    "decision_family": "B",
+    "title": "Make composite renderer dispatch view-owned",
+    "decision_statement": "Composite renderer selection belongs to FieldView, DocumentSection, or DocumentView with most-specific precedence, so the same semantic records can be presented differently by different views; no renderer binding is carried by the Field or Type.",
+    "status": "implemented",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/rfcs/rfc-036-composite-rendering.md#change-b--three-declaration-sites-in-the-view-layer-with-a-total-precedence-order",
+        "excerpt": "Accepted RFC-036 puts dispatch at three view-layer sites and states that one record set may render differently in different views.",
+        "explicitness": "explicit",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      },
+      {
+        "kind": "canonical",
+        "authority_rank": 1,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/view.json#L107-L148",
+        "excerpt": "The effective view schema defines CompositeRendererBinding as presentation-only and attaches it to FieldView.",
+        "explicitness": "explicit",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      }
+    ],
+    "alternatives": [
+      "Keep renderer dispatch on FieldGroup or another Type-owned construct.",
+      "Put renderer selection on each instance.",
+      "Allow only one repository-wide renderer choice per composite field."
+    ],
+    "accepted_cost": "Dispatch now depends on a view capability, and precedence plus an explicit baseline sentinel add presentation-layer complexity.",
+    "supersedes": [
+      "RFC-007 FieldGroup.compositeRenderer for composite-range fields"
+    ],
+    "derived_from": [
+      "RFC-015 presentation ownership",
+      "RFC-032 composite range"
+    ],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "integrity",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Putting a renderer on the Type would make one presentation choice appear to be part of the data's meaning.",
+        "counterpole_safeguard": "The view layer provides explicit bindings, role maps, defaults, and a defined fallback for usable rendering.",
+        "shadow_signal": "Semantic metadata is withheld even when a renderer genuinely needs a semantic role contract."
+      },
+      "continuity_evolution": {
+        "relevance": "supporting",
+        "direction": "evolution",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Retaining the FieldGroup dispatch model would preserve an acknowledged coupling and block per-view variation.",
+        "counterpole_safeguard": "By-name defaults, the table renderer, and baseline fallback preserve existing output capability during migration.",
+        "shadow_signal": "Presentation mechanisms are replaced without parity fixtures for existing rendered content."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "autonomy",
+        "evidence_basis": "revealed-by-alternative",
+        "confidence": "high",
+        "counterfactual": "A Type-owned dispatcher would impose one arrangement on every consumer of the same records.",
+        "counterpole_safeguard": "All views use one shared precedence, identifier grammar, diagnostics, and baseline contract.",
+        "shadow_signal": "Local view choices create outputs that cannot be compared or reliably interpreted across implementations."
+      }
+    },
+    "cube": {
+      "dimensionality": "vertex",
+      "coordinate": [
+        "Integrity",
+        "Evolution",
+        "Autonomy"
+      ]
+    },
+    "exception_class": "none",
+    "review_state": "adjudicated",
+    "coding_notes": "This is the ownership decision only. The concrete composite fallback algorithm is a separable rendering decision. Reconciled from both calibration passes; exception classification is intentionally deferred until an epic-level bias is established."
+  },
+  {
+    "decision_id": "E256-B91",
+    "epic_row": "Rendering baseline / #294",
+    "task_refs": [
+      "srs#294",
+      "srs-rust#782",
+      "RFC-037"
+    ],
+    "decision_family": "B",
+    "title": "Define a portable field-row rendering baseline",
+    "decision_statement": "DocumentView baseline rendering has normative field-row forms for markdown, AsciiDoc, text, and HTML, including stable labels, multi-entry behavior, empty placeholders, and class identity, while application UI outside DocumentView remains unbound.",
+    "status": "implemented",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/rfcs/rfc-037-normative-field-row-rendering-baseline.md#change-a--normative-scalar-field-row-form",
+        "excerpt": "Accepted RFC-037 specifies exact portable field-row forms and limits them to DocumentView emission paths.",
+        "explicitness": "explicit",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      },
+      {
+        "kind": "canonical",
+        "authority_rank": 1,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/srs/records/subsections/07-7-ext-views-l2.json",
+        "excerpt": "The accepted baseline rules are integrated into the canonical ext:views-l2 specification records.",
+        "explicitness": "explicit",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      }
+    ],
+    "alternatives": [
+      "Leave field-row form implementation-defined.",
+      "Require a Theme to define every concrete row form.",
+      "Apply the baseline to all native application interfaces."
+    ],
+    "accepted_cost": "Previously conforming renderers lose freedom over emitted row shape and placeholder behavior in covered formats.",
+    "supersedes": [
+      "RFC-001 implementation-defined default field rendering",
+      "RFC-036 undefined terminal field-row fallback"
+    ],
+    "derived_from": [
+      "RFC-001 default rendering baseline",
+      "RFC-036 composite baseline"
+    ],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "expression",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Leaving the output abstract would preserve renderer freedom but give consumers no portable readable form.",
+        "counterpole_safeguard": "Labels and values are not humanized or semantically transformed; authored content is preserved verbatim or escaped as literal text.",
+        "shadow_signal": "Presentation uniformity begins altering stored meaning or prescribing native application UI."
+      },
+      "continuity_evolution": {
+        "relevance": "supporting",
+        "direction": "continuity",
+        "evidence_basis": "revealed-by-alternative",
+        "confidence": "high",
+        "counterfactual": "A newly invented format could discard the already normative markdown form and existing CSS identity vocabulary.",
+        "counterpole_safeguard": "The RFC deliberately strengthens MAY behavior to MUST where interoperability requires a correction.",
+        "shadow_signal": "Historical output quirks are retained after they undermine accessibility or faithful rendering."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "coherence",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Two conforming DocumentView implementations could emit incompatible output for the same source and format.",
+        "counterpole_safeguard": "Native application UI and formats outside the named DocumentView boundary retain implementation freedom.",
+        "shadow_signal": "The baseline expands beyond portable interchange into surfaces where local interaction design is legitimate."
+      }
+    },
+    "cube": {
+      "dimensionality": "vertex",
+      "coordinate": [
+        "Expression",
+        "Continuity",
+        "Coherence"
+      ]
+    },
+    "exception_class": "none",
+    "review_state": "adjudicated",
+    "coding_notes": "This card codes the choice to establish a portable baseline, not each independently testable row-format detail. Reconciled from both calibration passes; exception classification is intentionally deferred until an epic-level bias is established."
+  },
+  {
+    "decision_id": "E256-C90",
+    "epic_row": "Carrier / #242",
+    "task_refs": [
+      "srs#242",
+      "RFC-039"
+    ],
+    "decision_family": "C",
+    "title": "Key Record fieldValues by authored Field.name",
+    "decision_statement": "Tier-2 Record fieldValues is an object keyed verbatim by Field.name, with values conforming directly to fieldType; fieldId is resolved from the pinned Type and key rather than repeated in every instance value entry.",
+    "status": "implemented",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/rfcs/rfc-039-record-field-value-carrier.md#change-a--fieldvalues-becomes-an-object-keyed-by-fieldname",
+        "excerpt": "Accepted RFC-039 makes fieldValues a verbatim Field.name-keyed object and aligns instance keys with projected domain-schema keys.",
+        "explicitness": "explicit",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      },
+      {
+        "kind": "canonical",
+        "authority_rank": 1,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/record.json#L29-L53",
+        "excerpt": "The effective Record schema carries fieldValues as an object rather than an array of FieldValue wrappers.",
+        "explicitness": "explicit",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      }
+    ],
+    "alternatives": [
+      "Keep the UUID-keyed FieldValue array.",
+      "Key the object by field UUID.",
+      "Camel-case domain Field names during projection."
+    ],
+    "accepted_cost": "The breaking carrier migration drops stored write-order, makes names load-bearing within a pinned Type version, and requires coordinated schema and ecosystem cutover.",
+    "supersedes": [
+      "Record.FieldValue array carrier",
+      "UUID-keyed instance values",
+      "domain-wide RFC-035 camelCase interpretation"
+    ],
+    "derived_from": [
+      "RFC-032 fieldType instance space",
+      "RFC-035 projection rules"
+    ],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "expression",
+        "evidence_basis": "revealed-by-alternative",
+        "confidence": "high",
+        "counterfactual": "UUID keys would retain stronger rename-independent identity but keep instances opaque and unlike their schemas.",
+        "counterpole_safeguard": "Field identity remains recoverable through the version-pinned Type, and names must be unique in the effective field set.",
+        "shadow_signal": "Readable keys are treated as durable identity without Type-version pinning or rename migration."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive",
+        "direction": "evolution",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Preserving the legacy wrapper array would retain compatibility but leave composite values and the unified fieldType carrier unresolved.",
+        "counterpole_safeguard": "The cutover is revision-gated, exhaustively inventoried, recursively migrated, parity-checked, and coordinated atomically.",
+        "shadow_signal": "Carrier simplification deletes historical signals or live legacy branches without proving their disposition."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "coherence",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Separate schema and instance key conventions would require a permanent bridge and allow the two representations to drift.",
+        "counterpole_safeguard": "Domain authors choose their own Field names verbatim; only within-Type uniqueness is imposed.",
+        "shadow_signal": "Cross-layer uniformity forces global naming policy beyond the local Type boundary."
+      }
+    },
+    "cube": {
+      "dimensionality": "vertex",
+      "coordinate": [
+        "Expression",
+        "Evolution",
+        "Coherence"
+      ]
+    },
+    "exception_class": "none",
+    "review_state": "adjudicated",
+    "coding_notes": "The carrier key decision is separated from provenance relocation, repeatable-entry removal, and FieldGroup migration. Reconciled from both calibration passes; exception classification is intentionally deferred until an epic-level bias is established."
+  },
+  {
+    "decision_id": "E256-D90",
+    "epic_row": "Repository authority / #296",
+    "task_refs": [
+      "srs#296",
+      "RFC-038"
+    ],
+    "decision_family": "D",
+    "title": "Make the authoritative store, not manifest indexes, determine repository membership",
+    "decision_statement": "Repository membership is the deterministic enumeration of six authoritative sets reported by the backing store; manifest indexes are removed as authorities and any derived catalog is rebuildable and validity-token gated.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/rfcs/rfc-038-tree-authoritative-storage.md#r1",
+        "excerpt": "Accepted RFC-038 R1 makes the authoritative store decisive across six sets and forbids treating manifest catalogs as authority.",
+        "explicitness": "explicit",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      },
+      {
+        "kind": "canonical",
+        "authority_rank": 1,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/srs/records/tier-2/rfc-4071ab22.json",
+        "excerpt": "The canonical RFC record states that membership authority moves from manifest.json to the authoritative store.",
+        "explicitness": "explicit",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      }
+    ],
+    "alternatives": [
+      "Keep manifest.json indexes authoritative.",
+      "Use unrestricted glob discovery.",
+      "Standardize a second committed catalog as co-authority."
+    ],
+    "accepted_cost": "Readers and writers must implement complete backend enumeration, strict classification, duplicate detection, and coordinated generation-2 migration instead of consulting one central list.",
+    "supersedes": [
+      "manifest.instanceIndex authority",
+      "manifest.containerIndex authority",
+      "live relations collection authority"
+    ],
+    "derived_from": [
+      "RFC-013 tree-authoritative membership rule",
+      "observed manifest/tree contradiction",
+      "conflict reproduction in PR #291"
+    ],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "integrity",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "A convenient central index could disagree with the stored objects and make membership depend on update order.",
+        "counterpole_safeguard": "Derived catalogs remain permitted for fast lookup when tied to a store validity token.",
+        "shadow_signal": "Fail-closed discovery treats opaque payloads or unrelated files as semantic repository objects."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive",
+        "direction": "evolution",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Preserving index authority would retain the old wire shape but perpetuate contradiction and write conflicts.",
+        "counterpole_safeguard": "The change is revision-discriminated, parity-measured, snapshot-aware, and composed with the carrier cutover.",
+        "shadow_signal": "Storage rules change without a reader version gate, full artifact inventory, or identity-set parity proof."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "autonomy",
+        "evidence_basis": "revealed-by-alternative",
+        "confidence": "high",
+        "counterfactual": "A central manifest forces every independent object write to coordinate through one shared file.",
+        "counterpole_safeguard": "Every backend implements one shared enumeration, classification, ordering, and conflict contract.",
+        "shadow_signal": "Backend independence yields different membership sets or observable enumeration orders for identical content."
+      }
+    },
+    "cube": {
+      "dimensionality": "vertex",
+      "coordinate": [
+        "Integrity",
+        "Evolution",
+        "Autonomy"
+      ]
+    },
+    "exception_class": "none",
+    "review_state": "adjudicated",
+    "coding_notes": "The authority decision is atomic. Standalone Relation files and individual classification rules are consequential but separable commitments. Reconciled from both calibration passes; exception classification is intentionally deferred until an epic-level bias is established."
+  },
+  {
+    "decision_id": "E256-C91",
+    "epic_row": "FieldType predicate repair / #284",
+    "task_refs": [
+      "srs#284",
+      "RFC-032 Revision 7"
+    ],
+    "decision_family": "C",
+    "title": "Port legacy subset predicates explicitly onto fieldType",
+    "decision_statement": "Every rule that formerly selected a subset of valueType is restated as an exact fieldType predicate, with a temporary assignment-level cardinality conjunct retained until the atomic carrier cutover proves it can be removed.",
+    "status": "implemented",
+    "decision_class": "reasoned-application",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/rfcs/rfc-032-composite-field-range.md#change-i--extension-rule-subset-predicates-rev-7-erratum",
+        "excerpt": "Ratified RFC-032 Revision 7 gives exact replacement predicates for search, conditional-required, CSS-class, and title rules.",
+        "explicitness": "explicit",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      },
+      {
+        "kind": "owner-decision",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/284",
+        "excerpt": "The owner ratified a substantive erratum so the fieldType migration did not silently widen or erase legacy rule boundaries.",
+        "explicitness": "explicit",
+        "commit_sha": "71ee4c78ab0881f42cd23dd5d0451bff2f882da5"
+      }
+    ],
+    "alternatives": [
+      "Treat every new string datatype alike.",
+      "Drop the legacy predicates until the carrier migration.",
+      "Remove the repeatable compatibility conjunct before the atomic cutover."
+    ],
+    "accepted_cost": "Four verbose predicates and a temporary dual-cardinality test are maintained through the transition, including fail-closed removal criteria.",
+    "supersedes": [
+      "Legacy valueType subset predicates",
+      "RFC-032 Revision 5 omission of extension predicate dispositions"
+    ],
+    "derived_from": [
+      "RFC-012 R8",
+      "RFC-019 R6",
+      "ext:themes-l1 T-9",
+      "ext:views-l2 N+1"
+    ],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "integrity",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "A broad string check would silently change which fields are searchable, comparable, style-bearing, or suitable as titles.",
+        "counterpole_safeguard": "The predicates preserve intended user-facing behavior and explicitly classify every newly introduced datatype and format.",
+        "shadow_signal": "Predicate precision becomes an accretion of special cases that obscures the underlying semantic distinction."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive",
+        "direction": "continuity",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "A clean immediate switch to fieldType-only cardinality would misclassify records still using the legacy assignment carrier.",
+        "counterpole_safeguard": "The compatibility conjunct has explicit atomic removal gates and the date-time predicate intentionally corrects a legacy omission.",
+        "shadow_signal": "Transitional predicates remain after all legacy data and code paths have been eliminated."
+      },
+      "coherence_autonomy": {
+        "relevance": "supporting",
+        "direction": "coherence",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Each extension could reinterpret the new facets independently and drift from the original behavior.",
+        "counterpole_safeguard": "Each extension keeps its distinct eligibility boundary rather than receiving one global string policy.",
+        "shadow_signal": "Central predicate rules prevent extensions from defining new, explicitly ratified behavior for new types."
+      }
+    },
+    "cube": {
+      "dimensionality": "vertex",
+      "coordinate": [
+        "Integrity",
+        "Continuity",
+        "Coherence"
+      ]
+    },
+    "exception_class": "none",
+    "review_state": "adjudicated",
+    "coding_notes": "The shared atomic decision is to port rather than infer the legacy predicates. Individual rule truth tables are mechanical consequences of that choice and their source rules. Reconciled from both calibration passes; exception classification is intentionally deferred until an epic-level bias is established."
+  },
+  {
+    "decision_id": "E256-G90",
+    "epic_row": "Delivered: pinned CI binary (#316 / PR #336)",
+    "task_refs": [
+      "srs#316",
+      "srs#336"
+    ],
+    "decision_family": "G",
+    "title": "Pin the required release-drift renderer to the exact build represented by committed exports",
+    "decision_statement": "Declare SRS_RUST_CLI_TAG exactly once in the release-drift workflow, pin it to v0.1.0-build.265, make the required check download that exact renderer, log its tag and checksum, and require any future pin advance and corresponding documentation re-render to land together as one reviewable change.",
+    "status": "implemented",
+    "decision_class": "reasoned-application",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {
+        "kind": "implementation",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/c132784ce959787b5ee40b2472c4b996abe35363/.github/workflows/release-drift.yml#L3-L53",
+        "excerpt": "The workflow explains that an unpinned required gate can change without an SRS commit, declares SRS_RUST_CLI_TAG once as v0.1.0-build.265, and defines advancing the pin and re-rendering as two halves of one fact that must land together.",
+        "explicitness": "explicit",
+        "commit_sha": "c132784ce959787b5ee40b2472c4b996abe35363"
+      },
+      {
+        "kind": "implementation",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/c132784ce959787b5ee40b2472c4b996abe35363/.github/workflows/release-drift.yml#L69-L90",
+        "excerpt": "The required job downloads the release named by SRS_RUST_CLI_TAG, logs that tag and the binary SHA-256, then runs release drift with SRS_CLI_PATH bound to the downloaded binary.",
+        "explicitness": "explicit",
+        "commit_sha": "c132784ce959787b5ee40b2472c4b996abe35363"
+      },
+      {
+        "kind": "pull-request",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/pull/336",
+        "excerpt": "Merged 2026-08-01T22:15:50Z. The PR reports that the same records fail release drift with build.263 and pass with build.265, which is the first release carrying RFC-037's renderer; committed docs/spec output was deliberately left unchanged.",
+        "explicitness": "explicit",
+        "commit_sha": "c132784ce959787b5ee40b2472c4b996abe35363"
+      },
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/316",
+        "excerpt": "Issue #316 identifies the defect: release-drift was required but downloaded the latest cross-repository binary, so its behavior changed without any commit and produced failures indistinguishable from genuine record drift.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      }
+    ],
+    "alternatives": [
+      "Continue downloading the latest srs-rust release so the gate stays automatically fresh.",
+      "Treat v0.1.0-build.265 as a minimum and permit any newer release.",
+      "Pin the tag separately in each consuming step or helper.",
+      "Re-render committed exports whenever an unpinned required check begins failing."
+    ],
+    "accepted_cost": "The required gate intentionally stops receiving renderer updates automatically; maintainers must review a pin bump and any resulting export or mirror changes together, and contributors must use the exact named build rather than whichever srs binary is locally current.",
+    "supersedes": [
+      "release-drift latest-release download without a tag"
+    ],
+    "derived_from": [
+      "RFC-037 renderer changes first released in v0.1.0-build.265",
+      "Epic-256 requirement that generated artifacts have an auditable chain"
+    ],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "integrity",
+        "evidence_basis": "revealed-by-alternative",
+        "confidence": "high",
+        "counterfactual": "Resolving the latest renderer is operationally convenient and automatically fresh, but it can report committed semantic sources as stale when only an external executable changed.",
+        "counterpole_safeguard": "The workflow keeps the exact renderer easy to fetch from one declared tag and documents a four-step procedure for advancing it.",
+        "shadow_signal": "A reproducibility pin has over-rotated when it blocks a deliberate renderer upgrade after the outputs, mirrors, and reason for the upgrade are ready to be reviewed together."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive",
+        "direction": "continuity",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Following every new srs-rust release evolves the gate immediately, but makes required-check behavior change outside this repository's versioned decision history.",
+        "counterpole_safeguard": "Evolution remains explicit: update the single pin and regenerate with that exact build in the same PR; a no-diff verified bump is allowed.",
+        "shadow_signal": "Continuity has become inertia if the pin remains old after a newer renderer has been intentionally selected and its complete projection delta can be reviewed."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "coherence",
+        "evidence_basis": "behavioral",
+        "confidence": "high",
+        "counterfactual": "Allowing CI and each contributor to use their locally available renderer reduces setup friction but permits the same records to produce different results across environments.",
+        "counterpole_safeguard": "The renderer identity has one declaration, the fetch path is automated, and provenance is logged so local and CI failures can be attributed without central guesswork.",
+        "shadow_signal": "Central coherence has overreached if unrelated tools that deliberately track latest releases are pinned without evidence that their output participates in this required artifact chain."
+      }
+    },
+    "cube": {
+      "dimensionality": "vertex",
+      "coordinate": [
+        "integrity",
+        "continuity",
+        "coherence"
+      ]
+    },
+    "exception_class": "none",
+    "review_state": "adjudicated",
+    "coding_notes": "Independent Pass-A supplemental coding of the release-renderer pin. The decision is counted as reasoned application rather than mechanical derivation because the chosen equality policy, single source of truth, exact build, coupled advancement procedure, and deliberate exclusion of unrelated latest-tracking workflows encode explicit tradeoffs. The implementation is delivered at merge commit c132784ce959787b5ee40b2472c4b996abe35363. Reconciled with Pass B E256-G90. Directions agree on all three axes; high Integrity confidence is retained because the workflow explicitly describes the rejected unpinned behavior and its semantic-source ambiguity. Exception classification is deferred until epic-level synthesis."
+  },
+  {
+    "decision_id": "E256-A93",
+    "epic_row": "Bootstrap repair / #295",
+    "task_refs": [
+      "srs#258",
+      "srs#295",
+      "RFC-033 Revision 5"
+    ],
+    "decision_family": "A",
+    "title": "Reassign the generated metamodel package after a UUID collision and guard uniqueness repository-wide",
+    "decision_statement": "The colliding generated metamodel package is reassigned from package UUID 4a000001 to the first never-claimed slot, 4a000004, while the hand-authored spec-authoring-core package retains its established identity; validation now rejects duplicate resolved IDs and any package ID associated with different namespace/name pairs anywhere in the repository corpus.",
+    "status": "implemented",
+    "decision_class": "reasoned-application",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/512d9c60da079f793b6dc4a37f7bdd23a63e8a8b/rfcs/rfc-033-self-host-metamodel-frozen-seed.md#L12-L18",
+        "excerpt": "RFC-033 Revision 5 records the collision, selects the first never-claimed package slot, preserves the hand-authored package, and requires a uniqueness guard.",
+        "explicitness": "explicit",
+        "commit_sha": "512d9c60da079f793b6dc4a37f7bdd23a63e8a8b"
+      },
+      {
+        "kind": "canonical",
+        "authority_rank": 1,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/512d9c60da079f793b6dc4a37f7bdd23a63e8a8b/srs/package/metamodel/package.json#L60-L65",
+        "excerpt": "The effective metamodel package declares the corrected UUID 4a000004-0000-4000-a000-000000000004.",
+        "explicitness": "explicit",
+        "commit_sha": "512d9c60da079f793b6dc4a37f7bdd23a63e8a8b"
+      },
+      {
+        "kind": "implementation",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/512d9c60da079f793b6dc4a37f7bdd23a63e8a8b/scripts/check-package-id-uniqueness.mjs",
+        "excerpt": "The delivered validator rejects duplicate resolved package or definition IDs and cross-tree package-ID meaning changes.",
+        "explicitness": "inferred",
+        "commit_sha": "512d9c60da079f793b6dc4a37f7bdd23a63e8a8b"
+      }
+    ],
+    "alternatives": [
+      "Reassign the established hand-authored spec-authoring-core package and all definitions hanging from it.",
+      "Reuse a previously claimed but currently inactive package ID.",
+      "Repair this collision without adding a repository-wide invariant check."
+    ],
+    "accepted_cost": "The generated metamodel package and its 66 generated artifacts change package identity, and the validation pipeline gains a repository-wide scan, in order to preserve the more expensive established package and prevent resolution-order ambiguity from recurring.",
+    "supersedes": [
+      "RFC-033 Revision 4 metamodel package UUID 4a000001-0000-4000-a000-000000000001"
+    ],
+    "derived_from": [
+      "SRS UUID identity rule",
+      "srs#295 collision audit",
+      "RFC-014 package-ID keyed resolution"
+    ],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "integrity",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Leaving both packages on one UUID would make identity resolution depend on load order and collapse two semantic entities into one key.",
+        "counterpole_safeguard": "The cheaper generated package is regenerated, avoiding a larger hand-authored migration while retaining patterned human-legible IDs.",
+        "shadow_signal": "Identity purity triggers broad rewrites when a bounded generated-side repair would restore the invariant."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive",
+        "direction": "evolution",
+        "evidence_basis": "revealed-by-alternative",
+        "confidence": "high",
+        "counterfactual": "Preserving the newly assigned metamodel UUID would retain its short history but require either accepting collision or moving the older, larger package.",
+        "counterpole_safeguard": "The established hand-authored package, every Field and Type UUID, and previously claimed ID history remain unchanged; only the generated package ID moves.",
+        "shadow_signal": "Corrective reassignment changes identities beyond the minimal conflicting generated boundary."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "coherence",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Checking only the active manifest would allow fixtures, proposals, archives, or other package trees to assign a different meaning to the same ID.",
+        "counterpole_safeguard": "Different trees may carry copies and revisions of the same package when the ID retains the same namespace/name meaning.",
+        "shadow_signal": "Repository-wide uniqueness checks forbid legitimate copies of the same identified package or confuse version variation with identity conflict."
+      }
+    },
+    "cube": {
+      "dimensionality": "vertex",
+      "coordinate": [
+        "Integrity",
+        "Evolution",
+        "Coherence"
+      ]
+    },
+    "exception_class": "none",
+    "review_state": "adjudicated",
+    "coding_notes": "The reassignment and guard are coded together because the accepted repair explicitly treats prevention of the same identity defect as part of closing the collision. The choice of which side moves is independently evidenced by generated-versus-hand-authored migration cost. Reconciled with Pass A CAL-A-009. Directions and confidence agree on all three axes. Family A is used because the substantive commitment repairs the RFC-033 metamodel bootstrap identity; the repository-wide guard is its operational enforcement. Exception classification is deferred until epic-level synthesis."
+  }
+]

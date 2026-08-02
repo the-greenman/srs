@@ -1,0 +1,375 @@
+{
+  "auditor": "audit-2b",
+  "assignment_count": 37,
+  "independence_note": "This pass was completed from the methodology, schema, source manifest, audit assignment, family batches, pinned repository evidence, and live PR metadata. Pass-1 conclusions were not used to form these reviews.",
+  "reviews": [
+    {
+      "decision_id": "E256-A03",
+      "outcome": "correction-required",
+      "findings": [
+        "The card combines at least three independently reversible construct decisions: admit bounded maps, reject a general sum type, and reject a free-JSON datatype. A future RFC could reverse any one without reversing the others.",
+        "The single vote consequently overstates one broad architectural preference while hiding potentially different accepted costs for each construct."
+      ],
+      "recommended_action": "Split the bounded-map admission and the two rejected general constructs into atomic cards, or retain one accepted typed-specialization card and represent the independently rejected alternatives as non-voting rejected-alternative cards. Recode axes per resulting decision."
+    },
+    {
+      "decision_id": "E256-A06",
+      "outcome": "pass",
+      "findings": [
+        "Accepted RFC-033 and the pinned canonical metamodel package establish both ratified intent and delivered effect. The replacement of the parallel RFC-004 vocabulary is explicit, the accepted bootstrap cost is stated, and all three axis directions follow from compared alternatives."
+      ],
+      "recommended_action": "Retain as coded."
+    },
+    {
+      "decision_id": "E256-A09",
+      "outcome": "pass",
+      "findings": [
+        "The accepted fidelity rule and current pinned dashboard support implemented status. The decision is atomic at the per-emitter contract boundary, and its integrity, evolution, and coherence directions are supported without forcing target implementations into identical representations."
+      ],
+      "recommended_action": "Retain as coded."
+    },
+    {
+      "decision_id": "E256-A12",
+      "outcome": "pass",
+      "findings": [
+        "RFC-035 explicitly supersedes RFC-033's impossible literal wording with a deliberately coupled two-tier verification contract. The original and superseding rules are both preserved, the accepted maintenance cost is explicit, and the coordinate matches the three named-pole directions."
+      ],
+      "recommended_action": "Retain as coded."
+    },
+    {
+      "decision_id": "E256-A15",
+      "outcome": "correction-required",
+      "findings": [
+        "PR #299 is manifest-verified as merged at 2026-07-31T18:13:09Z with the cited full SHA.",
+        "The card nevertheless combines two independently reversible choices: which colliding package identity to move, and whether to add a repository-wide historical uniqueness guard. The first is a contextual repair; the second establishes a broader validation precedent."
+      ],
+      "recommended_action": "Split the identity-selection repair from the cross-tree uniqueness rule. Keep the shared PR evidence, but give each card its own alternatives, cost, class, and axes so the repair does not cast one combined constitutional vote."
+    },
+    {
+      "decision_id": "E256-B02",
+      "outcome": "pass",
+      "findings": [
+        "Accepted RFC-036 explicitly replaces JSON-in-text table parsing with the structured carrier and records the blocked implementation consequence. Ratified rather than implemented status is honest, and the three directional axes match the explicit comparison."
+      ],
+      "recommended_action": "Retain as coded."
+    },
+    {
+      "decision_id": "E256-B05",
+      "outcome": "correction-required",
+      "findings": [
+        "srs-rust PR #786 is manifest-verified as merged at 2026-07-31T22:14:02Z with SHA 356c544cc816043352ec9b140bb208b22f88a941, so implemented status is supported.",
+        "The source typed as pull-request links to a commit URL rather than the PR. This obscures the merge proof and misdescribes the source kind even though the SHA itself is correct."
+      ],
+      "recommended_action": "Replace the pull-request source URL with https://github.com/the-greenman/srs-rust/pull/786 and retain the merge SHA; optionally add the commit URL separately as implementation evidence."
+    },
+    {
+      "decision_id": "E256-C01",
+      "outcome": "correction-required",
+      "findings": [
+        "PR #306 is manifest-verified as merged at 2026-07-31T22:10:00Z with the cited full SHA, and the accepted RFC supports ratified rather than implemented Phase-B status.",
+        "The pull-request source is assigned authority rank 2, but the methodology fixes merged PR evidence at rank 3."
+      ],
+      "recommended_action": "Change the PR source to authority rank 3. Retain the RFC at rank 2 and the decision, axes, and status otherwise unchanged."
+    },
+    {
+      "decision_id": "E256-C04",
+      "outcome": "correction-required",
+      "findings": [
+        "RFC-039 explicitly ratifies the single-cardinality carrier and total agreement check, and the axes and cube are supported.",
+        "derived_from cites E256-C07, which is the unresolved placement of the later naming guard and has no derivational relation to list cardinality. This is a false relationship and could create a misleading dependency graph."
+      ],
+      "recommended_action": "Remove E256-C07 from derived_from and replace it only with the actual cardinality precedent, such as the applicable RFC-032/A14 decision identifier if present in the reconciled ledger."
+    },
+    {
+      "decision_id": "E256-C07",
+      "outcome": "correction-required",
+      "findings": [
+        "The open issue supports unresolved status and unknown directions; no enforcement-layer cost has been accepted.",
+        "exception_class uncertain is premature. The methodology permits exception classification only after a historical bias is established, and this unresolved centre card is not an opposite-pole decision."
+      ],
+      "recommended_action": "Set exception_class to none. Retain the unresolved centre mapping and exclude it from bias counts."
+    },
+    {
+      "decision_id": "E256-C10",
+      "outcome": "pass",
+      "findings": [
+        "The exact owner-decision anchor establishes the grandfather/new-name rule and its measured migration cost. The two temporal branches form one conditional naming policy rather than two competing votes, and the continuity/coherence directions are explicit."
+      ],
+      "recommended_action": "Retain as coded."
+    },
+    {
+      "decision_id": "E256-C13",
+      "outcome": "correction-required",
+      "findings": [
+        "The issue supports a genuine unresolved corpus-boundary question and all three unknown directions.",
+        "exception_class uncertain is premature because no choice or opposite-pole outcome exists to classify."
+      ],
+      "recommended_action": "Set exception_class to none and retain the centre mapping."
+    },
+    {
+      "decision_id": "E256-D03",
+      "outcome": "pass",
+      "findings": [
+        "Accepted RFC-038 directly specifies fixed reserved roots and package-presence discovery after measuring the undeclared-package case. The choice, alternatives, cost, and three directions are supported by pinned normative evidence."
+      ],
+      "recommended_action": "Retain as coded."
+    },
+    {
+      "decision_id": "E256-D06",
+      "outcome": "correction-required",
+      "findings": [
+        "The statement combines two independently reversible rules: derive the definition-kind set from package-manifest arrays, and refuse to load a declared kind without a closed admissible schema. An implementation could derive the complete set while handling a missing schema differently.",
+        "The current accepted cost addresses schema completeness rather than the separate removal of the kind allowlist."
+      ],
+      "recommended_action": "Split catalog kind derivation from the fail-closed schema-completeness obligation and code each against its own rejected alternatives and costs."
+    },
+    {
+      "decision_id": "E256-D09",
+      "outcome": "correction-required",
+      "findings": [
+        "RFC-038 ratifies both rules, but the card combines independently reversible diagnostic behavior: fail the repository load on any reserved-location error, and continue validation to collect all diagnostics rather than fail fast.",
+        "The accepted cost and axis evidence apply mainly to partial-load rejection, not to diagnostic accumulation."
+      ],
+      "recommended_action": "Split fatal repository loading from collect-all validation diagnostics. The latter may be a separate practical-expression decision with a different cube position."
+    },
+    {
+      "decision_id": "E256-D12",
+      "outcome": "pass",
+      "findings": [
+        "The backend-neutral catalog is a single API-boundary decision: expose logical entries while keeping locators diagnostic and adapter-private. Accepted RFC-038 and the cutover contract support the alternatives, cost, and integrity/evolution/coherence coordinate."
+      ],
+      "recommended_action": "Retain as coded."
+    },
+    {
+      "decision_id": "E256-D15",
+      "outcome": "pass",
+      "findings": [
+        "Accepted RFC-038 independently supports the package-versus-repository classification even though the broad epic owner source lacks a comment anchor. The statement records a specific classification application, and its continuity/autonomy directions follow from the rejected invented-identity alternatives."
+      ],
+      "recommended_action": "Retain this as the canonical card for the fixture package/repository classification; use the pinned RFC lines as primary ratification evidence."
+    },
+    {
+      "decision_id": "E256-D18",
+      "outcome": "pass",
+      "findings": [
+        "RFC-038 explicitly frames the deadlock between isolated writes and exact-one reference validity and resolves it with one narrowly scoped cascade rule. The apparent default and exception are inseparable parts of that bounded decision, and the axes are supported."
+      ],
+      "recommended_action": "Retain as coded."
+    },
+    {
+      "decision_id": "E256-E02",
+      "outcome": "pass",
+      "findings": [
+        "Accepted RFC-039 explicitly records a deliberately zero-length compatibility window, so the broad owner issue URL is not needed to establish ratification. The card correctly distinguishes ratified cutover policy from unimplemented migration, and evolution/coherence are the only justified coordinate dimensions."
+      ],
+      "recommended_action": "Retain as coded; an exact owner-comment anchor would improve, but is not required given the accepted RFC."
+    },
+    {
+      "decision_id": "E256-E05",
+      "outcome": "duplicate-candidate",
+      "findings": [
+        "This is the same conceptual decision as E256-D15: migrate the independently valid fixture package while refusing to invent repository identity for its enclosing fixture tree. The alternatives and accepted cost restate the same classification through the migration lens.",
+        "Counting both as eligible precedent would double-vote one owner/RFC disposition across two families."
+      ],
+      "recommended_action": "Keep E256-D15 as the canonical atomic decision and preserve E256-E05 as a non-voting derivation/rollup or remove it from the ledger while retaining its task coverage in the manifest."
+    },
+    {
+      "decision_id": "E256-E08",
+      "outcome": "pass",
+      "findings": [
+        "Accepted RFC-039 states one atomic all-or-nothing migration rule and explicitly rejects skip, coercion, winner selection, and partial dual-shape output. The accepted availability cost and integrity/continuity/coherence coordinate are directly supported."
+      ],
+      "recommended_action": "Retain as coded."
+    },
+    {
+      "decision_id": "E256-E11",
+      "outcome": "correction-required",
+      "findings": [
+        "Accepted RFC-038 Revision 9 supports ratification and the balanced continuity coding.",
+        "The second source is a commit but is assigned authority rank 2. Under the methodology, commit messages are supporting evidence only at rank 5 and cannot independently establish owner intent."
+      ],
+      "recommended_action": "Change the commit source to authority rank 5 (and inferred explicitness if it relies on the commit message rather than file content). Keep the accepted RFC as the rank-2 ratification source."
+    },
+    {
+      "decision_id": "E256-E14",
+      "outcome": "correction-required",
+      "findings": [
+        "This is an issue/epic implementation rollup, not an atomic unresolved decision: multiple repositories and delivery boundaries can be completed, narrowed, or deferred independently.",
+        "No choice is presented as having been made; the card reports that a work train remains incomplete. Keeping it as an atomic card confuses coverage state with decision history."
+      ],
+      "recommended_action": "Move this information to manifest coverage and gap analysis. If unresolved owner choices emerge for individual cutover targets, represent those as separate atomic cards."
+    },
+    {
+      "decision_id": "E256-F103",
+      "outcome": "duplicate-candidate",
+      "findings": [
+        "The accepted sovereign-reader floor is already the explicit accepted_cost of E256-F102 and uses the same owner comment. As written, F103 votes again for the same integrity/autonomy choice while adding a separate documentation obligation.",
+        "Open PR #291 is accurately described as unmerged supporting evidence and is not used as delivery proof."
+      ],
+      "recommended_action": "Keep the reader-floor cost on E256-F102. If the requirement to document that cost is consequential enough to retain, split it into a mechanical-derivation card excluded from bias counts."
+    },
+    {
+      "decision_id": "E256-F106",
+      "outcome": "pass",
+      "findings": [
+        "Two exact owner-decision anchors preserve the original contextual choice and its later supersession. F107 points back to this card, so the missing forward relationship is recoverable in the ledger, and the superseded card remains excluded from primary-bias counts."
+      ],
+      "recommended_action": "Retain as coded and preserve F107's supersedes link during reconciliation."
+    },
+    {
+      "decision_id": "E256-F109",
+      "outcome": "correction-required",
+      "findings": [
+        "The card aggregates multiple independently reversible questions: retention of Field.defaultValue, retention of FieldAssignment.defaultValue, precedence, application timing, requiredness interaction, validity, versioning, and projection.",
+        "No decision has been made, so exception_class uncertain is premature."
+      ],
+      "recommended_action": "Split the unresolved choices into atomic cards at least by Field default, assignment default, and cross-layer precedence/application contract. Set exception_class to none on all unresolved cards."
+    },
+    {
+      "decision_id": "E256-F112",
+      "outcome": "correction-required",
+      "findings": [
+        "The card combines per-entity reject/preserve policy, interaction with inherited extension Types, and the separate naming/shape of an escape bag.",
+        "The coherence/autonomy direction is conditional on alternatives that have not been chosen. Conditional is for a decided rule whose direction varies by stated conditions, not for an unresolved menu. The current centre coordinate happens to exclude that axis, but the axis evidence still codes a proposed preference rather than an observed decision.",
+        "exception_class uncertain is premature."
+      ],
+      "recommended_action": "Split the independent unresolved questions, code unchosen axes unknown with low confidence, keep them at centre, and set exception_class to none."
+    },
+    {
+      "decision_id": "E256-F115",
+      "outcome": "correction-required",
+      "findings": [
+        "The unresolved binary disposition is atomic, but medium-confidence coherence and axis placement infer a desired resolution from the existence of drift. Neither removal nor sanctioning has been selected, so the project has not accepted coherence's cost on this decision.",
+        "exception_class uncertain is also premature."
+      ],
+      "recommended_action": "Code coherence/autonomy as unknown/low, move the card to centre, and set exception_class to none until an actual choice can be compared with alternatives."
+    },
+    {
+      "decision_id": "E256-F202",
+      "outcome": "correction-required",
+      "findings": [
+        "The owner-authored issue body supports ratified task intent, but the statement joins two reversible choices: model each surviving shape once, and obtain extension facets through inherited Types rather than flattening them.",
+        "The inheritance choice is already ratified and counted in E256-F102. Repeating it here as part of another eligible reasoned-application card risks an extra vote.",
+        "The source is coded as a rank-4 issue even though ratified status relies on the owner-authored scope; its authority should be made explicit in the evidence record."
+      ],
+      "recommended_action": "Retain one atomic reasoned-application card for one-source-shape-per-semantics. Move the inherited-extension clause to derived_from E256-F102 or a non-voting mechanical consequence, and represent the owner-authored scope as an owner-decision source with an exact stable anchor where possible."
+    },
+    {
+      "decision_id": "E256-F205",
+      "outcome": "correction-required",
+      "findings": [
+        "The existing `attaches` vocabulary decision is implemented in the canonical schema, but the card's forward-looking claim that instance self-hosting must carry it has not been implemented because F2 remains open.",
+        "The card therefore conflates an earlier delivered decision with a future mechanical consequence and assigns one status to both."
+      ],
+      "recommended_action": "Either restate the card as the implemented historical `attaches` decision, or retain the self-hosting consequence as ratified/proposed mechanical derivation. Do not call the future generated SourceReference consequence implemented."
+    },
+    {
+      "decision_id": "E256-F208",
+      "outcome": "pass",
+      "findings": [
+        "The issue and pinned schema establish a genuine atomic unresolved choice between UUID enforcement and deliberate string semantics. All directions remain unknown/low, no cost is claimed as accepted, and centre placement is honest."
+      ],
+      "recommended_action": "Retain as coded."
+    },
+    {
+      "decision_id": "E256-F211",
+      "outcome": "pass",
+      "findings": [
+        "The aliases discrepancy is independently reversible, supported by the open issue and pinned published substrate, and correctly remains an unmapped unresolved centre card with no exception classification."
+      ],
+      "recommended_action": "Retain as coded."
+    },
+    {
+      "decision_id": "E256-F214",
+      "outcome": "correction-required",
+      "findings": [
+        "The card combines a resolved owner decision—wholesale retirement of RFC-031 without replacement is unacceptable—with the still-unresolved choice of generation coverage versus a hardened residual comparator.",
+        "Conditional integrity and continuity currently describe unchosen alternatives, not a ratified conditional rule, while supersedes claims a resolved historical relationship on an unresolved card."
+      ],
+      "recommended_action": "Split an explicit rejected-alternative card for wholesale retirement from an unresolved residual-mechanism card. Code the unresolved card's unchosen axes unknown and place it at centre unless the retained shared-conformance obligation is isolated as its own ratified decision."
+    },
+    {
+      "decision_id": "E256-G03",
+      "outcome": "pass",
+      "findings": [
+        "Live PR metadata verifies PR #303 merged at 2026-07-31T19:37:51Z with SHA c9797f0ee57b3ceae3a78fe1f004efaf23c42f80. The card records one process precedent, avoids counting each carried finding as a new decision, and its axes match the explicit stale-context alternative."
+      ],
+      "recommended_action": "Retain the card; repair the source manifest omission noted in cross-batch findings."
+    },
+    {
+      "decision_id": "E256-G06",
+      "outcome": "pass",
+      "findings": [
+        "PR #339 is manifest-verified as merged at 2026-08-02T09:27:54Z with the cited full SHA. The card correctly classifies the helper and fail-fast worker path as a mechanical derivation of G05, preventing a second eligible pin-policy vote."
+      ],
+      "recommended_action": "Retain as coded."
+    },
+    {
+      "decision_id": "E256-G12",
+      "outcome": "duplicate-candidate",
+      "findings": [
+        "E256-G12 and E256-H06 ask the same unresolved board-sync float-versus-pin question from the same #335/#316 evidence. Differences in per-axis coding do not make them independent decisions.",
+        "Keeping both inflates unresolved counts and creates a false coding disagreement."
+      ],
+      "recommended_action": "Keep one canonical unresolved card, preferably G12 in the operational-reliability family, merge any unique evidence from H06, and remove H06 from the atomic ledger while retaining H's boundary coverage."
+    },
+    {
+      "decision_id": "E256-H02",
+      "outcome": "pass",
+      "findings": [
+        "The strategic third-party-extension posture is independently reversible from H01's immediate reader behavior. The issue, canonical manifest shape, and explicitly lower-authority design note support unresolved status without implying an owner choice; all axes remain unknown and the card stays at centre."
+      ],
+      "recommended_action": "Retain as coded."
+    }
+  ],
+  "cross_batch_findings": [
+    {
+      "outcome": "correction-required",
+      "decision_ids": [
+        "E256-G03"
+      ],
+      "finding": "The source manifest omits merged srs PR #303 even though an assigned implemented card cites it. Live GitHub metadata confirms a non-null merge timestamp and full merge SHA, but the frozen manifest cannot reproduce that proof.",
+      "recommended_action": "Add PR #303 to source-manifest.json with https://github.com/the-greenman/srs/pull/303, mergedAt 2026-07-31T19:37:51Z, and merge SHA c9797f0ee57b3ceae3a78fe1f004efaf23c42f80. Re-run the manifest coverage check for every pull-request source in all batches."
+    },
+    {
+      "outcome": "duplicate-candidate",
+      "decision_ids": [
+        "E256-D15",
+        "E256-E05"
+      ],
+      "finding": "Repository classification and migration batches independently coded the same fixture-package versus fixture-repository disposition as eligible decisions.",
+      "recommended_action": "Use one canonical atomic decision and represent the other family occurrence as a derivation or rollup without an additional bias vote."
+    },
+    {
+      "outcome": "duplicate-candidate",
+      "decision_ids": [
+        "E256-F102",
+        "E256-F103",
+        "E256-F202"
+      ],
+      "finding": "The choice to keep extension facets in inherited extension Types—and its sovereign-reader inheritance cost—appears in three eligible cards. F103 repeats F102's accepted cost, and F202 bundles the same inheritance choice with schema-shape deduplication.",
+      "recommended_action": "Count the architectural choice once in F102. Preserve documentation and downstream instance-layer consequences as mechanical derivations; retain a separate F202 vote only for the independently atomic one-shape-once choice."
+    },
+    {
+      "outcome": "correction-required",
+      "decision_ids": [
+        "E256-C07",
+        "E256-C13",
+        "E256-F109",
+        "E256-F112",
+        "E256-F115"
+      ],
+      "finding": "Several unresolved cards assign exception_class uncertain before any bias exists and before an opposite-pole choice has been made. Other unresolved cards correctly use exception_class none, so the corpus is internally inconsistent.",
+      "recommended_action": "Set unresolved, unchosen cards to exception_class none. Apply the exception taxonomy only during post-bias synthesis to observed opposite-pole outcomes."
+    },
+    {
+      "outcome": "correction-required",
+      "decision_ids": [
+        "E256-G12",
+        "E256-H06"
+      ],
+      "finding": "The board-sync policy is duplicated across G and H and coded differently: G12 claims a high-confidence coherence direction while H06 leaves coherence unknown. Because no float-or-pin choice is ratified, neither alternative establishes a pole preference; only a separately isolated requirement for consistency across entry points could justify coherence.",
+      "recommended_action": "Reconcile to one unresolved centre card with unknown directions, or split a genuinely ratified cross-entry-point consistency rule from the unresolved float-versus-pin policy if exact owner evidence supports it."
+    }
+  ]
+}

@@ -1,0 +1,996 @@
+[
+  {
+    "decision_id": "E256-G01",
+    "epic_row": "coordination",
+    "task_refs": ["srs#298", "srs#300"],
+    "decision_family": "G",
+    "title": "Give one coordinator exclusive ownership of epic state",
+    "decision_statement": "One coordinator is the sole writer of the epic ledger and epic workflow labels, while live GitHub state and non-null PR merge timestamps are used to reconcile that record.",
+    "status": "implemented",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "pull-request",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/pull/300",
+        "excerpt": "PR #300 defines the coordinator as sole ledger and label writer and requires mergedAt evidence for completed rows; mergedAt is 2026-07-31T18:27:53Z.",
+        "explicitness": "explicit",
+        "commit_sha": "809174609b173a5a844fbe56b76ae5fd9cc7a8b4"
+      },
+      {
+        "kind": "implementation",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/809174609b173a5a844fbe56b76ae5fd9cc7a8b4/.claude/commands/epic-coordinator.md#L12-L19",
+        "excerpt": "The delivered command makes exclusivity a condition for the ledger to remain audit evidence.",
+        "explicitness": "explicit",
+        "commit_sha": "809174609b173a5a844fbe56b76ae5fd9cc7a8b4"
+      }
+    ],
+    "alternatives": [
+      "Let multiple workers update the epic body, ledger, and labels independently.",
+      "Treat coordinator narration or issue closure as sufficient completion evidence."
+    ],
+    "accepted_cost": "Epic state updates are serialized through one operational bottleneck and require reconciliation against GitHub on every run.",
+    "supersedes": [],
+    "derived_from": ["Epic 256 sequential-spine gate"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "integrity",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Multiple narrators could produce plausible but conflicting accounts of what was actually delivered.",
+        "counterpole_safeguard": "The ledger remains a readable projection of live state rather than replacing GitHub evidence.",
+        "shadow_signal": "Coordinator exclusivity becomes unreviewable authority instead of a provenance boundary."
+      },
+      "continuity_evolution": {
+        "relevance": "supporting",
+        "direction": "continuity",
+        "evidence_basis": "behavioral",
+        "confidence": "medium",
+        "counterfactual": "Replacing rather than reconciling the ledger would lose the history of state transitions and stalls.",
+        "counterpole_safeguard": "Live state corrects stale ledger state, so continuity does not freeze an obsolete account.",
+        "shadow_signal": "Preserving ledger history prevents correction when repository facts have changed."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "coherence",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Independent writers could put one task in incompatible states or dispatch duplicate work.",
+        "counterpole_safeguard": "Workers retain bounded ownership of implementation and PR creation; the coordinator owns only cross-task state.",
+        "shadow_signal": "Central coordination begins choosing implementation details reserved to workers or maintainers."
+      }
+    },
+    "cube": {"dimensionality": "vertex", "coordinate": ["Integrity", "Continuity", "Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "The single-writer state architecture is distinct from the worker authority boundary and from the later post-merge coherence pass."
+  },
+  {
+    "decision_id": "E256-G02",
+    "epic_row": "coordination",
+    "task_refs": ["srs#298", "srs#300"],
+    "decision_family": "G",
+    "title": "Separate worker execution from merge authority",
+    "decision_statement": "A worker stops at a green pull request and never merges its own work; the coordinator may merge pre-authorized mechanical work, while normative or unresolved work remains owner-merged.",
+    "status": "implemented",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "pull-request",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/pull/300",
+        "excerpt": "The accepted PR separates worker delivery from coordinator and owner merge authority; mergedAt is 2026-07-31T18:27:53Z.",
+        "explicitness": "explicit",
+        "commit_sha": "809174609b173a5a844fbe56b76ae5fd9cc7a8b4"
+      },
+      {
+        "kind": "implementation",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/809174609b173a5a844fbe56b76ae5fd9cc7a8b4/.claude/commands/epic-worker.md#L12-L20",
+        "excerpt": "The worker neither selects tasks, merges PRs, nor writes epic state.",
+        "explicitness": "explicit",
+        "commit_sha": "809174609b173a5a844fbe56b76ae5fd9cc7a8b4"
+      }
+    ],
+    "alternatives": ["Let the implementing worker merge its own green pull request."],
+    "accepted_cost": "A completed green pull request waits for a separate authority to merge it.",
+    "supersedes": [],
+    "derived_from": ["Epic 256 owner-merge gate"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "integrity",
+        "evidence_basis": "revealed-by-alternative",
+        "confidence": "high",
+        "counterfactual": "An executing agent could turn its own interpretation into effective project intent by merging it.",
+        "counterpole_safeguard": "Mechanical work still has an automatic path when its class was declared in advance and its checks are green.",
+        "shadow_signal": "Every low-risk repair is held as normative, making the protected review boundary unusable."
+      },
+      "continuity_evolution": {
+        "relevance": "unexpressed",
+        "direction": "not-applicable",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "The sources do not choose between compatibility and change.",
+        "counterpole_safeguard": "",
+        "shadow_signal": ""
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "coherence",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Each worker could independently decide that its own implementation was authorized to become effective.",
+        "counterpole_safeguard": "Within the dispatched boundary, the worker owns implementation choices and can surface unresolved questions.",
+        "shadow_signal": "The coordinator prescribes local implementation rather than setting authority and sequencing boundaries."
+      }
+    },
+    "cube": {"dimensionality": "edge", "coordinate": ["Integrity", "Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Task selection and pre-dispatch merge classification are independently reversible and therefore have separate cards."
+  },
+  {
+    "decision_id": "E256-G03",
+    "epic_row": "coordination",
+    "task_refs": ["srs#302", "srs#303"],
+    "decision_family": "G",
+    "title": "Carry post-merge findings into downstream decisions",
+    "decision_statement": "After a merge, the coordinator evaluates what the delivered diff changed, corrects stale epic claims, records cited findings, and quotes binding carried context into later dispatches.",
+    "status": "implemented",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "pull-request",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/pull/303",
+        "excerpt": "PR #303 adds a merge-triggered coherence pass and append-only carried-context register; mergedAt is 2026-07-31T19:37:51Z.",
+        "explicitness": "explicit",
+        "commit_sha": "c9797f0ee57b3ceae3a78fe1f004efaf23c42f80"
+      },
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/302",
+        "excerpt": "The issue identifies bookkeeping without cross-task learning as a source of coherent-looking drift.",
+        "explicitness": "explicit"
+      }
+    ],
+    "alternatives": [
+      "Mark the row complete and make each downstream worker rediscover prior findings.",
+      "Run a second routine that races the coordinator to update the epic and ledger."
+    ],
+    "accepted_cost": "Each merge incurs a focused review and later briefs carry more context, even when the implementation task itself is already complete.",
+    "supersedes": ["Merge bookkeeping without consequence reconciliation"],
+    "derived_from": ["E256-G01"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "integrity",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "The epic body could remain legible but factually false about dependencies and delivered behavior.",
+        "counterpole_safeguard": "Findings are summarized into a dispatch brief rather than forcing every worker to replay all history.",
+        "shadow_signal": "The coherence pass rewrites delivered decisions instead of recording their actual consequences."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive",
+        "direction": "continuity",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Knowledge acquired by one delivery would disappear when the next isolated session starts.",
+        "counterpole_safeguard": "New evidence corrects the epic and can create or change downstream work instead of preserving stale scope.",
+        "shadow_signal": "Carried context becomes inherited dogma that cannot be corrected by later evidence."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "coherence",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Fresh workers would make locally reasonable decisions without the constraints discovered by earlier work.",
+        "counterpole_safeguard": "Only cited findings binding a row are carried; the pass is not licensed to prescribe implementation or re-litigate a merged PR.",
+        "shadow_signal": "Context accumulation crowds out local judgment or grows beyond what actually binds a task."
+      }
+    },
+    "cube": {"dimensionality": "vertex", "coordinate": ["Integrity", "Continuity", "Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "The carried-context mechanism is counted once; each downstream brief that repeats a finding is not a new decision."
+  },
+  {
+    "decision_id": "E256-G04",
+    "epic_row": "coordination/process-correction",
+    "task_refs": ["srs#304", "srs#303"],
+    "decision_family": "G",
+    "title": "Make normative RFC review understandable without generated diffs",
+    "decision_statement": "An RFC PR presents the normative changes, consequences, breakage, migration, and owner questions in prose, identifies generated files, and does not require the owner to reconstruct the decision from generated JSON diffs.",
+    "status": "implemented",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/304",
+        "excerpt": "Issue #304 requires the owner to understand the normative change and its implications without opening a file.",
+        "explicitness": "explicit"
+      },
+      {
+        "kind": "pull-request",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/pull/303",
+        "excerpt": "The merged process PR delivered the RFC reviewer-brief rule; mergedAt is 2026-07-31T19:37:51Z.",
+        "explicitness": "explicit",
+        "commit_sha": "c9797f0ee57b3ceae3a78fe1f004efaf23c42f80"
+      },
+      {
+        "kind": "implementation",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/commit/e6673543624843521f831ce519d1c0e73809e9f6",
+        "excerpt": "Commit e667354 adds the reviewer-facing PR-body contract to the RFC workflow.",
+        "explicitness": "explicit",
+        "commit_sha": "e6673543624843521f831ce519d1c0e73809e9f6"
+      }
+    ],
+    "alternatives": [
+      "Treat generated artifacts and their diffs as the primary owner-review interface.",
+      "Provide only a terse schema-change checklist and expect reviewers to reconstruct consequences."
+    ],
+    "accepted_cost": "RFC authors must maintain a substantial human-readable review brief in addition to normative and generated artifacts.",
+    "supersedes": ["Generated-diff-first RFC review"],
+    "derived_from": [],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "expression",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Normative meaning could remain technically present while the approving owner could not practically inspect it.",
+        "counterpole_safeguard": "The prose must state every normative rule and practical effect; it explains rather than substitutes for the RFC.",
+        "shadow_signal": "Readable summaries soften, omit, or contradict the normative artifact they are meant to expose."
+      },
+      "continuity_evolution": {
+        "relevance": "unexpressed",
+        "direction": "not-applicable",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "The review-interface choice does not prefer preserving or changing the model.",
+        "counterpole_safeguard": "",
+        "shadow_signal": ""
+      },
+      "coherence_autonomy": {
+        "relevance": "supporting",
+        "direction": "coherence",
+        "evidence_basis": "revealed-by-alternative",
+        "confidence": "high",
+        "counterfactual": "Authors and reviewers could carry materially different understandings of what the same RFC asks them to approve.",
+        "counterpole_safeguard": "Authors choose the clearest prose and may use a short illustrative snippet where prose cannot carry the shape.",
+        "shadow_signal": "A rigid template obscures an RFC whose change needs a different explanatory structure."
+      }
+    },
+    "cube": {"dimensionality": "edge", "coordinate": ["Expression", "Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "This is a review-interface decision, not a claim that explanatory prose becomes canonical specification text."
+  },
+  {
+    "decision_id": "E256-G05",
+    "epic_row": "delivered/operational-reliability",
+    "task_refs": ["srs#316", "srs#336"],
+    "decision_family": "G",
+    "title": "Pin the CLI that defines a required semantic drift gate",
+    "decision_statement": "The required release-drift check uses one named srs-rust release declared once, so its semantic rendering behavior changes only through a reviewable repository commit.",
+    "status": "implemented",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/316",
+        "excerpt": "Issue #316 documents that adjacent CLI releases produce different render results for identical records and that freshness was explicitly rejected for this gate.",
+        "explicitness": "explicit"
+      },
+      {
+        "kind": "pull-request",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/pull/336",
+        "excerpt": "PR #336 pins v0.1.0-build.265 and documents deliberate advancement; mergedAt is 2026-08-01T22:15:50Z.",
+        "explicitness": "explicit",
+        "commit_sha": "c132784ce959787b5ee40b2472c4b996abe35363"
+      },
+      {
+        "kind": "implementation",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/c132784ce959787b5ee40b2472c4b996abe35363/.github/workflows/release-drift.yml#L1-L52",
+        "excerpt": "The workflow states that reproducible gate behavior, rather than automatic freshness, is the purpose of the pin.",
+        "explicitness": "explicit",
+        "commit_sha": "c132784ce959787b5ee40b2472c4b996abe35363"
+      }
+    ],
+    "alternatives": [
+      "Always download the latest CLI release.",
+      "Accept that a required check can change behavior without a commit to this repository."
+    ],
+    "accepted_cost": "The project must review and maintain a cross-repository version pin, and new CLI behavior is not adopted automatically.",
+    "supersedes": ["Unpinned latest-release download in release-drift.yml"],
+    "derived_from": ["RFC-037 rendered-output compatibility floor"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "integrity",
+        "evidence_basis": "revealed-by-alternative",
+        "confidence": "high",
+        "counterfactual": "The same records and repository commit could be judged differently because an external latest release moved.",
+        "counterpole_safeguard": "The workflow logs tag and checksum so contributors can diagnose the operational artifact behind the gate.",
+        "shadow_signal": "A stale pin starts validating semantics the current project no longer intends."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive",
+        "direction": "continuity",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Fresh tool releases would change committed projection behavior immediately, without a controlled transition.",
+        "counterpole_safeguard": "The documented bump procedure advances the pin and re-renders outputs in one reviewed PR.",
+        "shadow_signal": "Reproducibility becomes an excuse never to advance a pin after intentional renderer evolution."
+      },
+      "coherence_autonomy": {
+        "relevance": "supporting",
+        "direction": "coherence",
+        "evidence_basis": "behavioral",
+        "confidence": "medium",
+        "counterfactual": "CI and contributors could render the same records with different, indistinguishable CLI builds.",
+        "counterpole_safeguard": "The policy constrains this required semantic gate, not every cross-repository tool regardless of risk.",
+        "shadow_signal": "The project pins low-risk mutable tooling without a threat-specific reason and blocks useful local iteration."
+      }
+    },
+    "cube": {"dimensionality": "vertex", "coordinate": ["Integrity", "Continuity", "Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Pin selection, single declaration, and reviewable advancement are one reproducibility policy. Reachability and fail-fast mechanics are recorded separately without another vote."
+  },
+  {
+    "decision_id": "E256-G06",
+    "epic_row": "delivered/operational-reliability",
+    "task_refs": ["srs#337", "srs#339"],
+    "decision_family": "G",
+    "title": "Make the canonical CLI pin executable by workers",
+    "decision_statement": "Worker documentation and render scripts obtain the exact workflow-declared CLI through one helper, reject an unset SRS_CLI_PATH, and log binary sha256 provenance instead of relying on PATH or an ambiguous version string.",
+    "status": "implemented",
+    "decision_class": "mechanical-derivation",
+    "effective_date": "2026-08-02",
+    "sources": [
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/337",
+        "excerpt": "Issue #337 shows that the first pin change left five contradictory instructions and machine-specific silent fallbacks.",
+        "explicitness": "explicit"
+      },
+      {
+        "kind": "pull-request",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/pull/339",
+        "excerpt": "PR #339 delivers the helper, fail-fast behavior, checksum logging, and exact-pin guidance; mergedAt is 2026-08-02T09:27:54Z.",
+        "explicitness": "explicit",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      },
+      {
+        "kind": "implementation",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/scripts/fetch-pinned-srs.mjs",
+        "excerpt": "The helper reads the single workflow pin and emits the environment binding used by local render commands.",
+        "explicitness": "explicit",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      }
+    ],
+    "alternatives": [
+      "Tell workers to use whichever srs binary appears first on PATH.",
+      "Duplicate the release tag in documentation and helper code.",
+      "Silently fall back to a developer-specific absolute path."
+    ],
+    "accepted_cost": "Local rendering now requires an explicit fetch and environment binding, and offline work must already possess the pinned artifact.",
+    "supersedes": ["which srs rendering instructions", "hard-coded local CLI fallback"],
+    "derived_from": ["E256-G05"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "expression",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "The pin could remain semantically correct but unusable, leaving workers to guess how to satisfy it.",
+        "counterpole_safeguard": "The helper reads the authoritative workflow declaration and scripts fail rather than substitute another binary.",
+        "shadow_signal": "Convenience tooling hides which artifact is being executed or silently changes the authoritative pin."
+      },
+      "continuity_evolution": {
+        "relevance": "supporting",
+        "direction": "continuity",
+        "evidence_basis": "behavioral",
+        "confidence": "medium",
+        "counterfactual": "Different worker environments would continue producing non-reproducible outputs for the same commit.",
+        "counterpole_safeguard": "Changing the single workflow tag deliberately moves every consumer together.",
+        "shadow_signal": "Environment reproducibility prevents testing a candidate future renderer outside the committed-output path."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "coherence",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "CI, local workers, and documentation would name different ways to choose the rendering binary.",
+        "counterpole_safeguard": "Workers choose their local cache location and invoke the helper within their repository workflow.",
+        "shadow_signal": "Central pin mechanics make unrelated local CLI experimentation impossible."
+      }
+    },
+    "cube": {"dimensionality": "vertex", "coordinate": ["Expression", "Continuity", "Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Classed as mechanical because it makes G05 operational and must not add a second bias vote for the same pin decision."
+  },
+  {
+    "decision_id": "E256-G07",
+    "epic_row": "delivered/mirror-sync",
+    "task_refs": ["srs#280", "srs-rust#787", "srs-rust#788", "srs-rust#789", "srs-rust#791"],
+    "decision_family": "G",
+    "title": "Propagate accepted schema bytes through the mirror pipeline",
+    "decision_statement": "After canonical schema decisions land, repository-owned sync scripts copy the canonical bytes into srs-rust and regenerate SHA256SUMS without hand-editing or reinterpreting the schema.",
+    "status": "implemented",
+    "decision_class": "mechanical-derivation",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {
+        "kind": "pull-request",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs-rust/pull/788",
+        "excerpt": "PR #788 copies four RFC-036 schema files and regenerates checksums through the sync script; mergedAt is 2026-07-31T22:02:40Z.",
+        "explicitness": "explicit",
+        "commit_sha": "22a7a32b5366337748c57c325ff95ff0c2776a29"
+      },
+      {
+        "kind": "pull-request",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs-rust/pull/791",
+        "excerpt": "PR #791 copies the three RFC-032 Revision 7 schema descriptions byte-for-byte; mergedAt is 2026-08-01T22:15:46Z.",
+        "explicitness": "explicit",
+        "commit_sha": "b4bb4e30e9512ab67f99bd684f73e81c714a1e75"
+      },
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/280",
+        "excerpt": "The earlier cardinality-description mirror repair was explicitly behavior-neutral and allowed batching only to avoid losing the required sync.",
+        "explicitness": "explicit"
+      }
+    ],
+    "alternatives": [
+      "Reinterpret or improve accepted schema content while copying it.",
+      "Regenerate checksum files by hand.",
+      "Leave mirrors stale until an unrelated implementation change happens to touch them."
+    ],
+    "accepted_cost": "Mechanical cross-repository PRs and temporary red drift windows are required for bytes whose normative meaning was already reviewed elsewhere.",
+    "supersedes": [],
+    "derived_from": ["E256-A14", "E256-B01", "E256-C08"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "integrity",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "A mirror repair could silently become a second normative schema-authoring path.",
+        "counterpole_safeguard": "The sync script and PR summaries make the mechanical operation repeatable and reviewable.",
+        "shadow_signal": "Byte identity is preserved after the canonical artifact is known to be wrong, instead of fixing authority first."
+      },
+      "continuity_evolution": {
+        "relevance": "supporting",
+        "direction": "continuity",
+        "evidence_basis": "behavioral",
+        "confidence": "medium",
+        "counterfactual": "Consumers could continue using an earlier schema generation after the accepted source changed.",
+        "counterpole_safeguard": "Mirrors advance whenever canonical decisions evolve; they do not preserve obsolete bytes as compatibility behavior.",
+        "shadow_signal": "Mirror synchronization is mistaken for a reason to retain deprecated canonical surfaces indefinitely."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "coherence",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Each consumer repository could embed a divergent schema interpretation.",
+        "counterpole_safeguard": "Each repository owns its sync PR and validation pipeline rather than accepting edits from a sibling checkout.",
+        "shadow_signal": "Mirror uniformity erases repository-specific implementation code beyond the shared schema artifact."
+      }
+    },
+    "cube": {"dimensionality": "vertex", "coordinate": ["Integrity", "Continuity", "Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Three repair episodes are consolidated as repeated manifestations of one mechanical propagation rule and therefore receive no eligible constitutional vote."
+  },
+  {
+    "decision_id": "E256-G08",
+    "epic_row": "delivered/mirror-sync",
+    "task_refs": ["srs-rust#787", "srs-rust#788", "srs-rust#789", "srs-rust#791"],
+    "decision_family": "G",
+    "title": "Keep mirror repairs inside repository authority boundaries",
+    "decision_statement": "A worker repairs only the mirror in its assigned repository, leaves sibling repositories untouched, and explicitly refuses to treat one green mirror as evidence that every ecosystem mirror is current.",
+    "status": "implemented",
+    "decision_class": "reasoned-application",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs-rust/issues/787#issuecomment-5147100327",
+        "excerpt": "The owner dispatch confines repair to srs-rust, prohibits sibling edits, and requires disclosure that srs-vscode remains outside the evidence.",
+        "explicitness": "explicit"
+      },
+      {
+        "kind": "pull-request",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs-rust/pull/788",
+        "excerpt": "The delivered PR states that a green srs-rust mirror is not evidence that both mirrors are current; mergedAt is 2026-07-31T22:02:40Z.",
+        "explicitness": "explicit",
+        "commit_sha": "22a7a32b5366337748c57c325ff95ff0c2776a29"
+      },
+      {
+        "kind": "pull-request",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs-rust/pull/791",
+        "excerpt": "The second repair repeats the bounded scope and records the absent srs-vscode check rather than inferring success; mergedAt is 2026-08-01T22:15:46Z.",
+        "explicitness": "explicit",
+        "commit_sha": "b4bb4e30e9512ab67f99bd684f73e81c714a1e75"
+      }
+    ],
+    "alternatives": [
+      "Edit sibling repositories directly to obtain one atomic green result.",
+      "Report all mirrors current after validating only the local mirror."
+    ],
+    "accepted_cost": "The ecosystem can remain temporarily inconsistent and requires separately authorized follow-up work in each repository.",
+    "supersedes": [],
+    "derived_from": ["Repository-scoped worker boundary"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "integrity",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "A locally green check could be presented as ecosystem evidence even though one mirror was never opened.",
+        "counterpole_safeguard": "PR prose clearly names the checked and unchecked scope so partial progress remains useful.",
+        "shadow_signal": "Strict evidentiary language obscures a practical, clearly labeled partial success."
+      },
+      "continuity_evolution": {
+        "relevance": "unexpressed",
+        "direction": "not-applicable",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "The repository-boundary choice does not itself prefer old or new schema content.",
+        "counterpole_safeguard": "",
+        "shadow_signal": ""
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "autonomy",
+        "evidence_basis": "revealed-by-alternative",
+        "confidence": "high",
+        "counterfactual": "A central worker could mutate multiple repositories to force immediate ecosystem consistency.",
+        "counterpole_safeguard": "Canonical bytes and drift checks preserve the shared contract, and the unresolved ecosystem gap stays explicit.",
+        "shadow_signal": "Repository boundaries become a reason to tolerate indefinite known divergence with no accountable follow-up."
+      }
+    },
+    "cube": {"dimensionality": "edge", "coordinate": ["Integrity", "Autonomy"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "This is the bounded-authority choice surrounding the repair, distinct from the copied schema bytes. It is a candidate opposite-pole case only if an epic-level coherence bias is later established."
+  },
+  {
+    "decision_id": "E256-G09",
+    "epic_row": "operational-reliability",
+    "task_refs": ["srs-rust#792"],
+    "decision_family": "G",
+    "title": "Replace impossible mirror ordering with a coordinated landing",
+    "decision_statement": "The project proposes treating a canonical schema change and its repository mirrors as one landing executed close together, because mirror-first and spec-first both create a measurable red window.",
+    "status": "proposed",
+    "decision_class": "proposal",
+    "effective_date": null,
+    "sources": [
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs-rust/issues/792",
+        "excerpt": "Open issue #792 proposes replacing the documented mirror-first rule after measuring that both orderings necessarily create drift.",
+        "explicitness": "explicit"
+      },
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs-rust/issues/789",
+        "excerpt": "Issue #789 records the second red window and explains why a mirror PR was red before the canonical merge and stale after it.",
+        "explicitness": "explicit"
+      }
+    ],
+    "alternatives": [
+      "Require mirrors to merge before the canonical spec change.",
+      "Require the canonical change first and tolerate an unbounded mirror delay.",
+      "Change drift jobs to compare against a coordinated candidate ref."
+    ],
+    "accepted_cost": "Even coordinated execution retains a short red window and depends on cross-repository timing rather than an atomic transaction.",
+    "supersedes": [],
+    "derived_from": ["E256-G07"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "supporting",
+        "direction": "integrity",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "The project would continue documenting a merge-order claim contradicted by its actual checks.",
+        "counterpole_safeguard": "The replacement gives contributors an executable pre-stage and close-merge workflow.",
+        "shadow_signal": "Correct diagnosis stops at documentation while recurring red windows continue to block work."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive",
+        "direction": "evolution",
+        "evidence_basis": "revealed-by-alternative",
+        "confidence": "high",
+        "counterfactual": "A familiar but impossible operational convention would be retained despite two measured failures.",
+        "counterpole_safeguard": "The proposal preserves the existing mirror contract and changes only the landing procedure.",
+        "shadow_signal": "Process changes are adopted from one incident without validating repository and CI assumptions."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "coherence",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Repositories could merge independently with no bounded plan for restoring a shared schema generation.",
+        "counterpole_safeguard": "Each repository still owns its branch, PR, checks, and merge authority.",
+        "shadow_signal": "Close-together coordination is treated as permission to bypass repository-specific review."
+      }
+    },
+    "cube": {"dimensionality": "vertex", "coordinate": ["Integrity", "Evolution", "Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Open proposal only. The two completed repairs demonstrate the failure mode, not ratification of the proposed replacement policy."
+  },
+  {
+    "decision_id": "E256-G10",
+    "epic_row": "operational-reliability",
+    "task_refs": ["srs-rust#792", "srs-rust#791"],
+    "decision_family": "G",
+    "title": "Report exactly which schema mirrors a check examined",
+    "decision_statement": "The project proposes that schema-sync success name the mirrors actually checked and provide an explicit strict mode that turns a missing mirror into an error without breaking legitimate single-repository checkouts by default.",
+    "status": "proposed",
+    "decision_class": "proposal",
+    "effective_date": null,
+    "sources": [
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs-rust/issues/792",
+        "excerpt": "Open issue #792 shows that check-schema-sync reported all copies current after warning that srs-vscode was absent, then proposes scoped output and opt-in strictness.",
+        "explicitness": "explicit"
+      },
+      {
+        "kind": "pull-request",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs-rust/pull/791",
+        "excerpt": "PR #791 records that the success command skipped srs-vscode while its summary still claimed all embedded copies; mergedAt is 2026-08-01T22:15:46Z.",
+        "explicitness": "explicit",
+        "commit_sha": "b4bb4e30e9512ab67f99bd684f73e81c714a1e75"
+      }
+    ],
+    "alternatives": [
+      "Continue returning a global success message when one mirror was skipped.",
+      "Fail every single-repository checkout whenever another repository is absent."
+    ],
+    "accepted_cost": "Callers that need ecosystem-wide evidence must opt into stricter setup and supply every mirror checkout.",
+    "supersedes": [],
+    "derived_from": ["E256-G08"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "integrity",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "A successful message would continue claiming evidence the check never gathered.",
+        "counterpole_safeguard": "The summary remains concise and actionable by naming checked scope and the missing requirement.",
+        "shadow_signal": "Evidence precision produces output so technical that contributors cannot tell whether their required scope passed."
+      },
+      "continuity_evolution": {
+        "relevance": "unexpressed",
+        "direction": "not-applicable",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "The diagnostic contract does not choose between preserving and changing schema generations.",
+        "counterpole_safeguard": "",
+        "shadow_signal": ""
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "conditional",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Always-lenient mode cannot prove ecosystem coherence, while always-strict mode prevents autonomous single-repo work.",
+        "counterpole_safeguard": "Default scoped checking preserves local operation; explicit strict mode can demand shared coverage at release boundaries.",
+        "shadow_signal": "The default mode is mistaken for ecosystem proof, or strict mode becomes mandatory for unrelated local work."
+      }
+    },
+    "cube": {"dimensionality": "axis", "coordinate": ["Integrity"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Conditional coherence/autonomy is intentionally off-vertex because the proposal selects different behavior at local and ecosystem gates."
+  },
+  {
+    "decision_id": "E256-G11",
+    "epic_row": "operational-reliability",
+    "task_refs": ["srs#338", "srs#336"],
+    "decision_family": "G",
+    "title": "Verify the pinned release asset before execution",
+    "decision_statement": "The project proposes verifying the downloaded CLI archive against its published checksum before extraction, while retaining checksum logging for later attribution.",
+    "status": "proposed",
+    "decision_class": "proposal",
+    "effective_date": null,
+    "sources": [
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/338",
+        "excerpt": "Open issue #338 proposes failing before extraction when the pinned release asset does not match its published digest.",
+        "explicitness": "explicit"
+      },
+      {
+        "kind": "pull-request",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/pull/336",
+        "excerpt": "PR #336 deliberately logged but did not verify the digest, separating provenance from the later supply-chain hardening question; mergedAt is 2026-08-01T22:15:50Z.",
+        "explicitness": "explicit",
+        "commit_sha": "c132784ce959787b5ee40b2472c4b996abe35363"
+      }
+    ],
+    "alternatives": [
+      "Trust the archive resolved by a pinned tag and only log its computed digest.",
+      "Embed a second hard-coded expected digest in the workflow."
+    ],
+    "accepted_cost": "The gate depends on an additional release asset and can fail when checksum publication is missing or malformed.",
+    "supersedes": [],
+    "derived_from": ["E256-G05"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "integrity",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "A replaced archive at the same tag could change required-gate behavior while the workflow faithfully logs the new digest.",
+        "counterpole_safeguard": "A mismatch message names the tag and both digests so the failure remains operationally diagnosable.",
+        "shadow_signal": "Artifact hardening depends circularly on an untrusted checksum from the same mutable channel."
+      },
+      "continuity_evolution": {
+        "relevance": "supporting",
+        "direction": "continuity",
+        "evidence_basis": "revealed-by-alternative",
+        "confidence": "medium",
+        "counterfactual": "The content behind a supposedly fixed release identity could change after publication.",
+        "counterpole_safeguard": "Advancing to new content remains possible through the explicit tag-bump procedure.",
+        "shadow_signal": "Immutability checks prevent recovery from a legitimately reissued broken asset without a new tag."
+      },
+      "coherence_autonomy": {
+        "relevance": "unexpressed",
+        "direction": "not-applicable",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "The proposal does not establish a project-wide versus local authority boundary.",
+        "counterpole_safeguard": "",
+        "shadow_signal": ""
+      }
+    },
+    "cube": {"dimensionality": "edge", "coordinate": ["Integrity", "Continuity"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Open proposal. The accepted #316 scope decision to defer checksum verification is preserved rather than treated as rejection of the follow-on."
+  },
+  {
+    "decision_id": "E256-G12",
+    "epic_row": "explicitly-out-of-gate",
+    "task_refs": ["srs#335", "srs#316", "srs#336"],
+    "decision_family": "G",
+    "title": "Choose whether mutable board tooling floats or pins everywhere",
+    "decision_statement": "It remains unresolved whether the post-merge board tool should intentionally track the latest release everywhere or be pinned consistently across CI and agent entry points.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/335",
+        "excerpt": "Open issue #335 preserves two defensible policies: float mutable board reconciliation everywhere, or pin every workflow and skill with one advancement procedure.",
+        "explicitness": "explicit"
+      },
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/316#issuecomment-5153345819",
+        "excerpt": "The #316 delivery explicitly excludes board-sync because its mutating, non-required workflow has a different risk and consistency boundary.",
+        "explicitness": "explicit"
+      }
+    ],
+    "alternatives": [
+      "Leave every board-tool entry point unpinned by design.",
+      "Pin the board tool consistently in the workflow and all agent skills."
+    ],
+    "accepted_cost": "No cost has been accepted because the project has not chosen between freshness with repairability and reproducibility with maintenance overhead.",
+    "supersedes": [],
+    "derived_from": ["E256-G05"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "supporting",
+        "direction": "unknown",
+        "evidence_basis": "speculative",
+        "confidence": "low",
+        "counterfactual": "Pinning protects reproducible operation; floating protects prompt availability of board-tool fixes, and no owner choice ranks them.",
+        "counterpole_safeguard": "The issue requires the rationale to be documented whichever option is selected.",
+        "shadow_signal": "The unresolved choice is silently treated as an intentional policy."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive",
+        "direction": "conditional",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "A pin chooses controlled continuity; a shared latest-release convention chooses continuous evolution.",
+        "counterpole_safeguard": "The issue requires consistency across entry points rather than a split-brain compromise.",
+        "shadow_signal": "Either freshness causes silent destructive churn or pinning leaves board automation incompatibly stale."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "coherence",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Pinning only CI would let agent skills and the workflow reconcile the same board with different tool versions.",
+        "counterpole_safeguard": "The consistency decision can still be either shared-latest or shared-pin; it need not force one freshness policy.",
+        "shadow_signal": "Cross-entry-point consistency is used to apply the required-gate pin policy to unlike mutable tooling without risk analysis."
+      }
+    },
+    "cube": {"dimensionality": "axis", "coordinate": ["Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Explicit negative control outside the gate. The implemented decision was only to file and separate this question from #316; neither substantive option is ratified."
+  },
+  {
+    "decision_id": "E256-G13",
+    "epic_row": "coordination",
+    "task_refs": ["srs#298", "srs#300"],
+    "decision_family": "G",
+    "title": "Let the shared spine choose work rather than each worker",
+    "decision_statement": "A worker executes only the single issue dispatched from the epic spine and does not select adjacent useful work for itself.",
+    "status": "implemented",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "pull-request",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/pull/300",
+        "excerpt": "PR #300 defines a single dispatched task per repository and prohibits workers from choosing other work; mergedAt is 2026-07-31T18:27:53Z.",
+        "explicitness": "explicit",
+        "commit_sha": "809174609b173a5a844fbe56b76ae5fd9cc7a8b4"
+      },
+      {
+        "kind": "implementation",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/809174609b173a5a844fbe56b76ae5fd9cc7a8b4/.claude/commands/epic-worker.md#L12-L20",
+        "excerpt": "The delivered worker contract stops when no task is dispatched instead of manufacturing activity.",
+        "explicitness": "explicit",
+        "commit_sha": "809174609b173a5a844fbe56b76ae5fd9cc7a8b4"
+      }
+    ],
+    "alternatives": [
+      "Let each worker choose the locally useful task it can progress.",
+      "Run several dependent spine rows concurrently in one repository."
+    ],
+    "accepted_cost": "A capable worker can remain idle while a predecessor, owner decision, or repository slot blocks the shared sequence.",
+    "supersedes": [],
+    "derived_from": ["Epic 256 sequential spine"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "supporting",
+        "direction": "integrity",
+        "evidence_basis": "revealed-by-alternative",
+        "confidence": "medium",
+        "counterfactual": "Useful-looking local work could assume unresolved upstream meaning and make that assumption costly to reverse.",
+        "counterpole_safeguard": "The coordinator dispatches mechanical work when it is independently workable and records why nothing else can move.",
+        "shadow_signal": "The spine blocks independent, non-overlapping work whose prerequisites and authority are already clear."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive",
+        "direction": "continuity",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Later work could race ahead without inheriting decisions and consequences from earlier rows.",
+        "counterpole_safeguard": "Post-merge reconciliation may add or change downstream work when delivered evidence requires evolution.",
+        "shadow_signal": "Historical sequencing becomes more important than current dependency evidence."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "coherence",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Workers could independently optimize their local queue while making incompatible assumptions about shared project state.",
+        "counterpole_safeguard": "The worker retains implementation autonomy inside the dispatched issue and escalates genuine gaps rather than receiving a prescribed solution.",
+        "shadow_signal": "Central sequencing becomes centralized implementation control."
+      }
+    },
+    "cube": {"dimensionality": "vertex", "coordinate": ["Integrity", "Continuity", "Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Split from merge authority because allowing local task selection is independently reversible without allowing self-merge."
+  },
+  {
+    "decision_id": "E256-G14",
+    "epic_row": "coordination",
+    "task_refs": ["srs#298", "srs#300"],
+    "decision_family": "G",
+    "title": "Declare merge authority before seeing the finished diff",
+    "decision_statement": "Each task's merge class is fixed at dispatch; review may downgrade automatic authority to owner authority but may never upgrade an owner-held task to automatic merge.",
+    "status": "implemented",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "pull-request",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/pull/300",
+        "excerpt": "PR #300 identifies finished-diff self-classification as the judgment the design removes; mergedAt is 2026-07-31T18:27:53Z.",
+        "explicitness": "explicit",
+        "commit_sha": "809174609b173a5a844fbe56b76ae5fd9cc7a8b4"
+      },
+      {
+        "kind": "implementation",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/809174609b173a5a844fbe56b76ae5fd9cc7a8b4/.claude/commands/epic-coordinator.md#L78-L91",
+        "excerpt": "The delivered coordinator permits only the conservative auto-merge to owner-merge transition.",
+        "explicitness": "explicit",
+        "commit_sha": "809174609b173a5a844fbe56b76ae5fd9cc7a8b4"
+      }
+    ],
+    "alternatives": [
+      "Classify merge authority only after seeing whether the completed diff looks harmless.",
+      "Allow review to upgrade owner-held work to automatic merge."
+    ],
+    "accepted_cost": "Some work remains owner-held even when its completed diff proves less normative than expected.",
+    "supersedes": [],
+    "derived_from": ["E256-G02"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "integrity",
+        "evidence_basis": "revealed-by-alternative",
+        "confidence": "high",
+        "counterfactual": "The authority about to merge a diff could reframe that same diff as mechanical to authorize itself.",
+        "counterpole_safeguard": "Review can still downgrade automatic authority when implementation uncovers normative consequences.",
+        "shadow_signal": "Conservative classification imposes owner review on clearly derived repairs without any path to improve future classification."
+      },
+      "continuity_evolution": {
+        "relevance": "unexpressed",
+        "direction": "not-applicable",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "The authority-timing rule does not determine whether the underlying change preserves or evolves behavior.",
+        "counterpole_safeguard": "",
+        "shadow_signal": ""
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "coherence",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Merge authority could vary with each reviewer's favorable interpretation of its own task.",
+        "counterpole_safeguard": "The implementer can reveal that a task is more normative than expected and force stricter review.",
+        "shadow_signal": "Shared classification rules cannot adapt after repeated evidence that a task class is routinely misidentified."
+      }
+    },
+    "cube": {"dimensionality": "edge", "coordinate": ["Integrity", "Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Split from worker self-merge and task selection because precommitment of authority is independently reversible."
+  }
+]

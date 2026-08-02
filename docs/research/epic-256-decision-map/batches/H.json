@@ -1,0 +1,567 @@
+[
+  {
+    "decision_id": "E256-H01",
+    "epic_row": "cross-cutting/open-owner-decision",
+    "task_refs": [
+      "srs#312",
+      "RFC-038"
+    ],
+    "decision_family": "H",
+    "title": "Choose the reader disposition for a declared but unknown extension",
+    "decision_statement": "It remains unresolved whether a reader encountering a declared extension it does not implement must reject the repository, load it with a named diagnostic, or negotiate behavior from an extension criticality classification.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/312",
+        "excerpt": "Issue #312 identifies the silent-success gap, enumerates reject, report, and negotiate as alternatives, and explicitly blocks implementation until the governing principle is decided.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#L775-L784",
+        "excerpt": "RFC-038 R5 reserves locations for three named extension-owned paths when their owning extension is declared; it does not define a location or disposition for an unknown declared extension.",
+        "explicitness": "explicit",
+        "commit_sha": "0c0ee75fb7b582879a908ed1e2ad5c937185ba4f"
+      },
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#L824-L826",
+        "excerpt": "RFC-038 R10 preserves files outside reserved locations without discovering or validating them as SRS entities, producing the silent-success behavior that #312 questions.",
+        "explicitness": "explicit",
+        "commit_sha": "0c0ee75fb7b582879a908ed1e2ad5c937185ba4f"
+      }
+    ],
+    "alternatives": [
+      "Reject a repository that declares an extension the reader does not implement.",
+      "Load the repository but emit a named non-fatal diagnostic for every unimplemented declared extension.",
+      "Classify extension criticality and reject only extensions that change interpretation of otherwise readable data."
+    ],
+    "accepted_cost": "No cost has yet been accepted; the current silence remains while the conformance disposition is unresolved.",
+    "supersedes": [],
+    "derived_from": [
+      "RFC-038 R5",
+      "RFC-038 R10"
+    ],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "unknown",
+        "evidence_basis": "speculative",
+        "confidence": "low",
+        "counterfactual": "Failing closed protects complete semantic interpretation at the cost of graceful use; reporting or negotiation keeps usable content available at the cost of accepting partial understanding.",
+        "counterpole_safeguard": "Every live option attempts to avoid silent semantic loss, but no option has been chosen.",
+        "shadow_signal": "A future coder treats the current silent behavior as precedent merely because no rule yet forbids it."
+      },
+      "continuity_evolution": {
+        "relevance": "supporting",
+        "direction": "unknown",
+        "evidence_basis": "speculative",
+        "confidence": "low",
+        "counterfactual": "A new rejection rule could break repositories that currently load, while an interim report rule could preserve behavior and postpone a fuller extension model.",
+        "counterpole_safeguard": "The issue explicitly leaves room for a compatible interim without declaring it the final model.",
+        "shadow_signal": "Compatibility with accidental silence becomes a reason never to specify extension semantics."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "unknown",
+        "evidence_basis": "explicit",
+        "confidence": "low",
+        "counterfactual": "Rejecting unknown declarations enforces one fully understood contract; negotiation would preserve extension-owned semantics through a common criticality mechanism.",
+        "counterpole_safeguard": "Even the open-ended option requires declared classification rather than unconstrained reader discretion.",
+        "shadow_signal": "Either a closed core erases legitimate extension ownership or unconstrained extensions make conformance unknowable."
+      }
+    },
+    "cube": {
+      "dimensionality": "centre",
+      "coordinate": []
+    },
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "The current canonical graceful-degradation design note advises preserving and surfacing unknown content, but it is supporting guidance and does not answer the stronger declared-semantics case. This unresolved card is excluded from bias counts."
+  },
+  {
+    "decision_id": "E256-H02",
+    "epic_row": "cross-cutting/open-owner-decision",
+    "task_refs": [
+      "srs#312"
+    ],
+    "decision_family": "H",
+    "title": "Choose whether open third-party extensibility is a project goal",
+    "decision_statement": "The project has not decided whether SRS is deliberately closed to repositories whose declared semantics a reader cannot fully interpret or whether third-party extension interoperability is an intended design goal.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/312",
+        "excerpt": "Issue #312 states the strategic question explicitly and says fail-closed closed lists are coherent but have not been established as the intended extension posture.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "canonical",
+        "authority_rank": 1,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/manifest.json#L46-L54",
+        "excerpt": "The current manifest schema permits a free-form declaredExtensions list but supplies no criticality or capability-negotiation metadata.",
+        "explicitness": "explicit",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      },
+      {
+        "kind": "design-note",
+        "authority_rank": 5,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/srs/records/design-notes/022-graceful-degradation.json",
+        "excerpt": "The published graceful-degradation note describes a federated ecosystem and advises preserving and surfacing unknown extension content; as a design note it is contextual evidence, not a conformance decision.",
+        "explicitness": "explicit",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      }
+    ],
+    "alternatives": [
+      "Define SRS as closed to repositories whose declared semantics are not fully understood.",
+      "Make open third-party extension interoperability an explicit design goal.",
+      "Define a bounded extension model that distinguishes interpretation-changing and additive capabilities."
+    ],
+    "accepted_cost": "No strategic cost has yet been accepted; both the closed and open readings remain plausible from different parts of the corpus.",
+    "supersedes": [],
+    "derived_from": [
+      "srs#312 extension-policy question"
+    ],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "supporting",
+        "direction": "unknown",
+        "evidence_basis": "speculative",
+        "confidence": "low",
+        "counterfactual": "A closed system protects full interpretation; an open extension goal protects practical participation under partial knowledge.",
+        "counterpole_safeguard": "The issue rejects silent loss under either posture.",
+        "shadow_signal": "A strategic extension posture is inferred from incidental schema shape rather than explicitly chosen."
+      },
+      "continuity_evolution": {
+        "relevance": "supporting",
+        "direction": "unknown",
+        "evidence_basis": "speculative",
+        "confidence": "low",
+        "counterfactual": "Opening the storage model may require new extension metadata and locations; declaring it closed would preserve today's finite lists.",
+        "counterpole_safeguard": "No option licenses silently changing the meaning of existing extension declarations.",
+        "shadow_signal": "Today's schema limitations are elevated into permanent policy, or extensibility is added without migration discipline."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "unknown",
+        "evidence_basis": "explicit",
+        "confidence": "low",
+        "counterfactual": "A closed contract maximizes shared interpretive coherence; an open goal preserves bounded extension ownership and ecosystem autonomy.",
+        "counterpole_safeguard": "The bounded alternative would require shared negotiation rules even while preserving extension ownership.",
+        "shadow_signal": "Coherence becomes central closure, or autonomy becomes semantics that no common reader can safely process."
+      }
+    },
+    "cube": {
+      "dimensionality": "centre",
+      "coordinate": []
+    },
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "This strategic question is independently reversible from H01's immediate reader behavior: the project could choose a reporting interim while still deciding the long-term extension model."
+  },
+  {
+    "decision_id": "E256-H03",
+    "epic_row": "4-implementation/6-prerequisite",
+    "task_refs": [
+      "srs#256",
+      "srs-rust#790",
+      "RFC-032"
+    ],
+    "decision_family": "H",
+    "title": "Choose the consequence of an ineligible titleFieldId",
+    "decision_statement": "It remains unresolved whether an authored DocumentSection.titleFieldId that fails RFC-032 Revision 7's eligibility predicate falls through to the Type's identityFieldId, emits no heading, or produces a validation diagnostic or rejection.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs-rust/issues/790#issuecomment-5153916848",
+        "excerpt": "The implementation research found that the predicate is repeated normatively without a stated failure consequence, rejected its own fallback inference, and stopped with three live readings.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/256",
+        "excerpt": "Epic 256 records this consequence as the blocking owner decision and keeps all three interpretations live rather than treating the implementation recommendation as intent.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/4ac36bafbc9603f0ca8d4e5e7dd2c6f42909568d/rfcs/rfc-032-composite-field-range.md#change-i--post-acceptance-conformance-erratum-four-rules-still-naming-legacy-valuetype-subsets",
+        "excerpt": "Accepted RFC-032 Revision 7 defines titleFieldId eligibility but does not select the consequence when the authored reference fails that predicate.",
+        "explicitness": "explicit",
+        "commit_sha": "4ac36bafbc9603f0ca8d4e5e7dd2c6f42909568d"
+      }
+    ],
+    "alternatives": [
+      "Treat the ineligible property as absent and fall through to effective identityFieldId.",
+      "Omit the per-record heading without substitution.",
+      "Emit a validation diagnostic or reject the view."
+    ],
+    "accepted_cost": "No normative cost has been accepted; implementation work remains held because every return value would choose an unstated behavior.",
+    "supersedes": [],
+    "derived_from": [
+      "RFC-032 Revision 7 [N+1]",
+      "RFC-020 [N+37]"
+    ],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "unknown",
+        "evidence_basis": "explicit",
+        "confidence": "low",
+        "counterfactual": "A loud diagnostic protects the semantic eligibility claim; silent omission protects the rendering path; fallback substitution improves presentation but supplies a different semantic source.",
+        "counterpole_safeguard": "The unresolved research explicitly requires that no plausible implementation reading be silently promoted to owner intent.",
+        "shadow_signal": "A convenient fallback masks invalid authored semantics, or strict validation makes a presentation failure unnecessarily fatal."
+      },
+      "continuity_evolution": {
+        "relevance": "unexpressed",
+        "direction": "not-applicable",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "The first-party corpus is behaviorally identical under every option, so no compatibility cost currently discriminates among them.",
+        "counterpole_safeguard": "Future migration consequences remain visible once a choice creates observable behavior.",
+        "shadow_signal": "A latent rule is decided from an invented compatibility story despite measured zero current delta."
+      },
+      "coherence_autonomy": {
+        "relevance": "supporting",
+        "direction": "unknown",
+        "evidence_basis": "speculative",
+        "confidence": "low",
+        "counterfactual": "A single normative consequence would make renderers coherent; leaving the behavior to implementations would preserve local choice but create divergent output.",
+        "counterpole_safeguard": "The worker stopped rather than exercising implementation autonomy where the shared contract is silent.",
+        "shadow_signal": "Different renderers permanently encode different consequences for the same invalid view."
+      }
+    },
+    "cube": {
+      "dimensionality": "centre",
+      "coordinate": []
+    },
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "The unmerged branch and its conservative reading are reachability evidence only, not delivered behavior or owner intent. This unresolved card is excluded from bias counts."
+  },
+  {
+    "decision_id": "E256-H04",
+    "epic_row": "boundary-research",
+    "task_refs": [
+      "srs#256",
+      "srs#312",
+      "srs-rust#790"
+    ],
+    "decision_family": "H",
+    "title": "Propose a semantic-versus-presentation disposition principle",
+    "decision_statement": "A generated coordinator proposed that presentation failures degrade silently, semantic claims fail loudly, and neither substitutes another value, but explicitly stated that the principle is unratified and must not direct work without owner ratification through an RFC.",
+    "status": "proposed",
+    "decision_class": "proposal",
+    "effective_date": "2026-08-02",
+    "sources": [
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/256#issuecomment-5156633226",
+        "excerpt": "The Claude-authored comment labels the disposition principle PROPOSAL, says nothing is decided, and forbids workers from treating it as normative pending owner ratification and an RFC.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      }
+    ],
+    "alternatives": [
+      "Continue deciding each failure disposition case by case.",
+      "Use one fail-loud or degrade-silently rule across both semantic and presentation concerns.",
+      "Ratify a two-plane rule that combines a semantic diagnostic with presentation omission where both concerns are present."
+    ],
+    "accepted_cost": "No project cost has been accepted because the proposal is unratified; adopting it would constrain future failure handling and require normative amendments.",
+    "supersedes": [],
+    "derived_from": [
+      "Generated corpus synthesis in srs#256"
+    ],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive",
+        "direction": "conditional",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "A single unconditional pole would either make presentation failures too strict or permit semantic claims to disappear silently.",
+        "counterpole_safeguard": "The proposal explicitly preserves both concerns by classifying the claim and forbidding substitution.",
+        "shadow_signal": "The semantic-versus-presentation label is used rhetorically without specifying mixed cases or diagnostic severity."
+      },
+      "continuity_evolution": {
+        "relevance": "unexpressed",
+        "direction": "not-applicable",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "The proposal derives a disposition lens and does not itself choose a compatibility or migration policy.",
+        "counterpole_safeguard": "Any later normative amendment would still need its own migration analysis.",
+        "shadow_signal": "A general principle is treated as permission for unrelated breaking changes."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "coherence",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Without a shared disposition rule, each RFC or implementation can fill the same kind of silence differently.",
+        "counterpole_safeguard": "The proposal remains inert until explicitly ratified; an agent cannot impose the common rule on the owner or implementations.",
+        "shadow_signal": "A simplifying constitutional rule flattens domain-specific reasons for legitimate exceptions."
+      }
+    },
+    "cube": {
+      "dimensionality": "axis",
+      "coordinate": [
+        "Coherence"
+      ]
+    },
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "This card is an explicit negative control for evidence authority. Its axis mapping describes the proposal, not a historical project preference, and its class and status exclude it from bias counts."
+  },
+  {
+    "decision_id": "E256-H05",
+    "epic_row": "explicitly-out-of-gate",
+    "task_refs": [
+      "srs#256",
+      "srs#267",
+      "RFC-034"
+    ],
+    "decision_family": "H",
+    "title": "Reject adding RFC-034 structural composition to the Epic 256 gate",
+    "decision_statement": "The alternative of bringing RFC-034 structural container composition into Epic 256 was explicitly rejected; its preserved draft and empirical findings remain parked for separate governance after the self-hosting gate.",
+    "status": "rejected",
+    "decision_class": "rejected-alternative",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/256",
+        "excerpt": "The epic's explicit out-of-gate section names #267 / RFC-034 structural container composition.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/267#issuecomment-5143951958",
+        "excerpt": "The #267 comment records that the RFC-034 draft is deliberately preserved but parked behind the Epic 256 gate, with its interactions documented for later work.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      }
+    ],
+    "alternatives": [
+      "Add structural container composition, membership semantics, and their migrations to Epic 256.",
+      "Lose the untracked RFC draft and rediscover its findings later.",
+      "Preserve the draft and route the work through its own epic after the gate."
+    ],
+    "accepted_cost": "The project postpones a measured spec-versus-implementation disagreement and an owner-relevant vault-migration enabler in order to keep the self-hosting cutover bounded.",
+    "supersedes": [],
+    "derived_from": [
+      "Epic 256 scope boundary"
+    ],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "unexpressed",
+        "direction": "not-applicable",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "The scope decision does not settle RFC-034's semantic model or its practical expression.",
+        "counterpole_safeguard": "The draft and empirical evidence are preserved rather than discarded.",
+        "shadow_signal": "A scope boundary is misreported as a decision against the RFC's technical merits."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive",
+        "direction": "continuity",
+        "evidence_basis": "revealed-by-alternative",
+        "confidence": "high",
+        "counterfactual": "Adding RFC-034 would expand the gate with a second structural migration before the self-hosting cutover completes.",
+        "counterpole_safeguard": "The branch, draft, interactions, and later route are retained so deferral does not become abandonment.",
+        "shadow_signal": "Gate stability becomes indefinite postponement of a demonstrated conformance mismatch."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "autonomy",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "Absorbing RFC-034 would couple a separately governed structural-composition problem to the self-hosting release train.",
+        "counterpole_safeguard": "Its relation-core and migration interactions are documented so the separate work must still compose coherently later.",
+        "shadow_signal": "Separate routing allows interacting structural rules to land without a later coherence review."
+      }
+    },
+    "cube": {
+      "dimensionality": "edge",
+      "coordinate": [
+        "Continuity",
+        "Autonomy"
+      ]
+    },
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "This card records a rejected scope expansion, not rejection of RFC-034's design. Its class excludes it from primary-bias counts."
+  },
+  {
+    "decision_id": "E256-H06",
+    "epic_row": "explicitly-out-of-gate",
+    "task_refs": [
+      "srs#335"
+    ],
+    "decision_family": "H",
+    "title": "Choose whether the board-sync tool floats or is pinned everywhere",
+    "decision_statement": "It remains unresolved whether the mutable post-merge board reconciliation tool should deliberately track the latest release or be pinned consistently across the workflow and every agent entry point with an advance procedure.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/335",
+        "excerpt": "Issue #335 contrasts an intentionally floating, visible, repairable board tool with a single pin applied to CI and agent skills, and leaves the choice for triage.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      }
+    ],
+    "alternatives": [
+      "Leave all board-tool entry points unpinned by design and document why.",
+      "Pin the workflow and every skill to one declared tag with a stated advance procedure.",
+      "Pin only the workflow, creating two active tool versions across CI and agent entry points."
+    ],
+    "accepted_cost": "No pinning cost has been accepted; the current floating behavior remains while a visible but potentially broad board rewrite risk is triaged.",
+    "supersedes": [],
+    "derived_from": [
+      "srs#316 cross-repository artifact sweep"
+    ],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "unexpressed",
+        "direction": "not-applicable",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "The issue concerns operational reproducibility and iteration rather than semantic meaning or presentation.",
+        "counterpole_safeguard": "Board mutations remain visible and repairable under either intended policy.",
+        "shadow_signal": "Operational convenience is misclassified as a semantic design precedent."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive",
+        "direction": "unknown",
+        "evidence_basis": "explicit",
+        "confidence": "low",
+        "counterfactual": "A pin protects reproducible board behavior; a floating tool permits immediate evolution without a coordinated advance.",
+        "counterpole_safeguard": "The pin-everywhere option includes an advance procedure, while the float option relies on visible and recoverable state.",
+        "shadow_signal": "Stability freezes tool improvements, or rapid iteration silently rewrites ecosystem priorities."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "unknown",
+        "evidence_basis": "explicit",
+        "confidence": "low",
+        "counterfactual": "One declared pin keeps all entry points coherent; latest-release convention lets the separately owned tool evolve without coordinated consumers.",
+        "counterpole_safeguard": "The issue rejects workflow-only pinning because that would preserve neither consistent ownership nor a coherent version.",
+        "shadow_signal": "Different entry points reconcile the same board with different policy code."
+      }
+    },
+    "cube": {
+      "dimensionality": "centre",
+      "coordinate": []
+    },
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "This is an explicit negative control outside the Epic 256 gate. It is retained to test whether gate scope is being mistaken for technical resolution and is excluded from bias counts while unresolved."
+  },
+  {
+    "decision_id": "E256-H07",
+    "epic_row": "explicitly-out-of-gate",
+    "task_refs": [
+      "srs#256",
+      "srs#335"
+    ],
+    "decision_family": "H",
+    "title": "Reject pulling board-sync pinning into the Epic 256 gate",
+    "decision_statement": "The alternative of adding #335 to Epic 256 was explicitly rejected because board sync is not a required check, gates no spec change, and requires ecosystem-wide triage rather than a workflow-only repair.",
+    "status": "rejected",
+    "decision_class": "rejected-alternative",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/256",
+        "excerpt": "The epic explicitly records #335 outside the gate, with no epic class or sub-issue relation, because it gates nothing and a local pin would split board behavior across entry points.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/335",
+        "excerpt": "Issue #335 says the decision must cover both the workflow and documented agent conventions and was filed for later triage rather than silently repaired in the gate.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      }
+    ],
+    "alternatives": [
+      "Expand the gate to decide and implement board-tool pinning.",
+      "Pin only board-sync.yml while leaving agent entry points floating.",
+      "Record the risk and triage the ecosystem-wide policy after the gate."
+    ],
+    "accepted_cost": "The board continues consuming a floating cross-repository tool during the gate, with a known risk of visible and repairable priority rewrites.",
+    "supersedes": [],
+    "derived_from": [
+      "Epic 256 operational-reliability boundary",
+      "srs#335 scope analysis"
+    ],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "unexpressed",
+        "direction": "not-applicable",
+        "evidence_basis": "explicit",
+        "confidence": "high",
+        "counterfactual": "The gate boundary does not decide the correctness of either pinning policy.",
+        "counterpole_safeguard": "The issue remains recorded rather than being treated as harmless or resolved.",
+        "shadow_signal": "Out-of-scope is reported as evidence that the current technical behavior is preferred."
+      },
+      "continuity_evolution": {
+        "relevance": "supporting",
+        "direction": "unknown",
+        "evidence_basis": "behavioral",
+        "confidence": "low",
+        "counterfactual": "Deferral preserves gate continuity but leaves a floating tool free to evolve during the same interval.",
+        "counterpole_safeguard": "Later triage must decide the actual pin policy rather than inheriting the temporary state.",
+        "shadow_signal": "A bounded gate becomes a reason to leave unrelated known risks permanently unowned."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive",
+        "direction": "autonomy",
+        "evidence_basis": "explicit",
+        "confidence": "medium",
+        "counterfactual": "Absorbing the issue would make the self-hosting gate own a separate mutable-board policy that spans workflow and agent tooling.",
+        "counterpole_safeguard": "The issue requires any later decision to be coherent across all entry points rather than letting each consumer choose independently.",
+        "shadow_signal": "Bounded ownership fragments one shared board across inconsistent tool versions."
+      }
+    },
+    "cube": {
+      "dimensionality": "axis",
+      "coordinate": [
+        "Autonomy"
+      ]
+    },
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "This card is separate from H06: the gate has decided not to own the work, while the underlying pin-versus-float choice remains unresolved. Rejected-alternative cards do not enter bias counts."
+  }
+]

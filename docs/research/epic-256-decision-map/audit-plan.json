@@ -1,0 +1,2759 @@
+{
+  "generated_from": [
+    "batches/A.json",
+    "batches/B.json",
+    "batches/C.json",
+    "batches/D.json",
+    "batches/D2.json",
+    "batches/E.json",
+    "batches/F1.json",
+    "batches/F2.json",
+    "batches/G.json",
+    "batches/H.json"
+  ],
+  "corpus_cards": 123,
+  "stratified_sample": {
+    "A": {
+      "family_cards": 15,
+      "required_minimum": 3,
+      "selected_ids": [
+        "E256-A03",
+        "E256-A08",
+        "E256-A13"
+      ]
+    },
+    "B": {
+      "family_cards": 10,
+      "required_minimum": 2,
+      "selected_ids": [
+        "E256-B03",
+        "E256-B08"
+      ]
+    },
+    "C": {
+      "family_cards": 13,
+      "required_minimum": 3,
+      "selected_ids": [
+        "E256-C03",
+        "E256-C07",
+        "E256-C11"
+      ]
+    },
+    "D": {
+      "family_cards": 19,
+      "required_minimum": 4,
+      "selected_ids": [
+        "E256-D03",
+        "E256-D08",
+        "E256-D12",
+        "E256-D17"
+      ]
+    },
+    "E": {
+      "family_cards": 15,
+      "required_minimum": 3,
+      "selected_ids": [
+        "E256-E03",
+        "E256-E08",
+        "E256-E13"
+      ]
+    },
+    "F1": {
+      "family_cards": 15,
+      "required_minimum": 3,
+      "selected_ids": [
+        "E256-F103",
+        "E256-F108",
+        "E256-F113"
+      ]
+    },
+    "F2": {
+      "family_cards": 15,
+      "required_minimum": 3,
+      "selected_ids": [
+        "E256-F203",
+        "E256-F208",
+        "E256-F213"
+      ]
+    },
+    "G": {
+      "family_cards": 14,
+      "required_minimum": 3,
+      "selected_ids": [
+        "E256-G03",
+        "E256-G08",
+        "E256-G12"
+      ]
+    },
+    "H": {
+      "family_cards": 7,
+      "required_minimum": 2,
+      "selected_ids": [
+        "E256-H02",
+        "E256-H06"
+      ]
+    }
+  },
+  "flagged_cards": [
+    {
+      "decision_id": "E256-A01",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-A02",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-A03",
+      "reasons": [
+        "low-confidence",
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-A04",
+      "reasons": [
+        "low-confidence"
+      ]
+    },
+    {
+      "decision_id": "E256-A05",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-A06",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-A07",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-A09",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-A11",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-A12",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-A13",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-A14",
+      "reasons": [
+        "supersession",
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-A15",
+      "reasons": [
+        "supersession",
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-B01",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-B02",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-B04",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-B05",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-B06",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-B07",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-B09",
+      "reasons": [
+        "supersession",
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-B10",
+      "reasons": [
+        "supersession",
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-C01",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-C02",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-C03",
+      "reasons": [
+        "low-confidence",
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-C04",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-C05",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-C07",
+      "reasons": [
+        "low-confidence",
+        "exception-or-contradiction"
+      ]
+    },
+    {
+      "decision_id": "E256-C08",
+      "reasons": [
+        "conditional",
+        "supersession",
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-C09",
+      "reasons": [
+        "low-confidence",
+        "exception-or-contradiction"
+      ]
+    },
+    {
+      "decision_id": "E256-C10",
+      "reasons": [
+        "supersession",
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-C11",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-C13",
+      "reasons": [
+        "low-confidence",
+        "exception-or-contradiction"
+      ]
+    },
+    {
+      "decision_id": "E256-C12",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-D01",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-D02",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-D03",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-D04",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-D05",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-D06",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-D07",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-D08",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-D09",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-D10",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-D11",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-D12",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-D13",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-D14",
+      "reasons": [
+        "supersession",
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-D15",
+      "reasons": [
+        "supersession",
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-D16",
+      "reasons": [
+        "low-confidence",
+        "exception-or-contradiction"
+      ]
+    },
+    {
+      "decision_id": "E256-D17",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-D18",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-D19",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-E01",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-E02",
+      "reasons": [
+        "low-confidence",
+        "supersession",
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-E03",
+      "reasons": [
+        "low-confidence"
+      ]
+    },
+    {
+      "decision_id": "E256-E04",
+      "reasons": [
+        "supersession",
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-E05",
+      "reasons": [
+        "supersession",
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-E06",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-E07",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-E08",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-E09",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-E10",
+      "reasons": [
+        "supersession",
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-E11",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-E12",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-E14",
+      "reasons": [
+        "low-confidence"
+      ]
+    },
+    {
+      "decision_id": "E256-E15",
+      "reasons": [
+        "low-confidence"
+      ]
+    },
+    {
+      "decision_id": "E256-F101",
+      "reasons": [
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-F102",
+      "reasons": [
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-F103",
+      "reasons": [
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-F104",
+      "reasons": [
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-F105",
+      "reasons": [
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-F106",
+      "reasons": [
+        "supersession",
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-F107",
+      "reasons": [
+        "supersession",
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-F108",
+      "reasons": [
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-F109",
+      "reasons": [
+        "low-confidence",
+        "exception-or-contradiction",
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-F110",
+      "reasons": [
+        "low-confidence",
+        "exception-or-contradiction",
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-F111",
+      "reasons": [
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-F112",
+      "reasons": [
+        "low-confidence",
+        "conditional",
+        "exception-or-contradiction",
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-F113",
+      "reasons": [
+        "low-confidence",
+        "exception-or-contradiction"
+      ]
+    },
+    {
+      "decision_id": "E256-F114",
+      "reasons": [
+        "low-confidence",
+        "exception-or-contradiction"
+      ]
+    },
+    {
+      "decision_id": "E256-F115",
+      "reasons": [
+        "low-confidence",
+        "exception-or-contradiction"
+      ]
+    },
+    {
+      "decision_id": "E256-F201",
+      "reasons": [
+        "supersession",
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-F202",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-F203",
+      "reasons": [
+        "low-confidence"
+      ]
+    },
+    {
+      "decision_id": "E256-F204",
+      "reasons": [
+        "low-confidence"
+      ]
+    },
+    {
+      "decision_id": "E256-F205",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-F206",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-F207",
+      "reasons": [
+        "low-confidence"
+      ]
+    },
+    {
+      "decision_id": "E256-F208",
+      "reasons": [
+        "low-confidence"
+      ]
+    },
+    {
+      "decision_id": "E256-F209",
+      "reasons": [
+        "low-confidence"
+      ]
+    },
+    {
+      "decision_id": "E256-F210",
+      "reasons": [
+        "low-confidence"
+      ]
+    },
+    {
+      "decision_id": "E256-F211",
+      "reasons": [
+        "low-confidence"
+      ]
+    },
+    {
+      "decision_id": "E256-F212",
+      "reasons": [
+        "low-confidence"
+      ]
+    },
+    {
+      "decision_id": "E256-F213",
+      "reasons": [
+        "supersession",
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-F214",
+      "reasons": [
+        "conditional",
+        "supersession",
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-F215",
+      "reasons": [
+        "owner-decision"
+      ]
+    },
+    {
+      "decision_id": "E256-G03",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-G04",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-G05",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-G06",
+      "reasons": [
+        "supersession"
+      ]
+    },
+    {
+      "decision_id": "E256-G10",
+      "reasons": [
+        "conditional"
+      ]
+    },
+    {
+      "decision_id": "E256-G12",
+      "reasons": [
+        "low-confidence",
+        "conditional"
+      ]
+    },
+    {
+      "decision_id": "E256-H01",
+      "reasons": [
+        "low-confidence"
+      ]
+    },
+    {
+      "decision_id": "E256-H02",
+      "reasons": [
+        "low-confidence"
+      ]
+    },
+    {
+      "decision_id": "E256-H03",
+      "reasons": [
+        "low-confidence"
+      ]
+    },
+    {
+      "decision_id": "E256-H04",
+      "reasons": [
+        "conditional"
+      ]
+    },
+    {
+      "decision_id": "E256-H06",
+      "reasons": [
+        "low-confidence"
+      ]
+    },
+    {
+      "decision_id": "E256-H07",
+      "reasons": [
+        "low-confidence"
+      ]
+    }
+  ],
+  "assignments": {
+    "audit-1a": [
+      {
+        "decision_id": "E256-A03",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "low-confidence",
+          "stratified-20-percent",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-A06",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-A08",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-A09",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-A12",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-A13",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-A15",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-B02",
+        "family": "B",
+        "batch": "B.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-B05",
+        "family": "B",
+        "batch": "B.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-C01",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-C04",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-C07",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "exception-or-contradiction",
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-C10",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-C13",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "exception-or-contradiction",
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-D03",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "stratified-20-percent",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D06",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D08",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-D09",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D12",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "stratified-20-percent",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D15",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D17",
+        "family": "D",
+        "batch": "D2.json",
+        "reasons": [
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-D18",
+        "family": "D",
+        "batch": "D2.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E02",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "low-confidence",
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E05",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E08",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E11",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E14",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F103",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "owner-decision",
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-F106",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-F108",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-F109",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "exception-or-contradiction",
+          "low-confidence",
+          "owner-decision"
+        ]
+      },
+      {
+        "decision_id": "E256-F112",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "conditional",
+          "exception-or-contradiction",
+          "low-confidence",
+          "owner-decision"
+        ]
+      },
+      {
+        "decision_id": "E256-F113",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-F115",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "exception-or-contradiction",
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F202",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-F205",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-F208",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F211",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F214",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "conditional",
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-G03",
+        "family": "G",
+        "batch": "G.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-G06",
+        "family": "G",
+        "batch": "G.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-G12",
+        "family": "G",
+        "batch": "G.json",
+        "reasons": [
+          "conditional",
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-H02",
+        "family": "H",
+        "batch": "H.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      }
+    ],
+    "audit-1b": [
+      {
+        "decision_id": "E256-A01",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-A04",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-A07",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-A13",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-B03",
+        "family": "B",
+        "batch": "B.json",
+        "reasons": [
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-B06",
+        "family": "B",
+        "batch": "B.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-B08",
+        "family": "B",
+        "batch": "B.json",
+        "reasons": [
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-B09",
+        "family": "B",
+        "batch": "B.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-C02",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-C05",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-C08",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "conditional",
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-C11",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D01",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D04",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D07",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D10",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D13",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D16",
+        "family": "D",
+        "batch": "D2.json",
+        "reasons": [
+          "exception-or-contradiction",
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-D19",
+        "family": "D",
+        "batch": "D2.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E03",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "low-confidence",
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-E06",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E08",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-E09",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E12",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E13",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-E15",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F101",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "owner-decision"
+        ]
+      },
+      {
+        "decision_id": "E256-F104",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "owner-decision"
+        ]
+      },
+      {
+        "decision_id": "E256-F107",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-F110",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "exception-or-contradiction",
+          "low-confidence",
+          "owner-decision"
+        ]
+      },
+      {
+        "decision_id": "E256-F113",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "exception-or-contradiction",
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F203",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "low-confidence",
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-F206",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-F208",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-F209",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F212",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F213",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-F215",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "owner-decision"
+        ]
+      },
+      {
+        "decision_id": "E256-G04",
+        "family": "G",
+        "batch": "G.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-G10",
+        "family": "G",
+        "batch": "G.json",
+        "reasons": [
+          "conditional"
+        ]
+      },
+      {
+        "decision_id": "E256-H03",
+        "family": "H",
+        "batch": "H.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-H06",
+        "family": "H",
+        "batch": "H.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      }
+    ],
+    "audit-1c": [
+      {
+        "decision_id": "E256-A02",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-A05",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-A11",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-A14",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-B01",
+        "family": "B",
+        "batch": "B.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-B04",
+        "family": "B",
+        "batch": "B.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-B07",
+        "family": "B",
+        "batch": "B.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-B10",
+        "family": "B",
+        "batch": "B.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-C03",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "low-confidence",
+          "stratified-20-percent",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-C07",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-C09",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "exception-or-contradiction",
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-C11",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-C12",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D02",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D05",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D08",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D11",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D14",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D17",
+        "family": "D",
+        "batch": "D2.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E01",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E04",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E07",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E10",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-F102",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "owner-decision"
+        ]
+      },
+      {
+        "decision_id": "E256-F105",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "owner-decision"
+        ]
+      },
+      {
+        "decision_id": "E256-F108",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "owner-decision"
+        ]
+      },
+      {
+        "decision_id": "E256-F111",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "owner-decision"
+        ]
+      },
+      {
+        "decision_id": "E256-F114",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "exception-or-contradiction",
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F201",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-F204",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F207",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F210",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F213",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-G03",
+        "family": "G",
+        "batch": "G.json",
+        "reasons": [
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-G05",
+        "family": "G",
+        "batch": "G.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-G08",
+        "family": "G",
+        "batch": "G.json",
+        "reasons": [
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-G12",
+        "family": "G",
+        "batch": "G.json",
+        "reasons": [
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-H01",
+        "family": "H",
+        "batch": "H.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-H02",
+        "family": "H",
+        "batch": "H.json",
+        "reasons": [
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-H04",
+        "family": "H",
+        "batch": "H.json",
+        "reasons": [
+          "conditional"
+        ]
+      },
+      {
+        "decision_id": "E256-H06",
+        "family": "H",
+        "batch": "H.json",
+        "reasons": [
+          "stratified-20-percent"
+        ]
+      },
+      {
+        "decision_id": "E256-H07",
+        "family": "H",
+        "batch": "H.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      }
+    ],
+    "audit-2a": [
+      {
+        "decision_id": "E256-A02",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-A05",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-A11",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-A14",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-B01",
+        "family": "B",
+        "batch": "B.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-B04",
+        "family": "B",
+        "batch": "B.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-B07",
+        "family": "B",
+        "batch": "B.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-B10",
+        "family": "B",
+        "batch": "B.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-C03",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "low-confidence",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-C09",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "exception-or-contradiction",
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-C12",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D02",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D05",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D08",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D11",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D14",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D17",
+        "family": "D",
+        "batch": "D2.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E01",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E04",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E07",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E10",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-F102",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "owner-decision"
+        ]
+      },
+      {
+        "decision_id": "E256-F105",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "owner-decision"
+        ]
+      },
+      {
+        "decision_id": "E256-F108",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "owner-decision"
+        ]
+      },
+      {
+        "decision_id": "E256-F111",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "owner-decision"
+        ]
+      },
+      {
+        "decision_id": "E256-F114",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "exception-or-contradiction",
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F201",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-F204",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F207",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F210",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F213",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-G05",
+        "family": "G",
+        "batch": "G.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-H01",
+        "family": "H",
+        "batch": "H.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-H04",
+        "family": "H",
+        "batch": "H.json",
+        "reasons": [
+          "conditional"
+        ]
+      },
+      {
+        "decision_id": "E256-H07",
+        "family": "H",
+        "batch": "H.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      }
+    ],
+    "audit-2b": [
+      {
+        "decision_id": "E256-A03",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "low-confidence",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-A06",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-A09",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-A12",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-A15",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-B02",
+        "family": "B",
+        "batch": "B.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-B05",
+        "family": "B",
+        "batch": "B.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-C01",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-C04",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-C07",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "exception-or-contradiction",
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-C10",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-C13",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "exception-or-contradiction",
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-D03",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D06",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D09",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D12",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D15",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D18",
+        "family": "D",
+        "batch": "D2.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E02",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "low-confidence",
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E05",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E08",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E11",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E14",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F103",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "owner-decision"
+        ]
+      },
+      {
+        "decision_id": "E256-F106",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-F109",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "exception-or-contradiction",
+          "low-confidence",
+          "owner-decision"
+        ]
+      },
+      {
+        "decision_id": "E256-F112",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "conditional",
+          "exception-or-contradiction",
+          "low-confidence",
+          "owner-decision"
+        ]
+      },
+      {
+        "decision_id": "E256-F115",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "exception-or-contradiction",
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F202",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-F205",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-F208",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F211",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F214",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "conditional",
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-G03",
+        "family": "G",
+        "batch": "G.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-G06",
+        "family": "G",
+        "batch": "G.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-G12",
+        "family": "G",
+        "batch": "G.json",
+        "reasons": [
+          "conditional",
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-H02",
+        "family": "H",
+        "batch": "H.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      }
+    ],
+    "audit-2c": [
+      {
+        "decision_id": "E256-A01",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-A04",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-A07",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-A13",
+        "family": "A",
+        "batch": "A.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-B06",
+        "family": "B",
+        "batch": "B.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-B09",
+        "family": "B",
+        "batch": "B.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-C02",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-C05",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-C08",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "conditional",
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-C11",
+        "family": "C",
+        "batch": "C.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D01",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D04",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D07",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D10",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D13",
+        "family": "D",
+        "batch": "D.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-D16",
+        "family": "D",
+        "batch": "D2.json",
+        "reasons": [
+          "exception-or-contradiction",
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-D19",
+        "family": "D",
+        "batch": "D2.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E03",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-E06",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E09",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E12",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-E15",
+        "family": "E",
+        "batch": "E.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F101",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "owner-decision"
+        ]
+      },
+      {
+        "decision_id": "E256-F104",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "owner-decision"
+        ]
+      },
+      {
+        "decision_id": "E256-F107",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "owner-decision",
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-F110",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "exception-or-contradiction",
+          "low-confidence",
+          "owner-decision"
+        ]
+      },
+      {
+        "decision_id": "E256-F113",
+        "family": "F1",
+        "batch": "F1.json",
+        "reasons": [
+          "exception-or-contradiction",
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F203",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F206",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-F209",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F212",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-F215",
+        "family": "F2",
+        "batch": "F2.json",
+        "reasons": [
+          "owner-decision"
+        ]
+      },
+      {
+        "decision_id": "E256-G04",
+        "family": "G",
+        "batch": "G.json",
+        "reasons": [
+          "supersession"
+        ]
+      },
+      {
+        "decision_id": "E256-G10",
+        "family": "G",
+        "batch": "G.json",
+        "reasons": [
+          "conditional"
+        ]
+      },
+      {
+        "decision_id": "E256-H03",
+        "family": "H",
+        "batch": "H.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      },
+      {
+        "decision_id": "E256-H06",
+        "family": "H",
+        "batch": "H.json",
+        "reasons": [
+          "low-confidence"
+        ]
+      }
+    ]
+  }
+}

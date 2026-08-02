@@ -1,0 +1,426 @@
+[
+  {
+    "decision_id": "E256-D01",
+    "epic_row": "3a",
+    "task_refs": ["srs#296", "RFC-038", "srs#297"],
+    "decision_family": "D",
+    "title": "Make the authoritative store, not the manifest, define repository content",
+    "decision_statement": "A repository's authoritative content is what its authoritative store reports across the instance, relation, container, source-document, definition, and extension sets; manifest.json is not content authority except for its inline root container.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L162-L179","excerpt":"Accepted RFC-038 Change A names six authoritative sets and assigns authority to the backing store rather than an index file.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L749-L754","excerpt":"Rule R1 makes the store authoritative and reserves only the inline root-container exception for the manifest.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"}
+    ],
+    "alternatives": ["Keep manifest indexes authoritative.", "Let each implementation choose between index and tree authority."],
+    "accepted_cost": "Implementations must replace index-driven enumeration and accept a coordinated breaking storage migration.",
+    "supersedes": ["RepositoryManifest authoritative-index rule", "ext:json-store manifest-index membership rule"],
+    "derived_from": ["RFC-013 R2", "Invariant 80", "PR #291 conflict evidence"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"A stale or implementation-selected index could hide objects that the repository actually stores.","counterpole_safeguard":"The manifest remains the stable entry point and descriptor.","shadow_signal":"Store discovery becomes so implicit that authors cannot explain why an object is or is not content."},
+      "continuity_evolution": {"relevance":"decisive","direction":"evolution","evidence_basis":"explicit","confidence":"high","counterfactual":"Preserving index authority would retain a ratified contradiction and the known parallel-writer conflict.","counterpole_safeguard":"The inline root-container authority and logical identities are preserved.","shadow_signal":"Authority changes without an identity-complete migration or generation gate."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Filesystem, JSON, memory, and database implementations could expose different membership semantics.","counterpole_safeguard":"Each backend decides how its authoritative store answers the common logical query.","shadow_signal":"A common contract forces every backend to emulate filesystem paths or a manifest index."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "This card records the authority choice only; discovery, diagnostics, and migration gates are separate decisions."
+  },
+  {
+    "decision_id": "E256-D02",
+    "epic_row": "3a",
+    "task_refs": ["srs#296", "RFC-038", "srs#267"],
+    "decision_family": "D",
+    "title": "Retain one stable manifest as descriptor while removing live inventories",
+    "decision_statement": "Every repository retains exactly one manifest.json for identity and stable configuration, including the canonical inline root container, while generation-2 manifests forbid the five live inventory or cache properties and routine unscoped writes do not touch the manifest.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L221-L234","excerpt":"Change A retains the manifest as required descriptor and removes its role as a content inventory.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L756-L759","excerpt":"Rule R2 forbids instanceIndex, containerIndex, sourceDocumentIndex, relationsChecksums, and relationsPath at revision 2.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"}
+    ],
+    "alternatives": ["Remove the manifest entirely.", "Retain the inventories as maintained caches.", "Move routine membership writes into the root container."],
+    "accepted_cost": "The manifest's updatedAt no longer tracks routine repository activity and inventory consumers must move to catalog enumeration.",
+    "supersedes": ["Manifest-maintained content inventories"],
+    "derived_from": ["E256-D01", "RFC-013 inline root-container authority"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"A convenient singleton cache would remain a competing statement of repository meaning.","counterpole_safeguard":"Identity and configuration stay easy to locate in one stable entry point.","shadow_signal":"Removing projections also removes useful deliberate configuration or orientation."},
+      "continuity_evolution": {"relevance":"decisive","direction":"continuity","evidence_basis":"explicit","confidence":"high","counterfactual":"Eliminating the descriptor or relocating root-container authority would create unrelated identity and composition changes.","counterpole_safeguard":"The obsolete inventory contract is removed rather than indefinitely deprecated.","shadow_signal":"Stable descriptor status is used to retain frequently mutated derived state."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Repositories could expose different entry points and root-container authority rules.","counterpole_safeguard":"Only deliberate configuration and membership edits share the descriptor; ordinary writes remain isolated.","shadow_signal":"The common descriptor grows into a central registry for independent semantic objects."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Continuity","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "The retained descriptor and removal of inventory authority are one contrasted role decision; root composition semantics remain outside RFC-038."
+  },
+  {
+    "decision_id": "E256-D03",
+    "epic_row": "3a",
+    "task_refs": ["srs#296", "RFC-038", "srs#307"],
+    "decision_family": "D",
+    "title": "Discover fixed reserved roots by conforming package presence",
+    "decision_statement": "Filesystem discovery recursively scans fixed records, notes, and typed-records roots at the repository root and every conforming local-package root discovered by package.json presence, never by packageRefs or another configured path list.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L236-L269","excerpt":"Change B rejects declared-package discovery after measuring seven instances under an undeclared but conforming local package root.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L761-L773","excerpt":"Rules R3 and R4 define presence-keyed roots and diagnose SRS-shaped near-miss package manifests without treating npm manifests as errors.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"}
+    ],
+    "alternatives": ["Scan the whole repository by shape.", "Configure roots in the manifest.", "Limit package discovery to packageRefs."],
+    "accepted_cost": "The loader must search for package anchors and diagnose malformed SRS package manifests rather than reading one configured list.",
+    "supersedes": ["packageRefs-keyed repository enumeration", "instanceIndex enumeration"],
+    "derived_from": ["E256-D01", "RFC-038 corpus measurement"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"Configured roots already omit seven live instances and hide the definitions needed to detect a live dangling fieldId.","counterpole_safeguard":"The root vocabulary is small, fixed, and implementation-defined subfolders remain legal.","shadow_signal":"Discovery expands beyond intentional boundaries and turns incidental files into semantic members."},
+      "continuity_evolution": {"relevance":"supporting","direction":"evolution","evidence_basis":"explicit","confidence":"medium","counterfactual":"Keeping configured enumeration would preserve an incomplete legacy model.","counterpole_safeguard":"Legacy top-level roots and existing recursive subfolders remain recognized.","shadow_signal":"New roots invalidate conforming legacy content without measured necessity."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Locally configured root lists could give identical trees different membership.","counterpole_safeguard":"Packages may live anywhere in the repository subtree and organize their root contents freely.","shadow_signal":"The fixed root set prevents a legitimate package-owned storage pattern from being represented."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Near-miss package diagnostics are a safeguard of the same discovery choice, not an extra constitutional vote."
+  },
+  {
+    "decision_id": "E256-D04",
+    "epic_row": "3a",
+    "task_refs": ["srs#296", "RFC-038"],
+    "decision_family": "D",
+    "title": "Apply a closed policy only inside explicit repository locations",
+    "decision_statement": "Candidate files inside reserved repository locations must be recognized SRS entities, recognized sidecars, or diagnosed errors, while content outside those locations and permitted opaque payloads are application content that repository operations neither interpret nor modify.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L324-L363","excerpt":"Change D defines reserved locations, most-specific classification, a closed candidate policy, and opaque source payload protection.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L812-L826","excerpt":"Rules R9 and R10 forbid silent skipping inside the boundary and forbid semantic interpretation outside it.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"}
+    ],
+    "alternatives": ["Scan all repository files by shape.", "Silently ignore malformed or unknown files under reserved locations.", "Treat every JSON file under a reserved root as an instance."],
+    "accepted_cost": "Reserved locations become strict and a single malformed candidate can block loading; authors must place non-member SRS-shaped material outside them.",
+    "supersedes": ["Silent omission of unindexed candidates"],
+    "derived_from": ["E256-D01", "RFC-038 rejected whole-tree scan"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Silent skips inside an authoritative boundary make an incomplete repository look successful.","counterpole_safeguard":"Opaque source payloads are exempted from SRS classification and preserved.","shadow_signal":"Strictness expands to files that make no semantic claim."},
+      "continuity_evolution": {"relevance":"unexpressed","direction":"not-applicable","evidence_basis":"explicit","confidence":"high","counterfactual":"The choice sets a boundary rather than choosing migration or compatibility.","counterpole_safeguard":"Existing application content outside reserved locations remains untouched.","shadow_signal":"Previously tolerated malformed candidates surface without actionable diagnostics."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"autonomy","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"Whole-tree discovery would let the SRS contract appropriate application-owned files merely because their shape matches.","counterpole_safeguard":"Inside explicitly shared locations all implementations apply the same closed candidate rules.","shadow_signal":"Local-content protection becomes a loophole for hiding semantic claims just outside the boundary."}
+    },
+    "cube": {"dimensionality":"edge","coordinate":["Integrity","Autonomy"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "This is the boundary decision; entity classification and fatality are coded separately."
+  },
+  {
+    "decision_id": "E256-D05",
+    "epic_row": "3a",
+    "task_refs": ["srs#296", "RFC-038"],
+    "decision_family": "D",
+    "title": "Classify objects by validated content rather than location or declaration alone",
+    "decision_statement": "Object kind and tier come from validated content: a declared schema must validate and resolve to exactly one admissible entity without shape fallback, while an object without a schema must validate as exactly one admissible entity; path never determines kind or tier.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L283-L322","excerpt":"Change C adopts declared-then-validated classification with exact-shape fallback only when schema is absent.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L784-L810","excerpt":"Rules R6 through R8 make content authoritative for classification and preserve unlabelled objects only through exact validation.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"}
+    ],
+    "alternatives": ["Infer tier from folder names.", "Trust any declared $schema without validation.", "Require $schema on every object.", "Always fall back to shape after a bad declaration."],
+    "accepted_cost": "Loaders need full schema resolution and exact admissible-set validation, including pairwise distinguishability checks.",
+    "supersedes": ["Path-derived tier classification", "Declaration-only classification"],
+    "derived_from": ["29 conforming no-$schema records", "nonconforming showcase record with a declared schema"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"Convenient filename or declaration heuristics can silently misclassify invalid content.","counterpole_safeguard":"Schema-absent legacy records remain loadable when their shape is unambiguous and valid.","shadow_signal":"Validation machinery becomes disproportionate to the semantic ambiguity it prevents."},
+      "continuity_evolution": {"relevance":"decisive","direction":"continuity","evidence_basis":"explicit","confidence":"high","counterfactual":"Requiring $schema would invalidate 29 currently conforming records for no semantic gain.","counterpole_safeguard":"A false or invalid declaration fails rather than receiving legacy fallback.","shadow_signal":"Compatibility fallback lets ambiguous or malformed legacy shapes survive indefinitely."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Adapters could classify the same bytes differently based on their path conventions.","counterpole_safeguard":"Domain schemas remain valid through explicit allOf composition.","shadow_signal":"A closed core entity set prevents legitimate domain composition."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Continuity","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "The schema-present and schema-absent branches form one conditional classifier contract and cannot be split without losing the explicit fallback boundary."
+  },
+  {
+    "decision_id": "E256-D06",
+    "epic_row": "6a-prerequisite",
+    "task_refs": ["srs#296", "srs#311", "RFC-038", "srs#297"],
+    "decision_family": "D",
+    "title": "Derive definition kinds from the package contract and require schema completeness",
+    "decision_statement": "The catalog's definition kinds are derived from package-manifest.json definition arrays rather than a hand-maintained subset, and every declarable kind must have an admissible closed schema before a generation-2 package using it can load.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L203-L215","excerpt":"Accepted RFC-038 derives all ten kinds from package-manifest arrays and makes missing protocol.json a Phase-0 prerequisite rather than narrowing the set.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/311","excerpt":"Issue 311 records the missing protocol schema and proposes a CI correspondence check; the enforcement task remains open.","explicitness":"explicit"}
+    ],
+    "alternatives": ["Maintain a separate catalog kind allowlist.", "Silently omit kinds without schemas.", "Narrow package-manifest.json to the schemas that happen to exist."],
+    "accepted_cost": "Adding a definition kind creates a schema obligation, and current protocol packages block cutover until protocol.json exists.",
+    "supersedes": ["Hand-maintained definition-kind discovery lists"],
+    "derived_from": ["E256-D04", "E256-D05"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"A manifest could claim a kind that the catalog cannot represent or validate.","counterpole_safeguard":"The correspondence is one explicit table and can be checked mechanically.","shadow_signal":"Every experimental kind is forced prematurely into the core schema catalog."},
+      "continuity_evolution": {"relevance":"supporting","direction":"evolution","evidence_basis":"behavioral","confidence":"medium","counterfactual":"Preserving the incomplete schema set would leave two published governance packages unreadable under the accepted contract.","counterpole_safeguard":"The gate may use a named, dated exception during sequencing rather than silently skipping the kind.","shadow_signal":"Schema expansion proceeds without a real declared package use case."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"Package authors and catalog implementations could disagree about which declared kinds exist.","counterpole_safeguard":"Packages still choose which supported definition kinds and definitions they declare.","shadow_signal":"Completeness is confused with requiring every package to implement every kind."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "The accepted completeness principle is ratified; issue 311's particular CI script design is proposed and intentionally not a separate counted decision."
+  },
+  {
+    "decision_id": "E256-D07",
+    "epic_row": "3a",
+    "task_refs": ["srs#296", "RFC-038"],
+    "decision_family": "D",
+    "title": "Reject duplicate logical identifiers without precedence",
+    "decision_statement": "Two objects in one authoritative set that claim the same logical identifier are an error naming every conflicting locator; implementations may not choose a winner by path, recency, or enumeration order.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L195-L201","excerpt":"Presence discovery exposes 27 duplicate definition IDs in muSrs and the RFC refuses silent coalescing even for byte-identical copies.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L835-L841","excerpt":"Rule R12 requires all-locator duplicate diagnostics and forbids conflict resolution by precedence, recency, or enumeration order.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"}
+    ],
+    "alternatives": ["Let first-discovered or newest object win.", "Coalesce byte-identical objects.", "Scope uniqueness only to paths or packages."],
+    "accepted_cost": "Previously hidden duplicate definitions become cutover-blocking repairs even when their bytes match.",
+    "supersedes": ["Implicit duplicate resolution by enumeration"],
+    "derived_from": ["E256-D01", "muSrs duplicate-definition cross-check"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"A precedence rule would substitute storage accident for semantic identity authority.","counterpole_safeguard":"Diagnostics name every locator so the conflict is practical to repair.","shadow_signal":"Global uniqueness rejects intentionally scoped identities whose schema defines a narrower domain."},
+      "continuity_evolution": {"relevance":"supporting","direction":"evolution","evidence_basis":"behavioral","confidence":"medium","counterfactual":"Preserving hidden duplicates would make the new complete catalog ambiguous.","counterpole_safeguard":"Logical IDs remain unchanged; only conflicting duplicate ownership is repaired.","shadow_signal":"Repairs discard provenance or history merely because two current files collide."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Packages or adapters could claim incompatible local winners for one shared logical identity.","counterpole_safeguard":"Extension uniqueness remains keyed by its schema-defined kind and ID rather than one global namespace.","shadow_signal":"The uniqueness domain expands beyond the authoritative set defined by the entity contract."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Reference resolution is independently reversible and therefore appears on D08."
+  },
+  {
+    "decision_id": "E256-D08",
+    "epic_row": "3a/6a-prerequisite",
+    "task_refs": ["srs#296", "RFC-038", "srs#307", "srs#297"],
+    "decision_family": "D",
+    "title": "Require every reference to resolve to exactly one target",
+    "decision_statement": "Every semantic reference resolves to exactly one object in its named authoritative set; zero or multiple targets are errors identifying the referring object, property, identifier, and conflicting locators, making the live #307 dangling fieldId a cutover prerequisite rather than a warning.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L520-L544","excerpt":"Change H uses the live srs#307 fieldId defect to calibrate exact-one resolution against the correct authoritative set.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L843-L848","excerpt":"Rule R13 requires exact-one resolution and names the target set for field assignments, relations, containers, and source references.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"}
+    ],
+    "alternatives": ["Warn and continue on dangling references.", "Resolve against one undifferentiated repository set.", "Accept multiple targets and choose by precedence."],
+    "accepted_cost": "Existing hidden defects become fatal prerequisites and loaders must retain enough locator context for complete diagnostics.",
+    "supersedes": ["Warning-only dangling-reference handling", "Index-limited reference validation"],
+    "derived_from": ["E256-D01", "E256-D03"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Continuing with a missing or ambiguous target would fabricate or omit semantic relationships.","counterpole_safeguard":"Errors identify the referring property and all known locators to support repair.","shadow_signal":"Every soft, external, or intentionally deferred link is treated as a closed-world reference."},
+      "continuity_evolution": {"relevance":"supporting","direction":"evolution","evidence_basis":"behavioral","confidence":"medium","counterfactual":"Grandfathering the live dangling fieldId would preserve a corpus known not to meet the chosen semantic contract.","counterpole_safeguard":"The intended existing Field identity is repaired rather than replaced wholesale.","shadow_signal":"Validation breaks old repositories without an explicit migration path and reference parity check."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Implementations could use different target domains or tolerate different missing references.","counterpole_safeguard":"The target set is property-specific rather than one centrally flattened object namespace.","shadow_signal":"Exact-one rules are applied where an extension explicitly defines open or federated resolution."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "The concrete repair of srs#307 is not counted separately; it is a mechanical consequence of this accepted rule."
+  },
+  {
+    "decision_id": "E256-D09",
+    "epic_row": "3a",
+    "task_refs": ["srs#296", "RFC-038", "srs#311"],
+    "decision_family": "D",
+    "title": "Fail repository load rather than return a partial catalog",
+    "decision_statement": "An error under a reserved repository location is fatal to repository loading, so an implementation may not report a partial catalog as successfully loaded; validation still reports all diagnostics instead of stopping at the first.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L128-L137","excerpt":"The RFC abstract states that one malformed reserved-location file deliberately makes the repository refuse to open rather than silently become smaller.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L909-L913","excerpt":"Rule R24 makes reserved-location errors fatal to load while requiring validation to collect all diagnostics.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"}
+    ],
+    "alternatives": ["Load every valid object and warn about omitted files.", "Stop at the first diagnostic.", "Make only instance-file errors fatal."],
+    "accepted_cost": "One malformed or schema-incomplete candidate can make an otherwise large repository temporarily unavailable.",
+    "supersedes": ["Partial successful loads after candidate failure"],
+    "derived_from": ["E256-D01", "E256-D04"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"A partial load presents missing semantic content as a complete successful repository.","counterpole_safeguard":"Validation accumulates all errors and stable identifiers make failures diagnosable.","shadow_signal":"A non-semantic presentation or optional extension failure blocks access to otherwise valid meaning."},
+      "continuity_evolution": {"relevance":"unexpressed","direction":"not-applicable","evidence_basis":"explicit","confidence":"high","counterfactual":"The decision governs failure semantics rather than compatibility over time.","counterpole_safeguard":"Migration tools receive a separately explicit legacy-data exemption.","shadow_signal":"Fail-closed behavior is introduced before prerequisites can be repaired atomically."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Different loaders could expose different partial subsets for the same broken tree.","counterpole_safeguard":"Diagnostics can remain implementation-specific in presentation while carrying stable IDs and severity.","shadow_signal":"Shared fatality prevents bounded local recovery modes that are clearly labelled as incomplete."}
+    },
+    "cube": {"dimensionality":"edge","coordinate":["Integrity","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "This is the load-result decision, distinct from which conditions are errors."
+  },
+  {
+    "decision_id": "E256-D10",
+    "epic_row": "3a",
+    "task_refs": ["srs#296", "RFC-038", "srs#291", "srs#297"],
+    "decision_family": "D",
+    "title": "Store each relation as an independent object",
+    "decision_statement": "At generation 2 each Relation is one flat relations/<relationId>.json object with an authoritative in-file ID; relation collections are invalid even in snapshots, and changing one relation does not read or write another relation's file.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L391-L443","excerpt":"Change E selects one relation per file, rejects collection retention in snapshots, and keeps identity in file rather than deriving it from filename.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L828-L833","excerpt":"Rule R11 makes relation writes independent and forbids live generation-2 collection files.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"}
+    ],
+    "alternatives": ["Keep one relation collection.", "Shard relations into several collections.", "Derive identity or type from a semantic filename."],
+    "accepted_cost": "The corpus and all archives must split collection entries into many files and readers must enumerate them deterministically.",
+    "supersedes": ["Live relations-collection storage", "Snapshot relations-collection storage"],
+    "derived_from": ["PR #291 parallel-writer failure class", "E256-D01"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"A semantic filename or folder would create a second competing classification beside relationId and relationType.","counterpole_safeguard":"The UUID locator is deterministic and a filename mismatch yields an actionable error.","shadow_signal":"Identity purity makes repository browsing needlessly opaque without derived views."},
+      "continuity_evolution": {"relevance":"decisive","direction":"evolution","evidence_basis":"explicit","confidence":"high","counterfactual":"Retaining collections in any generation-2 surface would preserve shared-write contention and two loader paths.","counterpole_safeguard":"Every relation field and logical ID is preserved through deterministic conversion.","shadow_signal":"A breaking storage rewrite proceeds without relation-count and endpoint parity."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"autonomy","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"Independent writers would continue coordinating through one collection file or shard.","counterpole_safeguard":"All relation objects share one closed wire schema, flat location, and total ordering rule.","shadow_signal":"Write isolation fragments operations that require atomic semantic coordination."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Autonomy"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "File naming and flatness are retained as safeguards of the independent-object decision rather than extra votes."
+  },
+  {
+    "decision_id": "E256-D11",
+    "epic_row": "3a",
+    "task_refs": ["srs#296", "RFC-038", "srs#297"],
+    "decision_family": "D",
+    "title": "Separate derived live catalogs from authoritative immutable snapshots",
+    "decision_statement": "A live catalog is a rebuildable non-authoritative cache served only while its store validity token matches, whereas the enumerated contents of an immutable .srs or .srsj snapshot are authoritative for that snapshot; RFC-038 standardizes no additional serialized catalog.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L546-L594","excerpt":"Change I distinguishes rebuildable live catalogs from closed snapshots and rejects a new inventory format without a demonstrated consumer.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L861-L875","excerpt":"Rules R16 through R18 define validity tokens, snapshot completeness, and content-derived identity for any future catalog artifact.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"}
+    ],
+    "alternatives": ["Commit a regenerated live index.", "Forbid caches entirely.", "Standardize a timestamped serialized inventory now.", "Treat snapshots as non-authoritative views of an external tree."],
+    "accepted_cost": "Stores need explicit invalidation tokens and complete snapshot packing; fast standalone inventory/history use cases remain deferred.",
+    "supersedes": ["Manifest index as live catalog authority"],
+    "derived_from": ["E256-D01", "ADR-039 deterministic archives"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"A stale live catalog could substitute an incomplete view for current store content.","counterpole_safeguard":"Validated caches remain permitted for fast queries and snapshots remain self-enumerating.","shadow_signal":"Authority checks negate the practical value of materialized catalogs."},
+      "continuity_evolution": {"relevance":"decisive","direction":"continuity","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"A new inventory schema and dated artifact would add a second representation before any consumer demonstrated need.","counterpole_safeguard":"A future catalog format is allowed with content-derived identity and optional provenance.","shadow_signal":"Deferral prevents an evidenced indexing or historical-comparison need from being met."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"autonomy","evidence_basis":"explicit","confidence":"high","counterfactual":"Standardizing one cache representation would constrain filesystem, memory, and database stores without semantic benefit.","counterpole_safeguard":"All stores obey the same authority, validity, and snapshot-completeness semantics.","shadow_signal":"Implementation freedom produces incompatible validity guarantees or incomplete exports."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Continuity","Autonomy"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "The live/snapshot distinction is one contrast; the decision not to standardize another catalog is its explicit accepted consequence."
+  },
+  {
+    "decision_id": "E256-D12",
+    "epic_row": "3a/6a",
+    "task_refs": ["srs#296", "RFC-038", "srs#297", "srs-rust#783"],
+    "decision_family": "D",
+    "title": "Expose backend-neutral logical catalog entries instead of path identity",
+    "decision_statement": "Every repository backend exposes one materialized catalog contract of logical IDs, kinds, optional instance tiers, optional diagnostic locators, and diagnostics; paths remain adapter-private and never become required addressing or semantic identity.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L665-L698","excerpt":"Change L specifies a backend-neutral logical catalog so database adapters do not emulate paths or manifests.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L903-L907","excerpt":"Rule R23 returns id, kind, optional tier and locator plus diagnostics, and forbids using locators as semantic identity.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/297","excerpt":"The cutover contract requires equivalent logical catalogs from file/tree, memory, JSON snapshot, archive, and database-style adapters.","explicitness":"explicit"}
+    ],
+    "alternatives": ["Expose filesystem paths as the service contract.", "Keep manifest indexes as the backend-neutral API.", "Let each backend expose unrelated enumeration semantics."],
+    "accepted_cost": "Filesystem adapters must translate paths to logical entries and all operations materialize a consistent catalog snapshot with diagnostics.",
+    "supersedes": ["Path-shaped service enumeration", "Manifest cache as service API"],
+    "derived_from": ["ADR-041 storage guardrails", "E256-D01"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Using a locator as identity lets a rename change semantic identity and makes database semantics path-shaped.","counterpole_safeguard":"Optional locators remain available for diagnostics and portable tree projection.","shadow_signal":"Logical abstraction hides operational information needed to diagnose or repair a store."},
+      "continuity_evolution": {"relevance":"supporting","direction":"evolution","evidence_basis":"explicit","confidence":"medium","counterfactual":"Keeping path and manifest APIs would block the accepted database-style storage direction.","counterpole_safeguard":"Existing logical IDs are the stable cross-backend seam.","shadow_signal":"A new abstraction removes proven adapter capabilities without a parity test."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Backend-specific public contracts could enumerate different logical repositories.","counterpole_safeguard":"Adapters keep full freedom over locators, persistence, queries, and validity-token implementation.","shadow_signal":"The shared catalog specifies storage mechanics rather than observable semantic results."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Deterministic total ordering is a contractual safeguard but is not counted as another conceptual decision."
+  },
+  {
+    "decision_id": "E256-D13",
+    "epic_row": "3a/6a",
+    "task_refs": ["srs#296", "RFC-038", "srs#297", "RFC-039"],
+    "decision_family": "D",
+    "title": "Reject old or mixed repository generations outside explicit migration",
+    "decision_statement": "Repository and snapshot generation is discriminated by dataModelRevision, generation-2 .srsj uses format version 2, ordinary readers reject generation 0 or 1 rather than coercing or partially reading it, and only an explicitly invoked migrator may consume the old form.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L595-L619","excerpt":"Change J chooses explicit generation and srsj version gates to prevent an old reader from presenting revision-2 content as an empty repository.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L885-L894","excerpt":"Rules R20 and R21 require loud version rejection and reserve old-format reading to an opt-in migrator.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/297","excerpt":"The cutover tracker rejects a public upgrade command, old-format runtime reader, compatibility window, intermediate supported format, and partial public state.","explicitness":"explicit"}
+    ],
+    "alternatives": ["Keep a compatibility reader indefinitely.", "Infer generation from missing properties.", "Support an intermediate RFC-039-only or RFC-038-only repository form.", "Let readers migrate in place."],
+    "accepted_cost": "The ecosystem needs one coordinated cutover and old repositories become unreadable without an explicit migration tool.",
+    "supersedes": ["Implicit old-format coercion", "Separate RFC-038 data-model revision"],
+    "derived_from": ["RFC-033 dataModelRevision", "RFC-039 shared revision 2"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"A legacy reader can mistake a generation-2 snapshot for an empty valid repository, silently losing visible content.","counterpole_safeguard":"An explicit opt-in migrator remains the supported recovery path.","shadow_signal":"Format purity makes recovery unavailable or requires undocumented tooling."},
+      "continuity_evolution": {"relevance":"decisive","direction":"evolution","evidence_basis":"explicit","confidence":"high","counterfactual":"A compatibility window would institutionalize intermediate formats and multiple authority models.","counterpole_safeguard":"Migration preserves identities and content and starts from pinned baselines with rollback evidence.","shadow_signal":"Atomic cutover is attempted before all first-party consumers and artifacts can move together."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Independent client timing would expose partial public states and inconsistent repository meaning.","counterpole_safeguard":"Each client remains free to implement its adapter behind the common generation contract.","shadow_signal":"Ecosystem lockstep blocks unrelated work or external consumers without a proportionate semantic risk."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "The actual migration and parity procedures belong to family E; this card records only the reader/version authority contract."
+  },
+  {
+    "decision_id": "E256-D14",
+    "epic_row": "5-input/6a-input",
+    "task_refs": ["srs#296", "srs#313", "RFC-038"],
+    "decision_family": "D",
+    "title": "Use a directory as the repository marker and keep its contents non-authoritative",
+    "decision_statement": "The repository boundary marker is a .srs directory beside manifest.json; its contents are implementation-private, are excluded from SRS entity discovery, and carry no normative semantic claims.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L761-L782","excerpt":"Accepted rules R3 and R5 treat .srs as a skipped implementation-private directory that participates in the repository-root boundary.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/313","excerpt":"Issue 313 records the conflict with Invariant 45's file wording and the required fold that will reconcile prose, gallery data, and implementation.","explicitness":"explicit"},
+      {"kind":"owner-decision","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/issues/313#issuecomment-5156823568","excerpt":"The recorded owner read-back selects directory, keeps non-emptiness non-normative, and reserves README content for orientation without normative weight.","explicitness":"explicit"}
+    ],
+    "alternatives": ["Use a marker file.", "Accept both file and directory forms.", "Put repository version authority inside the marker."],
+    "accepted_cost": "The gallery marker and stale canonical prose must be migrated, and empty directories need a non-normative portability convention.",
+    "supersedes": ["Invariant 45 marker-file wording", "Marker first-line format-version prose"],
+    "derived_from": ["RFC-038 R3", "RFC-038 R5"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Normative claims inside implementation-private marker state would be invisible to repository validation and compete with manifest generation authority.","counterpole_safeguard":"A conventional About SRS README may orient humans and agents by pointing to authoritative sources.","shadow_signal":"Semantic guidance is placed in private README prose because it is convenient."},
+      "continuity_evolution": {"relevance":"decisive","direction":"evolution","evidence_basis":"revealed-by-alternative","confidence":"medium","counterfactual":"Accepting both forms would preserve a boundary ambiguity on which discovery and repository_exists depend.","counterpole_safeguard":"The canonical spec repository and reference implementation already use the directory form; the gallery migration is bounded.","shadow_signal":"The prose fold changes more than marker kind or rewrites historical accepted records without revision history."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"autonomy","evidence_basis":"explicit","confidence":"high","counterfactual":"Making marker contents normative would centralize tool-private state into the semantic repository contract.","counterpole_safeguard":"All implementations agree that the directory exists and that its subtree is excluded from discovery.","shadow_signal":"Private state becomes a hidden channel for behavior that should be shared and testable."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Autonomy"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "RFC-038 ratifies the directory interpretation; issue 313 remains open because the contradictory invariant and gallery artifact have not yet been folded. The non-emptiness convention is not part of the normative decision statement."
+  },
+  {
+    "decision_id": "E256-D15",
+    "epic_row": "5/6a",
+    "task_refs": ["srs#256", "srs#296", "srs#314", "RFC-038", "RFC-039"],
+    "decision_family": "D",
+    "title": "Require intended repository identity while allowing an independent fixture package",
+    "decision_statement": "The discovery fixture tree remains test data and receives no invented repository identity, while its independently valid package remains a package that reaches the generation-2 contract; package identity and repository identity are therefore classified separately rather than inferred from surrounding files.",
+    "status": "ratified",
+    "decision_class": "reasoned-application",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L1413-L1428","excerpt":"The accepted migration dispositions distinguish intended repositories from fixtures and require published first-party packages to receive the generation stamp.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"owner-decision","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/issues/256","excerpt":"The epic's first-party corpus boundary decides that fixture packages reach the contract while fixture repositories do not gain repository identity.","explicitness":"explicit"},
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/314#issuecomment-5157074817","excerpt":"The resolution traces the fixture package's in-scope disposition to the existing owner boundary and RFC-039 migration schedule; the fold remains open.","explicitness":"explicit"}
+    ],
+    "alternatives": ["Add a repository marker because repository-shaped files are present.", "Exclude the package because its enclosing fixture is not a repository.", "Leave the package unstamped while migrating its definitions."],
+    "accepted_cost": "Repository and package inventories need separate classification, RFC-012's stale fixture-repository prose must be corrected, and the fixture package must join the cutover inventory.",
+    "supersedes": ["RFC-012 fixture described as a valid repository", "RFC-038 inventory omission for the fixture package"],
+    "derived_from": ["Epic 256 first-party corpus boundary", "RFC-039 fixture package migration"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Inferring repository identity from a manifest-shaped fixture would manufacture purpose and authority that its owner did not declare.","counterpole_safeguard":"The independently meaningful package is still migrated and remains usable as conformance data.","shadow_signal":"Intent is invoked without a stable, observable declaration or boundary rule."},
+      "continuity_evolution": {"relevance":"decisive","direction":"continuity","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"Giving the fixture repository identity would change the longstanding role of test data merely to simplify migration arithmetic.","counterpole_safeguard":"Its package advances to the new field and storage contract instead of remaining generation 0.","shadow_signal":"Historical fixture status prevents necessary evolution of what the fixture actually tests."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"autonomy","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"A uniform corpus rule would force every package-containing tree to become a repository and erase the package/repository ownership distinction.","counterpole_safeguard":"Both identities use shared explicit conformance contracts; the package still participates in the ecosystem cutover.","shadow_signal":"Local identity distinctions create untracked artifacts that no ecosystem gate owns."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Continuity","Autonomy"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "This card captures the constitutional package/repository identity distinction. The mechanical stamping row and field migration belong to family E."
+  }
+]

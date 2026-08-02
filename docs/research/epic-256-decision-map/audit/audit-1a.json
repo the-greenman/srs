@@ -1,0 +1,336 @@
+{
+  "auditor": "audit-1a",
+  "assignment_count": 43,
+  "reviews": [
+    {
+      "decision_id": "E256-A03",
+      "outcome": "correction-required",
+      "checks": {"atomicity":"issue","source_authority":"pass","source_exactness":"pass","status_class":"pass","costs_alternatives":"pass","axis_coding":"recheck-after-split","cube_placement":"internally-consistent","relationships":"pass","exception_coding":"pass","delivery_verification":"srs-pr-263 merged 2026-07-29T13:43:59Z at de2310bc5d90ed47597c0a1a99beffa26ac396b1"},
+      "evidence_checked": ["RFC-032 accepted rationale at de2310bc5d90ed47597c0a1a99beffa26ac396b1", "source-manifest:srs-pr-263"],
+      "findings": ["The card combines at least two independently reversible commitments: adopting demonstrated typed shapes (including bounded maps) and rejecting both a general sum type and free JSON. A future union could be admitted without changing bounded-map policy."],
+      "recommended_changes": ["Split the adopted specialized shapes from the rejected general escape hatches, or narrow the statement to one governing boundary and preserve the other choices as rejected-alternative cards; then recode axes and cube per atom."]
+    },
+    {
+      "decision_id": "E256-A06",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"pass","source_exactness":"pass","status_class":"pass","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"pass","delivery_verification":"srs-pr-268 merged 2026-07-29T14:58:06Z at e6d94bba0a9d78d0e3be3a46d9b25a50f6b0d30f"},
+      "evidence_checked": ["RFC-033 Change A at e6d94bba0a9d78d0e3be3a46d9b25a50f6b0d30f", "canonical metamodel tree at ae52927de4e45490cb427fee2b332d5351f536cd", "source-manifest:srs-pr-268"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-A08",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"pass","source_exactness":"pass","status_class":"pass","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"pass","delivery_verification":"srs-pr-268 merged 2026-07-29T14:58:06Z at e6d94bba0a9d78d0e3be3a46d9b25a50f6b0d30f"},
+      "evidence_checked": ["RFC-033 Change B at e6d94bba0a9d78d0e3be3a46d9b25a50f6b0d30f", "canonical field.json at ae52927de4e45490cb427fee2b332d5351f536cd", "source-manifest:srs-pr-268"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-A09",
+      "outcome": "correction-required",
+      "checks": {"atomicity":"pass","source_authority":"pass","source_exactness":"pass","status_class":"pass","costs_alternatives":"pass","axis_coding":"continuity/evolution unsupported","cube_placement":"must-change-with-axis","relationships":"pass","exception_coding":"pass","delivery_verification":"srs-pr-268 merged 2026-07-29T14:58:06Z at e6d94bba0a9d78d0e3be3a46d9b25a50f6b0d30f"},
+      "evidence_checked": ["RFC-033 Change D at e6d94bba0a9d78d0e3be3a46d9b25a50f6b0d30f", "metamodel-fidelity.md at ae52927de4e45490cb427fee2b332d5351f536cd"],
+      "findings": ["The cited fidelity rule explicitly protects semantic integrity and cross-emitter disclosure, but it does not compare continuity against evolution or identify a historical cost accepted on that axis. The current medium-confidence evolution code is inferred from possible future target work rather than the decision."],
+      "recommended_changes": ["Code continuity/evolution as not-applicable (or unknown low if retained as a research gap) and reduce the cube from a vertex to the Integrity/Coherence edge."]
+    },
+    {
+      "decision_id": "E256-A12",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"pass","source_exactness":"pass","status_class":"pass","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"pass","delivery_verification":"srs-pr-270 merged 2026-07-29T16:01:16Z at 9d4f5e9063c3c09af960f3c7318ffaae90e9c0de"},
+      "evidence_checked": ["RFC-035 Change F and closure test at 9d4f5e9063c3c09af960f3c7318ffaae90e9c0de", "source-manifest:srs-pr-270"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-A13",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"pass","source_exactness":"pass","status_class":"mechanical correctly excluded from bias","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"pass","delivery_verification":"srs-rust-pr-778 merged 2026-07-31T11:27:21Z at b6b2757558e8a79bfa17fbcd6d150ab783cf2aa2"},
+      "evidence_checked": ["source-manifest:srs-rust-pr-778", "RFC-035 Change I at 9d4f5e9063c3c09af960f3c7318ffaae90e9c0de"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-A15",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass-as-coupled-owner-repair","source_authority":"pass","source_exactness":"pass","status_class":"pass","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"pass","delivery_verification":"srs-pr-299 merged 2026-07-31T18:13:09Z at 512d9c60da079f793b6dc4a37f7bdd23a63e8a8b"},
+      "evidence_checked": ["owner acceptance srs#295 comment 5144920464", "source-manifest:srs-pr-299", "canonical package.json at 512d9c60da079f793b6dc4a37f7bdd23a63e8a8b"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-B02",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"pass","source_exactness":"pass","status_class":"ratified-not-implemented correctly coded","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"pass","delivery_verification":"RFC design merged in srs-pr-293 at f120e9f3174b2eddd773e259a91034eb958b60c2; carrier implementation not claimed"},
+      "evidence_checked": ["RFC-036 Change D and Problem 3 at f120e9f3174b2eddd773e259a91034eb958b60c2", "source-manifest:srs-pr-293"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-B05",
+      "outcome": "correction-required",
+      "checks": {"atomicity":"pass","source_authority":"pass","source_exactness":"source kind/URL mismatch","status_class":"pass","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"pass","delivery_verification":"srs-rust-pr-786 merged 2026-07-31T22:14:02Z at 356c544cc816043352ec9b140bb208b22f88a941"},
+      "evidence_checked": ["RFC-037 conformance rules at f467593204e6f11cb78a4599a8c76cae4bd95e5a", "source-manifest:srs-rust-pr-786"],
+      "findings": ["The delivered source is typed as pull-request but its URL is the merge commit. The evidence is valid and merge-verified, but the source record is internally mislabeled."],
+      "recommended_changes": ["Change kind to commit, or change url_or_path to https://github.com/the-greenman/srs-rust/pull/786 while retaining the full merge SHA."]
+    },
+    {
+      "decision_id": "E256-C01",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"pass","source_exactness":"pass","status_class":"ratified-not-implemented correctly coded","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"pass","delivery_verification":"srs-pr-306 merged 2026-07-31T22:10:00Z at e0fb4b050447febcd5ecb8f6ccb7864196e656d6; Phase B not claimed"},
+      "evidence_checked": ["RFC-039 Change A at e0fb4b050447febcd5ecb8f6ccb7864196e656d6", "source-manifest:srs-pr-306"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-C04",
+      "outcome": "correction-required",
+      "checks": {"atomicity":"pass","source_authority":"pass","source_exactness":"pass","status_class":"pass","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"incorrect derivation","exception_coding":"pass","delivery_verification":"RFC design merged in srs-pr-306; Phase B not claimed"},
+      "evidence_checked": ["RFC-039 Change D at e0fb4b050447febcd5ecb8f6ccb7864196e656d6", "E256-C07 card"],
+      "findings": ["derived_from includes E256-C07, which is the unresolved placement of the new-Field naming guard and has no causal relationship to repeatable-value cardinality."],
+      "recommended_changes": ["Remove E256-C07 from derived_from and replace it only with the actual accepted cardinality/carrier antecedent, if a ledger ID exists."]
+    },
+    {
+      "decision_id": "E256-C07",
+      "outcome": "correction-required",
+      "checks": {"atomicity":"pass","source_authority":"pass","source_exactness":"mutable issue only but appropriate for unresolved state","status_class":"pass","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"premature","delivery_verification":"not-applicable"},
+      "evidence_checked": ["srs#308 open enforcement-location question", "methodology exception rule"],
+      "findings": ["exception_class uncertain is assigned before any axis bias has been established; the methodology permits opposite-pole exception classification only after synthesis establishes a bias."],
+      "recommended_changes": ["Set exception_class to none for the audited ledger; retain uncertainty in status, axes, and coding_notes, and let synthesis classify exceptions only if a bias exists."]
+    },
+    {
+      "decision_id": "E256-C10",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"explicit owner decision","source_exactness":"stable comment anchor","status_class":"pass","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"pass","delivery_verification":"ratified policy; enforcement correctly not claimed"},
+      "evidence_checked": ["srs#242 comment 5147997566", "srs#308 scope and corpus measurement"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-C13",
+      "outcome": "correction-required",
+      "checks": {"atomicity":"pass","source_authority":"pass","source_exactness":"mutable issue appropriate for unresolved state","status_class":"pass","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"premature","delivery_verification":"not-applicable"},
+      "evidence_checked": ["srs#308 historical-tree scope question", "methodology exception rule"],
+      "findings": ["exception_class uncertain is premature under the methodology; no historical bias has yet been established against which this unresolved boundary could be an exception."],
+      "recommended_changes": ["Set exception_class to none until synthesis."]
+    },
+    {
+      "decision_id": "E256-D03",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"pass","source_exactness":"commit-pinned line anchors","status_class":"pass","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"pass","delivery_verification":"RFC-038 ratified in accepted Revision 9; implementation not claimed"},
+      "evidence_checked": ["RFC-038 lines 236-269 and 761-773 at 1a1746d3ebf8346914fd88920dcaf2b80b07d877", "source-manifest:rfc-038"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-D06",
+      "outcome": "correction-required",
+      "checks": {"atomicity":"issue","source_authority":"pass","source_exactness":"pass","status_class":"pass","costs_alternatives":"pass","axis_coding":"recheck-after-split","cube_placement":"recheck-after-split","relationships":"pass","exception_coding":"pass","delivery_verification":"accepted RFC design; open enforcement task not claimed implemented"},
+      "evidence_checked": ["RFC-038 lines 203-215 at 1a1746d3ebf8346914fd88920dcaf2b80b07d877", "srs#311"],
+      "findings": ["The card combines two independently reversible rules: derive the supported kind set from package-manifest arrays, and require every declarable kind to have a closed schema. A system could derive the set while allowing opaque/extension kinds, or maintain a closed allowlist while still requiring schema completeness."],
+      "recommended_changes": ["Split kind-source authority from schema-completeness/fail-load policy and recode each atom. Keep issue #311's proposed CI mechanism outside the ratified card."]
+    },
+    {
+      "decision_id": "E256-D08",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"pass","source_exactness":"pass","status_class":"pass","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"pass","delivery_verification":"accepted RFC design; concrete repair correctly treated as consequence"},
+      "evidence_checked": ["RFC-038 Change H and R13 at 1a1746d3ebf8346914fd88920dcaf2b80b07d877"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-D09",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"pass","source_exactness":"pass","status_class":"pass","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"pass","delivery_verification":"accepted RFC design"},
+      "evidence_checked": ["RFC-038 abstract and R24 at 1a1746d3ebf8346914fd88920dcaf2b80b07d877"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-D12",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"pass","source_exactness":"pass","status_class":"pass","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"pass","delivery_verification":"accepted RFC design; ecosystem implementation not claimed"},
+      "evidence_checked": ["RFC-038 Change L and R23 at 1a1746d3ebf8346914fd88920dcaf2b80b07d877", "srs#297 implementation contract"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-D15",
+      "outcome": "duplicate-candidate",
+      "checks": {"atomicity":"pass","source_authority":"pass","source_exactness":"owner source should ultimately use an exact anchor","status_class":"pass in isolation","costs_alternatives":"pass","axis_coding":"conflicts with duplicate manifestation","cube_placement":"internally-consistent","relationships":"missing cross-batch duplicate","exception_coding":"deferred correctly","delivery_verification":"ratified boundary; implementation not claimed"},
+      "evidence_checked": ["RFC-038 lines 1413-1428 at 1a1746d3ebf8346914fd88920dcaf2b80b07d877", "owner corpus boundary in srs#256", "srs#314 comment 5157074817", "E256-E05"],
+      "findings": ["E256-D15 and E256-E05 encode the same owner choice: migrate/stamp the fixture package without inventing repository identity for its containing fixture tree. They differ mainly in family framing and even assign opposite continuity/evolution directions to the same accepted cost."],
+      "recommended_changes": ["Reconcile D15 and E05 into one eligible conceptual decision. Prefer the identity-boundary atom in D and retain any migration manifestation in E only as a mechanical derivation with derived_from pointing to the retained card."]
+    },
+    {
+      "decision_id": "E256-D17",
+      "outcome": "correction-required",
+      "checks": {"atomicity":"issue","source_authority":"pass","source_exactness":"pass","status_class":"pass","costs_alternatives":"pass","axis_coding":"recheck-after-split","cube_placement":"recheck-after-split","relationships":"pass","exception_coding":"pass","delivery_verification":"ratified design; current canonical contradiction correctly disclosed"},
+      "evidence_checked": ["RFC-038 Change G and R15 at 1a1746d3ebf8346914fd88920dcaf2b80b07d877", "Invariant 52 at ae52927de4e45490cb427fee2b332d5351f536cd"],
+      "findings": ["The card combines sidecar membership/identity authority, retirement of sourceDocumentIndex, and permission for absent-content tombstones. The RFC's own alternatives show that sidecar authority could be retained while requiring content, so the tombstone choice is independently reversible."],
+      "recommended_changes": ["Split source-document authority/index retirement from absent-content tombstone policy and recode axes per atom; preserve the canonical invariant supersession on the tombstone card."]
+    },
+    {
+      "decision_id": "E256-D18",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"pass","source_exactness":"pass","status_class":"pass","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"pass","delivery_verification":"accepted RFC design"},
+      "evidence_checked": ["RFC-038 Change F and R22 at 1a1746d3ebf8346914fd88920dcaf2b80b07d877"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-E02",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"accepted RFC plus owner boundary","source_exactness":"RFC commit-pinned; owner body mutable but corroborative","status_class":"pass","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"pass","delivery_verification":"ratified no-window policy; runtime cutover not claimed"},
+      "evidence_checked": ["RFC-039 Change H at e0fb4b050447febcd5ecb8f6ccb7864196e656d6", "owner corpus boundary in srs#256"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-E05",
+      "outcome": "duplicate-candidate",
+      "checks": {"atomicity":"pass","source_authority":"pass","source_exactness":"pass","status_class":"overcounts same policy as D15","costs_alternatives":"pass","axis_coding":"conflicts with duplicate manifestation","cube_placement":"internally-consistent","relationships":"missing derived_from D15","exception_coding":"deferred correctly","delivery_verification":"ratified boundary; implementation not claimed"},
+      "evidence_checked": ["owner corpus boundary in srs#256", "RFC-038 migration plan at 0c0ee75fb7b582879a908ed1e2ad5c937185ba4f", "srs#314 comment 5157074817", "E256-D15"],
+      "findings": ["This repeats D15's fixture-package/repository-identity choice and would give the same conceptual decision two constitutional votes. The duplicate currently produces Evolution here but Continuity in D15, demonstrating framing sensitivity rather than two distinct accepted costs."],
+      "recommended_changes": ["Retain the D-family identity choice as the eligible decision and reclass this E-family manifestation as mechanical-derivation, or remove it during ledger reconciliation."]
+    },
+    {
+      "decision_id": "E256-E08",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"pass","source_exactness":"pass","status_class":"pass","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"pass","delivery_verification":"ratified migration policy; implementation not claimed"},
+      "evidence_checked": ["RFC-039 total-transform/abort rule at e0fb4b050447febcd5ecb8f6ccb7864196e656d6"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-E11",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"pass","source_exactness":"commit-pinned accepted disposition","status_class":"pass","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"pass","delivery_verification":"ratified disposition; later destination mechanics not claimed"},
+      "evidence_checked": ["RFC-038 Revision 9 Phase 0 disposition and commit 0c0ee75fb7b582879a908ed1e2ad5c937185ba4f"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-E14",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"open implementation trackers appropriate","source_exactness":"pass","status_class":"unresolved correctly excluded","costs_alternatives":"pass","axis_coding":"all unknown","cube_placement":"centre correct","relationships":"pass","exception_coding":"pass","delivery_verification":"no delivered PR claimed"},
+      "evidence_checked": ["srs#297", "srs-rust#783", "srs-web#276", "source-manifest cross-repository coverage"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-F103",
+      "outcome": "correction-required",
+      "checks": {"atomicity":"pass","source_authority":"owner comment ratifies decision","source_exactness":"proposal PR evidence not stably pinned","status_class":"ratified decision independent of proposal delivery","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"pass","delivery_verification":"PR 291 verified open, mergedAt null; current head 618417f83a031c2aa7c1145e27ca731bb9679e72, not cited da8d79b8d594087cd26f7e27ebb8a6581b4532af"},
+      "evidence_checked": ["srs#273 comment 5141760683", "gh pr view the-greenman/srs#291 on 2026-08-02", "source-manifest known-gap note for PR 291"],
+      "findings": ["The card correctly does not treat PR 291 as delivered, but the mutable PR URL is paired with a stale commit_sha that is no longer the PR head, and the proposal is absent from the manifest's pullRequests list. The owner comment remains sufficient for ratification."],
+      "recommended_changes": ["Pin the proposal evidence to https://github.com/the-greenman/srs/commit/da8d79b8d594087cd26f7e27ebb8a6581b4532af with kind commit/design-note, or refresh it to an inventoried proposal source. Keep mergedAt null and do not upgrade delivery status."]
+    },
+    {
+      "decision_id": "E256-F106",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"two exact owner comments","source_exactness":"pass","status_class":"superseded correctly preserved","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"superseding card named in coding_notes","exception_coding":"pass","delivery_verification":"not-applicable"},
+      "evidence_checked": ["srs#273 comments 5141867338 and 5142207974", "E256-F107 superseding card"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-F108",
+      "outcome": "correction-required",
+      "checks": {"atomicity":"pass","source_authority":"exact owner comments","source_exactness":"pass","status_class":"class overstates novelty","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"derived_from A12 recorded","exception_coding":"pass","delivery_verification":"ratified requirement; implementation not claimed"},
+      "evidence_checked": ["srs#273 comments 5141867338 and 5144920423", "E256-A12"],
+      "findings": ["The card explicitly describes itself as a stricter F1 application of A12's verification precedent. Coding it precedent-setting gives a second precedent vote to an application of an existing rule."],
+      "recommended_changes": ["Change decision_class to reasoned-application unless adjudication identifies a genuinely new governing rule (for example cross-emitter byte identity) and narrows the statement to that new atom."]
+    },
+    {
+      "decision_id": "E256-F109",
+      "outcome": "correction-required",
+      "checks": {"atomicity":"pass-as-one-unresolved-policy-cluster","source_authority":"pass","source_exactness":"stable owner comment plus issue","status_class":"pass","costs_alternatives":"pass","axis_coding":"all unknown","cube_placement":"centre correct","relationships":"pass","exception_coding":"premature","delivery_verification":"not-applicable"},
+      "evidence_checked": ["srs#234", "srs#234 comment 5144926033", "methodology exception rule"],
+      "findings": ["exception_class uncertain is premature because no bias has yet been established and this unresolved card favors no pole."],
+      "recommended_changes": ["Set exception_class to none until synthesis."]
+    },
+    {
+      "decision_id": "E256-F112",
+      "outcome": "correction-required",
+      "checks": {"atomicity":"pass-as-strategic-policy-question","source_authority":"pass","source_exactness":"pass","status_class":"pass","costs_alternatives":"pass","axis_coding":"coherence/autonomy overcoded","cube_placement":"centre remains correct","relationships":"pass","exception_coding":"premature","delivery_verification":"not-applicable"},
+      "evidence_checked": ["srs#237", "srs#237 comment 5144925648"],
+      "findings": ["No per-entity extension policy has been accepted, so conditional/high on coherence/autonomy mistakes the set of open alternatives for a chosen conditional decision. No cost has been accepted.", "exception_class uncertain is premature before synthesis establishes a bias."],
+      "recommended_changes": ["Code coherence/autonomy unknown with low confidence and speculative basis; set exception_class to none."]
+    },
+    {
+      "decision_id": "E256-F113",
+      "outcome": "correction-required",
+      "checks": {"atomicity":"pass","source_authority":"open issues appropriate","source_exactness":"pass","status_class":"pass","costs_alternatives":"pass","axis_coding":"coherence overcoded","cube_placement":"must become centre","relationships":"pass","exception_coding":"premature","delivery_verification":"not-applicable"},
+      "evidence_checked": ["srs#247", "srs#273", "current fail-closed schema context"],
+      "findings": ["The open contradiction demonstrates a need for coherence but no decision has accepted the cost of modelling or removing the properties. A medium coherence direction and axis placement therefore code a desired outcome, not an observed decision.", "exception_class uncertain is premature."],
+      "recommended_changes": ["Set coherence/autonomy to unknown low/speculative, move the card to the centre, and set exception_class to none."]
+    },
+    {
+      "decision_id": "E256-F115",
+      "outcome": "correction-required",
+      "checks": {"atomicity":"pass","source_authority":"open issues appropriate","source_exactness":"pass","status_class":"pass","costs_alternatives":"pass","axis_coding":"coherence overcoded","cube_placement":"must become centre","relationships":"pass","exception_coding":"premature","delivery_verification":"proposal not treated as delivered"},
+      "evidence_checked": ["srs#247", "srs#273 generated/coordinator proposal boundary"],
+      "findings": ["As with F113, current prose/schema disagreement does not itself establish an accepted coherence-pole decision. The card correctly says no cost has been chosen but then maps Coherence at medium confidence.", "exception_class uncertain is premature."],
+      "recommended_changes": ["Set coherence/autonomy to unknown low/speculative, move to centre, and set exception_class to none."]
+    },
+    {
+      "decision_id": "E256-F202",
+      "outcome": "needs-adjudication",
+      "checks": {"atomicity":"pass","source_authority":"ambiguous ratification basis","source_exactness":"issue body is mutable and not exact owner-comment evidence","status_class":"needs owner-intent adjudication","costs_alternatives":"pass","axis_coding":"plausible if ratified","cube_placement":"internally-consistent","relationships":"pass","exception_coding":"pass","delivery_verification":"no implementation claimed"},
+      "evidence_checked": ["srs#272 body authored by repository owner", "srs#272 owner comments including 5144920408", "canonical relations-collection.json at ae52927de4e45490cb427fee2b332d5351f536cd"],
+      "findings": ["The one-shape-once rule appears only in the mutable issue body, recorded as rank-4 issue evidence; the exact owner comment 5144920408 ratifies the complete ledger but does not repeat this modelling rule. Under the stated hierarchy, issue scope alone may be proposal/context rather than ratified intent, even though the issue author is the owner."],
+      "recommended_changes": ["Adjudicate whether an owner-authored task body counts as an explicit owner decision in this corpus. If yes, recode the source kind/authority and pin a snapshot or exact owner acknowledgement; if no, set status proposed and class proposal until an accepted artifact or explicit comment ratifies the rule."]
+    },
+    {
+      "decision_id": "E256-F205",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"accepted RFC and canonical schema","source_exactness":"pass","status_class":"mechanical correctly excluded","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"pass","delivery_verification":"canonical implementation present at snapshot"},
+      "evidence_checked": ["RFC-017 Change A at ae52927de4e45490cb427fee2b332d5351f536cd", "canonical note.json lines 70-80", "srs#248"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-F208",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"open issue plus canonical contradiction","source_exactness":"pass","status_class":"unresolved correctly excluded","costs_alternatives":"pass","axis_coding":"all unknown","cube_placement":"centre correct","relationships":"pass","exception_coding":"pass","delivery_verification":"not-applicable"},
+      "evidence_checked": ["srs#252", "canonical container.json at ae52927de4e45490cb427fee2b332d5351f536cd"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-F211",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"open issue plus canonical prose","source_exactness":"pass","status_class":"unresolved correctly excluded","costs_alternatives":"pass","axis_coding":"all unknown","cube_placement":"centre correct","relationships":"pass","exception_coding":"pass","delivery_verification":"not-applicable"},
+      "evidence_checked": ["srs#254", "canonical vocabulary substrate at ae52927de4e45490cb427fee2b332d5351f536cd"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-F214",
+      "outcome": "correction-required",
+      "checks": {"atomicity":"issue","source_authority":"two exact owner comments","source_exactness":"pass","status_class":"mixes ratified and unresolved states","costs_alternatives":"mixed","axis_coding":"mixed decision states","cube_placement":"internally consistent only for combined card","relationships":"pass","exception_coding":"pass","delivery_verification":"not-applicable"},
+      "evidence_checked": ["srs#271 comments 5144920750 and 5141287961", "RFC-031 residual coverage context"],
+      "findings": ["The owner has ratified one atom: generation alone must not remove residual prose-schema coverage, and wholesale retirement is rejected. A second atom remains unresolved: the exact #274 residual mechanism. Combining them forces status unresolved while preserving high-confidence chosen directions and a supersession, obscuring the ratified decision."],
+      "recommended_changes": ["Split a ratified conditional coverage rule/rejection of wholesale retirement from an unresolved mechanism-selection card. Recode accepted cost, axes, and cube separately."]
+    },
+    {
+      "decision_id": "E256-G03",
+      "outcome": "correction-required",
+      "checks": {"atomicity":"pass","source_authority":"merged PR independently verified","source_exactness":"pass","status_class":"pass","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"pass","delivery_verification":"gh verified merged 2026-07-31T19:37:51Z at c9797f0ee57b3ceae3a78fe1f004efaf23c42f80, but source-manifest has no PR 303 entry"},
+      "evidence_checked": ["https://github.com/the-greenman/srs/pull/303", "gh pr view the-greenman/srs#303 on 2026-08-02", "source-manifest pullRequests list"],
+      "findings": ["The delivered PR is real and merge-verified externally, but the required manifest verification fails because source-manifest.json omits srs#303 entirely while the card claims delivery. The manifest's coverage claim therefore does not cover every cited delivered PR."],
+      "recommended_changes": ["Add srs-pr-303 to source-manifest.json with mergedAt 2026-07-31T19:37:51Z and mergeCommitSha c9797f0ee57b3ceae3a78fe1f004efaf23c42f80, then update manifest coverage counts if necessary."]
+    },
+    {
+      "decision_id": "E256-G06",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"pass","source_exactness":"pass","status_class":"mechanical correctly excluded","costs_alternatives":"pass","axis_coding":"pass","cube_placement":"pass","relationships":"pass","exception_coding":"pass","delivery_verification":"srs-pr-339 merged 2026-08-02T09:27:54Z at ae52927de4e45490cb427fee2b332d5351f536cd"},
+      "evidence_checked": ["srs#337", "source-manifest:srs-pr-339", "fetch-pinned-srs.mjs at ae52927de4e45490cb427fee2b332d5351f536cd"],
+      "findings": [], "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-G12",
+      "outcome": "correction-required",
+      "checks": {"atomicity":"mixes unresolved policy with implemented deferral boundary","source_authority":"issue context only for substantive policy","source_exactness":"pass","status_class":"substantive choice unresolved","costs_alternatives":"pass","axis_coding":"conditional/coherence overcoded","cube_placement":"must become centre for unresolved policy","relationships":"pass","exception_coding":"pass","delivery_verification":"no board-tool policy implementation claimed"},
+      "evidence_checked": ["srs#335", "srs#316 comment 5153345819", "E256-G05"],
+      "findings": ["For the stated unresolved float-versus-pin decision, no continuity/evolution cost has been accepted; conditional/high describes alternatives rather than a chosen conditional rule. The high Coherence direction relies on an open issue's desired consistency, not owner ratification.", "The coding notes mention a separate implemented decision to file and exclude board sync from #316; that boundary is a different atomic decision from the unresolved policy in the statement."],
+      "recommended_changes": ["Code all axes unknown/low and centre for the substantive unresolved policy. If the exclusion/deferral itself is consequential, create a separate implemented card with exact delivered evidence."]
+    },
+    {
+      "decision_id": "E256-H02",
+      "outcome": "pass",
+      "checks": {"atomicity":"pass","source_authority":"open strategic issue plus canonical/design-note context","source_exactness":"pass","status_class":"unresolved correctly excluded","costs_alternatives":"pass","axis_coding":"all unknown","cube_placement":"centre correct","relationships":"pass","exception_coding":"pass","delivery_verification":"no implementation claimed"},
+      "evidence_checked": ["srs#312", "manifest.json at ae52927de4e45490cb427fee2b332d5351f536cd", "design note 022 at ae52927de4e45490cb427fee2b332d5351f536cd"],
+      "findings": [], "recommended_changes": []
+    }
+  ],
+  "cross_batch_findings": [
+    "E256-D15 and E256-E05 are duplicate framings of one fixture package/repository identity decision and currently produce contradictory Continuity versus Evolution votes. Reconcile to one eligible conceptual vote.",
+    "The exception taxonomy is being applied before bias synthesis: C07, C13, F109, F112, F113, and F115 use uncertain even though the methodology says opposite-pole cases are classified only after a bias exists. Preserve uncertainty in status/axes until synthesis.",
+    "Several unresolved cards code the alternatives as a chosen conditional or directional result despite saying no cost has been accepted (F112, F113, F115, G12). Unknown/low and centre are the honest pre-decision mapping unless a separately ratified sub-decision is split out.",
+    "source-manifest.json omits delivered srs PR #303 even though G03 cites it. Independent gh verification found mergedAt 2026-07-31T19:37:51Z and full merge SHA c9797f0ee57b3ceae3a78fe1f004efaf23c42f80.",
+    "Proposal PR #291 remains open and undelivered, as F103 correctly states, but its cited SHA is no longer the PR head and it has no manifest PR entry. Pin the historical proposal evidence to a commit URL and never count it as delivered.",
+    "Atomicity pressure recurs where a source made a coordinated package of choices: A03, D06, D17, and F214 contain independently reversible commitments. Split before bias aggregation so one source container does not become one vote by convenience.",
+    "Owner-authored mutable task bodies need a consistent evidence rule. F202 depends on the #272 body for ratified status, while the hierarchy otherwise treats issue prose as historical context. Adjudication should either recognize and snapshot explicit owner-authored task scope or keep such cards proposed until a stable acknowledgement/accepted artifact exists."
+  ]
+}

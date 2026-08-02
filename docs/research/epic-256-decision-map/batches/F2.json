@@ -1,0 +1,427 @@
+[
+  {
+    "decision_id": "E256-F201",
+    "epic_row": "9",
+    "task_refs": ["srs#272", "RFC-031", "RFC-038", "RFC-039"],
+    "decision_family": "F2",
+    "title": "Require a complete post-cutover schema authorship ledger",
+    "decision_statement": "Before instance-layer self-hosting is implemented, enumerate every schema in the post-RFC-038 contract and assign each an authoritative source Type or Types, extension dependencies, emitter, and generated status or explicit exclusion rationale.",
+    "status": "ratified",
+    "decision_class": "reasoned-application",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {"kind":"owner-decision","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/issues/272#issuecomment-5144920408","excerpt":"The owner requires a ledger for all 24 then-known schema files before authoring, including extension and envelope schemas and explicit emitter-owned outputs.","explicitness":"explicit","commit_sha":null},
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/272","excerpt":"The current task scope updates the ledger for the complete post-RFC-038 schema set and explicitly calls out manifest, Relation, and relations-collection dispositions.","explicitness":"explicit","commit_sha":null}
+    ],
+    "alternatives": ["Begin with the named instance entities and discover unclassified schemas during implementation.", "Carry the pre-RFC schema count forward as the target."],
+    "accepted_cost": "Implementation waits for a larger, evolving inventory, including schemas whose ownership is not yet assigned.",
+    "supersedes": ["The six-entity instance-layer scope implied by the earlier #272 description"],
+    "derived_from": ["RFC-031 inventory findings", "RFC-038 schema-contract expansion"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"A convenient partial inventory could silently omit effective contracts and make the authorship claim false.","counterpole_safeguard":"The ledger may give explicit exclusion rationales instead of forcing every artifact into the semantic model.","shadow_signal":"Inventory work expands without assigning actionable ownership or reaching implementation."},
+      "continuity_evolution": {"relevance":"supporting","direction":"continuity","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"A source flip scoped only to the obvious files could strand existing schema consumers and corpus trees.","counterpole_safeguard":"The ledger is explicitly recounted after architectural changes rather than freezing the old file set.","shadow_signal":"Historic artifacts are retained merely because they appeared in the old count."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Different schema classes could acquire unrelated or unrecorded authorship rules.","counterpole_safeguard":"Emitter-owned and genuinely excluded artifacts remain legitimate when their boundary is explicit and tested.","shadow_signal":"Completeness is interpreted as requiring one mechanism for artifacts with materially different roles."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Continuity","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Counts the explicit owner-imposed coverage gate, not any unresolved content disposition inside a ledger row. Later coordinator prose about additional files is supporting scope evidence only."
+  },
+  {
+    "decision_id": "E256-F202",
+    "epic_row": "9",
+    "task_refs": ["srs#272", "srs#273", "srs#247", "srs#251"],
+    "decision_family": "F2",
+    "title": "Model each surviving instance shape once",
+    "decision_statement": "Instance-layer self-hosting models each surviving semantic shape once and obtains extension-owned facets through effective inherited Types rather than duplicating the shape for every schema copy or flattening extension fields into core.",
+    "status": "ratified",
+    "decision_class": "reasoned-application",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/272","excerpt":"The current scope says to model each surviving RFC-031 shape once, model SourceReference once, and use effective inherited Types for extension-owned facets such as Relation federation IDs.","explicitness":"explicit","commit_sha":null},
+      {"kind":"canonical","authority_rank":1,"url_or_path":"https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/relations-collection.json","excerpt":"The effective schema demonstrates one embedded Relation shape carrying extension-owned federation properties, the concrete duplication this rule must replace.","explicitness":"inferred","commit_sha":"ae52927de4e45490cb427fee2b332d5351f536cd"}
+    ],
+    "alternatives": ["Model every copied schema occurrence independently.", "Flatten all extension-contributed fields into the core instance Type."],
+    "accepted_cost": "Emitters and resolvers must understand inheritance and reuse a source shape across multiple output locations.",
+    "supersedes": ["RFC-031's file-to-prose mapping as the target self-hosting model"],
+    "derived_from": ["E256-F102", "RFC-031's 18 rows representing only 15 semantic shapes"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Copied or flattened definitions could drift or misstate which package owns a semantic facet.","counterpole_safeguard":"One source shape may still emit into every concrete schema location consumers need.","shadow_signal":"Semantic factoring makes generated artifacts hard for ordinary consumers to locate or understand."},
+      "continuity_evolution": {"relevance":"supporting","direction":"evolution","evidence_basis":"explicit","confidence":"high","counterfactual":"Preserving the old one-row-per-copy structure would carry known duplication into the self-hosted model.","counterpole_safeguard":"Every surviving output location remains accounted for in the ledger.","shadow_signal":"Deduplication removes a compatibility surface without a generated replacement."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"Independent copies could disagree about the same SourceReference or Relation semantics.","counterpole_safeguard":"Extension packages retain ownership of their facets through inheritance rather than core absorption.","shadow_signal":"Shared coherence collapses legitimate extension ownership into the core package."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "This is the instance-layer application of F1's inheritance precedent. Individual content choices below remain separate and unresolved."
+  },
+  {
+    "decision_id": "E256-F203",
+    "epic_row": "9-input",
+    "task_refs": ["srs#248", "srs#249", "srs#250", "srs#252", "srs#253"],
+    "decision_family": "F2",
+    "title": "Settle whether tags belong to the affected instance shapes",
+    "decision_statement": "The project has not yet decided, entity by entity, whether schema-only or published-copy-only tags on Record, TypedRecord, Note, NoteSection, Container, and Vocabulary belong in their self-hosted semantic Types or should be removed from the conflicting artifact.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/248","excerpt":"Record.tags is schema-only and the issue requires an explicit add-to-prose or remove-from-schema decision.","explicitness":"explicit","commit_sha":null},
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/249","excerpt":"TypedRecord.tags has the same unresolved schema-versus-prose disposition.","explicitness":"explicit","commit_sha":null},
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/250","excerpt":"Note and NoteSection tags expose a published-record versus shadow-record disagreement whose semantic content remains for #272.","explicitness":"explicit","commit_sha":null},
+      {"kind":"canonical","authority_rank":1,"url_or_path":"https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/note.json#L16-L19","excerpt":"The effective Note schema currently defines free-form tags as non-semantic discovery labels.","explicitness":"explicit","commit_sha":"ae52927de4e45490cb427fee2b332d5351f536cd"}
+    ],
+    "alternatives": ["Model tags consistently on all affected instance Types.", "Remove tags from schemas or published prose where no semantic contract is intended.", "Choose different dispositions per entity with explicit reasons."],
+    "accepted_cost": "No cost has been accepted; the current artifacts disagree and the feeder issues remain open.",
+    "supersedes": [],
+    "derived_from": ["RFC-006 tag vocabulary", "RFC-031 drift audit"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Keeping tags favors practical discovery; removing or formally typing them may better protect semantic clarity.","counterpole_safeguard":"No safeguard is ratified.","shadow_signal":"A convenient tag surface is mistaken for a settled semantic contract."},
+      "continuity_evolution": {"relevance":"supporting","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Either removal or formalization can change accepted instance data.","counterpole_safeguard":"No migration rule exists until dispositions are chosen.","shadow_signal":"A content decision is smuggled through as drift repair."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"A common tags contract favors coherence while entity-specific dispositions may preserve local fit.","counterpole_safeguard":"No common or local policy has been chosen.","shadow_signal":"Superficially similar fields are forced into one policy without examining their meaning."}
+    },
+    "cube": {"dimensionality":"centre","coordinate":[]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "One unresolved cross-entity policy question. Audit should split it if #272 records distinct, independently reasoned dispositions. It is excluded from bias counts."
+  },
+  {
+    "decision_id": "E256-F204",
+    "epic_row": "9-input",
+    "task_refs": ["srs#248", "RFC-023"],
+    "decision_family": "F2",
+    "title": "Resolve the legacy SourceReference relationType alias",
+    "decision_statement": "The project has not decided whether SourceReference.relationType remains a declared compatibility alias of sourceRole or is deleted from the schema as a superseded legacy field.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/248","excerpt":"The issue identifies relationType as schema-declared but prose-described only as a deprecated never-written alias and requires delete-versus-declare resolution.","explicitness":"explicit","commit_sha":null},
+      {"kind":"canonical","authority_rank":1,"url_or_path":"https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/note.json#L70-L76","excerpt":"The current schema still recognizes relationType while forbidding it together with sourceRole.","explicitness":"explicit","commit_sha":"ae52927de4e45490cb427fee2b332d5351f536cd"}
+    ],
+    "alternatives": ["Delete relationType and require sourceRole.", "Declare relationType as a supported deprecated compatibility alias."],
+    "accepted_cost": "No compatibility-versus-simplification cost has yet been accepted.",
+    "supersedes": [],
+    "derived_from": ["RFC-023"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Alias retention aids old data but preserves two names for one role.","counterpole_safeguard":"No final rule exists.","shadow_signal":"Legacy syntax becomes accidental current semantics."},
+      "continuity_evolution": {"relevance":"decisive","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Retention protects continuity; deletion completes the RFC-023 evolution.","counterpole_safeguard":"No migration or deprecation window is chosen.","shadow_signal":"Compatibility is claimed without evidence of live writers or readers."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"One field name improves shared coherence; an alias tolerates locally old producers.","counterpole_safeguard":"No boundary has been ratified.","shadow_signal":"Two encodings survive indefinitely without an explicit compatibility contract."}
+    },
+    "cube": {"dimensionality":"centre","coordinate":[]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "The current schema is effective evidence but the issue explicitly disputes whether that state is intentional. Therefore this is not coded as an implemented preference."
+  },
+  {
+    "decision_id": "E256-F205",
+    "epic_row": "9-input",
+    "task_refs": ["srs#248", "RFC-017"],
+    "decision_family": "F2",
+    "title": "Carry the attaches source role into generated SourceReference",
+    "decision_statement": "SourceReference.sourceRole includes attaches; instance self-hosting must carry that already accepted value into its single source Type and generated references.",
+    "status": "implemented",
+    "decision_class": "mechanical-derivation",
+    "effective_date": "2026-07-17",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/rfcs/rfc-017-attachments-base-package-archive-determinism.md#change-a--add-attaches-to-the-sourcereferencesourcerole-enum","excerpt":"Accepted RFC-017 requires attaches in SourceReference.sourceRole across all four schema copies and rejects modelling attachments as Relation edges.","explicitness":"explicit","commit_sha":"ae52927de4e45490cb427fee2b332d5351f536cd"},
+      {"kind":"canonical","authority_rank":1,"url_or_path":"https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/note.json#L70-L80","excerpt":"The effective SourceReference schema includes attaches in the sourceRole enum.","explicitness":"explicit","commit_sha":"ae52927de4e45490cb427fee2b332d5351f536cd"},
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/248","excerpt":"The drift audit attributes attaches to RFC-017 and identifies only its omission from prose.","explicitness":"explicit","commit_sha":null}
+    ],
+    "alternatives": ["Drop attaches during self-hosting despite its accepted schema meaning."],
+    "accepted_cost": "The SourceReference vocabulary remains broader than the stale pseudo-IDL currently documents.",
+    "supersedes": ["The stale four-value SourceReference.sourceRole prose enum"],
+    "derived_from": ["RFC-017"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Generation from stale prose would erase an accepted semantic role.","counterpole_safeguard":"The value remains a simple readable enum member.","shadow_signal":"Schema presence is treated as intent even when no ratified source can be found."},
+      "continuity_evolution": {"relevance":"unexpressed","direction":"not-applicable","evidence_basis":"explicit","confidence":"high","counterfactual":"This card merely carries an accepted value across representations.","counterpole_safeguard":"No new compatibility policy is introduced.","shadow_signal":"A mechanical reconciliation is given a separate constitutional vote."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Schema and generated reference could expose different role vocabularies.","counterpole_safeguard":"Extensions may still define separate source-reference behavior through their own contracts.","shadow_signal":"A shared enum is expanded without an accepted semantic source."}
+    },
+    "cube": {"dimensionality":"edge","coordinate":["Integrity","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Documented but excluded from bias counts because carrying an accepted RFC-017 enum member is mechanical derivation."
+  },
+  {
+    "decision_id": "E256-F206",
+    "epic_row": "9-input",
+    "task_refs": ["srs#251", "srs#272", "srs#273"],
+    "decision_family": "F2",
+    "title": "Keep Relation federation identifiers extension-owned",
+    "decision_statement": "Model sourceRepositoryId and targetRepositoryId as effective inherited Relation facets owned by ext:federation rather than as fields of the core Relation Type or as unmodelled schema exceptions.",
+    "status": "ratified",
+    "decision_class": "reasoned-application",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/272","excerpt":"The instance-layer scope explicitly directs effective inherited Types for extension-owned facets such as Relation federation IDs.","explicitness":"explicit","commit_sha":null},
+      {"kind":"canonical","authority_rank":1,"url_or_path":"https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/relations-collection.json","excerpt":"The current schema describes sourceRepositoryId and targetRepositoryId as ext:federation-only properties.","explicitness":"explicit","commit_sha":"ae52927de4e45490cb427fee2b332d5351f536cd"},
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/251","excerpt":"The feeder issue records the prior ambiguity between adding federation IDs to core prose and removing them from the schema.","explicitness":"explicit","commit_sha":null}
+    ],
+    "alternatives": ["Add federation repository identifiers directly to the core Relation Type.", "Remove them from generated schemas.", "Leave them as a hand-maintained schema exception."],
+    "accepted_cost": "Consumers must resolve an effective inherited Type to see the complete Relation shape.",
+    "supersedes": ["Treating federation identifiers as an unexplained core-schema/prose drift"],
+    "derived_from": ["E256-F102", "ext:type-inheritance"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Flattening the fields into core would obscure their semantic owner; omitting them would erase federation meaning.","counterpole_safeguard":"Generated effective schemas still present a directly usable complete Relation shape.","shadow_signal":"Provenance factoring makes the effective contract invisible to ordinary tooling."},
+      "continuity_evolution": {"relevance":"supporting","direction":"evolution","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"Preserving the accidental flattened schema/prose split would retain known drift.","counterpole_safeguard":"The existing on-wire field names and effective schema behavior are retained.","shadow_signal":"Architectural cleanup changes stored federation data unnecessarily."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"autonomy","evidence_basis":"explicit","confidence":"high","counterfactual":"Core ownership would collapse a bounded extension concern into the shared base model.","counterpole_safeguard":"Inheritance produces one coherent effective Relation contract for consumers.","shadow_signal":"Extension autonomy produces incompatible effective Relation shapes or ambiguous resolution."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Autonomy"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "A deliberate counter-pole candidate on Coherence/Autonomy; exception classification remains none until epic bias is established."
+  },
+  {
+    "decision_id": "E256-F207",
+    "epic_row": "9-input",
+    "task_refs": ["srs#252"],
+    "decision_family": "F2",
+    "title": "Resolve Container description and identity metadata",
+    "decision_statement": "The project has not yet decided whether Container.description, Container.identityInstanceId, and Container.tags are intended instance semantics to model or schema-only additions to remove.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/252","excerpt":"The issue records three RFCs' worth of schema-only Container properties and requires add-to-prose or remove-from-schema dispositions.","explicitness":"explicit","commit_sha":null},
+      {"kind":"canonical","authority_rank":1,"url_or_path":"https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/container.json#L30-L56","excerpt":"The effective schema currently defines description, identityInstanceId, and tags with substantive constraints and provenance.","explicitness":"explicit","commit_sha":"ae52927de4e45490cb427fee2b332d5351f536cd"}
+    ],
+    "alternatives": ["Model all three properties in the Container Type.", "Remove one or more properties from the schema after individual review."],
+    "accepted_cost": "No semantic-surface or compatibility cost has been accepted.",
+    "supersedes": [],
+    "derived_from": ["RFC-006", "RFC-009", "RFC-013", "RFC-029"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"The properties carry useful identity and description, but their absence from prose makes intent uncertain.","counterpole_safeguard":"No disposition exists.","shadow_signal":"Schema detail is automatically promoted to semantic intent."},
+      "continuity_evolution": {"relevance":"supporting","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Removal may break existing containers; modelling may preserve accidental additions.","counterpole_safeguard":"No corpus evidence or migration rule is recorded here.","shadow_signal":"Compatibility assumptions replace an explicit content decision."},
+      "coherence_autonomy": {"relevance":"unexpressed","direction":"not-applicable","evidence_basis":"speculative","confidence":"low","counterfactual":"The evidence does not expose a clear coherence/autonomy tension.","counterpole_safeguard":"None.","shadow_signal":"An axis is forced onto a content disposition without evidence."}
+    },
+    "cube": {"dimensionality":"centre","coordinate":[]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Grouped because the issue presents these as one additive Container drift cluster; audit should split any property receiving a distinct rationale."
+  },
+  {
+    "decision_id": "E256-F208",
+    "epic_row": "9-input",
+    "task_refs": ["srs#252"],
+    "decision_family": "F2",
+    "title": "Resolve UUID enforcement for Container identifiers",
+    "decision_statement": "The project has not yet decided whether Container.containerId and root/member instance IDs must be schema-enforced UUIDs or remain unconstrained strings despite their prose types.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/252","excerpt":"The issue identifies missing UUID formats as an enforcement gap and requires format constraints or a reason to omit them.","explicitness":"explicit","commit_sha":null},
+      {"kind":"canonical","authority_rank":1,"url_or_path":"https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/container.json#L14-L46","excerpt":"The current schema describes UUID semantics while validating these identifiers only as strings.","explicitness":"explicit","commit_sha":"ae52927de4e45490cb427fee2b332d5351f536cd"}
+    ],
+    "alternatives": ["Add format uuid to all Container identity fields.", "Deliberately allow non-UUID string identifiers and correct the prose type."],
+    "accepted_cost": "No strictness-versus-data-acceptance cost has been chosen.",
+    "supersedes": [],
+    "derived_from": ["RFC-031 drift audit"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"UUID enforcement protects declared identity semantics but could reject practical existing strings.","counterpole_safeguard":"No validation boundary is chosen.","shadow_signal":"A format annotation is treated as harmless when it changes validity."},
+      "continuity_evolution": {"relevance":"supporting","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Tightening validation may invalidate existing data; retaining strings perpetuates drift.","counterpole_safeguard":"No corpus measurement is cited.","shadow_signal":"Evolution proceeds without measuring compatibility impact."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"A shared UUID rule constrains local identifier choice.","counterpole_safeguard":"No extension or compatibility path is selected.","shadow_signal":"Local flexibility erodes cross-repository identity assumptions."}
+    },
+    "cube": {"dimensionality":"centre","coordinate":[]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Separate from whether the Container fields exist because validation strictness is independently reversible."
+  },
+  {
+    "decision_id": "E256-F209",
+    "epic_row": "9-input",
+    "task_refs": ["srs#253", "srs#254", "srs#247"],
+    "decision_family": "F2",
+    "title": "Resolve lineage and provenance on Vocabulary and Term",
+    "decision_statement": "The project has not yet decided whether Vocabulary and Term carry Lineage and Provenance as their published pseudo-IDL declares or omit them as their closed schemas currently require.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/253","excerpt":"Vocabulary lineage and provenance are present in prose but rejected by the closed schema.","explicitness":"explicit","commit_sha":null},
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/254","excerpt":"Term has the same unresolved lineage and provenance drift.","explicitness":"explicit","commit_sha":null},
+      {"kind":"canonical","authority_rank":1,"url_or_path":"https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/srs/records/subsections/04-7-vocabulary-term-substrate.json","excerpt":"The published subsection declares lineage and provenance on both Vocabulary and Term.","explicitness":"explicit","commit_sha":"ae52927de4e45490cb427fee2b332d5351f536cd"}
+    ],
+    "alternatives": ["Add Lineage and Provenance to both generated schemas and source Types.", "Remove the properties from published prose.", "Choose different dispositions for Vocabulary and Term with explicit rationale."],
+    "accepted_cost": "No provenance-richness versus schema-surface cost has been chosen.",
+    "supersedes": [],
+    "derived_from": ["RFC-031 drift audit"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Provenance fields protect semantic history but add model surface and authoring burden.","counterpole_safeguard":"No chosen boundary exists.","shadow_signal":"Provenance is retained ceremonially without reliable population or semantics."},
+      "continuity_evolution": {"relevance":"supporting","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Removal simplifies the model but may discard established lineage claims.","counterpole_safeguard":"No migration evidence exists.","shadow_signal":"Current drift is mistaken for a deliberate continuity choice."},
+      "coherence_autonomy": {"relevance":"unexpressed","direction":"not-applicable","evidence_basis":"speculative","confidence":"low","counterfactual":"The record does not clearly expose this axis.","counterpole_safeguard":"None.","shadow_signal":"An irrelevant axis is forced into the cube."}
+    },
+    "cube": {"dimensionality":"centre","coordinate":[]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "The shared substrate makes this a candidate common policy; split if owner decisions diverge by entity."
+  },
+  {
+    "decision_id": "E256-F210",
+    "epic_row": "9-input",
+    "task_refs": ["srs#254"],
+    "decision_family": "F2",
+    "title": "Resolve Term createdAt requiredness",
+    "decision_statement": "The project has not yet decided whether Term.createdAt is required, as the published substrate declares, or optional, as the effective schema permits.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/254","excerpt":"The issue identifies the Term.createdAt optionality flip and requires a decision.","explicitness":"explicit","commit_sha":null},
+      {"kind":"canonical","authority_rank":1,"url_or_path":"https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/term.json#L7-L46","excerpt":"createdAt is defined but omitted from the effective schema's required list.","explicitness":"explicit","commit_sha":"ae52927de4e45490cb427fee2b332d5351f536cd"}
+    ],
+    "alternatives": ["Require createdAt and migrate terms missing it.", "Make createdAt optional in the source Type and published structural reference."],
+    "accepted_cost": "No historical-accountability versus permissive-authorship cost has been chosen.",
+    "supersedes": [],
+    "derived_from": ["VocabularyEntry substrate"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Required creation time improves provenance but makes incomplete term authoring invalid.","counterpole_safeguard":"No defaulting or migration rule exists.","shadow_signal":"A timestamp is required without demonstrating semantic use."},
+      "continuity_evolution": {"relevance":"supporting","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Tightening requiredness could reject existing terms.","counterpole_safeguard":"No corpus scan is cited.","shadow_signal":"A validation change lands without measuring affected records."},
+      "coherence_autonomy": {"relevance":"unexpressed","direction":"not-applicable","evidence_basis":"speculative","confidence":"low","counterfactual":"No shared-versus-local ownership choice is evidenced.","counterpole_safeguard":"None.","shadow_signal":"Axis overreach."}
+    },
+    "cube": {"dimensionality":"centre","coordinate":[]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Independently reversible from lineage/provenance and therefore split."
+  },
+  {
+    "decision_id": "E256-F211",
+    "epic_row": "9-input",
+    "task_refs": ["srs#254"],
+    "decision_family": "F2",
+    "title": "Resolve RelationTypeDefinition aliases",
+    "decision_statement": "The project has not yet decided whether RelationTypeDefinition supports aliases as the shared VocabularyEntry prose declares or omits them as its schema currently does.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/254","excerpt":"RelationTypeDefinition.aliases is present in pseudo-IDL and absent from the schema; the issue requires a disposition.","explicitness":"explicit","commit_sha":null},
+      {"kind":"canonical","authority_rank":1,"url_or_path":"https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/srs/records/subsections/04-7-vocabulary-term-substrate.json","excerpt":"The published substrate and RelationTypeDefinition pseudo-IDL declare aliases.","explicitness":"explicit","commit_sha":"ae52927de4e45490cb427fee2b332d5351f536cd"}
+    ],
+    "alternatives": ["Add aliases to RelationTypeDefinition.", "Remove aliases from the specialization while retaining or revising the substrate rule."],
+    "accepted_cost": "No resolution-flexibility versus vocabulary-simplicity cost has been accepted.",
+    "supersedes": [],
+    "derived_from": ["RFC-006 VocabularyEntry substrate"],
+    "axes": {
+      "integrity_expression": {"relevance":"supporting","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Aliases preserve identity through naming changes but create multiple accepted expressions.","counterpole_safeguard":"No collision or deprecation rule is chosen for this specialization.","shadow_signal":"Aliases obscure canonical relation vocabulary."},
+      "continuity_evolution": {"relevance":"decisive","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Aliases can preserve old keys while vocabulary evolves; omission requires rewrites or rejection.","counterpole_safeguard":"No decision exists.","shadow_signal":"Compatibility aliases become permanent ambiguity."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"A single key favors shared coherence while aliases tolerate varied producers.","counterpole_safeguard":"No boundary exists.","shadow_signal":"Local names fragment relation meaning."}
+    },
+    "cube": {"dimensionality":"centre","coordinate":[]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Split from the independent open-versus-closed schema choice."
+  },
+  {
+    "decision_id": "E256-F212",
+    "epic_row": "9-input",
+    "task_refs": ["srs#254"],
+    "decision_family": "F2",
+    "title": "Resolve RelationTypeDefinition's top-level extension policy",
+    "decision_statement": "The project has not yet decided whether RelationTypeDefinition rejects unknown top-level fields and confines extension metadata to properties, as its prose claims, or deliberately remains open-world as its schema currently permits.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/254","excerpt":"The issue identifies relation-type.json as the only audited sibling lacking additionalProperties false despite its own text claiming unknown top-level fields are rejected.","explicitness":"explicit","commit_sha":null},
+      {"kind":"canonical","authority_rank":1,"url_or_path":"https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/relation-type.json#L80-L85","excerpt":"The schema provides an open properties bag whose description says unknown top-level fields are rejected, while the root lacks that rejecting keyword.","explicitness":"explicit","commit_sha":"ae52927de4e45490cb427fee2b332d5351f536cd"}
+    ],
+    "alternatives": ["Set additionalProperties false and require extension data in properties.", "Keep top-level openness and revise the stated policy."],
+    "accepted_cost": "No interoperability-versus-extension-flexibility cost has been accepted.",
+    "supersedes": [],
+    "derived_from": ["VocabularyEntry forward-compatibility policy"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Closed-world validation protects the shared meaning; open-world data is easier to extend ad hoc.","counterpole_safeguard":"The properties bag is the proposed counter-pole safeguard but has not been ratified for this fix.","shadow_signal":"Strictness rejects legitimate evolution without an extension channel, or openness admits silent semantic drift."},
+      "continuity_evolution": {"relevance":"supporting","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Closing the schema may reject existing unknown fields; leaving it open preserves an inconsistency.","counterpole_safeguard":"No corpus scan is cited.","shadow_signal":"A breaking validation change is called mechanical."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Closed top-level vocabulary favors coherence; open top-level fields favor local autonomy.","counterpole_safeguard":"A namespaced properties bag could retain autonomy if chosen.","shadow_signal":"Local extension becomes indistinguishable from shared contract evolution."}
+    },
+    "cube": {"dimensionality":"centre","coordinate":[]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "A direct foundational-axis tension, but no direction is coded because the effective schema and published claim conflict."
+  },
+  {
+    "decision_id": "E256-F213",
+    "epic_row": "10",
+    "task_refs": ["srs#271", "srs#272", "srs#273", "srs#274"],
+    "decision_family": "F2",
+    "title": "Flip generated artifacts to final authorship",
+    "decision_statement": "After instance and definition closure, make resolved-record emitters authoritative for generated schemas and structural references, forbid hand edits to generated targets, and enforce clean-checkout regenerate-and-diff with no remainder overlay.",
+    "status": "proposed",
+    "decision_class": "proposal",
+    "effective_date": null,
+    "sources": [
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/271","excerpt":"The open final-cutover task specifies generated-output authorship, no hand edits, no remainder overlay, and clean regenerate-and-diff acceptance.","explicitness":"explicit","commit_sha":null},
+      {"kind":"owner-decision","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/issues/271#issuecomment-5144920750","excerpt":"The owner keeps #271 as the last implementation item and requires pure regenerate-and-diff, synchronized mirrors, and byte-level equality.","explicitness":"explicit","commit_sha":null}
+    ],
+    "alternatives": ["Keep hand-authored schemas as authority and use generation only as an advisory comparison.", "Merge a hand-maintained remainder overlay into generated output."],
+    "accepted_cost": "If implemented, contributors lose direct authorship of generated structural artifacts and must change semantic source records or emitters instead.",
+    "supersedes": ["Hand-authored schema/reference authority for generated targets"],
+    "derived_from": ["E256-F101", "E256-B09", "E256-F201", "E256-F202"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Directly editable projections could diverge from their semantic sources.","counterpole_safeguard":"Generated property tables and structural references remain contributor-readable outputs.","shadow_signal":"Semantic-source discipline makes small documentation corrections prohibitively indirect."},
+      "continuity_evolution": {"relevance":"decisive","direction":"evolution","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"Retaining hand-authored authority would preserve the duplication the epic intends to replace.","counterpole_safeguard":"The cutover is last, byte-compared, mirror-synchronized, and gated from a clean checkout.","shadow_signal":"Authorship flips before closure and parity evidence are complete."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Independent editors and consumers could maintain conflicting structural authorities.","counterpole_safeguard":"Human narrative remains separately authored, and emitter implementations may vary when output parity holds.","shadow_signal":"One generation pipeline becomes an opaque bottleneck for all contributors."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Kept off historical-bias counts because the final source flip is still open and unimplemented, despite explicit owner scope."
+  },
+  {
+    "decision_id": "E256-F214",
+    "epic_row": "10",
+    "task_refs": ["srs#271", "srs#274", "RFC-031"],
+    "decision_family": "F2",
+    "title": "Set the residual prose-schema conformance mechanism",
+    "decision_statement": "For any target not covered by generated prose, the project must still choose through #274 whether and how a hardened fail-closed AST and symbol-resolving comparator replaces or retains RFC-031 coverage; generation alone does not close that residual seam.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {"kind":"owner-decision","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/issues/271#issuecomment-5144920750","excerpt":"Final acceptance is conditional on either generated prose safely replacing RFC-031 or a residual checker retained and hardened exactly as #274 decides.","explicitness":"explicit","commit_sha":null},
+      {"kind":"owner-decision","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/issues/271#issuecomment-5141287961","excerpt":"The owner records that regenerate-and-diff covers records to schema but does not by itself cover prose to schema, so RFC-031 cannot simply be retired.","explicitness":"explicit","commit_sha":null}
+    ],
+    "alternatives": ["Generate all structural prose and remove RFC-031 mappings for generated targets.", "Retain a hardened residual comparator for genuinely ungenerated targets.", "Retire RFC-031 without replacement."],
+    "accepted_cost": "The exact residual mechanism and its maintenance cost remain undecided pending #274.",
+    "supersedes": ["The original proposal to retire RFC-031 wholesale"],
+    "derived_from": ["RFC-031", "E256-B09"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"conditional","evidence_basis":"explicit","confidence":"high","counterfactual":"Removing the only remaining signal could permit prose and schema to disagree; retaining it adds complexity where generation may suffice.","counterpole_safeguard":"Generated readable projections are preferred where coverage exists; hardened comparison is limited to a genuine remainder.","shadow_signal":"A checker survives after its target is generated, or is removed while an ungenerated seam remains."},
+      "continuity_evolution": {"relevance":"supporting","direction":"conditional","evidence_basis":"explicit","confidence":"high","counterfactual":"Wholesale retirement loses a proven signal; wholesale retention blocks replacement by generation.","counterpole_safeguard":"Coverage transitions target by target.","shadow_signal":"Transitional machinery becomes permanent duplication."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"coherence","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"An unguarded residual allows structural accounts to drift.","counterpole_safeguard":"Only shared structural claims are compared; human narrative remains locally authored.","shadow_signal":"Conformance tooling begins policing non-structural prose."}
+    },
+    "cube": {"dimensionality":"axis","coordinate":["Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Conditional axes remain off-vertex and off bias. The rejection of wholesale retirement is historical; the final #274 mechanism remains unresolved."
+  },
+  {
+    "decision_id": "E256-F215",
+    "epic_row": "closure-scope-decision",
+    "task_refs": ["srs-rust#777", "srs-rust#769", "srs-rust#778", "srs#256"],
+    "decision_family": "F2",
+    "title": "Resolve the schema-to-Rust binding seam",
+    "decision_statement": "Epic 256 has not yet chosen whether to generate and gate Rust bindings and validators from the self-hosted model inside this epic or narrow the epic's closure claim and retain schema-to-Rust conformance as an explicit sequenced follow-on.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {"kind":"owner-decision","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs-rust/issues/777#issuecomment-5144928432","excerpt":"The owner states PR #778 did not generate the full Rust struct/validator layer and requires the epic to choose inclusion with a regenerate gate or an explicitly narrowed claim and follow-on.","explicitness":"explicit","commit_sha":null},
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs-rust/issues/777","excerpt":"The open issue distinguishes schema-file mirror fidelity from the unguarded schema-to-Rust struct and validator semantics seam.","explicitness":"explicit","commit_sha":null}
+    ],
+    "alternatives": ["Include generated Rust bindings and validators in epic 256 and close with regenerate-and-diff.", "Close epic 256 at schema/prose generation and name #777 as a sequenced follow-on."],
+    "accepted_cost": "No scope, schedule, or residual-conformance cost has yet been accepted.",
+    "supersedes": [],
+    "derived_from": ["srs-rust#769", "srs-rust#778"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"unknown","evidence_basis":"explicit","confidence":"high","counterfactual":"Including the seam protects end-to-end semantic fidelity; deferral enables a nearer honest milestone.","counterpole_safeguard":"Either outcome must state its boundary explicitly and must not imply the seam is closed.","shadow_signal":"A schema-level success claim obscures divergent runtime semantics."},
+      "continuity_evolution": {"relevance":"supporting","direction":"unknown","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"Generation would replace hand-maintained bindings; deferral preserves the current implementation path temporarily.","counterpole_safeguard":"The follow-on option retains the gap as named work rather than declaring it solved.","shadow_signal":"A bootstrap boundary persists without sequencing or ownership."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"unknown","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"A generated binding gate enforces cross-language coherence; deferral leaves Rust implementation autonomy within an explicit boundary.","counterpole_safeguard":"Parity scope must be truthful under either outcome.","shadow_signal":"Implementation autonomy becomes silent contract divergence, or shared conformance overreaches the epic's feasible scope."}
+    },
+    "cube": {"dimensionality":"centre","coordinate":[]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Explicitly off bias counts. High confidence refers to the existence and shape of the unresolved fork, not to either direction."
+  }
+]
