@@ -4,11 +4,14 @@ import { tmpdir } from "os";
 import { basename, join, resolve } from "path";
 import { spawn } from "child_process";
 import { renderInvariants } from "./render-invariants.mjs";
+import { logSrsCliProvenance, resolveSrsCli } from "./lib/pinned-srs.mjs";
 
 const ROOT = resolve(new URL("..", import.meta.url).pathname);
 const REPO_ROOT = join(ROOT, "srs");
 const SPEC_ROOT = join(ROOT, "docs", "spec");
-const SRS_CLI = process.env.SRS_CLI_PATH || "/home/greenman/.cargo/bin/srs";
+// Assigned in main() so a missing SRS_CLI_PATH is reported by the error
+// handler as a message rather than a module-load stack trace.
+let SRS_CLI;
 
 const VIEW_EXPORTS = [
   { id: "3a000001-0000-4000-a000-000000000001", output: join(SPEC_ROOT, "srs-spec.md"), requiresKeyInvariants: true },
@@ -128,6 +131,8 @@ async function step(label, fn) {
 }
 
 async function main() {
+  SRS_CLI = await resolveSrsCli();
+  await logSrsCliProvenance(SRS_CLI);
   await step("package/instance validation", async () => {
     await run("node", ["scripts/validate-all.mjs"]);
     await run(SRS_CLI, ["--repo", REPO_ROOT, "repo", "validate"], { silent: true });
