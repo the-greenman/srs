@@ -1,0 +1,450 @@
+{
+  "generated_from": "decision-ledger.json",
+  "methodology_version": "1.0",
+  "corpus": {
+    "total_decisions": 171,
+    "eligible_bias_decisions": 101,
+    "status_counts": {
+      "implemented": 48,
+      "rejected": 4,
+      "ratified": 70,
+      "unresolved": 40,
+      "proposed": 8,
+      "superseded": 1
+    },
+    "class_counts": {
+      "precedent-setting": 76,
+      "mechanical-derivation": 17,
+      "reasoned-application": 26,
+      "rejected-alternative": 4,
+      "unresolved": 40,
+      "proposal": 8
+    },
+    "family_counts": {
+      "A": 26,
+      "B": 13,
+      "C": 18,
+      "D": 25,
+      "E": 17,
+      "F1": 25,
+      "F2": 26,
+      "G": 14,
+      "H": 7
+    }
+  },
+  "axes": {
+    "integrity_expression": {
+      "poles": [
+        "integrity",
+        "expression"
+      ],
+      "eligible_decisions": 101,
+      "counted_decisions": 98,
+      "excluded_eligible_decisions": 3,
+      "excluded_ids": [
+        "E256-B08",
+        "E256-D24",
+        "E256-E02"
+      ],
+      "unresolved_candidate_decisions": 23,
+      "unresolved_candidate_ids": [
+        "E256-C09",
+        "E256-F109",
+        "E256-F112",
+        "E256-F114",
+        "E256-F115",
+        "E256-F119",
+        "E256-F123",
+        "E256-F124",
+        "E256-F203",
+        "E256-F204",
+        "E256-F208",
+        "E256-F210",
+        "E256-F211",
+        "E256-F212",
+        "E256-F215",
+        "E256-F216",
+        "E256-F217",
+        "E256-F218",
+        "E256-F219",
+        "E256-F221",
+        "E256-F222",
+        "E256-H01",
+        "E256-H03"
+      ],
+      "unresolved_reversal_assessment": "explicit",
+      "unresolved_reversal_rationale": "Twenty-three open choices could plausibly prefer practical legibility, permissive authoring, compatibility aliases, or graceful use over tighter semantic constraints. The remaining unresolved cards either do not put this axis in tension, would codify explicit meaning whichever alternative wins, or are manifestations that would not independently become eligible precedent votes. Even if every listed card resolved toward Expression, Integrity retains 70.16% of the worst-case eligible pool.",
+      "direction_counts": {
+        "integrity": 87,
+        "expression": 11
+      },
+      "family_counts": {
+        "A": {
+          "integrity": 20,
+          "expression": 0
+        },
+        "B": {
+          "integrity": 5,
+          "expression": 7
+        },
+        "C": {
+          "integrity": 12,
+          "expression": 1
+        },
+        "D": {
+          "integrity": 19,
+          "expression": 2
+        },
+        "E": {
+          "integrity": 13,
+          "expression": 0
+        },
+        "F1": {
+          "integrity": 8,
+          "expression": 0
+        },
+        "F2": {
+          "integrity": 3,
+          "expression": 0
+        },
+        "G": {
+          "integrity": 7,
+          "expression": 1
+        }
+      },
+      "family_majorities": {
+        "A": "integrity",
+        "B": "expression",
+        "C": "integrity",
+        "D": "integrity",
+        "E": "integrity",
+        "F1": "integrity",
+        "F2": "integrity",
+        "G": "integrity"
+      },
+      "family_span": 8,
+      "winner": "integrity",
+      "decision_share": 0.8878,
+      "family_majority_share": 0.875,
+      "worst_case_share_if_excluded_oppose": 0.7016,
+      "robust_to_excluded_evidence": true,
+      "classification": "strong-bias"
+    },
+    "continuity_evolution": {
+      "poles": [
+        "continuity",
+        "evolution"
+      ],
+      "eligible_decisions": 101,
+      "counted_decisions": 84,
+      "excluded_eligible_decisions": 17,
+      "excluded_ids": [
+        "E256-A04",
+        "E256-A09",
+        "E256-A10",
+        "E256-A11",
+        "E256-A19",
+        "E256-A20",
+        "E256-A23",
+        "E256-B08",
+        "E256-D04",
+        "E256-D09",
+        "E256-D21",
+        "E256-E11",
+        "E256-F122",
+        "E256-G02",
+        "E256-G04",
+        "E256-G08",
+        "E256-G14"
+      ],
+      "unresolved_candidate_decisions": 32,
+      "unresolved_candidate_ids": [
+        "E256-C09",
+        "E256-C13",
+        "E256-F109",
+        "E256-F110",
+        "E256-F113",
+        "E256-F114",
+        "E256-F115",
+        "E256-F119",
+        "E256-F121",
+        "E256-F125",
+        "E256-F203",
+        "E256-F204",
+        "E256-F207",
+        "E256-F208",
+        "E256-F209",
+        "E256-F210",
+        "E256-F211",
+        "E256-F212",
+        "E256-F215",
+        "E256-F216",
+        "E256-F217",
+        "E256-F218",
+        "E256-F219",
+        "E256-F220",
+        "E256-F221",
+        "E256-F222",
+        "E256-F223",
+        "E256-F224",
+        "E256-F225",
+        "E256-H01",
+        "E256-H02",
+        "E256-H06"
+      ],
+      "unresolved_reversal_assessment": "explicit",
+      "unresolved_reversal_rationale": "There is no threshold bias to protect: Evolution is a 51-to-33 plurality, not a 70% primary bias. The listed open dispositions can plausibly retain aliases, properties, permissive shapes, historical boundaries, current readers, or current tooling, and collectively could reverse that plurality. This axis therefore remains historically mixed regardless of the worst-case calculation.",
+      "direction_counts": {
+        "continuity": 33,
+        "evolution": 51
+      },
+      "family_counts": {
+        "A": {
+          "continuity": 4,
+          "evolution": 9
+        },
+        "B": {
+          "continuity": 3,
+          "evolution": 9
+        },
+        "C": {
+          "continuity": 6,
+          "evolution": 7
+        },
+        "D": {
+          "continuity": 7,
+          "evolution": 12
+        },
+        "E": {
+          "continuity": 5,
+          "evolution": 8
+        },
+        "F1": {
+          "continuity": 2,
+          "evolution": 5
+        },
+        "F2": {
+          "continuity": 2,
+          "evolution": 1
+        },
+        "G": {
+          "continuity": 4,
+          "evolution": 0
+        }
+      },
+      "family_majorities": {
+        "A": "evolution",
+        "B": "evolution",
+        "C": "evolution",
+        "D": "evolution",
+        "E": "evolution",
+        "F1": "evolution",
+        "F2": "continuity",
+        "G": "continuity"
+      },
+      "family_span": 8,
+      "winner": "evolution",
+      "decision_share": 0.6071,
+      "family_majority_share": 0.75,
+      "worst_case_share_if_excluded_oppose": 0.3835,
+      "robust_to_excluded_evidence": false,
+      "classification": "tendency"
+    },
+    "coherence_autonomy": {
+      "poles": [
+        "coherence",
+        "autonomy"
+      ],
+      "eligible_decisions": 101,
+      "counted_decisions": 97,
+      "excluded_eligible_decisions": 4,
+      "excluded_ids": [
+        "E256-B03",
+        "E256-C03",
+        "E256-E03",
+        "E256-F104"
+      ],
+      "unresolved_candidate_decisions": 13,
+      "unresolved_candidate_ids": [
+        "E256-C07",
+        "E256-C13",
+        "E256-F112",
+        "E256-F123",
+        "E256-F124",
+        "E256-F203",
+        "E256-F208",
+        "E256-F212",
+        "E256-F215",
+        "E256-F221",
+        "E256-F222",
+        "E256-H01",
+        "E256-H02"
+      ],
+      "unresolved_reversal_assessment": "explicit",
+      "unresolved_reversal_rationale": "Thirteen open choices could plausibly prefer layer-specific enforcement, local identifier freedom, open properties, bounded extension ownership, or implementation autonomy. Repeated per-entity tag questions are treated as manifestations of the one unresolved tags-policy precedent rather than independent constitutional votes. Even if every listed card resolved toward Autonomy, Coherence retains 70.18% of the worst-case eligible pool and all eight currently counted family majorities.",
+      "direction_counts": {
+        "coherence": 80,
+        "autonomy": 17
+      },
+      "family_counts": {
+        "A": {
+          "coherence": 17,
+          "autonomy": 3
+        },
+        "B": {
+          "coherence": 10,
+          "autonomy": 2
+        },
+        "C": {
+          "coherence": 10,
+          "autonomy": 2
+        },
+        "D": {
+          "coherence": 16,
+          "autonomy": 6
+        },
+        "E": {
+          "coherence": 13,
+          "autonomy": 0
+        },
+        "F1": {
+          "coherence": 5,
+          "autonomy": 2
+        },
+        "F2": {
+          "coherence": 2,
+          "autonomy": 1
+        },
+        "G": {
+          "coherence": 7,
+          "autonomy": 1
+        }
+      },
+      "family_majorities": {
+        "A": "coherence",
+        "B": "coherence",
+        "C": "coherence",
+        "D": "coherence",
+        "E": "coherence",
+        "F1": "coherence",
+        "F2": "coherence",
+        "G": "coherence"
+      },
+      "family_span": 8,
+      "winner": "coherence",
+      "decision_share": 0.8247,
+      "family_majority_share": 1,
+      "worst_case_share_if_excluded_oppose": 0.7018,
+      "robust_to_excluded_evidence": true,
+      "classification": "strong-bias"
+    }
+  },
+  "cube": {
+    "occupancy": {
+      "vertex": 97,
+      "edge": 30,
+      "axis": 4,
+      "centre": 40
+    },
+    "coordinate_counts": {
+      "Integrity|Evolution|Coherence": 47,
+      "Integrity|Autonomy": 5,
+      "Integrity|Continuity|Autonomy": 2,
+      "Integrity|Continuity|Coherence": 29,
+      "Integrity|Coherence": 15,
+      "Integrity|Evolution|Autonomy": 10,
+      "Expression|Continuity": 1,
+      "Expression|Continuity|Coherence": 3,
+      "Expression|Evolution|Coherence": 6,
+      "Autonomy": 2,
+      "Integrity|Continuity": 3,
+      "centre": 40,
+      "Expression|Coherence": 2,
+      "Continuity|Autonomy": 2,
+      "Evolution|Coherence": 1,
+      "Integrity|Evolution": 1,
+      "Integrity": 1,
+      "Coherence": 1
+    }
+  },
+  "exceptions": {
+    "counts": {
+      "none": 143,
+      "principled-contextual": 16,
+      "counterpole-protection": 11,
+      "transitional": 1
+    },
+    "ids": [
+      "E256-A04",
+      "E256-A07",
+      "E256-A23",
+      "E256-B01",
+      "E256-B03",
+      "E256-B04",
+      "E256-B05",
+      "E256-B06",
+      "E256-B08",
+      "E256-B11",
+      "E256-B12",
+      "E256-B13",
+      "E256-C01",
+      "E256-C05",
+      "E256-C06",
+      "E256-D04",
+      "E256-D10",
+      "E256-D14",
+      "E256-D15",
+      "E256-D19",
+      "E256-D21",
+      "E256-D22",
+      "E256-D24",
+      "E256-F102",
+      "E256-F107",
+      "E256-F206",
+      "E256-G04",
+      "E256-G08"
+    ]
+  },
+  "unresolved_ids": [
+    "E256-C07",
+    "E256-C09",
+    "E256-C13",
+    "E256-E15",
+    "E256-F109",
+    "E256-F110",
+    "E256-F112",
+    "E256-F113",
+    "E256-F114",
+    "E256-F115",
+    "E256-F119",
+    "E256-F120",
+    "E256-F121",
+    "E256-F123",
+    "E256-F124",
+    "E256-F125",
+    "E256-F203",
+    "E256-F204",
+    "E256-F207",
+    "E256-F208",
+    "E256-F209",
+    "E256-F210",
+    "E256-F211",
+    "E256-F212",
+    "E256-F214",
+    "E256-F215",
+    "E256-F216",
+    "E256-F217",
+    "E256-F218",
+    "E256-F219",
+    "E256-F220",
+    "E256-F221",
+    "E256-F222",
+    "E256-F223",
+    "E256-F224",
+    "E256-F225",
+    "E256-H01",
+    "E256-H02",
+    "E256-H03",
+    "E256-H06"
+  ]
+}

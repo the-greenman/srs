@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://srs.semanticops.com/research/epic-256-decision-card.schema.json",
+  "title": "Epic 256 atomic decision card",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "decision_id",
+    "epic_row",
+    "task_refs",
+    "decision_family",
+    "title",
+    "decision_statement",
+    "status",
+    "decision_class",
+    "effective_date",
+    "sources",
+    "alternatives",
+    "accepted_cost",
+    "supersedes",
+    "derived_from",
+    "axes",
+    "cube",
+    "exception_class",
+    "review_state",
+    "coding_notes"
+  ],
+  "properties": {
+    "decision_id": { "type": "string", "pattern": "^E256-(?:[A-EG-H]|F[12])[0-9]{2,3}$" },
+    "epic_row": { "type": "string", "minLength": 1 },
+    "task_refs": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true,
+      "default": []
+    },
+    "decision_family": { "enum": ["A", "B", "C", "D", "E", "F1", "F2", "G", "H"] },
+    "title": { "type": "string", "minLength": 1 },
+    "decision_statement": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["proposed", "ratified", "implemented", "superseded", "rejected", "unresolved"] },
+    "decision_class": { "enum": ["precedent-setting", "reasoned-application", "mechanical-derivation", "proposal", "rejected-alternative", "unresolved"] },
+    "effective_date": { "type": ["string", "null"], "format": "date" },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "authority_rank", "url_or_path", "excerpt", "explicitness"],
+        "properties": {
+          "kind": { "enum": ["canonical", "rfc", "owner-decision", "pull-request", "review", "test", "implementation", "issue", "design-note", "projection", "commit"] },
+          "authority_rank": { "type": "integer", "minimum": 1, "maximum": 5 },
+          "url_or_path": { "type": "string", "minLength": 1 },
+          "excerpt": { "type": "string", "minLength": 1 },
+          "explicitness": { "enum": ["explicit", "inferred"] },
+          "commit_sha": { "type": ["string", "null"], "pattern": "^[0-9a-f]{40}$" }
+        }
+      }
+    },
+    "alternatives": { "type": "array", "items": { "type": "string" } },
+    "accepted_cost": { "type": "string" },
+    "supersedes": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "derived_from": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "axes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["integrity_expression", "continuity_evolution", "coherence_autonomy"],
+      "properties": {
+        "integrity_expression": { "$ref": "#/$defs/integrityAxis" },
+        "continuity_evolution": { "$ref": "#/$defs/continuityAxis" },
+        "coherence_autonomy": { "$ref": "#/$defs/coherenceAxis" }
+      }
+    },
+    "cube": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dimensionality", "coordinate"],
+      "properties": {
+        "dimensionality": { "enum": ["vertex", "edge", "axis", "centre"] },
+        "coordinate": { "type": "array", "items": { "type": "string" }, "maxItems": 3 }
+      }
+    },
+    "exception_class": { "enum": ["none", "principled-contextual", "counterpole-protection", "transitional", "legacy", "possible-contradiction", "uncertain"] },
+    "review_state": { "enum": ["uncalibrated", "calibrated", "audited", "adjudicated"] },
+    "coding_notes": { "type": "string" }
+  },
+  "$defs": {
+    "axisBase": {
+      "type": "object",
+      "required": ["relevance", "direction", "evidence_basis", "confidence", "counterfactual", "counterpole_safeguard", "shadow_signal"],
+      "properties": {
+        "relevance": { "enum": ["decisive", "supporting", "unexpressed"] },
+        "evidence_basis": { "enum": ["explicit", "revealed-by-alternative", "behavioral", "speculative"] },
+        "confidence": { "enum": ["high", "medium", "low"] },
+        "counterfactual": { "type": "string" },
+        "counterpole_safeguard": { "type": "string" },
+        "shadow_signal": { "type": "string" }
+      }
+    },
+    "integrityAxis": {
+      "unevaluatedProperties": false,
+      "allOf": [
+        { "$ref": "#/$defs/axisBase" },
+        { "properties": { "direction": { "enum": ["integrity", "expression", "balanced", "conditional", "unknown", "not-applicable"] } }, "required": ["direction"] }
+      ]
+    },
+    "continuityAxis": {
+      "unevaluatedProperties": false,
+      "allOf": [
+        { "$ref": "#/$defs/axisBase" },
+        { "properties": { "direction": { "enum": ["continuity", "evolution", "balanced", "conditional", "unknown", "not-applicable"] } }, "required": ["direction"] }
+      ]
+    },
+    "coherenceAxis": {
+      "unevaluatedProperties": false,
+      "allOf": [
+        { "$ref": "#/$defs/axisBase" },
+        { "properties": { "direction": { "enum": ["coherence", "autonomy", "balanced", "conditional", "unknown", "not-applicable"] } }, "required": ["direction"] }
+      ]
+    }
+  }
+}

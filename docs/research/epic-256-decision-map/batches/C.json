@@ -1,0 +1,591 @@
+[
+  {
+    "decision_id": "E256-C01",
+    "epic_row": "3 / RFC-039 Phase A",
+    "task_refs": ["srs#242", "srs#306", "RFC-039"],
+    "decision_family": "C",
+    "title": "Use authored Field names as Record value keys",
+    "decision_statement": "The revision-2 Record carrier will store fieldValues as an object keyed verbatim by Field.name, with field identity recovered through the Record's version-pinned Type rather than repeated as a fieldId in each value.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#change-a--fieldvalues-becomes-an-object-keyed-by-fieldname",
+        "excerpt": "Accepted RFC-039 Change A specifies verbatim Field.name keys, no case or separator transform, and Type-mediated recovery of fieldId.",
+        "explicitness": "explicit",
+        "commit_sha": "e0fb4b050447febcd5ecb8f6ccb7864196e656d6"
+      },
+      {
+        "kind": "pull-request",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/pull/306",
+        "excerpt": "PR 306 merged the Accepted Revision 6 RFC design at 2026-07-31T22:10:00Z; it did not perform Phase B.",
+        "explicitness": "explicit",
+        "commit_sha": "e0fb4b050447febcd5ecb8f6ccb7864196e656d6"
+      }
+    ],
+    "alternatives": ["Keep the UUID-keyed FieldValue array.", "Key the object by field UUID.", "Transform authored names to lowerCamelCase.", "Add a separate fieldId map to each Type."],
+    "accepted_cost": "Readable keys become load-bearing within a pinned Type version; stored write order and per-entry UUID redundancy disappear, and the ecosystem requires an atomic migration.",
+    "supersedes": ["Record.fieldValues as FieldValue[]", "RFC-035 R4 when read as applying lowerCamelCase to domain Types"],
+    "derived_from": ["RFC-032 fieldType", "RFC-035 projectField"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive", "direction": "expression", "evidence_basis": "revealed-by-alternative", "confidence": "high",
+        "counterfactual": "UUID keys would preserve rename-independent identity in each instance but remain opaque to people and standard schema tools.",
+        "counterpole_safeguard": "Field identity remains resolvable through typeId, typeVersion, and effective-set name uniqueness.",
+        "shadow_signal": "Names are treated as durable identity without pinned Type versions or explicit rename migration."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive", "direction": "evolution", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "Retaining the wrapper array would preserve compatibility but keep the schema and instance representations structurally misaligned.",
+        "counterpole_safeguard": "The accepted RFC requires a gated, exhaustive, atomic Phase-B migration and preserves the old form until then.",
+        "shadow_signal": "A breaking carrier shape lands in only part of the ecosystem."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive", "direction": "coherence", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "Different keys for schemas and instances would require a permanent bridge and permit semantic drift.",
+        "counterpole_safeguard": "Domain packages author their own names verbatim; uniqueness is scoped to one Type's effective field set.",
+        "shadow_signal": "Cross-layer alignment expands into a global naming authority over unrelated packages."
+      }
+    },
+    "cube": {"dimensionality": "vertex", "coordinate": ["Expression", "Evolution", "Coherence"]},
+    "exception_class": "none",
+    "review_state": "calibrated",
+    "coding_notes": "Phase A ratified the design only. The current canonical record.json at the frozen snapshot still contains the legacy array, so this is not coded implemented. This card overlaps calibrated pilot E256-C90 and should replace, not duplicate, it during reconciliation."
+  },
+  {
+    "decision_id": "E256-C02",
+    "epic_row": "3 / RFC-039 Phase A",
+    "task_refs": ["srs#242", "srs#306", "RFC-039"],
+    "decision_family": "C",
+    "title": "Make the carrier recursively identical to the projected field value space",
+    "decision_statement": "A Record value is determined solely by its Field.fieldType, with list cardinality uniformly array-wrapping the scalar, inline-reference, reference, map, or dependent shape; inline composites recursively contain the same fieldValues map.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [{
+      "kind": "rfc", "authority_rank": 2,
+      "url_or_path": "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#change-b--one-recursive-value-rule-identical-to-projectfields-instance-space",
+      "excerpt": "Change B makes instance shape and projectField the same rule read in two directions, including recursive inline composites and a uniform list wrap.",
+      "explicitness": "explicit", "commit_sha": "e0fb4b050447febcd5ecb8f6ccb7864196e656d6"
+    }],
+    "alternatives": ["Define a second carrier-specific value grammar.", "Retain FieldGroup/groupValues for nested values.", "Use an untyped JSON escape hatch for composites."],
+    "accepted_cost": "The migration and validators must implement recursion, exact facet defaults, and every schema-legal branch rather than treating composite values as opaque JSON.",
+    "supersedes": ["Separate instance shapes for scalar, repeatable, and grouped values"],
+    "derived_from": ["RFC-032 Change G", "RFC-035 projectField"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive", "direction": "integrity", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "A separate or untyped carrier could accept values whose meaning differs from the Type's projected schema.",
+        "counterpole_safeguard": "The result is directly consumable by ordinary JSON Schema tooling and readable as normal JSON.",
+        "shadow_signal": "Recursive typing becomes too complex for practical authoring or ordinary validators."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive", "direction": "evolution", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "Preserving separate legacy carriers would leave composite range uncarried and cardinality duplicated.",
+        "counterpole_safeguard": "Phase B must prove full-corpus logical round trips before changing effective data.",
+        "shadow_signal": "The model is simplified before all legacy branches have a total disposition."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive", "direction": "coherence", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "Carrier and projection implementations could encode the same Field differently.",
+        "counterpole_safeguard": "Implementations retain freedom in how they realize the shared recursive contract.",
+        "shadow_signal": "One target's limits are mistaken for the universal semantic value space."
+      }
+    },
+    "cube": {"dimensionality": "vertex", "coordinate": ["Integrity", "Evolution", "Coherence"]},
+    "exception_class": "none", "review_state": "uncalibrated",
+    "coding_notes": "The recursive shape is independently reversible from the choice of object key and from null handling, which are separate cards."
+  },
+  {
+    "decision_id": "E256-C03",
+    "epic_row": "3 / RFC-039 Phase A",
+    "task_refs": ["srs#242", "srs#306", "RFC-039"],
+    "decision_family": "C",
+    "title": "Relocate per-value provenance without wrapping domain values",
+    "decision_statement": "Per-value source, editedAt, and sourceRefs move losslessly to an optional fieldMeta sibling keyed like fieldValues; provenance remains field-scoped, not record-scoped or per-list-element, so domain values stay directly schema-valid.",
+    "status": "ratified", "decision_class": "precedent-setting", "effective_date": "2026-07-31",
+    "sources": [{
+      "kind": "rfc", "authority_rank": 2,
+      "url_or_path": "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#change-c--per-value-provenance-moves-to-a-parallel-fieldmeta-sibling",
+      "excerpt": "Change C rejects wrappers, record-level reinterpretation, and deletion, and preserves the three provenance facets in a parallel fieldMeta object.",
+      "explicitness": "explicit", "commit_sha": "e0fb4b050447febcd5ecb8f6ccb7864196e656d6"
+    }],
+    "alternatives": ["Wrap each value in a value-plus-metadata object.", "Move all provenance to Record level.", "Delete the sparsely used per-value capability."],
+    "accepted_cost": "A parallel object and key-coherence rule are added for a capability used by only one measured value, while per-item and nested provenance granularity are not retained.",
+    "supersedes": ["Metadata embedded in FieldValue wrappers"],
+    "derived_from": ["RFC-017 sourceRefs capability", "RFC-039 name-keyed carrier"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive", "direction": "integrity", "evidence_basis": "revealed-by-alternative", "confidence": "high",
+        "counterfactual": "Moving or deleting field-scoped provenance would change the claim's meaning; wrapping would make schemas describe envelopes rather than domain values.",
+        "counterpole_safeguard": "Ordinary domain values remain direct and usable; the uncommon metadata object is optional.",
+        "shadow_signal": "Sparse future capability adds persistent structural complexity without exercised value."
+      },
+      "continuity_evolution": {
+        "relevance": "supporting", "direction": "continuity", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "The carrier migration could have removed a lightly used forward capability for simplicity.",
+        "counterpole_safeguard": "The representation changes and deliberately drops unused per-item granularity to fit the new carrier.",
+        "shadow_signal": "Compatibility preserves dormant surface indefinitely after evidence shows it should be retired."
+      },
+      "coherence_autonomy": {
+        "relevance": "unexpressed", "direction": "not-applicable", "evidence_basis": "speculative", "confidence": "low",
+        "counterfactual": "The evidence does not present repository ownership or shared-vs-local policy as the relevant tension.",
+        "counterpole_safeguard": "Not applicable.", "shadow_signal": "Not applicable."
+      }
+    },
+    "cube": {"dimensionality": "edge", "coordinate": ["Integrity", "Continuity"]},
+    "exception_class": "none", "review_state": "uncalibrated",
+    "coding_notes": "Low corpus frequency is context, not the rationale; the explicit semantic non-substitution argument controls the coding."
+  },
+  {
+    "decision_id": "E256-C04",
+    "epic_row": "3 / RFC-039 Phase A",
+    "task_refs": ["srs#242", "srs#276", "srs#306", "RFC-039"],
+    "decision_family": "C",
+    "title": "Use fieldType cardinality as the only repeatability mechanism",
+    "decision_statement": "Phase B will remove FieldValue.entries and FieldValueEntry; repeatable data is represented by a JSON array whenever fieldType.cardinality is list, with the migration asserting agreement for the legacy corpus's dual-written value and entries forms.",
+    "status": "ratified", "decision_class": "precedent-setting", "effective_date": "2026-07-31",
+    "sources": [{
+      "kind": "rfc", "authority_rank": 2,
+      "url_or_path": "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#change-d--extrepeatable-fields-entries-is-removed-cardinality-carries-it",
+      "excerpt": "Change D retires entries, uses list cardinality plus arrays, and requires the transform to compare the 61 dual-written legacy representations rather than discard either silently.",
+      "explicitness": "explicit", "commit_sha": "e0fb4b050447febcd5ecb8f6ccb7864196e656d6"
+    }],
+    "alternatives": ["Keep entries as a second sanctioned list carrier.", "Abort whenever both value and entries appear.", "Prefer one duplicate representation without checking agreement."],
+    "accepted_cost": "Entry-level identity and provenance disappear, and migration must fail on divergence; all clients must switch cardinality handling together.",
+    "supersedes": ["ext:repeatable-fields entries carrier", "FieldValueEntry"],
+    "derived_from": ["RFC-032 R4", "E256-C07"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive", "direction": "integrity", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "Two cardinality mechanisms could disagree and make a value's semantic shape depend on which carrier a client reads.",
+        "counterpole_safeguard": "Lists become ordinary JSON arrays and the migration accepts the corpus's actual dual-written shape after checking agreement.",
+        "shadow_signal": "Model purity removes entry-level capabilities that become materially needed."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive", "direction": "evolution", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "Keeping entries would preserve wire compatibility but perpetuate the model contradiction.",
+        "counterpole_safeguard": "The conversion is gated on exhaustive scanning, preserved order and values, and logical round-trip evidence.",
+        "shadow_signal": "Legacy carriers are removed before all clients and data have migrated."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive", "direction": "coherence", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "Extensions and clients could independently choose assignment repeatable, entries, or fieldType cardinality.",
+        "counterpole_safeguard": "Packages still choose each Field's cardinality; only the representation is shared.",
+        "shadow_signal": "A universal carrier prevents legitimate future list-item semantics from being introduced explicitly."
+      }
+    },
+    "cube": {"dimensionality": "vertex", "coordinate": ["Integrity", "Evolution", "Coherence"]},
+    "exception_class": "none", "review_state": "uncalibrated",
+    "coding_notes": "This is the cardinality policy; the 61 conversions are mechanical manifestations and do not receive separate votes."
+  },
+  {
+    "decision_id": "E256-C05",
+    "epic_row": "3 / RFC-039 Phase A",
+    "task_refs": ["srs#242", "srs#262", "srs#306", "RFC-039"],
+    "decision_family": "C",
+    "title": "Replace FieldGroup with typed inline composite Fields",
+    "decision_statement": "Phase B will remove Type.fieldGroups and groupValues by deterministically minting a project-local range Type and a ref/inline Field for each group, preserving bounds and presentation placement while bumping affected Type versions and rewriting instances.",
+    "status": "ratified", "decision_class": "precedent-setting", "effective_date": "2026-07-31",
+    "sources": [{
+      "kind": "rfc", "authority_rank": 2,
+      "url_or_path": "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#change-e--fieldgroup-and-groupvalues-are-removed",
+      "excerpt": "Changes E and E.2 specify removal of FieldGroup/groupValues and a deterministic transform to project-local typed inline composites.",
+      "explicitness": "explicit", "commit_sha": "e0fb4b050447febcd5ecb8f6ccb7864196e656d6"
+    }],
+    "alternatives": ["Keep groupValues beside the new carrier.", "Create a global canonical Row Type.", "Encode grouped rows as untyped JSON."],
+    "accepted_cost": "New Fields and range Types, version bumps, and a 23-carrier migration are required; project-local row Types may later need deprecation if a canonical Row emerges.",
+    "supersedes": ["Type.fieldGroups", "Record.groupValues", "FieldGroup compositeRenderer ownership"],
+    "derived_from": ["RFC-032 Change E", "RFC-036 view-owned composite rendering"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive", "direction": "integrity", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "Keeping a special group carrier or using arbitrary JSON would make structured rows semantically different from other composite Fields.",
+        "counterpole_safeguard": "Project-local row Types and view-owned renderer roles keep authoring and rendering practical without a new global package.",
+        "shadow_signal": "Typed decomposition creates excessive auxiliary definitions for simple tables."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive", "direction": "evolution", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "Retaining FieldGroup would avoid migration but leave a construct already subsumed by RFC-032.",
+        "counterpole_safeguard": "The transform preserves row bounds, labels, order, rendering placement, and version lineage.",
+        "shadow_signal": "Deprecated structures are removed before their behavior is demonstrated through parity fixtures."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive", "direction": "autonomy", "evidence_basis": "revealed-by-alternative", "confidence": "high",
+        "counterfactual": "A canonical Row Type would create a new shared distributable package despite renderer roles already being namespace-independent.",
+        "counterpole_safeguard": "Every project-local row uses the same ref/inline carrier and shared renderer role contract.",
+        "shadow_signal": "Project-local range Types proliferate incompatible meanings that should have become a shared vocabulary."
+      }
+    },
+    "cube": {"dimensionality": "vertex", "coordinate": ["Integrity", "Evolution", "Autonomy"]},
+    "exception_class": "none", "review_state": "uncalibrated",
+    "coding_notes": "The target model and deterministic conversion are one reversible architecture commitment; individual migrated entities are mechanical derivations."
+  },
+  {
+    "decision_id": "E256-C06",
+    "epic_row": "3 / RFC-039 Phase A",
+    "task_refs": ["srs#242", "srs#306", "RFC-039"],
+    "decision_family": "C",
+    "title": "Require Field.name uniqueness only within a Type's effective field set",
+    "decision_statement": "Every Type's effective field set, including inherited Fields, must resolve to unique Field.name values; global Field-name uniqueness is neither required nor available.",
+    "status": "ratified", "decision_class": "precedent-setting", "effective_date": "2026-07-31",
+    "sources": [{
+      "kind": "rfc", "authority_rank": 2,
+      "url_or_path": "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#change-f--fieldname-uniqueness-within-a-types-effective-field-set",
+      "excerpt": "Change F establishes the weakest sufficient uniqueness scope and notes that global uniqueness is already violated.",
+      "explicitness": "explicit", "commit_sha": "e0fb4b050447febcd5ecb8f6ccb7864196e656d6"
+    }],
+    "alternatives": ["Require Field.name uniqueness globally.", "Allow collisions and disambiguate instance keys with namespaces.", "Retain UUID-keyed values."],
+    "accepted_cost": "Type loading must resolve inheritance and reject collisions before records can be interpreted; independent Types may still reuse the same name.",
+    "supersedes": [], "derived_from": ["RFC-039 name-keyed carrier", "ext:type-inheritance effective set"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive", "direction": "integrity", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "Colliding names would make one Record key resolve ambiguously to different Field identities.",
+        "counterpole_safeguard": "The constraint is only as broad as needed for readable keys, not global.",
+        "shadow_signal": "Resolution requirements make otherwise valid local models hard to compose."
+      },
+      "continuity_evolution": {
+        "relevance": "supporting", "direction": "evolution", "evidence_basis": "explicit", "confidence": "medium",
+        "counterfactual": "Avoiding a new invariant would preserve the current permissive loader but block the carrier design.",
+        "counterpole_safeguard": "The measured corpus has zero effective-set collisions, so existing coherent Types do not need renaming.",
+        "shadow_signal": "New invariants are introduced without migration evidence for external packages."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive", "direction": "autonomy", "evidence_basis": "revealed-by-alternative", "confidence": "high",
+        "counterfactual": "Global uniqueness would centralize naming across unrelated namespaces and reject six existing metamodel reuses.",
+        "counterpole_safeguard": "Every composed Type still has one unambiguous shared lookup rule.",
+        "shadow_signal": "Local reuse makes cross-Type tooling or vocabulary discovery misleading."
+      }
+    },
+    "cube": {"dimensionality": "vertex", "coordinate": ["Integrity", "Evolution", "Autonomy"]},
+    "exception_class": "none", "review_state": "uncalibrated",
+    "coding_notes": "This is independently reversible from the key choice because alternative disambiguation schemes could preserve name keys."
+  },
+  {
+    "decision_id": "E256-C07",
+    "epic_row": "3 / 6 naming prerequisite",
+    "task_refs": ["srs#308", "srs#242 Phase B"],
+    "decision_family": "C",
+    "title": "Choose where new-Field naming enforcement belongs",
+    "decision_statement": "It remains unresolved whether the fail-closed snake_case rule for new Field definitions belongs in the Node validation pipeline, the Rust repository validator, both, or another explicitly bounded layer.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [{
+      "kind": "issue",
+      "authority_rank": 4,
+      "url_or_path": "https://github.com/the-greenman/srs/issues/308",
+      "excerpt": "Issue 308 requires the enforcement location to be decided explicitly and notes both the Node guard precedent and the open Rust-validator question.",
+      "explicitness": "explicit"
+    }],
+    "alternatives": ["Enforce only in scripts/validate-all.mjs.", "Enforce only in srs repo validate.", "Enforce in both with one shared contract.", "Place enforcement at a different declared package boundary."],
+    "accepted_cost": "No placement cost has been accepted; until resolved, the naming disposition is ratified but its durable enforcement boundary is not.",
+    "supersedes": [],
+    "derived_from": ["E256-C10", "check-package-id-uniqueness Node guard precedent", "ADR-004 loader boundary"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "supporting", "direction": "unknown", "evidence_basis": "speculative", "confidence": "low",
+        "counterfactual": "A single practical guard may be easier to maintain, while enforcement in the semantic loader may protect the rule more completely.",
+        "counterpole_safeguard": "No safeguard chosen.",
+        "shadow_signal": "The rule appears enforced in one workflow while another accepted entry path silently bypasses it."
+      },
+      "continuity_evolution": {
+        "relevance": "unexpressed", "direction": "not-applicable", "evidence_basis": "speculative", "confidence": "low",
+        "counterfactual": "The evidence does not frame enforcement placement as a historical compatibility or model-change choice.",
+        "counterpole_safeguard": "Not applicable.",
+        "shadow_signal": "Not applicable."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive", "direction": "unknown", "evidence_basis": "speculative", "confidence": "low",
+        "counterfactual": "Central enforcement improves shared behavior; layer-specific enforcement preserves implementation and repository boundaries.",
+        "counterpole_safeguard": "No safeguard chosen.",
+        "shadow_signal": "Duplicated guards drift, or a central validator takes ownership outside its declared scope."
+      }
+    },
+    "cube": {"dimensionality": "centre", "coordinate": []},
+    "exception_class": "uncertain",
+    "review_state": "uncalibrated",
+    "coding_notes": "This is independently reversible from the owner-selected naming policy and from the grandfather corpus boundary. It is excluded from bias counts."
+  },
+  {
+    "decision_id": "E256-C08",
+    "epic_row": "4 / RFC-032 Revision 7 erratum",
+    "task_refs": ["srs#284", "srs#334", "RFC-032 Revision 7", "RFC-012", "RFC-019"],
+    "decision_family": "C",
+    "title": "Port legacy subset rules as explicit allow-listed fieldType predicates",
+    "decision_statement": "Four legacy valueType subset rules are restated as exact fieldType predicates, including a transition-only effective-single test across both cardinality mechanisms; new formats and composite datatypes fail closed unless explicitly admitted, while the owner records the intentional date-time widening and scalar narrowings.",
+    "status": "implemented", "decision_class": "reasoned-application", "effective_date": "2026-08-01",
+    "sources": [
+      {
+        "kind": "owner-decision", "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/284#issuecomment-5151606989",
+        "excerpt": "The owner explicitly chooses the four predicates, accepted widenings and exclusions, Tier-1 deferral, fixture handoff, and five-condition removal gate.",
+        "explicitness": "explicit", "commit_sha": "4ac36bafbc9603f0ca8d4e5e7dd2c6f42909568d"
+      },
+      {
+        "kind": "rfc", "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/4ac36bafbc9603f0ca8d4e5e7dd2c6f42909568d/rfcs/rfc-032-composite-field-range.md#change-i--extension-rule-subset-predicates-rev-7-erratum",
+        "excerpt": "The merged Revision 7 erratum records exact predicates and behavioral dispositions in the accepted RFC.",
+        "explicitness": "explicit", "commit_sha": "4ac36bafbc9603f0ca8d4e5e7dd2c6f42909568d"
+      }
+    ],
+    "alternatives": ["Treat every string datatype alike.", "Use deny-lists such as format != uri.", "Re-key immediately to fieldType cardinality only.", "Guess classifications for new composite datatypes."],
+    "accepted_cost": "Verbose predicates, temporary dual-cardinality logic, explicit exclusion of new formats/composites, and an acknowledged future RFC for composite search remain.",
+    "supersedes": ["Legacy valueType subset predicates", "RFC-032 omission of extension-rule dispositions"],
+    "derived_from": ["RFC-032 Change H", "RFC-037 transition precedent", "owner decision on srs#284"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive", "direction": "integrity", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "Broad string tests or guessed composite behavior would silently change search, equality, theme, and title semantics.",
+        "counterpole_safeguard": "Legacy user-facing outcomes are preserved where specified, and deliberate changes are named rather than hidden.",
+        "shadow_signal": "Predicate precision accumulates special cases and prevents useful new values from participating by default."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive", "direction": "conditional", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "Pure preservation would exclude date-time and retain undefined repeatable behavior; pure cleanup would drop the transition conjunct too early.",
+        "counterpole_safeguard": "Each intentional widening or narrowing is explicit and has a removal or fixture gate.",
+        "shadow_signal": "Transitional compatibility remains indefinitely or intentional evolution is disguised as a port."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive", "direction": "coherence", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "Each extension could reinterpret the new facets independently and drift from the accepted model.",
+        "counterpole_safeguard": "The four extensions retain distinct, independently stated eligibility boundaries.",
+        "shadow_signal": "One licensed predicate style prevents extensions from making explicit domain-specific admissions."
+      }
+    },
+    "cube": {"dimensionality": "edge", "coordinate": ["Integrity", "Coherence"]},
+    "exception_class": "none", "review_state": "calibrated",
+    "coding_notes": "The calibrated pilot treated the shared policy choice as one atomic reasoned application and the four truth tables as its manifestations. The conditional continuity/evolution result is deliberately excluded from vertex and bias counts. This card overlaps E256-C91."
+  },
+  {
+    "decision_id": "E256-C09",
+    "epic_row": "6 prerequisite / 6a prerequisite",
+    "task_refs": ["srs#307", "srs#242 Phase B", "srs#297", "RFC-038", "RFC-039"],
+    "decision_family": "C",
+    "title": "Resolve the dangling canonical-key assignment without an inferred version policy",
+    "decision_statement": "It remains unresolved whether four meta Types should repoint their transposed canonical_key fieldId in place, bump their Type versions, or remove the assignments; the accepted carrier and repository contracts require resolution before cutover but do not decide the repair's version semantics.",
+    "status": "unresolved", "decision_class": "unresolved", "effective_date": null,
+    "sources": [
+      {
+        "kind": "issue", "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/307",
+        "excerpt": "Issue 307 identifies the dangling and orphan UUIDs and explicitly directs researchers not to infer whether repair requires four Type version bumps.",
+        "explicitness": "explicit"
+      },
+      {
+        "kind": "rfc", "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#known-blocker-to-fix-before-the-transform-runs",
+        "excerpt": "RFC-039 makes the unresolved definition reference a hard Phase-B prerequisite but deliberately does not fix it.",
+        "explicitness": "explicit", "commit_sha": "e0fb4b050447febcd5ecb8f6ccb7864196e656d6"
+      }
+    ],
+    "alternatives": ["Repoint four assignments in place.", "Repoint and bump all four Type versions.", "Remove the assignments and leave canonical_key unused.", "Register the defect and continue."],
+    "accepted_cost": "No repair cost has been accepted; the unresolved question blocks both carrier and repository cutovers.",
+    "supersedes": [], "derived_from": ["RFC-039 R4", "RFC-038 R13 and R24"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive", "direction": "unknown", "evidence_basis": "speculative", "confidence": "low",
+        "counterfactual": "Removing the assignment favors operational simplicity; repairing it may preserve intended semantics, but intent is not ratified.",
+        "counterpole_safeguard": "No safeguard chosen.", "shadow_signal": "A convenient repair is mistaken for owner intent."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive", "direction": "unknown", "evidence_basis": "speculative", "confidence": "low",
+        "counterfactual": "In-place correction preserves version labels while bumping preserves strict historical version semantics; the corpus is silent on this defect class.",
+        "counterpole_safeguard": "No safeguard chosen.", "shadow_signal": "Versioning doctrine is silently inferred from absence of live instances."
+      },
+      "coherence_autonomy": {
+        "relevance": "supporting", "direction": "unknown", "evidence_basis": "speculative", "confidence": "low",
+        "counterfactual": "The location of the durable validator guard across srs and srs-rust is also unresolved.",
+        "counterpole_safeguard": "No safeguard chosen.", "shadow_signal": "A cross-repository guard exists but is absent from the actual gated toolchain."
+      }
+    },
+    "cube": {"dimensionality": "centre", "coordinate": []},
+    "exception_class": "uncertain", "review_state": "uncalibrated",
+    "coding_notes": "Open issue state is not the reason for unresolved status; the issue explicitly records a still-undecided normative repair. Excluded from bias counts."
+  },
+  {
+    "decision_id": "E256-C10",
+    "epic_row": "3 / 6 naming prerequisite",
+    "task_refs": ["srs#242", "srs#308", "RFC-039 Open Question 2"],
+    "decision_family": "C",
+    "title": "Grandfather existing kebab-case Field names but forbid new ones",
+    "decision_statement": "The existing in-scope kebab-case Field names remain unchanged and become verbatim wire keys, while new Field names must use snake_case; the grandfather is scoped by identity rather than bare name.",
+    "status": "ratified", "decision_class": "precedent-setting", "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "owner-decision", "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/242#issuecomment-5147997566",
+        "excerpt": "The owner chose to keep existing fields but allow no more kebab-case names.",
+        "explicitness": "explicit"
+      },
+      {
+        "kind": "issue", "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/308",
+        "excerpt": "Issue 308 records the owner decision, the 33-definition in-scope baseline, rejected rename cost, and still-open enforcement details.",
+        "explicitness": "explicit"
+      }
+    ],
+    "alternatives": ["Rename every existing kebab-case Field to snake_case.", "Allow both conventions for all future Fields.", "Transform names only at the wire boundary."],
+    "accepted_cost": "A permanent scoped grandfather list and mixed historical spellings remain; new authoring is constrained and enforcement work is still open.",
+    "supersedes": ["Unqualified documentary claim that every existing Field name is snake_case"],
+    "derived_from": ["RFC-039 verbatim keys", "Field rename creates a new definition"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "supporting", "direction": "integrity", "evidence_basis": "revealed-by-alternative", "confidence": "high",
+        "counterfactual": "Renaming for cosmetic consistency would create new Field identities and migrate 216 live Records.",
+        "counterpole_safeguard": "Future names follow one legible convention and the existing wire spellings remain directly readable.",
+        "shadow_signal": "Identity protection permanently normalizes confusing or costly naming debt."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive", "direction": "continuity", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "Immediate normalization would replace 33 Field identities, 13 Type versions, and their live instance keys.",
+        "counterpole_safeguard": "The rule evolves prospectively: no new kebab-case Fields are accepted.",
+        "shadow_signal": "Grandfathering grows or becomes an excuse never to improve the naming system."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive", "direction": "coherence", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "Allowing every package to continue choosing separators would grow the migration and tooling burden after names become wire keys.",
+        "counterpole_safeguard": "The grandfather is scoped to existing identities and historical out-of-scope trees do not define the active rule.",
+        "shadow_signal": "A style convention is enforced across historical or external trees outside the project's authority."
+      }
+    },
+    "cube": {"dimensionality": "vertex", "coordinate": ["Integrity", "Continuity", "Coherence"]},
+    "exception_class": "none", "review_state": "uncalibrated",
+    "coding_notes": "Only the owner-selected naming disposition is ratified. Node-vs-Rust guard placement and whether the historical RFC-004 tree is walked remain implementation questions on open issue 308."
+  },
+  {
+    "decision_id": "E256-C11",
+    "epic_row": "3 / RFC-039 Phase A",
+    "task_refs": ["srs#242", "srs#306", "RFC-039"],
+    "decision_family": "C",
+    "title": "Fail reference-mode values closed on dangling or mismatched targets",
+    "decision_statement": "A ref/reference value must resolve to an instance of its declared range Type at the declared version; a dangling or type-mismatched target is an error rather than a warning, silent skip, or substituted value.",
+    "status": "ratified", "decision_class": "precedent-setting", "effective_date": "2026-07-31",
+    "sources": [{
+      "kind": "rfc", "authority_rank": 2,
+      "url_or_path": "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#change-j--reference-integrity-for-mode-reference-values",
+      "excerpt": "Change J and R14 discharge three prior deferrals by making dangling and type-mismatched reference values errors with identified diagnostics.",
+      "explicitness": "explicit", "commit_sha": "e0fb4b050447febcd5ecb8f6ccb7864196e656d6"
+    }],
+    "alternatives": ["Allow dangling references with warnings.", "Validate only UUID shape.", "Defer resolution to consumers."],
+    "accepted_cost": "Repositories with unresolved or mismatched references cannot be treated as conforming and require complete range resolution at validation time.",
+    "supersedes": ["Deferred reference-integrity questions in RFC-032, RFC-019, and RFC-020"],
+    "derived_from": ["RFC-032 OQ4", "RFC-019 OQ", "RFC-020 OQ"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive", "direction": "integrity", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "A syntactically valid UUID could claim a relationship to no object or to the wrong Type.",
+        "counterpole_safeguard": "Diagnostics name the owning value, target, and expected Type so repair remains practical.",
+        "shadow_signal": "Strict resolution makes intentionally offline or partially synchronized work impossible."
+      },
+      "continuity_evolution": {
+        "relevance": "supporting", "direction": "evolution", "evidence_basis": "explicit", "confidence": "medium",
+        "counterfactual": "Continuing the prior deferred behavior would preserve permissive loading but leave semantic references unchecked.",
+        "counterpole_safeguard": "The rule lands with the planned cutover and migration diagnostics rather than retroactively changing the current carrier in Phase A.",
+        "shadow_signal": "New fail-closed behavior appears before repositories have a repair path."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive", "direction": "coherence", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "Consumers could disagree on whether a reference resolves and what range it is allowed to target.",
+        "counterpole_safeguard": "Resolution uses repository/package boundaries rather than a required global online registry.",
+        "shadow_signal": "Shared referential rules assume all valid targets are locally available at every workflow stage."
+      }
+    },
+    "cube": {"dimensionality": "vertex", "coordinate": ["Integrity", "Evolution", "Coherence"]},
+    "exception_class": "none", "review_state": "uncalibrated",
+    "coding_notes": "This governs instance values and is distinct from issue 307's dangling FieldAssignment definition, whose exact repair remains unresolved."
+  },
+  {
+    "decision_id": "E256-C13",
+    "epic_row": "3 / 6 naming prerequisite",
+    "task_refs": ["srs#308", "RFC-004 historical proposed package", "srs#286"],
+    "decision_family": "C",
+    "title": "Choose whether the historical RFC-004 tree enters the naming guard's corpus",
+    "decision_statement": "It remains unresolved whether snake_case validation walks rfcs/rfc-004/**, whose proposed package is classified as historical and outside the epic migration boundary, or excludes that tree from the active grandfather and enforcement scope.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [{
+      "kind": "issue",
+      "authority_rank": 4,
+      "url_or_path": "https://github.com/the-greenman/srs/issues/308",
+      "excerpt": "Issue 308 identifies five additional kebab names in the historical RFC-004 proposed package, explains that they are identity-distinct from active Fields, and requires an explicit walk-scope decision.",
+      "explicitness": "explicit"
+    }],
+    "alternatives": ["Exclude rfcs/rfc-004/** from the guard as historical evidence.", "Validate the historical tree with a separate grandfather set.", "Apply the active package grandfather across both trees by identity."],
+    "accepted_cost": "No corpus-boundary cost has been accepted; inclusion adds historical exceptions, while exclusion means the guard does not validate every Field-shaped artifact in the repository.",
+    "supersedes": [],
+    "derived_from": ["E256-C10", "srs#286 historical package-tree disposition"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "supporting", "direction": "unknown", "evidence_basis": "speculative", "confidence": "low",
+        "counterfactual": "Validating historical artifacts may expose inconsistent claims, while excluding them preserves their evidentiary meaning without pretending they are active definitions.",
+        "counterpole_safeguard": "No safeguard chosen.",
+        "shadow_signal": "Historical evidence is either silently treated as canonical or ignored when it still affects readers."
+      },
+      "continuity_evolution": {
+        "relevance": "supporting", "direction": "unknown", "evidence_basis": "speculative", "confidence": "low",
+        "counterfactual": "Including the tree protects a uniform present rule; excluding it preserves an intentionally historical snapshot.",
+        "counterpole_safeguard": "No safeguard chosen.",
+        "shadow_signal": "Validation rewrites the meaning of archived design evidence or lets active artifacts hide behind a historical label."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive", "direction": "unknown", "evidence_basis": "speculative", "confidence": "low",
+        "counterfactual": "Repository-wide validation favors one coherent corpus, while exclusion respects the declared boundary between active packages and historical proposal material.",
+        "counterpole_safeguard": "No safeguard chosen.",
+        "shadow_signal": "A guard crosses a corpus authority boundary without an explicit classification rule."
+      }
+    },
+    "cube": {"dimensionality": "centre", "coordinate": []},
+    "exception_class": "uncertain",
+    "review_state": "uncalibrated",
+    "coding_notes": "The active grandfather set must remain identity-scoped whichever option is chosen; bare-name overlap across the two trees cannot decide the boundary. Excluded from bias counts."
+  },
+  {
+    "decision_id": "E256-C12",
+    "epic_row": "3 / RFC-039 Phase A",
+    "task_refs": ["srs#242", "srs#306", "RFC-039"],
+    "decision_family": "C",
+    "title": "Represent unset fields by absence, never explicit null",
+    "decision_statement": "The new carrier excludes null from every Field value space; an unset optional Field is represented only by absence of its key, and the one known first-party null is deleted during Phase B.",
+    "status": "ratified", "decision_class": "precedent-setting", "effective_date": "2026-07-31",
+    "sources": [{
+      "kind": "rfc", "authority_rank": 2,
+      "url_or_path": "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#change-b--one-recursive-value-rule-identical-to-projectfields-instance-space",
+      "excerpt": "Change B and R5 explicitly remove null because it would make valid-by-construction projection false; absence is the sole unset representation.",
+      "explicitness": "explicit", "commit_sha": "e0fb4b050447febcd5ecb8f6ccb7864196e656d6"
+    }],
+    "alternatives": ["Project every optional field as a union with null.", "Retain null only for legacy data.", "Interpret null and absence identically."],
+    "accepted_cost": "One fixture value is deleted and consumers lose an explicit null-vs-absent distinction in exchange for one unambiguous optionality model.",
+    "supersedes": ["record.json FieldValue.value null branch"],
+    "derived_from": ["RFC-032 Change G", "RFC-035 projection rules"],
+    "axes": {
+      "integrity_expression": {
+        "relevance": "decisive", "direction": "integrity", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "Allowing null would make a Record fail the non-null schema generated from its own Type or force nullable unions everywhere.",
+        "counterpole_safeguard": "Unset remains easy to author as key absence and ordinary JSON Schema optionality works directly.",
+        "shadow_signal": "The model cannot express a domain where null is meaningfully distinct from missing."
+      },
+      "continuity_evolution": {
+        "relevance": "decisive", "direction": "evolution", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "Preserving the legacy null branch would retain one value but compromise the new carrier invariant.",
+        "counterpole_safeguard": "The exact corpus impact is measured and confined to an explicit Phase-B disposition.",
+        "shadow_signal": "Rare data is deleted because aggregate frequency is mistaken for semantic insignificance."
+      },
+      "coherence_autonomy": {
+        "relevance": "decisive", "direction": "coherence", "evidence_basis": "explicit", "confidence": "high",
+        "counterfactual": "Clients could disagree on whether null means unset, invalid, or a domain value.",
+        "counterpole_safeguard": "A later explicit datatype could add domain nullability rather than relying on an ambient carrier ambiguity.",
+        "shadow_signal": "The common unset rule blocks domains that need tri-state values."
+      }
+    },
+    "cube": {"dimensionality": "vertex", "coordinate": ["Integrity", "Evolution", "Coherence"]},
+    "exception_class": "none", "review_state": "uncalibrated",
+    "coding_notes": "Null exclusion is separated from recursive value shape because it can be reversed independently by changing projected optional-value semantics."
+  }
+]

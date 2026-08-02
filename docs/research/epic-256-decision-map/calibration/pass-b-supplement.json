@@ -1,0 +1,81 @@
+{
+  "decision_id": "E256-A98",
+  "epic_row": "Bootstrap repair / #295",
+  "task_refs": ["srs#258", "srs#295", "RFC-033 Revision 5"],
+  "decision_family": "A",
+  "title": "Reassign the generated metamodel package after a UUID collision and guard uniqueness repository-wide",
+  "decision_statement": "The colliding generated metamodel package is reassigned from package UUID 4a000001 to the first never-claimed slot, 4a000004, while the hand-authored spec-authoring-core package retains its established identity; validation now rejects duplicate resolved IDs and any package ID associated with different namespace/name pairs anywhere in the repository corpus.",
+  "status": "implemented",
+  "decision_class": "reasoned-application",
+  "effective_date": "2026-07-31",
+  "sources": [
+    {
+      "kind": "rfc",
+      "authority_rank": 2,
+      "url_or_path": "https://github.com/the-greenman/srs/blob/512d9c60da079f793b6dc4a37f7bdd23a63e8a8b/rfcs/rfc-033-self-host-metamodel-frozen-seed.md#L12-L18",
+      "excerpt": "RFC-033 Revision 5 records the collision, selects the first never-claimed package slot, preserves the hand-authored package, and requires a uniqueness guard.",
+      "explicitness": "explicit",
+      "commit_sha": "512d9c60da079f793b6dc4a37f7bdd23a63e8a8b"
+    },
+    {
+      "kind": "canonical",
+      "authority_rank": 1,
+      "url_or_path": "https://github.com/the-greenman/srs/blob/512d9c60da079f793b6dc4a37f7bdd23a63e8a8b/srs/package/metamodel/package.json#L60-L65",
+      "excerpt": "The effective metamodel package declares the corrected UUID 4a000004-0000-4000-a000-000000000004.",
+      "explicitness": "explicit",
+      "commit_sha": "512d9c60da079f793b6dc4a37f7bdd23a63e8a8b"
+    },
+    {
+      "kind": "implementation",
+      "authority_rank": 3,
+      "url_or_path": "https://github.com/the-greenman/srs/blob/512d9c60da079f793b6dc4a37f7bdd23a63e8a8b/scripts/check-package-id-uniqueness.mjs",
+      "excerpt": "The delivered validator rejects duplicate resolved package or definition IDs and cross-tree package-ID meaning changes.",
+      "explicitness": "inferred",
+      "commit_sha": "512d9c60da079f793b6dc4a37f7bdd23a63e8a8b"
+    }
+  ],
+  "alternatives": [
+    "Reassign the established hand-authored spec-authoring-core package and all definitions hanging from it.",
+    "Reuse a previously claimed but currently inactive package ID.",
+    "Repair this collision without adding a repository-wide invariant check."
+  ],
+  "accepted_cost": "The generated metamodel package and its 66 generated artifacts change package identity, and the validation pipeline gains a repository-wide scan, in order to preserve the more expensive established package and prevent resolution-order ambiguity from recurring.",
+  "supersedes": ["RFC-033 Revision 4 metamodel package UUID 4a000001-0000-4000-a000-000000000001"],
+  "derived_from": ["SRS UUID identity rule", "srs#295 collision audit", "RFC-014 package-ID keyed resolution"],
+  "axes": {
+    "integrity_expression": {
+      "relevance": "decisive",
+      "direction": "integrity",
+      "evidence_basis": "explicit",
+      "confidence": "high",
+      "counterfactual": "Leaving both packages on one UUID would make identity resolution depend on load order and collapse two semantic entities into one key.",
+      "counterpole_safeguard": "The cheaper generated package is regenerated, avoiding a larger hand-authored migration while retaining patterned human-legible IDs.",
+      "shadow_signal": "Identity purity triggers broad rewrites when a bounded generated-side repair would restore the invariant."
+    },
+    "continuity_evolution": {
+      "relevance": "decisive",
+      "direction": "evolution",
+      "evidence_basis": "revealed-by-alternative",
+      "confidence": "high",
+      "counterfactual": "Preserving the newly assigned metamodel UUID would retain its short history but require either accepting collision or moving the older, larger package.",
+      "counterpole_safeguard": "The established hand-authored package, every Field and Type UUID, and previously claimed ID history remain unchanged; only the generated package ID moves.",
+      "shadow_signal": "Corrective reassignment changes identities beyond the minimal conflicting generated boundary."
+    },
+    "coherence_autonomy": {
+      "relevance": "decisive",
+      "direction": "coherence",
+      "evidence_basis": "explicit",
+      "confidence": "high",
+      "counterfactual": "Checking only the active manifest would allow fixtures, proposals, archives, or other package trees to assign a different meaning to the same ID.",
+      "counterpole_safeguard": "Different trees may carry copies and revisions of the same package when the ID retains the same namespace/name meaning.",
+      "shadow_signal": "Repository-wide uniqueness checks forbid legitimate copies of the same identified package or confuse version variation with identity conflict."
+    }
+  },
+  "cube": {
+    "dimensionality": "vertex",
+    "coordinate": ["Integrity", "Evolution", "Coherence"]
+  },
+  "exception_class": "none",
+  "review_state": "uncalibrated",
+  "coding_notes": "The reassignment and guard are coded together because the accepted repair explicitly treats prevention of the same identity defect as part of closing the collision. The choice of which side moves is independently evidenced by generated-versus-hand-authored migration cost."
+}

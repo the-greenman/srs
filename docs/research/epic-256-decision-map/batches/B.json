@@ -1,0 +1,414 @@
+[
+  {
+    "decision_id": "E256-B01",
+    "epic_row": "rendering design / #262 and #292",
+    "task_refs": ["srs#262", "srs#292", "RFC-036"],
+    "decision_family": "B",
+    "title": "Place composite-renderer dispatch in the view layer",
+    "decision_statement": "Composite renderer selection is owned by FieldView, DocumentSection, or DocumentView under a most-specific-wins order, so different views may present the same semantic records differently; Field and Type do not carry the binding.",
+    "status": "implemented",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/f120e9f3174b2eddd773e259a91034eb958b60c2/rfcs/rfc-036-composite-rendering.md#change-b--three-declaration-sites-in-the-view-layer-with-a-total-precedence-order",
+        "excerpt": "Accepted RFC-036 defines three view-layer declaration sites and a total FieldView, DocumentSection, DocumentView, unbound precedence order.",
+        "explicitness": "explicit",
+        "commit_sha": "f120e9f3174b2eddd773e259a91034eb958b60c2"
+      },
+      {
+        "kind": "canonical",
+        "authority_rank": 1,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/view.json#L107-L148",
+        "excerpt": "The current schema attaches the presentation-only CompositeRendererBinding to FieldView.",
+        "explicitness": "explicit",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      }
+    ],
+    "alternatives": ["Keep compositeRenderer on FieldGroup or the replacement Type.", "Put renderer selection on each instance.", "Allow only a repository-wide renderer choice."],
+    "accepted_cost": "Dispatch requires view capabilities and a precedence protocol, including an explicit baseline sentinel for cancelling broader bindings.",
+    "supersedes": ["RFC-007 FieldGroup.compositeRenderer for composite-range fields"],
+    "derived_from": ["RFC-015 presentation ownership", "RFC-032 composite range"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"A Type-owned renderer would make a presentation choice appear to be semantic meaning.","counterpole_safeguard":"Bindings, role maps, defaults, and baseline fallback give views a usable expression surface.","shadow_signal":"The semantic layer withholds metadata that a renderer genuinely needs to interpret roles."},
+      "continuity_evolution": {"relevance":"supporting","direction":"evolution","evidence_basis":"explicit","confidence":"high","counterfactual":"Retaining the FieldGroup dispatch placement would preserve a known coupling and prevent per-view variation.","counterpole_safeguard":"The baseline sentinel, by-name defaults, and staged RFC-007 retirement preserve output during migration.","shadow_signal":"Presentation mechanisms are replaced before existing output has parity fixtures."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"autonomy","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"Type ownership would impose one arrangement on every view of the records.","counterpole_safeguard":"Every view follows one precedence, identifier grammar, diagnostic, and fallback contract.","shadow_signal":"Per-view outputs become incomparable or cease to carry stable semantic identity."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Autonomy"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Ownership is isolated from the renderer contract and baseline algorithm. This decision was independently calibrated as E256-B90; this family card retains a normal batch ID."
+  },
+  {
+    "decision_id": "E256-B02",
+    "epic_row": "rendering design / #262 and #292",
+    "task_refs": ["srs#262", "srs#292", "RFC-036"],
+    "decision_family": "B",
+    "title": "Render tables from structured composite values",
+    "decision_statement": "The table renderer consumes typed list and inline-reference fields for columns, rows, cells, widths, headings, and labels rather than parsing arrays encoded inside text values.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/f120e9f3174b2eddd773e259a91034eb958b60c2/rfcs/rfc-036-composite-rendering.md#change-d--the-table-renderer-specified-against-a-structured-value",
+        "excerpt": "Accepted RFC-036 specifies the table contract over native lists and inline row records, including number-list width constraints.",
+        "explicitness": "explicit",
+        "commit_sha": "f120e9f3174b2eddd773e259a91034eb958b60c2"
+      },
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/f120e9f3174b2eddd773e259a91034eb958b60c2/rfcs/rfc-036-composite-rendering.md#problem-3--the-specified-value-shape-is-json-in-text-and-structured-values-must-win",
+        "excerpt": "The accepted rationale records the owner rule that structured values win whenever a real structure can be created.",
+        "explicitness": "explicit",
+        "commit_sha": "f120e9f3174b2eddd773e259a91034eb958b60c2"
+      }
+    ],
+    "alternatives": ["Continue parsing JSON arrays from string fields.", "Carry renderer-only parsing and clamping rules for semantically structured values."],
+    "accepted_cost": "The corpus needs a carrier migration and the renderer cannot become executable until #242 supplies inline composite instances.",
+    "supersedes": ["RFC-007 JSON-in-text table value encoding"],
+    "derived_from": ["RFC-032 list cardinality and inline composite range"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Convenient text transport would keep structured meaning implicit, lossy, and renderer-dependent.","counterpole_safeguard":"The table renderer retains zero-configuration role names and defines output for each supported format.","shadow_signal":"A strict structure prevents legitimate content that the model cannot yet express."},
+      "continuity_evolution": {"relevance":"decisive","direction":"evolution","evidence_basis":"explicit","confidence":"high","counterfactual":"Preserving the shipped JSON-in-text representation would retain silent parse and width-loss defects.","counterpole_safeguard":"The design records corpus divergences and gates executable migration on #242 parity work.","shadow_signal":"Structured replacement lands without proving existing tables survive the cutover."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"coherence","evidence_basis":"behavioral","confidence":"medium","counterfactual":"Individual renderers would continue inventing parsing, constraint, and failure semantics.","counterpole_safeguard":"Vendor renderers retain their own role contracts under namespaced identifiers.","shadow_signal":"One renderer contract is generalized into restrictions on unrelated vendor renderers."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Ratified design, not implemented carrier behavior at the captured snapshot. Output-shape decisions are separate."
+  },
+  {
+    "decision_id": "E256-B03",
+    "epic_row": "rendering design / #292",
+    "task_refs": ["srs#292", "RFC-036"],
+    "decision_family": "B",
+    "title": "Degrade invalid composite-renderer bindings to the baseline",
+    "decision_statement": "Malformed, unknown, inapplicable, or contract-mismatched composite renderer bindings do not prevent a record or view from loading; implementations ignore the binding, emit a diagnostic, and render through the composite baseline.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/f120e9f3174b2eddd773e259a91034eb958b60c2/rfcs/rfc-036-composite-rendering.md#dispatch",
+        "excerpt": "Rules CR-036-1, CR-036-3, CR-036-7, and CR-036-9 require ignored bindings, diagnostics, and baseline rendering instead of load failure.",
+        "explicitness": "explicit",
+        "commit_sha": "f120e9f3174b2eddd773e259a91034eb958b60c2"
+      },
+      {
+        "kind": "canonical",
+        "authority_rank": 1,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/view.json#L113-L130",
+        "excerpt": "The binding schema deliberately leaves identifier grammar to runtime so an invalid value can fall back rather than fail View loading.",
+        "explicitness": "explicit",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      }
+    ],
+    "alternatives": ["Reject the whole View at schema-load time.", "Silently ignore the binding without a diagnostic.", "Render nothing for the failed composite field."],
+    "accepted_cost": "A malformed presentation declaration can remain loadable, so conformance requires runtime diagnostics and deterministic fallback rather than schema rejection.",
+    "supersedes": [],
+    "derived_from": ["RFC-007 unknown-renderer fallback"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"expression","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"Failing the entire view would protect declaration strictness at the cost of losing otherwise renderable meaning.","counterpole_safeguard":"The error is surfaced diagnostically and the semantic record is not altered or reinterpreted.","shadow_signal":"Graceful degradation normalizes broken declarations and diagnostics are routinely ignored."},
+      "continuity_evolution": {"relevance":"supporting","direction":"continuity","evidence_basis":"explicit","confidence":"high","counterfactual":"A stricter new dispatch mechanism could make previously renderable material disappear.","counterpole_safeguard":"Reserved identifiers and binding contracts can evolve through ratified RFCs without schema enum closure.","shadow_signal":"Fallback preserves obsolete bindings indefinitely instead of prompting repair."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"balanced","evidence_basis":"explicit","confidence":"high","counterfactual":"Either schema rejection would over-centralize renderer knowledge or unconstrained behavior would make failures implementation-specific.","counterpole_safeguard":"The common fallback and diagnostic contract coexist with namespaced vendor identifiers.","shadow_signal":"Implementations diverge in what they diagnose or how they render after failure."}
+    },
+    "cube": {"dimensionality":"edge","coordinate":["Expression","Continuity"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "The load-vs-fallback choice is independently reversible from where bindings are owned."
+  },
+  {
+    "decision_id": "E256-B04",
+    "epic_row": "rendering design / #292",
+    "task_refs": ["srs#292", "RFC-036"],
+    "decision_family": "B",
+    "title": "Specify a normative composite baseline",
+    "decision_statement": "An unbound or failed composite renders through a portable baseline with a resolved heading, ordered value blocks, ordered nested field rows, recursive inline composites, and deterministic block separation.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/f120e9f3174b2eddd773e259a91034eb958b60c2/rfcs/rfc-036-composite-rendering.md#change-c--composite-baseline-rendering-normative",
+        "excerpt": "Accepted RFC-036 defines the heading, block, row-order, nesting, omission, and separation algorithm for composite baseline rendering.",
+        "explicitness": "explicit",
+        "commit_sha": "f120e9f3174b2eddd773e259a91034eb958b60c2"
+      }
+    ],
+    "alternatives": ["Leave composite fallback implementation-defined.", "Restore only named renderer dispatch and strand the undispatched majority path.", "Require every composite to bind a renderer."],
+    "accepted_cost": "The specification takes on detailed cross-format rendering rules and preserves some anomalous legacy heading behavior for parity.",
+    "supersedes": ["RFC-007 FieldGroup baseline for migrated composites"],
+    "derived_from": ["RFC-036 fallback contract", "RFC-007 shipped group rendering behavior"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"expression","evidence_basis":"explicit","confidence":"high","counterfactual":"Semantically valid composites without a renderer would have no predictable readable projection.","counterpole_safeguard":"Nested rows preserve assignment order and identity; presentation remains outside the Type.","shadow_signal":"Baseline details begin dictating semantic structure or become the only usable presentation."},
+      "continuity_evolution": {"relevance":"decisive","direction":"continuity","evidence_basis":"explicit","confidence":"high","counterfactual":"Removing FieldGroup without a successor baseline would delete the majority rendering path and corpus headings.","counterpole_safeguard":"The baseline is expressed for the new composite-range model and permits recursive structured values.","shadow_signal":"Preserving inert anomalies prevents later correction even when parity no longer requires them."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Each renderer would invent a different terminal fallback for the same DocumentView.","counterpole_safeguard":"Views and Themes may override or wrap the baseline through declared extension points.","shadow_signal":"The portable baseline crowds out legitimate view-specific presentation."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Expression","Continuity","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "This card covers the composite fallback algorithm, not the ordinary top-level field-row form later settled by RFC-037."
+  },
+  {
+    "decision_id": "E256-B05",
+    "epic_row": "2 / #294 and srs-rust#782",
+    "task_refs": ["srs#294", "srs-rust#782", "RFC-037"],
+    "decision_family": "B",
+    "title": "Standardize field-row output at the DocumentView boundary",
+    "decision_statement": "DocumentView baseline rendering uses normative scalar and multi-entry field-row forms, ordering, separation, continuation, and HTML structure for markdown, AsciiDoc, text, and HTML rather than leaving those forms implementation-defined.",
+    "status": "implemented",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/f467593204e6f11cb78a4599a8c76cae4bd95e5a/rfcs/rfc-037-normative-field-row-rendering-baseline.md#conformance-rules",
+        "excerpt": "Accepted RFC-037 FR-037-3 through FR-037-8 pin per-format scalar and block-list forms, ordering, separation, and continuation.",
+        "explicitness": "explicit",
+        "commit_sha": "f467593204e6f11cb78a4599a8c76cae4bd95e5a"
+      },
+      {
+        "kind": "pull-request",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs-rust/commit/356c544cc816043352ec9b140bb208b22f88a941",
+        "excerpt": "Merged srs-rust PR 786 implements the RFC-037 field-row baseline; the manifest records mergedAt 2026-07-31T22:14:02Z.",
+        "explicitness": "inferred",
+        "commit_sha": "356c544cc816043352ec9b140bb208b22f88a941"
+      }
+    ],
+    "alternatives": ["Leave text-oriented field rows implementation-defined.", "Standardize only markdown and let other committed formats diverge.", "Render multi-entry values as comma-joined text."],
+    "accepted_cost": "Implementations lose freedom over covered DocumentView serialization and must maintain full-format tests and coordinated export changes.",
+    "supersedes": ["RFC-001 implementation-defined field-row presentation"],
+    "derived_from": ["RFC-001 default rendering baseline", "RFC-036 composite baseline"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"expression","evidence_basis":"explicit","confidence":"high","counterfactual":"A semantically selected field set would still lack a portable, predictable reader form.","counterpole_safeguard":"Multi-entry ordering and stable class identity preserve structure rather than flattening values.","shadow_signal":"Output syntax is mistaken for semantic meaning or constrains non-DocumentView interfaces."},
+      "continuity_evolution": {"relevance":"supporting","direction":"evolution","evidence_basis":"explicit","confidence":"high","counterfactual":"Existing inconsistent output, including empty labels and untested format arms, would remain conformant.","counterpole_safeguard":"Compatibility aliases and coordinated export correction stage visible changes.","shadow_signal":"Format contracts churn without migration windows or golden fixtures."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Two conforming implementations could emit incompatible DocumentViews for the same records.","counterpole_safeguard":"The rule is confined to four normative DocumentView formats, leaving native UI independent.","shadow_signal":"The shared format contract expands into unrelated native-client layout."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Expression","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "This groups the mutually dependent row grammar as one serialization contract. Empty-value policy, identity classes, and boundary scope remain separate cards."
+  },
+  {
+    "decision_id": "E256-B06",
+    "epic_row": "2 / #294 and srs-rust#782",
+    "task_refs": ["srs#294", "srs-rust#782", "RFC-037"],
+    "decision_family": "B",
+    "title": "Make empty-field output deterministic",
+    "decision_statement": "An empty string or value sequence is absent and emits no label-only row; when a required field is absent under show-placeholder, the baseline must emit the literal portable placeholder `(empty)` rather than optionally choosing whether or how to show it.",
+    "status": "implemented",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/f467593204e6f11cb78a4599a8c76cae4bd95e5a/rfcs/rfc-037-normative-field-row-rendering-baseline.md#change-c--empty-values-and-the-portable-placeholder",
+        "excerpt": "Accepted RFC-037 deliberately promotes the optional placeholder to a required literal form and defines empty values as absent.",
+        "explicitness": "explicit",
+        "commit_sha": "f467593204e6f11cb78a4599a8c76cae4bd95e5a"
+      },
+      {
+        "kind": "canonical",
+        "authority_rank": 1,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/spec/srs-spec.md#normative-field-row-form-rfc-037",
+        "excerpt": "The current rendered specification contains the mandatory omission and `(empty)` placeholder rules.",
+        "explicitness": "explicit",
+        "commit_sha": "ae52927de4e45490cb427fee2b332d5351f536cd"
+      }
+    ],
+    "alternatives": ["Emit label-only rows for empty strings.", "Keep placeholder presence and spelling implementation-defined.", "Apply the DocumentSection placeholder rule to L1 View rendering too."],
+    "accepted_cost": "Previously conforming implementations that omitted placeholders become non-conforming, and committed exports intentionally lose empty label-only rows.",
+    "supersedes": ["RFC-001 Step 4 optional placeholder wording"],
+    "derived_from": ["RFC-001 emptyBehavior"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"expression","evidence_basis":"explicit","confidence":"high","counterfactual":"A reader could not distinguish intentional absence handling across implementations and might see meaningless empty labels.","counterpole_safeguard":"The placeholder applies only to required fields and does not fabricate a semantic value.","shadow_signal":"A presentation placeholder is consumed downstream as actual record data."},
+      "continuity_evolution": {"relevance":"supporting","direction":"evolution","evidence_basis":"explicit","confidence":"high","counterfactual":"Preserving the MAY and current empty-string bug would retain an acknowledged interoperability hole.","counterpole_safeguard":"The L1 View path remains governed by its existing ExportConfig contract.","shadow_signal":"Corrective output changes are made without quantifying or reviewing export diffs."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Implementations could differ on both placeholder presence and syntax.","counterpole_safeguard":"The rule is conditional on a locally selected DocumentSection.emptyBehavior.","shadow_signal":"A universal placeholder rule overrides context-specific author intent."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Expression","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Omission and placeholder are coupled as the two outcomes of the same absent-field branch."
+  },
+  {
+    "decision_id": "E256-B07",
+    "epic_row": "2 / #294 and srs-rust#782",
+    "task_refs": ["srs#294", "srs-rust#782", "RFC-037"],
+    "decision_family": "B",
+    "title": "Separate field identity classes from display labels",
+    "decision_statement": "A rendered field row's machine-facing identity class is derived from stable Field.name, never the contextual displayLabel; the visible label may still resolve contextually through FieldAssignment.displayLabel.",
+    "status": "implemented",
+    "decision_class": "reasoned-application",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/f467593204e6f11cb78a4599a8c76cae4bd95e5a/rfcs/rfc-037-normative-field-row-rendering-baseline.md#change-d--class-vocabulary-and-the-t-8-amendment",
+        "excerpt": "Accepted RFC-037 requires srs-fieldname-* to derive from Field.name and prohibits deriving it from displayLabel.",
+        "explicitness": "explicit",
+        "commit_sha": "f467593204e6f11cb78a4599a8c76cae4bd95e5a"
+      },
+      {
+        "kind": "pull-request",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs-rust/commit/356c544cc816043352ec9b140bb208b22f88a941",
+        "excerpt": "The merged implementation carries the field name separately so the formatter does not normalize the human label into identity.",
+        "explicitness": "inferred",
+        "commit_sha": "356c544cc816043352ec9b140bb208b22f88a941"
+      }
+    ],
+    "alternatives": ["Normalize displayLabel into the CSS identity class.", "Use one string for both machine identity and reader label.", "Humanize Field.name automatically."],
+    "accepted_cost": "Renderers must carry separate semantic-name and contextual-label values, and authored labels can no longer implicitly rename style hooks.",
+    "supersedes": ["srs-rust displayLabel-derived field identity behavior"],
+    "derived_from": ["RFC-002 T-8 field-name class intent", "RFC-001 label resolution"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"A presentation label change would silently change the row's machine-addressable identity.","counterpole_safeguard":"The visible label remains contextual and author-controlled through displayLabel.","shadow_signal":"Stable identity tokens leak into visible text or prevent useful contextual labelling."},
+      "continuity_evolution": {"relevance":"supporting","direction":"continuity","evidence_basis":"revealed-by-alternative","confidence":"medium","counterfactual":"Styles and automation would break whenever a human-facing label changed.","counterpole_safeguard":"The forward class vocabulary uses a new srs- prefix with a scheduled compatibility window.","shadow_signal":"Compatibility classes become permanent duplicates after the scheduled cutover."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Implementations could choose different sources for the same identity class.","counterpole_safeguard":"Each assignment remains free to choose its own displayLabel.","shadow_signal":"The common class vocabulary becomes a global styling mandate beyond normative output."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Continuity","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "The visible label-resolution rule is preserved while only the machine identity source changes."
+  },
+  {
+    "decision_id": "E256-B08",
+    "epic_row": "2 / #294",
+    "task_refs": ["srs#294", "RFC-037"],
+    "decision_family": "B",
+    "title": "Confine portable rendering rules to DocumentView emitters",
+    "decision_statement": "The normative field-row forms bind implementations emitting covered DocumentView formats, including client-side DocumentView renderers, but do not bind native application interfaces that do not claim to emit a DocumentView.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "rfc",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/blob/f467593204e6f11cb78a4599a8c76cae4bd95e5a/rfcs/rfc-037-normative-field-row-rendering-baseline.md#change-g--conformance-boundary",
+        "excerpt": "Accepted RFC-037 binds covered DocumentView emissions and explicitly leaves native application UI outside the rule.",
+        "explicitness": "explicit",
+        "commit_sha": "f467593204e6f11cb78a4599a8c76cae4bd95e5a"
+      }
+    ],
+    "alternatives": ["Require all client UI to use the same DOM and class vocabulary.", "Exempt client-side DocumentView renderers from portable output rules.", "Leave the boundary implicit."],
+    "accepted_cost": "Native interfaces may present the same records differently, so visual equivalence is not guaranteed outside a declared projection boundary.",
+    "supersedes": [],
+    "derived_from": ["capability-layering client rendering boundary"],
+    "axes": {
+      "integrity_expression": {"relevance":"supporting","direction":"balanced","evidence_basis":"explicit","confidence":"high","counterfactual":"A universal UI form would conflate a portable projection with every possible expression surface.","counterpole_safeguard":"Any surface claiming DocumentView output must preserve the normative portable structure.","shadow_signal":"A native client avoids conformance simply by declining to name an otherwise equivalent export as DocumentView."},
+      "continuity_evolution": {"relevance":"unexpressed","direction":"not-applicable","evidence_basis":"explicit","confidence":"high","counterfactual":"The evidence does not compare compatibility with change.","counterpole_safeguard":"No continuity/evolution priority is inferred.","shadow_signal":"Analysts force a migration reading onto a scope decision."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"autonomy","evidence_basis":"explicit","confidence":"high","counterfactual":"Repository-wide visual coherence would unnecessarily dictate independent native client UX.","counterpole_safeguard":"The DocumentView contract supplies one shared interoperability boundary regardless of which client emits it.","shadow_signal":"Local interfaces diverge in semantic content, not merely presentation."}
+    },
+    "cube": {"dimensionality":"axis","coordinate":["Autonomy"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Balanced Integrity/Expression is deliberately off-coordinate; the decisive choice is the shared-vs-local boundary."
+  },
+  {
+    "decision_id": "E256-B09",
+    "epic_row": "architecture decision / #274",
+    "task_refs": ["srs#274", "RFC-031", "srs#273", "srs#272", "srs#271"],
+    "decision_family": "B",
+    "title": "Generate structural reference projections from semantic records",
+    "decision_statement": "Resolved Field, Type, and value-object records are the semantic source; contributors keep narrative in published subsection records around a stable typed view slot, while tooling generates a property-table reference, optional pseudo-IDL, and schema from the resolved model.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "owner-decision",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/274",
+        "excerpt": "The owner-recorded decision makes resolved semantic records authoritative, keeps narrative in published subsections, and selects a generated property table with optional pseudo-IDL and linked raw schema.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "owner-decision",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/274#issuecomment-5145639920",
+        "excerpt": "The ratified research result separates semantic structure, human explanation, and generated reference rather than rediscovering prose structure with regex.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      }
+    ],
+    "alternatives": ["Continue comparing hand-authored pseudo-IDL to generated schemas.", "Generate human prose from JSON Schema and make the schema canonical.", "Embed raw JSON Schema as the main contributor-facing reference."],
+    "accepted_cost": "The architecture needs effective-Type resolution, typed generated-view support, a complete emitter inventory, and staged residual checks before authorship can flip.",
+    "supersedes": ["RFC-031 hand-authored pseudo-IDL as the long-term structural reference"],
+    "derived_from": ["RFC-031 Open Question 2", "RFC-035 neutral emitter architecture", "srs#275 shadow-source finding"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"A hand-maintained or schema-derived reader reference could drift from the project's semantic source.","counterpole_safeguard":"A property table is primary for readers, narrative remains hand-authored, and compact IDL plus raw schema remain accessible.","shadow_signal":"Model authority makes the generated or narrative surfaces too weak for contributors to understand the specification."},
+      "continuity_evolution": {"relevance":"decisive","direction":"evolution","evidence_basis":"explicit","confidence":"high","counterfactual":"Retaining RFC-031's comparator would preserve duplicated sources and known blind spots.","counterpole_safeguard":"RFC-031 remains as a fail-closed residual gate until each generation boundary actually crosses.","shadow_signal":"The final source flip happens before coverage, fidelity, and regeneration gates are complete."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Different authoring and output surfaces could independently define the same structure.","counterpole_safeguard":"Narrative authors retain control around typed slots, and output profiles remain distinct projections.","shadow_signal":"A single generated surface displaces legitimate narrative context or target-specific views."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "This is the #274 architectural decision, not the later implementation choices owned by #273/#272/#271."
+  },
+  {
+    "decision_id": "E256-B10",
+    "epic_row": "8 / #285",
+    "task_refs": ["srs#274", "srs#275", "srs#285", "RFC-031"],
+    "decision_family": "B",
+    "title": "Require publication reachability or deliberate invisibility",
+    "decision_statement": "Indexed records must be reachable from an intended declared presentation, or their invisibility must be explicitly declared and tested; unpublished duplicate prose records are retired rather than treated as authoritative shadows.",
+    "status": "ratified",
+    "decision_class": "reasoned-application",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "owner-decision",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/274",
+        "excerpt": "The owner decision states that unpublished type-definition shadows are never authoritative and assigns shadow retirement and publication reachability to #285.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/285",
+        "excerpt": "Issue #285 records six duplicate prose shadows and nine valid indexed table records that no committed presentation reaches, then defines the reachability guard.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "pull-request",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs/commit/27bbe49c02cf1c380e77d71212725770c48bed08",
+        "excerpt": "Merged PR 283 retired the unrendered Field prose copy, repointed conformance at the published record, and exposed the broader shadow pattern.",
+        "explicitness": "inferred",
+        "commit_sha": "27bbe49c02cf1c380e77d71212725770c48bed08"
+      }
+    ],
+    "alternatives": ["Accept duplicate valid records if a comparator checks one copy.", "Delete every unreachable record, including unique table content.", "Permit indexed invisibility without an explicit declaration."],
+    "accepted_cost": "The repository must model presentation reachability, wire unique content into a view or explicitly justify invisibility, and remove convenient duplicate prose sources.",
+    "supersedes": ["RFC-031 per-entity choice of an unpublished canonical prose copy"],
+    "derived_from": ["srs#275 published-vs-checked source finding", "RFC-031 Open Question 2", "srs#274 source architecture"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"expression","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"A valid and indexed record could remain semantically present yet invisible to every intended reader.","counterpole_safeguard":"Unique content is wired into a presentation rather than deleted blindly, and deliberate invisibility remains expressible.","shadow_signal":"Reachability is mistaken for semantic authority or every internal record is forced into public output."},
+      "continuity_evolution": {"relevance":"supporting","direction":"evolution","evidence_basis":"explicit","confidence":"high","counterfactual":"Keeping shadows would preserve an architecture whose checker read the wrong artifact and missed semantic prose errors.","counterpole_safeguard":"Published narrative is retained, unique table content is preserved, and retirement is sequenced with generated coverage.","shadow_signal":"Cleanup removes content or RFC integration anchors before their successors exist."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Different tools could choose different indexed copies as authoritative without any shared publication boundary.","counterpole_safeguard":"A record may remain intentionally invisible when that local choice is explicit and tested.","shadow_signal":"The reachability guard forbids legitimate non-public operational records."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Expression","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "The policy is ratified through #274, but #285 remained open at capture; implementation status is therefore not claimed."
+  }
+]

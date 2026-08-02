@@ -1,0 +1,774 @@
+{
+  "calibrationPass": "A",
+  "independent": true,
+  "corpus": {
+    "epic": "https://github.com/the-greenman/srs/issues/256",
+    "repository": "https://github.com/the-greenman/srs",
+    "selectionRule": "Ten heterogeneous accepted or implemented atomic decisions spanning at least five epic-256 research families.",
+    "familiesRepresented": [
+      "A-model-and-bootstrap",
+      "B-rendering-and-publication",
+      "C-carrier-architecture",
+      "D-repository-authority",
+      "G-operational-reliability",
+      "H-boundary-and-exception-search"
+    ],
+    "excludedFromSelection": "Drafts, unresolved owner questions, generated coordinator proposals, and purely mechanical consequences."
+  },
+  "axisDirections": {
+    "semanticIntegrityPracticalExpression": [
+      "integrity",
+      "expression",
+      "balanced",
+      "conditional",
+      "unknown",
+      "not-applicable"
+    ],
+    "continuityEvolution": [
+      "continuity",
+      "evolution",
+      "balanced",
+      "conditional",
+      "unknown",
+      "not-applicable"
+    ],
+    "sharedCoherenceLocalAutonomy": [
+      "coherence",
+      "autonomy",
+      "balanced",
+      "conditional",
+      "unknown",
+      "not-applicable"
+    ]
+  },
+  "cards": [
+    {
+      "id": "CAL-A-001",
+      "epicRow": "Delivered: Field type model (#257 / RFC-032)",
+      "family": "A-model-and-bootstrap",
+      "effectiveDate": "2026-07-29",
+      "decision": "Replace the closed, conflated Field.valueType model with the orthogonal fieldType facets, including composite references, dependent values, maps, constraints, and FieldGroup subsumption, while deferring the instance-carrier removal to the coordinated #242 cutover.",
+      "class": "precedent-setting",
+      "status": "accepted-and-implemented",
+      "alternatives": [
+        "Retain valueType and continue adding satellite properties.",
+        "Add a general sum-type construct.",
+        "Remove FieldGroup and its instance carrier immediately."
+      ],
+      "acceptedCost": "A breaking definition-layer migration, a richer type model, and a sequenced later instance cutover were accepted to make the model self-describing without stranding live data.",
+      "evidence": [
+        {
+          "kind": "accepted-rfc",
+          "commit": "de2310bc5d90ed47597c0a1a99beffa26ac396b1",
+          "url": "https://github.com/the-greenman/srs/blob/de2310bc5d90ed47597c0a1a99beffa26ac396b1/rfcs/rfc-032-composite-field-range.md#L30-L41",
+          "locator": "RFC-032 Abstract",
+          "excerpt": "This RFC replaces valueType with an orthogonal fieldType model ... no sum-type construct is added."
+        },
+        {
+          "kind": "accepted-rfc",
+          "commit": "71ee4c78ab0881f42cd23dd5d0451bff2f882da5",
+          "url": "https://github.com/the-greenman/srs/blob/71ee4c78ab0881f42cd23dd5d0451bff2f882da5/rfcs/rfc-032-composite-field-range.md#L148-L158",
+          "locator": "RFC-032 Change E",
+          "excerpt": "New authoring uses composite range; FieldGroup is deprecated ... actual removal is a cutover gated with #242."
+        }
+      ],
+      "derivedFrom": [],
+      "supersedes": [
+        "pre-RFC-032 valueType model",
+        "FieldGroup as the future composite-definition mechanism"
+      ],
+      "axes": {
+        "semanticIntegrityPracticalExpression": {
+          "relevant": true,
+          "direction": "integrity",
+          "evidenceBasis": "The project accepted a more expressive, explicitly factored semantic model rather than retaining the simpler closed enum and patches.",
+          "confidence": "high",
+          "counterfactual": "Keeping valueType would be easier for existing tooling but leave nested, recursive, constrained, and open shapes semantically inexpressible.",
+          "counterPoleSafeguard": "Projection rules and a deterministic migration keep the richer model executable rather than merely conceptual.",
+          "shadowSignal": "Further decomposition could become abstract machinery without a demonstrated self-hosting or validation need."
+        },
+        "continuityEvolution": {
+          "relevant": true,
+          "direction": "evolution",
+          "evidenceBasis": "The RFC explicitly makes a breaking definition-layer replacement rather than freezing a flawed public shape.",
+          "confidence": "high",
+          "counterfactual": "Deprecating valueType indefinitely would preserve reader compatibility but retain two competing semantic models.",
+          "counterPoleSafeguard": "FieldGroup removal and instance migration are delayed until the carrier and renderer exist, preserving live data during the transition.",
+          "shadowSignal": "Breaking the definition and instance layers in separate uncoordinated steps would strand records."
+        },
+        "sharedCoherenceLocalAutonomy": {
+          "relevant": true,
+          "direction": "coherence",
+          "evidenceBasis": "One orthogonal facet model replaces a family of special cases and supplies the common foundation required by later epic rows.",
+          "confidence": "high",
+          "counterfactual": "Independent extension-specific encodings would let each feature move locally but preserve cross-model inconsistency.",
+          "counterPoleSafeguard": "Open maps, references, and package-managed vocabularies retain bounded extension freedom inside the common model.",
+          "shadowSignal": "A single core model could overreach by absorbing presentation or domain-specific constructs."
+        }
+      },
+      "cubeCoordinate": "integrity/evolution/coherence",
+      "reviewState": "awaiting-adjudication",
+      "exceptionClassification": "none"
+    },
+    {
+      "id": "CAL-A-002",
+      "epicRow": "Delivered: Self-hosted seed (#258 / RFC-033)",
+      "family": "A-model-and-bootstrap",
+      "effectiveDate": "2026-07-29",
+      "decision": "Express the core definition meta-model as SRS records, but retain the committed hand-authored Field and Type schemas as a frozen runtime bootstrap seed linked to those records by build-time closure checks and an explicit fidelity register.",
+      "class": "precedent-setting",
+      "status": "accepted-and-implemented",
+      "alternatives": [
+        "Re-derive the schemas from their own records at runtime.",
+        "Keep records and schemas as unrelated hand-maintained sources.",
+        "Treat every emitter projection as fully authoritative."
+      ],
+      "acceptedCost": "A deliberately duplicated bootstrap representation and explicit approximation bookkeeping remain necessary to keep metacircular loading well-founded.",
+      "evidence": [
+        {
+          "kind": "accepted-rfc",
+          "commit": "3553f2ac75b08fc766589cfee153461c4e8b75e5",
+          "url": "https://github.com/the-greenman/srs/blob/3553f2ac75b08fc766589cfee153461c4e8b75e5/rfcs/rfc-033-self-host-metamodel-frozen-seed.md#L31-L50",
+          "locator": "RFC-033 Abstract",
+          "excerpt": "The hand-authored ... schemas remain the frozen seed ... loaded as committed, never re-derived ... a build-time consistency obligation."
+        },
+        {
+          "kind": "accepted-rfc",
+          "commit": "3553f2ac75b08fc766589cfee153461c4e8b75e5",
+          "url": "https://github.com/the-greenman/srs/blob/3553f2ac75b08fc766589cfee153461c4e8b75e5/rfcs/rfc-033-self-host-metamodel-frozen-seed.md#L269-L288",
+          "locator": "RFC-033 Change D",
+          "excerpt": "An emitter MUST NOT silently drop an approximated feature; it MUST emit the documented lossy shape and the dashboard records the loss."
+        }
+      ],
+      "derivedFrom": [
+        "RFC-032 fieldType expressiveness"
+      ],
+      "supersedes": [
+        "RFC-004 schema-definition/schema-member vocabulary"
+      ],
+      "axes": {
+        "semanticIntegrityPracticalExpression": {
+          "relevant": true,
+          "direction": "integrity",
+          "evidenceBasis": "The self-hosted records carry semantic authorship, while every lossy projection must declare and preserve its approximation rather than silently dropping meaning.",
+          "confidence": "high",
+          "counterfactual": "Treating a convenient projection as complete would conceal semantic features its target language cannot express.",
+          "counterPoleSafeguard": "The frozen JSON Schemas remain directly usable bootstrap artifacts and approximated output must remain usable.",
+          "shadowSignal": "Semantic primacy without executable projections would leave tooling unable to load the model."
+        },
+        "continuityEvolution": {
+          "relevant": true,
+          "direction": "continuity",
+          "evidenceBasis": "The decision explicitly retains the proven hand-authored schemas as the fixed runtime seed instead of replacing bootstrap behavior immediately.",
+          "confidence": "high",
+          "counterfactual": "Runtime self-derivation would more completely enact self-hosting but introduces an ill-founded bootstrap loop and immediate loader churn.",
+          "counterPoleSafeguard": "Build-time closure and a later emitter chain ensure the retained seed does not become an excuse for permanent drift.",
+          "shadowSignal": "The frozen seed can become a second authority if closure coverage or the divergence register is allowed to decay."
+        },
+        "sharedCoherenceLocalAutonomy": {
+          "relevant": true,
+          "direction": "coherence",
+          "evidenceBasis": "One self-hosted substrate supersedes a separate schema-notation vocabulary and gives all emitters a shared semantic source and fidelity vocabulary.",
+          "confidence": "high",
+          "counterfactual": "Each target could define its own approximation and bootstrap policy, but those policies would drift independently.",
+          "counterPoleSafeguard": "Fidelity is recorded per emitter, allowing target-specific limitations without pretending all targets are identical.",
+          "shadowSignal": "A universal fidelity regime could constrain legitimate target-language conventions beyond semantic equivalence."
+        }
+      },
+      "cubeCoordinate": "integrity/continuity/coherence",
+      "reviewState": "awaiting-adjudication",
+      "exceptionClassification": "counter-pole protection"
+    },
+    {
+      "id": "CAL-A-003",
+      "epicRow": "Delivered: Schema emitter (#259 / RFC-035)",
+      "family": "A-model-and-bootstrap",
+      "effectiveDate": "2026-07-29",
+      "decision": "Compile self-hosted Type records into a target-neutral semantic IR and make JSON Schema the first syntax-only emitter, reusing the existing per-field projection unchanged and verifying both deterministic output and structural closure against the frozen seed.",
+      "class": "precedent-setting",
+      "status": "accepted-and-implemented",
+      "alternatives": [
+        "Generate JSON Schema directly from records with target semantics mixed into traversal.",
+        "Implement a second per-field projection in each target language.",
+        "Require byte equality with the hand-authored seed despite known approximated envelopes."
+      ],
+      "acceptedCost": "The design introduces an IR, two verification tiers, explicit exclusions, and a divergence register before additional emitters exist.",
+      "evidence": [
+        {
+          "kind": "accepted-rfc-and-delivered-reference",
+          "commit": "1ecb76219f17e7d2a880fa686d578553476ee321",
+          "url": "https://github.com/the-greenman/srs/blob/1ecb76219f17e7d2a880fa686d578553476ee321/rfcs/rfc-035-schema-emitter.md#L24-L44",
+          "locator": "RFC-035 Abstract",
+          "excerpt": "A neutral intermediate representation ... and a first JSON Schema 2020-12 emitter ... verification is two-tier."
+        },
+        {
+          "kind": "accepted-rfc",
+          "commit": "1ecb76219f17e7d2a880fa686d578553476ee321",
+          "url": "https://github.com/the-greenman/srs/blob/1ecb76219f17e7d2a880fa686d578553476ee321/rfcs/rfc-035-schema-emitter.md#L100-L130",
+          "locator": "RFC-035 Change A",
+          "excerpt": "The front half is target-agnostic and owns every semantic decision; an emitter owns only target-syntax decisions."
+        }
+      ],
+      "derivedFrom": [
+        "RFC-032 projectField",
+        "RFC-033 frozen-seed closure obligation"
+      ],
+      "supersedes": [
+        "Independent direct projections of the pre-RFC-032 model"
+      ],
+      "axes": {
+        "semanticIntegrityPracticalExpression": {
+          "relevant": true,
+          "direction": "integrity",
+          "evidenceBasis": "Semantic decisions are centralized in the target-neutral front half; emitters are expressly limited to syntax.",
+          "confidence": "high",
+          "counterfactual": "Target-specific direct generators would be simpler initially but allow each output syntax to reinterpret field meaning.",
+          "counterPoleSafeguard": "The first emitter ships as executable Node code with deterministic goldens, not only an abstract architecture.",
+          "shadowSignal": "An overly abstract IR could cease to map cleanly to useful target artifacts."
+        },
+        "continuityEvolution": {
+          "relevant": true,
+          "direction": "evolution",
+          "evidenceBasis": "The project adopts a new generation chain that displaces independent hand-maintained projections, while explicitly refining an earlier closure promise.",
+          "confidence": "medium",
+          "counterfactual": "Continuing to hand-maintain schema copies avoids architectural churn but preserves the drift epic #256 exists to remove.",
+          "counterPoleSafeguard": "The change is additive at this stage; the frozen seed is not overwritten and runtime bindings wait for #260.",
+          "shadowSignal": "A prolonged additive phase could leave the old and new paths coexisting as rival authorities."
+        },
+        "sharedCoherenceLocalAutonomy": {
+          "relevant": true,
+          "direction": "coherence",
+          "evidenceBasis": "All future emitters share one semantic IR and reuse one projection core rather than re-deciding semantics locally.",
+          "confidence": "high",
+          "counterfactual": "Independent emitters could optimize freely for their targets but would recreate multiple sources of truth.",
+          "counterPoleSafeguard": "Target emitters retain ownership of target syntax and target-specific fidelity classifications.",
+          "shadowSignal": "Centralizing target-neutral structure could suppress target capabilities that have no common denominator."
+        }
+      },
+      "cubeCoordinate": "integrity/evolution/coherence",
+      "reviewState": "awaiting-adjudication",
+      "exceptionClassification": "none"
+    },
+    {
+      "id": "CAL-A-004",
+      "epicRow": "Delivered: Rendering design (#262 / RFC-036)",
+      "family": "B-rendering-and-publication",
+      "effectiveDate": "2026-07-31",
+      "decision": "Move composite-renderer selection out of semantic Type definitions and into FieldView, DocumentSection, and DocumentView bindings so the same records may have multiple legitimate presentations.",
+      "class": "precedent-setting",
+      "status": "accepted-design",
+      "alternatives": [
+        "Keep compositeRenderer on FieldGroup or its successor Type.",
+        "Dispatch from hard-coded Field.name conventions.",
+        "Encode display order or renderer choice as semantic relations or fields."
+      ],
+      "acceptedCost": "Renderer configuration becomes contextual and must resolve across several view-layer scopes instead of living in one Type definition.",
+      "evidence": [
+        {
+          "kind": "accepted-rfc",
+          "commit": "f120e9f3174b2eddd773e259a91034eb958b60c2",
+          "url": "https://github.com/the-greenman/srs/blob/f120e9f3174b2eddd773e259a91034eb958b60c2/rfcs/rfc-036-composite-rendering.md#L68-L83",
+          "locator": "RFC-036 Problem 2",
+          "excerpt": "RFC-032 ... declared compositeRenderer ... presentation, out of the type model ... encoding presentation on the data would pollute the data model."
+        },
+        {
+          "kind": "accepted-rfc",
+          "commit": "f120e9f3174b2eddd773e259a91034eb958b60c2",
+          "url": "https://github.com/the-greenman/srs/blob/f120e9f3174b2eddd773e259a91034eb958b60c2/rfcs/rfc-036-composite-rendering.md#L136-L180",
+          "locator": "RFC-036 Change A",
+          "excerpt": "The same records [can be] rendered as a table by one View and as nested field rows by another."
+        }
+      ],
+      "derivedFrom": [
+        "RFC-015 view-owned presentation",
+        "RFC-032 separation of presentation from fieldType"
+      ],
+      "supersedes": [
+        "RFC-007 FieldGroup-owned compositeRenderer"
+      ],
+      "axes": {
+        "semanticIntegrityPracticalExpression": {
+          "relevant": true,
+          "direction": "integrity",
+          "evidenceBasis": "The chosen placement protects semantic Types from presentation claims even though Type-owned dispatch would be simpler to find and implement.",
+          "confidence": "high",
+          "counterfactual": "Type-owned dispatch offers a convenient default but makes one presentation look like part of the record's meaning.",
+          "counterPoleSafeguard": "A specified baseline and scoped resolution ladder ensure records still render without bespoke view configuration.",
+          "shadowSignal": "Strict layer separation can make routine rendering configuration verbose or difficult to discover."
+        },
+        "continuityEvolution": {
+          "relevant": true,
+          "direction": "evolution",
+          "evidenceBasis": "The RFC replaces the legacy FieldGroup placement and explicitly retires hard-coded renderer conventions.",
+          "confidence": "high",
+          "counterfactual": "Preserving the legacy placement would reduce migration work but perpetuate the model/presentation conflation.",
+          "counterPoleSafeguard": "The RFC maps legacy behavior, restores defaults, and gates executable carrier changes with #242.",
+          "shadowSignal": "A broad replacement can lose obscure legacy rendering behavior unless parity cases remain explicit."
+        },
+        "sharedCoherenceLocalAutonomy": {
+          "relevant": true,
+          "direction": "autonomy",
+          "evidenceBasis": "The decision protects the ability of each View or section to choose a different legitimate arrangement over shared records.",
+          "confidence": "high",
+          "counterfactual": "One renderer on the Type creates a single coherent presentation policy but prevents concurrent contextual presentations.",
+          "counterPoleSafeguard": "All bindings use shared renderer contracts, role definitions, diagnostics, and a common baseline.",
+          "shadowSignal": "Per-view freedom can yield inconsistent user experiences if shared renderer contracts are too weak."
+        }
+      },
+      "cubeCoordinate": "integrity/evolution/autonomy",
+      "reviewState": "awaiting-adjudication",
+      "exceptionClassification": "principled contextual exception"
+    },
+    {
+      "id": "CAL-A-005",
+      "epicRow": "Delivered: Field-row rendering baseline (#294 / RFC-037)",
+      "family": "B-rendering-and-publication",
+      "effectiveDate": "2026-07-31",
+      "decision": "Make field-row forms, multi-entry block rendering, row separation, empty handling, and identity classes normative across markdown, AsciiDoc, text, and HTML, while retaining the established authored labels and values.",
+      "class": "precedent-setting",
+      "status": "accepted-and-implemented",
+      "alternatives": [
+        "Leave emitted row form implementation-defined.",
+        "Humanize or normalize fallback labels.",
+        "Adopt a newly designed markdown form and remove legacy CSS aliases immediately."
+      ],
+      "acceptedCost": "Implementations lose output-format discretion and must maintain a temporary alias window, in exchange for parseable and interoperable projections.",
+      "evidence": [
+        {
+          "kind": "accepted-rfc",
+          "commit": "3e1539479ff584eb93f3a6b792d56a3fd7377d06",
+          "url": "https://github.com/the-greenman/srs/blob/3e1539479ff584eb93f3a6b792d56a3fd7377d06/rfcs/rfc-037-normative-field-row-rendering-baseline.md#L294-L330",
+          "locator": "RFC-037 conformance rules FR-037-1 through FR-037-18",
+          "excerpt": "Implementations MUST emit exactly one row ... multi-entry fields ... as a block list ... label and value content verbatim."
+        },
+        {
+          "kind": "accepted-rfc-rationale",
+          "commit": "3e1539479ff584eb93f3a6b792d56a3fd7377d06",
+          "url": "https://github.com/the-greenman/srs/blob/3e1539479ff584eb93f3a6b792d56a3fd7377d06/rfcs/rfc-037-normative-field-row-rendering-baseline.md#L371-L383",
+          "locator": "RFC-037 Rationale",
+          "excerpt": "Ratify the existing markdown form ... choosing a different form would invalidate the entire committed projection to no benefit."
+        }
+      ],
+      "derivedFrom": [
+        "RFC-001 Default Rendering Baseline",
+        "RFC-027 relation-row reference",
+        "RFC-036 composite baseline"
+      ],
+      "supersedes": [
+        "Implementation-defined field-row emission on covered paths"
+      ],
+      "axes": {
+        "semanticIntegrityPracticalExpression": {
+          "relevant": true,
+          "direction": "expression",
+          "evidenceBasis": "This decision primarily standardizes readable, parseable emitted forms and implementation behavior rather than adding domain meaning.",
+          "confidence": "high",
+          "counterfactual": "Leaving row shape open preserves implementer freedom but makes generated documents non-portable and can silently merge rows during parsing.",
+          "counterPoleSafeguard": "Semantic identity remains Field.name, authored content is preserved verbatim in text formats, and presentation labels cannot replace identity.",
+          "shadowSignal": "Over-specifying typography or markup beyond interoperability needs would mistake a presentation preference for semantics."
+        },
+        "continuityEvolution": {
+          "relevant": true,
+          "direction": "continuity",
+          "evidenceBasis": "The RFC deliberately ratifies the established markdown output and preserves old CSS aliases through a scheduled migration window.",
+          "confidence": "high",
+          "counterfactual": "A cleaner new row syntax or immediate alias removal could simplify the final contract but invalidate exports and stylesheets.",
+          "counterPoleSafeguard": "Ambiguous MAY behavior becomes MUST behavior and aliases have a defined sunset at the #242 cutover.",
+          "shadowSignal": "Compatibility can fossilize incidental renderer behavior if the rule lacks a concrete interoperability reason."
+        },
+        "sharedCoherenceLocalAutonomy": {
+          "relevant": true,
+          "direction": "coherence",
+          "evidenceBasis": "All covered renderers and relation rows share one normative row vocabulary and structural contract.",
+          "confidence": "high",
+          "counterfactual": "Format implementations could choose locally idiomatic rows but consumers could not rely on a cross-implementation contract.",
+          "counterPoleSafeguard": "The contract is bounded to DocumentView paths and four named formats; other surfaces remain implementation-defined.",
+          "shadowSignal": "Applying the baseline outside its declared paths would unnecessarily constrain specialized renderers."
+        }
+      },
+      "cubeCoordinate": "expression/continuity/coherence",
+      "reviewState": "awaiting-adjudication",
+      "exceptionClassification": "principled contextual exception"
+    },
+    {
+      "id": "CAL-A-006",
+      "epicRow": "Sequential spine row 3: #242 Phase A / RFC-039",
+      "family": "C-carrier-architecture",
+      "effectiveDate": "2026-07-31",
+      "decision": "Replace Tier-2 fieldValues pairs with an object keyed by Field.name verbatim and one recursively defined fieldType value space; reject unknown keys, null values, duplicate effective names, and lossy migration cases.",
+      "class": "precedent-setting",
+      "status": "accepted-design",
+      "alternatives": [
+        "Retain fieldId/value arrays and generate per-field conditional schemas.",
+        "Transform Field.name spellings for wire keys.",
+        "Keep separate carriers for composites and repeated values.",
+        "Choose winners or drop metadata when old shapes cannot map losslessly."
+      ],
+      "acceptedCost": "A breaking atomic ecosystem migration, effective-name uniqueness, loss of explicit null, and aborts on legal-but-unrepresentable legacy inputs are accepted for by-construction validation and one carrier.",
+      "evidence": [
+        {
+          "kind": "accepted-rfc",
+          "commit": "e0fb4b050447febcd5ecb8f6ccb7864196e656d6",
+          "url": "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#L27-L45",
+          "locator": "RFC-039 Abstract",
+          "excerpt": "An object keyed by Field.name ... a single recursive rule ... abort rather than skip on every schema-legal input the new shape cannot express."
+        },
+        {
+          "kind": "accepted-rfc",
+          "commit": "e0fb4b050447febcd5ecb8f6ccb7864196e656d6",
+          "url": "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#L674-L700",
+          "locator": "RFC-039 R1-R5",
+          "excerpt": "A fieldValues key MUST be Field.name verbatim ... inline ref ... recursively ... null MUST be rejected."
+        },
+        {
+          "kind": "accepted-rfc-migration",
+          "commit": "e0fb4b050447febcd5ecb8f6ccb7864196e656d6",
+          "url": "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#L970-L980",
+          "locator": "RFC-039 migration dispositions",
+          "excerpt": "Duplicate fieldId ... Abort. Two pairs collapse to one key; picking a winner would silently discard data."
+        }
+      ],
+      "derivedFrom": [
+        "RFC-032 fieldType instance space",
+        "RFC-035 schema projection"
+      ],
+      "supersedes": [
+        "Record.fieldValues as FieldValue[]",
+        "FieldGroup/groupValues carrier",
+        "ext:repeatable-fields entries carrier"
+      ],
+      "axes": {
+        "semanticIntegrityPracticalExpression": {
+          "relevant": true,
+          "direction": "integrity",
+          "evidenceBasis": "The carrier is shaped to be valid by construction against Field semantics and aborts rather than silently discard data or provenance.",
+          "confidence": "high",
+          "counterfactual": "Keeping id/value pairs avoids a large migration but prevents ordinary JSON Schema from expressing the Type's value contract.",
+          "counterPoleSafeguard": "Name-keyed JSON is substantially simpler to author, inspect, and validate with standard tools.",
+          "shadowSignal": "Strict aborts can make migration operationally expensive when legacy ambiguity has no semantic consequence."
+        },
+        "continuityEvolution": {
+          "relevant": true,
+          "direction": "evolution",
+          "evidenceBasis": "The accepted design is explicitly breaking and retires three legacy carrier mechanisms in one atomic cutover.",
+          "confidence": "high",
+          "counterfactual": "A long compatibility window would preserve old readers but require both carrier semantics and undermine the single-source goal.",
+          "counterPoleSafeguard": "The RFC inventories the first-party corpus, specifies total transforms and rollback, and delays execution until prerequisites are satisfied.",
+          "shadowSignal": "Atomic evolution across many repositories can create a cutover too large to verify or recover safely."
+        },
+        "sharedCoherenceLocalAutonomy": {
+          "relevant": true,
+          "direction": "coherence",
+          "evidenceBasis": "One recursive value rule aligns records, projected schemas, inline composites, lists, and domain Field.name keys.",
+          "confidence": "high",
+          "counterfactual": "Separate carriers allow each feature to optimize locally but require divergent readers and migration logic.",
+          "counterPoleSafeguard": "Field names need only be unique in a Type's effective field set, not globally across packages.",
+          "shadowSignal": "A globally generalized carrier could impose metamodel-specific key policy on unrelated domain Types."
+        }
+      },
+      "cubeCoordinate": "integrity/evolution/coherence",
+      "reviewState": "awaiting-adjudication",
+      "exceptionClassification": "none"
+    },
+    {
+      "id": "CAL-A-007",
+      "epicRow": "Sequential spine row 3a: #296 / RFC-038",
+      "family": "D-repository-authority",
+      "effectiveDate": "2026-08-01",
+      "decision": "Make declared repository trees authoritative for membership, discover reserved roots by repository/package markers rather than manifest indexes, and require explicit classification plus fail-closed diagnostics for malformed, duplicate, or dangling content.",
+      "class": "precedent-setting",
+      "status": "accepted-design",
+      "alternatives": [
+        "Keep manifest indexes authoritative.",
+        "Use packageRefs as the exclusive discovery list.",
+        "Infer entity kind from path or silently skip near-miss content."
+      ],
+      "acceptedCost": "Readers must scan declared trees, classify content, and diagnose conflicts; migration must reconcile formerly hidden files and duplicate identifiers.",
+      "evidence": [
+        {
+          "kind": "accepted-rfc",
+          "commit": "0c0ee75fb7b582879a908ed1e2ad5c937185ba4f",
+          "url": "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#L30-L48",
+          "locator": "RFC-038 Abstract",
+          "excerpt": "Resolves the contradiction in favour of the already-ratified tree-authoritative rule ... a routine write stops touching a shared file."
+        },
+        {
+          "kind": "accepted-rfc",
+          "commit": "0c0ee75fb7b582879a908ed1e2ad5c937185ba4f",
+          "url": "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#L250-L269",
+          "locator": "RFC-038 Change B",
+          "excerpt": "A rule keyed on declared package boundaries silently drops 7 of 375 indexed instances ... this RFC therefore keys on presence."
+        },
+        {
+          "kind": "accepted-rfc",
+          "commit": "0c0ee75fb7b582879a908ed1e2ad5c937185ba4f",
+          "url": "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#L784-L805",
+          "locator": "RFC-038 R6-R8",
+          "excerpt": "Tier and kind ... from its own content ... zero matches, or two or more, MUST be reported as an error."
+        }
+      ],
+      "derivedFrom": [
+        "RFC-012 and RFC-013 tree-authoritative membership rules"
+      ],
+      "supersedes": [
+        "RepositoryManifest instanceIndex as membership authority",
+        "manifest-indexed relation and container collections"
+      ],
+      "axes": {
+        "semanticIntegrityPracticalExpression": {
+          "relevant": true,
+          "direction": "integrity",
+          "evidenceBasis": "The chosen discovery model makes actual declared content authoritative and turns silent omissions, duplicates, and ambiguous classification into named errors.",
+          "confidence": "high",
+          "counterfactual": "Index authority is faster and explicit but can make valid files disappear semantically when indexes drift.",
+          "counterPoleSafeguard": "A backend-neutral catalog provides one practical API and snapshots may cache the discovered set.",
+          "shadowSignal": "Fail-closed classification across broad trees can make incidental files fatal if reserved boundaries are not sharply defined."
+        },
+        "continuityEvolution": {
+          "relevant": true,
+          "direction": "evolution",
+          "evidenceBasis": "The RFC resolves two ratified but contradictory authority models by removing index authority and designing an atomic generation-2 migration.",
+          "confidence": "high",
+          "counterfactual": "Retaining indexes preserves existing readers and formats but leaves contradictory membership semantics in force.",
+          "counterPoleSafeguard": "Logical IDs, source documents, relations, containers, and revision history are preserved or explicitly reconciled during migration.",
+          "shadowSignal": "A direct cutover without an external compatibility obligation may underestimate downstream readers outside the declared first-party boundary."
+        },
+        "sharedCoherenceLocalAutonomy": {
+          "relevant": true,
+          "direction": "autonomy",
+          "evidenceBasis": "Membership is composed from independently writable entity files; routine writes no longer mutate a shared global index and concurrent agents avoid that hotspot.",
+          "confidence": "medium",
+          "counterfactual": "A central index provides one visibly coherent enumeration but couples all local writes and silently diverges from the tree.",
+          "counterPoleSafeguard": "Shared reserved-location, classification, uniqueness, and catalog rules reconstruct a coherent repository view from local files.",
+          "shadowSignal": "File-level autonomy without comprehensive set-level validation would permit duplicate identities and inconsistent repository membership."
+        }
+      },
+      "cubeCoordinate": "integrity/evolution/autonomy",
+      "reviewState": "awaiting-adjudication",
+      "exceptionClassification": "principled contextual exception"
+    },
+    {
+      "id": "CAL-A-008",
+      "epicRow": "Delivered: Four legacy rule ports (#284 / RFC-032 Revision 7)",
+      "family": "C-carrier-architecture",
+      "effectiveDate": "2026-08-01",
+      "decision": "Re-express four legacy valueType subset rules as exact fieldType predicates, preserve every legacy classification, classify every new datatype and format explicitly, and retain a two-mechanism effective-single check until the atomic carrier cutover proves the legacy conjunct removable.",
+      "class": "reasoned-application",
+      "status": "accepted-and-implemented",
+      "alternatives": [
+        "Treat every string datatype identically after the collapse.",
+        "Immediately re-key all four rules to fieldType.cardinality alone.",
+        "Make new or unknown formats eligible by default.",
+        "Add composite text-projection recursion in the erratum."
+      ],
+      "acceptedCost": "Some new semantically rich fields remain non-searchable, both cardinality mechanisms must be read temporarily, and the predicates are more explicit and restrictive.",
+      "evidence": [
+        {
+          "kind": "owner-ratified-rfc-erratum",
+          "commit": "71ee4c78ab0881f42cd23dd5d0451bff2f882da5",
+          "url": "https://github.com/the-greenman/srs/blob/71ee4c78ab0881f42cd23dd5d0451bff2f882da5/rfcs/rfc-032-composite-field-range.md#L207-L231",
+          "locator": "RFC-032 Change I",
+          "excerpt": "The complete disposition of the four legacy subset rules ... preserves all eight legacy classifications ... unknown and future formats remain excluded."
+        },
+        {
+          "kind": "owner-ratified-rfc-erratum",
+          "commit": "71ee4c78ab0881f42cd23dd5d0451bff2f882da5",
+          "url": "https://github.com/the-greenman/srs/blob/71ee4c78ab0881f42cd23dd5d0451bff2f882da5/rfcs/rfc-032-composite-field-range.md#L233-L251",
+          "locator": "RFC-032 legacy-conjunct removal gate",
+          "excerpt": "MUST NOT be removed ... independently ... only in the atomic #242 Phase-B change that proves all [five conditions]."
+        },
+        {
+          "kind": "owner-decision",
+          "commit": null,
+          "url": "https://github.com/the-greenman/srs/issues/284#issuecomment-5151606989",
+          "locator": "Issue #284 owner decision",
+          "excerpt": "Owner decision resolving all four predicates and directing the RFC-032 Revision 7 erratum route."
+        }
+      ],
+      "derivedFrom": [
+        "RFC-032 datatype collapse",
+        "RFC-012 searchability obligation",
+        "legacy I-94, T-9, and N+1 behavior"
+      ],
+      "supersedes": [
+        "Legacy predicates expressed only over valueType"
+      ],
+      "axes": {
+        "semanticIntegrityPracticalExpression": {
+          "relevant": true,
+          "direction": "integrity",
+          "evidenceBasis": "The decision rejects apparently mechanical string tests and specifies exact semantic facets, including explicit exclusion of formats whose storage shape is string but whose meaning differs.",
+          "confidence": "high",
+          "counterfactual": "Checking datatype == string alone is much simpler but silently widens rule eligibility and changes meaning.",
+          "counterPoleSafeguard": "Predicates use small allow-lists and existing facets that implementations can execute directly.",
+          "shadowSignal": "Semantically precise allow-lists can leave useful new types inert until a later RFC explicitly admits them."
+        },
+        "continuityEvolution": {
+          "relevant": true,
+          "direction": "continuity",
+          "evidenceBasis": "All eight legacy text classifications are preserved and the temporary effective-single union prevents a silent behavior widening before migration completes.",
+          "confidence": "high",
+          "counterfactual": "Switching directly to the new facets would simplify the end state but misclassify records still carrying assignment-level repeatability.",
+          "counterPoleSafeguard": "The legacy conjunct has a concrete five-condition removal gate tied to the atomic Phase-B transition.",
+          "shadowSignal": "Compatibility conjuncts can survive past their evidence-based sunset and permanently complicate the model."
+        },
+        "sharedCoherenceLocalAutonomy": {
+          "relevant": true,
+          "direction": "coherence",
+          "evidenceBasis": "Four separate extension rules are reconciled against one shared fieldType vocabulary and one transition definition.",
+          "confidence": "high",
+          "counterfactual": "Each extension could independently interpret new field types but would produce incompatible eligibility semantics.",
+          "counterPoleSafeguard": "Each rule retains a purpose-specific predicate rather than forcing one universal definition of string eligibility.",
+          "shadowSignal": "Shared facet vocabulary can be mistaken for a requirement that all consumers select the same subset."
+        }
+      },
+      "cubeCoordinate": "integrity/continuity/coherence",
+      "reviewState": "awaiting-adjudication",
+      "exceptionClassification": "counter-pole protection"
+    },
+    {
+      "id": "CAL-A-009",
+      "epicRow": "Delivered: Package UUID collision repair (#295 / PR #299)",
+      "family": "G-operational-reliability",
+      "effectiveDate": "2026-07-31",
+      "decision": "Reassign the generated metamodel package's colliding UUID while preserving all Field and Type identities, and add repository-wide assertions that package and resolved definition identities are unique and stable across package trees.",
+      "class": "reasoned-application",
+      "status": "implemented-and-owner-ratified",
+      "alternatives": [
+        "Keep the collision and rely on resolution order.",
+        "Reassign the larger hand-authored spec-authoring-core package.",
+        "Repair the one ID without adding a general uniqueness guard."
+      ],
+      "acceptedCost": "The newly generated package identity changes and all generated package files are regenerated; a new repository-wide validation scan is added.",
+      "evidence": [
+        {
+          "kind": "implemented-guard",
+          "commit": "512d9c60da079f793b6dc4a37f7bdd23a63e8a8b",
+          "url": "https://github.com/the-greenman/srs/blob/512d9c60da079f793b6dc4a37f7bdd23a63e8a8b/scripts/check-package-id-uniqueness.mjs#L15-L29",
+          "locator": "check-package-id-uniqueness contract",
+          "excerpt": "Resolved package ids are unique ... a package id means one package everywhere."
+        },
+        {
+          "kind": "implemented-guard",
+          "commit": "512d9c60da079f793b6dc4a37f7bdd23a63e8a8b",
+          "url": "https://github.com/the-greenman/srs/blob/512d9c60da079f793b6dc4a37f7bdd23a63e8a8b/scripts/check-package-id-uniqueness.mjs#L104-L120",
+          "locator": "checkPackageIds",
+          "excerpt": "package id ... claimed by two resolved packages [is recorded as an error naming both packages]."
+        },
+        {
+          "kind": "accepted-rfc-erratum",
+          "commit": "512d9c60da079f793b6dc4a37f7bdd23a63e8a8b",
+          "url": "https://github.com/the-greenman/srs/blob/512d9c60da079f793b6dc4a37f7bdd23a63e8a8b/rfcs/rfc-033-self-host-metamodel-frozen-seed.md#L13-L16",
+          "locator": "RFC-033 Revision 5",
+          "excerpt": "The metamodel package is reassigned ... the first slot no tree in this repo has ever claimed ... no normative change."
+        }
+      ],
+      "derivedFrom": [
+        "RFC-033 pinned UUID scheme",
+        "Package identity invariants"
+      ],
+      "supersedes": [
+        "Colliding metamodel package id 4a000001-0000-4000-a000-000000000001"
+      ],
+      "axes": {
+        "semanticIntegrityPracticalExpression": {
+          "relevant": true,
+          "direction": "integrity",
+          "evidenceBasis": "The project rejects resolution-order-dependent identity and makes duplicate claims fail with both semantic owners named.",
+          "confidence": "high",
+          "counterfactual": "Leaving the collision alone avoids regeneration but lets one identifier denote two packages depending on traversal order.",
+          "counterPoleSafeguard": "Only the cheaper generated package ID changes; all definition identities and normative meaning remain untouched.",
+          "shadowSignal": "Repository-wide identity policing can flag intentional artifact copies unless semantic sameness is distinguished from collision."
+        },
+        "continuityEvolution": {
+          "relevant": true,
+          "direction": "evolution",
+          "evidenceBasis": "The incorrect public identity is changed rather than preserved for compatibility, because stable identity is meaningful only when unique.",
+          "confidence": "high",
+          "counterfactual": "Preserving the assigned UUID maintains byte continuity but institutionalizes an invalid identity claim.",
+          "counterPoleSafeguard": "The smallest and newest generated package is reassigned; its Fields, Types, and semantics do not change.",
+          "shadowSignal": "Corrective ID changes can break references if their blast radius is not exhaustively regenerated and checked."
+        },
+        "sharedCoherenceLocalAutonomy": {
+          "relevant": true,
+          "direction": "coherence",
+          "evidenceBasis": "A repository-wide rule prevents local generators or package trees from independently claiming identities already owned elsewhere.",
+          "confidence": "high",
+          "counterfactual": "Each package tree could manage its own IDs, but cross-tree resolution would remain ambiguous.",
+          "counterPoleSafeguard": "Legitimate repeated copies of the same namespace/name package retain the same ID; cross-kind reuse remains only a warning.",
+          "shadowSignal": "Uniqueness rules broader than resolution scope could prohibit legitimate mirrors and immutable copies."
+        }
+      },
+      "cubeCoordinate": "integrity/evolution/coherence",
+      "reviewState": "awaiting-adjudication",
+      "exceptionClassification": "none"
+    },
+    {
+      "id": "CAL-A-010",
+      "epicRow": "Cross-cutting boundary: extension forward compatibility",
+      "family": "H-boundary-and-exception-search",
+      "effectiveDate": "2026-05-28",
+      "decision": "When an implementation encounters extension content it does not understand, it should continue processing the recognized base content, surface the unknown content, and preserve it through round trips instead of discarding it or letting specialization redefine base semantics.",
+      "class": "precedent-setting",
+      "status": "implemented-canonical-guidance",
+      "alternatives": [
+        "Reject every record containing an unknown extension.",
+        "Silently discard unrecognized fields.",
+        "Allow a specializing Type to reinterpret or relax base semantics."
+      ],
+      "acceptedCost": "Readers must retain opaque content and expose partial understanding; extension authors cannot alter inherited base-field meaning or relax base requirements.",
+      "evidence": [
+        {
+          "kind": "canonical-rationale",
+          "commit": "ce667700a66a47513db5bf6073576f60be2f878d",
+          "url": "https://github.com/the-greenman/srs/blob/ce667700a66a47513db5bf6073576f60be2f878d/srs/source-documents/rationale/scds-rationale.md#L250-L254",
+          "locator": "SCDS rationale 3.7 Graceful degradation",
+          "excerpt": "Understand what you can, preserve what you cannot ... pass that unknown content through rather than silently discarding it."
+        },
+        {
+          "kind": "canonical-rationale",
+          "commit": "ce667700a66a47513db5bf6073576f60be2f878d",
+          "url": "https://github.com/the-greenman/srs/blob/ce667700a66a47513db5bf6073576f60be2f878d/srs/source-documents/rationale/scds-rationale.md#L317-L323",
+          "locator": "SCDS rationale 4.6 Conservative inheritance",
+          "excerpt": "It does not let a specializing Type change Field semantics or relax base requirements ... a system ... can still process the base portion."
+        }
+      ],
+      "derivedFrom": [
+        "SRS extension and type-inheritance contracts"
+      ],
+      "supersedes": [],
+      "axes": {
+        "semanticIntegrityPracticalExpression": {
+          "relevant": true,
+          "direction": "integrity",
+          "evidenceBasis": "Unknown semantic content is retained and surfaced, and specialization cannot substitute a different meaning for inherited fields.",
+          "confidence": "high",
+          "counterfactual": "Dropping unrecognized content is operationally simpler but irreversibly destroys claims the reader cannot evaluate.",
+          "counterPoleSafeguard": "The reader may still process and present the base portion it understands instead of failing the entire record.",
+          "shadowSignal": "Opaque preservation without clear diagnostics can make users believe unknown claims were validated."
+        },
+        "continuityEvolution": {
+          "relevant": true,
+          "direction": "continuity",
+          "evidenceBasis": "Older or narrower implementations continue to read the stable base contract while preserving newer specialization content for capable systems.",
+          "confidence": "high",
+          "counterfactual": "Requiring all readers to understand every extension makes semantic enforcement uniform but prevents independent evolution of the ecosystem.",
+          "counterPoleSafeguard": "Extensions may add fields, ordering, and presentation/workflow overrides without waiting for the base model to absorb them.",
+          "shadowSignal": "Compatibility with unknown content can become an excuse not to version or validate recognized semantic extensions."
+        },
+        "sharedCoherenceLocalAutonomy": {
+          "relevant": true,
+          "direction": "autonomy",
+          "evidenceBasis": "Namespaces may specialize locally and receivers may understand different extension sets while interoperating on a shared base.",
+          "confidence": "high",
+          "counterfactual": "A closed centrally enumerated extension set maximizes uniform behavior but prevents federated domain specialization.",
+          "counterPoleSafeguard": "Inheritance is conservative: extensions cannot redefine base Field semantics or relax base requirements.",
+          "shadowSignal": "Unbounded extension autonomy can fragment discoverability and behavior unless base guarantees remain mechanically enforced."
+        }
+      },
+      "cubeCoordinate": "integrity/continuity/autonomy",
+      "reviewState": "awaiting-adjudication",
+      "exceptionClassification": "principled contextual exception"
+    }
+  ]
+}

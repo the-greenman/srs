@@ -1,0 +1,117 @@
+[
+  {
+    "decision_id": "E256-D16",
+    "epic_row": "5-input/6a-input",
+    "task_refs": ["srs#296", "srs#313", "RFC-038"],
+    "decision_family": "D",
+    "title": "Reconcile the accepted marker-directory rule with the canonical file invariant",
+    "decision_statement": "The current corpus is contradictory: accepted RFC-038 and repository tooling treat .srs as an implementation-private directory, while canonical Invariant 45 still requires a marker file and the gallery carries that file form; the canonical fold and corpus repair remain unresolved.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {"kind":"canonical","authority_rank":1,"url_or_path":"https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/srs/records/invariants/invariant-045.json#L9-L16","excerpt":"Current canonical Invariant 45 says a conforming repository must have a .srs marker file.","explicitness":"explicit","commit_sha":"ae52927de4e45490cb427fee2b332d5351f536cd"},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L761-L782","excerpt":"Accepted RFC-038 rules R3 and R5 use .srs as a skipped implementation-private directory at the repository root.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"implementation","authority_rank":3,"url_or_path":"https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/spec/examples/gallery-project-v2/.srs","excerpt":"The current gallery repository artifact is a regular file at .srs rather than a directory.","explicitness":"inferred","commit_sha":"ae52927de4e45490cb427fee2b332d5351f536cd"},
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/313","excerpt":"Issue 313 remains open to reconcile the invariant, projection, gallery artifact, and reference implementation around one marker kind.","explicitness":"explicit"}
+    ],
+    "alternatives": ["Fold the accepted directory rule into the canonical invariant and migrate the gallery.", "Amend RFC-038 and tooling back to a marker file.", "Normatively accept both kinds."],
+    "accepted_cost": "No final cost is yet effective across all authorities; every option requires amending at least one accepted or canonical source and adding a negative check.",
+    "supersedes": [],
+    "derived_from": ["E256-D14"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Choosing the convenient live form without reconciling canonical meaning leaves two incompatible repository boundaries.","counterpole_safeguard":"Any resolution must preserve a clear, discoverable repository boundary and keep private marker content non-authoritative unless explicitly changed.","shadow_signal":"The conflict is treated as cosmetic even though discovery and validation depend on it."},
+      "continuity_evolution": {"relevance":"decisive","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"The directory choice preserves current tooling and the canonical spec repository but changes the canonical invariant and gallery; the file choice reverses those costs.","counterpole_safeguard":"The fold must name every authority and artifact whose behavior changes.","shadow_signal":"A local compatibility fix silently creates a third accepted form."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Leaving both forms implicit lets repositories and implementations disagree about whether the same tree is an SRS repository.","counterpole_safeguard":"Implementation-private state must retain a bounded home after a common marker contract is selected.","shadow_signal":"Tool-private needs override the shared repository boundary without a normative decision."}
+    },
+    "cube": {"dimensionality":"centre","coordinate":[]},
+    "exception_class": "possible-contradiction",
+    "review_state": "uncalibrated",
+    "coding_notes": "D14 preserves the accepted RFC decision as historical evidence; this card separately preserves the unresolved current-authority contradiction and is excluded from bias counts."
+  },
+  {
+    "decision_id": "E256-D17",
+    "epic_row": "3a/6a",
+    "task_refs": ["srs#296", "RFC-038", "srs#297", "RFC-017"],
+    "decision_family": "D",
+    "title": "Make the source-document sidecar authoritative even when content is absent",
+    "decision_statement": "Source-document identity is discovered from its .meta.json sidecar under sourceDocumentsPath, the documentId comes from that sidecar, and a valid sidecar remains a source-document tombstone when its opaque content payload is absent; sourceDocumentIndex is retired.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L470-L497","excerpt":"Accepted Change G retires sourceDocumentIndex, assigns identity to the sidecar, preserves absent-content tombstones, and explicitly supersedes the contrary invariant wording.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L857-L859","excerpt":"Rule R15 makes a parseable sidecar authoritative and permits absent content.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"canonical","authority_rank":1,"url_or_path":"https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/srs/records/invariants/invariant-052.json","excerpt":"The current canonical invariant still requires sidecar contentPath to resolve, so the accepted supersession is not yet effective in canonical records pending cutover.","explicitness":"explicit","commit_sha":"ae52927de4e45490cb427fee2b332d5351f536cd"}
+    ],
+    "alternatives": ["Retain sourceDocumentIndex solely for tombstones.", "Require every sidecar to have content.", "Drop tombstones when retiring the index."],
+    "accepted_cost": "Invariant 52 and source-document discovery prose must be rewritten, and a sidecar becomes meaningful membership even without a payload.",
+    "supersedes": ["sourceDocumentIndex authority", "Invariant 52 prohibition on sidecar tombstones"],
+    "derived_from": ["E256-D01", "RFC-017 source-document identity"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Dropping tombstones or treating content presence as identity would erase reference-only source-document meaning.","counterpole_safeguard":"Opaque payloads remain unparsed and unmanaged payloads remain application-owned.","shadow_signal":"Sidecars accumulate stale identities whose missing payloads are no longer intentional."},
+      "continuity_evolution": {"relevance":"decisive","direction":"evolution","evidence_basis":"explicit","confidence":"high","counterfactual":"Retaining the index for one legacy role would preserve a shared competing authority.","counterpole_safeguard":"The existing tombstone capability and documentId identities survive in the sidecar representation.","shadow_signal":"The authority flip adopts unindexed sidecars as members without explicit corpus disposition."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Index and sidecar discovery could continue giving different answers about source-document membership.","counterpole_safeguard":"Payload bytes and unclaimed source material remain outside semantic classification.","shadow_signal":"One identity rule starts governing application-owned source payload content."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "This is independently reversible from generic object discovery. The accepted decision is not yet implemented: current canonical Invariant 52 remains the losing rule until #297 folds the contract."
+  },
+  {
+    "decision_id": "E256-D18",
+    "epic_row": "3a/6a",
+    "task_refs": ["srs#296", "RFC-038", "srs#297"],
+    "decision_family": "D",
+    "title": "Permit only a reference-preserving scoped cascade on delete",
+    "decision_statement": "A routine delete normally writes only its target, but deletion of an instance, container, or source document must include only the incident relation or reference targets necessary to avoid an exact-one-resolution violation in the same scoped cascade.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L444-L468","excerpt":"Change F resolves the deadlock between isolated writes and fatal dangling references with a narrowly declared cascade, while rejecting a shared tombstone list.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L896-L901","excerpt":"Rule R22 permits and requires only the incident-target cascade needed to preserve R13, forbidding unrelated additions.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"}
+    ],
+    "alternatives": ["Forbid every multi-object routine write.", "Leave incident references dangling after deletion.", "Maintain a shared tombstone membership list.", "Allow unconstrained cascading cleanup."],
+    "accepted_cost": "Delete is not always a one-file operation, and importing an older archive can visibly resurrect an object because no instance tombstone list is retained.",
+    "supersedes": ["Unqualified one-target delete rule"],
+    "derived_from": ["E256-D08", "E256-D10"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"Strict one-file isolation would leave a repository fatally inconsistent immediately after a valid delete.","counterpole_safeguard":"The cascade is limited to named incident targets and must not absorb unrelated cleanup.","shadow_signal":"Referential closure triggers surprising large deletions without a visible plan or preview."},
+      "continuity_evolution": {"relevance":"supporting","direction":"evolution","evidence_basis":"explicit","confidence":"medium","counterfactual":"A tombstone registry would recreate the shared mutable membership structure RFC-038 removes.","counterpole_safeguard":"Archive resurrection is visible rather than silently discarded, and root-container deletions remain explicit membership operations.","shadow_signal":"Rejecting tombstones makes intentional historical deletion impossible to preserve across import."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Purely local delete autonomy would violate the repository-wide reference contract.","counterpole_safeguard":"Only semantically incident objects join the operation; unrelated objects retain write autonomy.","shadow_signal":"Shared-consistency claims justify cascades beyond the smallest closed semantic set."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "The cascade is an independently reversible transaction-boundary decision, not merely a mechanical effect of exact-one validation."
+  },
+  {
+    "decision_id": "E256-D19",
+    "epic_row": "3a/6a",
+    "task_refs": ["srs#296", "RFC-038", "srs#297"],
+    "decision_family": "D",
+    "title": "Define one deterministic logical-identifier order across backends",
+    "decision_statement": "Every authoritative set enumerates in a deterministic total order by its schema-defined logical identifier using canonical byte-wise UUID comparison, with extensions ordered by kind then ID; filesystem or backend iteration order is never observable enumeration order.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L438-L442","excerpt":"Change E explains that platform and backend directory order is unstable and all consumers need one total order.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L850-L855","excerpt":"Rule R14 fixes identifier ordering and forbids exposing storage iteration order.","explicitness":"explicit","commit_sha":"1a1746d3ebf8346914fd88920dcaf2b80b07d877"}
+    ],
+    "alternatives": ["Expose filesystem or map iteration order.", "Let each backend choose its native UUID ordering.", "Sort by filenames or paths.", "Leave ordering to every consumer."],
+    "accepted_cost": "Native database UUID ordering may need normalization, and every adapter must materialize the same canonical comparison rather than expose its cheapest iteration.",
+    "supersedes": ["Backend-native enumeration order", "Filesystem iteration order"],
+    "derived_from": ["E256-D12", "ADR-039 deterministic archive requirement"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"expression","evidence_basis":"explicit","confidence":"high","counterfactual":"Semantically identical repositories would render, export, and diff in unstable orders across runs or backends.","counterpole_safeguard":"Ordering uses the schema-defined logical identifier and does not change entity identity or meaning.","shadow_signal":"Presentation stability is mistaken for semantic ordering or used to imply precedence."},
+      "continuity_evolution": {"relevance":"supporting","direction":"continuity","evidence_basis":"explicit","confidence":"high","counterfactual":"Backend migration or platform changes would reorder otherwise identical repository outputs.","counterpole_safeguard":"Extension sets retain an extensible two-key order rather than a frozen filesystem layout.","shadow_signal":"Historical byte order prevents a better explicit semantic order when one is later defined."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Each adapter or consumer could create different projections from the same logical content.","counterpole_safeguard":"Storage engines remain free to use any internal ordering and normalize only at the catalog boundary.","shadow_signal":"The shared ordering contract leaks into storage indexes and constrains local query execution."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Expression","Continuity","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "This is independently reversible: cross-backend ordering could differ while the logical catalog shape remained unchanged."
+  }
+]

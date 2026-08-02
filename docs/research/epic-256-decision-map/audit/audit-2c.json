@@ -1,0 +1,345 @@
+{
+  "auditor": "audit-2c",
+  "assignment_count": 36,
+  "reviews": [
+    {
+      "decision_id": "E256-A01",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["RFC-032 Change A and rationale at de2310bc", "current field schema at ae52927d"],
+      "findings": ["The card isolates the replacement of the conflated type-description mechanism; the separately reversible datatype and migration choices remain outside this atom."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-A04",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["RFC-032 presentation boundary and rationale at de2310bc", "current field schema at ae52927d"],
+      "findings": ["The low-confidence not-applicable temporal axis is excluded from placement; the semantic/presentation boundary and retained rendering follow-up directly support the Integrity and Autonomy edge."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-A07",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["RFC-033 Revision 2 rationale and accepted Revision 4 at e6d94bba", "current repository manifest at ae52927d"],
+      "findings": ["The accepted RFC explicitly rejects its earlier implicit-merge position and preserves ordinary packageRef resolution while narrowing reservation to canonical identities."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-A13",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["RFC-035 Change I at 9d4f5e90", "srs-rust PR 778 merged 2026-07-31T11:27:21Z at b6b2757558e8a79bfa17fbcd6d150ab783cf2aa2"],
+      "findings": ["Mechanical-derivation correctly prevents the multi-surface Rust delivery from receiving another bias vote; merge delivery and the binding-to-reference consequence are verified."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-B06",
+      "outcome": "correction-required",
+      "checks": {"atomicity":false,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":false,"cube":false,"relationships":true,"exception":true},
+      "evidence_checked": ["RFC-037 Change C at f4675932", "current normative field-row projection at ae52927d"],
+      "findings": ["The card combines two independently reversible output rules: treating empty strings/sequences as absent and requiring the literal `(empty)` for an absent required field under show-placeholder.", "Their shared control-flow branch does not make them one policy choice; either rule can change without reversing the other."],
+      "recommended_changes": ["Split omission and portable-placeholder behavior into separate cards and recode each atom's axes and cube."]
+    },
+    {
+      "decision_id": "E256-B09",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["Owner-authored issue 274 decision body", "owner comment 5145639920"],
+      "findings": ["The ratified architecture is one authority/projection boundary: semantic records are authoritative while narrative and typed generated views are distinct reader surfaces."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-C02",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["RFC-039 Change B at e0fb4b05"],
+      "findings": ["Recursive value-space identity, including uniform cardinality wrapping, is a single bidirectional carrier/projection rule; object-key choice and null policy are correctly left to other cards."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-C05",
+      "outcome": "correction-required",
+      "checks": {"atomicity":false,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":false,"cube":false,"relationships":true,"exception":true},
+      "evidence_checked": ["RFC-039 Change E and Phase B plan at e0fb4b05"],
+      "findings": ["The statement combines the governing replacement of FieldGroup/groupValues with independently reversible migration commitments: deterministic range-Type/Field minting, version bumps, presentation-placement preservation, and instance rewrites."],
+      "recommended_changes": ["Keep one precedent card for replacing FieldGroup with typed inline composites; move versioning and transform behavior into separate reasoned-application or mechanical-derivation cards."]
+    },
+    {
+      "decision_id": "E256-C08",
+      "outcome": "correction-required",
+      "checks": {"atomicity":false,"evidence":true,"status_class":true,"alternatives_cost":false,"axes":false,"cube":false,"relationships":true,"exception":true},
+      "evidence_checked": ["owner comment 5151606989 on issue 284", "accepted RFC-032 Revision 7 at 4ac36baf"],
+      "findings": ["Four independently reversible predicates—I-120, I-94, T-9, and N+1—are bundled into one vote even though they admit different datatypes, formats, domains, cardinality effects, and behavioral consequences.", "The aggregate `conditional` temporal result is produced by mixing an intentional date-time widening with several scalar/format narrowings, not by one irreducibly conditional decision."],
+      "recommended_changes": ["Split one card per legacy rule port, retaining the shared transition-only effective-single definition as a separately ratified shared constraint or derivation."]
+    },
+    {
+      "decision_id": "E256-C11",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["RFC-039 Change J and R14 at e0fb4b05"],
+      "findings": ["Dangling and wrong-range targets are two manifestations of one fail-closed reference-integrity rule, explicitly resolving the cited deferrals."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-D01",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["RFC-038 Change A and R1 at 1a1746d3"],
+      "findings": ["The six named authoritative sets are the exhaustive scope of one store-over-manifest authority rule rather than six independent policy choices."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-D04",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["RFC-038 Change D and reserved-location rules at 1a1746d3"],
+      "findings": ["Fail-closed classification inside reserved locations and non-interference outside them are the two sides of one explicit ownership boundary."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-D07",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["RFC-038 duplicate-logical-id rules R12/R13 at 1a1746d3"],
+      "findings": ["The no-winner duplicate policy is explicit, atomic, and correctly distinguishes logical identity from backend enumeration."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-D10",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["RFC-038 Change E and snapshot reconciliation at 1a1746d3"],
+      "findings": ["One-relation-per-object is the governing storage atom; snapshot exclusion and independent-file writes are direct consequences of applying it consistently."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-D13",
+      "outcome": "correction-required",
+      "checks": {"atomicity":false,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":false,"exception":true},
+      "evidence_checked": ["RFC-038 Change J and R20/R21 at 1a1746d3", "comparison with E256-E12"],
+      "findings": ["This is the same conceptual generation-discrimination and fail-loud reader decision as E256-E12, so retaining both creates a duplicate eligible vote.", "The statement also bundles discriminator selection, srsj format version, ordinary-reader rejection, and migrator exception."],
+      "recommended_changes": ["Retain one canonical generation-boundary card—E256-E12 is the more complete cross-artifact framing—and preserve D-family occurrence only as a rollup/derivation; split subordinate mechanics only if they require independent axis coding."]
+    },
+    {
+      "decision_id": "E256-D16",
+      "outcome": "correction-required",
+      "checks": {"atomicity":true,"evidence":false,"status_class":false,"alternatives_cost":false,"axes":false,"cube":false,"relationships":false,"exception":false},
+      "evidence_checked": ["current source-manifest entries srs-313 and owner-marker-directory", "E256-D14", "issue 313 comments through 5157074885"],
+      "findings": ["The card is stale and duplicates E256-D14: the frozen manifest records the owner selection of a `.srs` directory, while D14 already preserves the pending canonical fold and gallery repair.", "Treating the same concept as both ratified (D14) and unresolved possible contradiction (D16) would preserve neither history nor current state.", "The cited issue root is no longer exact evidence for unresolved status, and `possible-contradiction` is applied before bias synthesis."],
+      "recommended_changes": ["Remove D16 from the canonical ledger or turn it into a superseded historical conflict card that is ineligible and explicitly superseded by D14; do not retain an unresolved centre vote."]
+    },
+    {
+      "decision_id": "E256-D19",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["RFC-038 Change E enumeration rule and R18 at 1a1746d3"],
+      "findings": ["One logical-identifier total order across backends is explicit; stable reproducibility over backend-native iteration supports the Continuity direction rather than preserving the old incidental order."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-E03",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["RFC-039 rollback section at e0fb4b05", "RFC-038 rollback at 0c0ee75f"],
+      "findings": ["Whole-train git reversion and deliberate absence of a lossy downgrade converter form one bounded first-party recovery policy; the accepted semantic-loss alternative supports Integrity as well as Continuity."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-E06",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["RFC-038 accepted Phase 1 disposition at 0c0ee75f", "issue 286 reconciliation comment 5151034166"],
+      "findings": ["The accepted RFC explicitly supersedes the freeze/republish fork and chooses in-place migration of both published governance versions with their consumers."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-E09",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["RFC-038 Phase 0/2 parity rules at 0c0ee75f", "RFC-039 conformance evidence at e0fb4b05"],
+      "findings": ["Counts, identity sets, hashes, and explicit losses are complementary measures within one migration-proof standard; known losses are safeguards rather than separate votes."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-E12",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["RFC-038 Change J and R20/R21 at 0c0ee75f"],
+      "findings": ["The cross-artifact generation boundary and fail-loud runtime policy are explicit and internally coherent; this should be the canonical card after deduplicating E256-D13."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-E15",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["RFC-038 accepted relocation at 0c0ee75f", "open issue 329", "issue 297 comment 5151615896"],
+      "findings": ["The accepted move-both instruction remains effective history while the newly exposed sidecar-conformance consequence is genuinely unresolved; the card correctly avoids treating the recommendation to delete as owner intent."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-F101",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["owner comment 5141760683 on issue 273", "owner-authored issue 273 scope"],
+      "findings": ["The no-remainder-overlay ruling is an explicit owner decision grounded in portable semantic meaning and is distinct from the later modelling particulars."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-F104",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["owner comment 5141760683", "owner revision 5142207974"],
+      "findings": ["The contextual description slot and its non-override/data-error guardrail are one explicit owner-selected annotation boundary; balanced Coherence/Autonomy is correctly kept off the cube."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-F107",
+      "outcome": "correction-required",
+      "checks": {"atomicity":false,"evidence":true,"status_class":true,"alternatives_cost":false,"axes":false,"cube":false,"relationships":true,"exception":true},
+      "evidence_checked": ["owner revision 5142207974", "owner reconciliation 5144920423"],
+      "findings": ["The card combines at least three independently reversible dispositions: omit the deleted FieldGroup/cardinality cluster, narrow the contextual slot to description-only, and defer generic deprecation modelling.", "Those dispositions have different derivation and status: cluster omission is mostly mechanical after #242, while deprecation remains an open Field-level policy under #234."],
+      "recommended_changes": ["Split the live-surface scope rule from description narrowing and deprecation deferral; classify mechanically forced omissions as derivations and preserve #234's unresolved policy separately."]
+    },
+    {
+      "decision_id": "E256-F110",
+      "outcome": "correction-required",
+      "checks": {"atomicity":false,"evidence":true,"status_class":false,"alternatives_cost":true,"axes":false,"cube":false,"relationships":true,"exception":false},
+      "evidence_checked": ["open issue 234 and owner comments", "owner reconciliation 5144920423"],
+      "findings": ["The unresolved mechanism choice is bundled with a separately expressed accepted constraint that the model should not carry two inconsistent deprecation mechanisms.", "Coding Coherence/medium and an axis coordinate for the unresolved choice confuses that accepted design constraint with the unchosen Field policy.", "`uncertain` is assigned before synthesis has established a bias, contrary to the exception sequencing rule."],
+      "recommended_changes": ["Split any ratified one-mechanism constraint into its own card; leave the survive/status/read-write/versioning choice unknown at centre with exception_class none until owner disposition and bias synthesis."]
+    },
+    {
+      "decision_id": "E256-F113",
+      "outcome": "correction-required",
+      "checks": {"atomicity":false,"evidence":true,"status_class":true,"alternatives_cost":false,"axes":false,"cube":false,"relationships":true,"exception":false},
+      "evidence_checked": ["open issue 247", "owner reconciliation 5144926013", "current closed Type schema and published prose"],
+      "findings": ["Type.lineage and Type.provenance are independently reversible properties and should not be one atomic unresolved card unless an explicit all-or-none owner constraint exists.", "No cost has been accepted, so a named Coherence direction and axis occupancy are not justified merely because every resolution should remove drift.", "`uncertain` is premature before a historical bias is established."],
+      "recommended_changes": ["Split the two property dispositions or cite an all-or-none constraint; code unresolved choices unknown/centre and reset exception_class to none."]
+    },
+    {
+      "decision_id": "E256-F203",
+      "outcome": "correction-required",
+      "checks": {"atomicity":false,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["issues 248, 249, and 250", "current note schema at ae52927d"],
+      "findings": ["The card expressly says the project must decide entity by entity, yet combines tags on Record, TypedRecord, Note, NoteSection, Container, and Vocabulary into one unresolved atom."],
+      "recommended_changes": ["Create one atomic tag-disposition card per independently decidable entity shape, then produce an issue-family rollup."]
+    },
+    {
+      "decision_id": "E256-F206",
+      "outcome": "correction-required",
+      "checks": {"atomicity":true,"evidence":false,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["owner-authored issue 272 body", "current relations-collection schema at ae52927d", "owner comment 5145639920 on issue 274"],
+      "findings": ["The decision itself is supported, but the cited current schema proves that the fields exist, not that effective inherited ext:federation owns them.", "The exact owner evidence is issue 274 comment 5145639920, which explicitly says federation repository IDs are extension-owned and enter through a federation Type extending core Relation; it is absent from this card."],
+      "recommended_changes": ["Add the exact owner-decision anchor and classify it at authority rank 2; retain the canonical schema only as effective-shape evidence."]
+    },
+    {
+      "decision_id": "E256-F209",
+      "outcome": "correction-required",
+      "checks": {"atomicity":false,"evidence":true,"status_class":true,"alternatives_cost":false,"axes":false,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["open issues 253 and 254", "published vocabulary/term subsection at ae52927d"],
+      "findings": ["Vocabulary and Term can independently retain or remove lineage and provenance, and each property can in principle receive a different disposition; the issue sources do not impose one all-or-none decision."],
+      "recommended_changes": ["Split by entity and, where evidence permits independent treatment, by property; keep the resulting unresolved atoms unknown and off bias counts."]
+    },
+    {
+      "decision_id": "E256-F212",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["open issue 254", "current relation-type schema at ae52927d"],
+      "findings": ["Top-level closedness versus deliberate open-world extension is one unresolved policy fork; unknown/low on all relevant axes and centre placement honestly preserve the contradiction."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-F215",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true},
+      "evidence_checked": ["owner comment 5144928432 on srs-rust issue 777", "open issue 777"],
+      "findings": ["The owner explicitly requires one of two future scope outcomes without choosing either; high confidence describes the fork, while unknown directions and centre placement prevent false historical preference."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-G04",
+      "outcome": "correction-required",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true,"delivery_manifest":false},
+      "evidence_checked": ["issue 304", "PR 303 independently verified merged 2026-07-31T19:37:51Z at c9797f0ee57b3ceae3a78fe1f004efaf23c42f80", "implementation commit e6673543624843521f831ce519d1c0e73809e9f6"],
+      "findings": ["The card is substantively correct and delivery is independently verified, but source-manifest.json lists PR 303 only as a reference and omits its required merged-pull-request record."],
+      "recommended_changes": ["Add PR 303 to the manifest with non-null mergedAt and full merge SHA before marking this card audited."]
+    },
+    {
+      "decision_id": "E256-G10",
+      "outcome": "correction-required",
+      "checks": {"atomicity":false,"evidence":true,"status_class":true,"alternatives_cost":false,"axes":false,"cube":false,"relationships":true,"exception":true,"delivery_verification":true},
+      "evidence_checked": ["open srs-rust issue 792", "srs-rust PR 791 merged 2026-08-01T22:15:46Z at b4bb4e30e9512ab67f99bd684f73e81c714a1e75"],
+      "findings": ["The proposal combines a truthful scoped success message with an opt-in strict missing-mirror mode; either can be implemented or rejected without reversing the other.", "The conditional Coherence/Autonomy result is therefore created by aggregation rather than an unsplittable conditional decision."],
+      "recommended_changes": ["Split scoped diagnostics from strict-mode policy and recode each proposal separately; keep both ineligible until ratified or implemented."]
+    },
+    {
+      "decision_id": "E256-H03",
+      "outcome": "pass",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":true,"exception":true,"delivery_verification":true},
+      "evidence_checked": ["srs-rust issue 790 comment 5153916848", "accepted RFC-032 Revision 7 at 4ac36baf", "draft PR 794 confirmed non-delivered in the manifest"],
+      "findings": ["The three live consequences are accurately preserved as unresolved; the worker explicitly defeated its own fallback inference and the unmerged implementation is not treated as owner intent or delivery."],
+      "recommended_changes": []
+    },
+    {
+      "decision_id": "E256-H06",
+      "outcome": "correction-required",
+      "checks": {"atomicity":true,"evidence":true,"status_class":true,"alternatives_cost":true,"axes":true,"cube":true,"relationships":false,"exception":true},
+      "evidence_checked": ["open issue 335", "comparison with E256-G12"],
+      "findings": ["This is the same unresolved board-tool pin-versus-float decision as E256-G12, so both cannot remain in the canonical ledger.", "H06 is the more honest mapping: no substantive cost has been accepted, so unknown/low and centre placement are preferable to G12's conditional Continuity and named Coherence occupancy."],
+      "recommended_changes": ["Retain one canonical unresolved negative control, preferably H06, and remove or convert G12 to a family rollup/derivation."]
+    }
+  ],
+  "cross_batch_findings": [
+    {
+      "severity": "critical",
+      "kind": "stale-duplicate-state",
+      "decision_ids": ["E256-D14", "E256-D16"],
+      "finding": "The marker-directory decision is simultaneously represented as ratified and unresolved. The source manifest itself records the owner selection, and D14 already carries it; D16 would reintroduce a resolved contradiction as an unresolved possible contradiction.",
+      "recommendation": "Keep D14 as the current decision, preserve pre-decision conflict only as superseded history if useful, and exclude D16 as presently written."
+    },
+    {
+      "severity": "high",
+      "kind": "duplicate-vote",
+      "decision_ids": ["E256-D13", "E256-E12"],
+      "finding": "Both eligible cards encode the same dataModelRevision/srsj-v2 discrimination, fail-loud reader boundary, and explicit migrator exception.",
+      "recommendation": "Use one canonical eligible card, preferably E12's cross-artifact framing; expose the D-family manifestation only in rollups."
+    },
+    {
+      "severity": "high",
+      "kind": "duplicate-negative-control",
+      "decision_ids": ["E256-G12", "E256-H06"],
+      "finding": "The unresolved board-tool pin/float question is duplicated across operational and boundary families, with incompatible cube mappings.",
+      "recommendation": "Retain H06's unknown/centre treatment as the canonical unresolved negative control and remove the duplicate eligible occupancy from G12."
+    },
+    {
+      "severity": "high",
+      "kind": "atomicity",
+      "decision_ids": ["E256-B06", "E256-C05", "E256-C08", "E256-F107", "E256-F110", "E256-F113", "E256-F203", "E256-F209", "E256-G10"],
+      "finding": "These cards combine independently reversible output rules, rule ports, migration mechanics, entities, or unresolved properties. Several aggregates manufacture conditional or vertex mappings that no individual decision supports.",
+      "recommendation": "Split before ledger aggregation and recode axes/cube per atom; use later issue/family rollups rather than source-container-sized votes."
+    },
+    {
+      "severity": "high",
+      "kind": "manifest-pr-gap",
+      "decision_ids": ["E256-G04"],
+      "finding": "PR 303 is delivered and independently verified, but the source manifest lacks the required merged-pull-request object with mergedAt and merge SHA.",
+      "recommendation": "Add PR 303 at mergedAt 2026-07-31T19:37:51Z and c9797f0ee57b3ceae3a78fe1f004efaf23c42f80 before reconciliation."
+    },
+    {
+      "severity": "medium",
+      "kind": "exact-owner-evidence",
+      "decision_ids": ["E256-F206"],
+      "finding": "The card's current sources under-prove extension ownership. Exact owner evidence exists at issue 274 comment 5145639920 and should replace reliance on a mutable task body plus effective schema shape.",
+      "recommendation": "Pin and classify the exact owner comment in both manifest and card."
+    },
+    {
+      "severity": "medium",
+      "kind": "premature-exception-and-occupancy",
+      "decision_ids": ["E256-F110", "E256-F113"],
+      "finding": "Unresolved choices receive exception classes and named-pole cube occupancy from a desired property of any future resolution, before a bias or chosen cost exists.",
+      "recommendation": "Reset exception_class to none and use unknown/centre unless a separately ratified sub-decision is split out."
+    }
+  ]
+}

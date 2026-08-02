@@ -1,0 +1,632 @@
+[
+  {
+    "decision_id": "E256-F101",
+    "epic_row": "7",
+    "task_refs": ["srs#273"],
+    "decision_family": "F1",
+    "title": "Close definition-layer gaps in the model rather than a remainder overlay",
+    "decision_statement": "Metamodel v1.1.0 must express the live definition-layer surface in SRS records and emit the complete artifact; it must not depend on a hand-maintained remainder overlay for meaning the records cannot carry.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "owner-decision",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/273#issuecomment-5141760683",
+        "excerpt": "Owner confirms 'do not build the remainder overlay': requiring a side-channel for the model's own meaning would undermine portable, self-contained documents and produce non-interoperable community side-channels.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/273",
+        "excerpt": "The outcome says to close the generated-subset-of-seed gap by modelling the live post-242 surface and explicitly forbids a hand-maintained remainder overlay.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      }
+    ],
+    "alternatives": ["Keep the core metamodel smaller and merge a hand-maintained remainder/*.json overlay into generated schemas."],
+    "accepted_cost": "The metamodel and emitters must become expressive enough to carry the full live definition layer, increasing modelling and projection work.",
+    "supersedes": [],
+    "derived_from": ["E256-A06", "E256-A09"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"A smaller metamodel and easier emitter would leave part of SRS meaning in repository-specific infrastructure.","counterpole_safeguard":"Generated schemas and reader-facing projections remain practical outputs of the records.","shadow_signal":"Adding model machinery solely to reproduce incidental schema syntax rather than semantic meaning would over-rotate."},
+      "continuity_evolution": {"relevance":"supporting","direction":"evolution","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"Keep the v1.0.0 metamodel boundary and preserve its known fidelity exclusions through an overlay.","counterpole_safeguard":"The frozen bootstrap seed remains the runtime fixed point under RFC-033.","shadow_signal":"Changing the bootstrap contract while closing build-time authorship gaps would exceed this decision."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Each community could maintain an external side-channel for facets its records cannot express, at the cost of interoperability.","counterpole_safeguard":"Communities retain their own records and extension packages; coherence is achieved through the portable model, not a central service.","shadow_signal":"A common model that prevents communities from defining sanctioned extensions would defeat the stated sovereignty goal."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Owner-ratified design rule. This is distinct from A06's initial self-hosting precedent: it decides how to close the remaining definition-layer gap."
+  },
+  {
+    "decision_id": "E256-F102",
+    "epic_row": "7",
+    "task_refs": ["srs#273", "srs#237", "srs#247"],
+    "decision_family": "F1",
+    "title": "Self-host definition extensions as inherited extension Types",
+    "decision_statement": "Lifecycle, inheritance, validation, identity, and other extension-contributed definition facets are modelled as separate Types extending the core through ext:type-inheritance; emitters consume the resolved effective Type instead of adding those facets as optional core properties.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "owner-decision",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/273#issuecomment-5141760683",
+        "excerpt": "Owner selects option (a), separate Types extending core via ext:type-inheritance, because optional core Fields would assert extension facets for core-only adopters and erode adopt-only-what-you-need.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "owner-decision",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/273#issuecomment-5142207974",
+        "excerpt": "The ordering revision explicitly preserves Decision 1 unaltered and lists the live extension-contributed facets to model after the carrier cutover.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/247#issuecomment-5141292536",
+        "excerpt": "The Type prose/schema gaps and RFC-035 exclusions are traced to one cause: the live schema is a flattened union of core and extension facets while metamodel v1.0.0 models core only.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      }
+    ],
+    "alternatives": ["Add every live extension facet as an optional Field on the core metamodel Types.", "Leave extension facets outside the records and merge them in an emitter overlay."],
+    "accepted_cost": "Consumers of the metamodel as records must resolve inheritance before they see the effective definition shape.",
+    "supersedes": [],
+    "derived_from": ["E256-A06", "E256-A07"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Flattening facets into core would make extension-owned meaning appear to be core meaning.","counterpole_safeguard":"Emitters still expose a convenient flattened schema/reference shape after resolving inheritance.","shadow_signal":"Preserving layer identity without an effective merged view would make the model impractical to consume."},
+      "continuity_evolution": {"relevance":"supporting","direction":"evolution","evidence_basis":"explicit","confidence":"high","counterfactual":"Keep the v1.0 core-only model and tolerate permanent fidelity exclusions.","counterpole_safeguard":"Existing extension identities and the already-implemented inheritance mechanism are reused rather than replaced.","shadow_signal":"Inventing a second composition mechanism instead of using inheritance would create needless discontinuity."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"autonomy","evidence_basis":"explicit","confidence":"high","counterfactual":"A single maximal core would impose facets from extensions on communities that did not adopt them.","counterpole_safeguard":"All adopters use the same sanctioned inheritance contract and effective-Type resolution.","shadow_signal":"Extension autonomy that yields incompatible merge semantics or opaque bags would lose shared coherence."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Autonomy"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Ratified owner choice between two explicit architectures. It also supplies the definition-layer extension mechanism requested by #237, but the complete per-entity unknown-field policy remains unresolved in F112."
+  },
+  {
+    "decision_id": "E256-F103",
+    "epic_row": "7",
+    "task_refs": ["srs#273", "srs#290", "srs#291"],
+    "decision_family": "F1",
+    "title": "Accept and document inheritance as the sovereign-reader floor",
+    "decision_statement": "The project accepts that an independent implementation consuming the metamodel records must implement inheritance merging, and requires that raised implementation floor to be recorded as a durable guardrail rather than left implicit.",
+    "status": "ratified",
+    "decision_class": "reasoned-application",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "owner-decision",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/273#issuecomment-5141760683",
+        "excerpt": "The owner explicitly accepts the higher floor for a from-scratch sovereign reader because inheritance is core to extensibility, and requires the cost to be written into design note 045.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "pull-request",
+        "authority_rank": 5,
+        "url_or_path": "https://github.com/the-greenman/srs/pull/291",
+        "excerpt": "Open, unmerged PR 291 proposes a Tier-0 record carrying the #273 guardrails; it is supporting proposal evidence only and does not establish delivery.",
+        "explicitness": "explicit",
+        "commit_sha": "da8d79b8d594087cd26f7e27ebb8a6581b4532af"
+      }
+    ],
+    "alternatives": ["Flatten extension facets in the authored core model so a minimal reader need not resolve inheritance.", "Accept the cost silently without recording a consumer-facing guardrail."],
+    "accepted_cost": "A minimal independent definition reader has a larger conformance surface before it can consume the self-hosted metamodel.",
+    "supersedes": [],
+    "derived_from": ["E256-F102"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Simplify the reader by erasing the semantic distinction between core and extension facets.","counterpole_safeguard":"The effective merged Type is the practical emitter input, and existing repository machinery already computes it.","shadow_signal":"A floor that grows beyond mechanisms necessary for the portability claim would make sovereignty nominal."},
+      "continuity_evolution": {"relevance":"unexpressed","direction":"not-applicable","evidence_basis":"explicit","confidence":"high","counterfactual":"No historical compatibility alternative controls this cost acceptance.","counterpole_safeguard":"Existing inheritance implementation is reused.","shadow_signal":"None identified for this axis."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"autonomy","evidence_basis":"explicit","confidence":"high","counterfactual":"Optimize centrally authored schemas for the easiest consumer at the expense of demonstrating sovereign extension.","counterpole_safeguard":"Independent readers implement one shared inheritance contract rather than local merge rules.","shadow_signal":"If only the reference implementation can realistically meet the floor, the autonomy claim has failed."}
+    },
+    "cube": {"dimensionality":"edge","coordinate":["Integrity","Autonomy"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "PR 291 is intentionally not treated as delivered because mergedAt is null. The owner comment itself ratifies the cost acceptance and documentation obligation."
+  },
+  {
+    "decision_id": "E256-F104",
+    "epic_row": "7",
+    "task_refs": ["srs#273", "srs#247"],
+    "decision_family": "F1",
+    "title": "Add contextual FieldAssignment description without semantic override",
+    "decision_statement": "FieldAssignment gains a per-context description annotation so a reused Field can be explained within a Type, but the annotation is documentation-only: it cannot change Field semantics or AI guidance, and a contradiction is a data error.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "owner-decision",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/273#issuecomment-5141760683",
+        "excerpt": "Owner chooses a per-context description slot rather than permanently genericizing shared Field descriptions, with a normative documentation-only guardrail and Field meaning winning any conflict.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "owner-decision",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/273#issuecomment-5142207974",
+        "excerpt": "After #242, Decision 2 stands in substance and narrows to description only; its contextual annotation can never override Field semantics.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      }
+    ],
+    "alternatives": ["Rewrite shared Field descriptions into context-free generic wording.", "Allow Type-local assignments to override a Field's semantics.", "Keep contextual explanation only in hand-authored prose outside the model."],
+    "accepted_cost": "The frozen seed, core structs, emitters, and downstream payload types acquire an additional annotation property and conflict validation rule.",
+    "supersedes": [],
+    "derived_from": ["E256-A09"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Avoid a schema slot by lowering documentation fidelity or permit contextual prose to mutate shared meaning.","counterpole_safeguard":"The new annotation directly improves reader-facing contextual expression.","shadow_signal":"Treating immutable shared semantics as a ban on contextual explanation would make reuse opaque."},
+      "continuity_evolution": {"relevance":"supporting","direction":"evolution","evidence_basis":"explicit","confidence":"high","counterfactual":"Preserve the frozen seed unchanged and accept the reference-text mismatch.","counterpole_safeguard":"Existing Field semantics and aiGuidance remain authoritative and unchanged.","shadow_signal":"Using schema freedom to alter Field meaning through assignments would break semantic continuity."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"balanced","evidence_basis":"explicit","confidence":"high","counterfactual":"Either force one generic explanation everywhere or permit unconstrained local reinterpretation.","counterpole_safeguard":"Shared Field meaning remains coherent while each Type can document its local context.","shadow_signal":"Either contradictory local descriptions or context-free central wording signals over-rotation."}
+    },
+    "cube": {"dimensionality":"edge","coordinate":["Integrity","Evolution"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "The balanced coherence/autonomy result is deliberately off-vertex. The slot's later narrowing from description+deprecated to description only is captured separately."
+  },
+  {
+    "decision_id": "E256-F105",
+    "epic_row": "7",
+    "task_refs": ["srs#273"],
+    "decision_family": "F1",
+    "title": "Land the contextual annotation in #273 despite seed breakage",
+    "decision_statement": "Because epic work pauses other consumers and backward compatibility is not a constraint, the FieldAssignment description change remains in #273 instead of being split into a later RFC solely to keep this task smaller.",
+    "status": "ratified",
+    "decision_class": "reasoned-application",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "owner-decision",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/273#issuecomment-5141867338",
+        "excerpt": "Owner states that core may be broken freely during the paused epic and withdraws the fallback of splitting Decision 2 into its own RFC; the change lands in #273.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      }
+    ],
+    "alternatives": ["Defer the description slot to a separate later RFC to minimize #273's immediate blast radius."],
+    "accepted_cost": "The task reaches the frozen seed, core structs, both emitters, and downstream payload types before unblocking closure.",
+    "supersedes": [],
+    "derived_from": ["E256-F104"],
+    "axes": {
+      "integrity_expression": {"relevance":"supporting","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Optimize task size while knowingly retaining a definition/projection fidelity gap.","counterpole_safeguard":"The scope remains one narrowly guarded documentation annotation.","shadow_signal":"Bundling unrelated improvements under compatibility freedom would over-expand the task."},
+      "continuity_evolution": {"relevance":"decisive","direction":"evolution","evidence_basis":"explicit","confidence":"high","counterfactual":"Preserve seed and downstream shapes temporarily by deferring the breaking addition.","counterpole_safeguard":"All paused first-party consumers change together within the epic before ordinary work resumes.","shadow_signal":"Breaking beyond the coordinated epic boundary would abandon the condition that justified this choice."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"coherence","evidence_basis":"revealed-by-alternative","confidence":"medium","counterfactual":"Allow the model, emitters, and consumers to remain temporarily divergent across separately scheduled work.","counterpole_safeguard":"The annotation preserves contextual autonomy within a shared semantic contract.","shadow_signal":"Central coordination is justified here by a paused ecosystem, not as a standing ban on independent release cadence."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "A project-scoped sequencing decision, not a general license to ignore compatibility. No delivery is claimed while #273 remains open."
+  },
+  {
+    "decision_id": "E256-F106",
+    "epic_row": "7",
+    "task_refs": ["srs#273", "srs#242", "srs#262"],
+    "decision_family": "F1",
+    "title": "Initially retain and model the deprecated FieldGroup cluster",
+    "decision_statement": "Before the epic was reordered, metamodel v1.1.0 was to model the deprecated FieldGroup and assignment-cardinality surface because the live instance carrier and table capability still depended on it, with per-context description and deprecated annotations projected from the model.",
+    "status": "superseded",
+    "decision_class": "reasoned-application",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "owner-decision",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/273#issuecomment-5141867338",
+        "excerpt": "The initial owner amendment keeps the deprecated surface because its carrier and renderer gates, not backward compatibility, remain active; v1.1.0 was to model it and project deprecation.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "owner-decision",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/273#issuecomment-5142207974",
+        "excerpt": "The later ordering revision explicitly marks this guidance superseded because #242 now deletes the cluster before #273.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      }
+    ],
+    "alternatives": ["Delete the deprecated surface before a conforming replacement carrier and table-rendering path existed.", "Ignore the live deprecated surface in closure and preserve it outside the metamodel."],
+    "accepted_cost": "A deprecated mechanism would temporarily enlarge the self-hosted model and deprecation projector.",
+    "supersedes": [],
+    "derived_from": ["E256-A05"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Claim model closure while omitting a construct that still carried real table data.","counterpole_safeguard":"The deprecated cluster was explicitly temporary and tied to a successor path.","shadow_signal":"Modelling dead compatibility surface after its carrier disappears would preserve syntax without live meaning."},
+      "continuity_evolution": {"relevance":"decisive","direction":"continuity","evidence_basis":"explicit","confidence":"high","counterfactual":"Remove FieldGroup before its live table values had a conforming destination and capability replacement.","counterpole_safeguard":"The model recorded deprecation and the planned #242/#262 successor rather than normalizing the legacy mechanism.","shadow_signal":"Retaining the cluster after its replacement lands would convert a gate into inertia."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"coherence","evidence_basis":"revealed-by-alternative","confidence":"medium","counterfactual":"Let actual first-party data depend on an unmodelled exception while declaring the model complete.","counterpole_safeguard":"No external-consumer compatibility claim was used to keep it indefinitely.","shadow_signal":"None identified beyond the explicit retirement gate."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Continuity","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Historical decision preserved because the plan requires supersession rather than rewriting. Superseded by E256-F107 later the same day."
+  },
+  {
+    "decision_id": "E256-F107",
+    "epic_row": "7",
+    "task_refs": ["srs#273", "srs#242"],
+    "decision_family": "F1",
+    "title": "Model only the live post-carrier definition surface",
+    "decision_statement": "After #242 was ordered before #273, metamodel v1.1.0 excludes the deleted FieldGroup and assignment-cardinality cluster, narrows FieldAssignment's new annotation to description only, and defers generic deprecation modelling until a live need demonstrates it.",
+    "status": "ratified",
+    "decision_class": "reasoned-application",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "owner-decision",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/273#issuecomment-5142207974",
+        "excerpt": "The revised order puts #242 first, inverts the earlier guidance, excludes the deleted cluster, narrows the contextual slot to description only, and defers deprecation capability until something needs it.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "owner-decision",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/273#issuecomment-5144920423",
+        "excerpt": "Epic reconciliation confirms that #273 models only the live post-cutover seed and that the old deprecated-surface advice is superseded.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      }
+    ],
+    "alternatives": ["Carry just-deleted deprecated definitions into v1.1.0 for general future usefulness.", "Keep the earlier description-plus-deprecated assignment annotation despite no remaining seed site."],
+    "accepted_cost": "Downstream communities cannot yet express deprecation through this metamodel version and must wait for a demonstrated need and later model revision.",
+    "supersedes": ["E256-F106"],
+    "derived_from": ["E256-F104", "E256-C05"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Add speculative capability that no longer describes the live seed and call it closure work.","counterpole_safeguard":"The live model remains fully expressible, and a later version can add deprecation when an actual case defines its semantics.","shadow_signal":"Equating only-currently-used with complete could make the model unable to represent normal lifecycle needs."},
+      "continuity_evolution": {"relevance":"decisive","direction":"evolution","evidence_basis":"explicit","confidence":"high","counterfactual":"Preserve deleted legacy definitions in the next metamodel merely because they were present when analysis began.","counterpole_safeguard":"The historical decision and the successor carrier remain documented; deletion occurs only after #242 provides the destination.","shadow_signal":"Deleting a surface before its data and capability have a conforming replacement would repeat the superseded plan's rejected risk."},
+      "coherence_autonomy": {"relevance":"unexpressed","direction":"not-applicable","evidence_basis":"explicit","confidence":"high","counterfactual":"The choice is scoped to live model content rather than allocation of central versus local authority.","counterpole_safeguard":"Later extension Types remain the sanctioned community evolution mechanism.","shadow_signal":"None identified for this axis."}
+    },
+    "cube": {"dimensionality":"edge","coordinate":["Integrity","Evolution"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Supersedes F106. This is definition-layer scope only; the #242 carrier decision itself belongs to family C/E."
+  },
+  {
+    "decision_id": "E256-F108",
+    "epic_row": "7",
+    "task_refs": ["srs#273", "srs#247"],
+    "decision_family": "F1",
+    "title": "Verify definition closure at byte level over the full artifact",
+    "decision_statement": "Definition-layer closure is tested by full byte-level regeneration including annotations and $defs, not by comparing only top-level property key sets; Node and Rust emitters must remain byte-identical.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "owner-decision",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/273#issuecomment-5141867338",
+        "excerpt": "The owner identifies that the key-set reproduction misses annotations and $defs and requires byte-level comparison against a full regenerate before sizing closure.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "owner-decision",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/273#issuecomment-5144920423",
+        "excerpt": "Epic reconciliation requires full-artifact byte-level regeneration, including annotations and $defs, and byte-identical emitters.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      }
+    ],
+    "alternatives": ["Use top-level property-name parity as sufficient evidence of closure.", "Allow each emitter to produce semantically similar but byte-different definition artifacts."],
+    "accepted_cost": "Closure tests become stricter and expose annotation, definition, ordering, and formatting differences that require additional modelling or explicit divergence records.",
+    "supersedes": [],
+    "derived_from": ["E256-A12"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Declare closure from a lossy comparison that cannot observe parts of the authoritative artifact.","counterpole_safeguard":"Byte parity applies to deterministic reference artifacts; the fidelity contract may still register justified target limitations.","shadow_signal":"Treating insignificant formatting as semantic without a deterministic artifact contract would create noise."},
+      "continuity_evolution": {"relevance":"supporting","direction":"continuity","evidence_basis":"revealed-by-alternative","confidence":"medium","counterfactual":"Accept silent output drift outside the limited property-key comparison.","counterpole_safeguard":"Intentional changes remain possible through explicit model revisions and regenerated goldens.","shadow_signal":"Golden preservation without semantic review would turn tests into accidental authority."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Permit Node and Rust to define subtly different authoritative projections.","counterpole_safeguard":"Implementations retain independent internals behind the shared byte-level output contract.","shadow_signal":"Requiring identical internal architecture rather than identical contract output would over-centralize implementation choice."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Continuity","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "A stricter F1 application of A12's two-tier closure rule, justified by the discovered blind spot."
+  },
+  {
+    "decision_id": "E256-F109",
+    "epic_row": "7/9-input",
+    "task_refs": ["srs#234", "srs#273"],
+    "decision_family": "F1",
+    "title": "Settle Field and assignment default semantics",
+    "decision_statement": "It remains unresolved whether and how Field.defaultValue and FieldAssignment.defaultValue survive, including precedence, application timing, requiredness, allowed-value validity, versioning, and JSON Schema default projection.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/234",
+        "excerpt": "The open issue lists the independent semantic choices for defaultValue and requires a normative definition or removal.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "owner-decision",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/234#issuecomment-5144926033",
+        "excerpt": "Epic reconciliation keeps the issue open, routes definition-layer defaultValue decisions into #273, and forbids treating allowlisting as closure.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      }
+    ],
+    "alternatives": ["Define Field default semantics and assignment precedence normatively.", "Remove one or both default mechanisms from the schema and implementation."],
+    "accepted_cost": "No cost has been accepted; the unresolved semantics block complete definition-layer closure.",
+    "supersedes": [],
+    "derived_from": [],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Retention would improve expressive convenience; removal would avoid carrying undefined meaning.","counterpole_safeguard":"Any resolution must align normative records, projection, and behavior.","shadow_signal":"Silently generating the existing property would turn schema presence into an unratified semantic decision."},
+      "continuity_evolution": {"relevance":"supporting","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Retention preserves the accepted machine shape; removal simplifies it.","counterpole_safeguard":"The issue requires explicit version semantics for whichever property survives.","shadow_signal":"None can be established before resolution."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"A shared precedence rule improves coherence; local handling could preserve implementation latitude.","counterpole_safeguard":"Schema and engine must agree.","shadow_signal":"None can be established before resolution."}
+    },
+    "cube": {"dimensionality":"centre","coordinate":[]},
+    "exception_class": "uncertain",
+    "review_state": "uncalibrated",
+    "coding_notes": "Open feeder. Generated recommendations are not owner intent; no normative choice is inferred from current schema presence."
+  },
+  {
+    "decision_id": "E256-F110",
+    "epic_row": "7/9-input",
+    "task_refs": ["srs#234", "srs#273"],
+    "decision_family": "F1",
+    "title": "Choose and define the model's deprecation mechanism",
+    "decision_statement": "It remains unresolved whether Field.deprecatedAt survives and how it relates to status-based deprecation, read/write semantics, versioning, and JSON Schema deprecated projection; deletion of the old FieldGroup annotations does not settle this Field-level policy.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/234",
+        "excerpt": "The open issue requires deprecatedAt either to be defined and reconciled with status-based deprecation or removed.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "owner-decision",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/273#issuecomment-5144920423",
+        "excerpt": "Post-cutover reconciliation still requires #273 to consume #234 decisions for Field.deprecatedAt and deprecation projection even though the old FieldGroup annotation sites are deleted.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      }
+    ],
+    "alternatives": ["Retain timestamp deprecation and define its projection and lifecycle semantics.", "Converge Field on the substrate status vocabulary.", "Remove Field deprecation from this model version."],
+    "accepted_cost": "No deprecation model cost has yet been chosen; closure cannot merely inherit the schema's existing timestamp shape.",
+    "supersedes": [],
+    "derived_from": ["E256-F107"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Timestamp, status, and deletion protect different semantic and projection concerns.","counterpole_safeguard":"Any surviving mechanism must have explicit lifecycle meaning and projection.","shadow_signal":"Treating a JSON Schema annotation mapping as a substitute for governance semantics would be an integrity failure."},
+      "continuity_evolution": {"relevance":"decisive","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Keeping deprecatedAt preserves current schema shape; convergence or deletion changes it.","counterpole_safeguard":"The issue requires version semantics for the chosen shape.","shadow_signal":"None can be established before resolution."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"coherence","evidence_basis":"explicit","confidence":"medium","counterfactual":"Leave Field deprecation inconsistent with the substrate's status-based mechanism.","counterpole_safeguard":"Entity-specific differences remain possible if made normative and explained.","shadow_signal":"Uniform syntax without regard to entity lifecycle needs would be false coherence."}
+    },
+    "cube": {"dimensionality":"axis","coordinate":["Coherence"]},
+    "exception_class": "uncertain",
+    "review_state": "uncalibrated",
+    "coding_notes": "The coherence direction reflects the explicit requirement to reconcile or explain the mechanisms, not a choice among timestamp/status/removal. This card remains excluded from bias counts."
+  },
+  {
+    "decision_id": "E256-F111",
+    "epic_row": "7/9-input",
+    "task_refs": ["srs#237", "srs-rust#778"],
+    "decision_family": "F1",
+    "title": "Make Rust Field parsing uniformly reject unknown properties",
+    "decision_statement": "The Rust implementation rejects unknown properties consistently for Field, nested FieldTypeConstraints, and ExactTypeRef across create, snapshot, archive, and embedded-bundle paths, while modelling $schema explicitly rather than accepting it as unknown data.",
+    "status": "implemented",
+    "decision_class": "reasoned-application",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {
+        "kind": "pull-request",
+        "authority_rank": 3,
+        "url_or_path": "https://github.com/the-greenman/srs-rust/pull/778",
+        "excerpt": "Merged PR 778 delivered the RFC-032/RFC-035 adoption and uniform parser behavior.",
+        "explicitness": "explicit",
+        "commit_sha": "b6b2757558e8a79bfa17fbcd6d150ab783cf2aa2"
+      },
+      {
+        "kind": "owner-decision",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/237#issuecomment-5141296024",
+        "excerpt": "Owner records that PR 778 implements uniform reject-unknown because the self-hosted Field Type has no extension bag and the schema says additionalProperties false; nested silent-drop paths were also fixed.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      }
+    ],
+    "alternatives": ["Preserve unknown top-level Field properties in an untyped extra map.", "Reject only at create time while other read paths preserve or silently drop unknown data."],
+    "accepted_cost": "A newer producer's undeclared definition properties cannot round-trip through this implementation; they fail closed until the model declares an extension path.",
+    "supersedes": [],
+    "derived_from": ["E256-A13"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"behavioral","confidence":"medium","counterfactual":"Accept or silently drop undeclared keys, yielding path-dependent meaning and lossy round trips.","counterpole_safeguard":"$schema is explicitly modelled, and the policy can change with a later schema decision.","shadow_signal":"Rejecting safely namespaced data after a sanctioned extension mechanism is defined would become rigidity."},
+      "continuity_evolution": {"relevance":"supporting","direction":"continuity","evidence_basis":"revealed-by-alternative","confidence":"medium","counterfactual":"Permit future unknown fields but risk deleting them on current read/write paths.","counterpole_safeguard":"The owner notes a future preserve-unknown spec choice would be a small implementation reversal plus schema change.","shadow_signal":"Calling current schema behavior a permanent forward-compatibility policy before normative resolution would overreach."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Different ingestion paths and nested structs would answer unknown-field handling differently.","counterpole_safeguard":"Implementation internals remain free so long as every path enforces the declared shape consistently.","shadow_signal":"Uniform rejection without a sanctioned community extension path would sacrifice bounded evolution."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Continuity","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Distinct from A13's broad Rust adoption card: this records the delivered forward-compatibility behavior surfaced by feeder #237. It is implementation precedent, not normative closure."
+  },
+  {
+    "decision_id": "E256-F112",
+    "epic_row": "7/9-input",
+    "task_refs": ["srs#237", "srs#273"],
+    "decision_family": "F1",
+    "title": "Ratify a per-entity definition-layer forward-compatibility policy",
+    "decision_statement": "It remains unresolved whether the normative definition layer adopts reject-unknown or preserve-unknown per entity, how sanctioned extensions interact with that policy beyond inherited extension Types, and whether any escape bag is named meta or properties.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/237",
+        "excerpt": "The issue requires an explicit policy for every entity, a sanctioned extension point, and resolution or explanation of meta versus properties.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "owner-decision",
+        "authority_rank": 2,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/237#issuecomment-5144925648",
+        "excerpt": "Epic reconciliation says Rust's consistent rejection resolves only the implementation contradiction; #273 still owes definition-layer extension policy and normative schema/engine agreement.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      }
+    ],
+    "alternatives": ["Normatively reject all undeclared definition properties and rely on declared inherited extension Types.", "Preserve unknown properties, with or without a sanctioned meta/properties bag.", "Set different policies per entity with explicit reasons."],
+    "accepted_cost": "No forward-compatibility cost has been normatively accepted; current Rust rejection remains provisional implementation behavior.",
+    "supersedes": [],
+    "derived_from": ["E256-F102", "E256-F111"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Fail-closed declaration protects known meaning; preservation protects future data and practical round trips.","counterpole_safeguard":"Whichever policy wins must prevent silent deletion and be stated per entity.","shadow_signal":"Inferring normative intent from one implementation would collapse evidence hierarchy."},
+      "continuity_evolution": {"relevance":"decisive","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Reject-unknown protects current shape; preserve-unknown allows newer producers to cross older consumers.","counterpole_safeguard":"The extension mechanism and version semantics must remain explicit.","shadow_signal":"None can be established before resolution."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"conditional","evidence_basis":"explicit","confidence":"high","counterfactual":"One uniform rule favors coherence; entity-specific or preserved extension space may favor autonomy.","counterpole_safeguard":"The issue permits justified entity differences but forbids accidental path-dependent behavior.","shadow_signal":"Uniformity without a usable extension path or autonomy without interoperable rules would each over-rotate."}
+    },
+    "cube": {"dimensionality":"centre","coordinate":[]},
+    "exception_class": "uncertain",
+    "review_state": "uncalibrated",
+    "coding_notes": "Kept separate from F111 so delivered engine behavior is not mistaken for ratified spec policy. Instance-layer policy belongs to F2."
+  },
+  {
+    "decision_id": "E256-F113",
+    "epic_row": "7/9-input",
+    "task_refs": ["srs#247", "srs#273"],
+    "decision_family": "F1",
+    "title": "Resolve Type lineage and provenance disposition",
+    "decision_statement": "It remains unresolved whether Type.lineage and Type.provenance become modelled definition properties or are removed from the published definition prose because the live fail-closed schema rejects them.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/247",
+        "excerpt": "The issue reports that published prose declares lineage and provenance while additionalProperties false in the schema rejects them, and requires a per-property disposition.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/273",
+        "excerpt": "The #273 scope explicitly requires resolution of #247's definition-layer dispositions, including Type.lineage and Type.provenance.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      }
+    ],
+    "alternatives": ["Model lineage and provenance in the self-hosted Type surface and emit them.", "Remove the unsupported prose claims and keep the fail-closed schema shape."],
+    "accepted_cost": "No cost has been selected; prose, model, and schema remain divergent until disposition.",
+    "supersedes": [],
+    "derived_from": [],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Modelling preserves expressed provenance meaning; removal makes the authoritative machine contract honest and smaller.","counterpole_safeguard":"Closure requires records, schema, and projection to agree rather than silently selecting one source.","shadow_signal":"None can be established before resolution."},
+      "continuity_evolution": {"relevance":"supporting","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Either current prose or current schema shape must change.","counterpole_safeguard":"Any retained meaning requires explicit version treatment.","shadow_signal":"None can be established before resolution."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"coherence","evidence_basis":"behavioral","confidence":"medium","counterfactual":"Continue publishing a definition that independent validators reject.","counterpole_safeguard":"The final model may still expose provenance as a sanctioned optional capability.","shadow_signal":"Forcing uniform omission without evaluating the provenance use case would be shallow coherence."}
+    },
+    "cube": {"dimensionality":"axis","coordinate":["Coherence"]},
+    "exception_class": "uncertain",
+    "review_state": "uncalibrated",
+    "coding_notes": "Open #247 sub-decision. No schema-is-right default is promoted to owner intent."
+  },
+  {
+    "decision_id": "E256-F114",
+    "epic_row": "7/9-input",
+    "task_refs": ["srs#247", "srs#273"],
+    "decision_family": "F1",
+    "title": "Resolve FieldAssignment requiredness shape",
+    "decision_statement": "It remains unresolved whether FieldAssignment.required remains a required boolean property as enforced by the schema or becomes optional as the published pseudo-IDL currently states.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/247",
+        "excerpt": "The issue identifies requiredness as an optionality mismatch, not a missing documentation line, and requires an explicit disposition.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/273",
+        "excerpt": "The #273 outcome includes FieldAssignment requiredness in the definition-layer decisions it must resolve.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      }
+    ],
+    "alternatives": ["Require the boolean to be explicitly present in every assignment.", "Make the property optional and define an absence default."],
+    "accepted_cost": "No representation or migration cost has yet been accepted.",
+    "supersedes": [],
+    "derived_from": [],
+    "axes": {
+      "integrity_expression": {"relevance":"supporting","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Explicit presence reduces ambiguity; optional syntax is more concise but requires default semantics.","counterpole_safeguard":"Either choice must preserve a determinate requiredness value.","shadow_signal":"None can be established before resolution."},
+      "continuity_evolution": {"relevance":"supporting","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Keeping the schema shape and changing prose differs from changing schema and data.","counterpole_safeguard":"Migration consequences must be tested.","shadow_signal":"None can be established before resolution."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"behavioral","confidence":"medium","counterfactual":"Let prose and validators continue assigning different meanings to omission.","counterpole_safeguard":"The final common rule can still choose concise optional syntax if its default is explicit.","shadow_signal":"Uniform syntax without an explicit semantic default would not achieve coherence."}
+    },
+    "cube": {"dimensionality":"axis","coordinate":["Coherence"]},
+    "exception_class": "uncertain",
+    "review_state": "uncalibrated",
+    "coding_notes": "Atomic optionality decision split from the other #247 FieldAssignment discrepancies."
+  },
+  {
+    "decision_id": "E256-F115",
+    "epic_row": "7/9-input",
+    "task_refs": ["srs#247", "srs#273"],
+    "decision_family": "F1",
+    "title": "Remove or sanction FieldAssignment displayHint",
+    "decision_statement": "It remains unresolved in accepted artifacts whether the schema-rejected FieldAssignment.displayHint is removed from published definition prose or becomes a sanctioned model property; #273 proposes removal but has not yet delivered it.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/247",
+        "excerpt": "The open issue reports displayHint in prose while the fail-closed schema rejects it and requires an explicit per-property disposition.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      },
+      {
+        "kind": "issue",
+        "authority_rank": 4,
+        "url_or_path": "https://github.com/the-greenman/srs/issues/273",
+        "excerpt": "The #273 scope proposes removal of the unsanctioned displayHint, but the issue remains open and its coordinator prose is not itself owner ratification or delivery.",
+        "explicitness": "explicit",
+        "commit_sha": null
+      }
+    ],
+    "alternatives": ["Remove displayHint from the published definition as unsupported prose.", "Model it as a sanctioned presentation annotation with explicit semantics."],
+    "accepted_cost": "No cost has been chosen; retaining prose preserves an unsupported claim while removal may discard a practical hint without evaluating its use.",
+    "supersedes": [],
+    "derived_from": [],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Removal favors a truthful semantic contract; sanctioning may preserve practical presentation expression.","counterpole_safeguard":"Any retained hint must be explicitly presentation-only and projected consistently.","shadow_signal":"Treating issue-scope prose as owner intent would violate the evidence rules."},
+      "continuity_evolution": {"relevance":"supporting","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Removal changes published prose; sanctioning changes the machine model.","counterpole_safeguard":"Either path must be versioned and tested in the full artifact.","shadow_signal":"None can be established before resolution."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"coherence","evidence_basis":"behavioral","confidence":"medium","counterfactual":"Continue documenting a property that conforming validators reject.","counterpole_safeguard":"A sanctioned view-layer annotation remains possible if justified.","shadow_signal":"Deleting every locally useful hint merely because it is not yet in the shared schema could over-rotate."}
+    },
+    "cube": {"dimensionality":"axis","coordinate":["Coherence"]},
+    "exception_class": "uncertain",
+    "review_state": "uncalibrated",
+    "coding_notes": "Open proposal kept unresolved. The #273 body is generated/coordinator scope and is not promoted to an accepted decision without owner answer or merge."
+  }
+]

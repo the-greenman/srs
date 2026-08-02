@@ -21,6 +21,7 @@ const VIEW_EXPORTS = [
   { id: "3a000003-0000-4000-a000-000000000003", output: join(SPEC_ROOT, "srs-rationale.md") },
   { id: "3a000004-0000-4000-a000-000000000004", output: join(SPEC_ROOT, "srs-unified.md"), requiresKeyInvariants: true },
   { id: "7a000001-0000-4000-a000-000000000001", output: join(SPEC_ROOT, "rfcs", "rfc-catalog.md") },
+  { id: "7a000002-0000-4000-a000-000000000002", output: join(SPEC_ROOT, "rfcs", "rfc-decision-log.md") },
 ];
 
 function run(cmd, args, cwd = ROOT) {

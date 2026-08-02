@@ -1,0 +1,423 @@
+[
+  {
+    "decision_id": "E256-E01",
+    "epic_row": "6 / #242 Phase B and #297",
+    "task_refs": ["srs#242", "srs#296", "srs#297", "RFC-038", "RFC-039"],
+    "decision_family": "E",
+    "title": "Land carrier and storage changes as one final generation",
+    "decision_statement": "The RFC-039 carrier migration and RFC-038 repository-storage migration land as one composed first-party release train at dataModelRevision 2; neither design ships alone and no intermediate repository generation is supported.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#composition-with-rfc-039","excerpt":"Accepted RFC-038 fixes a single dataModelRevision 2 and says neither RFC ships alone in the composed #242/#296 train tracked by #297.","explicitness":"explicit","commit_sha":"0c0ee75fb7b582879a908ed1e2ad5c937185ba4f"},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#abstract","excerpt":"Accepted RFC-039 identifies Phase B as an atomic cutover with RFC-038 rather than an independently supported carrier generation.","explicitness":"explicit","commit_sha":"e0fb4b050447febcd5ecb8f6ccb7864196e656d6"}
+    ],
+    "alternatives": ["Ship the carrier change before the repository-authority change.", "Support an intermediate generation between the two contracts.", "Defer one known first-party population to a later release."],
+    "accepted_cost": "The coupled train is larger, has more prerequisites, and keeps both accepted designs unavailable until the whole ecosystem is ready.",
+    "supersedes": ["RFC-039 Phase 2 as an independently stampable migration"],
+    "derived_from": ["RFC-038 composition with RFC-039", "Epic 256 first-party corpus boundary"],
+    "axes": {
+      "integrity_expression": {"relevance":"supporting","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"An intermediate carrier or storage state would express only half of the accepted meaning and could be mistaken for a conforming generation.","counterpole_safeguard":"The two designs remain independently documented and reviewable before the coupled implementation.","shadow_signal":"Coupling unrelated implementation work makes a coherent change too large to deliver."},
+      "continuity_evolution": {"relevance":"decisive","direction":"evolution","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"Preserving an intermediate or old runtime generation would extend compatibility instead of moving directly to the corrected final model.","counterpole_safeguard":"The migration preserves semantic identity and provides auditable rollback through repository history.","shadow_signal":"A breaking train proceeds despite an actual external compatibility population."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Repositories, clients, schemas, and data could temporarily implement incompatible halves of the final contract.","counterpole_safeguard":"Each repository keeps its own implementation issue and pipeline within the coordinated train.","shadow_signal":"Ecosystem atomicity prevents bounded components from preparing or validating independently."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Migration-policy choice only. Family C owns the carrier shape and family D owns the repository-authority model."
+  },
+  {
+    "decision_id": "E256-E02",
+    "epic_row": "6 / #242 Phase B and #297",
+    "task_refs": ["srs#242", "srs#256", "srs#297", "RFC-038", "RFC-039"],
+    "decision_family": "E",
+    "title": "Provide no public compatibility window",
+    "decision_statement": "Because the owner found no external repository-compatibility population, the cutover provides no public upgrade command, old-format runtime reader, compatibility window, or supported intermediate repository format.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"owner-decision","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/issues/256","excerpt":"The epic's owner-decision boundary says there is no external compatibility obligation and explicitly declines a public upgrade path, long-lived compatibility reader, and intermediate format.","explicitness":"explicit","commit_sha":null},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#change-h--version-discrimination-and-what-is-deliberately-not-provided","excerpt":"Accepted RFC-039 records a zero-length compatibility window by decision rather than omission.","explicitness":"explicit","commit_sha":"e0fb4b050447febcd5ecb8f6ccb7864196e656d6"}
+    ],
+    "alternatives": ["Maintain a dual-format reader during a compatibility window.", "Ship a public generation-1 to generation-2 upgrade command.", "Support a transitional repository format."],
+    "accepted_cost": "Generation-1 data is unreadable to conforming runtime readers after cutover and recovery requires returning to the pre-cutover code and data together.",
+    "supersedes": ["#242 process-gate expectation of a read-compatibility window"],
+    "derived_from": ["Owner measurement that no external SRS repositories exist"],
+    "axes": {
+      "integrity_expression": {"relevance":"unexpressed","direction":"not-applicable","evidence_basis":"speculative","confidence":"low","counterfactual":"The sources do not make representation convenience the decisive comparison.","counterpole_safeguard":"Migration tooling and explicit diagnostics still make the transition operationally visible.","shadow_signal":"Compatibility is declined without rechecking whether external users now exist."},
+      "continuity_evolution": {"relevance":"decisive","direction":"evolution","evidence_basis":"explicit","confidence":"high","counterfactual":"An old reader or upgrade window would preserve runtime continuity with generation 1.","counterpole_safeguard":"The complete named first-party corpus migrates together and git history preserves the old state.","shadow_signal":"A zero window is reused after the project has acquired external compatibility obligations."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"coherence","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"A compatibility period would allow different first-party components to remain on different generations.","counterpole_safeguard":"Explicit opt-in migration tooling remains the one component allowed to interpret old data.","shadow_signal":"Uniform generation is valued more than legitimate independent consumer schedules."}
+    },
+    "cube": {"dimensionality":"edge","coordinate":["Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "The no-window choice is split from rollback because either policy could be changed independently."
+  },
+  {
+    "decision_id": "E256-E03",
+    "epic_row": "6 / #242 Phase B and #297",
+    "task_refs": ["srs#242", "srs#297", "RFC-039"],
+    "decision_family": "E",
+    "title": "Use git history as cutover rollback",
+    "decision_statement": "Rollback is a git revert of the complete cutover train, returning code and first-party data together; no downgrade converter is provided.",
+    "status": "ratified",
+    "decision_class": "reasoned-application",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#change-h--version-discrimination-and-what-is-deliberately-not-provided","excerpt":"Accepted RFC-039 defines rollback as git revert of the train, with git history as recovery and no downgrade converter.","explicitness":"explicit","commit_sha":"e0fb4b050447febcd5ecb8f6ccb7864196e656d6"},
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/297","excerpt":"The cutover tracker requires baselines, before/after identity sets, hashes, and validation evidence for each migration target.","explicitness":"explicit","commit_sha":null}
+    ],
+    "alternatives": ["Build and maintain a generation-2 to generation-1 downgrade converter.", "Roll back code while leaving migrated data in place.", "Treat the migration as irreversible."],
+    "accepted_cost": "Rollback reverts the entire coordinated train and cannot selectively preserve later generation-2 edits.",
+    "supersedes": [],
+    "derived_from": ["E256-E01", "E256-E02"],
+    "axes": {
+      "integrity_expression": {"relevance":"supporting","direction":"integrity","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"A downgrade transform could approximate or discard semantics that generation 1 cannot represent.","counterpole_safeguard":"A simple repository-native revert remains practical for the bounded first-party corpus.","shadow_signal":"Exact historical recovery is unavailable because required external state was never captured."},
+      "continuity_evolution": {"relevance":"decisive","direction":"continuity","evidence_basis":"explicit","confidence":"high","counterfactual":"Without a recovery path, a failed breaking cutover could not restore the last coherent code-and-data state.","counterpole_safeguard":"Rollback does not require preserving the old format in current runtime code.","shadow_signal":"Recovery through history is invoked where users need forward migration of post-cutover work."},
+      "coherence_autonomy": {"relevance":"unexpressed","direction":"not-applicable","evidence_basis":"speculative","confidence":"low","counterfactual":"The selected evidence does not compare shared and local ownership for rollback.","counterpole_safeguard":"No coherence claim is inferred.","shadow_signal":"Different repositories cannot return to a mutually compatible baseline."}
+    },
+    "cube": {"dimensionality":"edge","coordinate":["Integrity","Continuity"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Recovery policy, not a vote for every mechanical file reversion."
+  },
+  {
+    "decision_id": "E256-E04",
+    "epic_row": "5–6a / first-party cutover boundary",
+    "task_refs": ["srs#256", "srs#286", "srs#297", "RFC-038"],
+    "decision_family": "E",
+    "title": "Migrate every named first-party artifact to the final contract",
+    "decision_statement": "The cutover includes the SRS specification repository, muSrs, maintained packages, fixtures, examples, seeds, snapshots, and schema mirrors; no known first-party target is deferred as a compatibility population.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"owner-decision","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/issues/256","excerpt":"The epic's First-party corpus boundary requires every named first-party repository and artifact to reach the final combined contract directly.","explicitness":"explicit","commit_sha":null},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#migration-plan","excerpt":"Accepted RFC-038 fixes the migration corpus and rejects an unmentioned or deferred repository population.","explicitness":"explicit","commit_sha":"0c0ee75fb7b582879a908ed1e2ad5c937185ba4f"}
+    ],
+    "alternatives": ["Migrate only the main srs repository.", "Leave packages and snapshots on their historical generations.", "Treat clients and schema mirrors as post-cutover follow-ons."],
+    "accepted_cost": "The gate expands across multiple repositories and artifact forms, increasing coordination and validation work before either design can ship.",
+    "supersedes": ["Repository-scoped migration inventories that omitted muSrs, fixtures, mirrors, or packages"],
+    "derived_from": ["Owner first-party corpus boundary", "RFC-038 Revision 7 dispositions"],
+    "axes": {
+      "integrity_expression": {"relevance":"supporting","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"An omitted first-party artifact would remain a contradictory, misleading expression of the project contract.","counterpole_safeguard":"The boundary is finite and enumerated rather than claiming unknown external populations.","shadow_signal":"The inventory absorbs abandoned or purely historical artifacts with no effective role."},
+      "continuity_evolution": {"relevance":"decisive","direction":"evolution","evidence_basis":"explicit","confidence":"high","counterfactual":"Deferring known artifacts would preserve old generations alongside the final contract.","counterpole_safeguard":"Migration preserves logical IDs, semantic content, relations, containers, source documents, and valid history.","shadow_signal":"Forced migration rewrites artifacts whose immutable historical form is itself meaningful."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Independent first-party schedules would leave clients and corpora on incompatible authority and carrier contracts.","counterpole_safeguard":"Each repository retains a named owning issue and validates through its own implementation boundary.","shadow_signal":"A shared release gate makes unrelated repositories unable to progress independently."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "This boundary decision does not count individual migrated files or repositories as additional decisions."
+  },
+  {
+    "decision_id": "E256-E05",
+    "epic_row": "5 input / #314",
+    "task_refs": ["srs#256", "srs#286", "srs#314", "srs#317", "RFC-038", "RFC-039"],
+    "decision_family": "E",
+    "title": "Migrate fixture packages without inventing repository identity",
+    "decision_statement": "First-party fixture packages are migrated and stamped to the final package contract, while fixture trees remain test inputs: they receive no repository marker or generation-2 repository identity and their relation collections are not migrated.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"owner-decision","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/issues/256","excerpt":"The owner explicitly distinguishes fixture packages, which reach the contract, from fixture repositories, which remain test data without invented identity.","explicitness":"explicit","commit_sha":null},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#migration-plan","excerpt":"Accepted RFC-038 excludes the discovery and RFC-032 fixture trees from repository migration while retaining them as test inputs.","explicitness":"explicit","commit_sha":"0c0ee75fb7b582879a908ed1e2ad5c937185ba4f"},
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/314#issuecomment-5157074817","excerpt":"The reconciliation records the direct owner boundary: stamp the package, do not turn its containing fixture tree into a repository.","explicitness":"explicit","commit_sha":null}
+    ],
+    "alternatives": ["Exclude fixture packages from the final contract.", "Turn every fixture tree into a generation-2 repository to simplify migration arithmetic."],
+    "accepted_cost": "Migration code and inventories must distinguish package conformance from repository identity instead of treating the containing directory as one homogeneous unit.",
+    "supersedes": ["RFC-038 stamping inventory that omitted the thirteenth fixture package"],
+    "derived_from": ["Owner first-party corpus boundary", "RFC-038 intended-tree rule"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Inventing repository identity would misstate what the test tree is, while leaving its package stale would misstate the package contract.","counterpole_safeguard":"The fixture remains usable as test input and its package description is rewritten in current fieldType terms.","shadow_signal":"Strict identity distinctions make fixtures difficult to load or exercise."},
+      "continuity_evolution": {"relevance":"supporting","direction":"evolution","evidence_basis":"explicit","confidence":"high","counterfactual":"Leaving the fixture package at generation 0 would preserve a removed field model that final readers reject.","counterpole_safeguard":"Scenario and instance IDs, values, order, and legacy expected results are preserved.","shadow_signal":"Fixture migration silently changes the oracle it is supposed to preserve."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"autonomy","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"A uniform rule that every package-bearing tree is a repository would impose identity the fixture does not claim.","counterpole_safeguard":"The package inside the fixture still conforms to the same shared generation-2 package contract.","shadow_signal":"Local classification becomes a loophole for stale or unreadable packages."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Autonomy"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Potential counter-pole case for synthesis; exception classification is deferred until a family-spanning bias exists."
+  },
+  {
+    "decision_id": "E256-E06",
+    "epic_row": "5–6a / #286 and #297",
+    "task_refs": ["srs#286", "srs#297", "RFC-038", "RFC-039"],
+    "decision_family": "E",
+    "title": "Migrate published governance packages in place",
+    "decision_statement": "Both published com.mudemocracy.governance package versions migrate in place with their consumers rather than remaining frozen at generation 0 or waiting for a newly published version.",
+    "status": "ratified",
+    "decision_class": "reasoned-application",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#phase-1--transform-placement","excerpt":"Accepted RFC-038 brings both published governance packages into the cutover because generation-2 readers otherwise reject them, superseding RFC-039's earlier #286 scheduling note.","explicitness":"explicit","commit_sha":"0c0ee75fb7b582879a908ed1e2ad5c937185ba4f"},
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/286#issuecomment-5151034166","excerpt":"The post-acceptance reconciliation states that freeze is no longer available and both versions migrate in place within #297.","explicitness":"explicit","commit_sha":null}
+    ],
+    "alternatives": ["Freeze the two released versions exactly as published.", "Publish only a new migrated version and leave old versions readable through compatibility support."],
+    "accepted_cost": "Artifacts labelled as already published versions are rewritten, so byte-level immutability yields to a generation-wide semantic cutover.",
+    "supersedes": ["RFC-039 and #286 deferral of published governance package disposition", "Freeze-versus-republish option set in #286"],
+    "derived_from": ["E256-E02", "E256-E04", "RFC-038 R21"],
+    "axes": {
+      "integrity_expression": {"relevance":"supporting","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Frozen packages would retain a representation the final reader rejects and cease to express usable package meaning.","counterpole_safeguard":"Logical package versions, IDs, and semantic content are preserved through the in-place transform.","shadow_signal":"Semantic usability becomes a license to rewrite historical artifacts without a traceable baseline."},
+      "continuity_evolution": {"relevance":"decisive","direction":"evolution","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"Freezing published bytes would preserve artifact continuity at the expense of final-generation readability.","counterpole_safeguard":"Before/after hashes and logical identity sets record what changed, and git preserves original bytes.","shadow_signal":"A published-version immutability promise actually relied on by consumers is overridden."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Published packages would occupy a generation that no conforming final reader accepts while their consumers move forward.","counterpole_safeguard":"Namespace-specific package ownership determines which definitions survive duplicate reconciliation.","shadow_signal":"Uniform generation overrides a package owner's legitimate independent versioning policy."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Preserves the earlier freeze proposal as a superseded alternative rather than rewriting the issue's history."
+  },
+  {
+    "decision_id": "E256-E07",
+    "epic_row": "6 / composed Phase B ordering",
+    "task_refs": ["srs#242", "srs#297", "RFC-038", "RFC-039"],
+    "decision_family": "E",
+    "title": "Stamp the new generation only after both transforms complete",
+    "decision_statement": "Carrier definition and instance transforms run while legacy instanceIndex enumeration remains available, relation conversion and retired-property removal follow, and one shared final step stamps dataModelRevision 2 and srsj 2 across the complete inventory.",
+    "status": "ratified",
+    "decision_class": "reasoned-application",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#composition-with-rfc-039","excerpt":"Accepted RFC-038 pins ordering below step granularity and subsumes RFC-039's separate stamp into one final step so the corpus is never stamped while still carrying retired indexes.","explicitness":"explicit","commit_sha":"0c0ee75fb7b582879a908ed1e2ad5c937185ba4f"}
+    ],
+    "alternatives": ["Stamp during RFC-039 before removing instanceIndex.", "Delete instanceIndex before using it for RFC-039's exhaustive count assertion.", "Stamp each repository whenever its local transform finishes."],
+    "accepted_cost": "The migration must retain and use a soon-to-be-retired authority until all carrier assertions finish, and the final stamp becomes a cross-artifact synchronization point.",
+    "supersedes": ["RFC-039 Phase 2 step 8 as a separate stamping action"],
+    "derived_from": ["RFC-039 R13", "RFC-038 R2", "E256-E01"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Premature stamping would assert generation-2 conformance over a manifest shape generation 2 forbids.","counterpole_safeguard":"The order is an executable sequence with measurable count assertions rather than only an architectural ideal.","shadow_signal":"Purity of transitional state adds choreography without reducing an observable risk."},
+      "continuity_evolution": {"relevance":"supporting","direction":"continuity","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"Deleting the old index too early would discard the authoritative enumeration needed to prove no legacy instances were skipped.","counterpole_safeguard":"The index is deleted immediately after it has discharged its one-off migration role.","shadow_signal":"A transitional legacy authority survives beyond the cutover proof that needs it."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Per-repository stamping could expose a mixed public generation across artifacts and clients.","counterpole_safeguard":"Repositories can prepare locally before the shared final stamp and retain separate validation evidence.","shadow_signal":"The synchronization point creates avoidable lockstep across otherwise isolated artifacts."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Continuity","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Counts as a reasoned ordering choice, not as votes for each mechanical transform step."
+  },
+  {
+    "decision_id": "E256-E08",
+    "epic_row": "6 / #242 Phase B",
+    "task_refs": ["srs#242", "RFC-039"],
+    "decision_family": "E",
+    "title": "Abort rather than partially migrate ambiguous data",
+    "decision_statement": "The migration fails the whole repository with a targeted diagnostic on any input the new shape cannot represent unambiguously; it never skips, coerces, chooses a winner, or leaves a partially migrated dual-shape repository.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-07-31",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#the-transform-must-be-total--every-schema-legal-branch-has-a-rule","excerpt":"Accepted RFC-039 gives every schema-legal branch an explicit disposition and defines abort as failure of the entire repository, never skip, coerce, or partial migration.","explicitness":"explicit","commit_sha":"e0fb4b050447febcd5ecb8f6ccb7864196e656d6"}
+    ],
+    "alternatives": ["Skip records that cannot migrate.", "Coerce ambiguous or malformed values into the closest new shape.", "Migrate valid files and leave failures in the old carrier."],
+    "accepted_cost": "One problematic value blocks migration of its whole repository and requires repair or an explicit normative disposition before the cutover can proceed.",
+    "supersedes": ["Best-effort migration behavior implied by incomplete earlier transform plans"],
+    "derived_from": ["RFC-039 total-transform review findings", "Atomic cutover requirement"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"Coercion or winner selection would silently invent or discard semantic content.","counterpole_safeguard":"Diagnostics name the record, key, and reason so a blocked migration is actionable.","shadow_signal":"Fail-closed handling blocks useful recovery even when a reversible, explicit repair exists."},
+      "continuity_evolution": {"relevance":"supporting","direction":"continuity","evidence_basis":"explicit","confidence":"high","counterfactual":"Partial migration would destroy the coherent pre-cutover state without producing a valid replacement.","counterpole_safeguard":"Known intentional losses have separate logged dispositions so not every non-round-trip case aborts.","shadow_signal":"Preserving exact input prevents removal of demonstrably redundant or meaningless legacy states."},
+      "coherence_autonomy": {"relevance":"decisive","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Best-effort repositories would contain incompatible carriers and no singular generation contract.","counterpole_safeguard":"Repairs are made at the owning repository or package before the shared cutover.","shadow_signal":"One local anomaly holds all otherwise independent migration targets behind a global gate."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Continuity","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "This is the failure policy; individual abort branches are mechanical derivations and do not receive separate votes."
+  },
+  {
+    "decision_id": "E256-E09",
+    "epic_row": "6 / migration acceptance",
+    "task_refs": ["srs#242", "srs#297", "RFC-038", "RFC-039"],
+    "decision_family": "E",
+    "title": "Prove migration parity from pinned baselines",
+    "decision_statement": "Each target records a pinned pre-migration baseline, identity sets, content hashes, counts, and validation results; acceptance requires old-to-new logical equivalence except for explicitly enumerated, logged losses whose alternatives were rejected.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#phase-0--audit-before-anything-is-written","excerpt":"Accepted RFC-038 requires per-tree baseline counts, identifier sets, hashes, and both sides of every explicitly reconciled conflict before writes begin.","explicitness":"explicit","commit_sha":"0c0ee75fb7b582879a908ed1e2ad5c937185ba4f"},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#conformance-evidence-required-at-cutover","excerpt":"Accepted RFC-039 requires full-corpus round-trip evidence and explicitly narrows equivalence only for logged valueless pairs and redundant value/entries duplication.","explicitness":"explicit","commit_sha":"e0fb4b050447febcd5ecb8f6ccb7864196e656d6"}
+    ],
+    "alternatives": ["Rely on green current-schema validation after migration.", "Compare only aggregate file counts.", "Demand byte-for-byte reversibility even for explicitly removed redundancy."],
+    "accepted_cost": "The cutover must build corpus-specific audit tooling and retain evidence for intentional exceptions instead of relying on ordinary tests alone.",
+    "supersedes": ["Validation-only migration acceptance"],
+    "derived_from": ["RFC-039 review discovery of hidden roots and dual-written values", "RFC-038 corpus conflict audit"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"A green validator can still accept skipped records, lost provenance, or a semantically changed fixture.","counterpole_safeguard":"The evidence is expressed as reproducible counts, hashes, and logical comparisons contributors can inspect.","shadow_signal":"The proof measures artifacts exhaustively but misses the user-visible behavior the migration exists to preserve."},
+      "continuity_evolution": {"relevance":"decisive","direction":"continuity","evidence_basis":"explicit","confidence":"high","counterfactual":"Breaking migration without before/after equivalence evidence could silently sever identity, order, history, or content.","counterpole_safeguard":"Explicitly justified losses permit removal of null, valueless placeholders, and redundant encodings rather than requiring false byte parity.","shadow_signal":"Parity requirements preserve accidental legacy behavior after its cost is understood and accepted."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"coherence","evidence_basis":"behavioral","confidence":"medium","counterfactual":"Each repository could declare success using incompatible evidence and omit cross-artifact references.","counterpole_safeguard":"Baselines are recorded per target and conflicts retain repository-specific owner dispositions.","shadow_signal":"A central evidence template ignores a target's materially different storage semantics."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Continuity","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Known permitted losses are safeguards inside one parity decision, not repeated conceptual votes."
+  },
+  {
+    "decision_id": "E256-E10",
+    "epic_row": "3a–6a / RFC-038 migration policy",
+    "task_refs": ["srs#296", "srs#297", "RFC-038"],
+    "decision_family": "E",
+    "title": "Repair first-party conflicts instead of deleting valid data",
+    "decision_statement": "Every migrated repository is made conformant by preserving logical IDs, semantic content, relations, containers, source documents, and valid revision history, while known conflicts and missing schemas are repaired before stamping rather than ignored or resolved by deleting meaningful data.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"owner-decision","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/issues/256","excerpt":"The owner boundary says to make every migrated repository conformant, preserve meaningful content and history, and repair conflicts and schema gaps rather than delete valid data.","explicitness":"explicit","commit_sha":null},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#phase-0--audit-before-anything-is-written","excerpt":"RFC-038 Phase 0 turns dangling IDs, invalid manifests, missing protocol and revision schemas, and duplicate ownership into hard prerequisites with explicit repairs.","explicitness":"explicit","commit_sha":"0c0ee75fb7b582879a908ed1e2ad5c937185ba4f"}
+    ],
+    "alternatives": ["Record known fatal errors and migrate anyway.", "Delete unclassifiable but valid history.", "Relax the final conformance rules to admit current defects."],
+    "accepted_cost": "The migration accumulates prerequisite repairs and schema work that increase scope and can block the entire release train.",
+    "supersedes": ["RFC-038 Revision 3 option to record #307 as a known failure"],
+    "derived_from": ["RFC-038 fail-closed diagnostics", "Owner preservation principle"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Relaxation or deletion would make the final contract fit the implementation by erasing valid meaning or concealing contradictions.","counterpole_safeguard":"Repairs are concrete and bounded to observed first-party conflicts rather than abstract model expansion.","shadow_signal":"Every historical artifact is treated as meaningful even when it has no effective use or authority."},
+      "continuity_evolution": {"relevance":"decisive","direction":"continuity","evidence_basis":"explicit","confidence":"high","counterfactual":"Deleting revision history, identifiers, relations, or source documents would achieve a cleaner generation by severing lineage.","counterpole_safeguard":"Invalid duplicate representations and obsolete carriers are removed after their valid content is reconciled.","shadow_signal":"Preservation blocks correction of legacy data whose meaning is demonstrably wrong."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Known local exceptions would make some migrated repositories fail the shared final contract.","counterpole_safeguard":"Namespace and repository ownership determine the authoritative copy and the specific repair.","shadow_signal":"Shared conformance forces repair of harmless local data that no consumer reads."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Continuity","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "The individual Phase-0 repairs are manifestations of this policy unless they contain a separately reversible owner choice."
+  },
+  {
+    "decision_id": "E256-E11",
+    "epic_row": "3a/6a / RFC-038 Phase 0",
+    "task_refs": ["srs#296", "srs#297", "RFC-038"],
+    "decision_family": "E",
+    "title": "Relocate the legacy purpose document rather than adopt it",
+    "decision_statement": "The unindexed legacy spec/srs-purpose-and-scope.md is moved out of sourceDocumentsPath rather than added to the authoritative source-document set; the first-party source-document membership therefore remains unchanged at four.",
+    "status": "ratified",
+    "decision_class": "reasoned-application",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#phase-0--audit-before-anything-is-written","excerpt":"RFC-038 Revision 9 records the owner disposition to relocate the legacy content and not adopt it into the source-document set.","explicitness":"explicit","commit_sha":"0c0ee75fb7b582879a908ed1e2ad5c937185ba4f"},
+      {"kind":"commit","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/commit/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f","excerpt":"The accepted RFC's Revision 9 commit specifically records the owner disposition for Phase 0 step 2.","explicitness":"explicit","commit_sha":"0c0ee75fb7b582879a908ed1e2ad5c937185ba4f"}
+    ],
+    "alternatives": ["Adopt the legacy document into the authoritative source-document set.", "Delete the legacy content.", "Leave it under sourceDocumentsPath as an unindexed contradiction."],
+    "accepted_cost": "The historical document remains outside the live source-document model and requires a clearly non-authoritative destination.",
+    "supersedes": ["Open Phase-0 disposition for spec/srs-purpose-and-scope.md"],
+    "derived_from": ["RFC-038 tree authority", "Owner assessment that the document is a legacy of early work"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"high","counterfactual":"Adoption would turn location accident into authoritative membership; leaving it in place would retain a contradiction.","counterpole_safeguard":"The content is preserved in a historical, non-authoritative location rather than erased.","shadow_signal":"Authority purity hides useful origin material from contributors."},
+      "continuity_evolution": {"relevance":"decisive","direction":"balanced","evidence_basis":"explicit","confidence":"high","counterfactual":"Deletion would discard history, while adoption would preserve an invalid live classification.","counterpole_safeguard":"Relocation preserves the artifact while correcting its current semantic status.","shadow_signal":"Historical material survives without a maintained explanation of its relationship to the current spec."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"coherence","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"An unindexed file inside the reserved authoritative location would contradict the common discovery contract.","counterpole_safeguard":"The artifact remains available outside that location as locally maintained history.","shadow_signal":"Reserved-location coherence disallows useful colocated context that is clearly marked non-authoritative."}
+    },
+    "cube": {"dimensionality":"edge","coordinate":["Integrity","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "The ratified membership disposition is distinct from the later unresolved destination/sidecar mechanics."
+  },
+  {
+    "decision_id": "E256-E12",
+    "epic_row": "6 / generation discrimination",
+    "task_refs": ["srs#242", "srs#297", "RFC-038", "RFC-039"],
+    "decision_family": "E",
+    "title": "Reject mismatched generations instead of coercing them",
+    "decision_statement": "Repository and package generation is declared by dataModelRevision, with absent meaning generation 0; srsj 2 is required for revision-2 archives, and conforming runtime readers reject older, unknown, or internally mismatched generations while only explicit migration tooling may read old data.",
+    "status": "ratified",
+    "decision_class": "precedent-setting",
+    "effective_date": "2026-08-01",
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#change-j--version-discrimination-and-what-an-old-reader-does","excerpt":"RFC-038 uses manifest dataModelRevision plus srsj versioning and requires old readers and final readers to fail loudly rather than infer from missing fields.","explicitness":"explicit","commit_sha":"0c0ee75fb7b582879a908ed1e2ad5c937185ba4f"},
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#conformance-rules","excerpt":"Rules R20 and R21 define generation stamps, archive version, reader rejection, and the explicit-opt-in migrator exception.","explicitness":"explicit","commit_sha":"0c0ee75fb7b582879a908ed1e2ad5c937185ba4f"}
+    ],
+    "alternatives": ["Infer generation from the presence or absence of retired properties.", "Silently read or coerce old data under the new runtime.", "Let each artifact class invent its own discriminator."],
+    "accepted_cost": "Unstamped first-party packages and old archives become hard errors until migrated, and all artifact manifests must be stamped consistently.",
+    "supersedes": ["Absence-of-instanceIndex as an implicit generation test", "srsj version 1 for migrated archives"],
+    "derived_from": ["RFC-033 monotonic dataModelRevision", "E256-E02"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"revealed-by-alternative","confidence":"high","counterfactual":"Shape inference could interpret a malformed or partially migrated artifact as a valid generation.","counterpole_safeguard":"Diagnostics name the file and expected generation, and the structural fieldValues distinction remains simple to inspect.","shadow_signal":"Strict stamping rejects data whose generation is otherwise unambiguous and recoverable."},
+      "continuity_evolution": {"relevance":"decisive","direction":"evolution","evidence_basis":"explicit","confidence":"high","counterfactual":"Runtime coercion would preserve access to generation-1 artifacts after the deliberate breaking cutover.","counterpole_safeguard":"An explicit opt-in migration tool may read old data and git history preserves the old runtime.","shadow_signal":"A hard version boundary strands legitimate archives after external use begins."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"coherence","evidence_basis":"explicit","confidence":"high","counterfactual":"Artifact-specific or heuristic discrimination would let implementations disagree about what generation they loaded.","counterpole_safeguard":"Backends remain free to implement storage differently behind the common generation contract.","shadow_signal":"A single artifact-generation rule prevents safe local import strategies."}
+    },
+    "cube": {"dimensionality":"vertex","coordinate":["Integrity","Evolution","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Version semantics are separate from the no-compatibility-window policy: explicit migration tooling remains permitted."
+  },
+  {
+    "decision_id": "E256-E13",
+    "epic_row": "5a / #317",
+    "task_refs": ["srs#284", "srs#286", "srs#317", "srs-rust#793", "RFC-012", "RFC-032", "RFC-039"],
+    "decision_family": "E",
+    "title": "Expand the migrated discovery fixture into an executable predicate oracle",
+    "decision_statement": "The proposed fixture migration preserves all legacy scenario identities and results while adding positive and constructed negative cases for every RFC-032 Revision-7 fieldType classification, list ordering, and the final Tier-1 disposition; it closes only in the atomic Phase-B train.",
+    "status": "proposed",
+    "decision_class": "proposal",
+    "effective_date": null,
+    "sources": [
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/317","excerpt":"The open issue specifies the fixture migration, preservation requirements, full positive/negative classification matrix, list behavior, and atomic closure gate.","explicitness":"explicit","commit_sha":null},
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/314#issuecomment-5156946005","excerpt":"The audit finds that srs-rust declares ext:discovery but no runner executes the normative scenarios, and files srs-rust#793 as a pre-migration oracle prerequisite.","explicitness":"explicit","commit_sha":null}
+    ],
+    "alternatives": ["Mechanically migrate the existing fixture without expanding predicate coverage.", "Test only current first-party positive cases.", "Add the conformance runner after the oracle itself has changed."],
+    "accepted_cost": "The migration gains constructed cases with no current corpus use and must land a conformance runner before changing the normative fixture.",
+    "supersedes": [],
+    "derived_from": ["RFC-032 Revision 7", "RFC-012 R11/R12", "E256-E05", "srs-rust#793 finding"],
+    "axes": {
+      "integrity_expression": {"relevance":"decisive","direction":"integrity","evidence_basis":"explicit","confidence":"medium","counterfactual":"A green migration over only existing data would not prove that exclusions or unknown formats retain their intended semantics.","counterpole_safeguard":"Scenario IDs, values, ordering, and legacy expected results remain contributor-readable and stable.","shadow_signal":"The fixture becomes a model-completeness exercise disconnected from discovery behavior users need."},
+      "continuity_evolution": {"relevance":"decisive","direction":"balanced","evidence_basis":"explicit","confidence":"medium","counterfactual":"Either unchanged coverage would leave the new rules prose-only or wholesale replacement could redefine the legacy oracle.","counterpole_safeguard":"New classifications are added while all eight legacy mappings and results are preserved.","shadow_signal":"Preserving every prior scenario prevents simplifying an obsolete fixture design."},
+      "coherence_autonomy": {"relevance":"supporting","direction":"coherence","evidence_basis":"explicit","confidence":"medium","counterfactual":"Implementations could claim ext:discovery while applying different untested classifications.","counterpole_safeguard":"The fixture owns only discovery consequences and explicitly leaves recursive composite search to a later RFC.","shadow_signal":"A shared oracle expands into semantics its owning RFC deliberately left open."}
+    },
+    "cube": {"dimensionality":"edge","coordinate":["Integrity","Coherence"]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Proposal status keeps this open task out of bias counts; it records intended acceptance, not delivered behavior."
+  },
+  {
+    "decision_id": "E256-E14",
+    "epic_row": "6a / #297 ecosystem cutover",
+    "task_refs": ["srs#297", "srs-rust#783", "srs-web#276", "srs-vscode#89", "muDemocracy.org#135"],
+    "decision_family": "E",
+    "title": "Complete the cross-repository ecosystem cutover",
+    "decision_statement": "Implementation of the accepted migration contract remains unresolved until the core backend, web client, editor mirror/workflows, muSrs, specification artifacts, and maintained fixtures all deliver and verify the final authority model without partial public state.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/297","excerpt":"The open tracker assigns four cross-repository owners, specifies release evidence, and rejects partial public state; every implementation checkbox remains part of the gate.","explicitness":"explicit","commit_sha":null},
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs-rust/issues/783","excerpt":"The backend-neutral catalog, codecs, migration, CLI, WASM, and bindings implementation child remains open at the captured snapshot.","explicitness":"explicit","commit_sha":null},
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs-web/issues/276","excerpt":"The web adoption child remains open at the captured snapshot.","explicitness":"explicit","commit_sha":null}
+    ],
+    "alternatives": ["Declare the accepted RFCs effective after only the srs repository migrates.", "Narrow or defer named client and first-party targets through an explicit later decision.", "Complete the coordinated cutover as currently scoped."],
+    "accepted_cost": "No implementation outcome has yet been accepted; the unresolved train continues to block later epic rows.",
+    "supersedes": [],
+    "derived_from": ["E256-E01", "E256-E04", "RFC-038 accepted implementation obligations"],
+    "axes": {
+      "integrity_expression": {"relevance":"unexpressed","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Delivered consequences are not yet available for comparison.","counterpole_safeguard":"No directional claim is inferred from an open tracker.","shadow_signal":"Implementation divergence is concealed by treating ratified design as delivered."},
+      "continuity_evolution": {"relevance":"unexpressed","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"The final cost actually accepted by implementation is not yet known.","counterpole_safeguard":"The ratified migration policy remains documented separately from delivery status.","shadow_signal":"Open prerequisites make a deliberate cutover appear historically completed."},
+      "coherence_autonomy": {"relevance":"unexpressed","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"The cross-repository delivery record is incomplete.","counterpole_safeguard":"Each child remains visible with its own owner and evidence requirement.","shadow_signal":"A shared gate is coded as a preference before its consequences are observed."}
+    },
+    "cube": {"dimensionality":"centre","coordinate":[]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Unresolved implementation card; excluded from bias counts. The accepted scope and migration policies are represented by E01–E12."
+  },
+  {
+    "decision_id": "E256-E15",
+    "epic_row": "6a input / #329 and #297 Phase 0",
+    "task_refs": ["srs#297", "srs#329", "RFC-038"],
+    "decision_family": "E",
+    "title": "Resolve the relocated charter sidecar disposition",
+    "decision_statement": "It remains unresolved whether the legacy purpose document's .meta.json sidecar follows the content out of sourceDocumentsPath as RFC-038 currently says or is deleted so the relocation does not create a dangling sidecar that violates the source-document contract.",
+    "status": "unresolved",
+    "decision_class": "unresolved",
+    "effective_date": null,
+    "sources": [
+      {"kind":"rfc","authority_rank":2,"url_or_path":"https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#phase-0--audit-before-anything-is-written","excerpt":"Accepted RFC-038 Revision 9 currently says to relocate the content file and its sidecar together.","explicitness":"explicit","commit_sha":"0c0ee75fb7b582879a908ed1e2ad5c937185ba4f"},
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/329","excerpt":"The open charter-disposition issue identifies the relocated sidecar as dangling outside sourceDocumentsPath and recommends deletion, explicitly noting that this would amend accepted Phase 0 step 2 and requires owner disposition.","explicitness":"explicit","commit_sha":null},
+      {"kind":"issue","authority_rank":4,"url_or_path":"https://github.com/the-greenman/srs/issues/297#issuecomment-5151615896","excerpt":"The cutover tracker records both the proposed governance-origin destination and the still-open sidecar choice before Phase 0 executes.","explicitness":"explicit","commit_sha":null}
+    ],
+    "alternatives": ["Relocate the sidecar alongside the historical content as currently ratified.", "Delete the sidecar while preserving the content in a bannered historical location.", "Redefine a valid sidecar role outside sourceDocumentsPath."],
+    "accepted_cost": "No alternative has been accepted; leaving it unresolved blocks an internally conformant execution of the otherwise-ratified relocation.",
+    "supersedes": [],
+    "derived_from": ["E256-E11", "Invariant 52 source-document resolution"],
+    "axes": {
+      "integrity_expression": {"relevance":"unexpressed","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"The owner has not chosen whether provenance represented by the sidecar remains meaningful outside the live source-document model.","counterpole_safeguard":"The ratified content-membership decision is preserved separately in E256-E11.","shadow_signal":"A convenient relocation leaves an artifact whose declared semantics no longer resolve."},
+      "continuity_evolution": {"relevance":"unexpressed","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"Keeping provenance continuity and deleting an invalid legacy carrier remain live alternatives.","counterpole_safeguard":"No historical bias is inferred from an unchosen recommendation.","shadow_signal":"Deletion treats invalid placement as proof that the provenance itself has no value."},
+      "coherence_autonomy": {"relevance":"unexpressed","direction":"unknown","evidence_basis":"speculative","confidence":"low","counterfactual":"The shared sidecar contract and a special historical location have not been reconciled.","counterpole_safeguard":"The open choice is named rather than smoothed into the accepted relocation narrative.","shadow_signal":"A one-off exception silently changes what source-document sidecars mean."}
+    },
+    "cube": {"dimensionality":"centre","coordinate":[]},
+    "exception_class": "none",
+    "review_state": "uncalibrated",
+    "coding_notes": "Atomic unresolved seam only. #329's separate destination and section-purpose proposals are outside this card and should enter the manifest if the epic scope includes post-256 governance work."
+  }
+]
