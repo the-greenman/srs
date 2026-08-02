@@ -1,0 +1,70 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "createdAt": "2026-08-02T13:59:15.750859981+00:00",
+  "fieldValues": [
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "value": "Express the definition-layer metamodel in its own Field and Type language"
+    },
+    {
+      "fieldId": "5a000002-0000-4000-a000-000000000002",
+      "value": "accepted"
+    },
+    {
+      "fieldId": "5a000004-0000-4000-a000-000000000004",
+      "value": "2026-07-29"
+    },
+    {
+      "fieldId": "5a000012-0000-4000-a000-000000000012",
+      "value": "A second schema-source vocabulary would create two authorities for the same definitions. The canonical definition layer must use the Field and Type language it defines, with generated schemas retained as runtime projections."
+    },
+    {
+      "fieldId": "5a000019-0000-4000-a000-000000000019",
+      "value": "Field, Type, FieldAssignment, and the in-scope value objects are authored as SRS definitions in the canonical com.semanticops.srs/metamodel package, replacing RFC-004's parallel schema-source vocabulary."
+    },
+    {
+      "fieldId": "5a000020-0000-4000-a000-000000000020",
+      "value": "Definition-layer metamodel"
+    },
+    {
+      "fieldId": "5a000021-0000-4000-a000-000000000021",
+      "value": [
+        "semantic-integrity",
+        "evidence-led-evolution",
+        "shared-coherence"
+      ]
+    },
+    {
+      "fieldId": "5a000022-0000-4000-a000-000000000022",
+      "value": "formation"
+    },
+    {
+      "fieldId": "5a000023-0000-4000-a000-000000000023",
+      "value": "- Keep RFC-004 schema-definition/schema-member as a second source language.\n- Define the metamodel only through hand-authored JSON Schema."
+    },
+    {
+      "fieldId": "5a000024-0000-4000-a000-000000000024",
+      "value": "The system must bootstrap a language expressed in itself and maintain closure evidence for a recursive package."
+    },
+    {
+      "fieldId": "5a000025-0000-4000-a000-000000000025",
+      "value": [
+        "https://github.com/the-greenman/srs/blob/e6d94bba0a9d78d0e3be3a46d9b25a50f6b0d30f/rfcs/rfc-033-self-host-metamodel-frozen-seed.md#change-a--the-self-hosted-meta-model-package-comsemanticopssrsmetamodel",
+        "https://github.com/the-greenman/srs/tree/ae52927de4e45490cb427fee2b332d5351f536cd/srs/package/metamodel"
+      ]
+    },
+    {
+      "fieldId": "5a000026-0000-4000-a000-000000000026",
+      "value": "Review when a new definition-layer concern appears to require a parallel source language rather than a sanctioned metamodel extension."
+    }
+  ],
+  "instanceId": "d67e3d76-cf55-47b8-a611-fe71cad41d2d",
+  "tags": [
+    "topic:rfc"
+  ],
+  "typeId": "6a000004-0000-4000-a000-000000000004",
+  "typeName": "rfc-decision",
+  "typeNamespace": "com.semanticops.spec",
+  "typeVersion": 2,
+  "updatedAt": "2026-08-02T13:59:15.750863991+00:00"
+}
