@@ -3507,6 +3507,111 @@
       "instanceId": "4071ab22-5043-460f-bae4-1270e955b4ef",
       "path": "records/tier-2/rfc-4071ab22.json",
       "tier": 2
+    },
+    {
+      "instanceId": "1e5df0d9-430f-4a5a-ae7a-b4cd21a7c72f",
+      "path": "records/tier-2/rfc-decision-1e5df0d9.json",
+      "tags": [
+        "topic:meta",
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "c4fffe93-a726-45df-8bc3-d0079cbc5a16",
+      "path": "records/tier-2/rfc-decision-c4fffe93.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "6523cf5e-959b-40e1-91d0-ca2f4c0834be",
+      "path": "records/tier-2/rfc-decision-6523cf5e.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "d67e3d76-cf55-47b8-a611-fe71cad41d2d",
+      "path": "records/tier-2/rfc-decision-d67e3d76.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "dd0a33fc-c948-4bce-a599-8c54674f244a",
+      "path": "records/tier-2/rfc-decision-dd0a33fc.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "5c1e3068-6e22-42ae-ab24-882158e8035d",
+      "path": "records/tier-2/rfc-decision-5c1e3068.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "4269c744-8b73-4c8d-b6b9-e5b05e8bd1ef",
+      "path": "records/tier-2/rfc-decision-4269c744.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "2f048790-519d-441b-8f9d-1ba0652d8c4f",
+      "path": "records/tier-2/rfc-decision-2f048790.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "7d3dda60-baf8-4204-a7c1-cb7287ca98ca",
+      "path": "records/tier-2/rfc-decision-7d3dda60.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "2fb87c1e-dc5f-442d-ade0-67ee71979627",
+      "path": "records/tier-2/rfc-decision-2fb87c1e.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "86f49083-2e06-43bf-89dc-451c0a509015",
+      "path": "records/tier-2/rfc-decision-86f49083.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "7bd99afd-c15b-4bba-a189-2a3d34f2e4ee",
+      "path": "records/tier-2/rfc-decision-7bd99afd.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
+    },
+    {
+      "instanceId": "693b9458-3ee8-4db4-89d4-8b65437994db",
+      "path": "records/tier-2/rfc-decision-693b9458.json",
+      "tags": [
+        "topic:rfc"
+      ],
+      "tier": 2
     }
   ],
   "meta": {

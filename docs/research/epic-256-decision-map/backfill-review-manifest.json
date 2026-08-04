@@ -1,0 +1,2491 @@
+{
+  "title": "Epic 256 decision-log backfill review manifest",
+  "status": "review input; does not create or ratify backfilled records",
+  "generated_from": "decision-ledger.json",
+  "corpus_snapshot": "ae52927de4e45490cb427fee2b332d5351f536cd",
+  "selection_boundary": {
+    "decision_rule": "Record active consequential judgment where legitimate alternatives remained and the choice establishes, changes, applies with discretion, excepts, or supersedes guidance that future work may need to understand.",
+    "mechanical_rule": "Do not record a mechanical derivation: when competent contributors accepting the same governing decisions and evidence have only one valid outcome, record the task, implementation consequence, test, or pull request instead.",
+    "effective_statuses": [
+      "ratified",
+      "implemented"
+    ],
+    "eligible_classes": [
+      "precedent-setting",
+      "reasoned-application"
+    ]
+  },
+  "summary": {
+    "ledger_cards": 171,
+    "initially_eligible": 101,
+    "import_candidates": 91,
+    "held_for_human_review": 10,
+    "lineage_only": 1,
+    "excluded": {
+      "mechanical_derivations": 17,
+      "proposals": 8,
+      "rejected_alternatives": 4,
+      "unresolved": 40
+    }
+  },
+  "import_candidates": {
+    "by_family": {
+      "A": 19,
+      "B": 12,
+      "C": 13,
+      "D": 22,
+      "E": 13,
+      "F1": 7,
+      "F2": 3,
+      "G": 2
+    },
+    "decisions": [
+      {
+        "decision_id": "E256-A01",
+        "family": "A",
+        "epic_row": "foundation-1 / RFC-032",
+        "title": "Replace valueType with orthogonal fieldType facets",
+        "effective_date": "2026-07-29",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/de2310bc5d90ed47597c0a1a99beffa26ac396b1/rfcs/rfc-032-composite-field-range.md#change-a--the-fieldtype-model-replaces-valuetype",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/field.json"
+        ]
+      },
+      {
+        "decision_id": "E256-A02",
+        "family": "A",
+        "epic_row": "foundation-1 / RFC-032",
+        "title": "Use exact Type identity for composite Field ranges",
+        "effective_date": "2026-07-29",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/de2310bc5d90ed47597c0a1a99beffa26ac396b1/rfcs/rfc-032-composite-field-range.md#change-b--datatyperef-is-the-composite-range",
+          "https://github.com/the-greenman/srs/blob/de2310bc5d90ed47597c0a1a99beffa26ac396b1/tests/rfc-032/run.mjs"
+        ]
+      },
+      {
+        "decision_id": "E256-A03",
+        "family": "A",
+        "epic_row": "foundation-1 / RFC-032",
+        "title": "Admit demonstrated typed specializations",
+        "effective_date": "2026-07-29",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/de2310bc5d90ed47597c0a1a99beffa26ac396b1/rfcs/rfc-032-composite-field-range.md#rationale",
+          "https://github.com/the-greenman/srs/blob/de2310bc5d90ed47597c0a1a99beffa26ac396b1/scripts/rfc-032-paper-proof.mjs"
+        ]
+      },
+      {
+        "decision_id": "E256-A04",
+        "family": "A",
+        "epic_row": "foundation-1 / RFC-032",
+        "title": "Keep presentation hints outside the semantic type model",
+        "effective_date": "2026-07-29",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "principled-contextual",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/de2310bc5d90ed47597c0a1a99beffa26ac396b1/rfcs/rfc-032-composite-field-range.md#rationale",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/field.json"
+        ]
+      },
+      {
+        "decision_id": "E256-A05",
+        "family": "A",
+        "epic_row": "foundation-1 / RFC-032",
+        "title": "Subsume FieldGroup semantically but gate its data removal on a carrier",
+        "effective_date": "2026-07-29",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/de2310bc5d90ed47597c0a1a99beffa26ac396b1/rfcs/rfc-032-composite-field-range.md#change-e--fieldgroup-subsumed-by-composite-range-removal-gated-with-242",
+          "https://github.com/the-greenman/srs/pull/263"
+        ]
+      },
+      {
+        "decision_id": "E256-A06",
+        "family": "A",
+        "epic_row": "foundation-2 / RFC-033",
+        "title": "Express the definition-layer metamodel in its own Field and Type language",
+        "effective_date": "2026-07-29",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/e6d94bba0a9d78d0e3be3a46d9b25a50f6b0d30f/rfcs/rfc-033-self-host-metamodel-frozen-seed.md#change-a--the-self-hosted-meta-model-package-comsemanticopssrsmetamodel",
+          "https://github.com/the-greenman/srs/tree/ae52927de4e45490cb427fee2b332d5351f536cd/srs/package/metamodel"
+        ]
+      },
+      {
+        "decision_id": "E256-A07",
+        "family": "A",
+        "epic_row": "foundation-2 / RFC-033",
+        "title": "Resolve the metamodel through ordinary packageRefs rather than implicit merge",
+        "effective_date": "2026-07-29",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "counterpole-protection",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/e6d94bba0a9d78d0e3be3a46d9b25a50f6b0d30f/rfcs/rfc-033-self-host-metamodel-frozen-seed.md#rationale",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/srs/manifest.json"
+        ]
+      },
+      {
+        "decision_id": "E256-A08",
+        "family": "A",
+        "epic_row": "foundation-2 / RFC-033",
+        "title": "Retain committed Field and Type schemas as the runtime bootstrap fixed point",
+        "effective_date": "2026-07-29",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/e6d94bba0a9d78d0e3be3a46d9b25a50f6b0d30f/rfcs/rfc-033-self-host-metamodel-frozen-seed.md#change-b--frozen-seed-bootstrap-fixed-point-never-re-derived-at-runtime",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/field.json"
+        ]
+      },
+      {
+        "decision_id": "E256-A09",
+        "family": "A",
+        "epic_row": "foundation-2 / RFC-033",
+        "title": "Make projection loss explicit in a per-emitter fidelity contract",
+        "effective_date": "2026-07-29",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/e6d94bba0a9d78d0e3be3a46d9b25a50f6b0d30f/rfcs/rfc-033-self-host-metamodel-frozen-seed.md#change-d--authoritative-vs-lossy-fidelity-dashboard-per-emitter",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/metamodel-fidelity.md"
+        ]
+      },
+      {
+        "decision_id": "E256-A10",
+        "family": "A",
+        "epic_row": "foundation-2 / RFC-033",
+        "title": "Gate data-model compatibility with a monotonic revision stamp",
+        "effective_date": "2026-07-29",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/e6d94bba0a9d78d0e3be3a46d9b25a50f6b0d30f/rfcs/rfc-033-self-host-metamodel-frozen-seed.md#change-c--metamodel-versioning-id-scheme-and-datamodelrevision-folds-265",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/srs/manifest.json"
+        ]
+      },
+      {
+        "decision_id": "E256-A11",
+        "family": "A",
+        "epic_row": "foundation-3 / RFC-035",
+        "title": "Put a deterministic target-neutral IR between records and emitters",
+        "effective_date": "2026-07-29",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/9d4f5e9063c3c09af960f3c7318ffaae90e9c0de/rfcs/rfc-035-schema-emitter.md#change-a--the-neutral-ir-fieldtype-records--ir--target",
+          "https://github.com/the-greenman/srs/blob/9d4f5e9063c3c09af960f3c7318ffaae90e9c0de/scripts/lib/schema-emitter.mjs"
+        ]
+      },
+      {
+        "decision_id": "E256-A12",
+        "family": "A",
+        "epic_row": "foundation-3 / RFC-035",
+        "title": "Replace impossible seed byte-equality with two strict, honest verification tiers",
+        "effective_date": "2026-07-29",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/9d4f5e9063c3c09af960f3c7318ffaae90e9c0de/rfcs/rfc-035-schema-emitter.md#change-f--two-tier-verification-determinism-golden--structural-authoritative-subset-closure",
+          "https://github.com/the-greenman/srs/blob/9d4f5e9063c3c09af960f3c7318ffaae90e9c0de/scripts/rfc-035-closure-test.mjs"
+        ]
+      },
+      {
+        "decision_id": "E256-A14",
+        "family": "A",
+        "epic_row": "cardinality repair / #276",
+        "title": "Keep cardinality on Field and repair migrated definitions rather than add assignment overrides",
+        "effective_date": "2026-07-31",
+        "status": "implemented",
+        "decision_class": "reasoned-application",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/276#issuecomment-5142752701",
+          "https://github.com/the-greenman/srs/blob/7109ac6f22a1322fa2b91efaa15af572e41b105f/rfcs/rfc-032-composite-field-range.md#revision-history",
+          "https://github.com/the-greenman/srs/blob/e6f8b9803eff2b5d202ddf6fd00e8ab097ad745e/scripts/check-cardinality-coherence.mjs"
+        ]
+      },
+      {
+        "decision_id": "E256-A18",
+        "family": "A",
+        "epic_row": "foundation-1 / RFC-032",
+        "title": "Declare inline versus reference storage explicitly",
+        "effective_date": "2026-07-29",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/de2310bc5d90ed47597c0a1a99beffa26ac396b1/rfcs/rfc-032-composite-field-range.md#change-b--datatyperef-is-the-composite-range",
+          "https://github.com/the-greenman/srs/blob/de2310bc5d90ed47597c0a1a99beffa26ac396b1/tests/rfc-032/run.mjs"
+        ]
+      },
+      {
+        "decision_id": "E256-A19",
+        "family": "A",
+        "epic_row": "foundation-1 / RFC-032",
+        "title": "Reject recursive inline range cycles",
+        "effective_date": "2026-07-29",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/de2310bc5d90ed47597c0a1a99beffa26ac396b1/rfcs/rfc-032-composite-field-range.md#change-b--datatyperef-is-the-composite-range",
+          "https://github.com/the-greenman/srs/blob/de2310bc5d90ed47597c0a1a99beffa26ac396b1/tests/rfc-032/run.mjs"
+        ]
+      },
+      {
+        "decision_id": "E256-A20",
+        "family": "A",
+        "epic_row": "foundation-1 / RFC-032",
+        "title": "Retain the deprecated carrier until atomic replacement",
+        "effective_date": "2026-07-29",
+        "status": "implemented",
+        "decision_class": "reasoned-application",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/de2310bc5d90ed47597c0a1a99beffa26ac396b1/rfcs/rfc-032-composite-field-range.md#change-e--fieldgroup-subsumed-by-composite-range-removal-gated-with-242",
+          "https://github.com/the-greenman/srs/pull/263"
+        ]
+      },
+      {
+        "decision_id": "E256-A21",
+        "family": "A",
+        "epic_row": "foundation-3 / RFC-035",
+        "title": "Require deterministic target rendering",
+        "effective_date": "2026-07-29",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/9d4f5e9063c3c09af960f3c7318ffaae90e9c0de/rfcs/rfc-035-schema-emitter.md#change-a--the-neutral-ir-fieldtype-records--ir--target",
+          "https://github.com/the-greenman/srs/blob/9d4f5e9063c3c09af960f3c7318ffaae90e9c0de/scripts/lib/schema-emitter.mjs"
+        ]
+      },
+      {
+        "decision_id": "E256-A23",
+        "family": "A",
+        "epic_row": "cardinality repair / #276",
+        "title": "Keep requiredness contextual to Type assignment",
+        "effective_date": "2026-07-31",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "principled-contextual",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/276#issuecomment-5142752701",
+          "https://github.com/the-greenman/srs/blob/7109ac6f22a1322fa2b91efaa15af572e41b105f/rfcs/rfc-032-composite-field-range.md#revision-history",
+          "https://github.com/the-greenman/srs/blob/e6f8b9803eff2b5d202ddf6fd00e8ab097ad745e/scripts/check-cardinality-coherence.mjs"
+        ]
+      },
+      {
+        "decision_id": "E256-A26",
+        "family": "A",
+        "epic_row": "1 / package identity repair",
+        "title": "Enforce repository-wide package identity uniqueness",
+        "effective_date": "2026-07-31",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/295#issuecomment-5144920464",
+          "https://github.com/the-greenman/srs/pull/299",
+          "https://github.com/the-greenman/srs/blob/512d9c60da079f793b6dc4a37f7bdd23a63e8a8b/srs/package/metamodel/package.json"
+        ]
+      },
+      {
+        "decision_id": "E256-B01",
+        "family": "B",
+        "epic_row": "rendering design / #262 and #292",
+        "title": "Place composite-renderer dispatch in the view layer",
+        "effective_date": "2026-07-31",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "principled-contextual",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/f120e9f3174b2eddd773e259a91034eb958b60c2/rfcs/rfc-036-composite-rendering.md#change-b--three-declaration-sites-in-the-view-layer-with-a-total-precedence-order",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/view.json#L107-L148"
+        ]
+      },
+      {
+        "decision_id": "E256-B02",
+        "family": "B",
+        "epic_row": "rendering design / #262 and #292",
+        "title": "Render tables from structured composite values",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/f120e9f3174b2eddd773e259a91034eb958b60c2/rfcs/rfc-036-composite-rendering.md#change-d--the-table-renderer-specified-against-a-structured-value",
+          "https://github.com/the-greenman/srs/blob/f120e9f3174b2eddd773e259a91034eb958b60c2/rfcs/rfc-036-composite-rendering.md#problem-3--the-specified-value-shape-is-json-in-text-and-structured-values-must-win"
+        ]
+      },
+      {
+        "decision_id": "E256-B03",
+        "family": "B",
+        "epic_row": "rendering design / #292",
+        "title": "Degrade invalid composite-renderer bindings to the baseline",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "counterpole-protection",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/f120e9f3174b2eddd773e259a91034eb958b60c2/rfcs/rfc-036-composite-rendering.md#dispatch",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/view.json#L113-L130"
+        ]
+      },
+      {
+        "decision_id": "E256-B04",
+        "family": "B",
+        "epic_row": "rendering design / #292",
+        "title": "Specify a normative composite baseline",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "counterpole-protection",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/f120e9f3174b2eddd773e259a91034eb958b60c2/rfcs/rfc-036-composite-rendering.md#change-c--composite-baseline-rendering-normative"
+        ]
+      },
+      {
+        "decision_id": "E256-B05",
+        "family": "B",
+        "epic_row": "2 / #294 and srs-rust#782",
+        "title": "Standardize field-row output at the DocumentView boundary",
+        "effective_date": "2026-07-31",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "principled-contextual",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/f467593204e6f11cb78a4599a8c76cae4bd95e5a/rfcs/rfc-037-normative-field-row-rendering-baseline.md#conformance-rules",
+          "https://github.com/the-greenman/srs-rust/pull/786"
+        ]
+      },
+      {
+        "decision_id": "E256-B06",
+        "family": "B",
+        "epic_row": "2 / #294 and srs-rust#782",
+        "title": "Omit empty field rows deterministically",
+        "effective_date": "2026-07-31",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "principled-contextual",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/f467593204e6f11cb78a4599a8c76cae4bd95e5a/rfcs/rfc-037-normative-field-row-rendering-baseline.md#change-c--empty-values-and-the-portable-placeholder",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/spec/srs-spec.md#normative-field-row-form-rfc-037",
+          "https://github.com/the-greenman/srs-rust/pull/786"
+        ]
+      },
+      {
+        "decision_id": "E256-B07",
+        "family": "B",
+        "epic_row": "2 / #294 and srs-rust#782",
+        "title": "Separate field identity classes from display labels",
+        "effective_date": "2026-07-31",
+        "status": "implemented",
+        "decision_class": "reasoned-application",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/f467593204e6f11cb78a4599a8c76cae4bd95e5a/rfcs/rfc-037-normative-field-row-rendering-baseline.md#change-d--class-vocabulary-and-the-t-8-amendment",
+          "https://github.com/the-greenman/srs-rust/pull/786"
+        ]
+      },
+      {
+        "decision_id": "E256-B08",
+        "family": "B",
+        "epic_row": "2 / #294",
+        "title": "Confine portable rendering rules to DocumentView emitters",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "principled-contextual",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/f467593204e6f11cb78a4599a8c76cae4bd95e5a/rfcs/rfc-037-normative-field-row-rendering-baseline.md#change-g--conformance-boundary"
+        ]
+      },
+      {
+        "decision_id": "E256-B09",
+        "family": "B",
+        "epic_row": "architecture decision / #274",
+        "title": "Generate structural reference projections from semantic records",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/274",
+          "https://github.com/the-greenman/srs/issues/274#issuecomment-5145639920"
+        ]
+      },
+      {
+        "decision_id": "E256-B11",
+        "family": "B",
+        "epic_row": "rendering design / #262 and #292",
+        "title": "Resolve composite-renderer bindings most-specific-first",
+        "effective_date": "2026-07-31",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "principled-contextual",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/f120e9f3174b2eddd773e259a91034eb958b60c2/rfcs/rfc-036-composite-rendering.md#change-b--three-declaration-sites-in-the-view-layer-with-a-total-precedence-order",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/view.json#L107-L148"
+        ]
+      },
+      {
+        "decision_id": "E256-B12",
+        "family": "B",
+        "epic_row": "2 / #294 and srs-rust#782",
+        "title": "Use one portable required-field placeholder",
+        "effective_date": "2026-07-31",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "principled-contextual",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/f467593204e6f11cb78a4599a8c76cae4bd95e5a/rfcs/rfc-037-normative-field-row-rendering-baseline.md#change-c--empty-values-and-the-portable-placeholder",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/spec/srs-spec.md#normative-field-row-form-rfc-037",
+          "https://github.com/the-greenman/srs-rust/pull/786"
+        ]
+      },
+      {
+        "decision_id": "E256-B13",
+        "family": "B",
+        "epic_row": "8 / #285",
+        "title": "Require publication reachability or declared invisibility",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "reasoned-application",
+        "exception_class": "counterpole-protection",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/274",
+          "https://github.com/the-greenman/srs/issues/285",
+          "https://github.com/the-greenman/srs/pull/283",
+          "https://github.com/the-greenman/srs/issues/285#issuecomment-5144920510"
+        ]
+      },
+      {
+        "decision_id": "E256-C01",
+        "family": "C",
+        "epic_row": "3 / RFC-039 Phase A",
+        "title": "Use authored Field names as Record value keys",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "principled-contextual",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#change-a--fieldvalues-becomes-an-object-keyed-by-fieldname",
+          "https://github.com/the-greenman/srs/pull/306"
+        ]
+      },
+      {
+        "decision_id": "E256-C02",
+        "family": "C",
+        "epic_row": "3 / RFC-039 Phase A",
+        "title": "Make the carrier recursively identical to the projected field value space",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#change-b--one-recursive-value-rule-identical-to-projectfields-instance-space"
+        ]
+      },
+      {
+        "decision_id": "E256-C03",
+        "family": "C",
+        "epic_row": "3 / RFC-039 Phase A",
+        "title": "Relocate per-value provenance without wrapping domain values",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#change-c--per-value-provenance-moves-to-a-parallel-fieldmeta-sibling"
+        ]
+      },
+      {
+        "decision_id": "E256-C04",
+        "family": "C",
+        "epic_row": "3 / RFC-039 Phase A",
+        "title": "Use fieldType cardinality as the only repeatability mechanism",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#change-d--extrepeatable-fields-entries-is-removed-cardinality-carries-it"
+        ]
+      },
+      {
+        "decision_id": "E256-C05",
+        "family": "C",
+        "epic_row": "3 / RFC-039 Phase A",
+        "title": "Replace FieldGroup with typed inline composite Fields",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "principled-contextual",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#change-e--fieldgroup-and-groupvalues-are-removed"
+        ]
+      },
+      {
+        "decision_id": "E256-C06",
+        "family": "C",
+        "epic_row": "3 / RFC-039 Phase A",
+        "title": "Require Field.name uniqueness only within a Type's effective field set",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "counterpole-protection",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#change-f--fieldname-uniqueness-within-a-types-effective-field-set"
+        ]
+      },
+      {
+        "decision_id": "E256-C08",
+        "family": "C",
+        "epic_row": "4 / RFC-032 Revision 7 erratum",
+        "title": "Define the I-120 Text Projection predicate",
+        "effective_date": "2026-08-01",
+        "status": "implemented",
+        "decision_class": "reasoned-application",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/284#issuecomment-5151606989",
+          "https://github.com/the-greenman/srs/blob/4ac36bafbc9603f0ca8d4e5e7dd2c6f42909568d/rfcs/rfc-032-composite-field-range.md#change-i--extension-rule-subset-predicates-rev-7-erratum"
+        ]
+      },
+      {
+        "decision_id": "E256-C10",
+        "family": "C",
+        "epic_row": "3 / 6 naming prerequisite",
+        "title": "Grandfather existing kebab-case Field names but forbid new ones",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/242#issuecomment-5147997566",
+          "https://github.com/the-greenman/srs/issues/308"
+        ]
+      },
+      {
+        "decision_id": "E256-C12",
+        "family": "C",
+        "epic_row": "3 / RFC-039 Phase A",
+        "title": "Represent unset fields by absence, never explicit null",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#change-b--one-recursive-value-rule-identical-to-projectfields-instance-space"
+        ]
+      },
+      {
+        "decision_id": "E256-C15",
+        "family": "C",
+        "epic_row": "4 / RFC-032 Revision 7 erratum",
+        "title": "Define the I-94 conditional-required predicate",
+        "effective_date": "2026-08-01",
+        "status": "implemented",
+        "decision_class": "reasoned-application",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/284#issuecomment-5151606989",
+          "https://github.com/the-greenman/srs/blob/4ac36bafbc9603f0ca8d4e5e7dd2c6f42909568d/rfcs/rfc-032-composite-field-range.md#change-i--extension-rule-subset-predicates-rev-7-erratum"
+        ]
+      },
+      {
+        "decision_id": "E256-C16",
+        "family": "C",
+        "epic_row": "4 / RFC-032 Revision 7 erratum",
+        "title": "Define the T-9 theme class predicate",
+        "effective_date": "2026-08-01",
+        "status": "implemented",
+        "decision_class": "reasoned-application",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/284#issuecomment-5151606989",
+          "https://github.com/the-greenman/srs/blob/4ac36bafbc9603f0ca8d4e5e7dd2c6f42909568d/rfcs/rfc-032-composite-field-range.md#change-i--extension-rule-subset-predicates-rev-7-erratum"
+        ]
+      },
+      {
+        "decision_id": "E256-C17",
+        "family": "C",
+        "epic_row": "4 / RFC-032 Revision 7 erratum",
+        "title": "Define the N+1 titleFieldId predicate",
+        "effective_date": "2026-08-01",
+        "status": "implemented",
+        "decision_class": "reasoned-application",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/284#issuecomment-5151606989",
+          "https://github.com/the-greenman/srs/blob/4ac36bafbc9603f0ca8d4e5e7dd2c6f42909568d/rfcs/rfc-032-composite-field-range.md#change-i--extension-rule-subset-predicates-rev-7-erratum"
+        ]
+      },
+      {
+        "decision_id": "E256-C18",
+        "family": "C",
+        "epic_row": "4 / RFC-032 Revision 7 erratum",
+        "title": "Use a transition-only effective-single predicate",
+        "effective_date": "2026-08-01",
+        "status": "implemented",
+        "decision_class": "reasoned-application",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/284#issuecomment-5151606989",
+          "https://github.com/the-greenman/srs/blob/4ac36bafbc9603f0ca8d4e5e7dd2c6f42909568d/rfcs/rfc-032-composite-field-range.md#change-i--extension-rule-subset-predicates-rev-7-erratum"
+        ]
+      },
+      {
+        "decision_id": "E256-D01",
+        "family": "D",
+        "epic_row": "3a",
+        "title": "Make the authoritative store, not the manifest, define repository content",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L162-L179",
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L749-L754"
+        ]
+      },
+      {
+        "decision_id": "E256-D02",
+        "family": "D",
+        "epic_row": "3a",
+        "title": "Retain one stable manifest as descriptor while removing live inventories",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L221-L234",
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L756-L759"
+        ]
+      },
+      {
+        "decision_id": "E256-D03",
+        "family": "D",
+        "epic_row": "3a",
+        "title": "Discover fixed reserved roots by conforming package presence",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L236-L269",
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L761-L773"
+        ]
+      },
+      {
+        "decision_id": "E256-D04",
+        "family": "D",
+        "epic_row": "3a",
+        "title": "Apply a closed policy only inside explicit repository locations",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "counterpole-protection",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L324-L363",
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L812-L826"
+        ]
+      },
+      {
+        "decision_id": "E256-D05",
+        "family": "D",
+        "epic_row": "3a",
+        "title": "Classify objects by validated content rather than location or declaration alone",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L283-L322",
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L784-L810"
+        ]
+      },
+      {
+        "decision_id": "E256-D06",
+        "family": "D",
+        "epic_row": "6a-prerequisite",
+        "title": "Derive definition kinds from the package contract",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L203-L215",
+          "https://github.com/the-greenman/srs/issues/311"
+        ]
+      },
+      {
+        "decision_id": "E256-D07",
+        "family": "D",
+        "epic_row": "3a",
+        "title": "Reject duplicate logical identifiers without precedence",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L195-L201",
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L835-L841"
+        ]
+      },
+      {
+        "decision_id": "E256-D08",
+        "family": "D",
+        "epic_row": "3a/6a-prerequisite",
+        "title": "Require every reference to resolve to exactly one target",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L520-L544",
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L843-L848"
+        ]
+      },
+      {
+        "decision_id": "E256-D09",
+        "family": "D",
+        "epic_row": "3a",
+        "title": "Fail repository load rather than return a partial catalog",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L128-L137",
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L909-L913"
+        ]
+      },
+      {
+        "decision_id": "E256-D10",
+        "family": "D",
+        "epic_row": "3a",
+        "title": "Store each relation as an independent object",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "principled-contextual",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L391-L443",
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L828-L833"
+        ]
+      },
+      {
+        "decision_id": "E256-D11",
+        "family": "D",
+        "epic_row": "3a",
+        "title": "Separate derived live catalogs from authoritative snapshots",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L546-L594",
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L861-L875"
+        ]
+      },
+      {
+        "decision_id": "E256-D12",
+        "family": "D",
+        "epic_row": "3a/6a",
+        "title": "Expose backend-neutral logical catalog entries instead of path identity",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L665-L698",
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L903-L907",
+          "https://github.com/the-greenman/srs/issues/297"
+        ]
+      },
+      {
+        "decision_id": "E256-D14",
+        "family": "D",
+        "epic_row": "5-input/6a-input",
+        "title": "Use a directory as the repository marker and keep its contents non-authoritative",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "counterpole-protection",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L761-L782",
+          "https://github.com/the-greenman/srs/issues/313"
+        ]
+      },
+      {
+        "decision_id": "E256-D15",
+        "family": "D",
+        "epic_row": "5/6a",
+        "title": "Require intended repository identity while allowing an independent fixture package",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "reasoned-application",
+        "exception_class": "principled-contextual",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L1413-L1428",
+          "https://github.com/the-greenman/srs/issues/256",
+          "https://github.com/the-greenman/srs/issues/314#issuecomment-5157074817"
+        ]
+      },
+      {
+        "decision_id": "E256-D17",
+        "family": "D",
+        "epic_row": "3a/6a",
+        "title": "Make source-document sidecars authoritative for membership and identity",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L470-L497",
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L857-L859",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/srs/records/invariants/invariant-052.json"
+        ]
+      },
+      {
+        "decision_id": "E256-D18",
+        "family": "D",
+        "epic_row": "3a/6a",
+        "title": "Permit only a reference-preserving scoped cascade on delete",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L444-L468",
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L896-L901"
+        ]
+      },
+      {
+        "decision_id": "E256-D19",
+        "family": "D",
+        "epic_row": "3a/6a",
+        "title": "Define one deterministic logical-identifier order across backends",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "counterpole-protection",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L438-L442",
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L850-L855"
+        ]
+      },
+      {
+        "decision_id": "E256-D20",
+        "family": "D",
+        "epic_row": "6a-prerequisite",
+        "title": "Require a closed schema for every declarable definition kind",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L203-L215",
+          "https://github.com/the-greenman/srs/issues/311"
+        ]
+      },
+      {
+        "decision_id": "E256-D21",
+        "family": "D",
+        "epic_row": "3a",
+        "title": "Collect all repository diagnostics before failing",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "counterpole-protection",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L128-L137",
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L909-L913"
+        ]
+      },
+      {
+        "decision_id": "E256-D22",
+        "family": "D",
+        "epic_row": "3a",
+        "title": "Take Relation identity from validated content",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "counterpole-protection",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L391-L443",
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L828-L833"
+        ]
+      },
+      {
+        "decision_id": "E256-D24",
+        "family": "D",
+        "epic_row": "3a",
+        "title": "Defer a new standardized serialized catalog",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "principled-contextual",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L546-L594",
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L861-L875"
+        ]
+      },
+      {
+        "decision_id": "E256-D25",
+        "family": "D",
+        "epic_row": "3a/6a",
+        "title": "Permit source-document tombstones without content",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L470-L497",
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L857-L859",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/srs/records/invariants/invariant-052.json"
+        ]
+      },
+      {
+        "decision_id": "E256-E01",
+        "family": "E",
+        "epic_row": "6 / #242 Phase B and #297",
+        "title": "Land carrier and storage changes as one final generation",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#composition-with-rfc-039",
+          "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#abstract"
+        ]
+      },
+      {
+        "decision_id": "E256-E02",
+        "family": "E",
+        "epic_row": "6 / #242 Phase B and #297",
+        "title": "Provide no public compatibility window",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/256",
+          "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#change-h--version-discrimination-and-what-is-deliberately-not-provided"
+        ]
+      },
+      {
+        "decision_id": "E256-E03",
+        "family": "E",
+        "epic_row": "6 / #242 Phase B and #297",
+        "title": "Use git history as cutover rollback",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "reasoned-application",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#change-h--version-discrimination-and-what-is-deliberately-not-provided",
+          "https://github.com/the-greenman/srs/issues/297"
+        ]
+      },
+      {
+        "decision_id": "E256-E04",
+        "family": "E",
+        "epic_row": "5–6a / first-party cutover boundary",
+        "title": "Migrate every named first-party artifact to the final contract",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/256",
+          "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#migration-plan"
+        ]
+      },
+      {
+        "decision_id": "E256-E06",
+        "family": "E",
+        "epic_row": "5–6a / #286 and #297",
+        "title": "Migrate published governance packages in place",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "reasoned-application",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#phase-1--transform-placement",
+          "https://github.com/the-greenman/srs/issues/286#issuecomment-5151034166"
+        ]
+      },
+      {
+        "decision_id": "E256-E07",
+        "family": "E",
+        "epic_row": "6 / composed Phase B ordering",
+        "title": "Stamp the new generation only after both transforms complete",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "reasoned-application",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#composition-with-rfc-039"
+        ]
+      },
+      {
+        "decision_id": "E256-E08",
+        "family": "E",
+        "epic_row": "6 / #242 Phase B",
+        "title": "Abort rather than partially migrate ambiguous data",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#the-transform-must-be-total--every-schema-legal-branch-has-a-rule"
+        ]
+      },
+      {
+        "decision_id": "E256-E09",
+        "family": "E",
+        "epic_row": "6 / migration acceptance",
+        "title": "Prove migration parity from pinned baselines",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#phase-0--audit-before-anything-is-written",
+          "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#conformance-evidence-required-at-cutover"
+        ]
+      },
+      {
+        "decision_id": "E256-E10",
+        "family": "E",
+        "epic_row": "3a–6a / RFC-038 migration policy",
+        "title": "Repair first-party conflicts instead of deleting valid data",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/256",
+          "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#phase-0--audit-before-anything-is-written"
+        ]
+      },
+      {
+        "decision_id": "E256-E12",
+        "family": "E",
+        "epic_row": "6 / generation discrimination",
+        "title": "Use dataModelRevision as the generation discriminator",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#change-j--version-discrimination-and-what-an-old-reader-does",
+          "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#conformance-rules"
+        ]
+      },
+      {
+        "decision_id": "E256-E16",
+        "family": "E",
+        "epic_row": "6 / generation discrimination",
+        "title": "Bind revision-2 snapshots to srsj format version 2",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#change-j--version-discrimination-and-what-an-old-reader-does",
+          "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#conformance-rules"
+        ]
+      },
+      {
+        "decision_id": "E256-E17",
+        "family": "E",
+        "epic_row": "6 / generation discrimination",
+        "title": "Reject old, unknown, or mismatched generations at runtime",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#change-j--version-discrimination-and-what-an-old-reader-does",
+          "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#conformance-rules"
+        ]
+      },
+      {
+        "decision_id": "E256-E18",
+        "family": "E",
+        "epic_row": "6 / generation discrimination",
+        "title": "Reserve old-generation access to explicit migration tooling",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#change-j--version-discrimination-and-what-an-old-reader-does",
+          "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#conformance-rules"
+        ]
+      },
+      {
+        "decision_id": "E256-F101",
+        "family": "F1",
+        "epic_row": "7",
+        "title": "Close definition-layer gaps in the model rather than a remainder overlay",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/273#issuecomment-5141760683",
+          "https://github.com/the-greenman/srs/issues/273"
+        ]
+      },
+      {
+        "decision_id": "E256-F102",
+        "family": "F1",
+        "epic_row": "7",
+        "title": "Self-host definition extensions as inherited extension Types",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "principled-contextual",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/273#issuecomment-5141760683",
+          "https://github.com/the-greenman/srs/issues/273#issuecomment-5142207974",
+          "https://github.com/the-greenman/srs/issues/247#issuecomment-5141292536"
+        ]
+      },
+      {
+        "decision_id": "E256-F104",
+        "family": "F1",
+        "epic_row": "7",
+        "title": "Add contextual FieldAssignment description without semantic override",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/273#issuecomment-5141760683",
+          "https://github.com/the-greenman/srs/issues/273#issuecomment-5142207974"
+        ]
+      },
+      {
+        "decision_id": "E256-F107",
+        "family": "F1",
+        "epic_row": "7",
+        "title": "Defer generic assignment deprecation until demonstrated",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "reasoned-application",
+        "exception_class": "principled-contextual",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/273#issuecomment-5142207974",
+          "https://github.com/the-greenman/srs/issues/273#issuecomment-5144920423"
+        ]
+      },
+      {
+        "decision_id": "E256-F108",
+        "family": "F1",
+        "epic_row": "7",
+        "title": "Verify closure over the full generated artifact",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "reasoned-application",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/273#issuecomment-5141867338",
+          "https://github.com/the-greenman/srs/issues/273#issuecomment-5144920423"
+        ]
+      },
+      {
+        "decision_id": "E256-F118",
+        "family": "F1",
+        "epic_row": "7",
+        "title": "Require Node and Rust definition emitters to be byte-identical",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "reasoned-application",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/273#issuecomment-5141867338",
+          "https://github.com/the-greenman/srs/issues/273#issuecomment-5144920423"
+        ]
+      },
+      {
+        "decision_id": "E256-F122",
+        "family": "F1",
+        "epic_row": "7/9-input",
+        "title": "Require one coherent deprecation model",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "reasoned-application",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/234",
+          "https://github.com/the-greenman/srs/issues/273#issuecomment-5144920423"
+        ]
+      },
+      {
+        "decision_id": "E256-F201",
+        "family": "F2",
+        "epic_row": "9",
+        "title": "Require a complete post-cutover schema authorship ledger",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "reasoned-application",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/272#issuecomment-5144920408",
+          "https://github.com/the-greenman/srs/issues/272"
+        ]
+      },
+      {
+        "decision_id": "E256-F206",
+        "family": "F2",
+        "epic_row": "9-input",
+        "title": "Keep Relation federation identifiers extension-owned",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "reasoned-application",
+        "exception_class": "principled-contextual",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/272",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/relations-collection.json",
+          "https://github.com/the-greenman/srs/issues/251",
+          "https://github.com/the-greenman/srs/issues/274#issuecomment-5145639920"
+        ]
+      },
+      {
+        "decision_id": "E256-F226",
+        "family": "F2",
+        "epic_row": "10",
+        "title": "Do not retire residual prose-schema coverage without replacement",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "reasoned-application",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/271#issuecomment-5144920750",
+          "https://github.com/the-greenman/srs/issues/271#issuecomment-5141287961"
+        ]
+      },
+      {
+        "decision_id": "E256-G04",
+        "family": "G",
+        "epic_row": "coordination/process-correction",
+        "title": "Make normative RFC review understandable without generated diffs",
+        "effective_date": "2026-07-31",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "counterpole-protection",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/304",
+          "https://github.com/the-greenman/srs/pull/303",
+          "https://github.com/the-greenman/srs/commit/e6673543624843521f831ce519d1c0e73809e9f6"
+        ]
+      },
+      {
+        "decision_id": "E256-G05",
+        "family": "G",
+        "epic_row": "delivered/operational-reliability",
+        "title": "Pin the CLI that defines a required semantic drift gate",
+        "effective_date": "2026-08-01",
+        "status": "implemented",
+        "decision_class": "precedent-setting",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/316",
+          "https://github.com/the-greenman/srs/pull/336",
+          "https://github.com/the-greenman/srs/blob/c132784ce959787b5ee40b2472c4b996abe35363/.github/workflows/release-drift.yml#L1-L52"
+        ]
+      }
+    ]
+  },
+  "held_for_human_review": [
+    {
+      "decision_id": "E256-A15",
+      "family": "A",
+      "epic_row": "1 / package identity repair",
+      "title": "Move the cheaper generated package identity",
+      "effective_date": "2026-07-31",
+      "status": "implemented",
+      "decision_class": "reasoned-application",
+      "exception_class": "none",
+      "source_urls": [
+        "https://github.com/the-greenman/srs/issues/295#issuecomment-5144920464",
+        "https://github.com/the-greenman/srs/pull/299",
+        "https://github.com/the-greenman/srs/blob/512d9c60da079f793b6dc4a37f7bdd23a63e8a8b/srs/package/metamodel/package.json"
+      ],
+      "reason": "One-off package-ID repair; no reusable choice remains after the collision was resolved."
+    },
+    {
+      "decision_id": "E256-B10",
+      "family": "B",
+      "epic_row": "8 / #285",
+      "title": "Retire unpublished duplicate prose shadows",
+      "effective_date": "2026-07-31",
+      "status": "implemented",
+      "decision_class": "reasoned-application",
+      "exception_class": "none",
+      "source_urls": [
+        "https://github.com/the-greenman/srs/issues/274",
+        "https://github.com/the-greenman/srs/issues/285",
+        "https://github.com/the-greenman/srs/pull/283"
+      ],
+      "reason": "One-off shadow-retirement cleanup; its durable source-authority lesson is already represented by broader records."
+    },
+    {
+      "decision_id": "E256-E11",
+      "family": "E",
+      "epic_row": "3a/6a / RFC-038 Phase 0",
+      "title": "Relocate the legacy purpose document rather than adopt it",
+      "effective_date": "2026-08-01",
+      "status": "ratified",
+      "decision_class": "reasoned-application",
+      "exception_class": "none",
+      "source_urls": [
+        "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#phase-0--audit-before-anything-is-written",
+        "https://github.com/the-greenman/srs/commit/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f"
+      ],
+      "reason": "One legacy-purpose-document disposition; it is not a general migration rule."
+    },
+    {
+      "decision_id": "E256-F105",
+      "family": "F1",
+      "epic_row": "7",
+      "title": "Land the contextual annotation in #273 despite seed breakage",
+      "effective_date": "2026-07-31",
+      "status": "ratified",
+      "decision_class": "reasoned-application",
+      "exception_class": "none",
+      "source_urls": [
+        "https://github.com/the-greenman/srs/issues/273#issuecomment-5141867338"
+      ],
+      "reason": "A contextual #273 seed-break trade-off; retain in research until a repeated exception proves it needs its own precedent."
+    },
+    {
+      "decision_id": "E256-G01",
+      "family": "G",
+      "epic_row": "coordination",
+      "title": "Give one coordinator exclusive ownership of epic state",
+      "effective_date": "2026-07-31",
+      "status": "implemented",
+      "decision_class": "precedent-setting",
+      "exception_class": "none",
+      "source_urls": [
+        "https://github.com/the-greenman/srs/blob/809174609b173a5a844fbe56b76ae5fd9cc7a8b4/.claude/commands/epic-coordinator.md#L12-L19"
+      ],
+      "reason": "Epic-specific coordinator assignment; belongs to later formal governance rather than the SRS technical decision log."
+    },
+    {
+      "decision_id": "E256-G02",
+      "family": "G",
+      "epic_row": "coordination",
+      "title": "Separate worker execution from merge authority",
+      "effective_date": "2026-07-31",
+      "status": "implemented",
+      "decision_class": "precedent-setting",
+      "exception_class": "none",
+      "source_urls": [
+        "https://github.com/the-greenman/srs/blob/809174609b173a5a844fbe56b76ae5fd9cc7a8b4/.claude/commands/epic-worker.md#L12-L20"
+      ],
+      "reason": "Epic-specific worker and merge-authority arrangement; belongs to later formal governance."
+    },
+    {
+      "decision_id": "E256-G03",
+      "family": "G",
+      "epic_row": "coordination",
+      "title": "Carry post-merge findings into downstream decisions",
+      "effective_date": "2026-07-31",
+      "status": "implemented",
+      "decision_class": "precedent-setting",
+      "exception_class": "none",
+      "source_urls": [
+        "https://github.com/the-greenman/srs/pull/303",
+        "https://github.com/the-greenman/srs/issues/302"
+      ],
+      "reason": "Epic-specific post-merge follow-up process; belongs to later formal governance."
+    },
+    {
+      "decision_id": "E256-G08",
+      "family": "G",
+      "epic_row": "delivered/mirror-sync",
+      "title": "Keep mirror repairs inside repository authority boundaries",
+      "effective_date": "2026-07-31",
+      "status": "implemented",
+      "decision_class": "reasoned-application",
+      "exception_class": "transitional",
+      "source_urls": [
+        "https://github.com/the-greenman/srs-rust/issues/787#issuecomment-5147100327",
+        "https://github.com/the-greenman/srs-rust/pull/788",
+        "https://github.com/the-greenman/srs-rust/pull/791"
+      ],
+      "reason": "Transitional mirror-repair disposition; retain as history unless the same boundary recurs after the migration period."
+    },
+    {
+      "decision_id": "E256-G13",
+      "family": "G",
+      "epic_row": "coordination",
+      "title": "Let the shared spine choose work rather than each worker",
+      "effective_date": "2026-07-31",
+      "status": "implemented",
+      "decision_class": "precedent-setting",
+      "exception_class": "none",
+      "source_urls": [
+        "https://github.com/the-greenman/srs/blob/809174609b173a5a844fbe56b76ae5fd9cc7a8b4/.claude/commands/epic-worker.md#L12-L20"
+      ],
+      "reason": "Epic-specific work-selection mechanism; belongs to later formal governance."
+    },
+    {
+      "decision_id": "E256-G14",
+      "family": "G",
+      "epic_row": "coordination",
+      "title": "Declare merge authority before seeing the finished diff",
+      "effective_date": "2026-07-31",
+      "status": "implemented",
+      "decision_class": "precedent-setting",
+      "exception_class": "none",
+      "source_urls": [
+        "https://github.com/the-greenman/srs/blob/809174609b173a5a844fbe56b76ae5fd9cc7a8b4/.claude/commands/epic-coordinator.md#L78-L91"
+      ],
+      "reason": "Epic-specific merge-authority declaration; belongs to later formal governance."
+    }
+  ],
+  "lineage_only": [
+    {
+      "decision_id": "E256-F106",
+      "family": "F1",
+      "epic_row": "7",
+      "title": "Initially retain and model the deprecated FieldGroup cluster",
+      "effective_date": "2026-07-31",
+      "status": "superseded",
+      "decision_class": "reasoned-application",
+      "exception_class": "none",
+      "source_urls": [
+        "https://github.com/the-greenman/srs/issues/273#issuecomment-5141867338",
+        "https://github.com/the-greenman/srs/issues/273#issuecomment-5142207974"
+      ],
+      "reason": "Superseded retained-FieldGroup posture; preserve only if a successor record needs its transition history."
+    }
+  ],
+  "post_snapshot_note": {
+    "decision_id": "E256-H03",
+    "disposition": "The ledger snapshot retains H03 as unresolved, but its [N+1] question was resolved after the snapshot and is already carried by the foundational-values decision record. Do not backfill it as an unresolved historical card."
+  },
+  "excluded": {
+    "mechanical_derivations": [
+      {
+        "decision_id": "E256-A13",
+        "family": "A",
+        "epic_row": "foundation-3 / Rust adoption",
+        "title": "Bind Rust projection to the accepted fieldType and emitter contracts",
+        "effective_date": "2026-07-31",
+        "status": "implemented",
+        "decision_class": "mechanical-derivation",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs-rust/pull/778",
+          "https://github.com/the-greenman/srs/blob/9d4f5e9063c3c09af960f3c7318ffaae90e9c0de/rfcs/rfc-035-schema-emitter.md#change-i--reconcile-srs-rust770-as-the-srs-rust-binding-of-this-emitter"
+        ]
+      },
+      {
+        "decision_id": "E256-A22",
+        "family": "A",
+        "epic_row": "foundation-3 / RFC-035",
+        "title": "Reuse the shared field projection in the JSON Schema back end",
+        "effective_date": "2026-07-29",
+        "status": "implemented",
+        "decision_class": "mechanical-derivation",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/9d4f5e9063c3c09af960f3c7318ffaae90e9c0de/rfcs/rfc-035-schema-emitter.md#change-a--the-neutral-ir-fieldtype-records--ir--target",
+          "https://github.com/the-greenman/srs/blob/9d4f5e9063c3c09af960f3c7318ffaae90e9c0de/scripts/lib/schema-emitter.mjs"
+        ]
+      },
+      {
+        "decision_id": "E256-A24",
+        "family": "A",
+        "epic_row": "cardinality repair / #276",
+        "title": "Repair the two mistranslated table Fields",
+        "effective_date": "2026-07-31",
+        "status": "implemented",
+        "decision_class": "mechanical-derivation",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/276#issuecomment-5142752701",
+          "https://github.com/the-greenman/srs/blob/7109ac6f22a1322fa2b91efaa15af572e41b105f/rfcs/rfc-032-composite-field-range.md#revision-history",
+          "https://github.com/the-greenman/srs/blob/e6f8b9803eff2b5d202ddf6fd00e8ab097ad745e/scripts/check-cardinality-coherence.mjs"
+        ]
+      },
+      {
+        "decision_id": "E256-A25",
+        "family": "A",
+        "epic_row": "cardinality repair / #276",
+        "title": "Guard against contradictory deprecated cardinality",
+        "effective_date": "2026-07-31",
+        "status": "implemented",
+        "decision_class": "mechanical-derivation",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/276#issuecomment-5142752701",
+          "https://github.com/the-greenman/srs/blob/7109ac6f22a1322fa2b91efaa15af572e41b105f/rfcs/rfc-032-composite-field-range.md#revision-history",
+          "https://github.com/the-greenman/srs/blob/e6f8b9803eff2b5d202ddf6fd00e8ab097ad745e/scripts/check-cardinality-coherence.mjs"
+        ]
+      },
+      {
+        "decision_id": "E256-C11",
+        "family": "C",
+        "epic_row": "3 / RFC-039 Phase A",
+        "title": "Fail reference-mode values closed on dangling or mismatched targets",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "mechanical-derivation",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#change-j--reference-integrity-for-mode-reference-values"
+        ]
+      },
+      {
+        "decision_id": "E256-C14",
+        "family": "C",
+        "epic_row": "3 / RFC-039 Phase A",
+        "title": "Migrate FieldGroups deterministically",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "mechanical-derivation",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#change-e--fieldgroup-and-groupvalues-are-removed"
+        ]
+      },
+      {
+        "decision_id": "E256-D13",
+        "family": "D",
+        "epic_row": "3a/6a",
+        "title": "Reject old or mixed repository generations outside explicit migration",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "mechanical-derivation",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L595-L619",
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L885-L894",
+          "https://github.com/the-greenman/srs/issues/297"
+        ]
+      },
+      {
+        "decision_id": "E256-D23",
+        "family": "D",
+        "epic_row": "3a",
+        "title": "Remove Relation collections from snapshots",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "mechanical-derivation",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L391-L443",
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L828-L833"
+        ]
+      },
+      {
+        "decision_id": "E256-D26",
+        "family": "D",
+        "epic_row": "3a/6a",
+        "title": "Retire sourceDocumentIndex",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "mechanical-derivation",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L470-L497",
+          "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L857-L859",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/srs/records/invariants/invariant-052.json"
+        ]
+      },
+      {
+        "decision_id": "E256-E05",
+        "family": "E",
+        "epic_row": "5 input / #314",
+        "title": "Migrate fixture packages without inventing repository identity",
+        "effective_date": "2026-08-01",
+        "status": "ratified",
+        "decision_class": "mechanical-derivation",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/256",
+          "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#migration-plan",
+          "https://github.com/the-greenman/srs/issues/314#issuecomment-5157074817"
+        ]
+      },
+      {
+        "decision_id": "E256-F103",
+        "family": "F1",
+        "epic_row": "7",
+        "title": "Accept and document inheritance as the sovereign-reader floor",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "mechanical-derivation",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/273#issuecomment-5141760683"
+        ]
+      },
+      {
+        "decision_id": "E256-F111",
+        "family": "F1",
+        "epic_row": "7/9-input",
+        "title": "Make Rust Field parsing uniformly reject unknown properties",
+        "effective_date": "2026-07-31",
+        "status": "implemented",
+        "decision_class": "mechanical-derivation",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs-rust/pull/778",
+          "https://github.com/the-greenman/srs/issues/237#issuecomment-5141296024"
+        ]
+      },
+      {
+        "decision_id": "E256-F116",
+        "family": "F1",
+        "epic_row": "7",
+        "title": "Omit the carrier surface deleted before definition closure",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "mechanical-derivation",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/273#issuecomment-5142207974",
+          "https://github.com/the-greenman/srs/issues/273#issuecomment-5144920423"
+        ]
+      },
+      {
+        "decision_id": "E256-F117",
+        "family": "F1",
+        "epic_row": "7",
+        "title": "Narrow the contextual annotation to description",
+        "effective_date": "2026-07-31",
+        "status": "ratified",
+        "decision_class": "mechanical-derivation",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/273#issuecomment-5142207974",
+          "https://github.com/the-greenman/srs/issues/273#issuecomment-5144920423"
+        ]
+      },
+      {
+        "decision_id": "E256-F205",
+        "family": "F2",
+        "epic_row": "9-input",
+        "title": "Carry the attaches source role into generated SourceReference",
+        "effective_date": "2026-07-17",
+        "status": "implemented",
+        "decision_class": "mechanical-derivation",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/rfcs/rfc-017-attachments-base-package-archive-determinism.md#change-a--add-attaches-to-the-sourcereferencesourcerole-enum",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/note.json#L70-L80",
+          "https://github.com/the-greenman/srs/issues/248"
+        ]
+      },
+      {
+        "decision_id": "E256-G06",
+        "family": "G",
+        "epic_row": "delivered/operational-reliability",
+        "title": "Make the canonical CLI pin executable by workers",
+        "effective_date": "2026-08-02",
+        "status": "implemented",
+        "decision_class": "mechanical-derivation",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/337",
+          "https://github.com/the-greenman/srs/pull/339",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/scripts/fetch-pinned-srs.mjs"
+        ]
+      },
+      {
+        "decision_id": "E256-G07",
+        "family": "G",
+        "epic_row": "delivered/mirror-sync",
+        "title": "Propagate accepted schema bytes through the mirror pipeline",
+        "effective_date": "2026-08-01",
+        "status": "implemented",
+        "decision_class": "mechanical-derivation",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs-rust/pull/788",
+          "https://github.com/the-greenman/srs-rust/pull/791",
+          "https://github.com/the-greenman/srs/issues/280"
+        ]
+      }
+    ],
+    "proposals": [
+      {
+        "decision_id": "E256-E13",
+        "family": "E",
+        "epic_row": "5a / #317",
+        "title": "Expand the migrated discovery fixture into an executable predicate oracle",
+        "effective_date": null,
+        "status": "proposed",
+        "decision_class": "proposal",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/317",
+          "https://github.com/the-greenman/srs/issues/314#issuecomment-5156946005"
+        ]
+      },
+      {
+        "decision_id": "E256-F202",
+        "family": "F2",
+        "epic_row": "9",
+        "title": "Model each surviving instance shape once",
+        "effective_date": null,
+        "status": "proposed",
+        "decision_class": "proposal",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/272",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/relations-collection.json"
+        ]
+      },
+      {
+        "decision_id": "E256-F213",
+        "family": "F2",
+        "epic_row": "10",
+        "title": "Flip generated artifacts to final authorship",
+        "effective_date": null,
+        "status": "proposed",
+        "decision_class": "proposal",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/271",
+          "https://github.com/the-greenman/srs/issues/271#issuecomment-5144920750"
+        ]
+      },
+      {
+        "decision_id": "E256-G09",
+        "family": "G",
+        "epic_row": "operational-reliability",
+        "title": "Replace impossible mirror ordering with a coordinated landing",
+        "effective_date": null,
+        "status": "proposed",
+        "decision_class": "proposal",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs-rust/issues/792",
+          "https://github.com/the-greenman/srs-rust/issues/789"
+        ]
+      },
+      {
+        "decision_id": "E256-G10",
+        "family": "G",
+        "epic_row": "operational-reliability",
+        "title": "Report exactly which mirrors a check examined",
+        "effective_date": null,
+        "status": "proposed",
+        "decision_class": "proposal",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs-rust/issues/792",
+          "https://github.com/the-greenman/srs-rust/pull/791"
+        ]
+      },
+      {
+        "decision_id": "E256-G11",
+        "family": "G",
+        "epic_row": "operational-reliability",
+        "title": "Verify the pinned release asset before execution",
+        "effective_date": null,
+        "status": "proposed",
+        "decision_class": "proposal",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/338",
+          "https://github.com/the-greenman/srs/pull/336"
+        ]
+      },
+      {
+        "decision_id": "E256-G15",
+        "family": "G",
+        "epic_row": "operational-reliability",
+        "title": "Provide an opt-in strict missing-mirror mode",
+        "effective_date": null,
+        "status": "proposed",
+        "decision_class": "proposal",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs-rust/issues/792",
+          "https://github.com/the-greenman/srs-rust/pull/791"
+        ]
+      },
+      {
+        "decision_id": "E256-H04",
+        "family": "H",
+        "epic_row": "boundary-research",
+        "title": "Propose a semantic-versus-presentation disposition principle",
+        "effective_date": "2026-08-02",
+        "status": "proposed",
+        "decision_class": "proposal",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/256#issuecomment-5156633226"
+        ]
+      }
+    ],
+    "rejected_alternatives": [
+      {
+        "decision_id": "E256-A16",
+        "family": "A",
+        "epic_row": "foundation-1 / RFC-032",
+        "title": "Reject a general sum type in RFC-032",
+        "effective_date": "2026-07-29",
+        "status": "rejected",
+        "decision_class": "rejected-alternative",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/de2310bc5d90ed47597c0a1a99beffa26ac396b1/rfcs/rfc-032-composite-field-range.md#rationale",
+          "https://github.com/the-greenman/srs/blob/de2310bc5d90ed47597c0a1a99beffa26ac396b1/scripts/rfc-032-paper-proof.mjs"
+        ]
+      },
+      {
+        "decision_id": "E256-A17",
+        "family": "A",
+        "epic_row": "foundation-1 / RFC-032",
+        "title": "Reject a free-JSON datatype in RFC-032",
+        "effective_date": "2026-07-29",
+        "status": "rejected",
+        "decision_class": "rejected-alternative",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/de2310bc5d90ed47597c0a1a99beffa26ac396b1/rfcs/rfc-032-composite-field-range.md#rationale",
+          "https://github.com/the-greenman/srs/blob/de2310bc5d90ed47597c0a1a99beffa26ac396b1/scripts/rfc-032-paper-proof.mjs"
+        ]
+      },
+      {
+        "decision_id": "E256-H05",
+        "family": "H",
+        "epic_row": "explicitly-out-of-gate",
+        "title": "Reject adding RFC-034 structural composition to the Epic 256 gate",
+        "effective_date": "2026-07-31",
+        "status": "rejected",
+        "decision_class": "rejected-alternative",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/256",
+          "https://github.com/the-greenman/srs/issues/267#issuecomment-5143951958"
+        ]
+      },
+      {
+        "decision_id": "E256-H07",
+        "family": "H",
+        "epic_row": "explicitly-out-of-gate",
+        "title": "Reject pulling board-sync pinning into the Epic 256 gate",
+        "effective_date": "2026-08-01",
+        "status": "rejected",
+        "decision_class": "rejected-alternative",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/256",
+          "https://github.com/the-greenman/srs/issues/335"
+        ]
+      }
+    ],
+    "unresolved": [
+      {
+        "decision_id": "E256-C07",
+        "family": "C",
+        "epic_row": "3 / 6 naming prerequisite",
+        "title": "Choose where new-Field naming enforcement belongs",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/308"
+        ]
+      },
+      {
+        "decision_id": "E256-C09",
+        "family": "C",
+        "epic_row": "6 prerequisite / 6a prerequisite",
+        "title": "Resolve the dangling canonical-key assignment without an inferred version policy",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/307",
+          "https://github.com/the-greenman/srs/blob/e0fb4b050447febcd5ecb8f6ccb7864196e656d6/rfcs/rfc-039-record-field-value-carrier.md#known-blocker-to-fix-before-the-transform-runs"
+        ]
+      },
+      {
+        "decision_id": "E256-C13",
+        "family": "C",
+        "epic_row": "3 / 6 naming prerequisite",
+        "title": "Choose whether the historical RFC-004 tree enters the naming guard's corpus",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/308"
+        ]
+      },
+      {
+        "decision_id": "E256-E15",
+        "family": "E",
+        "epic_row": "6a input / #329 and #297 Phase 0",
+        "title": "Resolve the relocated charter sidecar disposition",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#phase-0--audit-before-anything-is-written",
+          "https://github.com/the-greenman/srs/issues/329",
+          "https://github.com/the-greenman/srs/issues/297#issuecomment-5151615896"
+        ]
+      },
+      {
+        "decision_id": "E256-F109",
+        "family": "F1",
+        "epic_row": "7/9-input",
+        "title": "Choose Field.defaultValue semantics",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/234",
+          "https://github.com/the-greenman/srs/issues/234#issuecomment-5144926033"
+        ]
+      },
+      {
+        "decision_id": "E256-F110",
+        "family": "F1",
+        "epic_row": "7/9-input",
+        "title": "Choose whether Field.deprecatedAt survives",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/234",
+          "https://github.com/the-greenman/srs/issues/273#issuecomment-5144920423"
+        ]
+      },
+      {
+        "decision_id": "E256-F112",
+        "family": "F1",
+        "epic_row": "7/9-input",
+        "title": "Choose the normative Field unknown-property policy",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/237",
+          "https://github.com/the-greenman/srs/issues/237#issuecomment-5144925648"
+        ]
+      },
+      {
+        "decision_id": "E256-F113",
+        "family": "F1",
+        "epic_row": "7/9-input",
+        "title": "Resolve Type.lineage disposition",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/247",
+          "https://github.com/the-greenman/srs/issues/273"
+        ]
+      },
+      {
+        "decision_id": "E256-F114",
+        "family": "F1",
+        "epic_row": "7/9-input",
+        "title": "Resolve FieldAssignment requiredness shape",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/247",
+          "https://github.com/the-greenman/srs/issues/273"
+        ]
+      },
+      {
+        "decision_id": "E256-F115",
+        "family": "F1",
+        "epic_row": "7/9-input",
+        "title": "Remove or sanction FieldAssignment displayHint",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/247",
+          "https://github.com/the-greenman/srs/issues/273"
+        ]
+      },
+      {
+        "decision_id": "E256-F119",
+        "family": "F1",
+        "epic_row": "7/9-input",
+        "title": "Choose FieldAssignment.defaultValue semantics",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/234",
+          "https://github.com/the-greenman/srs/issues/234#issuecomment-5144926033"
+        ]
+      },
+      {
+        "decision_id": "E256-F120",
+        "family": "F1",
+        "epic_row": "7/9-input",
+        "title": "Choose precedence and application timing for defaults",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/234",
+          "https://github.com/the-greenman/srs/issues/234#issuecomment-5144926033"
+        ]
+      },
+      {
+        "decision_id": "E256-F121",
+        "family": "F1",
+        "epic_row": "7/9-input",
+        "title": "Define deprecation lifecycle and projection if retained",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/234",
+          "https://github.com/the-greenman/srs/issues/273#issuecomment-5144920423"
+        ]
+      },
+      {
+        "decision_id": "E256-F123",
+        "family": "F1",
+        "epic_row": "7/9-input",
+        "title": "Choose how unknown-property policy interacts with inherited extension Types",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/237",
+          "https://github.com/the-greenman/srs/issues/237#issuecomment-5144925648"
+        ]
+      },
+      {
+        "decision_id": "E256-F124",
+        "family": "F1",
+        "epic_row": "7/9-input",
+        "title": "Choose whether a definition escape bag exists",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/237",
+          "https://github.com/the-greenman/srs/issues/237#issuecomment-5144925648"
+        ]
+      },
+      {
+        "decision_id": "E256-F125",
+        "family": "F1",
+        "epic_row": "7/9-input",
+        "title": "Resolve Type.provenance disposition",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/247",
+          "https://github.com/the-greenman/srs/issues/273"
+        ]
+      },
+      {
+        "decision_id": "E256-F203",
+        "family": "F2",
+        "epic_row": "9-input",
+        "title": "Resolve tags on Record",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/248",
+          "https://github.com/the-greenman/srs/issues/249",
+          "https://github.com/the-greenman/srs/issues/250",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/note.json#L16-L19"
+        ]
+      },
+      {
+        "decision_id": "E256-F204",
+        "family": "F2",
+        "epic_row": "9-input",
+        "title": "Resolve the legacy SourceReference relationType alias",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/248",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/note.json#L70-L76"
+        ]
+      },
+      {
+        "decision_id": "E256-F207",
+        "family": "F2",
+        "epic_row": "9-input",
+        "title": "Resolve Container.description",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/252",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/container.json#L30-L56"
+        ]
+      },
+      {
+        "decision_id": "E256-F208",
+        "family": "F2",
+        "epic_row": "9-input",
+        "title": "Resolve UUID enforcement for Container.containerId",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/252",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/container.json#L14-L46"
+        ]
+      },
+      {
+        "decision_id": "E256-F209",
+        "family": "F2",
+        "epic_row": "9-input",
+        "title": "Resolve Vocabulary.lineage",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/253",
+          "https://github.com/the-greenman/srs/issues/254",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/srs/records/subsections/04-7-vocabulary-term-substrate.json"
+        ]
+      },
+      {
+        "decision_id": "E256-F210",
+        "family": "F2",
+        "epic_row": "9-input",
+        "title": "Resolve Term createdAt requiredness",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/254",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/term.json#L7-L46"
+        ]
+      },
+      {
+        "decision_id": "E256-F211",
+        "family": "F2",
+        "epic_row": "9-input",
+        "title": "Resolve RelationTypeDefinition aliases",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/254",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/srs/records/subsections/04-7-vocabulary-term-substrate.json"
+        ]
+      },
+      {
+        "decision_id": "E256-F212",
+        "family": "F2",
+        "epic_row": "9-input",
+        "title": "Resolve RelationTypeDefinition's top-level extension policy",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/254",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/relation-type.json#L80-L85"
+        ]
+      },
+      {
+        "decision_id": "E256-F214",
+        "family": "F2",
+        "epic_row": "10",
+        "title": "Set the residual prose-schema conformance mechanism",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/271#issuecomment-5144920750",
+          "https://github.com/the-greenman/srs/issues/271#issuecomment-5141287961"
+        ]
+      },
+      {
+        "decision_id": "E256-F215",
+        "family": "F2",
+        "epic_row": "closure-scope-decision",
+        "title": "Resolve the schema-to-Rust binding seam",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs-rust/issues/777#issuecomment-5144928432",
+          "https://github.com/the-greenman/srs-rust/issues/777"
+        ]
+      },
+      {
+        "decision_id": "E256-F216",
+        "family": "F2",
+        "epic_row": "9-input",
+        "title": "Resolve tags on TypedRecord",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/248",
+          "https://github.com/the-greenman/srs/issues/249",
+          "https://github.com/the-greenman/srs/issues/250",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/note.json#L16-L19"
+        ]
+      },
+      {
+        "decision_id": "E256-F217",
+        "family": "F2",
+        "epic_row": "9-input",
+        "title": "Resolve tags on Note and NoteSection",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/248",
+          "https://github.com/the-greenman/srs/issues/249",
+          "https://github.com/the-greenman/srs/issues/250",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/note.json#L16-L19"
+        ]
+      },
+      {
+        "decision_id": "E256-F218",
+        "family": "F2",
+        "epic_row": "9-input",
+        "title": "Resolve tags on Container",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/248",
+          "https://github.com/the-greenman/srs/issues/249",
+          "https://github.com/the-greenman/srs/issues/250",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/note.json#L16-L19"
+        ]
+      },
+      {
+        "decision_id": "E256-F219",
+        "family": "F2",
+        "epic_row": "9-input",
+        "title": "Resolve tags on Vocabulary",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/248",
+          "https://github.com/the-greenman/srs/issues/249",
+          "https://github.com/the-greenman/srs/issues/250",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/note.json#L16-L19"
+        ]
+      },
+      {
+        "decision_id": "E256-F220",
+        "family": "F2",
+        "epic_row": "9-input",
+        "title": "Resolve Container.identityInstanceId",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/252",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/container.json#L30-L56"
+        ]
+      },
+      {
+        "decision_id": "E256-F221",
+        "family": "F2",
+        "epic_row": "9-input",
+        "title": "Resolve UUID enforcement for Container.rootInstanceIds",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/252",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/container.json#L14-L46"
+        ]
+      },
+      {
+        "decision_id": "E256-F222",
+        "family": "F2",
+        "epic_row": "9-input",
+        "title": "Resolve UUID enforcement for Container.memberInstanceIds",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/252",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/container.json#L14-L46"
+        ]
+      },
+      {
+        "decision_id": "E256-F223",
+        "family": "F2",
+        "epic_row": "9-input",
+        "title": "Resolve Vocabulary.provenance",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/253",
+          "https://github.com/the-greenman/srs/issues/254",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/srs/records/subsections/04-7-vocabulary-term-substrate.json"
+        ]
+      },
+      {
+        "decision_id": "E256-F224",
+        "family": "F2",
+        "epic_row": "9-input",
+        "title": "Resolve Term.lineage",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/253",
+          "https://github.com/the-greenman/srs/issues/254",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/srs/records/subsections/04-7-vocabulary-term-substrate.json"
+        ]
+      },
+      {
+        "decision_id": "E256-F225",
+        "family": "F2",
+        "epic_row": "9-input",
+        "title": "Resolve Term.provenance",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/253",
+          "https://github.com/the-greenman/srs/issues/254",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/srs/records/subsections/04-7-vocabulary-term-substrate.json"
+        ]
+      },
+      {
+        "decision_id": "E256-H01",
+        "family": "H",
+        "epic_row": "cross-cutting/open-owner-decision",
+        "title": "Choose the reader disposition for a declared but unknown extension",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/312",
+          "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#L775-L784",
+          "https://github.com/the-greenman/srs/blob/0c0ee75fb7b582879a908ed1e2ad5c937185ba4f/rfcs/rfc-038-tree-authoritative-storage.md#L824-L826"
+        ]
+      },
+      {
+        "decision_id": "E256-H02",
+        "family": "H",
+        "epic_row": "cross-cutting/open-owner-decision",
+        "title": "Choose whether open third-party extensibility is a project goal",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/312",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/docs/schema/2.0/manifest.json#L46-L54",
+          "https://github.com/the-greenman/srs/blob/ae52927de4e45490cb427fee2b332d5351f536cd/srs/records/design-notes/022-graceful-degradation.json"
+        ]
+      },
+      {
+        "decision_id": "E256-H03",
+        "family": "H",
+        "epic_row": "4-implementation/6-prerequisite",
+        "title": "Choose the consequence of an ineligible titleFieldId",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs-rust/issues/790#issuecomment-5153916848",
+          "https://github.com/the-greenman/srs/issues/256",
+          "https://github.com/the-greenman/srs/blob/4ac36bafbc9603f0ca8d4e5e7dd2c6f42909568d/rfcs/rfc-032-composite-field-range.md#change-i--post-acceptance-conformance-erratum-four-rules-still-naming-legacy-valuetype-subsets"
+        ]
+      },
+      {
+        "decision_id": "E256-H06",
+        "family": "H",
+        "epic_row": "explicitly-out-of-gate",
+        "title": "Choose whether the board-sync tool floats or is pinned everywhere",
+        "effective_date": null,
+        "status": "unresolved",
+        "decision_class": "unresolved",
+        "exception_class": "none",
+        "source_urls": [
+          "https://github.com/the-greenman/srs/issues/335"
+        ]
+      }
+    ]
+  }
+}
