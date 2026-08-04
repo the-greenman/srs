@@ -37,3 +37,5 @@
 - https://github.com/the-greenman/muDemocracy.org/issues/136
 
 **Review Trigger**: The first full public release triggers the precommitted temporal reversal: `public-standard` replaces `formation`, and Continuity becomes the default. After that trigger, a breaking standard change requires an explicit version boundary, migration and compatibility analysis, recovery evidence, and owner ratification.
+
+
