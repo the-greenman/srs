@@ -153,7 +153,9 @@ gh issue edit <n> --repo the-greenman/<this-repo> \
   --add-label "epic-256:in-review" --remove-label "epic-256:working"
 ```
 
-Watch CI until required checks are green, pushing fixes as needed. Then **stop**. Do not merge, even if the class is `epic-256:auto-merge` and everything is green — the coordinator merges on its next tick. Do not schedule a follow-up.
+**Watch via subscription, not polling.** Call `subscribe_pr_activity` on the PR once and treat that as the primary signal — CI results, comments, and eventual merge/close all arrive as `<github-webhook-activity>` events into this session. **Do not self-schedule a recurring `send_later` check-in as a matter of course.** A PR sitting green with nothing new to report does not need an hourly resume; each one is a full session-history reload for a "nothing changed" conclusion, and this epic has paid for exactly that pattern before (srs-rust#794 racked up 15+ consecutive quiet hourly check-ins over ~19h watching a PR that never changed). If you do fall back to a manual check-in — subscription unavailable, or a signal is genuinely overdue (CI still pending ~20min past its usual runtime with no event) — back off on repeat: each additional quiet fallback at least doubles the previous interval (20m → 40m → 80m → cap at 4h), never a flat hourly loop.
+
+Once CI is green: for `epic-256:auto-merge`, **stop outright** — there is nothing left to watch, the coordinator's next tick merges it. For `epic-256:owner-merge`, post the `<!-- epic-256:awaiting-merge -->` note once, then **stop scheduling check-ins entirely.** The only remaining event is the owner merging or commenting, and the subscription already delivers both — polling a green, held PR to ask "has the owner merged yet" learns nothing a webhook won't tell you first.
 
 If CI stays red on something you cannot resolve (external flake, infrastructure, a decision), comment the diagnosis on the PR, leave `epic-256:in-review`, and stop. The coordinator will surface it.
 
@@ -165,6 +167,7 @@ If CI stays red on something you cannot resolve (external flake, infrastructure,
 - Never write `ready`, `promote:ready`, `priority: *`, or `status: in progress`.
 - Never delete or force-push a branch you did not create; never edit a sibling repo's tree.
 - Keep the issue timeline warm — a run with no comment, commit, or PR for 3h is treated as stalled and reclaimed.
+- Never self-schedule a fixed-cadence (e.g. hourly) check-in loop for a PR that is already green — subscribe and wait for the event. If a fallback poll is genuinely needed, back off; don't repeat at a flat interval.
 
 ## Output contract
 
