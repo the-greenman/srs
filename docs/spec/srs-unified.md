@@ -2511,7 +2511,7 @@ A conforming repository has the following root structure:
 
 ```
 <repository-root>/
-  .srs                           ← required marker (empty or format version on first line)
+  .srs/                          ← required marker directory
   manifest.json                  ← required: root manifest and instance index
   source-documents/              ← raw source material with sidecar metadata
   notes/                         ← Tier 0 Note instances
@@ -2521,7 +2521,7 @@ A conforming repository has the following root structure:
   package/                       ← local Package, field, type, and view definitions
 ```
 
-The `.srs` marker file identifies the repository root. It may be empty or contain a single line with the format version (e.g. `1.0`). A reader must locate the marker before treating a directory as a repository.
+The `.srs` marker is a directory that identifies the repository root. It `SHOULD` contain at least one regular file — by convention `.srs/README.md`, an *About SRS* orientation document — so it survives storage and archive round-trips that do not preserve empty directories; its contents are implementation-private and carry no normative weight. A reader must locate the marker before treating a directory as a repository.
 
 Only `manifest.json` and `.srs` are required at root. Other folders are created as content is added. Implementations may add folders for application-local purposes; folder names defined by this extension are reserved.
 
@@ -3187,7 +3187,7 @@ Conforming implementations must uphold the following invariants.
 
 #### ext:repository
 
-**45.** A conforming repository must have a `.srs` marker file and a `manifest.json` at its root. A directory without both is not a conforming repository.
+**45.** A conforming repository must have a `.srs` marker directory and a `manifest.json` at its root. A directory without both is not a conforming repository.
 
 **46.** Every `instanceId` in `RepositoryManifest.instanceIndex` must resolve to a file at the declared `path`, and that file must contain an instance whose `instanceId` matches the index entry. An index entry whose `path` does not resolve, or whose file contains a different `instanceId`, is invalid.
 

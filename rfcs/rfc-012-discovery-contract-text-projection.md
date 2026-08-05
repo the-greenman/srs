@@ -2,7 +2,7 @@
 
 # RFC-012: Discovery Contract & Text Projection
 
-**Status**: Accepted (Revision 9)
+**Status**: Accepted (Revision 10)
 **Affects**: `Field` (`fieldType` searchability classification; Tier-1 `TypedField.valueType` transitional carve-out), `Record` (Tier 2), `TypedRecord` (Tier 1), `Note` (Tier 0), `Container`, `ext:lifecycle`, new `discovery.json` schema
 **Author**: Peter Brownell (scoped from srs-rust#213)
 **Date**: 2026-06-26
@@ -23,6 +23,7 @@
 | 7 | 2026-06-28 | Additive, backward-compatible: add `excludeLifecycleStates: string[]` to `DiscoveryQuery` (parity with the RFC-011 `type-query` axis of the same name). Lets an authored view's default-hidden lifecycle states (e.g. `superseded`, `closed`) be applied at query time with a client-side runtime "show all" (empty list) override, so the interactive list path composes container resolve-view with a single discovery query rather than re-expressing lifecycle filtering in clients. Existing conformance scenarios unaffected (property is optional). |
 | 8 | 2026-07-23 | Fold completion (#206): authored the `ext:discovery` extension record (`records/extensions/extension-8239da34.json`) and R1–R12 as invariant records I-113–I-124 (`records/invariants/`), the two normative artifacts left un-folded after Rev 6. RFC-012's integration manifest now declares `schema:discovery.json`, `ext:discovery`, and `I-113`–`I-124`, and resolves without the `rfcs/integration-allowlist.json` grandfather entry. No change to the contract itself. |
 | 9 | 2026-08-01 | RFC-032 Rev-7 erratum (#284): re-express Tier-2 searchability over `fieldType`; preserve all eight legacy outcomes; explicitly exclude UUID/email formats and the five new datatypes; define list segmentation; retain the legacy Tier-1 `TypedField.valueType` classification until its #242 Phase-B disposition. Fixture migration and exhaustive new-type coverage are tracked by #317 with #286. |
+| 10 | 2026-08-05 | srs#313 erratum: correct the Change F fixture-repo parenthetical, which described the discovery fixture as "a valid SRS repository (`.srs/`, ...)". It is not — RFC-038 Rev 7 disposes discovery/conformance fixtures as test data that receive no `.srs` marker, and the tree at the fixture's current state has no marker in either form. Restated positively: the fixture is test data (`manifest.json`, `package/`, `records/`, `relations/`) and is not a repository. No change to the fixture's contents, the conformance contract, or the Rules. |
 
 ---
 
@@ -209,7 +210,7 @@ The fixture repo and expected result sets live at:
 
 ```
 srs/conformance/discovery/
-  fixture-repo/        # a valid SRS repository (.srs/, manifest.json, package/, records/, relations/)
+  fixture-repo/        # discovery test data — manifest.json, package/, records/, relations/; carries no `.srs` marker and is not an SRS repository (RFC-038 Rev 7: fixtures stay test data)
   scenarios.json       # named scenarios
 ```
 
