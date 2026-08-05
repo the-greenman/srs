@@ -5,7 +5,7 @@
   "name": "discovery-fixture",
   "version": "1.0.0",
   "title": "Discovery Conformance Fixture Package",
-  "description": "Provides field and type definitions for the ext:discovery conformance fixture (RFC-012). Defines three types covering all eight SRS valueTypes: article (string, text, url, select, multiselect, number, boolean, date), project (string, text, select), and metric (string, number, boolean, date).",
+  "description": "Provides field and type definitions for the ext:discovery conformance fixture (RFC-012). Defines three types spanning a representative range of Field value domains under RFC-032's fieldType model: article (short and long text, URL, single-select, multi-select, numeric, boolean, date), project (short and long text, single-select), and metric (short text, numeric, boolean, date). Field declarations here still carry the pre-RFC-032 valueType scalar pending the Phase-B fieldType migration (the-greenman/srs#286).",
   "status": "active",
   "fields": [
     "fields/article-title.json",
