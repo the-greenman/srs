@@ -109,6 +109,8 @@ Then `gh pr merge <pr> --repo the-greenman/<repo> --squash` and mark the row don
 
 **CI red** → do not fix it yourself. That is worker work. Leave `epic-256:in-review`, note the failure and the failing job in the ledger, and let the repo's worker pick it up on its next tick. Your job is bookkeeping and dispatch, not debugging.
 
+**Watching a held PR between ticks: subscribe, don't poll.** For any PR you're holding for the owner, call `subscribe_pr_activity` on it once and let webhook events carry new comments, CI changes, and the merge itself into future ticks. **Do not self-schedule a recurring `send_later` check-in** to ask "has the owner merged yet" — that state changes only on a merge/close/comment event, which the subscription already delivers, and the scheduled coordinator tick (every 2h) re-verifies everything regardless. A green, held PR needs zero polling between ticks. This flow has already paid for the alternative: srs-rust#794 accumulated 15+ hourly "nothing changed" check-ins over ~19h watching a PR that never moved. If you ever do fall back to a manual check-in, back off exponentially on repeated quiet results rather than repeating at a fixed cadence.
+
 ### The merge class is fixed at dispatch, not at review
 
 The class label is stamped **before** work begins, from the spine. You may **downgrade** `auto-merge` → `owner-merge` when the finished diff turns out to touch normative ground. You may **never** upgrade `owner-merge` → `auto-merge`. Classifying a diff you are about to merge, in your own favour, is precisely the judgement this design removes from you.
@@ -133,7 +135,9 @@ Every delivery on this epic so far has produced findings that changed downstream
 
 ### 3.5a — Commission the coherence review
 
-Spawn a read-only agent (`Bash`, `Read`, `Grep`, `Glob`) for **each** PR merged since your last run. Give it: the PR number and repo, the epic number, and the ledger. Require it to read
+**Scale the review to the diff first.** Check the merge's shape: `gh pr view <pr> --json additions,deletions,changedFiles,files`. If it touches only prose — an RFC revision-history row, a stub record's narrative text, a comment or wording correction — and touches **no** `srs/records/**` structural field, no `docs/schema/2.0/**`, no `scripts/**` generator or validation logic, do the coherence read **yourself, inline**, against a light checklist instead of commissioning an agent: does the epic body still hold, does any not-done downstream row's acceptance criteria reference the text that moved, is there one carried-context line worth keeping. Record in the ledger which mode you used — `full coherence pass` or `lightweight scan — prose-only diff` — so the choice is auditable, not silent. This flow's actual findings to date (the RFC-036 theme-key rename, the #294 canonical-row reversal, the package-UUID collision) have all come from merges touching schema or normative content, never from a one-line revision-history fix — a full six-bucket commission on the latter buys nothing and costs a full agent run.
+
+For every other PR — the ones that do touch schema, Field/Type/fieldType definitions, generator or validation logic, or RFC status/normative content beyond a revision-history row — spawn a read-only agent (`Bash`, `Read`, `Grep`, `Glob`). Give it: the PR number and repo, the epic number, and the ledger. Require it to read
 
 - the merged **diff** — what actually changed, not what the PR body claims;
 - the PR body and **every review comment**, including ones marked resolved;
@@ -303,6 +307,7 @@ Bias hard toward `UNRESOLVED`. This epic exists because a self-hosted model was 
 - Never write the board's labels (`ready`, `promote:ready`, `priority: *`, `status: in progress`).
 - Never dispatch an issue labelled `epic`, `plan`, or `epic-256:external-work`.
 - One task per repo in flight. No exceptions — the sequential spine is the point.
+- Never self-schedule a fixed-cadence check-in loop for a PR you're holding — subscribe and wait for the event. If a fallback poll is genuinely needed, back off; don't repeat at a flat interval.
 
 ## Output contract
 
