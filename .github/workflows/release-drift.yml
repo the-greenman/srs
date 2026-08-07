@@ -92,3 +92,9 @@ jobs:
         env:
           SRS_CLI_PATH: /tmp/srs-cli/srs
         run: node scripts/check-release-drift.mjs
+
+      - name: Run gallery repository conformance check (#345)
+        working-directory: srs
+        env:
+          SRS_CLI_PATH: /tmp/srs-cli/srs
+        run: node scripts/check-gallery-conformance.mjs
