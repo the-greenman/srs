@@ -47,10 +47,14 @@ env:
   # the steps below read it, and so does `scripts/fetch-pinned-srs.mjs`, which
   # is how a contributor obtains this exact build. This is an EQUALITY, not a
   # floor: `docs/spec/**` is rendered by this release and no other, so a newer
-  # build fails the gate just as an older one does. (`v0.1.0-build.265` is also
-  # the earliest release that can render these exports at all — it is the first
-  # carrying RFC-037's renderer.)
-  SRS_RUST_CLI_TAG: v0.1.0-build.265
+  # build fails the gate just as an older one does. (`v0.1.0-build.265` was
+  # the earliest release that could render these exports at all — it is the
+  # first carrying RFC-037's renderer. `v0.1.0-build.267` is the first
+  # carrying the RFC-032 Rev-7 conformance predicates — I-120's `format`
+  # allow-list, I-94's Type-level enforcement, `[T-9]`, `[N+1]` — srs-rust#790.
+  # `v0.1.0-build.268` is a docs/tooling-only build on top of that (srs-rust#792)
+  # with no renderer/validator change.)
+  SRS_RUST_CLI_TAG: v0.1.0-build.268
 
 jobs:
   check-release-drift:
