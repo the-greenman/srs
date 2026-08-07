@@ -212,8 +212,15 @@ function applyValidationRule(ft, rule) {
  * Compute the `fieldType` object for a legacy field per Change H. Deterministic and total over the
  * eight legacy valueType values; throws on an unknown valueType so a stray value can never pass
  * silently.
+ *
+ * `opts.repeatable` (#276/#286): true when some Type in the field's own tree assigns it
+ * `repeatable: true` (or a deprecated `minItems`/`maxItems`) on a `FieldAssignment`. Legacy
+ * list-ness expressed *only* at the assignment level — never on the Field itself — must not be
+ * lost in migration: a Field whose only evidence of list-ness is assignment-level `repeatable`
+ * still migrates to single-valued without this, while its instance data stays arrays. Forcing
+ * `cardinality: "list"` here keeps `check-cardinality-coherence.mjs` green post-migration.
  */
-export function migrateFieldType(field) {
+export function migrateFieldType(field, opts = {}) {
   const vt = field.valueType;
   const contentFormat = field.contentFormat; // "plain" | "markdown"
   const ft = {};
@@ -254,6 +261,11 @@ export function migrateFieldType(field) {
       throw new Error(`migrateFieldType: unknown legacy valueType "${vt}" on field ${field.namespace}/${field.name}`);
   }
 
+  // Assignment-level `repeatable` (or minItems/maxItems) is the #276 defect class: list-ness that
+  // lived only on the FieldAssignment, never on the Field. `multiselect` already sets
+  // cardinality: "list" above, so this is a no-op there; every other legacy valueType gains it here.
+  if (opts.repeatable && ft.cardinality !== "list") ft.cardinality = "list";
+
   // Closed-domain source set: exactly one of allowedValues (inline) or vocabularyRef (Change A/R3).
   if (ft.valueDomain === "closed") {
     if (Array.isArray(field.allowedValues) && field.allowedValues.length > 0) {
@@ -277,14 +289,15 @@ export function migrateFieldType(field) {
 /**
  * Rebuild a legacy field object into its migrated form, preserving original key order for a clean
  * diff: `fieldType` takes the slot the first absorbed key occupied; the other absorbed keys drop.
+ * `opts.repeatable` forwards to `migrateFieldType` — see there.
  */
-export function migrateFieldObject(field) {
+export function migrateFieldObject(field, opts = {}) {
   // Idempotent: an already-migrated field (no legacy `valueType`) is returned untouched, never
   // re-run through the transform (which would throw on the absent valueType).
   if (field == null || typeof field !== "object" || typeof field.valueType !== "string") {
     return { field, changed: false, fieldType: field?.fieldType };
   }
-  const { fieldType, absorbed } = migrateFieldType(field);
+  const { fieldType, absorbed } = migrateFieldType(field, opts);
   if (absorbed.length === 0) return { field, changed: false, fieldType };
   const out = {};
   let placed = false;

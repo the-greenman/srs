@@ -14,6 +14,9 @@
   "id": "4181f210-f4be-5587-950e-890eda2a5590",
   "name": "next_steps",
   "namespace": "governance",
-  "valueType": "text",
+  "fieldType": {
+    "datatype": "string",
+    "format": "plain"
+  },
   "version": 1
 }

@@ -15,6 +15,9 @@
   "id": "9889052c-9313-5e2f-a2ac-15baa3c6983e",
   "name": "context",
   "namespace": "governance",
-  "valueType": "text",
+  "fieldType": {
+    "datatype": "string",
+    "format": "plain"
+  },
   "version": 1
 }

@@ -66,6 +66,27 @@ for (const [label, input, expected] of ROWS) {
   check(`${label} — projects to well-formed JSON Schema`, wellFormed(projectField(fieldType)), JSON.stringify(projectField(fieldType)));
 }
 
+// ---- opts.repeatable — the #276/#286 defect class: assignment-level `repeatable` must not be lost
+// (see governance/external_links: valueType "url" + repeatable: true on governance/decision@1) -----
+console.log("\nAssignment-level `repeatable` (#276/#286)\n");
+const REPEATABLE_ROWS = [
+  ["url + repeatable -> string/uri, cardinality list", field({ valueType: "url" }), { datatype: "string", format: "uri", cardinality: "list" }],
+  ["string + repeatable -> string, cardinality list", field({ valueType: "string" }), { datatype: "string", cardinality: "list" }],
+  ["select + allowedValues + repeatable -> list cardinality added", field({ valueType: "select", allowedValues: ["a", "b"] }), { datatype: "string", valueDomain: "closed", cardinality: "list", allowedValues: ["a", "b"] }],
+  ["multiselect + repeatable -> cardinality list (already there, no-op)", field({ valueType: "multiselect", allowedValues: ["a", "b"] }), { datatype: "string", cardinality: "list", valueDomain: "closed", allowedValues: ["a", "b"] }],
+];
+for (const [label, input, expected] of REPEATABLE_ROWS) {
+  const { fieldType } = migrateFieldType(input, { repeatable: true });
+  check(label, eq(fieldType, expected), `got ${JSON.stringify(fieldType)}  expected ${JSON.stringify(expected)}`);
+  const ftErrs = validateFieldType(fieldType, { where: label });
+  check(`${label} — R1–R11 conformant`, ftErrs.length === 0, ftErrs.join("; "));
+}
+check(
+  "opts.repeatable === false (or absent) does not force list cardinality",
+  !("cardinality" in migrateFieldType(field({ valueType: "url" })).fieldType) &&
+    !("cardinality" in migrateFieldType(field({ valueType: "url" }), { repeatable: false }).fieldType),
+);
+
 // ---- key order + absorbed-key removal (minimal-diff guarantee) -----------------------------------
 console.log("\nStructure & idempotency\n");
 {
@@ -100,7 +121,11 @@ console.log("\nReal-repo sanity\n");
     }
     return out;
   }
-  const files = (await Promise.all([join(ROOT, "srs/package"), join(ROOT, "srs/srs/package")].map(findJson))).flat();
+  const files = (await Promise.all([
+    join(ROOT, "srs/package"),
+    join(ROOT, "srs/srs/package"),
+    join(ROOT, "docs/spec/examples/gallery-project-v2/package"),
+  ].map(findJson))).flat();
   // State-independent: a legacy field (valueType) must migrate to a conformant fieldType; an
   // already-migrated field (fieldType) must itself be R1–R11 conformant. Either way, every field
   // definition in the repo carries a valid fieldType — the post-migration invariant.
@@ -118,6 +143,19 @@ console.log("\nReal-repo sanity\n");
     }
   }
   check(`every field definition carries a valid fieldType (${legacy} legacy + ${migratedAlready} migrated)`, (legacy + migratedAlready) > 0 && ftErrTotal === 0, `conformance errors: ${ftErrTotal}`);
+
+  // The named #286 case: governance/external_links (gallery-project-v2) is repeatable: true on
+  // governance/decision@1 and nowhere else expresses list-ness. If the migration ever regresses to
+  // ignoring assignment-level repeatable, this Field silently goes single-valued while its instance
+  // data (arrays) stays exactly as it is — this is the concrete failure #276/#286 describe.
+  const externalLinksPath = join(ROOT, "docs/spec/examples/gallery-project-v2/package/fields/externallinks-fc434475.json");
+  let externalLinks;
+  try { externalLinks = JSON.parse(await readFile(externalLinksPath, "utf8")); } catch { externalLinks = null; }
+  check(
+    "governance/external_links (gallery-project-v2) migrated with cardinality: list",
+    externalLinks?.fieldType?.cardinality === "list",
+    `fieldType: ${JSON.stringify(externalLinks?.fieldType)}`,
+  );
 }
 
 console.log(`\n${fail === 0 ? "PASS" : "FAIL"}: ${pass} passed, ${fail} failed.`);

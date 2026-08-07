@@ -14,6 +14,8 @@
   "id": "d7e82557-9045-5e92-a494-d99112bbec4a",
   "name": "title",
   "namespace": "governance",
-  "valueType": "string",
+  "fieldType": {
+    "datatype": "string"
+  },
   "version": 1
 }
