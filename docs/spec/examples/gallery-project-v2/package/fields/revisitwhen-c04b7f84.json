@@ -15,6 +15,9 @@
   "id": "c04b7f84-9a55-5353-8c9f-2b62f6a1e34e",
   "name": "revisit_when",
   "namespace": "governance",
-  "valueType": "text",
+  "fieldType": {
+    "datatype": "string",
+    "format": "plain"
+  },
   "version": 1
 }

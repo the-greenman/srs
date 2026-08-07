@@ -14,6 +14,9 @@
   "id": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
   "name": "decision_statement",
   "namespace": "governance",
-  "valueType": "text",
+  "fieldType": {
+    "datatype": "string",
+    "format": "plain"
+  },
   "version": 1
 }

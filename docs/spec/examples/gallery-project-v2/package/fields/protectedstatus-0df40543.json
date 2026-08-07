@@ -7,6 +7,8 @@
   "id": "0df40543-f72a-5471-a7f1-c85c1f1f93e4",
   "name": "protected_status",
   "namespace": "governance",
-  "valueType": "string",
+  "fieldType": {
+    "datatype": "string"
+  },
   "version": 1
 }

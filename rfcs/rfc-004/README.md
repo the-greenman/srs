@@ -25,3 +25,7 @@ Draft and proposed RFC artifacts may be validated and reviewed, but they do not 
 ## Identity Notes
 
 `schema-default-value` deliberately has its own field identity. It must not reuse the active `default-value` field (`1a000024-0000-4000-a000-000000000024`), because the active field documents defaults in prose while `schema-default-value` stores a concrete JSON default for a schema member.
+
+## RFC-032 migration disposition (#286)
+
+`proposed-package/spec-authoring-core/` remains on the pre-RFC-032 `valueType` field model and is **intentionally excluded** from RFC-032 (`valueType` → `fieldType`) migration. RFC-004's stub record (`srs/records/rfcs/rfc-004-language-neutral-schema-notation.json`) carries `rfc-status: superseded` — it is reconciled by RFC-033's self-hosted metamodel, not re-executed, so this proposal artifact stays as-authored rather than being brought forward to a data model it never advanced to. `scripts/migrate-rfc-032-field-type.mjs` does not scope itself to this directory, and it should not start to.

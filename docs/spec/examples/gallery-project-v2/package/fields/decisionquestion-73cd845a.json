@@ -14,6 +14,8 @@
   "id": "73cd845a-3623-5bc6-8ade-42a7cd64740c",
   "name": "decision_question",
   "namespace": "governance",
-  "valueType": "string",
+  "fieldType": {
+    "datatype": "string"
+  },
   "version": 1
 }
