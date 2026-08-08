@@ -12,7 +12,7 @@
     },
     {
       "fieldId": "5a000006-0000-4000-a000-000000000006",
-      "value": "When an `attachment_policy` is present, an implementation MAY enforce its limits as hard rejections. If it does not enforce them as hard limits, it MUST surface violations as non-blocking warning diagnostics at `srs repo validate` time: when a source document content file exceeds `maxPerFileBytes` or `maxDocBytes`; when aggregate source-document bytes exceed `maxTotalBytes`; when an attached file's MIME type is not listed in `allowedMimeTypes`. Non-blocking diagnostics MUST NOT prevent record storage or repository export. Whether to emit a warning at write time (e.g. `srs source import`) is implementation-defined; conformance is required at validate time. Hard caps are deferred to a future extension."
+      "value": "When an `attachment_policy` is present, an implementation MAY enforce its limits as hard rejections. If it does not enforce them as hard limits, it MUST surface violations as non-blocking warning diagnostics at `srs repo validate` time: when a source document content file exceeds `max_per_file_bytes` or `max_doc_bytes`; when aggregate source-document bytes exceed `max_total_bytes`; when an attached file's MIME type is not listed in `allowed_mime_types`. Non-blocking diagnostics MUST NOT prevent record storage or repository export. Whether to emit a warning at write time (e.g. `srs source import`) is implementation-defined; conformance is required at validate time. Hard caps are deferred to a future extension."
     },
     {
       "fieldId": "1a000004-0000-4000-a000-000000000004",
