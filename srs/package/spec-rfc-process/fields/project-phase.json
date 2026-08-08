@@ -2,7 +2,7 @@
   "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
   "id": "5a000022-0000-4000-a000-000000000022",
   "namespace": "com.semanticops.spec",
-  "name": "project-phase",
+  "name": "project_phase",
   "version": 1,
   "description": "The SRS standard phase in which the decision applies.",
   "aiGuidance": {

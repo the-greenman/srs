@@ -2,7 +2,7 @@
   "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
   "id": "5a000026-0000-4000-a000-000000000026",
   "namespace": "com.semanticops.spec",
-  "name": "review-trigger",
+  "name": "review_trigger",
   "version": 1,
   "description": "An observable event or evidence condition that requires the decision to be reviewed, superseded, or applied differently.",
   "aiGuidance": {

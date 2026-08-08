@@ -2,7 +2,7 @@
   "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
   "id": "5a000021-0000-4000-a000-000000000021",
   "namespace": "com.semanticops.spec",
-  "name": "governing-values",
+  "name": "governing_values",
   "version": 1,
   "description": "Stable identifiers for the constitutional values or principles used to derive the decision.",
   "aiGuidance": {
