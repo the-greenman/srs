@@ -2,7 +2,7 @@
   "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
   "id": "5a000023-0000-4000-a000-000000000023",
   "namespace": "com.semanticops.spec",
-  "name": "alternatives-considered",
+  "name": "alternatives_considered",
   "version": 1,
   "description": "The live alternatives considered before the decision, including the do-nothing option where relevant.",
   "aiGuidance": {

@@ -2,7 +2,7 @@
   "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
   "id": "5a000024-0000-4000-a000-000000000024",
   "namespace": "com.semanticops.spec",
-  "name": "accepted-costs",
+  "name": "accepted_costs",
   "version": 1,
   "description": "The disadvantages, risks, migration burden, or foreclosed options deliberately accepted by the decision.",
   "aiGuidance": {
