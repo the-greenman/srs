@@ -12,7 +12,7 @@
     },
     {
       "fieldId": "5a000006-0000-4000-a000-000000000006",
-      "value": "Define an optional package namespace `com.semanticops.base` that a repository MAY install. Its sole initial content is a `repo_settings` type with an optional `attachment_policy` record. The `attachment_policy` shape carries four optional fields: `allowedMimeTypes` (Text/JSON array), `maxPerFileBytes` (Number), `maxDocBytes` (Number), `maxTotalBytes` (Number). At most one `attachment_policy` record may exist per repository. Stable UUIDs for the four fields and the type MUST be assigned when the `com.semanticops.base` package records are created in the `srs/srs` repository; implementations MUST NOT mint independent UUID assignments."
+      "value": "Define an optional package namespace `com.semanticops.base` that a repository MAY install. Its sole initial content is a `repo_settings` type with an optional `attachment_policy` record. The `attachment_policy` shape carries four optional fields: `allowed_mime_types` (Text/JSON array), `max_per_file_bytes` (Number), `max_doc_bytes` (Number), `max_total_bytes` (Number). At most one `attachment_policy` record may exist per repository. Stable UUIDs for the four fields and the type MUST be assigned when the `com.semanticops.base` package records are created in the `srs/srs` repository; implementations MUST NOT mint independent UUID assignments."
     },
     {
       "fieldId": "1a000004-0000-4000-a000-000000000004",

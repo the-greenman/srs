@@ -3299,7 +3299,7 @@ Conforming implementations must uphold the following invariants.
 
 #### `srs repo validate`
 
-**I-107.** A conformant implementation MAY enforce `attachment_policy` limits as hard rejections. If it does not, it MUST emit non-blocking warning diagnostics at `srs repo validate` time when: a source document content file exceeds `maxPerFileBytes` or `maxDocBytes`; aggregate source-document bytes exceed `maxTotalBytes`; an attached file's MIME type is not listed in `allowedMimeTypes`. Non-blocking diagnostics MUST NOT prevent record storage or repository export.
+**I-107.** A conformant implementation MAY enforce `attachment_policy` limits as hard rejections. If it does not, it MUST emit non-blocking warning diagnostics at `srs repo validate` time when: a source document content file exceeds `max_per_file_bytes` or `max_doc_bytes`; aggregate source-document bytes exceed `max_total_bytes`; an attached file's MIME type is not listed in `allowed_mime_types`. Non-blocking diagnostics MUST NOT prevent record storage or repository export.
 
 #### ext:json-store importers and validators
 

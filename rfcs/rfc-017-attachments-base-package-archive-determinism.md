@@ -2,7 +2,7 @@
 
 # RFC-017: Decision-log Attachments, Base-package Settings, Archive Determinism, and srsj-gzip Retirement
 
-**Status**: Accepted (Revision 5)
+**Status**: Accepted (Revision 6)
 **Affects**: `SourceReference.sourceRole` enum (RFC-023) — new `attaches` value in all four SourceReference-bearing schemas (`record.json`, `note.json`, `typed-record.json`, `relations-collection.json`); `ext:repository` (archive determinism, attachment model, tombstone reference-only state, subdirectory support); `ext:json-store` (retire srsj-gzip); `docs/schema/2.0/source-document-meta.json` (subdirectory contentPath clarification)
 **Author**: the-greenman (from issue the-greenman/srs#101)
 **Date**: 2026-07-06
@@ -18,6 +18,7 @@
 | 3 | 2026-07-14 | Rebased onto RFC-023 (SourceReference vocabulary disjointness): the field is `sourceRole` (renamed from `relationType`), the base enum is `[evidence, extracted-from, quoted-from, inspired-by]`, and the `attaches` addition now covers **all four** SourceReference-bearing schemas (Rev 2 touched only `record.json` + `relations-collection.json`). Noted invariant I-88 (RFC-023 SourceReference/Relation vocabulary disjointness) is satisfied by `attaches`; the legacy `relationType` alias does not gain `attaches`. Required by RFC-023's cross-RFC coordination section. |
 | 4 | 2026-07-17 | Review pass (Spec Integrity + Completeness reviewers): fix Change A to list all four SourceReference-bearing schemas (prose body was not updated when Rev 3 expanded scope); narrow [R6] byte-identity guarantee to within-implementation consistency (the cross-implementation claim contradicted [R5]'s implementation-defined Store/Deflate choice); add gzip magic-byte detection to Change F; upgrade Change E non-blocking-diagnostics emission from SHOULD to MUST; add UUID-assignment note to Change B; define "identical repository content" for [R6]; expand [R7] with explicit trigger conditions; add [R3]/[R4] cross-reference to [R11]; add `manifest.json` to schema changes table; correct Rationale srsj-gzip history; scope [R4] diagnostics clause. |
 | 5 | 2026-07-17 | Accepted; spec records authored in `srs/srs` — RFC record `747f61db`, Changes A–G, invariants I-101–I-112. PR #186 merged to master. |
+| 6 | 2026-08-08 | **Erratum, no normative change.** This RFC named the four `attachment_policy` fields `allowedMimeTypes`, `maxPerFileBytes`, `maxDocBytes` and `maxTotalBytes`, in camelCase. The `com.semanticops.base` Field definitions authored under Change B have always been `allowed_mime_types`, `max_per_file_bytes`, `max_doc_bytes` and `max_total_bytes` — snake_case, per the Field-name convention — so the RFC text has never matched the fields it defines. Corrected here, and in invariant I-107 and the Change B / Change E records. The camelCase spellings in the `attachment policy-get` **CLI payload** are unaffected: payload keys are camelCase by contract (ADR-011) and are a separate namespace from Field names. Found while implementing #308, which banned kebab-case Field names outright; srs#359. |
 
 ---
 
@@ -106,14 +107,14 @@ Define an optional package namespace `com.semanticops.base` that a repository MA
 
 | Field key | Value type | Description |
 |---|---|---|
-| `allowedMimeTypes` | `Text` (JSON array of strings) | MIME types accepted as attachments. When absent, all MIME types are permitted. |
-| `maxPerFileBytes` | `Number` | Maximum size in bytes for a single attachment file. When absent, no per-file limit. |
-| `maxDocBytes` | `Number` | Maximum size in bytes for a single source document content file. When absent, no limit. |
-| `maxTotalBytes` | `Number` | Maximum aggregate size in bytes of all source documents in the repository. When absent, no limit. |
+| `allowed_mime_types` | `Text` (JSON array of strings) | MIME types accepted as attachments. When absent, all MIME types are permitted. |
+| `max_per_file_bytes` | `Number` | Maximum size in bytes for a single attachment file. When absent, no per-file limit. |
+| `max_doc_bytes` | `Number` | Maximum size in bytes for a single source document content file. When absent, no limit. |
+| `max_total_bytes` | `Number` | Maximum aggregate size in bytes of all source documents in the repository. When absent, no limit. |
 
 At most one `attachment_policy` record of this type may exist per repository. An implementation encountering a second `attachment_policy` record MUST surface a diagnostic and treat the policy as absent.
 
-Stable UUIDs for the four fields (`allowedMimeTypes`, `maxPerFileBytes`, `maxDocBytes`, `maxTotalBytes`) and the `attachment_policy` type definition MUST be assigned when the `com.semanticops.base` package records are created in the `srs/srs` repository as part of implementing this RFC. Those records are authoritative; implementations MUST NOT mint independent UUID assignments for the canonical `com.semanticops.base` fields and types.
+Stable UUIDs for the four fields (`allowed_mime_types`, `max_per_file_bytes`, `max_doc_bytes`, `max_total_bytes`) and the `attachment_policy` type definition MUST be assigned when the `com.semanticops.base` package records are created in the `srs/srs` repository as part of implementing this RFC. Those records are authoritative; implementations MUST NOT mint independent UUID assignments for the canonical `com.semanticops.base` fields and types.
 
 ### Change C — No-base-package invariant
 
@@ -141,9 +142,9 @@ A conforming `.srs` archive producer, given identical repository content on repe
 
 An implementation MAY enforce the limits in `attachment_policy` as hard rejections. If it does not enforce them as hard limits, it MUST surface violations as non-blocking diagnostics (severity: warning) when:
 
-- A source document content file exceeds `maxPerFileBytes` or `maxDocBytes`.
-- The aggregate content of all source documents exceeds `maxTotalBytes`.
-- An attached file's MIME type is not in `allowedMimeTypes`.
+- A source document content file exceeds `max_per_file_bytes` or `max_doc_bytes`.
+- The aggregate content of all source documents exceeds `max_total_bytes`.
+- An attached file's MIME type is not in `allowed_mime_types`.
 
 Non-blocking diagnostics MUST NOT prevent the record from being stored or the repository from being exported. They MUST be surfaced in `srs repo validate` output. Whether to emit a warning at the time of a write operation (e.g., `srs source import`) is implementation-defined; conformance is required at validate time. Hard caps are not part of this RFC and are explicitly deferred to a future extension.
 
@@ -186,7 +187,7 @@ The following normative clarifications apply to the attachment model:
 >
 > **[R6]** Given identical repository content, a conformant archive producer MUST produce a byte-for-byte identical `.srs` file across invocations of the same implementation. Cross-implementation byte identity is not guaranteed because [R5] allows the producer to choose between Deflate and Store. For the purposes of this rule, two repositories have identical content if and only if the set of archive entries — identified by their forward-slash-normalised relative paths and byte contents — is identical; filesystem timestamps, permissions, and host metadata are excluded from this definition and MUST NOT influence archive output (see Change D).
 >
-> **[R7]** A conformant implementation MAY enforce `attachment_policy` limits as hard rejections. If it does not enforce them as hard limits, it MUST emit non-blocking warning diagnostics at `srs repo validate` time when limits are exceeded — specifically: when a source document content file exceeds `maxPerFileBytes` or `maxDocBytes`; when the aggregate byte size of all source document content files exceeds `maxTotalBytes`; or when an attached file's MIME type is not listed in `allowedMimeTypes`.
+> **[R7]** A conformant implementation MAY enforce `attachment_policy` limits as hard rejections. If it does not enforce them as hard limits, it MUST emit non-blocking warning diagnostics at `srs repo validate` time when limits are exceeded — specifically: when a source document content file exceeds `max_per_file_bytes` or `max_doc_bytes`; when the aggregate byte size of all source document content files exceeds `max_total_bytes`; or when an attached file's MIME type is not listed in `allowed_mime_types`.
 >
 > **[R8]** A conformant implementation MUST reject a gzip-compressed file presented as a `.srsj` JSON Store.
 >
