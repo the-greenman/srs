@@ -249,8 +249,8 @@ design merit rather than waved through. It is answered by separating **the asser
 **metadata about the assertion**:
 
 ```jsonc
-"fieldValues": { "proposal-artifact-path": "rfcs/rfc-004.md" },
-"fieldMeta":   { "proposal-artifact-path": { "source": "human" } }
+"fieldValues": { "proposal_artifact_path": "rfcs/rfc-004.md" },
+"fieldMeta":   { "proposal_artifact_path": { "source": "human" } }
 ```
 
 `fieldMeta` is an optional sibling object, keyed **identically** to `fieldValues`, whose values are

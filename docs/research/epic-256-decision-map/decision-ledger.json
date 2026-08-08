@@ -4191,35 +4191,36 @@
         "RFC-039 Open Question 2"
       ],
       "decision_family": "C",
-      "title": "Grandfather existing kebab-case Field names but forbid new ones",
-      "decision_statement": "The existing in-scope kebab-case Field names remain unchanged and become verbatim wire keys, while new Field names must use snake_case; the grandfather is scoped by identity rather than bare name.",
+      "title": "Rename all kebab-case Field names to snake_case; forbid kebab-case outright",
+      "decision_statement": "Every Field name in srs/package/ is snake_case. The 33 kebab-case names are renamed in place -- same UUIDs, same versions, no Type version bumps, no Record migration -- because nothing outside the field definition files ever referenced them by name. Kebab-case Field names are forbidden with no grandfathered set.",
       "status": "ratified",
       "decision_class": "precedent-setting",
-      "effective_date": "2026-07-31",
+      "effective_date": "2026-08-08",
       "sources": [
         {
           "kind": "owner-decision",
           "authority_rank": 2,
-          "url_or_path": "https://github.com/the-greenman/srs/issues/242#issuecomment-5147997566",
-          "excerpt": "The owner chose to keep existing fields but allow no more kebab-case names.",
+          "url_or_path": "https://github.com/the-greenman/srs/issues/308",
+          "excerpt": "Reversed 2026-08-08: \"lets just do it. then we can simply ban kebabs ... we can simply alter our c10 ... very little has happened since.\" The 2026-07-31 grandfather rested on a rename cost of 33 new UUIDs, 13 new Type versions and 216 migrated Records; a first-party sweep showed that cost is not real, because Records and FieldAssignments key by fieldId.",
           "explicitness": "explicit"
         },
         {
-          "kind": "issue",
-          "authority_rank": 4,
-          "url_or_path": "https://github.com/the-greenman/srs/issues/308",
-          "excerpt": "Issue 308 records the owner decision, the 33-definition in-scope baseline, rejected rename cost, and still-open enforcement details.",
+          "kind": "owner-decision",
+          "authority_rank": 2,
+          "url_or_path": "https://github.com/the-greenman/srs/issues/242#issuecomment-5147997566",
+          "excerpt": "The superseded 2026-07-31 position: keep existing fields but allow no more kebab-case names.",
           "explicitness": "explicit"
         }
       ],
       "alternatives": [
-        "Rename every existing kebab-case Field to snake_case.",
+        "Grandfather the 33 existing kebab-case names permanently and forbid only new ones (the 2026-07-31 position, reversed).",
+        "Rename via new Field UUIDs, new Type versions, and Record migration.",
         "Allow both conventions for all future Fields.",
         "Transform names only at the wire boundary."
       ],
-      "accepted_cost": "A permanent scoped grandfather list and mixed historical spellings remain; new authoring is constrained and enforcement work is still open.",
+      "accepted_cost": "Two first-party name-based lookups had to move in step (a view field reference and a Rust find_field constant) and the srs-rust spec fixture had to be renamed with them. The historical rfcs/rfc-004/proposed-package/ tree keeps its kebab names, since row 5 declares it out of migration scope.",
       "supersedes": [
-        "Unqualified documentary claim that every existing Field name is snake_case"
+        "E256-C10 as ratified 2026-07-31: grandfather the existing kebab-case Field names but forbid new ones"
       ],
       "derived_from": [
         "RFC-039 verbatim keys",
