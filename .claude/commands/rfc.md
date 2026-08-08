@@ -421,6 +421,42 @@ In `srs/rfcs/rfc-NNN-<slug>.md`, update:
 ```
 Add a revision history row: `N | <date> | Accepted; spec records authored in srs/srs`.
 
+### 6c.1 — Maintain the RFC decision log
+
+An accepted RFC may contain one or more decisions worth retaining after its
+implementation details and generated artifacts have aged out of working memory.
+Before publishing, assess its decisions against the SRS decision-log boundary:
+
+> Record an active consequential judgment only when legitimate alternatives
+> remained and the choice establishes, changes, applies with discretion,
+> excepts, or supersedes guidance that future work may need to understand.
+> Do **not** record a mechanical derivation: where the governing decisions and
+> evidence leave one valid outcome, record the task, implementation, test, or
+> pull request instead.
+
+Use the atomic decision as the unit. Split independently reversible choices;
+do not create a decision record for every conformance rule, schema edit, task,
+or PR. A single RFC may yield no decision-log record, one record, or a small
+number of records. Before creating one, list existing
+`com.semanticops.spec/rfc-decision` records and reuse or supersede an existing
+decision rather than duplicating it.
+
+For each qualifying decision, create a `com.semanticops.spec/rfc-decision`
+record through the CLI. Include:
+
+- a concise, active decision statement;
+- the accepted alternatives and costs;
+- stable evidence links to the accepted RFC revision and the resulting
+  canonical record/schema or merged implementation when relevant;
+- scope, the governing values in tension, and a concrete review trigger.
+
+The RFC and canonical specification remain normative. The decision record is a
+curated rationale and evidence index, not a second copy of the RFC. Mark it
+`accepted` only after the owner has accepted the RFC decision; proposals and
+unresolved questions stay in the RFC or issue until that point. When a later
+decision changes the rule, create the successor record and link it with the
+canonical `supersedes` relation rather than silently editing history.
+
 ### 6d — Publish (validate + render)
 
 Run the publish pipeline from the `srs/` repo root:
