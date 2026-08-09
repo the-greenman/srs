@@ -182,7 +182,7 @@ The payload is `{ "payload": { "schema": { ... }, "diagnostics": [] } }`. Non-fa
 (unresolvable type references, unparseable cardinality) appear in `payload.diagnostics` rather
 than causing a command failure.
 
-Each field property carries vendor keys: `x-srs-order`, `x-srs-field-id`, `x-srs-widget`
+Each field property carries vendor keys: `x-srs-order`, `x-srs-widget`
 (e.g. `"textarea"` for Text fields), `x-srs-ai-guidance` (structured `aiGuidance`, when not a
 plain string), `x-srs-description` (the field's own `description`, when non-empty), and
 `x-srs-instructions` (the field's `instructions`, when authored) — the last two let an editor
@@ -343,9 +343,7 @@ Then graduate:
 ```bash
 srs note graduate --repo <path> <noteId> --type <namespace/name> <<'EOF'
 {
-  "fieldValues": [
-    { "fieldId": "<uuid>", "value": "<value>" }
-  ]
+  "fieldValues": { "<field_name>": "<value>" }
 }
 EOF
 ```
@@ -376,10 +374,10 @@ Then create:
 ```bash
 srs record create --repo <path> --type <namespace/name> <<'EOF'
 {
-  "fieldValues": [
-    { "fieldId": "<uuid>", "value": "<value>" },
+  "fieldValues": {
+    "<field_name>": "<value>",
     ...
-  ]
+  }
 }
 EOF
 ```
@@ -1702,7 +1700,7 @@ The URI scheme is implementation tooling (srs-rust ADR-037), built from existing
 | `srs://<repositoryId>/record/{instanceId}` | One record, any tier (JSON; exposed as a resource template) |
 | `srs://<repositoryId>/container/<containerId>` | Container resolve-view: authored columns + ordered members (JSON — same as `container resolve-view`) |
 | `srs://<repositoryId>/view/<documentViewId>` | Rendered document view (markdown — same as `render document-view`) |
-| `srs://<repositoryId>/type/{typeId}` | Type authoring schema (JSON — same as `type schema`): properties carry `x-srs-field-id`, `x-srs-ai-guidance`, `x-srs-description`, `x-srs-instructions`; enumerated per type and available as a template |
+| `srs://<repositoryId>/type/{typeId}` | Type authoring schema (JSON — same as `type schema`): properties are keyed by `Field.name` (RFC-039) and carry `x-srs-ai-guidance`, `x-srs-description`, `x-srs-instructions`; enumerated per type and available as a template |
 
 Containers, document views, and **types** are enumerated in `resources/list`; records are read through the template (discover instanceIds via the `find` tool or container resources).
 
@@ -1713,7 +1711,7 @@ The tool set mirrors the discovery ladder and write workflows in this document. 
 - **`repo_validate`** — validate the whole repository and return the diagnostics array plus a summary. Run after every write batch; an empty diagnostics array means the repository is consistent. Diagnostics are data, not an error.
 - **`type_schema`** — the authoring contract for a type by UUID (`typeVersion` optional; latest when omitted): a JSON Schema whose properties are keyed by `Field.name` — exactly the keys `record_create` `fieldValues` uses (RFC-039; the `x-srs-field-id` bridge is retired) — carrying the field's `aiGuidance`. An inline-composite range is expanded in place. Read this before authoring records of an unfamiliar type; discover typeIds from the type resources.
 - **`find`** — the deterministic discovery query (ext:discovery): all axes optional and AND-combined (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `excludeLifecycleStates`, `tier`, `contentMatch`). Serves Tier 2 in this build; other tier values return zero hits with a diagnostic.
-- **`record_create`** — create a typed Tier-2 Record (`type` = `namespace/name`, `fieldValues` keyed by fieldId UUID — resolve them via `type_schema` first). Validation is enforced: missing required or unknown fields are rejected with diagnostics and **nothing is written**. Optional `containerId` adds to a container atomically.
+- **`record_create`** — create a typed Tier-2 Record (`type` = `namespace/name`, `fieldValues` keyed by `Field.name` verbatim — read `type_schema` first; its property keys are exactly the carrier keys). Validation is enforced: missing required or unknown fields are rejected with diagnostics and **nothing is written**. Optional `containerId` adds to a container atomically.
 - **`relation_create`** — assert a typed binary relation (`source [relationType] target`, forward form only). The `relationType` must resolve to an installed `RelationTypeDefinition` (RFC-005/R3) — an unknown type is a validation error.
 - **`note_create`** — create a Tier-0 Note (free-text sections). Optional `containerId` adds to a container atomically.
 - **`record_update`** — replace the `fieldValues` of an existing Tier-2 Record (full replace, not a patch). Provide the complete set of field values you want stored. Optional `typeVersion` migrates the record to a different type version; omit to keep the stored version. Tag semantics: omit=preserve, `[]=`clear, `[...]=`replace. Returns the updated Record. Run `repo_validate` after to confirm consistency.
