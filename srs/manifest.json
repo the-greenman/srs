@@ -111,19 +111,6 @@
       ]
     },
     {
-      "instanceId": "b1000000-0000-4000-a000-000000000002",
-      "tier": 2,
-      "path": "records/tables/t002-repeatable-vs-field-groups-vs-records.json",
-      "tags": [
-        "construct:field",
-        "construct:lifecycle",
-        "construct:record",
-        "construct:reference",
-        "construct:relation",
-        "topic:extensions"
-      ]
-    },
-    {
       "instanceId": "b1000000-0000-4000-a000-000000000003",
       "tier": 2,
       "path": "records/tables/t003-graduation-identity-continuity.json",
@@ -214,16 +201,6 @@
       ]
     },
     {
-      "instanceId": "8e542d9f-d981-50f0-a044-867cafe088aa",
-      "tier": 2,
-      "path": "records/extensions/ext-field-groups.json",
-      "tags": [
-        "concern:extensibility",
-        "construct:field",
-        "topic:extensions"
-      ]
-    },
-    {
       "instanceId": "279877f5-dd9d-569c-94d6-358ad177a6fb",
       "tier": 2,
       "path": "records/extensions/ext-import-tracking.json",
@@ -270,16 +247,6 @@
       "tags": [
         "concern:extensibility",
         "concern:federation",
-        "topic:extensions"
-      ]
-    },
-    {
-      "instanceId": "5adefe1b-906b-5f23-b4bf-30603ec73174",
-      "tier": 2,
-      "path": "records/extensions/ext-repeatable-fields.json",
-      "tags": [
-        "concern:extensibility",
-        "construct:field",
         "topic:extensions"
       ]
     },
@@ -1322,67 +1289,6 @@
       "tags": [
         "concern:validation",
         "construct:container",
-        "topic:conformance"
-      ]
-    },
-    {
-      "instanceId": "e1000022-0000-4000-a000-000000000022",
-      "tier": 2,
-      "path": "records/invariants/invariant-022.json",
-      "tags": [
-        "concern:validation",
-        "construct:field",
-        "topic:conformance"
-      ]
-    },
-    {
-      "instanceId": "e1000023-0000-4000-a000-000000000023",
-      "tier": 2,
-      "path": "records/invariants/invariant-023.json",
-      "tags": [
-        "concern:validation",
-        "construct:field",
-        "topic:conformance"
-      ]
-    },
-    {
-      "instanceId": "e1000024-0000-4000-a000-000000000024",
-      "tier": 2,
-      "path": "records/invariants/invariant-024.json",
-      "tags": [
-        "concern:validation",
-        "construct:field",
-        "topic:conformance"
-      ]
-    },
-    {
-      "instanceId": "e1000025-0000-4000-a000-000000000025",
-      "tier": 2,
-      "path": "records/invariants/invariant-025.json",
-      "tags": [
-        "concern:validation",
-        "construct:record",
-        "construct:reference",
-        "topic:conformance"
-      ]
-    },
-    {
-      "instanceId": "e1000026-0000-4000-a000-000000000026",
-      "tier": 2,
-      "path": "records/invariants/invariant-026.json",
-      "tags": [
-        "concern:validation",
-        "construct:field",
-        "topic:conformance"
-      ]
-    },
-    {
-      "instanceId": "e1000027-0000-4000-a000-000000000027",
-      "tier": 2,
-      "path": "records/invariants/invariant-027.json",
-      "tags": [
-        "concern:validation",
-        "construct:field",
         "topic:conformance"
       ]
     },
@@ -3518,6 +3424,71 @@
       "tags": [
         "topic:rfc"
       ]
+    },
+    {
+      "instanceId": "f448175b-f3eb-486e-bbee-8ec4da0cb6a9",
+      "tier": 2,
+      "path": "records/invariants/invariant-f448175b.json"
+    },
+    {
+      "instanceId": "bf34d7af-45d8-4d9d-be41-284994eed684",
+      "tier": 2,
+      "path": "records/invariants/invariant-bf34d7af.json"
+    },
+    {
+      "instanceId": "99354119-e59f-457a-99d5-c2c3208e4a09",
+      "tier": 2,
+      "path": "records/invariants/invariant-99354119.json"
+    },
+    {
+      "instanceId": "bbed89d6-f406-4d57-915c-37e57e879371",
+      "tier": 2,
+      "path": "records/invariants/invariant-bbed89d6.json"
+    },
+    {
+      "instanceId": "2b94ca42-ef06-4187-b2ce-417020c1b28a",
+      "tier": 2,
+      "path": "records/invariants/invariant-2b94ca42.json"
+    },
+    {
+      "instanceId": "ef57abe8-5dd2-48ef-8257-a524282df5c6",
+      "tier": 2,
+      "path": "records/invariants/invariant-ef57abe8.json"
+    },
+    {
+      "instanceId": "000a1338-5a48-4609-83c8-9c6a0d9a05ac",
+      "tier": 2,
+      "path": "records/invariants/invariant-000a1338.json"
+    },
+    {
+      "instanceId": "fc982bf7-aae6-4a29-a20b-0ca6841ffaed",
+      "tier": 2,
+      "path": "records/invariants/invariant-fc982bf7.json"
+    },
+    {
+      "instanceId": "5a7dcf06-7ba3-480d-9860-d3d6fa5cc18e",
+      "tier": 2,
+      "path": "records/invariants/invariant-5a7dcf06.json"
+    },
+    {
+      "instanceId": "4d0263c2-1c3d-46f1-9dbd-1f0c60f64ea7",
+      "tier": 2,
+      "path": "records/invariants/invariant-4d0263c2.json"
+    },
+    {
+      "instanceId": "0e6f7aea-b283-4524-852b-60b7f7b51c54",
+      "tier": 2,
+      "path": "records/invariants/invariant-0e6f7aea.json"
+    },
+    {
+      "instanceId": "bca2cd6f-0a8f-4ab7-badb-30bd7ca9f4d7",
+      "tier": 2,
+      "path": "records/invariants/invariant-bca2cd6f.json"
+    },
+    {
+      "instanceId": "7bdbac1c-0bc5-4bcf-8d2b-37c583510ff3",
+      "tier": 2,
+      "path": "records/invariants/invariant-7bdbac1c.json"
     }
   ],
   "container": {
