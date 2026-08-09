@@ -744,50 +744,10 @@
       ]
     },
     {
-      "instanceId": "b9d40b80-3ca0-5daa-bd1f-6a8a47118156",
-      "tier": 2,
-      "path": "records/subsections/07-8-ext-repeatable-fields.json",
-      "tags": [
-        "concern:extensibility",
-        "construct:field",
-        "topic:extensions"
-      ]
-    },
-    {
-      "instanceId": "7196cf13-e961-5b8e-bcc5-2f91b61aaf9a",
-      "tier": 2,
-      "path": "records/subsections/07-9-ext-field-groups.json",
-      "tags": [
-        "concern:extensibility",
-        "construct:field",
-        "topic:extensions"
-      ]
-    },
-    {
       "instanceId": "812a7f7f-cb3e-5927-bc10-a097ffe28178",
       "tier": 2,
       "path": "records/subsections/08-1-field-semantics.json",
       "tags": [
-        "construct:field",
-        "topic:conformance"
-      ]
-    },
-    {
-      "instanceId": "b8b7c8e0-9a24-585b-9192-75ad2b97cfd4",
-      "tier": 2,
-      "path": "records/subsections/08-10-repeatability-ext-repeatable-fields.json",
-      "tags": [
-        "concern:extensibility",
-        "construct:field",
-        "topic:conformance"
-      ]
-    },
-    {
-      "instanceId": "1373ac6c-4491-509d-90ff-40b111d844d6",
-      "tier": 2,
-      "path": "records/subsections/08-11-field-groups-ext-field-groups.json",
-      "tags": [
-        "concern:extensibility",
         "construct:field",
         "topic:conformance"
       ]
