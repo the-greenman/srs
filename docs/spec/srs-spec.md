@@ -554,26 +554,19 @@ When source material referenced by a SourceReference is itself promoted to an in
 
 An implementation that performs such a conversion must follow these semantics: the created Relation records the originating role in `meta["com.semanticops.srs/sourceRole"]` (required for `quoted-from` — it is the only carrier of the quotation distinction); `confidence` carries over and `note` maps to the Relation's `notes`; the converted SourceReference is removed in the same operation. SourceReferences carried on Relations are excluded — a Relation cannot be a Relation endpoint — and are retained unchanged. See RFC-023.
 
-#### `FieldValue`
+#### Field values (RFC-039)
 
-The current value of a Field within a Record.
+`FieldValue` — the value stored at one `fieldValues` key — is the recursive union:
 
 ```typescript
-{
-  fieldId: UUID
-
-  // The stored value: a scalar, an array (cardinality: list), a map object,
-  // or an inline-composite fieldValues object for the rangeType — recursively
-  // (RFC-039 Change B; null is not a value, I-132)
-  value: FieldValue
-
-
-  source?: "human" | "ai" | "imported" | "derived"
-  editedAt?: ISO8601
-
-  sourceRefs?: SourceReference[]
-}
+type FieldValue = string | number | boolean
+                | FieldValue[]                       // cardinality: list
+                | { [key: string]: string | unknown } // datatype: map
+                | { [fieldName: string]: FieldValue } // inline composite: a fieldValues object for the rangeType
 ```
+
+There is no wrapper construct: the pre-RFC-039 `FieldValue`/`FieldValueEntry` pair
+objects, `groupValues`, and `FieldGroup` carriers are removed (I-134).
 
 
 #### `Record`
@@ -591,8 +584,14 @@ An instantiated Type with field values.
   // lifecycleState is ext:lifecycle
   lifecycleState?: string
 
-  fieldValues: { [fieldName: string]: FieldValue }  // RFC-039: name-keyed recursive carrier (I-129/I-130)
+  // RFC-039: the name-keyed recursive value carrier. Keys are Field.name
+  // verbatim (I-130); each value follows the recursive Change-B rule for the
+  // Field's fieldType — an inline-composite value is itself a fieldValues
+  // object (or an array of them for a list). null is not a value (I-132).
+  fieldValues: { [fieldName: string]: FieldValue }
 
+  // RFC-039: per-field provenance keyed identically to fieldValues (I-133).
+  fieldMeta?: { [fieldName: string]: { source?: "human" | "ai" | "imported" | "derived", editedAt?: ISO8601, sourceRefs?: SourceReference[] } }
 
   sourceRefs?: SourceReference[]
 
