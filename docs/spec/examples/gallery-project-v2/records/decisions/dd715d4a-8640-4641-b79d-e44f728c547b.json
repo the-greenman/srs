@@ -1,31 +1,13 @@
 {
   "createdAt": "2026-05-31T14:55:35.219217083+00:00",
-  "fieldValues": [
-    {
-      "fieldId": "d7e82557-9045-5e92-a494-d99112bbec4a",
-      "value": "Curatorial lead for Phase 1"
-    },
-    {
-      "fieldId": "73cd845a-3623-5bc6-8ade-42a7cd64740c",
-      "value": "Who will take the curatorial lead role for Phase 1, selecting and placing the work?"
-    },
-    {
-      "fieldId": "9889052c-9313-5e2f-a2ac-15baa3c6983e",
-      "value": "The group agreed that a single named person should lead curatorial decisions during Phase 1 to avoid decisions-by-committee on what is shown. The role was discussed as a practical necessity to get the first show up."
-    },
-    {
-      "fieldId": "de1296e0-e083-58d9-97a0-cb2b91fec02e",
-      "value": "Immo Klink is the curatorial lead for Phase 1. Immo has authority to select which works are shown and to decide their placement in the space, subject to Building Authority approval of any installation method."
-    },
-    {
-      "fieldId": "3340532b-d845-5e54-92b3-819ed05365c5",
-      "value": "Immo is the most experienced exhibitor in the group and is providing the first show's work. Having a single decision-maker for curation avoids gridlock and makes the show happen."
-    },
-    {
-      "fieldId": "c04b7f84-9a55-5353-8c9f-2b62f6a1e34e",
-      "value": "December 2026 pilot review. The role may be rotated, shared, or redefined for Phase 2."
-    }
-  ],
+  "fieldValues": {
+    "title": "Curatorial lead for Phase 1",
+    "decision_question": "Who will take the curatorial lead role for Phase 1, selecting and placing the work?",
+    "context": "The group agreed that a single named person should lead curatorial decisions during Phase 1 to avoid decisions-by-committee on what is shown. The role was discussed as a practical necessity to get the first show up.",
+    "decision_statement": "Immo Klink is the curatorial lead for Phase 1. Immo has authority to select which works are shown and to decide their placement in the space, subject to Building Authority approval of any installation method.",
+    "rationale": "Immo is the most experienced exhibitor in the group and is providing the first show's work. Having a single decision-maker for curation avoids gridlock and makes the show happen.",
+    "revisit_when": "December 2026 pilot review. The role may be rotated, shared, or redefined for Phase 2."
+  },
   "instanceId": "dd715d4a-8640-4641-b79d-e44f728c547b",
   "lifecycleState": "ratified",
   "tags": [

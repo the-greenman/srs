@@ -21,5 +21,6 @@
     "types/purpose-3c000001.json"
   ],
   "version": "1.0.0",
-  "views": []
+  "views": [],
+  "dataModelRevision": 2
 }

@@ -5,8 +5,17 @@
   "name": "priority",
   "version": 1,
   "description": "Priority level for the project.",
-  "aiGuidance": { "purpose": "Categorical priority: low, medium, or high." },
-  "valueType": "select",
-  "allowedValues": ["low", "medium", "high"],
+  "aiGuidance": {
+    "purpose": "Categorical priority: low, medium, or high."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "low",
+      "medium",
+      "high"
+    ]
+  },
   "createdAt": "2026-06-27T00:00:00Z"
 }

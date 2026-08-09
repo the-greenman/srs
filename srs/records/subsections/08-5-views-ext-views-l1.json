@@ -1,16 +1,10 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "createdAt": "2026-05-27T00:00:00Z",
-  "fieldValues": [
-    {
-      "fieldId": "1a000001-0000-4000-a000-000000000001",
-      "value": "Views (ext:views-l1)"
-    },
-    {
-      "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": ""
-    }
-  ],
+  "fieldValues": {
+    "title": "Views (ext:views-l1)",
+    "content": ""
+  },
   "instanceId": "6a3ae7a9-bb3e-5dc3-9d4e-8a2cea41fb77",
   "sourceRefs": [
     {

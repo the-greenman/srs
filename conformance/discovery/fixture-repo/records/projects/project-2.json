@@ -6,11 +6,13 @@
   "typeNamespace": "com.example.discovery",
   "typeName": "project",
   "lifecycleState": "active",
-  "fieldValues": [
-    { "fieldId": "0000f002-0000-4000-8000-000000000001", "value": "Conformance Fixtures" },
-    { "fieldId": "0000f002-0000-4000-8000-000000000002", "value": "Creating deterministic test fixtures for the discovery contract." },
-    { "fieldId": "0000f002-0000-4000-8000-000000000003", "value": "medium" }
+  "fieldValues": {
+    "name": "Conformance Fixtures",
+    "description": "Creating deterministic test fixtures for the discovery contract.",
+    "priority": "medium"
+  },
+  "tags": [
+    "searchable"
   ],
-  "tags": ["searchable"],
   "createdAt": "2026-06-27T00:00:00Z"
 }

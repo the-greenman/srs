@@ -1,63 +1,27 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "createdAt": "2026-08-02T13:59:15.823578709+00:00",
-  "fieldValues": [
-    {
-      "fieldId": "1a000001-0000-4000-a000-000000000001",
-      "value": "Close definition-layer gaps in the model rather than a remainder overlay"
-    },
-    {
-      "fieldId": "5a000002-0000-4000-a000-000000000002",
-      "value": "accepted"
-    },
-    {
-      "fieldId": "5a000004-0000-4000-a000-000000000004",
-      "value": "2026-07-31"
-    },
-    {
-      "fieldId": "5a000012-0000-4000-a000-000000000012",
-      "value": "A hand-maintained overlay would make part of SRS meaning repository-specific and non-portable. The model and emitters must instead become expressive enough to carry the live definition layer as one self-contained artifact."
-    },
-    {
-      "fieldId": "5a000019-0000-4000-a000-000000000019",
-      "value": "Metamodel v1.1.0 must express the live definition-layer surface in SRS records and emit the complete artifact; it must not depend on a hand-maintained remainder overlay for meaning the records cannot carry."
-    },
-    {
-      "fieldId": "5a000020-0000-4000-a000-000000000020",
-      "value": "Definition-layer self-hosting and schema emission"
-    },
-    {
-      "fieldId": "5a000021-0000-4000-a000-000000000021",
-      "value": [
-        "semantic-integrity",
-        "evidence-led-evolution",
-        "shared-coherence"
-      ]
-    },
-    {
-      "fieldId": "5a000022-0000-4000-a000-000000000022",
-      "value": "formation"
-    },
-    {
-      "fieldId": "5a000023-0000-4000-a000-000000000023",
-      "value": "- Keep the core metamodel smaller and merge a hand-maintained remainder/*.json overlay into generated schemas."
-    },
-    {
-      "fieldId": "5a000024-0000-4000-a000-000000000024",
-      "value": "The metamodel and emitters must become expressive enough to carry the full live definition layer, increasing modelling and projection work."
-    },
-    {
-      "fieldId": "5a000025-0000-4000-a000-000000000025",
-      "value": [
-        "https://github.com/the-greenman/srs/issues/273#issuecomment-5141760683",
-        "https://github.com/the-greenman/srs/issues/273"
-      ]
-    },
-    {
-      "fieldId": "5a000026-0000-4000-a000-000000000026",
-      "value": "Review when a live definition-layer concern cannot be represented in the metamodel, distinguishing a genuine new semantic facet from incidental target syntax."
-    }
-  ],
+  "fieldValues": {
+    "title": "Close definition-layer gaps in the model rather than a remainder overlay",
+    "rfc_status": "accepted",
+    "decision_date": "2026-07-31",
+    "decision_rationale": "A hand-maintained overlay would make part of SRS meaning repository-specific and non-portable. The model and emitters must instead become expressive enough to carry the live definition layer as one self-contained artifact.",
+    "decision_statement": "Metamodel v1.1.0 must express the live definition-layer surface in SRS records and emit the complete artifact; it must not depend on a hand-maintained remainder overlay for meaning the records cannot carry.",
+    "decision_scope": "Definition-layer self-hosting and schema emission",
+    "governing_values": [
+      "semantic-integrity",
+      "evidence-led-evolution",
+      "shared-coherence"
+    ],
+    "project_phase": "formation",
+    "alternatives_considered": "- Keep the core metamodel smaller and merge a hand-maintained remainder/*.json overlay into generated schemas.",
+    "accepted_costs": "The metamodel and emitters must become expressive enough to carry the full live definition layer, increasing modelling and projection work.",
+    "evidence_refs": [
+      "https://github.com/the-greenman/srs/issues/273#issuecomment-5141760683",
+      "https://github.com/the-greenman/srs/issues/273"
+    ],
+    "review_trigger": "Review when a live definition-layer concern cannot be represented in the metamodel, distinguishing a genuine new semantic facet from incidental target syntax."
+  },
   "instanceId": "7bd99afd-c15b-4bba-a189-2a3d34f2e4ee",
   "tags": [
     "topic:rfc"

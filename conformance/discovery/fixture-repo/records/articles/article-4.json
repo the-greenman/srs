@@ -6,16 +6,18 @@
   "typeNamespace": "com.example.discovery",
   "typeName": "article",
   "lifecycleState": "archived",
-  "fieldValues": [
-    { "fieldId": "0000f001-0000-4000-8000-000000000001", "value": "Legacy Search Approach" },
-    { "fieldId": "0000f001-0000-4000-8000-000000000002", "value": "The bespoke filter approach was replaced by the discovery contract." },
-    { "fieldId": "0000f001-0000-4000-8000-000000000003", "value": "https://example.com/legacy-search" },
-    { "fieldId": "0000f001-0000-4000-8000-000000000004", "value": "archived" },
-    { "fieldId": "0000f001-0000-4000-8000-000000000005", "value": ["legacy"] },
-    { "fieldId": "0000f001-0000-4000-8000-000000000006", "value": 75 },
-    { "fieldId": "0000f001-0000-4000-8000-000000000007", "value": false },
-    { "fieldId": "0000f001-0000-4000-8000-000000000008", "value": "2025-01-01" }
-  ],
+  "fieldValues": {
+    "title": "Legacy Search Approach",
+    "body": "The bespoke filter approach was replaced by the discovery contract.",
+    "source_url": "https://example.com/legacy-search",
+    "status": "archived",
+    "topics": [
+      "legacy"
+    ],
+    "word_count": 75,
+    "is_published": false,
+    "publish_date": "2025-01-01"
+  },
   "tags": [],
   "createdAt": "2026-06-27T00:00:00Z"
 }

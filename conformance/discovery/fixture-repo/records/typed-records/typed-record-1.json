@@ -7,16 +7,22 @@
     {
       "name": "agenda",
       "label": "Agenda",
-      "valueType": "string",
+      "fieldType": {
+        "datatype": "string"
+      },
       "value": "Discuss text projection algorithm"
     },
     {
       "name": "outcome",
       "label": "Outcome",
-      "valueType": "string",
+      "fieldType": {
+        "datatype": "string"
+      },
       "value": "Agreed on substring recall floor"
     }
   ],
-  "tags": ["searchable"],
+  "tags": [
+    "searchable"
+  ],
   "createdAt": "2026-06-27T00:00:00Z"
 }

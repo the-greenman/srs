@@ -5,7 +5,12 @@
   "name": "source_url",
   "version": 1,
   "description": "Canonical URL for the article.",
-  "aiGuidance": { "purpose": "The primary URL from which this article originates." },
-  "valueType": "url",
+  "aiGuidance": {
+    "purpose": "The primary URL from which this article originates."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "format": "uri"
+  },
   "createdAt": "2026-06-27T00:00:00Z"
 }

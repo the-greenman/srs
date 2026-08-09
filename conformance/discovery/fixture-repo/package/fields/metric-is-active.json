@@ -5,7 +5,11 @@
   "name": "is_active",
   "version": 1,
   "description": "Whether this metric is currently being collected.",
-  "aiGuidance": { "purpose": "Boolean active flag. Non-searchable per ext:discovery valueType classification." },
-  "valueType": "boolean",
+  "aiGuidance": {
+    "purpose": "Boolean active flag. Non-searchable per ext:discovery valueType classification."
+  },
+  "fieldType": {
+    "datatype": "boolean"
+  },
   "createdAt": "2026-06-27T00:00:00Z"
 }

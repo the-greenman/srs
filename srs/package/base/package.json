@@ -15,5 +15,6 @@
     "types/reposettings-849dab3d.json"
   ],
   "version": "1.0.0",
-  "views": []
+  "views": [],
+  "dataModelRevision": 2
 }

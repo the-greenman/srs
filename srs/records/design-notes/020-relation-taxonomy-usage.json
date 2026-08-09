@@ -1,16 +1,10 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "createdAt": "2026-05-27T00:00:00Z",
-  "fieldValues": [
-    {
-      "fieldId": "1a000001-0000-4000-a000-000000000001",
-      "value": "Relation taxonomy usage"
-    },
-    {
-      "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": "\nUse the canonical relation type strings installed in the core package (formerly `ext:recommended-relations`, retired by RFC-005) for common relationships. Reserve custom `namespace/name` format for domain-specific relations.\n\n**Composition example** (project planning):\n```\nStage A  --contains-->  Task B\nTask B   --contains-->  Subtask C\n```\n\n**Derivation example** (Protocol output):\n```\nDecision Record  --derived-from-->  Options Analysis Note\nOptions Analysis --derived-from-->  Brain Dump Note\n```\n\n**Governance example**:\n```\nPolicy v2  --supersedes-->  Policy v1\nAmendment  --com.example.gov/amends-->  Policy v2   (custom namespace/name type)\n```\n\n**Evidence example**:\n```\nWorkshop photo  --evidences-->  Stage 1 completion claim\nTranscript seg  --evidences-->  Decision rationale\n```\n\nNon-governance projects use the same Relation layer. `supersedes` is canonical; domain verbs like `delegates`, `ratifies`, and `amends` are custom types that require their own installed `namespace/name` RelationTypeDefinitions (governance packages typically ship them). They apply when the semantic object type calls for them — one profile of the layer, not its primary purpose."
-    }
-  ],
+  "fieldValues": {
+    "title": "Relation taxonomy usage",
+    "content": "\nUse the canonical relation type strings installed in the core package (formerly `ext:recommended-relations`, retired by RFC-005) for common relationships. Reserve custom `namespace/name` format for domain-specific relations.\n\n**Composition example** (project planning):\n```\nStage A  --contains-->  Task B\nTask B   --contains-->  Subtask C\n```\n\n**Derivation example** (Protocol output):\n```\nDecision Record  --derived-from-->  Options Analysis Note\nOptions Analysis --derived-from-->  Brain Dump Note\n```\n\n**Governance example**:\n```\nPolicy v2  --supersedes-->  Policy v1\nAmendment  --com.example.gov/amends-->  Policy v2   (custom namespace/name type)\n```\n\n**Evidence example**:\n```\nWorkshop photo  --evidences-->  Stage 1 completion claim\nTranscript seg  --evidences-->  Decision rationale\n```\n\nNon-governance projects use the same Relation layer. `supersedes` is canonical; domain verbs like `delegates`, `ratifies`, and `amends` are custom types that require their own installed `namespace/name` RelationTypeDefinitions (governance packages typically ship them). They apply when the semantic object type calls for them — one profile of the layer, not its primary purpose."
+  },
   "instanceId": "f1000020-0000-4000-a000-000000000020",
   "sourceRefs": [
     {
