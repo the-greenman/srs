@@ -18,9 +18,15 @@ function parseSortKey(rawValue, filename) {
   if (typeof rawValue === "string" && /^I-\d+$/.test(rawValue)) {
     return parseInt(rawValue.slice(2), 10);
   }
+  // srs#242 Phase B: invariant_number is a string Field (v2) — legacy numeric
+  // values were stringified display-identically ("17"), so bare digit strings
+  // carry the same sort key they always did.
+  if (typeof rawValue === "string" && /^\d+$/.test(rawValue)) {
+    return parseInt(rawValue, 10);
+  }
   throw new Error(
     `Malformed invariant-number value in ${filename}: ${JSON.stringify(rawValue)} — ` +
-      `expected a JSON number or a string matching ^I-\\d+$`
+      `expected a digit string, an I-<n> string, or a legacy JSON number`
   );
 }
 
