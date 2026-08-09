@@ -14,7 +14,9 @@
  *   4. every range/showcase Type validates against the live docs/schema/2.0/type.json;
  *   5. the showcase Type's projected object schema ACCEPTS a conforming instance and REJECTS a
  *      non-conforming one — proving the projection is enforceable at the instance level for the
- *      storable (scalar + reference-mode) modes. Inline-composite INSTANCE goldens are #242's scope
+ *      storable (scalar + reference-mode) modes. The emitted showcase instance is the
+ *      inline-composite instance golden RFC-032 deferred to #242: `fieldValues` is the
+ *      RFC-039 name-keyed carrier, and `guidance`/`examples` carry inline-composite values
  *      (no conforming carrier until then), per RFC-032 §Testability "Fixture scope".
  *
  *   node tests/rfc-032/run.mjs            # assert against committed goldens + emit artifacts
@@ -184,12 +186,36 @@ console.log("\n4) The showcase Type's projected object schema accepts valid / re
 // Build the object schema for the storable subset of the showcase Type.
 const STORABLE = FIELDS.filter((f) => {
   if (["author_name", "author_email", "example_output"].includes(f.name)) return false;
-  if (f.fieldType.datatype === "ref" && f.fieldType.mode === "inline") return false; // #242
   if (f.fieldType.datatype === "dependent") return false; // value-of-self, no standalone carrier here
   return true;
 });
+// RFC-039 (srs#242): an inline-composite value is a fieldValues map for the
+// range Type, recursively — so the projected object schema composes the range
+// Type's own object schema in place ([R3]/[R17]), instead of excluding the
+// field as the pre-#242 fixture did.
+const composeFieldSchema = (ft) => {
+  if (ft.datatype === "ref" && (ft.mode ?? "inline") === "inline") {
+    const rangeName = Object.keys(TYPES).find((n) => TYPES[n].id === ft.rangeType.typeId);
+    const rangeDef = TYPE_DEFS.find((t) => t.name === rangeName);
+    const inner = { type: "object", additionalProperties: false, properties: {}, required: [] };
+    for (const fa of rangeDef.fields) {
+      const member = FIELDS.find((f) => fieldDef(f).id === fa.fieldId);
+      inner.properties[member.name] = composeFieldSchema(member.fieldType);
+      if (fa.required) inner.required.push(member.name);
+    }
+    if (inner.required.length === 0) delete inner.required;
+    if (ft.cardinality === "list") {
+      const arr = { type: "array", items: inner };
+      if (ft.minItems != null) arr.minItems = ft.minItems;
+      if (ft.maxItems != null) arr.maxItems = ft.maxItems;
+      return arr;
+    }
+    return inner;
+  }
+  return projectOne(ft);
+};
 const objSchema = { type: "object", additionalProperties: false, properties: {} };
-for (const f of STORABLE) objSchema.properties[f.name] = projectOne(f.fieldType);
+for (const f of STORABLE) objSchema.properties[f.name] = composeFieldSchema(f.fieldType);
 
 const validInstance = {
   plain_string: "hello",
@@ -210,6 +236,20 @@ const validInstance = {
   reviewer_refs: ["bbbbbbbb-0000-4000-8000-000000000002"],
   meta: { anything: 1, nested: { x: true } },
   counts_by_key: { a: 1, b: 2 },
+  // RFC-039 [R3]: an inline-composite value IS a fieldValues map for the range
+  // Type, recursively — `guidance` nests two levels (ai_guidance.examples is
+  // itself an inline-composite list). This is the instance golden RFC-032
+  // deferred to #242.
+  guidance: {
+    plain_string: "Demonstrate the recursive carrier.",
+    examples: [
+      { example_output: "a table" },
+      { example_output: "a longer table" },
+    ],
+  },
+  examples: [
+    { example_output: "rendered" },
+  ],
 };
 const invalidInstance = {
   ...validInstance,
@@ -239,7 +279,7 @@ await writeFile(join(HERE, "records", "showcase-instance.json"), JSON.stringify(
   typeNamespace: NS,
   typeName: "rfc032_showcase",
   typeVersion: 1,
-  values: validInstance,
+  fieldValues: validInstance,
   createdAt: CREATED,
 }, null, 2) + "\n", "utf8");
 

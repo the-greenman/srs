@@ -1,24 +1,12 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "createdAt": "2026-05-27T00:00:00Z",
-  "fieldValues": [
-    {
-      "fieldId": "1a000020-0000-4000-a000-000000000020",
-      "value": 38
-    },
-    {
-      "fieldId": "1a000001-0000-4000-a000-000000000001",
-      "value": "Field.fieldType.format, when present, is only meaningful when datatype…"
-    },
-    {
-      "fieldId": "1a000003-0000-4000-a000-000000000003",
-      "value": "`Field.fieldType.format`, when present, is only meaningful when `fieldType.datatype` is `\"string\"`. Implementations must ignore `format` on fields with any other `datatype`."
-    },
-    {
-      "fieldId": "1a000021-0000-4000-a000-000000000021",
-      "value": "core — Field.contentFormat"
-    }
-  ],
+  "fieldValues": {
+    "invariant_number": "38",
+    "title": "Field.fieldType.format, when present, is only meaningful when datatype…",
+    "normative_statement": "`Field.fieldType.format`, when present, is only meaningful when `fieldType.datatype` is `\"string\"`. Implementations must ignore `format` on fields with any other `datatype`.",
+    "applies_to": "core — Field.contentFormat"
+  },
   "instanceId": "e1000038-0000-4000-a000-000000000038",
   "sourceRefs": [
     {

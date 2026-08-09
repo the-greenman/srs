@@ -75,9 +75,17 @@ emitter-owned, closure comparisons resolve `$ref`s away before comparing (never 
 
 ## Name projection (snake_case → lowerCamelCase) and the override table
 
-A `Field.name` (snake_case) projects to a lowerCamelCase JSON property key (`min_items` → `minItems`). The
+**Scope (RFC-039 [R2a], erratum to RFC-035 [R4]):** the name projection below and its override
+table bind schema emission for the **in-scope meta-model Types only** — the frozen-seed entities
+whose emitted keys must match the hand-authored `field.json`/`type.json` spellings. A **domain
+Type** projects each property key as its `Field.name` **verbatim** — no case or separator
+transformation — so instance keys ([R2b], canonical I-130) and projected schema keys are
+identical by construction.
+
+A metamodel `Field.name` (snake_case) projects to a lowerCamelCase JSON property key (`min_items` → `minItems`). The
 transform is deterministic and injective over the in-scope metamodel field names. The **override table** — the
-committed `{ metamodelFieldName → jsonKey }` map, keyed by the globally-unique `Field.name`, applied during
+committed `{ metamodelFieldName → jsonKey }` map, keyed by the `Field.name` (unique within the
+metamodel package; global uniqueness is not assumed), applied during
 **emission** (it sets the emitted wire key) — supplies the mapping where the mechanical projection differs from
 the intended key:
 

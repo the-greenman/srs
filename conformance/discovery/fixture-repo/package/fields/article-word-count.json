@@ -5,7 +5,11 @@
   "name": "word_count",
   "version": 1,
   "description": "Approximate word count of the article body.",
-  "aiGuidance": { "purpose": "Numeric word count. Non-searchable per ext:discovery valueType classification." },
-  "valueType": "number",
+  "aiGuidance": {
+    "purpose": "Numeric word count. Non-searchable per ext:discovery valueType classification."
+  },
+  "fieldType": {
+    "datatype": "number"
+  },
   "createdAt": "2026-06-27T00:00:00Z"
 }

@@ -257,7 +257,6 @@ type:com.semanticops.srs/lifecycle
 **Affected Components**: `FieldGroup.compositeRenderer` dispatch; `groupFieldRowTemplates`; `compositeRendererConfig` on `ElementTemplates`.
 
 <!-- srs-integration:v1
-ext:field-groups
 ext:themes-l1
 schema:type.json
 schema:theme.json
@@ -715,7 +714,6 @@ tooling-only
 ext:views-l1
 ext:views-l2
 ext:themes-l1
-ext:field-groups
 schema:view.json
 schema:document-view.json
 schema:theme.json
@@ -770,7 +768,29 @@ Full proposal and design history: `rfcs/rfc-037-normative-field-row-rendering-ba
 
 **Affected Components**: The Tier-2 `Record` instance carrier: `fieldValues` changes from an array of `{fieldId, value}` pairs to an object keyed by `Field.name` verbatim, whose value space is one recursive rule identical to RFC-032 `projectField`'s instance space — making a Record valid against its Type's projected JSON Schema by construction. Retires `FieldGroup`, `Type.fieldGroups`, `groupValues`, `ext:repeatable-fields` `entries`, and the deprecated `FieldAssignment.{repeatable,minItems,maxItems}` trio; relocates per-value provenance to a parallel `fieldMeta` sibling; reconciles Tier-1 `TypedField.valueType`/`selectOptions` to an inline `fieldType`. Narrows RFC-035 [R4]'s name projection to the in-scope meta-model Types and fixes verbatim `Field.name` keys for domain Types. Establishes `Field.name` uniqueness within a Type's effective field set. Discharges obligations RFC-032 (Change E, OQ4), RFC-033, RFC-035, RFC-036 (`document-view-output.json`, `theme.json` [CR-036-18], [CR-036-19], Open Question 3) and RFC-037 ([FR-037-14]) deferred to #242 by name; records conflicts with RFC-012 and RFC-031 for Phase B. Phase A is design and migration plan only — no schema file is edited and no data is migrated; the cutover is Phase B, composed with RFC-038 in one first-party release train.
 
-Phase A folds **no** canonical record or schema artifact — its normative changes land at the Phase-B cutover — so it carries no `srs-integration:v1` manifest and is grandfathered in `rfcs/integration-allowlist.json` against #242, per `.claude/commands/rfc.md` Stage 6f. The `tooling-only` token would be false here: this RFC has substantial schema impact, deferred rather than absent.
+Phase A folds **no** canonical record or schema artifact — its normative changes land at the Phase-B cutover — so it declared its `srs-integration:v1` manifest at the Phase-B cutover (below); the interim grandfather entry in `rfcs/integration-allowlist.json` is removed with it.
+
+<!-- srs-integration:v1
+schema:record.json
+schema:type.json
+schema:typed-record.json
+schema:document-view-output.json
+schema:theme.json
+type:com.semanticops.spec/table
+I-129
+I-130
+I-131
+I-132
+I-133
+I-134
+I-135
+I-136
+I-137
+I-138
+I-139
+I-140
+I-141
+-->
 
 **Proposal Artifact Path**: rfcs/rfc-039-record-field-value-carrier.md
 

@@ -78,7 +78,7 @@ flowchart LR
         TR["named fields with values<br/>+ optional instanceType hint<br/><i>no Type binding</i>"]
     end
     subgraph t2["Tier 2 — Record"]
-        R["typeId @ typeVersion<br/>fieldValues: fieldId → value<br/><i>fully resolvable & validated</i>"]
+        R["typeId @ typeVersion<br/>fieldValues: Field.name → value<br/><i>fully resolvable & validated</i>"]
     end
     t0 -->|"graduatedAt"| t1 -->|"graduatedAt"| t2
 ```
@@ -87,7 +87,7 @@ flowchart LR
   field semantics. Good for raw capture and brainstorming.
 - **Tier 1 — TypedRecord**: named fields that carry values and value types, but with no
   binding to a published Type. A lightweight `instanceType` string can hint at intent.
-- **Tier 2 — Record**: bound to a specific `typeId` + `typeVersion`, with `fieldValues[]`
+- **Tier 2 — Record**: bound to a specific `typeId` + `typeVersion`, with a name-keyed `fieldValues` object (RFC-039)
   mapping each `fieldId` to a value. This is the fully semantic, validatable tier.
 
 A Tier-2 Record also carries denormalized `typeNamespace`/`typeName` hints. **If those
@@ -220,8 +220,7 @@ independently adoptable capability module, declared in a repository's manifest u
 | `ext:addressability` | Universal addressing across document / process / conversation spaces |
 | `ext:protocol` | Structured facilitation processes with ordered stages |
 | `ext:federation` / `ext:registry` / `ext:import-tracking` | Cross-repository relations, catalogs, and provenance |
-| `ext:repeatable-fields` | Array values for a Field |
-| `ext:field-groups` / `ext:cross-field-validation` | Grouping and multi-field validation rules |
+| `ext:cross-field-validation` | Multi-field validation rules |
 | `ext:type-inheritance` | Types extending other Types |
 | `ext:json-store` | Arbitrary JSON alongside standard fields |
 

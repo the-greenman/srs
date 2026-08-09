@@ -25,8 +25,9 @@ const REPO_ROOT = join(SRS_ROOT, 'srs'); // the self-describing spec repo
 const SCHEMA_DIR = join(SRS_ROOT, 'docs', 'schema', '2.0');
 
 const RFC_TYPE_ID = '6a000001-0000-4000-a000-000000000001';
-const F_RFC_NUMBER = '5a000001-0000-4000-a000-000000000001';
-const F_PROPOSAL_ARTIFACT_PATH = '5a000016-0000-4000-a000-000000000016';
+// RFC-039: the carrier keys by Field.name — lookups are by name, not UUID.
+const F_RFC_NUMBER = 'rfc_number';
+const F_PROPOSAL_ARTIFACT_PATH = 'proposal_artifact_path';
 
 const errors = [];
 const warnings = [];
@@ -53,8 +54,8 @@ async function exists(path) {
   }
 }
 
-function fieldValue(record, fieldId) {
-  return record.fieldValues?.find(field => field.fieldId === fieldId)?.value;
+function fieldValue(record, name) {
+  return record.fieldValues?.[name];
 }
 
 // A proposal artifact path (ROOT-relative) must not live inside the active spec's package or

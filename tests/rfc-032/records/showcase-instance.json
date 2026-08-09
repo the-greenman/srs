@@ -5,7 +5,7 @@
   "typeNamespace": "com.semanticops.rfc032fixture",
   "typeName": "rfc032_showcase",
   "typeVersion": 1,
-  "values": {
+  "fieldValues": {
     "plain_string": "hello",
     "markdown_body": "# Title",
     "homepage": "https://example.com",
@@ -38,7 +38,23 @@
     "counts_by_key": {
       "a": 1,
       "b": 2
-    }
+    },
+    "guidance": {
+      "plain_string": "Demonstrate the recursive carrier.",
+      "examples": [
+        {
+          "example_output": "a table"
+        },
+        {
+          "example_output": "a longer table"
+        }
+      ]
+    },
+    "examples": [
+      {
+        "example_output": "rendered"
+      }
+    ]
   },
   "createdAt": "2026-07-29T00:00:00Z"
 }

@@ -5,7 +5,11 @@
   "name": "publish_date",
   "version": 1,
   "description": "The date on which the article was or will be published.",
-  "aiGuidance": { "purpose": "ISO 8601 date. Non-searchable per ext:discovery valueType classification." },
-  "valueType": "date",
+  "aiGuidance": {
+    "purpose": "ISO 8601 date. Non-searchable per ext:discovery valueType classification."
+  },
+  "fieldType": {
+    "datatype": "date"
+  },
   "createdAt": "2026-06-27T00:00:00Z"
 }

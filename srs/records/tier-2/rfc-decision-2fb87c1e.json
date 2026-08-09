@@ -1,63 +1,27 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "createdAt": "2026-08-02T13:59:15.800760775+00:00",
-  "fieldValues": [
-    {
-      "fieldId": "1a000001-0000-4000-a000-000000000001",
-      "value": "Make the authoritative store, not the manifest, define repository content"
-    },
-    {
-      "fieldId": "5a000002-0000-4000-a000-000000000002",
-      "value": "accepted"
-    },
-    {
-      "fieldId": "5a000004-0000-4000-a000-000000000004",
-      "value": "2026-08-01"
-    },
-    {
-      "fieldId": "5a000012-0000-4000-a000-000000000012",
-      "value": "An index can become stale or disagree with the stored objects it claims to enumerate. A common logical store-authority contract makes repository content coherent across backends while leaving each backend free to implement discovery."
-    },
-    {
-      "fieldId": "5a000019-0000-4000-a000-000000000019",
-      "value": "A repository's authoritative content is what its authoritative store reports across the instance, relation, container, source-document, definition, and extension sets; manifest.json is not content authority except for its inline root container."
-    },
-    {
-      "fieldId": "5a000020-0000-4000-a000-000000000020",
-      "value": "Repository content authority and enumeration"
-    },
-    {
-      "fieldId": "5a000021-0000-4000-a000-000000000021",
-      "value": [
-        "semantic-integrity",
-        "evidence-led-evolution",
-        "shared-coherence"
-      ]
-    },
-    {
-      "fieldId": "5a000022-0000-4000-a000-000000000022",
-      "value": "formation"
-    },
-    {
-      "fieldId": "5a000023-0000-4000-a000-000000000023",
-      "value": "- Keep manifest indexes authoritative.\n- Let each implementation choose between index and tree authority."
-    },
-    {
-      "fieldId": "5a000024-0000-4000-a000-000000000024",
-      "value": "Implementations must replace index-driven enumeration and accept a coordinated breaking storage migration."
-    },
-    {
-      "fieldId": "5a000025-0000-4000-a000-000000000025",
-      "value": [
-        "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L162-L179",
-        "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L749-L754"
-      ]
-    },
-    {
-      "fieldId": "5a000026-0000-4000-a000-000000000026",
-      "value": "Review when a new backend cannot answer the authoritative-set contract, or when a manifest field is proposed as a second content authority."
-    }
-  ],
+  "fieldValues": {
+    "title": "Make the authoritative store, not the manifest, define repository content",
+    "rfc_status": "accepted",
+    "decision_date": "2026-08-01",
+    "decision_rationale": "An index can become stale or disagree with the stored objects it claims to enumerate. A common logical store-authority contract makes repository content coherent across backends while leaving each backend free to implement discovery.",
+    "decision_statement": "A repository's authoritative content is what its authoritative store reports across the instance, relation, container, source-document, definition, and extension sets; manifest.json is not content authority except for its inline root container.",
+    "decision_scope": "Repository content authority and enumeration",
+    "governing_values": [
+      "semantic-integrity",
+      "evidence-led-evolution",
+      "shared-coherence"
+    ],
+    "project_phase": "formation",
+    "alternatives_considered": "- Keep manifest indexes authoritative.\n- Let each implementation choose between index and tree authority.",
+    "accepted_costs": "Implementations must replace index-driven enumeration and accept a coordinated breaking storage migration.",
+    "evidence_refs": [
+      "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L162-L179",
+      "https://github.com/the-greenman/srs/blob/1a1746d3ebf8346914fd88920dcaf2b80b07d877/rfcs/rfc-038-tree-authoritative-storage.md#L749-L754"
+    ],
+    "review_trigger": "Review when a new backend cannot answer the authoritative-set contract, or when a manifest field is proposed as a second content authority."
+  },
   "instanceId": "2fb87c1e-dc5f-442d-ade0-67ee71979627",
   "tags": [
     "topic:rfc"

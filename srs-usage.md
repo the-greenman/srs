@@ -67,7 +67,7 @@ srs field list --repo <path> --pretty
 
 `srs record list` returns each record as `{ instanceId, displayLabel, record }`. `displayLabel` is the core-resolved human label — the **same** label `srs tree`, `srs find`, `srs repo navigation`, and `srs container resolve-view` show. Priority (RFC-020): the record's Type's effective `identityFieldId` (own or inherited via `ext:type-inheritance`), when set on a field with a non-empty value; otherwise a field named `title` → `heading` → `name` → `label`; otherwise the record's type name. Render `displayLabel` directly for headings and list rows; do not re-derive a title from `record.fieldValues`.
 
-Do not guess field IDs from filenames. Always resolve them from `srs type get` or `srs field list`. Field IDs are UUIDs — `fieldId` is the authoritative key, not `name`.
+Do not guess field names from filenames. Always resolve the Type's effective field set from `srs type get` or `srs field list`. `fieldValues` keys are `Field.name` verbatim (RFC-039); the UUID `fieldId` remains the identity of the definition in the package and its assignments.
 
 ### Vocabulary and Lifecycle Discovery
 
@@ -182,7 +182,7 @@ The payload is `{ "payload": { "schema": { ... }, "diagnostics": [] } }`. Non-fa
 (unresolvable type references, unparseable cardinality) appear in `payload.diagnostics` rather
 than causing a command failure.
 
-Each field property carries vendor keys: `x-srs-order`, `x-srs-field-id`, `x-srs-widget`
+Each field property carries vendor keys: `x-srs-order`, `x-srs-widget`
 (e.g. `"textarea"` for Text fields), `x-srs-ai-guidance` (structured `aiGuidance`, when not a
 plain string), `x-srs-description` (the field's own `description`, when non-empty), and
 `x-srs-instructions` (the field's `instructions`, when authored) — the last two let an editor
@@ -343,14 +343,12 @@ Then graduate:
 ```bash
 srs note graduate --repo <path> <noteId> --type <namespace/name> <<'EOF'
 {
-  "fieldValues": [
-    { "fieldId": "<uuid>", "value": "<value>" }
-  ]
+  "fieldValues": { "<field_name>": "<value>" }
 }
 EOF
 ```
 
-The stdin shape is the same `CreateRecordInput` used by `record create`: `fieldValues`, optional `groupValues`, optional `tags`.
+The stdin shape is the same `CreateRecordInput` used by `record create`: `fieldValues` (an **object keyed by `Field.name` verbatim** — RFC-039), optional `fieldMeta` (per-field provenance keyed identically), optional `tags`.
 
 The response `data` contains:
 - `note` — the original Note with `graduatedAt` stamped (ISO-8601 UTC)
@@ -376,32 +374,32 @@ Then create:
 ```bash
 srs record create --repo <path> --type <namespace/name> <<'EOF'
 {
-  "fieldValues": [
-    { "fieldId": "<uuid>", "value": "<value>" },
+  "fieldValues": {
+    "<field_name>": "<value>",
     ...
-  ]
+  }
 }
 EOF
 ```
 
 ### Updating a Record
 
-Fetch the current state first. Then send the **complete** `fieldValues` array — all fields, with changed values substituted. Omitting a field from `fieldValues` removes its value; required fields will fail validation if omitted:
+Fetch the current state first. Then send the **complete** `fieldValues` object — every field key, with changed values substituted. Omitting a key removes its value (key absence is the sole "unset" — RFC-039 I-132); required fields will fail validation if omitted:
 
 ```bash
 srs record get --repo <path> <instanceId> --pretty
-# edit the output: substitute the new value in the full fieldValues array
+# edit the output: substitute the new value in the full fieldValues object
 srs record update --repo <path> <instanceId> <<'EOF'
 {
-  "fieldValues": [
-    { "fieldId": "<uuid-of-field-1>", "value": "<unchanged-value>" },
-    { "fieldId": "<uuid-of-field-2>", "value": "<new-value>" }
-  ]
+  "fieldValues": {
+    "<field_1_name>": "<unchanged-value>",
+    "<field_2_name>": "<new-value>"
+  }
 }
 EOF
 ```
 
-`groupValues` uses three-way semantics: **omit** (or `null`) to preserve existing groups; **empty array** (`[]`) to clear all groups; **non-empty array** to replace all groups. Tags follow the same three-way pattern.
+`fieldMeta` uses three-way semantics: **omit** (or `null`) to preserve stored per-field provenance; **empty object** (`{}`) to clear it; **non-empty object** to replace it. Tags follow the same three-way pattern (with arrays).
 
 ### Validating a Record Before Saving (preflight)
 
@@ -412,9 +410,7 @@ srs record validate --repo <path> <<'EOF'
 {
   "typeId": "<uuid>",
   "typeVersion": 1,
-  "fieldValues": [
-    { "fieldId": "<uuid>", "value": "<value>" }
-  ]
+  "fieldValues": { "<field_name>": "<value>" }
 }
 EOF
 ```
@@ -485,7 +481,7 @@ Superseding is a compound act: create the replacement, link it, retire the old o
 srs record successor --repo <path> --id <predecessorId> <<'EOF'
 {
   "relationType": "supersedes",
-  "fieldValues": [ { "fieldId": "<uuid>", "value": "<value>" }, ... ]
+  "fieldValues": { "<field_name>": "<value>", ... }
 }
 EOF
 ```
@@ -1123,9 +1119,7 @@ Returns all field values, type metadata, display label, and all outbound relatio
     "typeName": "decision",
     "typeNamespace": "com.example",
     "displayLabel": "First Decision",
-    "fieldValues": [
-      { "fieldId": "<uuid>", "value": "First Decision" }
-    ],
+    "fieldValues": { "title": "First Decision" },
     "relations": [
       {
         "id": "<uuid>",
@@ -1706,7 +1700,7 @@ The URI scheme is implementation tooling (srs-rust ADR-037), built from existing
 | `srs://<repositoryId>/record/{instanceId}` | One record, any tier (JSON; exposed as a resource template) |
 | `srs://<repositoryId>/container/<containerId>` | Container resolve-view: authored columns + ordered members (JSON — same as `container resolve-view`) |
 | `srs://<repositoryId>/view/<documentViewId>` | Rendered document view (markdown — same as `render document-view`) |
-| `srs://<repositoryId>/type/{typeId}` | Type authoring schema (JSON — same as `type schema`): properties carry `x-srs-field-id`, `x-srs-ai-guidance`, `x-srs-description`, `x-srs-instructions`; enumerated per type and available as a template |
+| `srs://<repositoryId>/type/{typeId}` | Type authoring schema (JSON — same as `type schema`): properties are keyed by `Field.name` (RFC-039) and carry `x-srs-ai-guidance`, `x-srs-description`, `x-srs-instructions`; enumerated per type and available as a template |
 
 Containers, document views, and **types** are enumerated in `resources/list`; records are read through the template (discover instanceIds via the `find` tool or container resources).
 
@@ -1715,9 +1709,9 @@ Containers, document views, and **types** are enumerated in `resources/list`; re
 The tool set mirrors the discovery ladder and write workflows in this document. Descriptions below are the canonical tool descriptions (single-sourced from `srs-mcp`'s `tools.rs`):
 
 - **`repo_validate`** — validate the whole repository and return the diagnostics array plus a summary. Run after every write batch; an empty diagnostics array means the repository is consistent. Diagnostics are data, not an error.
-- **`type_schema`** — the authoring contract for a type by UUID (`typeVersion` optional; latest when omitted): a JSON Schema whose properties carry `x-srs-field-id` (the UUID `record_create` fieldValues need) and the field's `aiGuidance`. Read this before authoring records of an unfamiliar type; discover typeIds from the type resources.
+- **`type_schema`** — the authoring contract for a type by UUID (`typeVersion` optional; latest when omitted): a JSON Schema whose properties are keyed by `Field.name` — exactly the keys `record_create` `fieldValues` uses (RFC-039; the `x-srs-field-id` bridge is retired) — carrying the field's `aiGuidance`. An inline-composite range is expanded in place. Read this before authoring records of an unfamiliar type; discover typeIds from the type resources.
 - **`find`** — the deterministic discovery query (ext:discovery): all axes optional and AND-combined (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `excludeLifecycleStates`, `tier`, `contentMatch`). Serves Tier 2 in this build; other tier values return zero hits with a diagnostic.
-- **`record_create`** — create a typed Tier-2 Record (`type` = `namespace/name`, `fieldValues` keyed by fieldId UUID — resolve them via `type_schema` first). Validation is enforced: missing required or unknown fields are rejected with diagnostics and **nothing is written**. Optional `containerId` adds to a container atomically.
+- **`record_create`** — create a typed Tier-2 Record (`type` = `namespace/name`, `fieldValues` keyed by `Field.name` verbatim — read `type_schema` first; its property keys are exactly the carrier keys). Validation is enforced: missing required or unknown fields are rejected with diagnostics and **nothing is written**. Optional `containerId` adds to a container atomically.
 - **`relation_create`** — assert a typed binary relation (`source [relationType] target`, forward form only). The `relationType` must resolve to an installed `RelationTypeDefinition` (RFC-005/R3) — an unknown type is a validation error.
 - **`note_create`** — create a Tier-0 Note (free-text sections). Optional `containerId` adds to a container atomically.
 - **`record_update`** — replace the `fieldValues` of an existing Tier-2 Record (full replace, not a patch). Provide the complete set of field values you want stored. Optional `typeVersion` migrates the record to a different type version; omit to keep the stored version. Tag semantics: omit=preserve, `[]=`clear, `[...]=`replace. Returns the updated Record. Run `repo_validate` after to confirm consistency.

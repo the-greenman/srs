@@ -5,8 +5,12 @@
   "name": "title",
   "version": 1,
   "description": "The title of the article.",
-  "aiGuidance": { "purpose": "A concise, human-readable title for the article." },
-  "valueType": "string",
+  "aiGuidance": {
+    "purpose": "A concise, human-readable title for the article."
+  },
+  "fieldType": {
+    "datatype": "string"
+  },
   "editorHint": "singleline",
   "createdAt": "2026-06-27T00:00:00Z"
 }

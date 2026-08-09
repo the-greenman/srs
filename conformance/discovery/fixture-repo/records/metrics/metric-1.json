@@ -6,12 +6,12 @@
   "typeNamespace": "com.example.discovery",
   "typeName": "metric",
   "lifecycleState": "active",
-  "fieldValues": [
-    { "fieldId": "0000f003-0000-4000-8000-000000000001", "value": "Indexed Record Count" },
-    { "fieldId": "0000f003-0000-4000-8000-000000000002", "value": 1024 },
-    { "fieldId": "0000f003-0000-4000-8000-000000000003", "value": true },
-    { "fieldId": "0000f003-0000-4000-8000-000000000004", "value": "2026-06-25" }
-  ],
+  "fieldValues": {
+    "label": "Indexed Record Count",
+    "value": 1024,
+    "is_active": true,
+    "recorded_at": "2026-06-25"
+  },
   "tags": [],
   "createdAt": "2026-06-27T00:00:00Z"
 }

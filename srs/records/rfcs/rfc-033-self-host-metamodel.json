@@ -1,36 +1,15 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "createdAt": "2026-07-29T00:00:00Z",
-  "fieldValues": [
-    {
-      "fieldId": "1a000001-0000-4000-a000-000000000001",
-      "value": "RFC-033: Self-hosting the meta-model — the frozen-seed bootstrap package"
-    },
-    {
-      "fieldId": "5a000001-0000-4000-a000-000000000001",
-      "value": "033"
-    },
-    {
-      "fieldId": "5a000002-0000-4000-a000-000000000002",
-      "value": "accepted"
-    },
-    {
-      "fieldId": "5a000003-0000-4000-a000-000000000003",
-      "value": "the-greenman"
-    },
-    {
-      "fieldId": "5a000009-0000-4000-a000-000000000009",
-      "value": "Self-hosts the SRS meta-model as SRS Type records in the frozen `com.semanticops.srs/metamodel` package (10 Types + 55 Fields); adds optional `dataModelRevision` (folds #265) to manifest/package-manifest/package-bundle schemas; adds the per-emitter fidelity dashboard; supersedes RFC-004's schema-notation vocabulary (reuses its projection-rules).\n\n<!-- srs-integration:v1\nschema:manifest.json\nschema:package-manifest.json\nschema:package-bundle.json\ntype:com.semanticops.srs/field\ntype:com.semanticops.srs/type\ntype:com.semanticops.srs/field-type\ntype:com.semanticops.srs/field-assignment\ntype:com.semanticops.srs/exact-type-ref\n-->"
-    },
-    {
-      "fieldId": "5a000016-0000-4000-a000-000000000016",
-      "value": "rfcs/rfc-033-self-host-metamodel-frozen-seed.md"
-    },
-    {
-      "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": "Expresses Field, Type, FieldAssignment and their value-objects as SRS Type records in a frozen com.semanticops.srs/metamodel package; keeps docs/schema/2.0/{field,type}.json as the never-re-derived bootstrap fixed point; adds a monotonic dataModelRevision stamp (#265) and a per-emitter fidelity dashboard; supersedes RFC-004's schema-notation vocabulary while reusing its projection-rules. Full text: rfcs/rfc-033-self-host-metamodel-frozen-seed.md."
-    }
-  ],
+  "fieldValues": {
+    "title": "RFC-033: Self-hosting the meta-model — the frozen-seed bootstrap package",
+    "rfc_number": "033",
+    "rfc_status": "accepted",
+    "author": "the-greenman",
+    "affected_components": "Self-hosts the SRS meta-model as SRS Type records in the frozen `com.semanticops.srs/metamodel` package (10 Types + 55 Fields); adds optional `dataModelRevision` (folds #265) to manifest/package-manifest/package-bundle schemas; adds the per-emitter fidelity dashboard; supersedes RFC-004's schema-notation vocabulary (reuses its projection-rules).\n\n<!-- srs-integration:v1\nschema:manifest.json\nschema:package-manifest.json\nschema:package-bundle.json\ntype:com.semanticops.srs/field\ntype:com.semanticops.srs/type\ntype:com.semanticops.srs/field-type\ntype:com.semanticops.srs/field-assignment\ntype:com.semanticops.srs/exact-type-ref\n-->",
+    "proposal_artifact_path": "rfcs/rfc-033-self-host-metamodel-frozen-seed.md",
+    "content": "Expresses Field, Type, FieldAssignment and their value-objects as SRS Type records in a frozen com.semanticops.srs/metamodel package; keeps docs/schema/2.0/{field,type}.json as the never-re-derived bootstrap fixed point; adds a monotonic dataModelRevision stamp (#265) and a per-emitter fidelity dashboard; supersedes RFC-004's schema-notation vocabulary while reusing its projection-rules. Full text: rfcs/rfc-033-self-host-metamodel-frozen-seed.md."
+  },
   "instanceId": "68f19e31-7616-5675-ae53-1ff8880680db",
   "tags": [
     "topic:rfc"

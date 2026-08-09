@@ -72,8 +72,6 @@ SRS Core [+ ext:<name> ...]
 | Type Inheritance | `ext:type-inheritance` | — | |
 | Views L1 | `ext:views-l1` | — | |
 | Views L2 | `ext:views-l2` | `ext:views-l1` | |
-| Repeatable Fields | `ext:repeatable-fields` | — | |
-| Field Groups | `ext:field-groups` | — | Group repeatability is self-contained; `ext:repeatable-fields` is not required |
 | Cross-Field Validation | `ext:cross-field-validation` | — | |
 | Recommended Relations | `ext:recommended-relations` | — | |
 | Import Tracking | `ext:import-tracking` | — | |
@@ -359,7 +357,7 @@ Before RFC-032, value semantics were a single closed enum, `valueType`, with the
   // Composition
   fields: FieldAssignment[]
   // type inheritance, fieldGroups, and validationRules are extensions; see
-  // ext:type-inheritance, ext:field-groups, and ext:cross-field-validation
+  // ext:type-inheritance and ext:cross-field-validation
 
   // lifecycle is an extension; see ext:lifecycle
 
@@ -391,7 +389,7 @@ A Field reference within a Type. Configures presentation without redefining fiel
 
 `displayLabel` and `displayHint` are strictly for rendering. If a materially different label or meaning is needed, a distinct Field with its own lineage is required.
 
-Repeatability fields (`repeatable`, `minItems`, `maxItems`) are defined in `ext:repeatable-fields`.
+Cardinality is a property of the referenced Field (`fieldType.cardinality`, RFC-032 [R4]); the former assignment-level `repeatable`/`minItems`/`maxItems` trio is removed (RFC-039 [R7], I-134).
 
 The Type's effective field list is `fields[]` unless `ext:type-inheritance` is declared and the Type extends another Type. In that case, the effective field list also includes inherited fields as defined by `ext:type-inheritance`.
 
@@ -556,28 +554,20 @@ When source material referenced by a SourceReference is itself promoted to an in
 
 An implementation that performs such a conversion must follow these semantics: the created Relation records the originating role in `meta["com.semanticops.srs/sourceRole"]` (required for `quoted-from` — it is the only carrier of the quotation distinction); `confidence` carries over and `note` maps to the Relation's `notes`; the converted SourceReference is removed in the same operation. SourceReferences carried on Relations are excluded — a Relation cannot be a Relation endpoint — and are retained unchanged. See RFC-023.
 
-#### `FieldValue`
+#### Field values (RFC-039)
 
-The current value of a Field within a Record.
+`FieldValue` — the value stored at one `fieldValues` key — is the recursive union:
 
 ```typescript
-{
-  fieldId: UUID
-
-  // Non-repeatable — use value
-  value?: string | number | boolean | string[] | null
-
-  // Repeatable — use entries (ext:repeatable-fields)
-  entries?: FieldValueEntry[]
-
-  source?: "human" | "ai" | "imported" | "derived"
-  editedAt?: ISO8601
-
-  sourceRefs?: SourceReference[]
-}
+type FieldValue = string | number | boolean
+                | FieldValue[]                       // cardinality: list
+                | { [key: string]: string | unknown } // datatype: map
+                | { [fieldName: string]: FieldValue } // inline composite: a fieldValues object for the rangeType
 ```
 
-`FieldValueEntry` is defined in `ext:repeatable-fields`.
+There is no wrapper construct: the pre-RFC-039 `FieldValue`/`FieldValueEntry` pair
+objects, `groupValues`, and `FieldGroup` carriers are removed (I-134).
+
 
 #### `Record`
 
@@ -594,10 +584,14 @@ An instantiated Type with field values.
   // lifecycleState is ext:lifecycle
   lifecycleState?: string
 
-  fieldValues: FieldValue[]
+  // RFC-039: the name-keyed recursive value carrier. Keys are Field.name
+  // verbatim (I-130); each value follows the recursive Change-B rule for the
+  // Field's fieldType — an inline-composite value is itself a fieldValues
+  // object (or an array of them for a list). null is not a value (I-132).
+  fieldValues: { [fieldName: string]: FieldValue }
 
-  // groupValues is ext:field-groups
-  groupValues?: FieldGroupValue[]
+  // RFC-039: per-field provenance keyed identically to fieldValues (I-133).
+  fieldMeta?: { [fieldName: string]: { source?: "human" | "ai" | "imported" | "derived", editedAt?: ISO8601, sourceRefs?: SourceReference[] } }
 
   sourceRefs?: SourceReference[]
 
@@ -1894,7 +1888,7 @@ When `DocumentSection.renderViewId` is absent, implementations MUST render each 
 
 **Step 1 — Field ordering.** Order fields ascending by `FieldAssignment.order`. With `ext:type-inheritance`, use `fieldOrder` from the Type if declared; otherwise use `FieldAssignment.order`.
 
-**Step 2 — Resolve values.** A field is present if `FieldValue.value` is non-null and non-empty-string, or (with `ext:repeatable-fields`) `FieldAssignment.repeatable === true` and `FieldValue.entries` is a non-empty array. Fields with neither are absent.
+**Step 2 — Resolve values.** A field is present if its `Field.name` key is present in `fieldValues` with a value that is not the empty string; a `cardinality: list` value is present when at least one entry survives Step 2 (RFC-039 [R5]/[R5a], canonical I-132 — structural presence and rendering presence remain distinct).
 
 **Step 3 — Labels.** Use `FieldAssignment.displayLabel`; fall back to `Field.name`.
 
@@ -1924,7 +1918,7 @@ composite.
 
 **Value sequence.** A field renders as multi-entry when Step 2 finds it present through an ordered
 sequence. Both mechanisms are covered without preference: `fieldType.cardinality: "list"` (RFC-032
-[R4], values carried as an array in `FieldValue.value`) and the legacy `ext:repeatable-fields` path
+[R4], values carried as a JSON array at the field's key) — the legacy `ext:repeatable-fields` path is removed (RFC-039 [R7]).
 (`FieldValue.entries`). *Sequence order* means array index order on the former, `entries` order on
 the latter. Cardinality — not element count — selects the form: a one-element sequence renders in
 block form, so a Type's rendered shape does not vary with instance data.
@@ -2075,107 +2069,6 @@ When `ext:themes-l1` is declared and a variant name is supplied at render invoca
 2. If found: resolve its `ThemeReference` and apply Rule [T-2] (targets check). If format matches, use that Theme. If format does not match, render **without a theme** — do NOT fall back to `themeRef`.
 3. If not found: fall back to `themeRef` (applying Rule [T-2]). If absent or format-incompatible, render without a theme.
 4. If no variant name is supplied: use `themeRef` (applying Rule [T-2]).
-
-
-#### ext:repeatable-fields
-
-**Content**: **Required for**: any Record type that needs lists of values within a single Field.
-
-Adds repeatability to `FieldAssignment` and defines `FieldValueEntry`.
-
-#### `FieldValueEntry`
-
-A single entry in a repeatable field.
-
-```typescript
-{
-  value: string | number | boolean | string[] | null
-  source?: "human" | "ai" | "imported" | "derived"
-  editedAt?: ISO8601
-}
-```
-
-#### FieldAssignment additions
-
-When `ext:repeatable-fields` is in use, `FieldAssignment` gains:
-
-```typescript
-repeatable?: boolean  // default: false; when true, multiple values are allowed
-minItems?: integer    // meaningful only when repeatable === true
-maxItems?: integer    // meaningful only when repeatable === true
-```
-
-And `FieldValue.entries` becomes active: use `entries` when `repeatable === true`, `value` otherwise.
-
-A repeatable field entry does not create a new semantic instance. Use separate Records connected by Relations when repeated items need their own identity, lifecycle, or graph position.
-
----
-
-
-#### ext:field-groups
-
-**Content**: **Required for**: Record types where multiple Fields are semantically paired and repeat together as a unit.
-
-Use when parallel `multiselect` arrays would lose pairing (e.g. a contact record with `name` + `email`). Preserves internal pairing across repeated items.
-
-#### `FieldGroup`
-
-A named, ordered group of Fields that repeat together as a unit within a Type.
-
-```typescript
-{
-  groupId: string        // stable key within the Type
-  label?: string
-  description?: string
-
-  order: integer         // min: 0; position relative to other Fields and Groups
-
-  required?: boolean     // default: false
-  repeatable?: boolean   // default: false
-  minItems?: integer
-  maxItems?: integer
-
-  fields: FieldAssignment[]
-}
-```
-
-#### `FieldGroupEntry`
-
-One entry in a repeatable Field Group.
-
-```typescript
-{
-  entryId?: UUID         // stable key for this entry; allows referencing or updating
-  fieldValues: FieldValue[]
-}
-```
-
-#### `FieldGroupValue`
-
-The current value of a Field Group within a Record.
-
-```typescript
-{
-  groupId: string           // references FieldGroup.groupId in the Type definition
-  entries: FieldGroupEntry[]
-}
-```
-
-A `FieldGroup` does not create a new semantic instance. Its entries are embedded structured context within the enclosing Record. Use separate Records connected by Relations when group entries need their own identity, lifecycle, provenance, or reuse across Records.
-
-`FieldGroup.repeatable`, `minItems`, and `maxItems` define group-level repeatability — whether the group as a whole can appear multiple times within a Record. This is structurally independent from `ext:repeatable-fields`, which adds scalar repeatability to individual Fields. An implementation may adopt `ext:field-groups` without `ext:repeatable-fields`; the repeatability mechanics in each extension are self-contained.
-
-When `ext:field-groups` is in use, `Type` gains `fieldGroups?: FieldGroup[]` and `Record` gains `groupValues?: FieldGroupValue[]`.
-
-**Repeatability pattern guide:**
-
-| Pattern | Use | Example |
-|---|---|---|
-| Repeatable scalar | `FieldAssignment.repeatable` (ext:repeatable-fields) | Multiple assigned person names |
-| Repeatable structured context | `FieldGroup` | Contacts with name + email pairs |
-| Repeated semantic objects | Separate Records + Relations | Tasks assigned to roles |
-
----
 
 
 #### ext:cross-field-validation
@@ -3107,22 +3000,6 @@ Conforming implementations must uphold the following invariants.
 
 **21.** `Container.rootInstanceIds` and `Container.memberInstanceIds`, when present, must reference valid SRS instance IDs (`Note.instanceId`, `Typed Record.instanceId`, or `Record.instanceId`).
 
-#### ext:repeatable-fields
-
-**22.** If `FieldAssignment.repeatable` is false or absent, its corresponding `FieldValue` must use `value` and must not include `entries`.
-
-**23.** If `FieldAssignment.repeatable` is true, its corresponding `FieldValue` may use `entries`. If `minItems` is specified, `entries` must contain at least that many items. If `maxItems` is specified, `entries` must not exceed that count. For repeatable fields, `Field.validationRules` are evaluated against each `FieldValueEntry.value` individually, not against the array as a whole.
-
-**24.** `FieldAssignment.minItems` and `maxItems` are valid only when `repeatable === true`. They must be ignored when `repeatable` is false or absent.
-
-#### ext:field-groups
-
-**25.** Every `groupId` in `Record.groupValues[]` must reference a `groupId` declared in the associated `Type.fieldGroups[]`.
-
-**26.** Within a `FieldGroupEntry.fieldValues[]`, every `fieldId` must appear in the enclosing `FieldGroup.fields[].fieldId`.
-
-**27.** A `FieldGroupValue.entries` list must satisfy `FieldGroup.minItems` and `maxItems` where specified.
-
 #### core — Record
 
 **28.** `Record.typeId` and `Record.typeVersion` are the authoritative Type binding. `typeNamespace` and `typeName` are denormalised convenience fields. If they conflict with the resolved `Type`, the `typeId`/`typeVersion` identity takes precedence and the Record is considered invalid until corrected.
@@ -3342,6 +3219,34 @@ Conforming implementations must uphold the following invariants.
 **I-123.** An implementation that declares `ext:discovery` MUST pass all structured-filter conformance scenarios (`exactMatch: true`) from the fixture at `srs/conformance/discovery/scenarios.json`, returning exactly the `expectedInstanceIds` set for each such scenario. (RFC-012 R11.)
 
 **I-124.** An implementation that declares `ext:discovery` MUST pass all content-match conformance scenarios (`exactMatch: false`) from the fixture at `srs/conformance/discovery/scenarios.json` — its result set for each such scenario MUST be a superset of the scenario's `expectedInstanceIds`. (RFC-012 R12.)
+
+#### Other
+
+**I-129.** A Tier-2 `Record`'s `fieldValues` MUST be a JSON object. Each key MUST equal the `Field.name` of a Field in the effective field set of the Record's `typeId`@`typeVersion`. Unknown keys MUST be rejected; the projected schema asserts `additionalProperties: false`. (RFC-039 [R1])
+
+**I-130.** A `fieldValues` key MUST be `Field.name` verbatim, with no case or separator transformation, at every nesting depth. The name projection MUST NOT be applied to instance keys under any circumstances, including for meta-model entities stored as Records. (RFC-039 [R2b])
+
+**I-131.** Within a Type's effective field set — its own `fields`, plus fields contributed through `extendsTypeId` — every referenced `Field.name` MUST be distinct. An implementation MUST reject a Type that violates this at definition time, not at instance time. (RFC-039 [R4])
+
+**I-132.** A `FieldAssignment` with `required: true` means its key MUST be present in `fieldValues`. Key absence is the sole representation of an unset field: a value of `null` MUST be rejected — writers MUST omit the key instead. Structural presence and rendering presence (RFC-001 Step 2, where an empty string resolves as absent) remain distinct and MUST NOT be conflated. (RFC-039 [R5]/[R5a])
+
+**I-133.** `fieldMeta`, when present, MUST be an object whose keys are a subset of the sibling `fieldValues` keys, and whose values are objects of `{source?, editedAt?, sourceRefs?}`. A `fieldMeta` key with no corresponding `fieldValues` key MUST be rejected. `fieldMeta` MUST NOT appear inside an inline-composite value. (RFC-039 [R6])
+
+**I-134.** `FieldValue`, `FieldValueEntry`, `FieldGroupValue`, `FieldGroupEntry`, `Type.fieldGroups`, and `FieldAssignment.{repeatable, minItems, maxItems}` are removed. An implementation MUST reject a document containing any of them at `dataModelRevision >= 2`. Definition files carry no document-local revision discriminator, so revision MUST be resolved from the enclosing repository or package manifest before this rule is applied to a definition. A manifest at `dataModelRevision >= 2` MUST NOT declare `ext:field-groups` or `ext:repeatable-fields`; a reader encountering such a declaration MUST report an error. (RFC-039 [R7]/[R15])
+
+**I-135.** A reader MUST determine instance generation structurally. For a Tier-2 `Record`: an array `fieldValues` is revision <= 1, an object `fieldValues` is revision >= 2. For a Tier-1 `TypedRecord`: a `TypedField` carrying `fieldType` is revision >= 2, one without it is revision <= 1. On encountering a generation it does not support, a reader MUST emit a diagnostic naming the file and the expected `dataModelRevision` and MUST NOT coerce, partially read, or silently skip the document. (RFC-039 [R9])
+
+**I-136.** A `mode: "reference"` value MUST resolve to an instance present in the repository's `instanceIndex`, and that instance MUST be of the Field's declared `rangeType` at the declared `typeVersion`. A dangling or type-mismatched target MUST be reported as an error naming the referring record, the key, and the target id. (RFC-039 [R14]; discharges RFC-032 OQ4, RFC-033:302, RFC-035:592)
+
+**I-137.** A Type version referenced by any instance in the repository MUST NOT be deleted. Name-keying makes the Record-to-Field edge Type-mediated: `fieldId` is recovered from `typeId` + `typeVersion` + key, so deleting the pinned Type version renders every instance of it unreadable. This rule governs versions with live referents only. (RFC-039 [R19])
+
+**I-138.** A DocumentView projection MUST key `ProjectedRecord.fields` and `orderedFieldKeys` by `Field.name`, and MUST carry a composite value recursively under its own key. `ProjectedFieldGroup` and `ProjectedGroupEntry` are removed and have no successor construct. (RFC-039 [R11])
+
+**I-139.** `cardinality: "list"` array-wraps uniformly, for every `datatype` including `map` and `dependent`, matching `projectField`'s unconditional wrap. The single-value rule states the `single` case; the wrap composes on top of it. (RFC-039 [R16])
+
+**I-140.** A Type's projected JSON Schema describes the `fieldValues` object, not the whole Record document. `instanceId`, `typeId`, `tags`, `meta`, `sourceRefs`, and `fieldMeta` are envelope members governed by `record.json`, and are outside the projected schema's `additionalProperties: false`. (RFC-039 [R17])
+
+**I-141.** Instance `fieldValues` keys MUST be serialised in `FieldAssignment.order`, and nested composite objects likewise, so that a re-run of a transform is byte-idempotent and diffs are stable. This is the instance-side counterpart of the schema-key ordering in `projection-rules.md`; it supersedes the write-order signal of rfc-012:139. (RFC-039 [R18])
 
 ---
 

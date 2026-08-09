@@ -2,13 +2,13 @@
 import { readdir, readFile } from "fs/promises";
 import { join } from "path";
 
-const INVARIANT_NUMBER_FIELD = "1a000020-0000-4000-a000-000000000020";
-const CONSTRAINT_FIELD = "1a000003-0000-4000-a000-000000000003";
-const GROUP_FIELD = "1a000021-0000-4000-a000-000000000021";
+// RFC-039: the carrier keys by Field.name.
+const INVARIANT_NUMBER_FIELD = "invariant_number";
+const CONSTRAINT_FIELD = "normative_statement";
+const GROUP_FIELD = "applies_to";
 
-function getFieldValue(record, fieldId) {
-  const fv = record.fieldValues?.find((f) => f.fieldId === fieldId);
-  return fv !== undefined ? fv.value : undefined;
+function getFieldValue(record, name) {
+  return record.fieldValues?.[name];
 }
 
 function parseSortKey(rawValue, filename) {
@@ -18,9 +18,15 @@ function parseSortKey(rawValue, filename) {
   if (typeof rawValue === "string" && /^I-\d+$/.test(rawValue)) {
     return parseInt(rawValue.slice(2), 10);
   }
+  // srs#242 Phase B: invariant_number is a string Field (v2) — legacy numeric
+  // values were stringified display-identically ("17"), so bare digit strings
+  // carry the same sort key they always did.
+  if (typeof rawValue === "string" && /^\d+$/.test(rawValue)) {
+    return parseInt(rawValue, 10);
+  }
   throw new Error(
     `Malformed invariant-number value in ${filename}: ${JSON.stringify(rawValue)} — ` +
-      `expected a JSON number or a string matching ^I-\\d+$`
+      `expected a digit string, an I-<n> string, or a legacy JSON number`
   );
 }
 

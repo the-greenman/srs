@@ -5,8 +5,22 @@
   "name": "topics",
   "version": 1,
   "description": "Topic labels for the article. Multiple values allowed.",
-  "aiGuidance": { "purpose": "Categorical topic labels. Each element contributes a separate searchable segment." },
-  "valueType": "multiselect",
-  "allowedValues": ["search", "indexing", "text", "segments", "performance", "legacy", "metadata"],
+  "aiGuidance": {
+    "purpose": "Categorical topic labels. Each element contributes a separate searchable segment."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "cardinality": "list",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "search",
+      "indexing",
+      "text",
+      "segments",
+      "performance",
+      "legacy",
+      "metadata"
+    ]
+  },
   "createdAt": "2026-06-27T00:00:00Z"
 }

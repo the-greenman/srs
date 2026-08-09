@@ -6,11 +6,14 @@
   "typeNamespace": "com.example.discovery",
   "typeName": "project",
   "lifecycleState": "active",
-  "fieldValues": [
-    { "fieldId": "0000f002-0000-4000-8000-000000000001", "value": "Searchable Index Project" },
-    { "fieldId": "0000f002-0000-4000-8000-000000000002", "value": "Building a full-text index over SRS repositories." },
-    { "fieldId": "0000f002-0000-4000-8000-000000000003", "value": "high" }
+  "fieldValues": {
+    "name": "Searchable Index Project",
+    "description": "Building a full-text index over SRS repositories.",
+    "priority": "high"
+  },
+  "tags": [
+    "searchable",
+    "indexed"
   ],
-  "tags": ["searchable", "indexed"],
   "createdAt": "2026-06-27T00:00:00Z"
 }

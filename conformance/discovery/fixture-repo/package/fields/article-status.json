@@ -5,8 +5,17 @@
   "name": "status",
   "version": 1,
   "description": "Editorial status of the article.",
-  "aiGuidance": { "purpose": "Current editorial state: draft, published, or archived." },
-  "valueType": "select",
-  "allowedValues": ["draft", "published", "archived"],
+  "aiGuidance": {
+    "purpose": "Current editorial state: draft, published, or archived."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "draft",
+      "published",
+      "archived"
+    ]
+  },
   "createdAt": "2026-06-27T00:00:00Z"
 }

@@ -1,32 +1,13 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "createdAt": "2026-05-27T00:00:00Z",
-  "fieldValues": [
-    {
-      "fieldId": "1a000001-0000-4000-a000-000000000001",
-      "value": "RFC-004: Language-Neutral Schema Notation for Spec Records"
-    },
-    {
-      "fieldId": "5a000001-0000-4000-a000-000000000001",
-      "value": "004"
-    },
-    {
-      "fieldId": "5a000002-0000-4000-a000-000000000002",
-      "value": "superseded"
-    },
-    {
-      "fieldId": "1a000002-0000-4000-a000-000000000002",
-      "value": "Draft: `ext:schema-notation`, a semantic, target-neutral schema definition model for spec authoring (JSON Schema / TypeScript / protobuf / Rust are projections). Carries the proposed-package / proposed-schemas boundary fixture under rfcs/rfc-004/. Full text: rfcs/rfc-004.md."
-    },
-    {
-      "fieldId": "5a000016-0000-4000-a000-000000000016",
-      "source": "human",
-      "value": "rfcs/rfc-004.md"
-    },
-    {
-      "fieldId": "5a000009-0000-4000-a000-000000000009"
-    }
-  ],
+  "fieldValues": {
+    "title": "RFC-004: Language-Neutral Schema Notation for Spec Records",
+    "rfc_number": "004",
+    "rfc_status": "superseded",
+    "proposal_artifact_path": "rfcs/rfc-004.md",
+    "content": "Draft: `ext:schema-notation`, a semantic, target-neutral schema definition model for spec authoring (JSON Schema / TypeScript / protobuf / Rust are projections). Carries the proposed-package / proposed-schemas boundary fixture under rfcs/rfc-004/. Full text: rfcs/rfc-004.md."
+  },
   "instanceId": "a4b5c6d7-e8f9-4a0b-8c2d-3e4f5a6b7c8d",
   "tags": [
     "construct:record",
@@ -35,5 +16,10 @@
   "typeId": "6a000001-0000-4000-a000-000000000001",
   "typeName": "rfc",
   "typeNamespace": "com.semanticops.spec",
-  "typeVersion": 1
+  "typeVersion": 1,
+  "fieldMeta": {
+    "proposal_artifact_path": {
+      "source": "human"
+    }
+  }
 }

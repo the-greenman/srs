@@ -17,7 +17,7 @@ This repo is part of a monorepo (`srs`, `srs-rust`, `srs-vscode`, `srs-web`) —
 **Record tiers:**
 - **Tier 0 (Note)**: free text sections, no type binding
 - **Tier 1 (TypedRecord)**: named fields with values, no Type binding
-- **Tier 2 (Record)**: instantiated Type via `typeId` + `typeVersion`; contains `fieldValues[]` mapping `fieldId → value`
+- **Tier 2 (Record)**: instantiated Type via `typeId` + `typeVersion`; carries `fieldValues` — an object keyed by `Field.name` verbatim, values recursive per the Field's `fieldType` (RFC-039)
 
 **Relation** — typed edge between two instance UUIDs. Canonical types: `contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`.
 

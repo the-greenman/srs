@@ -58,7 +58,7 @@ env:
   # required after #358 renamed them, since `find_field` misses are bound with
   # `if let Some(..)` and silently skip the invariant-number uniqueness check
   # rather than erroring. No renderer change, so `docs/spec/**` is unchanged.)
-  SRS_RUST_CLI_TAG: v0.1.0-build.271
+  SRS_RUST_CLI_TAG: v0.1.0-build.274
 
 jobs:
   check-release-drift:

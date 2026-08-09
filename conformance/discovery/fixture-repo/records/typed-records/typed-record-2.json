@@ -7,13 +7,17 @@
     {
       "name": "action",
       "label": "Action",
-      "valueType": "string",
+      "fieldType": {
+        "datatype": "string"
+      },
       "value": "Write conformance fixture"
     },
     {
       "name": "owner",
       "label": "Owner",
-      "valueType": "string",
+      "fieldType": {
+        "datatype": "string"
+      },
       "value": "engineering"
     }
   ],

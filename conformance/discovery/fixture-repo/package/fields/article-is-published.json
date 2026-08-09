@@ -5,7 +5,11 @@
   "name": "is_published",
   "version": 1,
   "description": "Whether the article has been formally published.",
-  "aiGuidance": { "purpose": "Boolean publication flag. Non-searchable per ext:discovery valueType classification." },
-  "valueType": "boolean",
+  "aiGuidance": {
+    "purpose": "Boolean publication flag. Non-searchable per ext:discovery valueType classification."
+  },
+  "fieldType": {
+    "datatype": "boolean"
+  },
   "createdAt": "2026-06-27T00:00:00Z"
 }

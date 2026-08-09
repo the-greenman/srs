@@ -94,5 +94,6 @@
   "views": [],
   "vocabularies": [
     "vocabularies/spec-taxonomy-35ee9e9e.json"
-  ]
+  ],
+  "dataModelRevision": 2
 }

@@ -14,6 +14,8 @@
       "content": "Substring matching after NFC normalization is the simplest universal floor."
     }
   ],
-  "tags": ["searchable"],
+  "tags": [
+    "searchable"
+  ],
   "createdAt": "2026-06-27T00:00:00Z"
 }
