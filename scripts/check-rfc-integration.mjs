@@ -45,19 +45,19 @@ const ALLOWLIST = join(ROOT, "rfcs", "integration-allowlist.json");
 
 // --- entity + field ids (verified against records on disk) ---------------------------------
 const RFC_TYPE_ID = "6a000001-0000-4000-a000-000000000001";
-const F_RFC_NUMBER = "5a000001-0000-4000-a000-000000000001";
-const F_STATUS = "5a000002-0000-4000-a000-000000000002";
-const F_AFFECTED = "5a000009-0000-4000-a000-000000000009";
-const F_ARTIFACT_PATH = "5a000016-0000-4000-a000-000000000016";
+const F_RFC_NUMBER = "rfc_number"; // RFC-039: carrier keys by Field.name
+const F_STATUS = "rfc_status";
+const F_AFFECTED = "affected_components";
+const F_ARTIFACT_PATH = "proposal_artifact_path";
 
 const INVARIANT_TYPE = "2a000006-0000-4000-a000-000000000006";
-const F_INV_NUMBER = "1a000020-0000-4000-a000-000000000020";
+const F_INV_NUMBER = "invariant_number";
 const EXTENSION_TYPE = "2a000008-0000-4000-a000-000000000008";
-const F_EXT_ID = "1a000018-0000-4000-a000-000000000018";
+const F_EXT_ID = "extension_id";
 const TYPEDEF_TYPE = "2a000005-0000-4000-a000-000000000005";
 const SECTION_TYPE = "2a000002-0000-4000-a000-000000000002";
 const SUBSECTION_TYPE = "2a000003-0000-4000-a000-000000000003";
-const F_TITLE = "1a000001-0000-4000-a000-000000000001";
+const F_TITLE = "title";
 
 const LEGAL_STATUSES = new Set([
   "draft",
@@ -75,8 +75,8 @@ function fail(msg) {
   failures.push(msg);
 }
 
-function fieldValue(record, fieldId) {
-  return record.fieldValues?.find((f) => f.fieldId === fieldId)?.value;
+function fieldValue(record, name) {
+  return record.fieldValues?.[name];
 }
 
 async function loadJson(path) {

@@ -2,13 +2,13 @@
 import { readdir, readFile } from "fs/promises";
 import { join } from "path";
 
-const INVARIANT_NUMBER_FIELD = "1a000020-0000-4000-a000-000000000020";
-const CONSTRAINT_FIELD = "1a000003-0000-4000-a000-000000000003";
-const GROUP_FIELD = "1a000021-0000-4000-a000-000000000021";
+// RFC-039: the carrier keys by Field.name.
+const INVARIANT_NUMBER_FIELD = "invariant_number";
+const CONSTRAINT_FIELD = "normative_statement";
+const GROUP_FIELD = "applies_to";
 
-function getFieldValue(record, fieldId) {
-  const fv = record.fieldValues?.find((f) => f.fieldId === fieldId);
-  return fv !== undefined ? fv.value : undefined;
+function getFieldValue(record, name) {
+  return record.fieldValues?.[name];
 }
 
 function parseSortKey(rawValue, filename) {

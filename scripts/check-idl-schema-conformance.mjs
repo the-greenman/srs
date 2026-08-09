@@ -32,7 +32,7 @@ const REPO_ROOT = join(ROOT, "srs"); // the self-describing spec repo (records/,
 const SCHEMA_DIR = join(ROOT, "docs", "schema", "2.0");
 const ALLOWLIST_PATH = join(ROOT, "scripts", "idl-schema-conformance-allowlist.json");
 
-const F_BODY = "1a000002-0000-4000-a000-000000000002"; // pseudo-IDL prose field
+const F_BODY = "content"; // pseudo-IDL prose field (RFC-039: carrier keys by Field.name)
 
 // --- RFC-031 Change B: the normative name-mapping table -------------------------------------
 // prose: path relative to REPO_ROOT. header: backtick-quoted heading text to match (before any
@@ -50,7 +50,8 @@ const MAPPING = [
   { entity: "Type", prose: "records/type-definitions/type.json", header: null, schemaFile: "type.json", pointer: "#" },
   { entity: "Type.FieldAssignment", prose: "records/type-definitions/type.json", header: "FieldAssignment", schemaFile: "type.json", pointer: "#/$defs/FieldAssignment" },
   { entity: "Record", prose: "records/type-definitions/record.json", header: "Record", schemaFile: "record.json", pointer: "#" },
-  { entity: "Record.FieldValue", prose: "records/type-definitions/record.json", header: "FieldValue", schemaFile: "record.json", pointer: "#/$defs/FieldValue" },
+  // Record.FieldValue row dropped at the srs#242 cutover: RFC-039 [R7] deletes
+  // $defs.FieldValue — the entity ceases to exist (RFC-031 Cross-references).
   { entity: "TypedRecord", prose: "records/type-definitions/record-typed.json", header: "Typed Record", schemaFile: "typed-record.json", pointer: "#" },
   { entity: "TypedRecord.TypedField", prose: "records/type-definitions/record-typed.json", header: "TypedField", schemaFile: "typed-record.json", pointer: "#/$defs/TypedField" },
   { entity: "SourceReference", prose: "records/type-definitions/record-typed.json", header: "SourceReference", schemaFile: "record.json", pointer: "#/$defs/SourceReference" },
@@ -123,8 +124,8 @@ async function loadJson(path) {
   return JSON.parse(await readFile(path, "utf8"));
 }
 
-function fieldValue(record, fieldId) {
-  return record.fieldValues?.find((f) => f.fieldId === fieldId)?.value;
+function fieldValue(record, name) {
+  return record.fieldValues?.[name];
 }
 
 function trimParenthetical(headingText) {

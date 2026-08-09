@@ -258,7 +258,7 @@ function packageIndex() {
   return {
     $schema: 'https://srs.semanticops.com/schema/2.0/package-manifest.json',
     createdAt: CREATED_AT,
-    dataModelRevision: 1,
+    dataModelRevision: 2,
     description: 'The self-hosted SRS meta-model (RFC-033): Field, Type, FieldAssignment, and value-objects expressed as SRS Type definitions. Frozen-seed source for docs/schema/2.0/{field,type}.json.',
     fields: FIELD_SPECS.map(([name]) => `fields/${name}.json`),
     id: PACKAGE_ID,
