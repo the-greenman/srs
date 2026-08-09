@@ -14,6 +14,7 @@
 
 | Rev | Date | Summary |
 |---|---|---|
+| 6 | 2026-08-09 | srs#242 Phase B cutover: the non-empty definition is re-based onto the RFC-039 carrier — a field is non-empty when its `Field.name` key is present in `fieldValues` with a value that is not the empty string ([R5]/[R5a], canonical I-132); the `fieldValues` array, `FieldAssignment.repeatable`, and `entries` clauses go with their constructs ([R7], I-134). `CrossFieldRule` continues to address fields by `fieldId` (a Type-level declaration, unaffected). |
 | 1 | 2026-07-09 | Initial draft — formalises the `validationRules` property and `CrossFieldRule` shape. |
 | 2 | 2026-07-09 | Address review findings. **Blocking:** (a) add R0 extension declaration gate; qualify R1–R10 to implementations declaring `ext:cross-field-validation`; (b) add Spec Record Changes section enumerating new invariant records; (c) add explicit non-date/non-number → error clause to R4. **Should-fix:** add "non-empty" definition; add R10 for wrong-context field presence → error; add predicateFieldId valueType restriction to R6; add ext:type-inheritance non-inheritance clause as R11; cross-reference I-10 and I-11. **Nits:** fix "Temporal direction" → "Ordering direction"; add rationale for fail-all evaluation; add rationale for no JSON Schema if-then-else. |
 | 3 | 2026-07-09 | Implementation started; RFC file committed to branch `rfc/019-cross-field-validation-rules-schema`; schema fix applied ("Temporal direction" → "Ordering direction" in `CrossFieldRuleEffect`). |

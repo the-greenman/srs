@@ -6,7 +6,7 @@
     "rfc_number": "007",
     "rfc_status": "accepted",
     "author": "Peter Brownell",
-    "affected_components": "`FieldGroup.compositeRenderer` dispatch; `groupFieldRowTemplates`; `compositeRendererConfig` on `ElementTemplates`.\n\n<!-- srs-integration:v1\next:field-groups\next:themes-l1\nschema:type.json\nschema:theme.json\n-->",
+    "affected_components": "`FieldGroup.compositeRenderer` dispatch; `groupFieldRowTemplates`; `compositeRendererConfig` on `ElementTemplates`.\n\n<!-- srs-integration:v1\next:themes-l1\nschema:type.json\nschema:theme.json\n-->",
     "proposal_artifact_path": "rfcs/rfc-007-composite-group-rendering.md",
     "content": "Adds a composite-renderer dispatch (`FieldGroup.compositeRenderer`, first value `table`) so structured groups render as composed output rather than raw rows, retroactively specifies `groupFieldRowTemplates`, and adds a generalised `compositeRendererConfig` surface on `ElementTemplates`. Full text: rfcs/rfc-007-composite-group-rendering.md."
   },

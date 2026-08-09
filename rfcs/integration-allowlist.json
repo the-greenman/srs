@@ -1,10 +1,6 @@
 {
   "$comment": "Grandfathered accepted/implemented RFCs whose primary normative artifact is not yet folded into the canonical spec (issue #204). Each MUST cite a follow-up issue tracking the fold. Allowlisting skips ONLY the integration-completeness check (that every declared manifest token resolves and the manifest is non-empty); status legality, proposal-artifact-path existence, and .md<->record status consistency stay enforced. New accepted RFCs may NOT be added here without review — the gate (scripts/check-rfc-integration.mjs) hard-fails otherwise. Remove an entry once its follow-up lands and the RFC's manifest fully resolves.",
   "grandfathered": {
-    "039": {
-      "issue": "the-greenman/srs#242",
-      "reason": "Phase A of #242 is design + migration plan only; by the issue's own process gate no schema file may be edited and no data migrated until the Phase-B cutover, so the RFC folds no canonical record or schema artifact yet. Its Schema-changes table and Fold-in targets section are the reviewed Phase-B contract (record/type/typed-record/document-view-output/theme + projection-rules, I-22..I-27 retired, new invariants for the checkable rules). #242 stays open through Phase B and is the follow-up; remove this entry when the fold lands."
-    },
     "038": {
       "issue": "the-greenman/srs#297",
       "reason": "RFC-038 is Accepted as the reviewed repository-authority and migration contract. Its normative schema, store, client, archive, and first-party corpus changes are deliberately implemented together by #297 after #242 Phase B; no partial generation-2 state is supported. Revision 7 resolves the complete first-party corpus boundary and migration dispositions. Remove this entry when #297 folds the contract into canonical records, schemas, implementations, and migrated artifacts."
