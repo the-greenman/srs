@@ -3449,6 +3449,11 @@
       "instanceId": "7bdbac1c-0bc5-4bcf-8d2b-37c583510ff3",
       "tier": 2,
       "path": "records/invariants/invariant-7bdbac1c.json"
+    },
+    {
+      "instanceId": "dfa099fc-fbbb-4e71-bcfa-840271b2bade",
+      "tier": 2,
+      "path": "records/rfc-decisions/section-purpose-deferral.json"
     }
   ],
   "container": {

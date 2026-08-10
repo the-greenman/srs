@@ -296,6 +296,14 @@ sidecar. When it is migrated:
 3. The **Purpose** facet needs a new field — `com.semanticops.spec/section-purpose` (a `text`
    field, likely `required`) added to the `section`/`subsection` types. Capturing purpose as a
    first-class field is the point of authoring the document this way.
+
+   > **Deferred, 2026-08-10.** This field is deliberately **not** minted during formation. The
+   > purpose concept is unconverged — four overlapping Fields already exist across three
+   > namespaces (`srs/summary`, `spec/summary`, `core/statement`, `srs/purpose`), none carrying
+   > the yardstick semantics this facet means — and Field identity is permanent. The discipline
+   > continues in prose; the decision is revisited before the first full public release. See the
+   > decision record **"Defer minting `section-purpose` until the purpose concept converges"** in
+   > the [RFC decision log](../../../docs/spec/rfcs/rfc-decision-log.md), and the-greenman/srs#329.
 4. `section-sequence` / `subsection-sequence` relations fix the ordering shown here.
 5. Every migrated record carries a `sourceRef` back to this document's `documentId`, preserving
    provenance.
