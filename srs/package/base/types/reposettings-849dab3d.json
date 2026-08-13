@@ -1,4 +1,5 @@
 {
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
   "aiGuidance": {
     "purpose": "Use to declare a repository's attachment policy: accepted MIME types and size limits for attached and source-document files. All fields are optional — absence of a field means no restriction for that dimension. Absence of the whole record means no restrictions at all."
   },

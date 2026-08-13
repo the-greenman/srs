@@ -60,5 +60,6 @@
   "version": "1.0.0",
   "views": [
     "views/decision-log-faebd240.json"
-  ]
+  ],
+  "dataModelRevision": 2
 }

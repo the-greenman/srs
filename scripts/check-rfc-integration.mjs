@@ -27,7 +27,8 @@
  *   4. for status in {accepted, implemented} and not grandfathered: the integration manifest is
  *      non-empty and every declared token resolves to an existing canonical record/schema.
  *
- * Plus a repo guard: the manifest instanceIndex must match the files on disk under records/.
+ * Plus a repo guard: every discovered instance parses and is reachable under a reserved
+ * instance root (RFC-038 [R1]/[R3] — the manifest no longer carries an instanceIndex).
  *
  * Grandfathered RFCs (rfcs/integration-allowlist.json) skip only check #4; #1–#3 stay live.
  *
@@ -36,6 +37,7 @@
 import { readFile, readdir } from "fs/promises";
 import { existsSync, statSync } from "fs";
 import { join, resolve } from "path";
+import { instancePaths } from "./lib/rfc-038-tree.mjs";
 
 const ROOT = resolve(new URL("..", import.meta.url).pathname); // srs repo root
 const REPO_ROOT = join(ROOT, "srs"); // the self-describing spec repo
@@ -114,8 +116,8 @@ export function parseIntegrationManifest(affectedComponents) {
 }
 
 async function buildResolvers() {
-  const manifest = await loadJson(MANIFEST);
-  const entries = manifest.instanceIndex ?? [];
+  // RFC-038 [R1]: the tree is membership authority; there is no instanceIndex to read.
+  const entries = await instancePaths(REPO_ROOT);
 
   const invariantNumbers = new Set();
   const extensionIds = new Set();
@@ -125,9 +127,7 @@ async function buildResolvers() {
   const indexedPaths = new Set();
   const rfcRecords = []; // { path, record } for every RFC-typed record, wherever it lives
 
-  for (const entry of entries) {
-    const relPath = typeof entry === "string" ? entry : entry.path;
-    if (!relPath) continue;
+  for (const relPath of entries) {
     indexedPaths.add(relPath);
     let record;
     try {
@@ -237,23 +237,10 @@ function parseMdStatus(mdText) {
 
 async function checkManifestSync(indexedPaths) {
   // Guard: every .json under records/ must be indexed, and every indexed record path must exist.
-  const onDisk = new Set();
-  async function walk(dir, base) {
-    for (const entry of await readdir(dir, { withFileTypes: true })) {
-      const abs = join(dir, entry.name);
-      const rel = base ? `${base}/${entry.name}` : entry.name;
-      if (entry.isDirectory()) await walk(abs, rel);
-      else if (entry.name.endsWith(".json")) onDisk.add(`records/${rel}`);
-    }
-  }
-  await walk(join(REPO_ROOT, "records"), "");
-  for (const p of onDisk) {
-    if (!indexedPaths.has(p)) fail(`manifest instanceIndex: on-disk record not indexed: ${p}`);
-  }
+  // Discovery is now the authority, so "indexed but missing" cannot arise. What can is a
+  // discovered file that fails to parse — [R5] makes that fatal under a reserved location.
   for (const p of indexedPaths) {
-    if (p.startsWith("records/") && !existsSync(join(REPO_ROOT, p))) {
-      fail(`manifest instanceIndex: indexed record missing on disk: ${p}`);
-    }
+    if (!existsSync(join(REPO_ROOT, p))) fail(`discovered instance vanished mid-run: ${p}`);
   }
 }
 

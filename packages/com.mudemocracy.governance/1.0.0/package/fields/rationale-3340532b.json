@@ -16,6 +16,9 @@
   "instructions": "Say what made this the right choice — the deciding factor, in two to four sentences. Focus on the outcome logic, not a blow-by-blow of the debate: this is here to remind your future selves, and anyone not in the room, why the choice made sense. Include the key evidence that tipped it.",
   "name": "rationale",
   "namespace": "governance",
-  "valueType": "text",
+  "fieldType": {
+    "datatype": "string",
+    "format": "plain"
+  },
   "version": 1
 }

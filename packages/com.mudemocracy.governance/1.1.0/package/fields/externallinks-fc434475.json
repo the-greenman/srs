@@ -14,6 +14,10 @@
   "id": "fc434475-b25e-46d5-8536-c2cc2e4e5f98",
   "name": "external_links",
   "namespace": "governance",
-  "valueType": "url",
+  "fieldType": {
+    "datatype": "string",
+    "format": "uri",
+    "cardinality": "list"
+  },
   "version": 1
 }

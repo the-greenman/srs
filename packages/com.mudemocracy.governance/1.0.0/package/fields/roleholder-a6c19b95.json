@@ -7,6 +7,8 @@
   "id": "a6c19b95-4f8f-5b07-93f8-3426c545277e",
   "name": "role_holder",
   "namespace": "governance",
-  "valueType": "string",
+  "fieldType": {
+    "datatype": "string"
+  },
   "version": 1
 }

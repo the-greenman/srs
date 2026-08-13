@@ -65,9 +65,9 @@ async function buildManifest() {
       mode: 'local',
       path: 'package'
     },
-    instanceIndex: recordFiles.sort(),
-    sourceDocumentIndex: sourceDocFiles.sort(),
-    relationsPath: 'relations/relations.json',
+    // RFC-038 [R2]: instanceIndex / sourceDocumentIndex / relationsPath are retired and
+    // denied at generation 2. Membership is the tree; relations are one file each.
+    dataModelRevision: 2,
     sourceDocumentsPath: 'source-documents',
     declaredExtensions: [
       'ext:lifecycle',

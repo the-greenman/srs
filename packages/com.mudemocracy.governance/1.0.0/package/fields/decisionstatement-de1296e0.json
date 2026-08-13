@@ -15,6 +15,9 @@
   "instructions": "Write the settled commitment as one clear sentence in the active voice — start with “We will…” or “We have decided to…” so the outcome is unmistakable. Capture what was agreed, not the discussion around it, and make it specific enough to act on: name the who, what, and when where they were agreed.",
   "name": "decision_statement",
   "namespace": "governance",
-  "valueType": "text",
+  "fieldType": {
+    "datatype": "string",
+    "format": "plain"
+  },
   "version": 1
 }

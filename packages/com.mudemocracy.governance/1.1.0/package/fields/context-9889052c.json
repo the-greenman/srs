@@ -16,6 +16,9 @@
   "instructions": "Set the scene: what happened before, and the limits you are working within — prior agreements, history, or constraints like budget, law, or deadlines. Explain the environment the group is in now. Do not name the problem itself here — that goes in Friction; context is the backdrop, not the pain.",
   "name": "context",
   "namespace": "governance",
-  "valueType": "text",
+  "fieldType": {
+    "datatype": "string",
+    "format": "plain"
+  },
   "version": 1
 }

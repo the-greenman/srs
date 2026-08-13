@@ -16,6 +16,9 @@
   "instructions": "List the options that had genuine support, including doing nothing. Do not write “none” or leave it blank — if there was no competing proposal, the real alternative was leaving things as they are, so state what would have happened if you had not decided. Keep distinct options distinct rather than blending them into one.",
   "name": "alternatives_considered",
   "namespace": "governance",
-  "valueType": "text",
+  "fieldType": {
+    "datatype": "string",
+    "format": "plain"
+  },
   "version": 1
 }

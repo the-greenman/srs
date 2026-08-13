@@ -15,6 +15,8 @@
   "instructions": "Give the decision a short, scannable label — a few words naming the topic, not a full sentence. Write it as the subject of the decision (e.g. “Meeting frequency for pilot”), not as “We will…”. It is what people see first in a list, so make it recognisable at a glance.",
   "name": "title",
   "namespace": "governance",
-  "valueType": "string",
+  "fieldType": {
+    "datatype": "string"
+  },
   "version": 1
 }

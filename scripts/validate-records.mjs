@@ -10,6 +10,7 @@
 import { readFile, readdir } from 'fs/promises';
 import { join, resolve } from 'path';
 import { loadSchema, validateJsonSchema } from './lib/json-schema-lite.mjs';
+import { loadRelations } from './lib/rfc-038-tree.mjs';
 
 const ROOT = resolve('.');
 const SCHEMA_DIR = join(ROOT, 'docs/schema/2.0');
@@ -73,26 +74,11 @@ async function loadInstalledRelationTypes() {
 }
 
 async function validateRelations(relDefs) {
-  const manifestPath = join(SRS_RECORDS_ROOT, 'manifest.json');
-  let manifest;
-  try {
-    manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
-  } catch {
-    return;
-  }
-  const relationsPath = manifest.relationsPath ?? 'relations/relations.json';
-  const fullRelPath = join(SRS_RECORDS_ROOT, relationsPath);
-  let collection;
-  try {
-    collection = JSON.parse(await readFile(fullRelPath, 'utf8'));
-  } catch {
-    return;
-  }
+  // RFC-038 [R11]: one Relation per file under relations/. There is no relationsPath.
+  const loaded = await loadRelations(SRS_RECORDS_ROOT);
+  console.log(`  Checking ${loaded.length} relations against installed definitions...`);
 
-  const relations = collection.relations ?? [];
-  console.log(`  Checking ${relations.length} relations against installed definitions...`);
-
-  for (const relation of relations) {
+  for (const { path: relationsPath, relation } of loaded) {
     const rt = relation.relationType;
     if (!rt) {
       errors.push(`${relationsPath}: relation ${relation.relationId ?? '(unknown)'} missing relationType`);
