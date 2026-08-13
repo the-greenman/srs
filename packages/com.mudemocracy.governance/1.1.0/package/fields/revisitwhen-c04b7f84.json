@@ -16,6 +16,9 @@
   "instructions": "Describe how you will know this decision may no longer be working — the conditions or events that should trigger a review, tied to your “why”. Avoid setting only a date: a bare “review in December” is weaker than a condition like “if attendance drops below three for two meetings running”. A date can anchor a condition, but should not replace one.",
   "name": "revisit_when",
   "namespace": "governance",
-  "valueType": "text",
+  "fieldType": {
+    "datatype": "string",
+    "format": "plain"
+  },
   "version": 1
 }

@@ -7,6 +7,9 @@
   "id": "3c39ee1f-6fe0-5da7-a0b6-928aa3a63211",
   "name": "boundary",
   "namespace": "governance",
-  "valueType": "text",
+  "fieldType": {
+    "datatype": "string",
+    "format": "plain"
+  },
   "version": 1
 }

@@ -1,213 +1,4 @@
 {
-  "srsj": "1",
-  "manifest": {
-    "$schema": "https://srs.semanticops.com/schema/2.0/manifest.json",
-    "container": {
-      "containerId": "4e4c9501-2709-4220-bb47-486f6f78a937",
-      "identityInstanceId": "ad159754-2edd-4bf8-a70f-a29a617e5809",
-      "title": "Limoma"
-    },
-    "containerIndex": [
-      {
-        "containerId": "4e4c9501-2709-4220-bb47-486f6f78a937",
-        "path": "containers/4e4c9501-2709-4220-bb47-486f6f78a937.json",
-        "title": "Limoma"
-      },
-      {
-        "containerId": "f7562aa3-98c7-44be-b4c5-5474df6441f2",
-        "containerType": "document",
-        "path": "containers/f7562aa3-98c7-44be-b4c5-5474df6441f2.json",
-        "title": "Articles"
-      },
-      {
-        "containerId": "b30db206-e9a7-4588-a9aa-53451aacd243",
-        "containerType": "document",
-        "path": "containers/b30db206-e9a7-4588-a9aa-53451aacd243.json",
-        "title": "Roles"
-      },
-      {
-        "containerId": "138e2fac-6a8a-4a06-9511-5aefd99ceae9",
-        "containerType": "decision_log",
-        "path": "containers/138e2fac-6a8a-4a06-9511-5aefd99ceae9.json",
-        "title": "Decision Log"
-      }
-    ],
-    "createdAt": "2026-07-14T09:54:47.961475594+00:00",
-    "dataModelRevision": 2,
-    "instanceIndex": [
-      {
-        "instanceId": "e4f2a891-3c7d-4b5e-9f12-8a6d0b1c2e3f",
-        "path": "records/notes/initial-brain-dump-e4f2a891.json",
-        "tags": [],
-        "tier": 0,
-        "title": "Initial brain dump"
-      },
-      {
-        "instanceId": "ad159754-2edd-4bf8-a70f-a29a617e5809",
-        "path": "records/tier-2/article-ad159754.json",
-        "tier": 2
-      },
-      {
-        "instanceId": "31291422-cd8b-4840-b884-d55023d938cb",
-        "path": "records/tier-2/article-31291422.json",
-        "tier": 2
-      },
-      {
-        "instanceId": "7560efe9-27e3-4186-8b9d-6ab48283f1df",
-        "path": "records/tier-2/article-7560efe9.json",
-        "tier": 2
-      },
-      {
-        "instanceId": "0482c489-37b4-4342-adaa-36e69dc6f780",
-        "path": "records/tier-2/article-0482c489.json",
-        "tier": 2
-      },
-      {
-        "instanceId": "c503fae5-c3ab-452e-a0b4-5682ca204288",
-        "path": "records/tier-2/article-c503fae5.json",
-        "tier": 2
-      },
-      {
-        "instanceId": "cc58c0dd-8e3a-4dc5-9b58-f3273911a9a9",
-        "path": "records/tier-2/article-cc58c0dd.json",
-        "tier": 2
-      },
-      {
-        "instanceId": "5bbf9209-1dc9-44b2-b0a3-f2192db5a879",
-        "path": "records/tier-2/role-5bbf9209.json",
-        "tier": 2
-      },
-      {
-        "instanceId": "8ed62308-f7b4-47e1-b1a2-5490908efd86",
-        "path": "records/tier-2/role-8ed62308.json",
-        "tier": 2
-      },
-      {
-        "instanceId": "448d64d4-ae82-4971-b027-3b78b9c7a90a",
-        "path": "records/tier-2/role-448d64d4.json",
-        "tier": 2
-      },
-      {
-        "instanceId": "9054911c-5285-4c3e-8198-4b9650169001",
-        "path": "records/tier-2/decision-9054911c.json",
-        "tags": [
-          "governance"
-        ],
-        "tier": 2
-      },
-      {
-        "instanceId": "eb4024a0-486f-4d64-a4e4-5d80297129d2",
-        "path": "records/tier-2/decision-eb4024a0.json",
-        "tags": [
-          "space",
-          "installation"
-        ],
-        "tier": 2
-      },
-      {
-        "instanceId": "3be7b057-9167-42a4-b0db-2a8b30666cef",
-        "path": "records/tier-2/decision-3be7b057.json",
-        "tags": [
-          "space",
-          "installation"
-        ],
-        "tier": 2
-      },
-      {
-        "instanceId": "9af57e54-03fb-4625-9a4c-8d2a254ff2b7",
-        "path": "records/tier-2/decision-9af57e54.json",
-        "tags": [
-          "artists",
-          "finance"
-        ],
-        "tier": 2
-      },
-      {
-        "instanceId": "4a989562-4a9d-4c86-a365-91bf14d55f06",
-        "path": "records/tier-2/decision-4a989562.json",
-        "tags": [
-          "governance"
-        ],
-        "tier": 2
-      },
-      {
-        "instanceId": "dd715d4a-8640-4641-b79d-e44f728c547b",
-        "path": "records/tier-2/decision-dd715d4a.json",
-        "tags": [
-          "governance"
-        ],
-        "tier": 2
-      },
-      {
-        "instanceId": "a9ca11cf-fd34-4901-b5f6-51e20737cb56",
-        "path": "records/tier-2/decision-a9ca11cf.json",
-        "tags": [
-          "governance"
-        ],
-        "tier": 2
-      },
-      {
-        "instanceId": "bf64442b-1e2b-4597-95e7-a665439c7f6f",
-        "path": "records/tier-2/decision-log-bf64442b.json",
-        "tier": 2
-      },
-      {
-        "instanceId": "2fba1783-f3f2-42a6-8d67-d39601e27241",
-        "path": "records/tier-2/decision-2fba1783.json",
-        "tags": [
-          "governance"
-        ],
-        "tier": 2
-      },
-      {
-        "instanceId": "38501856-26a5-4227-a877-eada79ce591a",
-        "path": "records/tier-2/decision-38501856.json",
-        "tags": [
-          "branding"
-        ],
-        "tier": 2
-      },
-      {
-        "instanceId": "2235c7d8-3f25-4774-bf2c-408e499bd8a6",
-        "path": "records/tier-2/decision-2235c7d8.json",
-        "tags": [
-          "finance"
-        ],
-        "tier": 2
-      },
-      {
-        "instanceId": "728ef118-d796-409d-a58d-2fb062a0b976",
-        "path": "records/tier-2/decision-728ef118.json",
-        "tags": [
-          "branding"
-        ],
-        "tier": 2
-      },
-      {
-        "instanceId": "d8599dd7-e8d7-45d1-a192-d1a0ac97f8d5",
-        "path": "records/tier-2/decision-d8599dd7.json",
-        "tags": [
-          "governance"
-        ],
-        "tier": 2
-      },
-      {
-        "instanceId": "e8e5ea7e-de96-4e94-b8d5-800df14b0b9e",
-        "path": "records/notes/tags-as-topic-convention-e8e5ea7e.json",
-        "tags": [
-          "convention",
-          "topic",
-          "browsing"
-        ],
-        "tier": 0,
-        "title": "tags-as-topic convention"
-      }
-    ],
-    "namespace": "com.limoma",
-    "repositoryId": "8ae058dc-b52d-4e52-8e7e-969018532a04",
-    "srsVersion": "2.0-draft",
-    "title": "Limoma"
-  },
   "data": {
     "containers/138e2fac-6a8a-4a06-9511-5aefd99ceae9.json": {
       "containerId": "138e2fac-6a8a-4a06-9511-5aefd99ceae9",
@@ -232,18 +23,6 @@
         "bf64442b-1e2b-4597-95e7-a665439c7f6f"
       ],
       "title": "Decision Log"
-    },
-    "containers/4e4c9501-2709-4220-bb47-486f6f78a937.json": {
-      "containerId": "4e4c9501-2709-4220-bb47-486f6f78a937",
-      "memberInstanceIds": [
-        "ad159754-2edd-4bf8-a70f-a29a617e5809",
-        "5bbf9209-1dc9-44b2-b0a3-f2192db5a879",
-        "bf64442b-1e2b-4597-95e7-a665439c7f6f"
-      ],
-      "rootInstanceIds": [
-        "ad159754-2edd-4bf8-a70f-a29a617e5809"
-      ],
-      "title": "Limoma"
     },
     "containers/b30db206-e9a7-4588-a9aa-53451aacd243.json": {
       "containerId": "b30db206-e9a7-4588-a9aa-53451aacd243",
@@ -333,6 +112,7 @@
       "version": 1
     },
     "package/document-views/articles-and-roles-78b11038.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/document-view.json",
       "createdAt": "2026-05-31T00:00:00Z",
       "description": "Renders the Articles of Association together with the current role holders.",
       "format": "markdown",
@@ -370,6 +150,7 @@
       "version": 1
     },
     "package/document-views/decision-deliberation-5a3ce87e.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/document-view.json",
       "createdAt": "2026-05-31T00:00:00Z",
       "description": "Full deliberation view — shows all fields including question, context, friction, alternatives, requirements, statement, rationale, next steps, owner, revisit, and status.",
       "format": "markdown",
@@ -392,6 +173,7 @@
       "version": 1
     },
     "package/document-views/decision-log-b5c8d124.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/document-view.json",
       "createdAt": "2026-05-31T00:00:00Z",
       "description": "Decision log view — compact summary showing only decision statement, alternatives considered, rationale, and revisit trigger.",
       "format": "markdown",
@@ -453,6 +235,9 @@
       "version": 1
     },
     "package/fields/amendmentrule-1f01bc6b.json": {
+      "aiGuidance": {
+        "purpose": ""
+      },
       "createdAt": "2026-05-26T00:00:00Z",
       "description": "The process or conditions under which this article may be amended or repealed.",
       "fieldType": {
@@ -465,6 +250,9 @@
       "version": 1
     },
     "package/fields/articlenumber-60be1468.json": {
+      "aiGuidance": {
+        "purpose": ""
+      },
       "createdAt": "2026-05-26T00:00:00Z",
       "description": "Stable local reference identifier for the article, e.g. A-001.",
       "fieldType": {
@@ -476,6 +264,9 @@
       "version": 1
     },
     "package/fields/articletext-8aa3eba2.json": {
+      "aiGuidance": {
+        "purpose": ""
+      },
       "createdAt": "2026-05-26T00:00:00Z",
       "description": "The operative text of the article.",
       "fieldType": {
@@ -488,6 +279,9 @@
       "version": 1
     },
     "package/fields/authority-d25da548.json": {
+      "aiGuidance": {
+        "purpose": ""
+      },
       "createdAt": "2026-05-26T00:00:00Z",
       "description": "What this role may decide or act on without requiring group agreement.",
       "fieldType": {
@@ -500,6 +294,9 @@
       "version": 1
     },
     "package/fields/boundary-3c39ee1f.json": {
+      "aiGuidance": {
+        "purpose": ""
+      },
       "createdAt": "2026-05-26T00:00:00Z",
       "description": "The limits of this role — where the role's authority ends or must be shared.",
       "fieldType": {
@@ -591,6 +388,7 @@
       "createdAt": "2026-06-26T00:00:00Z",
       "description": "External reference URLs attached to this decision — documents, minutes, or other materials that provide rationale or context.",
       "fieldType": {
+        "cardinality": "list",
         "datatype": "string",
         "format": "uri"
       },
@@ -688,6 +486,9 @@
       "version": 1
     },
     "package/fields/protectedstatus-0df40543.json": {
+      "aiGuidance": {
+        "purpose": ""
+      },
       "createdAt": "2026-05-26T00:00:00Z",
       "description": "Whether this article is protected from ordinary amendment by the group.",
       "fieldType": {
@@ -745,6 +546,9 @@
       "version": 1
     },
     "package/fields/roleholder-a6c19b95.json": {
+      "aiGuidance": {
+        "purpose": ""
+      },
       "createdAt": "2026-05-26T00:00:00Z",
       "description": "The person, team, group, or function currently holding this role.",
       "fieldType": {
@@ -756,6 +560,9 @@
       "version": 1
     },
     "package/fields/sourceofauthority-9a32dc01.json": {
+      "aiGuidance": {
+        "purpose": ""
+      },
       "createdAt": "2026-05-26T00:00:00Z",
       "description": "How this authority was conferred: inherited, delegated, elected, appointed, constitutional, etc.",
       "fieldType": {
@@ -820,7 +627,7 @@
       "namespace": "governance",
       "version": 1
     },
-    "package/lifecycles/governancelifecycle-3c504040.json": {
+    "package/lifecycles/governance-lifecycle-3c504040.json": {
       "createdAt": "2026-06-08T00:00:00Z",
       "description": "Shared governance lifecycle for Articles, Roles, and Decisions. A record is drafted, proposed to the group, and ratified once agreed. Ratified records either close (obligation discharged), are superseded by a successor, or are abandoned (withdrawn without a successor). closed, superseded, and abandoned are final.",
       "id": "3c504040-7920-43aa-8fbd-eda21dc7c07b",
@@ -859,7 +666,10 @@
           "id": "ec97cea2-9d19-4940-b101-75282f37fa50",
           "isFinal": true,
           "key": "superseded",
-          "label": "Superseded"
+          "label": "Superseded",
+          "requiresRelation": {
+            "relationType": "supersedes"
+          }
         },
         {
           "description": "Proposed or ratified record withdrawn without a successor.",
@@ -962,40 +772,206 @@
         "fields/authority-d25da548.json",
         "fields/boundary-3c39ee1f.json",
         "fields/sourceofauthority-9a32dc01.json",
-        "fields/externallinks-fc434475.json",
-        "fields/statement-3b000001.json",
-        "fields/title-3b000002.json"
+        "fields/externallinks-fc434475.json"
       ],
       "id": "90677fae-16a7-49ec-8aee-1872cbf8e381",
       "lifecycles": [
-        "lifecycles/governancelifecycle-3c504040.json"
+        "lifecycles/governance-lifecycle-3c504040.json"
       ],
       "name": "governance-core",
       "namespace": "com.limoma",
+      "protocols": [
+        "protocols/decision-7a088176.json"
+      ],
       "relationTypes": [
-        "relation-types/delegates-31c82363.json",
+        "relation-types/precedes-b24aaf29.json",
         "relation-types/derived-from-36b78f14.json",
         "relation-types/evidences-35c7aba2.json",
-        "relation-types/precedes-b24aaf29.json",
+        "relation-types/delegates-31c82363.json",
         "relation-types/supersedes-6e86ebd3.json"
       ],
       "status": "active",
-      "themes": [],
       "title": "governance-core",
       "types": [
         "types/decision-1fcad6a2.json",
         "types/article-a1142ac3.json",
         "types/role-e53dce11.json",
-        "types/decisionlog-5a061505.json",
-        "types/purpose-3c000001.json"
+        "types/decisionlog-5a061505.json"
       ],
       "version": "1.0.0",
       "views": [
         "views/decision-log-faebd240.json"
+      ]
+    },
+    "package/protocols/decision-7a088176.json": {
+      "protocolCreatedAt": "2026-06-25T00:00:00Z",
+      "protocolDescription": "Nine-stage facilitation protocol for capturing a governance decision: from scene-setting through deliberation to the settled commitment, rationale, review triggers, and follow-up actions.",
+      "protocolId": "7a088176-977f-4ed9-9d0e-f8608c8a944b",
+      "protocolName": "decision",
+      "protocolNamespace": "governance",
+      "protocolStages": [
+        {
+          "aiGuidance": "Look for background information stated before the decision point: prior agreements, historical context, changes in circumstances, or what happened to prompt this discussion. Extract the scene, not the problem. Do not include the friction or problem itself — that belongs in the Friction stage.",
+          "completionCriteria": "The scene is set: prior agreements, historical context, or the trigger event are described without naming the problem itself.",
+          "contributesTo": [
+            {
+              "fieldId": "9889052c-9313-5e2f-a2ac-15baa3c6983e"
+            }
+          ],
+          "dependsOn": [],
+          "name": "Background",
+          "order": 1,
+          "purpose": "Establishes the history, constraints, and trigger event that make this decision matter — the scene before the problem itself is named.",
+          "question": "What is the history or circumstance that makes this decision necessary?",
+          "stageId": "5e15928e-23b4-4057-a7a4-650d3a8ac0db"
+        },
+        {
+          "aiGuidance": "Look for expressions of frustration, tension, or a named gap in current practice. The friction answers why this needs to be decided today. Extract it as a concrete condition, not a wish. Do not describe what the group wants to do about the friction — that belongs in Alternatives or the Decision Statement.",
+          "completionCriteria": "A concrete forcing function is named — not what the group wants to do about it, but why it cannot be left unresolved.",
+          "contributesTo": [
+            {
+              "fieldId": "1a1c0a5d-a1df-5d03-95f2-32af73bb71da"
+            }
+          ],
+          "dependsOn": [
+            "5e15928e-23b4-4057-a7a4-650d3a8ac0db"
+          ],
+          "name": "Friction",
+          "order": 2,
+          "purpose": "Names the specific pain, conflict, or gap that is forcing a decision right now — the concrete thing that cannot be left unresolved.",
+          "question": "What is the specific problem, tension, or gap that makes this decision necessary today?",
+          "stageId": "611a1a55-a804-4d7f-9e6c-59b0d347d448"
+        },
+        {
+          "aiGuidance": "Look for the moment someone names what is actually being decided: 'so the question is...', 'what we are deciding is...', or an implicit framing that narrows discussion to one choice point. If no explicit question was stated, infer the minimal question the decision statement answers.",
+          "completionCriteria": "One specific question is stated that the decision statement will directly answer.",
+          "contributesTo": [
+            {
+              "fieldId": "73cd845a-3623-5bc6-8ade-42a7cd64740c"
+            }
+          ],
+          "dependsOn": [
+            "611a1a55-a804-4d7f-9e6c-59b0d347d448"
+          ],
+          "name": "Decision question",
+          "order": 3,
+          "purpose": "Narrows the discussion to one concrete choice point — the single question the decision statement will directly answer.",
+          "question": "What is the single concrete question this decision settles?",
+          "stageId": "c5b159ef-e997-42ac-beef-70c1940a6755"
+        },
+        {
+          "aiGuidance": "Look for options mentioned, proposals floated, or alternatives explicitly compared. Include any option that received real consideration, even if dismissed quickly. Include doing nothing or no change if the group acknowledged it. Do not write 'none' unless truly no alternatives were discussed. Do not merge distinct alternatives into a single blended option.",
+          "completionCriteria": "All options that received real consideration are listed, including any 'do nothing' option if the group acknowledged it. Distinct alternatives are not merged.",
+          "contributesTo": [
+            {
+              "fieldId": "636ce948-2110-57b4-a3ed-04354ec17843"
+            }
+          ],
+          "dependsOn": [
+            "c5b159ef-e997-42ac-beef-70c1940a6755"
+          ],
+          "name": "Alternatives",
+          "order": 4,
+          "purpose": "Records the genuine options the group weighed before settling on a direction — including doing nothing — to show the decision was a real choice, not a foregone conclusion.",
+          "question": "What options did the group genuinely consider, including the status quo?",
+          "stageId": "413d4b43-6fec-41d0-8867-a1949a3b58f8"
+        },
+        {
+          "aiGuidance": "Look for statements about what matters most, explicit trade-offs named, objections raised, and any disagreement about the decision or its criteria. Extract both the criteria used and any tension between them.",
+          "completionCriteria": "The criteria used to evaluate options are named, along with any tension between criteria or recorded objections.",
+          "contributesTo": [
+            {
+              "fieldId": "a952604c-d150-5315-bfc1-7229ddc1d636"
+            }
+          ],
+          "dependsOn": [
+            "c5b159ef-e997-42ac-beef-70c1940a6755"
+          ],
+          "name": "Key requirements",
+          "order": 5,
+          "purpose": "Captures the judging criteria, trade-offs acknowledged, and any recorded disagreement that shaped how the alternatives were evaluated.",
+          "question": "What standards, constraints, and trade-offs guided the evaluation of options?",
+          "stageId": "8e46b286-ef7d-4c1f-ac5d-45fba6f30dcc"
+        },
+        {
+          "aiGuidance": "Look for the moment agreement is reached — signalled by 'so we are agreed', 'let us go with', or a direct statement of resolution. Extract the commitment itself, not the discussion around it. One sentence.",
+          "completionCriteria": "One concise, active-voice sentence states the settled commitment. It directly answers the decision question.",
+          "contributesTo": [
+            {
+              "fieldId": "de1296e0-e083-58d9-97a0-cb2b91fec02e"
+            }
+          ],
+          "dependsOn": [
+            "413d4b43-6fec-41d0-8867-a1949a3b58f8",
+            "8e46b286-ef7d-4c1f-ac5d-45fba6f30dcc"
+          ],
+          "name": "Verdict",
+          "order": 6,
+          "purpose": "Records the settled commitment — what the group agreed to do — in one concise, active-voice sentence.",
+          "question": "What did the group agree to do?",
+          "stageId": "4f3e5d2e-2236-46bf-b92a-b3f8fda44af1"
+        },
+        {
+          "aiGuidance": "Look for statements about why the group chose what they chose: the reasoning given for the final decision, what made this option preferable to the others. Capture the outcome logic, not the deliberation process. Do not write a blow-by-blow account of the discussion. Do not include objections that were not ultimately deciding factors.",
+          "completionCriteria": "One to three sentences capture the core reasoning that made this option preferable. The rationale is the deciding logic, not a summary of the meeting.",
+          "contributesTo": [
+            {
+              "fieldId": "3340532b-d845-5e54-92b3-819ed05365c5"
+            }
+          ],
+          "dependsOn": [
+            "4f3e5d2e-2236-46bf-b92a-b3f8fda44af1"
+          ],
+          "name": "Why",
+          "order": 7,
+          "purpose": "Explains the deciding factor — why this option was chosen over the alternatives. Captures the outcome logic, not the deliberation process.",
+          "question": "Why did the group choose this option over the alternatives?",
+          "stageId": "ae9bbedc-ea0e-4611-b3c9-445c954424c0"
+        },
+        {
+          "aiGuidance": "Look for statements about when to revisit, what would change the decision, or what review conditions were set. Prefer condition-based triggers, which may reference a date as an anchor. Avoid bare dates without a condition — 'revisit in December' is weaker than 'revisit if attendance consistently drops or at the end of the pilot period'.",
+          "completionCriteria": "A condition-based trigger is named. Bare dates without a condition are insufficient — dates may anchor a condition but should not replace one.",
+          "contributesTo": [
+            {
+              "fieldId": "c04b7f84-9a55-5353-8c9f-2b62f6a1e34e"
+            }
+          ],
+          "dependsOn": [
+            "4f3e5d2e-2236-46bf-b92a-b3f8fda44af1"
+          ],
+          "name": "Review triggers",
+          "order": 8,
+          "purpose": "Names the condition or event that should trigger a review of this decision — tied to the underlying reasoning so the review moment is meaningful.",
+          "question": "Under what conditions or at what event should this decision be revisited?",
+          "stageId": "d7451c29-44f5-43c2-92c2-dc2f0d3697fa"
+        },
+        {
+          "aiGuidance": "Look for action assignments after the decision point: 'X will do Y by Z', 'the first step is...', or concrete commitments. Extract owner and timing if named.",
+          "completionCriteria": "Follow-up actions are listed with named owners and timing where stated. May be empty if no follow-up actions were recorded.",
+          "contributesTo": [
+            {
+              "fieldId": "4181f210-f4be-5587-950e-890eda2a5590"
+            }
+          ],
+          "dependsOn": [
+            "4f3e5d2e-2236-46bf-b92a-b3f8fda44af1"
+          ],
+          "name": "Next steps",
+          "order": 9,
+          "purpose": "Lists concrete follow-up actions that emerge from the decision, with named owners and timing where stated.",
+          "question": "What concrete actions follow from this decision, and who owns them?",
+          "stageId": "adb176b6-cc16-4ee9-b791-8dde3a6c18c4"
+        }
       ],
-      "vocabularies": []
+      "protocolTags": [
+        "governance",
+        "decision"
+      ],
+      "protocolTargetType": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
+      "protocolVersion": 1
     },
     "package/relation-types/delegates-31c82363.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation-type.json",
       "category": "governance",
       "createdAt": "2026-05-31T00:00:00Z",
       "description": "Source delegates responsibility or authority to target.",
@@ -1006,6 +982,7 @@
       "version": 1
     },
     "package/relation-types/derived-from-36b78f14.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation-type.json",
       "category": "derivation",
       "createdAt": "2026-05-31T00:00:00Z",
       "description": "Target was derived or adapted from source.",
@@ -1016,6 +993,7 @@
       "version": 1
     },
     "package/relation-types/evidences-35c7aba2.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation-type.json",
       "category": "evidence",
       "createdAt": "2026-05-31T00:00:00Z",
       "description": "Source provides evidence for or supports the target.",
@@ -1026,6 +1004,7 @@
       "version": 1
     },
     "package/relation-types/precedes-b24aaf29.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation-type.json",
       "category": "sequence",
       "createdAt": "2026-05-31T00:00:00Z",
       "description": "Source comes before target in a sequence.",
@@ -1037,6 +1016,7 @@
       "version": 1
     },
     "package/relation-types/supersedes-6e86ebd3.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation-type.json",
       "canonicalDirection": "source is the newer record; target is the older record being superseded",
       "category": "governance",
       "createdAt": "2026-05-31T00:00:00Z",
@@ -1049,6 +1029,7 @@
       "version": 1
     },
     "package/types/article-a1142ac3.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
       "createdAt": "2026-05-26T00:00:00Z",
       "description": "A durable governance rule, boundary, constitutional clause, or standing commitment.",
       "fields": [
@@ -1102,6 +1083,7 @@
       "version": 1
     },
     "package/types/decision-1fcad6a2.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
       "createdAt": "2026-05-25T00:00:00Z",
       "description": "A settled commitment, choice, policy, or direction of action.",
       "fields": [
@@ -1185,6 +1167,7 @@
       "version": 1
     },
     "package/types/decisionlog-5a061505.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
       "createdAt": "2026-06-25T00:00:00Z",
       "description": "Header root record for a decision-log container. Carries the log title and acts as the typed anchor for RFC-009 rootTypeRefs dispatch.",
       "fields": [
@@ -1228,6 +1211,7 @@
       "version": 1
     },
     "package/types/role-e53dce11.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
       "createdAt": "2026-05-26T00:00:00Z",
       "description": "An authority boundary. Defines who may decide or act on what, without requiring group agreement.",
       "fields": [
@@ -1275,6 +1259,7 @@
       "version": 1
     },
     "package/views/decision-log-faebd240.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/view.json",
       "createdAt": "2026-06-01T00:00:00Z",
       "description": "Compact decision log field view showing statement, alternatives, rationale, and revisit trigger.",
       "fieldViews": [
@@ -1384,11 +1369,11 @@
     "records/tier-2/article-0482c489.json": {
       "createdAt": "2026-05-31T14:55:35.184158383+00:00",
       "fieldValues": {
+        "amendment_rule": "Unanimous agreement of all current members.",
         "article_number": "A-004",
-        "title": "How we make decisions",
         "article_text": "Decisions are made by talk and agreement. We do not vote. Where we cannot agree, the matter stays open or is recorded as an exercise. Once a decision is agreed, it is written down in the decision log and does not change silently — a new decision supersedes an old one by name. These Articles may be amended by unanimous agreement of all current members. The Clerk is responsible for maintaining the coherence of the record.",
         "rationale": "Writing things down is the mechanism by which we hold ourselves accountable and remain honest with artists who exhibit with us.",
-        "amendment_rule": "Unanimous agreement of all current members."
+        "title": "How we make decisions"
       },
       "instanceId": "0482c489-37b4-4342-adaa-36e69dc6f780",
       "lifecycleState": "ratified",
@@ -1401,11 +1386,11 @@
     "records/tier-2/article-31291422.json": {
       "createdAt": "2026-05-31T14:55:35.173940496+00:00",
       "fieldValues": {
+        "amendment_rule": "Unanimous agreement of all current members.",
         "article_number": "A-002",
-        "title": "What we are here to do",
         "article_text": "LiMoMa exists to curate, install, and maintain a rotating display of artwork in the back stairwell and landings of the building. We select work, agree on placement, and manage the practical business of mounting and demounting. We are not a commercial gallery: we do not sell work on behalf of artists, take commission, or enter into financial relationships with artists in exchange for showing their work.",
         "rationale": "Stating what we are not — a commercial gallery — is as important as stating what we are. This protects artists who exhibit with us and is honest about our amateur, community basis.",
-        "amendment_rule": "Unanimous agreement of all current members."
+        "title": "What we are here to do"
       },
       "instanceId": "31291422-cd8b-4840-b884-d55023d938cb",
       "lifecycleState": "ratified",
@@ -1418,10 +1403,10 @@
     "records/tier-2/article-7560efe9.json": {
       "createdAt": "2026-05-31T14:55:35.178917705+00:00",
       "fieldValues": {
+        "amendment_rule": "Unanimous agreement of all current members. Admission of a new member requires unanimous agreement.",
         "article_number": "A-003",
-        "title": "Who we are",
         "article_text": "The founding members of LiMoMa are Sam Hayder, Immo Klink, Peter Brownell, and Brian. New members may be admitted by agreement of all current members. Membership carries no financial obligation. Any member may resign at any time without formality. The group has no quorum rules during the pilot phase: decisions require that all members have had a reasonable opportunity to be heard.",
-        "amendment_rule": "Unanimous agreement of all current members. Admission of a new member requires unanimous agreement."
+        "title": "Who we are"
       },
       "instanceId": "7560efe9-27e3-4186-8b9d-6ab48283f1df",
       "lifecycleState": "ratified",
@@ -1434,11 +1419,11 @@
     "records/tier-2/article-ad159754.json": {
       "createdAt": "2026-05-31T14:55:35.167441369+00:00",
       "fieldValues": {
+        "amendment_rule": "Unanimous agreement of all current members.",
         "article_number": "A-001",
-        "title": "What this is",
         "article_text": "LiMoMa — the Limehouse Museum of Maybe Art — is a community gallery initiative that uses the back stairs and landings of Limehouse Town Hall as a space for exhibiting artwork. It exists as a voluntary association of members with no formal legal status. The pilot runs for six months from June 2026.",
         "rationale": "The name and definition set the frame for all subsequent decisions. 'Maybe Art' signals that the space is exploratory — not a conventional gallery with commercial or institutional expectations.",
-        "amendment_rule": "Unanimous agreement of all current members."
+        "title": "What this is"
       },
       "instanceId": "ad159754-2edd-4bf8-a70f-a29a617e5809",
       "lifecycleState": "ratified",
@@ -1451,12 +1436,12 @@
     "records/tier-2/article-c503fae5.json": {
       "createdAt": "2026-05-31T14:55:35.188976549+00:00",
       "fieldValues": {
-        "article_number": "A-005",
-        "title": "Care of the building",
-        "article_text": "We will leave the building in no worse condition than we found it. Installation work must be carried out carefully: minimum drilled holes, no continuous re-drilling into the same plaster, and all fixings made good when removed. The member with Building Authority (R-001) has final say on what is and is not acceptable. This article cannot be weakened or removed without the explicit agreement of the Party Utility.",
-        "rationale": "Our right to use this space depends on the trust of the Party Utility and the building community. Demonstrating care of the building is not optional — it is the basis on which the experiment is allowed to continue.",
         "amendment_rule": "Unanimous agreement of all current members AND agreement of the Party Utility.",
-        "protected_status": "Protected — requires Party Utility agreement to amend"
+        "article_number": "A-005",
+        "article_text": "We will leave the building in no worse condition than we found it. Installation work must be carried out carefully: minimum drilled holes, no continuous re-drilling into the same plaster, and all fixings made good when removed. The member with Building Authority (R-001) has final say on what is and is not acceptable. This article cannot be weakened or removed without the explicit agreement of the Party Utility.",
+        "protected_status": "Protected — requires Party Utility agreement to amend",
+        "rationale": "Our right to use this space depends on the trust of the Party Utility and the building community. Demonstrating care of the building is not optional — it is the basis on which the experiment is allowed to continue.",
+        "title": "Care of the building"
       },
       "instanceId": "c503fae5-c3ab-452e-a0b4-5682ca204288",
       "lifecycleState": "ratified",
@@ -1469,11 +1454,11 @@
     "records/tier-2/article-cc58c0dd.json": {
       "createdAt": "2026-05-31T14:55:35.192383646+00:00",
       "fieldValues": {
+        "amendment_rule": "Unanimous agreement of all current members.",
         "article_number": "A-006",
-        "title": "On ending",
         "article_text": "When LiMoMa closes — whether at the end of the pilot, by group decision, or by necessity — the group will: (1) return all artworks to their makers within a reasonable period; (2) remove or make good all fixings and mounts; (3) leave no unresolved commitments to artists, the building, or third parties; (4) transfer any remaining shared funds to the Party Utility for building improvement. The Clerk is responsible for ensuring these obligations are discharged and recorded.",
         "rationale": "Ending cleanly is a commitment we make to artists before they show with us, not something we work out at the end. This article makes that commitment concrete.",
-        "amendment_rule": "Unanimous agreement of all current members."
+        "title": "On ending"
       },
       "instanceId": "cc58c0dd-8e3a-4dc5-9b58-f3273911a9a9",
       "lifecycleState": "ratified",
@@ -1486,8 +1471,8 @@
     "records/tier-2/decision-2235c7d8.json": {
       "createdAt": "2026-06-28T21:50:00.602193713+00:00",
       "fieldValues": {
-        "title": "Approve 2026 Q1 budget",
-        "decision_statement": "Approve the Q1 operating budget as circulated."
+        "decision_statement": "Approve the Q1 operating budget as circulated.",
+        "title": "Approve 2026 Q1 budget"
       },
       "instanceId": "2235c7d8-3f25-4774-bf2c-408e499bd8a6",
       "lifecycleState": "closed",
@@ -1503,8 +1488,8 @@
     "records/tier-2/decision-2fba1783.json": {
       "createdAt": "2026-06-28T21:50:00.555546787+00:00",
       "fieldValues": {
-        "title": "Trial async standups",
-        "decision_statement": "Adopt async written standups for one month, then review."
+        "decision_statement": "Adopt async written standups for one month, then review.",
+        "title": "Trial async standups"
       },
       "instanceId": "2fba1783-f3f2-42a6-8d67-d39601e27241",
       "lifecycleState": "draft",
@@ -1520,8 +1505,8 @@
     "records/tier-2/decision-38501856.json": {
       "createdAt": "2026-06-28T21:50:00.570223896+00:00",
       "fieldValues": {
-        "title": "Original branding palette",
-        "decision_statement": "Use the teal/orange palette for all materials."
+        "decision_statement": "Use the teal/orange palette for all materials.",
+        "title": "Original branding palette"
       },
       "instanceId": "38501856-26a5-4227-a877-eada79ce591a",
       "lifecycleState": "superseded",
@@ -1537,9 +1522,9 @@
     "records/tier-2/decision-3be7b057.json": {
       "createdAt": "2026-05-31T14:55:35.210869640+00:00",
       "fieldValues": {
-        "title": "Eye level standard",
         "decision_statement": "Centre of all works at 165cm from floor. Standard for all installations unless the curatorial lead specifies otherwise for a particular show.",
-        "rationale": "Establishes a consistent baseline that removes ad-hoc judgement from each installation. Curatorial override preserved where needed."
+        "rationale": "Establishes a consistent baseline that removes ad-hoc judgement from each installation. Curatorial override preserved where needed.",
+        "title": "Eye level standard"
       },
       "instanceId": "3be7b057-9167-42a4-b0db-2a8b30666cef",
       "lifecycleState": "ratified",
@@ -1556,14 +1541,14 @@
     "records/tier-2/decision-4a989562.json": {
       "createdAt": "2026-05-31T14:55:35.216705494+00:00",
       "fieldValues": {
-        "title": "Phase 1 scope",
-        "decision_question": "Should Phase 1 cover the full stairwell including the main hallway, or just the back stairs and landings?",
-        "context": "The back stairs have a large amount of wall space across multiple landings. The main hallway was also discussed as a potential exhibition space, but adding it in Phase 1 would significantly increase the scope of the first experiment.",
-        "friction": "Taking on too much in Phase 1 risks overextending the group's capacity before the mounting system and workflow have been tested.",
         "alternatives_considered": "Including the main hallway in Phase 1. Deferred to Phase 2.",
+        "context": "The back stairs have a large amount of wall space across multiple landings. The main hallway was also discussed as a potential exhibition space, but adding it in Phase 1 would significantly increase the scope of the first experiment.",
+        "decision_question": "Should Phase 1 cover the full stairwell including the main hallway, or just the back stairs and landings?",
         "decision_statement": "Phase 1 covers the back stairs and landings only. The main hallway is explicitly deferred to Phase 2, contingent on Phase 1 working well.",
+        "friction": "Taking on too much in Phase 1 risks overextending the group's capacity before the mounting system and workflow have been tested.",
         "rationale": "Starting smaller allows the group to test the mounting system, workflow, and artist relations before expanding. The main hallway is more visible and involves more parties.",
-        "revisit_when": "December 2026 pilot review — if Phase 1 is working, bring main hallway into scope for Phase 2."
+        "revisit_when": "December 2026 pilot review — if Phase 1 is working, bring main hallway into scope for Phase 2.",
+        "title": "Phase 1 scope"
       },
       "instanceId": "4a989562-4a9d-4c86-a365-91bf14d55f06",
       "lifecycleState": "ratified",
@@ -1579,8 +1564,8 @@
     "records/tier-2/decision-728ef118.json": {
       "createdAt": "2026-07-10T20:21:16.308769233+00:00",
       "fieldValues": {
-        "title": "Revised branding palette",
-        "decision_statement": "Use the warm neutral palette for all materials, replacing the original teal/orange."
+        "decision_statement": "Use the warm neutral palette for all materials, replacing the original teal/orange.",
+        "title": "Revised branding palette"
       },
       "instanceId": "728ef118-d796-409d-a58d-2fb062a0b976",
       "lifecycleState": "ratified",
@@ -1596,11 +1581,11 @@
     "records/tier-2/decision-9054911c.json": {
       "createdAt": "2026-05-31T14:55:35.204278944+00:00",
       "fieldValues": {
-        "title": "Pilot duration and review",
+        "alternatives_considered": "Open-ended pilot with no fixed review date — judged too likely to drift.",
         "decision_statement": "Six-month pilot, June to December 2026. At the end of that period the group meets to decide what comes next: continue, extend, change scope, or close.",
         "rationale": "A defined lifespan makes the review real rather than optional. Open-ended pilots drift without a moment of explicit recommitment.",
-        "alternatives_considered": "Open-ended pilot with no fixed review date — judged too likely to drift.",
-        "revisit_when": "December 2026. The review meeting produces a new decision that either supersedes this one or records closure."
+        "revisit_when": "December 2026. The review meeting produces a new decision that either supersedes this one or records closure.",
+        "title": "Pilot duration and review"
       },
       "instanceId": "9054911c-5285-4c3e-8198-4b9650169001",
       "lifecycleState": "ratified",
@@ -1616,10 +1601,10 @@
     "records/tier-2/decision-9af57e54.json": {
       "createdAt": "2026-05-31T14:55:35.213599116+00:00",
       "fieldValues": {
-        "title": "Artist liability",
-        "decision_statement": "Artists retain ownership of and responsibility for their own work. The project does not insure exhibited work. Artists are informed of this before agreeing to show.",
         "context": "The back stairwell cannot be locked — it is also a fire escape route. There is no practical mechanism to insure or protect work against theft or accidental damage in an open-access space.",
-        "rationale": "Artists must make their own insurance decisions. The project is not in a position to take on liability for others' work and is not a commercial operation. Informing artists upfront keeps the arrangement honest."
+        "decision_statement": "Artists retain ownership of and responsibility for their own work. The project does not insure exhibited work. Artists are informed of this before agreeing to show.",
+        "rationale": "Artists must make their own insurance decisions. The project is not in a position to take on liability for others' work and is not a commercial operation. Informing artists upfront keeps the arrangement honest.",
+        "title": "Artist liability"
       },
       "instanceId": "9af57e54-03fb-4625-9a4c-8d2a254ff2b7",
       "lifecycleState": "ratified",
@@ -1636,11 +1621,11 @@
     "records/tier-2/decision-a9ca11cf.json": {
       "createdAt": "2026-05-31T14:55:35.221994141+00:00",
       "fieldValues": {
-        "title": "Closure obligations",
-        "decision_question": "What specific obligations do we commit to if and when the project closes?",
         "context": "The founding meeting discussed the importance of being honest with artists about what happens if the project ends. Article A-006 states the constitutional commitment; this decision makes it operational and specific.",
+        "decision_question": "What specific obligations do we commit to if and when the project closes?",
         "decision_statement": "On closure the group commits to: (1) returning all artworks to their makers within 14 days of the closure decision; (2) making good all fixings and mounts within 28 days; (3) settling any outstanding commitments to artists before disbanding; (4) transferring any remaining group funds to the Party Utility. The Clerk records when each obligation is discharged.",
-        "rationale": "Specific timelines make the commitment real. Without them, 'we will return work' is a statement of intent that can drift indefinitely."
+        "rationale": "Specific timelines make the commitment real. Without them, 'we will return work' is a statement of intent that can drift indefinitely.",
+        "title": "Closure obligations"
       },
       "instanceId": "a9ca11cf-fd34-4901-b5f6-51e20737cb56",
       "lifecycleState": "ratified",
@@ -1656,10 +1641,10 @@
     "records/tier-2/decision-d8599dd7.json": {
       "createdAt": "2026-07-14T09:50:54.548959916+00:00",
       "fieldValues": {
-        "title": "Fixed schedule for all working groups",
+        "decision_question": "Can we reduce friction around scheduling if all working groups meet at the same time?",
         "decision_statement": "All working groups will meet on a fixed fortnightly schedule to be coordinated centrally.",
         "rationale": "Intended to reduce scheduling overhead by standardising meeting cadence across groups.",
-        "decision_question": "Can we reduce friction around scheduling if all working groups meet at the same time?"
+        "title": "Fixed schedule for all working groups"
       },
       "instanceId": "d8599dd7-e8d7-45d1-a192-d1a0ac97f8d5",
       "lifecycleState": "abandoned",
@@ -1675,12 +1660,12 @@
     "records/tier-2/decision-dd715d4a.json": {
       "createdAt": "2026-05-31T14:55:35.219217083+00:00",
       "fieldValues": {
-        "title": "Curatorial lead for Phase 1",
-        "decision_question": "Who will take the curatorial lead role for Phase 1, selecting and placing the work?",
         "context": "The group agreed that a single named person should lead curatorial decisions during Phase 1 to avoid decisions-by-committee on what is shown. The role was discussed as a practical necessity to get the first show up.",
+        "decision_question": "Who will take the curatorial lead role for Phase 1, selecting and placing the work?",
         "decision_statement": "Immo Klink is the curatorial lead for Phase 1. Immo has authority to select which works are shown and to decide their placement in the space, subject to Building Authority approval of any installation method.",
         "rationale": "Immo is the most experienced exhibitor in the group and is providing the first show's work. Having a single decision-maker for curation avoids gridlock and makes the show happen.",
-        "revisit_when": "December 2026 pilot review. The role may be rotated, shared, or redefined for Phase 2."
+        "revisit_when": "December 2026 pilot review. The role may be rotated, shared, or redefined for Phase 2.",
+        "title": "Curatorial lead for Phase 1"
       },
       "instanceId": "dd715d4a-8640-4641-b79d-e44f728c547b",
       "lifecycleState": "ratified",
@@ -1696,16 +1681,16 @@
     "records/tier-2/decision-eb4024a0.json": {
       "createdAt": "2026-05-31T14:55:35.208193625+00:00",
       "fieldValues": {
-        "title": "Mounting system",
-        "decision_question": "Should we install permanent fixings in the stairwell walls, or use a removable or flexible mounting approach for each show?",
-        "context": "The stairwell is an old building with plaster walls. The group had already been hanging art informally using various ad-hoc methods. A six-month pilot gallery experiment was being planned, requiring a repeatable and durable solution. The building is a shared cooperative space, so any approach must protect the walls and be acceptable to the wider building.",
-        "friction": "The walls crumble when repeatedly drilled — every new hole degrades the plaster further. There is currently no consistent hanging system, so each person uses whatever is to hand (blue tack, tape, random screws), which looks poor and provides no standard for the pilot gallery. Something needs to be installed once and reused across shows.",
         "alternatives_considered": "Hanging rails — inflexible, institutional-looking, poor fit for the angles in this stairwell. Command strips — fail on these walls, require grease-free surface, come off after about a week. Bolt systems — overkill for the weights involved. Sacrificial backing boards — interesting but adds complexity; may revisit for Phase 2. Central suspension from ceiling/beam — technically interesting but complex to engineer safely.",
-        "key_requirements": "Must not continuously damage old plaster walls (non-negotiable). Must accommodate different artwork sizes, weights, and formats across multiple shows. Must look intentional — not like a DIY bodge — when fixings are not in use. Must be simple enough to install correctly the first time. Should protect the building, which is a shared cooperative space. Aesthetics vs practicality was the main tension discussed: the group accepted a slightly visible fixing system in exchange for durability and flexibility.",
+        "context": "The stairwell is an old building with plaster walls. The group had already been hanging art informally using various ad-hoc methods. A six-month pilot gallery experiment was being planned, requiring a repeatable and durable solution. The building is a shared cooperative space, so any approach must protect the walls and be acceptable to the wider building.",
+        "decision_question": "Should we install permanent fixings in the stairwell walls, or use a removable or flexible mounting approach for each show?",
         "decision_statement": "Permanent 6mm wall plugs (brown equivalent) with screws, drilled once and left in place. Typically two screws per position. Caps or covers fabricated for unused fixings between shows.",
+        "friction": "The walls crumble when repeatedly drilled — every new hole degrades the plaster further. There is currently no consistent hanging system, so each person uses whatever is to hand (blue tack, tape, random screws), which looks poor and provides no standard for the pilot gallery. Something needs to be installed once and reused across shows.",
+        "key_requirements": "Must not continuously damage old plaster walls (non-negotiable). Must accommodate different artwork sizes, weights, and formats across multiple shows. Must look intentional — not like a DIY bodge — when fixings are not in use. Must be simple enough to install correctly the first time. Should protect the building, which is a shared cooperative space. Aesthetics vs practicality was the main tension discussed: the group accepted a slightly visible fixing system in exchange for durability and flexibility.",
+        "next_steps": "Brian to sketch mounting ideas and share with the group. Trial 6mm plugs in back stairwell as Phase 1 experiment. Fabricate decorative caps for unused fixings between shows. Phase 2 approach for main hallway to be decided separately.",
         "rationale": "Repeated drilling degrades these walls faster than permanent fixings. Once drilled correctly, the plug can be reused indefinitely. Keeping a cap on unused fixings means the system looks intentional between shows rather than abandoned.",
         "revisit_when": "Wall condition deteriorates significantly, or Phase 2 requires a different approach for the main hallway.",
-        "next_steps": "Brian to sketch mounting ideas and share with the group. Trial 6mm plugs in back stairwell as Phase 1 experiment. Fabricate decorative caps for unused fixings between shows. Phase 2 approach for main hallway to be decided separately."
+        "title": "Mounting system"
       },
       "instanceId": "eb4024a0-486f-4d64-a4e4-5d80297129d2",
       "lifecycleState": "ratified",
@@ -1735,11 +1720,11 @@
     "records/tier-2/role-448d64d4.json": {
       "createdAt": "2026-05-31T14:55:35.200802911+00:00",
       "fieldValues": {
-        "title": "R-003 Clerk",
-        "role_holder": "Peter Brownell",
         "authority": "May write up and maintain the decision log, Articles, and role records. May flag when a proposed action appears inconsistent with a recorded decision or article. Responsible for ensuring that Article A-006 (On ending) obligations are discharged when the time comes.",
         "boundary": "Cannot decide what is shown or how it is installed. The Clerk's role is to maintain the record faithfully — not to determine its content. Cannot amend a decision unilaterally; can only record what the group has agreed.",
-        "source_of_authority": "Established by Article A-004 (How we make decisions)."
+        "role_holder": "Peter Brownell",
+        "source_of_authority": "Established by Article A-004 (How we make decisions).",
+        "title": "R-003 Clerk"
       },
       "instanceId": "448d64d4-ae82-4971-b027-3b78b9c7a90a",
       "lifecycleState": "ratified",
@@ -1752,11 +1737,11 @@
     "records/tier-2/role-5bbf9209.json": {
       "createdAt": "2026-05-31T14:55:35.195104906+00:00",
       "fieldValues": {
-        "title": "R-001 Building Authority",
-        "role_holder": "Sam Hayder",
         "authority": "May decide what fixings and mounting methods are acceptable for the physical fabric of the building. May halt or reverse installation work that risks damage to walls, plaster, or structural elements. Has final say on whether a proposed intervention is safe and appropriate.",
         "boundary": "Cannot decide what artwork is shown or how it is curated — that is the Curatorial Lead's authority. Cannot commit the group to structural changes without Party Utility agreement. Cannot override A-005 (Care of the building).",
-        "source_of_authority": "Inherited from the Party Utility, who granted access to the back stairs and entrusted Sam with responsibility for the physical space."
+        "role_holder": "Sam Hayder",
+        "source_of_authority": "Inherited from the Party Utility, who granted access to the back stairs and entrusted Sam with responsibility for the physical space.",
+        "title": "R-001 Building Authority"
       },
       "instanceId": "5bbf9209-1dc9-44b2-b0a3-f2192db5a879",
       "lifecycleState": "ratified",
@@ -1769,12 +1754,12 @@
     "records/tier-2/role-8ed62308.json": {
       "createdAt": "2026-05-31T14:55:35.198208984+00:00",
       "fieldValues": {
-        "title": "R-002 Curatorial Lead",
-        "role_holder": "Immo Klink",
         "authority": "May select which works are exhibited and which artists are invited to show during Phase 1. May decide placement and arrangement within the space, subject to Building Authority approval of any installation method. May set the thematic direction of a show.",
         "boundary": "Cannot approve installation methods or fixings — that is Building Authority. Cannot commit to showing work that would require structural changes not yet approved. Cannot enter financial agreements on behalf of the group.",
+        "revisit_when": "December 2026 pilot review.",
+        "role_holder": "Immo Klink",
         "source_of_authority": "Delegated by the founding group at the founding meeting, May 2026. Role is Phase 1 scoped — to be reviewed at the pilot review in December 2026.",
-        "revisit_when": "December 2026 pilot review."
+        "title": "R-002 Curatorial Lead"
       },
       "instanceId": "8ed62308-f7b4-47e1-b1a2-5490908efd86",
       "lifecycleState": "ratified",
@@ -1784,129 +1769,161 @@
       "typeVersion": 1,
       "updatedAt": "2026-06-08T21:05:18.757652487+00:00"
     },
-    "relations/relations-collection.json": {
-      "$schema": "https://srs.semanticops.com/schema/2.0/relations-collection.json",
-      "relations": [
-        {
-          "createdAt": "2026-05-25T00:00:00Z",
-          "relationId": "0d58b710-526e-416f-971a-585176d2acb2",
-          "relationType": "precedes",
-          "sourceInstanceId": "5bbf9209-1dc9-44b2-b0a3-f2192db5a879",
-          "targetInstanceId": "bf64442b-1e2b-4597-95e7-a665439c7f6f"
-        },
-        {
-          "createdAt": "2026-05-31T00:00:00Z",
-          "relationId": "33bafd90-6748-47dd-a302-3c06f22fbe05",
-          "relationType": "precedes",
-          "sourceInstanceId": "ad159754-2edd-4bf8-a70f-a29a617e5809",
-          "targetInstanceId": "31291422-cd8b-4840-b884-d55023d938cb"
-        },
-        {
-          "createdAt": "2026-05-31T00:00:00Z",
-          "relationId": "96d89162-fbf7-4036-a38c-3b09452ec073",
-          "relationType": "precedes",
-          "sourceInstanceId": "31291422-cd8b-4840-b884-d55023d938cb",
-          "targetInstanceId": "7560efe9-27e3-4186-8b9d-6ab48283f1df"
-        },
-        {
-          "createdAt": "2026-05-31T00:00:00Z",
-          "relationId": "ae90c407-4b89-444c-b55c-c47c321d620d",
-          "relationType": "precedes",
-          "sourceInstanceId": "7560efe9-27e3-4186-8b9d-6ab48283f1df",
-          "targetInstanceId": "0482c489-37b4-4342-adaa-36e69dc6f780"
-        },
-        {
-          "createdAt": "2026-05-31T00:00:00Z",
-          "relationId": "9271b98a-0993-4c15-8a03-c500e8ce1c03",
-          "relationType": "precedes",
-          "sourceInstanceId": "0482c489-37b4-4342-adaa-36e69dc6f780",
-          "targetInstanceId": "c503fae5-c3ab-452e-a0b4-5682ca204288"
-        },
-        {
-          "createdAt": "2026-05-31T00:00:00Z",
-          "relationId": "b5806157-21bf-4304-a6be-fb648f38e6a4",
-          "relationType": "precedes",
-          "sourceInstanceId": "c503fae5-c3ab-452e-a0b4-5682ca204288",
-          "targetInstanceId": "cc58c0dd-8e3a-4dc5-9b58-f3273911a9a9"
-        },
-        {
-          "createdAt": "2026-05-31T00:00:00Z",
-          "relationId": "3163376c-b056-464a-87e9-f31f0067a1d3",
-          "relationType": "derived-from",
-          "sourceInstanceId": "448d64d4-ae82-4971-b027-3b78b9c7a90a",
-          "targetInstanceId": "0482c489-37b4-4342-adaa-36e69dc6f780"
-        },
-        {
-          "createdAt": "2026-05-31T00:00:00Z",
-          "relationId": "74329aa8-bda6-4d4d-a67b-61466eb0028a",
-          "relationType": "derived-from",
-          "sourceInstanceId": "9054911c-5285-4c3e-8198-4b9650169001",
-          "targetInstanceId": "31291422-cd8b-4840-b884-d55023d938cb"
-        },
-        {
-          "createdAt": "2026-05-31T00:00:00Z",
-          "relationId": "9f3638e9-08cd-483b-9f11-b8b2e791d7f6",
-          "relationType": "derived-from",
-          "sourceInstanceId": "a9ca11cf-fd34-4901-b5f6-51e20737cb56",
-          "targetInstanceId": "cc58c0dd-8e3a-4dc5-9b58-f3273911a9a9"
-        },
-        {
-          "createdAt": "2026-05-31T00:00:00Z",
-          "relationId": "e458157d-6f9a-4c56-92d6-25954780c664",
-          "relationType": "evidences",
-          "sourceInstanceId": "eb4024a0-486f-4d64-a4e4-5d80297129d2",
-          "targetInstanceId": "c503fae5-c3ab-452e-a0b4-5682ca204288"
-        },
-        {
-          "createdAt": "2026-05-31T00:00:00Z",
-          "relationId": "c7a2f118-c201-4296-8ed0-8aac2e86b9ef",
-          "relationType": "evidences",
-          "sourceInstanceId": "4a989562-4a9d-4c86-a365-91bf14d55f06",
-          "targetInstanceId": "c503fae5-c3ab-452e-a0b4-5682ca204288"
-        },
-        {
-          "createdAt": "2026-05-31T00:00:00Z",
-          "relationId": "749dc20a-ba74-4f39-b619-5869a652e616",
-          "relationType": "evidences",
-          "sourceInstanceId": "9af57e54-03fb-4625-9a4c-8d2a254ff2b7",
-          "targetInstanceId": "c503fae5-c3ab-452e-a0b4-5682ca204288"
-        },
-        {
-          "createdAt": "2026-05-31T00:00:00Z",
-          "relationId": "fa46f4c2-ef60-4f26-82bc-f28d3f99bf75",
-          "relationType": "delegates",
-          "sourceInstanceId": "0482c489-37b4-4342-adaa-36e69dc6f780",
-          "targetInstanceId": "8ed62308-f7b4-47e1-b1a2-5490908efd86"
-        },
-        {
-          "createdAt": "2026-05-31T00:00:00Z",
-          "relationId": "e1967251-6eca-45e9-a95c-b6c6d36f9518",
-          "relationType": "delegates",
-          "sourceInstanceId": "0482c489-37b4-4342-adaa-36e69dc6f780",
-          "targetInstanceId": "5bbf9209-1dc9-44b2-b0a3-f2192db5a879"
-        },
-        {
-          "createdAt": "2026-05-31T00:00:00Z",
-          "relationId": "a069348a-c079-43a3-afd8-5e2633c8993a",
-          "relationType": "evidences",
-          "sourceInstanceId": "dd715d4a-8640-4641-b79d-e44f728c547b",
-          "targetInstanceId": "8ed62308-f7b4-47e1-b1a2-5490908efd86"
-        },
-        {
-          "createdAt": "2026-05-31T00:00:00Z",
-          "relationId": "783716de-7cf3-49c5-8c35-b2e46f247ea2",
-          "relationType": "evidences",
-          "sourceInstanceId": "3be7b057-9167-42a4-b0db-2a8b30666cef",
-          "targetInstanceId": "8ed62308-f7b4-47e1-b1a2-5490908efd86"
-        },
-        {
-          "createdAt": "2026-07-10T20:21:16.309673628+00:00",
-          "relationId": "b46b5ff3-8295-4503-b116-1aee36b07a5e",
-          "relationType": "supersedes",
-          "sourceInstanceId": "728ef118-d796-409d-a58d-2fb062a0b976",
-          "targetInstanceId": "38501856-26a5-4227-a877-eada79ce591a"
-        }
-      ]
+    "relations/0d58b710-526e-416f-971a-585176d2acb2.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation.json",
+      "createdAt": "2026-05-25T00:00:00Z",
+      "relationId": "0d58b710-526e-416f-971a-585176d2acb2",
+      "relationType": "precedes",
+      "sourceInstanceId": "5bbf9209-1dc9-44b2-b0a3-f2192db5a879",
+      "targetInstanceId": "bf64442b-1e2b-4597-95e7-a665439c7f6f"
+    },
+    "relations/3163376c-b056-464a-87e9-f31f0067a1d3.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation.json",
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "3163376c-b056-464a-87e9-f31f0067a1d3",
+      "relationType": "derived-from",
+      "sourceInstanceId": "448d64d4-ae82-4971-b027-3b78b9c7a90a",
+      "targetInstanceId": "0482c489-37b4-4342-adaa-36e69dc6f780"
+    },
+    "relations/33bafd90-6748-47dd-a302-3c06f22fbe05.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation.json",
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "33bafd90-6748-47dd-a302-3c06f22fbe05",
+      "relationType": "precedes",
+      "sourceInstanceId": "ad159754-2edd-4bf8-a70f-a29a617e5809",
+      "targetInstanceId": "31291422-cd8b-4840-b884-d55023d938cb"
+    },
+    "relations/74329aa8-bda6-4d4d-a67b-61466eb0028a.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation.json",
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "74329aa8-bda6-4d4d-a67b-61466eb0028a",
+      "relationType": "derived-from",
+      "sourceInstanceId": "9054911c-5285-4c3e-8198-4b9650169001",
+      "targetInstanceId": "31291422-cd8b-4840-b884-d55023d938cb"
+    },
+    "relations/749dc20a-ba74-4f39-b619-5869a652e616.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation.json",
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "749dc20a-ba74-4f39-b619-5869a652e616",
+      "relationType": "evidences",
+      "sourceInstanceId": "9af57e54-03fb-4625-9a4c-8d2a254ff2b7",
+      "targetInstanceId": "c503fae5-c3ab-452e-a0b4-5682ca204288"
+    },
+    "relations/783716de-7cf3-49c5-8c35-b2e46f247ea2.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation.json",
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "783716de-7cf3-49c5-8c35-b2e46f247ea2",
+      "relationType": "evidences",
+      "sourceInstanceId": "3be7b057-9167-42a4-b0db-2a8b30666cef",
+      "targetInstanceId": "8ed62308-f7b4-47e1-b1a2-5490908efd86"
+    },
+    "relations/9271b98a-0993-4c15-8a03-c500e8ce1c03.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation.json",
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "9271b98a-0993-4c15-8a03-c500e8ce1c03",
+      "relationType": "precedes",
+      "sourceInstanceId": "0482c489-37b4-4342-adaa-36e69dc6f780",
+      "targetInstanceId": "c503fae5-c3ab-452e-a0b4-5682ca204288"
+    },
+    "relations/96d89162-fbf7-4036-a38c-3b09452ec073.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation.json",
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "96d89162-fbf7-4036-a38c-3b09452ec073",
+      "relationType": "precedes",
+      "sourceInstanceId": "31291422-cd8b-4840-b884-d55023d938cb",
+      "targetInstanceId": "7560efe9-27e3-4186-8b9d-6ab48283f1df"
+    },
+    "relations/9f3638e9-08cd-483b-9f11-b8b2e791d7f6.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation.json",
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "9f3638e9-08cd-483b-9f11-b8b2e791d7f6",
+      "relationType": "derived-from",
+      "sourceInstanceId": "a9ca11cf-fd34-4901-b5f6-51e20737cb56",
+      "targetInstanceId": "cc58c0dd-8e3a-4dc5-9b58-f3273911a9a9"
+    },
+    "relations/a069348a-c079-43a3-afd8-5e2633c8993a.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation.json",
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "a069348a-c079-43a3-afd8-5e2633c8993a",
+      "relationType": "evidences",
+      "sourceInstanceId": "dd715d4a-8640-4641-b79d-e44f728c547b",
+      "targetInstanceId": "8ed62308-f7b4-47e1-b1a2-5490908efd86"
+    },
+    "relations/ae90c407-4b89-444c-b55c-c47c321d620d.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation.json",
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "ae90c407-4b89-444c-b55c-c47c321d620d",
+      "relationType": "precedes",
+      "sourceInstanceId": "7560efe9-27e3-4186-8b9d-6ab48283f1df",
+      "targetInstanceId": "0482c489-37b4-4342-adaa-36e69dc6f780"
+    },
+    "relations/b46b5ff3-8295-4503-b116-1aee36b07a5e.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation.json",
+      "createdAt": "2026-07-10T20:21:16.309673628+00:00",
+      "relationId": "b46b5ff3-8295-4503-b116-1aee36b07a5e",
+      "relationType": "supersedes",
+      "sourceInstanceId": "728ef118-d796-409d-a58d-2fb062a0b976",
+      "targetInstanceId": "38501856-26a5-4227-a877-eada79ce591a"
+    },
+    "relations/b5806157-21bf-4304-a6be-fb648f38e6a4.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation.json",
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "b5806157-21bf-4304-a6be-fb648f38e6a4",
+      "relationType": "precedes",
+      "sourceInstanceId": "c503fae5-c3ab-452e-a0b4-5682ca204288",
+      "targetInstanceId": "cc58c0dd-8e3a-4dc5-9b58-f3273911a9a9"
+    },
+    "relations/c7a2f118-c201-4296-8ed0-8aac2e86b9ef.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation.json",
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "c7a2f118-c201-4296-8ed0-8aac2e86b9ef",
+      "relationType": "evidences",
+      "sourceInstanceId": "4a989562-4a9d-4c86-a365-91bf14d55f06",
+      "targetInstanceId": "c503fae5-c3ab-452e-a0b4-5682ca204288"
+    },
+    "relations/e1967251-6eca-45e9-a95c-b6c6d36f9518.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation.json",
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "e1967251-6eca-45e9-a95c-b6c6d36f9518",
+      "relationType": "delegates",
+      "sourceInstanceId": "0482c489-37b4-4342-adaa-36e69dc6f780",
+      "targetInstanceId": "5bbf9209-1dc9-44b2-b0a3-f2192db5a879"
+    },
+    "relations/e458157d-6f9a-4c56-92d6-25954780c664.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation.json",
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "e458157d-6f9a-4c56-92d6-25954780c664",
+      "relationType": "evidences",
+      "sourceInstanceId": "eb4024a0-486f-4d64-a4e4-5d80297129d2",
+      "targetInstanceId": "c503fae5-c3ab-452e-a0b4-5682ca204288"
+    },
+    "relations/fa46f4c2-ef60-4f26-82bc-f28d3f99bf75.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation.json",
+      "createdAt": "2026-05-31T00:00:00Z",
+      "relationId": "fa46f4c2-ef60-4f26-82bc-f28d3f99bf75",
+      "relationType": "delegates",
+      "sourceInstanceId": "0482c489-37b4-4342-adaa-36e69dc6f780",
+      "targetInstanceId": "8ed62308-f7b4-47e1-b1a2-5490908efd86"
     }
-  }
+  },
+  "manifest": {
+    "$schema": "https://srs.semanticops.com/schema/2.0/manifest.json",
+    "container": {
+      "containerId": "4e4c9501-2709-4220-bb47-486f6f78a937",
+      "identityInstanceId": "ad159754-2edd-4bf8-a70f-a29a617e5809",
+      "memberInstanceIds": [
+        "ad159754-2edd-4bf8-a70f-a29a617e5809",
+        "5bbf9209-1dc9-44b2-b0a3-f2192db5a879",
+        "bf64442b-1e2b-4597-95e7-a665439c7f6f"
+      ],
+      "title": "Limoma"
+    },
+    "createdAt": "2026-07-14T09:54:47.961475594+00:00",
+    "dataModelRevision": 2,
+    "namespace": "com.limoma",
+    "repositoryId": "8ae058dc-b52d-4e52-8e7e-969018532a04",
+    "srsVersion": "2.0-draft",
+    "title": "Limoma"
+  },
+  "srsj": "2"
 }

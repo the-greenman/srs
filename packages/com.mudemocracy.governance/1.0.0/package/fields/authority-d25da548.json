@@ -7,6 +7,9 @@
   "id": "d25da548-79d6-555b-8878-f40b685b3955",
   "name": "authority",
   "namespace": "governance",
-  "valueType": "text",
+  "fieldType": {
+    "datatype": "string",
+    "format": "plain"
+  },
   "version": 1
 }

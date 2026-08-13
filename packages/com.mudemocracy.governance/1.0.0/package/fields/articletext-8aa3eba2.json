@@ -7,6 +7,9 @@
   "id": "8aa3eba2-204b-5ebd-ba7a-be0f066027d6",
   "name": "article_text",
   "namespace": "governance",
-  "valueType": "text",
+  "fieldType": {
+    "datatype": "string",
+    "format": "plain"
+  },
   "version": 1
 }

@@ -19,6 +19,7 @@
 import { access, readdir, readFile } from 'fs/promises';
 import { join, resolve } from 'path';
 import { loadSchema, validateJsonSchema } from './lib/json-schema-lite.mjs';
+import { loadInstances, loadRelations } from './lib/rfc-038-tree.mjs';
 
 const SRS_ROOT = resolve(new URL('..', import.meta.url).pathname); // the srs repo root
 const REPO_ROOT = join(SRS_ROOT, 'srs'); // the self-describing spec repo
@@ -109,14 +110,11 @@ async function validatePackageWithSchemas(packageDir, fieldSchemaPath, typeSchem
 async function main() {
   console.log('Validating RFC process boundaries...');
 
-  const manifest = await loadJson(join(REPO_ROOT, 'manifest.json'));
-  const relationsCollection = await loadJson(join(REPO_ROOT, 'relations/relations.json'));
-  const relations = relationsCollection?.relations ?? [];
+  // RFC-038 [R1]/[R11]: membership is the tree and relations are one object per file.
+  const relations = (await loadRelations(REPO_ROOT)).map((r) => r.relation);
 
   const indexedRecords = new Map();
-  for (const indexEntry of manifest?.instanceIndex ?? []) {
-    const instancePath = typeof indexEntry === 'string' ? indexEntry : indexEntry.path;
-    const record = await loadJson(join(REPO_ROOT, instancePath));
+  for (const { record } of await loadInstances(REPO_ROOT)) {
     if (record?.instanceId) indexedRecords.set(record.instanceId, record);
   }
 
@@ -144,10 +142,10 @@ async function main() {
     const target = relation.targetInstanceId;
     const id = relation.relationId ?? '(unknown)';
     if (!indexedRecords.has(source)) {
-      errors.push(`relations/relations.json: ${id} has unknown RFC source ${source}`);
+      errors.push(`relations/: ${id} has unknown RFC source ${source}`);
     }
     if (!indexedRecords.has(target)) {
-      errors.push(`relations/relations.json: ${id} has unknown target ${target}`);
+      errors.push(`relations/: ${id} has unknown target ${target}`);
     }
   }
 

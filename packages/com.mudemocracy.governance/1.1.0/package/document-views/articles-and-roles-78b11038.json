@@ -1,4 +1,5 @@
 {
+  "$schema": "https://srs.semanticops.com/schema/2.0/document-view.json",
   "createdAt": "2026-05-31T00:00:00Z",
   "description": "Renders the Articles of Association together with the current role holders.",
   "format": "markdown",
@@ -15,8 +16,9 @@
       },
       "sectionId": "articles",
       "source": {
-        "containerId": "f7562aa3-98c7-44be-b4c5-5474df6441f2",
-        "type": "container-subset"
+        "type": "type-query",
+        "semanticObjectType": "governance/article",
+        "containerScope": "repository"
       },
       "title": "Articles of Association",
       "titleFieldId": "d7e82557-9045-5e92-a494-d99112bbec4a"
@@ -26,8 +28,9 @@
       "order": 1,
       "sectionId": "roles",
       "source": {
-        "containerId": "b30db206-e9a7-4588-a9aa-53451aacd243",
-        "type": "container-subset"
+        "type": "type-query",
+        "semanticObjectType": "governance/role",
+        "containerScope": "repository"
       },
       "title": "Roles",
       "titleFieldId": "d7e82557-9045-5e92-a494-d99112bbec4a"

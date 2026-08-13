@@ -28,12 +28,18 @@ import { join, resolve, relative } from "path";
 import { migrateFieldObject, validateFieldType } from "./lib/rfc-032-fieldtype.mjs";
 
 const ROOT = resolve(new URL("..", import.meta.url).pathname); // srs repo root
-// Live, migrating package trees. Released package artifacts under packages/<name>/<version>/ are
-// frozen and must not be rewritten in place (#286) — they migrate only if/when republished.
+// Live, migrating package trees. Released package artifacts under packages/<name>/<version>/ were
+// frozen by #286 and migrated only if/when republished — RFC-038 Revision 7 republishes both
+// com.mudemocracy.governance versions with their consumers in the #297 cutover, so they join the
+// roots here. They must migrate through THIS transform, not the Rust `field-type` rung: only this
+// one consults assignment-level `repeatable`, and governance/external_links is the sole field in
+// the corpus whose list-ness is expressed that way (#351).
 const PACKAGE_ROOTS = [
   join(ROOT, "srs", "package"),
   join(ROOT, "srs", "srs", "package"),
   join(ROOT, "docs", "spec", "examples", "gallery-project-v2", "package"),
+  join(ROOT, "packages", "com.mudemocracy.governance", "1.0.0", "package"),
+  join(ROOT, "packages", "com.mudemocracy.governance", "1.1.0", "package"),
 ];
 const CHECK = process.argv.includes("--check");
 

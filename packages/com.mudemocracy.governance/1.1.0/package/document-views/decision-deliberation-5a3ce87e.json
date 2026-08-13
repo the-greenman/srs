@@ -1,4 +1,5 @@
 {
+  "$schema": "https://srs.semanticops.com/schema/2.0/document-view.json",
   "createdAt": "2026-05-31T00:00:00Z",
   "description": "Full deliberation view — shows all fields including question, context, friction, alternatives, requirements, statement, rationale, next steps, owner, revisit, and status.",
   "format": "markdown",
@@ -11,8 +12,9 @@
       "order": 0,
       "sectionId": "decisions",
       "source": {
-        "containerId": "138e2fac-6a8a-4a06-9511-5aefd99ceae9",
-        "type": "container-subset"
+        "type": "type-query",
+        "semanticObjectType": "governance/decision",
+        "containerScope": "repository"
       },
       "title": "Decisions",
       "titleFieldId": "d7e82557-9045-5e92-a494-d99112bbec4a"

@@ -81,7 +81,10 @@ function build(outPath) {
       description:
         'An empty governance document: the canonical MuDemocracy governance package installed with zero records, ready for a clerk to capture their first decision.',
       packageRef: { mode: 'local', path: 'package' },
-      instanceIndex: [],
+      // RFC-038: membership is the tree, so the scaffolded manifest carries no
+      // instanceIndex ([R2] denies it) and declares the storage generation the
+      // package is at ([R21] rejects an absent revision as generation 0).
+      dataModelRevision: 2,
       createdAt: STAMP_TIME,
     };
     writeFileSync(join(repo, 'manifest.json'), `${JSON.stringify(sourceManifest, null, 2)}\n`);
