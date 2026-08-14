@@ -1696,13 +1696,28 @@ The URI scheme is implementation tooling (srs-rust ADR-037), built from existing
 | URI | Content |
 |---|---|
 | `srs://<repositoryId>/map` | Repo map: counts, package info, relation summary (JSON — same shape as `repo map`) |
-| `srs://<repositoryId>/navigation` | Identity record + ordered navigation sections (JSON — same as `repo navigation`) |
+| `srs://<repositoryId>/navigation` | Identity record + ordered navigation sections (JSON — same as `repo navigation`). `identity` is **optional** — see below |
 | `srs://<repositoryId>/record/{instanceId}` | One record, any tier (JSON; exposed as a resource template) |
 | `srs://<repositoryId>/container/<containerId>` | Container resolve-view: authored columns + ordered members (JSON — same as `container resolve-view`) |
 | `srs://<repositoryId>/view/<documentViewId>` | Rendered document view (markdown — same as `render document-view`) |
 | `srs://<repositoryId>/type/{typeId}` | Type authoring schema (JSON — same as `type schema`): properties are keyed by `Field.name` (RFC-039) and carry `x-srs-ai-guidance`, `x-srs-description`, `x-srs-instructions`; enumerated per type and available as a template |
 
 Containers, document views, and **types** are enumerated in `resources/list`; records are read through the template (discover instanceIds via the `find` tool or container resources).
+
+**`navigation.identity` is optional.** It is present only when the root container names an
+`identityInstanceId`. RFC-029 makes a root container without one **valid**, so an identity-less
+repository is a supported state, not a broken one — and in that case the `identity` key is **omitted
+from the JSON entirely** rather than emitted as an empty node. When it is absent:
+
+- every root-container member appears in `sections` (nothing is excluded as "the identity"), and
+- `diagnostics` carries a line naming the absent `identityInstanceId`.
+
+Do not treat a missing `identity` as an error, and do not substitute the first entry of `sections`
+for it — that inference is exactly what this contract removed (it presented an ordinary section as
+the repository's identity while silently dropping it from navigation). If your surface needs a
+headline for an identity-less repository, choose a presentation fallback in your own client. Set a
+real identity with `srs repo set-root-container --identity-instance-id <uuid>`, or run
+`srs repo migrate-identity` to mint a `com.semanticops.core/purpose` record.
 
 ### Tools
 
