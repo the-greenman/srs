@@ -1835,6 +1835,35 @@ This completes the fully UUID-anchored typed chain: `Blueprint.rootTypes → Doc
 
 **Migration:** existing Blueprint files whose `rootTypes` entries carry only `typeId` (no `typeVersion`) will fail `blueprint.json` schema validation and produce a diagnostic. Add the `typeVersion` integer to restore full ExactTypeRef conformance. An empty `rootTypes: []` array is valid.
 
+### Container membership must name an instance that exists ([R13]/[R24])
+
+`srs container roots add` and `srs container members add` require the instance id to resolve to a real instance in the repository. Create the Note or Record **first**, then add it to the container. An id that resolves to nothing is rejected with `ok: false`:
+
+```console
+$ srs container roots add --repo <path> <containerId> ""
+{"ok":false,"diagnostics":["invalid input: instance_id must not be empty"]}
+
+$ srs container roots add --repo <path> <containerId> dddddddd-dddd-4ddd-8ddd-dddddddddddd
+{"ok":false,"diagnostics":["instance not found: dddddddd-dddd-4ddd-8ddd-dddddddddddd"]}
+```
+
+This is stricter than it may look, and deliberately so. A `rootInstanceIds` / `memberInstanceIds` entry that resolves to nothing is a fatal `SRS038-R13-DANGLING-REFERENCE` diagnostic, and under [R24] a fatal diagnostic fails the *whole* catalog load — so persisting one does not break the container, it makes **every** command on the repository fail, including the ones you would use to inspect or undo it.
+
+**Recovery.** If a repository is already in that state (from an older binary, an import, or a hand-edited file), do **not** hand-edit JSON. Two commands still work, by design:
+
+1. `srs repo validate --repo <path>` — reports diagnostics rather than failing on them, and names both the offending container and the dangling id.
+2. `srs container roots remove` / `srs container members remove` — removal can only ever *reduce* the reference set, so it is treated as a repair operation and works on a repository nothing else can load.
+
+```console
+$ srs repo validate --repo <path>
+{"ok":false,"diagnostics":["[containers/c-2222.json] SRS038-R13-DANGLING-REFERENCE: container rootInstanceIds 'dddddddd-…' resolves to nothing in the instance set"]}
+
+$ srs container roots remove --repo <path> <containerId> dddddddd-dddd-4ddd-8ddd-dddddddddddd
+{"ok":true,...}                                    # repository loads again
+```
+
+Note that `srs container create` and `srs container update` take the membership list wholesale and are checked less strictly — they reject a blank id but still accept a well-formed id that resolves to nothing. Run `srs repo validate` after either.
+
 ### Presentational vs semantic ordering (RFC-015 [N+28]–[N+29])
 Do not create `precedes` relations to achieve a presentational goal. `precedes` is the SRS relation for semantic sequence — the kind of ordering where a different arrangement would be semantically *wrong* (e.g. Step 1 must precede Step 2). For purely presentational ordering (newest-first decisions, manual curation, display preference), use `ordering.memberOrder` on a `container-subset` DocumentView section:
 
