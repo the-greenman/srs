@@ -51,7 +51,11 @@ function isExcluded(abs) {
   return EXCLUDED.some((e) => path === e || path.startsWith(`${e}/`));
 }
 
-/** Both carriers a Field definition can live in: a loose `.json` file, or a `.srsj` bundle entry. */
+// Every extension a Field definition can arrive in: loose JSON, a `.srsj` repository or package
+// bundle, and RFC-003's `.srspkg` package bundle (none committed yet — listed so the first one is
+// walked rather than silently skipped, which is how the inline package-bundle shape got missed).
+const CARRIERS = [".json", ".srsj", ".srspkg"];
+
 async function findFiles(dir) {
   const out = [];
   // Not swallowed: a directory that exists but cannot be read is unwalked coverage, and the only
@@ -63,7 +67,7 @@ async function findFiles(dir) {
     const abs = join(dir, e.name);
     if (isExcluded(abs)) continue;
     if (e.isDirectory()) out.push(...(await findFiles(abs)));
-    else if (e.name.endsWith(".json") || e.name.endsWith(".srsj")) out.push(abs);
+    else if (CARRIERS.some((ext) => e.name.endsWith(ext))) out.push(abs);
   }
   return out;
 }
