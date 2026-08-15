@@ -82,7 +82,7 @@ function validateRoadmap(data) {
     visiting.delete(boundaryId); visited.add(boundaryId);
   };
   for (const boundaryId of boundaryIds) visit(boundaryId);
-  const pipelineIds = new Set();
+  const pipelineIds = new Set(), allPipelineStageIds = new Set();
   for (const pipeline of data.capabilityPipelines || []) {
     if (!pipeline.id || pipelineIds.has(pipeline.id)) errors.push(`duplicate capability pipeline id: ${pipeline.id || "(blank)"}`);
     pipelineIds.add(pipeline.id);
@@ -94,6 +94,8 @@ function validateRoadmap(data) {
     for (const stage of pipeline.stages || []) {
       if (!stage.id || stageIds.has(stage.id)) errors.push(`${pipeline.id}: duplicate stage id: ${stage.id || "(blank)"}`);
       stageIds.add(stage.id); stages.set(stage.id, stage);
+      if (allPipelineStageIds.has(stage.id)) errors.push(`duplicate capability stage id: ${stage.id || "(blank)"}`);
+      allPipelineStageIds.add(stage.id);
       for (const field of PIPELINE_STAGE_FIELDS) {
         const value = stage[field];
         if (value == null || value === "" || (Array.isArray(value) && !value.length && !["requires", "releaseAlignment", "executionAnchors"].includes(field))) errors.push(`${pipeline.id}/${stage.id}: missing ${field}`);
@@ -114,6 +116,14 @@ function validateRoadmap(data) {
       stageVisiting.delete(stageId); stageVisited.add(stageId);
     };
     for (const stageId of stageIds) visitStage(stageId);
+  }
+  const modeIds = new Set();
+  for (const mode of data.applicationStrategy?.modes || []) {
+    if (!mode.id || modeIds.has(mode.id)) errors.push(`applicationStrategy: duplicate mode id: ${mode.id || "(blank)"}`);
+    modeIds.add(mode.id);
+    if (!mode.name) errors.push(`applicationStrategy/${mode.id}: missing name`);
+    for (const capability of mode.capabilities || []) if (!capabilities.has(capability)) errors.push(`applicationStrategy/${mode.id}: unknown capability ${capability}`);
+    for (const stageId of mode.servesStages || []) if (!allPipelineStageIds.has(stageId)) errors.push(`applicationStrategy/${mode.id}: serves unknown stage ${stageId}`);
   }
   const known = new Set(data.knownEpicRefs || []), mapped = new Set();
   for (const epic of data.epics || []) {
@@ -148,7 +158,7 @@ function renderRoadmap(data) {
     "### Boundary rules", "",
     ...data.applicationStrategy.boundaries.flatMap((boundary) => [`- ${boundary}`, ""]),
     "### Modes over the shared substrate", "",
-    ...data.applicationStrategy.modes.flatMap((mode) => [`- ${mode}`, ""]),
+    ...data.applicationStrategy.modes.flatMap((mode) => [`- ${mode.name}`, ""]),
     "### Origin prototype", "",
     data.applicationStrategy.predecessor, "",
     "### Human–AI constitution", "",

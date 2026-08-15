@@ -135,3 +135,4 @@ jobs:
         run: |
           node scripts/roadmap.mjs --check
           node scripts/roadmap.test.mjs
+          node scripts/roadmap-visualizer.test.mjs

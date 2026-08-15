@@ -1,0 +1,105 @@
+:root {
+  --paper: #f5f2ec;
+  --surface: #fffdf9;
+  --ink: #1c1b19;
+  --muted: #716d65;
+  --line: #d5d0c7;
+  --line-strong: #928b80;
+  --sovereignty: #3a568c;
+  --practice: #9b4b37;
+  --pipeline: #356c5b;
+  --capability: #675b91;
+  --mode: #796429;
+  --shadow: 0 14px 30px rgba(42, 35, 24, 0.09);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+button, a { font: inherit; }
+button { color: inherit; }
+
+.roadmap-app { max-width: 1480px; margin: 0 auto; padding: 28px clamp(18px, 4vw, 64px) 52px; }
+.loading, .error { margin: 12vh auto; max-width: 560px; padding: 24px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); }
+.error h1 { margin-top: 0; }
+.eyebrow { margin: 0 0 10px; color: var(--muted); font: 600 0.76rem/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.06em; text-transform: uppercase; }
+h1 { max-width: 800px; margin: 0; font-size: clamp(2rem, 5vw, 4.25rem); font-weight: 500; letter-spacing: -0.055em; line-height: 0.95; }
+.lede { max-width: 780px; margin: 20px 0 0; color: #49453f; font-size: clamp(1rem, 1.8vw, 1.25rem); line-height: 1.55; }
+
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 32px 0 20px; border-bottom: 1px solid var(--line); padding-bottom: 14px; }
+.tab { border: 1px solid var(--line); background: transparent; padding: 8px 12px; border-radius: 999px; cursor: pointer; }
+.tab:hover, .tab:focus-visible { border-color: var(--ink); outline: none; }
+.tab[aria-selected="true"] { color: var(--surface); background: var(--ink); border-color: var(--ink); }
+.view-note { margin: 0 0 16px; color: var(--muted); font-size: 0.92rem; }
+
+.view-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 0.35fr); gap: 22px; align-items: start; }
+.canvas, .detail { background: rgba(255, 253, 249, 0.68); border: 1px solid var(--line); border-radius: 16px; }
+.canvas { min-height: 560px; overflow: auto; padding: clamp(14px, 2vw, 26px); }
+.detail { position: sticky; top: 16px; padding: 20px; box-shadow: var(--shadow); }
+.detail h2 { margin: 0 0 8px; font-size: 1.35rem; letter-spacing: -0.025em; }
+.detail h3 { margin: 20px 0 6px; color: var(--muted); font: 600 0.72rem/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.06em; text-transform: uppercase; }
+.detail p, .detail li { line-height: 1.45; }
+.detail p { margin: 6px 0; }
+.detail ul { margin: 7px 0; padding-left: 19px; }
+.detail a { color: inherit; text-decoration-color: var(--line-strong); }
+.detail .muted { color: var(--muted); }
+
+.graph-shell { position: relative; min-width: 720px; }
+.graph-edges { pointer-events: none; position: absolute; inset: 0; overflow: visible; z-index: 0; }
+.graph-edges path { fill: none; stroke: var(--line-strong); stroke-width: 1.4; opacity: 0.7; }
+.graph-edges path.is-related { stroke: var(--ink); stroke-width: 2.2; opacity: 0.9; }
+.graph-content { position: relative; z-index: 1; }
+.track { margin-bottom: 32px; }
+.track-title { display: flex; align-items: baseline; gap: 10px; margin: 0 0 12px; font-size: 0.92rem; }
+.track-title span { font: 600 0.72rem/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.05em; text-transform: uppercase; }
+.track.sovereignty .track-title { color: var(--sovereignty); }
+.track.practice .track-title { color: var(--practice); }
+.track-row { display: grid; grid-template-columns: repeat(3, minmax(180px, 1fr)); gap: 14px; }
+.pipeline-grid { display: grid; grid-template-columns: repeat(5, minmax(150px, 1fr)); grid-template-rows: repeat(2, auto); gap: 18px; align-items: center; }
+
+.road-card { position: relative; width: 100%; min-height: 98px; border: 1px solid var(--line); border-left: 4px solid var(--ink); border-radius: 11px; padding: 13px; text-align: left; cursor: pointer; background: var(--surface); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03); transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease, opacity 160ms ease; }
+.road-card:hover, .road-card:focus-visible, .road-card.is-focus { border-color: var(--ink); box-shadow: var(--shadow); outline: none; transform: translateY(-2px); }
+.road-card.is-direct { border-color: var(--ink); }
+.road-card.is-secondary { opacity: 0.72; }
+.road-card.is-dim { opacity: 0.27; }
+.road-card.release.f { border-left-color: var(--sovereignty); }
+.road-card.release.p { border-left-color: var(--practice); }
+.road-card.stage { border-left-color: var(--pipeline); }
+.road-card.capability { border-left-color: var(--capability); }
+.road-card.mode { border-left-color: var(--mode); }
+.road-card.work { border-left-color: #777; }
+.card-id { display: block; color: var(--muted); font: 600 0.7rem/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.04em; }
+.card-title { display: block; margin-top: 6px; font-size: 0.96rem; font-weight: 650; line-height: 1.15; }
+.card-summary { display: -webkit-box; overflow: hidden; margin: 7px 0 0; color: #5a554e; font-size: 0.77rem; line-height: 1.32; -webkit-box-orient: vertical; -webkit-line-clamp: 1; transition: -webkit-line-clamp 160ms ease; }
+.road-card:hover .card-summary, .road-card:focus-visible .card-summary { -webkit-line-clamp: 3; }
+
+.relationship-groups { display: grid; gap: 16px; }
+.relationship-group { border-bottom: 1px solid var(--line); padding-bottom: 16px; }
+.relationship-group:last-child { border-bottom: 0; }
+.relationship-group h2 { margin: 0 0 10px; color: var(--muted); font: 600 0.72rem/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.06em; text-transform: uppercase; }
+.relationship-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 10px; }
+.relationship-row .road-card { min-height: 78px; }
+
+.tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.tag { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 4px 7px; color: #514c45; font: 600 0.69rem/1 ui-monospace, SFMono-Regular, Menlo, monospace; text-decoration: none; }
+.tag:hover { border-color: var(--ink); }
+
+@media (max-width: 880px) {
+  .view-layout { grid-template-columns: 1fr; }
+  .detail { position: static; }
+  .canvas { min-height: 0; }
+}
+
+@media (max-width: 640px) {
+  .roadmap-app { padding: 20px 14px 36px; }
+  .canvas { margin-inline: -2px; }
+  .graph-shell { min-width: 620px; }
+  .track-row { grid-template-columns: repeat(3, 180px); }
+  .pipeline-grid { grid-template-columns: repeat(5, 150px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+}

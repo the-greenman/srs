@@ -12,6 +12,12 @@ test("two-track roadmap has complete ratified contracts", () => {
   assert.deepEqual(roadmap.tracks.map((track) => track.id), ["F", "P"]);
   assert.deepEqual(roadmap.boundaries.map((boundary) => boundary.id), ["F1", "F2", "F3", "P1", "P2", "P3"]);
   assert.equal(roadmap.applicationStrategy.name, "srs-web / app.mudemocracy.org");
+  assert.deepEqual(roadmap.applicationStrategy.modes.map((mode) => mode.id), [
+    "repository-inspection",
+    "container-workspace",
+    "shared-facilitation",
+    "blueprint-authoring"
+  ]);
   assert.deepEqual(roadmap.capabilityPipelines.map((pipeline) => pipeline.id), ["governance-practice"]);
   assert.deepEqual(roadmap.capabilityPipelines[0].stages.map((stage) => stage.id), ["G1", "G2", "G3", "G4", "G5", "G6", "G7"]);
   assert.equal(roadmap.knownEpicRefs.length, 16);
@@ -25,12 +31,14 @@ test("validation rejects invalid task roles, missing issue references and depend
   invalid.boundaries[0].requires = ["F2"];
   delete invalid.applicationStrategy.architecture;
   invalid.capabilityPipelines[0].stages[0].requires = ["G7"];
+  invalid.applicationStrategy.modes[0].servesStages = ["G99"];
   const errors = validateRoadmap(invalid).errors.join("\n");
   assert.match(errors, /invalid task role/);
   assert.match(errors, /invalid issue reference/);
   assert.match(errors, /boundary dependency cycle/);
   assert.match(errors, /applicationStrategy: missing architecture/);
   assert.match(errors, /capability dependency cycle/);
+  assert.match(errors, /serves unknown stage G99/);
 });
 
 test("Markdown is deterministic and renders separate tracks, explicit tasks and gaps", () => {
