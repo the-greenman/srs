@@ -1,17 +1,42 @@
 #!/usr/bin/env node
 /**
  * Validate a package directory using the SRS repo's JSON schemas plus manifest checks.
- * Run from the repo root (parent of srs/).
+ *
+ * ALL TEN definition kinds are covered (#391). Until this change, `fields`, `types`, `views` and
+ * `relationTypes` were path-checked and only the first, second and fourth were schema-validated;
+ * `documentViews`, `themes`, `vocabularies`, `lifecycles`, `blueprints` and `protocols` were
+ * neither. Live packages declare them — `srs/package/base`, and
+ * `packages/com.mudemocracy.governance/1.1.0` declares 4 documentViews, 1 view, 1 lifecycle,
+ * 1 blueprint and 1 protocol — so a malformed blueprint, or one listed at a path that does not
+ * exist, passed `validate-all.mjs` in silence while #311's gate correctly reported
+ * `blueprints → blueprint.json ✓`. A schema existing is not a validator being wired up.
+ *
+ * The kind list is DERIVED, never written here: `definitionKinds()` in
+ * `check-schema-kind-correspondence.mjs` reads the properties `docs/schema/2.0/package-manifest.json`
+ * declares and classifies each one against that file's total PROPERTY_SCHEMA table. One table, two
+ * consumers. Listing the kinds again in this file would rebuild the exact "declared but never
+ * checked" gap #391 is about, one file over — an eleventh kind would be added to the schema, given
+ * a schema file to satisfy #311's gate, and still go unvalidated here.
  *
  * Usage:
  *   node scripts/validate-package.mjs
  *   node scripts/validate-package.mjs package/spec-authoring-core
+ *   node scripts/validate-package.mjs package/spec-authoring-core /path/to/root   # tests only
  */
 import { access, readdir, readFile } from 'fs/promises';
-import { join, resolve } from 'path';
+import { dirname, join, resolve } from 'path';
+import { fileURLToPath } from 'url';
 import { loadSchema, validateJsonSchema } from './lib/json-schema-lite.mjs';
+import { definitionKinds } from './check-schema-kind-correspondence.mjs';
 
-const ROOT = resolve('.');
+// Optional root override — the negative test (tests/guards/run.mjs) points this at a fixture tree,
+// the same seam both #308/#311 guards expose. Defaults to the repo root rather than `process.cwd()`
+// so the script no longer silently validates nothing when run from elsewhere.
+// `fileURLToPath`, not `new URL(..).pathname`, which is percent-encoded and resolves wrong under a
+// checkout path containing a space.
+const ROOT = process.argv[3]
+  ? resolve(process.argv[3])
+  : resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SCHEMA_DIR = join(ROOT, 'docs/schema/2.0');
 const SRS_REPO = join(ROOT, 'srs');
 const packageDir = process.argv[2] ?? 'package/spec-authoring-core';
@@ -38,7 +63,11 @@ async function fileExists(path) {
 }
 
 function rel(path) {
-  return path.startsWith(`${SRS_REPO}/`) ? path.slice(SRS_REPO.length + 1) : path;
+  if (path.startsWith(`${SRS_REPO}/`)) return path.slice(SRS_REPO.length + 1);
+  // Published packages under `packages/**` are reached as `../packages/...` and so fall outside
+  // SRS_REPO; without this they would be reported as absolute paths that differ per machine.
+  if (path.startsWith(`${ROOT}/`)) return path.slice(ROOT.length + 1);
+  return path;
 }
 
 function pushSchemaErrors(label, schemaErrors) {
@@ -85,12 +114,20 @@ async function validateManifestPaths(dirPath, manifest, subdir) {
 async function main() {
   console.log(`Validating package in ${packageDir}...`);
 
-  const [packageManifestSchema, fieldSchema, typeSchema, relationTypeSchema] = await Promise.all([
-    loadSchema(join(SCHEMA_DIR, 'package-manifest.json')),
-    loadSchema(join(SCHEMA_DIR, 'field.json')),
-    loadSchema(join(SCHEMA_DIR, 'type.json')),
-    loadSchema(join(SCHEMA_DIR, 'relation-type.json')),
-  ]);
+  const packageManifestSchema = await loadSchema(join(SCHEMA_DIR, 'package-manifest.json'));
+
+  const { kinds, unclassified } = await definitionKinds(ROOT);
+  for (const property of unclassified) {
+    // Reported, not skipped. A property package-manifest.json declares that PROPERTY_SCHEMA does
+    // not classify means the table is incomplete, and quietly validating the kinds it does
+    // recognise would be the same fail-open #311 exists to close. #311's own gate says the same
+    // thing about the same property; this one refuses to claim the package was fully checked.
+    errors.push(
+      `docs/schema/2.0/package-manifest.json declares "${property}", which has no row in ` +
+      `PROPERTY_SCHEMA (scripts/check-schema-kind-correspondence.mjs) — this package cannot be ` +
+      `fully validated until it is classified.`,
+    );
+  }
 
   const dirPath = join(SRS_REPO, packageDir);
   const manifest = await validatePackageManifest(dirPath);
@@ -100,36 +137,26 @@ async function main() {
 
   pushSchemaErrors(rel(join(dirPath, 'package.json')), validateJsonSchema(manifest, packageManifestSchema));
 
-  await validateManifestPaths(dirPath, manifest, 'fields');
-  await validateManifestPaths(dirPath, manifest, 'types');
-  await validateManifestPaths(dirPath, manifest, 'views');
-  await validateManifestPaths(dirPath, manifest, 'relationTypes');
+  for (const { kind, schemaFile } of kinds) {
+    await validateManifestPaths(dirPath, manifest, kind);
 
-  const fieldEntries = Array.isArray(manifest.fields) ? manifest.fields : [];
-  console.log(`  Checking ${fieldEntries.length} field definitions...`);
-  for (const relativePath of fieldEntries) {
-    const fullPath = join(dirPath, relativePath);
-    const field = await loadJson(fullPath);
-    if (!field) continue;
-    pushSchemaErrors(rel(fullPath), validateJsonSchema(field, fieldSchema));
-  }
+    const entries = Array.isArray(manifest[kind]) ? manifest[kind] : [];
+    // Load the schema even when the package declares no entries of this kind: a kind mapped to a
+    // schema file that is not there must fail, and skipping the load on an empty list would hide
+    // exactly that — the state `protocols` was in until #378, arrived at from the other side.
+    const schema = await loadSchema(join(SCHEMA_DIR, schemaFile)).catch((error) => {
+      errors.push(`${kind}: cannot load docs/schema/2.0/${schemaFile}: ${error.message}`);
+      return null;
+    });
 
-  const typeEntries = Array.isArray(manifest.types) ? manifest.types : [];
-  console.log(`  Checking ${typeEntries.length} type definitions...`);
-  for (const relativePath of typeEntries) {
-    const fullPath = join(dirPath, relativePath);
-    const type = await loadJson(fullPath);
-    if (!type) continue;
-    pushSchemaErrors(rel(fullPath), validateJsonSchema(type, typeSchema));
-  }
-
-  const relationTypeEntries = Array.isArray(manifest.relationTypes) ? manifest.relationTypes : [];
-  console.log(`  Checking ${relationTypeEntries.length} relation type definitions...`);
-  for (const relativePath of relationTypeEntries) {
-    const fullPath = join(dirPath, relativePath);
-    const relationType = await loadJson(fullPath);
-    if (!relationType) continue;
-    pushSchemaErrors(rel(fullPath), validateJsonSchema(relationType, relationTypeSchema));
+    console.log(`  Checking ${entries.length} ${kind} definitions against ${schemaFile}...`);
+    if (!schema) continue;
+    for (const relativePath of entries) {
+      const fullPath = join(dirPath, relativePath);
+      const definition = await loadJson(fullPath);
+      if (!definition) continue;
+      pushSchemaErrors(rel(fullPath), validateJsonSchema(definition, schema));
+    }
   }
 
   console.log(`\n  Errors: ${errors.length}`);

@@ -54,7 +54,7 @@ const MANIFEST_SCHEMA = join(SCHEMA_DIR, "package-manifest.json");
  * one-level-up fail-open this check exists to close, so there is no filter. Every new property
  * fails until a person says which it is.
  */
-const PROPERTY_SCHEMA = {
+export const PROPERTY_SCHEMA = {
   // Definition-kind indexes — each names files validated by the schema it maps to.
   fields: "field.json",
   types: "type.json",
@@ -82,6 +82,36 @@ const PROPERTY_SCHEMA = {
 };
 
 const declaredProperties = (schema) => Object.keys(schema.properties ?? {});
+
+/**
+ * The definition kinds a package may index, DERIVED from `package-manifest.json` and classified by
+ * PROPERTY_SCHEMA above — `[{ kind, schemaFile }]`, in the order the schema declares them.
+ *
+ * Exported so `validate-package.mjs` validates exactly the kinds this file classifies (#391).
+ * Two checks reading one table is the point: a kind added to the schema fails here until it has a
+ * row, and the moment it has one it is also path-checked and schema-validated, with no second list
+ * to remember. Hardcoding the kinds in the validator would rebuild the "declared but never checked"
+ * gap this check exists to close, one file over.
+ *
+ * Unclassified properties are reported, not skipped — an unknown property means the classification
+ * is incomplete, and silently validating the nine kinds it does recognise would be the same
+ * fail-open in a different costume.
+ */
+export async function definitionKinds(root) {
+  const schemaDir = join(resolve(root), "docs/schema/2.0");
+  const schema = JSON.parse(await readFile(join(schemaDir, "package-manifest.json"), "utf8"));
+  const kinds = [];
+  const unclassified = [];
+  for (const property of declaredProperties(schema)) {
+    if (!Object.hasOwn(PROPERTY_SCHEMA, property)) {
+      unclassified.push(property);
+      continue;
+    }
+    const schemaFile = PROPERTY_SCHEMA[property];
+    if (schemaFile != null) kinds.push({ kind: property, schemaFile });
+  }
+  return { kinds, unclassified };
+}
 
 /**
  * This check reads `properties` and nothing else. A manifest schema that composed its properties
@@ -153,7 +183,12 @@ async function main() {
   console.log(`\n✓ Every declared definition kind resolves to a schema in docs/schema/2.0/ (${kinds.length} checked)`);
 }
 
-main().catch((err) => {
-  console.error("Error:", err);
-  process.exit(1);
-});
+// Run only when invoked as a script. `validate-package.mjs` imports `definitionKinds` from here,
+// and a bare `main()` at module load would run the whole check as a side effect of that import.
+// `import.meta.main` is not available on the Node this repo targets, so compare argv[1].
+if (resolve(process.argv[1] ?? "") === fileURLToPath(import.meta.url)) {
+  main().catch((err) => {
+    console.error("Error:", err);
+    process.exit(1);
+  });
+}

@@ -8,11 +8,23 @@ import { dirname, join } from 'path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+// Paths are relative to `srs/` (validate-package.mjs joins them onto the spec repo root), so the
+// published packages under `packages/**` are reached with a leading `../`.
 const packages = [
   'package',
   'package/spec-authoring-core',
   'package/spec-rfc-process',
   'package/metamodel',
+  // Declared package.json files that no run ever reached (#391). Both were invisible for the same
+  // reason the seven definition kinds were: nothing enumerated them.
+  'package/base',
+  'package/core',
+  // The published packages are the ONLY ones that populate `views`, `documentViews`, `lifecycles`,
+  // `blueprints` and `protocols`. Without them, #391's extension is exercised against empty lists
+  // for five of the ten kinds — CI green for the wrong reason, which is the failure mode this
+  // whole line of work is about. They are shipped artifacts and both validate today.
+  '../packages/com.mudemocracy.governance/1.0.0/package',
+  '../packages/com.mudemocracy.governance/1.1.0/package',
 ];
 
 async function runScript(script, args = []) {
@@ -91,8 +103,10 @@ async function validateAll() {
   const schemaKindsValid = await runScript('check-schema-kind-correspondence.mjs');
   if (!schemaKindsValid) allValid = false;
 
-  // ...and both guards demonstrably fail on the violation they exist to catch. A guard nobody has
-  // watched fail is indistinguishable from a guard that cannot fail.
+  // ...and every guard demonstrably fails on the violation it exists to catch — including
+  // validate-package.mjs's own ten-kind coverage (#391), whose blueprint cases would otherwise be
+  // green on an empty list. A guard nobody has watched fail is indistinguishable from a guard that
+  // cannot fail.
   const guardsBite = await runScript('../tests/guards/run.mjs');
   if (!guardsBite) allValid = false;
 
