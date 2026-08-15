@@ -25,7 +25,7 @@
  *
  *   node scripts/check-field-name-convention.mjs [root]   # root defaults to the repo root
  */
-import { readdir, readFile, stat } from "fs/promises";
+import { readdir, readFile } from "fs/promises";
 import { join, resolve, relative, dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -36,10 +36,12 @@ const ROOT = process.argv[2]
   ? resolve(process.argv[2])
   : resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
-// Every tree that holds SRS packages. Proposal, example and fixture trees are included deliberately
-// — a stale example is what gets copied into a real package later. (`tests` extends
-// check-cardinality-coherence.mjs's list: `tests/rfc-032/package/` is a real 24-Field package.)
-const SEARCH_ROOTS = ["srs", "packages", "conformance", "docs/spec/examples", "rfcs", "tests"];
+// The whole repository is walked, rather than a list of trees known to hold packages. A list is an
+// allowlist, and an allowlist silently excludes whatever is added next: proposal, example and
+// fixture trees all hold real Field definitions (`tests/rfc-032/package/` alone is 24), and the
+// sibling #311 guard refuses hardcoding for the same reason. Measured: the walk finds the same 326
+// Field definitions the six-tree list did, with no parse failures anywhere in the repo — the list
+// bought nothing and would have cost the next tree.
 
 // RFC-004's proposed package is a historical artifact, not a live package (row 5 of #308).
 const EXCLUDED = ["rfcs/rfc-004"];
@@ -58,9 +60,8 @@ const CARRIERS = [".json", ".srsj", ".srspkg"];
 
 async function findFiles(dir) {
   const out = [];
-  // Not swallowed: a directory that exists but cannot be read is unwalked coverage, and the only
-  // other floor here is total emptiness. (A search root that does not exist at all is caught up
-  // front, per root.)
+  // Not swallowed: a directory that cannot be read is unwalked coverage, and the only other floor
+  // here is total emptiness.
   const entries = await readdir(dir, { withFileTypes: true });
   for (const e of entries) {
     if (e.name === "node_modules" || e.name === ".git") continue;
@@ -127,21 +128,7 @@ function isFieldDefinition(o) {
 }
 
 async function main() {
-  // Per root, not just in aggregate: one renamed root would otherwise go unchecked while the
-  // others kept the guard green.
-  const missing = [];
-  for (const root of SEARCH_ROOTS) {
-    if (!(await stat(join(ROOT, root)).then((s) => s.isDirectory(), () => false))) missing.push(root);
-  }
-  if (missing.length > 0) {
-    console.log("Field.name convention (#308)");
-    console.log(`\n✗ Search root(s) missing under ${ROOT}: ${missing.join(", ")}`);
-    console.log("  A tree this guard claims to walk does not exist, so its Fields are unchecked.");
-    console.log("  Either the tree moved (update SEARCH_ROOTS) or the root argument is wrong.");
-    process.exit(1);
-  }
-
-  const files = (await Promise.all(SEARCH_ROOTS.map((r) => findFiles(join(ROOT, r))))).flat().sort();
+  const files = (await findFiles(ROOT)).sort();
 
   const violations = [];
   const unreadable = [];
@@ -166,7 +153,7 @@ async function main() {
 
   console.log("Field.name convention (#308)");
   console.log(`  Field definitions checked: ${checked}`);
-  console.log(`  Trees walked:              ${SEARCH_ROOTS.join(", ")} (excluding ${EXCLUDED.join(", ")})`);
+  console.log(`  Walked:                    ${ROOT} (excluding ${EXCLUDED.join(", ")})`);
 
   // Unreadable files first: a corpus whose Field-bearing files all fail to parse would otherwise
   // report "no Field definitions found / the trees moved" and swallow the parse errors behind it.
@@ -183,9 +170,8 @@ async function main() {
   // A guard that checked nothing is not a guard that found nothing — the exact fail-open mode this
   // check exists to close, one level up.
   if (checked === 0) {
-    console.log("\n✗ No Field definitions found in any search root.");
-    console.log(`  Expected some under ${SEARCH_ROOTS.join(", ")} relative to ${ROOT}.`);
-    console.log("  Either the trees moved (update SEARCH_ROOTS) or the root argument is wrong.");
+    console.log(`\n✗ No Field definitions found anywhere under ${ROOT}.`);
+    console.log("  This repository has 326 of them, so an empty walk means the root is wrong.");
     process.exit(1);
   }
 

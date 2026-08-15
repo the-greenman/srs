@@ -62,19 +62,8 @@ const field = (name) => ({
 });
 
 // ---- #308 — Field.name is snake_case ------------------------------------------------------------
-const SEARCH_ROOTS = ["srs", "packages", "conformance", "docs/spec/examples", "rfcs", "tests"];
-
 async function fieldNameCases(root) {
   console.log("#308 — Field.name snake_case guard");
-
-  // A missing search root is unchecked coverage, not clean coverage — and it must fail even while
-  // the other roots are populated and conformant.
-  await writeJson(join(root, "srs/package/fields/ok.json"), field("snake_case_name"));
-  expect("fails when a search root is missing", runCheck("check-field-name-convention.mjs", root), {
-    exit: 1,
-    contains: ["Search root(s) missing", "packages"],
-  });
-  for (const r of SEARCH_ROOTS) await mkdir(join(root, r), { recursive: true });
 
   // The violation: one kebab-case Field in a live package tree.
   await writeJson(join(root, "srs/package/fields/bad.json"), field("kebab-case-name"));
@@ -150,12 +139,12 @@ async function fieldNameCases(root) {
   });
   await rm(broken);
 
-  // Roots that all exist but hold no Field at all is still a walk that read nothing.
+  // A walk that read nothing is not a corpus that is clean.
   const bare = join(root, "bare");
-  for (const r of SEARCH_ROOTS) await mkdir(join(bare, r), { recursive: true });
+  await mkdir(bare, { recursive: true });
   expect("fails when no Field definition is found at all", runCheck("check-field-name-convention.mjs", bare), {
     exit: 1,
-    contains: ["No Field definitions found"],
+    contains: ["No Field definitions found anywhere"],
   });
 }
 
