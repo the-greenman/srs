@@ -206,9 +206,12 @@ const invokedDirectly = (() => {
   try {
     return realpathSync(resolve(argv1)) === realpathSync(self);
   } catch {
-    // A path that cannot be realpath'd is not this module; fall back to the plain comparison rather
-    // than throwing out of module scope.
-    return resolve(argv1) === self;
+    // FAIL TOWARDS RUNNING. Falling back to `resolve(argv1) === self` would reinstate the exact
+    // comparison this block exists to replace — `self` is already realpath'd, `resolve` never
+    // follows a link — and because a guard that does not run exits 0, that fallback would report a
+    // clean pass for a check that never happened. Running when unsure is the safe direction: the
+    // worst case is the check running during an import, which is noisy and obvious, not silent.
+    return true;
   }
 })();
 

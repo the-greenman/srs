@@ -29,24 +29,45 @@ const REPO_ROOT = join(__dirname, '..');
  * root — so the published packages are reached with a leading `../`.
  */
 async function discoverPackages() {
-  const found = [];
-  const walk = async (absDir, relFromSrs) => {
-    let entries;
-    try {
-      entries = await readdir(absDir, { withFileTypes: true });
-    } catch {
-      return;
-    }
-    if (entries.some((e) => e.isFile() && e.name === 'package.json')) found.push(relFromSrs);
-    for (const entry of entries) {
-      if (entry.isDirectory()) {
-        await walk(join(absDir, entry.name), `${relFromSrs}/${entry.name}`);
+  const walkRoot = async (absRoot, relFromSrs) => {
+    const found = [];
+    const walk = async (absDir, rel) => {
+      let entries;
+      try {
+        entries = await readdir(absDir, { withFileTypes: true });
+      } catch {
+        return;
       }
-    }
+      if (entries.some((e) => e.isFile() && e.name === 'package.json')) found.push(rel);
+      for (const entry of entries) {
+        // `node_modules` would be fed to validate-package.mjs as an SRS manifest and turn the run
+        // red for a reason unrelated to the corpus. Nothing puts one here today; excluding it costs
+        // one line and removes a way for this walk to be wrong later.
+        if (entry.isDirectory() && entry.name !== 'node_modules') {
+          await walk(join(absDir, entry.name), `${rel}/${entry.name}`);
+        }
+      }
+    };
+    await walk(absRoot, relFromSrs);
+    return found;
   };
-  await walk(join(REPO_ROOT, 'srs/package'), 'package');
-  await walk(join(REPO_ROOT, 'packages'), '../packages');
-  return found.sort();
+
+  // PER-ROOT floors, not one floor on the union. A single `packages.length === 0` check cannot fire
+  // while the other root still yields something: rename `srs/package` and the walk would return the
+  // two published packages, print "Discovered 2 packages" and exit 0 having validated none of the
+  // six spec packages. Each root must independently produce at least one.
+  const roots = [
+    { abs: join(REPO_ROOT, 'srs/package'), rel: 'package', label: 'srs/package/**' },
+    { abs: join(REPO_ROOT, 'packages'), rel: '../packages', label: 'packages/**' },
+  ];
+  const found = [];
+  const emptyRoots = [];
+  for (const root of roots) {
+    const packages = await walkRoot(root.abs, root.rel);
+    if (packages.length === 0) emptyRoots.push(root.label);
+    found.push(...packages);
+  }
+  return { packages: found.sort(), emptyRoots };
 }
 
 async function runScript(script, args = []) {
@@ -71,11 +92,11 @@ async function validateAll() {
 
   let allValid = true;
 
-  const packages = await discoverPackages();
+  const { packages, emptyRoots } = await discoverPackages();
   console.log(`Discovered ${packages.length} packages: ${packages.join(', ')}`);
-  if (packages.length === 0) {
+  if (emptyRoots.length > 0) {
     // A walk that found nothing is not a tree with nothing to validate.
-    console.log('\n\u2717 No packages discovered under srs/package/** or packages/** — refusing to report success.');
+    console.log(`\n\u2717 No packages discovered under ${emptyRoots.join(' or ')} — refusing to report success.`);
     process.exit(1);
   }
 

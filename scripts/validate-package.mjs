@@ -95,44 +95,52 @@ async function validateManifestPaths(dirPath, manifest, kind) {
   }
 }
 
-/** Every `.json` file under a package directory, as paths relative to it. */
-async function jsonFilesUnder(dirPath, prefix = '') {
-  let entries;
-  try {
-    entries = await readdir(join(dirPath, prefix), { withFileTypes: true });
-  } catch {
-    return [];
-  }
-  const found = [];
-  for (const entry of entries) {
-    const relativePath = prefix ? `${prefix}/${entry.name}` : entry.name;
-    if (entry.isDirectory()) {
-      found.push(...(await jsonFilesUnder(dirPath, relativePath)));
-    } else if (entry.name.endsWith('.json') && relativePath !== 'package.json') {
-      found.push(relativePath);
-    }
-  }
-  return found;
-}
-
 /**
- * Warn about definition files present on disk that no kind indexes.
+ * Warn about definition files that sit beside indexed ones but are not themselves indexed.
  *
- * Walks the package directory rather than looking inside a per-kind folder named after the kind.
- * The folders are kebab-case — `document-views/`, `relation-types/` — so a `join(dirPath, kind)`
- * lookup silently finds nothing for exactly the kinds #391 added, and the check quietly stops
- * existing for them. Deriving the folder name by string surgery would be the same guess this
- * codebase already refuses to make for kind → schema, so nothing is derived: every `.json` under
- * the package is compared against the union of what the manifest lists, which also catches a stray
- * definition in a folder whose name matches no kind at all.
+ * Scans exactly the directories the manifest's own entries live in — the dirname of every listed
+ * path, across every kind. That is derived from the data, so it works for the kebab-case folders
+ * (`document-views/`, `relation-types/`) where a `join(dirPath, kind)` lookup finds nothing and the
+ * check silently stops existing for precisely the kinds #391 added.
+ *
+ * Deliberately NOT a walk of the whole package directory. `srs/package` is both a package and the
+ * parent of five others, each with its own manifest and its own separately-validated definitions,
+ * so a recursive walk reports every sub-package's files as "unlisted" — 181 warnings where 1 is
+ * real, which buries the finding it exists to surface. It would also flag nested `package.json`
+ * files and the Tier-1 records under `package/records/`, neither of which is a definition.
+ *
+ * The folder set is the union of two sources, because neither alone is enough. Dirnames of listed
+ * entries alone would drop the folders where NOTHING is indexed — `spec-authoring-core/views/`
+ * holds three unlisted view files today and master warns about them; with an empty `views` array
+ * there is no entry to take a dirname from. A kind-named folder alone is the kebab-case bug. So
+ * both: every dirname the manifest references, plus every kind-named folder that actually exists on
+ * disk (checked, never constructed — `documentViews/` does not exist and is simply not found).
  */
 async function warnUnlistedFiles(dirPath, manifest, kinds) {
   const listed = new Set(
     kinds.flatMap(({ kind }) => (Array.isArray(manifest[kind]) ? manifest[kind] : [])),
   );
-  for (const presentFile of await jsonFilesUnder(dirPath)) {
-    if (!listed.has(presentFile)) {
-      warnings.push(`${rel(join(dirPath, 'package.json'))}: ${presentFile} exists but is not listed in package.json`);
+  const folders = new Set(
+    [...listed].map((entry) => entry.includes('/') ? entry.slice(0, entry.lastIndexOf('/')) : ''),
+  );
+  for (const { kind } of kinds) {
+    if (await fileExists(join(dirPath, kind))) folders.add(kind);
+  }
+
+  for (const folder of [...folders].sort()) {
+    let names;
+    try {
+      names = await readdir(join(dirPath, folder));
+    } catch {
+      continue; // a listed path whose folder is missing is already an error, reported above
+    }
+    for (const name of names.sort()) {
+      if (!name.endsWith('.json')) continue;
+      const relativePath = folder ? `${folder}/${name}` : name;
+      if (relativePath === 'package.json') continue;
+      if (!listed.has(relativePath)) {
+        warnings.push(`${rel(join(dirPath, 'package.json'))}: ${relativePath} exists but is not listed in package.json`);
+      }
     }
   }
 }

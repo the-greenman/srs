@@ -399,15 +399,40 @@ async function validatePackageCases(root) {
   });
   await writeFile(manifestSchema, `${JSON.stringify(doc, null, 2)}\n`);
 
-  // A definition file on disk that no kind indexes is a warning, and it must fire for the
-  // kebab-case folders (`document-views/`, `relation-types/`) too — looking inside a folder named
-  // after the kind finds nothing for exactly the kinds #391 added.
+  // A definition file sitting beside indexed ones but not itself indexed is a warning, and it must
+  // fire for the KEBAB-CASE folders too. `documentViews` lives in `document-views/`, so a scan that
+  // looks in a folder named after the kind finds nothing — the check silently stopped existing for
+  // exactly the kinds #391 added.
+  //
+  // The package indexes a real documentView first, which is the shape this applies to in the wild
+  // (the governance packages index four). It also keeps the case honest: the folder is reached
+  // because the manifest references it, not because the fixture was arranged around the scan.
+  await writeJson(join(pkgDir, "document-views/real.json"), {
+    $schema: "https://srs.semanticops.com/schema/2.0/document-view.json",
+    id: "00000000-0000-4000-8000-0000000d1001",
+    namespace: "com.example.fixture",
+    name: "fixture-document-view",
+    version: 1,
+    description: "fixture document view",
+    sections: [],
+    createdAt: "2026-08-15T00:00:00Z",
+  });
+  await writeJson(join(pkgDir, "package.json"), {
+    ...manifest,
+    documentViews: ["document-views/real.json"],
+  });
+  expect("accepts an indexed documentView in a kebab-case folder", run(), {
+    exit: 0,
+    contains: ["Checking 1 documentViews definitions against document-view.json", "✓ Package is valid"],
+  });
+
   await writeJson(join(pkgDir, "document-views/stray.json"), { id: "unused" });
   expect("warns about an unlisted file in a kebab-case folder", run(), {
     exit: 0,
     contains: ["document-views/stray.json exists but is not listed in package.json"],
   });
   await rm(join(pkgDir, "document-views/stray.json"));
+  await writeJson(join(pkgDir, "package.json"), manifest);
 
   // Back to the baseline: the fixture minus every violation still passes.
   expect("passes again once the violations are removed", run(), {
