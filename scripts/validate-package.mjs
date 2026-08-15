@@ -115,6 +115,28 @@ async function validateManifestPaths(dirPath, manifest, kind) {
  * there is no entry to take a dirname from. A kind-named folder alone is the kebab-case bug. So
  * both: every dirname the manifest references, plus every kind-named folder that actually exists on
  * disk (checked, never constructed — `documentViews/` does not exist and is simply not found).
+ *
+ * Folders inside a SUB-PACKAGE are then dropped, which is what makes the "does not descend" claim
+ * above true of the dirname half too: a manifest may index across the boundary —
+ * `srs/package/package.json` indexes five relation types that live under `spec-authoring-core/` —
+ * and without this the parent's run scans a directory the child owns.
+ *
+ * That closes the parent side only, and deliberately. The mirror case is not fixed and cannot be
+ * fixed here: if the CHILD manifest also indexes something in that folder, the child's run acquires
+ * a dirname for it and reports the five parent-indexed files as unlisted, because from a
+ * per-package check's point of view they are. Verified, not theorised — indexing a sixth relation
+ * type in `spec-authoring-core/package.json` produces exactly those five spurious warnings today.
+ * Teaching this function about other packages' manifests is a much larger change than the warning
+ * is worth; the real lesson is that indexing across a package boundary is the smell. It is
+ * currently harmless only because that child indexes no relation types at all, so no dirname
+ * exists — which is the same limit recorded below, doing accidental duty as protection.
+ *
+ * Known limit, stated because the fix for it is a guess this file refuses to make: a kebab-case
+ * folder is only reached when the manifest indexes at least one entry in it. Drop the whole
+ * `documentViews` array and leave the files, and they go unwarned — there is no dirname left to
+ * derive and `documentViews/` does not exist on disk. camelCase kinds (`fields`, `types`, `views`)
+ * have no such hole, since the kind-named-folder check covers them. Closing it needs a kind →
+ * folder mapping, which is the string surgery this codebase already refuses for kind → schema.
  */
 async function warnUnlistedFiles(dirPath, manifest, kinds) {
   const listed = new Set(
@@ -125,6 +147,19 @@ async function warnUnlistedFiles(dirPath, manifest, kinds) {
   );
   for (const { kind } of kinds) {
     if (await fileExists(join(dirPath, kind))) folders.add(kind);
+  }
+
+  // Drop anything owned by a sub-package: a directory under this one whose own `package.json`
+  // makes it a separate package, validated on its own iteration of validate-all.mjs.
+  const ownedBySubPackage = async (folder) => {
+    const segments = folder.split('/').filter(Boolean);
+    for (let i = 1; i <= segments.length; i++) {
+      if (await fileExists(join(dirPath, ...segments.slice(0, i), 'package.json'))) return true;
+    }
+    return false;
+  };
+  for (const folder of [...folders]) {
+    if (await ownedBySubPackage(folder)) folders.delete(folder);
   }
 
   for (const folder of [...folders].sort()) {
