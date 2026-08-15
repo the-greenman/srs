@@ -28,6 +28,10 @@ async function runScript(script, args = []) {
   });
 }
 
+// Where this runs: `scripts/check-release-drift.mjs` invokes this script as its first step, and
+// that is what `.github/workflows/release-drift.yml` (a required check on every push and pull
+// request) and `hooks/pre-commit` both run. Grepping the workflows for `validate-all` finds nothing
+// and reads as "no CI runs this" — it does, one call deep.
 async function validateAll() {
   console.log('Running all validations...\n');
 
@@ -69,6 +73,28 @@ async function validateAll() {
   // Field made repeatable purely by assignment migrated to single-valued without complaint.
   const cardinalityCoherent = await runScript('check-cardinality-coherence.mjs');
   if (!cardinalityCoherent) allValid = false;
+
+  // Field.name is snake_case (#308). The rule was stated unconditionally by field.json and record
+  // 7d22d50f and enforced nowhere, so the corpus stayed conformant only by attention. Names matter
+  // beyond style: srs-repository resolves several Fields by name and binds misses with
+  // `if let Some(..)`, so a drifted name silently disables the check that depended on it.
+  //
+  // After the RFC-032 fixture above, not before: the guard walks `tests/`, and tests/rfc-032/run.mjs
+  // regenerates those 24 Field files from its in-script table. Running first would read the previous
+  // run's output, so a kebab name introduced in that generator would pass the run that introduced it
+  // and fail the next one, detached from its cause.
+  const fieldNamesValid = await runScript('check-field-name-convention.mjs');
+  if (!fieldNamesValid) allValid = false;
+
+  // Every definition kind package-manifest.json declares resolves to a schema (#311). `protocols`
+  // was declarable with no protocol.json behind it until #378 and nothing noticed.
+  const schemaKindsValid = await runScript('check-schema-kind-correspondence.mjs');
+  if (!schemaKindsValid) allValid = false;
+
+  // ...and both guards demonstrably fail on the violation they exist to catch. A guard nobody has
+  // watched fail is indistinguishable from a guard that cannot fail.
+  const guardsBite = await runScript('../tests/guards/run.mjs');
+  if (!guardsBite) allValid = false;
 
   // RFC-033 (self-hosted meta-model). The frozen-seed metamodel package must stay in sync with its
   // generator, and its fieldTypes must project (via the projectField stand-in) to the frozen seed's
