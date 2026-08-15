@@ -330,7 +330,7 @@ async function validatePackageCases(root) {
   await rm(join(pkgDir, "blueprints/fixture.json"));
   expect("rejects a listed blueprint file that is missing", run(), {
     exit: 1,
-    contains: ["listed blueprint file missing: blueprints/fixture.json"],
+    contains: ["listed blueprints entry missing: blueprints/fixture.json"],
   });
   await writeJson(join(pkgDir, "blueprints/fixture.json"), validBlueprint);
 
@@ -366,12 +366,48 @@ async function validatePackageCases(root) {
 
   // A kind mapped to a schema file that is not there must fail even when the package declares no
   // entries of that kind — otherwise the pre-#378 `protocols` state is invisible from this side.
+  //
+  // Asserted on the LOAD FAILURE message, not on "protocols"/"protocol.json": both of those strings
+  // are printed by the per-kind progress line on a PASSING run too (the case above requires exactly
+  // that on exit 0), so asserting them here would make this an exit-code-only test that could not
+  // tell the missing schema apart from any unrelated failure.
   await rm(join(schemaDir, "protocol.json"));
   expect("fails when a kind's schema file is absent, even with no entries", run(), {
     exit: 1,
-    contains: ["protocols", "protocol.json"],
+    contains: ["cannot load docs/schema/2.0/protocol.json"],
   });
   await cp(join(REPO, "docs/schema/2.0/protocol.json"), join(schemaDir, "protocol.json"));
+
+  // The derivation's preconditions, enforced at the point of use and not only by #311's gate. A
+  // manifest schema that composes its properties yields an empty kind list, and a validator that
+  // shrugs at zero kinds prints "✓ Package is valid" over a package it never opened.
+  const composing = JSON.parse(await readFile(manifestSchema, "utf8"));
+  composing.allOf = [{ properties: { widgets: { type: "array", items: { type: "string" } } } }];
+  await writeFile(manifestSchema, `${JSON.stringify(composing, null, 2)}\n`);
+  expect("refuses to validate against a composed manifest schema", run(), {
+    exit: 1,
+    contains: ["composes its properties via allOf", "cannot be fully validated"],
+  });
+
+  const noProperties = JSON.parse(await readFile(manifestSchema, "utf8"));
+  delete noProperties.allOf;
+  delete noProperties.properties;
+  await writeFile(manifestSchema, `${JSON.stringify(noProperties, null, 2)}\n`);
+  expect("refuses to validate when the schema yields no definition kinds", run(), {
+    exit: 1,
+    contains: ["yielded no definition kinds", "vacuous pass would be worse"],
+  });
+  await writeFile(manifestSchema, `${JSON.stringify(doc, null, 2)}\n`);
+
+  // A definition file on disk that no kind indexes is a warning, and it must fire for the
+  // kebab-case folders (`document-views/`, `relation-types/`) too — looking inside a folder named
+  // after the kind finds nothing for exactly the kinds #391 added.
+  await writeJson(join(pkgDir, "document-views/stray.json"), { id: "unused" });
+  expect("warns about an unlisted file in a kebab-case folder", run(), {
+    exit: 0,
+    contains: ["document-views/stray.json exists but is not listed in package.json"],
+  });
+  await rm(join(pkgDir, "document-views/stray.json"));
 
   // Back to the baseline: the fixture minus every violation still passes.
   expect("passes again once the violations are removed", run(), {

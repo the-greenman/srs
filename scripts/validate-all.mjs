@@ -5,27 +5,49 @@
 import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { readdir } from 'fs/promises';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// Paths are relative to `srs/` (validate-package.mjs joins them onto the spec repo root), so the
-// published packages under `packages/**` are reached with a leading `../`.
-const packages = [
-  'package',
-  'package/spec-authoring-core',
-  'package/spec-rfc-process',
-  'package/metamodel',
-  // Declared package.json files that no run ever reached (#391). Both were invisible for the same
-  // reason the seven definition kinds were: nothing enumerated them.
-  'package/base',
-  'package/core',
-  // The published packages are the ONLY ones that populate `views`, `documentViews`, `lifecycles`,
-  // `blueprints` and `protocols`. Without them, #391's extension is exercised against empty lists
-  // for five of the ten kinds — CI green for the wrong reason, which is the failure mode this
-  // whole line of work is about. They are shipped artifacts and both validate today.
-  '../packages/com.mudemocracy.governance/1.0.0/package',
-  '../packages/com.mudemocracy.governance/1.1.0/package',
-];
+const REPO_ROOT = join(__dirname, '..');
+
+/**
+ * Every package in the tree, DISCOVERED rather than listed (#391).
+ *
+ * A hardcoded list is the same defect #391 fixes at the kind level, one level up: `package/base`
+ * and `package/core` carried package.json files that no run ever reached, and the published
+ * governance packages — the only ones populating `views`, `documentViews`, `lifecycles`,
+ * `blueprints` and `protocols`, so the only ones that exercise five of the ten kinds against
+ * anything — were never validated either. Adding a 1.2.0 to a list would have left it unvalidated
+ * forever, silently. So nothing is listed: the two package roots are walked.
+ *
+ * Scoped to `srs/package/**` and `packages/**` deliberately. `rfcs/rfc-004/proposed-package/**`
+ * also holds package.json files; those are the historical RFC-004 proposal that #308's guard
+ * likewise excludes, and they are not live packages.
+ *
+ * Paths come back relative to `srs/`, because validate-package.mjs joins them onto the spec repo
+ * root — so the published packages are reached with a leading `../`.
+ */
+async function discoverPackages() {
+  const found = [];
+  const walk = async (absDir, relFromSrs) => {
+    let entries;
+    try {
+      entries = await readdir(absDir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    if (entries.some((e) => e.isFile() && e.name === 'package.json')) found.push(relFromSrs);
+    for (const entry of entries) {
+      if (entry.isDirectory()) {
+        await walk(join(absDir, entry.name), `${relFromSrs}/${entry.name}`);
+      }
+    }
+  };
+  await walk(join(REPO_ROOT, 'srs/package'), 'package');
+  await walk(join(REPO_ROOT, 'packages'), '../packages');
+  return found.sort();
+}
 
 async function runScript(script, args = []) {
   return new Promise((resolve) => {
@@ -48,6 +70,14 @@ async function validateAll() {
   console.log('Running all validations...\n');
 
   let allValid = true;
+
+  const packages = await discoverPackages();
+  console.log(`Discovered ${packages.length} packages: ${packages.join(', ')}`);
+  if (packages.length === 0) {
+    // A walk that found nothing is not a tree with nothing to validate.
+    console.log('\n\u2717 No packages discovered under srs/package/** or packages/** — refusing to report success.');
+    process.exit(1);
+  }
 
   for (const pkg of packages) {
     const valid = await runScript('validate-package.mjs', [pkg]);

@@ -83,32 +83,58 @@ async function validatePackageManifest(dirPath) {
   return manifest;
 }
 
-async function validateManifestPaths(dirPath, manifest, subdir) {
-  const listed = new Set();
-  const manifestEntries = Array.isArray(manifest[subdir]) ? manifest[subdir] : [];
+async function validateManifestPaths(dirPath, manifest, kind) {
+  const manifestEntries = Array.isArray(manifest[kind]) ? manifest[kind] : [];
 
   for (const relativePath of manifestEntries) {
-    const fullPath = join(dirPath, relativePath);
-    listed.add(relativePath);
-    if (!(await fileExists(fullPath))) {
-      errors.push(`${rel(join(dirPath, 'package.json'))}: listed ${subdir.slice(0, -1)} file missing: ${relativePath}`);
+    if (!(await fileExists(join(dirPath, relativePath)))) {
+      // The kind name verbatim. `kind.slice(0, -1)` produced "listed vocabularie file missing" —
+      // naive de-pluralisation is wrong here for the same reason it is wrong for kind → schema.
+      errors.push(`${rel(join(dirPath, 'package.json'))}: listed ${kind} entry missing: ${relativePath}`);
     }
   }
+}
 
-  const folderPath = join(dirPath, subdir);
-  if (!(await fileExists(folderPath))) return listed;
+/** Every `.json` file under a package directory, as paths relative to it. */
+async function jsonFilesUnder(dirPath, prefix = '') {
+  let entries;
+  try {
+    entries = await readdir(join(dirPath, prefix), { withFileTypes: true });
+  } catch {
+    return [];
+  }
+  const found = [];
+  for (const entry of entries) {
+    const relativePath = prefix ? `${prefix}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) {
+      found.push(...(await jsonFilesUnder(dirPath, relativePath)));
+    } else if (entry.name.endsWith('.json') && relativePath !== 'package.json') {
+      found.push(relativePath);
+    }
+  }
+  return found;
+}
 
-  const presentFiles = (await readdir(folderPath))
-    .filter(name => name.endsWith('.json'))
-    .map(name => `${subdir}/${name}`);
-
-  for (const presentFile of presentFiles) {
+/**
+ * Warn about definition files present on disk that no kind indexes.
+ *
+ * Walks the package directory rather than looking inside a per-kind folder named after the kind.
+ * The folders are kebab-case — `document-views/`, `relation-types/` — so a `join(dirPath, kind)`
+ * lookup silently finds nothing for exactly the kinds #391 added, and the check quietly stops
+ * existing for them. Deriving the folder name by string surgery would be the same guess this
+ * codebase already refuses to make for kind → schema, so nothing is derived: every `.json` under
+ * the package is compared against the union of what the manifest lists, which also catches a stray
+ * definition in a folder whose name matches no kind at all.
+ */
+async function warnUnlistedFiles(dirPath, manifest, kinds) {
+  const listed = new Set(
+    kinds.flatMap(({ kind }) => (Array.isArray(manifest[kind]) ? manifest[kind] : [])),
+  );
+  for (const presentFile of await jsonFilesUnder(dirPath)) {
     if (!listed.has(presentFile)) {
       warnings.push(`${rel(join(dirPath, 'package.json'))}: ${presentFile} exists but is not listed in package.json`);
     }
   }
-
-  return listed;
 }
 
 async function main() {
@@ -116,7 +142,29 @@ async function main() {
 
   const packageManifestSchema = await loadSchema(join(SCHEMA_DIR, 'package-manifest.json'));
 
-  const { kinds, unclassified } = await definitionKinds(ROOT);
+  const { properties, composed, kinds, unclassified } = await definitionKinds(ROOT);
+
+  // The derivation's own preconditions, enforced here and not only in #311's gate. A
+  // package-manifest.json whose properties are composed behind an allOf/$ref yields an EMPTY kind
+  // list, and validating zero kinds without complaint prints "✓ Package is valid" over a package
+  // this script never opened a single file of. Inside validate-all.mjs the sibling #311 run would
+  // also go red, but a standalone per-package run would not — and that is the invocation a human
+  // reaches for.
+  if (composed.length > 0) {
+    errors.push(
+      `docs/schema/2.0/package-manifest.json composes its properties via ${composed.join(', ')} — ` +
+      `the definition-kind list derived from it is incomplete, so this package cannot be fully ` +
+      `validated. See scripts/check-schema-kind-correspondence.mjs.`,
+    );
+  }
+  if (properties.length === 0 || kinds.length === 0) {
+    errors.push(
+      `docs/schema/2.0/package-manifest.json yielded no definition kinds ` +
+      `(${properties.length} properties declared) — this script is not reading what it thinks it ` +
+      `is, and a vacuous pass would be worse than a failure.`,
+    );
+  }
+
   for (const property of unclassified) {
     // Reported, not skipped. A property package-manifest.json declares that PROPERTY_SCHEMA does
     // not classify means the table is incomplete, and quietly validating the kinds it does
@@ -136,6 +184,8 @@ async function main() {
   }
 
   pushSchemaErrors(rel(join(dirPath, 'package.json')), validateJsonSchema(manifest, packageManifestSchema));
+
+  await warnUnlistedFiles(dirPath, manifest, kinds);
 
   for (const { kind, schemaFile } of kinds) {
     await validateManifestPaths(dirPath, manifest, kind);
