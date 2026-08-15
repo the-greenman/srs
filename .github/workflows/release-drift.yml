@@ -129,3 +129,9 @@ jobs:
         env:
           SRS_CLI_PATH: /tmp/srs-cli/srs
         run: node scripts/check-gallery-conformance.mjs
+
+      - name: Check owner strategic map
+        working-directory: srs
+        run: |
+          node scripts/roadmap.mjs --check
+          node scripts/roadmap.test.mjs
