@@ -30,6 +30,7 @@
  *   node scripts/check-schema-kind-correspondence.mjs [root]   # root defaults to the repo root
  */
 import { readFile, access } from "fs/promises";
+import { realpathSync } from "fs";
 import { join, resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -54,7 +55,7 @@ const MANIFEST_SCHEMA = join(SCHEMA_DIR, "package-manifest.json");
  * one-level-up fail-open this check exists to close, so there is no filter. Every new property
  * fails until a person says which it is.
  */
-const PROPERTY_SCHEMA = {
+export const PROPERTY_SCHEMA = {
   // Definition-kind indexes — each names files validated by the schema it maps to.
   fields: "field.json",
   types: "type.json",
@@ -96,12 +97,51 @@ const COMPOSITION_KEYWORDS = [
   "patternProperties", "dependentSchemas", "unevaluatedProperties",
 ];
 
+/**
+ * THE derivation — the single place `package-manifest.json`'s declared properties are read and
+ * classified. Both this file's own check and `validate-package.mjs` (#391) go through it, so a kind
+ * added to the schema fails the gate until it has a row, and the moment it has one it is also
+ * path-checked and schema-validated, with no second list to remember.
+ *
+ * Returns everything a caller needs to enforce its own policy, including the two structural facts
+ * that decide whether the derivation means anything at all:
+ *
+ *   properties   — every property the schema declares (the zero floor is computed from this)
+ *   composed     — composition keywords present at the schema root; non-empty means `properties`
+ *                  is an incomplete view and any kind list derived from it is untrustworthy
+ *   kinds        — [{ kind, schemaFile }] for the classified definition-kind indexes
+ *   unclassified — declared properties with no PROPERTY_SCHEMA row
+ *
+ * `composed` and `properties` are returned rather than acted on here because each caller fails
+ * differently — but a caller that ignores them gets the exact fail-open this check exists to close:
+ * properties composed behind an `allOf`/`$ref` yield an EMPTY kind list, and a consumer that
+ * validates zero kinds without complaint prints a clean pass over a package it never opened.
+ */
+export async function definitionKinds(root) {
+  const schemaDir = join(resolve(root), "docs/schema/2.0");
+  const schema = JSON.parse(await readFile(join(schemaDir, "package-manifest.json"), "utf8"));
+  const properties = declaredProperties(schema);
+  const composed = COMPOSITION_KEYWORDS.filter((k) => schema[k] != null);
+  const kinds = [];
+  const unclassified = [];
+  for (const property of properties) {
+    if (!Object.hasOwn(PROPERTY_SCHEMA, property)) {
+      unclassified.push(property);
+      continue;
+    }
+    const schemaFile = PROPERTY_SCHEMA[property];
+    if (schemaFile != null) kinds.push({ kind: property, schemaFile });
+  }
+  return { properties, composed, kinds, unclassified };
+}
+
+
 const exists = (path) => access(path).then(() => true, () => false);
 
 async function main() {
-  const schema = JSON.parse(await readFile(MANIFEST_SCHEMA, "utf8"));
-  const properties = declaredProperties(schema);
-  const composed = COMPOSITION_KEYWORDS.filter((k) => schema[k] != null);
+  // Through the same derivation `validate-package.mjs` uses — one reader of the schema, so the two
+  // checks cannot disagree about what this file declares.
+  const { properties, composed, kinds: classified, unclassified } = await definitionKinds(ROOT);
 
   console.log("Definition kind → schema correspondence (#311)");
 
@@ -121,22 +161,17 @@ async function main() {
     process.exit(1);
   }
 
-  const errors = [];
+  const errors = unclassified.map(
+    (property) =>
+      `${property}: declared by package-manifest.json with no row in PROPERTY_SCHEMA. If it ` +
+      `indexes definition files, add its schema to docs/schema/2.0/ and map it here; if it does ` +
+      `not, map it to null in scripts/check-schema-kind-correspondence.mjs.`,
+  );
   const kinds = [];
-  for (const property of properties) {
-    if (!Object.hasOwn(PROPERTY_SCHEMA, property)) {
-      errors.push(
-        `${property}: declared by package-manifest.json with no row in PROPERTY_SCHEMA. If it ` +
-        `indexes definition files, add its schema to docs/schema/2.0/ and map it here; if it does ` +
-        `not, map it to null in scripts/check-schema-kind-correspondence.mjs.`,
-      );
-      continue;
-    }
-    const file = PROPERTY_SCHEMA[property];
-    if (file == null) continue; // explicitly classified as not a definition kind
-    kinds.push(property);
-    if (!(await exists(join(SCHEMA_DIR, file)))) {
-      errors.push(`${property}: maps to docs/schema/2.0/${file}, which does not exist.`);
+  for (const { kind, schemaFile } of classified) {
+    kinds.push(kind);
+    if (!(await exists(join(SCHEMA_DIR, schemaFile)))) {
+      errors.push(`${kind}: maps to docs/schema/2.0/${schemaFile}, which does not exist.`);
     }
   }
   console.log(`  Definition kinds among them:                  ${kinds.length} (${kinds.join(", ")})`);
@@ -153,7 +188,36 @@ async function main() {
   console.log(`\n✓ Every declared definition kind resolves to a schema in docs/schema/2.0/ (${kinds.length} checked)`);
 }
 
-main().catch((err) => {
-  console.error("Error:", err);
-  process.exit(1);
-});
+// Run only when invoked as a script. `validate-package.mjs` imports `definitionKinds` from here,
+// and a bare `main()` at module load would run the whole check as a side effect of that import.
+// `import.meta.main` is not available on the Node this repo targets, so compare argv[1].
+//
+// REALPATH BOTH SIDES. `import.meta.url` is already resolved to the real path (Node resolves the
+// main entry that way unless --preserve-symlinks-main), but `process.argv[1]` is the literal string
+// typed, and `resolve()` normalises without ever following a symlink. Comparing them raw makes this
+// guard a silent no-op for any invocation whose path traverses a link — a symlinked checkout, an
+// npm/pnpm bin shim, `node /proc/self/cwd/scripts/...` — and a no-op here EXITS 0, so
+// validate-all.mjs reads the vanished check as a pass. That is the same fail-open this file exists
+// to close, arriving through its own invocation.
+const invokedDirectly = (() => {
+  const argv1 = process.argv[1];
+  if (!argv1) return false;
+  const self = fileURLToPath(import.meta.url);
+  try {
+    return realpathSync(resolve(argv1)) === realpathSync(self);
+  } catch {
+    // FAIL TOWARDS RUNNING. Falling back to `resolve(argv1) === self` would reinstate the exact
+    // comparison this block exists to replace — `self` is already realpath'd, `resolve` never
+    // follows a link — and because a guard that does not run exits 0, that fallback would report a
+    // clean pass for a check that never happened. Running when unsure is the safe direction: the
+    // worst case is the check running during an import, which is noisy and obvious, not silent.
+    return true;
+  }
+})();
+
+if (invokedDirectly) {
+  main().catch((err) => {
+    console.error("Error:", err);
+    process.exit(1);
+  });
+}

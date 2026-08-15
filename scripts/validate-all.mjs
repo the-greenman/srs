@@ -5,15 +5,70 @@
 import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { readdir } from 'fs/promises';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const packages = [
-  'package',
-  'package/spec-authoring-core',
-  'package/spec-rfc-process',
-  'package/metamodel',
-];
+const REPO_ROOT = join(__dirname, '..');
+
+/**
+ * Every package in the tree, DISCOVERED rather than listed (#391).
+ *
+ * A hardcoded list is the same defect #391 fixes at the kind level, one level up: `package/base`
+ * and `package/core` carried package.json files that no run ever reached, and the published
+ * governance packages — the only ones populating `views`, `documentViews`, `lifecycles`,
+ * `blueprints` and `protocols`, so the only ones that exercise five of the ten kinds against
+ * anything — were never validated either. Adding a 1.2.0 to a list would have left it unvalidated
+ * forever, silently. So nothing is listed: the two package roots are walked.
+ *
+ * Scoped to `srs/package/**` and `packages/**` deliberately. `rfcs/rfc-004/proposed-package/**`
+ * also holds package.json files; those are the historical RFC-004 proposal that #308's guard
+ * likewise excludes, and they are not live packages.
+ *
+ * Paths come back relative to `srs/`, because validate-package.mjs joins them onto the spec repo
+ * root — so the published packages are reached with a leading `../`.
+ */
+async function discoverPackages() {
+  const walkRoot = async (absRoot, relFromSrs) => {
+    const found = [];
+    const walk = async (absDir, rel) => {
+      let entries;
+      try {
+        entries = await readdir(absDir, { withFileTypes: true });
+      } catch {
+        return;
+      }
+      if (entries.some((e) => e.isFile() && e.name === 'package.json')) found.push(rel);
+      for (const entry of entries) {
+        // `node_modules` would be fed to validate-package.mjs as an SRS manifest and turn the run
+        // red for a reason unrelated to the corpus. Nothing puts one here today; excluding it costs
+        // one line and removes a way for this walk to be wrong later.
+        if (entry.isDirectory() && entry.name !== 'node_modules') {
+          await walk(join(absDir, entry.name), `${rel}/${entry.name}`);
+        }
+      }
+    };
+    await walk(absRoot, relFromSrs);
+    return found;
+  };
+
+  // PER-ROOT floors, not one floor on the union. A single `packages.length === 0` check cannot fire
+  // while the other root still yields something: rename `srs/package` and the walk would return the
+  // two published packages, print "Discovered 2 packages" and exit 0 having validated none of the
+  // six spec packages. Each root must independently produce at least one.
+  const roots = [
+    { abs: join(REPO_ROOT, 'srs/package'), rel: 'package', label: 'srs/package/**' },
+    { abs: join(REPO_ROOT, 'packages'), rel: '../packages', label: 'packages/**' },
+  ];
+  const found = [];
+  const emptyRoots = [];
+  for (const root of roots) {
+    const packages = await walkRoot(root.abs, root.rel);
+    if (packages.length === 0) emptyRoots.push(root.label);
+    found.push(...packages);
+  }
+  return { packages: found.sort(), emptyRoots };
+}
 
 async function runScript(script, args = []) {
   return new Promise((resolve) => {
@@ -36,6 +91,14 @@ async function validateAll() {
   console.log('Running all validations...\n');
 
   let allValid = true;
+
+  const { packages, emptyRoots } = await discoverPackages();
+  console.log(`Discovered ${packages.length} packages: ${packages.join(', ')}`);
+  if (emptyRoots.length > 0) {
+    // A walk that found nothing is not a tree with nothing to validate.
+    console.log(`\n\u2717 No packages discovered under ${emptyRoots.join(' or ')} — refusing to report success.`);
+    process.exit(1);
+  }
 
   for (const pkg of packages) {
     const valid = await runScript('validate-package.mjs', [pkg]);
@@ -91,8 +154,10 @@ async function validateAll() {
   const schemaKindsValid = await runScript('check-schema-kind-correspondence.mjs');
   if (!schemaKindsValid) allValid = false;
 
-  // ...and both guards demonstrably fail on the violation they exist to catch. A guard nobody has
-  // watched fail is indistinguishable from a guard that cannot fail.
+  // ...and every guard demonstrably fails on the violation it exists to catch — including
+  // validate-package.mjs's own ten-kind coverage (#391), whose blueprint cases would otherwise be
+  // green on an empty list. A guard nobody has watched fail is indistinguishable from a guard that
+  // cannot fail.
   const guardsBite = await runScript('../tests/guards/run.mjs');
   if (!guardsBite) allValid = false;
 

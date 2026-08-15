@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
- * tests/guards/run.mjs — the negative tests for the two enforcement guards (#308, #311).
+ * tests/guards/run.mjs — the negative tests for the enforcement checks (#308, #311, #391).
  *
- * Both guards pass over the live tree today, which is the whole problem with trusting them: a guard
- * that has never been watched fail is indistinguishable from a guard that cannot fail. Each case
+ * All three pass over the live tree today, which is the whole problem with trusting them: a check
+ * that has never been watched fail is indistinguishable from one that cannot fail. Each case
  * below drives the real check script against a fixture tree (the scripts take an optional root
  * argument for exactly this) and asserts BOTH halves — that the violating fixture is rejected with a
  * message naming the offender, and that the same fixture minus the violation passes. Asserting on
@@ -24,11 +24,14 @@ const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 
 let failures = 0;
 
-/** Run a check script against a fixture root; returns {code, out}. */
-function runCheck(script, root) {
-  const r = spawnSync("node", [join(REPO, "scripts", script), root], { encoding: "utf8" });
+/** Run a check script with explicit args; returns {code, out}. */
+function runScript(script, ...args) {
+  const r = spawnSync("node", [join(REPO, "scripts", script), ...args], { encoding: "utf8" });
   return { code: r.status, out: `${r.stdout ?? ""}${r.stderr ?? ""}` };
 }
+
+/** Run a check script against a fixture root; returns {code, out}. */
+const runCheck = (script, root) => runScript(script, root);
 
 function expect(label, { code, out }, { exit, contains = [] }) {
   const problems = [];
@@ -266,10 +269,183 @@ async function schemaKindCases(root) {
   });
 }
 
+// ---- #391 — validate-package.mjs covers all ten definition kinds ---------------------------------
+async function validatePackageCases(root) {
+  console.log("#391 — package validation covers every declared definition kind");
+
+  // A fixture package that declares one of the seven kinds that were previously neither
+  // path-checked nor schema-validated. `blueprints` is the sharpest of them: #311's gate reports
+  // `blueprints → blueprint.json ✓` while nothing ever opened a blueprint file.
+  const schemaDir = join(root, "docs/schema/2.0");
+  await cp(join(REPO, "docs/schema/2.0"), schemaDir, { recursive: true });
+
+  const PKG = "package/fixture";
+  const pkgDir = join(root, "srs", PKG);
+  const run = () => runScript("validate-package.mjs", PKG, root);
+
+  const validBlueprint = {
+    $schema: "https://srs.semanticops.com/schema/2.0/blueprint.json",
+    id: "00000000-0000-4000-8000-0000000b1001",
+    namespace: "com.example.fixture",
+    name: "fixture-blueprint",
+    version: 1,
+    description: "fixture blueprint",
+    rootTypes: [{ typeId: "00000000-0000-4000-8000-0000000e1001", typeVersion: 1 }],
+    createdAt: "2026-08-15T00:00:00Z",
+  };
+  const manifest = {
+    $schema: "https://srs.semanticops.com/schema/2.0/package-manifest.json",
+    id: "00000000-0000-4000-8000-0000000a1001",
+    namespace: "com.example.fixture",
+    name: "fixture",
+    version: "1.0.0",
+    title: "Fixture",
+    description: "fixture package",
+    status: "draft",
+    fields: [],
+    types: [],
+    blueprints: ["blueprints/fixture.json"],
+    createdAt: "2026-08-15T00:00:00Z",
+  };
+
+  // Baseline: a well-formed blueprint passes. Without this the cases below could not tell a working
+  // check apart from one that rejects every blueprint it is shown.
+  await writeJson(join(pkgDir, "package.json"), manifest);
+  await writeJson(join(pkgDir, "blueprints/fixture.json"), validBlueprint);
+  expect("accepts a valid blueprint", run(), {
+    exit: 0,
+    contains: ["Checking 1 blueprints definitions against blueprint.json", "✓ Package is valid"],
+  });
+
+  // The violation #391 is about: a malformed blueprint that passed `validate-all.mjs` in silence,
+  // because no schema was ever loaded for the kind. `rootTypes` is required.
+  const { rootTypes: _dropped, ...malformed } = validBlueprint;
+  await writeJson(join(pkgDir, "blueprints/fixture.json"), malformed);
+  expect("rejects a malformed blueprint", run(), {
+    exit: 1,
+    contains: ["package/fixture/blueprints/fixture.json", "rootTypes", "✗ Package validation failed"],
+  });
+
+  // ...and the path half of the same gap: a blueprint listed at a path that does not exist.
+  await rm(join(pkgDir, "blueprints/fixture.json"));
+  expect("rejects a listed blueprint file that is missing", run(), {
+    exit: 1,
+    contains: ["listed blueprints entry missing: blueprints/fixture.json"],
+  });
+  await writeJson(join(pkgDir, "blueprints/fixture.json"), validBlueprint);
+
+  // Every one of the ten kinds is named in the run output. Asserting the count alone would pass on
+  // ten arbitrary kinds; asserting the names is what pins the derivation to package-manifest.json.
+  const perKind = [
+    "fields definitions against field.json",
+    "types definitions against type.json",
+    "views definitions against view.json",
+    "documentViews definitions against document-view.json",
+    "themes definitions against theme.json",
+    "relationTypes definitions against relation-type.json",
+    "vocabularies definitions against vocabulary.json",
+    "lifecycles definitions against lifecycle.json",
+    "blueprints definitions against blueprint.json",
+    "protocols definitions against protocol.json",
+  ];
+  expect("checks all ten declared kinds", run(), { exit: 0, contains: perKind });
+
+  // The derivation is live, not a snapshot: a kind added to package-manifest.json with no
+  // classification row must stop this script claiming the package was validated — the same
+  // fail-open #311's gate refuses, refused again at the point of use.
+  const manifestSchema = join(schemaDir, "package-manifest.json");
+  const doc = JSON.parse(await readFile(manifestSchema, "utf8"));
+  doc.properties.widgets = { type: "array", items: { type: "string" } };
+  await writeFile(manifestSchema, `${JSON.stringify(doc, null, 2)}\n`);
+  expect("refuses to validate against an unclassified declared kind", run(), {
+    exit: 1,
+    contains: ["widgets", "no row in PROPERTY_SCHEMA", "cannot be fully validated"],
+  });
+  delete doc.properties.widgets;
+  await writeFile(manifestSchema, `${JSON.stringify(doc, null, 2)}\n`);
+
+  // A kind mapped to a schema file that is not there must fail even when the package declares no
+  // entries of that kind — otherwise the pre-#378 `protocols` state is invisible from this side.
+  //
+  // Asserted on the LOAD FAILURE message, not on "protocols"/"protocol.json": both of those strings
+  // are printed by the per-kind progress line on a PASSING run too (the case above requires exactly
+  // that on exit 0), so asserting them here would make this an exit-code-only test that could not
+  // tell the missing schema apart from any unrelated failure.
+  await rm(join(schemaDir, "protocol.json"));
+  expect("fails when a kind's schema file is absent, even with no entries", run(), {
+    exit: 1,
+    contains: ["cannot load docs/schema/2.0/protocol.json"],
+  });
+  await cp(join(REPO, "docs/schema/2.0/protocol.json"), join(schemaDir, "protocol.json"));
+
+  // The derivation's preconditions, enforced at the point of use and not only by #311's gate. A
+  // manifest schema that composes its properties yields an empty kind list, and a validator that
+  // shrugs at zero kinds prints "✓ Package is valid" over a package it never opened.
+  const composing = JSON.parse(await readFile(manifestSchema, "utf8"));
+  composing.allOf = [{ properties: { widgets: { type: "array", items: { type: "string" } } } }];
+  await writeFile(manifestSchema, `${JSON.stringify(composing, null, 2)}\n`);
+  expect("refuses to validate against a composed manifest schema", run(), {
+    exit: 1,
+    contains: ["composes its properties via allOf", "cannot be fully validated"],
+  });
+
+  const noProperties = JSON.parse(await readFile(manifestSchema, "utf8"));
+  delete noProperties.allOf;
+  delete noProperties.properties;
+  await writeFile(manifestSchema, `${JSON.stringify(noProperties, null, 2)}\n`);
+  expect("refuses to validate when the schema yields no definition kinds", run(), {
+    exit: 1,
+    contains: ["yielded no definition kinds", "vacuous pass would be worse"],
+  });
+  await writeFile(manifestSchema, `${JSON.stringify(doc, null, 2)}\n`);
+
+  // A definition file sitting beside indexed ones but not itself indexed is a warning, and it must
+  // fire for the KEBAB-CASE folders too. `documentViews` lives in `document-views/`, so a scan that
+  // looks in a folder named after the kind finds nothing — the check silently stopped existing for
+  // exactly the kinds #391 added.
+  //
+  // The package indexes a real documentView first, which is the shape this applies to in the wild
+  // (the governance packages index four). It also keeps the case honest: the folder is reached
+  // because the manifest references it, not because the fixture was arranged around the scan.
+  await writeJson(join(pkgDir, "document-views/real.json"), {
+    $schema: "https://srs.semanticops.com/schema/2.0/document-view.json",
+    id: "00000000-0000-4000-8000-0000000d1001",
+    namespace: "com.example.fixture",
+    name: "fixture-document-view",
+    version: 1,
+    description: "fixture document view",
+    sections: [],
+    createdAt: "2026-08-15T00:00:00Z",
+  });
+  await writeJson(join(pkgDir, "package.json"), {
+    ...manifest,
+    documentViews: ["document-views/real.json"],
+  });
+  expect("accepts an indexed documentView in a kebab-case folder", run(), {
+    exit: 0,
+    contains: ["Checking 1 documentViews definitions against document-view.json", "✓ Package is valid"],
+  });
+
+  await writeJson(join(pkgDir, "document-views/stray.json"), { id: "unused" });
+  expect("warns about an unlisted file in a kebab-case folder", run(), {
+    exit: 0,
+    contains: ["document-views/stray.json exists but is not listed in package.json"],
+  });
+  await rm(join(pkgDir, "document-views/stray.json"));
+  await writeJson(join(pkgDir, "package.json"), manifest);
+
+  // Back to the baseline: the fixture minus every violation still passes.
+  expect("passes again once the violations are removed", run(), {
+    exit: 0,
+    contains: ["✓ Package is valid"],
+  });
+}
+
 const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
 try {
   await fieldNameCases(join(root, "field-name"));
   await schemaKindCases(join(root, "schema-kind"));
+  await validatePackageCases(join(root, "validate-package"));
 } finally {
   await rm(root, { recursive: true, force: true });
 }
@@ -278,4 +454,4 @@ if (failures > 0) {
   console.error(`\n✗ ${failures} guard case(s) did not behave as specified.`);
   process.exit(1);
 }
-console.log("\n✓ Both guards fail on the violation they exist to catch, and pass without it.");
+console.log("\n✓ Every guard fails on the violation it exists to catch, and passes without it.");
