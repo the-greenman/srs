@@ -83,13 +83,32 @@ const PROPERTY_SCHEMA = {
 
 const declaredProperties = (schema) => Object.keys(schema.properties ?? {});
 
+/**
+ * This check reads `properties` and nothing else. A manifest schema that composed its properties
+ * elsewhere — an `allOf` branch, an `$ref` to a `$defs` entry (the file already uses `$defs`) —
+ * would hide a definition kind from the classification entirely: 21 properties would still be
+ * present so the zero floor never fires, and the guard would print a clean "✓ 9 checked" over
+ * exactly the pre-#378 state it exists to detect. Rather than chase every composition keyword, the
+ * assumption is asserted.
+ */
+const COMPOSITION_KEYWORDS = ["allOf", "anyOf", "oneOf", "$ref", "if", "then", "else", "patternProperties"];
+
 const exists = (path) => access(path).then(() => true, () => false);
 
 async function main() {
   const schema = JSON.parse(await readFile(MANIFEST_SCHEMA, "utf8"));
   const properties = declaredProperties(schema);
+  const composed = COMPOSITION_KEYWORDS.filter((k) => schema[k] != null);
 
   console.log("Definition kind → schema correspondence (#311)");
+
+  if (composed.length > 0) {
+    console.log(`\n✗ package-manifest.json composes its properties via ${composed.join(", ")}.`);
+    console.log("  This check classifies `properties` only, so a definition kind declared through a");
+    console.log("  composition keyword would be invisible to it — the failure it exists to catch,");
+    console.log("  one level up. Either inline the properties or teach this check to resolve them.");
+    process.exit(1);
+  }
   console.log(`  Properties declared by package-manifest.json: ${properties.length}`);
 
   if (properties.length === 0) {

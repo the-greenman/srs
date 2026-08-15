@@ -150,6 +150,29 @@ async function fieldNameCases(root) {
   });
   await rm(nameless);
 
+  // A definition file with no `id` would not match `isFieldDefinition` at all. At a document root
+  // that is a malformed definition, not a nested fragment, so its name is still checked.
+  const idless = join(root, "srs/package/fields/idless.json");
+  const { id: _noId, ...withoutId } = field("kebab-case-name");
+  await writeJson(idless, withoutId);
+  expect("rejects a kebab-case name in a root definition with no id", runCheck("check-field-name-convention.mjs", root), {
+    exit: 1,
+    contains: ["srs/package/fields/idless.json", "kebab-case-name"],
+  });
+  await rm(idless);
+
+  // ...but a Tier-1 TypedRecord's `fields[]` values legitimately carry a fieldType and no id, and
+  // are not roots. Treating them as definitions would fail the corpus on valid data.
+  await writeJson(join(root, "srs/records/typed-record.json"), {
+    instanceId: "00000000-0000-4000-8000-00000000e001",
+    tier: 1,
+    fields: [{ name: "agenda", label: "Agenda", fieldType: { datatype: "string" }, value: "x" }],
+  });
+  expect("does not treat Tier-1 field values as definitions", runCheck("check-field-name-convention.mjs", root), {
+    exit: 0,
+    contains: ["✓ Every Field definition name is snake_case"],
+  });
+
   // A file the guard cannot read defeats its own claim, so it fails rather than skipping.
   const broken = join(root, "srs/package/fields/broken.json");
   await writeFile(broken, "{ not json");
@@ -219,6 +242,17 @@ async function schemaKindCases(root) {
     contains: ["widgets", "no row in PROPERTY_SCHEMA"],
   });
   delete doc.properties.widgets;
+
+  // A schema that composes its properties elsewhere hides kinds from a check that reads
+  // `properties` only — 21 properties would remain, so no floor fires and it prints a clean pass.
+  const composing = JSON.parse(await readFile(manifestSchema, "utf8"));
+  composing.allOf = [{ properties: { widgets: { type: "array", items: { type: "string" } } } }];
+  await writeFile(manifestSchema, `${JSON.stringify(composing, null, 2)}\n`);
+  expect("fails on a manifest schema that composes properties", runCheck("check-schema-kind-correspondence.mjs", root), {
+    exit: 1,
+    contains: ["composes its properties via allOf"],
+  });
+  await writeFile(manifestSchema, `${JSON.stringify(doc, null, 2)}\n`);
 
   // A manifest schema that declares nothing this check recognises is a check reading the wrong
   // thing; a vacuous pass would be worse than a failure.

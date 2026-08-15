@@ -46,6 +46,12 @@ const ROOT = process.argv[2]
 // RFC-004's proposed package is a historical artifact, not a live package (row 5 of #308).
 const EXCLUDED = ["rfcs/rfc-004"];
 
+// Files with a JSON extension that are deliberately not JSON — a JSONC config, a malformed negative
+// fixture. Empty today. It exists because the parse gate below is fatal and repo-wide, so without a
+// named exemption the only way past it is to weaken the gate; adding a path here is a decision,
+// which is the point.
+const NOT_JSON = [];
+
 const SNAKE_CASE = /^[a-z][a-z0-9]*(_[a-z0-9]+)*$/;
 
 function isExcluded(abs) {
@@ -71,6 +77,10 @@ async function findFiles(dir) {
     if (e.name === "node_modules" || e.name.startsWith(".")) continue;
     const abs = join(dir, e.name);
     if (isExcluded(abs)) continue;
+    // Symlinks are skipped, not followed: `Dirent.isDirectory()` is lstat-based so they already
+    // fall through, and following them invites cycles for no gain — nothing in this repo is
+    // reached only through one.
+    if (e.isSymbolicLink()) continue;
     if (e.isDirectory()) out.push(...(await findFiles(abs)));
     else if (CARRIERS.some((ext) => e.name.endsWith(ext))) out.push(abs);
   }
@@ -116,7 +126,15 @@ async function candidates(abs) {
     }
   };
   walk(parsed, relative(ROOT, abs));
-  return { docs };
+  // Document roots — the whole file, and each `.srsj` `data` entry, which is a whole document in a
+  // bundle. A carrier here with no `id` is a malformed definition rather than a nested fragment, so
+  // it is checked for a name even though `isFieldDefinition` would not match it. Array members are
+  // not roots: a Tier-1 TypedRecord's `fields[]` values legitimately carry a `fieldType` and no id.
+  const roots = [relative(ROOT, abs)];
+  if (isObject(parsed?.data)) {
+    for (const key of Object.keys(parsed.data)) roots.push(`${relative(ROOT, abs)}#data#${key}`);
+  }
+  return { docs, roots: new Set(roots) };
 }
 
 /**
@@ -133,9 +151,11 @@ async function candidates(abs) {
  * violations of a rule they are not subject to. A definition with no `id` is a different defect,
  * for the schema validation that owns identity.
  */
+const hasCarrier = (o) =>
+  typeof o.valueType === "string" || (o.fieldType != null && typeof o.fieldType === "object");
+
 function isFieldDefinition(o) {
-  return typeof o.id === "string" &&
-    (typeof o.valueType === "string" || (o.fieldType != null && typeof o.fieldType === "object"));
+  return typeof o.id === "string" && hasCarrier(o);
 }
 
 async function main() {
@@ -146,10 +166,11 @@ async function main() {
   let checked = 0;
 
   for (const abs of files) {
-    const { error, docs } = await candidates(abs);
+    if (NOT_JSON.includes(relative(ROOT, abs))) continue;
+    const { error, docs, roots } = await candidates(abs);
     if (error != null) unreadable.push({ path: relative(ROOT, abs), error });
     for (const { label, doc } of docs) {
-      if (!isFieldDefinition(doc)) continue;
+      if (!isFieldDefinition(doc) && !(roots?.has(label) && hasCarrier(doc))) continue;
       checked++;
       if (typeof doc.name !== "string" || !SNAKE_CASE.test(doc.name)) {
         violations.push({
