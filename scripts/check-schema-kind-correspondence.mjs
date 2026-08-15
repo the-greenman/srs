@@ -102,7 +102,7 @@ async function main() {
   const errors = [];
   const kinds = [];
   for (const property of properties) {
-    if (!(property in PROPERTY_SCHEMA)) {
+    if (!Object.hasOwn(PROPERTY_SCHEMA, property)) {
       errors.push(
         `${property}: declared by package-manifest.json with no row in PROPERTY_SCHEMA. If it ` +
         `indexes definition files, add its schema to docs/schema/2.0/ and map it here; if it does ` +

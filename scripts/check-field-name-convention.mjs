@@ -31,8 +31,7 @@ import { fileURLToPath } from "url";
 
 // Optional root override — the negative test (tests/guards/run.mjs) points this at a fixture tree.
 // `fileURLToPath`, not `new URL(..).pathname`: the latter is percent-encoded, so a checkout under a
-// path containing a space resolves to a directory that does not exist — where `findJsonFiles`
-// swallows the ENOENT and the guard passes having checked nothing.
+// path containing a space resolves to a directory that does not exist.
 const ROOT = process.argv[2]
   ? resolve(process.argv[2])
   : resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -55,12 +54,10 @@ function isExcluded(abs) {
 /** Both carriers a Field definition can live in: a loose `.json` file, or a `.srsj` bundle entry. */
 async function findFiles(dir) {
   const out = [];
-  let entries;
-  try {
-    entries = await readdir(dir, { withFileTypes: true });
-  } catch {
-    return out;
-  }
+  // Not swallowed: a directory that exists but cannot be read is unwalked coverage, and the only
+  // other floor here is total emptiness. (A search root that does not exist at all is caught up
+  // front, per root.)
+  const entries = await readdir(dir, { withFileTypes: true });
   for (const e of entries) {
     if (e.name === "node_modules" || e.name === ".git") continue;
     const abs = join(dir, e.name);
@@ -113,15 +110,21 @@ async function candidates(abs) {
   return { docs };
 }
 
-/** A Field definition is any object with an id plus a fieldType (post-RFC-032) or valueType (pre-). */
+/**
+ * A Field definition is any object with an id plus a fieldType (post-RFC-032) or valueType (pre-).
+ * `name` is deliberately NOT part of the test: requiring it to be a string would make a Field whose
+ * name is missing, null or a number fail to match at all — the guard would report success over the
+ * one Field most obviously in breach of a rule about names, and nothing else schema-validates Field
+ * files outside `srs/`. A candidate with no usable name is a violation, checked below.
+ */
 function isFieldDefinition(o) {
-  return typeof o.id === "string" && typeof o.name === "string" &&
+  return typeof o.id === "string" &&
     (typeof o.valueType === "string" || (o.fieldType != null && typeof o.fieldType === "object"));
 }
 
 async function main() {
-  // Per root, not just in aggregate: `findFiles` swallows a missing directory, so one renamed root
-  // would go unchecked while the others kept the guard green.
+  // Per root, not just in aggregate: one renamed root would otherwise go unchecked while the
+  // others kept the guard green.
   const missing = [];
   for (const root of SEARCH_ROOTS) {
     if (!(await stat(join(ROOT, root)).then((s) => s.isDirectory(), () => false))) missing.push(root);
@@ -146,8 +149,13 @@ async function main() {
     for (const { label, doc } of docs) {
       if (!isFieldDefinition(doc)) continue;
       checked++;
-      if (!SNAKE_CASE.test(doc.name)) {
-        violations.push({ path: label, name: doc.name, id: doc.id, namespace: doc.namespace ?? "?" });
+      if (typeof doc.name !== "string" || !SNAKE_CASE.test(doc.name)) {
+        violations.push({
+          path: label,
+          name: typeof doc.name === "string" ? doc.name : `(${doc.name === undefined ? "absent" : JSON.stringify(doc.name)})`,
+          id: doc.id,
+          namespace: doc.namespace ?? "?",
+        });
       }
     }
   }
@@ -168,9 +176,8 @@ async function main() {
     process.exit(1);
   }
 
-  // A guard that checked nothing is not a guard that found nothing. `findFiles` swallows a missing
-  // directory, so a renamed search root would otherwise leave this silently green forever — the
-  // exact fail-open mode this check exists to close, one level up.
+  // A guard that checked nothing is not a guard that found nothing — the exact fail-open mode this
+  // check exists to close, one level up.
   if (checked === 0) {
     console.log("\n✗ No Field definitions found in any search root.");
     console.log(`  Expected some under ${SEARCH_ROOTS.join(", ")} relative to ${ROOT}.`);

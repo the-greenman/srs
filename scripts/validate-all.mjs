@@ -28,6 +28,10 @@ async function runScript(script, args = []) {
   });
 }
 
+// Where this runs: `scripts/check-release-drift.mjs` invokes this script as its first step, and
+// that is what `.github/workflows/release-drift.yml` (a required check on every push and pull
+// request) and `hooks/pre-commit` both run. Grepping the workflows for `validate-all` finds nothing
+// and reads as "no CI runs this" — it does, one call deep.
 async function validateAll() {
   console.log('Running all validations...\n');
 

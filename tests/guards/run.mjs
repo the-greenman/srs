@@ -125,6 +125,22 @@ async function fieldNameCases(root) {
   });
   await rm(bundle);
 
+  // The Field most obviously in breach of a rule about names is the one with no name. Making `name`
+  // part of the "is this a Field definition" test would drop it from the walk and report success.
+  const nameless = join(root, "srs/package/fields/nameless.json");
+  const { name: _dropped, ...noName } = field("unused");
+  await writeJson(nameless, noName);
+  expect("rejects a Field definition with no name at all", runCheck("check-field-name-convention.mjs", root), {
+    exit: 1,
+    contains: ["srs/package/fields/nameless.json", "(absent)"],
+  });
+  await writeJson(nameless, { ...noName, name: 42 });
+  expect("rejects a non-string Field.name", runCheck("check-field-name-convention.mjs", root), {
+    exit: 1,
+    contains: ["srs/package/fields/nameless.json", "(42)"],
+  });
+  await rm(nameless);
+
   // A file the guard cannot read defeats its own claim, so it fails rather than skipping.
   const broken = join(root, "srs/package/fields/broken.json");
   await writeFile(broken, "{ not json");
