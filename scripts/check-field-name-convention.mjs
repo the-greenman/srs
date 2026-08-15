@@ -64,7 +64,11 @@ async function findFiles(dir) {
   // here is total emptiness.
   const entries = await readdir(dir, { withFileTypes: true });
   for (const e of entries) {
-    if (e.name === "node_modules" || e.name === ".git") continue;
+    // Dot-directories are tooling, not corpus (`.vscode`, `.claude`, `.srs` markers, `.git`), and
+    // parse failures here are fatal: a JSONC editor-settings file would otherwise block every
+    // commit through hooks/pre-commit for a reason that has nothing to do with the spec. Matches
+    // check-package-id-uniqueness.mjs.
+    if (e.name === "node_modules" || e.name.startsWith(".")) continue;
     const abs = join(dir, e.name);
     if (isExcluded(abs)) continue;
     if (e.isDirectory()) out.push(...(await findFiles(abs)));
@@ -121,6 +125,13 @@ async function candidates(abs) {
  * name is missing, null or a number fail to match at all — the guard would report success over the
  * one Field most obviously in breach of a rule about names, and nothing else schema-validates Field
  * files outside `srs/`. A candidate with no usable name is a violation, checked below.
+ *
+ * `id` IS part of the test, and load-bearing: it is what separates a Field *definition* from the
+ * other things that carry a `fieldType` — a Tier-1 TypedRecord's field values, and the JSON Schema
+ * fragments under `docs/schema/2.0/` and `tests/rfc-035/goldens/`. Measured: dropping it matches 9
+ * more objects, several with an object-valued `name`, which the guard would then report as
+ * violations of a rule they are not subject to. A definition with no `id` is a different defect,
+ * for the schema validation that owns identity.
  */
 function isFieldDefinition(o) {
   return typeof o.id === "string" &&

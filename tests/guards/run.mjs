@@ -114,6 +114,26 @@ async function fieldNameCases(root) {
   });
   await rm(bundle);
 
+  // RFC-003's package-bundle extension. Nothing is committed in it yet, so a typo in CARRIERS would
+  // leave every other case green.
+  const srspkg = join(root, "packages/com.example/1.0.0/bundle.srspkg");
+  await writeJson(srspkg, { mode: "bundled", fields: [field("kebab-case-name")] });
+  expect("rejects a kebab-case Field.name inside a .srspkg bundle", runCheck("check-field-name-convention.mjs", root), {
+    exit: 1,
+    contains: ["bundle.srspkg#fields[0]", "kebab-case-name"],
+  });
+  await rm(srspkg);
+
+  // The pre-RFC-032 carrier. `core-bundle.srsj` still ships two `valueType` Fields, so dropping that
+  // disjunct from `isFieldDefinition` would silently stop checking them.
+  const { fieldType: _unused, ...legacy } = field("kebab-case-name");
+  await writeJson(join(root, "srs/package/fields/legacy.json"), { ...legacy, valueType: "string" });
+  expect("rejects a kebab-case Field.name on the legacy valueType carrier", runCheck("check-field-name-convention.mjs", root), {
+    exit: 1,
+    contains: ["srs/package/fields/legacy.json", "kebab-case-name"],
+  });
+  await rm(join(root, "srs/package/fields/legacy.json"));
+
   // The Field most obviously in breach of a rule about names is the one with no name. Making `name`
   // part of the "is this a Field definition" test would drop it from the walk and report success.
   const nameless = join(root, "srs/package/fields/nameless.json");
