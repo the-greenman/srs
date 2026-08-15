@@ -11,6 +11,7 @@ test("two-track roadmap has complete ratified contracts", () => {
   assert.deepEqual(check.errors, []);
   assert.deepEqual(roadmap.tracks.map((track) => track.id), ["F", "P"]);
   assert.deepEqual(roadmap.boundaries.map((boundary) => boundary.id), ["F1", "F2", "F3", "P1", "P2", "P3"]);
+  assert.equal(roadmap.applicationStrategy.name, "srs-web / app.mudemocracy.org");
   assert.equal(roadmap.knownEpicRefs.length, 16);
   assert.equal(roadmap.epics.length, 16);
 });
@@ -20,10 +21,12 @@ test("validation rejects invalid task roles, missing issue references and depend
   invalid.boundaries[0].tasks[0].role = "maybe";
   invalid.boundaries[1].tasks[0].ref = "not an issue";
   invalid.boundaries[0].requires = ["F2"];
+  delete invalid.applicationStrategy.architecture;
   const errors = validateRoadmap(invalid).errors.join("\n");
   assert.match(errors, /invalid task role/);
   assert.match(errors, /invalid issue reference/);
   assert.match(errors, /boundary dependency cycle/);
+  assert.match(errors, /applicationStrategy: missing architecture/);
 });
 
 test("Markdown is deterministic and renders separate tracks, explicit tasks and gaps", () => {
@@ -34,6 +37,9 @@ test("Markdown is deterministic and renders separate tracks, explicit tasks and 
   assert.match(rendered, /subgraph P\["Decision practice"\]/);
   assert.match(rendered, /F2 --> F3/);
   assert.match(rendered, /F2 --> P3/);
+  assert.match(rendered, /First usable application/);
+  assert.match(rendered, /One repository runtime and one canonical edit, save, import and export path/);
+  assert.match(rendered, /paused origin prototype and research corpus/);
   assert.match(rendered, /\| \[#384\].*\| gate \|/);
   assert.match(rendered, /TSS schema and transcript-ingestion contract/);
 });

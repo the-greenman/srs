@@ -38,6 +38,10 @@ function validateRoadmap(data) {
   const tracks = new Set((data.tracks || []).map((track) => track.id));
   if (!data.version) errors.push("missing version");
   if (!data.bootstrapStatus) errors.push("missing bootstrapStatus");
+  for (const field of ["name", "role", "architecture", "boundaries", "modes", "predecessor"]) {
+    const value = data.applicationStrategy?.[field];
+    if (value == null || value === "" || (Array.isArray(value) && !value.length)) errors.push(`applicationStrategy: missing ${field}`);
+  }
   if (data.mission?.status !== "ratified") errors.push("mission must be ratified");
   for (const field of ["purpose", "muDemocracy", "srs", "humanAiConstitution", "roadmapTests"]) {
     const value = data.mission?.[field];
@@ -104,6 +108,15 @@ function renderRoadmap(data) {
     `> ${data.mission.purpose}`, "",
     `**μDemocracy:** ${data.mission.muDemocracy}`, "",
     `**SRS:** ${data.mission.srs}`, "",
+    "## First usable application", "",
+    `**${data.applicationStrategy.name}** — ${data.applicationStrategy.role}`, "",
+    `**Architecture:** ${data.applicationStrategy.architecture}`, "",
+    "### Boundary rules", "",
+    ...data.applicationStrategy.boundaries.flatMap((boundary) => [`- ${boundary}`, ""]),
+    "### Modes over the shared substrate", "",
+    ...data.applicationStrategy.modes.flatMap((mode) => [`- ${mode}`, ""]),
+    "### Origin prototype", "",
+    data.applicationStrategy.predecessor, "",
     "### Human–AI constitution", "",
     `> ${data.mission.humanAiConstitution}`, "",
     "### Roadmap test", "",

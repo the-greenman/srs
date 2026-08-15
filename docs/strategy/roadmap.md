@@ -16,6 +16,38 @@ The owner-governed release map above GitHub execution detail. It keeps semantic 
 
 **SRS:** SRS is an open standard for portable semantic documents that people and AI can understand and use. Semantic sovereignty means a group can possess, inspect, understand, move, present and continue working with its meaning without dependence on the application, service, storage provider or AI model that created it.
 
+## First usable application
+
+**srs-web / app.mudemocracy.org** — The first usable SRS application: an opinionated surface for people to inspect, edit, validate and work with their own semantic repositories.
+
+**Architecture:** One repository runtime and one canonical edit, save, import and export path. Repository, container workspace, facilitation and blueprint-authoring modes are projections over that shared substrate, never separate semantic stores.
+
+### Boundary rules
+
+- The application is generic about repository, Record, Relation, Container, Package, validation, navigation and preservation behaviour.
+
+- Blueprints select a workspace and presentation without changing canonical meaning.
+
+- Governance packages define decisions, roles, ratification, review and supersession; they are replaceable application content, not application-owned semantics.
+
+- Protocols guide work against canonical state; DocumentViews present it; neither becomes an authoritative store.
+
+- AI proposes visibly within a current Protocol or Blueprint context. Human review and ratification alone commit canonical meaning.
+
+### Modes over the shared substrate
+
+- Repository inspection and direct semantic editing
+
+- Container workspace for ordinary group work
+
+- Shared-screen Protocol facilitation
+
+- Blueprint and package authoring
+
+### Origin prototype
+
+The separate decision-logger repository is a paused origin prototype and research corpus. It informs fixtures, scenarios and migration learning, but is not a canonical SRS producer, consumer or release dependency unless explicitly restarted on current SRS contracts.
+
 ### Human–AI constitution
 
 > AI may observe, extract, propose, question, organise, explain and coach. People decide, agree, ratify and remain accountable.
@@ -94,7 +126,7 @@ Meaning survives independently of the system that created it.
 
 **Actor:** Independent user with no originating-service access
 
-**Promise:** A Decision Logger export opens, validates, explains itself and renders offline as a self-contained semantic repository.
+**Promise:** A realistic SRS governance repository opens, validates, explains itself and renders offline as a self-contained semantic repository.
 
 **Durable artifact:** Portable `.srs` export, generic readable fallback and independent conformance proof.
 
@@ -104,7 +136,7 @@ Meaning survives independently of the system that created it.
 
 **Explicit exclusions:** Editing and reintegration; Cryptographic authority profiles; Federation negotiation
 
-**End-to-end walkthrough:** Export a Decision Logger repository, disconnect from its service, then recover definitions, records, relations, provenance and a readable facet while accurately reporting missing evidence or unsupported semantics.
+**End-to-end walkthrough:** Export an SRS-native governance repository or fixed governance fixture, disconnect from its originating service, then recover definitions, records, relations, provenance and a readable facet while accurately reporting missing evidence or unsupported semantics.
 
 **Compatibility promise:** Frozen publications resolve their declared closure reproducibly and remain independent of live Views.
 
@@ -117,11 +149,17 @@ Meaning survives independently of the system that created it.
 | [#113](https://github.com/the-greenman/muDemocracy.org/issues/113) | gate |
 | [#385](https://github.com/the-greenman/srs/issues/385) | gate |
 | [#386](https://github.com/the-greenman/srs/issues/386) | gate |
-| [#142](https://github.com/the-greenman/muDemocracy.org/issues/142) | gate |
+| [#142](https://github.com/the-greenman/muDemocracy.org/issues/142) | supporting |
 | [#71](https://github.com/the-greenman/muDemocracy.org/issues/71) | gate |
 | [#312](https://github.com/the-greenman/srs/issues/312) | gate |
 | [#375](https://github.com/the-greenman/srs/issues/375) | evidence |
 | [#340](https://github.com/the-greenman/srs/issues/340) | supporting |
+
+**Known gaps**
+
+| Gap | Owner | Activation trigger |
+| --- | --- | --- |
+| SRS-web F2 portable-reader walkthrough | srs#384 | Create and make a gate when the SRS-web repository runtime can open a portable archive without service access. |
 
 ### F3 — Meaning You Can Continue Elsewhere
 
@@ -165,21 +203,21 @@ Groups create, maintain and improve accountable decisions together.
 
 **Actor:** Group returning to its decisions over time
 
-**Promise:** A group upgrades its decision repository, reviews commitments when due and supersedes decisions with an accountable history.
+**Promise:** A group uses the SRS-web governance workspace to review commitments when due and supersede decisions with an accountable history.
 
 **Durable artifact:** Upgradable decision repository with living-decision history.
 
-**Entry criteria:** F1 is closed; Decision Logger safe-to-try baseline exists
+**Entry criteria:** F1 is closed; SRS-web safe-to-try governance baseline exists
 
 **Included capabilities:** Work With Meaning, Preserve Meaning, Present Facets
 
 **Explicit exclusions:** Projected Protocol facilitation; AI-assisted drafting
 
-**End-to-end walkthrough:** Upgrade a repository, identify a decision due for review, supersede it, and inspect the resulting history.
+**End-to-end walkthrough:** In srs-web, upgrade a repository, identify a decision due for review, supersede it, and inspect the resulting history.
 
 **Compatibility promise:** Package upgrades and supersession preserve prior decision meaning and lineage.
 
-**What becomes stable:** The Decision Logger supports decisions as a maintained practice, not a one-time log.
+**What becomes stable:** The SRS-web governance workspace supports decisions as a maintained practice, not a one-time log.
 
 | Task | Role |
 | --- | --- |
@@ -191,23 +229,23 @@ Groups create, maintain and improve accountable decisions together.
 
 ### P2 — Facilitated Decisions
 
-**Actor:** Group gathered around a shared decision process
+**Actor:** Group using the shared-screen facilitation mode of the SRS-web governance workspace
 
 **Promise:** A group works through a projected semantic Protocol, agrees wording live and ratifies a complete decision.
 
 **Durable artifact:** Ratified decision produced by a resumable Protocol run and readable as a whole.
 
-**Entry criteria:** F1 is closed; Decision Logger safe-to-try baseline exists
+**Entry criteria:** F1 is closed; SRS-web can open and edit the governance container workspace
 
 **Included capabilities:** Work With Meaning, Present Facets
 
-**Explicit exclusions:** AI-generated wording; Transcript ingestion
+**Explicit exclusions:** AI-generated wording; Transcript ingestion and TSS emission; A separate facilitation-only semantic store
 
-**End-to-end walkthrough:** Project a Protocol, guide the group through each stage, resume after interruption, review the assembled record, ratify it and later read it back.
+**End-to-end walkthrough:** In the same SRS-web repository workspace, project a Protocol, guide the group through each stage, resume after interruption, review the assembled record, ratify it and later read it back.
 
 **Compatibility promise:** The Protocol presents and guides canonical meaning; it does not own or alter it.
 
-**What becomes stable:** Manual facilitated decision-making is a first-class SRS application pattern.
+**What becomes stable:** Shared-screen manual facilitation is a first-class SRS-web mode, not a separate editor.
 
 | Task | Role |
 | --- | --- |
@@ -215,10 +253,18 @@ Groups create, maintain and improve accountable decisions together.
 | [#66](https://github.com/the-greenman/muDemocracy.org/issues/66) | gate |
 | [#67](https://github.com/the-greenman/muDemocracy.org/issues/67) | gate |
 | [#144](https://github.com/the-greenman/muDemocracy.org/issues/144) | gate |
+| [#236](https://github.com/the-greenman/srs-rust/issues/236) | gate |
+| [#252](https://github.com/the-greenman/srs-rust/issues/252) | evidence |
+
+**Known gaps**
+
+| Gap | Owner | Activation trigger |
+| --- | --- | --- |
+| P2/P3 substrate split in existing story bodies | muDemocracy.org#141 | Before P2 implementation, move TSS emission and transcript-linked provenance from the manual P2 contract into P3 while retaining Protocol-run attention state in P2. |
 
 ### P3 — AI-Assisted Decisions
 
-**Actor:** Group using AI as a facilitator and drafting assistant
+**Actor:** Group using AI inside the current SRS-web Protocol workspace
 
 **Promise:** AI reads a live or recorded transcript, proposes stage-appropriate text with provenance, and people edit, agree and ratify it.
 
@@ -228,9 +274,9 @@ Groups create, maintain and improve accountable decisions together.
 
 **Included capabilities:** Collaborate With AI, Work With Meaning, Preserve Meaning
 
-**Explicit exclusions:** AI authority over commitment; Federation
+**Explicit exclusions:** AI authority over commitment; Federation; A separate AI-specific editor or canonical store
 
-**End-to-end walkthrough:** Use a live transcript during a Protocol run, request a stage recommendation, edit it with the group, ratify the resulting decision and inspect the source provenance.
+**End-to-end walkthrough:** In the same SRS-web Protocol workspace, use a live transcript, request a stage recommendation, edit it with the group, ratify the resulting decision and inspect the source provenance.
 
 **Compatibility promise:** AI assistance never silently commits canonical meaning; attribution and human ratification remain inspectable.
 
@@ -242,8 +288,8 @@ Groups create, maintain and improve accountable decisions together.
 | [#68](https://github.com/the-greenman/muDemocracy.org/issues/68) | gate |
 | [#71](https://github.com/the-greenman/muDemocracy.org/issues/71) | gate |
 | [#72](https://github.com/the-greenman/muDemocracy.org/issues/72) | gate |
-| [#236](https://github.com/the-greenman/srs-rust/issues/236) | gate |
-| [#252](https://github.com/the-greenman/srs-rust/issues/252) | gate |
+| [#236](https://github.com/the-greenman/srs-rust/issues/236) | supporting |
+| [#252](https://github.com/the-greenman/srs-rust/issues/252) | supporting |
 
 **Known gaps**
 
@@ -320,11 +366,11 @@ Delivery surfaces across all branches: Web, VS Code, CLI, WASM.
 
 | Epic | Disposition | Role | Rationale |
 | --- | --- | --- | --- |
-| [#36](https://github.com/the-greenman/muDemocracy.org/issues/36) Decision Logger public release | keep release | P1 living-decisions outcome | R1 is complete; R2/R3 are the P1 gate. |
+| [#36](https://github.com/the-greenman/muDemocracy.org/issues/36) Decision Logger public release | keep release | P1 SRS-web governance-workspace outcome | The current SRS-web decision surface grew from this release line; R1 is complete and R2/R3 are the P1 gate. It is distinct from the paused decision-logger repository. |
 | [#60](https://github.com/the-greenman/muDemocracy.org/issues/60) AI-assisted decision capture | keep release | P3 AI-assisted outcome | AI overlays the completed human Protocol, never replaces it. |
 | [#76](https://github.com/the-greenman/muDemocracy.org/issues/76) Workflow Editor | keep release | candidate outcome release | Human authoring surface, not the kernel. |
 | [#83](https://github.com/the-greenman/muDemocracy.org/issues/83) muSrs Generic Semantic Editor | keep release | candidate outcome release | Validates semantic editing and inspection. |
-| [#92](https://github.com/the-greenman/muDemocracy.org/issues/92) Live Governance Editor | keep release | candidate outcome release | P2 Protocol stories reparented to #141. |
+| [#92](https://github.com/the-greenman/muDemocracy.org/issues/92) Live Governance Editor | keep release | SRS-web convergence workstream | Converges repository inspection, container workspace and blueprint-based governance modes; P2 Protocol stories are reparented to #141. |
 | [#94](https://github.com/the-greenman/muDemocracy.org/issues/94) Offline Editor | keep release | F3 outcome release | Whole-repository continuation proof. |
 | [#95](https://github.com/the-greenman/muDemocracy.org/issues/95) Governance Viewer | keep release | candidate outcome release | Readable facet of durable governance meaning. |
 | [#100](https://github.com/the-greenman/muDemocracy.org/issues/100) Public VCS storage — hosting | demote to workstream | F3 supporting delivery workstream | Hosted storage is not an F3 gate. |
