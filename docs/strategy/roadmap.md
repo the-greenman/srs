@@ -298,6 +298,131 @@ Groups create, maintain and improve accountable decisions together.
 | TSS schema and transcript-ingestion contract | muDemocracy.org#60 | Create concrete stories after P2 establishes the manual Protocol run. |
 | AI-assisted meeting walkthrough | muDemocracy.org#60 | Create when transcript ingestion and stage recommendations have runnable surfaces. |
 
+## Governance-practice capability pipeline
+
+This is the group adoption path, not another release plan or issue hierarchy. Each stage adds only the next semantic and procedural capability a group needs; issue anchors identify active execution work without containing its implementation tree.
+
+### Governance practice
+
+A group adopts only the next amount of semantic and procedural structure its own practice needs. These stages are owner-level adoption cards, not releases or issue containers.
+
+```mermaid
+flowchart LR
+  CP_governance_practice_G1["G1: Simple decision log"]
+  CP_governance_practice_G2["G2: Living decisions"]
+  CP_governance_practice_G3["G3: Accountable decisions"]
+  CP_governance_practice_G4["G4: Delegated practice"]
+  CP_governance_practice_G5["G5: Constituted group"]
+  CP_governance_practice_G6["G6: Facilitated practice"]
+  CP_governance_practice_G7["G7: AI-assisted practice"]
+  CP_governance_practice_G1 --> CP_governance_practice_G2
+  CP_governance_practice_G2 --> CP_governance_practice_G3
+  CP_governance_practice_G3 --> CP_governance_practice_G4
+  CP_governance_practice_G4 --> CP_governance_practice_G5
+  CP_governance_practice_G3 --> CP_governance_practice_G6
+  CP_governance_practice_G6 --> CP_governance_practice_G7
+```
+
+| Stage | Capability promise | Release alignment | Activation trigger |
+| --- | --- | --- | --- |
+| G1 — Simple decision log | A group records decisions with the four-field Quick Log blueprint while retaining a capable canonical Decision Record beneath it. | P1 | A group wants to record and read back decisions without adopting a governance process. |
+| G2 — Living decisions | A Decision Record has stable identity through drafting, review, revisit and supersession; operational version history may remain in Git until interoperable history exchange is needed. | P1 | A group needs decisions to remain useful after the meeting in which they first appeared. |
+| G3 — Accountable decisions | A decision can be refined across several sessions and linked to declared participation and ratification without making any session the owner of the decision. | P2 | A group needs the participation, timing or authority of a decision to be inspectable. |
+| G4 — Delegated practice | A group can define roles, working groups and mandates, then connect decisions to the authority under which they were made. | future | A group delegates recurring work or needs to distinguish who may decide what. |
+| G5 — Constituted group | A group maintains purpose and founding documents as governed Records with explicit amendment and special-ratification policy rather than immutable application configuration. | future | A group needs a durable shared purpose or a rule for changing its own rules. |
+| G6 — Facilitated practice | A shared-screen Protocol guides people through canonical decision state, can resume after interruption, and ends in whole-record review and human ratification. | P2 | A group wants help holding an actual shared decision process, not merely editing a record. |
+| G7 — AI-assisted practice | AI works inside a current Protocol or Blueprint context, proposes visibly with provenance, and never commits canonical meaning without human review and ratification. | P3 | A group has a reliable manual Protocol practice and wants assistive coaching or transcript-grounded drafting. |
+
+#### G1 — Simple decision log
+
+**Group need:** We need a small shared form that lets us remember what we decided.
+
+**Semantic additions:** Decision Record; four essential decision fields; explicit absent rather than inferred information
+
+**Blueprint additions:** Quick Log editing form; readable decision-log facet
+
+**Does not introduce:** sessions or attendance; formal roles or authority; AI assistance
+
+**Execution anchors:** [#36](https://github.com/the-greenman/muDemocracy.org/issues/36)
+
+
+#### G2 — Living decisions
+
+**Group need:** We need to share a draft, return to it, revisit commitments and replace a decision without losing its history.
+
+**Semantic additions:** draft and ratified lifecycle; review/revisit information; supersession relation
+
+**Blueprint additions:** Decision workspace; review and supersession facets
+
+**Does not introduce:** a meeting-owned decision; attendance or authority claims; a new semantic Record for every working edit
+
+**Execution anchors:** [#36](https://github.com/the-greenman/muDemocracy.org/issues/36), [#57](https://github.com/the-greenman/muDemocracy.org/issues/57), [#58](https://github.com/the-greenman/muDemocracy.org/issues/58)
+
+
+#### G3 — Accountable decisions
+
+**Group need:** We need to say when a decision was made, who participated and whether the group actually ratified it.
+
+**Semantic additions:** Session Record; declared participation; considered-in and ratified-in relations; ratification event or lifecycle transition
+
+**Blueprint additions:** accountable-decision review; session and ratification summary
+
+**Does not introduce:** formal roles or mandates; a full identity system; TSS or transcript ingestion; AI assistance
+
+**Execution anchors:** [#66](https://github.com/the-greenman/muDemocracy.org/issues/66), [#67](https://github.com/the-greenman/muDemocracy.org/issues/67)
+
+
+#### G4 — Delegated practice
+
+**Group need:** We need working groups or roles, and need to make their mandates and authority legible.
+
+**Semantic additions:** Role Record; working-group Record; mandate and authority relations
+
+**Blueprint additions:** role and mandate workspace; authority context on decisions
+
+**Does not introduce:** a founding constitution; global identity or federation; automatic enforcement of human authority
+
+**Execution anchors:** None — remember until activated
+
+
+#### G5 — Constituted group
+
+**Group need:** We need to maintain our purpose, objectives and foundational rules, including how those rules may change.
+
+**Semantic additions:** Purpose and founding-document Records; ratification-policy definitions; amendment and evidencing relations
+
+**Blueprint additions:** founding-document workspace; policy-aware amendment review
+
+**Does not introduce:** new SRS root types; hard-coded constitutional behaviour in srs-web; a universal governance ontology
+
+**Execution anchors:** None — remember until activated
+
+
+#### G6 — Facilitated practice
+
+**Group need:** We want to make a decision together in the room or online, one clear step at a time.
+
+**Semantic additions:** Protocol Run; attention state; stage approval
+
+**Blueprint additions:** shared-screen facilitation mode; whole-record ratification review
+
+**Does not introduce:** transcript capture or TSS emission; AI-generated wording; a facilitation-only semantic store
+
+**Execution anchors:** [#141](https://github.com/the-greenman/muDemocracy.org/issues/141), [#236](https://github.com/the-greenman/srs-rust/issues/236)
+
+
+#### G7 — AI-assisted practice
+
+**Group need:** We want AI to propose useful wording and coaching from conversation evidence while people retain judgment and authority.
+
+**Semantic additions:** TSS and transcript provenance; AI proposal provenance; human review and ratification evidence
+
+**Blueprint additions:** stage-specific AI proposal review; inspectable source-provenance facet
+
+**Does not introduce:** AI authority; an AI-specific editor; a separate canonical store
+
+**Execution anchors:** [#60](https://github.com/the-greenman/muDemocracy.org/issues/60), [#68](https://github.com/the-greenman/muDemocracy.org/issues/68)
+
 ## Capability map
 
 ```mermaid

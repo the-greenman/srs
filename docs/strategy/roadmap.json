@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "title": "SRS owner strategic map",
   "purpose": "The owner-governed release map above GitHub execution detail. It keeps semantic sovereignty and practical decision-making visible together.",
   "bootstrapStatus": "This JSON is a temporary curated source. Once the post-#256 model is usable, migrate its mission, boundaries, tasks and relations into an SRS repository and generate this map as a DocumentView or equivalent projection.",
@@ -41,6 +41,106 @@
     ],
     "predecessor": "The separate decision-logger repository is a paused origin prototype and research corpus. It informs fixtures, scenarios and migration learning, but is not a canonical SRS producer, consumer or release dependency unless explicitly restarted on current SRS contracts."
   },
+  "capabilityPipelines": [
+    {
+      "id": "governance-practice",
+      "name": "Governance practice",
+      "purpose": "A group adopts only the next amount of semantic and procedural structure its own practice needs. These stages are owner-level adoption cards, not releases or issue containers.",
+      "stages": [
+        {
+          "id": "G1",
+          "name": "Simple decision log",
+          "groupNeed": "We need a small shared form that lets us remember what we decided.",
+          "promise": "A group records decisions with the four-field Quick Log blueprint while retaining a capable canonical Decision Record beneath it.",
+          "semanticAdds": ["Decision Record", "four essential decision fields", "explicit absent rather than inferred information"],
+          "blueprintAdds": ["Quick Log editing form", "readable decision-log facet"],
+          "doesNotIntroduce": ["sessions or attendance", "formal roles or authority", "AI assistance"],
+          "requires": [],
+          "releaseAlignment": ["P1"],
+          "executionAnchors": ["muDemocracy.org#36"],
+          "activationTrigger": "A group wants to record and read back decisions without adopting a governance process."
+        },
+        {
+          "id": "G2",
+          "name": "Living decisions",
+          "groupNeed": "We need to share a draft, return to it, revisit commitments and replace a decision without losing its history.",
+          "promise": "A Decision Record has stable identity through drafting, review, revisit and supersession; operational version history may remain in Git until interoperable history exchange is needed.",
+          "semanticAdds": ["draft and ratified lifecycle", "review/revisit information", "supersession relation"],
+          "blueprintAdds": ["Decision workspace", "review and supersession facets"],
+          "doesNotIntroduce": ["a meeting-owned decision", "attendance or authority claims", "a new semantic Record for every working edit"],
+          "requires": ["G1"],
+          "releaseAlignment": ["P1"],
+          "executionAnchors": ["muDemocracy.org#36", "muDemocracy.org#57", "muDemocracy.org#58"],
+          "activationTrigger": "A group needs decisions to remain useful after the meeting in which they first appeared."
+        },
+        {
+          "id": "G3",
+          "name": "Accountable decisions",
+          "groupNeed": "We need to say when a decision was made, who participated and whether the group actually ratified it.",
+          "promise": "A decision can be refined across several sessions and linked to declared participation and ratification without making any session the owner of the decision.",
+          "semanticAdds": ["Session Record", "declared participation", "considered-in and ratified-in relations", "ratification event or lifecycle transition"],
+          "blueprintAdds": ["accountable-decision review", "session and ratification summary"],
+          "doesNotIntroduce": ["formal roles or mandates", "a full identity system", "TSS or transcript ingestion", "AI assistance"],
+          "requires": ["G2"],
+          "releaseAlignment": ["P2"],
+          "executionAnchors": ["muDemocracy.org#66", "muDemocracy.org#67"],
+          "activationTrigger": "A group needs the participation, timing or authority of a decision to be inspectable."
+        },
+        {
+          "id": "G4",
+          "name": "Delegated practice",
+          "groupNeed": "We need working groups or roles, and need to make their mandates and authority legible.",
+          "promise": "A group can define roles, working groups and mandates, then connect decisions to the authority under which they were made.",
+          "semanticAdds": ["Role Record", "working-group Record", "mandate and authority relations"],
+          "blueprintAdds": ["role and mandate workspace", "authority context on decisions"],
+          "doesNotIntroduce": ["a founding constitution", "global identity or federation", "automatic enforcement of human authority"],
+          "requires": ["G3"],
+          "releaseAlignment": [],
+          "executionAnchors": [],
+          "activationTrigger": "A group delegates recurring work or needs to distinguish who may decide what."
+        },
+        {
+          "id": "G5",
+          "name": "Constituted group",
+          "groupNeed": "We need to maintain our purpose, objectives and foundational rules, including how those rules may change.",
+          "promise": "A group maintains purpose and founding documents as governed Records with explicit amendment and special-ratification policy rather than immutable application configuration.",
+          "semanticAdds": ["Purpose and founding-document Records", "ratification-policy definitions", "amendment and evidencing relations"],
+          "blueprintAdds": ["founding-document workspace", "policy-aware amendment review"],
+          "doesNotIntroduce": ["new SRS root types", "hard-coded constitutional behaviour in srs-web", "a universal governance ontology"],
+          "requires": ["G4"],
+          "releaseAlignment": [],
+          "executionAnchors": [],
+          "activationTrigger": "A group needs a durable shared purpose or a rule for changing its own rules."
+        },
+        {
+          "id": "G6",
+          "name": "Facilitated practice",
+          "groupNeed": "We want to make a decision together in the room or online, one clear step at a time.",
+          "promise": "A shared-screen Protocol guides people through canonical decision state, can resume after interruption, and ends in whole-record review and human ratification.",
+          "semanticAdds": ["Protocol Run", "attention state", "stage approval"],
+          "blueprintAdds": ["shared-screen facilitation mode", "whole-record ratification review"],
+          "doesNotIntroduce": ["transcript capture or TSS emission", "AI-generated wording", "a facilitation-only semantic store"],
+          "requires": ["G3"],
+          "releaseAlignment": ["P2"],
+          "executionAnchors": ["muDemocracy.org#141", "srs-rust#236"],
+          "activationTrigger": "A group wants help holding an actual shared decision process, not merely editing a record."
+        },
+        {
+          "id": "G7",
+          "name": "AI-assisted practice",
+          "groupNeed": "We want AI to propose useful wording and coaching from conversation evidence while people retain judgment and authority.",
+          "promise": "AI works inside a current Protocol or Blueprint context, proposes visibly with provenance, and never commits canonical meaning without human review and ratification.",
+          "semanticAdds": ["TSS and transcript provenance", "AI proposal provenance", "human review and ratification evidence"],
+          "blueprintAdds": ["stage-specific AI proposal review", "inspectable source-provenance facet"],
+          "doesNotIntroduce": ["AI authority", "an AI-specific editor", "a separate canonical store"],
+          "requires": ["G6"],
+          "releaseAlignment": ["P3"],
+          "executionAnchors": ["muDemocracy.org#60", "muDemocracy.org#68"],
+          "activationTrigger": "A group has a reliable manual Protocol practice and wants assistive coaching or transcript-grounded drafting."
+        }
+      ]
+    }
+  ],
   "taskRoles": ["gate", "evidence", "supporting", "later"],
   "tracks": [
     {"id":"F","name":"Sovereignty","purpose":"Meaning survives independently of the system that created it."},

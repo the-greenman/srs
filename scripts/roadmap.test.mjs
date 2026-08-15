@@ -12,6 +12,8 @@ test("two-track roadmap has complete ratified contracts", () => {
   assert.deepEqual(roadmap.tracks.map((track) => track.id), ["F", "P"]);
   assert.deepEqual(roadmap.boundaries.map((boundary) => boundary.id), ["F1", "F2", "F3", "P1", "P2", "P3"]);
   assert.equal(roadmap.applicationStrategy.name, "srs-web / app.mudemocracy.org");
+  assert.deepEqual(roadmap.capabilityPipelines.map((pipeline) => pipeline.id), ["governance-practice"]);
+  assert.deepEqual(roadmap.capabilityPipelines[0].stages.map((stage) => stage.id), ["G1", "G2", "G3", "G4", "G5", "G6", "G7"]);
   assert.equal(roadmap.knownEpicRefs.length, 16);
   assert.equal(roadmap.epics.length, 16);
 });
@@ -22,11 +24,13 @@ test("validation rejects invalid task roles, missing issue references and depend
   invalid.boundaries[1].tasks[0].ref = "not an issue";
   invalid.boundaries[0].requires = ["F2"];
   delete invalid.applicationStrategy.architecture;
+  invalid.capabilityPipelines[0].stages[0].requires = ["G7"];
   const errors = validateRoadmap(invalid).errors.join("\n");
   assert.match(errors, /invalid task role/);
   assert.match(errors, /invalid issue reference/);
   assert.match(errors, /boundary dependency cycle/);
   assert.match(errors, /applicationStrategy: missing architecture/);
+  assert.match(errors, /capability dependency cycle/);
 });
 
 test("Markdown is deterministic and renders separate tracks, explicit tasks and gaps", () => {
@@ -40,6 +44,10 @@ test("Markdown is deterministic and renders separate tracks, explicit tasks and 
   assert.match(rendered, /First usable application/);
   assert.match(rendered, /One repository runtime and one canonical edit, save, import and export path/);
   assert.match(rendered, /paused origin prototype and research corpus/);
+  assert.match(rendered, /Governance-practice capability pipeline/);
+  assert.match(rendered, /G1: Simple decision log/);
+  assert.match(rendered, /G6: Facilitated practice/);
+  assert.match(rendered, /CP_governance_practice_G6 --> CP_governance_practice_G7/);
   assert.match(rendered, /\| \[#384\].*\| gate \|/);
   assert.match(rendered, /TSS schema and transcript-ingestion contract/);
 });

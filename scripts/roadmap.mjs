@@ -13,6 +13,7 @@ const MODEL_PATH = resolve(SCRIPT_DIR, "../docs/strategy/roadmap.json");
 const MARKDOWN_PATH = resolve(SCRIPT_DIR, "../docs/strategy/roadmap.md");
 const TASK_ROLES = new Set(["gate", "evidence", "supporting", "later"]);
 const BOUNDARY_FIELDS = ["track", "name", "actor", "promise", "durableArtifact", "entryCriteria", "includedCapabilities", "exclusions", "walkthrough", "compatibilityPromise", "stableAfter", "tasks"];
+const PIPELINE_STAGE_FIELDS = ["id", "name", "groupNeed", "promise", "semanticAdds", "blueprintAdds", "doesNotIntroduce", "requires", "releaseAlignment", "executionAnchors", "activationTrigger"];
 
 function issueRef(ref) {
   const match = /^([^#\s]+)#(\d+)$/.exec(ref || "");
@@ -81,6 +82,39 @@ function validateRoadmap(data) {
     visiting.delete(boundaryId); visited.add(boundaryId);
   };
   for (const boundaryId of boundaryIds) visit(boundaryId);
+  const pipelineIds = new Set();
+  for (const pipeline of data.capabilityPipelines || []) {
+    if (!pipeline.id || pipelineIds.has(pipeline.id)) errors.push(`duplicate capability pipeline id: ${pipeline.id || "(blank)"}`);
+    pipelineIds.add(pipeline.id);
+    for (const field of ["name", "purpose", "stages"]) {
+      const value = pipeline[field];
+      if (value == null || value === "" || (Array.isArray(value) && !value.length)) errors.push(`${pipeline.id}: missing ${field}`);
+    }
+    const stageIds = new Set(), stages = new Map();
+    for (const stage of pipeline.stages || []) {
+      if (!stage.id || stageIds.has(stage.id)) errors.push(`${pipeline.id}: duplicate stage id: ${stage.id || "(blank)"}`);
+      stageIds.add(stage.id); stages.set(stage.id, stage);
+      for (const field of PIPELINE_STAGE_FIELDS) {
+        const value = stage[field];
+        if (value == null || value === "" || (Array.isArray(value) && !value.length && !["requires", "releaseAlignment", "executionAnchors"].includes(field))) errors.push(`${pipeline.id}/${stage.id}: missing ${field}`);
+      }
+      if ((stage.executionAnchors || []).length > 3) errors.push(`${pipeline.id}/${stage.id}: more than three execution anchors`);
+      for (const ref of stage.executionAnchors || []) try { issueRef(ref); } catch (error) { errors.push(`${pipeline.id}/${stage.id}: ${error.message}`); }
+      for (const boundaryId of stage.releaseAlignment || []) if (!boundaryIds.has(boundaryId)) errors.push(`${pipeline.id}/${stage.id}: aligns to unknown boundary ${boundaryId}`);
+    }
+    for (const stage of pipeline.stages || []) for (const required of stage.requires || []) {
+      if (!stageIds.has(required)) errors.push(`${pipeline.id}/${stage.id}: requires unknown stage ${required}`);
+    }
+    const stageVisiting = new Set(), stageVisited = new Set();
+    const visitStage = (stageId) => {
+      if (stageVisiting.has(stageId)) { errors.push(`${pipeline.id}: capability dependency cycle at ${stageId}`); return; }
+      if (stageVisited.has(stageId)) return;
+      stageVisiting.add(stageId);
+      for (const required of stages.get(stageId)?.requires || []) visitStage(required);
+      stageVisiting.delete(stageId); stageVisited.add(stageId);
+    };
+    for (const stageId of stageIds) visitStage(stageId);
+  }
   const known = new Set(data.knownEpicRefs || []), mapped = new Set();
   for (const epic of data.epics || []) {
     try { issueRef(epic.ref); } catch (error) { errors.push(`epic: ${error.message}`); continue; }
@@ -141,6 +175,19 @@ function renderRoadmap(data) {
         for (const gap of boundary.gaps) lines.push(`| ${cell(gap.title)} | ${cell(gap.owner)} | ${cell(gap.trigger)} |`);
       }
       lines.push("");
+    }
+  }
+  lines.push("## Governance-practice capability pipeline", "", "This is the group adoption path, not another release plan or issue hierarchy. Each stage adds only the next semantic and procedural capability a group needs; issue anchors identify active execution work without containing its implementation tree.", "");
+  for (const pipeline of data.capabilityPipelines || []) {
+    lines.push(`### ${pipeline.name}`, "", pipeline.purpose, "", "```mermaid", "flowchart LR");
+    for (const stage of pipeline.stages) lines.push(`  CP_${id(pipeline.id)}_${stage.id}["${mermaid(`${stage.id}: ${stage.name}`)}"]`);
+    for (const stage of pipeline.stages) for (const required of stage.requires || []) lines.push(`  CP_${id(pipeline.id)}_${required} --> CP_${id(pipeline.id)}_${stage.id}`);
+    lines.push("```");
+    lines.push("", "| Stage | Capability promise | Release alignment | Activation trigger |", "| --- | --- | --- | --- |");
+    for (const stage of pipeline.stages) lines.push(`| ${stage.id} — ${cell(stage.name)} | ${cell(stage.promise)} | ${cell((stage.releaseAlignment || []).join(", ") || "future")} | ${cell(stage.activationTrigger)} |`);
+    for (const stage of pipeline.stages) {
+      const anchors = (stage.executionAnchors || []).map(issueLink).join(", ") || "None — remember until activated";
+      lines.push("", `#### ${stage.id} — ${stage.name}`, "", `**Group need:** ${stage.groupNeed}`, "", `**Semantic additions:** ${stage.semanticAdds.join("; ")}`, "", `**Blueprint additions:** ${stage.blueprintAdds.join("; ")}`, "", `**Does not introduce:** ${stage.doesNotIntroduce.join("; ")}`, "", `**Execution anchors:** ${anchors}`, "");
     }
   }
   lines.push("## Capability map", "", "```mermaid", "flowchart LR", "  S[\"Semantic sovereignty\"]");
