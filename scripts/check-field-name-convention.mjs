@@ -128,8 +128,15 @@ async function candidates(abs) {
   walk(parsed, relative(ROOT, abs));
   // Document roots — the whole file, and each `.srsj` `data` entry, which is a whole document in a
   // bundle. A carrier here with no `id` is a malformed definition rather than a nested fragment, so
-  // it is checked for a name even though `isFieldDefinition` would not match it. Array members are
-  // not roots: a Tier-1 TypedRecord's `fields[]` values legitimately carry a `fieldType` and no id.
+  // it is checked for a name even though `isFieldDefinition` would not match it.
+  //
+  // Array members are deliberately NOT roots, which leaves one gap: a Field inlined in a package
+  // bundle's `fields[]` with no `id` goes unchecked. Closing it means telling an id-less definition
+  // apart from a Tier-1 TypedRecord's `fields[]` value — both are `{name, fieldType, …}` inside a
+  // top-level `fields` array — which needs shape-sniffing of the containing document, and a
+  // TypedRecord field key is only *recommended* snake_case (docs/schema/2.0/typed-record.json), so
+  // getting it wrong fails valid data. Left open: bundles are generated artifacts, and an id-less
+  // entry in one fails that bundle's own schema.
   const roots = [relative(ROOT, abs)];
   if (isObject(parsed?.data)) {
     for (const key of Object.keys(parsed.data)) roots.push(`${relative(ROOT, abs)}#data#${key}`);

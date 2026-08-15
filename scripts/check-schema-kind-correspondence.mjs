@@ -91,7 +91,10 @@ const declaredProperties = (schema) => Object.keys(schema.properties ?? {});
  * exactly the pre-#378 state it exists to detect. Rather than chase every composition keyword, the
  * assumption is asserted.
  */
-const COMPOSITION_KEYWORDS = ["allOf", "anyOf", "oneOf", "$ref", "if", "then", "else", "patternProperties"];
+const COMPOSITION_KEYWORDS = [
+  "allOf", "anyOf", "oneOf", "$ref", "if", "then", "else",
+  "patternProperties", "dependentSchemas", "unevaluatedProperties",
+];
 
 const exists = (path) => access(path).then(() => true, () => false);
 

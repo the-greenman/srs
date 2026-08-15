@@ -166,7 +166,9 @@ async function fieldNameCases(root) {
   await writeJson(join(root, "srs/records/typed-record.json"), {
     instanceId: "00000000-0000-4000-8000-00000000e001",
     tier: 1,
-    fields: [{ name: "agenda", label: "Agenda", fieldType: { datatype: "string" }, value: "x" }],
+    // Kebab-case on purpose: with a snake_case key this case passes whether or not the exclusion
+    // exists, which is a test that cannot fail.
+    fields: [{ name: "kebab-case-key", label: "Agenda", fieldType: { datatype: "string" }, value: "x" }],
   });
   expect("does not treat Tier-1 field values as definitions", runCheck("check-field-name-convention.mjs", root), {
     exit: 0,
