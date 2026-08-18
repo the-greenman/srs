@@ -581,17 +581,32 @@ async function publicationReachabilityCases(root) {
   });
   await rm(join(repo, "relations/precedes.json"));
 
-  // Container membership is its own surface (RFC-013 structural navigation), independent of views.
-  await writeJson(join(repo, "containers/fixture.json"), {
-    containerId: "00000000-0000-4000-8000-000000000602",
-    title: "Members",
-    memberInstanceIds: [ID(2)],
+  // The RFC-013 ROOT container is a surface — it is the top of structural navigation.
+  const manifestPath = join(repo, "manifest.json");
+  const baseManifest = JSON.parse(await readFile(manifestPath, "utf8"));
+  await writeJson(manifestPath, {
+    ...baseManifest,
+    container: { ...baseManifest.container, memberInstanceIds: [ID(2)] },
   });
-  expect("accepts a record reached only by container membership", runCheck("check-publication-reachability.mjs", root), {
+  expect("accepts a record reached only by root container membership", runCheck("check-publication-reachability.mjs", root), {
     exit: 0,
     contains: ["✓ Every discovered record is reachable"],
   });
-  await rm(join(repo, "containers/fixture.json"));
+  await writeJson(manifestPath, baseManifest);
+
+  // ...but a Container under `containers/` is NOT, because nothing points at it. Honouring those made
+  // membership a free "publish" lever: all 12 Containers in the live corpus are referenced by nothing,
+  // and one of them was silencing this guard for a note that reaches no reader.
+  await writeJson(join(repo, "containers/orphan.json"), {
+    containerId: "00000000-0000-4000-8000-000000000602",
+    title: "Referenced by nothing",
+    memberInstanceIds: [ID(2)],
+  });
+  expect("does not let an unreferenced Container publish a record", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["records/orphan.json", "unreachable from every declared presentation"],
+  });
+  await rm(join(repo, "containers/orphan.json"));
 
   // RFC-016 [R1]: the invariant projection publishes `records/invariants/` after render, so no view
   // selects it. A definition quantifying only over DocumentViews calls all 124 live ones invisible.
@@ -626,7 +641,56 @@ async function publicationReachabilityCases(root) {
     exit: 1,
     contains: ["container-subset", "this guard does not resolve"],
   });
+
+  // A type-query may also filter by lifecycle state or container, and the renderer applies those.
+  // Ignoring them is fail-OPEN, not fail-closed: a section excluding `archived` records would
+  // otherwise confer publication on every archived record of the type. Refused for that reason.
+  const filtered = view(TITLE_FIELD);
+  filtered.sections[0].source = {
+    type: "type-query",
+    semanticObjectType: "com.example.fixture/root",
+    excludeLifecycleStates: ["archived"],
+  };
+  await writeJson(join(repo, "package/document-views/fixture-view.json"), filtered);
+  expect("refuses a type-query it cannot filter", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["excludeLifecycleStates", "this guard does not apply"],
+  });
   await writeJson(join(repo, "package/document-views/fixture-view.json"), view(TITLE_FIELD));
+
+  // A package manifest that will not parse declares no views, so every record those views publish is
+  // reported unreachable and nothing says why. Reported, like the unparseable view beside it.
+  const pkgPath = join(repo, "package/package.json");
+  const goodPkg = JSON.parse(await readFile(pkgPath, "utf8"));
+  await writeFile(pkgPath, "{ not json");
+  expect("reports a package manifest that will not parse", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["package manifest does not parse"],
+  });
+  await writeJson(pkgPath, goodPkg);
+
+  // The exclusion `path` must name where the instance actually is. Matching is by instanceId, so
+  // without this the path is decorative and a rename carries the suppression along in silence.
+  await exclusions({ ...orphanEntry, path: "records/moved-away.json" });
+  expect("rejects an exclusion whose path is not where the instance lives", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["records/moved-away.json", "is stored at", "records/orphan.json"],
+  });
+
+  // ...and `issue` must be a navigable reference, matching what the sibling RFC-031 allowlist
+  // requires. "later" is not a tracking issue.
+  await exclusions({ ...orphanEntry, issue: "later" });
+  expect("rejects an exclusion with no real issue reference", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ['issue "later" is not a GitHub issue reference'],
+  });
+
+  await exclusions(orphanEntry, orphanEntry);
+  expect("rejects two exclusions for one instance", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["duplicates the exclusion", "one entry per instance"],
+  });
+  await exclusions();
 
   // Floors. A walk that found nothing is not a repository with nothing wrong with it, and a
   // repository whose package declares no view publishes nothing at all.

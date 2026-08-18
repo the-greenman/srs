@@ -22,8 +22,10 @@
  *   1. **DocumentView sections** — every `document-views/*.json` reachable from every package
  *      manifest in the tree. A `type-query` section's roots are the instances whose
  *      `typeNamespace/typeName` equals its `semanticObjectType`.
- *   2. **Container membership** — `manifest.container` (RFC-013's required root container) and every
- *      Container under `containers/`: `identityInstanceId`, `memberInstanceIds`, `rootInstanceIds`.
+ *   2. **Root container membership** — `manifest.container` only (RFC-013's required root container,
+ *      the top of structural navigation): `identityInstanceId`, `memberInstanceIds`,
+ *      `rootInstanceIds`. A Container under `containers/` is deliberately NOT a surface — see the
+ *      note on `containers()` for the wrong verdict that produced.
  *   3. **The RFC-016 invariant projection** — [R1]: every `com.semanticops.spec/invariant` record
  *      MUST appear in the rendered Key Invariants region of each view marked `requiresKeyInvariants`.
  *      This surface is a *post-render injection*, not a view section, so a definition quantifying
@@ -39,8 +41,9 @@
  *   - **`precedes` is not a descent edge.** It sequences siblings that are already reachable. A
  *     record whose only participation is a `precedes` chain is still unpublished.
  *   - **`contains` descent is conditional on `titleFieldId`.** `render_service.rs` gates the
- *     recursive subsection walk on `let structured = section.title_field_id.is_some()`
- *     (srs-rust `crates/srs-repository/src/render_service.rs:1705`, pinned build.284). A section
+ *     recursive subsection walk on `let structured = section.title_field_id.is_some()` — cited by
+ *     that statement rather than by line number, since a line number into another repository is the
+ *     staleness class this guard exists to close. A section
  *     without `titleFieldId` renders its query roots and *nothing beneath them*. Both RFC views are
  *     such sections, which is why `rfc-catalog.md` contains not one of the 34 `rfc-change` /
  *     `rfc-proposed-artifact` records that hang off RFC records by `contains` — verified against the
@@ -65,7 +68,7 @@
  * a third-party SRS repository is free to hold unpublished records.
  *
  *   node scripts/check-publication-reachability.mjs [root]            # guard: exit 1 on a violation
- *   node scripts/check-publication-reachability.mjs [root] --report   # full measurement, always 0
+ *   node scripts/check-publication-reachability.mjs [root] --report   # adds the census, same exit code
  */
 import { readdir, readFile } from "fs/promises";
 import { existsSync } from "fs";
@@ -105,11 +108,15 @@ async function declaredDocumentViews(repoRoot) {
       return;
     }
     if (entries.some((e) => e.isFile() && e.name === "package.json")) {
-      let manifest;
+      let manifest = null;
       try {
         manifest = JSON.parse(await readFile(join(dir, "package.json"), "utf8"));
-      } catch {
-        manifest = null;
+      } catch (error) {
+        // Reported, not swallowed, for the same reason as the unparseable view three lines down: a
+        // package whose manifest will not load declares no views, so every record its views publish
+        // is reported unreachable — 44 of them for `spec-authoring-core` — and not one message says
+        // why. Fail-closed in outcome, useless in diagnosis.
+        fail(`package manifest does not parse: ${join(dir, "package.json")}: ${error.message}`);
       }
       for (const rel of manifest?.documentViews ?? []) {
         try {
@@ -132,24 +139,31 @@ async function declaredDocumentViews(repoRoot) {
   return views;
 }
 
-/** `manifest.container` plus every Container under `containers/`. */
+/**
+ * The Containers that are presentation surfaces — which is `manifest.container` and nothing else.
+ *
+ * RFC-013 makes `manifest.container` the repository's identity object and the top of structural
+ * navigation, so its members are reached by a reader navigating the repository. **A Container under
+ * `containers/` is not a presentation surface by existing.** It becomes one when a `container-subset`
+ * section or a `containerIds` type-query filter names it, and this guard refuses both of those
+ * rather than resolving them — so any `containers/**` file it honoured would be a free "publish"
+ * lever with no reader behind it.
+ *
+ * That is not hypothetical. All 12 Containers under `srs/containers/` are referenced by nothing at
+ * all — not `manifest.container`, not any view, not each other. Honouring them published exactly one
+ * record: `records/notes/rfc-001-implementation-prerequisites.json`, sole member of an orphan
+ * Container, reported reachable while its 18 siblings in the same directory were recorded as
+ * invisible. Adding an id to any of those 12 files would have silenced this guard for that record,
+ * with no reason and no issue.
+ */
 async function containers(repoRoot) {
   const out = [];
   try {
     const manifest = JSON.parse(await readFile(join(repoRoot, "manifest.json"), "utf8"));
     if (manifest.container) out.push({ path: "manifest.json#container", container: manifest.container });
+    else fail(`${join(repoRoot, "manifest.json")} declares no root container — required by RFC-013`);
   } catch {
     fail(`cannot read ${join(repoRoot, "manifest.json")}`);
-  }
-  const dir = join(repoRoot, "containers");
-  if (!existsSync(dir)) return out;
-  for (const name of (await readdir(dir)).sort()) {
-    if (!name.endsWith(".json")) continue;
-    try {
-      out.push({ path: `containers/${name}`, container: JSON.parse(await readFile(join(dir, name), "utf8")) });
-    } catch {
-      fail(`Container does not parse: containers/${name}`);
-    }
   }
   return out;
 }
@@ -196,6 +210,22 @@ async function reachability(repoRoot) {
       const t = section.source?.semanticObjectType;
       if (!t) {
         fail(`${path} section "${section.sectionId}" is a type-query with no semanticObjectType`);
+        continue;
+      }
+      // A type-query may also carry `lifecycleState`, `lifecycleStates`, `excludeLifecycleStates`,
+      // `containerIds` and `containerScope`, and `render_service.rs` applies every one of them. This
+      // guard resolves the type alone, so a filtered section would confer reachability on records it
+      // never renders — fail-OPEN, unlike the unresolved source kinds above. Refused for that reason:
+      // a section that excludes `archived` records would otherwise let every archived record in the
+      // type read as published.
+      const FILTERS = ["lifecycleState", "lifecycleStates", "excludeLifecycleStates", "containerIds", "containerScope"];
+      const applied = FILTERS.filter((k) => section.source[k] !== undefined);
+      if (applied.length) {
+        fail(
+          `${path} section "${section.sectionId}" filters its type-query by ${applied.join(", ")}, ` +
+            `which this guard does not apply — resolving the type alone would report records the ` +
+            `section filters out as published`,
+        );
         continue;
       }
       const descends = section.titleFieldId !== undefined && section.titleFieldId !== null;
@@ -274,6 +304,7 @@ async function loadExclusions() {
   // Typed, not free prose: every entry must carry the instance it excludes, why, and the issue that
   // owns its real resolution. A reason-less entry is an allowlist, which is the thing this is not.
   const valid = [];
+  const seen = new Set();
   for (const [i, e] of entries.entries()) {
     const where = `${EXCLUSIONS} exclusions[${i}]`;
     const missing = ["instanceId", "path", "reason", "issue"].filter((k) => typeof e?.[k] !== "string" || !e[k].trim());
@@ -281,6 +312,18 @@ async function loadExclusions() {
       fail(`${where} is missing required properties: ${missing.join(", ")}`);
       continue;
     }
+    // `#<number>`, matching the issue-number requirement the sibling allowlist in
+    // check-idl-schema-conformance.mjs enforces for the same reason: "later" is not a tracking issue,
+    // and a suppression nobody can navigate back to is how the list stops shrinking.
+    if (!/^#[1-9]\d*$/.test(e.issue)) {
+      fail(`${where} issue "${e.issue}" is not a GitHub issue reference of the form #<number>`);
+      continue;
+    }
+    if (seen.has(e.instanceId)) {
+      fail(`${where} duplicates the exclusion for ${e.instanceId} — one entry per instance`);
+      continue;
+    }
+    seen.add(e.instanceId);
     valid.push(e);
   }
   return valid;
@@ -308,12 +351,21 @@ async function main() {
   // Stale exclusions are errors in both directions. An entry for an instance that no longer exists
   // is dead weight; an entry for one that has since become reachable is a suppression that would
   // hide the next regression at that path.
+  const pathOf = new Map(instances.map((i) => [i.record?.instanceId, i.path]));
   for (const e of exclusions) {
     if (!discovered.has(e.instanceId)) {
       fail(`stale exclusion: ${e.path} (${e.instanceId}) is no longer a discovered instance — remove the entry`);
     } else if (surfaceOf.has(e.instanceId)) {
       fail(
         `stale exclusion: ${e.path} is now reachable via ${surfaceOf.get(e.instanceId)} — remove the entry`,
+      );
+    } else if (pathOf.get(e.instanceId) !== e.path) {
+      // Matching is by `instanceId`, so without this the `path` is decorative: rename or move an
+      // excluded record and the suppression follows the UUID silently while the census — the artifact
+      // read to decide what #274/#285 must fix — keeps pointing at a file that is no longer there.
+      fail(
+        `stale exclusion: ${e.instanceId} is excluded as "${e.path}" but is stored at ` +
+          `"${pathOf.get(e.instanceId)}" — update the entry`,
       );
     }
   }

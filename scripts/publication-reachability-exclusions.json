@@ -1,22 +1,22 @@
 {
-  "$comment": "Records that are deliberately reachable from no declared presentation (#285). Read by scripts/check-publication-reachability.mjs. Every entry names the instance, why it is invisible, and the issue that owns its real resolution. An entry for an instance that no longer exists, or one that has since become reachable, is an error — a stale exclusion is how a suppression list becomes a permanent blind spot.",
+  "$comment": "Records that are deliberately reachable from no declared presentation (#285). Read by scripts/check-publication-reachability.mjs. Every entry names the instance, why it is invisible, and the issue that owns its real resolution. An entry for an instance that no longer exists, or one that has since become reachable, is an error \u2014 a stale exclusion is how a suppression list becomes a permanent blind spot.",
   "exclusions": [
     {
       "instanceId": "187b18d0-89ab-4591-a61f-273821f2412b",
       "path": "package/records/invariant-187b18d0.json",
-      "reason": "Proposed invariant belonging to RFC-011, which is not accepted. It sits under `package/records/` rather than `records/invariants/`, so the RFC-016 [R1] projection does not reach it — correctly, since projecting it would publish an unratified invariant as normative. It becomes reachable by moving into `records/invariants/` if and when RFC-011 is accepted.",
+      "reason": "Proposed invariant belonging to RFC-011, which is not accepted. It sits under `package/records/` rather than `records/invariants/`, so the RFC-016 [R1] projection does not reach it \u2014 correctly, since projecting it would publish an unratified invariant as normative. It becomes reachable by moving into `records/invariants/` if and when RFC-011 is accepted.",
       "issue": "#285"
     },
     {
       "instanceId": "49572823-6f73-42c1-9a57-4aa01fa1df43",
       "path": "package/records/invariant-49572823.json",
-      "reason": "Proposed invariant belonging to RFC-011, which is not accepted. It sits under `package/records/` rather than `records/invariants/`, so the RFC-016 [R1] projection does not reach it — correctly, since projecting it would publish an unratified invariant as normative. It becomes reachable by moving into `records/invariants/` if and when RFC-011 is accepted.",
+      "reason": "Proposed invariant belonging to RFC-011, which is not accepted. It sits under `package/records/` rather than `records/invariants/`, so the RFC-016 [R1] projection does not reach it \u2014 correctly, since projecting it would publish an unratified invariant as normative. It becomes reachable by moving into `records/invariants/` if and when RFC-011 is accepted.",
       "issue": "#285"
     },
     {
       "instanceId": "f287f47c-c64a-400a-b348-89374b26bbce",
       "path": "package/records/invariant-f287f47c.json",
-      "reason": "Proposed invariant belonging to RFC-011, which is not accepted. It sits under `package/records/` rather than `records/invariants/`, so the RFC-016 [R1] projection does not reach it — correctly, since projecting it would publish an unratified invariant as normative. It becomes reachable by moving into `records/invariants/` if and when RFC-011 is accepted.",
+      "reason": "Proposed invariant belonging to RFC-011, which is not accepted. It sits under `package/records/` rather than `records/invariants/`, so the RFC-016 [R1] projection does not reach it \u2014 correctly, since projecting it would publish an unratified invariant as normative. It becomes reachable by moving into `records/invariants/` if and when RFC-011 is accepted.",
       "issue": "#285"
     },
     {
@@ -40,97 +40,97 @@
     {
       "instanceId": "a10d49a3-06ae-5690-ad9b-81edd6886b6d",
       "path": "records/extensions/ext-addressability.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:addressability — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
+      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:addressability \u2014 the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
       "instanceId": "c16793d7-005a-58d2-88d0-9e7d9b4967b1",
       "path": "records/extensions/ext-cross-field-validation.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:cross-field-validation — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
+      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:cross-field-validation \u2014 the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
       "instanceId": "20dc444e-756e-5641-93c9-3083f3abb57f",
       "path": "records/extensions/ext-federation.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:federation — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
+      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:federation \u2014 the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
       "instanceId": "279877f5-dd9d-569c-94d6-358ad177a6fb",
       "path": "records/extensions/ext-import-tracking.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:import-tracking — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
+      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:import-tracking \u2014 the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
       "instanceId": "e47a2b91-0c3d-4f5e-a6b7-8c9d0e1f2a3b",
       "path": "records/extensions/ext-json-store.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:json-store — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
+      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:json-store \u2014 the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
       "instanceId": "ef180de4-5ec3-5e92-94e4-0077fdc12ebe",
       "path": "records/extensions/ext-lifecycle.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:lifecycle — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
+      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:lifecycle \u2014 the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
       "instanceId": "d557206f-fd5f-5626-8f13-8781b684fd03",
       "path": "records/extensions/ext-protocol.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:protocol — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
+      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:protocol \u2014 the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
       "instanceId": "ed9f0446-800c-5428-8780-09bb499f76aa",
       "path": "records/extensions/ext-recommended-relations.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:recommended-relations — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
+      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:recommended-relations \u2014 the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
       "instanceId": "48823261-d31e-5893-a968-20e5c1e3d0ae",
       "path": "records/extensions/ext-registry.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:registry — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
+      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:registry \u2014 the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
       "instanceId": "df2f6a2c-3601-5f19-89e1-05661d21e611",
       "path": "records/extensions/ext-repository.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:repository — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
+      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:repository \u2014 the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
       "instanceId": "a3f7c9e1-2b4d-4f8a-9c1e-5d7b3a2f6e0c",
       "path": "records/extensions/ext-themes-l1.json",
-      "reason": "Extension documentation for ext:themes-l1 with no published subsection counterpart at all — unlike the thirteen shadow copies, retiring this would lose the only copy. It reaches no reader today by any route. Owner decision requested on #285: publish it as a `07-*` subsection, or record it as deliberately unpublished.",
+      "reason": "Extension documentation for ext:themes-l1 with no published subsection counterpart at all \u2014 unlike the thirteen shadow copies, retiring this would lose the only copy. It reaches no reader today by any route. Owner decision requested on #285: publish it as a `07-*` subsection, or record it as deliberately unpublished.",
       "issue": "#285"
     },
     {
       "instanceId": "2a5ae7ad-8b51-4fc4-8bc4-2a004ecae698",
       "path": "records/extensions/ext-type-inheritance.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:type-inheritance — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
+      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:type-inheritance \u2014 the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
       "instanceId": "c5bb163b-93eb-5f79-8ee8-2ec0bc5df50b",
       "path": "records/extensions/ext-views-l1.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:views-l1 — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
+      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:views-l1 \u2014 the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
       "instanceId": "87e912b6-b3f3-5207-a71b-73ce5cd6b8b7",
       "path": "records/extensions/ext-views-l2.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:views-l2 — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
+      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:views-l2 \u2014 the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
       "instanceId": "212379f4-4bb7-465f-94e6-ffd037a718b4",
       "path": "records/extensions/extension-212379f4.json",
-      "reason": "Extension documentation for ext:slices with no published subsection counterpart at all — unlike the thirteen shadow copies, retiring this would lose the only copy. It reaches no reader today by any route. Owner decision requested on #285: publish it as a `07-*` subsection, or record it as deliberately unpublished.",
+      "reason": "Extension documentation for ext:slices with no published subsection counterpart at all \u2014 unlike the thirteen shadow copies, retiring this would lose the only copy. It reaches no reader today by any route. Owner decision requested on #285: publish it as a `07-*` subsection, or record it as deliberately unpublished.",
       "issue": "#285"
     },
     {
       "instanceId": "86102577-a045-4087-8ddb-28ca721579a4",
       "path": "records/extensions/extension-86102577.json",
-      "reason": "Extension documentation for ext:changelog with no published subsection counterpart at all — unlike the thirteen shadow copies, retiring this would lose the only copy. It reaches no reader today by any route. Owner decision requested on #285: publish it as a `07-*` subsection, or record it as deliberately unpublished.",
+      "reason": "Extension documentation for ext:changelog with no published subsection counterpart at all \u2014 unlike the thirteen shadow copies, retiring this would lose the only copy. It reaches no reader today by any route. Owner decision requested on #285: publish it as a `07-*` subsection, or record it as deliberately unpublished.",
       "issue": "#285"
     },
     {
@@ -191,6 +191,12 @@
       "instanceId": "2bd94648-85c0-4e2a-a8a8-4db54895c65d",
       "path": "records/notes/purpose-principles-constraints.json",
       "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. The nineteenth note is the repository identity record named by `manifest.container.identityInstanceId` and is published; these eighteen are its sources. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "issue": "#274"
+    },
+    {
+      "instanceId": "3ac58ecc-dfc8-45cd-8ddb-2a3b429e768e",
+      "path": "records/notes/rfc-001-implementation-prerequisites.json",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. The nineteenth note is the repository identity record named by `manifest.container.identityInstanceId` and is published; these eighteen are its sources. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section. This one was previously reported reachable, via membership of an orphan Container under `containers/` that no view and no manifest references \u2014 see the note on `containers()` in the guard.",
       "issue": "#274"
     },
     {
@@ -442,61 +448,61 @@
     {
       "instanceId": "d0100002-0000-4000-a000-000000000002",
       "path": "records/specifications/srs-rationale.json",
-      "reason": "Document identity anchor, not document content: it names one of the two rendered specifications and carries its canonical key, title, version label and summary. Nothing renders it because there is nothing in it for a reader — the document it names is the presentation. Deliberately invisible.",
+      "reason": "Document identity anchor, not document content: it names one of the two rendered specifications and carries its canonical key, title, version label and summary. Nothing renders it because there is nothing in it for a reader \u2014 the document it names is the presentation. Deliberately invisible.",
       "issue": "#285"
     },
     {
       "instanceId": "d0100001-0000-4000-a000-000000000001",
       "path": "records/specifications/srs-spec.json",
-      "reason": "Document identity anchor, not document content: it names one of the two rendered specifications and carries its canonical key, title, version label and summary. Nothing renders it because there is nothing in it for a reader — the document it names is the presentation. Deliberately invisible.",
+      "reason": "Document identity anchor, not document content: it names one of the two rendered specifications and carries its canonical key, title, version label and summary. Nothing renders it because there is nothing in it for a reader \u2014 the document it names is the presentation. Deliberately invisible.",
       "issue": "#285"
     },
     {
       "instanceId": "b1000000-0000-4000-a000-000000000001",
       "path": "records/tables/t001-edit-in-place-vs-new-record.json",
-      "reason": "Populated `com.semanticops.spec/table` record that reaches no reader: measured against all five committed exports, 0 of its rows appear anywhere. The eight tables carry 62 rows of spec content between them. #276's acceptance asked that these records \"render identically\", which was never satisfiable. #285's acceptance is to wire them into an intended presentation or remove them deliberately — both are content decisions. Owner decision requested on #285.",
+      "reason": "Populated `com.semanticops.spec/table` record that reaches no reader: measured against all five committed exports, 0 of its rows appear anywhere. The eight tables carry 62 rows of spec content between them. #276's acceptance asked that these records \"render identically\", which was never satisfiable. #285's acceptance is to wire them into an intended presentation or remove them deliberately \u2014 both are content decisions. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
       "instanceId": "b1000000-0000-4000-a000-000000000003",
       "path": "records/tables/t003-graduation-identity-continuity.json",
-      "reason": "Populated `com.semanticops.spec/table` record that reaches no reader: measured against all five committed exports, 0 of its rows appear anywhere. The eight tables carry 62 rows of spec content between them. #276's acceptance asked that these records \"render identically\", which was never satisfiable. #285's acceptance is to wire them into an intended presentation or remove them deliberately — both are content decisions. Owner decision requested on #285.",
+      "reason": "Populated `com.semanticops.spec/table` record that reaches no reader: measured against all five committed exports, 0 of its rows appear anywhere. The eight tables carry 62 rows of spec content between them. #276's acceptance asked that these records \"render identically\", which was never satisfiable. #285's acceptance is to wire them into an intended presentation or remove them deliberately \u2014 both are content decisions. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
       "instanceId": "b1000000-0000-4000-a000-000000000004",
       "path": "records/tables/t004-which-extensions-to-implement.json",
-      "reason": "Populated `com.semanticops.spec/table` record that reaches no reader: measured against all five committed exports, 0 of its rows appear anywhere. The eight tables carry 62 rows of spec content between them. #276's acceptance asked that these records \"render identically\", which was never satisfiable. #285's acceptance is to wire them into an intended presentation or remove them deliberately — both are content decisions. Owner decision requested on #285.",
+      "reason": "Populated `com.semanticops.spec/table` record that reaches no reader: measured against all five committed exports, 0 of its rows appear anywhere. The eight tables carry 62 rows of spec content between them. #276's acceptance asked that these records \"render identically\", which was never satisfiable. #285's acceptance is to wire them into an intended presentation or remove them deliberately \u2014 both are content decisions. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
       "instanceId": "b1000000-0000-4000-a000-000000000005",
       "path": "records/tables/t005-democracy-mapping.json",
-      "reason": "Populated `com.semanticops.spec/table` record that reaches no reader: measured against all five committed exports, 0 of its rows appear anywhere. The eight tables carry 62 rows of spec content between them. #276's acceptance asked that these records \"render identically\", which was never satisfiable. #285's acceptance is to wire them into an intended presentation or remove them deliberately — both are content decisions. Owner decision requested on #285.",
+      "reason": "Populated `com.semanticops.spec/table` record that reaches no reader: measured against all five committed exports, 0 of its rows appear anywhere. The eight tables carry 62 rows of spec content between them. #276's acceptance asked that these records \"render identically\", which was never satisfiable. #285's acceptance is to wire them into an intended presentation or remove them deliberately \u2014 both are content decisions. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
       "instanceId": "b1000000-0000-4000-a000-000000000006",
       "path": "records/tables/t006-relation-directionality.json",
-      "reason": "Populated `com.semanticops.spec/table` record that reaches no reader: measured against all five committed exports, 0 of its rows appear anywhere. The eight tables carry 62 rows of spec content between them. #276's acceptance asked that these records \"render identically\", which was never satisfiable. #285's acceptance is to wire them into an intended presentation or remove them deliberately — both are content decisions. Owner decision requested on #285.",
+      "reason": "Populated `com.semanticops.spec/table` record that reaches no reader: measured against all five committed exports, 0 of its rows appear anywhere. The eight tables carry 62 rows of spec content between them. #276's acceptance asked that these records \"render identically\", which was never satisfiable. #285's acceptance is to wire them into an intended presentation or remove them deliberately \u2014 both are content decisions. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
       "instanceId": "b1000000-0000-4000-a000-000000000007",
       "path": "records/tables/t007-canonical-relation-types.json",
-      "reason": "Populated `com.semanticops.spec/table` record that reaches no reader: measured against all five committed exports, 0 of its rows appear anywhere. The eight tables carry 62 rows of spec content between them. #276's acceptance asked that these records \"render identically\", which was never satisfiable. #285's acceptance is to wire them into an intended presentation or remove them deliberately — both are content decisions. Owner decision requested on #285.",
+      "reason": "Populated `com.semanticops.spec/table` record that reaches no reader: measured against all five committed exports, 0 of its rows appear anywhere. The eight tables carry 62 rows of spec content between them. #276's acceptance asked that these records \"render identically\", which was never satisfiable. #285's acceptance is to wire them into an intended presentation or remove them deliberately \u2014 both are content decisions. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
       "instanceId": "b1000000-0000-4000-a000-000000000008",
       "path": "records/tables/t008-relation-category-taxonomy.json",
-      "reason": "Populated `com.semanticops.spec/table` record that reaches no reader: measured against all five committed exports, 0 of its rows appear anywhere. The eight tables carry 62 rows of spec content between them. #276's acceptance asked that these records \"render identically\", which was never satisfiable. #285's acceptance is to wire them into an intended presentation or remove them deliberately — both are content decisions. Owner decision requested on #285.",
+      "reason": "Populated `com.semanticops.spec/table` record that reaches no reader: measured against all five committed exports, 0 of its rows appear anywhere. The eight tables carry 62 rows of spec content between them. #276's acceptance asked that these records \"render identically\", which was never satisfiable. #285's acceptance is to wire them into an intended presentation or remove them deliberately \u2014 both are content decisions. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
       "instanceId": "8b8377fc-7666-4f52-973c-d751d2d56264",
       "path": "records/tables/t009-sourceref-graduation-mapping.json",
-      "reason": "Populated `com.semanticops.spec/table` record that reaches no reader: measured against all five committed exports, 0 of its rows appear anywhere. The eight tables carry 62 rows of spec content between them. #276's acceptance asked that these records \"render identically\", which was never satisfiable. #285's acceptance is to wire them into an intended presentation or remove them deliberately — both are content decisions. Owner decision requested on #285.",
+      "reason": "Populated `com.semanticops.spec/table` record that reaches no reader: measured against all five committed exports, 0 of its rows appear anywhere. The eight tables carry 62 rows of spec content between them. #276's acceptance asked that these records \"render identically\", which was never satisfiable. #285's acceptance is to wire them into an intended presentation or remove them deliberately \u2014 both are content decisions. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
