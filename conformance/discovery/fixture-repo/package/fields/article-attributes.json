@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f001-0000-4000-8000-000000000015",
+  "namespace": "com.example.discovery",
+  "name": "attributes",
+  "version": 1,
+  "description": "Open extension bag of string-valued attributes.",
+  "aiGuidance": {
+    "purpose": "I-120 exclusion: datatype map. Neither its keys nor its values contribute segments."
+  },
+  "fieldType": {
+    "datatype": "map",
+    "valueRange": "string"
+  },
+  "createdAt": "2026-06-27T00:00:00Z"
+}

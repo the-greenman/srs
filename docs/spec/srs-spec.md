@@ -485,8 +485,9 @@ A field within a Typed Record.
 {
   name: string
   label?: string
-  valueType?: "string" | "text" | "number" | "boolean" | "date" | "url" | "select" | "multiselect"
-  selectOptions?: string[]
+  // RFC-039 [R8]: inline RFC-032 fieldType facets, self-contained (no Type
+  // binding to resolve against). datatype MUST NOT be "ref" or "dependent".
+  fieldType: { datatype: "string" | "number" | "integer" | "boolean" | "date" | "date-time" | "map", cardinality?: "single" | "list", valueDomain?: "open" | "closed", allowedValues?: string[], format?: "plain" | "markdown" | "uri" | "uuid" | "email", constraints?: object }
   value: string | number | boolean | string[] | null
   source?: "human" | "ai" | "imported" | "derived"
   editedAt?: ISO8601

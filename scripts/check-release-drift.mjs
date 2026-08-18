@@ -5,7 +5,7 @@ import { basename, join, resolve } from "path";
 import { spawn } from "child_process";
 import { renderInvariants } from "./render-invariants.mjs";
 import { logSrsCliProvenance, resolveSrsCli } from "./lib/pinned-srs.mjs";
-import { viewExports } from "./lib/view-exports.mjs";
+import { VIEW_EXPORTS as VIEW_EXPORT_SPECS } from "./lib/view-exports.mjs";
 import { injectKeyInvariants } from "./lib/invariant-region.mjs";
 import { checkPublishCompleteness, keyInvariantsExemptTitleCounts } from "./lib/publish-completeness.mjs";
 import { testPublishCompletenessGuard } from "../tests/guards/check-publish-completeness.mjs";
@@ -17,7 +17,7 @@ const SPEC_ROOT = join(ROOT, "docs", "spec");
 // handler as a message rather than a module-load stack trace.
 let SRS_CLI;
 
-const VIEW_EXPORTS = viewExports(SPEC_ROOT);
+const VIEW_EXPORTS = VIEW_EXPORT_SPECS.map((e) => ({ ...e, output: join(ROOT, e.output) }));
 
 function run(cmd, args, { cwd = ROOT, silent = false } = {}) {
   return new Promise((resolvePromise, rejectPromise) => {

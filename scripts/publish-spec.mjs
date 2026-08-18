@@ -5,7 +5,7 @@ import { dirname, join, resolve } from "path";
 import { spawn } from "child_process";
 import { renderInvariants } from "./render-invariants.mjs";
 import { logSrsCliProvenance, resolveSrsCli } from "./lib/pinned-srs.mjs";
-import { viewExports } from "./lib/view-exports.mjs";
+import { VIEW_EXPORTS as VIEW_EXPORT_SPECS } from "./lib/view-exports.mjs";
 import { injectKeyInvariants } from "./lib/invariant-region.mjs";
 
 const ROOT = resolve(new URL("..", import.meta.url).pathname);
@@ -18,7 +18,7 @@ const VSCODE_SCHEMA_DST = join(ROOT, "..", "srs-vscode", "schemas", "2.0");
 // handler as a message rather than a module-load stack trace.
 let SRS_CLI;
 
-const VIEW_EXPORTS = viewExports(SPEC_ROOT);
+const VIEW_EXPORTS = VIEW_EXPORT_SPECS.map((e) => ({ ...e, output: join(ROOT, e.output) }));
 
 function run(cmd, args, cwd = ROOT) {
   return new Promise((resolvePromise, rejectPromise) => {

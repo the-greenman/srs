@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f004-0000-4000-8000-000000000001",
+  "namespace": "com.example.discovery",
+  "name": "display_name",
+  "version": 1,
+  "description": "Author display name.",
+  "aiGuidance": {
+    "purpose": "A plain searchable string in isolation. Inside an inline composite it contributes nothing, because the containing Field's datatype is ref (CC-27)."
+  },
+  "fieldType": {
+    "datatype": "string"
+  },
+  "createdAt": "2026-06-27T00:00:00Z"
+}

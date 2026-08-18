@@ -1,0 +1,20 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f001-0000-4000-8000-000000000017",
+  "namespace": "com.example.discovery",
+  "name": "byline",
+  "version": 1,
+  "description": "Inline authorship block.",
+  "aiGuidance": {
+    "purpose": "I-120 exclusion: datatype ref in mode inline. CC-27 — `ref` is excluded in BOTH modes, knowingly. The nested `display_name` is a plain string Field and would be searchable at the top level; reaching it here needs recursive composite Text Projection, which no accepted RFC defines. The nested value being unfindable is a recorded accepted cost, not a defect."
+  },
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "rangeType": {
+      "typeId": "0000a004-0000-4000-8000-000000000004",
+      "typeVersion": 1
+    }
+  },
+  "createdAt": "2026-06-27T00:00:00Z"
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f001-0000-4000-8000-000000000010",
+  "namespace": "com.example.discovery",
+  "name": "aliases",
+  "version": 1,
+  "description": "Alternative titles the article has been published under.",
+  "aiGuidance": {
+    "purpose": "I-120 inclusion: an OPEN list-cardinality string. `topics` is closed, so without this the fixture proved list behaviour only for a closed domain — and I-120 states valueDomain does not affect searchability. Each element contributes its own segment."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "cardinality": "list"
+  },
+  "createdAt": "2026-06-27T00:00:00Z"
+}
