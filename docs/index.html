@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Semantic Record System: an open standard for portable, inspectable semantic documents." />
+    <title>Semantic Record System</title>
+    <style>
+      :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #1f1d1a; background: #f8f6f1; }
+      body { max-width: 780px; margin: 0 auto; padding: 8vh 24px; line-height: 1.6; }
+      h1 { font-size: clamp(2.2rem, 8vw, 4.8rem); letter-spacing: -0.06em; line-height: 0.95; margin: 0; }
+      h2 { margin: 2.5rem 0 0.6rem; font-size: 1.15rem; }
+      p { color: #4d4942; font-size: 1.08rem; }
+      .eyebrow { color: #7a7368; font: 600 .75rem/1.2 ui-monospace, monospace; letter-spacing: .07em; text-transform: uppercase; }
+      nav { display: grid; gap: 10px; margin: 2rem 0; }
+      a { color: inherit; }
+      nav a { display: block; border: 1px solid #d5cfc5; border-radius: 10px; padding: 14px 16px; background: #fffdf9; text-decoration: none; }
+      nav a:hover, nav a:focus-visible { border-color: #1f1d1a; outline: none; }
+      nav strong, nav span { display: block; }
+      nav span { color: #716b62; font-size: .9rem; margin-top: 3px; }
+      footer { border-top: 1px solid #d5cfc5; color: #716b62; font-size: .9rem; margin-top: 3rem; padding-top: 1rem; }
+    </style>
+  </head>
+  <body>
+    <p class="eyebrow">Open semantic-document standard</p>
+    <h1>Semantic Record System</h1>
+    <p>SRS is an open standard for semantic documents that people and software can inspect, understand, move and continue using without dependence on the system that created them.</p>
+
+    <nav aria-label="SRS documentation">
+      <a href="./strategy/"><strong>Strategic map</strong><span>Capabilities, release boundaries and current evidence.</span></a>
+      <a href="./spec/srs-spec.md"><strong>Specification</strong><span>The normative SRS 2.0 specification.</span></a>
+      <a href="./spec/srs-unified.md"><strong>Specification and rationale</strong><span>A single-pass reading of the specification and its design reasoning.</span></a>
+      <a href="./overview/concepts.md"><strong>Conceptual introduction</strong><span>A gentler introduction to the main ideas.</span></a>
+      <a href="https://github.com/the-greenman/srs"><strong>Source repository</strong><span>Records, schemas, RFCs and implementation guidance.</span></a>
+    </nav>
+
+    <footer>The documentation is published as portable files. The repository is the source for the current specification and its generated projections.</footer>
+  </body>
+</html>

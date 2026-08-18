@@ -1,154 +1,42 @@
 #!/usr/bin/env node
-// Owner strategic map: committed structure plus a REST-only GitHub status overlay.
+// Public strategic map: committed structure plus a REST-only GitHub status overlay.
 // It intentionally has no Project-v2 or board-manager dependency.
 
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
+import { buildRoadmapIndex, capabilityArchitecture, contractRequirements, evidenceReview, issueRef, issueUrl, pipelineLayout, validateRoadmap } from "../docs/strategy/roadmap-model.mjs";
 
 const OWNER = process.env.SRS_ROADMAP_OWNER || "the-greenman";
 const SCRIPT_DIR = dirname(new URL(import.meta.url).pathname);
 const MODEL_PATH = resolve(SCRIPT_DIR, "../docs/strategy/roadmap.json");
 const MARKDOWN_PATH = resolve(SCRIPT_DIR, "../docs/strategy/roadmap.md");
-const TASK_ROLES = new Set(["gate", "evidence", "supporting", "later"]);
-const BOUNDARY_FIELDS = ["track", "name", "actor", "promise", "durableArtifact", "entryCriteria", "includedCapabilities", "exclusions", "walkthrough", "compatibilityPromise", "stableAfter", "tasks"];
-const PIPELINE_STAGE_FIELDS = ["id", "name", "groupNeed", "promise", "semanticAdds", "blueprintAdds", "doesNotIntroduce", "requires", "releaseAlignment", "executionAnchors", "activationTrigger"];
 
-function issueRef(ref) {
-  const match = /^([^#\s]+)#(\d+)$/.exec(ref || "");
-  if (!match) throw new Error(`invalid issue reference: ${ref}`);
-  return { ref, repo: match[1], number: Number(match[2]) };
-}
-
-function issueUrl(ref) {
-  const { repo, number } = issueRef(ref);
-  return `https://github.com/${OWNER}/${repo}/issues/${number}`;
-}
-
-function issueLink(ref) { return `[#${issueRef(ref).number}](${issueUrl(ref)})`; }
+function issueLink(ref) { return `[#${issueRef(ref).number}](${issueUrl(ref, OWNER)})`; }
 function cell(value) { return String(value).replaceAll("|", "\\|").replaceAll("\n", " "); }
 function id(value) { return String(value).replace(/[^A-Za-z0-9_]/g, "_"); }
 function mermaid(value) { return String(value).replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("[", "(").replaceAll("]", ")").replace(/\r?\n/g, "<br/>"); }
+function sourceLink(source) {
+  const ref = typeof source === "string" ? source : source.ref;
+  if (ref.startsWith("http")) return `[${ref}](${ref})`;
+  const href = ref.startsWith("docs/") ? `../${ref.slice(5)}` : `../../${ref}`;
+  return `[${ref.split("/").at(-1)}](${href})`;
+}
 
 function model(path = MODEL_PATH) { return JSON.parse(readFileSync(path, "utf8")); }
-
-function validateRoadmap(data) {
-  const errors = [], warnings = [];
-  const capabilities = new Set(data.capabilities || []);
-  const tracks = new Set((data.tracks || []).map((track) => track.id));
-  if (!data.version) errors.push("missing version");
-  if (!data.bootstrapStatus) errors.push("missing bootstrapStatus");
-  for (const field of ["name", "role", "architecture", "boundaries", "modes", "predecessor"]) {
-    const value = data.applicationStrategy?.[field];
-    if (value == null || value === "" || (Array.isArray(value) && !value.length)) errors.push(`applicationStrategy: missing ${field}`);
-  }
-  if (data.mission?.status !== "ratified") errors.push("mission must be ratified");
-  for (const field of ["purpose", "muDemocracy", "srs", "humanAiConstitution", "roadmapTests"]) {
-    const value = data.mission?.[field];
-    if (value == null || value === "" || (Array.isArray(value) && !value.length)) errors.push(`mission: missing ${field}`);
-  }
-  if (!tracks.size) errors.push("missing tracks");
-  const boundaryIds = new Set();
-  const byId = new Map();
-  for (const boundary of data.boundaries || []) {
-    if (!boundary.id || boundaryIds.has(boundary.id)) errors.push(`duplicate boundary id: ${boundary.id || "(blank)"}`);
-    boundaryIds.add(boundary.id); byId.set(boundary.id, boundary);
-    for (const field of BOUNDARY_FIELDS) {
-      const value = boundary[field];
-      if (value == null || value === "" || (Array.isArray(value) && !value.length)) errors.push(`${boundary.id}: missing ${field}`);
-    }
-    if (!tracks.has(boundary.track)) errors.push(`${boundary.id}: unknown track ${boundary.track}`);
-    for (const capability of boundary.includedCapabilities || []) if (!capabilities.has(capability)) errors.push(`${boundary.id}: unknown capability ${capability}`);
-    const taskRefs = new Set();
-    for (const task of boundary.tasks || []) {
-      try { issueRef(task.ref); } catch (error) { errors.push(`${boundary.id}: ${error.message}`); }
-      if (!TASK_ROLES.has(task.role)) errors.push(`${boundary.id}: invalid task role ${task.role}`);
-      if (taskRefs.has(task.ref)) errors.push(`${boundary.id}: duplicate task ${task.ref}`);
-      taskRefs.add(task.ref);
-    }
-    if (!(boundary.tasks || []).some((task) => task.role === "gate")) errors.push(`${boundary.id}: no gate task`);
-    for (const gap of boundary.gaps || []) if (!gap.title || !gap.owner || !gap.trigger) errors.push(`${boundary.id}: incomplete gap`);
-  }
-  for (const boundary of data.boundaries || []) for (const required of boundary.requires || []) {
-    if (!boundaryIds.has(required)) errors.push(`${boundary.id}: requires unknown boundary ${required}`);
-  }
-  const visiting = new Set(), visited = new Set();
-  const visit = (boundaryId) => {
-    if (visiting.has(boundaryId)) { errors.push(`boundary dependency cycle at ${boundaryId}`); return; }
-    if (visited.has(boundaryId)) return;
-    visiting.add(boundaryId);
-    for (const required of byId.get(boundaryId)?.requires || []) visit(required);
-    visiting.delete(boundaryId); visited.add(boundaryId);
-  };
-  for (const boundaryId of boundaryIds) visit(boundaryId);
-  const pipelineIds = new Set(), allPipelineStageIds = new Set();
-  for (const pipeline of data.capabilityPipelines || []) {
-    if (!pipeline.id || pipelineIds.has(pipeline.id)) errors.push(`duplicate capability pipeline id: ${pipeline.id || "(blank)"}`);
-    pipelineIds.add(pipeline.id);
-    for (const field of ["name", "purpose", "stages"]) {
-      const value = pipeline[field];
-      if (value == null || value === "" || (Array.isArray(value) && !value.length)) errors.push(`${pipeline.id}: missing ${field}`);
-    }
-    const stageIds = new Set(), stages = new Map();
-    for (const stage of pipeline.stages || []) {
-      if (!stage.id || stageIds.has(stage.id)) errors.push(`${pipeline.id}: duplicate stage id: ${stage.id || "(blank)"}`);
-      stageIds.add(stage.id); stages.set(stage.id, stage);
-      if (allPipelineStageIds.has(stage.id)) errors.push(`duplicate capability stage id: ${stage.id || "(blank)"}`);
-      allPipelineStageIds.add(stage.id);
-      for (const field of PIPELINE_STAGE_FIELDS) {
-        const value = stage[field];
-        if (value == null || value === "" || (Array.isArray(value) && !value.length && !["requires", "releaseAlignment", "executionAnchors"].includes(field))) errors.push(`${pipeline.id}/${stage.id}: missing ${field}`);
-      }
-      if ((stage.executionAnchors || []).length > 3) errors.push(`${pipeline.id}/${stage.id}: more than three execution anchors`);
-      for (const ref of stage.executionAnchors || []) try { issueRef(ref); } catch (error) { errors.push(`${pipeline.id}/${stage.id}: ${error.message}`); }
-      for (const boundaryId of stage.releaseAlignment || []) if (!boundaryIds.has(boundaryId)) errors.push(`${pipeline.id}/${stage.id}: aligns to unknown boundary ${boundaryId}`);
-    }
-    for (const stage of pipeline.stages || []) for (const required of stage.requires || []) {
-      if (!stageIds.has(required)) errors.push(`${pipeline.id}/${stage.id}: requires unknown stage ${required}`);
-    }
-    const stageVisiting = new Set(), stageVisited = new Set();
-    const visitStage = (stageId) => {
-      if (stageVisiting.has(stageId)) { errors.push(`${pipeline.id}: capability dependency cycle at ${stageId}`); return; }
-      if (stageVisited.has(stageId)) return;
-      stageVisiting.add(stageId);
-      for (const required of stages.get(stageId)?.requires || []) visitStage(required);
-      stageVisiting.delete(stageId); stageVisited.add(stageId);
-    };
-    for (const stageId of stageIds) visitStage(stageId);
-  }
-  const modeIds = new Set();
-  for (const mode of data.applicationStrategy?.modes || []) {
-    if (!mode.id || modeIds.has(mode.id)) errors.push(`applicationStrategy: duplicate mode id: ${mode.id || "(blank)"}`);
-    modeIds.add(mode.id);
-    if (!mode.name) errors.push(`applicationStrategy/${mode.id}: missing name`);
-    for (const capability of mode.capabilities || []) if (!capabilities.has(capability)) errors.push(`applicationStrategy/${mode.id}: unknown capability ${capability}`);
-    for (const stageId of mode.servesStages || []) if (!allPipelineStageIds.has(stageId)) errors.push(`applicationStrategy/${mode.id}: serves unknown stage ${stageId}`);
-  }
-  const known = new Set(data.knownEpicRefs || []), mapped = new Set();
-  for (const epic of data.epics || []) {
-    try { issueRef(epic.ref); } catch (error) { errors.push(`epic: ${error.message}`); continue; }
-    if (mapped.has(epic.ref)) errors.push(`duplicate epic: ${epic.ref}`);
-    mapped.add(epic.ref);
-    if (!known.has(epic.ref)) warnings.push(`mapped epic absent from knownEpicRefs: ${epic.ref}`);
-    for (const capability of epic.capabilities || []) if (!capabilities.has(capability)) errors.push(`${epic.ref}: unknown capability ${capability}`);
-    if (!epic.disposition || !epic.role) errors.push(`${epic.ref}: missing disposition or role`);
-  }
-  for (const ref of known) if (!mapped.has(ref)) errors.push(`unmapped epic: ${ref}`);
-  for (const ref of mapped) if (!known.has(ref)) warnings.push(`unrecognised mapped epic: ${ref}`);
-  return { errors, warnings };
-}
 
 function renderRoadmap(data) {
   const check = validateRoadmap(data);
   if (check.errors.length) throw new Error(`roadmap invalid:\n- ${check.errors.join("\n- ")}`);
+  const index = buildRoadmapIndex(data);
   const lines = [
-    "# SRS owner strategic map", "",
+    "# SRS strategic map", "",
     "> Generated from `roadmap.json` by `node scripts/roadmap.mjs --write`. Do not edit this file directly.", "",
     data.purpose, "",
-    `> Bootstrap status: ${data.bootstrapStatus}`, "",
+    `> Source status: ${data.bootstrapStatus}`, "",
     "## Mission and roadmap constitution", "",
-    `**Status:** Ratified on ${data.mission.ratifiedOn}. ${data.mission.decisionAuthority}`, "",
+    `**Current direction:** Ratified on ${data.mission.ratifiedOn}.`, "",
     `> ${data.mission.purpose}`, "",
     `**μDemocracy:** ${data.mission.muDemocracy}`, "",
     `**SRS:** ${data.mission.srs}`, "",
@@ -173,7 +61,7 @@ function renderRoadmap(data) {
     for (const boundary of data.boundaries.filter((item) => item.track === track.id)) lines.push(`    ${boundary.id}["${mermaid(`${boundary.id}: ${boundary.name}`)}"]`);
     lines.push("  end");
   }
-  for (const boundary of data.boundaries) for (const required of boundary.requires || []) lines.push(`  ${required} --> ${boundary.id}`);
+  for (const boundary of data.boundaries) for (const required of index.targets(boundary.id, "depends-on")) lines.push(`  ${required} --> ${boundary.id}`);
   lines.push("```", "", "F2 is the first concentrated post-kernel effort. P1 and P2 may progress after F1; P3 requires both F2 and P2.", "");
   for (const track of data.tracks) {
     lines.push(`## ${track.name}`, "", track.purpose, "");
@@ -187,17 +75,48 @@ function renderRoadmap(data) {
       lines.push("");
     }
   }
-  lines.push("## Governance-practice capability pipeline", "", "This is the group adoption path, not another release plan or issue hierarchy. Each stage adds only the next semantic and procedural capability a group needs; issue anchors identify active execution work without containing its implementation tree.", "");
+  lines.push("## SRS capability architecture", "", data.capabilityArchitecture.purpose, "", "| Stability | Meaning |", "| --- | --- |");
+  for (const stability of data.capabilityArchitecture.stability) lines.push(`| ${cell(stability.label)} | ${cell(stability.meaning)} |`);
+  const renderArchitecture = (node, depth = 0) => {
+    const indent = "  ".repeat(depth);
+    const requirements = contractRequirements(index, node.id);
+    lines.push(`${indent}- **${node.name}** — ${node.promise}`, `${indent}  - Stability: ${data.capabilityArchitecture.stability.find((item) => item.id === node.stability).label}`, `${indent}  - Required by: ${requirements.length ? requirements.map((item) => item.id).join(", ") : "future work"}`, `${indent}  - Sources: ${node.sources.map(sourceLink).join(", ")}`, `${indent}  - Not included: ${node.notIncluded.join("; ")}`);
+    for (const child of index.contractChildrenById.get(node.id) || []) renderArchitecture(child, depth + 1);
+  };
+  for (const { node } of capabilityArchitecture(index)) renderArchitecture(node);
+  lines.push("");
+  lines.push("## Release contract readiness", "", "Each row is a public SRS promise required by a boundary or practice stage. Readiness is assessed separately from GitHub issue state.", "", "| Contract | Required by | Specification | Implementation | Conformance |", "| --- | --- | --- | --- | --- |");
+  for (const contract of data.standardContracts) {
+    const assessment = (index.assessmentsByContract.get(contract.id) || [])[0];
+    const requirements = contractRequirements(index, contract.id).map((item) => item.id).join(", ") || "future";
+    lines.push(`| ${cell(contract.name)} | ${cell(requirements)} | ${cell(assessment?.specification || "not assessed")} | ${cell(assessment?.implementation || "not assessed")} | ${cell(assessment?.conformance || "not assessed")} |`);
+  }
+  lines.push("", "## Extension register", "", "Extensions are referenced by their normative SRS Records; this register records only their roadmap role and review state.", "", "| Extension | Subject | Required by | Readiness |", "| --- | --- | --- | --- |");
+  for (const contract of data.standardContracts.filter((item) => item.kind === "normative-subject")) {
+    const assessment = (index.assessmentsByContract.get(contract.id) || [])[0];
+    const readiness = assessment ? `${assessment.specification} / ${assessment.implementation} / ${assessment.conformance}` : "not assessed";
+    lines.push(`| ${cell(contract.name)} | ${cell(contract.normativeSubject.path)} | ${cell(contractRequirements(index, contract.id).map((item) => item.id).join(", "))} | ${cell(readiness)} |`);
+  }
+  lines.push("");
+  lines.push("## Current evidence", "", `Assessed evidence snapshot as of ${data.reality.asOf}. ${data.reality.method}`, "", "| Boundary | Proven | Partial | Planned | Prototype |", "| --- | ---: | ---: | ---: | ---: |");
+  for (const boundary of data.boundaries) {
+    const counts = Object.fromEntries(["proven", "partial", "planned", "prototype"].map((state) => [state, 0]));
+    for (const item of index.checksByBoundary.get(boundary.id) || []) counts[item.state] += 1;
+    lines.push(`| ${boundary.id} — ${cell(boundary.name)} | ${counts.proven} | ${counts.partial} | ${counts.planned} | ${counts.prototype} |`);
+  }
+  lines.push("");
+  lines.push("## Capability paths", "", "These paths show the next semantic and procedural capability a group may need. Related work connects the map to active implementation without replacing it.", "");
   for (const pipeline of data.capabilityPipelines || []) {
     lines.push(`### ${pipeline.name}`, "", pipeline.purpose, "", "```mermaid", "flowchart LR");
     for (const stage of pipeline.stages) lines.push(`  CP_${id(pipeline.id)}_${stage.id}["${mermaid(`${stage.id}: ${stage.name}`)}"]`);
-    for (const stage of pipeline.stages) for (const required of stage.requires || []) lines.push(`  CP_${id(pipeline.id)}_${required} --> CP_${id(pipeline.id)}_${stage.id}`);
+    for (const stage of pipeline.stages) for (const required of index.targets(stage.id, "depends-on")) lines.push(`  CP_${id(pipeline.id)}_${required} --> CP_${id(pipeline.id)}_${stage.id}`);
     lines.push("```");
     lines.push("", "| Stage | Capability promise | Release alignment | Activation trigger |", "| --- | --- | --- | --- |");
-    for (const stage of pipeline.stages) lines.push(`| ${stage.id} — ${cell(stage.name)} | ${cell(stage.promise)} | ${cell((stage.releaseAlignment || []).join(", ") || "future")} | ${cell(stage.activationTrigger)} |`);
+    for (const stage of pipeline.stages) lines.push(`| ${stage.id} — ${cell(stage.name)} | ${cell(stage.promise)} | ${cell(index.targets(stage.id, "com.semanticops.strategy/aligns-with").join(", ") || "future")} | ${cell(stage.activationTrigger)} |`);
     for (const stage of pipeline.stages) {
-      const anchors = (stage.executionAnchors || []).map(issueLink).join(", ") || "None — remember until activated";
-      lines.push("", `#### ${stage.id} — ${stage.name}`, "", `**Group need:** ${stage.groupNeed}`, "", `**Semantic additions:** ${stage.semanticAdds.join("; ")}`, "", `**Blueprint additions:** ${stage.blueprintAdds.join("; ")}`, "", `**Does not introduce:** ${stage.doesNotIntroduce.join("; ")}`, "", `**Execution anchors:** ${anchors}`, "");
+      const anchors = (stage.executionAnchors || []).map(issueLink).join(", ") || "None mapped yet";
+      lines.push("", `#### ${stage.id} — ${stage.name}`, "", `**Group need:** ${stage.groupNeed}`, "", `**Semantic additions:** ${stage.semanticAdds.join("; ")}`, "", `**Blueprint additions:** ${stage.blueprintAdds.join("; ")}`, "", `**Does not introduce:** ${stage.doesNotIntroduce.join("; ")}`, "", `**Related work:** ${anchors}`, "");
+      if (stage.research?.length) lines.push(`**Research:** ${stage.research.map((item) => `${item.takeaway} (${item.source})`).join("; ")}`, "");
     }
   }
   lines.push("## Capability map", "", "```mermaid", "flowchart LR", "  S[\"Semantic sovereignty\"]");
@@ -209,7 +128,7 @@ function renderRoadmap(data) {
   }
   lines.push("```", "", `Delivery surfaces across all branches: ${data.deliverySurfaces.join(", ")}.`, "", "## Epic and workstream disposition", "", "| Epic | Disposition | Role | Rationale |", "| --- | --- | --- | --- |");
   for (const epic of data.epics) lines.push(`| ${issueLink(epic.ref)} ${cell(epic.name)} | ${epic.disposition} | ${cell(epic.role)} | ${cell(epic.notes)} |`);
-  lines.push("", "## Use", "", "- Regenerate: `node scripts/roadmap.mjs --write`.", "- Verify generated output: `node scripts/roadmap.mjs --check`.", "- Overlay live GitHub state: `node scripts/roadmap.mjs --status`.", "");
+  lines.push("", "## Use", "", "- Regenerate: `node scripts/roadmap.mjs --write`.", "- Verify generated output and local evidence targets: `node scripts/roadmap.mjs --check`.", "- Audit curated evidence and review dates: `node scripts/roadmap.mjs --audit`.", "- Overlay live GitHub state: `node scripts/roadmap.mjs --status`.", "");
   return lines.join("\n");
 }
 
@@ -254,9 +173,51 @@ function renderStatus(data, rows) {
   return lines.join("\n");
 }
 
+function evidencePath(ref) {
+  const roots = [resolve(SCRIPT_DIR, ".."), resolve(SCRIPT_DIR, "../.."), resolve(SCRIPT_DIR, "../../..")];
+  return roots.map((root) => resolve(root, ref)).find(existsSync) || null;
+}
+
+function auditRoadmap(data, today = new Date().toISOString().slice(0, 10)) {
+  const rows = [];
+  for (const assessment of data.assessments || []) {
+    const review = evidenceReview(assessment, today);
+    for (const evidence of assessment.evidence || []) {
+      const target = ["repo-path", "srs-record"].includes(evidence.type) ? evidencePath(evidence.ref) : null;
+      rows.push({ check: assessment, evidence, review, result: ["repo-path", "srs-record"].includes(evidence.type) ? (target ? "verified" : "missing") : evidence.type === "command" ? "manual" : "reference", target });
+    }
+  }
+  for (const contract of data.standardContracts || []) {
+    const check = { id: contract.id, assessedAt: "", reviewBy: "" };
+    for (const source of contract.sources || []) if (["repo-path", "srs-record"].includes(source.type)) {
+      const target = evidencePath(source.ref);
+      rows.push({ check, evidence: source, review: "current", result: target ? "verified" : "missing", target });
+    }
+    if (contract.normativeSubject) {
+      const target = evidencePath(contract.normativeSubject.path);
+      let result = target ? "verified" : "missing";
+      if (target) {
+        try { if (JSON.parse(readFileSync(target, "utf8")).instanceId !== contract.normativeSubject.instanceId) result = "mismatched"; }
+        catch { result = "invalid"; }
+      }
+      rows.push({ check, evidence: { type: "srs-record", ref: contract.normativeSubject.path }, review: "current", result, target });
+    }
+  }
+  return rows;
+}
+
+function renderAudit(data, rows) {
+  const lines = ["SRS owner strategic map — curated evidence audit", "", `Evidence snapshot: ${data.reality.asOf}. Audit date: ${new Date().toISOString().slice(0, 10)}.`, ""];
+  for (const row of rows) lines.push(`- [${row.result}${row.review === "current" ? "" : `; review ${row.review}`}] ${row.check.id}: ${row.evidence.type} ${row.evidence.ref}${row.target ? ` → ${row.target}` : ""}`);
+  const missing = rows.filter((row) => row.result === "missing").length;
+  const due = [...new Set(rows.filter((row) => row.review !== "current").map((row) => row.check.id))];
+  lines.push("", `${missing} missing local evidence target(s). ${due.length} reality check(s) due for review.`);
+  return lines.join("\n");
+}
+
 function run(argv) {
-  const modes = ["--write", "--check", "--status"].filter((flag) => argv.includes(flag));
-  if (modes.length !== 1) throw new Error("usage: roadmap.mjs --write | --check | --status");
+  const modes = ["--write", "--check", "--status", "--audit"].filter((flag) => argv.includes(flag));
+  if (modes.length !== 1) throw new Error("usage: roadmap.mjs --write | --check | --status | --audit");
   const data = model();
   const check = validateRoadmap(data);
   if (check.errors.length) throw new Error(`roadmap invalid:\n- ${check.errors.join("\n- ")}`);
@@ -264,12 +225,18 @@ function run(argv) {
   if (modes[0] === "--check") {
     const actual = existsSync(MARKDOWN_PATH) ? readFileSync(MARKDOWN_PATH, "utf8") : "";
     if (actual !== renderRoadmap(data)) throw new Error("roadmap output is stale; run: node scripts/roadmap.mjs --write");
+    const audit = auditRoadmap(data);
+    const missing = audit.filter((row) => row.result === "missing");
+    if (missing.length) throw new Error(`missing local evidence target(s): ${missing.map((row) => `${row.check.id} (${row.evidence.ref})`).join(", ")}`);
+    const due = [...new Set(audit.filter((row) => row.review !== "current").map((row) => row.check.id))];
+    if (due.length) console.warn(`roadmap: evidence review due for ${due.join(", ")}`);
     console.log("roadmap is current"); return;
   }
+  if (modes[0] === "--audit") { console.log(renderAudit(data, auditRoadmap(data))); return; }
   console.log(renderStatus(data, collectStatus(data, githubClient())));
 }
 
-export { MODEL_PATH, MARKDOWN_PATH, issueRef, validateRoadmap, renderRoadmap, collectStatus, renderStatus };
+export { MODEL_PATH, MARKDOWN_PATH, issueRef, validateRoadmap, renderRoadmap, collectStatus, renderStatus, auditRoadmap, renderAudit };
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try { run(process.argv.slice(2)); }

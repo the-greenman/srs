@@ -1,8 +1,8 @@
 {
-  "version": 5,
-  "title": "SRS owner strategic map",
-  "purpose": "The owner-governed release map above GitHub execution detail. It keeps semantic sovereignty and practical decision-making visible together.",
-  "bootstrapStatus": "This JSON is a temporary curated source. Once the post-#256 model is usable, migrate its mission, boundaries, tasks and relations into an SRS repository and generate this map as a DocumentView or equivalent projection.",
+  "version": 10,
+  "title": "SRS strategic map",
+  "purpose": "A map of the capabilities and release boundaries needed for semantic sovereignty and practical human–AI collaboration.",
+  "bootstrapStatus": "This map is a curated logical SRS projection: stable strategic entities, explicit semantic links, and separate assessments. It will later materialize as SRS Records, Relations, Containers and DocumentViews after the post-#256 model settles.",
   "mission": {
     "status": "ratified",
     "ratifiedOn": "2026-08-15",
@@ -20,8 +20,21 @@
       "Does it establish or protect a root invariant that becomes expensive to change after release?"
     ]
   },
-  "capabilities": ["Define Meaning", "Preserve Meaning", "Work With Meaning", "Present Facets", "Move and Reconcile", "Collaborate With AI", "Sustain Trust"],
-  "deliverySurfaces": ["Web", "VS Code", "CLI", "WASM"],
+  "capabilities": [
+    "Define Meaning",
+    "Preserve Meaning",
+    "Work With Meaning",
+    "Present Facets",
+    "Move and Reconcile",
+    "Collaborate With AI",
+    "Sustain Trust"
+  ],
+  "deliverySurfaces": [
+    "Web",
+    "VS Code",
+    "CLI",
+    "WASM"
+  ],
   "applicationStrategy": {
     "name": "srs-web / app.mudemocracy.org",
     "role": "The first usable SRS application: an opinionated surface for people to inspect, edit, validate and work with their own semantic repositories.",
@@ -37,178 +50,2470 @@
       {
         "id": "repository-inspection",
         "name": "Repository inspection and direct semantic editing",
-        "capabilities": ["Preserve Meaning", "Work With Meaning", "Present Facets"],
-        "servesStages": ["G1", "G2", "G3", "G4", "G5", "G6", "G7"]
+        "capabilities": [
+          "Preserve Meaning",
+          "Work With Meaning",
+          "Present Facets"
+        ],
+        "servesStages": [
+          "G1",
+          "G2",
+          "G3",
+          "G4",
+          "G5",
+          "G6",
+          "G7",
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5"
+        ]
       },
       {
         "id": "container-workspace",
         "name": "Container workspace for ordinary group work",
-        "capabilities": ["Work With Meaning", "Present Facets"],
-        "servesStages": ["G1", "G2", "G3", "G4", "G5"]
+        "capabilities": [
+          "Work With Meaning",
+          "Present Facets"
+        ],
+        "servesStages": [
+          "G1",
+          "G2",
+          "G3",
+          "G4",
+          "G5",
+          "D1",
+          "D2",
+          "D4"
+        ]
       },
       {
         "id": "shared-facilitation",
         "name": "Shared-screen Protocol facilitation",
-        "capabilities": ["Work With Meaning", "Present Facets", "Collaborate With AI"],
-        "servesStages": ["G6", "G7"]
+        "capabilities": [
+          "Work With Meaning",
+          "Present Facets",
+          "Collaborate With AI"
+        ],
+        "servesStages": [
+          "G6",
+          "G7"
+        ]
       },
       {
         "id": "blueprint-authoring",
         "name": "Blueprint and package authoring",
-        "capabilities": ["Define Meaning", "Present Facets"],
-        "servesStages": []
+        "capabilities": [
+          "Define Meaning",
+          "Present Facets"
+        ],
+        "servesStages": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5"
+        ]
       }
     ],
-    "predecessor": "The separate decision-logger repository is a paused origin prototype and research corpus. It informs fixtures, scenarios and migration learning, but is not a canonical SRS producer, consumer or release dependency unless explicitly restarted on current SRS contracts."
+    "predecessor": "The separate decision-logger repository is an earlier prototype and research corpus. It informs fixtures, scenarios and migration learning, but is not a canonical SRS producer, consumer or release dependency unless explicitly restarted on current SRS contracts."
+  },
+  "reality": {
+    "asOf": "2026-08-15",
+    "method": "This is an assessed evidence snapshot, not an issue-status calculation. A claim is proven only by a runnable surface, repeatable test, walkthrough or durable artifact; partial means a useful fragment exists but the boundary promise is not yet demonstrated.",
+    "states": [
+      {
+        "id": "proven",
+        "label": "Proven usable"
+      },
+      {
+        "id": "partial",
+        "label": "Partial / unintegrated"
+      },
+      {
+        "id": "planned",
+        "label": "Not yet built"
+      },
+      {
+        "id": "prototype",
+        "label": "Paused prototype"
+      }
+    ]
+  },
+  "capabilityArchitecture": {
+    "purpose": "The standard-level contracts that make the release boundaries and practice paths possible. A contract is not an application feature: it is a promise that independent SRS implementations can rely on.",
+    "stability": [
+      {
+        "id": "lock-before-f1",
+        "label": "Lock before F1",
+        "meaning": "A root semantic contract. Changing it after the coherent-kernel release would require a breaking migration."
+      },
+      {
+        "id": "settle-before-f2",
+        "label": "Settle before F2",
+        "meaning": "Required for an independently understandable, portable SRS publication."
+      },
+      {
+        "id": "settle-before-f3",
+        "label": "Settle before F3",
+        "meaning": "Required when a repository can be continued and reconciled across installations."
+      },
+      {
+        "id": "extension",
+        "label": "Extension or profile",
+        "meaning": "Built on the stable substrate; it may evolve without redefining the preservation kernel."
+      },
+      {
+        "id": "deferred",
+        "label": "Deliberately deferred",
+        "meaning": "Important, but not required for the current public SRS boundary."
+      }
+    ]
   },
   "capabilityPipelines": [
     {
       "id": "governance-practice",
       "name": "Governance practice",
-      "purpose": "A group adopts only the next amount of semantic and procedural structure its own practice needs. These stages are owner-level adoption cards, not releases or issue containers.",
+      "purpose": "A group adopts only the semantic and procedural structure its practice needs next. These stages describe a capability path, not a release plan or issue hierarchy.",
       "stages": [
         {
           "id": "G1",
           "name": "Simple decision log",
           "groupNeed": "We need a small shared form that lets us remember what we decided.",
           "promise": "A group records decisions with the four-field Quick Log blueprint while retaining a capable canonical Decision Record beneath it.",
-          "semanticAdds": ["Decision Record", "four essential decision fields", "explicit absent rather than inferred information"],
-          "blueprintAdds": ["Quick Log editing form", "readable decision-log facet"],
-          "doesNotIntroduce": ["sessions or attendance", "formal roles or authority", "AI assistance"],
-          "requires": [],
-          "releaseAlignment": ["P1"],
-          "executionAnchors": ["muDemocracy.org#36"],
-          "activationTrigger": "A group wants to record and read back decisions without adopting a governance process."
+          "semanticAdds": [
+            "Decision Record",
+            "four essential decision fields",
+            "explicit absent rather than inferred information"
+          ],
+          "blueprintAdds": [
+            "Quick Log editing form",
+            "readable decision-log facet"
+          ],
+          "doesNotIntroduce": [
+            "sessions or attendance",
+            "formal roles or authority",
+            "AI assistance"
+          ],
+          "executionAnchors": [
+            "muDemocracy.org#36"
+          ],
+          "activationTrigger": "A group wants to record and read back decisions without adopting a governance process.",
+          "instanceId": "5b1f8f08-5395-5d96-858b-449c66df0a68"
         },
         {
           "id": "G2",
           "name": "Living decisions",
           "groupNeed": "We need to share a draft, return to it, revisit commitments and replace a decision without losing its history.",
           "promise": "A Decision Record has stable identity through drafting, review, revisit and supersession; operational version history may remain in Git until interoperable history exchange is needed.",
-          "semanticAdds": ["draft and ratified lifecycle", "review/revisit information", "supersession relation"],
-          "blueprintAdds": ["Decision workspace", "review and supersession facets"],
-          "doesNotIntroduce": ["a meeting-owned decision", "attendance or authority claims", "a new semantic Record for every working edit"],
-          "requires": ["G1"],
-          "releaseAlignment": ["P1"],
-          "executionAnchors": ["muDemocracy.org#36", "muDemocracy.org#57", "muDemocracy.org#58"],
-          "activationTrigger": "A group needs decisions to remain useful after the meeting in which they first appeared."
+          "semanticAdds": [
+            "draft and ratified lifecycle",
+            "review/revisit information",
+            "supersession relation"
+          ],
+          "blueprintAdds": [
+            "Decision workspace",
+            "review and supersession facets"
+          ],
+          "doesNotIntroduce": [
+            "a meeting-owned decision",
+            "attendance or authority claims",
+            "a new semantic Record for every working edit"
+          ],
+          "executionAnchors": [
+            "muDemocracy.org#36",
+            "muDemocracy.org#57",
+            "muDemocracy.org#58"
+          ],
+          "activationTrigger": "A group needs decisions to remain useful after the meeting in which they first appeared.",
+          "instanceId": "7e0779af-1ccd-576b-80be-78ce43e3eddc"
         },
         {
           "id": "G3",
           "name": "Accountable decisions",
           "groupNeed": "We need to say when a decision was made, who participated and whether the group actually ratified it.",
           "promise": "A decision can be refined across several sessions and linked to declared participation and ratification without making any session the owner of the decision.",
-          "semanticAdds": ["Session Record", "declared participation", "considered-in and ratified-in relations", "ratification event or lifecycle transition"],
-          "blueprintAdds": ["accountable-decision review", "session and ratification summary"],
-          "doesNotIntroduce": ["formal roles or mandates", "a full identity system", "TSS or transcript ingestion", "AI assistance"],
-          "requires": ["G2"],
-          "releaseAlignment": ["P2"],
-          "executionAnchors": ["muDemocracy.org#66", "muDemocracy.org#67"],
-          "activationTrigger": "A group needs the participation, timing or authority of a decision to be inspectable."
+          "semanticAdds": [
+            "Session Record",
+            "declared participation",
+            "considered-in and ratified-in relations",
+            "ratification event or lifecycle transition"
+          ],
+          "blueprintAdds": [
+            "accountable-decision review",
+            "session and ratification summary"
+          ],
+          "doesNotIntroduce": [
+            "formal roles or mandates",
+            "a full identity system",
+            "TSS or transcript ingestion",
+            "AI assistance"
+          ],
+          "executionAnchors": [
+            "muDemocracy.org#66",
+            "muDemocracy.org#67"
+          ],
+          "activationTrigger": "A group needs the participation, timing or authority of a decision to be inspectable.",
+          "instanceId": "88c97f11-2f95-5df8-8328-a7a117969b15"
         },
         {
           "id": "G4",
           "name": "Delegated practice",
           "groupNeed": "We need working groups or roles, and need to make their mandates and authority legible.",
           "promise": "A group can define roles, working groups and mandates, then connect decisions to the authority under which they were made.",
-          "semanticAdds": ["Role Record", "working-group Record", "mandate and authority relations"],
-          "blueprintAdds": ["role and mandate workspace", "authority context on decisions"],
-          "doesNotIntroduce": ["a founding constitution", "global identity or federation", "automatic enforcement of human authority"],
-          "requires": ["G3"],
-          "releaseAlignment": [],
+          "semanticAdds": [
+            "Role Record",
+            "working-group Record",
+            "mandate and authority relations"
+          ],
+          "blueprintAdds": [
+            "role and mandate workspace",
+            "authority context on decisions"
+          ],
+          "doesNotIntroduce": [
+            "a founding constitution",
+            "global identity or federation",
+            "automatic enforcement of human authority"
+          ],
           "executionAnchors": [],
-          "activationTrigger": "A group delegates recurring work or needs to distinguish who may decide what."
+          "activationTrigger": "A group delegates recurring work or needs to distinguish who may decide what.",
+          "instanceId": "6be17c95-cad5-507d-ade9-fc49262e1891"
         },
         {
           "id": "G5",
           "name": "Constituted group",
           "groupNeed": "We need to maintain our purpose, objectives and foundational rules, including how those rules may change.",
           "promise": "A group maintains purpose and founding documents as governed Records with explicit amendment and special-ratification policy rather than immutable application configuration.",
-          "semanticAdds": ["Purpose and founding-document Records", "ratification-policy definitions", "amendment and evidencing relations"],
-          "blueprintAdds": ["founding-document workspace", "policy-aware amendment review"],
-          "doesNotIntroduce": ["new SRS root types", "hard-coded constitutional behaviour in srs-web", "a universal governance ontology"],
-          "requires": ["G4"],
-          "releaseAlignment": [],
+          "semanticAdds": [
+            "Purpose and founding-document Records",
+            "ratification-policy definitions",
+            "amendment and evidencing relations"
+          ],
+          "blueprintAdds": [
+            "founding-document workspace",
+            "policy-aware amendment review"
+          ],
+          "doesNotIntroduce": [
+            "new SRS root types",
+            "hard-coded constitutional behaviour in srs-web",
+            "a universal governance ontology"
+          ],
           "executionAnchors": [],
-          "activationTrigger": "A group needs a durable shared purpose or a rule for changing its own rules."
+          "activationTrigger": "A group needs a durable shared purpose or a rule for changing its own rules.",
+          "instanceId": "c3919feb-cfa4-5d09-9fc4-aaf5f59af1e9"
         },
         {
           "id": "G6",
           "name": "Facilitated practice",
           "groupNeed": "We want to make a decision together in the room or online, one clear step at a time.",
           "promise": "A shared-screen Protocol guides people through canonical decision state, can resume after interruption, and ends in whole-record review and human ratification.",
-          "semanticAdds": ["Protocol Run", "attention state", "stage approval"],
-          "blueprintAdds": ["shared-screen facilitation mode", "whole-record ratification review"],
-          "doesNotIntroduce": ["transcript capture or TSS emission", "AI-generated wording", "a facilitation-only semantic store"],
-          "requires": ["G3"],
-          "releaseAlignment": ["P2"],
-          "executionAnchors": ["muDemocracy.org#141", "srs-rust#236"],
-          "activationTrigger": "A group wants help holding an actual shared decision process, not merely editing a record."
+          "semanticAdds": [
+            "Protocol Run",
+            "attention state",
+            "stage approval"
+          ],
+          "blueprintAdds": [
+            "shared-screen facilitation mode",
+            "whole-record ratification review"
+          ],
+          "doesNotIntroduce": [
+            "transcript capture or TSS emission",
+            "AI-generated wording",
+            "a facilitation-only semantic store"
+          ],
+          "executionAnchors": [
+            "muDemocracy.org#141",
+            "srs-rust#236"
+          ],
+          "activationTrigger": "A group wants help holding an actual shared decision process, not merely editing a record.",
+          "instanceId": "78d1647b-7db3-5eb0-bc03-fc2d9c9a0494"
         },
         {
           "id": "G7",
           "name": "AI-assisted practice",
           "groupNeed": "We want AI to propose useful wording and coaching from conversation evidence while people retain judgment and authority.",
           "promise": "AI works inside a current Protocol or Blueprint context, proposes visibly with provenance, and never commits canonical meaning without human review and ratification.",
-          "semanticAdds": ["TSS and transcript provenance", "AI proposal provenance", "human review and ratification evidence"],
-          "blueprintAdds": ["stage-specific AI proposal review", "inspectable source-provenance facet"],
-          "doesNotIntroduce": ["AI authority", "an AI-specific editor", "a separate canonical store"],
-          "requires": ["G6"],
-          "releaseAlignment": ["P3"],
-          "executionAnchors": ["muDemocracy.org#60", "muDemocracy.org#68"],
-          "activationTrigger": "A group has a reliable manual Protocol practice and wants assistive coaching or transcript-grounded drafting."
+          "semanticAdds": [
+            "TSS and transcript provenance",
+            "AI proposal provenance",
+            "human review and ratification evidence"
+          ],
+          "blueprintAdds": [
+            "stage-specific AI proposal review",
+            "inspectable source-provenance facet"
+          ],
+          "doesNotIntroduce": [
+            "AI authority",
+            "an AI-specific editor",
+            "a separate canonical store"
+          ],
+          "executionAnchors": [
+            "muDemocracy.org#60",
+            "muDemocracy.org#68"
+          ],
+          "activationTrigger": "A group has a reliable manual Protocol practice and wants assistive coaching or transcript-grounded drafting.",
+          "instanceId": "df873e64-5a5f-5596-8a45-e5eea97bbda3"
         }
-      ]
+      ],
+      "instanceId": "c6c12a53-4aa2-5ae9-9cff-8f3220aea2d8"
+    },
+    {
+      "id": "semantic-document-practice",
+      "name": "Semantic document practice",
+      "purpose": "A group defines and maintains the meaning, structure and publication facets of a real document together. These are adoption capabilities, not a CMS feature tree or a second set of release gates.",
+      "stages": [
+        {
+          "id": "D1",
+          "name": "Structured semantic document",
+          "groupNeed": "We need to write a guide, policy, specification or handbook without separating its content from the structure that makes it understandable.",
+          "promise": "A document is authored as typed Records in a Container, with explicit fields and relations instead of an opaque page blob.",
+          "semanticAdds": [
+            "document root Record",
+            "typed content Records",
+            "Container membership and ordering relations"
+          ],
+          "blueprintAdds": [
+            "basic document form",
+            "generic record navigation"
+          ],
+          "doesNotIntroduce": [
+            "a website-specific page schema",
+            "a required bespoke renderer",
+            "shared reusable definition packages"
+          ],
+          "executionAnchors": [
+            "muDemocracy.org#83"
+          ],
+          "activationTrigger": "A group needs a document whose structure and meaning must remain inspectable as it is written.",
+          "research": [
+            {
+              "source": "problem-index/07-field-records/README.md",
+              "takeaway": "Content is maintained meaning: fields need an inspectable change history, not a monolithic document blob."
+            }
+          ],
+          "instanceId": "b44b2da8-5de0-5265-9f13-ec5db1c14999"
+        },
+        {
+          "id": "D2",
+          "name": "Composed semantic document",
+          "groupNeed": "We need documents with repeatable structure and reusable concepts, rather than one-off forms for every guide or policy.",
+          "promise": "Blueprints, type inheritance, shared Fields and package definitions compose validated multi-record documents without making the editor own the ontology.",
+          "semanticAdds": [
+            "Blueprint structure",
+            "reusable Field and Type definitions",
+            "package-level document vocabulary"
+          ],
+          "blueprintAdds": [
+            "guide, policy or specification structure",
+            "reusable section forms"
+          ],
+          "doesNotIntroduce": [
+            "automatic publication",
+            "cross-installation package discovery",
+            "application-specific semantics in the core"
+          ],
+          "executionAnchors": [
+            "muDemocracy.org#76",
+            "muDemocracy.org#124"
+          ],
+          "activationTrigger": "A group repeats document patterns and wants structure to be reusable, reviewable and independently understandable.",
+          "research": [
+            {
+              "source": "problem-index/09-distribution/package-system.md",
+              "takeaway": "A reusable document library distributes its definitions, Views, DocumentViews, Protocols and Themes as one explicit package closure."
+            }
+          ],
+          "instanceId": "6e116f6a-a99b-532f-ad6f-721b91c04698"
+        },
+        {
+          "id": "D3",
+          "name": "Faceted publication",
+          "groupNeed": "We need to read, edit, print and publish the same document differently without duplicating or losing its meaning.",
+          "promise": "Authoring, reading, generic fallback and website or print publication are explicit facets over canonical meaning; a publication adapter never becomes the only reader.",
+          "semanticAdds": [
+            "purpose-specific Views",
+            "DocumentViews",
+            "generic fallback rendering contract"
+          ],
+          "blueprintAdds": [
+            "authoring facet",
+            "reading and publication facets"
+          ],
+          "doesNotIntroduce": [
+            "layout as canonical state",
+            "a single View for editing and publication",
+            "a required theme or website runtime"
+          ],
+          "executionAnchors": [
+            "muDemocracy.org#95",
+            "srs#385"
+          ],
+          "activationTrigger": "A document must serve readers in more than one context while remaining recoverable without its preferred presentation.",
+          "research": [
+            {
+              "source": "problem-index/08-rendering-export/default-rendering-baseline.md",
+              "takeaway": "A conforming reader needs a normative baseline when no View is available."
+            },
+            {
+              "source": "problem-index/08-rendering-export/deliberation-export-separation.md",
+              "takeaway": "Authoring and publication Views have incompatible purposes and must remain separate projections."
+            }
+          ],
+          "instanceId": "c08a73fc-e205-5684-9c84-f823ffe13456"
+        },
+        {
+          "id": "D4",
+          "name": "Living document library",
+          "groupNeed": "We need to revise content, evolve document definitions and reuse shared pieces without obscuring what changed or breaking existing documents.",
+          "promise": "Document content and definitions evolve through visible revision, migration and compatibility practices; reusable content remains linked to its semantic context.",
+          "semanticAdds": [
+            "field-level revision and provenance",
+            "definition migration guidance",
+            "reusable content and lineage relations"
+          ],
+          "blueprintAdds": [
+            "revision-aware editing",
+            "migration and reuse review facets"
+          ],
+          "doesNotIntroduce": [
+            "silent type migration",
+            "immutable website configuration",
+            "cross-repository merge semantics"
+          ],
+          "executionAnchors": [
+            "muDemocracy.org#124",
+            "srs#388"
+          ],
+          "activationTrigger": "A group maintains a document library long enough that shared definitions and previously published content must change safely.",
+          "research": [
+            {
+              "source": "problem-index/07-field-records/field-versioning.md",
+              "takeaway": "Revision chains make individual semantic changes auditable and safely restorable."
+            }
+          ],
+          "instanceId": "c8ffea35-da61-569f-abb0-86efb88714ce"
+        },
+        {
+          "id": "D5",
+          "name": "Portable semantic publication",
+          "groupNeed": "We need another person or tool to take a document, its definitions and its readable meaning elsewhere without depending on our website or editor.",
+          "promise": "A publication carries the definition closure, canonical Records and Relations, provenance/completeness diagnostics and a generic readable facet; a later user can continue it without silent loss.",
+          "semanticAdds": [
+            "self-contained definition closure",
+            "publication completeness declaration",
+            "portable document lineage"
+          ],
+          "blueprintAdds": [
+            "offline-reader walkthrough",
+            "whole-document continuation review"
+          ],
+          "doesNotIntroduce": [
+            "a promise that every attachment is included without a declaration",
+            "federation negotiation",
+            "a proprietary publication reader"
+          ],
+          "executionAnchors": [
+            "muDemocracy.org#117",
+            "srs#384",
+            "srs#386"
+          ],
+          "activationTrigger": "A document must remain usable and explainable after leaving the system that authored or published it.",
+          "research": [
+            {
+              "source": "problem-index/09-distribution/repository-slices.md",
+              "takeaway": "Portable subsets need explicit identity, closure, provenance-completeness and import semantics rather than a bespoke export format."
+            }
+          ],
+          "instanceId": "8eccd53a-6c63-5765-ba5d-b37f409db130"
+        }
+      ],
+      "instanceId": "7fe1e33d-761e-5c1e-8cc2-4c5a6512f73e"
     }
   ],
-  "taskRoles": ["gate", "evidence", "supporting", "later"],
+  "taskRoles": [
+    "gate",
+    "evidence",
+    "supporting",
+    "later"
+  ],
   "tracks": [
-    {"id":"F","name":"Sovereignty","purpose":"Meaning survives independently of the system that created it."},
-    {"id":"P","name":"Decision practice","purpose":"Groups create, maintain and improve accountable decisions together."}
+    {
+      "id": "F",
+      "name": "Sovereignty",
+      "purpose": "Meaning survives independently of the system that created it."
+    },
+    {
+      "id": "P",
+      "name": "Decision practice",
+      "purpose": "Groups create, maintain and improve accountable decisions together."
+    }
   ],
   "boundaries": [
     {
-      "id":"F1","track":"F","name":"Coherent Semantic Kernel","actor":"Maintainer of a first-party SRS package","promise":"One authoritative semantic model migrates and regenerates without silent meaning loss.","durableArtifact":"Migrated first-party corpus with generated conformance evidence.","entryCriteria":["#256 closure checklist is agreed","First-party corpus inventory is known"],"includedCapabilities":["Define Meaning","Preserve Meaning","Present Facets"],"exclusions":["Independent portable archive","Offline reintegration","Runtime AI ratification"],"walkthrough":"Regenerate the first-party corpus from the authoritative model, validate it through independent Node and Rust paths, and inspect canonical state through more than one DocumentView.","compatibilityPromise":"The migrated kernel has one source of truth and reproducible projections.","stableAfter":"Core identity, reference resolution and regeneration invariants are stable enough to build outward.","requires":[],
-      "tasks":[{"ref":"srs#256","role":"gate"},{"ref":"muDemocracy.org#133","role":"supporting"},{"ref":"srs#375","role":"evidence"}],"gaps":[]
+      "id": "F1",
+      "track": "F",
+      "name": "Coherent Semantic Kernel",
+      "actor": "Maintainer of a first-party SRS package",
+      "promise": "One authoritative semantic model migrates and regenerates without silent meaning loss.",
+      "durableArtifact": "Migrated first-party corpus with generated conformance evidence.",
+      "entryCriteria": [
+        "#256 closure checklist is agreed",
+        "First-party corpus inventory is known"
+      ],
+      "includedCapabilities": [
+        "Define Meaning",
+        "Preserve Meaning",
+        "Present Facets"
+      ],
+      "exclusions": [
+        "Independent portable archive",
+        "Offline reintegration",
+        "Runtime AI ratification"
+      ],
+      "walkthrough": "Regenerate the first-party corpus from the authoritative model, validate it through independent Node and Rust paths, and inspect canonical state through more than one DocumentView.",
+      "compatibilityPromise": "The migrated kernel has one source of truth and reproducible projections.",
+      "stableAfter": "Core identity, reference resolution and regeneration invariants are stable enough to build outward.",
+      "tasks": [
+        {
+          "ref": "srs#256",
+          "role": "gate"
+        },
+        {
+          "ref": "muDemocracy.org#133",
+          "role": "supporting"
+        },
+        {
+          "ref": "srs#375",
+          "role": "evidence"
+        }
+      ],
+      "gaps": [],
+      "instanceId": "48c90c52-50af-5153-bfa6-2ac1948628cc"
     },
     {
-      "id":"F2","track":"F","name":"Meaning You Can Take / SRS 2.0","actor":"Independent user with no originating-service access","promise":"A realistic SRS governance repository opens, validates, explains itself and renders offline as a self-contained semantic repository.","durableArtifact":"Portable `.srs` export, generic readable fallback and independent conformance proof.","entryCriteria":["F1 evidence is green","Archive, completeness and version-closure tests are defined"],"includedCapabilities":["Define Meaning","Preserve Meaning","Present Facets","Move and Reconcile"],"exclusions":["Editing and reintegration","Cryptographic authority profiles","Federation negotiation"],"walkthrough":"Export an SRS-native governance repository or fixed governance fixture, disconnect from its originating service, then recover definitions, records, relations, provenance and a readable facet while accurately reporting missing evidence or unsupported semantics.","compatibilityPromise":"Frozen publications resolve their declared closure reproducibly and remain independent of live Views.","stableAfter":"The public SRS boundary: Continuity becomes the default.","requires":["F1"],
-      "tasks":[{"ref":"srs#384","role":"gate"},{"ref":"muDemocracy.org#117","role":"gate"},{"ref":"muDemocracy.org#113","role":"gate"},{"ref":"srs#385","role":"gate"},{"ref":"srs#386","role":"gate"},{"ref":"muDemocracy.org#142","role":"supporting"},{"ref":"muDemocracy.org#71","role":"gate"},{"ref":"srs#312","role":"gate"},{"ref":"srs#375","role":"evidence"},{"ref":"srs#340","role":"supporting"}],"gaps":[{"title":"SRS-web F2 portable-reader walkthrough","owner":"srs#384","trigger":"Create and make a gate when the SRS-web repository runtime can open a portable archive without service access."}]
+      "id": "F2",
+      "track": "F",
+      "name": "Meaning You Can Take / SRS 2.0",
+      "actor": "Independent user with no originating-service access",
+      "promise": "A realistic SRS governance repository opens, validates, explains itself and renders offline as a self-contained semantic repository.",
+      "durableArtifact": "Portable `.srs` export, generic readable fallback and independent conformance proof.",
+      "entryCriteria": [
+        "F1 evidence is green",
+        "Archive, completeness and version-closure tests are defined"
+      ],
+      "includedCapabilities": [
+        "Define Meaning",
+        "Preserve Meaning",
+        "Present Facets",
+        "Move and Reconcile"
+      ],
+      "exclusions": [
+        "Editing and reintegration",
+        "Cryptographic authority profiles",
+        "Federation negotiation"
+      ],
+      "walkthrough": "Export an SRS-native governance repository or fixed governance fixture, disconnect from its originating service, then recover definitions, records, relations, provenance and a readable facet while accurately reporting missing evidence or unsupported semantics.",
+      "compatibilityPromise": "Frozen publications resolve their declared closure reproducibly and remain independent of live Views.",
+      "stableAfter": "The public SRS boundary: Continuity becomes the default.",
+      "tasks": [
+        {
+          "ref": "srs#384",
+          "role": "gate"
+        },
+        {
+          "ref": "muDemocracy.org#117",
+          "role": "gate"
+        },
+        {
+          "ref": "muDemocracy.org#113",
+          "role": "gate"
+        },
+        {
+          "ref": "srs#385",
+          "role": "gate"
+        },
+        {
+          "ref": "srs#386",
+          "role": "gate"
+        },
+        {
+          "ref": "muDemocracy.org#142",
+          "role": "supporting"
+        },
+        {
+          "ref": "muDemocracy.org#71",
+          "role": "gate"
+        },
+        {
+          "ref": "srs#312",
+          "role": "gate"
+        },
+        {
+          "ref": "srs#375",
+          "role": "evidence"
+        },
+        {
+          "ref": "srs#340",
+          "role": "supporting"
+        }
+      ],
+      "gaps": [
+        {
+          "title": "SRS-web F2 portable-reader walkthrough",
+          "owner": "srs#384",
+          "trigger": "Create and make a gate when the SRS-web repository runtime can open a portable archive without service access."
+        }
+      ],
+      "instanceId": "9e9bd786-da58-59d1-a5e9-63d7c1ff2c41"
     },
     {
-      "id":"F3","track":"F","name":"Meaning You Can Continue Elsewhere","actor":"Collaborator continuing work from a clone or export","promise":"A user edits offline, inspects semantic differences and reintegrates without losing identity, relations, provenance or unsupported content.","durableArtifact":"Reintegrated repository with reviewable semantic diff and preserved unsupported-content diagnostics.","entryCriteria":["F2 walkthrough passes","Diff and reintegration contracts are accepted"],"includedCapabilities":["Preserve Meaning","Work With Meaning","Move and Reconcile","Sustain Trust"],"exclusions":["Container-slice reintegration","Hosted VCS","Federation negotiation"],"walkthrough":"Clone or export a repository, make an offline change, inspect the semantic diff, and reintegrate while verifying record identities, relations, provenance and opaque extensions.","compatibilityPromise":"Interchange never silently discards data a conforming reader cannot interpret.","stableAfter":"Offline continuation and reintegration form a reliable cross-installation collaboration boundary.","requires":["F2"],
-      "tasks":[{"ref":"muDemocracy.org#94","role":"gate"},{"ref":"muDemocracy.org#62","role":"gate"},{"ref":"muDemocracy.org#63","role":"gate"},{"ref":"muDemocracy.org#64","role":"gate"},{"ref":"muDemocracy.org#65","role":"gate"},{"ref":"srs#387","role":"gate"},{"ref":"srs#388","role":"gate"},{"ref":"muDemocracy.org#143","role":"gate"},{"ref":"muDemocracy.org#116","role":"later"},{"ref":"muDemocracy.org#100","role":"supporting"},{"ref":"muDemocracy.org#101","role":"supporting"}],"gaps":[]
+      "id": "F3",
+      "track": "F",
+      "name": "Meaning You Can Continue Elsewhere",
+      "actor": "Collaborator continuing work from a clone or export",
+      "promise": "A user edits offline, inspects semantic differences and reintegrates without losing identity, relations, provenance or unsupported content.",
+      "durableArtifact": "Reintegrated repository with reviewable semantic diff and preserved unsupported-content diagnostics.",
+      "entryCriteria": [
+        "F2 walkthrough passes",
+        "Diff and reintegration contracts are accepted"
+      ],
+      "includedCapabilities": [
+        "Preserve Meaning",
+        "Work With Meaning",
+        "Move and Reconcile",
+        "Sustain Trust"
+      ],
+      "exclusions": [
+        "Container-slice reintegration",
+        "Hosted VCS",
+        "Federation negotiation"
+      ],
+      "walkthrough": "Clone or export a repository, make an offline change, inspect the semantic diff, and reintegrate while verifying record identities, relations, provenance and opaque extensions.",
+      "compatibilityPromise": "Interchange never silently discards data a conforming reader cannot interpret.",
+      "stableAfter": "Offline continuation and reintegration form a reliable cross-installation collaboration boundary.",
+      "tasks": [
+        {
+          "ref": "muDemocracy.org#94",
+          "role": "gate"
+        },
+        {
+          "ref": "muDemocracy.org#62",
+          "role": "gate"
+        },
+        {
+          "ref": "muDemocracy.org#63",
+          "role": "gate"
+        },
+        {
+          "ref": "muDemocracy.org#64",
+          "role": "gate"
+        },
+        {
+          "ref": "muDemocracy.org#65",
+          "role": "gate"
+        },
+        {
+          "ref": "srs#387",
+          "role": "gate"
+        },
+        {
+          "ref": "srs#388",
+          "role": "gate"
+        },
+        {
+          "ref": "muDemocracy.org#143",
+          "role": "gate"
+        },
+        {
+          "ref": "muDemocracy.org#116",
+          "role": "later"
+        },
+        {
+          "ref": "muDemocracy.org#100",
+          "role": "supporting"
+        },
+        {
+          "ref": "muDemocracy.org#101",
+          "role": "supporting"
+        }
+      ],
+      "gaps": [],
+      "instanceId": "ed55b2b0-7076-536d-87fa-e394670aaac8"
     },
     {
-      "id":"P1","track":"P","name":"Living Decisions","actor":"Group returning to its decisions over time","promise":"A group uses the SRS-web governance workspace to review commitments when due and supersede decisions with an accountable history.","durableArtifact":"Upgradable decision repository with living-decision history.","entryCriteria":["F1 is closed","SRS-web safe-to-try governance baseline exists"],"includedCapabilities":["Work With Meaning","Preserve Meaning","Present Facets"],"exclusions":["Projected Protocol facilitation","AI-assisted drafting"],"walkthrough":"In srs-web, upgrade a repository, identify a decision due for review, supersede it, and inspect the resulting history.","compatibilityPromise":"Package upgrades and supersession preserve prior decision meaning and lineage.","stableAfter":"The SRS-web governance workspace supports decisions as a maintained practice, not a one-time log.","requires":["F1"],
-      "tasks":[{"ref":"muDemocracy.org#36","role":"gate"},{"ref":"muDemocracy.org#56","role":"gate"},{"ref":"muDemocracy.org#57","role":"gate"},{"ref":"muDemocracy.org#58","role":"gate"},{"ref":"muDemocracy.org#59","role":"gate"}],"gaps":[]
+      "id": "P1",
+      "track": "P",
+      "name": "Living Decisions",
+      "actor": "Group returning to its decisions over time",
+      "promise": "A group uses the SRS-web governance workspace to review commitments when due and supersede decisions with an accountable history.",
+      "durableArtifact": "Upgradable decision repository with living-decision history.",
+      "entryCriteria": [
+        "F1 is closed",
+        "SRS-web safe-to-try governance baseline exists"
+      ],
+      "includedCapabilities": [
+        "Work With Meaning",
+        "Preserve Meaning",
+        "Present Facets"
+      ],
+      "exclusions": [
+        "Projected Protocol facilitation",
+        "AI-assisted drafting"
+      ],
+      "walkthrough": "In srs-web, upgrade a repository, identify a decision due for review, supersede it, and inspect the resulting history.",
+      "compatibilityPromise": "Package upgrades and supersession preserve prior decision meaning and lineage.",
+      "stableAfter": "The SRS-web governance workspace supports decisions as a maintained practice, not a one-time log.",
+      "tasks": [
+        {
+          "ref": "muDemocracy.org#36",
+          "role": "gate"
+        },
+        {
+          "ref": "muDemocracy.org#56",
+          "role": "gate"
+        },
+        {
+          "ref": "muDemocracy.org#57",
+          "role": "gate"
+        },
+        {
+          "ref": "muDemocracy.org#58",
+          "role": "gate"
+        },
+        {
+          "ref": "muDemocracy.org#59",
+          "role": "gate"
+        }
+      ],
+      "gaps": [],
+      "instanceId": "13d0a5cf-f499-5f08-8273-5bae4e9e9d1d"
     },
     {
-      "id":"P2","track":"P","name":"Facilitated Decisions","actor":"Group using the shared-screen facilitation mode of the SRS-web governance workspace","promise":"A group works through a projected semantic Protocol, agrees wording live and ratifies a complete decision.","durableArtifact":"Ratified decision produced by a resumable Protocol run and readable as a whole.","entryCriteria":["F1 is closed","SRS-web can open and edit the governance container workspace"],"includedCapabilities":["Work With Meaning","Present Facets"],"exclusions":["AI-generated wording","Transcript ingestion and TSS emission","A separate facilitation-only semantic store"],"walkthrough":"In the same SRS-web repository workspace, project a Protocol, guide the group through each stage, resume after interruption, review the assembled record, ratify it and later read it back.","compatibilityPromise":"The Protocol presents and guides canonical meaning; it does not own or alter it.","stableAfter":"Shared-screen manual facilitation is a first-class SRS-web mode, not a separate editor.","requires":["F1"],
-      "tasks":[{"ref":"muDemocracy.org#141","role":"gate"},{"ref":"muDemocracy.org#66","role":"gate"},{"ref":"muDemocracy.org#67","role":"gate"},{"ref":"muDemocracy.org#144","role":"gate"},{"ref":"srs-rust#236","role":"gate"},{"ref":"srs-rust#252","role":"evidence"}],"gaps":[{"title":"P2/P3 substrate split in existing story bodies","owner":"muDemocracy.org#141","trigger":"Before P2 implementation, move TSS emission and transcript-linked provenance from the manual P2 contract into P3 while retaining Protocol-run attention state in P2."}]
+      "id": "P2",
+      "track": "P",
+      "name": "Facilitated Decisions",
+      "actor": "Group using the shared-screen facilitation mode of the SRS-web governance workspace",
+      "promise": "A group works through a projected semantic Protocol, agrees wording live and ratifies a complete decision.",
+      "durableArtifact": "Ratified decision produced by a resumable Protocol run and readable as a whole.",
+      "entryCriteria": [
+        "F1 is closed",
+        "SRS-web can open and edit the governance container workspace"
+      ],
+      "includedCapabilities": [
+        "Work With Meaning",
+        "Present Facets"
+      ],
+      "exclusions": [
+        "AI-generated wording",
+        "Transcript ingestion and TSS emission",
+        "A separate facilitation-only semantic store"
+      ],
+      "walkthrough": "In the same SRS-web repository workspace, project a Protocol, guide the group through each stage, resume after interruption, review the assembled record, ratify it and later read it back.",
+      "compatibilityPromise": "The Protocol presents and guides canonical meaning; it does not own or alter it.",
+      "stableAfter": "Shared-screen manual facilitation is a first-class SRS-web mode, not a separate editor.",
+      "tasks": [
+        {
+          "ref": "muDemocracy.org#141",
+          "role": "gate"
+        },
+        {
+          "ref": "muDemocracy.org#66",
+          "role": "gate"
+        },
+        {
+          "ref": "muDemocracy.org#67",
+          "role": "gate"
+        },
+        {
+          "ref": "muDemocracy.org#144",
+          "role": "gate"
+        },
+        {
+          "ref": "srs-rust#236",
+          "role": "gate"
+        },
+        {
+          "ref": "srs-rust#252",
+          "role": "evidence"
+        }
+      ],
+      "gaps": [
+        {
+          "title": "P2/P3 substrate split in existing story bodies",
+          "owner": "muDemocracy.org#141",
+          "trigger": "Before P2 implementation, move TSS emission and transcript-linked provenance from the manual P2 contract into P3 while retaining Protocol-run attention state in P2."
+        }
+      ],
+      "instanceId": "9e5e37af-bd33-5e47-959f-fcdb3f22ffb9"
     },
     {
-      "id":"P3","track":"P","name":"AI-Assisted Decisions","actor":"Group using AI inside the current SRS-web Protocol workspace","promise":"AI reads a live or recorded transcript, proposes stage-appropriate text with provenance, and people edit, agree and ratify it.","durableArtifact":"Human-ratified decision with transcript-linked AI proposal provenance.","entryCriteria":["F2 and P2 walkthroughs pass","Addressability and Protocol runs are available"],"includedCapabilities":["Collaborate With AI","Work With Meaning","Preserve Meaning"],"exclusions":["AI authority over commitment","Federation","A separate AI-specific editor or canonical store"],"walkthrough":"In the same SRS-web Protocol workspace, use a live transcript, request a stage recommendation, edit it with the group, ratify the resulting decision and inspect the source provenance.","compatibilityPromise":"AI assistance never silently commits canonical meaning; attribution and human ratification remain inspectable.","stableAfter":"AI may participate as a transparent coach inside a human-owned decision practice.","requires":["F2","P2"],
-      "tasks":[{"ref":"muDemocracy.org#60","role":"gate"},{"ref":"muDemocracy.org#68","role":"gate"},{"ref":"muDemocracy.org#71","role":"gate"},{"ref":"muDemocracy.org#72","role":"gate"},{"ref":"srs-rust#236","role":"supporting"},{"ref":"srs-rust#252","role":"supporting"}],"gaps":[{"title":"TSS schema and transcript-ingestion contract","owner":"muDemocracy.org#60","trigger":"Create concrete stories after P2 establishes the manual Protocol run."},{"title":"AI-assisted meeting walkthrough","owner":"muDemocracy.org#60","trigger":"Create when transcript ingestion and stage recommendations have runnable surfaces."}]
+      "id": "P3",
+      "track": "P",
+      "name": "AI-Assisted Decisions",
+      "actor": "Group using AI inside the current SRS-web Protocol workspace",
+      "promise": "AI reads a live or recorded transcript, proposes stage-appropriate text with provenance, and people edit, agree and ratify it.",
+      "durableArtifact": "Human-ratified decision with transcript-linked AI proposal provenance.",
+      "entryCriteria": [
+        "F2 and P2 walkthroughs pass",
+        "Addressability and Protocol runs are available"
+      ],
+      "includedCapabilities": [
+        "Collaborate With AI",
+        "Work With Meaning",
+        "Preserve Meaning"
+      ],
+      "exclusions": [
+        "AI authority over commitment",
+        "Federation",
+        "A separate AI-specific editor or canonical store"
+      ],
+      "walkthrough": "In the same SRS-web Protocol workspace, use a live transcript, request a stage recommendation, edit it with the group, ratify the resulting decision and inspect the source provenance.",
+      "compatibilityPromise": "AI assistance never silently commits canonical meaning; attribution and human ratification remain inspectable.",
+      "stableAfter": "AI may participate as a transparent coach inside a human-owned decision practice.",
+      "tasks": [
+        {
+          "ref": "muDemocracy.org#60",
+          "role": "gate"
+        },
+        {
+          "ref": "muDemocracy.org#68",
+          "role": "gate"
+        },
+        {
+          "ref": "muDemocracy.org#71",
+          "role": "gate"
+        },
+        {
+          "ref": "muDemocracy.org#72",
+          "role": "gate"
+        },
+        {
+          "ref": "srs-rust#236",
+          "role": "supporting"
+        },
+        {
+          "ref": "srs-rust#252",
+          "role": "supporting"
+        }
+      ],
+      "gaps": [
+        {
+          "title": "TSS schema and transcript-ingestion contract",
+          "owner": "muDemocracy.org#60",
+          "trigger": "Create concrete stories after P2 establishes the manual Protocol run."
+        },
+        {
+          "title": "AI-assisted meeting walkthrough",
+          "owner": "muDemocracy.org#60",
+          "trigger": "Create when transcript ingestion and stage recommendations have runnable surfaces."
+        }
+      ],
+      "instanceId": "be464ef9-b816-5f80-86ed-ac4536101b1d"
     }
   ],
-  "knownEpicRefs":["muDemocracy.org#36","muDemocracy.org#60","muDemocracy.org#76","muDemocracy.org#83","muDemocracy.org#92","muDemocracy.org#94","muDemocracy.org#95","muDemocracy.org#100","muDemocracy.org#101","muDemocracy.org#117","muDemocracy.org#118","muDemocracy.org#120","muDemocracy.org#124","muDemocracy.org#133","muDemocracy.org#136","muDemocracy.org#141"],
-  "epics":[
-    {"ref":"muDemocracy.org#36","name":"Decision Logger public release","capabilities":["Work With Meaning","Present Facets"],"disposition":"keep release","role":"P1 SRS-web governance-workspace outcome","notes":"The current SRS-web decision surface grew from this release line; R1 is complete and R2/R3 are the P1 gate. It is distinct from the paused decision-logger repository."},
-    {"ref":"muDemocracy.org#60","name":"AI-assisted decision capture","capabilities":["Collaborate With AI","Work With Meaning"],"disposition":"keep release","role":"P3 AI-assisted outcome","notes":"AI overlays the completed human Protocol, never replaces it."},
-    {"ref":"muDemocracy.org#76","name":"Workflow Editor","capabilities":["Define Meaning","Work With Meaning"],"disposition":"keep release","role":"candidate outcome release","notes":"Human authoring surface, not the kernel."},
-    {"ref":"muDemocracy.org#83","name":"muSrs Generic Semantic Editor","capabilities":["Work With Meaning","Present Facets"],"disposition":"keep release","role":"candidate outcome release","notes":"Validates semantic editing and inspection."},
-    {"ref":"muDemocracy.org#92","name":"Live Governance Editor","capabilities":["Work With Meaning","Collaborate With AI"],"disposition":"keep release","role":"SRS-web convergence workstream","notes":"Converges repository inspection, container workspace and blueprint-based governance modes; P2 Protocol stories are reparented to #141."},
-    {"ref":"muDemocracy.org#94","name":"Offline Editor","capabilities":["Move and Reconcile","Work With Meaning"],"disposition":"keep release","role":"F3 outcome release","notes":"Whole-repository continuation proof."},
-    {"ref":"muDemocracy.org#95","name":"Governance Viewer","capabilities":["Present Facets","Work With Meaning"],"disposition":"keep release","role":"candidate outcome release","notes":"Readable facet of durable governance meaning."},
-    {"ref":"muDemocracy.org#100","name":"Public VCS storage — hosting","capabilities":["Preserve Meaning","Move and Reconcile"],"disposition":"demote to workstream","role":"F3 supporting delivery workstream","notes":"Hosted storage is not an F3 gate."},
-    {"ref":"muDemocracy.org#101","name":"Exploded repositories","capabilities":["Preserve Meaning","Move and Reconcile"],"disposition":"reparent","role":"F3 supporting delivery workstream","notes":"Supports reviewable VCS storage."},
-    {"ref":"muDemocracy.org#117","name":"Snapshot export","capabilities":["Preserve Meaning","Move and Reconcile"],"disposition":"keep release","role":"F2 archive outcome","notes":"Principal portable-archive capability."},
-    {"ref":"muDemocracy.org#118","name":"SRS VS Code Extension","capabilities":["Work With Meaning","Present Facets"],"disposition":"demote to workstream","role":"cross-cutting delivery workstream","notes":"Delivery surface, not a capability branch."},
-    {"ref":"muDemocracy.org#120","name":"srs-vscode CLI parity","capabilities":["Work With Meaning","Present Facets"],"disposition":"merge","role":"VS Code delivery workstream","notes":"Proposed merge into #118."},
-    {"ref":"muDemocracy.org#124","name":"SRS for Specs","capabilities":["Define Meaning","Present Facets"],"disposition":"keep release","role":"candidate outcome release","notes":"Spec-authoring package and publication consumer."},
-    {"ref":"muDemocracy.org#133","name":"Core model foundations","capabilities":["Define Meaning","Preserve Meaning"],"disposition":"demote to workstream","role":"F1 standards-convergence workstream","notes":"Converges with #256; not a product release."},
-    {"ref":"muDemocracy.org#136","name":"Project governance","capabilities":["Sustain Trust"],"disposition":"demote to workstream","role":"Sustain Trust workstream","notes":"Keeps purpose and decisions inspectable."},
-    {"ref":"muDemocracy.org#141","name":"Facilitated Decisions","capabilities":["Work With Meaning","Present Facets","Collaborate With AI"],"disposition":"keep release","role":"P2 facilitated-decision outcome","notes":"Manual Protocol and ratification precede AI assistance."}
+  "knownEpicRefs": [
+    "muDemocracy.org#36",
+    "muDemocracy.org#60",
+    "muDemocracy.org#76",
+    "muDemocracy.org#83",
+    "muDemocracy.org#92",
+    "muDemocracy.org#94",
+    "muDemocracy.org#95",
+    "muDemocracy.org#100",
+    "muDemocracy.org#101",
+    "muDemocracy.org#117",
+    "muDemocracy.org#118",
+    "muDemocracy.org#120",
+    "muDemocracy.org#124",
+    "muDemocracy.org#133",
+    "muDemocracy.org#136",
+    "muDemocracy.org#141"
+  ],
+  "epics": [
+    {
+      "ref": "muDemocracy.org#36",
+      "name": "Decision Logger public release",
+      "capabilities": [
+        "Work With Meaning",
+        "Present Facets"
+      ],
+      "disposition": "keep release",
+      "role": "P1 SRS-web governance-workspace outcome",
+      "notes": "The current SRS-web decision surface grew from this release line; R1 is complete and R2/R3 are the P1 gate. It is distinct from the paused decision-logger repository."
+    },
+    {
+      "ref": "muDemocracy.org#60",
+      "name": "AI-assisted decision capture",
+      "capabilities": [
+        "Collaborate With AI",
+        "Work With Meaning"
+      ],
+      "disposition": "keep release",
+      "role": "P3 AI-assisted outcome",
+      "notes": "AI overlays the completed human Protocol, never replaces it."
+    },
+    {
+      "ref": "muDemocracy.org#76",
+      "name": "Workflow Editor",
+      "capabilities": [
+        "Define Meaning",
+        "Work With Meaning"
+      ],
+      "disposition": "keep release",
+      "role": "candidate outcome release",
+      "notes": "Human authoring surface, not the kernel."
+    },
+    {
+      "ref": "muDemocracy.org#83",
+      "name": "muSrs Generic Semantic Editor",
+      "capabilities": [
+        "Work With Meaning",
+        "Present Facets"
+      ],
+      "disposition": "keep release",
+      "role": "candidate outcome release",
+      "notes": "Validates semantic editing and inspection."
+    },
+    {
+      "ref": "muDemocracy.org#92",
+      "name": "Live Governance Editor",
+      "capabilities": [
+        "Work With Meaning",
+        "Collaborate With AI"
+      ],
+      "disposition": "keep release",
+      "role": "SRS-web convergence workstream",
+      "notes": "Converges repository inspection, container workspace and blueprint-based governance modes; P2 Protocol stories are reparented to #141."
+    },
+    {
+      "ref": "muDemocracy.org#94",
+      "name": "Offline Editor",
+      "capabilities": [
+        "Move and Reconcile",
+        "Work With Meaning"
+      ],
+      "disposition": "keep release",
+      "role": "F3 outcome release",
+      "notes": "Whole-repository continuation proof."
+    },
+    {
+      "ref": "muDemocracy.org#95",
+      "name": "Governance Viewer",
+      "capabilities": [
+        "Present Facets",
+        "Work With Meaning"
+      ],
+      "disposition": "keep release",
+      "role": "candidate outcome release",
+      "notes": "Readable facet of durable governance meaning."
+    },
+    {
+      "ref": "muDemocracy.org#100",
+      "name": "Public VCS storage — hosting",
+      "capabilities": [
+        "Preserve Meaning",
+        "Move and Reconcile"
+      ],
+      "disposition": "demote to workstream",
+      "role": "F3 supporting delivery workstream",
+      "notes": "Hosted storage is not an F3 gate."
+    },
+    {
+      "ref": "muDemocracy.org#101",
+      "name": "Exploded repositories",
+      "capabilities": [
+        "Preserve Meaning",
+        "Move and Reconcile"
+      ],
+      "disposition": "reparent",
+      "role": "F3 supporting delivery workstream",
+      "notes": "Supports reviewable VCS storage."
+    },
+    {
+      "ref": "muDemocracy.org#117",
+      "name": "Snapshot export",
+      "capabilities": [
+        "Preserve Meaning",
+        "Move and Reconcile"
+      ],
+      "disposition": "keep release",
+      "role": "F2 archive outcome",
+      "notes": "Principal portable-archive capability."
+    },
+    {
+      "ref": "muDemocracy.org#118",
+      "name": "SRS VS Code Extension",
+      "capabilities": [
+        "Work With Meaning",
+        "Present Facets"
+      ],
+      "disposition": "demote to workstream",
+      "role": "cross-cutting delivery workstream",
+      "notes": "Delivery surface, not a capability branch."
+    },
+    {
+      "ref": "muDemocracy.org#120",
+      "name": "srs-vscode CLI parity",
+      "capabilities": [
+        "Work With Meaning",
+        "Present Facets"
+      ],
+      "disposition": "merge",
+      "role": "VS Code delivery workstream",
+      "notes": "Proposed merge into #118."
+    },
+    {
+      "ref": "muDemocracy.org#124",
+      "name": "SRS for Specs",
+      "capabilities": [
+        "Define Meaning",
+        "Present Facets"
+      ],
+      "disposition": "keep release",
+      "role": "candidate outcome release",
+      "notes": "Spec-authoring package and publication consumer."
+    },
+    {
+      "ref": "muDemocracy.org#133",
+      "name": "Core model foundations",
+      "capabilities": [
+        "Define Meaning",
+        "Preserve Meaning"
+      ],
+      "disposition": "demote to workstream",
+      "role": "F1 standards-convergence workstream",
+      "notes": "Converges with #256; not a product release."
+    },
+    {
+      "ref": "muDemocracy.org#136",
+      "name": "Project governance",
+      "capabilities": [
+        "Sustain Trust"
+      ],
+      "disposition": "demote to workstream",
+      "role": "Sustain Trust workstream",
+      "notes": "Keeps purpose and decisions inspectable."
+    },
+    {
+      "ref": "muDemocracy.org#141",
+      "name": "Facilitated Decisions",
+      "capabilities": [
+        "Work With Meaning",
+        "Present Facets",
+        "Collaborate With AI"
+      ],
+      "disposition": "keep release",
+      "role": "P2 facilitated-decision outcome",
+      "notes": "Manual Protocol and ratification precede AI assistance."
+    }
+  ],
+  "standardContracts": [
+    {
+      "id": "semantic-kernel",
+      "instanceId": "f97af7fa-dc30-5b69-87fb-b3a0e10e5c3d",
+      "kind": "strategy-contract",
+      "name": "Coherent semantic kernel",
+      "stability": "lock-before-f1",
+      "promise": "Independent implementations resolve the same canonical meaning, validate it consistently, and regenerate reproducible projections.",
+      "capabilities": [
+        "Define Meaning",
+        "Preserve Meaning",
+        "Present Facets"
+      ],
+      "sources": [
+        {
+          "type": "repo-path",
+          "ref": "docs/spec/srs-unified.md"
+        }
+      ],
+      "notIncluded": [
+        "A particular editor, database, governance model or preferred layout"
+      ]
+    },
+    {
+      "id": "identity-and-references",
+      "instanceId": "57f67384-eea9-510f-aaa9-cb0b0892f6bb",
+      "kind": "strategy-contract",
+      "name": "Identity and reference resolution",
+      "stability": "lock-before-f1",
+      "promise": "Records, definitions and structural members have durable identity and unambiguous references across a repository and its installed packages.",
+      "capabilities": [
+        "Define Meaning",
+        "Preserve Meaning"
+      ],
+      "sources": [
+        {
+          "type": "repo-path",
+          "ref": "docs/spec/srs-unified.md"
+        }
+      ],
+      "notIncluded": [
+        "Repository-copy and merge identity"
+      ]
+    },
+    {
+      "id": "definitions-and-structure",
+      "instanceId": "e8af41f9-4200-593f-ae9e-f0b6e33cfc9d",
+      "kind": "strategy-contract",
+      "name": "Definitions and structural navigation",
+      "stability": "lock-before-f1",
+      "promise": "Fields, Types, Records, Relations, Containers and Packages compose inspectable semantic documents with navigable structure.",
+      "capabilities": [
+        "Define Meaning",
+        "Work With Meaning"
+      ],
+      "sources": [
+        {
+          "type": "repo-path",
+          "ref": "docs/spec/srs-unified.md"
+        }
+      ],
+      "notIncluded": [
+        "Website-specific document or decision schemas"
+      ]
+    },
+    {
+      "id": "projection-boundary",
+      "instanceId": "a399a748-1b43-57ff-9b89-e788a1102c48",
+      "kind": "strategy-contract",
+      "name": "Canonical meaning and facets",
+      "stability": "lock-before-f1",
+      "promise": "Views, DocumentViews, Blueprints and Themes present or guide canonical meaning without becoming an authoritative store.",
+      "capabilities": [
+        "Present Facets",
+        "Work With Meaning"
+      ],
+      "sources": [
+        {
+          "type": "repo-path",
+          "ref": "docs/spec/srs-unified.md"
+        },
+        {
+          "type": "repo-path",
+          "ref": "rfcs/rfc-015-view-owned-ordering-declared-presentations.md"
+        }
+      ],
+      "notIncluded": [
+        "A single required renderer or layout-preservation promise"
+      ]
+    },
+    {
+      "id": "portable-publication",
+      "instanceId": "285d8498-5575-5fdc-af1a-5d6b4b746206",
+      "kind": "strategy-contract",
+      "name": "Portable semantic publication",
+      "stability": "settle-before-f2",
+      "promise": "A person can take an SRS repository away from its originating service and still recover its definitions, canonical meaning, provenance and a readable orientation.",
+      "capabilities": [
+        "Preserve Meaning",
+        "Present Facets",
+        "Move and Reconcile"
+      ],
+      "sources": [
+        {
+          "type": "repo-path",
+          "ref": "docs/spec/srs-unified.md"
+        }
+      ],
+      "notIncluded": [
+        "Editing, merge, federation or a promise that every attachment is present"
+      ]
+    },
+    {
+      "id": "closure-and-completeness",
+      "instanceId": "612d81b8-9019-577e-b842-dd254fdf3f2c",
+      "kind": "strategy-contract",
+      "name": "Definition closure and completeness",
+      "stability": "settle-before-f2",
+      "promise": "A frozen publication declares the exact definitions and versions it needs, and accurately reports evidence or other content that is absent.",
+      "capabilities": [
+        "Define Meaning",
+        "Preserve Meaning"
+      ],
+      "sources": [
+        {
+          "type": "repo-path",
+          "ref": "docs/spec/srs-unified.md"
+        }
+      ],
+      "notIncluded": [
+        "Silent substitution of live definitions or implied evidence completeness"
+      ]
+    },
+    {
+      "id": "fallback-orientation",
+      "instanceId": "62a67e6b-3420-5ecc-b927-55c617e0de8b",
+      "kind": "strategy-contract",
+      "name": "Generic orientation and fallback rendering",
+      "stability": "settle-before-f2",
+      "promise": "A conforming reader can navigate and explain a repository without its preferred application, theme or DocumentView.",
+      "capabilities": [
+        "Present Facets",
+        "Preserve Meaning"
+      ],
+      "sources": [
+        {
+          "type": "repo-path",
+          "ref": "docs/spec/srs-unified.md"
+        }
+      ],
+      "notIncluded": [
+        "Reproducing a publisher’s exact visual layout"
+      ]
+    },
+    {
+      "id": "continuation",
+      "instanceId": "16edc400-1cb3-55cd-9a31-20df824d541b",
+      "kind": "strategy-contract",
+      "name": "Continuation and reconciliation",
+      "stability": "settle-before-f3",
+      "promise": "A repository can be copied, changed elsewhere and reconciled without silently losing semantic identity, relations, provenance or unsupported content.",
+      "capabilities": [
+        "Move and Reconcile",
+        "Preserve Meaning",
+        "Sustain Trust"
+      ],
+      "sources": [
+        {
+          "type": "repo-path",
+          "ref": "rfcs/rfc-010-assisted-three-way-merge.md"
+        }
+      ],
+      "notIncluded": [
+        "Hosted VCS, federation negotiation or automatic conflict resolution"
+      ]
+    },
+    {
+      "id": "semantic-diff-and-merge",
+      "instanceId": "bd73d81a-0389-5fcd-ab02-b1933a0f97be",
+      "kind": "strategy-contract",
+      "name": "Copy identity, semantic diff and merge",
+      "stability": "settle-before-f3",
+      "promise": "Independent implementations can compare and reintegrate semantic changes using stable identity and explicit conflict semantics rather than raw-file coincidence.",
+      "capabilities": [
+        "Move and Reconcile",
+        "Preserve Meaning"
+      ],
+      "sources": [
+        {
+          "type": "repo-path",
+          "ref": "rfcs/rfc-010-assisted-three-way-merge.md"
+        }
+      ],
+      "notIncluded": [
+        "A required storage backend or a guarantee that every conflict is automatically resolved"
+      ]
+    },
+    {
+      "id": "practice-extensions",
+      "instanceId": "d8dc9b2b-2d53-590b-a2bf-85ce2f6a37c9",
+      "kind": "strategy-contract",
+      "name": "Practice extensions",
+      "stability": "extension",
+      "promise": "Governance and collaboration practices use the preservation substrate, but do not redefine it.",
+      "capabilities": [
+        "Work With Meaning",
+        "Collaborate With AI",
+        "Sustain Trust"
+      ],
+      "sources": [
+        {
+          "type": "repo-path",
+          "ref": "rfcs/mudemocracy-rfc-candidates.md"
+        }
+      ],
+      "notIncluded": [
+        "A universal governance ontology or mandatory AI behaviour"
+      ]
+    },
+    {
+      "id": "governance-profile",
+      "instanceId": "06bfd09d-69f9-5ac6-a0af-97309c34f472",
+      "kind": "strategy-contract",
+      "name": "Governance profile",
+      "stability": "extension",
+      "promise": "Decision, role, mandate, ratification and founding-document semantics are installable domain definitions, not SRS root types.",
+      "capabilities": [
+        "Work With Meaning",
+        "Sustain Trust"
+      ],
+      "sources": [
+        {
+          "type": "repo-path",
+          "ref": "rfcs/mudemocracy-rfc-candidates.md"
+        }
+      ],
+      "notIncluded": [
+        "Hard-coded governance behaviour in a generic reader"
+      ]
+    },
+    {
+      "id": "protocol-and-ai-provenance",
+      "instanceId": "b115bd76-1d66-55d8-a65b-1b0f02217a6e",
+      "kind": "strategy-contract",
+      "name": "Protocol and AI provenance",
+      "stability": "extension",
+      "promise": "A Protocol can guide a human process, while transcript-linked AI proposals carry inspectable provenance and human ratification evidence.",
+      "capabilities": [
+        "Work With Meaning",
+        "Collaborate With AI",
+        "Present Facets"
+      ],
+      "sources": [
+        {
+          "type": "repo-path",
+          "ref": "docs/spec/srs-unified.md"
+        },
+        {
+          "type": "repo-path",
+          "ref": "rfcs/mudemocracy-rfc-candidates.md"
+        }
+      ],
+      "notIncluded": [
+        "AI authority to commit canonical meaning"
+      ]
+    },
+    {
+      "id": "integrity-and-federation",
+      "instanceId": "2a1adcb8-c0a6-5bdd-b8b6-23adcfe6f7bc",
+      "kind": "strategy-contract",
+      "name": "Integrity profiles and federation",
+      "stability": "deferred",
+      "promise": "Cryptographic authority, attestations and cross-community semantic negotiation remain future layers above portable meaning.",
+      "capabilities": [
+        "Sustain Trust",
+        "Move and Reconcile"
+      ],
+      "sources": [
+        {
+          "type": "repo-path",
+          "ref": "docs/spec/srs-unified.md"
+        }
+      ],
+      "notIncluded": [
+        "A requirement for the F1, F2 or F3 release promises"
+      ]
+    },
+    {
+      "id": "addressability",
+      "instanceId": "a10d49a3-06ae-5690-ad9b-81edd6886b6d",
+      "kind": "normative-subject",
+      "name": "Addressability and attention state",
+      "stability": "extension",
+      "promise": "Tools can identify semantic locations, preserve a live point of attention, and refer back to the relevant revision.",
+      "capabilities": [
+        "Work With Meaning",
+        "Collaborate With AI",
+        "Preserve Meaning"
+      ],
+      "normativeSubject": {
+        "type": "srs-record",
+        "instanceId": "a10d49a3-06ae-5690-ad9b-81edd6886b6d",
+        "path": "srs/records/extensions/ext-addressability.json"
+      },
+      "sources": [
+        {
+          "type": "repo-path",
+          "ref": "docs/spec/srs-spec.md"
+        },
+        {
+          "type": "repo-path",
+          "ref": "docs/schema/2.0/revisions.json"
+        },
+        {
+          "type": "repo-path",
+          "ref": "rfcs/mudemocracy-rfc-candidates.md"
+        },
+        {
+          "type": "srs-record",
+          "ref": "srs/records/design-notes/025-addressability-as-a-prerequisite-for-live-facilitation.json"
+        }
+      ],
+      "notIncluded": [
+        "A required Git, database or archive backend",
+        "AI authority to commit canonical meaning"
+      ]
+    }
+  ],
+  "assessments": [
+    {
+      "id": "f1-model",
+      "title": "Structured SRS model and schemas",
+      "state": "partial",
+      "exists": "The specification, record corpus and published JSON schemas are present.",
+      "missing": "The #256 cutover must establish one authoritative model and migrated first-party corpus.",
+      "evidence": [
+        {
+          "type": "repo-path",
+          "kind": "source",
+          "ref": "srs/source-documents/spec/srs-spec.md"
+        },
+        {
+          "type": "repo-path",
+          "kind": "schema",
+          "ref": "docs/schema/2.0/"
+        }
+      ],
+      "assessedAt": "2026-08-15",
+      "reviewBy": "2026-11-15",
+      "instanceId": "f332c628-1429-5b55-b5ec-60b2629476a4",
+      "kind": "boundary-assessment"
+    },
+    {
+      "id": "f1-regeneration",
+      "title": "Reproducible first-party regeneration",
+      "state": "partial",
+      "exists": "Release-drift and roadmap conformance gates exist.",
+      "missing": "Post-cutover clean regeneration and Node/Rust corpus evidence must close together.",
+      "evidence": [
+        {
+          "type": "repo-path",
+          "kind": "automation",
+          "ref": ".github/workflows/release-drift.yml"
+        }
+      ],
+      "assessedAt": "2026-08-15",
+      "reviewBy": "2026-11-15",
+      "instanceId": "2d0e2a13-97d7-5aa0-94ef-ef6f329fbb79",
+      "kind": "boundary-assessment"
+    },
+    {
+      "id": "f1-kernel-proof",
+      "title": "Closed semantic-kernel proof",
+      "state": "planned",
+      "exists": "The closure gate and audit structure are defined.",
+      "missing": "A green #256 closure with migrated-corpus evidence.",
+      "evidence": [
+        {
+          "type": "issue",
+          "kind": "issue",
+          "ref": "srs#256"
+        }
+      ],
+      "assessedAt": "2026-08-15",
+      "reviewBy": "2026-11-15",
+      "instanceId": "928cd3a8-0236-55fb-b786-3de7429964d4",
+      "kind": "boundary-assessment"
+    },
+    {
+      "id": "f1-musrs-document-corpus",
+      "title": "μSrs semantic-document corpus",
+      "state": "partial",
+      "exists": "μSrs contains packages, guide Blueprints, typed sections, Containers, DocumentViews, themes and a website publication adapter.",
+      "missing": "Its manifest must migrate to the current carrier contract before it can prove the current engine and portable DocumentView behaviour.",
+      "evidence": [
+        {
+          "type": "repo-path",
+          "kind": "source",
+          "ref": "muDemocracy.org/muSrs/package/blueprints/guide-7bfa600b.json"
+        },
+        {
+          "type": "repo-path",
+          "kind": "source",
+          "ref": "muDemocracy.org/muSrs/package/document-views/guide-body-view-2aba4d85.json"
+        },
+        {
+          "type": "command",
+          "kind": "diagnostic",
+          "ref": "srs repo map --repo muDemocracy.org/muSrs: manifest missing instanceIndex"
+        }
+      ],
+      "assessedAt": "2026-08-15",
+      "reviewBy": "2026-11-15",
+      "instanceId": "7ede2023-9db0-54f9-b199-27075aa7104a",
+      "kind": "boundary-assessment"
+    },
+    {
+      "id": "f2-archive-export",
+      "title": "Portable archive export",
+      "state": "partial",
+      "exists": "srs-web can export a repository archive as `.srs`.",
+      "missing": "The export is not yet an independently proven portable semantic publication.",
+      "evidence": [
+        {
+          "type": "repo-path",
+          "kind": "source",
+          "ref": "srs-web/src/App.svelte"
+        },
+        {
+          "type": "repo-path",
+          "kind": "test",
+          "ref": "srs-web/e2e/export-import.spec.ts"
+        }
+      ],
+      "assessedAt": "2026-08-15",
+      "reviewBy": "2026-11-15",
+      "instanceId": "11393afe-5734-583c-85ee-c07913cd3c7f",
+      "kind": "boundary-assessment"
+    },
+    {
+      "id": "f2-offline-reader",
+      "title": "Independent offline reader and fallback",
+      "state": "planned",
+      "exists": "DocumentViews and application rendering exist inside the current stack.",
+      "missing": "A generic reader must explain a detached archive without the originating service.",
+      "evidence": [
+        {
+          "type": "issue",
+          "kind": "issue",
+          "ref": "srs#385"
+        }
+      ],
+      "assessedAt": "2026-08-15",
+      "reviewBy": "2026-11-15",
+      "instanceId": "c84b39b1-d7e8-5af8-aa74-e1b7c3286e0e",
+      "kind": "boundary-assessment"
+    },
+    {
+      "id": "f2-frozen-closure",
+      "title": "Frozen closure and completeness proof",
+      "state": "planned",
+      "exists": "The required archive/version/completeness boundary has been specified.",
+      "missing": "Version closure, evidence-completeness diagnostics and independent conformance.",
+      "evidence": [
+        {
+          "type": "issue",
+          "kind": "issue",
+          "ref": "srs#384"
+        },
+        {
+          "type": "issue",
+          "kind": "issue",
+          "ref": "srs#386"
+        }
+      ],
+      "assessedAt": "2026-08-15",
+      "reviewBy": "2026-11-15",
+      "instanceId": "d36c12b0-45a1-5729-bf18-c60ac396e5e3",
+      "kind": "boundary-assessment"
+    },
+    {
+      "id": "f3-local-editing",
+      "title": "Repository editing on user-controlled storage",
+      "state": "partial",
+      "exists": "srs-web opens, edits and saves local, cloud and GitHub-backed repositories.",
+      "missing": "This is not yet a whole-repository offline continuation and reintegration proof.",
+      "evidence": [
+        {
+          "type": "repo-path",
+          "kind": "source",
+          "ref": "srs-web/src/App.svelte"
+        },
+        {
+          "type": "repo-path",
+          "kind": "test",
+          "ref": "srs-web/e2e/cloud-storage.spec.ts"
+        }
+      ],
+      "assessedAt": "2026-08-15",
+      "reviewBy": "2026-11-15",
+      "instanceId": "00c7d355-8671-5c48-ab7e-1e2b972ff942",
+      "kind": "boundary-assessment"
+    },
+    {
+      "id": "f3-semantic-diff",
+      "title": "Semantic diff and repository-copy identity",
+      "state": "planned",
+      "exists": "Git storage integration provides a useful substrate.",
+      "missing": "Copy identity and semantic-diff RFCs, rather than byte-level assumptions.",
+      "evidence": [
+        {
+          "type": "issue",
+          "kind": "issue",
+          "ref": "muDemocracy.org#62"
+        },
+        {
+          "type": "issue",
+          "kind": "issue",
+          "ref": "srs#387"
+        }
+      ],
+      "assessedAt": "2026-08-15",
+      "reviewBy": "2026-11-15",
+      "instanceId": "62f9f20a-d599-58ee-aebe-f8e05b15026b",
+      "kind": "boundary-assessment"
+    },
+    {
+      "id": "f3-reintegration",
+      "title": "Offline reintegration without semantic loss",
+      "state": "planned",
+      "exists": "The target walkthrough and release gate are defined.",
+      "missing": "Conflict handling, merge semantics and a whole-repository demonstration.",
+      "evidence": [
+        {
+          "type": "issue",
+          "kind": "issue",
+          "ref": "muDemocracy.org#63"
+        },
+        {
+          "type": "issue",
+          "kind": "issue",
+          "ref": "muDemocracy.org#65"
+        }
+      ],
+      "assessedAt": "2026-08-15",
+      "reviewBy": "2026-11-15",
+      "instanceId": "9ed85650-1dd5-5807-825e-d393a0e68bfb",
+      "kind": "boundary-assessment"
+    },
+    {
+      "id": "p1-governance-editor",
+      "title": "Simple governance decision workspace",
+      "state": "proven",
+      "exists": "The SRS-web governance editor can create, edit, validate and render decision repositories.",
+      "missing": "This proves the starting log, not the full living-decision release.",
+      "evidence": [
+        {
+          "type": "repo-path",
+          "kind": "test",
+          "ref": "srs-web/e2e/decision-flow.spec.ts"
+        },
+        {
+          "type": "repo-path",
+          "kind": "test",
+          "ref": "srs-web/e2e/create-document.spec.ts"
+        }
+      ],
+      "assessedAt": "2026-08-15",
+      "reviewBy": "2026-11-15",
+      "instanceId": "4825c22f-e2b1-518e-9131-9f627104eeb2",
+      "kind": "boundary-assessment"
+    },
+    {
+      "id": "p1-lifecycle-history",
+      "title": "Lifecycle and supersession fragments",
+      "state": "partial",
+      "exists": "Lifecycle transitions, decision links and supersession-oriented editor paths exist.",
+      "missing": "A group-level review, revisit and upgrade walkthrough.",
+      "evidence": [
+        {
+          "type": "repo-path",
+          "kind": "test",
+          "ref": "srs-web/e2e/lifecycle.spec.ts"
+        },
+        {
+          "type": "repo-path",
+          "kind": "test",
+          "ref": "srs-web/e2e/decision-link.spec.ts"
+        }
+      ],
+      "assessedAt": "2026-08-15",
+      "reviewBy": "2026-11-15",
+      "instanceId": "7ea24aad-0d00-53ed-b2c8-83b5996f446d",
+      "kind": "boundary-assessment"
+    },
+    {
+      "id": "p1-living-walkthrough",
+      "title": "Maintained-practice walkthrough",
+      "state": "planned",
+      "exists": "The P1 release contract identifies the route.",
+      "missing": "Upgrade, review-due and supersession proof in one user walkthrough.",
+      "evidence": [
+        {
+          "type": "issue",
+          "kind": "issue",
+          "ref": "muDemocracy.org#36"
+        }
+      ],
+      "assessedAt": "2026-08-15",
+      "reviewBy": "2026-11-15",
+      "instanceId": "f85e515a-6ea5-56f5-aaba-05d675ca3430",
+      "kind": "boundary-assessment"
+    },
+    {
+      "id": "p2-workspace-substrate",
+      "title": "Shared semantic workspace substrate",
+      "state": "partial",
+      "exists": "SRS-web has a governance workspace and generic guides editor over the WASM engine.",
+      "missing": "One converged container-and-blueprint workspace for facilitated work.",
+      "evidence": [
+        {
+          "type": "repo-path",
+          "kind": "source",
+          "ref": "srs-web/src/lib/governance/GovernanceShell.svelte"
+        },
+        {
+          "type": "repo-path",
+          "kind": "source",
+          "ref": "srs-web/src/lib/guides/GuidesShell.svelte"
+        }
+      ],
+      "assessedAt": "2026-08-15",
+      "reviewBy": "2026-11-15",
+      "instanceId": "62053ec4-6ec6-5651-8cf7-12c672d060b3",
+      "kind": "boundary-assessment"
+    },
+    {
+      "id": "p2-manual-protocol",
+      "title": "Projected manual Protocol",
+      "state": "planned",
+      "exists": "Protocol and Blueprint concepts are part of the SRS model and roadmap.",
+      "missing": "A shared-screen, resumable manual Protocol run.",
+      "evidence": [
+        {
+          "type": "issue",
+          "kind": "issue",
+          "ref": "muDemocracy.org#141"
+        },
+        {
+          "type": "issue",
+          "kind": "issue",
+          "ref": "muDemocracy.org#66"
+        }
+      ],
+      "assessedAt": "2026-08-15",
+      "reviewBy": "2026-11-15",
+      "instanceId": "6eb0887a-eca4-5db9-9de4-54cdb9184897",
+      "kind": "boundary-assessment"
+    },
+    {
+      "id": "p2-ratification",
+      "title": "Meeting participation and whole-record ratification",
+      "state": "planned",
+      "exists": "The intended semantic additions and release contract are explicit.",
+      "missing": "Session, participation, ratification and later read-back in a real facilitated walkthrough.",
+      "evidence": [
+        {
+          "type": "issue",
+          "kind": "issue",
+          "ref": "muDemocracy.org#67"
+        },
+        {
+          "type": "issue",
+          "kind": "issue",
+          "ref": "srs-rust#236"
+        }
+      ],
+      "assessedAt": "2026-08-15",
+      "reviewBy": "2026-11-15",
+      "instanceId": "dde16a16-c967-5724-9b25-3db233c619b2",
+      "kind": "boundary-assessment"
+    },
+    {
+      "id": "p3-origin-prototype",
+      "title": "Meeting transcription and AI proposal prototype",
+      "state": "prototype",
+      "exists": "The paused decision-logger prototype implements transcription, AI-assisted triage and draft-generation workflows.",
+      "missing": "It is not a current SRS-native, Protocol-contextual or ratified P3 surface.",
+      "evidence": [
+        {
+          "type": "repo-path",
+          "kind": "source",
+          "ref": "decision-logger/README.md"
+        }
+      ],
+      "assessedAt": "2026-08-15",
+      "reviewBy": "2026-11-15",
+      "instanceId": "ccedded8-644b-5fe6-82b3-8d78fd0e07d2",
+      "kind": "boundary-assessment"
+    },
+    {
+      "id": "p3-ai-protocol",
+      "title": "Protocol-contextual AI proposals with provenance",
+      "state": "planned",
+      "exists": "The human–AI constitution and release contract constrain the intended behaviour.",
+      "missing": "Live/recorded transcript ingestion, stage-specific proposals and inspectable provenance.",
+      "evidence": [
+        {
+          "type": "issue",
+          "kind": "issue",
+          "ref": "muDemocracy.org#60"
+        },
+        {
+          "type": "issue",
+          "kind": "issue",
+          "ref": "muDemocracy.org#68"
+        }
+      ],
+      "assessedAt": "2026-08-15",
+      "reviewBy": "2026-11-15",
+      "instanceId": "1bdf666d-3d87-58f9-9a4e-f1a9ba4541fe",
+      "kind": "boundary-assessment"
+    },
+    {
+      "id": "p3-human-ratification",
+      "title": "Human-ratified AI-assisted meeting walkthrough",
+      "state": "planned",
+      "exists": "The required end-to-end proof is defined.",
+      "missing": "A runnable meeting in which people review, agree and ratify AI-proposed canonical meaning.",
+      "evidence": [
+        {
+          "type": "issue",
+          "kind": "issue",
+          "ref": "muDemocracy.org#60"
+        }
+      ],
+      "assessedAt": "2026-08-15",
+      "reviewBy": "2026-11-15",
+      "instanceId": "bfc9b38c-72d5-5b57-85b1-65c1cc012d1d",
+      "kind": "boundary-assessment"
+    },
+    {
+      "id": "addressability-assessment",
+      "instanceId": "77dcf3d8-3897-5610-b6d0-ec537125e304",
+      "kind": "contract-assessment",
+      "title": "Addressability readiness",
+      "specification": "provisional",
+      "implementation": "not-implemented",
+      "conformance": "unproven",
+      "openConditions": [
+        "Separate revision addressing from storage and VCS implementation.",
+        "Define stable document, process and conversation address spaces.",
+        "Demonstrate resumable AttentionState in a Protocol run.",
+        "Prove transcript and extracted claims can reference addressed source material."
+      ],
+      "evidence": [
+        {
+          "type": "repo-path",
+          "kind": "spec-record",
+          "ref": "srs/records/extensions/ext-addressability.json"
+        },
+        {
+          "type": "repo-path",
+          "kind": "design-note",
+          "ref": "srs/records/design-notes/025-addressability-as-a-prerequisite-for-live-facilitation.json"
+        }
+      ],
+      "assessedAt": "2026-08-18",
+      "reviewBy": "2026-11-18"
+    }
+  ],
+  "links": [
+    {
+      "type": "depends-on",
+      "from": "F2",
+      "to": "F1"
+    },
+    {
+      "type": "depends-on",
+      "from": "F3",
+      "to": "F2"
+    },
+    {
+      "type": "depends-on",
+      "from": "P1",
+      "to": "F1"
+    },
+    {
+      "type": "depends-on",
+      "from": "P2",
+      "to": "F1"
+    },
+    {
+      "type": "depends-on",
+      "from": "P3",
+      "to": "F2"
+    },
+    {
+      "type": "depends-on",
+      "from": "P3",
+      "to": "P2"
+    },
+    {
+      "type": "com.semanticops.strategy/aligns-with",
+      "from": "G1",
+      "to": "P1"
+    },
+    {
+      "type": "depends-on",
+      "from": "G2",
+      "to": "G1"
+    },
+    {
+      "type": "com.semanticops.strategy/aligns-with",
+      "from": "G2",
+      "to": "P1"
+    },
+    {
+      "type": "depends-on",
+      "from": "G3",
+      "to": "G2"
+    },
+    {
+      "type": "com.semanticops.strategy/aligns-with",
+      "from": "G3",
+      "to": "P2"
+    },
+    {
+      "type": "depends-on",
+      "from": "G4",
+      "to": "G3"
+    },
+    {
+      "type": "depends-on",
+      "from": "G5",
+      "to": "G4"
+    },
+    {
+      "type": "depends-on",
+      "from": "G6",
+      "to": "G3"
+    },
+    {
+      "type": "com.semanticops.strategy/aligns-with",
+      "from": "G6",
+      "to": "P2"
+    },
+    {
+      "type": "depends-on",
+      "from": "G7",
+      "to": "G6"
+    },
+    {
+      "type": "com.semanticops.strategy/aligns-with",
+      "from": "G7",
+      "to": "P3"
+    },
+    {
+      "type": "com.semanticops.strategy/aligns-with",
+      "from": "D1",
+      "to": "F1"
+    },
+    {
+      "type": "depends-on",
+      "from": "D2",
+      "to": "D1"
+    },
+    {
+      "type": "com.semanticops.strategy/aligns-with",
+      "from": "D2",
+      "to": "F1"
+    },
+    {
+      "type": "depends-on",
+      "from": "D3",
+      "to": "D2"
+    },
+    {
+      "type": "com.semanticops.strategy/aligns-with",
+      "from": "D3",
+      "to": "F2"
+    },
+    {
+      "type": "depends-on",
+      "from": "D4",
+      "to": "D2"
+    },
+    {
+      "type": "com.semanticops.strategy/aligns-with",
+      "from": "D4",
+      "to": "F3"
+    },
+    {
+      "type": "depends-on",
+      "from": "D5",
+      "to": "D3"
+    },
+    {
+      "type": "depends-on",
+      "from": "D5",
+      "to": "D4"
+    },
+    {
+      "type": "com.semanticops.strategy/aligns-with",
+      "from": "D5",
+      "to": "F2"
+    },
+    {
+      "type": "com.semanticops.strategy/aligns-with",
+      "from": "D5",
+      "to": "F3"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "F1",
+      "to": "semantic-kernel"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "D1",
+      "to": "semantic-kernel"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "D2",
+      "to": "semantic-kernel"
+    },
+    {
+      "type": "contains",
+      "from": "semantic-kernel",
+      "to": "identity-and-references"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "F1",
+      "to": "identity-and-references"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "D1",
+      "to": "identity-and-references"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "D2",
+      "to": "identity-and-references"
+    },
+    {
+      "type": "contains",
+      "from": "semantic-kernel",
+      "to": "definitions-and-structure"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "F1",
+      "to": "definitions-and-structure"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "D1",
+      "to": "definitions-and-structure"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "D2",
+      "to": "definitions-and-structure"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "G1",
+      "to": "definitions-and-structure"
+    },
+    {
+      "type": "contains",
+      "from": "semantic-kernel",
+      "to": "projection-boundary"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "F1",
+      "to": "projection-boundary"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "F2",
+      "to": "projection-boundary"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "D2",
+      "to": "projection-boundary"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "D3",
+      "to": "projection-boundary"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "G1",
+      "to": "projection-boundary"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "F2",
+      "to": "portable-publication"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "D3",
+      "to": "portable-publication"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "D5",
+      "to": "portable-publication"
+    },
+    {
+      "type": "contains",
+      "from": "portable-publication",
+      "to": "closure-and-completeness"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "F2",
+      "to": "closure-and-completeness"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "D5",
+      "to": "closure-and-completeness"
+    },
+    {
+      "type": "contains",
+      "from": "portable-publication",
+      "to": "fallback-orientation"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "F2",
+      "to": "fallback-orientation"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "D3",
+      "to": "fallback-orientation"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "D5",
+      "to": "fallback-orientation"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "F3",
+      "to": "continuation"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "D4",
+      "to": "continuation"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "D5",
+      "to": "continuation"
+    },
+    {
+      "type": "contains",
+      "from": "continuation",
+      "to": "semantic-diff-and-merge"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "F3",
+      "to": "semantic-diff-and-merge"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "D4",
+      "to": "semantic-diff-and-merge"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "D5",
+      "to": "semantic-diff-and-merge"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "P1",
+      "to": "practice-extensions"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "P2",
+      "to": "practice-extensions"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "P3",
+      "to": "practice-extensions"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "G1",
+      "to": "practice-extensions"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "G2",
+      "to": "practice-extensions"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "G3",
+      "to": "practice-extensions"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "G4",
+      "to": "practice-extensions"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "G5",
+      "to": "practice-extensions"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "G6",
+      "to": "practice-extensions"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "G7",
+      "to": "practice-extensions"
+    },
+    {
+      "type": "contains",
+      "from": "practice-extensions",
+      "to": "governance-profile"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "P1",
+      "to": "governance-profile"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "P2",
+      "to": "governance-profile"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "G1",
+      "to": "governance-profile"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "G2",
+      "to": "governance-profile"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "G3",
+      "to": "governance-profile"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "G4",
+      "to": "governance-profile"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "G5",
+      "to": "governance-profile"
+    },
+    {
+      "type": "contains",
+      "from": "practice-extensions",
+      "to": "protocol-and-ai-provenance"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "P2",
+      "to": "protocol-and-ai-provenance"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "P3",
+      "to": "protocol-and-ai-provenance"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "G6",
+      "to": "protocol-and-ai-provenance"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "G7",
+      "to": "protocol-and-ai-provenance"
+    },
+    {
+      "type": "contains",
+      "from": "practice-extensions",
+      "to": "integrity-and-federation"
+    },
+    {
+      "type": "contains",
+      "from": "practice-extensions",
+      "to": "addressability"
+    },
+    {
+      "type": "depends-on",
+      "from": "addressability",
+      "to": "identity-and-references"
+    },
+    {
+      "type": "depends-on",
+      "from": "protocol-and-ai-provenance",
+      "to": "addressability"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "P2",
+      "to": "addressability"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "P3",
+      "to": "addressability"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "G6",
+      "to": "addressability"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "G7",
+      "to": "addressability"
+    },
+    {
+      "type": "com.semanticops.strategy/assesses",
+      "from": "f1-model",
+      "to": "F1"
+    },
+    {
+      "type": "com.semanticops.strategy/assesses",
+      "from": "f1-regeneration",
+      "to": "F1"
+    },
+    {
+      "type": "com.semanticops.strategy/assesses",
+      "from": "f1-kernel-proof",
+      "to": "F1"
+    },
+    {
+      "type": "com.semanticops.strategy/assesses",
+      "from": "f1-musrs-document-corpus",
+      "to": "F1"
+    },
+    {
+      "type": "evidences",
+      "from": "f1-musrs-document-corpus",
+      "to": "D1"
+    },
+    {
+      "type": "evidences",
+      "from": "f1-musrs-document-corpus",
+      "to": "D2"
+    },
+    {
+      "type": "evidences",
+      "from": "f1-musrs-document-corpus",
+      "to": "D3"
+    },
+    {
+      "type": "com.semanticops.strategy/assesses",
+      "from": "f2-archive-export",
+      "to": "F2"
+    },
+    {
+      "type": "com.semanticops.strategy/assesses",
+      "from": "f2-offline-reader",
+      "to": "F2"
+    },
+    {
+      "type": "com.semanticops.strategy/assesses",
+      "from": "f2-frozen-closure",
+      "to": "F2"
+    },
+    {
+      "type": "com.semanticops.strategy/assesses",
+      "from": "f3-local-editing",
+      "to": "F3"
+    },
+    {
+      "type": "com.semanticops.strategy/assesses",
+      "from": "f3-semantic-diff",
+      "to": "F3"
+    },
+    {
+      "type": "com.semanticops.strategy/assesses",
+      "from": "f3-reintegration",
+      "to": "F3"
+    },
+    {
+      "type": "com.semanticops.strategy/assesses",
+      "from": "p1-governance-editor",
+      "to": "P1"
+    },
+    {
+      "type": "evidences",
+      "from": "p1-governance-editor",
+      "to": "G1"
+    },
+    {
+      "type": "com.semanticops.strategy/assesses",
+      "from": "p1-lifecycle-history",
+      "to": "P1"
+    },
+    {
+      "type": "evidences",
+      "from": "p1-lifecycle-history",
+      "to": "G2"
+    },
+    {
+      "type": "com.semanticops.strategy/assesses",
+      "from": "p1-living-walkthrough",
+      "to": "P1"
+    },
+    {
+      "type": "evidences",
+      "from": "p1-living-walkthrough",
+      "to": "G2"
+    },
+    {
+      "type": "com.semanticops.strategy/assesses",
+      "from": "p2-workspace-substrate",
+      "to": "P2"
+    },
+    {
+      "type": "evidences",
+      "from": "p2-workspace-substrate",
+      "to": "G3"
+    },
+    {
+      "type": "com.semanticops.strategy/assesses",
+      "from": "p2-manual-protocol",
+      "to": "P2"
+    },
+    {
+      "type": "evidences",
+      "from": "p2-manual-protocol",
+      "to": "G6"
+    },
+    {
+      "type": "com.semanticops.strategy/assesses",
+      "from": "p2-ratification",
+      "to": "P2"
+    },
+    {
+      "type": "evidences",
+      "from": "p2-ratification",
+      "to": "G3"
+    },
+    {
+      "type": "evidences",
+      "from": "p2-ratification",
+      "to": "G6"
+    },
+    {
+      "type": "com.semanticops.strategy/assesses",
+      "from": "p3-origin-prototype",
+      "to": "P3"
+    },
+    {
+      "type": "evidences",
+      "from": "p3-origin-prototype",
+      "to": "G7"
+    },
+    {
+      "type": "com.semanticops.strategy/assesses",
+      "from": "p3-ai-protocol",
+      "to": "P3"
+    },
+    {
+      "type": "evidences",
+      "from": "p3-ai-protocol",
+      "to": "G7"
+    },
+    {
+      "type": "com.semanticops.strategy/assesses",
+      "from": "p3-human-ratification",
+      "to": "P3"
+    },
+    {
+      "type": "evidences",
+      "from": "p3-human-ratification",
+      "to": "G7"
+    },
+    {
+      "type": "com.semanticops.strategy/assesses",
+      "from": "addressability-assessment",
+      "to": "addressability"
+    }
   ]
 }

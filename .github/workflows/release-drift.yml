@@ -134,5 +134,6 @@ jobs:
         working-directory: srs
         run: |
           node scripts/roadmap.mjs --check
+          node scripts/roadmap.mjs --audit
           node scripts/roadmap.test.mjs
           node scripts/roadmap-visualizer.test.mjs
