@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f001-0000-4000-8000-000000000019",
+  "namespace": "com.example.discovery",
+  "name": "legacy_score",
+  "version": 1,
+  "description": "Legacy editorial score.",
+  "aiGuidance": {
+    "purpose": "I-120 exclusion: datatype number. `word_count` already carries this classification, but none of its values (42, 28, 150, 75, 99) is long enough to probe — a content match for \"42\" proves nothing. Repointing one of them at a distinctive value was the smaller change and was rejected: #317 requires the fixture's existing stored values be preserved, and they are part of what the 18 pre-existing scenarios were written against. This Field exists solely to carry a token that appears nowhere else in the fixture. Its value is load-bearing for i120_exclude_number."
+  },
+  "fieldType": {
+    "datatype": "number"
+  },
+  "createdAt": "2026-06-27T00:00:00Z"
+}

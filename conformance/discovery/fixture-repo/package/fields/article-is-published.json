@@ -6,7 +6,7 @@
   "version": 1,
   "description": "Whether the article has been formally published.",
   "aiGuidance": {
-    "purpose": "Boolean publication flag. Non-searchable per ext:discovery valueType classification."
+    "purpose": "Boolean publication flag. Non-searchable per ext:discovery valueType classification. Load-bearing: i120_exclude_boolean probes the literal \"true\", which no projectable string in the fixture contains. Keep it that way — \"true\" is a common English substring (construe, untrue, truest), so prose added anywhere in this fixture must avoid it."
   },
   "fieldType": {
     "datatype": "boolean"

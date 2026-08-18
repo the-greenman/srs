@@ -6,7 +6,7 @@
   "version": 1,
   "description": "The date on which the article was or will be published.",
   "aiGuidance": {
-    "purpose": "ISO 8601 date. Non-searchable per ext:discovery valueType classification."
+    "purpose": "ISO 8601 date. Non-searchable per ext:discovery valueType classification. Load-bearing: article-4's value \"2025-01-01\" is the probe for i120_exclude_date and is unique across every projectable string in the fixture. Changing it silently makes that scenario vacuous."
   },
   "fieldType": {
     "datatype": "date"

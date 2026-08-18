@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f001-0000-4000-8000-000000000011",
+  "namespace": "com.example.discovery",
+  "name": "revision_uuid",
+  "version": 1,
+  "description": "Opaque revision identifier.",
+  "aiGuidance": {
+    "purpose": "I-120 exclusion: format uuid. Asserted positively against the allow-list (plain/markdown/uri), never as a `format != uri` test — CC-25: an unrecognised or future format is ineligible by default."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "format": "uuid"
+  },
+  "createdAt": "2026-06-27T00:00:00Z"
+}

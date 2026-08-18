@@ -441,11 +441,349 @@ async function validatePackageCases(root) {
   });
 }
 
+// ---- #285 — every discovered record is reachable from a declared presentation -------------------
+async function publicationReachabilityCases(root) {
+  console.log("#285 — publication reachability gate");
+
+  const ID = (n) => `00000000-0000-4000-8000-0000000002${String(n).padStart(2, "0")}`;
+  const TITLE_FIELD = "1a000001-0000-4000-a000-000000000001";
+
+  // A minimal repository: one package declaring one DocumentView, one type-query section, and
+  // records under the reserved instance root. Everything the guard reads is built here, so a case
+  // that passes for a reason other than the one it names shows up as a message mismatch.
+  const record = (n, typeName, extra = {}) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/record.json",
+    instanceId: ID(n),
+    typeId: "00000000-0000-4000-8000-0000000000t1".replace("t1", "01"),
+    typeVersion: 1,
+    typeNamespace: "com.example.fixture",
+    typeName,
+    fieldValues: { title: `record ${n}` },
+    ...extra,
+  });
+  const relation = (n, type, source, target) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/relation.json",
+    relationId: `00000000-0000-4000-8000-0000000003${String(n).padStart(2, "0")}`,
+    relationType: type,
+    sourceInstanceId: source,
+    targetInstanceId: target,
+    createdAt: "2026-08-18T00:00:00Z",
+  });
+  const exclusions = (...entries) =>
+    writeJson(join(root, "scripts/publication-reachability-exclusions.json"), { exclusions: entries });
+
+  // `titleFieldId` present ⇒ the renderer descends `contains` (render_service.rs). The two
+  // cases below turn exactly this on and off, because getting it wrong is what made the first cut
+  // of this guard call 34 records published that appear in no export.
+  // A real exported id (lib/view-exports.mjs): only views `publish-spec.mjs` renders confer
+  // reachability, so a synthetic id here would make every case below vacuously fail.
+  const EXPORTED_ID = "3a000001-0000-4000-a000-000000000001";
+  const view = (titleFieldId, id = EXPORTED_ID) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/document-view.json",
+    id,
+    namespace: "com.example.fixture",
+    name: "fixture-view",
+    version: 1,
+    format: "markdown",
+    sections: [
+      {
+        sectionId: "roots",
+        title: "Roots",
+        order: 0,
+        source: { type: "type-query", semanticObjectType: "com.example.fixture/root" },
+        ...(titleFieldId ? { titleFieldId } : {}),
+      },
+    ],
+    createdAt: "2026-08-18T00:00:00Z",
+  });
+
+  const repo = join(root, "srs");
+  await writeJson(join(repo, "manifest.json"), {
+    srsVersion: "2.0-draft",
+    dataModelRevision: 2,
+    repositoryId: "00000000-0000-4000-8000-000000000501",
+    namespace: "com.example.fixture",
+    container: { containerId: "00000000-0000-4000-8000-000000000601", title: "Fixture", memberInstanceIds: [] },
+  });
+  await writeJson(join(repo, "package/package.json"), {
+    id: "00000000-0000-4000-8000-000000000701",
+    namespace: "com.example.fixture",
+    name: "fixture-package",
+    version: "1.0.0",
+    documentViews: ["document-views/fixture-view.json"],
+  });
+  await writeJson(join(repo, "package/document-views/fixture-view.json"), view(TITLE_FIELD));
+  await writeJson(join(repo, "records/root.json"), record(1, "root"));
+  await exclusions();
+
+  expect("passes when every record is a query root", runCheck("check-publication-reachability.mjs", root), {
+    exit: 0,
+    contains: ["✓ Every discovered record is reachable"],
+  });
+
+  // The violation the guard exists for: a valid, discovered, loading record no presentation reaches.
+  await writeJson(join(repo, "records/orphan.json"), record(2, "leaf"));
+  expect("rejects a discovered record no presentation reaches", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["records/orphan.json", "unreachable from every declared presentation"],
+  });
+
+  // Declaring the invisibility clears it — the exclusion list is the sanctioned escape, not a flag.
+  const orphanEntry = { instanceId: ID(2), path: "records/orphan.json", reason: "fixture", issue: "#285" };
+  await exclusions(orphanEntry);
+  expect("accepts it once its invisibility is declared", runCheck("check-publication-reachability.mjs", root), {
+    exit: 0,
+    contains: ["✓ Every discovered record is reachable"],
+  });
+
+  // ...but only as typed data. A reason-less entry is an allowlist, which is the thing this is not.
+  await exclusions({ instanceId: ID(2), path: "records/orphan.json", issue: "#285" });
+  expect("rejects an exclusion entry with no reason", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["exclusions[0] is missing required properties: reason"],
+  });
+
+  // A stale exclusion is an error in both directions. First: it names an instance that is gone.
+  await exclusions(orphanEntry, { instanceId: ID(9), path: "records/vanished.json", reason: "fixture", issue: "#285" });
+  expect("rejects an exclusion for an instance that no longer exists", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["stale exclusion", "records/vanished.json", "no longer a discovered instance"],
+  });
+
+  // Second: it names one that has since become reachable, where it would hide the next regression.
+  await exclusions({ instanceId: ID(1), path: "records/root.json", reason: "fixture", issue: "#285" }, orphanEntry);
+  expect("rejects an exclusion for a record that is now reachable", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["stale exclusion", "records/root.json", "is now reachable"],
+  });
+
+  // `contains` from a query root publishes the target — but only from a section that descends.
+  await writeJson(join(repo, "relations/contains.json"), relation(1, "contains", ID(1), ID(2)));
+  await exclusions();
+  expect("accepts a record contained by a structured section's root", runCheck("check-publication-reachability.mjs", root), {
+    exit: 0,
+    contains: ["✓ Every discovered record is reachable"],
+  });
+
+  // The same tree with `titleFieldId` removed. The renderer stops descending, so the contained
+  // record is published nowhere — and an unconditional descent would call this green.
+  await writeJson(join(repo, "package/document-views/fixture-view.json"), view(null));
+  expect("rejects it when the section declares no titleFieldId", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["records/orphan.json", "unreachable from every declared presentation"],
+  });
+  await writeJson(join(repo, "package/document-views/fixture-view.json"), view(TITLE_FIELD));
+
+  // `precedes` sequences records that are already published; it does not publish one. Traversing it
+  // would have reported the eight unrendered RFC-017 change records as fine.
+  await rm(join(repo, "relations/contains.json"));
+  await writeJson(join(repo, "relations/precedes.json"), relation(2, "precedes", ID(1), ID(2)));
+  expect("does not treat a precedes edge as publication", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["records/orphan.json", "unreachable from every declared presentation"],
+  });
+  await rm(join(repo, "relations/precedes.json"));
+
+  // The RFC-013 ROOT container is a surface — it is the top of structural navigation.
+  const manifestPath = join(repo, "manifest.json");
+  const baseManifest = JSON.parse(await readFile(manifestPath, "utf8"));
+  await writeJson(manifestPath, {
+    ...baseManifest,
+    container: { ...baseManifest.container, memberInstanceIds: [ID(2)] },
+  });
+  expect("accepts a record reached only by root container membership", runCheck("check-publication-reachability.mjs", root), {
+    exit: 0,
+    contains: ["✓ Every discovered record is reachable"],
+  });
+  await writeJson(manifestPath, baseManifest);
+
+  // ...but a Container under `containers/` is NOT, because nothing points at it. Honouring those made
+  // membership a free "publish" lever: all 12 Containers in the live corpus are referenced by nothing,
+  // and one of them was silencing this guard for a note that reaches no reader.
+  await writeJson(join(repo, "containers/orphan.json"), {
+    containerId: "00000000-0000-4000-8000-000000000602",
+    title: "Referenced by nothing",
+    memberInstanceIds: [ID(2)],
+  });
+  expect("does not let an unreferenced Container publish a record", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["records/orphan.json", "unreachable from every declared presentation"],
+  });
+  await rm(join(repo, "containers/orphan.json"));
+
+  // RFC-016 [R1]: the invariant projection publishes `records/invariants/` after render, so no view
+  // selects it. A definition quantifying only over DocumentViews calls all 124 live ones invisible.
+  // The orphan is excluded here so this case turns on the invariant alone: a run that reports the
+  // invariant cannot reach exit 0, and one that reports nothing else cannot pass for another reason.
+  await exclusions(orphanEntry);
+  await writeJson(join(repo, "records/invariants/inv.json"), record(3, "invariant"));
+  expect("accepts an invariant record via the RFC-016 projection", runCheck("check-publication-reachability.mjs", root), {
+    exit: 0,
+    contains: ["✓ Every discovered record is reachable"],
+  });
+
+  // ...and the projection is scoped to that directory, not to the type: the same record one level
+  // out is unpublished. Otherwise "it is an invariant" would be the rule, and the three unratified
+  // RFC-011 proposals under `package/records/` would read as published normative invariants.
+  await rm(join(repo, "records/invariants"), { recursive: true });
+  await writeJson(join(repo, "package/records/inv.json"), record(3, "invariant"));
+  expect("does not project an invariant outside records/invariants/", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["package/records/inv.json", "unreachable from every declared presentation"],
+  });
+  await rm(join(repo, "package/records"), { recursive: true });
+
+  // `document-view.json` admits four source kinds and this guard resolves one. The other three are
+  // refused by name rather than skipped: an unresolved section can only shrink the reachable set,
+  // so it surfaces as a false violation — with the wrong reason attached, which is how a guard
+  // quietly stops covering what it was written for.
+  const containerSubset = view(TITLE_FIELD);
+  containerSubset.sections[0].source = { type: "container-subset", containerId: "00000000-0000-4000-8000-000000000602" };
+  await writeJson(join(repo, "package/document-views/fixture-view.json"), containerSubset);
+  expect("refuses a section source kind it cannot resolve", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["container-subset", "this guard does not resolve"],
+  });
+
+  // A type-query may also filter by lifecycle state or container, and the renderer applies those.
+  // Ignoring them is fail-OPEN, not fail-closed: a section excluding `archived` records would
+  // otherwise confer publication on every archived record of the type. Refused for that reason.
+  const filtered = view(TITLE_FIELD);
+  filtered.sections[0].source = {
+    type: "type-query",
+    semanticObjectType: "com.example.fixture/root",
+    excludeLifecycleStates: ["archived"],
+  };
+  await writeJson(join(repo, "package/document-views/fixture-view.json"), filtered);
+  expect("refuses a type-query it cannot filter", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["excludeLifecycleStates", "this guard does not apply"],
+  });
+  await writeJson(join(repo, "package/document-views/fixture-view.json"), view(TITLE_FIELD));
+
+  // Declared is not published. `publish-spec.mjs` renders a fixed set of view ids; a view outside it
+  // produces no artifact, so honouring it would be the same free "publish" lever the `containers/**`
+  // glob was — worse, in fact, since a stale exclusion is an error, so one line added to a
+  // `documentViews[]` array would *demand* the matching exclusions be deleted.
+  await exclusions(); // the orphan must be undeclared here, or this case passes for the wrong reason
+  const ghost = view(TITLE_FIELD, "00000000-0000-4000-8000-000000000499");
+  ghost.name = "ghost-view";
+  ghost.sections[0].source = { type: "type-query", semanticObjectType: "com.example.fixture/leaf" };
+  await writeJson(join(repo, "package/document-views/ghost.json"), ghost);
+  const withGhost = JSON.parse(await readFile(join(repo, "package/package.json"), "utf8"));
+  await writeJson(join(repo, "package/package.json"), {
+    ...withGhost,
+    documentViews: [...withGhost.documentViews, "document-views/ghost.json"],
+  });
+  expect("a view no export renders publishes nothing", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["records/orphan.json", "unreachable from every declared presentation"],
+  });
+  await rm(join(repo, "package/document-views/ghost.json"));
+  await writeJson(join(repo, "package/package.json"), withGhost);
+
+  // The RFC-016 projection does a flat `readdir`, so a record one directory deeper is not projected.
+  // Treating the root as a path prefix called it published.
+  await writeJson(join(repo, "records/invariants/proposed/nested.json"), record(4, "invariant"));
+  expect("does not project an invariant in a subdirectory of the root", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["records/invariants/proposed/nested.json", "in a subdirectory", "does not read"],
+  });
+  await rm(join(repo, "records/invariants/proposed"), { recursive: true });
+
+  // The renderer resolves `contains` children as Tier-2 Records. An edge to a Note does not publish
+  // it — it aborts the whole view with "missing field 'typeId'", so the guard would report the corpus
+  // green at the moment every document stopped being produced.
+  const note = { $schema: "https://srs.semanticops.com/schema/2.0/note.json", instanceId: ID(5), title: "note", sections: [] };
+  await writeJson(join(repo, "records/note.json"), note);
+  await writeJson(join(repo, "relations/contains-note.json"), relation(3, "contains", ID(1), ID(5)));
+  expect("refuses a contains edge to a non-Record target", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["records/note.json", "not a Tier-2", "aborts the view"],
+  });
+  await rm(join(repo, "relations/contains-note.json"));
+  await rm(join(repo, "records/note.json"));
+
+  // Everything is keyed by instanceId, so two files sharing one id collapse to a single node and the
+  // second is never reported. `repo validate` catches it; `validate-all` — this guard's pipeline — does not.
+  await writeJson(join(repo, "records/duplicate.json"), record(1, "root"));
+  expect("rejects two files sharing one instanceId", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["duplicate instanceId", "records/duplicate.json"],
+  });
+  await rm(join(repo, "records/duplicate.json"));
+
+  // A package manifest that will not parse declares no views, so every record those views publish is
+  // reported unreachable and nothing says why. Reported, like the unparseable view beside it.
+  const pkgPath = join(repo, "package/package.json");
+  const goodPkg = JSON.parse(await readFile(pkgPath, "utf8"));
+  await writeFile(pkgPath, "{ not json");
+  expect("reports a package manifest that will not parse", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["package manifest does not parse"],
+  });
+  await writeJson(pkgPath, goodPkg);
+
+  // The exclusion `path` must name where the instance actually is. Matching is by instanceId, so
+  // without this the path is decorative and a rename carries the suppression along in silence.
+  await exclusions({ ...orphanEntry, path: "records/moved-away.json" });
+  expect("rejects an exclusion whose path is not where the instance lives", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["records/moved-away.json", "is stored at", "records/orphan.json"],
+  });
+
+  // ...and `issue` must be a navigable reference, matching what the sibling RFC-031 allowlist
+  // requires. "later" is not a tracking issue.
+  await exclusions({ ...orphanEntry, issue: "later" });
+  expect("rejects an exclusion with no real issue reference", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ['issue "later" is not a GitHub issue reference'],
+  });
+
+  await exclusions(orphanEntry, orphanEntry);
+  expect("rejects two exclusions for one instance", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["duplicates the exclusion", "one entry per instance"],
+  });
+  await exclusions();
+
+  // Floors. A walk that found nothing is not a repository with nothing wrong with it, and a
+  // repository whose package declares no view publishes nothing at all.
+  await exclusions(orphanEntry);
+  await writeJson(join(repo, "package/package.json"), {
+    id: "00000000-0000-4000-8000-000000000701",
+    namespace: "com.example.fixture",
+    name: "fixture-package",
+    version: "1.0.0",
+    documentViews: [],
+  });
+  expect("fails when no DocumentView is declared", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["no DocumentView is declared"],
+  });
+
+  const bare = join(root, "bare");
+  await mkdir(join(bare, "scripts"), { recursive: true });
+  await writeJson(join(bare, "scripts/publication-reachability-exclusions.json"), { exclusions: [] });
+  expect("fails when the walk discovers no instances", runCheck("check-publication-reachability.mjs", bare), {
+    exit: 1,
+    contains: ["the walk found nothing"],
+  });
+
+  // A missing exclusion list is a missing decision, not an empty one.
+  await rm(join(bare, "scripts/publication-reachability-exclusions.json"));
+  expect("fails when the exclusion list is absent", runCheck("check-publication-reachability.mjs", bare), {
+    exit: 1,
+    contains: ["missing exclusion list"],
+  });
+}
+
 const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
 try {
   await fieldNameCases(join(root, "field-name"));
   await schemaKindCases(join(root, "schema-kind"));
   await validatePackageCases(join(root, "validate-package"));
+  await publicationReachabilityCases(join(root, "publication-reachability"));
 } finally {
   await rm(root, { recursive: true, force: true });
 }

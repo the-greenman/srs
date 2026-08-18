@@ -53,6 +53,61 @@
       "order": 7,
       "required": false,
       "displayLabel": "Publish Date"
+    },
+    {
+      "fieldId": "0000f001-0000-4000-8000-000000000009",
+      "order": 8,
+      "required": false
+    },
+    {
+      "fieldId": "0000f001-0000-4000-8000-000000000010",
+      "order": 9,
+      "required": false
+    },
+    {
+      "fieldId": "0000f001-0000-4000-8000-000000000011",
+      "order": 10,
+      "required": false
+    },
+    {
+      "fieldId": "0000f001-0000-4000-8000-000000000012",
+      "order": 11,
+      "required": false
+    },
+    {
+      "fieldId": "0000f001-0000-4000-8000-000000000013",
+      "order": 12,
+      "required": false
+    },
+    {
+      "fieldId": "0000f001-0000-4000-8000-000000000014",
+      "order": 13,
+      "required": false
+    },
+    {
+      "fieldId": "0000f001-0000-4000-8000-000000000015",
+      "order": 14,
+      "required": false
+    },
+    {
+      "fieldId": "0000f001-0000-4000-8000-000000000016",
+      "order": 15,
+      "required": false
+    },
+    {
+      "fieldId": "0000f001-0000-4000-8000-000000000017",
+      "order": 16,
+      "required": false
+    },
+    {
+      "fieldId": "0000f001-0000-4000-8000-000000000018",
+      "order": 17,
+      "required": false
+    },
+    {
+      "fieldId": "0000f001-0000-4000-8000-000000000019",
+      "order": 18,
+      "required": false
     }
   ],
   "createdAt": "2026-06-27T00:00:00Z"
