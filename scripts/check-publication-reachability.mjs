@@ -177,10 +177,27 @@ async function reachability(repoRoot) {
   const roots = [];
   const views = await declaredDocumentViews(repoRoot);
   const queried = new Map(); // semanticObjectType -> { descends, via }
-  for (const { view } of views) {
+  for (const { path, view } of views) {
     for (const section of view.sections ?? []) {
+      // `document-view.json` admits four source kinds; only `type-query` is used in this
+      // repository, so only it is implemented. The other three are refused rather than skipped.
+      // Skipping is fail-closed here — an unread section can only shrink the reachable set, so it
+      // surfaces as a false violation rather than a missed one — but it would report the *wrong
+      // reason*, sending whoever hits it hunting for a missing relation instead of an unimplemented
+      // source kind. It is also how a guard quietly stops covering the thing it was written for.
+      const kind = section.source?.type;
+      if (kind !== "type-query") {
+        fail(
+          `${path} section "${section.sectionId}" uses source kind "${kind}", which this guard does ` +
+            `not resolve — implement it here, or the records it publishes will be reported unreachable`,
+        );
+        continue;
+      }
       const t = section.source?.semanticObjectType;
-      if (section.source?.type !== "type-query" || !t) continue;
+      if (!t) {
+        fail(`${path} section "${section.sectionId}" is a type-query with no semanticObjectType`);
+        continue;
+      }
       const descends = section.titleFieldId !== undefined && section.titleFieldId !== null;
       const prior = queried.get(t);
       // A type queried by several sections publishes its subtree if ANY of them is structured.

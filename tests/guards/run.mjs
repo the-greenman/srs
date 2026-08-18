@@ -615,6 +615,19 @@ async function publicationReachabilityCases(root) {
   });
   await rm(join(repo, "package/records"), { recursive: true });
 
+  // `document-view.json` admits four source kinds and this guard resolves one. The other three are
+  // refused by name rather than skipped: an unresolved section can only shrink the reachable set,
+  // so it surfaces as a false violation — with the wrong reason attached, which is how a guard
+  // quietly stops covering what it was written for.
+  const containerSubset = view(TITLE_FIELD);
+  containerSubset.sections[0].source = { type: "container-subset", containerId: "00000000-0000-4000-8000-000000000602" };
+  await writeJson(join(repo, "package/document-views/fixture-view.json"), containerSubset);
+  expect("refuses a section source kind it cannot resolve", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["container-subset", "this guard does not resolve"],
+  });
+  await writeJson(join(repo, "package/document-views/fixture-view.json"), view(TITLE_FIELD));
+
   // Floors. A walk that found nothing is not a repository with nothing wrong with it, and a
   // repository whose package declares no view publishes nothing at all.
   await exclusions(orphanEntry);
