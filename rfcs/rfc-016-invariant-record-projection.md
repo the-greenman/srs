@@ -2,7 +2,7 @@
 
 # RFC-016: Invariant Record Projection
 
-**Status**: Accepted (Revision 5)
+**Status**: Accepted (Revision 6)
 **Affects**: `com.semanticops.spec/invariant` (rendering); `scripts/publish-spec.mjs`; subsection body records (Phase 2)
 **Author**: design dialogue draft
 **Date**: 2026-07-04
@@ -18,6 +18,7 @@
 | 3 | 2026-07-04 | Address Stage 4 re-review: type-aware sort algorithm (JSON number vs I-NN string); clarify intro sentence is part of renderInvariants output; R5 covers absent Number field; EOF boundary case; full UUIDs; remove Rationale hedge |
 | 4 | 2026-07-04 | Implementation started; RFC file committed to branch rfc/016-invariant-record-projection |
 | 5 | 2026-07-04 | Accepted; spec records authored in srs/srs; pipeline passes end-to-end; I-63–I-84 visible in rendered views; updated check-release-drift.mjs to apply invariant injection before comparison |
+| 6 | 2026-08-18 | srs#396: the next-`---` region boundary silently discarded a real top-level section (Extension Interactions) whose closing rule fell inside the Key Invariants region rather than after it. Region replacement algorithm amended to a heading-level boundary; `next '---'` text scan retired. |
 
 ---
 
@@ -90,7 +91,7 @@ Before emitting a Constraint field value, strip any trailing markdown horizontal
 
 #### Output format
 
-The function returns a markdown string consisting of an introductory sentence, followed by group headings and invariant items — no `### Key Invariants` heading and no `---` boundary (those are preserved by Change B's region replacement). The intro sentence is part of the return value and replaces any intro text present in the region. Example:
+The function returns a markdown string consisting of an introductory sentence, followed by group headings and invariant items — no `### Key Invariants` heading and no closing boundary line (the heading is preserved unchanged by Change B's region replacement, and the boundary is now the next same-or-higher-level heading rather than a `---` marker; see Change B, Rev 6). The intro sentence is part of the return value and replaces any intro text present in the region. Example:
 
 ```markdown
 Conforming implementations must uphold the following invariants.
@@ -117,7 +118,9 @@ For each file in `VIEW_EXPORTS`, mark entries that are expected to contain a Key
 - If `requiresKeyInvariants: false` (or unset) and the file has no heading: skip silently.
 - If the heading is present: perform wholesale replacement of the region body.
 
-**Region replacement algorithm:** Locate the first occurrence of `### Key Invariants` in the rendered markdown. The region body is everything after the end of that heading line up to (but not including) the next `---` horizontal rule at the start of a line; if no closing `---` exists, the region extends to end of file. Replace the region body with the output of `renderInvariants`. The `### Key Invariants` heading line and the closing `---` (if present) are preserved unchanged.
+**Region replacement algorithm (amended, Rev 6, srs#396):** Locate the first occurrence of `### Key Invariants` in the rendered markdown, and note its heading level (the number of leading `#`s — 3). The region body is everything after the end of that heading line up to (but not including) the next line that is a heading of the same or higher level (`#{1,3}` not followed by another `#`); if no such heading exists, the region extends to end of file. Replace the region body with the output of `renderInvariants`. The `### Key Invariants` heading line is preserved unchanged; the next same-or-higher-level heading (if present) is preserved unchanged and is not consumed by the replacement.
+
+A prior revision of this algorithm bounded the region at the next `---` horizontal rule instead of the next same-or-higher-level heading. `---` is a generic subsection separator used throughout the rendered document for reasons unrelated to Key Invariants, so it does not reliably mark the end of the region: in the corpus that exposed this, the first `---` after `### Key Invariants` fell partway through the following top-level section ("Extension Interactions"), and the scan silently discarded that section's heading and its first subsection along with the intended region body. The heading-level boundary is exact by construction — headings are the document's real nesting structure — and requires no change to `srs render document-view` (the pinned Rust CLI), consistent with this RFC's original confinement of the whole feature to this repo's scripts (see Rationale).
 
 The injected output does not include `**Content**: ` prefixes (those are Rust CLI rendering artifacts from the subsection body approach). The new format emits invariant items directly, which is a deliberate formatting improvement.
 
