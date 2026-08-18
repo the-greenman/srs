@@ -9,19 +9,26 @@ one adds an obligation, and changing an expectation changes what conformance mea
 - `scenarios.json` — 36 scenarios, each a `DiscoveryQuery` plus its expected instance ids.
 
 > **Open question before the exclusion scenarios can be relied on as conformance.** The 13
-> content-match exclusion scenarios (`exactMatch: true`, empty expected set) are **not bound by any
-> current invariant, and one invariant arguably permits failing them.** I-123 binds *"structured-filter
-> conformance scenarios (`exactMatch: true`)"*; I-124 binds *"content-match conformance scenarios
-> (`exactMatch: false`)"* as a superset. These are content-match **and** `exactMatch: true` — a third
-> category neither reaches cleanly. And I-115 says an implementation MAY return instances beyond the
-> I-114 recall floor *"e.g. via stemming, phonetic matching, or **semantic similarity**"*, which by
-> definition does not need the token in a segment. The soundness argument below ("no legitimate
-> over-recall path to a token that is in no segment") holds against a Layer-1 substring index and
-> **not** against the semantic-similarity case I-115 explicitly allows.
+> content-match exclusion scenarios (`exactMatch: true`, empty expected set) sit awkwardly against
+> the ratified rules, in two ways worth separating.
 >
-> #317 requires these assertions, so they are here. But landing them as conformance wants an I-123 /
-> I-124 scoping amendment — a scoped no-false-positive obligation over probe tokens — rather than
-> resting on the extension record's looser one-line summary. Raised on #317; the owner's call.
+> *Which invariant binds them is ambiguous.* I-123 binds *"structured-filter conformance scenarios
+> (`exactMatch: true`)"* and I-124 binds *"content-match conformance scenarios (`exactMatch: false`)"*
+> as supersets. Read as definitional labels over an `exactMatch` partition — a natural reading —
+> I-123 binds these 13 fully and there is no gap. Read as genuinely scoping to structured filters,
+> these are content-match *and* `exactMatch: true`, and neither invariant reaches them. The wording
+> does not settle it.
+>
+> *The substantive tension does not depend on that reading.* **I-115** says an implementation MAY
+> return instances beyond the I-114 recall floor *"e.g. via stemming, phonetic matching, or
+> **semantic similarity**"*, which by definition does not require the token in a segment. The
+> soundness argument below holds against a Layer-1 substring index and **not** against the
+> semantic-similarity case I-115 explicitly allows. Under the binding reading of I-123, an
+> implementation could be required to fail these scenarios and permitted to fail them at once.
+>
+> #317 requires these assertions, so they are here. Landing them as conformance wants I-123/I-124
+> scoped explicitly and reconciled with I-115 — a no-false-positive obligation over probe tokens.
+> Raised on #317; the owner's call.
 
 ## Two layers, migrated independently
 
@@ -80,7 +87,7 @@ Tier-1 rule, so neither discriminates them:
 | `TypedField` | legacy rule (`valueType` searchable, *or absent with a string/array value*) | `fieldType` predicate | discriminates? |
 |---|---|---|---|
 | `summary` (string) | emitted — `valueType` absent, string value | emitted — string/markdown | **no** |
-| `estimate_minutes` (number) | skipped — not a string/array value | skipped — integer | **no** |
+| `estimate_minutes` (integer) | skipped — not a string/array value | skipped — integer | **no** |
 | `ticket_uuid` (uuid-format string) | **emitted** — `valueType` absent, string value | **skipped** — `format: uuid` | **yes** |
 
 **Only `ticket_uuid` discriminates, and it is deliberately left unasserted.** The canonical Tier-1
@@ -119,14 +126,29 @@ The inclusion scenarios use `exactMatch: false`. RFC-012 lets a Layer-2 index re
 Layer-1 floor, so a set equality would forbid conformant behaviour.
 
 The exclusion scenarios use `exactMatch: true` with an empty expected set, which looks stricter than
-the recall floor permits and is not. Each probe token appears **only** inside the excluded Field —
-`zzmapvalueprobe` in a `map` value, `aa11bb22` in a `uuid`-format string, `zzinlineprobe` in an
-inline composite, and so on — so no Text Projection segment anywhere in the fixture contains it.
-There is no legitimate over-recall path to a token that is in no segment. A hit means an excluded
-Field contributed one, which is exactly what I-120 forbids.
+the recall floor permits. Each probe token appears **only** inside the excluded Field, verified
+across every string a conformant projection could emit at any tier — searchable Tier-2 values, tags,
+`displayLabel`s, note titles and sections, Tier-1 titles and values. So no Text Projection segment
+anywhere in the fixture contains it, and a substring index has no path to it. A hit means an
+excluded Field contributed a segment, which is what I-120 forbids. (The limit of that argument is
+the I-115 tension at the top of this file.)
+
+**Two of the thirteen are weaker than the rest, and it is worth knowing which.** Eleven use planted
+tokens that exist for no other purpose. The other two reuse values the fixture already had, because
+the datatypes they cover leave no room to plant one:
+
+- `i120_exclude_date` probes article-4's `publish_date`, `"2025-01-01"` — unique today, but nothing
+  structurally prevents a later edit from changing it and leaving the scenario green and vacuous.
+  The Field's `aiGuidance` now says the value is load-bearing.
+- `i120_exclude_boolean` probes the literal `"true"`. **A boolean carries no text**, so this asserts
+  a *serialization convention* rather than the datatype rule: an implementation rendering booleans
+  as `Yes`, `1`, or a `displayLabel` would evade it, and only `true` is probed — `is_published:
+  false` on three records is not. It also reserves a common English substring (`construe`, `untrue`,
+  `truest`) against all future fixture prose. It is the weakest scenario here, kept because #317
+  requires boolean coverage and no stronger form exists.
 
 The two halves need each other. Without the inclusion scenarios, a `contentMatch` implementation
-that always returned nothing would pass all nineteen exclusions.
+that always returned nothing would pass all thirteen exclusions.
 
 ## What this fixture does NOT assert, and why
 
@@ -136,9 +158,10 @@ asserts that each element is independently recallable (`i120_include_list_elemen
 lossily. It does **not** assert the segment *count* or their *order*.
 
 That is a limit of the conformance contract, not an oversight. A scenario expresses expectations as
-`expectedInstanceIds`, and `DiscoveryHit` exposes an instance id, a label and the first matching
-segment's text — no segment list. Nothing a scenario can say distinguishes three segments in array
-order from one concatenated segment. Closing it needs a new expectation kind in `scenarios.json`
+`expectedInstanceIds`, so the strongest thing it can say about a record is that the record matched.
+Nor does the hit shape help: `DiscoveryHit` carries `matched_fields`, but those are distinct *field
+names*, so three `aliases` segments and one lossily concatenated `aliases` segment both yield
+`["aliases"]`. Nothing a scenario can say distinguishes them. Closing it needs a new expectation kind in `scenarios.json`
 (normative — it changes the RFC-012 `[R11]` interface) landed together with a runner that can
 evaluate it. Raised on #317 rather than worked around here.
 
