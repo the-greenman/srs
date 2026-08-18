@@ -23,7 +23,9 @@
     {
       "name": "tier_filter_note",
       "description": "A tier:0 filter returns only Note instances (Tier 0). Tier 1 and Tier 2 instances must not appear.",
-      "query": { "tier": 0 },
+      "query": {
+        "tier": 0
+      },
       "expectedInstanceIds": [
         "00000005-0000-4000-8000-000000000001"
       ],
@@ -32,7 +34,9 @@
     {
       "name": "tier_filter_typed_record",
       "description": "A tier:1 filter returns only TypedRecord instances (Tier 1). Tier 0 and Tier 2 instances must not appear.",
-      "query": { "tier": 1 },
+      "query": {
+        "tier": 1
+      },
       "expectedInstanceIds": [
         "00000004-0000-4000-8000-000000000001",
         "00000004-0000-4000-8000-000000000002"
@@ -42,7 +46,9 @@
     {
       "name": "tier_filter_record",
       "description": "A tier:2 filter returns only Record instances (Tier 2). Tier 0 and Tier 1 instances must not appear.",
-      "query": { "tier": 2 },
+      "query": {
+        "tier": 2
+      },
       "expectedInstanceIds": [
         "00000001-0000-4000-8000-000000000001",
         "00000001-0000-4000-8000-000000000002",
@@ -58,7 +64,9 @@
     {
       "name": "type_name_article",
       "description": "A typeName:'article' filter returns exactly all Records whose typeNamespace-qualified type name is 'article'. Tier 0/1 instances and Records of other types must not appear.",
-      "query": { "typeName": "article" },
+      "query": {
+        "typeName": "article"
+      },
       "expectedInstanceIds": [
         "00000001-0000-4000-8000-000000000001",
         "00000001-0000-4000-8000-000000000002",
@@ -71,7 +79,9 @@
     {
       "name": "type_namespace",
       "description": "A typeNamespace:'com.example.discovery' filter returns all Tier 2 Records in that namespace. Tier 0/1 instances have no typeNamespace and must not appear.",
-      "query": { "typeNamespace": "com.example.discovery" },
+      "query": {
+        "typeNamespace": "com.example.discovery"
+      },
       "expectedInstanceIds": [
         "00000001-0000-4000-8000-000000000001",
         "00000001-0000-4000-8000-000000000002",
@@ -87,7 +97,9 @@
     {
       "name": "type_id_project",
       "description": "A typeId filter matching the 'project' type UUID returns exactly the two project Records.",
-      "query": { "typeId": "0000a002-0000-4000-8000-000000000002" },
+      "query": {
+        "typeId": "0000a002-0000-4000-8000-000000000002"
+      },
       "expectedInstanceIds": [
         "00000002-0000-4000-8000-000000000001",
         "00000002-0000-4000-8000-000000000002"
@@ -97,7 +109,9 @@
     {
       "name": "container_alpha",
       "description": "A containerId filter for container-alpha returns only the three articles registered as members via memberInstanceIds. Instances not in that container must not appear.",
-      "query": { "containerId": "0000c001-0000-4000-8000-000000000001" },
+      "query": {
+        "containerId": "0000c001-0000-4000-8000-000000000001"
+      },
       "expectedInstanceIds": [
         "00000001-0000-4000-8000-000000000001",
         "00000001-0000-4000-8000-000000000002",
@@ -108,7 +122,9 @@
     {
       "name": "container_beta",
       "description": "A containerId filter for container-beta returns only the two project Records registered as members via memberInstanceIds.",
-      "query": { "containerId": "0000c002-0000-4000-8000-000000000002" },
+      "query": {
+        "containerId": "0000c002-0000-4000-8000-000000000002"
+      },
       "expectedInstanceIds": [
         "00000002-0000-4000-8000-000000000001",
         "00000002-0000-4000-8000-000000000002"
@@ -118,7 +134,11 @@
     {
       "name": "single_tag_searchable",
       "description": "A tag filter for ['searchable'] returns all instances carrying that tag string. Instances without the tag must not appear.",
-      "query": { "tag": ["searchable"] },
+      "query": {
+        "tag": [
+          "searchable"
+        ]
+      },
       "expectedInstanceIds": [
         "00000001-0000-4000-8000-000000000001",
         "00000001-0000-4000-8000-000000000002",
@@ -132,7 +152,12 @@
     {
       "name": "multi_tag_and",
       "description": "A tag filter for ['searchable', 'indexed'] uses AND semantics: only instances carrying BOTH tags must be returned. Instances carrying only one of the two tags must not appear.",
-      "query": { "tag": ["searchable", "indexed"] },
+      "query": {
+        "tag": [
+          "searchable",
+          "indexed"
+        ]
+      },
       "expectedInstanceIds": [
         "00000001-0000-4000-8000-000000000001",
         "00000002-0000-4000-8000-000000000001"
@@ -142,7 +167,9 @@
     {
       "name": "lifecycle_published",
       "description": "A lifecycleState:'published' filter returns only Records in that lifecycle state. Records in other states and Tier 0/1 instances (which have no lifecycleState) must not appear.",
-      "query": { "lifecycleState": "published" },
+      "query": {
+        "lifecycleState": "published"
+      },
       "expectedInstanceIds": [
         "00000001-0000-4000-8000-000000000001",
         "00000001-0000-4000-8000-000000000003"
@@ -152,7 +179,9 @@
     {
       "name": "lifecycle_draft",
       "description": "A lifecycleState:'draft' filter returns only Records in the draft state.",
-      "query": { "lifecycleState": "draft" },
+      "query": {
+        "lifecycleState": "draft"
+      },
       "expectedInstanceIds": [
         "00000001-0000-4000-8000-000000000002",
         "00000001-0000-4000-8000-000000000005"
@@ -162,7 +191,10 @@
     {
       "name": "type_and_lifecycle_combined",
       "description": "Combined typeName and lifecycleState predicates are evaluated as an AND conjunction. Only Records satisfying both must be returned.",
-      "query": { "typeName": "article", "lifecycleState": "draft" },
+      "query": {
+        "typeName": "article",
+        "lifecycleState": "draft"
+      },
       "expectedInstanceIds": [
         "00000001-0000-4000-8000-000000000002",
         "00000001-0000-4000-8000-000000000005"
@@ -172,7 +204,9 @@
     {
       "name": "content_match_discovery",
       "description": "A contentMatch:'discovery' predicate must include every instance whose Text Projection contains a segment whose normalized text contains 'discovery' as a substring. The guaranteed-recall floor is articles 1, 2, and 4 (title/body contain 'discovery'), project-2 (description contains 'discovery'), typed-record-1 (title contains 'Discovery'), and typed-record-2 (title contains 'ext:discovery'). Implementations may return additional instances.",
-      "query": { "contentMatch": "discovery" },
+      "query": {
+        "contentMatch": "discovery"
+      },
       "expectedInstanceIds": [
         "00000001-0000-4000-8000-000000000001",
         "00000001-0000-4000-8000-000000000002",
@@ -186,7 +220,9 @@
     {
       "name": "content_match_indexing",
       "description": "A contentMatch:'indexing' predicate must include every instance with a Text Projection segment containing 'indexing'. Articles 1 and 3 each have 'indexing' as a multiselect topics value. This tests that multiselect elements each contribute a separate segment.",
-      "query": { "contentMatch": "indexing" },
+      "query": {
+        "contentMatch": "indexing"
+      },
       "expectedInstanceIds": [
         "00000001-0000-4000-8000-000000000001",
         "00000001-0000-4000-8000-000000000003"
@@ -196,7 +232,9 @@
     {
       "name": "content_match_indexed_tag_and_label",
       "description": "A contentMatch:'indexed' predicate must include instances where 'indexed' appears in tag segments (articles 1, 3 and project-1) and in the string label field of metric-1 ('Indexed Record Count'). This tests that both tag segments and string field segments are projected.",
-      "query": { "contentMatch": "indexed" },
+      "query": {
+        "contentMatch": "indexed"
+      },
       "expectedInstanceIds": [
         "00000001-0000-4000-8000-000000000001",
         "00000001-0000-4000-8000-000000000003",
@@ -208,12 +246,169 @@
     {
       "name": "content_match_combined_type_and_content",
       "description": "Combined typeName and contentMatch predicates: must return only article instances (structured filter, exact) that also match the content floor for 'draft' (the select field value 'draft' is searchable). The floor is articles 2 and 5 (both have status field value 'draft').",
-      "query": { "typeName": "article", "contentMatch": "draft" },
+      "query": {
+        "typeName": "article",
+        "contentMatch": "draft"
+      },
       "expectedInstanceIds": [
         "00000001-0000-4000-8000-000000000002",
         "00000001-0000-4000-8000-000000000005"
       ],
       "exactMatch": false
+    },
+    {
+      "name": "i120_include_format_markdown",
+      "description": "I-120: datatype string with format markdown is searchable. Recall floor \u2014 the article carrying it must be found.",
+      "query": {
+        "contentMatch": "zzmarkdownprobe"
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001"
+      ],
+      "exactMatch": false
+    },
+    {
+      "name": "i120_include_list_element_first",
+      "description": "I-120: a list-cardinality string emits one segment per array element. Element 0 must be independently recallable.",
+      "query": {
+        "contentMatch": "zzaliasalpha"
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001"
+      ],
+      "exactMatch": false
+    },
+    {
+      "name": "i120_include_list_element_middle",
+      "description": "I-120: element 1 of the same open list. Asserted separately from element 0 so a projection that concatenates the list into a single segment still passes only if every element is recallable.",
+      "query": {
+        "contentMatch": "zzaliasbeta"
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001"
+      ],
+      "exactMatch": false
+    },
+    {
+      "name": "i120_include_list_element_last",
+      "description": "I-120: element 2 of the same open list. See the README note on what this trio does NOT assert (segment count and order are not observable through DiscoveryHit).",
+      "query": {
+        "contentMatch": "zzaliasgamma"
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001"
+      ],
+      "exactMatch": false
+    },
+    {
+      "name": "i120_exclude_format_uuid",
+      "description": "I-120: format uuid contributes no segment. The token is the uuid's own leading group and appears nowhere else in the fixture, so any hit means the excluded Field was projected. Asserted against the allow-list (CC-25), not as a format!=uri test.",
+      "query": {
+        "contentMatch": "aa11bb22"
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "i120_exclude_format_email",
+      "description": "I-120: format email contributes no segment. Same allow-list reasoning as the uuid case.",
+      "query": {
+        "contentMatch": "zzemailprobe"
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "i120_exclude_integer",
+      "description": "I-120: datatype integer contributes no segment. Distinct from the legacy `number` exclusion \u2014 the erratum added integer as its own datatype.",
+      "query": {
+        "contentMatch": "987654321"
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "i120_exclude_date_time",
+      "description": "I-120: datatype date-time contributes no segment. Distinct from `date`; the erratum made date-time a first-class datatype rather than a string format.",
+      "query": {
+        "contentMatch": "09:15:07"
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "i120_exclude_map_value",
+      "description": "I-120: datatype map contributes no segment. The probe is a map VALUE, the likelier of the two to be projected by an implementation that walks the carrier generically.",
+      "query": {
+        "contentMatch": "zzmapvalueprobe"
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "i120_exclude_map_key",
+      "description": "I-120: a map's KEYS are not segments either. Asserted separately from the value: a projection that emitted keys but not values would pass the value case alone.",
+      "query": {
+        "contentMatch": "zzmapkeyprobe"
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "i120_exclude_ref_reference",
+      "description": "I-120: datatype ref in mode reference contributes no segment. The probe is the referenced project's own instance id \u2014 a hit would mean opaque identifiers are searchable as prose. project-1 is NOT expected: a content match is over Text Projection segments, and no segment contains this id.",
+      "query": {
+        "contentMatch": "00000002-0000-4000-8000-000000000001"
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "i120_exclude_ref_inline",
+      "description": "I-120 + CC-27: datatype ref in mode inline contributes no segment either, knowingly. The token sits in the nested composite's `display_name`, a plain string Field that WOULD be searchable at the top level. Recursive composite Text Projection is undefined \u2014 this fixture asserts exclusion only, and the unfindability is a recorded accepted cost.",
+      "query": {
+        "contentMatch": "zzinlineprobe"
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "i120_exclude_dependent",
+      "description": "I-120: datatype dependent contributes no segment. Excluded by its own datatype \u2014 the projection does not resolve `dependsOn` (here, the searchable `title`) before deciding.",
+      "query": {
+        "contentMatch": "zzdependentprobe"
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "i120_tier1_include_fieldtype_string",
+      "description": "Tier-1 disposition, inclusion half: a TypedField whose RFC-039 [R8] fieldType is a markdown-format string is searchable, by the same I-120 predicate as Tier 2. I-120's closing sentence still defers Tier 1 to the legacy `TypedField.valueType` classification 'until the #242 Phase-B carrier cutover'; that cutover has landed and no fixture record carries `valueType` any more, so this scenario asserts the post-cutover reality. See the README and the finding raised on #317.",
+      "query": {
+        "contentMatch": "zztier1probe"
+      },
+      "expectedInstanceIds": [
+        "00000004-0000-4000-8000-000000000002"
+      ],
+      "exactMatch": false
+    },
+    {
+      "name": "i120_tier1_exclude_integer",
+      "description": "Tier-1 disposition, exclusion half: a TypedField with datatype integer contributes no segment. Without this the Tier-1 half would assert only that something is searchable, which a projection that emitted every TypedField regardless of type would also satisfy.",
+      "query": {
+        "contentMatch": "123454321"
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "i120_tier1_exclude_format_uuid",
+      "description": "Tier-1 disposition: the format allow-list applies at Tier 1 too (CC-25). The token is the uuid's leading group and appears nowhere else in the fixture.",
+      "query": {
+        "contentMatch": "bb22cc33"
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
     }
   ]
 }

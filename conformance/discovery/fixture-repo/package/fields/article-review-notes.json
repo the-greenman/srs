@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f001-0000-4000-8000-000000000009",
+  "namespace": "com.example.discovery",
+  "name": "review_notes",
+  "version": 1,
+  "description": "Editorial notes on the article, in markdown.",
+  "aiGuidance": {
+    "purpose": "I-120 inclusion: datatype string with format markdown is searchable. The only markdown-format Field in the fixture."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "format": "markdown"
+  },
+  "createdAt": "2026-06-27T00:00:00Z"
+}

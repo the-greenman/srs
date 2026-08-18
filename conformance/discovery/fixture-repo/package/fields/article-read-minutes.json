@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f001-0000-4000-8000-000000000013",
+  "namespace": "com.example.discovery",
+  "name": "read_minutes",
+  "version": 1,
+  "description": "Estimated reading time in whole minutes.",
+  "aiGuidance": {
+    "purpose": "I-120 exclusion: datatype integer. Distinct from `number` (word_count), which the legacy classification already excluded — the erratum added integer as its own datatype."
+  },
+  "fieldType": {
+    "datatype": "integer"
+  },
+  "createdAt": "2026-06-27T00:00:00Z"
+}

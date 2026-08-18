@@ -5,7 +5,7 @@
   "name": "discovery-fixture",
   "version": "1.0.0",
   "title": "Discovery Conformance Fixture Package",
-  "description": "Provides field and type definitions for the ext:discovery conformance fixture (RFC-012). Defines three types spanning a representative range of Field value domains under RFC-032's fieldType model: article (short and long text, URL, single-select, multi-select, numeric, boolean, date), project (short and long text, single-select), and metric (short text, numeric, boolean, date). Field declarations here still carry the pre-RFC-032 valueType scalar pending the Phase-B fieldType migration (the-greenman/srs#286).",
+  "description": "Provides field and type definitions for the ext:discovery conformance fixture (RFC-012). Four types span the full RFC-032 fieldType classification the RFC-032 Rev-7 erratum settles for I-120: article (searchable — plain and markdown text, URI, closed single- and list-select, open list; excluded — number, integer, boolean, date, date-time, uuid, email, map, ref in both modes, dependent), project and metric (the original legacy-classification spread), and byline (the inline composite range of article.byline). All Field declarations carry RFC-032 `fieldType`; the pre-RFC-032 `valueType` scalar was migrated by the #242 Phase-B cutover (the-greenman/srs#286).",
   "status": "active",
   "fields": [
     "fields/article-title.json",
@@ -22,12 +22,24 @@
     "fields/metric-label.json",
     "fields/metric-value.json",
     "fields/metric-is-active.json",
-    "fields/metric-recorded-at.json"
+    "fields/metric-recorded-at.json",
+    "fields/article-review-notes.json",
+    "fields/article-aliases.json",
+    "fields/article-revision-uuid.json",
+    "fields/article-contact-email.json",
+    "fields/article-read-minutes.json",
+    "fields/article-indexed-at.json",
+    "fields/article-attributes.json",
+    "fields/article-related-project.json",
+    "fields/article-byline.json",
+    "fields/article-legacy-note.json",
+    "fields/byline-display-name.json"
   ],
   "types": [
     "types/article.json",
     "types/project.json",
-    "types/metric.json"
+    "types/metric.json",
+    "types/byline.json"
   ],
   "createdAt": "2026-06-27T00:00:00Z",
   "dataModelRevision": 2

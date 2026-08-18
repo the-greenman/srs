@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "id": "0000a004-0000-4000-8000-000000000004",
+  "namespace": "com.example.discovery",
+  "name": "byline",
+  "version": 1,
+  "description": "Authorship block used as the inline composite range of article.byline.",
+  "fields": [
+    {
+      "fieldId": "0000f004-0000-4000-8000-000000000001",
+      "order": 0,
+      "required": true
+    }
+  ],
+  "createdAt": "2026-06-27T00:00:00Z"
+}
