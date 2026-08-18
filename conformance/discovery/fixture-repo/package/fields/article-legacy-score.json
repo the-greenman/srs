@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f001-0000-4000-8000-000000000019",
+  "namespace": "com.example.discovery",
+  "name": "legacy_score",
+  "version": 1,
+  "description": "Legacy editorial score.",
+  "aiGuidance": {
+    "purpose": "I-120 exclusion: datatype number. `word_count` already carries this classification, but no value in the fixture was distinctive enough to probe \u2014 a match for \"42\" or \"150\" proves nothing. This Field exists to carry a token that appears nowhere else."
+  },
+  "fieldType": {
+    "datatype": "number"
+  },
+  "createdAt": "2026-06-27T00:00:00Z"
+}

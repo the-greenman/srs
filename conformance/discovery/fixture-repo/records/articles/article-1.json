@@ -35,7 +35,8 @@
     "byline": {
       "display_name": "zzinlineprobe"
     },
-    "legacy_note": "zzdependentprobe"
+    "legacy_note": "zzdependentprobe",
+    "legacy_score": 567898765
   },
   "tags": [
     "searchable",

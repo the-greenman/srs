@@ -402,10 +402,28 @@
       "exactMatch": true
     },
     {
-      "name": "i120_tier1_exclude_format_uuid",
-      "description": "Tier-1 disposition: the format allow-list applies at Tier 1 too (CC-25). The token is the uuid's leading group and appears nowhere else in the fixture.",
+      "name": "i120_exclude_number",
+      "description": "I-120: datatype number contributes no segment. Probes `legacy_score`, whose value appears in no projectable string anywhere in the fixture \u2014 `word_count`'s values (42, 28, 150, 75, 99) are all too short to probe meaningfully.",
       "query": {
-        "contentMatch": "bb22cc33"
+        "contentMatch": "567898765"
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "i120_exclude_boolean",
+      "description": "I-120: datatype boolean contributes no segment. No projectable string in the fixture contains \"true\" or \"false\", so a hit means a boolean was rendered into a segment \u2014 `is_published` is true on two articles and `is_active` on one metric. Assumes the rendering would be the JSON literal, which is the only plausible one; a projection emitting \"1\"/\"yes\" would evade this and no assertion can cover every rendering of a value with no text.",
+      "query": {
+        "contentMatch": "true"
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "i120_exclude_date",
+      "description": "I-120: datatype date contributes no segment. \"2025-01-01\" occurs exactly once in the fixture \u2014 as article-4's `publish_date`, the excluded Field itself \u2014 so any hit means the date was projected. Distinct from `date-time` (i120_exclude_date_time), which the Rev-7 erratum made a separate datatype.",
+      "query": {
+        "contentMatch": "2025-01-01"
       },
       "expectedInstanceIds": [],
       "exactMatch": true

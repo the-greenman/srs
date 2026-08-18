@@ -4,9 +4,24 @@ Normative test data for the Discovery Contract. RFC-012 `[R11]`/`[R12]` bind `ex
 conformance to this fixture, so **every scenario here is contract, not a test convenience**: adding
 one adds an obligation, and changing an expectation changes what conformance means.
 
-- `fixture-repo/` — the repository under test: 11 instances across Tiers 0, 1 and 2, four Types, 26
+- `fixture-repo/` — the repository under test: 11 instances across Tiers 0, 1 and 2, four Types, 27
   Fields spanning every RFC-032 `fieldType` classification I-120 rules on.
-- `scenarios.json` — 34 scenarios, each a `DiscoveryQuery` plus its expected instance ids.
+- `scenarios.json` — 36 scenarios, each a `DiscoveryQuery` plus its expected instance ids.
+
+> **Open question before the exclusion scenarios can be relied on as conformance.** The 13
+> content-match exclusion scenarios (`exactMatch: true`, empty expected set) are **not bound by any
+> current invariant, and one invariant arguably permits failing them.** I-123 binds *"structured-filter
+> conformance scenarios (`exactMatch: true`)"*; I-124 binds *"content-match conformance scenarios
+> (`exactMatch: false`)"* as a superset. These are content-match **and** `exactMatch: true` — a third
+> category neither reaches cleanly. And I-115 says an implementation MAY return instances beyond the
+> I-114 recall floor *"e.g. via stemming, phonetic matching, or **semantic similarity**"*, which by
+> definition does not need the token in a segment. The soundness argument below ("no legitimate
+> over-recall path to a token that is in no segment") holds against a Layer-1 substring index and
+> **not** against the semantic-similarity case I-115 explicitly allows.
+>
+> #317 requires these assertions, so they are here. But landing them as conformance wants an I-123 /
+> I-124 scoping amendment — a scoped no-false-positive obligation over probe tokens — rather than
+> resting on the extension record's looser one-line summary. Raised on #317; the owner's call.
 
 ## Two layers, migrated independently
 
@@ -54,22 +69,42 @@ never something to be fixed by editing `scenarios.json` to match the implementat
 
 ## Tier-1 disposition (#317)
 
-**Tier 1 uses the RFC-039 `[R8]` `fieldType` carrier, and I-120's predicate applies to it
-unchanged.** Every `TypedField` in `records/typed-records/` declares `fieldType`; none declares
-`valueType`. `i120_tier1_include_fieldtype_string`, `i120_tier1_exclude_integer` and
-`i120_tier1_exclude_format_uuid` make that executable rather than prose-only.
+Every `TypedField` in `records/typed-records/` declares the RFC-039 `[R8]` `fieldType` carrier; none
+declares `valueType`. `i120_tier1_include_fieldtype_string` and `i120_tier1_exclude_integer` assert
+that Tier 1 participates in content match at all — which it did not until srs-rust#797 composed
+Tiers 0 and 1 into `find`.
 
-**A finding rides with it.** I-120 as merged closes with:
+**Read what those two scenarios do *not* establish.** Both are satisfied by either reading of the
+Tier-1 rule, so neither discriminates them:
+
+| `TypedField` | legacy rule (`valueType` searchable, *or absent with a string/array value*) | `fieldType` predicate | discriminates? |
+|---|---|---|---|
+| `summary` (string) | emitted — `valueType` absent, string value | emitted — string/markdown | **no** |
+| `estimate_minutes` (number) | skipped — not a string/array value | skipped — integer | **no** |
+| `ticket_uuid` (uuid-format string) | **emitted** — `valueType` absent, string value | **skipped** — `format: uuid` | **yes** |
+
+**Only `ticket_uuid` discriminates, and it is deliberately left unasserted.** The canonical Tier-1
+algorithm — in the `ext:discovery` extension record, not just in I-120 — reads:
+
+> For each `TypedField` in `fields[]` array order — if `valueType` is searchable (**or absent with a
+> string/array value**) and value is non-empty, emit one or more `typed-record-field` segments.
+
+`ticket_uuid` has no `valueType` (RFC-039 forbids it) and a string value, so the **canonical
+algorithm requires the segment**. A scenario asserting its exclusion would fail a spec-conformant
+reader, however sensible the post-cutover reading is. The Field stays in the fixture as the standing
+evidence; the assertion waits for the rule text.
+
+**Which is the finding.** I-120 closes with:
 
 > Tier-1 `TypedField.valueType` continues to use the legacy classification until the #242 Phase-B
 > carrier cutover.
 
-That cutover has landed. The sentence's condition is discharged and its subject —
-`TypedField.valueType` — no longer exists in the corpus, so the sentence now defers Tier 1 to a
-classification over a property nothing carries. The scenarios above assert the post-cutover reading,
-which is the only one the data admits. Retiring the stale conditional is a rule-text change and
-therefore the owner's, not this fixture's: raised on #317, and **#284's predicates are not reopened
-by it** — the predicate is unchanged, only its no-longer-needed transitional escape clause.
+That cutover has landed, and `TypedField.valueType` no longer exists in the corpus — so the sentence
+defers Tier 1 to a classification over a property nothing carries. The same stale clause appears
+**twice**: in `invariant-99dc528c.json` and in the extension record's own Tier-1 algorithm paragraph,
+where the *"or absent with a string/array value"* fallback is what actually decides. Retiring it is a
+rule-text change in both sites, and therefore the owner's. **#284's predicates are not reopened** —
+the predicate is unchanged, only its spent transitional escape clause. Raised on #317.
 
 ## `format` predicates are allow-lists
 

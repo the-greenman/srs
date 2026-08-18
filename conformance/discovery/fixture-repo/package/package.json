@@ -5,7 +5,7 @@
   "name": "discovery-fixture",
   "version": "1.0.0",
   "title": "Discovery Conformance Fixture Package",
-  "description": "Provides field and type definitions for the ext:discovery conformance fixture (RFC-012). Four types span the full RFC-032 fieldType classification the RFC-032 Rev-7 erratum settles for I-120: article (searchable — plain and markdown text, URI, closed single- and list-select, open list; excluded — number, integer, boolean, date, date-time, uuid, email, map, ref in both modes, dependent), project and metric (the original legacy-classification spread), and byline (the inline composite range of article.byline). All Field declarations carry RFC-032 `fieldType`; the pre-RFC-032 `valueType` scalar was migrated by the #242 Phase-B cutover (the-greenman/srs#286).",
+  "description": "Provides field and type definitions for the ext:discovery conformance fixture (RFC-012). Four types span the full RFC-032 fieldType classification the RFC-032 Rev-7 erratum settles for I-120: article (searchable \u2014 plain and markdown text, URI, closed single- and list-select, open list; excluded \u2014 number, integer, boolean, date, date-time, uuid, email, map, ref in both modes, dependent), project and metric (the original legacy-classification spread), and byline (the inline composite range of article.byline). All Field declarations carry RFC-032 `fieldType`; the pre-RFC-032 `valueType` scalar was migrated by the #242 Phase-B cutover (the-greenman/srs#286).",
   "status": "active",
   "fields": [
     "fields/article-title.json",
@@ -33,7 +33,8 @@
     "fields/article-related-project.json",
     "fields/article-byline.json",
     "fields/article-legacy-note.json",
-    "fields/byline-display-name.json"
+    "fields/byline-display-name.json",
+    "fields/article-legacy-score.json"
   ],
   "types": [
     "types/article.json",
