@@ -38,21 +38,9 @@
       "issue": "#285"
     },
     {
-      "instanceId": "a10d49a3-06ae-5690-ad9b-81edd6886b6d",
-      "path": "records/extensions/ext-addressability.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:addressability — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
-      "issue": "#285"
-    },
-    {
       "instanceId": "c16793d7-005a-58d2-88d0-9e7d9b4967b1",
       "path": "records/extensions/ext-cross-field-validation.json",
       "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:cross-field-validation — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
-      "issue": "#285"
-    },
-    {
-      "instanceId": "20dc444e-756e-5641-93c9-3083f3abb57f",
-      "path": "records/extensions/ext-federation.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:federation — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
@@ -62,21 +50,9 @@
       "issue": "#285"
     },
     {
-      "instanceId": "e47a2b91-0c3d-4f5e-a6b7-8c9d0e1f2a3b",
-      "path": "records/extensions/ext-json-store.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:json-store — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
-      "issue": "#285"
-    },
-    {
       "instanceId": "ef180de4-5ec3-5e92-94e4-0077fdc12ebe",
       "path": "records/extensions/ext-lifecycle.json",
       "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:lifecycle — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
-      "issue": "#285"
-    },
-    {
-      "instanceId": "d557206f-fd5f-5626-8f13-8781b684fd03",
-      "path": "records/extensions/ext-protocol.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:protocol — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
@@ -86,27 +62,9 @@
       "issue": "#285"
     },
     {
-      "instanceId": "48823261-d31e-5893-a968-20e5c1e3d0ae",
-      "path": "records/extensions/ext-registry.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:registry — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
-      "issue": "#285"
-    },
-    {
-      "instanceId": "df2f6a2c-3601-5f19-89e1-05661d21e611",
-      "path": "records/extensions/ext-repository.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:repository — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
-      "issue": "#285"
-    },
-    {
       "instanceId": "a3f7c9e1-2b4d-4f8a-9c1e-5d7b3a2f6e0c",
       "path": "records/extensions/ext-themes-l1.json",
       "reason": "Extension documentation for ext:themes-l1 with no published subsection counterpart at all — unlike the thirteen shadow copies, retiring this would lose the only copy. It reaches no reader today by any route. Owner decision requested on #285: publish it as a `07-*` subsection, or record it as deliberately unpublished.",
-      "issue": "#285"
-    },
-    {
-      "instanceId": "2a5ae7ad-8b51-4fc4-8bc4-2a004ecae698",
-      "path": "records/extensions/ext-type-inheritance.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:type-inheritance — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
