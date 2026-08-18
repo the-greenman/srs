@@ -472,12 +472,15 @@ async function publicationReachabilityCases(root) {
   const exclusions = (...entries) =>
     writeJson(join(root, "scripts/publication-reachability-exclusions.json"), { exclusions: entries });
 
-  // `titleFieldId` present ⇒ the renderer descends `contains` (render_service.rs:1705). The two
+  // `titleFieldId` present ⇒ the renderer descends `contains` (render_service.rs). The two
   // cases below turn exactly this on and off, because getting it wrong is what made the first cut
   // of this guard call 34 records published that appear in no export.
-  const view = (titleFieldId) => ({
+  // A real exported id (lib/view-exports.mjs): only views `publish-spec.mjs` renders confer
+  // reachability, so a synthetic id here would make every case below vacuously fail.
+  const EXPORTED_ID = "3a000001-0000-4000-a000-000000000001";
+  const view = (titleFieldId, id = EXPORTED_ID) => ({
     $schema: "https://srs.semanticops.com/schema/2.0/document-view.json",
-    id: "00000000-0000-4000-8000-000000000401",
+    id,
     namespace: "com.example.fixture",
     name: "fixture-view",
     version: 1,
@@ -657,6 +660,58 @@ async function publicationReachabilityCases(root) {
     contains: ["excludeLifecycleStates", "this guard does not apply"],
   });
   await writeJson(join(repo, "package/document-views/fixture-view.json"), view(TITLE_FIELD));
+
+  // Declared is not published. `publish-spec.mjs` renders a fixed set of view ids; a view outside it
+  // produces no artifact, so honouring it would be the same free "publish" lever the `containers/**`
+  // glob was — worse, in fact, since a stale exclusion is an error, so one line added to a
+  // `documentViews[]` array would *demand* the matching exclusions be deleted.
+  await exclusions(); // the orphan must be undeclared here, or this case passes for the wrong reason
+  const ghost = view(TITLE_FIELD, "00000000-0000-4000-8000-000000000499");
+  ghost.name = "ghost-view";
+  ghost.sections[0].source = { type: "type-query", semanticObjectType: "com.example.fixture/leaf" };
+  await writeJson(join(repo, "package/document-views/ghost.json"), ghost);
+  const withGhost = JSON.parse(await readFile(join(repo, "package/package.json"), "utf8"));
+  await writeJson(join(repo, "package/package.json"), {
+    ...withGhost,
+    documentViews: [...withGhost.documentViews, "document-views/ghost.json"],
+  });
+  expect("a view no export renders publishes nothing", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["records/orphan.json", "unreachable from every declared presentation"],
+  });
+  await rm(join(repo, "package/document-views/ghost.json"));
+  await writeJson(join(repo, "package/package.json"), withGhost);
+
+  // The RFC-016 projection does a flat `readdir`, so a record one directory deeper is not projected.
+  // Treating the root as a path prefix called it published.
+  await writeJson(join(repo, "records/invariants/proposed/nested.json"), record(4, "invariant"));
+  expect("does not project an invariant in a subdirectory of the root", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["records/invariants/proposed/nested.json", "in a subdirectory", "does not read"],
+  });
+  await rm(join(repo, "records/invariants/proposed"), { recursive: true });
+
+  // The renderer resolves `contains` children as Tier-2 Records. An edge to a Note does not publish
+  // it — it aborts the whole view with "missing field 'typeId'", so the guard would report the corpus
+  // green at the moment every document stopped being produced.
+  const note = { $schema: "https://srs.semanticops.com/schema/2.0/note.json", instanceId: ID(5), title: "note", sections: [] };
+  await writeJson(join(repo, "records/note.json"), note);
+  await writeJson(join(repo, "relations/contains-note.json"), relation(3, "contains", ID(1), ID(5)));
+  expect("refuses a contains edge to a non-Record target", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["records/note.json", "not a Tier-2", "aborts the view"],
+  });
+  await rm(join(repo, "relations/contains-note.json"));
+  await rm(join(repo, "records/note.json"));
+
+  // Everything is keyed by instanceId, so two files sharing one id collapse to a single node and the
+  // second is never reported. `repo validate` catches it; `validate-all` — this guard's pipeline — does not.
+  await writeJson(join(repo, "records/duplicate.json"), record(1, "root"));
+  expect("rejects two files sharing one instanceId", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["duplicate instanceId", "records/duplicate.json"],
+  });
+  await rm(join(repo, "records/duplicate.json"));
 
   // A package manifest that will not parse declares no views, so every record those views publish is
   // reported unreachable and nothing says why. Reported, like the unparseable view beside it.

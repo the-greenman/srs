@@ -5,7 +5,8 @@
  * The defect this closes is not "a record is wrong", it is "a record is *invisible*": valid,
  * discovered, loading cleanly, reported by `repo validate` as a healthy instance — and reachable
  * from no declared presentation, so no reader ever sees it. `repo validate` is green either way,
- * which is exactly why it went unnoticed: seven `records/type-definitions/` shadows were being read
+ * which is exactly why it went unnoticed: the seven `records/type-definitions/` shadows (one retired
+ * by #275, six by this issue) were being read
  * by RFC-031 as authoritative prose for 9 of its 18 mapped entities while the specification
  * published a *different* copy, and one of them (`container.json`) carried a wrong cross-reference
  * the published copy did not. #276's acceptance asked that the nine table records "render
@@ -76,6 +77,7 @@ import { join, resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import { instancePaths, loadInstances, loadRelations } from "./lib/rfc-038-tree.mjs";
 import { INVARIANT_PROJECTION_ROOT } from "./render-invariants.mjs";
+import { EXPORTED_VIEW_IDS } from "./lib/view-exports.mjs";
 
 // `fileURLToPath`, not `new URL(..).pathname` — the percent-encoding trap the sibling guards
 // document against; getting it wrong breaks every run under a checkout path containing a space.
@@ -100,6 +102,7 @@ const fail = (msg) => problems.push(msg);
  */
 async function declaredDocumentViews(repoRoot) {
   const views = [];
+  const unexported = [];
   const walk = async (dir) => {
     let entries;
     try {
@@ -120,7 +123,16 @@ async function declaredDocumentViews(repoRoot) {
       }
       for (const rel of manifest?.documentViews ?? []) {
         try {
-          views.push({ path: join(dir, rel), view: JSON.parse(await readFile(join(dir, rel), "utf8")) });
+          const view = JSON.parse(await readFile(join(dir, rel), "utf8"));
+          // Declared is not published. `publish-spec.mjs` renders exactly the ids in
+          // `lib/view-exports.mjs`; a view outside that set produces no artifact, so honouring it
+          // would be the same free "publish" lever the `containers/**` glob was. It is not
+          // hypothetical: `srs/package/package.json` declares `srs-spec-document-view` (ec34f54b),
+          // which nothing exports — and because a stale exclusion is an error, adding one line to a
+          // `documentViews[]` array would not merely silence this guard, it would *demand* the
+          // matching exclusions be deleted.
+          if (EXPORTED_VIEW_IDS.has(view.id)) views.push({ path: join(dir, rel), view });
+          else unexported.push({ path: join(dir, rel), id: view.id });
         } catch {
           // A declared view that will not parse is validate-package.mjs's diagnostic to raise. Not
           // swallowed silently here either: it becomes lost reachability, which the guard reports as
@@ -136,7 +148,7 @@ async function declaredDocumentViews(repoRoot) {
     }
   };
   await walk(join(repoRoot, "package"));
-  return views;
+  return { views, unexported };
 }
 
 /**
@@ -179,6 +191,23 @@ async function reachability(repoRoot) {
     if (record?.instanceId) byId.set(record.instanceId, path);
   }
 
+  const pathOf = new Map();
+  const tier2 = new Set();
+  for (const { path, record } of instances) {
+    if (!record?.instanceId) continue;
+    // Finding: everything here is keyed by instanceId, so two files sharing one id collapse to a
+    // single node and the second is never reported. `repo validate` catches it; `validate-all` — the
+    // pipeline this guard runs in — does not.
+    if (pathOf.has(record.instanceId)) {
+      fail(
+        `duplicate instanceId ${record.instanceId}: ${pathOf.get(record.instanceId)} and ${path} — ` +
+          `reachability is keyed by id, so one of them is invisible to this check`,
+      );
+    }
+    pathOf.set(record.instanceId, path);
+    if (record.typeId) tier2.add(record.instanceId);
+  }
+
   const contains = new Map();
   for (const { relation } of await loadRelations(repoRoot)) {
     if (relation.relationType !== "contains") continue;
@@ -189,7 +218,7 @@ async function reachability(repoRoot) {
   // Surface 1 — DocumentView type-query sections. `descends` records whether the section's roots
   // also publish their `contains` subtree; see the header note on `titleFieldId`.
   const roots = [];
-  const views = await declaredDocumentViews(repoRoot);
+  const { views, unexported } = await declaredDocumentViews(repoRoot);
   const queried = new Map(); // semanticObjectType -> { descends, via }
   for (const { path, view } of views) {
     for (const section of view.sections ?? []) {
@@ -219,7 +248,17 @@ async function reachability(repoRoot) {
       // a section that excludes `archived` records would otherwise let every archived record in the
       // type read as published.
       const FILTERS = ["lifecycleState", "lifecycleStates", "excludeLifecycleStates", "containerIds", "containerScope"];
-      const applied = FILTERS.filter((k) => section.source[k] !== undefined);
+      // Refused on filters that actually narrow, not on their presence. The renderer discards an
+      // empty list, ignores a null, and treats `containerScope: "repository"` as "no container
+      // filtering" — so the *most explicit* spelling of "this section filters nothing" would
+      // otherwise be the one spelling this guard rejects.
+      const narrows = (k, v) => {
+        if (v === undefined || v === null) return false;
+        if (Array.isArray(v)) return v.length > 0;
+        if (k === "containerScope") return v !== "repository";
+        return true;
+      };
+      const applied = FILTERS.filter((k) => narrows(k, section.source[k]));
       if (applied.length) {
         fail(
           `${path} section "${section.sectionId}" filters its type-query by ${applied.join(", ")}, ` +
@@ -253,7 +292,18 @@ async function reachability(repoRoot) {
 
   // Surface 3 — the RFC-016 invariant projection.
   for (const path of await instancePaths(repoRoot)) {
-    if (path.startsWith(`${INVARIANT_PROJECTION_ROOT}/`)) {
+    if (!path.startsWith(`${INVARIANT_PROJECTION_ROOT}/`)) continue;
+    // `renderInvariants` does a flat `readdir` of the root and keeps `*.json`, so a file in a
+    // SUBdirectory is not projected. Treating the root as a path prefix would call it published.
+    const rest = path.slice(INVARIANT_PROJECTION_ROOT.length + 1);
+    if (rest.includes("/")) {
+      fail(
+        `${path} is under ${INVARIANT_PROJECTION_ROOT}/ but in a subdirectory, which the RFC-016 ` +
+          `projection does not read — it is published by nothing`,
+      );
+      continue;
+    }
+    {
       const id = instances.find((i) => i.path === path)?.record?.instanceId;
       if (id) roots.push({ id, surface: "RFC-016 [R1] invariant projection", path });
     }
@@ -270,6 +320,19 @@ async function reachability(repoRoot) {
     const id = stack.pop();
     for (const target of contains.get(id) ?? []) {
       if (surfaceOf.has(target)) continue;
+      // The renderer's descent resolves each child through a Tier-2 lookup, so a `contains` edge to
+      // a Note or TypedRecord publishes nothing — it makes the whole view fail to render
+      // ("missing field 'typeId'"). Treating every target as published would report the corpus green
+      // at the moment every document stopped being produced.
+      const targetPath = pathOf.get(target);
+      if (targetPath !== undefined && !tier2.has(target)) {
+        fail(
+          `relations: \`contains\` from a published record to ${targetPath}, which is not a Tier-2 ` +
+            `Record — the renderer resolves children as Records, so this publishes nothing and ` +
+            `aborts the view`,
+        );
+        continue;
+      }
       surfaceOf.set(target, `contains from ${surfaceOf.get(id)}`);
       stack.push(target);
     }
@@ -281,7 +344,7 @@ async function reachability(repoRoot) {
     const id = record?.instanceId;
     (id && surfaceOf.has(id) ? reachable : unreachable).push({ path, id, surface: id ? surfaceOf.get(id) : null });
   }
-  return { instances, views, reachable, unreachable, surfaceOf };
+  return { instances, views, unexported, reachable, unreachable, surfaceOf };
 }
 
 async function loadExclusions() {
@@ -330,7 +393,7 @@ async function loadExclusions() {
 }
 
 async function main() {
-  const { instances, views, reachable, unreachable, surfaceOf } = await reachability(REPO);
+  const { instances, views, unexported, reachable, unreachable, surfaceOf } = await reachability(REPO);
   const exclusions = await loadExclusions();
   const excludedById = new Map(exclusions.map((e) => [e.instanceId, e]));
   const discovered = new Set(instances.map((i) => i.record?.instanceId).filter(Boolean));
@@ -384,7 +447,13 @@ async function main() {
     }
     console.log(`# Publication reachability — ${REPO}`);
     console.log(`\ninstances discovered : ${instances.length}`);
-    console.log(`DocumentViews declared: ${views.length}`);
+    console.log(`DocumentViews published   : ${views.length}`);
+    for (const u of unexported) {
+      // Reported, not failed: a view declared by a package but rendered by nothing publishes no
+      // record, which is this guard's concern and is handled by not counting it. Whether such a view
+      // should exist at all is a corpus question (#285), not this check's to force.
+      console.log(`  declared but never exported: ${u.path} (${u.id}) — publishes nothing`);
+    }
     console.log(`reachable             : ${reachable.length}`);
     console.log(`unreachable           : ${unreachable.length}`);
     console.log(`  declared invisible  : ${unreachable.length - undeclared.length}`);
