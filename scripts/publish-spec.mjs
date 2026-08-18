@@ -6,6 +6,7 @@ import { spawn } from "child_process";
 import { renderInvariants } from "./render-invariants.mjs";
 import { logSrsCliProvenance, resolveSrsCli } from "./lib/pinned-srs.mjs";
 import { VIEW_EXPORTS as VIEW_EXPORT_SPECS } from "./lib/view-exports.mjs";
+import { injectKeyInvariants } from "./lib/invariant-region.mjs";
 
 const ROOT = resolve(new URL("..", import.meta.url).pathname);
 const REPO_ROOT = join(ROOT, "srs");
@@ -76,19 +77,13 @@ async function injectInvariants() {
   const injectedContent = await renderInvariants(REPO_ROOT);
   for (const entry of VIEW_EXPORTS) {
     const content = await readFile(entry.output, "utf8");
-    const headingMatch = /^### Key Invariants$/m.exec(content);
-    if (!headingMatch) {
+    const newContent = injectKeyInvariants(content, injectedContent);
+    if (newContent === null) {
       if (entry.requiresKeyInvariants) {
         throw new Error(`${entry.output} is marked requiresKeyInvariants but has no ### Key Invariants heading`);
       }
       continue;
     }
-    const headingEnd = headingMatch.index + headingMatch[0].length;
-    const rest = content.slice(headingEnd);
-    const closingMatch = /^---$/m.exec(rest);
-    const beforeRegion = content.slice(0, headingEnd);
-    const afterRegion = closingMatch ? rest.slice(closingMatch.index) : "";
-    const newContent = `${beforeRegion}\n\n${injectedContent.trimEnd()}\n\n${afterRegion}`;
     await writeFile(entry.output, newContent, "utf8");
   }
 }
