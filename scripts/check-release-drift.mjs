@@ -5,6 +5,10 @@ import { basename, join, resolve } from "path";
 import { spawn } from "child_process";
 import { renderInvariants } from "./render-invariants.mjs";
 import { logSrsCliProvenance, resolveSrsCli } from "./lib/pinned-srs.mjs";
+import { viewExports } from "./lib/view-exports.mjs";
+import { injectKeyInvariants } from "./lib/invariant-region.mjs";
+import { checkPublishCompleteness, keyInvariantsExemptTitleCounts } from "./lib/publish-completeness.mjs";
+import { testPublishCompletenessGuard } from "../tests/guards/check-publish-completeness.mjs";
 
 const ROOT = resolve(new URL("..", import.meta.url).pathname);
 const REPO_ROOT = join(ROOT, "srs");
@@ -13,13 +17,7 @@ const SPEC_ROOT = join(ROOT, "docs", "spec");
 // handler as a message rather than a module-load stack trace.
 let SRS_CLI;
 
-const VIEW_EXPORTS = [
-  { id: "3a000001-0000-4000-a000-000000000001", output: join(SPEC_ROOT, "srs-spec.md"), requiresKeyInvariants: true },
-  { id: "3a000003-0000-4000-a000-000000000003", output: join(SPEC_ROOT, "srs-rationale.md") },
-  { id: "3a000004-0000-4000-a000-000000000004", output: join(SPEC_ROOT, "srs-unified.md"), requiresKeyInvariants: true },
-  { id: "7a000001-0000-4000-a000-000000000001", output: join(SPEC_ROOT, "rfcs", "rfc-catalog.md") },
-  { id: "7a000002-0000-4000-a000-000000000002", output: join(SPEC_ROOT, "rfcs", "rfc-decision-log.md") },
-];
+const VIEW_EXPORTS = viewExports(SPEC_ROOT);
 
 function run(cmd, args, { cwd = ROOT, silent = false } = {}) {
   return new Promise((resolvePromise, rejectPromise) => {
@@ -87,41 +85,33 @@ function normalizeMarkdownForComparison(text) {
 async function applyInvariantInjection(entries, injectedContent) {
   for (const entry of entries) {
     const content = await readFile(entry.output, "utf8");
-    const headingMatch = /^### Key Invariants$/m.exec(content);
-    if (!headingMatch) continue;
-    const headingEnd = headingMatch.index + headingMatch[0].length;
-    const rest = content.slice(headingEnd);
-    const closingMatch = /^---$/m.exec(rest);
-    const beforeRegion = content.slice(0, headingEnd);
-    const afterRegion = closingMatch ? rest.slice(closingMatch.index) : "";
-    const newContent = `${beforeRegion}\n\n${injectedContent.trimEnd()}\n\n${afterRegion}`;
+    const newContent = injectKeyInvariants(content, injectedContent);
+    if (newContent === null) continue;
     await writeFile(entry.output, newContent, "utf8");
   }
 }
 
-async function checkRenderedDocsDrift() {
-  const tempDir = await mkdtemp(join(tmpdir(), "srs-render-check-"));
+async function renderFreshViews(tempDir) {
   const tempEntries = VIEW_EXPORTS.map((e) => ({ ...e, output: join(tempDir, basename(e.output)) }));
-  try {
-    for (const entry of tempEntries) {
-      await run(SRS_CLI, [
-        "--repo",
-        REPO_ROOT,
-        "render",
-        "document-view",
-        "--view",
-        entry.id,
-        "--output",
-        entry.output,
-      ], { silent: true });
-    }
-    const injectedContent = await renderInvariants(REPO_ROOT);
-    await applyInvariantInjection(tempEntries, injectedContent);
-    for (let i = 0; i < VIEW_EXPORTS.length; i++) {
-      await assertFileMatches(VIEW_EXPORTS[i].output, tempEntries[i].output, "rendered document");
-    }
-  } finally {
-    await rm(tempDir, { recursive: true, force: true });
+  for (const entry of tempEntries) {
+    await run(SRS_CLI, [
+      "--repo",
+      REPO_ROOT,
+      "render",
+      "document-view",
+      "--view",
+      entry.id,
+      "--output",
+      entry.output,
+    ], { silent: true });
+  }
+  return tempEntries;
+}
+
+async function checkRenderedDocsDrift(tempEntries, injectedContent) {
+  await applyInvariantInjection(tempEntries, injectedContent);
+  for (let i = 0; i < VIEW_EXPORTS.length; i++) {
+    await assertFileMatches(VIEW_EXPORTS[i].output, tempEntries[i].output, "rendered document");
   }
 }
 
@@ -140,7 +130,32 @@ async function main() {
   });
   await step("IDL/schema conformance", () => run("node", ["scripts/check-idl-schema-conformance.mjs"], { silent: true }));
   await step("RFC integration", () => run("node", ["scripts/check-rfc-integration.mjs"], { silent: true }));
-  await step("rendered docs", checkRenderedDocsDrift);
+
+  const tempDir = await mkdtemp(join(tmpdir(), "srs-render-check-"));
+  try {
+    const tempEntries = await renderFreshViews(tempDir);
+    // Captured before injection overwrites the temp files in place — the completeness guard (srs#396)
+    // needs the raw, un-injected render to know everything the CLI actually emitted for each view.
+    const rawContentsById = {};
+    for (const entry of tempEntries) {
+      rawContentsById[entry.id] = await readFile(entry.output, "utf8");
+    }
+    const injectedContent = await renderInvariants(REPO_ROOT);
+    await step("rendered docs", () => checkRenderedDocsDrift(tempEntries, injectedContent));
+
+    // Computed once: it's a full walk + parse of records/ and relations/, and the completeness
+    // check and its self-test below both want the answer for the same repository state.
+    const exemptCounts = await keyInvariantsExemptTitleCounts(REPO_ROOT);
+    await step("publish completeness", () => checkPublishCompleteness(VIEW_EXPORTS, rawContentsById, exemptCounts));
+    // A guard nobody has watched fail is indistinguishable from a guard that cannot fail (#308/#311/
+    // #383/#391's lesson, per srs#396's disposition). Proves the check above actually bites.
+    await step("publish completeness guard self-test", () =>
+      testPublishCompletenessGuard(VIEW_EXPORTS, rawContentsById, exemptCounts)
+    );
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+
   console.log("\nOK: release artifacts are in sync.");
 }
 
