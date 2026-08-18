@@ -1,0 +1,346 @@
+#!/usr/bin/env node
+/**
+ * check-publication-reachability.mjs — every catalogued record reaches a reader, fail-closed (#285).
+ *
+ * The defect this closes is not "a record is wrong", it is "a record is *invisible*": valid,
+ * discovered, loading cleanly, reported by `repo validate` as a healthy instance — and reachable
+ * from no declared presentation, so no reader ever sees it. `repo validate` is green either way,
+ * which is exactly why it went unnoticed: seven `records/type-definitions/` shadows were being read
+ * by RFC-031 as authoritative prose for 9 of its 18 mapped entities while the specification
+ * published a *different* copy, and one of them (`container.json`) carried a wrong cross-reference
+ * the published copy did not. #276's acceptance asked that the nine table records "render
+ * identically"; that was never satisfiable, and nothing said so.
+ *
+ * Reachability is defined ONCE, here, and both the measurement report (`--report`) and the guard
+ * read it. Two definitions would drift, and the drift would be silent in the same way.
+ *
+ * ## What "reachable" means
+ *
+ * A discovered instance is reachable when some *declared* presentation surface can reach it. Three
+ * surfaces exist in this repository, and all three are derived from declarations rather than listed:
+ *
+ *   1. **DocumentView sections** — every `document-views/*.json` reachable from every package
+ *      manifest in the tree. A `type-query` section's roots are the instances whose
+ *      `typeNamespace/typeName` equals its `semanticObjectType`.
+ *   2. **Container membership** — `manifest.container` (RFC-013's required root container) and every
+ *      Container under `containers/`: `identityInstanceId`, `memberInstanceIds`, `rootInstanceIds`.
+ *   3. **The RFC-016 invariant projection** — [R1]: every `com.semanticops.spec/invariant` record
+ *      MUST appear in the rendered Key Invariants region of each view marked `requiresKeyInvariants`.
+ *      This surface is a *post-render injection*, not a view section, so a definition quantifying
+ *      only over DocumentViews would report all 124 invariant records as invisible. They are the
+ *      most-published records in the corpus. The projection's scope is imported from
+ *      `render-invariants.mjs` rather than restated — see INVARIANT_PROJECTION_ROOT there.
+ *
+ * From those roots, rendering descends `contains` (source → target) and orders by `precedes`.
+ *
+ * Two things about that descent are easy to get wrong, and getting either wrong makes this guard
+ * report invisible records as published — the precise failure it exists to prevent:
+ *
+ *   - **`precedes` is not a descent edge.** It sequences siblings that are already reachable. A
+ *     record whose only participation is a `precedes` chain is still unpublished.
+ *   - **`contains` descent is conditional on `titleFieldId`.** `render_service.rs` gates the
+ *     recursive subsection walk on `let structured = section.title_field_id.is_some()`
+ *     (srs-rust `crates/srs-repository/src/render_service.rs:1705`, pinned build.284). A section
+ *     without `titleFieldId` renders its query roots and *nothing beneath them*. Both RFC views are
+ *     such sections, which is why `rfc-catalog.md` contains not one of the 34 `rfc-change` /
+ *     `rfc-proposed-artifact` records that hang off RFC records by `contains` — verified against the
+ *     committed export and by re-rendering view 7a000001. An unconditional descent would have
+ *     called all 34 published.
+ *
+ * This is the rule the renderer applies, read off the view declarations rather than hardcoded — a
+ * section that gains a `titleFieldId` starts publishing its subtree and the guard follows.
+ *
+ * ## The exclusion list
+ *
+ * Some records are deliberately not published — document identity anchors, source notes, artifacts
+ * of an unaccepted RFC. That is legitimate, but it must be *recorded*, not inferred from silence.
+ * `publication-reachability-exclusions.json` is that record: one typed entry per instance, each
+ * carrying a reason and the issue that owns its real resolution. It is data the guard reads, not
+ * prose in a comment. An entry naming an instance that is no longer discovered, or one that has
+ * since become reachable, is itself an error — a stale exclusion is how a suppression list turns
+ * into a permanent blind spot.
+ *
+ * Node pipeline only, per ADR-004: the pinned binary renders the views but has no notion of "a
+ * record no view reaches", and this is an authoring-corpus rule rather than a load-time invariant —
+ * a third-party SRS repository is free to hold unpublished records.
+ *
+ *   node scripts/check-publication-reachability.mjs [root]            # guard: exit 1 on a violation
+ *   node scripts/check-publication-reachability.mjs [root] --report   # full measurement, always 0
+ */
+import { readdir, readFile } from "fs/promises";
+import { existsSync } from "fs";
+import { join, resolve, dirname } from "path";
+import { fileURLToPath } from "url";
+import { instancePaths, loadInstances, loadRelations } from "./lib/rfc-038-tree.mjs";
+import { INVARIANT_PROJECTION_ROOT } from "./render-invariants.mjs";
+
+// `fileURLToPath`, not `new URL(..).pathname` — the percent-encoding trap the sibling guards
+// document against; getting it wrong breaks every run under a checkout path containing a space.
+const args = process.argv.slice(2);
+const REPORT = args.includes("--report");
+const rootArg = args.find((a) => !a.startsWith("--"));
+const ROOT = rootArg ? resolve(rootArg) : resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const REPO = join(ROOT, "srs");
+const EXCLUSIONS = join(ROOT, "scripts", "publication-reachability-exclusions.json");
+
+const problems = [];
+const fail = (msg) => problems.push(msg);
+
+/**
+ * Every DocumentView the repository declares, discovered through package manifests.
+ *
+ * Keyed on the manifests rather than on `**\/document-views/*.json`, because a view file that no
+ * package declares is not a declared presentation — it renders nothing and must not confer
+ * reachability. The walk finds package manifests by presence (RFC-038 Change B), so a package that
+ * `packageRefs` omits still contributes: `srs/package/package.json` is exactly such a package and it
+ * declares one of the six views.
+ */
+async function declaredDocumentViews(repoRoot) {
+  const views = [];
+  const walk = async (dir) => {
+    let entries;
+    try {
+      entries = await readdir(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    if (entries.some((e) => e.isFile() && e.name === "package.json")) {
+      let manifest;
+      try {
+        manifest = JSON.parse(await readFile(join(dir, "package.json"), "utf8"));
+      } catch {
+        manifest = null;
+      }
+      for (const rel of manifest?.documentViews ?? []) {
+        try {
+          views.push({ path: join(dir, rel), view: JSON.parse(await readFile(join(dir, rel), "utf8")) });
+        } catch {
+          // A declared view that will not parse is validate-package.mjs's diagnostic to raise. Not
+          // swallowed silently here either: it becomes lost reachability, which the guard reports as
+          // unreachable records rather than as a parse error — so record it.
+          fail(`declared DocumentView does not parse: ${join(dir, rel)}`);
+        }
+      }
+    }
+    for (const e of entries) {
+      if (e.isDirectory() && e.name !== "node_modules" && !e.name.startsWith(".")) {
+        await walk(join(dir, e.name));
+      }
+    }
+  };
+  await walk(join(repoRoot, "package"));
+  return views;
+}
+
+/** `manifest.container` plus every Container under `containers/`. */
+async function containers(repoRoot) {
+  const out = [];
+  try {
+    const manifest = JSON.parse(await readFile(join(repoRoot, "manifest.json"), "utf8"));
+    if (manifest.container) out.push({ path: "manifest.json#container", container: manifest.container });
+  } catch {
+    fail(`cannot read ${join(repoRoot, "manifest.json")}`);
+  }
+  const dir = join(repoRoot, "containers");
+  if (!existsSync(dir)) return out;
+  for (const name of (await readdir(dir)).sort()) {
+    if (!name.endsWith(".json")) continue;
+    try {
+      out.push({ path: `containers/${name}`, container: JSON.parse(await readFile(join(dir, name), "utf8")) });
+    } catch {
+      fail(`Container does not parse: containers/${name}`);
+    }
+  }
+  return out;
+}
+
+/**
+ * The reachable set, with the surface that first reached each instance recorded so the report can
+ * say *why* something is published rather than only that it is.
+ */
+async function reachability(repoRoot) {
+  const instances = await loadInstances(repoRoot);
+  const byId = new Map();
+  for (const { path, record } of instances) {
+    if (record?.instanceId) byId.set(record.instanceId, path);
+  }
+
+  const contains = new Map();
+  for (const { relation } of await loadRelations(repoRoot)) {
+    if (relation.relationType !== "contains") continue;
+    if (!contains.has(relation.sourceInstanceId)) contains.set(relation.sourceInstanceId, []);
+    contains.get(relation.sourceInstanceId).push(relation.targetInstanceId);
+  }
+
+  // Surface 1 — DocumentView type-query sections. `descends` records whether the section's roots
+  // also publish their `contains` subtree; see the header note on `titleFieldId`.
+  const roots = [];
+  const views = await declaredDocumentViews(repoRoot);
+  const queried = new Map(); // semanticObjectType -> { descends, via }
+  for (const { view } of views) {
+    for (const section of view.sections ?? []) {
+      const t = section.source?.semanticObjectType;
+      if (section.source?.type !== "type-query" || !t) continue;
+      const descends = section.titleFieldId !== undefined && section.titleFieldId !== null;
+      const prior = queried.get(t);
+      // A type queried by several sections publishes its subtree if ANY of them is structured.
+      if (!prior || (descends && !prior.descends)) {
+        queried.set(t, { descends, via: `${view.namespace}/${view.name}#${section.sectionId}` });
+      }
+    }
+  }
+  for (const { path, record } of instances) {
+    const q = queried.get(`${record?.typeNamespace}/${record?.typeName}`);
+    if (q) roots.push({ id: record.instanceId, surface: `document-view type-query ${q.via}`, path, descends: q.descends });
+  }
+
+  // Surface 2 — Container membership.
+  for (const { path, container } of await containers(repoRoot)) {
+    const members = [
+      ...(container.identityInstanceId ? [container.identityInstanceId] : []),
+      ...(container.memberInstanceIds ?? []),
+      ...(container.rootInstanceIds ?? []),
+    ];
+    for (const id of members) roots.push({ id, surface: `container ${path}`, path: byId.get(id) });
+  }
+
+  // Surface 3 — the RFC-016 invariant projection.
+  for (const path of await instancePaths(repoRoot)) {
+    if (path.startsWith(`${INVARIANT_PROJECTION_ROOT}/`)) {
+      const id = instances.find((i) => i.path === path)?.record?.instanceId;
+      if (id) roots.push({ id, surface: "RFC-016 [R1] invariant projection", path });
+    }
+  }
+
+  // Descent: `contains`, and only from roots whose surface actually descends. See the header note.
+  const surfaceOf = new Map();
+  const stack = [];
+  for (const r of roots) {
+    if (!surfaceOf.has(r.id)) surfaceOf.set(r.id, r.surface);
+    if (r.descends) stack.push(r.id);
+  }
+  while (stack.length) {
+    const id = stack.pop();
+    for (const target of contains.get(id) ?? []) {
+      if (surfaceOf.has(target)) continue;
+      surfaceOf.set(target, `contains from ${surfaceOf.get(id)}`);
+      stack.push(target);
+    }
+  }
+
+  const reachable = [];
+  const unreachable = [];
+  for (const { path, record } of instances) {
+    const id = record?.instanceId;
+    (id && surfaceOf.has(id) ? reachable : unreachable).push({ path, id, surface: id ? surfaceOf.get(id) : null });
+  }
+  return { instances, views, reachable, unreachable, surfaceOf };
+}
+
+async function loadExclusions() {
+  if (!existsSync(EXCLUSIONS)) {
+    fail(`missing exclusion list: ${EXCLUSIONS} — a repository with no unpublished records still declares an empty one`);
+    return [];
+  }
+  let doc;
+  try {
+    doc = JSON.parse(await readFile(EXCLUSIONS, "utf8"));
+  } catch (error) {
+    fail(`exclusion list does not parse: ${EXCLUSIONS}: ${error.message}`);
+    return [];
+  }
+  const entries = doc?.exclusions;
+  if (!Array.isArray(entries)) {
+    fail(`exclusion list has no "exclusions" array: ${EXCLUSIONS}`);
+    return [];
+  }
+  // Typed, not free prose: every entry must carry the instance it excludes, why, and the issue that
+  // owns its real resolution. A reason-less entry is an allowlist, which is the thing this is not.
+  const valid = [];
+  for (const [i, e] of entries.entries()) {
+    const where = `${EXCLUSIONS} exclusions[${i}]`;
+    const missing = ["instanceId", "path", "reason", "issue"].filter((k) => typeof e?.[k] !== "string" || !e[k].trim());
+    if (missing.length) {
+      fail(`${where} is missing required properties: ${missing.join(", ")}`);
+      continue;
+    }
+    valid.push(e);
+  }
+  return valid;
+}
+
+async function main() {
+  const { instances, views, reachable, unreachable, surfaceOf } = await reachability(REPO);
+  const exclusions = await loadExclusions();
+  const excludedById = new Map(exclusions.map((e) => [e.instanceId, e]));
+  const discovered = new Set(instances.map((i) => i.record?.instanceId).filter(Boolean));
+
+  // A floor. Every other failure mode here is "too many unreachable"; this one is "the walk found
+  // nothing", which would otherwise read as a clean bill of health.
+  if (instances.length === 0) fail(`no instances discovered under ${REPO} — the walk found nothing`);
+  if (views.length === 0) fail(`no DocumentView is declared by any package under ${REPO}/package`);
+
+  const undeclared = unreachable.filter((u) => !excludedById.has(u.id));
+  for (const u of undeclared) {
+    fail(
+      `${u.path} is discovered but unreachable from every declared presentation — publish it, ` +
+        `or record its invisibility in scripts/publication-reachability-exclusions.json with a reason`,
+    );
+  }
+
+  // Stale exclusions are errors in both directions. An entry for an instance that no longer exists
+  // is dead weight; an entry for one that has since become reachable is a suppression that would
+  // hide the next regression at that path.
+  for (const e of exclusions) {
+    if (!discovered.has(e.instanceId)) {
+      fail(`stale exclusion: ${e.path} (${e.instanceId}) is no longer a discovered instance — remove the entry`);
+    } else if (surfaceOf.has(e.instanceId)) {
+      fail(
+        `stale exclusion: ${e.path} is now reachable via ${surfaceOf.get(e.instanceId)} — remove the entry`,
+      );
+    }
+  }
+
+  if (REPORT) {
+    const dirOf = (p) => p.split("/").slice(0, -1).join("/");
+    const rows = new Map();
+    for (const i of instances) {
+      const d = dirOf(i.path);
+      if (!rows.has(d)) rows.set(d, { total: 0, reachable: 0, excluded: 0, undeclared: 0 });
+      const r = rows.get(d);
+      r.total++;
+      if (surfaceOf.has(i.record?.instanceId)) r.reachable++;
+      else if (excludedById.has(i.record?.instanceId)) r.excluded++;
+      else r.undeclared++;
+    }
+    console.log(`# Publication reachability — ${REPO}`);
+    console.log(`\ninstances discovered : ${instances.length}`);
+    console.log(`DocumentViews declared: ${views.length}`);
+    console.log(`reachable             : ${reachable.length}`);
+    console.log(`unreachable           : ${unreachable.length}`);
+    console.log(`  declared invisible  : ${unreachable.length - undeclared.length}`);
+    console.log(`  UNDECLARED          : ${undeclared.length}`);
+    console.log(`\n| directory | total | reachable | declared invisible | undeclared |`);
+    console.log(`|---|---:|---:|---:|---:|`);
+    for (const [d, r] of [...rows].sort()) {
+      console.log(`| \`${d}\` | ${r.total} | ${r.reachable} | ${r.excluded} | ${r.undeclared} |`);
+    }
+    console.log(`\n## Unreachable instances\n`);
+    for (const u of [...unreachable].sort((a, b) => a.path.localeCompare(b.path))) {
+      const e = excludedById.get(u.id);
+      console.log(`- \`${u.path}\` — ${e ? `declared invisible (${e.issue}): ${e.reason}` : "**UNDECLARED**"}`);
+    }
+  }
+
+  if (problems.length) {
+    console.error(`\n✗ Publication reachability (#285): ${problems.length} problem(s)\n`);
+    for (const p of problems) console.error(`  - ${p}`);
+    process.exit(1);
+  }
+  console.log(
+    `✓ Every discovered record is reachable from a declared presentation or declared invisible ` +
+      `(${reachable.length} reachable, ${unreachable.length} declared invisible, of ${instances.length})`,
+  );
+}
+
+await main();

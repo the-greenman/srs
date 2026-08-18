@@ -154,6 +154,17 @@ async function validateAll() {
   const schemaKindsValid = await runScript('check-schema-kind-correspondence.mjs');
   if (!schemaKindsValid) allValid = false;
 
+  // Every discovered record reaches a reader, or its invisibility is recorded (#285). `repo
+  // validate` reports an unpublished record as a healthy instance, which is how six
+  // records/type-definitions/ shadows came to be read by RFC-031 as authoritative prose the
+  // specification never published, and how eight populated table records carrying 62 rows of spec
+  // content stayed invisible through a release criterion ("render identically") that was never
+  // satisfiable. Reachability is a property of the corpus and its declared views, so it belongs
+  // here rather than in the binary — a third-party SRS repository may legitimately hold
+  // unpublished records.
+  const publicationReachable = await runScript('check-publication-reachability.mjs');
+  if (!publicationReachable) allValid = false;
+
   // ...and every guard demonstrably fails on the violation it exists to catch — including
   // validate-package.mjs's own ten-kind coverage (#391), whose blueprint cases would otherwise be
   // green on an empty list. A guard nobody has watched fail is indistinguishable from a guard that
