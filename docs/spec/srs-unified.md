@@ -87,6 +87,26 @@ Example declaration: `SRS Core + ext:lifecycle + ext:protocol + ext:views-l1 + e
 
 ---
 
+**Intro**: Start with the question: what does your implementation need to do?
+
+| Need | Extensions |
+| --- | --- |
+| Define and exchange Field and Type definitions | Core only |
+| Track definition origin and imports | `ext:import-tracking` |
+| Publish a definition catalog | `ext:registry` |
+| Governance with lifecycle states | `ext:lifecycle` |
+| Present and export Records | `ext:views-l1` |
+| Assemble multi-Record documents | `ext:views-l2` |
+| Facilitate structured deliberation | `ext:protocol` |
+| Live facilitation with context assembly | `ext:addressability` |
+| Extraction from source material | `ext:blueprint` |
+| Specialise Types while preserving base processability | `ext:type-inheritance` |
+| Lists of values within a Record | Core only — `fieldType` `cardinality: "list"` (RFC-039; `ext:repeatable-fields` retired) |
+| Structured repeatable context in a Record | Core only — composite-range Field (`datatype: "ref"`, `mode: "inline"`; RFC-039; `ext:field-groups` retired) |
+| Complex conditional validation | `ext:cross-field-validation` |
+| Cross-system Relation interoperability | `ext:recommended-relations` |
+
+
 
 
 ### Namespace Format
