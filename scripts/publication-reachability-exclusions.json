@@ -532,13 +532,13 @@
     {
       "instanceId": "ef180de4-5ec3-5e92-94e4-0077fdc12ebe",
       "path": "records/extensions/ext-lifecycle.json",
-      "reason": "Reconciled per srs#407 (srs#285 D2): the drifted duplicate prose was merged into the published subsection `records/subsections/07-2-ext-lifecycle.json`, and this record's `content` was reduced to a retirement stub. It stays unreachable — and stays as a record rather than being deleted — because `scripts/check-rfc-integration.mjs` resolves `ext:lifecycle` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:lifecycle`.",
+      "reason": "Reconciled per srs#407 (srs#285 D2): the published subsection `records/subsections/07-2-ext-lifecycle.json` was already current (it reflects a later RFC than the drifted shadow content did); no merge was needed, and this record's `content` was reduced to a retirement stub. It stays unreachable — and stays as a record rather than being deleted — because `scripts/check-rfc-integration.mjs` resolves `ext:lifecycle` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:lifecycle`.",
       "issue": "#407"
     },
     {
       "instanceId": "ed9f0446-800c-5428-8780-09bb499f76aa",
       "path": "records/extensions/ext-recommended-relations.json",
-      "reason": "Reconciled per srs#407 (srs#285 D2): the drifted duplicate prose was merged into the published subsection `records/subsections/07-11-ext-recommended-relations.json`, and this record's `content` was reduced to a retirement stub. It stays unreachable — and stays as a record rather than being deleted — because `scripts/check-rfc-integration.mjs` resolves `ext:recommended-relations` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:recommended-relations`.",
+      "reason": "Reconciled per srs#407 (srs#285 D2): the published subsection `records/subsections/07-11-ext-recommended-relations.json` was already current (it reflects a later RFC than the drifted shadow content did); no merge was needed, and this record's `content` was reduced to a retirement stub. It stays unreachable — and stays as a record rather than being deleted — because `scripts/check-rfc-integration.mjs` resolves `ext:recommended-relations` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:recommended-relations`.",
       "issue": "#407"
     },
     {

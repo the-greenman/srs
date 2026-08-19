@@ -1604,7 +1604,7 @@ Facilitation steps have been removed from View. Use `ext:protocol` Protocol stag
 
 ---
 
-## Composite rendering — renderer dispatch (RFC-036)
+#### Composite rendering — renderer dispatch (RFC-036)
 
 `FieldView` gains an optional `compositeRenderer`, a `CompositeRendererBinding` that dispatches a
 composite-range Field (`fieldType.datatype: "ref"`, `mode: "inline"`) to a named composite renderer.
@@ -1658,7 +1658,7 @@ The composite field's own `cardinality` governs how many tables it carries: `sin
 sequence. This replaces the `FieldGroup` + `compositeRenderer` mechanism of RFC-007, which is retired with
 `FieldGroup` at the #242 cutover.
 
-## Conformance Rules (RFC-036)
+#### Conformance Rules (RFC-036)
 
 **[CR-036-1]** A `renderer` identifier MUST match `^([a-z][a-z0-9-]*|[a-z0-9-]+(\.[a-z0-9-]+)+/[^/]+)$`. An identifier that does not match MUST be treated as unrecognised, and [CR-036-7] applies. Enforced at render and validation time, not by JSON Schema, so a malformed identifier degrades gracefully rather than failing the load of an entire View or Theme.
 
