@@ -542,19 +542,6 @@ A pointer from a field value or instance back to source material.
 
 `"transcript-chunk"` and `"transcript-segment"` are intended for implementations that have a stable conversation or time-stream layer with durable chunk or segment identifiers. A standalone repository that stores transcript exports, chat dumps, email threads, or similar source material directly under `source-documents/` should generally cite those files using `sourceType: "repository-document"` (see `ext:repository`) rather than inventing pseudo-chunk IDs.
 
-#### Graduation mapping (RFC-023)
-
-When source material referenced by a SourceReference is itself promoted to an instance in the repository, the provenance is re-expressed as a Relation edge. Two participants exist in every conversion: the **referencing instance** (the instance that carried the `sourceRefs[]` entry) and the **promoted instance** (the new instance created from the source material).
-
-| `sourceRole` | Relation edge | `sourceInstanceId` | `targetInstanceId` |
-|---|---|---|---|
-| `extracted-from` | `derived-from` | the referencing instance | the promoted instance |
-| `evidence` | `evidences` | the promoted instance | the referencing instance (direction flips) |
-| `quoted-from` | `derived-from` | the referencing instance | the promoted instance |
-| `inspired-by` | *(no canonical edge)* | — | — |
-
-An implementation that performs such a conversion must follow these semantics: the created Relation records the originating role in `meta["com.semanticops.srs/sourceRole"]` (required for `quoted-from` — it is the only carrier of the quotation distinction); `confidence` carries over and `note` maps to the Relation's `notes`; the converted SourceReference is removed in the same operation. SourceReferences carried on Relations are excluded — a Relation cannot be a Relation endpoint — and are retained unchanged. See RFC-023.
-
 #### Field values (RFC-039)
 
 `FieldValue` — the value stored at one `fieldValues` key — is the recursive union:
@@ -615,6 +602,18 @@ An instantiated Type with field values.
 **Semantic meaning must not be silently rewritten.** When a change would alter what a Record means — not merely correct a transcription or formatting error — implementations must produce a successor Record linked to the prior by `supersedes` or `refines`. The prior Record remains valid. What constitutes a semantic change is determined by the Type's intended use; when in doubt, prefer a successor.
 
 ---
+
+**Intro**: **SourceReference → Relation graduation mapping (RFC-023):** when source material referenced by a `sourceRole` provenance pointer is promoted to an instance, the pointer converts to the listed Relation edge. The *referencing instance* carried the sourceRef; the *promoted instance* is created from the source material.
+
+**Outro**: Conversion semantics (RFC-023 R6): the originating role is recorded in `meta["com.semanticops.srs/sourceRole"]` (required for `quoted-from` — it is the only carrier of the quotation distinction); `confidence` carries over; `note` maps to Relation `notes`; the converted SourceReference is removed in the same operation. Relation-borne sourceRefs never convert (a Relation cannot be an edge endpoint) and are retained. `inspired-by` is retained, or a custom `namespace/name` relation type may be used — removal applies if an edge is created. See RFC-023.
+
+| sourceRole | Relation edge | sourceInstanceId | targetInstanceId |
+| --- | --- | --- | --- |
+| `extracted-from` | `derived-from` | the referencing instance | the promoted instance |
+| `evidence` | `evidences` | the promoted instance | the referencing instance (direction flips) |
+| `quoted-from` | `derived-from` | the referencing instance | the promoted instance |
+| `inspired-by` | *(no canonical edge)* | — | — |
+
 
 
 **Intro**: The underlying question: *Would a reasonable reader, encountering this Record a year later, recognise it as the same understanding they would have read before the change?*
@@ -687,20 +686,6 @@ An instantiated Type with field values.
 }
 ```
 
-**Directionality convention:**
-`sourceInstanceId` is the asserting instance; `targetInstanceId` is the related instance. The Relation reads: "source [relationType] target."
-
-| Relation | source | target |
-|---|---|---|
-| `supersedes` | the newer Record | the older Record |
-| `contains` | the stage | the task inside it |
-| `depends-on` | the dependent task | the task it needs |
-| `refines` | the detailed version | the rough version |
-| `derived-from` | the successor | the source Note or Record |
-| `evidences` | the source material | the claim it supports |
-
-This convention must be consistent across implementations. See Invariant 16.
-
 Relations span tiers. A Note may be the target of `derived-from` Relations from the Records it graduated into.
 
 **Canonical relation types** (use these exact strings for cross-system interoperability):
@@ -712,6 +697,22 @@ Custom types not covered by these should use `namespace/name` format (e.g. `com.
 **Relations do not change lifecycle state.** A `supersedes` Relation does not mutate the prior Record's `lifecycleState`. Lifecycle state changes are explicit acts by an implementation's transition mechanism.
 
 ---
+
+**Intro**: **Directionality convention:**
+`sourceInstanceId` is the asserting instance; `targetInstanceId` is the related instance. The Relation reads: "source [relationType] target."
+
+**Outro**: This convention must be consistent across implementations. See Invariant 16.
+
+| Relation | source | target |
+| --- | --- | --- |
+| `supersedes` | the newer Record | the older Record |
+| `contains` | the stage | the task inside it |
+| `depends-on` | the dependent task | the task it needs |
+| `refines` | the detailed version | the rough version |
+| `derived-from` | the successor | the source Note or Record |
+| `evidences` | the source material | the claim it supports |
+| `precedes` | the earlier item | the later item |
+
 
 
 #### Container
