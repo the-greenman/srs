@@ -485,3 +485,34 @@ Deferring the Field does not defer the discipline. Minting is the irreversible a
 **Review Trigger**: Revisit before the first full public release, which is the precommitted point at which the temporal default reverses from evidence-led Evolution to Continuity and this addition stops being nearly free. The revisit is gated on a prior convergence step: resolve the overlap between `com.semanticops.srs/summary`, `com.semanticops.spec/summary`, `com.semanticops.core/statement`, and `com.semanticops.srs/purpose` — in particular the duplicated `summary` pair — so that a minted `section-purpose` has a defined boundary against its neighbours. If that convergence has not happened by the release boundary, the decision to mint must be taken or refused explicitly at that point rather than lapsing.
 
 
+**Title**: Rename DocumentView to Composition
+
+**Decision Status**: accepted
+
+**Decision Date**: 2026-08-19
+
+**Decision Rationale**: The corpus itself could not use the old name unambiguously: RFC-015's renderedPresentations.viewId points at a DocumentView, and two entities shared the word "view" across ext:views-l1/ext:views-l2. Composition names exactly what the entity does. The owner had arrived at this name previously and the decision was lost unrecorded — this record exists so it cannot be lost again.
+
+**Decision**: The document-composition entity is named Composition; the name DocumentView retires. The rendering-chain vocabulary is Composition → Presentation → Projection: a Composition defines how records compose into a document; a Presentation is a repository's declared commitment to render a Composition in a format (manifest.renderedPresentations); a Projection is the produced artifact. "Export" retires as vocabulary with the VIEW_EXPORTS mechanism.
+
+**Scope**: Rendering-chain vocabulary and the document-composition entity name
+
+**Governing Values**:
+- shared-coherence
+- evolution
+
+**Project Phase**: formation
+
+**Alternatives Considered**: - Keep DocumentView: rejected — the View/DocumentView collision is unresolvable in prose and already confused RFC-015's own key naming.
+- Arrangement, Edition, Outline, Assembly: rejected — weaker semantic fit; none name the composing act.
+- Rename in vocabulary only, keep the entity name in schemas: rejected — a permanent prose/model split is the drift class this project retires.
+
+**Accepted Costs**: A breaking rename across the ecosystem (~83 srs-rust files, the schema file, the package-manifest documentViews[] key, CLI commands, payload goldens, MCP resource paths), executed only at srs#272's regeneration where the schemas are rewritten anyway (Evolution phase). RFC-034 (srs#267, unaccepted) must rephrase "structural container composition" to container structure/nesting so the noun stays unambiguous. srs#411 lands first with the old key; the viewId→compositionId key rename travels with the entity rename at #272.
+
+**Evidence**:
+- https://github.com/the-greenman/srs/pull/389#issuecomment-5339733683
+- https://github.com/the-greenman/srs/issues/272#issuecomment-5339733831
+
+**Review Trigger**: Review if srs#272's regeneration cannot execute the rename atomically with the schema rewrite, or if RFC-034's rephrasing is refused.
+
+
