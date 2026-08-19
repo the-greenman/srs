@@ -324,11 +324,11 @@ The standard-level contracts that make the release boundaries and practice paths
     - Required by: F1, D1, D2, G1
     - Sources: [srs-unified.md](../spec/srs-unified.md)
     - Not included: Website-specific document or decision schemas
-  - **Canonical meaning and facets** — Views, DocumentViews, Blueprints and Themes present or guide canonical meaning without becoming an authoritative store.
+  - **Canonical meaning and facets** — A repository declares one repository-owned set of presentations it commits to render and can produce reproducible, readable projections from canonical meaning; neither the presentations nor their projections becomes an authoritative store.
     - Stability: Lock before F1
     - Required by: F1, F2, D2, D3, G1
     - Sources: [srs-unified.md](../spec/srs-unified.md), [rfc-015-view-owned-ordering-declared-presentations.md](../../rfcs/rfc-015-view-owned-ordering-declared-presentations.md)
-    - Not included: A single required renderer or layout-preservation promise
+    - Not included: A single required renderer, theme or layout-preservation promise; Byte-identical rendering across independent implementations
 - **Portable semantic publication** — A person can take an SRS repository away from its originating service and still recover its definitions, canonical meaning, provenance and a readable orientation.
   - Stability: Settle before F2
   - Required by: F2, D3, D5

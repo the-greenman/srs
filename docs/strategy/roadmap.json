@@ -1179,7 +1179,7 @@
       "kind": "strategy-contract",
       "name": "Canonical meaning and facets",
       "stability": "lock-before-f1",
-      "promise": "Views, DocumentViews, Blueprints and Themes present or guide canonical meaning without becoming an authoritative store.",
+      "promise": "A repository declares one repository-owned set of presentations it commits to render and can produce reproducible, readable projections from canonical meaning; neither the presentations nor their projections becomes an authoritative store.",
       "capabilities": [
         "Present Facets",
         "Work With Meaning"
@@ -1195,7 +1195,8 @@
         }
       ],
       "notIncluded": [
-        "A single required renderer or layout-preservation promise"
+        "A single required renderer, theme or layout-preservation promise",
+        "Byte-identical rendering across independent implementations"
       ]
     },
     {
