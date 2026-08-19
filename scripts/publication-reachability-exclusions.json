@@ -482,12 +482,6 @@
       "issue": "#285"
     },
     {
-      "instanceId": "b1000000-0000-4000-a000-000000000006",
-      "path": "records/tables/t006-relation-directionality.json",
-      "reason": "`com.semanticops.spec/table` record whose rows ARE published — 6 of its 7 — but not from this record: they are hand-written markdown inside a published subsection's prose. So this is a shadow of published content, the same defect as the retired `records/type-definitions/` copies and the 13 extension shadows, not orphan content. Its remedy is reconciliation with the duplicate rather than wiring or deletion. Owner decision requested on #285.",
-      "issue": "#285"
-    },
-    {
       "instanceId": "b1000000-0000-4000-a000-000000000007",
       "path": "records/tables/t007-canonical-relation-types.json",
       "reason": "Populated `com.semanticops.spec/table` record that reaches no reader: measured row-by-row against all five committed exports, 0 of its rows appear anywhere. Across the eight tables, 52 of 62 rows are published nowhere. #276's acceptance asked that these records \"render identically\", which was never satisfiable. #285's acceptance is to wire them into an intended presentation or remove them deliberately — both are content decisions. Owner decision requested on #285.",
@@ -497,12 +491,6 @@
       "instanceId": "b1000000-0000-4000-a000-000000000008",
       "path": "records/tables/t008-relation-category-taxonomy.json",
       "reason": "Populated `com.semanticops.spec/table` record that reaches no reader: measured row-by-row against all five committed exports, 0 of its rows appear anywhere. Across the eight tables, 52 of 62 rows are published nowhere. #276's acceptance asked that these records \"render identically\", which was never satisfiable. #285's acceptance is to wire them into an intended presentation or remove them deliberately — both are content decisions. Owner decision requested on #285.",
-      "issue": "#285"
-    },
-    {
-      "instanceId": "8b8377fc-7666-4f52-973c-d751d2d56264",
-      "path": "records/tables/t009-sourceref-graduation-mapping.json",
-      "reason": "`com.semanticops.spec/table` record whose rows ARE published — 4 of its 4 — but not from this record: they are hand-written markdown inside a published subsection's prose. So this is a shadow of published content, the same defect as the retired `records/type-definitions/` copies and the 13 extension shadows, not orphan content. Its remedy is reconciliation with the duplicate rather than wiring or deletion. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
