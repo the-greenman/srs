@@ -416,12 +416,6 @@
       "issue": "#285"
     },
     {
-      "instanceId": "b1000000-0000-4000-a000-000000000001",
-      "path": "records/tables/t001-edit-in-place-vs-new-record.json",
-      "reason": "Populated `com.semanticops.spec/table` record that reaches no reader: measured row-by-row against all five committed exports, 0 of its rows appear anywhere. Across the eight tables, 52 of 62 rows are published nowhere. #276's acceptance asked that these records \"render identically\", which was never satisfiable. #285's acceptance is to wire them into an intended presentation or remove them deliberately — both are content decisions. Owner decision requested on #285.",
-      "issue": "#285"
-    },
-    {
       "instanceId": "b1000000-0000-4000-a000-000000000003",
       "path": "records/tables/t003-graduation-identity-continuity.json",
       "reason": "Populated `com.semanticops.spec/table` record that reaches no reader: measured row-by-row against all five committed exports, 0 of its rows appear anywhere. Across the eight tables, 52 of 62 rows are published nowhere. #276's acceptance asked that these records \"render identically\", which was never satisfiable. #285's acceptance is to wire them into an intended presentation or remove them deliberately — both are content decisions. Owner decision requested on #285.",
