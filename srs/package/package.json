@@ -80,9 +80,7 @@
   ],
   "updatedAt": "2026-06-03T00:00:00Z",
   "version": "2.0.0",
-  "views": [
-    "views/table-record-view-77f51737.json"
-  ],
+  "views": [],
   "vocabularies": [
     "vocabularies/spec-taxonomy-35ee9e9e.json"
   ],
