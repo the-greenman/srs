@@ -64,7 +64,7 @@
     {
       "instanceId": "a3f7c9e1-2b4d-4f8a-9c1e-5d7b3a2f6e0c",
       "path": "records/extensions/ext-themes-l1.json",
-      "reason": "Extension documentation for ext:themes-l1 with no published subsection counterpart at all — unlike the thirteen shadow copies, retiring this would lose the only copy. It reaches no reader today by any route. Owner decision requested on #285: publish it as a `07-*` subsection, or record it as deliberately unpublished.",
+      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` (6e28a8e1-7fad-486e-9bac-426c36a8aee8) for ext:themes-l1 — published by #408, which resolved the prior 'no published subsection counterpart at all' state. The subsection content is byte-identical to this record's content field, so this now falls in the 'byte-identical: retire the shadow' disposition class already ratified on #285 (comment 5332260013); retirement of this record is left to a follow-up so #408 stays scoped to publishing the three no-twin extensions.",
       "issue": "#285"
     },
     {
@@ -82,13 +82,13 @@
     {
       "instanceId": "212379f4-4bb7-465f-94e6-ffd037a718b4",
       "path": "records/extensions/extension-212379f4.json",
-      "reason": "Extension documentation for ext:slices with no published subsection counterpart at all — unlike the thirteen shadow copies, retiring this would lose the only copy. It reaches no reader today by any route. Owner decision requested on #285: publish it as a `07-*` subsection, or record it as deliberately unpublished.",
+      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` (136187cc-8317-4705-91c0-7aaeadaf5998) for ext:slices — published by #408, which resolved the prior 'no published subsection counterpart at all' state. The subsection content is byte-identical to this record's content field, so this now falls in the 'byte-identical: retire the shadow' disposition class already ratified on #285 (comment 5332260013); retirement of this record is left to a follow-up so #408 stays scoped to publishing the three no-twin extensions.",
       "issue": "#285"
     },
     {
       "instanceId": "86102577-a045-4087-8ddb-28ca721579a4",
       "path": "records/extensions/extension-86102577.json",
-      "reason": "Extension documentation for ext:changelog with no published subsection counterpart at all — unlike the thirteen shadow copies, retiring this would lose the only copy. It reaches no reader today by any route. Owner decision requested on #285: publish it as a `07-*` subsection, or record it as deliberately unpublished.",
+      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` (76e8a0c6-5c11-4639-a884-51b9f714b1f1) for ext:changelog — published by #408, which resolved the prior 'no published subsection counterpart at all' state. The subsection content is byte-identical to this record's content field, so this now falls in the 'byte-identical: retire the shadow' disposition class already ratified on #285 (comment 5332260013); retirement of this record is left to a follow-up so #408 stays scoped to publishing the three no-twin extensions.",
       "issue": "#285"
     },
     {
