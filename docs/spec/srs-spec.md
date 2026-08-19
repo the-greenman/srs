@@ -1533,7 +1533,7 @@ A field reference within a View. Controls presentation for this View without alt
 }
 ```
 
-A Field hidden with `visible: false` remains in the Record and may appear in other Views.
+A Field hidden with `visible: false` remains in the Record and may appear in other Views. `visible` controls rendered text output only. A field with `visible: false` must still be included in any structured projection or export of this view. To exclude a field from both rendered output and structured projections, omit it from `fieldViews[]` entirely.
 
 #### `ExportConfig`
 
@@ -1603,6 +1603,85 @@ A View may not reference unknown Fields: every `fieldId` in `View.fieldViews[]` 
 Facilitation steps have been removed from View. Use `ext:protocol` Protocol stages instead.
 
 ---
+
+## Composite rendering — renderer dispatch (RFC-036)
+
+`FieldView` gains an optional `compositeRenderer`, a `CompositeRendererBinding` that dispatches a
+composite-range Field (`fieldType.datatype: "ref"`, `mode: "inline"`) to a named composite renderer.
+Presentation lives in the View, not in the Type: RFC-032 evicted `compositeRenderer` from the type model,
+and RFC-015 established that an arrangement over records with many legitimate concurrent forms is
+view-owned.
+
+```typescript
+CompositeRendererBinding {
+  renderer: string
+  // Bare lower-kebab identifiers are SRS-reserved and introduced only by a ratified RFC:
+  //   "table"     — the SRS-defined composite renderer
+  //   "baseline"  — sentinel meaning explicitly no renderer; cancels a broader declaration site
+  // Vendor identifiers use "{reverse-domain}/{name}" with at least two reverse-domain labels.
+  // Grammar: ^([a-z][a-z0-9-]*|[a-z0-9-]+(\.[a-z0-9-]+)+/[^/]+)$ — enforced at render and
+  // validation time, not by JSON Schema, so a malformed value degrades per [CR-036-7].
+
+  roles?: { [roleName: string]: UUID }
+  // Explicit, UUID-anchored role -> Field.id binding, overriding the by-name defaults.
+}
+```
+
+### Composite baseline rendering
+
+A composite-range Field that resolves to no renderer — unbound per [CR-036-6], or fallen back per
+[CR-036-7] or [CR-036-9] — is rendered by the **composite baseline**: a heading when a label resolves
+(`FieldAssignment.displayLabel`, overridable by `FieldView.displayLabel`) at level `4 + d` shifted by
+`DocumentView.depthOffset`, where `d` is nesting depth; then one block per value in value order; within
+each block one field row per assignment on the composite's `rangeType`, ascending by
+`FieldAssignment.order` with `fieldId` code-point order as tie-break. A field with no value, or whose
+value renders to nothing, is omitted unconditionally. An assignment that is itself `ref`/`inline` expands
+into a nested baseline block at depth `d + 1` rather than a field row. Field-row labels resolve by
+`FieldAssignment.displayLabel` -> `Field.name` -> `fieldId`; templates resolve by
+`ElementTemplates.compositeFieldRowTemplates[Field.name]` -> `ElementTemplates.fieldRow` -> the
+implementation's existing top-level field-row form.
+
+### The `table` renderer
+
+Roles, with their owning Type and required `fieldType`:
+
+| Role | Owner | Required | `fieldType` |
+|---|---|---|---|
+| `rows` | table Type | yes | `{ datatype: "ref", mode: "inline", cardinality: "list", rangeType: <row Type> }` |
+| `cells` | row Type | yes | `{ datatype: "string", cardinality: "list" }` |
+| `columns` | table Type | no | `{ datatype: "string", cardinality: "list" }` |
+| `widths` | table Type | no | `{ datatype: "number", cardinality: "list", constraints: { minimum: 0, maximum: 1 } }` |
+| `subheading` | table Type | no | `{ datatype: "string", cardinality: "single" }` |
+| `label` | table Type | no | `{ datatype: "string", cardinality: "single" }` |
+
+The composite field's own `cardinality` governs how many tables it carries: `single` is one, `list` is a
+sequence. This replaces the `FieldGroup` + `compositeRenderer` mechanism of RFC-007, which is retired with
+`FieldGroup` at the #242 cutover.
+
+## Conformance Rules (RFC-036)
+
+**[CR-036-1]** A `renderer` identifier MUST match `^([a-z][a-z0-9-]*|[a-z0-9-]+(\.[a-z0-9-]+)+/[^/]+)$`. An identifier that does not match MUST be treated as unrecognised, and [CR-036-7] applies. Enforced at render and validation time, not by JSON Schema, so a malformed identifier degrades gracefully rather than failing the load of an entire View or Theme.
+
+**[CR-036-2]** *(Governance.)* Bare `renderer` identifiers are reserved for SRS-defined renderers and MUST only be introduced by a ratified RFC. Those defined to date are `table` and the sentinel `baseline`. Vendor renderers MUST use the `{reverse-domain}/{name}` form.
+
+**[CR-036-3]** A binding or directive MUST reference a Field whose `fieldType.datatype` is `"ref"` and whose `fieldType.mode` is `"inline"`. Otherwise, or when the `fieldId` does not resolve in the effective package set, implementations MUST ignore the binding, MUST render the field by whatever rendering its `fieldType` normally receives, and MUST emit a diagnostic.
+
+**[CR-036-4]** Composite rendering applies to Tier 2 Records only. A binding whose `fieldId` does not appear on the rendered instance's resolved Type MUST be ignored without a diagnostic — the normal case for a heterogeneous section.
+
+**[CR-036-5]** A binding MUST target a composite field assigned directly to the rendered Record's Type. Binding a composite nested inside another composite's `rangeType` is out of scope; a nested composite is rendered by the composite baseline. Implementations MUST NOT infer a binding for a nested composite from a binding on its parent.
+
+**[CR-036-6]** For a given rendered Record and composite-range field, implementations MUST resolve at most one binding, taking the first that applies: (1) `FieldView.compositeRenderer` on the `FieldView` for that field in the `ext:views-l1` View selected to render the Record — chosen by `DocumentSection.typeDispatch`, else `DocumentSection.renderViewId`; (2) the matching `DocumentSection.compositeRenderers` entry; (3) the matching `DocumentView.compositeRenderers` entry. When none applies the field is unbound. A resolved `renderer` of `"baseline"` means unbound and MUST NOT fall through to a broader site. A `FieldView` that exists but carries no `compositeRenderer` is not an override and MUST fall through. A field not visible in the selected View is not rendered and no binding applies. When an L1 View is rendered outside any DocumentView, only site (1) exists. Duplicate `fieldId` entries within one array are a validation diagnostic; the first in array order wins.
+
+**[CR-036-7]** When a resolved `renderer` is not recognised, the implementation MUST fall back to the composite baseline and MUST emit a diagnostic identifying the unrecognised value and the field. The fallback MUST NOT suppress the field's content.
+
+**[CR-036-8]** Role resolution proceeds per role: when `roles` declares that role, its value is the bound Field and MUST resolve to an assignment on the owning Type; otherwise the role binds to the assigned Field whose `Field.name` equals the role name, compared exactly and independently of namespace. Assignments inherited via `ext:type-inheritance` are in scope. On ambiguity, implementations MUST bind the lowest `FieldAssignment.order`, with `fieldId` code-point order as tie-break, and MUST emit a diagnostic. A `roles` entry naming an undefined role MUST be silently ignored.
+
+**[CR-036-9]** A role Field satisfies the renderer's contract when its `fieldType` declares every key the contract specifies, matching the specified value where the contract gives a literal one. `rangeType` is presence-matched — it MUST be present and MUST resolve, and its resolved Type is what dependent roles are looked up on. A `constraints` key required by a contract is advisory and its absence MUST NOT fail the contract test. Additional `fieldType` keys, and assigned Fields filling no role, MUST be ignored. When a required role does not resolve or does not satisfy the contract, implementations MUST fall back to the composite baseline with a diagnostic; when an optional role does not satisfy it, implementations MUST drop that role only, with a diagnostic.
+
+**[CR-036-21]** `FieldView.editorHintOverride`, when present, MUST take a value from the same set as `Field.editorHint` (`singleline`, `textarea`, `rich-text`, `date-picker`, `dropdown`, `multi-select`, `voice`) and supersedes it for Records rendered or edited through that View. A value outside that set MUST be ignored with a diagnostic and `Field.editorHint` MUST apply. Enforced at validation and render time rather than by JSON Schema.
+
+**[CR-036-22]** Every diagnostic required or recommended by a `[CR-036-n]` rule MUST carry that rule's identifier and MUST identify the instance, field, and where applicable the value or row index. [CR-036-13]'s constraint bound raises validation-pass diagnostics of severity `error`; every other `[CR-036-n]` diagnostic is a render-pass `warning`, except [CR-036-6]'s duplicate-`fieldId` case, which is additionally reported at validation time. No `[CR-036-n]` diagnostic of either pass causes a non-zero exit code.
+
 
 
 #### ext:views-l2
@@ -1712,6 +1791,35 @@ One section in a Document View.
   // Relations of the declared types) after each member this section renders — all
   // SectionSource variants, all member tiers. Independent of emptyBehavior.
   // See RelationsPresentation below. Rules [I-027-1]-[I-027-8] (RFC-027).
+
+  compositeRenderers?: CompositeRendererDirective[]   // RFC-036
+  // Composite renderer dispatch for records rendered by this section. The primary
+  // ext:views-l2 declaration site, following RFC-027's placement of relationsPresentation.
+  // Resolved after FieldView.compositeRenderer and before DocumentView.compositeRenderers
+  // ([CR-036-6]). More than one entry for the same fieldId is a validation diagnostic; the
+  // first in array order wins.
+}
+```
+
+#### `CompositeRendererDirective` (RFC-036)
+
+A `CompositeRendererBinding` (`ext:views-l1`) plus the composite-range Field it binds. Presentation only ([CR-036-20]).
+
+```typescript
+{
+  fieldId: UUID
+  // The composite-range Field this directive binds. MUST resolve to a Field whose
+  // fieldType.datatype is "ref" and mode is "inline" ([CR-036-3]); a fieldId absent from
+  // a rendered instance's Type is ignored without a diagnostic ([CR-036-4]).
+
+  renderer: string
+  // Composite renderer identifier, as `CompositeRendererBinding.renderer` (`ext:views-l1`).
+  // "baseline" is the reserved sentinel meaning explicitly no renderer, used to cancel a
+  // broader declaration site. Grammar enforced at render and validation time ([CR-036-1]).
+
+  roles?: { [roleName: string]: UUID }
+  // Explicit, UUID-anchored role -> Field.id binding, overriding the by-name defaults of
+  // [CR-036-8].
 }
 ```
 
@@ -1855,6 +1963,11 @@ A versioned, Container-level projection. Defines how a Container's Records are a
   themeVariants?: ThemeVariant[]
   // Named alternative themes selectable at render invocation.
   // When ext:themes-l1 is not declared, implementations MUST ignore this field.
+
+  compositeRenderers?: CompositeRendererDirective[]   // RFC-036
+  // Document-wide default composite renderer dispatch, applied to any section that
+  // declares no matching DocumentSection.compositeRenderers entry. Lowest-precedence
+  // declaration site ([CR-036-6]); a section or FieldView cancels it with renderer: "baseline".
 
   aiGuidance?: AiGuidance
   tags?: string[]
@@ -2074,7 +2187,9 @@ When `ext:themes-l1` is declared and a variant name is supplied at render invoca
 
 #### ext:cross-field-validation
 
-**Content**: **Required for**: Types with constraints that span multiple Fields.
+**Content**: > **Formalised by**: RFC-019 (srs#139). The `CrossFieldRule` shape and `validationRules` property are formally specified by RFC-019; refer to it for normative conformance rules (R0–R11).
+
+**Required for**: Types with constraints that span multiple Fields.
 
 `ValidationRule` handles single-field constraints. `CrossFieldRule` handles constraints that require evaluating more than one Field together.
 
@@ -2152,7 +2267,7 @@ One record per imported definition in a consumer's local registry.
 ```typescript
 {
   definitionId: UUID
-  definitionType: "field" | "type" | "view" | "blueprint" | "protocol"
+  definitionType: "field" | "type" | "view" | "blueprint" | "protocol" | "relation-type"
   namespace: string
   name: string
   version: integer
@@ -2188,10 +2303,45 @@ A consumer's complete picture of its imported definitions.
   views: ImportRecord[]
   blueprints: ImportRecord[]
   protocols: ImportRecord[]
+  relationTypes: ImportRecord[]
 }
 ```
 
 ---
+
+#### Repository-Level Provenance (RFC-014)
+
+When a repository is initialised from a published SRS Package, it records provenance in `manifest.json` at `manifest.upstreamPackage`. This is a normative top-level field — the machine-readable anchor for divergence detection and non-destructive package upgrades.
+
+#### `UpstreamPackage`
+
+Shape recorded at install time and updated on upgrade:
+
+```typescript
+{
+  packageId:   UUID      // Stable UUID of the upstream Package. Never changes across upgrades.
+  namespace:   string    // Reverse-DNS namespace, e.g. "com.mudemocracy.governance"
+  name:        string    // Package name, e.g. "governance"
+  version:     string    // Semver of the upstream version at last install/upgrade
+  installedAt: ISO8601   // Timestamp of the last install or upgrade event
+}
+```
+
+#### Repository-Level Divergence Detection
+
+When `upstreamPackage` is set, a conforming `ext:import-tracking` implementation MAY detect whether the locally installed definitions differ from the canonical content of the upstream package at that same version (RFC-014 Change E, R8). The comparison is performed against a reference copy (either a byte-for-byte snapshot stored at install time, or re-fetched from the published source if network access is available). A tool without a reference copy simply skips the check.
+
+Divergence is surfaced using the same `conflictState` vocabulary already defined for `ImportRecord`:
+
+| State | Description |
+|---|---|
+| `"clean"` | Local package content matches the reference copy at install time. No drift. |
+| `"local-ahead"` | Local package has definitions not present in the upstream at install time; all differing ids are locally-added. |
+| `"diverged"` | One or more local definition files differ from what the upstream declared under the same `id`+`version` key. |
+
+When both `local-ahead` and `diverged` conditions hold simultaneously, implementations MUST report `diverged` as the primary status and include locally-added definitions as a supplementary list.
+
+The `"upstream-ahead"` state (a newer version exists upstream) requires `ext:registry` and is out of scope for local divergence detection.
 
 
 #### ext:registry
