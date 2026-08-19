@@ -617,6 +617,44 @@ An instantiated Type with field values.
 ---
 
 
+**Intro**: The underlying question: *Would a reasonable reader, encountering this Record a year later, recognise it as the same understanding they would have read before the change?*
+
+**Outro**: Cross-check: if a `supersedes` Relation would feel misleading — as if the group reversed itself when it only clarified — it is probably an edit. If a silent edit would feel misleading — as if the record was silently revised after the fact — it is probably a new Record.
+
+**Columns**:
+- Scenario
+- Guidance
+
+**cells**:
+- Correcting how something is expressed (typo, phrasing)
+- Edit in-place
+
+
+**cells**:
+- Adding context that reinforces the existing understanding
+- Edit in-place
+
+
+**cells**:
+- Clarifying a detail that was ambiguous but understanding is unchanged
+- Edit in-place
+
+
+**cells**:
+- Adding information that changes what was actually committed to
+- New Record + `refines` or `supersedes`
+
+
+**cells**:
+- Reversing or materially replacing a prior commitment
+- New Record + `supersedes`
+
+
+**cells**:
+- Producing a more detailed version from a rough original
+- New Record + `refines`
+
+
 #### Relation
 
 **Content**: A first-class typed link between instances. Relations allow implementations to construct semantic graphs for navigation, analysis, projection, and reasoning.
