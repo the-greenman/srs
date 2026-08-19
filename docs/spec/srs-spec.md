@@ -620,38 +620,14 @@ An instantiated Type with field values.
 
 **Outro**: Cross-check: if a `supersedes` Relation would feel misleading — as if the group reversed itself when it only clarified — it is probably an edit. If a silent edit would feel misleading — as if the record was silently revised after the fact — it is probably a new Record.
 
-**Columns**:
-- Scenario
-- Guidance
-
-**cells**:
-- Correcting how something is expressed (typo, phrasing)
-- Edit in-place
-
-
-**cells**:
-- Adding context that reinforces the existing understanding
-- Edit in-place
-
-
-**cells**:
-- Clarifying a detail that was ambiguous but understanding is unchanged
-- Edit in-place
-
-
-**cells**:
-- Adding information that changes what was actually committed to
-- New Record + `refines` or `supersedes`
-
-
-**cells**:
-- Reversing or materially replacing a prior commitment
-- New Record + `supersedes`
-
-
-**cells**:
-- Producing a more detailed version from a rough original
-- New Record + `refines`
+| Scenario | Guidance |
+| --- | --- |
+| Correcting how something is expressed (typo, phrasing) | Edit in-place |
+| Adding context that reinforces the existing understanding | Edit in-place |
+| Clarifying a detail that was ambiguous but understanding is unchanged | Edit in-place |
+| Adding information that changes what was actually committed to | New Record + `refines` or `supersedes` |
+| Reversing or materially replacing a prior commitment | New Record + `supersedes` |
+| Producing a more detailed version from a rough original | New Record + `refines` |
 
 
 #### Relation
