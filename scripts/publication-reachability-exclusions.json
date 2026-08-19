@@ -38,45 +38,9 @@
       "issue": "#285"
     },
     {
-      "instanceId": "c16793d7-005a-58d2-88d0-9e7d9b4967b1",
-      "path": "records/extensions/ext-cross-field-validation.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:cross-field-validation — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
-      "issue": "#285"
-    },
-    {
-      "instanceId": "279877f5-dd9d-569c-94d6-358ad177a6fb",
-      "path": "records/extensions/ext-import-tracking.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:import-tracking — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
-      "issue": "#285"
-    },
-    {
-      "instanceId": "ef180de4-5ec3-5e92-94e4-0077fdc12ebe",
-      "path": "records/extensions/ext-lifecycle.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:lifecycle — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
-      "issue": "#285"
-    },
-    {
-      "instanceId": "ed9f0446-800c-5428-8780-09bb499f76aa",
-      "path": "records/extensions/ext-recommended-relations.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:recommended-relations — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
-      "issue": "#285"
-    },
-    {
       "instanceId": "a3f7c9e1-2b4d-4f8a-9c1e-5d7b3a2f6e0c",
       "path": "records/extensions/ext-themes-l1.json",
       "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` (6e28a8e1-7fad-486e-9bac-426c36a8aee8) for ext:themes-l1 — published by #408, which resolved the prior 'no published subsection counterpart at all' state. The subsection content is byte-identical to this record's content field, so this now falls in the 'byte-identical: retire the shadow' disposition class already ratified on #285 (comment 5332260013); retirement of this record is left to a follow-up so #408 stays scoped to publishing the three no-twin extensions.",
-      "issue": "#285"
-    },
-    {
-      "instanceId": "c5bb163b-93eb-5f79-8ee8-2ec0bc5df50b",
-      "path": "records/extensions/ext-views-l1.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:views-l1 — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
-      "issue": "#285"
-    },
-    {
-      "instanceId": "87e912b6-b3f3-5207-a71b-73ce5cd6b8b7",
-      "path": "records/extensions/ext-views-l2.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-*` for ext:views-l2 — the same defect as the six retired `records/type-definitions/` records, in a class #285 did not originally name. Six of the thirteen have already drifted from their twin, in both directions (the `ext:views-l1` shadow carries 8.5KB the published copy does not; the `ext:views-l2` twin carries 25KB the shadow does not), so retiring them is a content reconciliation rather than a deletion. Owner decision requested on #285.",
       "issue": "#285"
     },
     {
@@ -492,6 +456,42 @@
       "path": "records/tier-2/rfc-change-ff2ef2e8.json",
       "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains` (edge asserted by #409 — RFC-017's stub record had no relations at all before this fix), but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into it (render_service.rs) and `rfc-catalog.md` contains none of it. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "issue": "#285"
+    },
+    {
+      "instanceId": "c5bb163b-93eb-5f79-8ee8-2ec0bc5df50b",
+      "path": "records/extensions/ext-views-l1.json",
+      "reason": "Reconciled per srs#407 (srs#285 D2): the drifted duplicate prose was merged into the published subsection `records/subsections/07-6-ext-views-l1.json`, and this record's `content` was reduced to a retirement stub. It stays unreachable — and stays as a record rather than being deleted — because `scripts/check-rfc-integration.mjs` resolves `ext:views-l1` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:views-l1`.",
+      "issue": "#407"
+    },
+    {
+      "instanceId": "87e912b6-b3f3-5207-a71b-73ce5cd6b8b7",
+      "path": "records/extensions/ext-views-l2.json",
+      "reason": "Reconciled per srs#407 (srs#285 D2): the drifted duplicate prose was merged into the published subsection `records/subsections/07-7-ext-views-l2.json`, and this record's `content` was reduced to a retirement stub. It stays unreachable — and stays as a record rather than being deleted — because `scripts/check-rfc-integration.mjs` resolves `ext:views-l2` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:views-l2`.",
+      "issue": "#407"
+    },
+    {
+      "instanceId": "ef180de4-5ec3-5e92-94e4-0077fdc12ebe",
+      "path": "records/extensions/ext-lifecycle.json",
+      "reason": "Reconciled per srs#407 (srs#285 D2): the published subsection `records/subsections/07-2-ext-lifecycle.json` was already current (it reflects a later RFC than the drifted shadow content did); no merge was needed, and this record's `content` was reduced to a retirement stub. It stays unreachable — and stays as a record rather than being deleted — because `scripts/check-rfc-integration.mjs` resolves `ext:lifecycle` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:lifecycle`.",
+      "issue": "#407"
+    },
+    {
+      "instanceId": "ed9f0446-800c-5428-8780-09bb499f76aa",
+      "path": "records/extensions/ext-recommended-relations.json",
+      "reason": "Reconciled per srs#407 (srs#285 D2): the published subsection `records/subsections/07-11-ext-recommended-relations.json` was already current (it reflects a later RFC than the drifted shadow content did); no merge was needed, and this record's `content` was reduced to a retirement stub. It stays unreachable — and stays as a record rather than being deleted — because `scripts/check-rfc-integration.mjs` resolves `ext:recommended-relations` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:recommended-relations`.",
+      "issue": "#407"
+    },
+    {
+      "instanceId": "279877f5-dd9d-569c-94d6-358ad177a6fb",
+      "path": "records/extensions/ext-import-tracking.json",
+      "reason": "Reconciled per srs#407 (srs#285 D2): the drifted duplicate prose was merged into the published subsection `records/subsections/07-12-ext-import-tracking.json`, and this record's `content` was reduced to a retirement stub. It stays unreachable — and stays as a record rather than being deleted — because `scripts/check-rfc-integration.mjs` resolves `ext:import-tracking` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:import-tracking`.",
+      "issue": "#407"
+    },
+    {
+      "instanceId": "c16793d7-005a-58d2-88d0-9e7d9b4967b1",
+      "path": "records/extensions/ext-cross-field-validation.json",
+      "reason": "Reconciled per srs#407 (srs#285 D2): the drifted duplicate prose was merged into the published subsection `records/subsections/07-10-ext-cross-field-validation.json`, and this record's `content` was reduced to a retirement stub. It stays unreachable — and stays as a record rather than being deleted — because `scripts/check-rfc-integration.mjs` resolves `ext:cross-field-validation` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:cross-field-validation`.",
+      "issue": "#407"
     }
   ]
 }
