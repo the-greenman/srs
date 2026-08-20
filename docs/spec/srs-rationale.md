@@ -392,6 +392,25 @@ Web UI comments and annotations attached to specific text within a Field value r
 
 ### μDemocracy Mapping
 
+**Intro**: How the SCDS v2 vocabulary maps to the μDemocracy application layer. Reproduced from the v1→v2 conceptual remapping document for reference.
+
+| SCDS concept | μDemocracy application |
+| --- | --- |
+| Field | Semantic atom in a governance record |
+| Type | Decision, Proposal, Action, Role, Value, Principle, ... |
+| Record | A captured governance artefact with provenance |
+| Blueprint | Founding Document type; Decision Log type |
+| Protocol | Democracy protocol: Brain Dump, Decomposition, Decision, Proposal, ... |
+| Container | A group's governance workspace; a founding process scope |
+| Relation | `supersedes`, `derived-from`, `ratifies`, `depends-on`, ... |
+| View | Facilitator view; summary view; export for ratification |
+| Document View | Assembled founding document; full decision log |
+| Address | Stable identifier for any governance element — Field, Record, stage, chunk |
+| Attention State | Current focus of an active facilitated session |
+| Revision | Auditable history of how a governance field arrived at its current value |
+| Conversation layer | Session transcript; threaded discussion; facilitator annotations |
+
+
 
 ### Why tags exist: from clustering to definitions
 
