@@ -603,6 +603,21 @@ An instantiated Type with field values.
 
 ---
 
+**Intro**: Graduation is the act of replacing a lower-tier instance with a higher-tier equivalent as its structure stabilises.
+
+**Identity continuity:**
+
+**Outro**: **Graduation is not always one-to-one.** A single meeting Note may graduate into one Decision Record, three Task Records, and two Risk Records. Each resulting Record receives its own `instanceId` and links to the original via `derived-from`. The original Note is preserved as the semantic root of the derived graph.
+
+Implementations may automate graduation suggestions by matching section or field names against `Field.name` values in available Type definitions.
+
+| Scenario | `instanceId` | Relation |
+| --- | --- | --- |
+| Pure formalisation (section names map directly to field names, content unchanged) | Keep | None required |
+| Content interpreted or restructured during formalisation | New | `refines` from new to old |
+| One Note splits into multiple Records | New IDs for all | `derived-from` from each new Record to the original |
+
+
 **Intro**: **SourceReference → Relation graduation mapping (RFC-023):** when source material referenced by a `sourceRole` provenance pointer is promoted to an instance, the pointer converts to the listed Relation edge. The *referencing instance* carried the sourceRef; the *promoted instance* is created from the source material.
 
 **Outro**: Conversion semantics (RFC-023 R6): the originating role is recorded in `meta["com.semanticops.srs/sourceRole"]` (required for `quoted-from` — it is the only carrier of the quotation distinction); `confidence` carries over; `note` maps to Relation `notes`; the converted SourceReference is removed in the same operation. Relation-borne sourceRefs never convert (a Relation cannot be an edge endpoint) and are retained. `inspired-by` is retained, or a custom `namespace/name` relation type may be used — removal applies if an edge is created. See RFC-023.
