@@ -725,6 +725,21 @@ Custom types not covered by these should use `namespace/name` format (e.g. `com.
 | `precedes` | the earlier item | the later item |
 
 
+**Intro**: **Canonical relation types** (use exact strings):
+
+**Outro**: Implementations must store only the canonical (forward) form and derive the inverse when needed.
+
+| Canonical | Converse | Category |
+| --- | --- | --- |
+| `contains` | `part-of` | Composition |
+| `depends-on` | `required-by` | Dependency |
+| `supersedes` | `superseded-by` | Governance |
+| `refines` | `refined-by` | Refinement |
+| `derived-from` | `source-of` | Derivation |
+| `evidences` | `evidenced-by` | Evidence |
+| `precedes` | `follows` | Sequence |
+
+
 
 #### Container
 
