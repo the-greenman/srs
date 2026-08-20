@@ -99,7 +99,7 @@ Example declaration: `SRS Core + ext:lifecycle + ext:protocol + ext:views-l1 + e
 | Assemble multi-Record documents | `ext:views-l2` |
 | Facilitate structured deliberation | `ext:protocol` |
 | Live facilitation with context assembly | `ext:addressability` |
-| Extraction from source material | `ext:blueprint` |
+| Extraction from source material | Blueprint (`Package.blueprints[]`) |
 | Specialise Types while preserving base processability | `ext:type-inheritance` |
 | Lists of values within a Record | Core only — `fieldType` `cardinality: "list"` (RFC-039; `ext:repeatable-fields` retired) |
 | Structured repeatable context in a Record | Core only — composite-range Field (`datatype: "ref"`, `mode: "inline"`; RFC-039; `ext:field-groups` retired) |
