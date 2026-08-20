@@ -2,7 +2,7 @@
 
 # RFC-016: Invariant Record Projection
 
-**Status**: Accepted (Revision 6)
+**Status**: Accepted (Revision 7)
 **Affects**: `com.semanticops.spec/invariant` (rendering); `scripts/publish-spec.mjs`; subsection body records (Phase 2)
 **Author**: design dialogue draft
 **Date**: 2026-07-04
@@ -19,6 +19,7 @@
 | 4 | 2026-07-04 | Implementation started; RFC file committed to branch rfc/016-invariant-record-projection |
 | 5 | 2026-07-04 | Accepted; spec records authored in srs/srs; pipeline passes end-to-end; I-63–I-84 visible in rendered views; updated check-release-drift.mjs to apply invariant injection before comparison |
 | 6 | 2026-08-18 | srs#396: the next-`---` region boundary silently discarded a real top-level section (Extension Interactions) whose closing rule fell inside the Key Invariants region rather than after it. Region replacement algorithm amended to a heading-level boundary; `next '---'` text scan retired. |
+| 7 | 2026-08-20 | srs#285 (disposition class D4): [R1] scoped to the projection root `render-invariants.mjs` actually reads (`records/invariants/`) instead of "every invariant record present in the repository". The literal reading was in tension with three `invariant`-typed records under `package/records/`. The publication-reachability guard's RFC-016 [R1] surface already takes its scope from the exported `INVARIANT_PROJECTION_ROOT`, pinned by a negative test; this revision makes the rule text describe the projection root. **PARKED pending owner decision (srs#410):** the disposition's premise that those `package/records/` records are "unratified invariants of an unaccepted RFC" is contradicted by the data — RFC-011 is Accepted (Rev 1) — so whether narrowing [R1] is correct, or those accepted invariants should instead be published, is unresolved. |
 
 ---
 
@@ -134,7 +135,7 @@ Phase 2 work is tracked in [srs#117](https://github.com/the-greenman/srs/issues/
 
 ## Conformance Rules
 
-> **[R1]** Every `com.semanticops.spec/invariant` record present in the repository MUST appear in the rendered "Key Invariants" section of each document view marked `requiresKeyInvariants: true`.
+> **[R1]** Every `com.semanticops.spec/invariant` record under the projection root that `render-invariants.mjs` reads — the `records/invariants/` directory, exported as `INVARIANT_PROJECTION_ROOT` — MUST appear in the rendered "Key Invariants" section of each document view marked `requiresKeyInvariants: true`. An `invariant`-typed record located outside that root is not reached by this projection and is outside this rule's scope. (Whether a particular out-of-root `invariant` record *should* be moved into the projection root and published is a separate, per-record question, tracked outside this rule — see the RFC-011 records under `package/records/`, disposition on srs#285.)
 
 > **[R2]** The rendering order of invariants MUST be ascending by the integer key derived from `invariant-number` (strip `"I-"` prefix if present, parse as integer, sort numerically).
 
