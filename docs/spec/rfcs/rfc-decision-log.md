@@ -516,3 +516,34 @@ Deferring the Field does not defer the discipline. Minting is the irreversible a
 **Review Trigger**: Review if srs#272's regeneration cannot execute the rename atomically with the schema rewrite, or if RFC-034's rephrasing is refused.
 
 
+**Title**: Carry meaning you do not recognise
+
+**Decision Status**: accepted
+
+**Decision Date**: 2026-08-20
+
+**Decision Rationale**: The governed spec exists so that meaning can be carried: a repository built in one system — and even more importantly, the packages created somewhere — must be shareable. The key motivator is the sharing of practice: fields, types, blueprints and protocols must be portable so that the process of creating meaning is shared, even more than the content itself. Interoperability cannot be sacrificed; extensibility is bounded by it. Silent tolerance (the engine's prior behaviour: a flattened catch-all with no diagnostics) and silent loss are both defects of the same kind — the fix to Postel's law is not less tolerance but mandatory naming of what was tolerated.
+
+**Decision**: Unknown content in instance-layer data is governed by a three-verb contract with graded diagnostics. DETECT: unknown elements are always identified — content in `meta` gets at most a quiet mention (it is the sanctioned extension carrier; not recognising its contents is expected, not a defect); unknown fields elsewhere draw a louder warning. LOAD: unknown instance-layer content never fails a load — it must not break the reader, and the reader should not break it. WRITE: a conformant writer preserves what it does not understand (the ideal), or refuses loudly when preservation is genuinely impossible; silently discarding unknown content is the one forbidden behaviour. Emitted JSON Schemas express the PRODUCTION contract — closed except `meta` — while round-tripped out-of-contract keys are carried despite being schema-invalid: the validation complaint IS the louder diagnostic. The definition layer is unchanged by this decision: definitions remain reject-unknown (they are the trust boundary), and extension remains inheritance-only.
+
+**Scope**: Instance-layer unknown-content handling: reader, writer, and emitted-schema conformance
+
+**Governing Values**:
+- shared-coherence
+- local-autonomy
+
+**Project Phase**: formation
+
+**Alternatives Considered**: - Strictly closed everywhere (emit `additionalProperties: false` universally, reject on load): rejected — overturns the ruled instance-layer tolerance, breaks carriage of foreign extension content, and sacrifices the extensibility the meta bag exists to sanction.
+- Open everywhere (sanction arbitrary top-level unknowns, full writer passthrough): rejected — the record's shape stops being knowable and the write contract stops being schema-checkable; reopens one layer down the silent-drift surface the definition-layer ruling closed.
+- Refuse-only on write (no preservation obligation): rejected as the default — loud refusal remains the sanctioned fallback, but preservation is the ideal; a standard whose writers routinely refuse foreign content does not carry meaning.
+
+**Accepted Costs**: Writers carry preservation machinery (verbatim `meta` passthrough at minimum; out-of-contract carriage where feasible) or accept refusing work. Out-of-contract keys hold a dual status — loadable and carried, yet schema-invalid — which the spec must document explicitly so the complaint is understood as graded diagnosis, not contradiction. srs-rust#847 (record update patch/preserve mode) graduates from enhancement to conformance support. The emitter must know it is emitting an instance-facing schema (closed-except-meta) versus a definition schema (fully closed).
+
+**Evidence**:
+- https://github.com/the-greenman/srs/issues/237#issuecomment-5237687810
+- https://github.com/the-greenman/srs/issues/273#issuecomment-5367009305
+
+**Review Trigger**: Review if practice-package portability testing shows the preserve-ideal is unimplementable for a real class of writers, or if graded diagnostics prove too quiet to prevent silent semantic drift in shared packages.
+
+
