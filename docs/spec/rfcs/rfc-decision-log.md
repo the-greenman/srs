@@ -579,3 +579,33 @@ Deferring the Field does not defer the discipline. Minting is the irreversible a
 **Review Trigger**: The RFC starts when any real consumer needs pre-filled values — a Protocol stage, a Blueprint authoring form, or a Type wanting authoring sugar — not before.
 
 
+**Title**: One escape bag, one name: meta
+
+**Decision Status**: accepted
+
+**Decision Date**: 2026-08-21
+
+**Decision Rationale**: Owner ruling, verbatim: "meta. Don't have two things!" One concept must not carry two names — the same one-way-per-goal principle that collapsed E4/semanticObjectType and rejected parallel default mechanisms, applied to naming. The original option pricing ("breaking is free exactly once" inside the #242/#297 train) expired when that train landed; the owner accepts the standalone breaking cost under the Evolution phase rather than carrying a permanent two-name split whose distinction every future reader must relearn.
+
+**Decision**: The per-layer escape bag has one name everywhere: `meta`. The substrate layer's `properties` bag (VocabularyEntry, Term, RelationTypeDefinition) renames to `meta`, matching the instance layer's existing convention. The per-layer POLICIES remain distinct as ruled (#237's three-layer table: definitions have no bag; substrate reject-unknown with a `meta` escape; instances tolerate with `meta`) — the name is unified, the semantics stay layered. Executed as its own small breaking unit, not a #273 rider: substrate schemas + engine structs + substrate data migration + mirror choreography together.
+
+**Scope**: Escape-bag naming across the substrate and instance layers
+
+**Governing Values**:
+- shared-coherence
+- evolution
+
+**Project Phase**: formation
+
+**Alternatives Considered**: - Keep both names with a stated normative distinction (substrate `properties` = definitional extension surface; instance `meta` = tolerated annotation): rejected by the ruling — the layered policies already carry the distinction; a second NAME adds nothing the policy table does not, and costs a permanent explanation.
+- Fold the rename into the #273 train: rejected — #273 is definition-layer; the substrate rename is its own bounded breaking change with its own migration.
+
+**Accepted Costs**: A standalone breaking substrate change post-train: `vocabulary.json`-family schemas, the Rust engine's substrate structs, any substrate data carrying `properties` keys (a deterministic key-rename migration), and the full schema-mirror one-landing choreography. Emitted-schema and validator surfaces that special-case the bag name touch once. The decision record "Carry meaning you do not recognise" (2e0cd70a) reads naturally after this: `meta` is THE sanctioned carrier at every layer that has one.
+
+**Evidence**:
+- https://github.com/the-greenman/srs/issues/237#issuecomment-5225580634
+- https://github.com/the-greenman/srs/issues/273#issuecomment-5367009305
+
+**Review Trigger**: Review only if the substrate data migration surfaces a live consumer reading the `properties` key by name outside the first-party corpus.
+
+
