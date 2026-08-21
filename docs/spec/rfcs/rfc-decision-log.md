@@ -547,3 +547,35 @@ Deferring the Field does not defer the discipline. Minting is the irreversible a
 **Review Trigger**: Review if practice-package portability testing shows the preserve-ideal is unimplementable for a real class of writers, or if graded diagnostics prove too quiet to prevent silent semantic drift in shared packages.
 
 
+**Title**: Defaults arrive later, as one mechanism
+
+**Decision Status**: accepted
+
+**Decision Date**: 2026-08-21
+
+**Decision Rationale**: The owner's rule was conditional: keep and define now only if a consistent rule is simple now. It is not. The layered chain spans three levels including Protocol, which has no defaults surface and whose schema is weeks old; the design requires application-timing semantics (writer-materialized versus reader-resolved — which decides whether a record's meaning depends on its definition context), the required-interaction (JSON Schema's precedent: a default does not satisfy required), inheritance interaction for assignment-level overrides, and an effective-default resolution mirroring effective-Type resolution. With zero live corpus uses to falsify against, designing this today is speculative elegance — the exact posture evidence-led Evolution forbids. Removal is cheap now; a half-specified fragment kept alive at one level is how two-ways-of-doing-the-job gets seeded.
+
+**Decision**: Defaults are an essential FUTURE capability, and both current defaultValue sites are removed now. `Field.defaultValue` (already ruled removed, #234 2026-08-08) and `FieldAssignment.defaultValue` are removed together in the #273 train — the latter EXPLICITLY SUPERSEDING #274's ledger row "Generate defaultValue". When defaults arrive they arrive once, as a single layered-override capability — a higher level overrides a lower: a Protocol may override a Type, which may override a Field — designed whole in its own RFC as a versioned metamodel capability. There must never be two ways of doing the job; no fragment of the old mechanism survives to seed a second way.
+
+**Scope**: Definition-layer defaults: removal now, the shape of their future return, and the supersession of #274's FieldAssignment.defaultValue ledger row
+
+**Governing Values**:
+- evolution
+- shared-coherence
+
+**Project Phase**: formation
+
+**Alternatives Considered**: - Define the consistent rule now: rejected by the owner's own conditional — the rule is not simple (three-layer resolution including a defaults-less Protocol layer; timing, required, inheritance, and sovereignty semantics; no corpus evidence to design against).
+- Keep `FieldAssignment.defaultValue` per #274's ledger while removing the Field-level site: rejected — a half-specified single-site fragment contradicts the one-mechanism rule and pre-empts the future design's own choice of carrier.
+- Remove without recording intent: rejected — the intent (defaults essential, layered override, one mechanism) is the part that must not be lost; this record and the roadmap entry carry it.
+
+**Accepted Costs**: The one live (decorative) authored value in `srs/package/fields/status.json` is deleted. #274's ratified ledger row is superseded and the ledger no longer matches — this record is the supersession trail. The future RFC inherits named obligations: effective-default resolution across Protocol → Type → Field, application timing, the default-does-not-satisfy-required precedent, inheritance interaction, and the writer-materialized-versus-reader-resolved sovereignty question. The roadmap carries the capability so removal cannot read as abandonment.
+
+**Evidence**:
+- https://github.com/the-greenman/srs/issues/234#issuecomment-5225578699
+- https://github.com/the-greenman/srs/issues/274#issuecomment-5145639920
+- https://github.com/the-greenman/srs/issues/273#issuecomment-5367009305
+
+**Review Trigger**: The RFC starts when any real consumer needs pre-filled values — a Protocol stage, a Blueprint authoring form, or a Type wanting authoring sugar — not before.
+
+
