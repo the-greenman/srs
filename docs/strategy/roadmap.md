@@ -413,7 +413,7 @@ Extensions are referenced by their normative SRS Records; this register records 
 
 | Extension | Subject | Required by | Readiness |
 | --- | --- | --- | --- |
-| Addressability and attention state | srs/records/extensions/ext-addressability.json | P2, P3, G6, G7 | provisional / not-implemented / unproven |
+| Addressability and attention state | srs/records/subsections/07-1-ext-addressability.json | P2, P3, G6, G7 | provisional / not-implemented / unproven |
 
 ## Current evidence
 
