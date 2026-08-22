@@ -1174,6 +1174,29 @@
       ]
     },
     {
+      "id": "layered-defaults",
+      "instanceId": "9d9d8f41-c363-5906-8efe-b6476100c847",
+      "kind": "strategy-contract",
+      "name": "Layered default values",
+      "stability": "deferred",
+      "promise": "When a real authoring surface needs pre-filled values, it can use one versioned layered-default mechanism whose effective value resolves Protocol → Type → Field; a default never satisfies a required Field.",
+      "capabilities": [
+        "Define Meaning",
+        "Work With Meaning"
+      ],
+      "sources": [
+        {
+          "type": "issue",
+          "ref": "srs#431"
+        }
+      ],
+      "notIncluded": [
+        "A separate default mechanism at each of the Field, Type and Protocol layers",
+        "Treating a default as satisfying requiredness",
+        "A current F1, F2, F3 or practice-track release gate"
+      ]
+    },
+    {
       "id": "projection-boundary",
       "instanceId": "a399a748-1b43-57ff-9b89-e788a1102c48",
       "kind": "strategy-contract",
@@ -2060,6 +2083,11 @@
       "type": "contains",
       "from": "semantic-kernel",
       "to": "definitions-and-structure"
+    },
+    {
+      "type": "contains",
+      "from": "definitions-and-structure",
+      "to": "layered-defaults"
     },
     {
       "type": "com.semanticops.strategy/requires-contract",

@@ -324,6 +324,11 @@ The standard-level contracts that make the release boundaries and practice paths
     - Required by: F1, D1, D2, G1
     - Sources: [srs-unified.md](../spec/srs-unified.md)
     - Not included: Website-specific document or decision schemas
+    - **Layered default values** — When a real authoring surface needs pre-filled values, it can use one versioned layered-default mechanism whose effective value resolves Protocol → Type → Field; a default never satisfies a required Field.
+      - Stability: Deliberately deferred
+      - Required by: future work
+      - Sources: [#431](https://github.com/the-greenman/srs/issues/431)
+      - Not included: A separate default mechanism at each of the Field, Type and Protocol layers; Treating a default as satisfying requiredness; A current F1, F2, F3 or practice-track release gate
   - **Canonical meaning and facets** — A repository declares one repository-owned set of presentations it commits to render and can produce reproducible, readable projections from canonical meaning; neither the presentations nor their projections becomes an authoritative store.
     - Stability: Lock before F1
     - Required by: F1, F2, D2, D3, G1
@@ -389,6 +394,7 @@ Each row is a public SRS promise required by a boundary or practice stage. Readi
 | Coherent semantic kernel | F1, D1, D2 | not assessed | not assessed | not assessed |
 | Identity and reference resolution | F1, D1, D2 | not assessed | not assessed | not assessed |
 | Definitions and structural navigation | F1, D1, D2, G1 | not assessed | not assessed | not assessed |
+| Layered default values | future | not assessed | not assessed | not assessed |
 | Canonical meaning and facets | F1, F2, D2, D3, G1 | not assessed | not assessed | not assessed |
 | Portable semantic publication | F2, D3, D5 | not assessed | not assessed | not assessed |
 | Definition closure and completeness | F2, D5 | not assessed | not assessed | not assessed |

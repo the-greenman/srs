@@ -19,6 +19,7 @@ function id(value) { return String(value).replace(/[^A-Za-z0-9_]/g, "_"); }
 function mermaid(value) { return String(value).replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("[", "(").replaceAll("]", ")").replace(/\r?\n/g, "<br/>"); }
 function sourceLink(source) {
   const ref = typeof source === "string" ? source : source.ref;
+  if (typeof source === "object" && source.type === "issue") return issueLink(ref);
   if (ref.startsWith("http")) return `[${ref}](${ref})`;
   const href = ref.startsWith("docs/") ? `../${ref.slice(5)}` : `../../${ref}`;
   return `[${ref.split("/").at(-1)}](${href})`;
