@@ -103,8 +103,11 @@ test("audit distinguishes missing local targets, manual evidence, and review due
   assert.ok(rows.some((row) => row.evidence.type === "command" && row.result === "manual"));
   assert.ok(rows.filter((row) => row.check.assessedAt).every((row) => row.review === "overdue"));
   const invalid = structuredClone(roadmap);
-  invalid.assessments[0].evidence = [{ type: "repo-path", ref: "definitely-not-a-roadmap-target" }];
+  invalid.assessments[0].evidence = [{ type: "repo-path", ref: "docs/definitely-not-a-roadmap-target" }];
   assert.equal(auditRoadmap(invalid, "2026-08-15")[0].result, "missing");
+  const external = structuredClone(roadmap);
+  external.assessments[0].evidence = [{ type: "repo-path", ref: "sibling-repo/definitely-not-here" }];
+  assert.equal(auditRoadmap(external, "2026-08-15")[0].result, "external");
 });
 
 test("logical projection round-trips stable entities and explicit relations", () => {
