@@ -695,7 +695,7 @@ A healthy repo should report empty `declaredButUnsupported` and empty `usedButUn
 
 ### Seeding a New Repository from a Governance Package
 
-Some governance packages ship as a pre-configured `.srsj` seed bundle that carries upstream provenance (`meta.upstreamPackage` in the manifest). After receiving the seed, re-stamp it with the new organization's identity before doing any further work:
+Some governance packages ship as a pre-configured `.srsj` seed bundle that carries upstream provenance (the top-level `upstreamPackage` in the manifest, RFC-014 [R7]; older seeds may instead carry the deprecated `meta.upstreamPackage` — read-only fallback, never written, RFC-014 [R9]). After receiving the seed, re-stamp it with the new organization's identity before doing any further work:
 
 ```bash
 srs repo init-new --repo <path-to-seed.srsj> \
@@ -709,7 +709,7 @@ srs repo init-new --repo <path-to-seed.srsj> \
 The command:
 - Writes a new `repositoryId` (auto-generated or caller-supplied)
 - Updates `namespace`, `title`, and (if provided) `description` in the manifest
-- Stamps `meta.upstreamPackage.installedAt` with the current UTC timestamp, preserving all other provenance fields (`packageId`, `namespace`, `name`, `version`)
+- Stamps `upstreamPackage.installedAt` (top level, RFC-014 [R7]) with the current UTC timestamp, preserving all other provenance fields (`packageId`, `namespace`, `name`, `version`) — never `meta.upstreamPackage`, which conformant tools MUST NOT write
 
 Payload:
 ```json
@@ -721,7 +721,7 @@ Payload:
 }
 ```
 
-The store must already contain `meta.upstreamPackage` (written by the governance-seed install step). If it is absent, the command returns an error.
+The store must already contain `upstreamPackage` (top level, written by the governance-seed install step; RFC-014 [R7]) — or, for a pre-RFC-014 seed, the deprecated `meta.upstreamPackage`, read as a fallback but never written (RFC-014 [R9]). If neither is present, the command returns an error.
 
 ---
 
@@ -1743,7 +1743,7 @@ A **rejected write is a tool-level result** (`isError: true` with the service di
 
 ## 5j. OKF Bundle Export (`srs render okf-bundle`)
 
-`srs render okf-bundle` exports a container as a **Google Open Knowledge Format (OKF) v0.1** folder: one Markdown file per member instance plus an `index.md` listing them. The file order respects `precedes` relations among members; ties use insertion order.
+`srs render okf-bundle` exports a container as a **Google Open Knowledge Format (OKF) v0.1** folder: one Markdown file per member instance plus an `index.md` listing them. The file order respects `precedes` relations among members; ties use `createdAt` ascending, then `instanceId` ascending as a secondary tiebreak — the same tiebreak pattern RFC-013 pins for navigation-order determinism.
 
 ```bash
 srs render okf-bundle \
@@ -1794,8 +1794,8 @@ type: <namespace>/<typeName>    # or "note" for Tier-0 Notes
 
 ## 6. Common Traps
 
-### The instanceIndex trap
-`manifest.json → instanceIndex` is the authoritative membership list. A record file on disk that is not listed there does not exist to the system. The CLI manages this automatically. Direct file writes do not.
+### The direct-write trap
+Repository membership is tree-authoritative: a record file discovered under a reserved instance root is a member of the repository simply by being there — the repository's catalog, enumerated from the tree, is the authoritative membership list (RFC-038 [R1]). There is no `manifest.json → instanceIndex` to consult; it is retired (RFC-038 [R2]), with the sole carve-out that the manifest still carries the root container inline at `manifest.container` (RFC-038 [R1]). The CLI enumerates and validates as it writes. A direct file write reaches the tree — and so becomes a member — without going through that validation, so a malformed or invalid file can enter the repository silently. The CLI manages this automatically. Direct file writes do not.
 
 ### The typeId-wins rule
 A Record carries both `typeId`/`typeVersion` (authoritative) and `typeNamespace`/`typeName` (denormalized hints). If they conflict, `typeId` wins and the Record is invalid. Do not try to fix a broken Record by patching the name fields — fix the `typeId` or recreate the Record.

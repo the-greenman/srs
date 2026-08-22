@@ -147,7 +147,7 @@
         },
         "initialState": {
           "type": "string",
-          "description": "Must reference a state name with isInitial: true (Invariant 4)."
+          "description": "Must reference a state key with isInitial: true (Invariant 4)."
         }
       }
     },
