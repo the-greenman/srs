@@ -840,3 +840,50 @@ EXPLICITLY KEPT, with reasons of record:
 **Review Trigger**: Each entry's own return trigger, recorded on the roadmap. Collectively: if two returns arrive within one phase, re-examine whether the attestation's corpus base was too narrow.
 
 
+**Title**: Layers stay separate: the layer rules
+
+**Decision Status**: accepted
+
+**Decision Date**: 2026-08-22
+
+**Decision Rationale**: The owner's ruling: layers must be kept separate, as a baked decision register. The evidence is the audit's freshest confirmed findings, each a layer violation the grid alone did not name: SectionSource re-implementing the discovery contract inside composition (rule 2), FieldView.required carrying validity in presentation (rule 3), View.exportConfig holding projection config in the presentation layer (rule 1), protection as behavior without a contract (rule 6). Each rule generalizes ground already ruled once (I-28, spec independence, capability layering, view-owned presentation, the three-layer policy) - the register states the stacking discipline in one place instead of leaving it distributed as precedent.
+
+**Decision**: A companion register to the Pattern Grid (rfc-decision-cce3c00e): where the grid locates concerns by element and level, the layer rules govern STACKING - what sits on what, what may know about what. The stack has three planes, each with named layers:
+
+MEANING (what things are): substrate -> definitions -> instances. Per-layer contracts already ruled: the three-layer unknown-key policy, retirement one-way-per-layer, the reference taxonomy binding the layers (instances PIN definitions; definitions KEY substrate).
+
+EXPRESSION (how meaning is shown): selection -> composition -> presentation -> projection. Selection is the one query shape (the discovery contract); composition arranges selected meaning into document structure; presentation renders it (views, themes); projection is the emitted artifact. Each stage consumes its predecessor's output and adds exactly its own concern.
+
+OPERATION (who does what): core service -> adapters (CLI, WASM, MCP) -> clients. Capability layering, raised from implementation ADR to charter level: semantics live once in the core; adapters translate; clients present.
+
+THE SIX LAYER RULES:
+1. ONE HOME - every construct names its plane and layer; a concern expressed in two layers is drift by definition.
+2. CONSUME, DON'T CLONE - an upper layer references the lower layer's constructs through the reference taxonomy; it never re-implements a lower-layer mechanism. (The SectionSource root cause: type-query cloning the discovery axes divergently.)
+3. EXPRESSION NEVER ALTERS MEANING - nothing in selection, composition, presentation, or projection may change validity, identity, state, or relations. Meaning-plane facts are set only in the meaning plane. (FieldView.required carrying validity; relations-never-change-lifecycle, generalized.)
+4. CROSSINGS ARE DECLARED, AND THE LOWER LAYER WINS - where a layer legitimately carries another layer's data (denormalized hints, composition order as a render default), the crossing is named where it occurs and conflicts resolve downward, visibly (Invariant 28 generalized). Identity conflicts remain fatal per the Earth rule - they are not crossings.
+5. EVERY LAYER STANDS ALONE BELOW - a layer must be complete and valid with every layer above it absent: the spec without any implementation, records without any view, selection results without any composition. Deleting all expression changes nothing about meaning. (Spec independence, generalized to every boundary.)
+6. BEHAVIOR NEEDS A CONTRACT - an affordance enters the standard only with enforcement semantics; until then it is application-private behind axis 3-9's explicit-local boundary. (The protection lesson: a hint without a contract is neither testable nor portable.)
+
+THE REVIEW TEST, three questions asked of every proposal alongside its cell: Which layer owns this? Does it consume or clone downward? Can the layer below it still stand alone?
+
+**Scope**: Governs all future design decisions and reviews alongside the Pattern Grid; the #272 Composition remodel executes rules 1-3 for the expression plane (selection via the one query shape, exportConfig relocation, the required distinction); the operation plane's rule binds spec-adjacent tooling decisions (the capability-layering ADR remains the implementation-side elaboration). Refinable by successor decision per the charter rule.
+
+**Governing Values**:
+- shared-coherence
+- semantic-integrity
+- local-autonomy
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Folding layer discipline into the grid's cell preferences (rejected: layers are orthogonal to element x level - SectionSource's violation crossed cells but was invisible to cell preferences; stacking needs its own register). Leaving it as accumulated precedent (rejected: that is the rule-stated-once-sites-silent failure shape the audit diagnosed).
+
+**Accepted Costs**: A second register reviewers must apply (the three-question test alongside the cell check); some legitimate conveniences become formal crossings needing declaration; plane/layer vocabulary to learn.
+
+**Evidence**:
+- srs#435: the SectionSource, FieldView.required, exportConfig, and protection layer checks (owner-confirmed 2026-08-22)
+- rfc-decision-cce3c00e (the grid this register accompanies)
+- Invariant 28 (crossing precedent), subsection 01-5 and spec independence (rule 5 precedent), srs-rust capability-layering architecture doc (operation plane), RFC-015/RFC-036 view-owned rulings (rule 3 precedent), the three-layer forward-compat policy (meaning plane)
+
+**Review Trigger**: A construct that genuinely needs a new layer or plane; or the three-question test failing to catch a violation the audit style later finds - the register, like the grid, is refined rather than bypassed.
+
+
