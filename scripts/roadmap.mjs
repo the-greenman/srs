@@ -179,20 +179,27 @@ function evidencePath(ref) {
   return roots.map((root) => resolve(root, ref)).find(existsSync) || null;
 }
 
+// A ref rooted outside this repository's own tree (a sibling repo in the local
+// monorepo layout) is external evidence: verifiable when the sibling is present,
+// reported as "external" — never "missing" — when it is not (single-repo CI).
+function isRepoLocalRef(ref) {
+  return existsSync(resolve(SCRIPT_DIR, "..", String(ref).split("/")[0]));
+}
+
 function auditRoadmap(data, today = new Date().toISOString().slice(0, 10)) {
   const rows = [];
   for (const assessment of data.assessments || []) {
     const review = evidenceReview(assessment, today);
     for (const evidence of assessment.evidence || []) {
       const target = ["repo-path", "srs-record"].includes(evidence.type) ? evidencePath(evidence.ref) : null;
-      rows.push({ check: assessment, evidence, review, result: ["repo-path", "srs-record"].includes(evidence.type) ? (target ? "verified" : "missing") : evidence.type === "command" ? "manual" : "reference", target });
+      rows.push({ check: assessment, evidence, review, result: ["repo-path", "srs-record"].includes(evidence.type) ? (target ? "verified" : isRepoLocalRef(evidence.ref) ? "missing" : "external") : evidence.type === "command" ? "manual" : "reference", target });
     }
   }
   for (const contract of data.standardContracts || []) {
     const check = { id: contract.id, assessedAt: "", reviewBy: "" };
     for (const source of contract.sources || []) if (["repo-path", "srs-record"].includes(source.type)) {
       const target = evidencePath(source.ref);
-      rows.push({ check, evidence: source, review: "current", result: target ? "verified" : "missing", target });
+      rows.push({ check, evidence: source, review: "current", result: target ? "verified" : isRepoLocalRef(source.ref) ? "missing" : "external", target });
     }
     if (contract.normativeSubject) {
       const target = evidencePath(contract.normativeSubject.path);
@@ -212,7 +219,8 @@ function renderAudit(data, rows) {
   for (const row of rows) lines.push(`- [${row.result}${row.review === "current" ? "" : `; review ${row.review}`}] ${row.check.id}: ${row.evidence.type} ${row.evidence.ref}${row.target ? ` → ${row.target}` : ""}`);
   const missing = rows.filter((row) => row.result === "missing").length;
   const due = [...new Set(rows.filter((row) => row.review !== "current").map((row) => row.check.id))];
-  lines.push("", `${missing} missing local evidence target(s). ${due.length} reality check(s) due for review.`);
+  const external = rows.filter((row) => row.result === "external").length;
+  lines.push("", `${missing} missing local evidence target(s), ${external} external (sibling-repo) target(s) not present in this checkout. ${due.length} reality check(s) due for review.`);
   return lines.join("\n");
 }
 
