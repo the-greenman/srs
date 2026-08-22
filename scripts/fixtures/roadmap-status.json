@@ -1,0 +1,5 @@
+{
+  "purpose": "Recorded shape used by the roadmap status tests: a mapped root can have an unrelated descendant, but only explicit task references are read.",
+  "unrelatedDescendant": "srs-rust#1",
+  "nativeBlocker": ["srs#384", "srs#256"]
+}
