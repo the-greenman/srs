@@ -19,6 +19,32 @@
         "datatype": "string"
       },
       "value": "engineering"
+    },
+    {
+      "name": "estimate_minutes",
+      "label": "Estimate (minutes)",
+      "fieldType": {
+        "datatype": "integer"
+      },
+      "value": 123454321
+    },
+    {
+      "name": "ticket_uuid",
+      "label": "Ticket",
+      "fieldType": {
+        "datatype": "string",
+        "format": "uuid"
+      },
+      "value": "bb22cc33-dd44-4e55-8f66-aa7788990011"
+    },
+    {
+      "name": "summary",
+      "label": "Summary",
+      "fieldType": {
+        "datatype": "string",
+        "format": "markdown"
+      },
+      "value": "Tier-1 probe token: zztier1probe."
     }
   ],
   "tags": [],

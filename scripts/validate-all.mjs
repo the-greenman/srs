@@ -5,15 +5,70 @@
 import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { readdir } from 'fs/promises';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const packages = [
-  'package',
-  'package/spec-authoring-core',
-  'package/spec-rfc-process',
-  'package/metamodel',
-];
+const REPO_ROOT = join(__dirname, '..');
+
+/**
+ * Every package in the tree, DISCOVERED rather than listed (#391).
+ *
+ * A hardcoded list is the same defect #391 fixes at the kind level, one level up: `package/base`
+ * and `package/core` carried package.json files that no run ever reached, and the published
+ * governance packages — the only ones populating `views`, `documentViews`, `lifecycles`,
+ * `blueprints` and `protocols`, so the only ones that exercise five of the ten kinds against
+ * anything — were never validated either. Adding a 1.2.0 to a list would have left it unvalidated
+ * forever, silently. So nothing is listed: the two package roots are walked.
+ *
+ * Scoped to `srs/package/**` and `packages/**` deliberately. `rfcs/rfc-004/proposed-package/**`
+ * also holds package.json files; those are the historical RFC-004 proposal that #308's guard
+ * likewise excludes, and they are not live packages.
+ *
+ * Paths come back relative to `srs/`, because validate-package.mjs joins them onto the spec repo
+ * root — so the published packages are reached with a leading `../`.
+ */
+async function discoverPackages() {
+  const walkRoot = async (absRoot, relFromSrs) => {
+    const found = [];
+    const walk = async (absDir, rel) => {
+      let entries;
+      try {
+        entries = await readdir(absDir, { withFileTypes: true });
+      } catch {
+        return;
+      }
+      if (entries.some((e) => e.isFile() && e.name === 'package.json')) found.push(rel);
+      for (const entry of entries) {
+        // `node_modules` would be fed to validate-package.mjs as an SRS manifest and turn the run
+        // red for a reason unrelated to the corpus. Nothing puts one here today; excluding it costs
+        // one line and removes a way for this walk to be wrong later.
+        if (entry.isDirectory() && entry.name !== 'node_modules') {
+          await walk(join(absDir, entry.name), `${rel}/${entry.name}`);
+        }
+      }
+    };
+    await walk(absRoot, relFromSrs);
+    return found;
+  };
+
+  // PER-ROOT floors, not one floor on the union. A single `packages.length === 0` check cannot fire
+  // while the other root still yields something: rename `srs/package` and the walk would return the
+  // two published packages, print "Discovered 2 packages" and exit 0 having validated none of the
+  // six spec packages. Each root must independently produce at least one.
+  const roots = [
+    { abs: join(REPO_ROOT, 'srs/package'), rel: 'package', label: 'srs/package/**' },
+    { abs: join(REPO_ROOT, 'packages'), rel: '../packages', label: 'packages/**' },
+  ];
+  const found = [];
+  const emptyRoots = [];
+  for (const root of roots) {
+    const packages = await walkRoot(root.abs, root.rel);
+    if (packages.length === 0) emptyRoots.push(root.label);
+    found.push(...packages);
+  }
+  return { packages: found.sort(), emptyRoots };
+}
 
 async function runScript(script, args = []) {
   return new Promise((resolve) => {
@@ -28,10 +83,22 @@ async function runScript(script, args = []) {
   });
 }
 
+// Where this runs: `scripts/check-release-drift.mjs` invokes this script as its first step, and
+// that is what `.github/workflows/release-drift.yml` (a required check on every push and pull
+// request) and `hooks/pre-commit` both run. Grepping the workflows for `validate-all` finds nothing
+// and reads as "no CI runs this" — it does, one call deep.
 async function validateAll() {
   console.log('Running all validations...\n');
 
   let allValid = true;
+
+  const { packages, emptyRoots } = await discoverPackages();
+  console.log(`Discovered ${packages.length} packages: ${packages.join(', ')}`);
+  if (emptyRoots.length > 0) {
+    // A walk that found nothing is not a tree with nothing to validate.
+    console.log(`\n\u2717 No packages discovered under ${emptyRoots.join(' or ')} — refusing to report success.`);
+    process.exit(1);
+  }
 
   for (const pkg of packages) {
     const valid = await runScript('validate-package.mjs', [pkg]);
@@ -69,6 +136,41 @@ async function validateAll() {
   // Field made repeatable purely by assignment migrated to single-valued without complaint.
   const cardinalityCoherent = await runScript('check-cardinality-coherence.mjs');
   if (!cardinalityCoherent) allValid = false;
+
+  // Field.name is snake_case (#308). The rule was stated unconditionally by field.json and record
+  // 7d22d50f and enforced nowhere, so the corpus stayed conformant only by attention. Names matter
+  // beyond style: srs-repository resolves several Fields by name and binds misses with
+  // `if let Some(..)`, so a drifted name silently disables the check that depended on it.
+  //
+  // After the RFC-032 fixture above, not before: the guard walks `tests/`, and tests/rfc-032/run.mjs
+  // regenerates those 24 Field files from its in-script table. Running first would read the previous
+  // run's output, so a kebab name introduced in that generator would pass the run that introduced it
+  // and fail the next one, detached from its cause.
+  const fieldNamesValid = await runScript('check-field-name-convention.mjs');
+  if (!fieldNamesValid) allValid = false;
+
+  // Every definition kind package-manifest.json declares resolves to a schema (#311). `protocols`
+  // was declarable with no protocol.json behind it until #378 and nothing noticed.
+  const schemaKindsValid = await runScript('check-schema-kind-correspondence.mjs');
+  if (!schemaKindsValid) allValid = false;
+
+  // Every discovered record reaches a reader, or its invisibility is recorded (#285). `repo
+  // validate` reports an unpublished record as a healthy instance, which is how six
+  // records/type-definitions/ shadows came to be read by RFC-031 as authoritative prose the
+  // specification never published, and how eight populated table records carrying 62 rows of spec
+  // content stayed invisible through a release criterion ("render identically") that was never
+  // satisfiable. Reachability is a property of the corpus and its declared views, so it belongs
+  // here rather than in the binary — a third-party SRS repository may legitimately hold
+  // unpublished records.
+  const publicationReachable = await runScript('check-publication-reachability.mjs');
+  if (!publicationReachable) allValid = false;
+
+  // ...and every guard demonstrably fails on the violation it exists to catch — including
+  // validate-package.mjs's own ten-kind coverage (#391), whose blueprint cases would otherwise be
+  // green on an empty list. A guard nobody has watched fail is indistinguishable from a guard that
+  // cannot fail.
+  const guardsBite = await runScript('../tests/guards/run.mjs');
+  if (!guardsBite) allValid = false;
 
   // RFC-033 (self-hosted meta-model). The frozen-seed metamodel package must stay in sync with its
   // generator, and its fieldTypes must project (via the projectField stand-in) to the frozen seed's

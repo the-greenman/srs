@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f001-0000-4000-8000-000000000018",
+  "namespace": "com.example.discovery",
+  "name": "legacy_note",
+  "version": 1,
+  "description": "Free note whose type follows the article title's.",
+  "aiGuidance": {
+    "purpose": "I-120 exclusion: datatype dependent. Excluded by datatype regardless of what the depended-on Field resolves to — the projection does not resolve `dependsOn` before deciding searchability."
+  },
+  "fieldType": {
+    "datatype": "dependent",
+    "dependsOn": "title"
+  },
+  "createdAt": "2026-06-27T00:00:00Z"
+}

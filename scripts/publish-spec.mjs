@@ -5,6 +5,8 @@ import { dirname, join, resolve } from "path";
 import { spawn } from "child_process";
 import { renderInvariants } from "./render-invariants.mjs";
 import { logSrsCliProvenance, resolveSrsCli } from "./lib/pinned-srs.mjs";
+import { VIEW_EXPORTS as VIEW_EXPORT_SPECS } from "./lib/view-exports.mjs";
+import { injectKeyInvariants } from "./lib/invariant-region.mjs";
 
 const ROOT = resolve(new URL("..", import.meta.url).pathname);
 const REPO_ROOT = join(ROOT, "srs");
@@ -16,13 +18,7 @@ const VSCODE_SCHEMA_DST = join(ROOT, "..", "srs-vscode", "schemas", "2.0");
 // handler as a message rather than a module-load stack trace.
 let SRS_CLI;
 
-const VIEW_EXPORTS = [
-  { id: "3a000001-0000-4000-a000-000000000001", output: join(SPEC_ROOT, "srs-spec.md"), requiresKeyInvariants: true },
-  { id: "3a000003-0000-4000-a000-000000000003", output: join(SPEC_ROOT, "srs-rationale.md") },
-  { id: "3a000004-0000-4000-a000-000000000004", output: join(SPEC_ROOT, "srs-unified.md"), requiresKeyInvariants: true },
-  { id: "7a000001-0000-4000-a000-000000000001", output: join(SPEC_ROOT, "rfcs", "rfc-catalog.md") },
-  { id: "7a000002-0000-4000-a000-000000000002", output: join(SPEC_ROOT, "rfcs", "rfc-decision-log.md") },
-];
+const VIEW_EXPORTS = VIEW_EXPORT_SPECS.map((e) => ({ ...e, output: join(ROOT, e.output) }));
 
 function run(cmd, args, cwd = ROOT) {
   return new Promise((resolvePromise, rejectPromise) => {
@@ -81,19 +77,13 @@ async function injectInvariants() {
   const injectedContent = await renderInvariants(REPO_ROOT);
   for (const entry of VIEW_EXPORTS) {
     const content = await readFile(entry.output, "utf8");
-    const headingMatch = /^### Key Invariants$/m.exec(content);
-    if (!headingMatch) {
+    const newContent = injectKeyInvariants(content, injectedContent);
+    if (newContent === null) {
       if (entry.requiresKeyInvariants) {
         throw new Error(`${entry.output} is marked requiresKeyInvariants but has no ### Key Invariants heading`);
       }
       continue;
     }
-    const headingEnd = headingMatch.index + headingMatch[0].length;
-    const rest = content.slice(headingEnd);
-    const closingMatch = /^---$/m.exec(rest);
-    const beforeRegion = content.slice(0, headingEnd);
-    const afterRegion = closingMatch ? rest.slice(closingMatch.index) : "";
-    const newContent = `${beforeRegion}\n\n${injectedContent.trimEnd()}\n\n${afterRegion}`;
     await writeFile(entry.output, newContent, "utf8");
   }
 }

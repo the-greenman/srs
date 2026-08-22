@@ -160,6 +160,10 @@ async function buildResolvers() {
       case SUBSECTION_TYPE: {
         const t = fieldValue(record, F_TITLE);
         if (t) subsectionSlugs.add(slugify(t));
+        // A retired extension shadow's `ext:<name>` token now resolves only through its
+        // published subsection twin (#406/#285) — the twin carries the same `ext:<name>`
+        // title, so an `ext:` token is canonical here too, not just via records/extensions/.
+        if (t && /^ext:/i.test(t)) extensionIds.add(t.trim());
         break;
       }
       default:

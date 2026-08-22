@@ -21,21 +21,21 @@ Never assume you understand the repo's content from its directory listing.
 
 ---
 
-## 2. The CLI-First Rule
+## 2. The Tool-First Rule
 
-**Do not create, edit, or delete SRS JSON files directly.** Use the CLI for all read and write operations.
+**Do not create, edit, or delete SRS JSON files directly.** Use the tool surfaces, in this order:
 
-The only exception is when the CLI cannot yet express the operation — for example, a field or type definition that has no `create` command yet. In that case:
-1. Document why the CLI cannot be used.
-2. Make the minimal edit required.
-3. Immediately run `srs repo validate --repo <path>` and fix every diagnostic before continuing.
+1. **A mounted SRS MCP server, when your session has one.** `srs mcp serve` exposes validated tools (`find`, `record_create`, `record_update`, `relation_create`, `note_create`, `note_graduate`, `record_transition`, `container_member_add`/`remove`, `repo_validate`, `type_schema`) and resources (`srs://<repoId>/map`, `/navigation`, `/record/{id}`, `/container/{id}`). Every write enforces the repository's type and relation contracts and returns diagnostics on rejection — it is the cheapest path that is also the correct one. In agent sessions these tools may arrive deferred; load them by name before assuming they are absent.
+2. **The `srs` CLI** for everything else — always the current release asset, never a stale local build (a pre-cutover binary fails on a current-generation repository, and vice versa).
+3. **Direct file edits only when neither tool can express the operation** (for example, a definition kind with no `create` command yet). Then: document why, make the minimal edit, and immediately run `srs repo validate` and fix every diagnostic before continuing.
 
-This exception is narrow. If a CLI command exists for the operation, use it — even if direct file editing feels faster.
+This exception is narrow. If a tool exists for the operation, use it — even if direct file editing feels faster.
 
 ### Why this matters
 
-- Writing a record file without registering it in `manifest.json → instanceIndex` creates a ghost file the system ignores.
-- Editing `typeId`, `fieldId`, or `relationId` values by hand bypasses referential integrity checks.
+- Under tree-authoritative storage (RFC-038), **a file you drop IS a member** — but one that participates in nothing: no containment, no document order, no reachable presentation. The repository's reachability guards will fail your change; the content reaches no reader.
+- **Copying an existing record file verbatim is load-fatal**: the copy carries the original's `instanceId`, and a duplicate id is an [R12] error that [R24] makes fatal — the repository will not open until it is repaired.
+- Editing `typeId`, `fieldId`, or `relationId` values by hand bypasses referential integrity; a dangling reference is likewise fatal ([R13]).
 - The file layout (`records/`, `package/`, `relations/`) is a FileStore detail. A future SQL-backed repo has no files; agent code that touches the filesystem directly will not port.
 
 ---

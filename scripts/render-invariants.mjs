@@ -60,8 +60,17 @@ function sanitizeConstraint(body) {
   return body.replace(/\n\n---\s*$/, "").replace(/\n---\s*$/, "");
 }
 
+/**
+ * The repository-relative root this projection reads, exported so the publication reachability
+ * guard (#285) takes the projection's scope *from the projection* instead of restating it. RFC-016
+ * [R1] makes every record here a published record even though no DocumentView section selects it —
+ * injection happens after render — so a reachability definition quantifying only over views would
+ * call all 124 of them invisible.
+ */
+export const INVARIANT_PROJECTION_ROOT = "records/invariants";
+
 export async function renderInvariants(repoPath) {
-  const invariantsDir = join(repoPath, "records", "invariants");
+  const invariantsDir = join(repoPath, INVARIANT_PROJECTION_ROOT);
   const entries = await readdir(invariantsDir);
   const jsonFiles = entries.filter((f) => f.endsWith(".json")).sort();
 

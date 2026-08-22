@@ -113,7 +113,7 @@
     "ext:lifecycle",
     "ext:discovery"
   ],
-  "description": "Self-contained SRS repository used as the conformance fixture for ext:discovery (RFC-012). Contains 8 Tier 2 Records across 3 types (covering all 8 SRS valueTypes), 2 Tier 1 TypedRecords, 1 Tier 0 Note, 2 Containers, and instances with tags and lifecycleState set.",
+  "description": "Self-contained SRS repository used as the conformance fixture for ext:discovery (RFC-012). Contains 8 Tier 2 Records across 3 instantiated types — article, project and metric — drawn from a 4-type package whose fourth, byline, is the inline composite range of article.byline and carries no Records of its own. Between them the Fields span every RFC-032 fieldType classification I-120 rules on, searchable and excluded. Also 2 Tier 1 TypedRecords on the RFC-039 [R8] fieldType carrier, 1 Tier 0 Note, 2 Containers, and instances with tags and lifecycleState set. Storage stays pre-RFC-038 by the ratified Rev-7 disposition — see conformance/discovery/README.md.",
   "namespace": "com.example.discovery",
   "packageRef": {
     "mode": "local",

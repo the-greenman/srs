@@ -54,7 +54,9 @@
     "types/table.json",
     "types/table_rows.json"
   ],
-  "views": [],
+  "views": [
+    "views/table-record-view-77f51737.json"
+  ],
   "documentViews": [
     "document-views/spec-document-view.json",
     "document-views/rationale-document-view.json",

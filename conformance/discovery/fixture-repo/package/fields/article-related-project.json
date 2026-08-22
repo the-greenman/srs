@@ -1,0 +1,20 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "0000f001-0000-4000-8000-000000000016",
+  "namespace": "com.example.discovery",
+  "name": "related_project",
+  "version": 1,
+  "description": "The project this article documents.",
+  "aiGuidance": {
+    "purpose": "I-120 exclusion: datatype ref in mode reference. The value is a target instance id; projecting it would make an opaque identifier searchable as prose."
+  },
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "reference",
+    "rangeType": {
+      "typeId": "0000a002-0000-4000-8000-000000000002",
+      "typeVersion": 1
+    }
+  },
+  "createdAt": "2026-06-27T00:00:00Z"
+}
