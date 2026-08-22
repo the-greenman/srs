@@ -656,6 +656,102 @@ STANDING RULE: every new RFC and decision names its cell. A proposal that contra
 **Review Trigger**: Refine when a proposal lands in no cell, when a cell's preference is overridden twice for the same reason (the boundary clause is wrong), or at the Continuity flip (first full public release), when axis 2-8's default pole reverses and the layer should be re-read whole against the new phase.
 
 
+**Title**: One state mechanism: workflow status is a Lifecycle
+
+**Decision Status**: accepted
+
+**Decision Date**: 2026-08-21
+
+**Decision Rationale**: The pattern audit found six parallel status mechanisms with four vocabularies and no two enums equal (findings C12, C13, B14): the fully-specified state machine had zero users in the spec repository while a bare enum carried the spec's primary workflow, and nothing enforced draft-to-proposed-to-accepted or prevented withdrawn-to-implemented. The attestation then showed production muSrs DOES use ext:lifecycle load-bearingly (a five-state governance lifecycle with an excludeLifecycleStates query), turning the question from removal to unification. Conformance's preference (one way over many) picks unification; the owner ruled: make status right - it should be defined as a real lifecycle. Dogfooding also closes the credibility gap of a standard that avoids its own machinery.
+
+**Decision**: Cell: Conformance (one way over many), with Versioning owning the state value. Anything in the standard's own corpus or its packages that models workflow state - named stages a record moves through - is a Lifecycle (ext:lifecycle): a defined state set with transitions, bound to the Type via lifecycleRef, with the record's position carried in lifecycleState. Bare status enum Fields for workflow state are retired as a parallel mechanism. First migration: the spec's own rfc_status field (49 records, seven values, no transitions) becomes a real spec-rfc-process Lifecycle - the standard dogfoods its own state machinery, and RFC supersession gains RFC-022 requiresRelation coupling (rfc_status superseded requires the supersedes assertion it today carries only in prose).
+
+The line this draws: Lifecycle = workflow state on records (Fire, individual: where the record is in its process). Substrate entry status (active/deprecated/tombstone/retired) is NOT workflow state - it is the retirement mechanism of the substrate layer under axis 5-11 (Reliability over Renewal) and stays as-is. Enum value domains remain legal for genuinely stateless labels; the test is transitions: if some value changes are meaningful and others are wrong, it is a Lifecycle.
+
+**Scope**: Governs the spec repository's rfc-status field and all future package authoring guidance: workflow state is modelled as Lifecycle, not enum. Does not change the substrate retirement status vocabulary (axis 5-11 territory), does not resurrect Relation.status (removed with relation provenance machinery), and does not forbid stateless enum value domains. Execution is a post-train unit: define the spec-rfc-process Lifecycle, bind it on the rfc type, migrate the 49 records, retire the rfc_status Field via deletion (the definition-layer retirement rule).
+
+**Governing Values**:
+- shared-coherence
+- semantic-integrity
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Sanctioning two tiers (bare enum for light cases, Lifecycle when transitions matter, boundary stated once) was the honest alternative - cheaper, matching current practice. Rejected by the owner in favor of one mechanism: the two-tier boundary would itself become a drift seam, and the spec's own workflow is exactly the case where transition enforcement has value (the audit found nothing prevents impossible status jumps today).
+
+**Accepted Costs**: Migrating 49 rfc records and the rfc type; a Lifecycle definition to maintain; authoring friction for trivial cases that would have been a three-value enum (they now either justify statelessness or take the machine). The spec-rfc-process package grows a lifecycles entry from today's empty array.
+
+**Evidence**:
+- srs#435 findings C12, C13, B14 and the census status-lifecycle axis
+- 2026-08-21 attestation: muSrs governance_lifecycle in production use; spec repo zero lifecycleState, 49 rfc_status records
+- rfc-decision-cce3c00e (the Pattern Grid preference layer - Conformance: one way over many)
+- RFC-022 (relational lifecycle states / requiresRelation)
+
+**Review Trigger**: Review if the migration surfaces workflow cases the Lifecycle machine genuinely cannot express, or when package-authoring practice shows the stateless-enum test being routinely argued - the boundary clause may need sharpening.
+
+
+**Title**: Tier 1 was a theory: TypedRecord is removed
+
+**Decision Status**: accepted
+
+**Decision Date**: 2026-08-21
+
+**Decision Rationale**: The 2026-08-21 attestation found zero TypedRecords in every corpus - production muSrs, the spec's own 384-record repository, and both derivative trees - and zero graduatedAt anywhere. The graduation path has had no middle rung in practice across the system's entire life. Axis 2-8's boundary clause requires evolution decisions to be evidence-led and names speculative elegance as insufficient; a tier that exists only in theory is exactly that. The owner ruled: Tier 1 is a theory... at this point there is no evidence. Lets remove it. The dormancy rule applies: the cell keeps the concept's name and its return trigger.
+
+**Decision**: Cell: Identity (Earth, individual), under axis 2-8's evidence clause. The record model goes from three tiers to two: Tier 0 (Note - free text sections, no type binding) and Tier 2 (Record - instantiated Type). Tier 1 (TypedRecord - named fields without a Type binding) and the graduatedAt timestamps are removed from the standard. The gradual-refinement theory the middle tier expressed - meaning matures from free text toward typed structure - survives without it: graduation is Note to Record, linked by derived-from, and partial structure inside a Note remains what it always was, sections. Tier numbering (0 and 2) is retained as-is to keep every existing reference, invariant, and discussion stable; renumbering would be churn without meaning.
+
+**Scope**: Removes: the TypedRecord entity (typed-record.json), the graduatedAt field on Note and TypedRecord, Tier 1 from the discovery Text Projection (re-expressed I-120 covers two tiers), tier-1 handling in implementations, and Tier 1 from the tier taxonomy prose. Keeps: Note (Tier 0) and Record (Tier 2) unchanged; the graduation concept as Note-to-Record via derived-from. Execution is its own breaking unit with a dataModelRevision bump, sequenced after the #273 train; roadmap entry per the dormancy rule with return trigger: evidence of a real consumer producing semi-structured records that fit neither tier - if that evidence arrives, the middle tier returns as an evidence-shaped design, not this one.
+
+**Governing Values**:
+- semantic-integrity
+- evolution
+
+**Project Phase**: formation
+
+**Alternatives Considered**: (1) Keep Tier 1 as specified - rejected: it is the definition of specified-but-unexercised surface, and the audit showed such surface is where drift accumulates (the tier's ordering, for example, was un-overridable by the view layer, finding B4, and nobody had ever hit it). (2) Keep the tier but mark it experimental - rejected: a third conformance class for a construct with zero users is complexity without evidence. (3) Remove Note instead and make Records the only tier - rejected without debate: Notes are heavily used (26 across corpora) and are the capture surface the mission depends on.
+
+**Accepted Costs**: The theory of gradual semantic refinement loses its explicit intermediate representation; if a future consumer genuinely needs schema-light named fields, the return costs a fresh design informed by that consumer. Removal touches the discovery conformance fixture, schemas, both implementations, and the tier prose - a real breaking unit. The tier numbering gap (0, 2) is a permanent small oddity, accepted deliberately for reference stability.
+
+**Evidence**:
+- 2026-08-21 attestation: 0 TypedRecords and 0 graduatedAt in all four corpora (muSrs 32 records, spec repo 384, both derivatives)
+- srs#435 finding B4 (Tier 0/1 order un-overridable - a latent defect nobody ever hit)
+- rfc-decision-cce3c00e (the Pattern Grid - axis 2-8 boundary clause: evidence-led, speculative elegance insufficient; the dormancy rule)
+
+**Review Trigger**: The roadmap return trigger: a real consumer produces semi-structured records (named fields, no Type) that fit neither Note sections nor a lightweight Type. Until then, the two-tier model stands.
+
+
+**Title**: State is mutable, semantics are not: the Fire carve-out, and Revisions and Changelog are removed
+
+**Decision Status**: accepted
+
+**Decision Date**: 2026-08-21
+
+**Decision Rationale**: The column coherence check (srs#435, finding F1) surfaced the coupling: lifecycle state transitions are the one Fire mechanism that mutates in place, and the only specified preservation mechanism (Revisions) was simultaneously on the removal shortlist. Ruling the removal first would have silently decided the carve-out; the owner ruled both explicitly: the carve out makes sense - state is mutable, and if revisions and changelog are incompletely specified, remove them and add them back at a later stage. The incompleteness is documented: zero corpus files anywhere (attestation), the RevisionAgent PascalCase wire-format leak (audit C8), provenance.lifecycleTransition documented against a field name RFC-006 renamed (C19), and no implementation exercising the chain. Production evidence agrees with the carve-out: muSrs mutates lifecycle state tracelessly and nothing has been harmed.
+
+**Decision**: Cell: Versioning (Fire, individual), carving the boundary of the column principle change preserves what it replaces. The Fire principle governs SEMANTIC content: a record's meaning changes by version increment or successor-and-link, never in place. STATE is the sanctioned exception: designated state fields - lifecycleState is the canonical case - mutate in place, because a state value is the record's current position in a process, not part of its meaning. The carve-out is exact: a field is state only if it is bound to a defined machine (a Lifecycle) whose transitions make some changes legal and others not; nothing else earns in-place mutation by calling itself state.
+
+With the carve-out ruled, the transition-history machinery loses its structural necessity and its removal follows under axis 2-8's evidence clause: per-field Revision sidecars (revisions.json) and ChangelogCollection (changelog.json) are removed from the standard, with the ext:addressability coupling that depends on revision provenance ([LC-AX2]'s provenance.lifecycleTransition matching) simplified accordingly. Dormancy rule applies: return trigger is a real consumer needing transition history or field-level audit - the muDemocracy Decision Log's governance audit surface is the anticipated first claimant, and when it arrives the history mechanism is designed against its actual requirements.
+
+**Scope**: Amends the Fire column principle's boundary in the Pattern Grid (rfc-decision-cce3c00e): increment over edit governs semantics; machine-bound state mutates in place. Removes revisions.json, changelog.json, ext:changelog prose records, and the revision-dependent clauses of ext:addressability's lifecycle coupling. Does not touch: the Lifecycle machinery itself (strengthened by the status-unification decision of the same date), record createdAt/updatedAt envelope timestamps, or RFC revision-history records in the spec process (those are authored content, not the removed mechanism). Execution rides the removal batch after the #273 train; roadmap entries carry the cell and trigger.
+
+**Governing Values**:
+- evolution
+- semantic-integrity
+
+**Project Phase**: formation
+
+**Alternatives Considered**: (1) Require transition traces (keep a minimal changelog): honest under a strict reading of the Fire principle, and re-legitimizes the machinery - rejected because no present consumer needs history, the specified mechanism has documented defects, and axis 2-8 prices maintaining defective unused machinery as speculative. When the Decision Log's audit surface arrives, a mechanism designed against real requirements will be better than this one preserved. (2) Remove the machinery without ruling the carve-out - rejected: it silently decides the principle by default, the exact failure mode the coupling flag existed to prevent. (3) Make lifecycleState itself versioned/successor-based - rejected: it would make every state transition a record-identity event, conflating process position with meaning.
+
+**Accepted Costs**: Until the history mechanism returns, state transitions are unwitnessed: a record shows where it is, not how it got there. Auditability of lifecycle progression is deferred to the claimant that needs it. The [LC-AX2] addressability coupling loses its revision-provenance leg. The carve-out adds one boundary definition (machine-bound state) that reviewers must apply.
+
+**Evidence**:
+- srs#435 finding F1 (the coupling) and the column coherence check
+- 2026-08-21 attestation: zero revisions.json / ChangelogCollection files in all corpora; muSrs mutates lifecycleState tracelessly in production
+- srs#435 findings C8 (RevisionAgent PascalCase leak) and C19 (provenance.lifecycleTransition names a pre-RFC-006 field) - the incomplete-specification evidence
+- rfc-decision-cce3c00e (the Fire column principle this carves)
+
+**Review Trigger**: The roadmap return trigger: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface. Also review if a second field class beyond lifecycleState claims the state carve-out; the machine-bound test must hold or the boundary is wrong.
+
+
 **Title**: Every reference names its strength: the Reference taxonomy
 
 **Decision Status**: accepted
