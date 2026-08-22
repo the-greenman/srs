@@ -2,24 +2,6 @@
   "$comment": "Records that are deliberately reachable from no declared presentation (#285). Read by scripts/check-publication-reachability.mjs. Every entry names the instance, why it is invisible, and the issue that owns its real resolution. An entry for an instance that no longer exists, or one that has since become reachable, is an error — a stale exclusion is how a suppression list becomes a permanent blind spot.",
   "exclusions": [
     {
-      "instanceId": "187b18d0-89ab-4591-a61f-273821f2412b",
-      "path": "package/records/invariant-187b18d0.json",
-      "reason": "Proposed invariant belonging to RFC-011, which is not accepted. It sits under `package/records/` rather than `records/invariants/`, so the RFC-016 [R1] projection does not reach it — correctly, since projecting it would publish an unratified invariant as normative. It becomes reachable by moving into `records/invariants/` if and when RFC-011 is accepted.",
-      "issue": "#285"
-    },
-    {
-      "instanceId": "49572823-6f73-42c1-9a57-4aa01fa1df43",
-      "path": "package/records/invariant-49572823.json",
-      "reason": "Proposed invariant belonging to RFC-011, which is not accepted. It sits under `package/records/` rather than `records/invariants/`, so the RFC-016 [R1] projection does not reach it — correctly, since projecting it would publish an unratified invariant as normative. It becomes reachable by moving into `records/invariants/` if and when RFC-011 is accepted.",
-      "issue": "#285"
-    },
-    {
-      "instanceId": "f287f47c-c64a-400a-b348-89374b26bbce",
-      "path": "package/records/invariant-f287f47c.json",
-      "reason": "Proposed invariant belonging to RFC-011, which is not accepted. It sits under `package/records/` rather than `records/invariants/`, so the RFC-016 [R1] projection does not reach it — correctly, since projecting it would publish an unratified invariant as normative. It becomes reachable by moving into `records/invariants/` if and when RFC-011 is accepted.",
-      "issue": "#285"
-    },
-    {
       "instanceId": "05fc673c-0d59-45ae-80d5-0c1a879d32d4",
       "path": "package/records/rfc-change-05fc673c.json",
       "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",

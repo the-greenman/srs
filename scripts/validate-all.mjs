@@ -165,6 +165,15 @@ async function validateAll() {
   const publicationReachable = await runScript('check-publication-reachability.mjs');
   if (!publicationReachable) allValid = false;
 
+  // Every com.semanticops.spec/invariant record lives in the RFC-016 projection root, with no
+  // exclusion-list escape (srs#410). The #285 guard above already refuses to treat a stray invariant
+  // as published; that guard's exclusion list is exactly the lever that let the RFC-011 invariants
+  // sit outside the root for weeks on a factually wrong "unaccepted RFC" reason. This makes literal
+  // [R1] mechanically true: placement in the root is what makes an invariant normative, and nothing
+  // can declare a stray one deliberately invisible instead of relocating it.
+  const invariantPlacementValid = await runScript('check-invariant-placement.mjs');
+  if (!invariantPlacementValid) allValid = false;
+
   // ...and every guard demonstrably fails on the violation it exists to catch — including
   // validate-package.mjs's own ten-kind coverage (#391), whose blueprint cases would otherwise be
   // green on an empty list. A guard nobody has watched fail is indistinguishable from a guard that

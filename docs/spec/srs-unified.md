@@ -3703,6 +3703,8 @@ Conforming implementations must uphold the following invariants.
 
 **I-127.** When both `typeFilter` and `memberOrder` are present on a `container-subset` section, `typeFilter` is applied first to obtain the filtered member set; `memberOrder` is then applied over that filtered set. `memberOrder` entries naming members excluded by `typeFilter` are silently skipped (no diagnostic). Unlisted filtered survivors are appended in the same topological-sort-by-`precedes` order used in Invariant I-126 step (3). The `direction` reversal of Invariant I-126 step (4) applies to the combined result after `typeFilter` and `memberOrder` are both applied. (RFC-015 Change B.)
 
+**I-144.** When SectionSource.type-query carries containerScope, implementations MUST apply the following scoping rules: (a) When containerScope is absent or "explicit", the query is scoped to the containers listed in containerIds[] — existing behaviour. An absent containerIds[] with explicit scope produces an empty result. (b) When containerScope is "repository", the query spans all containers in the repository; containerIds[] MUST be ignored. (c) When containerScope is "subtree", the query spans the context container and all containers reachable by contains relations from each container in containerIds[]; when containerIds[] is absent or empty, the context container is used as the subtree root. An implementation that cannot determine the context container for a subtree query MUST treat it as "explicit" with an empty containerIds[] and SHOULD emit a diagnostic. Implementations MUST NOT produce a validation error when containerScope is absent; absent is equivalent to "explicit".
+
 #### ext:addressability
 
 **33.** `Revision.priorRevisionId`, when present, must reference a `Revision.revisionId` for the same `fieldId` and `recordId`. Revision chains must be acyclic.
@@ -3898,6 +3900,12 @@ Conforming implementations must uphold the following invariants.
 **I-123.** An implementation that declares `ext:discovery` MUST pass all structured-filter conformance scenarios (`exactMatch: true`) from the fixture at `srs/conformance/discovery/scenarios.json`, returning exactly the `expectedInstanceIds` set for each such scenario. (RFC-012 R11.)
 
 **I-124.** An implementation that declares `ext:discovery` MUST pass all content-match conformance scenarios (`exactMatch: false`) from the fixture at `srs/conformance/discovery/scenarios.json` — its result set for each such scenario MUST be a superset of the scenario's `expectedInstanceIds`. (RFC-012 R12.)
+
+#### ext:views-l2 + ext:lifecycle
+
+**I-142.** When SectionSource.type-query carries a non-empty lifecycleStates array, implementations MUST restrict the query result to Records whose lifecycleState matches any value in the array (OR semantics). A Record with no lifecycleState MUST be excluded when lifecycleStates is present and non-empty. When lifecycleStates is absent or empty, no filtering by this field is applied and all lifecycle states (including absent) are included. Implementations that do not declare ext:lifecycle MUST ignore lifecycleStates and MUST NOT produce a validation error on its presence.
+
+**I-143.** When SectionSource.type-query carries a non-empty excludeLifecycleStates array, implementations MUST exclude from the query result any Record whose lifecycleState matches any value in the array. When lifecycleStates and excludeLifecycleStates are both present and non-empty, inclusion filtering (I-142) MUST be applied first; exclusion filtering is then applied to the survivors. A Record with no lifecycleState is not excluded by excludeLifecycleStates (only Records with a matching non-null lifecycleState are excluded). When excludeLifecycleStates is absent or empty, no exclusion is applied. Implementations that do not declare ext:lifecycle MUST ignore excludeLifecycleStates and MUST NOT produce a validation error on its presence.
 
 #### Other
 
