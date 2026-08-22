@@ -609,3 +609,281 @@ Deferring the Field does not defer the discipline. Minting is the irreversible a
 **Review Trigger**: Review only if the substrate data migration surfaces a live consumer reading the `properties` key by name outside the first-party corpus.
 
 
+**Title**: Every reference names its strength: the Reference taxonomy
+
+**Decision Status**: accepted
+
+**Decision Date**: 2026-08-21
+
+**Decision Rationale**: The audit found reference the least uniform axis (~8 shapes; findings A2, A5-A9, A11, C5). All three open choices were determined by the ratified preference layer: object-everywhere rejected by axis 2-8's evidence clause (breaking with no evidence-led need); the string form demoted by axis 1-7 (stored form serves integrity, the string is expression); aliases dropped by Description's one-name-over-many. The folded-in items (packageDependencies rename for the manifest-side dependencyRefs, lifecycleRef and Protocol TypeRef as LINEAGE, definitionType enum derived from the package-manifest's ten kinds, locator mode unification) follow from one-form-per-strength.
+
+**Decision**: Cell: Reference (Air, relational) - declared strength over convenient reach; the axis 1-7 preference (Semantic Integrity over Practical Expression) made mechanism. Four reference strengths, one form each:
+
+PINNED - this thing, this version; semantics frozen. Form: the domain-named {id, version} pair, both required. Appears as an object when the reference is a value (arrays, slots - the ExactTypeRef shape, collapsed to one shared definition) and as flat sibling properties when spread at an entity root (Record.typeId + typeVersion, the extends* pairs). One rule, two positions; the pair, not the wrapper, is the canonical thing. Used by: record-to-type binding, Blueprint.rootTypes, rootTypeRefs, inheritance extends, bundle dependencyRefs.
+
+LINEAGE - this thing, whatever version the context installs. Form: bare UUID (format: uuid); the effective package set resolves. Used by: fieldId in assignments/views/themes, renderViewId, typeDispatch values, lifecycleRef, discovery and theme typeId, vocabularyRef (migrated), Protocol TypeRef (typeVersion dropped - version-optional hybrids are forbidden).
+
+KEYED - whatever matches this name in an explicitly-scoped set. Form: string key with the scope stated by the construct: namespace/name resolves against the effective package set (typeFilter, typeDispatch keys); bare keys resolve against an installed substrate container (relationType, lifecycle state keys, term keys). Alias resolution is dropped: KEYED is key-only (one name over many); renaming a substrate entry is a supersession act through the status vocabulary. Package dependencies are the one sanctioned constraint form: KEYED with a semver range, existing only at the package layer.
+
+LOCATOR - where to fetch bytes, never what they mean. Form: one mode-discriminated shape {mode: local|remote|bundled, path|url|id}, shared by packageRef and ThemeReference (packageRef's 'external' becomes 'remote'). After fetch, identity is verified from the fetched content's own ids; a locator never overrides semantics.
+
+Cross-rules: hints never resolve (Invariant 28 generalized - a denormalized companion loses to its ref, visibly); substrate entries are KEYED references and their UUIDs serve lineage and package management, not reference; the canonical string form namespace/name@version is demoted to the DISPLAY serialization of a pinned reference (CLI output, docs, diagnostics) and never a stored form; strength is declared where the reference is defined - in the metamodel, the strengths become the modes of the ref-datatype Field; no fifth strength without a charter amendment.
+
+The axis 2-8 corollary, stated once: instances PIN; presentation and dispatch follow LINEAGE or KEYED; nothing else absorbs a version bump.
+
+**Scope**: Governs every reference in the standard. Execution: schema and IDL edits ride the #273 train (they touch the same files); the ExactTypeRef $ref collapse and small annotations ride the schema-mechanical unit; vocabularyRef and packageRef.external migrations are in-train data moves. Dispositioned findings: A2, A5, A6, A7, A8, A9, A11, C5.
+
+**Governing Values**:
+- shared-coherence
+- semantic-integrity
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Object-form-everywhere (rejected: breaking without evidence); keeping ns/name@version as a stored form (rejected: the fifth shape the taxonomy exists to eliminate); implementing aliases (rejected: a second resolution path needing its own justification; returns via the roadmap only with practice-sharing evidence).
+
+**Accepted Costs**: The one-rule-two-positions PINNED form is a stated asymmetry reviewers must know; version-independent dispatch remains a deliberate Practical Expression concession bounded by axis 1-7's clause; dropping aliases prices substrate renames as supersession acts.
+
+**Evidence**:
+- srs#435 audit findings A2, A5, A6, A7, A8, A9, A11, C5 and the reference-taxonomy draft + decisions-vs-layer review on the thread
+- rfc-decision-cce3c00e (the preference layer that determined the choices)
+- RFC-008 (version-independent dispatch rationale), RFC-009 (UUID-anchored chain), Invariant 28
+
+**Review Trigger**: A construct that genuinely needs a fifth strength, or the display-form demotion proving insufficient for a real interchange case.
+
+
+**Title**: Retirement has one way per layer
+
+**Decision Status**: accepted
+
+**Decision Date**: 2026-08-22
+
+**Decision Rationale**: The audit found nine-plus replacement mechanisms across five layers (supersession inventory) with the same words meaning different things in different enums. The preference layer determined the shape: Reliability over Renewal demands standing contracts hold and renewal be explicit; the three-layer split follows from how each layer is referenced (pinned / keyed / linked). The owner's dispositions had already ruled the parts (deprecation-by-deletion for Fields, substrate status vocabulary, RFC-022 supersession); this record states them once as one system.
+
+**Decision**: Axis 5-11 (Reliability over Renewal) applied: each layer has exactly one retirement mechanism, and renewal never silently breaks a standing contract.
+
+DEFINITIONS (Field, Type, View, Composition, Theme, Blueprint, Protocol, Package definitions) retire by DELETION, with version history as the trail - there is no deprecation state at the definition layer (the audit's carve-out C10, now stated). A definition that must signal replacement does so by a successor version; consumers pin, so deletion cannot break a pinned reference retroactively.
+
+SUBSTRATE ENTRIES (Terms, LifecycleStates, RelationTypeDefinitions) retire by STATUS - the existing four-stage vocabulary (active, deprecated, tombstone, retired) - because instance data addresses them by string key and cannot be version-pinned; the key must keep resolving while carrying its retirement.
+
+INSTANCES (Records) retire by SUPERSESSION - successor-and-link (supersedes/refines), per the Fire column principle; history stays addressable.
+
+Cross-layer rules: every retirement exception (allowlist entry, grandfather clause, compatibility label) carries its expiry condition and dies when the condition is met - a justification whose cited ground has changed is expired even if nobody noticed (the self-expiring-exception rule, now charter-level after finding C5's silent expiry). JSON Schema's deprecated:true annotation accompanies every documented deprecation (machine-readable, finding C16). The word 'deprecated' is reserved for the substrate status; definitions are never 'deprecated', they are removed.
+
+**Scope**: Governs all future retirements and the removal executions now queued. Dispositioned findings: C10 (stated as rule), C15 direction (extension retirement becomes a status-bearing declaration when extensions gain structure - until then prose retirement is a known gap, not a sanctioned mechanism), C16, C20 (the word 'tombstone' stays substrate-only; the source-document index concept is renamed in its own cleanup), the C17 vocabulary split (evidence/evidences) rides the #273 train.
+
+**Governing Values**:
+- shared-coherence
+- semantic-integrity
+
+**Project Phase**: formation
+
+**Alternatives Considered**: A single cross-layer deprecation status (rejected: definitions are pinned, so status on them is dead weight - deletion with version history is strictly cleaner); no expiry rule for exceptions (rejected: finding C5 showed an allowlist justification silently expiring when its cited schema condition changed).
+
+**Accepted Costs**: Definition deletion is abrupt for consumers who ignored pinning discipline - accepted, since unpinned consumption of definitions is already outside the contract. The expiry rule adds review overhead to every exception.
+
+**Evidence**:
+- srs#435 supersession inventory and findings C5, C10, C15, C16, C17, C20
+- rfc-decision-cce3c00e (axis 5-11: Reliability over Renewal)
+- RFC-022 (supersession coupling), the substrate status vocabulary (RFC-006 V5/V6)
+
+**Review Trigger**: A retirement case that genuinely fits none of the three layer mechanisms, or extension structure landing (which converts C15's prose gap into a status field).
+
+
+**Title**: A rename is a migration
+
+**Decision Status**: accepted
+
+**Decision Date**: 2026-08-22
+
+**Decision Rationale**: The audit's naming findings (C8's five spellings, C20's double meaning, A13/C19's stale renamed references) all trace to renames executed partially - the name changed where convenient and lingered elsewhere. Shared Coherence wins by default on axis 3-9, so a name's meaning is system-wide property; changing it locally-only produces exactly the incompatible-interpretation state the axis's boundary clause forbids. The migration framing already governs carrier changes; this extends it to names as such.
+
+**Decision**: Axis 3-9 (Shared Coherence over Local Autonomy) with Description's preference (one name over many): a name in the standard - a property key, a substrate key, an entity name, a spec term - is a contract, and changing one is a MIGRATION, never an edit. A rename ships as: the ruled decision naming old and new; a deterministic data/schema migration where stored forms carry the name; a generation stamp where the carrier changes (dataModelRevision); and the one-name end state - the old name does not linger as an accepted alias (KEYED is key-only per the reference taxonomy; substrate renames go through supersession status per the retirement ruling). Already-executed instances of this pattern are its precedent, not exceptions: valueType to fieldType (RFC-032), properties to meta (#433), Evolution to Governance (grid cell), DocumentView to Composition (#272). A rename that cannot afford its migration is not ready to happen.
+
+**Scope**: Governs every future rename in spec text, schemas, substrate keys, and grid vocabulary. The pending renames it disciplines: properties→meta (srs#433, already scoped this way), Composition (#272), packageRef external→remote and the dependencyRefs→packageDependencies rename (reference-taxonomy execution), the evidence/evidences vocabulary reconciliation (#273 train). Stale-reference cleanups from past renames (A13, C19) ride the truth-sync unit.
+
+**Governing Values**:
+- shared-coherence
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Alias-based grace periods for renames (rejected - two live names is the C8/C20 state this rule exists to prevent; grace lives in the migration tooling, not the name space); treating prose-only renames as exempt (rejected - A13 showed normative records lagging a ruled rename for months).
+
+**Accepted Costs**: Renames become heavier: even a better name waits until its migration is affordable. Accepted deliberately - the phase-bound Evolution default makes them cheap NOW, and the Continuity flip will make this rule the main guard later.
+
+**Evidence**:
+- srs#435 findings C8, C20, A13, C19
+- rfc-decision-cce3c00e (axis 3-9, Description's preference)
+- rfc-decision-6fc7e142 (properties→meta - the pattern's cleanest instance)
+- RFC-032 (valueType→fieldType, the carrier-migration precedent)
+
+**Review Trigger**: At the Continuity flip, when rename costs rise: confirm the rule's migration bar matches the post-flip breaking-change bar.
+
+
+**Title**: What a container can hold, a bundle can carry
+
+**Decision Status**: accepted
+
+**Decision Date**: 2026-08-22
+
+**Decision Rationale**: The mission is semantic sovereignty THROUGH portable data, and the practice-sharing articulation (rfc-decision-2e0cd70a) ranks the sharing of fields, types, blueprints and protocols above the content itself. The attestation showed the Water column dormant while srs#390 sat as a known gap: both governance-shaped packages would be unexportable the day they used what containers can hold. Portability over Possession makes the travelling form the test, not an afterthought.
+
+**Decision**: Axis 6-12 (Portability over Possession) applied as the travel mandate: every construct the standard lets a repository hold MUST be expressible in the standard's travelling forms - the package bundle for definitions, the archive/slice forms for content. A capability that exists only in place is captivity, the purpose statement's named failure mode. Concretely and immediately: the package-bundle format's inability to carry Themes, Blueprints, and Protocols (srs#390) is promoted from bug to mandate violation - the bundle grows to carry every one of the package-manifest's ten definition kinds, and the two lists are derived from one source so they cannot diverge again (finding A6's enum derivation). Standing rule for every future construct: the travelling form ships in the same RFC that introduces the held form, or the RFC states the explicit axis 3-9 local-boundary exception that keeps it in place.
+
+**Scope**: Promotes srs#390 to mandated work (bundle carries all ten kinds; execution scheduled with the #272/#273 window where bundle schemas are already open). Binds all future RFCs introducing holdable constructs. Does not mandate federation machinery (removed separately) - travel here is the artifact forms, not the transport.
+
+**Governing Values**:
+- semantic-integrity
+- shared-coherence
+- local-autonomy
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Treating #390 as an ordinary capability gap to schedule on demand (rejected: the mission's own failure mode deserves a standing rule, not a ticket); mandating full parity including runtime state (rejected: state and runtime surfaces are not held constructs; the mandate covers what the standard defines as holdable).
+
+**Accepted Costs**: Every future construct pays a travel tax at design time (its bundle/archive expression, or an explicit exception). The bundle format grows and its schema churns with the ten-kinds derivation.
+
+**Evidence**:
+- srs#390 (the proving gap)
+- srs#435 findings B7, C11, A6
+- rfc-decision-cce3c00e (axis 6-12) and rfc-decision-2e0cd70a (practice-sharing mission)
+- RFC-026 (slices, the content-side travelling form)
+
+**Review Trigger**: A construct whose travelling form is genuinely impossible rather than unbuilt - that would mean the construct itself violates the axis and needs redesign, not exemption.
+
+
+**Title**: Attribution is optional, single-shaped, and never authority
+
+**Decision Status**: accepted
+
+**Decision Date**: 2026-08-22
+
+**Decision Rationale**: The census found Attribution the one cell with no governing principle at all, and the polarity with Repository empty - while the column coherence check showed systemic trust (Portability, the mission cell) inherits upward from it. The attestation found the machinery at absolute zero use (0 of 250 relations) in five divergent shapes. Ruling the principle before removing the machinery is the F1 lesson applied: never let a removal silently decide a principle. Office over Testimony is also the anti-mimicry defense in axis form - the tool-enforced record over the plausible-looking assertion.
+
+**Decision**: Axis 4-10 (Office over Testimony - Athena over Aphrodite) and the Attribution cell (stated over assumed), ruled as the cell's foundation principle:
+
+OPTIONAL - attribution is never required for validity. An unattributed statement is unattributed, not invalid and not implicitly attributed to anyone.
+
+SINGLE-SHAPED - when attribution is expressed, there is ONE shape for who/when/why across the standard: one asserter vocabulary (one casing, one set of kinds - replacing the five spellings the audit found), one timestamp convention, one reference-to-source convention (sourceRefs). The concrete shape is designed when the machinery returns (see below); this ruling fixes its constraints in advance.
+
+NEVER AUTHORITY - attribution informs trust and diagnosis; it never overrides the record. The catalog, the manifest, the validated content are office; who-said-so is testimony, which fills gaps and can be PROMOTED into office only by a verification mechanism (a signature, a ratified decision, a verified publisher) - promotion is the sanctioned path by which testimony hardens, and it produces office artifacts, not privileged testimony.
+
+With the principle ruled, the current machinery's removal (the five divergent shapes: Relation provenance fields, FieldMeta.source's divergence, RevisionAgent's casing) is safe: the cell keeps its principle and its dormancy trigger - attribution machinery returns, in the single shape, when a consumer needs it, with travelling packages needing trustable publishers as the anticipated claimant.
+
+**Scope**: Establishes the Attribution cell's principle and the constraints on any future attribution mechanism. Enables the removal of the current provenance machinery (executed under the attested-removals record). Governs the future verification design (testimony-to-office promotion) when practice-sharing demands publisher trust. The single-shape constraint retroactively governs FieldMeta if it survives in any form.
+
+**Governing Values**:
+- shared-coherence
+- local-autonomy
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Unifying the five shapes now (rejected: unifying unused machinery is speculative - axis 2-8; the constraint is recorded instead so the return is shaped); making attribution mandatory for AI-asserted writes (deferred, not rejected: a real candidate for the verification design when agent-written content needs marking - noted for the return trigger).
+
+**Accepted Costs**: Until the machinery returns, the standard cannot express who asserted what - accepted, the office layer (validated records, tool-enforced writes) carries trust alone. The promotion path is a constraint on future design, priced now.
+
+**Evidence**:
+- srs#435 census (the empty cell and empty polarity) and findings C6, C7, C8
+- 2026-08-21 attestation (0/250 relations carry provenance; five divergent shapes)
+- rfc-decision-cce3c00e (axis 4-10, Athena over Aphrodite; the column inheritance argument)
+
+**Review Trigger**: The return claimant arrives: travelling packages need trustable publishers, or agent-written content needs marking. The mechanism then designed must satisfy all three clauses.
+
+
+**Title**: The attested removals: pruning the dormant machinery
+
+**Decision Status**: accepted
+
+**Decision Date**: 2026-08-22
+
+**Decision Rationale**: Ruling 3 of the track's governing rulings: unused systems are removed after muSrs attestation, with roadmap return triggers - a spec that does what it says beats one that half-does things. The attestation (production muSrs as decisive witness, the spec repository, two derivative trees) supplied the evidence per candidate; the preference layer supplied the tests (dormancy, cell preferences, the Succession limit case that KEEPS machinery a preference requires). The 34-prose-records federation finding also confirms the audit's meta-observation: spec weight was anti-correlated with usage - pruning restores the correlation.
+
+**Decision**: Under the dormancy rule (rfc-decision-cce3c00e) and axis 2-8's evidence clause, the constructs the 2026-08-21 usage attestation found exercised nowhere are removed from the standard. Each entry keeps its cell's name and carries its return trigger to the roadmap; a return re-enters through the charter as an evidence-shaped design.
+
+REMOVED:
+1. Relation provenance fields (assertedBy, confidence, status, createdBy, validFrom, validUntil) - 0 of 250 relations anywhere. Cell: Attribution; the cell's principle is ruled separately and survives the machinery. Trigger: the attribution mechanism's return claimant.
+2. Federation entities (registry, events, cross-repository relation fields) - zero data; 34 prose records and 7 invariants specify it. Cell: Portability. Return: COMMITTED, not evidence-gated - federation is core to SRS (owner, 2026-08-22); this removal is a deliberate reset of a design that predates real practice, not a judgment on the capability. The redesign returns as a planned roadmap phase, grounded in the sharing forms that actually emerged (bundles, slices, git-hosted repositories) and the axis 4-10 verification path; the owner schedules it. The travel mandate covers artifact-form portability meanwhile.
+3. Revisions sidecars + ChangelogCollection - ruled in rfc-decision-2a1e1590 (cross-referenced, not re-ruled here).
+4. SectionSource variants fixed-instances and relation-query - 0 of 13 real sections. Cell: Conformance (one way over many; container-subset and type-query are the two live ways). Trigger: a composition need neither live variant expresses.
+5. View.protection (the view-root enum, none/read-only/fill-in - corrected attribution: it sits on the View, not on FieldView) - zero use, and a hint without a contract: no enforcement semantics are defined anywhere. Cell: Description. Trigger: a real authoring surface needing edit protection, which must design the missing enforcement half. Note: FieldView.required is NOT in this entry - it is attested in production use (muSrs decision-log view) and is dispositioned separately as a form-vs-validity distinction ruling.
+6. ext:repeatable-fields - nothing beyond repeatable:false outside a stale ancestor tree. Cell: Identity. Trigger: a consumer with genuine array-valued assignments (note: RFC-032 cardinality already carries list semantics - the return may be a merge, not a revival).
+7. vocabularyRef's string form - absorbed by the reference taxonomy (becomes LINEAGE); listed for completeness.
+
+DISPOSED WITHOUT REMOVAL:
+8. sourceRole vs the deprecated relationType alias at 100% usage: MIGRATE the 231 sourceRefs to sourceRole in the #273 train; if the train slips past the next release window, un-deprecate relationType instead - one name either way (rename-is-a-migration applies).
+9. The 13 custom RelationTypeDefinitions with zero assertions: user-space corpus cleanup, not spec surface - noted to corpus owners.
+
+EXPLICITLY KEPT, with reasons of record:
+- supersedes / refines / derived-from / evidences relation types: Succession's preference (successor over overwrite) REQUIRES its mechanism - a cell preference's machinery is not removable while the preference stands. The evidences/evidence spelling reconciliation rides the #273 train.
+- ext:lifecycle and type-inheritance: attested in production use in muSrs.
+- Protocols: the definition model is kept (well-designed, near-term consumers in the Workflow Editor and the protocol-runs-first Decision Log direction); the genuinely thin RUN semantics are the dormant half, designed at consumer time. 
+- Instance meta and substrate properties (renaming to meta): policy affordances, not usage-gated features.
+- ext:discovery: conformance contract, not corpus machinery.
+
+**Scope**: Authorizes the removal execution units (relation provenance, federation, small surfaces) and the sourceRole in-train migration. Each removal PR cites this record; each roadmap entry carries cell + trigger and lands when the roadmap (PR #389) merges. Implementation follow-ups in srs-rust are filed as each spec unit lands.
+
+**Governing Values**:
+- evolution
+- semantic-integrity
+- shared-coherence
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Keeping the machinery marked experimental (rejected: a third conformance class for zero-user constructs); removing the supersedes family for symmetry with its zero usage (rejected: the dormancy rule's limit case - preference-required machinery stays); deleting protocols wholesale (rejected on the owner's cost condition: fixing the well-designed definition model is clearly cheaper than re-planning it).
+
+**Accepted Costs**: The spec loses stated ambitions (federation, field-level provenance) until practice earns them back; the prose removals are large diffs through normative records; returns will not match the removed designs - deliberately, since the removed designs were speculation.
+
+**Evidence**:
+- 2026-08-21 usage attestation (per-candidate zero-use evidence; muSrs decisive witness)
+- srs#435 removal shortlist, decisions-vs-layer review, and the protocols cost assessment
+- rfc-decision-cce3c00e (dormancy rule, cell preferences), rfc-decision-2a1e1590 (revisions/changelog), the attribution and travel decisions of the same batch
+
+**Review Trigger**: Each entry's own return trigger, recorded on the roadmap. Collectively: if two returns arrive within one phase, re-examine whether the attestation's corpus base was too narrow.
+
+
+**Title**: Layers stay separate: the layer rules
+
+**Decision Status**: accepted
+
+**Decision Date**: 2026-08-22
+
+**Decision Rationale**: The owner's ruling: layers must be kept separate, as a baked decision register. The evidence is the audit's freshest confirmed findings, each a layer violation the grid alone did not name: SectionSource re-implementing the discovery contract inside composition (rule 2), FieldView.required carrying validity in presentation (rule 3), View.exportConfig holding projection config in the presentation layer (rule 1), protection as behavior without a contract (rule 6). Each rule generalizes ground already ruled once (I-28, spec independence, capability layering, view-owned presentation, the three-layer policy) - the register states the stacking discipline in one place instead of leaving it distributed as precedent.
+
+**Decision**: A companion register to the Pattern Grid (rfc-decision-cce3c00e): where the grid locates concerns by element and level, the layer rules govern STACKING - what sits on what, what may know about what. The stack has three planes, each with named layers:
+
+MEANING (what things are): substrate -> definitions -> instances. Per-layer contracts already ruled: the three-layer unknown-key policy, retirement one-way-per-layer, the reference taxonomy binding the layers (instances PIN definitions; definitions KEY substrate).
+
+EXPRESSION (how meaning is shown): selection -> composition -> presentation -> projection. Selection is the one query shape (the discovery contract); composition arranges selected meaning into document structure; presentation renders it (views, themes); projection is the emitted artifact. Each stage consumes its predecessor's output and adds exactly its own concern.
+
+OPERATION (who does what): core service -> adapters (CLI, WASM, MCP) -> clients. Capability layering, raised from implementation ADR to charter level: semantics live once in the core; adapters translate; clients present.
+
+THE SIX LAYER RULES:
+1. ONE HOME - every construct names its plane and layer; a concern expressed in two layers is drift by definition.
+2. CONSUME, DON'T CLONE - an upper layer references the lower layer's constructs through the reference taxonomy; it never re-implements a lower-layer mechanism. (The SectionSource root cause: type-query cloning the discovery axes divergently.)
+3. EXPRESSION NEVER ALTERS MEANING - nothing in selection, composition, presentation, or projection may change validity, identity, state, or relations. Meaning-plane facts are set only in the meaning plane. (FieldView.required carrying validity; relations-never-change-lifecycle, generalized.)
+4. CROSSINGS ARE DECLARED, AND THE LOWER LAYER WINS - where a layer legitimately carries another layer's data (denormalized hints, composition order as a render default), the crossing is named where it occurs and conflicts resolve downward, visibly (Invariant 28 generalized). Identity conflicts remain fatal per the Earth rule - they are not crossings.
+5. EVERY LAYER STANDS ALONE BELOW - a layer must be complete and valid with every layer above it absent: the spec without any implementation, records without any view, selection results without any composition. Deleting all expression changes nothing about meaning. (Spec independence, generalized to every boundary.)
+6. BEHAVIOR NEEDS A CONTRACT - an affordance enters the standard only with enforcement semantics; until then it is application-private behind axis 3-9's explicit-local boundary. (The protection lesson: a hint without a contract is neither testable nor portable.)
+
+THE REVIEW TEST, three questions asked of every proposal alongside its cell: Which layer owns this? Does it consume or clone downward? Can the layer below it still stand alone?
+
+**Scope**: Governs all future design decisions and reviews alongside the Pattern Grid; the #272 Composition remodel executes rules 1-3 for the expression plane (selection via the one query shape, exportConfig relocation, the required distinction); the operation plane's rule binds spec-adjacent tooling decisions (the capability-layering ADR remains the implementation-side elaboration). Refinable by successor decision per the charter rule.
+
+**Governing Values**:
+- shared-coherence
+- semantic-integrity
+- local-autonomy
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Folding layer discipline into the grid's cell preferences (rejected: layers are orthogonal to element x level - SectionSource's violation crossed cells but was invisible to cell preferences; stacking needs its own register). Leaving it as accumulated precedent (rejected: that is the rule-stated-once-sites-silent failure shape the audit diagnosed).
+
+**Accepted Costs**: A second register reviewers must apply (the three-question test alongside the cell check); some legitimate conveniences become formal crossings needing declaration; plane/layer vocabulary to learn.
+
+**Evidence**:
+- srs#435: the SectionSource, FieldView.required, exportConfig, and protection layer checks (owner-confirmed 2026-08-22)
+- rfc-decision-cce3c00e (the grid this register accompanies)
+- Invariant 28 (crossing precedent), subsection 01-5 and spec independence (rule 5 precedent), srs-rust capability-layering architecture doc (operation plane), RFC-015/RFC-036 view-owned rulings (rule 3 precedent), the three-layer forward-compat policy (meaning plane)
+
+**Review Trigger**: A construct that genuinely needs a new layer or plane; or the three-question test failing to catch a violation the audit style later finds - the register, like the grid, is refined rather than bypassed.
+
+
