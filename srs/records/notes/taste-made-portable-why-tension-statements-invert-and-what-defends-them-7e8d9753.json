@@ -1,12 +1,7 @@
 {
+  "$schema": "https://srs.semanticops.com/schema/2.0/note.json",
+  "createdAt": "2026-08-23T09:10:00Z",
   "instanceId": "7e8d9753-044d-4374-9aa2-0939a0d85cfd",
-  "title": "Taste Made Portable: why tension statements invert, and what defends them",
-  "tags": [
-    "fundamental-tensions",
-    "charter",
-    "topic:meta",
-    "foundations"
-  ],
   "sections": [
     {
       "name": "capture_context",
@@ -37,5 +32,11 @@
       "content": "Rung 0 by the repo's capture ladder: this is background meaning — not a ratified decision (no alternatives-with-costs) and not structure (the grid's cells, axes and preferences will be Tier-2 data when the charter self-hosts). GRADUATION: when srs#273's charter self-hosting lands the matrix as typed records, this note graduates via derived-from into the rationale that accompanies them (a design note or the matrix records' evidence base). Until then it stays here, linked from the Decision Compass (#461) as background reading."
     }
   ],
-  "$schema": "https://srs.semanticops.com/schema/2.0/note.json"
+  "tags": [
+    "fundamental-tensions",
+    "charter",
+    "topic:meta",
+    "foundations"
+  ],
+  "title": "Taste Made Portable: why tension statements invert, and what defends them"
 }
