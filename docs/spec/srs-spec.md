@@ -393,12 +393,12 @@ Before RFC-032, value semantics were a single closed enum, `valueType`, with the
 
 #### `FieldAssignment`
 
-A Field reference within a Type. Configures presentation without redefining field semantics.
+A Field reference within a Type. Declares this field's composition order and requiredness within the Type, without redefining field semantics.
 
 ```typescript
 {
   fieldId: UUID     // references Field.id
-  order: integer    // min: 0; display and processing order within the Type
+  order: integer    // min: 0; declared composition order within the Type — structure, not presentation; feeds canonical serialisation and provides the render default (a View may override for display; see RFC-015)
   required?: boolean  // default: true
 
   // Presentation-only — must NOT affect AI guidance, extraction, fieldType, or validation
@@ -1340,7 +1340,7 @@ A named stage in a Protocol. Stages have epistemic dependencies (`dependsOn`) �
 ```typescript
 {
   stageId: string       // stable key within this Protocol
-  order: integer        // min: 0; display/presentation order only — see note below
+  order: integer        // min: 0; declared composition order of the stages — see note below
   purpose: string       // what understanding this stage builds
   question: string      // the core question this stage answers
   dependsOn: string[]   // stageId values; epistemic dependencies, not just ordering
@@ -1351,7 +1351,7 @@ A named stage in a Protocol. Stages have epistemic dependencies (`dependsOn`) �
 }
 ```
 
-**`order` vs `dependsOn`:** `order` is the display and presentation sequence — how stages are shown in a UI or facilitation guide. Execution sequence is determined by `dependsOn` resolution: a stage runs when all its declared dependencies are satisfied, regardless of its `order` value. Authors must ensure `order` is consistent with the partial order implied by `dependsOn` (i.e. a stage's `order` value should be greater than the `order` of any stage it depends on). See Invariant 31.
+**`order` vs `dependsOn`:** `order` is the declared composition order of the stages — structure, not presentation (RFC-015's layering table now states this explicitly as its own row: composition order is structure; display order is presentation; sequence is assertion). It provides the render default for how stages are shown in a UI or facilitation guide; a View may override for display. Execution sequence is determined by `dependsOn` resolution: a stage runs when all its declared dependencies are satisfied, regardless of its `order` value. Authors must ensure `order` is consistent with the partial order implied by `dependsOn` (i.e. a stage's `order` value should be greater than the `order` of any stage it depends on). See Invariant 31.
 
 #### `Protocol`
 
@@ -3695,7 +3695,7 @@ Conforming implementations must uphold the following invariants.
 
 **30.** Every `fieldId` in `ProtocolStage.contributesTo[]` must reference a `fieldId` that appears in the stage's own `outputType`'s effective field list (when `outputType` is declared), or in `Protocol.targetType`'s effective field list (when `outputType` is absent). A single stage must not contribute to both its own `outputType` and the enclosing `Protocol.targetType`. When neither `outputType` nor `Protocol.targetType` is declared, `contributesTo` must be empty.
 
-**31.** For every pair of stages A and B within a `Protocol` where B.dependsOn includes A.stageId, B.order must be greater than A.order. `order` is display order; execution sequence is determined by `dependsOn` resolution. The two must not contradict each other.
+**31.** For every pair of stages A and B within a `Protocol` where B.dependsOn includes A.stageId, B.order must be greater than A.order. `order` is the declared composition order of the stages — structure, not presentation; it provides the render default. Execution sequence is determined by `dependsOn` resolution. The two must not contradict each other.
 
 #### ext:views-l2
 
