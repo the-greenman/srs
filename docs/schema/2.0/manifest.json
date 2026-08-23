@@ -359,7 +359,7 @@
         "id": {
           "type": "string",
           "format": "uuid",
-          "description": "The boundary UUID: a containerId present in the source repository's containerIndex."
+          "description": "The boundary UUID: a containerId present in the source repository's container set (tree-authoritative enumeration, RFC-038 [R1]; the manifest's containerIndex is retired, RFC-038 [R2])."
         }
       }
     },

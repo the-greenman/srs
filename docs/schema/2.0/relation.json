@@ -36,41 +36,7 @@
       "format": "uuid",
       "description": "The related instance."
     },
-    "assertedBy": {
-      "type": "string",
-      "enum": [
-        "human",
-        "ai",
-        "imported"
-      ]
-    },
-    "confidence": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 1,
-      "description": "Meaningful for ai-asserted relations."
-    },
     "createdAt": {
-      "type": "string",
-      "format": "date-time"
-    },
-    "createdBy": {
-      "type": "string"
-    },
-    "status": {
-      "type": "string",
-      "enum": [
-        "proposed",
-        "active",
-        "rejected",
-        "superseded"
-      ]
-    },
-    "validFrom": {
-      "type": "string",
-      "format": "date-time"
-    },
-    "validUntil": {
       "type": "string",
       "format": "date-time"
     },
@@ -111,6 +77,17 @@
           "relationType"
         ]
       },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "sourceType": { "const": "repository-document" } },
+            "required": ["sourceType"]
+          },
+          "then": {
+            "properties": { "sourceId": { "format": "uuid" } }
+          }
+        }
+      ],
       "properties": {
         "sourceType": {
           "type": "string",
@@ -122,7 +99,8 @@
           ]
         },
         "sourceId": {
-          "type": "string"
+          "type": "string",
+          "description": "Free-form when sourceType is transcript-chunk/transcript-segment/external-document. When sourceType is repository-document, MUST be a SourceDocument.documentId (format: uuid, RFC-017) — enforced by the sibling if/then."
         },
         "sourceStandard": {
           "type": "string"
@@ -144,6 +122,7 @@
         },
         "relationType": {
           "type": "string",
+          "deprecated": true,
           "enum": [
             "evidence",
             "derived-from",

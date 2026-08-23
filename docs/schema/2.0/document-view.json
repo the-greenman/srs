@@ -43,6 +43,7 @@
     },
     "containerType": {
       "type": "string",
+      "deprecated": true,
       "description": "Soft-deprecated back-compat hint. When rootTypeRefs is present, MUST NOT be used for Container matching. Retained for pre-RFC-009 tools."
     },
     "rootTypeRefs": {
@@ -508,23 +509,21 @@
       }
     },
     "ExactTypeRef": {
+      "$comment": "Canonical source: field.json $defs.ExactTypeRef. Kept byte-identical here rather than a cross-file $ref because scripts/lib/json-schema-lite.mjs (the validate-all package/record validator) only resolves local '#/...' refs — see RFC-009 I-78, rfc-decision-c8704763 (ExactTypeRef collapsed to one shared definition).",
       "type": "object",
-      "description": "RFC-009. A version-exact reference to a Type, used in DocumentView.rootTypeRefs. Distinct from the spec-level TypeRef (Protocol/Blueprint) where typeVersion is optional. Both typeId and typeVersion are required — this is a package-validation-time claim against a specific type version.",
-      "required": [
-        "typeId",
-        "typeVersion"
-      ],
+      "required": ["typeId", "typeVersion"],
       "additionalProperties": false,
+      "description": "RFC-009 I-78. A version-exact reference to a Type in the Package. Both typeId and typeVersion are required. Distinct from the pre-RFC-009 spec-level TypeRef (Protocol) where typeVersion was optional.",
       "properties": {
         "typeId": {
           "type": "string",
           "format": "uuid",
-          "description": "Stable UUID of the Type (the Type's id field)."
+          "description": "Stable UUID of the Type."
         },
         "typeVersion": {
           "type": "integer",
           "minimum": 1,
-          "description": "Version of the Type this ref targets (required — version-exact anchor)."
+          "description": "Version of the Type this ref targets (required — version-exact anchor validated against the Package)."
         }
       }
     }

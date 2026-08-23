@@ -76,7 +76,7 @@ import { existsSync } from "fs";
 import { join, resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import { instancePaths, loadInstances, loadRelations } from "./lib/rfc-038-tree.mjs";
-import { INVARIANT_PROJECTION_ROOT } from "./render-invariants.mjs";
+import { INVARIANT_PROJECTION_ROOT, isInInvariantProjectionRoot } from "./render-invariants.mjs";
 import { EXPORTED_VIEW_IDS } from "./lib/view-exports.mjs";
 
 // `fileURLToPath`, not `new URL(..).pathname` — the percent-encoding trap the sibling guards
@@ -295,8 +295,7 @@ async function reachability(repoRoot) {
     if (!path.startsWith(`${INVARIANT_PROJECTION_ROOT}/`)) continue;
     // `renderInvariants` does a flat `readdir` of the root and keeps `*.json`, so a file in a
     // SUBdirectory is not projected. Treating the root as a path prefix would call it published.
-    const rest = path.slice(INVARIANT_PROJECTION_ROOT.length + 1);
-    if (rest.includes("/")) {
+    if (!isInInvariantProjectionRoot(path)) {
       fail(
         `${path} is under ${INVARIANT_PROJECTION_ROOT}/ but in a subdirectory, which the RFC-016 ` +
           `projection does not read — it is published by nothing`,

@@ -23,7 +23,7 @@ This repo is part of a monorepo (`srs`, `srs-rust`, `srs-vscode`, `srs-web`) —
 
 **Container** — lightweight grouping boundary. Its `containerId` is distinct from instance IDs and must not appear as a Relation source/target.
 
-**Repository** — directory with `.srs/` marker + `manifest.json`. The `instanceIndex` in the manifest is the authoritative member list.
+**Repository** — directory with `.srs/` marker + `manifest.json`. Membership is tree-authoritative: the repository's catalog, enumerated from the tree under the reserved instance roots, is the authoritative member list (RFC-038 [R1]). There is no `instanceIndex` in the manifest; it is retired (RFC-038 [R2]), except the root container, which the manifest carries inline at `manifest.container` (RFC-038 [R1]).
 
 ## Git commit signing (local CLI use)
 
