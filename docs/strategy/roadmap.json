@@ -1425,7 +1425,7 @@
       "kind": "normative-subject",
       "name": "Addressability and attention state",
       "stability": "extension",
-      "promise": "Tools can identify semantic locations, preserve a live point of attention, and refer back to the relevant revision.",
+      "promise": "Tools can identify semantic locations and preserve a live point of attention.",
       "capabilities": [
         "Work With Meaning",
         "Collaborate With AI",
@@ -1440,10 +1440,6 @@
         {
           "type": "repo-path",
           "ref": "docs/spec/srs-spec.md"
-        },
-        {
-          "type": "repo-path",
-          "ref": "docs/schema/2.0/revisions.json"
         },
         {
           "type": "repo-path",
