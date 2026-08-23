@@ -682,14 +682,7 @@ Implementations may automate graduation suggestions by matching section or field
   sourceInstanceId: UUID    // the asserting instance
   targetInstanceId: UUID    // the related instance
 
-  assertedBy?: "human" | "ai" | "imported"
-  confidence?: number       // 0.0–1.0; meaningful for ai-asserted
   createdAt?: ISO8601
-  createdBy?: string
-
-  status?: "proposed" | "active" | "rejected" | "superseded"
-  validFrom?: ISO8601
-  validUntil?: ISO8601
 
   notes?: string
   sourceRefs?: SourceReference[]
