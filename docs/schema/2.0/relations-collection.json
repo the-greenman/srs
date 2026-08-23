@@ -123,6 +123,17 @@
           "relationType"
         ]
       },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "sourceType": { "const": "repository-document" } },
+            "required": ["sourceType"]
+          },
+          "then": {
+            "properties": { "sourceId": { "format": "uuid" } }
+          }
+        }
+      ],
       "properties": {
         "sourceType": {
           "type": "string",
@@ -134,7 +145,8 @@
           ]
         },
         "sourceId": {
-          "type": "string"
+          "type": "string",
+          "description": "Free-form when sourceType is transcript-chunk/transcript-segment/external-document. When sourceType is repository-document, MUST be a SourceDocument.documentId (format: uuid, RFC-017) — enforced by the sibling if/then."
         },
         "sourceStandard": {
           "type": "string"
@@ -156,6 +168,7 @@
         },
         "relationType": {
           "type": "string",
+          "deprecated": true,
           "enum": [
             "evidence",
             "derived-from",
