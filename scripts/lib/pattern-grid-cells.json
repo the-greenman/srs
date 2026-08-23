@@ -1,0 +1,17 @@
+{
+  "$comment": "The Pattern Grid's twelve cell slugs (rfc-decision-cce3c00e). One source of truth: the Decision Compass (#461), the decision-record guard (check-decision-cell-tags.mjs), and the RFC-integration checker (check-rfc-integration.mjs) all read this file rather than each hardcoding their own copy (srs#462).",
+  "cells": [
+    "versioning",
+    "identity",
+    "description",
+    "attribution",
+    "succession",
+    "containment",
+    "reference",
+    "assertion",
+    "governance",
+    "repository",
+    "conformance",
+    "portability"
+  ]
+}

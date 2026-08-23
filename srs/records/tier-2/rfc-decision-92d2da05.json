@@ -25,9 +25,10 @@
     "review_trigger": "Review if srs#272's regeneration cannot execute the rename atomically with the schema rewrite, or if RFC-034's rephrasing is refused."
   },
   "tags": [
-    "topic:rfc"
+    "topic:rfc",
+    "cell:description"
   ],
   "createdAt": "2026-08-19T08:52:49.447849458+00:00",
-  "updatedAt": "2026-08-19T08:52:49.447858962+00:00",
+  "updatedAt": "2026-08-23T18:55:14.144874065+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

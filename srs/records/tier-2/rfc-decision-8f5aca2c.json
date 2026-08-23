@@ -27,9 +27,10 @@
     "review_trigger": "Review after two assessment cycles: if reach marks never changed anything worked, or balance counts were recorded but never read, the operations are ritual and should be cut - the compliance-inversion defense applied to our own additions."
   },
   "tags": [
-    "topic:rfc"
+    "topic:rfc",
+    "cell:governance"
   ],
   "createdAt": "2026-08-23T12:15:09.894899876+00:00",
-  "updatedAt": "2026-08-23T12:15:09.894905239+00:00",
+  "updatedAt": "2026-08-23T18:55:13.486808004+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

@@ -26,9 +26,10 @@
     "review_trigger": "A retirement case that genuinely fits none of the three layer mechanisms, or extension structure landing (which converts C15's prose gap into a status field)."
   },
   "tags": [
-    "topic:rfc"
+    "topic:rfc",
+    "cell:succession"
   ],
   "createdAt": "2026-08-22T11:31:44.391383922+00:00",
-  "updatedAt": "2026-08-22T11:31:44.391386023+00:00",
+  "updatedAt": "2026-08-23T18:55:11.456435027+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

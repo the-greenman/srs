@@ -34,7 +34,10 @@
     ],
     "review_trigger": "A future com.semanticops.spec/invariant record discovered outside records/invariants/ that scripts/check-invariant-placement.mjs flags: resolve by relocating and renumbering per this decision, not by adding a new publication-reachability exclusion for it."
   },
+  "tags": [
+    "cell:containment"
+  ],
   "createdAt": "2026-08-22T20:32:54.666492644+00:00",
-  "updatedAt": "2026-08-22T20:32:54.666506226+00:00",
+  "updatedAt": "2026-08-23T18:55:15.850311985+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

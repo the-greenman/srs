@@ -837,6 +837,65 @@ async function invariantPlacementCases(root) {
   });
 }
 
+// ---- srs#462 — decision-record cell tags: every rfc-decision dated 2026-08-23+ names its cell ---
+async function decisionCellTagsCases(root) {
+  console.log("srs#462 — decision-record cell tags guard");
+
+  const ID = (n) => `00000000-0000-4000-8000-0000000005${String(n).padStart(2, "0")}`;
+  const decision = (n, date, tags = []) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/record.json",
+    instanceId: ID(n),
+    typeId: "6a000004-0000-4000-a000-000000000004",
+    typeVersion: 2,
+    typeNamespace: "com.semanticops.spec",
+    typeName: "rfc-decision",
+    fieldValues: { title: `fixture decision ${n}`, decision_date: date },
+    tags,
+  });
+
+  const repo = join(root, "srs");
+
+  // A decision dated before the guard's enforcement floor carries no cell tag — out of scope,
+  // must pass. Without this the guard could not be told apart from one that requires a tag on
+  // every decision ever written, charter-era or not.
+  await writeJson(join(repo, "records/pre-floor.json"), decision(1, "2026-08-22"));
+  expect("passes on a decision dated before the enforcement floor", runCheck("check-decision-cell-tags.mjs", root), {
+    exit: 0,
+    contains: ["✓ Every com.semanticops.spec/rfc-decision record dated 2026-08-23 or later carries a valid cell:<slug> tag"],
+  });
+
+  // The violation this guard exists for: a decision dated on the floor, ratified with no cell.
+  await writeJson(join(repo, "records/untagged.json"), decision(2, "2026-08-23"));
+  expect("rejects a decision on the floor date with no cell tag", runCheck("check-decision-cell-tags.mjs", root), {
+    exit: 1,
+    contains: ["records/untagged.json", "carries no cell:<slug> tag at all"],
+  });
+
+  // A cell tag that does not name a slug in the vocabulary is caught by name, not waved through as
+  // "has some tag starting with cell:".
+  await writeJson(join(repo, "records/untagged.json"), decision(2, "2026-08-23", ["cell:mysticism"]));
+  expect("rejects a cell tag naming a slug outside the vocabulary", runCheck("check-decision-cell-tags.mjs", root), {
+    exit: 1,
+    contains: ["records/untagged.json", '"cell:mysticism"', "none of which names a slug in the vocabulary"],
+  });
+
+  // A valid cell tag, dated after the floor: the guard is not simply always red.
+  await writeJson(join(repo, "records/untagged.json"), decision(2, "2026-08-24", ["cell:governance"]));
+  expect("accepts a decision carrying a valid cell tag", runCheck("check-decision-cell-tags.mjs", root), {
+    exit: 0,
+    contains: ["✓ Every com.semanticops.spec/rfc-decision record dated 2026-08-23 or later carries a valid cell:<slug> tag"],
+  });
+
+  // A floor, matching the sibling guards: a walk that finds no decision record at all is not a
+  // repository with nothing wrong — it means the root argument is wrong.
+  await rm(join(repo, "records/pre-floor.json"));
+  await rm(join(repo, "records/untagged.json"));
+  expect("fails when the walk finds no rfc-decision records at all", runCheck("check-decision-cell-tags.mjs", root), {
+    exit: 1,
+    contains: ["No com.semanticops.spec/rfc-decision records found"],
+  });
+}
+
 const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
 try {
   await fieldNameCases(join(root, "field-name"));
@@ -844,6 +903,7 @@ try {
   await validatePackageCases(join(root, "validate-package"));
   await publicationReachabilityCases(join(root, "publication-reachability"));
   await invariantPlacementCases(join(root, "invariant-placement"));
+  await decisionCellTagsCases(join(root, "decision-cell-tags"));
 } finally {
   await rm(root, { recursive: true, force: true });
 }

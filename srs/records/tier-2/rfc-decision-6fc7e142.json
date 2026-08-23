@@ -25,9 +25,10 @@
     "review_trigger": "Review only if the substrate data migration surfaces a live consumer reading the `properties` key by name outside the first-party corpus."
   },
   "tags": [
-    "topic:rfc"
+    "topic:rfc",
+    "cell:description"
   ],
   "createdAt": "2026-08-21T08:23:22.009351568+00:00",
-  "updatedAt": "2026-08-21T08:23:22.009356585+00:00",
+  "updatedAt": "2026-08-23T18:55:15.217709231+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

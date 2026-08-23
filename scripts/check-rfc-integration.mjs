@@ -26,6 +26,10 @@
  *   3. the .md `**Status**:` line agrees with the record rfc-status
  *   4. for status in {accepted, implemented} and not grandfathered: the integration manifest is
  *      non-empty and every declared token resolves to an existing canonical record/schema.
+ *   5. (srs#462) for an RFC created on or after 2026-08-23: the manifest names at least one
+ *      cell:<slug> token, from the Pattern Grid vocabulary (scripts/lib/pattern-grid-cells.json) —
+ *      rfc-decision-cce3c00e's standing rule, "every new RFC and decision names its cell". The
+ *      existing corpus is grandfathered by the date test itself, not by an allowlist entry.
  *
  * Plus a repo guard: every discovered instance parses and is reachable under a reserved
  * instance root (RFC-038 [R1]/[R3] — the manifest no longer carries an instanceIndex).
@@ -38,6 +42,7 @@ import { readFile, readdir } from "fs/promises";
 import { existsSync, statSync } from "fs";
 import { join, resolve } from "path";
 import { instancePaths } from "./lib/rfc-038-tree.mjs";
+import { loadCellSlugs, CELL_RULE_EFFECTIVE_DATE } from "./lib/pattern-grid-cells.mjs";
 
 const ROOT = resolve(new URL("..", import.meta.url).pathname); // srs repo root
 const REPO_ROOT = join(ROOT, "srs"); // the self-describing spec repo
@@ -71,6 +76,16 @@ const LEGAL_STATUSES = new Set([
   "withdrawn",
 ]);
 const REQUIRES_INTEGRATION = new Set(["accepted", "implemented"]);
+
+// srs#462: rfc-decision-cce3c00e's standing rule ("every new RFC and decision names its cell")
+// binds RFCs whose acceptance postdates the rule. RFC stub records carry no dedicated
+// acceptance-date field, so the record's own `createdAt` — stamped once, at creation, and never
+// bumped by later edits to unrelated fields — stands in for it: an RFC proposed and folded in from
+// this date forward is bound; the existing corpus (all created earlier) is grandfathered by the
+// date test itself, with no separate allowlist entry needed. The floor date itself lives in
+// pattern-grid-cells.mjs, shared with check-decision-cell-tags.mjs's ENFORCEMENT_FLOOR, so the two
+// checks cannot drift to different effective dates for one rule.
+const CELL_RULE_FLOOR = CELL_RULE_EFFECTIVE_DATE;
 
 const failures = [];
 function fail(msg) {
@@ -196,7 +211,9 @@ async function buildResolvers() {
     (await readdir(SCHEMA_DIR)).filter((f) => f.endsWith(".json"))
   );
 
-  return { invariantNumbers, extensionIds, typeKeys, sectionSlugs, subsectionSlugs, schemaFiles, indexedPaths, rfcRecords };
+  const cellSlugs = await loadCellSlugs();
+
+  return { invariantNumbers, extensionIds, typeKeys, sectionSlugs, subsectionSlugs, schemaFiles, indexedPaths, rfcRecords, cellSlugs };
 }
 
 // Recursively find every package.json under a directory.
@@ -229,6 +246,7 @@ function resolveToken(token, r) {
   if ((m = /^type:(.+)$/i.exec(token))) return r.typeKeys.has(m[1].trim());
   if ((m = /^section:(.+)$/i.exec(token))) return r.sectionSlugs.has(slugify(m[1].trim()));
   if ((m = /^subsection:(.+)$/i.exec(token))) return r.subsectionSlugs.has(slugify(m[1].trim()));
+  if ((m = /^cell:(.+)$/i.exec(token))) return r.cellSlugs.has(m[1].trim().toLowerCase());
   return null; // unrecognized token kind
 }
 
@@ -297,8 +315,8 @@ async function main() {
     }
 
     // 4. integration completeness (accepted/implemented, not grandfathered)
+    const tokens = parseIntegrationManifest(fieldValue(record, F_AFFECTED));
     if (REQUIRES_INTEGRATION.has(status) && !(num in allowlist)) {
-      const tokens = parseIntegrationManifest(fieldValue(record, F_AFFECTED));
       if (tokens.length === 0) {
         fail(
           `${label}: status "${status}" but no integration manifest. Fold the RFC's normative ` +
@@ -310,10 +328,30 @@ async function main() {
       for (const token of tokens) {
         const resolved = resolveToken(token, resolvers);
         if (resolved === null) {
-          fail(`${label}: unrecognized manifest token "${token}" (expected I-<n> | ext:<name> | schema:<file>.json | type:<ns>/<name> | section:<slug> | subsection:<slug>)`);
+          fail(`${label}: unrecognized manifest token "${token}" (expected I-<n> | ext:<name> | schema:<file>.json | type:<ns>/<name> | section:<slug> | subsection:<slug> | cell:<slug>)`);
         } else if (resolved === false) {
           fail(`${label}: manifest token "${token}" does not resolve to any canonical record/schema — the change is not folded into the spec`);
         }
+      }
+    }
+
+    // 5. (srs#462) an RFC created after the cell-naming rule took effect must name its cell.
+    // Deliberately OUTSIDE the allowlist gate above: allowlisting an RFC skips only the
+    // integration-completeness check (the allowlist file's own documented contract), never this
+    // one — the existing corpus is grandfathered by the createdAt test itself, not by an allowlist
+    // entry. Also independent of REQUIRES_INTEGRATION's allowlist check, though still scoped to
+    // accepted/implemented status, since only an RFC that has actually been accepted has "named
+    // its cell" to check. Gated on createdAt, not rfc_status, so a pre-existing RFC that is merely
+    // re-edited today does not retroactively acquire the requirement — createdAt is stamped once
+    // and does not move when unrelated fields change.
+    if (REQUIRES_INTEGRATION.has(status) && record.createdAt && record.createdAt >= CELL_RULE_FLOOR) {
+      const cellTokens = tokens.filter((t) => /^cell:/i.test(t));
+      if (cellTokens.length === 0) {
+        fail(
+          `${label}: created ${record.createdAt}, on or after ${CELL_RULE_FLOOR} — the integration ` +
+            `manifest names no cell:<slug> token. rfc-decision-cce3c00e's standing rule requires ` +
+            `every new RFC to name its cell.`,
+        );
       }
     }
   }
