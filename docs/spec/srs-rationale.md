@@ -432,23 +432,6 @@ This led to `TagDefinition` — an addressable Tier 3 record that gives a tag a 
 Tags are a peer to Field and Type in the SRS data model — not an extension, not an afterthought. They are defined natively in the core implementation with dedicated service functions, not modelled as user-defined package types. This is because the operations that depend on tags (especially foundation note selection for AI context) are universal across all SRS repositories, not specific to any one repo's package.
 
 
-### ext:federation × ext:lifecycle interaction
-
-**Content**: Three design decisions govern how `ext:lifecycle` and `ext:federation` interact.
-
-**1. Lifecycle state preservation on import**
-
-Records imported via federation preserve their `lifecycleState`. An implementation MUST NOT reset a federated record's lifecycle state to `initialState` on import. Lifecycle state is part of the record's identity and governance history — it is not a local annotation that the receiving repository owns.
-
-**2. Cross-repository relations and lifecycle state**
-
-Relations targeting records in any lifecycle state — including `draft` and states where `isFinal: true` — are valid. Lifecycle is a governance concern, not an identity or structural concern. An implementation MAY surface a diagnostic warning when a relation targets a remote record whose lifecycle state is unresolvable (e.g. the remote repository is unavailable), but MUST NOT reject the relation on that basis alone.
-
-**3. Final-state records as federation targets**
-
-Records in states where `isFinal: true` remain valid relation targets after federation operations. `isFinal` signals that the record's lifecycle has settled — it does not signal deletion or invalidity. A federated record in a final state retains its identity and may be referenced, linked, and included in containers.
-
-
 ### Relation design principles (R1–R11)
 
 **Content**: The Relation layer is governed by eleven ratified principles (relation-coherence epic, srs#171), written for both human authors and AI agents. They constrain how relations, their vocabulary, ordering, provenance pointers, containers, and identity transitions relate to one another. Each is normative and, per R10, has an enforcement point.
