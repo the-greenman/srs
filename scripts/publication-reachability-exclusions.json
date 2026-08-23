@@ -480,6 +480,12 @@
       "path": "records/notes/test-case-semops2-expressiveness.json",
       "reason": "Tier-0 test case (2026-07-31, recreated from #291): SemOps2 mapped construct-by-construct onto SRS as an expressiveness probe, surfacing one genuine gap (scoped uniqueness). Evidence and a gap report, not normative content. Its long-term home is the #274 prose-generation decision, not a spec section.",
       "issue": "#274"
+    },
+    {
+      "instanceId": "7e8d9753-044d-4374-9aa2-0939a0d85cfd",
+      "path": "records/notes/taste-made-portable-why-tension-statements-invert-and-what-defends-them-7e8d9753.json",
+      "reason": "Rung-0 background capture (the charter's tension-form rationale — why tension statements invert in application and what defends them). Deliberately unpublished: background meaning, not spec content; the Decision Compass (#461) links it as background reading. Self-expiring: graduates via derived-from into the matrix records' rationale when srs#273 self-hosts the charter — this exclusion retires then.",
+      "issue": "#435"
     }
   ]
 }

@@ -1069,6 +1069,83 @@ THE REVIEW TEST, three questions asked of every proposal alongside its cell: Whi
 **Review Trigger**: A future com.semanticops.spec/invariant record discovered outside records/invariants/ that scripts/check-invariant-placement.mjs flags: resolve by relocating and renumbering per this decision, not by adding a new publication-reachability exclusion for it.
 
 
+**Title**: Decision modes: rules for the clear, geometry for the complex, a boundary against chaos
+
+**Decision Status**: accepted
+
+**Decision Date**: 2026-08-23
+
+**Decision Rationale**: The decision-layering precedents research (2026-08-23) recommended Cynefin-style mode classification as a missing mechanism, warning that a charter applying the same rule-based compression in clear, complicated and complex situations is dangerous, and naming premature classification as the first automated-ritualization pathology. The owner ruled the adoption with the design that completes it: simple and complicated decisions can generally be addressed through rules; complex decisions need a stronger judgment mechanism that allows looking ahead and mapping consequences and emergence; the geometry of the matrix is a key mechanism for complexity; chaotic decisions are outside the spec boundary. The ruling is also evidence-led (axis 2-8): the track's own history attests both halves - the ~20 layer-determined signatures were clear/complicated cases correctly resolved by rules, while the #273 decision map, the preference-layer construction, and the fix-vs-redo review were complex cases correctly resolved by geometry. This record formalizes attested practice rather than introducing speculative process.
+
+**Decision**: Cell: Governance. Every charter-checked decision names its mode - clear, complicated, complex, chaotic, or unresolved - and the mode determines which decision machinery applies:
+
+CLEAR and COMPLICATED decisions are addressed through rules: the charter check as specified (cell citation, governing preference, boundary-clause justification for a non-default pole, past-decision search) is sufficient. Complicated decisions may additionally need expert analysis, but the charter's existing adjudication machinery governs them.
+
+COMPLEX decisions require a stronger judgment mechanism, and charter citation alone is INSUFFICIENT - forcing a complex case into a single cell to produce a citation is the premature-classification pathology, forbidden by name. The mechanism for complexity is THE GEOMETRY OF THE MATRIX: the decision is mapped, not cited - located across the cells it genuinely touches (complex concerns straddle), its options plotted for consequences along the axes and polarities, checked for column coherence, and examined for emergence through look-ahead rather than rule application. This is the decision-map method as practiced (the #273 decision-consequence map and the construction of this charter itself are its precedents): options side-by-side, consequences plotted, tensions held visibly, probes and a review date where outcomes are genuinely unknowable in advance, and the owner in the loop. A complex decision resolves into rulings; it is never resolved by guard compliance.
+
+CHAOTIC situations are OUTSIDE THE SPEC BOUNDARY. The standard and its charter do not adjudicate chaos: no charter process applies, stabilizing action is not a spec act, and the spec's writ resumes only when the situation admits mapping again - re-entering as complex or complicated. The boundary is itself a protection: a governance system that claims jurisdiction over chaos will either paralyze the response or corrupt its own record.
+
+UNRESOLVED (mode not yet determinable) and CONTESTED mode assignments default to the more cautious handling: complex over complicated, boundary over adjudication.
+
+**Scope**: Binds the Charter Check (#463): decision_mode becomes a required field with these semantics, and the check's hard rule is that complex-mode cases produce a map and rulings, never a citation-only resolution. The Decision Compass (#461) documents the modes. The decision-map method (locate across cells, plot options along axes and polarities, check column coherence, look ahead for emergence) is the named complex-mode instrument; its richer operations registers (the polarity readings, the hexagram operations layer) remain available to it without being required. Does not change any existing ruling; does not give the charter jurisdiction over chaotic situations - explicitly the opposite.
+
+**Governing Values**:
+- semantic-integrity
+- local-autonomy
+- evolution
+
+**Project Phase**: formation
+
+**Alternatives Considered**: (1) decision_mode as an optional field (the pre-ruling proposal on #463) - rejected by the owner's adoption: the mode determines the machinery, so it cannot be optional. (2) Charter adjudication for complex cases with extra review - rejected: complexity is not complicated-plus-effort; look-ahead and emergence-mapping are a different kind of act, and pretending otherwise is the ritualization pathology. (3) Charter jurisdiction over chaotic response (a 'break-glass process') - rejected: chaos is placed outside the spec boundary deliberately; governing the ungovernable corrupts the record.
+
+**Accepted Costs**: Mode assignment is itself a judgment and can be gamed toward 'clear' to avoid mapping effort - mitigated by the cautious-default rule and by review; complex-mode decisions are slower and owner-involving by design; the spec boundary means some real events leave no charter trace until they re-enter as mappable situations.
+
+**Evidence**:
+- The decision-layering precedents research (2026-08-23): the Cynefin case, the automated-ritualization pathology list, and the adoption shortlist item 5
+- The track's attested practice: the #273 decision-consequence map (complex, mapped), the ~20 layer-determined signatures (clear/complicated, ruled), the preference-layer construction (complex, mapped)
+- rfc-decision-cce3c00e (the grid whose geometry is the complexity instrument; the review-test this ruling extends)
+- srs#435 adoption map and #463 (the Charter Check this binds)
+
+**Review Trigger**: Review if mode-gaming toward 'clear' is observed twice (the cautious-default clause may need teeth), or if a chaotic situation's re-entry proves to need more definition than 'admits mapping again'.
+
+
+**Title**: The grid grows three operations: reach, sequence, balance
+
+**Decision Status**: accepted
+
+**Decision Date**: 2026-08-23
+
+**Decision Rationale**: The owner adopted the three on 2026-08-23: practical tools that emerged from a week of work - proven not proposed. Each fills a diagnosed gap in the charter's own arc: reach marking formalizes the distinction the census lacked (the Water column's thinness conflated neglect with jurisdiction); sequence propagation names the causal reading the audit performed ad hoc (B6's knock-on into discovery conformance); cyclical balance converts the one-shot census into standing instrumentation - the presence problem solved for the map itself by cycle discipline, complementing agent enforcement. The adoption is evidence-led (axis 2-8): all three ran operationally in the sibling domain before entering the charter, and two (closure, propagation) have attested instances in this track's own history. They are diagnostic-mode operations per the decision-modes ruling (rfc-decision-7caca3a1): they serve the geometry-for-complexity mechanism, not the rules-for-the-clear path.
+
+**Decision**: Cell: Governance. The Pattern Grid (rfc-decision-cce3c00e) gains three standing operations, adopted from their proven use in a sibling application of the same method (a launch-prep risk assessment running the identical 4x3 geometry in an operational public-service domain):
+
+1. REACH MARKING. Every cell carries a reach mark - INSIDE (assessable from the standard, its corpora, and first-party stewardship alone), SHARED (the standard's half is ours; the other half belongs to implementations, adopters, or counterparties - assess our part and NAME the missing half rather than estimate it), or BEYOND (not answerable from inside the spec boundary; carried as a named dependency on the counterparty with an owner, never as an open discovery item that quietly stays open). The rule that makes reach matter: a thin cell has two possible causes needing opposite responses - thin-and-inside is our own discovery gap; thin-and-shared-or-beyond needs a conversation, not more solo work. The evidence-first discipline applies to reach itself: do not score what cannot be seen from here. Reach is PHASE-DEPENDENT and re-marked each cycle: in formation, nearly everything is inside; the first public release migrates cells outward. Initial marking (2026-08-23, formation phase): INSIDE - Versioning, Identity, Description, Succession, Containment, Reference, Assertion, Governance, Repository. SHARED - Attribution (verification requires counterparties), Conformance (third-party implementations attest their own half; today first-party only), Portability (practice-sharing requires partners who do not yet exist - which reframes the Water column's thinness: it is partly reach, not only neglect). BEYOND - none today; expected to appear at the public release.
+
+2. SEQUENCE PROPAGATION. The twelve cells in reading order (the zodiac order the grid reproduces) form a development: a thing is versioned, has identity, describes itself, is attributed, succeeded, contained, referenced, asserted about, governed, stored, conformed, and carried - and the sequence CLOSES: position 12 feeds position 1. What returns from carried practice defines the next version's mandate - adoption feedback drives evolution. This closure is already attested in the track's own history: the muSrs usage attestation (what carried practice actually exercised) reshaped the standard (the removals ruling) - a 12-to-1 event before the operation had a name. Two uses: DIRECTIONALITY - trace a gap forward by asking what it denies the next cell (attested instance: the membership gap B6 in Containment/Repository denied Conformance - the two-condition implementation made discovery under-report); and CLOSURE - secondaries accumulating in late cells without primaries signal that causes are being recorded and consequences are not.
+
+3. CYCLICAL AXIS-BALANCE COUNTS. At each assessment cycle (audit re-run, census refresh, charter review), record the counts per row, per column, per modality diagonal, and per polarity axis - the four readings disagree usefully. Weight imbalances by load-bearing position, and check whether loaded cells are merely quiet before working visibly empty ones. An imbalance that survives re-placement is a coverage gap, not a classification error. Initial snapshot (from the 2026-08-21 census): columns - Earth and Air strong, Fire middling, Water thinnest; diagonals - the FIXED diagonal (the stability core: Identity, Succession, Assertion, Conformance) carries three of the five strong cells, which is the correct shape for a governed spec; the Mutable diagonal (where change is legal) is the thinnest; the emptiest polarity axis was 4-10 (Attribution-Repository), since given its principle. Future cycles diff against this snapshot.
+
+**Scope**: Extends rfc-decision-cce3c00e's instrument; changes no preference, boundary clause, or layer rule. The grid page and the Decision Compass (#461) document the three operations; reach marks and the balance snapshot live with the grid and are re-recorded each assessment cycle; the #273 charter self-hosting design inherits them as data (reach as a cell property, balance counts as cycle records). The sibling document itself remains background - the operations are adopted, its content is not incorporated.
+
+**Governing Values**:
+- evolution
+- shared-coherence
+- local-autonomy
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Adopting the sibling's full apparatus (per-cell discovery questions, offset-3 squares, evidence packs) - deferred, not rejected: the owner adopted the three that earned it; squares and per-cell question banks remain available to complex-mode maps without a standing rule. Leaving the operations informal - rejected: unrecorded operations are how the audit's half-built-mechanism pattern starts.
+
+**Accepted Costs**: Each assessment cycle now carries bookkeeping (reach re-marks, four count readings); reach marks add a judgment surface that can itself be wrong (mitigated by cycle re-marking); the balance snapshot invites metric-gazing - the counts are prompts for re-placement and conversation, never targets.
+
+**Evidence**:
+- The sibling application (launch-prep risk assessment, RMG-001, 2026-08-17..20): reach classification with the mandate-column half-excuse analysis, the 6-7-8 propagation instance, the five-secondaries-before-a-primary closure diagnostic, and the corrected polarity check
+- This track's attested instances: the muSrs attestation reshaping the removals (closure), audit finding B6's knock-on into discovery conformance (propagation), the census's Water-column conflation (reach)
+- rfc-decision-cce3c00e (the instrument extended), rfc-decision-7caca3a1 (the diagnostic mode these operations serve)
+
+**Review Trigger**: Review after two assessment cycles: if reach marks never changed anything worked, or balance counts were recorded but never read, the operations are ritual and should be cut - the compliance-inversion defense applied to our own additions.
+
+
 **Title**: The grid learns to read: autoclassification and the stance vocabulary
 
 **Decision Status**: accepted
