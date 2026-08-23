@@ -194,11 +194,12 @@ tooling-only
 
 **Author**: the-greenman
 
-**Affected Components**: `manifest.json` (new `changelogPath` property); new schema file `changelog.json` (ChangelogCollection + ChangelogEntry); `ext:changelog` extension declaration
+**Affected Components**: `manifest.json` (new `changelogPath` property); new schema file `changelog.json` (ChangelogCollection + ChangelogEntry); `ext:changelog` extension declaration.
+
+**2026-08-21 update** (`rfc-decision-2a1e1590`): the mechanism this RFC introduced is removed under the dormancy rule (zero corpus use). `changelog.json` is deleted; `manifest.changelogPath` is deprecated, not deleted; the `ext:changelog` extension record becomes a dormancy stub carrying the return trigger. This RFC's own acceptance record is historical and unchanged — see the extension record and `rfc-decision-2a1e1590` for current status.
 
 <!-- srs-integration:v1
 ext:changelog
-schema:changelog.json
 schema:manifest.json
 -->
 

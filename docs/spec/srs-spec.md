@@ -1109,7 +1109,6 @@ type Address =
       containerId: UUID
       recordId?: UUID
       fieldId?: UUID
-      revisionId?: UUID    // requires ext:addressability Revision
     }
   | {
       space: "process"
@@ -1124,7 +1123,7 @@ type Address =
     }
 ```
 
-Every element that can be referred to has an Address. A transcript chunk and a field Revision are co-addressable because assertions about one referencing the other require both to be resolvable.
+Every element that can be referred to has an Address. A transcript chunk and a document-space field are co-addressable because assertions about one referencing the other require both to be resolvable.
 
 #### `AttentionState`
 
@@ -1144,27 +1143,6 @@ Conversation material is tagged with the active `AttentionState` as it is produc
 
 `AttentionState` is set live by the session or Protocol runner. `SourceReference` is set retrospectively at extraction or editorial review time. Both are needed; they answer different questions.
 
-#### `Revision`
-
-A first-class, addressable snapshot of a `FieldValue` at a point in time. Carries the value, the agent, a timestamp, and source references to the conversation that produced the change.
-
-```typescript
-{
-  revisionId: UUID
-  fieldId: UUID
-  recordId: UUID
-
-  value: FieldValue
-  agent: "human" | "ai" | "imported"
-  createdAt: ISO8601
-
-  sourceRefs?: SourceReference[]
-  priorRevisionId?: UUID  // chain to the previous Revision for this field
-}
-```
-
-Revision does not replace the edit-in-place vs. new-Record judgment. Minor corrections remain in-place edits at the implementation layer. Revision is the addressable audit trail for interoperability — it makes field history queryable: "what did this field say before the last Protocol run?", "which conversation produced the change from revision 2 to revision 3?"
-
 #### Context Query (behavioural requirement)
 
 A conforming `ext:addressability` implementation must be able to assemble relevant material given an address and a purpose. This is a behavioural requirement, not a data shape.
@@ -1173,20 +1151,21 @@ A conforming `ext:addressability` implementation must be able to assemble releva
 
 | Pattern | Address | Returns |
 |---|---|---|
-| Field context | `{recordId}/{fieldId}` | Current value, Revision history, chunks tagged to this Field, Field `aiGuidance` |
+| Field context | `{recordId}/{fieldId}` | Current value, chunks tagged to this Field, Field `aiGuidance` |
 | Record context | `{recordId}` | All field values, chunks tagged to this Record, Relations, Protocol run history |
 | Stage context | `{runId}/{stageId}` | All chunks produced during this stage, Fields active in this stage |
-| Revision trace | `{fieldId}/{revisionId}` | Value at that Revision, the conversation that produced it, prior Revision chain |
 
 **Recommended assembly order for AI assistance:**
 
 1. Type and Field `aiGuidance` — what this field captures, how to extract it
-2. Current value and recent Revision history — what has already been established
+2. Current value — what has already been established
 3. Chunks tagged to this Field via AttentionState — most focused context
 4. Chunks tagged to the parent Record — broader session context
 5. Related Records via Relations — structural context
 
 ---
+
+**Note (2026-08-21, `rfc-decision-2a1e1590`)**: the per-field `Revision` snapshot mechanism (addressable field-value history, `revisionId`, revision chains, revision-trace queries) previously specified here is removed under the dormancy rule — zero corpus use, and it was incompletely specified (a PascalCase wire-format leak in its agent tag, and a coupling that named a pre-RFC-006 field). `Address`, `AttentionState`, and the Context Query requirement above are untouched by that removal. Return trigger: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface.
 
 
 #### ext:lifecycle
@@ -3395,62 +3374,11 @@ RFC-036 row-template ladder.
 
 #### ext:changelog
 
-**Content**: **Introduced by**: RFC-018 (srs#141). **Required for**: repositories using `repo copy` round-trip workflows, sync/replication tooling, or governance use cases requiring an audit trail.
+**Content**: **Status: Dormant** (removed under `rfc-decision-2a1e1590`, 2026-08-21). The 2026-08-21 usage attestation found zero `changelog/changelog.json` files anywhere in the corpus — the mechanism was speculative, never exercised in production. It is removed under the dormancy rule (`rfc-decision-cce3c00e`) alongside the per-field Revision sidecar mechanism it paired with, removed by the same ruling.
 
-Maintains a lightweight, append-only log of entity-level changes in a repository. When declared, the implementation writes a `ChangelogEntry` to a central collection file on every successful mutation. The log is queryable by timestamp range and instance identity.
+**Removed surface** (historical — introduced by RFC-018, srs#141): the `ChangelogCollection`/`ChangelogEntry` schema (`changelog.json`); the `srs changelog list` CLI command. `manifest.changelogPath` is deprecated, not deleted, so existing declarations remain readable.
 
-#### Opt-in Declaration
-
-Declare `"ext:changelog"` in `manifest.declaredExtensions`. The implementation creates `changelog/changelog.json` (or the path in `manifest.changelogPath`) on first declaration with an empty `entries` array. Enabling the extension on a repository with existing records does **not** backfill historical entries; the changelog is prospective from the point of declaration.
-
-#### `ChangelogCollection`
-
-Lives at `manifest.changelogPath` (default: `changelog/changelog.json`).
-
-```json
-{
-  "$schema": "https://srs.semanticops.com/schema/2.0/changelog.json",
-  "entries": [
-    {
-      "entryId": "<uuid4>",
-      "instanceId": "<uuid>",
-      "changeKind": "created",
-      "timestamp": "2026-07-09T08:00:00Z",
-      "assertedBy": "srs-cli/0.1.0"
-    }
-  ]
-}
-```
-
-#### `ChangelogEntry` fields
-
-| Field | Type | Required | Description |
-|---|---|---|---|
-| `entryId` | UUID4 | yes | Freshly-minted, immutable entry identity |
-| `instanceId` | UUID | yes | The affected record (former id for deleted records) |
-| `changeKind` | enum | yes | `created` / `updated` / `deleted` / `note-created` / `note-updated` / `note-deleted` |
-| `timestamp` | date-time | yes | ISO8601 timestamp (UTC preferred) set at write time |
-| `assertedBy` | string | no | Stable identifier of the asserting agent or user |
-| `noteId` | UUID | required for note variants | UUID of the note affected; MUST be present when `changeKind` is a note variant |
-
-#### Operations that generate entries
-
-`record create`, `record update`, `record delete`, `note create`, `note update`, `note delete`.
-
-#### Query CLI
-
-```bash
-srs changelog list --repo <path> [--since <iso8601>] [--instance <uuid>]
-```
-
-Returns entries matching the filters in the standard SRS JSON envelope. Supports AND-semantics when both `--since` and `--instance` are combined.
-
-#### Invariants
-
-- Entries are append-only: once written, an entry MUST NOT be modified or removed (R4).
-- All `entryId` values within a changelog MUST be unique (R3).
-- `noteId` MUST be present when `changeKind` is a note variant (R7).
-- Repositories without `ext:changelog` MUST NOT carry `changelogPath` in the manifest (R5).
+**Return trigger**: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface. When a real consumer's requirements are known, the mechanism is redesigned against them rather than reinstated as specified here.
 
 
 #### ext:slices
@@ -3705,8 +3633,6 @@ Conforming implementations must uphold the following invariants.
 **I-144.** When SectionSource.type-query carries containerScope, implementations MUST apply the following scoping rules: (a) When containerScope is absent or "explicit", the query is scoped to the containers listed in containerIds[] — existing behaviour. An absent containerIds[] with explicit scope produces an empty result. (b) When containerScope is "repository", the query spans all containers in the repository; containerIds[] MUST be ignored. (c) When containerScope is "subtree", the query spans the context container and all containers reachable by contains relations from each container in containerIds[]; when containerIds[] is absent or empty, the context container is used as the subtree root. An implementation that cannot determine the context container for a subtree query MUST treat it as "explicit" with an empty containerIds[] and SHOULD emit a diagnostic. Implementations MUST NOT produce a validation error when containerScope is absent; absent is equivalent to "explicit".
 
 #### ext:addressability
-
-**33.** `Revision.priorRevisionId`, when present, must reference a `Revision.revisionId` for the same `fieldId` and `recordId`. Revision chains must be acyclic.
 
 **34.** `AttentionState.containerId` must reference a valid `Container.containerId`. Other Address components (`recordId`, `fieldId`, `protocolRunId`, `stageId`) are optional and may be absent when focus has not yet narrowed.
 
@@ -3975,16 +3901,9 @@ Conversation chunks produced while `AttentionState.stageId` is set are associate
 
 **Content**: **Trigger**: an implementation declares both `ext:lifecycle` and `ext:addressability`.
 
-**Required behaviour**: A lifecycle state transition on a Record MUST produce a `Revision` snapshot for each current field value at the moment of transition. The snapshot `Revision` MUST carry:
+**Status: Dormant** (removed under `rfc-decision-2a1e1590`, 2026-08-21). This coupling's required behaviour, and both of its invariants (formerly `[LC-AX1]` and `[LC-AX2]`), required a lifecycle state transition to produce a `Revision` snapshot per field value, tagged with `provenance.lifecycleTransition`. Every clause of this coupling was revision-dependent; with the per-field `Revision` mechanism removed (zero corpus use, incompletely specified — see `rfc-decision-2a1e1590`, also removed under the same ruling), no requirement survives the cut. `ext:lifecycle` and `ext:addressability` impose no cross-cutting obligation on each other while this stays dormant; each extension's own invariants are unaffected.
 
-- `provenance.lifecycleTransition` set to the key of the target lifecycle state (RFC-006: `LifecycleState.name` was renamed to `key`)
-- `provenance.transitionedAt` set to the transition timestamp
-
-This makes the record's field values at the moment of each lifecycle transition addressable — a consumer can reconstruct what the record looked like when it entered `active`, `archived`, or any other state, without timestamp correlation.
-
-**Invariant [LC-AX1]**: When a repository declares both `ext:lifecycle` and `ext:addressability`, every lifecycle state transition on a Record MUST be recorded as a `Revision` per field value with `provenance.lifecycleTransition` set. An implementation that performs a lifecycle transition without creating these snapshots is non-conformant.
-
-**Invariant [LC-AX2]**: The `Revision` snapshot created for a lifecycle transition MUST be created atomically with the transition — both the new `lifecycleState` value on the Record and the snapshot `Revision` records MUST be committed together. A record in state `active` with no corresponding `Revision` snapshot bearing `provenance.lifecycleTransition: "active"` is a conformance violation.
+**Return trigger**: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface. When a real consumer's requirements are known, the coupling is redesigned against them rather than reinstated as specified here.
 
 ---
 

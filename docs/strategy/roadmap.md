@@ -379,10 +379,10 @@ The standard-level contracts that make the release boundaries and practice paths
     - Required by: future work
     - Sources: [srs-unified.md](../spec/srs-unified.md)
     - Not included: A requirement for the F1, F2 or F3 release promises
-  - **Addressability and attention state** — Tools can identify semantic locations, preserve a live point of attention, and refer back to the relevant revision.
+  - **Addressability and attention state** — Tools can identify semantic locations and preserve a live point of attention.
     - Stability: Extension or profile
     - Required by: P2, P3, G6, G7
-    - Sources: [srs-spec.md](../spec/srs-spec.md), [revisions.json](../schema/2.0/revisions.json), [mudemocracy-rfc-candidates.md](../../rfcs/mudemocracy-rfc-candidates.md), [025-addressability-as-a-prerequisite-for-live-facilitation.json](../../srs/records/design-notes/025-addressability-as-a-prerequisite-for-live-facilitation.json)
+    - Sources: [srs-spec.md](../spec/srs-spec.md), [mudemocracy-rfc-candidates.md](../../rfcs/mudemocracy-rfc-candidates.md), [025-addressability-as-a-prerequisite-for-live-facilitation.json](../../srs/records/design-notes/025-addressability-as-a-prerequisite-for-live-facilitation.json)
     - Not included: A required Git, database or archive backend; AI authority to commit canonical meaning
 
 ## Release contract readiness
