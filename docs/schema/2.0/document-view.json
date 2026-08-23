@@ -275,28 +275,6 @@
           "type": "object",
           "required": [
             "type",
-            "instanceIds"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "type": "string",
-              "const": "fixed-instances"
-            },
-            "instanceIds": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uuid"
-              },
-              "description": "Explicit list of instance UUIDs. For preamble, cover page, or curated sections."
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "type",
             "semanticObjectType"
           ],
           "additionalProperties": false,
@@ -341,36 +319,6 @@
                 "subtree"
               ],
               "description": "RFC-011 [N+27]. Controls which containers are queried. 'explicit' (default): scope to containerIds[]. 'repository': all containers, ignores containerIds and any cli container override. 'subtree': traverse contains-relations from listed containers (v1: falls back to explicit with diagnostic when containerIds absent)."
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "type",
-            "fromInstanceId",
-            "relationType"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "type": "string",
-              "const": "relation-query"
-            },
-            "fromInstanceId": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "relationType": {
-              "type": "string"
-            },
-            "direction": {
-              "type": "string",
-              "enum": [
-                "forward",
-                "inverse"
-              ],
-              "description": "Default: 'forward'."
             }
           }
         },

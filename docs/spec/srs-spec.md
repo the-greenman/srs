@@ -1612,13 +1612,6 @@ A versioned presentation and export configuration over a field set. A View is co
   // Optional semanticObjectType hints this View was designed for.
   // Informative only. Compatibility is determined by field presence.
 
-  protection?: "none" | "read-only" | "fill-in"
-  // Default: "none".
-  // "read-only" — Records rendered through this View cannot be edited.
-  // "fill-in"   — only null or empty Field values may be populated.
-  // Protection is a View-level workflow constraint. It does not modify
-  // the Record or replace lifecycle states.
-
   exportConfig?: ExportConfig
 
   tags?: string[]
@@ -1627,6 +1620,8 @@ A versioned presentation and export configuration over a field set. A View is co
   provenance?: Provenance
 }
 ```
+
+**Note (2026-08-22, `rfc-decision-4f1e12e5` entry 5)**: the View-root `protection` enum (`none`/`read-only`/`fill-in`) previously specified here is removed under the dormancy rule (`rfc-decision-cce3c00e`) — zero use, and it was a hint without a contract: no enforcement semantics were defined anywhere. `FieldView.required` below is untouched — it is attested in production use and is a distinct form-vs-validity mechanism. Return trigger: a real authoring surface needing edit protection, which must design the missing enforcement half.
 
 Compatibility is field-centric:
 - A Record is renderable through a View when it contains all `FieldView` entries with `required: true`.
@@ -1734,11 +1729,6 @@ Defines how a section's instances are selected from a Container.
 ```typescript
 type SectionSource =
   | {
-      type: "fixed-instances"
-      instanceIds: UUID[]
-      // Explicit list. For preamble, cover page, or curated sections.
-    }
-  | {
       type: "type-query"
       semanticObjectType: string
       // For cross-system portability, use namespace/name format (e.g. "core/decision").
@@ -1759,12 +1749,6 @@ type SectionSource =
       // Absent is equivalent to "explicit". Invariant I-011-3.
     }
   | {
-      type: "relation-query"
-      fromInstanceId: UUID
-      relationType: string
-      direction?: "forward" | "inverse"  // default: "forward"
-    }
-  | {
       type: "container-subset"
       containerId: UUID
       containerType?: string
@@ -1777,6 +1761,8 @@ type SectionSource =
       // for members not connected by any precedes relation.
     }
 ```
+
+**Note (2026-08-22, `rfc-decision-4f1e12e5` entry 4)**: the `fixed-instances` and `relation-query` `SectionSource` variants previously specified here are removed under the dormancy rule (`rfc-decision-cce3c00e`) — zero corpus use across the 13 real sections in the attested corpus (2026-08-21 usage attestation). `type-query` and `container-subset` remain the two live ways to source a section. Return trigger: a composition need neither live variant expresses.
 
 #### `DocumentSection`
 
