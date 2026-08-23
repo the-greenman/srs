@@ -12,7 +12,7 @@ manifest is always `manifest.json` at the root.
 ```text
 my-repo/
 ├── .srs/             marker directory — its presence signals an SRS repo root
-├── manifest.json     declares repositoryId, srsVersion, instanceIndex, packageRef, …
+├── manifest.json     declares repositoryId, srsVersion, packageRef, container, …
 ├── package/          field, type, vocabulary, relation-type & view definitions
 │   ├── package.json      index of all definitions
 │   ├── fields/           one file per Field
@@ -26,10 +26,12 @@ my-repo/
 └── source-documents/ reference materials with .meta.json sidecars
 ```
 
-The **`instanceIndex` in `manifest.json` is the single source of truth** for what belongs
-to the repository. A file sitting in `records/` that isn't listed in the index is **not** a
-member. The manifest also declares which `declaredExtensions` are active, so consumers know
-the contract up front.
+Membership is tree-authoritative: **the repository's catalog — everything discovered under
+the reserved instance roots — is the single source of truth** for what belongs to the
+repository (RFC-038 [R1]). There is no `instanceIndex` in `manifest.json`; it is retired
+(RFC-038 [R2]), except for the root container, which the manifest carries inline at
+`manifest.container` (RFC-038 [R1]). The manifest also declares which `declaredExtensions`
+are active, so consumers know the contract up front.
 
 ## Records are the truth; documents are projections
 
@@ -64,7 +66,7 @@ flowchart TD
     A["1. Detect<br/>find .srs/ marker, locate manifest.json"]
     B["2. Load manifest<br/>parse & validate"]
     C["3. Resolve package<br/>load package.json + definitions"]
-    D["4. Load instances<br/>for each path in instanceIndex"]
+    D["4. Load instances<br/>for each file under a reserved instance root"]
     E["5. Load relations<br/>parse relationsPath"]
     F["6. Resolve references<br/>typeId@version, fieldId, relation endpoints"]
     G["7. Validate<br/>value types, validation rules, invariants"]

@@ -399,19 +399,20 @@ flowchart TD
     TYP["Type org.example.garden/decision v1<br/>fields: [fieldId, order, required, displayLabel]"]
     FLD["Field org.example.garden/rationale v1<br/>fieldType: string/markdown<br/>aiGuidance: 'Capture the reasoning…'"]
     PKG["package/package.json<br/><i>declares what this repository consumes</i>"]
-    MAN["manifest.json<br/>instanceIndex · root container · repositoryId"]
+    MAN["manifest.json<br/>root container · repositoryId"]
 
-    MAN -->|lists| REC
     REC -->|"typeId@version"| TYP
     TYP -->|fieldId| FLD
     PKG -->|defines| TYP
     PKG -->|defines| FLD
 ```
 
-Read a value's meaning bottom-up: the manifest says the record belongs; the record names
-its Type by UUID and version; the Type names each Field by UUID; the Field carries the
-semantics. Every arrow is a UUID reference — no string matching, no "hopefully the column
-is still called that." Rename nothing, move everything: meaning holds.
+Read a value's meaning bottom-up: the record belongs to the repository simply by being
+discovered under a reserved instance root — membership is tree-authoritative, not
+manifest-listed (RFC-038 [R1]); the record names its Type by UUID and version; the Type
+names each Field by UUID; the Field carries the semantics. Every arrow is a UUID
+reference — no string matching, no "hopefully the column is still called that." Rename
+nothing, move everything: meaning holds.
 
 This is also why the repository is genuinely portable. The folder contains every link in
 that chain. A different implementation of SRS, given the folder, resolves the same

@@ -1846,6 +1846,12 @@ One section in a Document View.
   ordering?: {
     fieldId?: UUID
     direction?: "asc" | "desc"  // default: "asc"
+    memberOrder?: UUID[]
+    // RFC-015 Change B. View-owned explicit presentation sequence, container-subset
+    // sections only. Lists member instanceIds in presentation order; members not
+    // listed are appended in [N+12] order (precedes topological sort, createdAt
+    // tiebreak). MUST NOT be combined with fieldId — a section carrying both is
+    // invalid (Rule [N+29]).
   }
 
   required?: boolean
@@ -2998,7 +3004,7 @@ A `.srsj` file is a pretty-printed UTF-8 JSON object with the following top-leve
 | Field | Type | Description |
 |---|---|---|
 | `srsj` | string | Format version. Current value: `"1"`. Implementations must reject files with unrecognised versions. |
-| `manifest` | object | The `RepositoryManifest` object as defined by `ext:repository`. `manifest.instanceIndex` is authoritative. |
+| `manifest` | object | The `RepositoryManifest` object as defined by `ext:repository`. There is no `manifest.instanceIndex`; it is retired (RFC-038 [R2]). The `data` object's own contents are the authoritative instance set (RFC-038 [R1]), except the root container, which the manifest carries inline at `manifest.container`. |
 | `data` | object | Flat key-value store. Keys are forward-slash-normalised relative paths as they would appear in a filesystem repository. Values are the parsed JSON content of each file. |
 
 The `.srsj` extension is conventional; an implementation may accept any filename. The extension must not be used as an authoritative indicator of format — implementations must inspect the `srsj` field to confirm the format and version.
@@ -3016,11 +3022,11 @@ Keys in `data` follow the same relative-path conventions as `ext:repository`:
 - `typed-records/<filename>.json` — Tier 1 TypedRecord instances
 - `relations/<filename>.json` — relation collections
 
-The `instanceIndex` in `manifest` is the authoritative list of members. A key present in `data` but absent from `instanceIndex` is not a repository member.
+There is no `instanceIndex` in `manifest`; it is retired (RFC-038 [R2]). The authoritative list of members is the `data` object's own contents — the tree-authoritative store, enumerated the same way as a filesystem repository (RFC-038 [R1]).
 
 #### Conformance requirements
 
-1. A conforming producer must write every instance listed in `manifest.instanceIndex` as an entry in `data` under its declared `path`.
+1. A conforming producer must write every instance in the repository's authoritative instance set (RFC-038 [R1]) as an entry in `data` under its path.
 2. A conforming producer must write all relation files declared in `manifest.relationsPath` as entries in `data`.
 3. A conforming producer must write the local package under `package/package.json` when `packageRef.mode === "local"`.
 4. A conforming consumer must reject a `.srsj` file whose `srsj` value is not a recognised version string.
@@ -3605,11 +3611,11 @@ Conforming implementations must uphold the following invariants.
 
 #### ext:lifecycle
 
-**4.** `Type.lifecycle.initialState` must reference a `name` that appears in `lifecycle.states[]` and where `isInitial === true`.
+**4.** `Type.lifecycle.initialState` must reference a `key` that appears in `lifecycle.states[]` and where `isInitial === true`.
 
-**5.** Every `from` and `to` value in `lifecycle.transitions[]` must reference a `name` that appears in `lifecycle.states[]`.
+**5.** Every `from` and `to` value in `lifecycle.transitions[]` must reference a `key` that appears in `lifecycle.states[]`.
 
-**6.** `Record.lifecycleState`, when present, must reference a `name` in the associated `Type.lifecycle.states[]`.
+**6.** `Record.lifecycleState`, when present, must reference a `key` in the associated `Type.lifecycle.states[]`.
 
 **I-98.** A Record MUST NOT rest in a lifecycle state that declares `requiresRelation` unless at least one Relation satisfies the obligation: its type equals one of the declared `relationType`(s) and the Record is the relation's target when `direction` is `incoming` (or omitted) or its source when `direction` is `outgoing`. When the state declares `enforcement: "hard"` (the default), an implementation MUST reject a lifecycle transition into it unless the operation, on completion, satisfies this occupancy requirement — either because a satisfying Relation already exists, or because the operation's fulfillment establishes one. The rejection MUST be machine-readable, identifying the target state key, the required relation type(s), and the direction. When the state declares `enforcement: "advisory"`, the transition MUST be permitted regardless of the obligation and the unsatisfied state surfaced only as an at-rest warning, never a rejection. (RFC-022 R1–R3, R2a.)
 
@@ -3747,15 +3753,15 @@ Conforming implementations must uphold the following invariants.
 
 **45.** A conforming repository must have a `.srs` marker directory and a `manifest.json` at its root. A directory without both is not a conforming repository.
 
-**46.** Every `instanceId` in `RepositoryManifest.instanceIndex` must resolve to a file at the declared `path`, and that file must contain an instance whose `instanceId` matches the index entry. An index entry whose `path` does not resolve, or whose file contains a different `instanceId`, is invalid.
+**46.** Every instance file discovered under a reserved instance root MUST declare an `instanceId`, and that self-declared value is the instance's identity. There is no manifest index entry to cross-check it against — `RepositoryManifest.instanceIndex` is retired (RFC-038 [R2]) and the repository's authoritative store, enumerated from the tree, is the instance set (RFC-038 [R1]).
 
 **47.** `RepositoryManifest.container` is the canonical `Container` for the repository. It must satisfy all core Container invariants (Invariants 20–21). If a separate `container.json` is present in the repository root, it must be consistent with the manifest's embedded Container; the manifest takes precedence on conflict.
 
 **48.** A `SourceReference` with `sourceType: "repository-document"` must have a `sourceId` matching a `SourceDocument.documentId` whose sidecar is present in `sourceDocumentsPath`. A reference whose `documentId` cannot be resolved within the repository is invalid.
 
-**49.** An archive must include all instance files listed in `RepositoryManifest.instanceIndex`. An archive missing any indexed instance file is malformed; a conforming consumer must reject it or surface the missing instances explicitly before processing.
+**49.** An archive must include every instance discovered by enumerating the repository's authoritative store — the instance set (RFC-038 [R1], [R17]) — not a manifest `instanceIndex`, which is retired (RFC-038 [R2]). An archive missing any enumerated instance file is malformed; a conforming consumer must reject it or surface the missing instances explicitly before processing.
 
-**50.** When `PackageRef.mode === "local"`, the package at the declared path must be `mode: "bundled"` and must include all Fields and Types referenced by any Tier 2 `Record` in the repository's instance index. This is the repository analogue of Package Invariants 7–8.
+**50.** When `PackageRef.mode === "local"`, the package at the declared path must be `mode: "bundled"` and must include all Fields and Types referenced by any Tier 2 `Record` in the repository's instance set (RFC-038 [R1]; enumerated from the tree, not a manifest `instanceIndex`, which is retired per [R2]). This is the repository analogue of Package Invariants 7–8.
 
 **51.** An archive that includes a `Relation` containing a `SourceReference` with `sourceType: "repository-document"` must include that document's sidecar and content file, just as if the reference appeared within an instance. A conforming archiver must scan Relations for `repository-document` references and collect the corresponding source material. An archive missing such material is malformed.
 
@@ -3803,15 +3809,15 @@ Conforming implementations must uphold the following invariants.
 
 #### ext:repository (RepositoryManifest, Container)
 
-**I-80.** Every id in the root container's rootInstanceIds and memberInstanceIds MUST resolve to a member of the repository's authoritative instance set. The manifest instanceIndex is the cache of that set (RFC-012 R6), not an independent authority. This is the root-container specialization of core Invariant 21, stated separately so the required-root-container guarantee is self-contained.
+**I-80.** Every id in the root container's rootInstanceIds and memberInstanceIds MUST resolve to a member of the repository's authoritative instance set. There is no manifest `instanceIndex` to consult — it is retired (RFC-038 [R2]); the repository's authoritative store, enumerated from the tree, is that set (RFC-038 [R1]). This is the root-container specialization of core Invariant 21, stated separately so the required-root-container guarantee is self-contained.
 
 #### ext:repository (Container.identityInstanceId)
 
 **I-81.** When present on a Container, identityInstanceId MUST equal an id contained in that Container's rootInstanceIds or memberInstanceIds. On the root container it names the repository's identity record. If it resolves to no such member, the repository is invalid. Reassigning identityInstanceId to a different member MUST NOT change the repositoryId, the container's containerId, or any instance id; the new target must already be a member before the pointer moves to it, so the repository is never transiently invalid.
 
-#### ext:repository (Container, containerIndex)
+#### ext:repository (Container, container set)
 
-**I-82.** When containerIndex is non-empty, each non-identity section root of the root container (its navigation sections) SHOULD be the root of some Container listed in containerIndex. An absent or empty containerIndex suppresses this diagnostic. A section root with no corresponding section container is a diagnostic, not an error, and a consumer MUST still render it as a navigation leaf rather than dropping it.
+**I-82.** When the repository's container set (RFC-038 [R1]) is non-empty, each non-identity section root of the root container (its navigation sections) SHOULD be the root of some Container in that set. An empty container set suppresses this diagnostic. A section root with no corresponding section container is a diagnostic, not an error, and a consumer MUST still render it as a navigation leaf rather than dropping it. `containerIndex` is retired (RFC-038 [R2]) and is no longer the membership authority for this check.
 
 #### ext:import-tracking
 
@@ -3839,7 +3845,7 @@ Conforming implementations must uphold the following invariants.
 
 #### Validators
 
-**I-102.** The `sourceId` of an `attaches` `SourceReference` MUST resolve to a `documentId` present in `sourceDocumentIndex` (or discoverable via a `.meta.json` sidecar scan of `sourceDocumentsPath`) in the same repository. Resolution is against the index/sidecar entry, not the content file. A `sourceId` that resolves to no such entry is non-conformant and MUST be reported with a diagnostic at validation time.
+**I-102.** The `sourceId` of an `attaches` `SourceReference` MUST resolve to a `documentId` in the repository's source-document set, discovered via a `.meta.json` sidecar scan of `sourceDocumentsPath` in the same repository (RFC-038 [R25], amending RFC-017 [R2]/[R12]; `sourceDocumentIndex` is retired per RFC-038 [R2]). Resolution is against the sidecar entry, not the content file. A `sourceId` that resolves to no such entry is non-conformant and MUST be reported with a diagnostic at validation time.
 
 **I-111.** At most one `attachment_policy` record of the `com.semanticops.base/repo_settings` type MAY exist per repository. A conformant implementation encountering two or more MUST surface a diagnostic and treat the policy as absent (applying the no-policy defaults: all MIME types accepted, no size limits enforced, no size-or-MIME-type-policy diagnostics emitted).
 
@@ -3873,7 +3879,7 @@ Conforming implementations must uphold the following invariants.
 
 #### ext:repository validators, exporters
 
-**I-112.** A `sourceDocumentIndex` entry whose content file (at `contentPath`) is absent is a valid tombstone (reference-only) state. A conformant implementation MUST NOT reject, refuse to load, or refuse to export a repository solely because an indexed source document's content is missing. An `attaches` `SourceReference` targeting a tombstoned `documentId` remains conformant (I-102). An implementation MAY surface an informational non-blocking diagnostic that the content is unavailable.
+**I-112.** A source-document sidecar entry (RFC-038 [R25], amending RFC-017 [R12]; the entry no longer lives in a manifest `sourceDocumentIndex`, which is retired per RFC-038 [R2]) whose content file (at `contentPath`) is absent is a valid tombstone (reference-only) state. A conformant implementation MUST NOT reject, refuse to load, or refuse to export a repository solely because a discovered source document's content is missing. An `attaches` `SourceReference` targeting a tombstoned `documentId` remains conformant (I-102). An implementation MAY surface an informational non-blocking diagnostic that the content is unavailable.
 
 #### ext:discovery
 
@@ -3887,7 +3893,7 @@ Conforming implementations must uphold the following invariants.
 
 **I-117.** When both structured filters and `contentMatch` are specified on a DiscoveryQuery, an instance MUST satisfy all structured filter predicates (exact-match, I-113) AND the content-match recall-floor predicate (I-114). The structured-filter constraints cannot be overridden or widened by content-match extra recall. (RFC-012 R5.)
 
-**I-118.** A `containerId` filter predicate MUST use the three-condition membership definition of RFC-009 I-66: (1) `instanceId` in `Container.rootInstanceIds[]`, OR (2) `instanceId` in `Container.memberInstanceIds[]`, OR (3) reachable via transitive `contains` Relation traversal from any `rootInstanceIds[]` entry. The authoritative source for membership is the instance file and the relations file. An implementation MAY use `instanceIndex` as a performance cache but MUST treat the instance file and relations file as authoritative when they differ from the cache. (RFC-012 R6.)
+**I-118.** A `containerId` filter predicate MUST use the three-condition membership definition of RFC-009 I-66: (1) `instanceId` in `Container.rootInstanceIds[]`, OR (2) `instanceId` in `Container.memberInstanceIds[]`, OR (3) reachable via transitive `contains` Relation traversal from any `rootInstanceIds[]` entry. The authoritative source for membership is the instance file and the relations file — the repository's authoritative store (RFC-038 [R1]). An implementation MAY maintain a derived catalog for performance but MUST treat the store as authoritative when they differ; there is no manifest `instanceIndex` to use as a cache, as it is retired (RFC-038 [R2]). (RFC-012 R6.)
 
 **I-119.** A `tag` predicate with multiple values MUST use AND semantics — all specified tags must be present on the instance. Both query tags and stored instance tags are canonicalized via RFC-006 key-or-alias resolution when a Vocabulary is declared for the tag key; when no Vocabulary is declared, raw string comparison applies (case-sensitive). (RFC-012 R7.)
 
@@ -3923,7 +3929,7 @@ Conforming implementations must uphold the following invariants.
 
 **I-135.** A reader MUST determine instance generation structurally. For a Tier-2 `Record`: an array `fieldValues` is revision <= 1, an object `fieldValues` is revision >= 2. For a Tier-1 `TypedRecord`: a `TypedField` carrying `fieldType` is revision >= 2, one without it is revision <= 1. On encountering a generation it does not support, a reader MUST emit a diagnostic naming the file and the expected `dataModelRevision` and MUST NOT coerce, partially read, or silently skip the document. (RFC-039 [R9])
 
-**I-136.** A `mode: "reference"` value MUST resolve to an instance present in the repository's `instanceIndex`, and that instance MUST be of the Field's declared `rangeType` at the declared `typeVersion`. A dangling or type-mismatched target MUST be reported as an error naming the referring record, the key, and the target id. (RFC-039 [R14]; discharges RFC-032 OQ4, RFC-033:302, RFC-035:592)
+**I-136.** A `mode: "reference"` value MUST resolve to an instance present in the repository's authoritative instance set, and that instance MUST be of the Field's declared `rangeType` at the declared `typeVersion`. A dangling or type-mismatched target MUST be reported as an error naming the referring record, the key, and the target id. (RFC-039 [R14], amended by RFC-038 [R25] — the reference target is the tree-enumerated instance set, not a manifest `instanceIndex`, which is retired per RFC-038 [R2]; discharges RFC-032 OQ4, RFC-033:302, RFC-035:592)
 
 **I-137.** A Type version referenced by any instance in the repository MUST NOT be deleted. Name-keying makes the Record-to-Field edge Type-mediated: `fieldId` is recovered from `typeId` + `typeVersion` + key, so deleting the pinned Type version renders every instance of it unreadable. This rule governs versions with live referents only. (RFC-039 [R19])
 
@@ -3978,7 +3984,7 @@ Conversation chunks produced while `AttentionState.stageId` is set are associate
 
 **Required behaviour**: A lifecycle state transition on a Record MUST produce a `Revision` snapshot for each current field value at the moment of transition. The snapshot `Revision` MUST carry:
 
-- `provenance.lifecycleTransition` set to the name of the target lifecycle state
+- `provenance.lifecycleTransition` set to the key of the target lifecycle state (RFC-006: `LifecycleState.name` was renamed to `key`)
 - `provenance.transitionedAt` set to the transition timestamp
 
 This makes the record's field values at the moment of each lifecycle transition addressable — a consumer can reconstruct what the record looked like when it entered `active`, `archived`, or any other state, without timestamp correlation.
@@ -4047,9 +4053,9 @@ Support for `Note` (Tier 0) and `Typed Record` (Tier 1) is optional at core conf
 
 **Content**: An implementation declaring `ext:repository` must:
 - Produce repositories with a `.srs` marker and `manifest.json` at root, with content in the prescribed folder layout
-- Maintain a complete and accurate `instanceIndex` in the manifest; the index must reflect the actual files present
+- Maintain no `instanceIndex` in the manifest — it is retired (RFC-038 [R2]); membership is the instance set enumerated from the tree (RFC-038 [R1])
 - Produce archives that satisfy all self-containment requirements (Invariants 49 and 51)
-- Consume archives by parsing the manifest first and resolving all instances via the index before processing content
+- Consume archives by parsing the manifest first and resolving all instances via the repository's authoritative instance set, enumerated from the tree (RFC-038 [R1]), before processing content
 - Resolve `SourceReference` entries with `sourceType: "repository-document"` via the sidecar in `sourceDocumentsPath`
 - Enforce Invariants 45–55
 - Require no TSS, Protocol, Addressability infrastructure, or external registry when `PackageRef.mode === "local"`. The repository is fully operable with only its own files.
