@@ -76,7 +76,6 @@ SRS Core [+ ext:<name> ...]
 | Recommended Relations | `ext:recommended-relations` | — | |
 | Import Tracking | `ext:import-tracking` | — | |
 | Registry | `ext:registry` | — | |
-| Federation | `ext:federation` | — | Cross-repository instance references, repository registry, and federation event log |
 | Repository | `ext:repository` | — | File-based live repository and archive (export/import) format |
 
 `ext:protocol` and `ext:addressability` are formally independent but are a functional co-dependency for live facilitation: a Protocol without `AttentionState` produces no live conversation tagging; `AttentionState` without Protocol stages has no stage context to capture. Implementations supporting live facilitation should declare both.
@@ -2425,143 +2424,13 @@ Multiple Registries may coexist. A consumer may index multiple catalogs. The spe
 
 #### ext:federation
 
-**Content**: **Required for**: implementations that maintain multiple SRS repositories within a single system, link instances across repository boundaries, or need to record merge, split, and import operations.
+**Content**: **Status: Dormant** (removed under `rfc-decision-4f1e12e5`, 2026-08-22). The 2026-08-21 usage attestation found zero registries, zero events, and zero cross-repository relations anywhere in the corpus — the mechanism was speculative, never exercised in production. It is removed under the dormancy rule (`rfc-decision-cce3c00e`).
 
-`ext:registry` covers catalogs of Field and Type definition packages. `ext:federation` covers catalogs of SRS document repositories — the repositories that hold Notes, Records, and Relations — and the cross-repository links between their instances.
+**Removed surface** (historical): `RepositoryRegistry`/`RepositoryRegistryEntry` and `FederationEvent`/`FederationEventsFile` (the `federation-registry.json`/`federation-events.json` schemas); the `sourceRepositoryId`/`targetRepositoryId` qualifier fields on `Relation`; `manifest.federationPath`/`federationEventsPath`.
 
-#### Design principles
+**Return trigger** (verbatim from `rfc-decision-4f1e12e5`): COMMITTED, not evidence-gated - federation is core to SRS (owner, 2026-08-22); this removal is a deliberate reset of a design that predates real practice, not a judgment on the capability. The redesign returns as a planned roadmap phase, grounded in the sharing forms that actually emerged (bundles, slices, git-hosted repositories) and the axis 4-10 verification path; the owner schedules it. The travel mandate covers artifact-form portability meanwhile.
 
-- **Local-first**: every construct defined here works offline with no network connectivity and no central infrastructure. Federation is an optional layer, not a prerequisite.
-- **Unresolved references are not errors**: a cross-repository instance reference whose target repository cannot be located is a citation — preserved, surfaced, but not invalid.
-- **Join at whatever level makes sense**: a standalone repository, a team-level registry, an org-level registry, and a community-level registry are all structurally identical. A repository joins federation by pointing at whichever registry level it needs; the rest of the chain is followed automatically.
-
----
-
-#### Cross-repository relations
-
-A standard `Relation` references instances within the same repository using bare UUIDs. When `ext:federation` is declared, `Relation` gains two optional qualifier fields:
-
-```typescript
-// Additional optional fields on Relation (ext:federation only):
-sourceRepositoryId?: UUID   // absent = source is in the current repository
-targetRepositoryId?: UUID   // absent = target is in the current repository
-```
-
-When `sourceRepositoryId` or `targetRepositoryId` is present, the corresponding `sourceInstanceId` or `targetInstanceId` is the instance's UUID within the named foreign repository. Because SRS instance IDs are globally unique UUIDs, an unqualified UUID is unambiguous as an identity key — the repository qualifier is a resolution hint, not a disambiguation mechanism.
-
-A cross-repository `Relation` degrades gracefully when the named repository cannot be located: the relation is preserved with its external qualifier; the instance is treated as an unresolved citation. Implementations must not discard the relation or treat the unknown repository as an error during normal operation.
-
----
-
-#### `RepositoryRegistryEntry`
-
-One entry in a repository registry.
-
-```typescript
-{
-  repositoryId: UUID    // stable identity key; matches the repository's own repositoryId
-  title: string         // human-readable name; for display and disambiguation only
-  location?: string     // local path or URL; absent = ID-only citation (location unknown)
-  lastSeen?: ISO8601    // when this entry was last confirmed reachable
-  tags?: string[]
-}
-```
-
-`location` may be any form the implementation can resolve: a relative or absolute filesystem path, or a URL. When absent, the entry records that a repository with this `repositoryId` exists, but its location is not known to this registry.
-
----
-
-#### `RepositoryRegistry`
-
-A local file listing the SRS document repositories known to this system or team. May be used standalone or as part of a federated hierarchy.
-
-```typescript
-{
-  registryId: UUID
-  title: string
-  updatedAt: ISO8601
-  entries: RepositoryRegistryEntry[]
-
-  childRegistries?: string[]
-  // Paths or URLs to subordinate RepositoryRegistry files.
-  // Resolution follows the chain: this registry → child registries → their children.
-  // Cycles must be detected and halted (Invariant 62).
-}
-```
-
-A registry is just a file. There is no registry server; no authentication is specified. A registry may live at any level of a filesystem or URL hierarchy. Teams may share a registry file in a shared folder; organisations may publish one at a stable URL; communities may federate by pointing at each other. Any of these are valid — none are required.
-
-Resolution order when locating a repository by `repositoryId`: search `entries[]` of the current registry first, then follow each `childRegistries` pointer in declaration order, depth-first. Stop when a matching entry is found or the chain is exhausted.
-
----
-
-#### `FederationEvent`
-
-A record of a merge, split, or import operation between repositories. Stored in a federation events file (not in the instance index) so that provenance of structural operations remains readable and auditable without polluting the instance graph.
-
-```typescript
-{
-  eventId: UUID
-  event: "merge" | "split" | "import"
-
-  at: ISO8601             // when the operation was performed
-  performedBy?: string    // name or identifier of the actor
-
-  sourceRepositoryId?: UUID
-  // Required for "merge" and "import": the repository instances arrived from.
-
-  targetRepositoryId?: UUID
-  // Required for "split": the new repository instances were moved into.
-
-  affectedInstanceIds: UUID[]
-  // The instance IDs involved. For "merge"/"import": IDs as they appear
-  // in the receiving repository after the operation. For "split": IDs as
-  // they appeared in the source repository before the operation.
-
-  strategy?: "preserve-ids" | "new-ids-with-lineage"
-  // The copy strategy used (see Section 7, Copy Semantics).
-  // Absent when strategy is not applicable or unknown.
-
-  note?: string
-  // Human-readable explanation of why the operation was performed.
-}
-```
-
-A `FederationEvent` with `event === "merge"` is recorded in the receiving repository. A `FederationEvent` with `event === "split"` is recorded in both the source repository (what left) and the new repository (what arrived). A `FederationEvent` with `event === "import"` is recorded in the consuming repository.
-
----
-
-#### `FederationEventsFile`
-
-The file that holds `FederationEvent` records for a repository.
-
-```typescript
-{
-  repositoryId: UUID       // the repository these events belong to; must match the enclosing repository's repositoryId
-  events: FederationEvent[]
-}
-```
-
----
-
-#### Manifest extensions (`ext:federation`)
-
-When `ext:federation` is declared, `RepositoryManifest` gains two optional fields:
-
-```typescript
-// Optional additions to RepositoryManifest when ext:federation is declared:
-federationPath?: string
-// Path to the RepositoryRegistry file for this repository.
-// Default when absent: "federation/registry.json"
-// Implementations must not fail if the file does not exist; absence means standalone.
-
-federationEventsPath?: string
-// Path to the FederationEventsFile for this repository.
-// Default when absent: "federation/events.json"
-// Implementations must not fail if the file does not exist; absence means no events recorded.
-```
-
----
+Cell: ♓ Portability.
 
 
 #### ext:repository
@@ -3680,22 +3549,6 @@ Conforming implementations must uphold the following invariants.
 
 **I-128.** When `manifest.renderedPresentations` is present and non-empty, a conformant viewer MUST select as the default presentation the first entry whose `isDefault` is `true`. When no entry carries `isDefault: true`, the first entry in the array is the default. The selected DocumentView governs the repository's presentation. When a `renderedPresentations` entry's `viewId` does not resolve to a DocumentView in the active packages, implementations MUST skip that entry and MUST emit a diagnostic; if all entries fail to resolve, behaviour falls back to implementation-defined selection as if `renderedPresentations` were absent. When `viewId` resolves to DocumentViews in more than one active package, implementations MUST report a validation error (ambiguous view reference). When `renderedPresentations` is absent or empty, viewer behaviour falls back to implementation-defined selection (existing behaviour unchanged; no conformance obligation is added for the absent case). (RFC-015 Change C.)
 
-#### ext:federation
-
-**56.** `Relation.sourceRepositoryId`, when present, must not equal the enclosing repository's own `repositoryId`. The absent-means-local convention handles intra-repository source references; using `sourceRepositoryId` to refer to the current repository is not conformant.
-
-**57.** `Relation.targetRepositoryId`, when present, must not equal the enclosing repository's own `repositoryId`. The absent-means-local convention handles intra-repository target references.
-
-**58.** A `Relation` with `sourceRepositoryId` present must also have a valid `sourceInstanceId`. A `Relation` with `targetRepositoryId` present must also have a valid `targetInstanceId`. The repository qualifier qualifies an instance ID; it does not replace it.
-
-**59.** A `FederationEvent` with `event === "merge"` or `event === "import"` must declare `sourceRepositoryId`. A `FederationEvent` with `event === "split"` must declare `targetRepositoryId`. `affectedInstanceIds` must be non-empty for all event types.
-
-**60.** A `FederationEventsFile.repositoryId` must match the `repositoryId` declared in the enclosing repository's manifest. A federation events file whose `repositoryId` does not match is invalid for that repository.
-
-**61.** `RepositoryRegistry.entries` must not contain two entries with the same `repositoryId`. A registry file with duplicate `repositoryId` values in `entries[]` is malformed.
-
-**62.** An implementation following `RepositoryRegistry.childRegistries` links must detect and halt on cycles. If resolving a child registry yields a `registryId` already encountered in the current resolution chain, the implementation must surface the cycle and stop rather than loop.
-
 #### Container (core)
 
 **I-64.** When a Container has one or more rootInstanceIds and also carries containerType, implementations SHOULD emit a diagnostic if containerType does not equal the resolved root Type name field (the local name within its namespace, not namespace/name). The root Record Type is authoritative; a mismatch does NOT make the Container invalid. Containers with no rootInstanceIds may carry any containerType value without triggering this rule.
@@ -3850,22 +3703,6 @@ Conforming implementations must uphold the following invariants.
 
 **Content**: Cross-extension interactions are behavioural requirements that apply only when an implementation declares both named extensions.
 
-#### ext:federation × ext:repository
-
-**Content**: **Trigger**: an implementation declares both `ext:federation` and `ext:repository`.
-
-**Required behaviour**: the federation registry file and events file follow the same discovery and round-trip conventions as all other repository files.
-
-Specifically:
-
-- If `manifest.json` declares `federationPath`, the file at that path must be present in any archive of the repository; an archive missing a declared `federationPath` file is malformed
-- If `manifest.json` declares `federationEventsPath`, the file at that path must likewise be present in any archive
-- Default paths (`federation/registry.json`, `federation/events.json`) are used when the corresponding manifest fields are absent; implementations must not fail if these files are absent at the default paths
-- `FederationEventsFile.repositoryId` must match `RepositoryManifest.repositoryId` in the same repository; a mismatch is a conflict subject to the same conflict-surfacing requirement as any other identity mismatch (Invariant 54)
-
----
-
-
 #### ext:protocol × ext:addressability
 
 **Content**: **Trigger**: an implementation declares both `ext:protocol` and `ext:addressability`.
@@ -3935,16 +3772,6 @@ Support for `Note` (Tier 0) and `Typed Record` (Tier 1) is optional at core conf
 - Respect the declared dependency chain (e.g., `ext:views-l2` requires `ext:views-l1` to also be declared)
 
 `ext:recommended-relations` is retired as of RFC-005. It no longer owns any normative semantics. Implementations must not treat it as a capability gate — the canonical relation vocabulary is now mandatory core behaviour provided by the `com.semanticops.srs` package.
-
-
-#### ext:federation conformance requirements
-
-**Content**: An implementation declaring `ext:federation` must:
-- Accept and preserve cross-repository qualifiers (`sourceRepositoryId`, `targetRepositoryId`) on `Relation` records without stripping them
-- Treat a `Relation` with an unresolvable `sourceRepositoryId` or `targetRepositoryId` as a valid citation with an unresolved location — not as an error
-- Produce and consume `RepositoryRegistry` and `FederationEventsFile` according to the structures defined in this section
-- Detect and surface cycles when following `childRegistries` chains; halt rather than loop
-- Enforce Invariants 56–62
 
 
 #### ext:repository conformance requirements
@@ -4417,23 +4244,6 @@ This led to `TagDefinition` — an addressable Tier 3 record that gives a tag a 
 ### Design principle
 
 Tags are a peer to Field and Type in the SRS data model — not an extension, not an afterthought. They are defined natively in the core implementation with dedicated service functions, not modelled as user-defined package types. This is because the operations that depend on tags (especially foundation note selection for AI context) are universal across all SRS repositories, not specific to any one repo's package.
-
-
-### ext:federation × ext:lifecycle interaction
-
-**Content**: Three design decisions govern how `ext:lifecycle` and `ext:federation` interact.
-
-**1. Lifecycle state preservation on import**
-
-Records imported via federation preserve their `lifecycleState`. An implementation MUST NOT reset a federated record's lifecycle state to `initialState` on import. Lifecycle state is part of the record's identity and governance history — it is not a local annotation that the receiving repository owns.
-
-**2. Cross-repository relations and lifecycle state**
-
-Relations targeting records in any lifecycle state — including `draft` and states where `isFinal: true` — are valid. Lifecycle is a governance concern, not an identity or structural concern. An implementation MAY surface a diagnostic warning when a relation targets a remote record whose lifecycle state is unresolvable (e.g. the remote repository is unavailable), but MUST NOT reject the relation on that basis alone.
-
-**3. Final-state records as federation targets**
-
-Records in states where `isFinal: true` remain valid relation targets after federation operations. `isFinal` signals that the record's lifecycle has settled — it does not signal deletion or invalidity. A federated record in a final state retains its identity and may be referenced, linked, and included in containers.
 
 
 ### Relation design principles (R1–R11)

@@ -437,6 +437,6 @@ Where to go next:
 - [concepts.md](concepts.md) — the full construct reference behind each step
 - [how-it-works.md](how-it-works.md) — loading, validation, and the toolchain
 - [`srs-usage.md`](../../srs-usage.md) — the complete CLI contract, including everything
-  this guide skipped (views, lifecycles, vocabularies, blueprints, containers, federation)
+  this guide skipped (views, lifecycles, vocabularies, blueprints, containers)
 - The [specification](../spec/srs-spec.md) — the normative rules, themselves authored as
   SRS records and rendered as a projection, exactly as promised above
