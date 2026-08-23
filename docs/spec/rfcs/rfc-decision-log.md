@@ -1069,3 +1069,40 @@ THE REVIEW TEST, three questions asked of every proposal alongside its cell: Whi
 **Review Trigger**: A future com.semanticops.spec/invariant record discovered outside records/invariants/ that scripts/check-invariant-placement.mjs flags: resolve by relocating and renumbering per this decision, not by adding a new publication-reachability exclusion for it.
 
 
+**Title**: The grid grows three operations: reach, sequence, balance
+
+**Decision Status**: accepted
+
+**Decision Date**: 2026-08-23
+
+**Decision Rationale**: The owner adopted the three on 2026-08-23: practical tools that emerged from a week of work - proven not proposed. Each fills a diagnosed gap in the charter's own arc: reach marking formalizes the distinction the census lacked (the Water column's thinness conflated neglect with jurisdiction); sequence propagation names the causal reading the audit performed ad hoc (B6's knock-on into discovery conformance); cyclical balance converts the one-shot census into standing instrumentation - the presence problem solved for the map itself by cycle discipline, complementing agent enforcement. The adoption is evidence-led (axis 2-8): all three ran operationally in the sibling domain before entering the charter, and two (closure, propagation) have attested instances in this track's own history. They are diagnostic-mode operations per the decision-modes ruling (rfc-decision-7caca3a1): they serve the geometry-for-complexity mechanism, not the rules-for-the-clear path.
+
+**Decision**: Cell: Governance. The Pattern Grid (rfc-decision-cce3c00e) gains three standing operations, adopted from their proven use in a sibling application of the same method (a launch-prep risk assessment running the identical 4x3 geometry in an operational public-service domain):
+
+1. REACH MARKING. Every cell carries a reach mark - INSIDE (assessable from the standard, its corpora, and first-party stewardship alone), SHARED (the standard's half is ours; the other half belongs to implementations, adopters, or counterparties - assess our part and NAME the missing half rather than estimate it), or BEYOND (not answerable from inside the spec boundary; carried as a named dependency on the counterparty with an owner, never as an open discovery item that quietly stays open). The rule that makes reach matter: a thin cell has two possible causes needing opposite responses - thin-and-inside is our own discovery gap; thin-and-shared-or-beyond needs a conversation, not more solo work. The evidence-first discipline applies to reach itself: do not score what cannot be seen from here. Reach is PHASE-DEPENDENT and re-marked each cycle: in formation, nearly everything is inside; the first public release migrates cells outward. Initial marking (2026-08-23, formation phase): INSIDE - Versioning, Identity, Description, Succession, Containment, Reference, Assertion, Governance, Repository. SHARED - Attribution (verification requires counterparties), Conformance (third-party implementations attest their own half; today first-party only), Portability (practice-sharing requires partners who do not yet exist - which reframes the Water column's thinness: it is partly reach, not only neglect). BEYOND - none today; expected to appear at the public release.
+
+2. SEQUENCE PROPAGATION. The twelve cells in reading order (the zodiac order the grid reproduces) form a development: a thing is versioned, has identity, describes itself, is attributed, succeeded, contained, referenced, asserted about, governed, stored, conformed, and carried - and the sequence CLOSES: position 12 feeds position 1. What returns from carried practice defines the next version's mandate - adoption feedback drives evolution. This closure is already attested in the track's own history: the muSrs usage attestation (what carried practice actually exercised) reshaped the standard (the removals ruling) - a 12-to-1 event before the operation had a name. Two uses: DIRECTIONALITY - trace a gap forward by asking what it denies the next cell (attested instance: the membership gap B6 in Containment/Repository denied Conformance - the two-condition implementation made discovery under-report); and CLOSURE - secondaries accumulating in late cells without primaries signal that causes are being recorded and consequences are not.
+
+3. CYCLICAL AXIS-BALANCE COUNTS. At each assessment cycle (audit re-run, census refresh, charter review), record the counts per row, per column, per modality diagonal, and per polarity axis - the four readings disagree usefully. Weight imbalances by load-bearing position, and check whether loaded cells are merely quiet before working visibly empty ones. An imbalance that survives re-placement is a coverage gap, not a classification error. Initial snapshot (from the 2026-08-21 census): columns - Earth and Air strong, Fire middling, Water thinnest; diagonals - the FIXED diagonal (the stability core: Identity, Succession, Assertion, Conformance) carries three of the five strong cells, which is the correct shape for a governed spec; the Mutable diagonal (where change is legal) is the thinnest; the emptiest polarity axis was 4-10 (Attribution-Repository), since given its principle. Future cycles diff against this snapshot.
+
+**Scope**: Extends rfc-decision-cce3c00e's instrument; changes no preference, boundary clause, or layer rule. The grid page and the Decision Compass (#461) document the three operations; reach marks and the balance snapshot live with the grid and are re-recorded each assessment cycle; the #273 charter self-hosting design inherits them as data (reach as a cell property, balance counts as cycle records). The sibling document itself remains background - the operations are adopted, its content is not incorporated.
+
+**Governing Values**:
+- evolution
+- shared-coherence
+- local-autonomy
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Adopting the sibling's full apparatus (per-cell discovery questions, offset-3 squares, evidence packs) - deferred, not rejected: the owner adopted the three that earned it; squares and per-cell question banks remain available to complex-mode maps without a standing rule. Leaving the operations informal - rejected: unrecorded operations are how the audit's half-built-mechanism pattern starts.
+
+**Accepted Costs**: Each assessment cycle now carries bookkeeping (reach re-marks, four count readings); reach marks add a judgment surface that can itself be wrong (mitigated by cycle re-marking); the balance snapshot invites metric-gazing - the counts are prompts for re-placement and conversation, never targets.
+
+**Evidence**:
+- The sibling application (launch-prep risk assessment, RMG-001, 2026-08-17..20): reach classification with the mandate-column half-excuse analysis, the 6-7-8 propagation instance, the five-secondaries-before-a-primary closure diagnostic, and the corrected polarity check
+- This track's attested instances: the muSrs attestation reshaping the removals (closure), audit finding B6's knock-on into discovery conformance (propagation), the census's Water-column conflation (reach)
+- rfc-decision-cce3c00e (the instrument extended), rfc-decision-7caca3a1 (the diagnostic mode these operations serve)
+
+**Review Trigger**: Review after two assessment cycles: if reach marks never changed anything worked, or balance counts were recorded but never read, the operations are ritual and should be cut - the compliance-inversion defense applied to our own additions.
+
+
