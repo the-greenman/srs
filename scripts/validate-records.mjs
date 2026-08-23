@@ -66,8 +66,11 @@ async function findPackageManifests(dir) {
   } catch {
     return out;
   }
+  // Sorted, and excluding only `node_modules` — matching validate-all.mjs's discoverPackages(),
+  // whose walk this mirrors, so the two cannot silently diverge on which roots they find.
+  entries.sort((a, b) => a.name.localeCompare(b.name));
   for (const entry of entries) {
-    if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;
+    if (entry.name === 'node_modules') continue;
     const full = join(dir, entry.name);
     if (entry.isDirectory()) {
       out.push(...await findPackageManifests(full));
@@ -79,6 +82,8 @@ async function findPackageManifests(dir) {
 }
 
 async function loadInstalledRelationTypes() {
+  // Sorted traversal order (above) makes a same-key collision across two roots deterministic —
+  // last-write-wins by path, not by whatever order the filesystem happens to hand back entries in.
   const manifestPaths = await findPackageManifests(join(SRS_RECORDS_ROOT, 'package'));
   const defs = new Map();
   for (const manifestPath of manifestPaths) {
