@@ -69,6 +69,19 @@ function sanitizeConstraint(body) {
  */
 export const INVARIANT_PROJECTION_ROOT = "records/invariants";
 
+/**
+ * True when a repo-relative instance path is a DIRECT child of the projection root — the exact test
+ * `renderInvariants` applies by construction (a flat `readdir`, not a recursive walk), and the one
+ * both placement guards (#285's reachability guard and #410's stray-invariant guard) must apply too.
+ * Defined once so the two guards cannot drift on what "in the root" means, the same reason
+ * INVARIANT_PROJECTION_ROOT itself is exported rather than restated.
+ */
+export function isInInvariantProjectionRoot(path) {
+  if (!path.startsWith(`${INVARIANT_PROJECTION_ROOT}/`)) return false;
+  const rest = path.slice(INVARIANT_PROJECTION_ROOT.length + 1);
+  return !rest.includes("/");
+}
+
 export async function renderInvariants(repoPath) {
   const invariantsDir = join(repoPath, INVARIANT_PROJECTION_ROOT);
   const entries = await readdir(invariantsDir);
