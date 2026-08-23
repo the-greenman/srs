@@ -97,8 +97,10 @@ const fail = (msg) => problems.push(msg);
  * Keyed on the manifests rather than on `**\/document-views/*.json`, because a view file that no
  * package declares is not a declared presentation — it renders nothing and must not confer
  * reachability. The walk finds package manifests by presence (RFC-038 Change B), so a package that
- * `packageRefs` omits still contributes: `srs/package/package.json` is exactly such a package and it
- * declares one of the six views.
+ * `packageRefs` omits still contributes: `srs/package/package.json` is exactly such a package (it
+ * declared the `ec34f54b` duplicate of `3a000001` until #411 dropped it — declares none today, but
+ * the walk still has to find it by presence, not by `packageRefs` membership, for the case where it
+ * declares one again).
  */
 async function declaredDocumentViews(repoRoot) {
   const views = [];
@@ -125,12 +127,13 @@ async function declaredDocumentViews(repoRoot) {
         try {
           const view = JSON.parse(await readFile(join(dir, rel), "utf8"));
           // Declared is not published. `publish-spec.mjs` renders exactly the ids in
-          // `lib/view-exports.mjs`; a view outside that set produces no artifact, so honouring it
-          // would be the same free "publish" lever the `containers/**` glob was. It is not
-          // hypothetical: `srs/package/package.json` declares `srs-spec-document-view` (ec34f54b),
-          // which nothing exports — and because a stale exclusion is an error, adding one line to a
-          // `documentViews[]` array would not merely silence this guard, it would *demand* the
-          // matching exclusions be deleted.
+          // `lib/view-exports.mjs` (which reads `manifest.renderedPresentations` — #411); a view
+          // outside that set produces no artifact, so honouring it would be the same free "publish"
+          // lever the `containers/**` glob was. It was not hypothetical: until #411,
+          // `srs/package/package.json` declared `srs-spec-document-view` (ec34f54b), a duplicate of
+          // `3a000001` that nothing exported — and because a stale exclusion is an error, adding one
+          // line to a `documentViews[]` array would not merely silence this guard, it would *demand*
+          // the matching exclusions be deleted.
           if (EXPORTED_VIEW_IDS.has(view.id)) views.push({ path: join(dir, rel), view });
           else unexported.push({ path: join(dir, rel), id: view.id });
         } catch {
