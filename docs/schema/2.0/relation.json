@@ -51,16 +51,6 @@
     },
     "meta": {
       "type": "object"
-    },
-    "sourceRepositoryId": {
-      "type": "string",
-      "format": "uuid",
-      "description": "ext:federation only. Repository containing the source instance. Absent = current repository."
-    },
-    "targetRepositoryId": {
-      "type": "string",
-      "format": "uuid",
-      "description": "ext:federation only. Repository containing the target instance. Absent = current repository."
     }
   },
   "$defs": {

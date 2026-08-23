@@ -219,7 +219,7 @@ independently adoptable capability module, declared in a repository's manifest u
 | `ext:themes-l1` | Visual theming for rendered views |
 | `ext:addressability` | Universal addressing across document / process / conversation spaces |
 | `ext:protocol` | Structured facilitation processes with ordered stages |
-| `ext:federation` / `ext:registry` / `ext:import-tracking` | Cross-repository relations, catalogs, and provenance |
+| `ext:registry` / `ext:import-tracking` | Package catalogs and provenance |
 | `ext:cross-field-validation` | Multi-field validation rules |
 | `ext:type-inheritance` | Types extending other Types |
 | `ext:json-store` | Arbitrary JSON alongside standard fields |

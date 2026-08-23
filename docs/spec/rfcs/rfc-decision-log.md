@@ -1069,6 +1069,46 @@ THE REVIEW TEST, three questions asked of every proposal alongside its cell: Whi
 **Review Trigger**: A future com.semanticops.spec/invariant record discovered outside records/invariants/ that scripts/check-invariant-placement.mjs flags: resolve by relocating and renumbering per this decision, not by adding a new publication-reachability exclusion for it.
 
 
+**Title**: Decision modes: rules for the clear, geometry for the complex, a boundary against chaos
+
+**Decision Status**: accepted
+
+**Decision Date**: 2026-08-23
+
+**Decision Rationale**: The decision-layering precedents research (2026-08-23) recommended Cynefin-style mode classification as a missing mechanism, warning that a charter applying the same rule-based compression in clear, complicated and complex situations is dangerous, and naming premature classification as the first automated-ritualization pathology. The owner ruled the adoption with the design that completes it: simple and complicated decisions can generally be addressed through rules; complex decisions need a stronger judgment mechanism that allows looking ahead and mapping consequences and emergence; the geometry of the matrix is a key mechanism for complexity; chaotic decisions are outside the spec boundary. The ruling is also evidence-led (axis 2-8): the track's own history attests both halves - the ~20 layer-determined signatures were clear/complicated cases correctly resolved by rules, while the #273 decision map, the preference-layer construction, and the fix-vs-redo review were complex cases correctly resolved by geometry. This record formalizes attested practice rather than introducing speculative process.
+
+**Decision**: Cell: Governance. Every charter-checked decision names its mode - clear, complicated, complex, chaotic, or unresolved - and the mode determines which decision machinery applies:
+
+CLEAR and COMPLICATED decisions are addressed through rules: the charter check as specified (cell citation, governing preference, boundary-clause justification for a non-default pole, past-decision search) is sufficient. Complicated decisions may additionally need expert analysis, but the charter's existing adjudication machinery governs them.
+
+COMPLEX decisions require a stronger judgment mechanism, and charter citation alone is INSUFFICIENT - forcing a complex case into a single cell to produce a citation is the premature-classification pathology, forbidden by name. The mechanism for complexity is THE GEOMETRY OF THE MATRIX: the decision is mapped, not cited - located across the cells it genuinely touches (complex concerns straddle), its options plotted for consequences along the axes and polarities, checked for column coherence, and examined for emergence through look-ahead rather than rule application. This is the decision-map method as practiced (the #273 decision-consequence map and the construction of this charter itself are its precedents): options side-by-side, consequences plotted, tensions held visibly, probes and a review date where outcomes are genuinely unknowable in advance, and the owner in the loop. A complex decision resolves into rulings; it is never resolved by guard compliance.
+
+CHAOTIC situations are OUTSIDE THE SPEC BOUNDARY. The standard and its charter do not adjudicate chaos: no charter process applies, stabilizing action is not a spec act, and the spec's writ resumes only when the situation admits mapping again - re-entering as complex or complicated. The boundary is itself a protection: a governance system that claims jurisdiction over chaos will either paralyze the response or corrupt its own record.
+
+UNRESOLVED (mode not yet determinable) and CONTESTED mode assignments default to the more cautious handling: complex over complicated, boundary over adjudication.
+
+**Scope**: Binds the Charter Check (#463): decision_mode becomes a required field with these semantics, and the check's hard rule is that complex-mode cases produce a map and rulings, never a citation-only resolution. The Decision Compass (#461) documents the modes. The decision-map method (locate across cells, plot options along axes and polarities, check column coherence, look ahead for emergence) is the named complex-mode instrument; its richer operations registers (the polarity readings, the hexagram operations layer) remain available to it without being required. Does not change any existing ruling; does not give the charter jurisdiction over chaotic situations - explicitly the opposite.
+
+**Governing Values**:
+- semantic-integrity
+- local-autonomy
+- evolution
+
+**Project Phase**: formation
+
+**Alternatives Considered**: (1) decision_mode as an optional field (the pre-ruling proposal on #463) - rejected by the owner's adoption: the mode determines the machinery, so it cannot be optional. (2) Charter adjudication for complex cases with extra review - rejected: complexity is not complicated-plus-effort; look-ahead and emergence-mapping are a different kind of act, and pretending otherwise is the ritualization pathology. (3) Charter jurisdiction over chaotic response (a 'break-glass process') - rejected: chaos is placed outside the spec boundary deliberately; governing the ungovernable corrupts the record.
+
+**Accepted Costs**: Mode assignment is itself a judgment and can be gamed toward 'clear' to avoid mapping effort - mitigated by the cautious-default rule and by review; complex-mode decisions are slower and owner-involving by design; the spec boundary means some real events leave no charter trace until they re-enter as mappable situations.
+
+**Evidence**:
+- The decision-layering precedents research (2026-08-23): the Cynefin case, the automated-ritualization pathology list, and the adoption shortlist item 5
+- The track's attested practice: the #273 decision-consequence map (complex, mapped), the ~20 layer-determined signatures (clear/complicated, ruled), the preference-layer construction (complex, mapped)
+- rfc-decision-cce3c00e (the grid whose geometry is the complexity instrument; the review-test this ruling extends)
+- srs#435 adoption map and #463 (the Charter Check this binds)
+
+**Review Trigger**: Review if mode-gaming toward 'clear' is observed twice (the cautious-default clause may need teeth), or if a chaotic situation's re-entry proves to need more definition than 'admits mapping again'.
+
+
 **Title**: The grid grows three operations: reach, sequence, balance
 
 **Decision Status**: accepted

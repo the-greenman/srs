@@ -77,14 +77,6 @@
       "deprecated": true,
       "description": "DEPRECATED (rfc-decision-2a1e1590, 2026-08-21): ext:changelog and its ChangelogCollection schema are removed under the dormancy rule (zero corpus use). Readers accept this property on existing manifests during the migration window; writers must not emit it."
     },
-    "federationPath": {
-      "type": "string",
-      "description": "ext:federation only. Path to the RepositoryRegistry file. Default: 'federation/registry.json'."
-    },
-    "federationEventsPath": {
-      "type": "string",
-      "description": "ext:federation only. Path to the FederationEventsFile. Default: 'federation/events.json'."
-    },
     "aiGuidance": {
       "type": "object",
       "description": "Comprehension guidance for AI agents reading this repository.",
