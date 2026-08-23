@@ -48,7 +48,7 @@
     },
     "protocolStages": {
       "type": "array",
-      "description": "The stages, in declaration order. Execution sequence is determined by dependsOn resolution, not by array position; `order` is the declared composition order of the stages, a structural default for display (Invariant 31).",
+      "description": "The stages, in declaration order. Execution sequence is determined by dependsOn resolution, not by array position; `order` is the declared composition order of the stages — structure, not presentation; it provides the render default (Invariant 31).",
       "items": {
         "$ref": "#/$defs/ProtocolStage"
       }

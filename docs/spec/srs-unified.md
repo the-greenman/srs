@@ -3689,7 +3689,7 @@ Conforming implementations must uphold the following invariants.
 
 **30.** Every `fieldId` in `ProtocolStage.contributesTo[]` must reference a `fieldId` that appears in the stage's own `outputType`'s effective field list (when `outputType` is declared), or in `Protocol.targetType`'s effective field list (when `outputType` is absent). A single stage must not contribute to both its own `outputType` and the enclosing `Protocol.targetType`. When neither `outputType` nor `Protocol.targetType` is declared, `contributesTo` must be empty.
 
-**31.** For every pair of stages A and B within a `Protocol` where B.dependsOn includes A.stageId, B.order must be greater than A.order. `order` is the declared composition order of the stages — a display default; execution sequence is determined by `dependsOn` resolution. The two must not contradict each other.
+**31.** For every pair of stages A and B within a `Protocol` where B.dependsOn includes A.stageId, B.order must be greater than A.order. `order` is the declared composition order of the stages — structure, not presentation; it provides the render default. Execution sequence is determined by `dependsOn` resolution. The two must not contradict each other.
 
 #### ext:views-l2
 
