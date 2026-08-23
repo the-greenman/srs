@@ -13,6 +13,7 @@
     },
     "containerId": {
       "type": "string",
+      "format": "uuid",
       "description": "Stable UUID for this Container. Must not appear in Relation.sourceInstanceId or targetInstanceId."
     },
     "title": {

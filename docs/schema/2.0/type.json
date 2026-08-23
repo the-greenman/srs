@@ -307,7 +307,8 @@
           "description": "Context-specific label override for this field within this Type."
         },
         "defaultValue": {
-          "description": "Optional default value to pre-populate the field."
+          "deprecated": true,
+          "description": "DEPRECATED: ruled removed (srs#234, 2026-08-08 decision; executed in the #273 train alongside Field.defaultValue) — this ledger row is explicitly superseded. Defaults return later as a single layered-override capability designed in its own RFC. Optional default value to pre-populate the field."
         }
       }
     },
