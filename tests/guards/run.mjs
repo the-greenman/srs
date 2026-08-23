@@ -623,8 +623,9 @@ async function publicationReachabilityCases(root) {
   });
 
   // ...and the projection is scoped to that directory, not to the type: the same record one level
-  // out is unpublished. Otherwise "it is an invariant" would be the rule, and the three unratified
-  // RFC-011 proposals under `package/records/` would read as published normative invariants.
+  // out is unpublished. Otherwise "it is an invariant" would be the rule — and outside this
+  // reachability guard's own escape hatch (an exclusion entry), a stray invariant is what
+  // check-invariant-placement.mjs (srs#410) exists to reject outright, unconditionally.
   await rm(join(repo, "records/invariants"), { recursive: true });
   await writeJson(join(repo, "package/records/inv.json"), record(3, "invariant"));
   expect("does not project an invariant outside records/invariants/", runCheck("check-publication-reachability.mjs", root), {
@@ -778,12 +779,71 @@ async function publicationReachabilityCases(root) {
   });
 }
 
+// ---- srs#410 — invariant placement: no exclusion-list escape --------------------------------------
+async function invariantPlacementCases(root) {
+  console.log("srs#410 — invariant placement guard (no exclusion escape)");
+
+  const ID = (n) => `00000000-0000-4000-8000-0000000004${String(n).padStart(2, "0")}`;
+  const invariant = (n, num) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/record.json",
+    instanceId: ID(n),
+    typeId: "2a000006-0000-4000-a000-000000000006",
+    typeVersion: 1,
+    typeNamespace: "com.semanticops.spec",
+    typeName: "invariant",
+    fieldValues: { invariant_number: num, title: `invariant ${n}`, normative_statement: "MUST fixture." },
+  });
+
+  const repo = join(root, "srs");
+  await writeJson(join(repo, "records/invariants/good.json"), invariant(1, "I-1"));
+
+  expect("passes when every invariant is in the projection root", runCheck("check-invariant-placement.mjs", root), {
+    exit: 0,
+    contains: ["✓ Every com.semanticops.spec/invariant record lives in records/invariants/"],
+  });
+
+  // The violation this guard exists for: an RFC-authoring invariant record that sits outside the
+  // projection root. Unlike #285's reachability guard, there is no exclusion file that can clear
+  // this — the srs#410 defect was exactly a stale exclusion entry papering over this exact shape.
+  await writeJson(join(repo, "package/package.json"), {
+    id: "00000000-0000-4000-8000-000000000701",
+    namespace: "com.example.fixture",
+    name: "fixture-package",
+    version: "1.0.0",
+  });
+  await writeJson(join(repo, "package/records/stray.json"), invariant(2, "011-1"));
+  expect("rejects an invariant record outside the projection root", runCheck("check-invariant-placement.mjs", root), {
+    exit: 1,
+    contains: ["package/records/stray.json", "outside records/invariants/", "no exclusion escape"],
+  });
+  await rm(join(repo, "package/records"), { recursive: true });
+
+  // The projection root is a flat readdir (render-invariants.mjs), so a record one directory deeper
+  // is not projected either — this guard must agree with what actually renders, not just with the
+  // path prefix.
+  await writeJson(join(repo, "records/invariants/nested/deep.json"), invariant(3, "I-3"));
+  expect("rejects an invariant record in a subdirectory of the projection root", runCheck("check-invariant-placement.mjs", root), {
+    exit: 1,
+    contains: ["records/invariants/nested/deep.json", "outside records/invariants/"],
+  });
+  await rm(join(repo, "records/invariants/nested"), { recursive: true });
+
+  // A floor, matching the sibling guards: a walk that finds no invariant record at all is not a
+  // repository with nothing wrong — it means the root argument is wrong.
+  await rm(join(repo, "records/invariants"), { recursive: true });
+  expect("fails when the walk finds no invariant records at all", runCheck("check-invariant-placement.mjs", root), {
+    exit: 1,
+    contains: ["No com.semanticops.spec/invariant records found"],
+  });
+}
+
 const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
 try {
   await fieldNameCases(join(root, "field-name"));
   await schemaKindCases(join(root, "schema-kind"));
   await validatePackageCases(join(root, "validate-package"));
   await publicationReachabilityCases(join(root, "publication-reachability"));
+  await invariantPlacementCases(join(root, "invariant-placement"));
 } finally {
   await rm(root, { recursive: true, force: true });
 }
