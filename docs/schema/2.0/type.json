@@ -96,7 +96,7 @@
         "type": "string",
         "format": "uuid"
       },
-      "description": "ext:type-inheritance — explicit ordering for the merged field list (base + own). Must contain every fieldId from the effective field set exactly once."
+      "description": "ext:type-inheritance — explicit declared composition order for the merged field list (base + own), overriding per-field FieldAssignment.order at the Type level. Must contain every fieldId from the effective field set exactly once."
     },
     "fieldAssignmentOverrides": {
       "type": "array",
@@ -296,7 +296,7 @@
         "order": {
           "type": "integer",
           "minimum": 0,
-          "description": "Display/processing order within the Type."
+          "description": "The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015)."
         },
         "required": {
           "type": "boolean",

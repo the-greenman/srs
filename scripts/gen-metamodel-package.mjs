@@ -126,7 +126,7 @@ const FIELD_SPECS = [
   ['fields', ref('field-assignment', 'inline', 'list'), 'Ordered list of FieldAssignments that make up this Type.'],
   // -- FieldAssignment --
   ['field_id', ref('field', 'reference', 'single'), 'References a Field by its stable id (reference mode closes the metacircular loop).'],
-  ['order', { datatype: 'integer', constraints: { minimum: 0 } }, 'Display/processing order within the Type.'],
+  ['order', { datatype: 'integer', constraints: { minimum: 0 } }, 'The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015).'],
   ['required', { datatype: 'boolean' }, 'Whether this field must be populated before a Record can be logged.'],
   ['display_label', { datatype: 'string' }, 'Context-specific label override for this field within this Type.'],
   ['assignment_default_value', { datatype: 'dependent', dependsOn: 'field_id' }, 'Optional default value conforming to the referenced Field\'s type.'],

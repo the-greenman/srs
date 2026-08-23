@@ -17,6 +17,7 @@
 | 1 | 2026-07-03 | Initial draft |
 | 2 | 2026-07-03 | Add `direction: "desc"` step (4) to Rule [N+29]; close OQ-1 (resolved). Fix RFC-014 dangling reference in Rationale. Promote OQ-2 resolution into Rule [N+31] (multi-package conflict + `viewId` failure); close OQ-2. Add Migration section. Add diagnostic asymmetry rationale. Add New Invariants note. Add RFC-013 OQ-1 acknowledgment. Fix `[N+20]–[N+21]` → `[N+19]–[N+21]` in Change B. Fix `direction` description in schema snippets. Fix Affects header for [N+31]. Fix MUST wording in Rule [N+29] step (2). Implementation started; spec records authored in `srs/srs/`; PR opened as srs#115. |
 | 3 | 2026-07-23 | Fold residue: Rules [N+28]–[N+31] assigned permanent invariant numbers I-125–I-128 and authored as `com.semanticops.spec/invariant` records (`srs/srs/records/invariants/`). RFC record's integration manifest updated accordingly. |
+| 4 | 2026-08-23 | Foundations-fixup reframe (rfc-decision-cce3c00e; the decisions-vs-layer review on srs#435, ordering straddle, resolved SIGNATURE): the layering table never addressed field-level order. Add the composition-order row — `FieldAssignment.order` / `ProtocolStage.order` is **structure** (declaration order feeding canonical serialisation and the render default), distinct from presentational arrangement (view-owned) and from semantic sequence (`precedes`). One sentence, three homes: composition order is structure; display order is presentation; sequence is assertion. No schema structural change; descriptions only (srs#445). |
 
 ---
 
@@ -56,6 +57,7 @@ The spec introduces a normative principle separating ordering concerns:
 |---|---|---|
 | Semantic sequence | `precedes` relation | Changing the order changes the *meaning*; one correct order exists |
 | Structural navigation | Root-container `precedes` chain (RFC-013 [N+12]) | Derived from semantic precedence among section roots |
+| Composition order | `FieldAssignment.order` / `Type.fieldOrder`; `ProtocolStage.order` | Declared on the Type/Protocol; structure, not presentation. Feeds canonical serialisation and provides the render *default*; a View overrides for display (`FieldView.order`, `ExportConfig.fieldOrder`) — Rev 4 |
 | Presentational arrangement | DocumentView `ordering` | View-level; many concurrent arrangements are legitimate; none is a semantic claim |
 
 Implementations MUST NOT create `precedes` relations to achieve a presentational ordering goal. `precedes` is reserved for sequences where a different order would be semantically wrong (spec sections in document order, protocol stages in execution sequence).
