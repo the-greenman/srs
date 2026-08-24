@@ -231,16 +231,16 @@ Fires on owner acceptance of this RFC (Draft → Accepted is the owner's act; th
 
 | # | Unit | Content | Class | Gate |
 |---|---|---|---|---|
-| 4a-1 | **Modelling** | Changes A, B, C, D, E, K(model)+F(model): generator rework (explicit pinning), facet Types, seven value objects, `description` slot, removals, `lineage`/`provenance`, `conditional-forbidden` in the model, seed core edits, `status.json` value deletion, byte-level gap re-analysis first, `dataModelRevision: 3` + migration-registry entry, package v1.1.0 | session-unit | RFC-040 Accepted |
-| 4a-2 | **Reference edits** | Change H: the seven taxonomy edits + their data migrations | session-unit | 4a-1 landed |
-| 4a-3 | **Emitter** | Changes F(projection), G: effective-Type resolution, facing distinction, conditional + annotation projection, closure-test tightening to byte level, regenerate-and-diff gate into `validate-all`, stale-prose corrections | session-unit | 4a-2 landed |
-| 4a-4 | **SourceRef migration** | Change I: RFC-023 field/value migration + legacy-alias schema removal | **pool** (+queued; gated in-body) | RFC-040 Accepted (independent of 4a-1..3) |
-| 4a-5 | **Reader projection** | Change J: property table + pseudo-IDL + raw-schema link through the typed slot; type-query design record (Change K); allowlist ledger reconciliation; OQ1 closure | session-unit | 4a-3 landed |
-| 4a-6 | **DN-045** | Change L: graduate the Tier-0 capture | session-unit (small) | RFC-040 Accepted (parallel) |
+| 4a-1 ([#477](https://github.com/the-greenman/srs/issues/477)) | **Modelling** | Changes A, B, C, D, E, K(model)+F(model): generator rework (explicit pinning), facet Types, seven value objects, `description` slot, removals, `lineage`/`provenance`, `conditional-forbidden` in the model, seed core edits, `status.json` value deletion, byte-level gap re-analysis first, `dataModelRevision: 3` + migration-registry entry, package v1.1.0 | session-unit | RFC-040 Accepted |
+| 4a-2 ([#478](https://github.com/the-greenman/srs/issues/478)) | **Reference edits** | Change H: the seven taxonomy edits + their data migrations | session-unit | 4a-1 landed |
+| 4a-3 ([#479](https://github.com/the-greenman/srs/issues/479)) | **Emitter** | Changes F(projection), G: effective-Type resolution, facing distinction, conditional + annotation projection, closure-test tightening to byte level, regenerate-and-diff gate into `validate-all`, stale-prose corrections | session-unit | 4a-2 landed |
+| 4a-4 ([#480](https://github.com/the-greenman/srs/issues/480)) | **SourceRef migration** | Change I: RFC-023 field/value migration + legacy-alias schema removal | **pool** (+queued; gated in-body) | RFC-040 Accepted (independent of 4a-1..3) |
+| 4a-5 ([#481](https://github.com/the-greenman/srs/issues/481)) | **Reader projection** | Change J: property table + pseudo-IDL + raw-schema link through the typed slot; type-query design record (Change K); allowlist ledger reconciliation; OQ1 closure | session-unit | 4a-3 landed |
+| 4a-6 ([#482](https://github.com/the-greenman/srs/issues/482)) | **DN-045** | Change L: graduate the Tier-0 capture | session-unit (small) | RFC-040 Accepted (parallel) |
 
 Sequenced by native `blocked by` edges. 4a-4 is the only pool unit — it is genuinely decided-design mechanical (RFC-023 supplies the whole contract) and single-repo; everything else is design-heavy or multi-consequence, so session-unit per the conservative default.
 
-**Routed-out siblings (not train units):** the #317-F2 `expectedSegments` expectation kind goes **standalone** (its own small session-unit issue — this train never touches the discovery runner, so riding would widen it; the 2026-08-18 disposition allows either); #383's execution and everything instance-layer stays at #272.
+**Routed-out siblings (not train units):** the #317-F2 `expectedSegments` expectation kind goes **standalone** ([#483](https://github.com/the-greenman/srs/issues/483) — this train never touches the discovery runner, so riding would widen it; the 2026-08-18 disposition allows either); #383's execution and everything instance-layer stays at #272.
 
 ---
 
