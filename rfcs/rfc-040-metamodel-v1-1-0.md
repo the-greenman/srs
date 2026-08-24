@@ -3,7 +3,7 @@
 # RFC-040: Metamodel v1.1.0 — the definition-layer train
 
 **Status**: Draft (Revision 1)
-**Affects**: `com.semanticops.srs/metamodel` (package v1.0.0 → v1.1.0), `docs/schema/2.0/field.json`, `docs/schema/2.0/type.json`, `docs/schema/2.0/note.json` / `record.json` (SourceReference legacy-alias removal), `docs/schema/2.0/package-manifest.json`, `docs/schema/2.0/vocabulary.json` (`vocabularyRef` form), `scripts/gen-metamodel-package.mjs`, `scripts/lib/schema-emitter.mjs`, `docs/schema/2.0/projection-rules.md`, `docs/schema/2.0/metamodel-fidelity.md`, closure tests (`rfc-033` / `rfc-035`), the RFC-031 residual allowlist, design-note 045. Builds on RFC-032 (Accepted), RFC-033 (Accepted), RFC-035 (Accepted), RFC-039 (Accepted), RFC-023 (Accepted), RFC-019 (Accepted), RFC-020 (Accepted), RFC-022 (Accepted).
+**Affects**: `com.semanticops.srs/metamodel` (package v1.0.0 → v1.1.0), `docs/schema/2.0/field.json`, `docs/schema/2.0/type.json`, `docs/schema/2.0/note.json` / `record.json` (SourceReference legacy-alias removal), `docs/schema/2.0/manifest.json` / `package-manifest.json` / `package-bundle.json` / `blueprint.json` / `document-view.json` / `protocol.json` (reference forms), `scripts/gen-metamodel-package.mjs`, `scripts/lib/schema-emitter.mjs`, `docs/schema/2.0/projection-rules.md`, `docs/schema/2.0/metamodel-fidelity.md`, closure tests (`rfc-033` / `rfc-035`), the RFC-031 residual allowlist, design-note 045. Builds on RFC-032 (Accepted), RFC-033 (Accepted), RFC-035 (Accepted), RFC-039 (Accepted), RFC-023 (Accepted), RFC-019 (Accepted), RFC-020 (Accepted), RFC-022 (Accepted).
 **Author**: #273 planning session (scheduled, complicated-mode), assembling owner rulings of 2026-07-31 … 2026-08-23
 **Date**: 2026-08-24
 
@@ -19,7 +19,7 @@
 
 ## Abstract
 
-Metamodel v1.1.0 closes the `generated ⊂ seed` gap by modelling the **live post-#242 definition layer** in SRS records and making the emitter reproduce the frozen seed **byte-for-byte, annotations and `$defs` included** — with no remainder overlay. Extension facets enter as separate Types extending the core via `ext:type-inheritance`; the emitter consumes the resolved effective Type and learns the instance-facing vs definition-facing distinction (emitted instance schemas closed-except-`meta`; definitions closed). Every change in this RFC was ruled between 2026-07-31 and 2026-08-23 and is cited to its decision record; this document assembles the rulings into a sequenced, gated execution train and adds nothing to them. The seed remains the authoritative fixed point throughout: the #260 authorship flip is explicitly **not** part of this train (owner hold, 2026-08-23).
+Metamodel v1.1.0 closes the `generated ⊂ seed` gap by modelling the **live post-#242 definition layer** in SRS records and making the emitter reproduce the frozen seed **byte-for-byte, annotations and `$defs` included** (modulo only the documented-divergence register, whose one live entry stays booked to #260) — with no remainder overlay. Extension facets enter as separate Types extending the core via `ext:type-inheritance`; the emitter consumes the resolved effective Type and learns the instance-facing vs definition-facing distinction (emitted instance schemas closed-except-`meta`; definitions closed). Every change in this RFC was ruled between 2026-07-31 and 2026-08-23 and is cited to its decision record; this document assembles the rulings into a sequenced, gated execution train and adds nothing to them. The seed remains the authoritative fixed point throughout: the #260 authorship flip is explicitly **not** part of this train (owner hold, 2026-08-23).
 
 ---
 
@@ -59,15 +59,15 @@ The per-decision decision → mechanism pairing is stated inline in each Change 
 
 *(Decision 1, #273 2026-07-31; options (b) facets-as-core-fields and (c) remainder overlay rejected with recorded rationale; no-overlay ruling recorded in the decision log 2026-07-31.)*
 
-Metamodel v1.1.0 models the live extension-contributed Type facets as **separate metamodel Types extending the core `type` Type** through `ext:type-inheritance`, grouped by their owning extension:
+Metamodel v1.1.0 models all nine live `type.json` properties beyond the v1.0.0 core (exactly today's closure-test exclusion set). The **extension-owned** facets enter as **separate metamodel Types extending the core `type` Type** through `ext:type-inheritance`; the two properties that are core spec surface — not owned by any extension — join the core `type` model directly, which does not flatten extension layering (Decision 1's bar is against asserting *extension* facets at core-only adopters):
 
-| Facet | Owner |
-|---|---|
-| `lifecycle`, `lifecycleRef` | `ext:lifecycle` |
-| `extendsTypeId`, `extendsTypeVersion`, `fieldOrder`, `fieldAssignmentOverrides` | `ext:type-inheritance` |
-| `identityFieldId` | RFC-020 |
-| `validationRules` | `ext:cross-field-validation` (RFC-019) |
-| `tags` | core Type surface (not extension-owned; joins the core model) |
+| Property | Contributed by | Modelling route |
+|---|---|---|
+| `lifecycle`, `lifecycleRef` | `ext:lifecycle` | inherited facet Type |
+| `extendsTypeId`, `extendsTypeVersion`, `fieldOrder`, `fieldAssignmentOverrides` | `ext:type-inheritance` | inherited facet Type |
+| `validationRules` | `ext:cross-field-validation` (RFC-019) | inherited facet Type |
+| `identityFieldId` | RFC-020 (core RFC, interacts with inheritance but is not extension-owned) | core `type` surface |
+| `tags` | core surface | core `type` surface |
 
 The emitter consumes the **resolved effective Type** (ancestor chain + effective fields — the resolution `srs-repository` already implements end to end). The inheritance semantics themselves are ratified invariants (I-39..43 + I-97: single inheritance, acyclic, no inherited-fieldId redeclaration, `fieldOrder` single-level exact permutation, overrides only-inherited with `required` tighten-only, `identityFieldId` the one cascading facet, `validationRules` never inherited) — this train *models* them; any modelling-time contradiction is a finding, not a choice.
 
@@ -79,7 +79,7 @@ The emitter consumes the **resolved effective Type** (ancestor chain + effective
 
 The seed's `type.json` `$defs` carry seven value objects the metamodel does not yet model: `TypeLifecycle`, `LifecycleState`, `RequiresRelation`, `LifecycleTransition`, `FieldAssignmentOverride`, `CrossFieldRule`, `CrossFieldRuleEffect`. Each becomes a metamodel Type (inline-`ref` range of its owning facet), exactly as `FieldType`/`ExactTypeRef`/`AiGuidance` already are.
 
-`field.json`'s one remaining seed-only property, `editorHint`, is also modelled: RFC-032 Rev 3 explicitly **retained** it on the Field envelope as *"presentation only, not part of the type model"* (it is deliberately outside `fieldType`, so `6523cf5e` is not contradicted), and the corpus uses it widely (the spec-authoring-core fields carry it). The live surface must be expressible (the no-overlay ruling); its modelled description carries the presentation-only declaration verbatim.
+`field.json`'s one remaining seed-only property, `editorHint`, is also modelled: RFC-032 Rev 3 declared it *"presentation, out of the type model"* and chose to *"retain `editorHint` (presentation; #262)"* on the Field envelope — deliberately outside `fieldType`, so `6523cf5e` is not contradicted — and the corpus uses it widely (the spec-authoring-core fields carry it). The live surface must be expressible (the no-overlay ruling); its modelled description carries the seed's own declaration verbatim (*"Presentation only (not part of the type model — RFC-032)"*).
 
 **Mechanism:** the closure test's printed exclusion sets shrink to empty for **both** entities; a regression re-grows them visibly (the printed-list discipline already in place).
 
@@ -126,7 +126,9 @@ The emitter distinguishes what it is emitting for:
 - **Definition-facing** schemas (`field.json`, `type.json`, the metamodel entities): `additionalProperties: false`, fully closed. Definitions are the trust boundary; extension is inheritance-only (#237 ruling, 2026-08-08).
 - **Instance-facing** schemas (domain Type projections that validate Records): **closed except `meta`** — the emitted schema is the production contract; carried out-of-contract keys are schema-invalid-but-preserved, the validation complaint being the ruled louder diagnostic. Readers DETECT always (graded: `meta` quiet, elsewhere louder), LOAD always, WRITE = preserve or refuse loudly; silent discard is the one forbidden behaviour.
 
-`$schema` / `title` are emitted uniformly, and annotations (`Field.description`, `FieldAssignment.description` → `description`, `displayLabel` → `title`) project on both facings. **Mechanism:** per-facing golden tests assert the `additionalProperties` posture; srs-rust#847 (record update preserve mode) graduates from enhancement to conformance support — the srs-rust follow-up is filed at this unit's landing; the spec documents the dual status (loadable-and-carried yet schema-invalid) so the complaint reads as graded diagnosis, not contradiction.
+`$schema` / `title` are emitted uniformly, and annotations (`Field.description`, `FieldAssignment.description` → `description`, `displayLabel` → `title`) project on both facings.
+
+**Boundary with #272:** this train lands the facing *mechanism and contract* — proven on definition entities and domain-Type golden fixtures — not the production instance-layer artifact set. Generating the instance-layer schemas themselves (the 24-schema ledger's scope) remains #272's; Unit 3's deliverable is that when #272 emits them, the closed-except-`meta` posture is already the emitter's behaviour, tested. **Mechanism:** per-facing golden tests assert the `additionalProperties` posture; srs-rust#847 (record update preserve mode) graduates from enhancement to conformance support — the srs-rust follow-up is filed at this unit's landing; the spec documents the dual status (loadable-and-carried yet schema-invalid) so the complaint reads as graded diagnosis, not contradiction.
 
 ### Change H — Reference-taxonomy definition-layer edits
 
@@ -134,11 +136,11 @@ The emitter distinguishes what it is emitting for:
 
 The definition-layer edits the taxonomy routed into this train:
 
-1. **Shared `ExactTypeRef` `$def`** — one definition, referenced everywhere the PINNED object form appears (the `$ref` collapse).
+1. **Shared `ExactTypeRef` `$def`** — one definition, referenced everywhere the PINNED object form appears (the `$ref` collapse). Its current hosts are `blueprint.json`, `document-view.json`, `field.json`, and `protocol.json` — all four are edited; `type.json` carries no `ExactTypeRef` today.
 2. **`dependencyRefs` → `packageDependencies`** on the package manifest (KEYED + semver — the one sanctioned constraint form, package layer only).
 3. **`lifecycleRef` and Protocol `TypeRef` → LINEAGE** — bare UUID; Protocol `TypeRef.typeVersion` is dropped (version-optional hybrids are forbidden).
-4. **`definitionType` enum derived from the package-manifest's ten kinds** — one source, so the lists cannot diverge again (finding A6; also serves the travel mandate's ten-kinds derivation, `8948e43f`).
-5. **Locator mode unification** — `packageRef` `external` → `remote`; one mode-discriminated shape shared with `ThemeReference`.
+4. **`definitionType` enum derived from the package-manifest's ten definition kinds** — the enum lives in `package-bundle.json` (today nine hand-listed values) and becomes derived from `package-manifest.json`'s ten definition collections: one source, so the lists cannot diverge again (finding A6; also serves the travel mandate's ten-kinds derivation, `8948e43f`).
+5. **Locator mode unification** — `manifest.json`'s `$defs.PackageRef` mode `external` → `remote`, converging on the one mode-discriminated shape `document-view.json`'s `ThemeReference` already uses.
 6. **`vocabularyRef` → LINEAGE** — the stored form becomes a bare UUID (`format: uuid`), replacing the `namespace/name@version` pattern string; the effective package set resolves. The metamodel's `vocabulary_ref` Field moves with it.
 7. **Canonical-string demotion** — `namespace/name@version` becomes the DISPLAY serialization of a pinned reference (CLI output, docs, diagnostics), never a stored form.
 
@@ -174,7 +176,7 @@ The generated property table renders from the resolved effective Type with colum
 - **The Type-keyed `type-query` variant is DESIGNED in this train** (it is a reference-taxonomy application, and this train owns that vocabulary): selection by **KEYED `namespace/name`** resolving against the effective package set — the taxonomy's dispatch form (`c8704763`: *"presentation and dispatch follow LINEAGE or KEYED"*; `typeFilter`/`typeDispatch` precedent), not PINNED — a composition should not absorb a version bump (the axis 2-8 corollary). The designed contract lands as records/prose in Unit 5's scope, execution-ready.
 - **Execution — SectionSource schema change, `semanticObjectType` retirement from all four schema sites, governance 1.2.0 republish with migrated views, Rust dispatch removal, re-vendor, and the I-142/143/144 invariant amendments — stays at #272**, its ruled natural site.
 
-#383 is updated with this placement (it asked for exactly that). The interim invariant stands meanwhile: the vendored governance seed must not silently diverge from the published package.
+Issue #383 is updated with this placement (it asked for exactly that). The interim invariant stands meanwhile: the vendored governance seed must not silently diverge from the published package.
 
 ### Change L — Design-note 045: the inheritance floor and the documentation-only rule
 
@@ -234,11 +236,11 @@ Fires on owner acceptance of this RFC (Draft → Accepted is the owner's act; th
 | 4a-1 ([#477](https://github.com/the-greenman/srs/issues/477)) | **Modelling** | Changes A, B, C, D, E, K(model)+F(model): generator rework (explicit pinning), facet Types, seven value objects, `description` slot, removals, `lineage`/`provenance`, `conditional-forbidden` in the model, seed core edits, `status.json` value deletion, byte-level gap re-analysis first, `dataModelRevision: 3` + migration-registry entry, package v1.1.0 | session-unit | RFC-040 Accepted |
 | 4a-2 ([#478](https://github.com/the-greenman/srs/issues/478)) | **Reference edits** | Change H: the seven taxonomy edits + their data migrations | session-unit | 4a-1 landed |
 | 4a-3 ([#479](https://github.com/the-greenman/srs/issues/479)) | **Emitter** | Changes F(projection), G: effective-Type resolution, facing distinction, conditional + annotation projection, closure-test tightening to byte level, regenerate-and-diff gate into `validate-all`, stale-prose corrections | session-unit | 4a-2 landed |
-| 4a-4 ([#480](https://github.com/the-greenman/srs/issues/480)) | **SourceRef migration** | Change I: RFC-023 field/value migration + legacy-alias schema removal | **pool** (+queued; gated in-body) | RFC-040 Accepted (independent of 4a-1..3) |
+| 4a-4 ([#480](https://github.com/the-greenman/srs/issues/480)) | **SourceRef migration** | Change I: RFC-023 field/value migration + legacy-alias schema removal | **pool** (+queued; gated in-body) | RFC-040 Accepted **and 4a-1 landed** (the generation-3 stamp precedes this migration; content-independent of 4a-2/4a-3) |
 | 4a-5 ([#481](https://github.com/the-greenman/srs/issues/481)) | **Reader projection** | Change J: property table + pseudo-IDL + raw-schema link through the typed slot; type-query design record (Change K); allowlist ledger reconciliation; OQ1 closure | session-unit | 4a-3 landed |
 | 4a-6 ([#482](https://github.com/the-greenman/srs/issues/482)) | **DN-045** | Change L: graduate the Tier-0 capture | session-unit (small) | RFC-040 Accepted (parallel) |
 
-Sequenced by native `blocked by` edges. 4a-4 is the only pool unit — it is genuinely decided-design mechanical (RFC-023 supplies the whole contract) and single-repo; everything else is design-heavy or multi-consequence, so session-unit per the conservative default.
+Sequenced by native `blocked by` edges. 4a-4 is the only pool unit — it is genuinely decided-design mechanical (RFC-023 supplies the whole contract) and single-repo; it waits for 4a-1 only so its migrated corpus lands inside stamped generation 3, never in an unstamped in-between state; everything else is design-heavy or multi-consequence, so session-unit per the conservative default.
 
 **Routed-out siblings (not train units):** the #317-F2 `expectedSegments` expectation kind goes **standalone** ([#483](https://github.com/the-greenman/srs/issues/483) — this train never touches the discovery runner, so riding would widen it; the 2026-08-18 disposition allows either); #383's execution and everything instance-layer stays at #272.
 
@@ -259,7 +261,7 @@ Per unit: `node scripts/validate-all.mjs` (exit code, includes `gen --check`, bo
 | **#447 `rfc_status` → Lifecycle** | Post-train breaker (`43249f53`); already filed. |
 | **#433 `properties` → `meta`** | Its ruling (`6fc7e142`) explicitly rejects folding into this train: substrate-layer, its own bounded breaking unit. |
 | **Revisions/Changelog removals** | `2a1e1590` — ride the removal batch after the train. |
-| **#272 instance-layer scope** | Only the type-query *design* and the sanctioned-until-collapsed modelling of `semanticObjectType` are allocated here (Change K); SectionSource, governance republish, `semanticObjectType` retirement, instance-schema generation, and the 24-schema ledger are #272's. |
+| **#272 instance-layer scope** | Only the type-query *design*, the sanctioned-until-collapsed modelling of `semanticObjectType` (Change K), and the instance-facing emission *mechanism* (Change G — contract and tests, not the artifact set) are allocated here; SectionSource, governance republish, `semanticObjectType` retirement, production instance-schema generation, and the 24-schema ledger are #272's. |
 | **Charter meta-work** | The charter is done — it guides this plan (see Charter alignment) and does not grow here; #461/#462/#463/#471 own their own units. |
 
 ---
@@ -291,11 +293,13 @@ Per unit: `node scripts/validate-all.mjs` (exit code, includes `gen --check`, bo
 | Schema file | Change |
 |---|---|
 | `field.json` | remove `defaultValue`, `deprecatedAt`; `vocabularyRef` becomes LINEAGE (bare UUID) |
-| `type.json` | remove `$defs.FieldAssignment.defaultValue`; add `$defs.FieldAssignment.description`; add `lineage`/`provenance`; add `conditional-forbidden` to the CrossFieldRule kind enum; shared `ExactTypeRef` `$def`; `lifecycleRef` → LINEAGE; `semanticObjectType` description marked sanctioned-until-collapsed |
+| `type.json` | remove `$defs.FieldAssignment.defaultValue`; add `$defs.FieldAssignment.description`; add `lineage`/`provenance`; add `conditional-forbidden` to the CrossFieldRule kind enum; `lifecycleRef` → LINEAGE; `semanticObjectType` description marked sanctioned-until-collapsed |
 | `note.json`, `record.json` (+ any SourceReference host) | remove the legacy `relationType` alias acceptance |
-| `package-manifest.json` | `dependencyRefs` → `packageDependencies`; `definitionType` enum derived from the ten kinds |
-| `package-manifest.json` / theme schema (LOCATOR hosts) | `packageRef.external` → `remote`, one mode-discriminated shape |
-| protocol schema | `TypeRef` → LINEAGE (drop `typeVersion`) |
+| `blueprint.json`, `document-view.json`, `field.json`, `protocol.json` | shared `ExactTypeRef` `$def` (the `$ref` collapse across its four current hosts) |
+| `package-manifest.json` | `dependencyRefs` → `packageDependencies` |
+| `package-bundle.json` | `definitionType` enum becomes derived from `package-manifest.json`'s ten definition collections (today nine hand-listed values) |
+| `manifest.json` | `$defs.PackageRef` mode `external` → `remote` (LOCATOR unification with `document-view.json`'s `ThemeReference`, already `remote`) |
+| `protocol.json` | `TypeRef` → LINEAGE (drop `typeVersion`) |
 
 Schema changes sync to the `srs-rust` and `srs-vscode` mirrors via their own pipelines; each schema-touching unit files the mirror/struct follow-up at landing (choreography above).
 
@@ -305,9 +309,13 @@ Schema changes sync to the `srs-rust` and `srs-vscode` mirrors via their own pip
 
 Assembled, not argued: every choice above cites the record that made it. The two genuinely local judgments are placement calls this session was explicitly asked to make — the semanticObjectType design/execution split (Change K, within #383's ruled frame) and the #317-F2 standalone slot — plus the reading in Change I that RFC-023's executed migration discharges the C17 reconciliation without touching the accepted disjointness contract, with the residual (a further value rename) flagged rather than taken.
 
+---
+
 ## Alternatives Considered
 
 Recorded in the source decisions (each Change cites them): facets-as-core-fields and the remainder overlay (rejected 2026-07-31); strictly-closed-everywhere and two-profile emission (rejected by `2e0cd70a`); generate-`defaultValue` (superseded by `0225099b`); object-form-everywhere, stored canonical strings, aliases (rejected by `c8704763`); riding the substrate rename here (rejected by `6fc7e142`); executing the semanticObjectType collapse in-train (rejected — partial public state against sequential trains; #383's frame). No new alternatives were opened.
+
+---
 
 ## Open Questions
 
