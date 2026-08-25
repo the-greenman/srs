@@ -1,0 +1,19 @@
+{
+  "id": "f0000000-0000-4000-a000-000000000000",
+  "namespace": "test.rfc040unit3",
+  "name": "rfc-040-unit3-fixture",
+  "version": "1.0.0",
+  "fields": [
+    "fields/name.json",
+    "fields/status.json",
+    "fields/serial.json",
+    "fields/kind.json",
+    "fields/priority.json",
+    "fields/blocker_id.json"
+  ],
+  "types": [
+    "types/widget.json",
+    "types/gadget.json",
+    "types/ticket.json"
+  ]
+}

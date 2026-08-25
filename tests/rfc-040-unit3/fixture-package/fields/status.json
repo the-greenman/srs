@@ -1,0 +1,8 @@
+{
+  "id": "f0000002-0000-4000-a000-000000000002",
+  "namespace": "test.rfc040unit3",
+  "name": "status",
+  "version": 1,
+  "description": "Lifecycle status.",
+  "fieldType": { "datatype": "string", "valueDomain": "closed", "allowedValues": ["active", "retired"] }
+}

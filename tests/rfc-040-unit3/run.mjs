@@ -1,0 +1,70 @@
+#!/usr/bin/env node
+/**
+ * tests/rfc-040-unit3/run.mjs — RFC-040 Unit 3 (srs#479) Change G golden fixtures.
+ *
+ * Proves, on domain (non-meta-model) Types — not the frozen `field`/`type` entities, which the
+ * regenerate-and-diff gate already covers — the three mechanisms Unit 3 adds to real emission:
+ *
+ *   1. Effective-Type resolution (`resolveEffectiveType`, I-39..43): `gadget` extends `widget`,
+ *      overrides `status` (tighten-only, I-42), and pins a `fieldOrder` (I-41) — proving the STANDARD
+ *      single-ancestor merge direction, distinct from the metamodel's own sibling-merge bootstrap case
+ *      (schema-emitter.mjs `withEffectiveType`, exercised by the frozen `type` entity instead).
+ *   2. The facing distinction (rfc-decision-2e0cd70a): the same `gadget` schema emitted
+ *      definition-facing (fully closed) vs instance-facing (closed except `meta`).
+ *   3. Conditional projection (Change F): `ticket`'s own `validationRules` — conditional-required,
+ *      conditional-forbidden, mutual-exclusion — project to real `allOf`/`if`/`then` guards.
+ *
+ * Fixture package: tests/rfc-040-unit3/fixture-package/ (test-only; outside srs/package/** and
+ * packages/**, so scripts/validate-all.mjs's package walker never discovers it as a live package).
+ * Node pipeline only (ADR-004 discipline, though nothing here touches the metamodel package).
+ */
+import assert from "node:assert/strict";
+import { dirname, join, resolve } from "path";
+import { fileURLToPath } from "url";
+import { loadPackage, emitEntity } from "../../scripts/lib/schema-emitter.mjs";
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const FIXTURE = join(HERE, "fixture-package");
+let pass = 0;
+function check(label, cond) {
+  assert.ok(cond, label);
+  pass++;
+  console.log(`  ✓ ${label}`);
+}
+
+const ctx = loadPackage(FIXTURE);
+
+// --- 1. Effective-Type resolution + 2. facing distinction, both on `gadget` -----------------------
+const gadgetDef = emitEntity(ctx, "gadget"); // facing defaults to "definition"
+check("gadget: effective fields follow the pinned fieldOrder (serial, name, status)",
+  Object.keys(gadgetDef.properties).join(",") === "serial,name,status");
+check("gadget: inherited `status` is tightened to required by the fieldAssignmentOverride (I-42)",
+  gadgetDef.required.includes("status"));
+check("gadget: own field `serial` is required (own FieldAssignment, unaffected by the override)",
+  gadgetDef.required.includes("name") && gadgetDef.required.includes("serial"));
+check("gadget: inherited `status`'s FieldAssignment.displayLabel still projects to title",
+  gadgetDef.properties.status.title === "Status");
+check("gadget: definition-facing is fully closed — no `meta` escape",
+  gadgetDef.additionalProperties === false && !("meta" in gadgetDef.properties));
+
+const gadgetInstance = emitEntity(ctx, "gadget", { facing: "instance" });
+check("gadget: instance-facing declares `meta` as an open escape property",
+  gadgetInstance.properties.meta && gadgetInstance.properties.meta.type === "object");
+check("gadget: instance-facing is still closed-except-meta (additionalProperties:false)",
+  gadgetInstance.additionalProperties === false);
+check("gadget: instance-facing keeps every definition-facing property unchanged",
+  ["serial", "name", "status"].every((k) => k in gadgetInstance.properties));
+
+// --- 3. Conditional projection on `ticket` ----------------------------------------------------
+const ticket = emitEntity(ctx, "ticket");
+const allOf = ticket.allOf || [];
+check("ticket: conditional-required projects an if/then guard (kind==bug -> priority required)",
+  allOf.some((c) => c.if?.properties?.kind?.const === "bug" && c.then?.required?.includes("priority")));
+check("ticket: conditional-forbidden projects an if/then/not guard (kind==feature -> blocker_id forbidden)",
+  allOf.some((c) => c.if?.properties?.kind?.const === "feature" && c.then?.not?.required?.includes("blocker_id")));
+check("ticket: mutual-exclusion projects a pairwise not-required guard (priority, blocker_id)",
+  allOf.some((c) => c.not?.required?.length === 2 && c.not.required.includes("priority") && c.not.required.includes("blocker_id")));
+check("ticket: exactly 3 allOf clauses (one per validationRules entry — none dropped, none doubled)",
+  allOf.length === 3);
+
+console.log(`\n✓ RFC-040 Unit 3 golden fixtures: ${pass} checks passed (effective-Type resolution, facing distinction, conditional projection).`);

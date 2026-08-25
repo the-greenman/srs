@@ -1,0 +1,8 @@
+{
+  "id": "f0000004-0000-4000-a000-000000000004",
+  "namespace": "test.rfc040unit3",
+  "name": "kind",
+  "version": 1,
+  "description": "Ticket kind.",
+  "fieldType": { "datatype": "string", "valueDomain": "closed", "allowedValues": ["bug", "feature"] }
+}

@@ -1,0 +1,20 @@
+{
+  "id": "t0000002-0000-4000-a000-000000000002",
+  "namespace": "test.rfc040unit3",
+  "name": "gadget",
+  "version": 1,
+  "description": "Single-inheritance golden fixture: extends widget (I-39/I-40), tightens status via an override (I-42), and pins a fieldOrder (I-41).",
+  "extendsTypeId": "t0000001-0000-4000-a000-000000000001",
+  "extendsTypeVersion": 1,
+  "fieldOrder": [
+    "f0000003-0000-4000-a000-000000000003",
+    "f0000001-0000-4000-a000-000000000001",
+    "f0000002-0000-4000-a000-000000000002"
+  ],
+  "fieldAssignmentOverrides": [
+    { "fieldId": "f0000002-0000-4000-a000-000000000002", "required": true }
+  ],
+  "fields": [
+    { "fieldId": "f0000003-0000-4000-a000-000000000003", "order": 0, "required": true }
+  ]
+}

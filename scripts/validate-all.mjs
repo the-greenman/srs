@@ -234,6 +234,19 @@ async function validateAll() {
   const emitterClosureHolds = await runScript('rfc-035-closure-test.mjs');
   if (!emitterClosureHolds) allValid = false;
 
+  // RFC-040 Unit 3 (srs#479) byte-closure gate: a full regenerate of docs/schema/2.0/{field,type}.json
+  // from the metamodel package MUST equal the committed files, modulo only the documented-divergence
+  // register (projection-rules.md). "Empty diff" was the acceptance criterion since RFC-035; this is
+  // its first enforcing mechanism (RFC-040's opening-move finding: it previously had none).
+  const schemaRegenerateInSync = await runScript('check-schema-regenerate-drift.mjs');
+  if (!schemaRegenerateInSync) allValid = false;
+
+  // RFC-040 Unit 3 Change G golden fixtures: effective-Type resolution (the general single-ancestor
+  // case, distinct from the metamodel's own sibling-merge bootstrap), the facing distinction, and
+  // conditional projection — proven on domain (non-meta-model) Types per the unit's #272 boundary.
+  const unit3GoldensHold = await runScript('../tests/rfc-040-unit3/run.mjs');
+  if (!unit3GoldensHold) allValid = false;
+
   console.log(`\n${'='.repeat(60)}`);
   console.log(allValid ? '\n✓ All validations passed' : '\n✗ Some validations failed');
   process.exit(allValid ? 0 : 1);
