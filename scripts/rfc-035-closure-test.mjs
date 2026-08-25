@@ -66,14 +66,18 @@ function resolveRefs(node, defs, seen = new Set()) {
   return node;
 }
 
-/** Strip annotations + approximated envelopes recursively (both sides). */
-function normalize(node) {
-  if (Array.isArray(node)) return node.map(normalize);
+/** Strip annotations + approximated envelopes recursively (both sides). `inPropertiesBag` marks a
+ * node whose OWN keys are property names (the value of a `properties` keyword), never annotation
+ * keywords, even when a property happens to be named e.g. "description" (RFC-040 Unit 1, srs#477 —
+ * a Field literally named `description` was being deleted from both sides before comparison,
+ * silently exempting Field.description/Type.description/FieldAssignment.description from closure). */
+function normalize(node, inPropertiesBag = false) {
+  if (Array.isArray(node)) return node.map((n) => normalize(n));
   if (node && typeof node === "object") {
     const out = {};
     for (const [k, v] of Object.entries(node)) {
-      if (ANNOT.has(k) || ENVELOPE.has(k)) continue;
-      out[k] = normalize(v);
+      if (!inPropertiesBag && (ANNOT.has(k) || ENVELOPE.has(k))) continue;
+      out[k] = normalize(v, k === "properties");
     }
     return out;
   }
@@ -140,8 +144,13 @@ for (const entity of ["field", "type"]) {
   // required set-subset (excluding divergence keys)
   const sreq = new Set(s.required || []);
   for (const r of e.required || []) if (!(r in div) && !sreq.has(r)) errs.push(`${entity}.required: emitter requires "${r}" not required in seed`);
-  // excluded seed props (coverage/envelope) — surfaced so a coverage regression is visible
-  excludedByEntity[entity] = Object.keys(s.properties).filter((k) => !(k in e.properties));
+  // excluded seed props (coverage/envelope) — surfaced so a coverage regression is visible.
+  // `$schema` (RFC-031 R1 carve-out, reused here) is the one PERMANENT structural exemption: as a
+  // PROPERTY NAME (not the JSON-Schema `$schema` meta-keyword — that's stripped as an annotation
+  // above) it is self-reference metadata every entity file may carry, emitted structurally at the
+  // top level (`emitEntity`'s `out.$schema`) rather than walked as a FieldAssignment — it will never
+  // have a modelled counterpart by design (byte-level answer: Unit 3, per the Unit 1 gap analysis).
+  excludedByEntity[entity] = Object.keys(s.properties).filter((k) => k !== "$schema" && !(k in e.properties));
 }
 
 console.log("RFC-035 Tier-2 closure (emitter ⊆ frozen seed, authoritative subset):");
