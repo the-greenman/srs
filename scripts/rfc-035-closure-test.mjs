@@ -70,14 +70,19 @@ function resolveRefs(node, defs, seen = new Set()) {
  * node whose OWN keys are property names (the value of a `properties` keyword), never annotation
  * keywords, even when a property happens to be named e.g. "description" (RFC-040 Unit 1, srs#477 —
  * a Field literally named `description` was being deleted from both sides before comparison,
- * silently exempting Field.description/Type.description/FieldAssignment.description from closure). */
+ * silently exempting Field.description/Type.description/FieldAssignment.description from closure).
+ * `k === "properties"` only introduces a NEW bag when we are not already inside one — a Field can be
+ * named `properties` too (LifecycleState/LifecycleTransition's open `properties` bag field), and its
+ * own schema value is a leaf fragment, not a nested properties bag (the `!inPropertiesBag` guard
+ * below); one level further down, `inPropertiesBag` is false again, so a genuine nested `properties`
+ * keyword on that field's own value is still detected correctly. */
 function normalize(node, inPropertiesBag = false) {
   if (Array.isArray(node)) return node.map((n) => normalize(n));
   if (node && typeof node === "object") {
     const out = {};
     for (const [k, v] of Object.entries(node)) {
       if (!inPropertiesBag && (ANNOT.has(k) || ENVELOPE.has(k))) continue;
-      out[k] = normalize(v, k === "properties");
+      out[k] = normalize(v, !inPropertiesBag && k === "properties");
     }
     return out;
   }
