@@ -53,6 +53,11 @@ const writeJson = async (path, doc) => {
   await writeFile(path, `${JSON.stringify(doc, null, 2)}\n`);
 };
 
+const writeText = async (path, text) => {
+  await mkdir(dirname(path), { recursive: true });
+  await writeFile(path, text);
+};
+
 const field = (name) => ({
   id: "00000000-0000-4000-8000-00000000f001",
   namespace: "com.example.fixture",
@@ -896,6 +901,79 @@ async function decisionCellTagsCases(root) {
   });
 }
 
+// ---- srs#461 — Decision Compass drift: bidirectional presence ------------------------------------
+async function decisionCompassDriftCases(root) {
+  console.log("srs#461 — Decision Compass drift guard (bidirectional presence)");
+
+  const decisionRecord = (id, title) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/record.json",
+    instanceId: `${id}-0000-4000-8000-000000000000`,
+    typeId: "6a000004-0000-4000-a000-000000000004",
+    typeVersion: 2,
+    typeNamespace: "com.semanticops.spec",
+    typeName: "rfc-decision",
+    fieldValues: {
+      title,
+      rfc_status: "accepted",
+      decision_date: "2026-08-21",
+      decision_statement: "fixture.",
+    },
+  });
+
+  const recordsDir = join(root, "srs/records/tier-2");
+  const compassPath = join(root, "docs/charter/decision-compass.md");
+
+  await writeJson(join(recordsDir, "rfc-decision-aaaaaaaa.json"), decisionRecord("aaaaaaaa", "Fixture ruling A"));
+  await writeJson(join(recordsDir, "rfc-decision-bbbbbbbb.json"), decisionRecord("bbbbbbbb", "Fixture ruling B"));
+
+  const goodCompass = [
+    "# The Decision Compass\n",
+    "<!-- srs-charter-ids:v1\n",
+    "aaaaaaaa bbbbbbbb\n",
+    "-->\n",
+    "Fixture ruling A: this over that. Cites `rfc-decision-aaaaaaaa`.\n",
+    "Fixture ruling B: this over that. Cites `rfc-decision-bbbbbbbb`.\n",
+  ].join("");
+  await writeText(compassPath, goodCompass);
+
+  expect(
+    "passes when every roster id is cited and every citation resolves",
+    runCheck("check-decision-compass-drift.mjs", root),
+    { exit: 0, contains: ["✓ Every roster id is cited"] },
+  );
+
+  // FORWARD violation: a citation in the body whose record no longer exists (renamed or removed
+  // out from under the compass).
+  await rm(join(recordsDir, "rfc-decision-bbbbbbbb.json"));
+  expect(
+    "rejects a body citation whose record does not exist",
+    runCheck("check-decision-compass-drift.mjs", root),
+    { exit: 1, contains: ["rfc-decision-bbbbbbbb", "does not exist", "Fix the citation or remove it"] },
+  );
+  await writeJson(join(recordsDir, "rfc-decision-bbbbbbbb.json"), decisionRecord("bbbbbbbb", "Fixture ruling B"));
+
+  // BACKWARD violation: a charter-class record added to the roster without the section that
+  // documents it — declared presence, no delivered citation.
+  await writeJson(join(recordsDir, "rfc-decision-cccccccc.json"), decisionRecord("cccccccc", "Fixture ruling C"));
+  const rosterOnlyCompass = goodCompass.replace("aaaaaaaa bbbbbbbb", "aaaaaaaa bbbbbbbb cccccccc");
+  await writeText(compassPath, rosterOnlyCompass);
+  expect(
+    "rejects a roster id with no citing section in the body",
+    runCheck("check-decision-compass-drift.mjs", root),
+    { exit: 1, contains: ["rfc-decision-cccccccc", "not cited anywhere in the compass body"] },
+  );
+  await rm(join(recordsDir, "rfc-decision-cccccccc.json"));
+  await writeText(compassPath, goodCompass);
+
+  // A roster comment id is not itself a citation — the scan must exclude the roster block, or a
+  // record could sit in the roster forever with no real section and still pass.
+  expect(
+    "still passes after restoring the fixture to its original good state",
+    runCheck("check-decision-compass-drift.mjs", root),
+    { exit: 0, contains: ["✓ Every roster id is cited"] },
+  );
+}
+
 const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
 try {
   await fieldNameCases(join(root, "field-name"));
@@ -903,6 +981,7 @@ try {
   await validatePackageCases(join(root, "validate-package"));
   await publicationReachabilityCases(join(root, "publication-reachability"));
   await invariantPlacementCases(join(root, "invariant-placement"));
+  await decisionCompassDriftCases(join(root, "decision-compass-drift"));
   await decisionCellTagsCases(join(root, "decision-cell-tags"));
 } finally {
   await rm(root, { recursive: true, force: true });

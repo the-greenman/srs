@@ -174,6 +174,12 @@ async function validateAll() {
   const invariantPlacementValid = await runScript('check-invariant-placement.mjs');
   if (!invariantPlacementValid) allValid = false;
 
+  // The Decision Compass (docs/charter/decision-compass.md, srs#461) stays bidirectionally in sync
+  // with the charter-class decision records it surfaces: every citation resolves to a real record,
+  // and every record in its roster is actually cited, not just listed.
+  const decisionCompassValid = await runScript('check-decision-compass-drift.mjs');
+  if (!decisionCompassValid) allValid = false;
+
   // Every com.semanticops.spec/rfc-decision record dated 2026-08-23 or later carries a cell:<slug>
   // tag (srs#462). rfc-decision-cce3c00e's standing rule — "every new RFC and decision names its
   // cell" — held only by convention until this guard; a decision landing in no cell is exactly the
