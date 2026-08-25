@@ -3503,7 +3503,7 @@ Conforming implementations must uphold the following invariants.
 
 #### ext:protocol — Distribution
 
-**37.** Every `TypeRef.typeId` referenced in `Protocol.targetType` or in any `ProtocolStage.outputType`, for each Protocol in `Package.protocols[]`, must appear in `Package.dependencyRefs` with `definitionType: "type"`. Every `FieldRef.fieldId` in any `ProtocolStage.contributesTo[]` must appear in `Package.dependencyRefs` with `definitionType: "field"`. If `mode === "bundled"`, those Types must be in `Package.types[]` and those Fields in `Package.fields[]`.
+**37.** Every `Protocol.protocolTargetType` (when a non-empty UUID) and every `ProtocolStage.outputType`, for each Protocol in `Package.protocols[]`, must appear in `Package.dependencyRefs` with `definitionType: "type"`. Every `FieldRef.fieldId` in any `ProtocolStage.contributesTo[]` must appear in `Package.dependencyRefs` with `definitionType: "field"`. If `mode === "bundled"`, those Types must be in `Package.types[]` and those Fields in `Package.fields[]`.
 
 #### core — Field.contentFormat
 
