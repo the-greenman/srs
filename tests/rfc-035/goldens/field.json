@@ -43,7 +43,19 @@
       "$ref": "#/$defs/com.semanticops.srs__field-type__v1",
       "title": "Field Type"
     },
-    "defaultValue": {},
+    "editorHint": {
+      "type": "string",
+      "enum": [
+        "singleline",
+        "textarea",
+        "rich-text",
+        "date-picker",
+        "dropdown",
+        "multi-select",
+        "voice"
+      ],
+      "title": "Editor Hint"
+    },
     "tags": {
       "type": "array",
       "items": {
@@ -55,10 +67,6 @@
     },
     "provenance": {
       "$ref": "#/$defs/com.semanticops.srs__provenance__v1"
-    },
-    "deprecatedAt": {
-      "type": "string",
-      "format": "date-time"
     },
     "createdAt": {
       "type": "string",

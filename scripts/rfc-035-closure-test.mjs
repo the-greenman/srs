@@ -21,7 +21,7 @@
 import { readFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
-import { loadPackage, emitEntity } from "./lib/schema-emitter.mjs";
+import { loadPackage, emitEntity, withEffectiveType } from "./lib/schema-emitter.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "..");
@@ -30,7 +30,11 @@ const SEED = join(REPO, "docs/schema/2.0");
 const load = (p) => JSON.parse(readFileSync(p, "utf8"));
 
 // Annotations + hand-authored approximated envelopes stripped on BOTH sides before comparison.
-const ANNOT = new Set(["description", "$comment", "deprecated", "title", "$id", "$schema", "x-srs-range-type"]);
+// `default` (RFC-040 Unit 1, srs#477): a JSON-Schema ANNOTATION keyword, never affects validation;
+// the model deliberately has no default mechanism post-Change-D (seed sites: RequiresRelation
+// direction/enforcement). Not currently load-bearing here (isSub only requires emitter keys ⊆ seed,
+// and the emitter never emits `default`) — stripped anyway so both closure tests document the same rule.
+const ANNOT = new Set(["description", "$comment", "deprecated", "title", "$id", "$schema", "x-srs-range-type", "default"]);
 const ENVELOPE = new Set(["allOf", "if", "then", "else", "oneOf", "anyOf", "not"]);
 
 // DIVERGENCE REGISTER (Change F): covered authoritative properties where emitter ≠ seed BY DESIGN.
@@ -62,14 +66,23 @@ function resolveRefs(node, defs, seen = new Set()) {
   return node;
 }
 
-/** Strip annotations + approximated envelopes recursively (both sides). */
-function normalize(node) {
-  if (Array.isArray(node)) return node.map(normalize);
+/** Strip annotations + approximated envelopes recursively (both sides). `inPropertiesBag` marks a
+ * node whose OWN keys are property names (the value of a `properties` keyword), never annotation
+ * keywords, even when a property happens to be named e.g. "description" (RFC-040 Unit 1, srs#477 —
+ * a Field literally named `description` was being deleted from both sides before comparison,
+ * silently exempting Field.description/Type.description/FieldAssignment.description from closure).
+ * `k === "properties"` only introduces a NEW bag when we are not already inside one — a Field can be
+ * named `properties` too (LifecycleState/LifecycleTransition's open `properties` bag field), and its
+ * own schema value is a leaf fragment, not a nested properties bag (the `!inPropertiesBag` guard
+ * below); one level further down, `inPropertiesBag` is false again, so a genuine nested `properties`
+ * keyword on that field's own value is still detected correctly. */
+function normalize(node, inPropertiesBag = false) {
+  if (Array.isArray(node)) return node.map((n) => normalize(n));
   if (node && typeof node === "object") {
     const out = {};
     for (const [k, v] of Object.entries(node)) {
-      if (ANNOT.has(k) || ENVELOPE.has(k)) continue;
-      out[k] = normalize(v);
+      if (!inPropertiesBag && (ANNOT.has(k) || ENVELOPE.has(k))) continue;
+      out[k] = normalize(v, !inPropertiesBag && k === "properties");
     }
     return out;
   }
@@ -118,7 +131,11 @@ const divergencesSeen = [];
 const excludedByEntity = {};
 
 for (const entity of ["field", "type"]) {
-  const e = prep(emitEntity(ctx, entity));
+  // `type` is compared as its RFC-040 Change A effective Type (core + every extending facet Type,
+  // single-level) — the frozen seed is one flat object; the metamodel deliberately is not. See
+  // schema-emitter.mjs `withEffectiveType` for why this merge lives here and not in `emitEntity`.
+  const entityCtx = entity === "type" ? withEffectiveType(ctx, "type") : ctx;
+  const e = prep(emitEntity(entityCtx, entity));
   const s = prep(load(join(SEED, `${entity}.json`)));
   const div = DIVERGENCE[entity] || {};
 
@@ -132,8 +149,13 @@ for (const entity of ["field", "type"]) {
   // required set-subset (excluding divergence keys)
   const sreq = new Set(s.required || []);
   for (const r of e.required || []) if (!(r in div) && !sreq.has(r)) errs.push(`${entity}.required: emitter requires "${r}" not required in seed`);
-  // excluded seed props (coverage/envelope) — surfaced so a coverage regression is visible
-  excludedByEntity[entity] = Object.keys(s.properties).filter((k) => !(k in e.properties));
+  // excluded seed props (coverage/envelope) — surfaced so a coverage regression is visible.
+  // `$schema` (RFC-031 R1 carve-out, reused here) is the one PERMANENT structural exemption: as a
+  // PROPERTY NAME (not the JSON-Schema `$schema` meta-keyword — that's stripped as an annotation
+  // above) it is self-reference metadata every entity file may carry, emitted structurally at the
+  // top level (`emitEntity`'s `out.$schema`) rather than walked as a FieldAssignment — it will never
+  // have a modelled counterpart by design (byte-level answer: Unit 3, per the Unit 1 gap analysis).
+  excludedByEntity[entity] = Object.keys(s.properties).filter((k) => k !== "$schema" && !(k in e.properties));
 }
 
 console.log("RFC-035 Tier-2 closure (emitter ⊆ frozen seed, authoritative subset):");

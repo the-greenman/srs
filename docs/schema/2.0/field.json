@@ -36,10 +36,6 @@
       "$ref": "#/$defs/FieldType",
       "description": "RFC-032 — the decomposed value type: datatype × cardinality × value-domain × format × constraints. Replaces the pre-RFC-032 closed scalar `valueType` enum and its companion properties (`contentFormat`, `allowedValues`, `vocabularyRef`, `validationRules`)."
     },
-    "defaultValue": {
-      "deprecated": true,
-      "description": "DEPRECATED: ruled removed (srs#234, 2026-08-08 decision; executed in the #273 train alongside FieldAssignment.defaultValue). Defaults return later as a single layered-override capability designed in its own RFC; no fragment of this mechanism should seed a second way. Default value applied when no value is supplied. Must conform to this Field's fieldType (a value-of-self dependent — RFC-032 Change C)."
-    },
     "editorHint": {
       "type": "string",
       "enum": ["singleline", "textarea", "rich-text", "date-picker", "dropdown", "multi-select", "voice"],
@@ -51,10 +47,6 @@
     },
     "lineage": { "$ref": "#/$defs/Lineage" },
     "provenance": { "$ref": "#/$defs/Provenance" },
-    "deprecatedAt": {
-      "type": "string",
-      "format": "date-time"
-    },
     "createdAt": { "type": "string", "format": "date-time" }
   },
   "$defs": {

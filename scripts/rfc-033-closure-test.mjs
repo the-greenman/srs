@@ -20,6 +20,7 @@ import { readFile } from 'fs/promises';
 import { dirname, join, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import { projectField } from './lib/rfc-032-fieldtype.mjs';
+import { loadPackage, effectiveFields } from './lib/schema-emitter.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
@@ -28,7 +29,11 @@ const SEED = join(ROOT, 'docs/schema/2.0');
 
 const load = async (p) => JSON.parse(await readFile(p, 'utf8'));
 const snakeToCamel = (s) => s.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
-const ANNOT = new Set(['description', '$comment', 'deprecated']);
+// `default` (RFC-040 Unit 1, srs#477): a JSON-Schema ANNOTATION keyword — it never affects validation.
+// The model deliberately has no default mechanism post-Change-D; seed sites carrying it (e.g.
+// RequiresRelation.direction/enforcement) are stripped here rather than requiring the emitter to
+// express a mechanism this train removed. The byte-level projection-vs-seed-edit question is Unit 3's.
+const ANNOT = new Set(['description', '$comment', 'deprecated', 'default']);
 function strip(schema) {
   if (Array.isArray(schema)) return schema.map(strip);
   if (schema && typeof schema === 'object') {
@@ -58,8 +63,20 @@ const CORRESPONDENCES = [
   { type: 'ai-guidance-example', file: 'field.json', pointer: ['$defs', 'AiGuidanceExample'] },
   { type: 'lineage', file: 'field.json', pointer: ['$defs', 'Lineage'] },
   { type: 'provenance', file: 'field.json', pointer: ['$defs', 'Provenance'] },
-  { type: 'type', file: 'type.json', pointer: [] },
-  { type: 'field-assignment', file: 'type.json', pointer: ['$defs', 'FieldAssignment'], nameOverride: { assignment_default_value: 'defaultValue' } },
+  // `type`'s effective fields (core + every extending facet Type, single-level, RFC-040 Change A) are
+  // substituted in below (`effective: true`) — the frozen seed is one flat object; the metamodel
+  // deliberately is not. See rfc-035-closure-test.mjs / schema-emitter.mjs `withEffectiveType` for why.
+  { type: 'type', file: 'type.json', pointer: [], effective: true },
+  { type: 'field-assignment', file: 'type.json', pointer: ['$defs', 'FieldAssignment'] },
+  // -- RFC-040 Unit 1 (srs#477) Change B: the seven type.json value objects. --
+  { type: 'type-lifecycle', file: 'type.json', pointer: ['$defs', 'TypeLifecycle'], nameOverride: { initial_state: 'initialState' } },
+  { type: 'lifecycle-state', file: 'type.json', pointer: ['$defs', 'LifecycleState'], nameOverride: { is_initial: 'isInitial', is_final: 'isFinal', requires_relation: 'requiresRelation' } },
+  { type: 'requires-relation', file: 'type.json', pointer: ['$defs', 'RequiresRelation'], nameOverride: { relation_type: 'relationType' } },
+  { type: 'lifecycle-transition', file: 'type.json', pointer: ['$defs', 'LifecycleTransition'], nameOverride: { transition_name: 'name' } },
+  { type: 'field-assignment-override', file: 'type.json', pointer: ['$defs', 'FieldAssignmentOverride'], nameOverride: { display_label: 'displayLabel', display_hint: 'displayHint' } },
+  // `effect`'s $ref-vs-inline-enum spelling is a Unit-3 $defs-layout convergence question (the prior
+  // gap analysis's finding #3), not a Unit-1 modelling gap — skipped here, covered by rfc-035-closure-test.
+  { type: 'cross-field-rule', file: 'type.json', pointer: ['$defs', 'CrossFieldRule'], nameOverride: { kind: 'type', predicate_field_id: 'predicateFieldId', predicate_value: 'predicateValue', target_field_id: 'targetFieldId', field_ids: 'fieldIds' }, skip: ['effect'] },
 ];
 
 // id -> name index over the metamodel package fields (built once).
@@ -95,10 +112,13 @@ function documentedShapeOk(ft, got) {
   return false;
 }
 
+const ctx = loadPackage(MM);
+
 for (const corr of CORRESPONDENCES) {
   const typeDef = await load(join(MM, `types/${corr.type}.json`));
   const props = await seedProps(corr);
-  for (const asg of typeDef.fields) {
+  const fields = corr.effective ? effectiveFields(ctx, corr.type) : typeDef.fields;
+  for (const asg of fields) {
     const field = await load(join(MM, `fields/${await fieldNameForId(asg.fieldId)}.json`));
     const camel = corr.nameOverride?.[field.name] ?? snakeToCamel(field.name);
     if (corr.skip?.includes(field.name)) { skipped++; continue; }
