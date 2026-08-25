@@ -196,17 +196,17 @@ const FIELD_SPECS = [
   [78, 'predicate_value', { datatype: 'string' }, 'Value the predicate field must equal to activate the rule (conditional-required).'],
   [79, 'target_field_id', ref('field', 'reference', 'single'), 'Field that is constrained when the rule fires (conditional-required, field-ordering).'],
   [80, 'effect', closed(['must-precede', 'must-follow']), 'Ordering direction for a field-ordering rule: the predicate field must-precede or must-follow the target.'],
-  [81, 'field_ids', { datatype: 'string', format: 'uuid', cardinality: 'list', minItems: 2 }, 'Fields of which at most one may be non-empty (mutual-exclusion).'],
+  [81, 'field_ids', ref('field', 'reference', 'list', { minItems: 2 }), 'Fields of which at most one may be non-empty (mutual-exclusion).'],
   // -- Change A: ext:type-inheritance facet --
-  [82, 'extends_type_id', { datatype: 'string', format: 'uuid' }, 'ext:type-inheritance — the UUID of the base Type this Type specializes.'],
+  [82, 'extends_type_id', ref('type', 'reference', 'single'), 'ext:type-inheritance — the UUID of the base Type this Type specializes.'],
   [83, 'extends_type_version', { datatype: 'integer', constraints: { minimum: 1 } }, 'ext:type-inheritance — the version of the base Type being extended.'],
-  [84, 'field_order', { datatype: 'string', format: 'uuid', cardinality: 'list' }, 'ext:type-inheritance — explicit declared composition order for the merged (base + own) effective field list, overriding per-field FieldAssignment.order at the Type level.'],
+  [84, 'field_order', ref('field', 'reference', 'list'), 'ext:type-inheritance — explicit declared composition order for the merged (base + own) effective field list, overriding per-field FieldAssignment.order at the Type level.'],
   [85, 'field_assignment_overrides', ref('field-assignment-override', 'inline', 'list'), 'ext:type-inheritance — per-field overrides applied to inherited FieldAssignments.'],
   // -- Change A: ext:lifecycle facet --
   [86, 'lifecycle', ref('type-lifecycle', 'inline', 'single'), 'ext:lifecycle — inline state machine declaration. Mutually exclusive with lifecycleRef.'],
   [87, 'lifecycle_ref', { datatype: 'string' }, 'ext:lifecycle — reference to an installed Lifecycle by id. Mutually exclusive with lifecycle.'],
   // -- Change A: core Type surface (not extension-owned) --
-  [88, 'identity_field_id', { datatype: 'string', format: 'uuid' }, 'RFC-020 — names one fieldId from this Type\'s effective field set as the record\'s identity/display field.'],
+  [88, 'identity_field_id', ref('field', 'reference', 'single'), 'RFC-020 — names one fieldId from this Type\'s effective field set as the record\'s identity/display field.'],
   // -- Change A: ext:cross-field-validation facet (RFC-019) --
   [89, 'validation_rules', ref('cross-field-rule', 'inline', 'list'), 'ext:cross-field-validation — cross-field validation rules applied to Records of this Type. Per I-97, this array is each Type\'s own complete and exclusive set; it is not inherited by value.'],
 ];

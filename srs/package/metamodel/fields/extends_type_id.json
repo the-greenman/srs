@@ -9,8 +9,12 @@
   "name": "extends_type_id",
   "namespace": "com.semanticops.srs",
   "fieldType": {
-    "datatype": "string",
-    "format": "uuid"
+    "datatype": "ref",
+    "mode": "reference",
+    "rangeType": {
+      "typeId": "4c000002-0000-4000-a000-000000000002",
+      "typeVersion": 1
+    }
   },
   "version": 1
 }

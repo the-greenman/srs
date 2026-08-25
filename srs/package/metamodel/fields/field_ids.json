@@ -9,9 +9,13 @@
   "name": "field_ids",
   "namespace": "com.semanticops.srs",
   "fieldType": {
-    "datatype": "string",
-    "format": "uuid",
+    "datatype": "ref",
+    "mode": "reference",
     "cardinality": "list",
+    "rangeType": {
+      "typeId": "4c000001-0000-4000-a000-000000000001",
+      "typeVersion": 1
+    },
     "minItems": 2
   },
   "version": 1

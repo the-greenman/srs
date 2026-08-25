@@ -376,6 +376,7 @@
         "identityFieldId": {
           "type": "string",
           "format": "uuid",
+          "x-srs-range-type": "com.semanticops.srs/field@1",
           "title": "Identity Field Id"
         },
         "createdAt": {
