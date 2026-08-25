@@ -19,7 +19,7 @@
 import { readFile } from 'fs/promises';
 import { dirname, join, resolve } from 'path';
 import { fileURLToPath } from 'url';
-import { projectField } from './lib/rfc-032-fieldtype.mjs';
+import { projectField, rangeDefKey } from './lib/rfc-032-fieldtype.mjs';
 import { loadPackage, effectiveFields } from './lib/schema-emitter.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -30,10 +30,14 @@ const SEED = join(ROOT, 'docs/schema/2.0');
 const load = async (p) => JSON.parse(await readFile(p, 'utf8'));
 const snakeToCamel = (s) => s.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
 // `default` (RFC-040 Unit 1, srs#477): a JSON-Schema ANNOTATION keyword — it never affects validation.
-// The model deliberately has no default mechanism post-Change-D; seed sites carrying it (e.g.
-// RequiresRelation.direction/enforcement) are stripped here rather than requiring the emitter to
-// express a mechanism this train removed. The byte-level projection-vs-seed-edit question is Unit 3's.
-const ANNOT = new Set(['description', '$comment', 'deprecated', 'default']);
+// The model deliberately has no default mechanism at any definition-layer site (Change D); Unit 3
+// dropped the two seed sites that carried it (RequiresRelation.direction/enforcement) when the seed
+// was regenerated to the emitter's canonical form, so this strip is now belt-and-suspenders.
+// `title`/`description` at the ASSIGNMENT level (Change C annotation projection, RFC-040 Unit 3) are
+// added by `emitBody` (FieldAssignment.displayLabel/.description), a layer above what this test
+// exercises (`projectField(field.fieldType)` alone) — stripped here so this test stays scoped to the
+// raw fieldType fragment; whole-entity title/description projection is rfc-035-closure-test's job.
+const ANNOT = new Set(['description', 'title', '$comment', 'deprecated', 'default']);
 function strip(schema) {
   if (Array.isArray(schema)) return schema.map(strip);
   if (schema && typeof schema === 'object') {
@@ -48,6 +52,10 @@ const eq = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 // Correspondence: metamodel Type -> the seed properties bag it self-hosts.
 // nameOverride maps a metamodel field name to a differently-named seed property.
 // skip lists metamodel fields with no seed counterpart (deferred/renamed carriers).
+// `$defsPointer(t)` computes the emitter-owned $defs key (RFC-040 Unit 3, srs#479: the frozen seed's
+// $defs keys were renamed from ad hoc PascalCase to this one emitter-owned spelling as part of ending
+// $ref-resolution in the byte-closure comparison — the committed layout now equals the emitter's).
+const $defsPointer = (t) => ['$defs', rangeDefKey({ namespace: 'com.semanticops.srs', name: t, version: 1 })];
 async function seedProps(spec) {
   const doc = await load(join(SEED, spec.file));
   let node = doc;
@@ -56,27 +64,29 @@ async function seedProps(spec) {
 }
 const CORRESPONDENCES = [
   { type: 'field', file: 'field.json', pointer: [] },
-  { type: 'field-type', file: 'field.json', pointer: ['$defs', 'FieldType'] },
-  { type: 'exact-type-ref', file: 'field.json', pointer: ['$defs', 'ExactTypeRef'] },
-  { type: 'field-type-constraints', file: 'field.json', pointer: ['$defs', 'FieldType', 'properties', 'constraints'] },
-  { type: 'ai-guidance', file: 'field.json', pointer: ['$defs', 'AiGuidance'] },
-  { type: 'ai-guidance-example', file: 'field.json', pointer: ['$defs', 'AiGuidanceExample'] },
-  { type: 'lineage', file: 'field.json', pointer: ['$defs', 'Lineage'] },
-  { type: 'provenance', file: 'field.json', pointer: ['$defs', 'Provenance'] },
+  { type: 'field-type', file: 'field.json', pointer: $defsPointer('field-type') },
+  { type: 'exact-type-ref', file: 'field.json', pointer: $defsPointer('exact-type-ref') },
+  { type: 'field-type-constraints', file: 'field.json', pointer: $defsPointer('field-type-constraints') },
+  { type: 'ai-guidance', file: 'field.json', pointer: $defsPointer('ai-guidance') },
+  { type: 'ai-guidance-example', file: 'field.json', pointer: $defsPointer('ai-guidance-example') },
+  { type: 'lineage', file: 'field.json', pointer: $defsPointer('lineage') },
+  { type: 'provenance', file: 'field.json', pointer: $defsPointer('provenance') },
   // `type`'s effective fields (core + every extending facet Type, single-level, RFC-040 Change A) are
   // substituted in below (`effective: true`) — the frozen seed is one flat object; the metamodel
   // deliberately is not. See rfc-035-closure-test.mjs / schema-emitter.mjs `withEffectiveType` for why.
   { type: 'type', file: 'type.json', pointer: [], effective: true },
-  { type: 'field-assignment', file: 'type.json', pointer: ['$defs', 'FieldAssignment'] },
+  { type: 'field-assignment', file: 'type.json', pointer: $defsPointer('field-assignment') },
   // -- RFC-040 Unit 1 (srs#477) Change B: the seven type.json value objects. --
-  { type: 'type-lifecycle', file: 'type.json', pointer: ['$defs', 'TypeLifecycle'], nameOverride: { initial_state: 'initialState' } },
-  { type: 'lifecycle-state', file: 'type.json', pointer: ['$defs', 'LifecycleState'], nameOverride: { is_initial: 'isInitial', is_final: 'isFinal', requires_relation: 'requiresRelation' } },
-  { type: 'requires-relation', file: 'type.json', pointer: ['$defs', 'RequiresRelation'], nameOverride: { relation_type: 'relationType' } },
-  { type: 'lifecycle-transition', file: 'type.json', pointer: ['$defs', 'LifecycleTransition'], nameOverride: { transition_name: 'name' } },
-  { type: 'field-assignment-override', file: 'type.json', pointer: ['$defs', 'FieldAssignmentOverride'], nameOverride: { display_label: 'displayLabel', display_hint: 'displayHint' } },
-  // `effect`'s $ref-vs-inline-enum spelling is a Unit-3 $defs-layout convergence question (the prior
-  // gap analysis's finding #3), not a Unit-1 modelling gap — skipped here, covered by rfc-035-closure-test.
-  { type: 'cross-field-rule', file: 'type.json', pointer: ['$defs', 'CrossFieldRule'], nameOverride: { kind: 'type', predicate_field_id: 'predicateFieldId', predicate_value: 'predicateValue', target_field_id: 'targetFieldId', field_ids: 'fieldIds' }, skip: ['effect'] },
+  { type: 'type-lifecycle', file: 'type.json', pointer: $defsPointer('type-lifecycle'), nameOverride: { initial_state: 'initialState' } },
+  { type: 'lifecycle-state', file: 'type.json', pointer: $defsPointer('lifecycle-state'), nameOverride: { is_initial: 'isInitial', is_final: 'isFinal', requires_relation: 'requiresRelation' } },
+  { type: 'requires-relation', file: 'type.json', pointer: $defsPointer('requires-relation'), nameOverride: { relation_type: 'relationType' } },
+  { type: 'lifecycle-transition', file: 'type.json', pointer: $defsPointer('lifecycle-transition'), nameOverride: { transition_name: 'name' } },
+  { type: 'field-assignment-override', file: 'type.json', pointer: $defsPointer('field-assignment-override'), nameOverride: { display_label: 'displayLabel', display_hint: 'displayHint' } },
+  // RFC-040 Unit 3: `effect` is modelled as a plain closed field (not a ref — CrossFieldRuleEffect
+  // cannot become a Type, it is a bare enum), and the emitter now projects it inline; the seed's
+  // former separate `$defs.CrossFieldRuleEffect` (never referenced by anything else) is retired along
+  // with it, so `effect` compares directly like any other authoritative property — no skip needed.
+  { type: 'cross-field-rule', file: 'type.json', pointer: $defsPointer('cross-field-rule'), nameOverride: { kind: 'type', predicate_field_id: 'predicateFieldId', predicate_value: 'predicateValue', target_field_id: 'targetFieldId', field_ids: 'fieldIds' } },
 ];
 
 // id -> name index over the metamodel package fields (built once).

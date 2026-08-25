@@ -4,7 +4,7 @@
     "purpose": "Describes the relation-type obligation, direction, and enforcement strength that gates a lifecycle state."
   },
   "createdAt": "2026-07-29T00:00:00Z",
-  "description": "RFC-022 relational state: a record may only be in a lifecycle state if a relation satisfying this obligation exists.",
+  "description": "RFC-022 relational state: a record may only be in this state if a relation satisfying this obligation exists.",
   "fields": [
     {
       "fieldId": "4b000047-0000-4000-a000-000000000047",

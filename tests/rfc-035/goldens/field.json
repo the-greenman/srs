@@ -1,7 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://srs.semanticops.com/schema/2.0/field.json",
-  "description": "The atomic semantic unit of SRS. A reusable field definition (RFC-033 self-hosted meta-model).",
+  "title": "SRS Field Definition",
+  "description": "An atomic, reusable field definition. Fields are the shared vocabulary of SRS — defined once, referenced across many Types.",
+  "$comment": "RFC-033 frozen-seed fixed point: this hand-authored schema is the bootstrap base case, loaded as committed and never re-derived at runtime (a schema that defines Field cannot be parsed without the Field schema). Its record-level source is the com.semanticops.srs/metamodel package (the `field` Type + FieldType/ExactTypeRef/AiGuidance/AiGuidanceExample/Lineage/Provenance value-object Types); the #259 emitter regenerates this file from those records, and docs/schema/2.0/metamodel-fidelity.md declares which features round-trip authoritatively vs are approximated.",
   "type": "object",
   "required": [
     "id",
@@ -15,6 +17,9 @@
   ],
   "additionalProperties": false,
   "properties": {
+    "$schema": {
+      "type": "string"
+    },
     "id": {
       "type": "string",
       "format": "uuid"
@@ -123,6 +128,7 @@
         "datatype"
       ],
       "additionalProperties": false,
+      "description": "RFC-032 Change A — orthogonal type facets. Conditional requirements (R2/R3/R9/R10) are expressed in the allOf branches below; the full semantic conformance check (R1–R11) is scripts/lib/rfc-032-fieldtype.mjs::validateFieldType.",
       "properties": {
         "datatype": {
           "type": "string",
@@ -216,11 +222,131 @@
           ],
           "title": "Value Range"
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "datatype": {
+                "const": "ref"
+              }
+            },
+            "required": [
+              "datatype"
+            ]
+          },
+          "then": {
+            "required": [
+              "rangeType"
+            ]
+          },
+          "else": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "rangeType"
+                  ]
+                },
+                {
+                  "required": [
+                    "mode"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "datatype": {
+                "const": "dependent"
+              }
+            },
+            "required": [
+              "datatype"
+            ]
+          },
+          "then": {
+            "required": [
+              "dependsOn"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "dependsOn"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "datatype": {
+                "const": "map"
+              }
+            },
+            "required": [
+              "datatype"
+            ]
+          },
+          "then": {
+            "required": [
+              "valueRange"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "valueRange"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "valueDomain": {
+                "const": "closed"
+              }
+            },
+            "required": [
+              "valueDomain"
+            ]
+          },
+          "then": {
+            "oneOf": [
+              {
+                "required": [
+                  "allowedValues"
+                ],
+                "not": {
+                  "required": [
+                    "vocabularyRef"
+                  ]
+                }
+              },
+              {
+                "required": [
+                  "vocabularyRef"
+                ],
+                "not": {
+                  "required": [
+                    "allowedValues"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
     },
     "com.semanticops.srs__field-type-constraints__v1": {
       "type": "object",
       "additionalProperties": false,
+      "description": "Datatype-appropriate value constraints carried by a FieldType (RFC-032 Change F).",
       "properties": {
         "minLength": {
           "type": "integer",
@@ -250,6 +376,7 @@
         "typeVersion"
       ],
       "additionalProperties": false,
+      "description": "RFC-009 I-78. A version-exact reference to a Type in the Package (PINNED, rfc-decision-c8704763). Both typeId and typeVersion are required. The pre-RFC-009 version-optional Protocol TypeRef this once contrasted with is retired — Protocol.outputType is now a bare-UUID LINEAGE reference (typeVersion dropped; version-optional hybrids are forbidden).",
       "properties": {
         "typeId": {
           "type": "string",

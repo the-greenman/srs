@@ -1,0 +1,8 @@
+{
+  "id": "f0000007-0000-4000-a000-000000000007",
+  "namespace": "test.rfc040unit3",
+  "name": "meta",
+  "version": 1,
+  "description": "A domain Field that happens to be named exactly like the reserved instance-facing escape key.",
+  "fieldType": { "datatype": "string" }
+}

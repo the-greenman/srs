@@ -1,7 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://srs.semanticops.com/schema/2.0/type.json",
+  "title": "SRS Type Definition",
   "description": "A named, versioned composition of Fields. Extension-owned facets (lifecycle, inheritance, cross-field-validation) are modelled as separate Types extending this one via ext:type-inheritance (RFC-040 Change A); tags and identityFieldId are core Type surface.",
+  "$comment": "RFC-033 frozen-seed fixed point: this hand-authored schema is the bootstrap base case, loaded as committed and never re-derived at runtime. Its record-level source is the com.semanticops.srs/metamodel package (the `type` + `field-assignment` Types; v1.0.0 covers the core definition facets, deferring lifecycle/type-inheritance/cross-field-validation/field-groups/identityFieldId). The #259 emitter regenerates this file from those records; docs/schema/2.0/metamodel-fidelity.md declares per-emitter fidelity.",
   "type": "object",
   "required": [
     "id",
@@ -14,6 +16,9 @@
   ],
   "additionalProperties": false,
   "properties": {
+    "$schema": {
+      "type": "string"
+    },
     "id": {
       "type": "string",
       "format": "uuid"
@@ -45,23 +50,65 @@
         "$ref": "#/$defs/com.semanticops.srs__field-assignment__v1"
       }
     },
+    "lifecycle": {
+      "$ref": "#/$defs/com.semanticops.srs__type-lifecycle__v1"
+    },
+    "lifecycleRef": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Lifecycle Ref"
+    },
     "tags": {
       "type": "array",
       "items": {
         "type": "string"
       }
     },
-    "lineage": {
-      "$ref": "#/$defs/com.semanticops.srs__lineage__v1"
+    "extendsTypeId": {
+      "type": "string",
+      "format": "uuid",
+      "x-srs-range-type": "com.semanticops.srs/type@1",
+      "title": "Extends Type Id"
     },
-    "provenance": {
-      "$ref": "#/$defs/com.semanticops.srs__provenance__v1"
+    "extendsTypeVersion": {
+      "type": "integer",
+      "minimum": 1,
+      "title": "Extends Type Version"
+    },
+    "fieldOrder": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid",
+        "x-srs-range-type": "com.semanticops.srs/field@1"
+      },
+      "title": "Field Order"
+    },
+    "fieldAssignmentOverrides": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/com.semanticops.srs__field-assignment-override__v1"
+      },
+      "title": "Field Assignment Overrides"
     },
     "identityFieldId": {
       "type": "string",
       "format": "uuid",
       "x-srs-range-type": "com.semanticops.srs/field@1",
       "title": "Identity Field Id"
+    },
+    "validationRules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/com.semanticops.srs__cross-field-rule__v1"
+      },
+      "title": "Validation Rules"
+    },
+    "lineage": {
+      "$ref": "#/$defs/com.semanticops.srs__lineage__v1"
+    },
+    "provenance": {
+      "$ref": "#/$defs/com.semanticops.srs__provenance__v1"
     },
     "createdAt": {
       "type": "string",
@@ -140,6 +187,243 @@
         },
         "description": {
           "type": "string"
+        }
+      }
+    },
+    "com.semanticops.srs__type-lifecycle__v1": {
+      "type": "object",
+      "required": [
+        "states",
+        "transitions",
+        "initialState"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "states": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/com.semanticops.srs__lifecycle-state__v1"
+          },
+          "minItems": 1
+        },
+        "transitions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/com.semanticops.srs__lifecycle-transition__v1"
+          }
+        },
+        "initialState": {
+          "type": "string",
+          "title": "Initial State"
+        }
+      }
+    },
+    "com.semanticops.srs__lifecycle-state__v1": {
+      "type": "object",
+      "required": [
+        "key"
+      ],
+      "additionalProperties": false,
+      "description": "A lifecycle state (VocabularyEntry specialization). key is the unified substrate field (was name pre-RFC-006).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isInitial": {
+          "type": "boolean",
+          "title": "Is Initial"
+        },
+        "isFinal": {
+          "type": "boolean",
+          "title": "Is Final"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "deprecated",
+            "tombstone",
+            "retired"
+          ]
+        },
+        "requiresRelation": {
+          "$ref": "#/$defs/com.semanticops.srs__requires-relation__v1",
+          "title": "Requires Relation"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "com.semanticops.srs__requires-relation__v1": {
+      "type": "object",
+      "required": [
+        "relationType"
+      ],
+      "additionalProperties": false,
+      "description": "RFC-022 relational state: a record may only be in this state if a relation satisfying this obligation exists.",
+      "properties": {
+        "relationType": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "title": "Relation Type"
+        },
+        "direction": {
+          "type": "string",
+          "enum": [
+            "incoming",
+            "outgoing"
+          ]
+        },
+        "enforcement": {
+          "type": "string",
+          "enum": [
+            "hard",
+            "advisory"
+          ]
+        }
+      }
+    },
+    "com.semanticops.srs__lifecycle-transition__v1": {
+      "type": "object",
+      "required": [
+        "name",
+        "from",
+        "to"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name"
+        },
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "com.semanticops.srs__field-assignment-override__v1": {
+      "type": "object",
+      "required": [
+        "fieldId"
+      ],
+      "additionalProperties": false,
+      "description": "ext:type-inheritance — overrides for a single inherited FieldAssignment.",
+      "properties": {
+        "fieldId": {
+          "type": "string",
+          "format": "uuid",
+          "x-srs-range-type": "com.semanticops.srs/field@1",
+          "title": "Field"
+        },
+        "displayLabel": {
+          "type": "string",
+          "title": "Display Label"
+        },
+        "displayHint": {
+          "type": "string",
+          "title": "Display Hint"
+        },
+        "required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "com.semanticops.srs__cross-field-rule__v1": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false,
+      "description": "ext:cross-field-validation — a constraint that validates a relationship between fields in a Record.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "conditional-required",
+            "field-ordering",
+            "mutual-exclusion",
+            "conditional-forbidden"
+          ],
+          "title": "Kind"
+        },
+        "message": {
+          "type": "string"
+        },
+        "predicateFieldId": {
+          "type": "string",
+          "format": "uuid",
+          "x-srs-range-type": "com.semanticops.srs/field@1",
+          "title": "Predicate Field"
+        },
+        "predicateValue": {
+          "type": "string",
+          "title": "Predicate Value"
+        },
+        "targetFieldId": {
+          "type": "string",
+          "format": "uuid",
+          "x-srs-range-type": "com.semanticops.srs/field@1",
+          "title": "Target Field"
+        },
+        "effect": {
+          "type": "string",
+          "enum": [
+            "must-precede",
+            "must-follow"
+          ]
+        },
+        "fieldIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid",
+            "x-srs-range-type": "com.semanticops.srs/field@1"
+          },
+          "minItems": 2,
+          "title": "Field Ids"
         }
       }
     },

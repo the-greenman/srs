@@ -1,0 +1,11 @@
+{
+  "id": "t0000001-0000-4000-a000-000000000001",
+  "namespace": "test.rfc040unit3",
+  "name": "widget",
+  "version": 1,
+  "description": "Base fixture Type (RFC-040 Unit 3 effective-Type resolution golden).",
+  "fields": [
+    { "fieldId": "f0000001-0000-4000-a000-000000000001", "order": 0, "required": true },
+    { "fieldId": "f0000002-0000-4000-a000-000000000002", "order": 1, "required": false, "displayLabel": "Status" }
+  ]
+}

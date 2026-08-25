@@ -1,0 +1,11 @@
+{
+  "id": "t0000004-0000-4000-a000-000000000004",
+  "namespace": "test.rfc040unit3",
+  "name": "gizmo",
+  "version": 1,
+  "description": "Reserved-name collision golden fixture: declares its OWN Field literally named `meta`, proving the instance-facing escape hatch always wins (RFC-040 Change G).",
+  "fields": [
+    { "fieldId": "f0000001-0000-4000-a000-000000000001", "order": 0, "required": true },
+    { "fieldId": "f0000007-0000-4000-a000-000000000007", "order": 1, "required": false }
+  ]
+}

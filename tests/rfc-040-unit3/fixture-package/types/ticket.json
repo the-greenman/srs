@@ -1,0 +1,33 @@
+{
+  "id": "t0000003-0000-4000-a000-000000000003",
+  "namespace": "test.rfc040unit3",
+  "name": "ticket",
+  "version": 1,
+  "description": "Conditional-projection golden fixture: conditional-required, conditional-forbidden, mutual-exclusion (RFC-040 Change F).",
+  "fields": [
+    { "fieldId": "f0000004-0000-4000-a000-000000000004", "order": 0, "required": true },
+    { "fieldId": "f0000005-0000-4000-a000-000000000005", "order": 1, "required": false },
+    { "fieldId": "f0000006-0000-4000-a000-000000000006", "order": 2, "required": false }
+  ],
+  "validationRules": [
+    {
+      "kind": "conditional-required",
+      "predicateFieldId": "f0000004-0000-4000-a000-000000000004",
+      "predicateValue": "bug",
+      "targetFieldId": "f0000005-0000-4000-a000-000000000005"
+    },
+    {
+      "kind": "conditional-forbidden",
+      "predicateFieldId": "f0000004-0000-4000-a000-000000000004",
+      "predicateValue": "feature",
+      "targetFieldId": "f0000006-0000-4000-a000-000000000006"
+    },
+    {
+      "kind": "mutual-exclusion",
+      "fieldIds": [
+        "f0000005-0000-4000-a000-000000000005",
+        "f0000006-0000-4000-a000-000000000006"
+      ]
+    }
+  ]
+}

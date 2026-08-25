@@ -1,0 +1,8 @@
+{
+  "id": "f0000006-0000-4000-a000-000000000006",
+  "namespace": "test.rfc040unit3",
+  "name": "blocker_id",
+  "version": 1,
+  "description": "Blocking ticket id.",
+  "fieldType": { "datatype": "string" }
+}

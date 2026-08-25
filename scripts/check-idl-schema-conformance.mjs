@@ -55,7 +55,10 @@ const MAPPING = [
   // Note/NoteSection had always mapped this way. #285 finished the set (RFC-031 Open Question 2).
   { entity: "Field", prose: "records/subsections/04-2-4-2-field.json", header: null, schemaFile: "field.json", pointer: "#" },
   { entity: "Type", prose: "records/subsections/04-3-4-3-type.json", header: null, schemaFile: "type.json", pointer: "#" },
-  { entity: "Type.FieldAssignment", prose: "records/subsections/04-3-4-3-type.json", header: "FieldAssignment", schemaFile: "type.json", pointer: "#/$defs/FieldAssignment" },
+  // RFC-040 Unit 3 (srs#479): the $defs key changed from ad hoc PascalCase to the emitter-owned
+  // `<namespace>__<name>__v<version>` spelling as part of ending $ref-resolution in the byte-closure
+  // comparison (the committed layout now equals the emitter's, not a hand-picked name).
+  { entity: "Type.FieldAssignment", prose: "records/subsections/04-3-4-3-type.json", header: "FieldAssignment", schemaFile: "type.json", pointer: "#/$defs/com.semanticops.srs__field-assignment__v1" },
   { entity: "Record", prose: "records/subsections/04-4-4-4-record-tiers.json", header: "Record", schemaFile: "record.json", pointer: "#" },
   // Record.FieldValue row dropped at the srs#242 cutover: RFC-039 [R7] deletes
   // $defs.FieldValue — the entity ceases to exist (RFC-031 Cross-references).

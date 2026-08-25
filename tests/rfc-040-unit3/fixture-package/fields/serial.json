@@ -1,0 +1,8 @@
+{
+  "id": "f0000003-0000-4000-a000-000000000003",
+  "namespace": "test.rfc040unit3",
+  "name": "serial",
+  "version": 1,
+  "description": "Serial number.",
+  "fieldType": { "datatype": "string" }
+}

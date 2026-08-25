@@ -4,7 +4,7 @@
     "purpose": "Describes one state in a TypeLifecycle: its key, labels, and optional relational obligation."
   },
   "createdAt": "2026-07-29T00:00:00Z",
-  "description": "A single lifecycle state (VocabularyEntry specialization; RFC-006 unified substrate — key was name pre-RFC-006).",
+  "description": "A lifecycle state (VocabularyEntry specialization). key is the unified substrate field (was name pre-RFC-006).",
   "fields": [
     {
       "fieldId": "4b000001-0000-4000-a000-000000000001",
