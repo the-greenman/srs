@@ -229,6 +229,14 @@ export function withEffectiveType(ctx, typeName) {
  * whatever it needs (namespace, description's `ext:<name>` prefix, etc.) without a second lookup.
  * Base-declared fields map to the base Type itself — callers distinguish "core" from "extension"
  * by checking whether the returned owner IS `base` (reference equality), not by name.
+ *
+ * Assumes the SIBLING-MERGE shape (`typeName` is a base with independent extenders, as `field`/
+ * `type` are today) — it reads `typeName`'s OWN `extendsTypeId` chain nowhere. Calling this on a
+ * Type that is itself a child in the child-perspective sense (`resolveEffectiveType`'s case) would
+ * mislabel every field it inherited from its own ancestor as "core", since only `base.fields` is
+ * ever attributed to `base`. No current caller does this (the two bootstrap entities and
+ * `field-assignment`, which has no `extendsTypeId` of its own) — flagged for whoever extends this
+ * to a general child Type next, not built out for a case nothing exercises today.
  */
 export function fieldOwners(ctx, typeName) {
   const base = ctx.typesByName[typeName];

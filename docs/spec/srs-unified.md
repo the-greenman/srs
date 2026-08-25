@@ -345,11 +345,13 @@ Before RFC-032, value semantics were a single closed enum, `valueType`, with the
 | `instructions` | string | no | — | core | Fuller guidance for a human completing this field. |
 | `aiGuidance` | ref → `ai-guidance` (inline) | yes | — | core | Inline LLM guidance for extracting/populating this field or type. |
 | `fieldType` | ref → `field-type` (inline) | yes | — | core | The decomposed value type (RFC-032): datatype x cardinality x value-domain x format x constraints. |
-| `editorHint` | string | no | enum: "singleline" \\| "textarea" \\| "rich-text" \\| "date-picker" \\| "dropdown" \\| "multi-select" \\| "voice" | core | Presentation only (not part of the type model — RFC-032). Suggested UI control; implementations and Views may override. Consolidated by the rendering follow-up #262. |
+| `editorHint` | string | no | enum: "singleline" \| "textarea" \| "rich-text" \| "date-picker" \| "dropdown" \| "multi-select" \| "voice" | core | Presentation only (not part of the type model — RFC-032). Suggested UI control; implementations and Views may override. Consolidated by the rendering follow-up #262. |
 | `tags` | string[] | no | — | core | Free-form classification tags. |
 | `lineage` | ref → `lineage` (inline) | no | — | core | Fork/copy history of this definition. |
 | `provenance` | ref → `provenance` (inline) | no | — | core | Import provenance of this definition. |
 | `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/field.json>
 
 #### Compact pseudo-IDL
 
@@ -370,8 +372,6 @@ field {
   createdAt: date-time // ISO-8601 creation timestamp.
 }
 ```
-
-Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/field.json>
 
 
 #### Type
@@ -454,6 +454,8 @@ Declaring both is a validation error. An inline lifecycle cannot extend; use `li
 | `provenance` | ref → `provenance` (inline) | no | — | core | Import provenance of this definition. |
 | `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
 
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/type.json>
+
 #### `FieldAssignment` (appendix)
 
 | Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
@@ -463,6 +465,8 @@ Declaring both is a validation error. An inline lifecycle cannot extend; use `li
 | `required` | boolean | yes | — | core | Whether this field must be populated before a Record can be logged. |
 | `displayLabel` | string | no | — | core | Context-specific label override for this field within this Type. |
 | `description` | string | no | — | core | Human-readable description of this entity. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/type.json#/$defs/com.semanticops.srs__field-assignment__v1>
 
 #### Compact pseudo-IDL
 
@@ -500,8 +504,6 @@ field-assignment {
   description?: string // Human-readable description of this entity.
 }
 ```
-
-Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/type.json>
 
 
 #### Record tiers

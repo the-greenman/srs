@@ -107,7 +107,11 @@ function constraintsDomainToken(ft) {
   const parts = [];
   if (ft.format) parts.push(`format: ${ft.format}`);
   if (ft.valueDomain === "closed") {
-    if (ft.allowedValues) parts.push(`enum: ${ft.allowedValues.map((v) => `"${v}"`).join(" \\| ")}`);
+    // Join with a plain " | " - mdEscape() is the table's ONE escaper, applied by the caller to
+    // the whole rendered string; pre-escaping the pipe here too double-escapes it to "\\|", which
+    // GFM reads as a literal backslash followed by an UNESCAPED pipe - the cell-split corruption
+    // this was meant to prevent, reproduced instead.
+    if (ft.allowedValues) parts.push(`enum: ${ft.allowedValues.map((v) => `"${v}"`).join(" | ")}`);
     if (ft.vocabularyRef) parts.push("vocabularyRef (LINEAGE)");
   }
   if (ft.constraints && Object.keys(ft.constraints).length) {
@@ -177,14 +181,21 @@ function rawSchemaLink(typeName) {
   throw new Error(`gen-type-reference-tables: no raw-schema link known for "${typeName}" — extend rawSchemaLink`);
 }
 
-/** The full generated `content` for one generated-type-reference record. */
+/** The full generated `content` for one generated-type-reference record. Each rendered entity
+ * (the base Type, and the FieldAssignment appendix when present) carries its OWN raw-schema link
+ * right after its own table - never one link at the end covering only the base, which would leave
+ * the appendix table with no pointer into its own schema fragment. */
 function renderContent(ctx, typeName, profile) {
   const sections = [
     `Generated from the resolved effective \`${typeName}\` Type — regenerate with \`node scripts/gen-type-reference-tables.mjs\` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.`,
     propertyTable(ctx, typeName),
+    `Raw JSON Schema: <${rawSchemaLink(typeName)}>`,
   ];
   if (typeName === "type") {
-    sections.push(`#### \`FieldAssignment\` (appendix)\n\n${propertyTable(ctx, FIELD_ASSIGNMENT_TYPE_NAME)}`);
+    sections.push(
+      `#### \`FieldAssignment\` (appendix)\n\n${propertyTable(ctx, FIELD_ASSIGNMENT_TYPE_NAME)}`,
+      `Raw JSON Schema: <${rawSchemaLink(FIELD_ASSIGNMENT_TYPE_NAME)}>`
+    );
   }
   if (profile === "property-table-and-pseudo-idl") {
     sections.push(`#### Compact pseudo-IDL\n\n${pseudoIdl(ctx, typeName)}`);
@@ -192,7 +203,6 @@ function renderContent(ctx, typeName, profile) {
       sections.push(pseudoIdl(ctx, FIELD_ASSIGNMENT_TYPE_NAME));
     }
   }
-  sections.push(`Raw JSON Schema: <${rawSchemaLink(typeName)}>`);
   return sections.join("\n\n");
 }
 
