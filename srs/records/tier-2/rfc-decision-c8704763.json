@@ -26,9 +26,10 @@
     "review_trigger": "A construct that genuinely needs a fifth strength, or the display-form demotion proving insufficient for a real interchange case."
   },
   "tags": [
-    "topic:rfc"
+    "topic:rfc",
+    "cell:reference"
   ],
   "createdAt": "2026-08-22T11:31:13.273605656+00:00",
-  "updatedAt": "2026-08-22T11:31:13.273608096+00:00",
+  "updatedAt": "2026-08-23T18:55:10.331596609+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

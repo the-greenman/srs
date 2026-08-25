@@ -28,9 +28,10 @@
     "review_trigger": "Review if mode-gaming toward 'clear' is observed twice (the cautious-default clause may need teeth), or if a chaotic situation's re-entry proves to need more definition than 'admits mapping again'."
   },
   "tags": [
-    "topic:rfc"
+    "topic:rfc",
+    "cell:governance"
   ],
   "createdAt": "2026-08-23T12:03:37.220497678+00:00",
-  "updatedAt": "2026-08-23T12:03:37.220521454+00:00",
+  "updatedAt": "2026-08-23T18:55:13.167899549+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

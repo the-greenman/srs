@@ -27,9 +27,10 @@
     "review_trigger": "The roadmap return trigger: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface. Also review if a second field class beyond lifecycleState claims the state carve-out; the machine-bound test must hold or the boundary is wrong."
   },
   "tags": [
-    "topic:rfc"
+    "topic:rfc",
+    "cell:versioning"
   ],
   "createdAt": "2026-08-21T21:14:04.878036326+00:00",
-  "updatedAt": "2026-08-21T21:14:04.878040974+00:00",
+  "updatedAt": "2026-08-23T18:55:10.001445978+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

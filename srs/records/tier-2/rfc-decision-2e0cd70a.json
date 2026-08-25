@@ -25,9 +25,10 @@
     "review_trigger": "Review if practice-package portability testing shows the preserve-ideal is unimplementable for a real class of writers, or if graded diagnostics prove too quiet to prevent silent semantic drift in shared packages."
   },
   "tags": [
-    "topic:rfc"
+    "topic:rfc",
+    "cell:portability"
   ],
   "createdAt": "2026-08-21T08:12:34.065870797+00:00",
-  "updatedAt": "2026-08-21T08:12:34.065875225+00:00",
+  "updatedAt": "2026-08-23T18:55:14.459260730+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

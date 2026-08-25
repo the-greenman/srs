@@ -28,9 +28,10 @@
     "review_trigger": "A construct whose travelling form is genuinely impossible rather than unbuilt - that would mean the construct itself violates the axis and needs redesign, not exemption."
   },
   "tags": [
-    "topic:rfc"
+    "topic:rfc",
+    "cell:portability"
   ],
   "createdAt": "2026-08-22T11:32:26.178678211+00:00",
-  "updatedAt": "2026-08-22T11:32:26.178680212+00:00",
+  "updatedAt": "2026-08-23T18:55:12.221557115+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

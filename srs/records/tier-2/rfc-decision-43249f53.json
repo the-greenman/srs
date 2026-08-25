@@ -27,9 +27,10 @@
     "review_trigger": "Review if the migration surfaces workflow cases the Lifecycle machine genuinely cannot express, or when package-authoring practice shows the stateless-enum test being routinely argued - the boundary clause may need sharpening."
   },
   "tags": [
-    "topic:rfc"
+    "topic:rfc",
+    "cell:conformance"
   ],
   "createdAt": "2026-08-21T21:13:13.119422385+00:00",
-  "updatedAt": "2026-08-21T21:13:13.119432903+00:00",
+  "updatedAt": "2026-08-23T18:55:08.477610914+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

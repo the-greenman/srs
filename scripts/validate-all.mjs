@@ -180,6 +180,13 @@ async function validateAll() {
   const decisionCompassValid = await runScript('check-decision-compass-drift.mjs');
   if (!decisionCompassValid) allValid = false;
 
+  // Every com.semanticops.spec/rfc-decision record dated 2026-08-23 or later carries a cell:<slug>
+  // tag (srs#462). rfc-decision-cce3c00e's standing rule — "every new RFC and decision names its
+  // cell" — held only by convention until this guard; a decision landing in no cell is exactly the
+  // drift the Pattern Grid exists to catch.
+  const decisionCellTagsValid = await runScript('check-decision-cell-tags.mjs');
+  if (!decisionCellTagsValid) allValid = false;
+
   // ...and every guard demonstrably fails on the violation it exists to catch — including
   // validate-package.mjs's own ten-kind coverage (#391), whose blueprint cases would otherwise be
   // green on an empty list. A guard nobody has watched fail is indistinguishable from a guard that

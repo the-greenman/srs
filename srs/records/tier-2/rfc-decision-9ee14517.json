@@ -27,9 +27,10 @@
     "review_trigger": "A construct that genuinely needs a new layer or plane; or the three-question test failing to catch a violation the audit style later finds - the register, like the grid, is refined rather than bypassed."
   },
   "tags": [
-    "topic:rfc"
+    "topic:rfc",
+    "cell:conformance"
   ],
   "createdAt": "2026-08-22T13:07:58.443069547+00:00",
-  "updatedAt": "2026-08-22T13:07:58.443074391+00:00",
+  "updatedAt": "2026-08-23T18:55:12.857130716+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

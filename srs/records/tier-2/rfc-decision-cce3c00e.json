@@ -33,9 +33,10 @@
     "review_trigger": "Refine when a proposal lands in no cell, when a cell's preference is overridden twice for the same reason (the boundary clause is wrong), or at the Continuity flip (first full public release), when axis 2-8's default pole reverses and the layer should be re-read whole against the new phase."
   },
   "tags": [
-    "topic:rfc"
+    "topic:rfc",
+    "cell:conformance"
   ],
   "createdAt": "2026-08-21T20:35:58.384756263+00:00",
-  "updatedAt": "2026-08-21T20:35:58.384760892+00:00",
+  "updatedAt": "2026-08-23T18:55:07.380696270+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

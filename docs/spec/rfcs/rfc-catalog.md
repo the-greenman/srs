@@ -845,7 +845,13 @@ Independent implementations of the proposed discovery rule return exactly the in
 
 **Author**: #273 planning session (scheduled, complicated-mode), assembling owner rulings of 2026-07-31 … 2026-08-23
 
-**Affected Components**: com.semanticops.srs/metamodel (v1.0.0 → v1.1.0), docs/schema/2.0/{field,type,note,record,package-manifest}.json reference forms, scripts/gen-metamodel-package.mjs, scripts/lib/schema-emitter.mjs, projection-rules.md, metamodel-fidelity.md, RFC-033/RFC-035 closure tests, the RFC-031 residual allowlist, design-note 045. Draft — integration manifest is authored at acceptance.
+**Affected Components**: com.semanticops.srs/metamodel (v1.0.0 → v1.1.0), docs/schema/2.0/{field,type,note,record,package-manifest}.json reference forms, scripts/gen-metamodel-package.mjs, scripts/lib/schema-emitter.mjs, projection-rules.md, metamodel-fidelity.md, RFC-033/RFC-035 closure tests, the RFC-031 residual allowlist, design-note 045.
+
+<!-- srs-integration:v1
+cell:reference
+cell:conformance
+cell:identity
+-->
 
 **Proposal Artifact Path**: rfcs/rfc-040-metamodel-v1-1-0.md
 
