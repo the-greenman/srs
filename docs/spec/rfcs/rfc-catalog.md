@@ -841,7 +841,7 @@ Independent implementations of the proposed discovery rule return exactly the in
 
 **RFC Number**: 040
 
-**Status**: draft
+**Status**: accepted
 
 **Author**: #273 planning session (scheduled, complicated-mode), assembling owner rulings of 2026-07-31 … 2026-08-23
 
