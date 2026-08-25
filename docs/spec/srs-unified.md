@@ -398,11 +398,14 @@ A Field reference within a Type. Declares this field's composition order and req
 {
   fieldId: UUID     // references Field.id
   order: integer    // min: 0; declared composition order within the Type — structure, not presentation; feeds canonical serialisation and provides the render default (a View may override for display; see RFC-015)
-  required?: boolean  // default: true
+  required: boolean
+
+  // Documentation-only — on conflict the Field's own semantics and aiGuidance win; a contextual
+  // description that contradicts them is a data error, not an override (RFC-040 Change C)
+  description?: string
 
   // Presentation-only — must NOT affect AI guidance, extraction, fieldType, or validation
   displayLabel?: string
-  displayHint?: string
 }
 ```
 

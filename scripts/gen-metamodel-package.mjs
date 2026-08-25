@@ -427,8 +427,13 @@ function packageIndex() {
   return {
     $schema: 'https://srs.semanticops.com/schema/2.0/package-manifest.json',
     createdAt: CREATED_AT,
-    dataModelRevision: 2,
-    description: 'The self-hosted SRS meta-model (RFC-033): Field, Type, FieldAssignment, and value-objects expressed as SRS Type definitions. Frozen-seed source for docs/schema/2.0/{field,type}.json.',
+    // RFC-040 (srs#273/#477) is data-model generation 3: RFC-032 (valueType -> fieldType) was
+    // migration #1 (fromRevision 0, toRevision 1); the #242/#297 carrier+storage train was
+    // migration #2 (toRevision 2); this train's definition-layer removals under reject-unknown
+    // (defaultValue both sites, deprecatedAt) and additions (FieldAssignment.description,
+    // Type.lineage/provenance) are migration #3, stamped once here at Unit 1 landing.
+    dataModelRevision: 3,
+    description: 'The self-hosted SRS meta-model (RFC-033/RFC-040): Field, Type, FieldAssignment, and value-objects expressed as SRS Type definitions. Frozen-seed source for docs/schema/2.0/{field,type}.json.',
     fields: FIELD_SPECS.map(([, name]) => `fields/${name}.json`),
     id: PACKAGE_ID,
     name: 'metamodel',
@@ -436,7 +441,7 @@ function packageIndex() {
     status: 'active',
     title: 'SRS Meta-Model (frozen seed)',
     types: TYPE_ORDER.map(([, name]) => `types/${name}.json`),
-    version: '1.0.0',
+    version: '1.1.0',
   };
 }
 

@@ -1,8 +1,8 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/package-manifest.json",
   "createdAt": "2026-07-29T00:00:00Z",
-  "dataModelRevision": 2,
-  "description": "The self-hosted SRS meta-model (RFC-033): Field, Type, FieldAssignment, and value-objects expressed as SRS Type definitions. Frozen-seed source for docs/schema/2.0/{field,type}.json.",
+  "dataModelRevision": 3,
+  "description": "The self-hosted SRS meta-model (RFC-033/RFC-040): Field, Type, FieldAssignment, and value-objects expressed as SRS Type definitions. Frozen-seed source for docs/schema/2.0/{field,type}.json.",
   "fields": [
     "fields/id.json",
     "fields/namespace.json",
@@ -117,5 +117,5 @@
     "types/inheritance-facet.json",
     "types/cross-field-validation-facet.json"
   ],
-  "version": "1.0.0"
+  "version": "1.1.0"
 }
