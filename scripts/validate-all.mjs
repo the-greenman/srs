@@ -137,6 +137,23 @@ async function validateAll() {
   const cardinalityCoherent = await runScript('check-cardinality-coherence.mjs');
   if (!cardinalityCoherent) allValid = false;
 
+  // rfc-decision-c8704763 (reference taxonomy) vocabularyRef migration must stay fully applied: no
+  // Field definition under tests/rfc-032/package/fields may still carry a legacy
+  // "namespace/name@version" vocabularyRef pattern string. Deterministic and re-runnable
+  // (scripts/migrate-vocabulary-ref-to-lineage.mjs --check).
+  //
+  // The sibling dependencyRefs -> packageDependencies rename (package-manifest.json item 2) is
+  // PARKED, not executed here: srs/package/spec-rfc-process/package.json is the only live
+  // package-manifest using it, and it is part of the effective package set the root container's
+  // catalog load depends on. Even the latest available srs-rust release at the time of this
+  // discovery (build.294, srs#478) still embeds a package-manifest.json with
+  // additionalProperties:false and no `packageDependencies` — renaming it now would fail catalog
+  // load entirely, taking `repo validate`/`render` (and therefore check-release-drift.mjs /
+  // publish-spec.mjs) down with it. See #478's PARK comment for the ready-to-run schema + migration
+  // diff, to land together with the srs-rust mirror-sync follow-up.
+  const vocabularyRefMigrated = await runScript('migrate-vocabulary-ref-to-lineage.mjs', ['--check']);
+  if (!vocabularyRefMigrated) allValid = false;
+
   // Field.name is snake_case (#308). The rule was stated unconditionally by field.json and record
   // 7d22d50f and enforced nowhere, so the corpus stayed conformant only by attention. Names matter
   // beyond style: srs-repository resolves several Fields by name and binds misses with
@@ -153,6 +170,12 @@ async function validateAll() {
   // was declarable with no protocol.json behind it until #378 and nothing noticed.
   const schemaKindsValid = await runScript('check-schema-kind-correspondence.mjs');
   if (!schemaKindsValid) allValid = false;
+
+  // package-bundle.json's definitionType enum is GENERATED from package-manifest.json's ten
+  // definition kinds (rfc-decision-c8704763 item 4; finding A6) — the two lists cannot diverge
+  // again because there is only one list.
+  const definitionTypeEnumSynced = await runScript('gen-package-bundle-definition-type.mjs', ['--check']);
+  if (!definitionTypeEnumSynced) allValid = false;
 
   // Every discovered record reaches a reader, or its invisibility is recorded (#285). `repo
   // validate` reports an unpublished record as a healthy instance, which is how six

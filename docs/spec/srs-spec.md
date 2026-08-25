@@ -282,7 +282,9 @@ FieldType {
   // Value domain — datatype "string" only
   valueDomain?: "open" | "closed"   // default: "open"
   allowedValues?: string[]          // valueDomain "closed"; mutually exclusive with vocabularyRef
-  vocabularyRef?: string            // valueDomain "closed"; namespace/name@version
+  vocabularyRef?: UUID               // valueDomain "closed"; LINEAGE (rfc-decision-c8704763) — bare
+                                     // UUID of an installed Vocabulary, migrated from the former
+                                     // namespace/name@version pattern string
 
   // Semantic string format — datatype "string" only
   format?: "plain" | "markdown" | "uri" | "uuid" | "email"
@@ -437,7 +439,8 @@ When `ext:lifecycle` is in use, a Type declares a lifecycle in exactly one of tw
 lifecycle?: { states: LifecycleState[]; transitions: LifecycleTransition[]; initialState: string }
 
 // Referenced — shared, installable Lifecycle:
-lifecycleRef?: Reference   // resolves to an installed Lifecycle (V8)
+lifecycleRef?: UUID        // LINEAGE reference (rfc-decision-c8704763) — resolves to an
+                            // installed Lifecycle in the effective package set (V8)
 ```
 
 Declaring both is a validation error. An inline lifecycle cannot extend; use `lifecycleRef` when the same state machine is needed across multiple Types.
@@ -1253,7 +1256,8 @@ lifecycle?: {
 }
 
 // Referenced (shared, installable):
-lifecycleRef?: Reference   // resolves to an installed Lifecycle (V8)
+lifecycleRef?: UUID        // LINEAGE reference (rfc-decision-c8704763) — resolves to an
+                            // installed Lifecycle in the effective package set (V8)
 ```
 
 Declaring both is a validation error (V7). An inline lifecycle's effective state set is exactly its own `states`/`transitions`; V5 and V9 apply identically.
@@ -1285,17 +1289,6 @@ Declaring both is a validation error (V7). An inline lifecycle's effective state
 
 Replaces `TemplateFacilitationStep` from v1. Protocol is epistemically richer: stages have explicit dependencies, completion criteria, and may produce intermediate Records.
 
-#### `TypeRef`
-
-A reference to a specific Type, used within Protocol and Blueprint.
-
-```typescript
-{
-  typeId: UUID
-  typeVersion?: integer
-}
-```
-
 #### `FieldRef`
 
 A reference to a Field within a Type.
@@ -1320,7 +1313,10 @@ A named stage in a Protocol. Stages have epistemic dependencies (`dependsOn`) �
   dependsOn: string[]   // stageId values; epistemic dependencies, not just ordering
   completionCriteria: string   // how to know this stage is sufficient to proceed
   contributesTo: FieldRef[]    // which Record Fields this stage feeds
-  outputType?: TypeRef         // if this stage produces its own intermediate Record
+  outputType?: UUID            // LINEAGE reference (rfc-decision-c8704763) to the Type this stage
+                                // produces its own intermediate Record as; the effective
+                                // package set resolves it. typeVersion is dropped — version-
+                                // optional hybrids are forbidden.
   aiGuidance: AiGuidance
 }
 ```
@@ -1340,8 +1336,10 @@ An epistemically ordered process for building quality Records through structured
 
   description: string
 
-  targetType?: TypeRef
-  // The Record type this Protocol produces. Absent for loose / exploratory Protocols
+  protocolTargetType: UUID | ""
+  // The Record type this Protocol produces — a LINEAGE reference (bare UUID;
+  // rfc-decision-c8704763), never the canonical namespace/name@version form (that is
+  // DISPLAY-only and is never stored). Empty string for loose / exploratory Protocols
   // (Brain Dump, Decomposition) whose output is input context for a tighter Protocol.
 
   stages: ProtocolStage[]
@@ -2537,12 +2535,12 @@ Reference to the package supplying Field and Type definitions for this repositor
 
 ```typescript
 {
-  mode: "local" | "external"
+  mode: "local" | "remote"  // renamed from "external" (rfc-decision-c8704763)
 
   // local: definitions live in the repository under package/
   path?: string           // relative path to package.json; default: "package/package.json"
 
-  // external: definitions are expected pre-installed in the consumer's registry
+  // remote: definitions are expected pre-installed in the consumer's registry
   packageId?: UUID
   packageName?: string
   packageVersion?: string
@@ -2733,7 +2731,7 @@ An archive is a self-contained, shareable snapshot of a live repository.
 - All source document content files and sidecars referenced by any `SourceReference` within any instance **or Relation** in the archive
 - When `PackageRef.mode === "local"`: the full local package
 
-External package dependencies (`mode: "external"`) are declared in `packageRef` and expected pre-installed at the consumer. They are not bundled in the archive.
+Remote package dependencies (`mode: "remote"`) are declared in `packageRef` and expected pre-installed at the consumer. They are not bundled in the archive.
 
 **Producing an archive:**
 1. Verify the manifest instance index is complete and consistent with the filesystem

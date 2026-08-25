@@ -11,7 +11,7 @@
   "fieldType": {
     "datatype": "string",
     "valueDomain": "closed",
-    "vocabularyRef": "com.semanticops.rfc032fixture/lifecycle_state@1"
+    "vocabularyRef": "28da3300-7f68-543a-8965-4e6743acc772"
   },
   "createdAt": "2026-07-29T00:00:00Z"
 }

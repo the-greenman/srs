@@ -72,7 +72,8 @@
     },
     "lifecycleRef": {
       "type": "string",
-      "description": "ext:lifecycle — reference to an installed Lifecycle by id. Mutually exclusive with lifecycle."
+      "format": "uuid",
+      "description": "ext:lifecycle — a LINEAGE reference (bare UUID; rfc-decision-c8704763) to an installed Lifecycle — the effective package set resolves it. Mutually exclusive with lifecycle."
     },
     "tags": {
       "type": "array",

@@ -88,8 +88,8 @@
         },
         "vocabularyRef": {
           "type": "string",
-          "pattern": "^[^/@]+/[^/@]+@[0-9]+$",
-          "description": "A CONFIGURABLE data range: an RFC-006 Reference (namespace/name@version) to a mode:closed Vocabulary whose Terms are managed in package config. Mutually exclusive with allowedValues. Projects to a pure enum of the Vocabulary's effective Term keys at schema-generation time (Change G)."
+          "format": "uuid",
+          "description": "A CONFIGURABLE data range: a LINEAGE reference (bare UUID; rfc-decision-c8704763, migrated from the namespace/name@version pattern) to a mode:closed Vocabulary whose Terms are managed in package config — the effective package set resolves it. Mutually exclusive with allowedValues. Projects to a pure enum of the Vocabulary's effective Term keys at schema-generation time (Change G)."
         },
         "format": {
           "type": "string",
@@ -158,7 +158,7 @@
       "type": "object",
       "required": ["typeId", "typeVersion"],
       "additionalProperties": false,
-      "description": "RFC-009 I-78. A version-exact reference to a Type in the Package. Both typeId and typeVersion are required. Distinct from the pre-RFC-009 spec-level TypeRef (Protocol) where typeVersion was optional.",
+      "description": "RFC-009 I-78. A version-exact reference to a Type in the Package (PINNED, rfc-decision-c8704763). Both typeId and typeVersion are required. The pre-RFC-009 version-optional Protocol TypeRef this once contrasted with is retired — Protocol.outputType is now a bare-UUID LINEAGE reference (typeVersion dropped; version-optional hybrids are forbidden).",
       "properties": {
         "typeId": {
           "type": "string",

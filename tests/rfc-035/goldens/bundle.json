@@ -175,7 +175,7 @@
             },
             "vocabularyRef": {
               "type": "string",
-              "pattern": "^[^/@]+/[^/@]+@[0-9]+$",
+              "format": "uuid",
               "title": "Vocabulary Ref"
             },
             "format": {

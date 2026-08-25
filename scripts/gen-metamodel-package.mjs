@@ -118,7 +118,7 @@ const FIELD_SPECS = [
   [18, 'max_items', { datatype: 'integer', constraints: { minimum: 0 } }, 'Maximum list length (cardinality == list only).'],
   [19, 'value_domain', closed(['open', 'closed']), 'Whether a string field is open or bound to a closed vocabulary. datatype == string only.'],
   [20, 'allowed_values', { datatype: 'string', cardinality: 'list' }, 'Inline, field-fixed closed vocabulary (valueDomain == closed).'],
-  [21, 'vocabulary_ref', { datatype: 'string', constraints: { pattern: '^[^/@]+/[^/@]+@[0-9]+$' } }, 'RFC-006 Reference (namespace/name@version) to a mode:closed configurable Vocabulary.'],
+  [21, 'vocabulary_ref', { datatype: 'string', format: 'uuid' }, 'A LINEAGE reference (bare UUID; rfc-decision-c8704763, migrated from the namespace/name@version pattern) to a mode:closed configurable Vocabulary.'],
   [22, 'format', closed(['plain', 'markdown', 'uri', 'uuid', 'email']), 'Semantic string format (JSON-Schema-aligned). datatype == string only.'],
   [23, 'constraints', ref('field-type-constraints', 'inline', 'single'), 'Datatype-appropriate value constraints (min/max length, pattern, numeric bounds).'],
   [24, 'range_type', ref('exact-type-ref', 'inline', 'single'), 'The Type this field\'s range is (datatype == ref only).'],
@@ -204,7 +204,7 @@ const FIELD_SPECS = [
   [85, 'field_assignment_overrides', ref('field-assignment-override', 'inline', 'list'), 'ext:type-inheritance — per-field overrides applied to inherited FieldAssignments.'],
   // -- Change A: ext:lifecycle facet --
   [86, 'lifecycle', ref('type-lifecycle', 'inline', 'single'), 'ext:lifecycle — inline state machine declaration. Mutually exclusive with lifecycleRef.'],
-  [87, 'lifecycle_ref', { datatype: 'string' }, 'ext:lifecycle — reference to an installed Lifecycle by id. Mutually exclusive with lifecycle.'],
+  [87, 'lifecycle_ref', { datatype: 'string', format: 'uuid' }, 'ext:lifecycle — a LINEAGE reference (bare UUID; rfc-decision-c8704763) to an installed Lifecycle. Mutually exclusive with lifecycle.'],
   // -- Change A: core Type surface (not extension-owned) --
   [88, 'identity_field_id', ref('field', 'reference', 'single'), 'RFC-020 — names one fieldId from this Type\'s effective field set as the record\'s identity/display field.'],
   // -- Change A: ext:cross-field-validation facet (RFC-019) --

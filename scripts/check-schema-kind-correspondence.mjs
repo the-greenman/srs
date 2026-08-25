@@ -77,7 +77,7 @@ export const PROPERTY_SCHEMA = {
   title: null,
   description: null,
   status: null,
-  dependencyRefs: null, // packages this package depends on, not definition files
+  dependencyRefs: null, // packages this package depends on, not definition files (rename to packageDependencies PARKED — srs#478, ADR-004 conflict with the pinned srs-rust binary)
   createdAt: null,
   updatedAt: null,
 };
