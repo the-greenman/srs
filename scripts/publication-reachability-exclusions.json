@@ -460,7 +460,7 @@
     {
       "instanceId": "717118a7-80be-49a2-bbc6-05c123ffa958",
       "path": "records/notes/design-capture-metamodel-v1-1-0.json",
-      "reason": "Tier-0 design capture (2026-07-31, recreated from #291): the two metamodel v1.1.0 decisions — extension-contributed Type facets as separately inheriting Types, and a per-context `description` on FieldAssignment. Rung 0 of the capture ladder; neither is yet an `rfc-decision` record, and the note is the staged content for the design-note the #273 RFC will carry. Its sequencing paragraph predates #242 completing (2026-08-10) and must be re-read against current state before graduation, which is itself a reason not to publish it. It becomes reachable when the #273 RFC lands.",
+      "reason": "Tier-0 design capture, graduated 2026-08-25 to `com.semanticops.spec/design-note` 045 (records/design-notes/045-inheritance-floor-and-documentation-only-rule.json, instance 6e7cb1a4) via `srs note graduate`, linked by a `derived-from` relation from the design note to this Note. The self-expiring premise in the prior reason (\"becomes reachable when the #273 RFC lands\") has resolved by graduation, not by the Note itself becoming reachable — Tier-0 Notes carry no `typeNamespace`/`typeName` and so never satisfy a type-query surface; `note graduate` preserves the Note (stamped `graduatedAt`, not deleted) as the permanent historical record of the pre-formalisation capture, same as every other entry in `records/notes/`.",
       "issue": "#273"
     },
     {

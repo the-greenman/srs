@@ -4272,3 +4272,28 @@ Tags are a peer to Field and Type in the SRS data model — not an extension, no
 **R11 — What a record *is* changes by re-instantiation linked by a relation, never by in-place mutation.** Field values and lifecycle state mutate in place; a record's identity — its Type, its tier, its position in a supersession lineage — does not. When a record becomes something else (superseded, graduated across tiers, retyped to a specialist type, or a cited source becoming an instance), the original is preserved and a new instance is created, linked by a lineage relation; the relation graph is the authoritative record of what became what. Retype additionally rebinds the lifecycle: the new Type's state machine applies from its initial state, so a state reached under the prior Type does not survive the retype.
 
 
+### The inheritance floor and the documentation-only rule
+
+**Content**: Metamodel v1.1.0 (RFC-040 Change A / Change C) models extension-contributed Type facets as separate metamodel Types extending the core via `ext:type-inheritance`, and gives `FieldAssignment` a per-context `description`. The owner's 2026-07-31 decision on srs#273 accepted both, each with a stated cost that this note exists to make a conscious acceptance rather than something a fresh implementer discovers by accident.
+
+**The inheritance floor.** Owner decision, 2026-07-31 (srs#273):
+
+> (a) makes the metamodel package depend on `ext:type-inheritance`, so any independent third-party implementation that wants to consume the metamodel *as records* must implement inheritance merging. That raises the floor for a from-scratch sovereign reader. Accepted — inheritance is core to the extensibility promise regardless — but it must be a conscious acceptance written into the design note, not an accident discovered later by an implementer.
+
+**The documentation-only rule.** Owner decision, 2026-07-31 (srs#273), on `FieldAssignment.description`:
+
+> The slot explains what a Field means *in this context*; it never changes what the Field means. "Field semantics are immutable — they cannot be overridden when used inside a Type" is one of the strongest anti-lock-in invariants in SRS: it is what makes cross-community Field reuse trustworthy. This is the first slot that could be abused to erode it. The RFC/design note must state: on conflict, the Field's own semantics and `aiGuidance` win, and a contextual description that contradicts them is a data error, not an override.
+
+**Three-layer forward-compatibility policy.** Ruled on srs#237, 2026-08-20, consolidating srs-rust#778 (engine) and the srs#273 Decision 1 extension mechanism into one normative statement per definition-layer entity:
+
+| Layer | Policy | Escape hatch |
+|---|---|---|
+| Definition (Field, Type, View) | reject-unknown | none — extend by inheritance |
+| Substrate (VocabularyEntry, Term, RelationTypeDefinition) | reject-unknown | `properties` bag |
+| Instance (Note, TypedRecord, Record) | tolerate | `meta` bag |
+
+The stated reason for the asymmetry: an instance's `meta` cannot change what the record *means*; an unknown property on a **definition** can silently change what every downstream record means. Definitions are the trust boundary.
+
+**Forward framing: cell linkage as a retrieval signal, not an ontology.** The owner-shared decision-coherence research synthesis (2026-08-23, srs#273 comment; Tier-0 note "Design Jurisprudence: the neighbourhood role of the map") repositions what a location in the Pattern Grid buys: not an answer, but a neighbourhood of prior judgements a new decision must reckon with. Cell linkage is **one retrieval signal among several** — alongside explicit links, semantic similarity, and shared concerns — never the ontology of truth. The minimal relation set stays deliberately small: `consistent_with`, `distinguishes`, `conflicts_with`, `supersedes` around decisions, plus `supports` / `challenges` between decisions and principles; `generalises` is inferred from a pattern of decisions, never itself asserted. No decision ontology beyond this set is sketched here. Retrieval favours precision over completeness — the minimum useful neighbourhood, not everything potentially relevant, or the retrieval mechanism recreates the context-bloat failure it exists to avoid. Today's actual significance gate — which decisions are worth capturing at all — is the owner-ruling bottleneck, named explicitly rather than left implicit: the charter's decision records are curated by what the owner chooses to rule on, and that curation is what keeps the record from drowning in undifferentiated capture.
+
+
