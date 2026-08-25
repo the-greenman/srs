@@ -486,6 +486,12 @@
       "path": "records/notes/taste-made-portable-why-tension-statements-invert-and-what-defends-them-7e8d9753.json",
       "reason": "Rung-0 background capture (the charter's tension-form rationale — why tension statements invert in application and what defends them). Deliberately unpublished: background meaning, not spec content; the Decision Compass (#461) links it as background reading. Self-expiring: graduates via derived-from into the matrix records' rationale when srs#273 self-hosts the charter — this exclusion retires then.",
       "issue": "#435"
+    },
+    {
+      "instanceId": "ac55018f-d7a6-4519-bf23-ce25c292be88",
+      "path": "records/notes/design-jurisprudence-the-neighbourhood-role-of-the-map-ac55018f.json",
+      "reason": "Rung-0 background capture (design jurisprudence: the neighbourhood role of the map — the decision-coherence research synthesis). Deliberately unpublished background meaning; linked from the Decision Compass (#461) as background reading. Self-expiring in parts: graduates via derived-from into the #273/#272 charter-self-hosting design, Epic 13's framing, and the first charter review cycle.",
+      "issue": "#435"
     }
   ]
 }
