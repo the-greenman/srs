@@ -33,15 +33,6 @@ function runScript(script, ...args) {
 /** Run a check script against a fixture root; returns {code, out}. */
 const runCheck = (script, root) => runScript(script, root);
 
-/**
- * validate-records.mjs takes no root argument — it resolves `ROOT` from `process.cwd()` and its one
- * positional argument is `recordsDir` (default `records`). Run it with the fixture as cwd instead.
- */
-function runInCwd(script, cwd, args = []) {
-  const r = spawnSync("node", [join(REPO, "scripts", script), ...args], { encoding: "utf8", cwd });
-  return { code: r.status, out: `${r.stdout ?? ""}${r.stderr ?? ""}` };
-}
-
 function expect(label, { code, out }, { exit, contains = [] }) {
   const problems = [];
   if (code !== exit) problems.push(`exit ${code}, expected ${exit}`);
@@ -60,6 +51,11 @@ function expect(label, { code, out }, { exit, contains = [] }) {
 const writeJson = async (path, doc) => {
   await mkdir(dirname(path), { recursive: true });
   await writeFile(path, `${JSON.stringify(doc, null, 2)}\n`);
+};
+
+const writeText = async (path, text) => {
+  await mkdir(dirname(path), { recursive: true });
+  await writeFile(path, text);
 };
 
 const field = (name) => ({
@@ -846,6 +842,70 @@ async function invariantPlacementCases(root) {
   });
 }
 
+// ---- srs#462 — decision-record cell tags: every rfc-decision dated 2026-08-23+ names its cell ---
+async function decisionCellTagsCases(root) {
+  console.log("srs#462 — decision-record cell tags guard");
+
+  const ID = (n) => `00000000-0000-4000-8000-0000000005${String(n).padStart(2, "0")}`;
+  const decision = (n, date, tags = []) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/record.json",
+    instanceId: ID(n),
+    typeId: "6a000004-0000-4000-a000-000000000004",
+    typeVersion: 2,
+    typeNamespace: "com.semanticops.spec",
+    typeName: "rfc-decision",
+    fieldValues: { title: `fixture decision ${n}`, decision_date: date },
+    tags,
+  });
+
+  const repo = join(root, "srs");
+
+  // A decision dated before the guard's enforcement floor carries no cell tag — out of scope,
+  // must pass. Without this the guard could not be told apart from one that requires a tag on
+  // every decision ever written, charter-era or not.
+  await writeJson(join(repo, "records/pre-floor.json"), decision(1, "2026-08-22"));
+  expect("passes on a decision dated before the enforcement floor", runCheck("check-decision-cell-tags.mjs", root), {
+    exit: 0,
+    contains: ["✓ Every com.semanticops.spec/rfc-decision record dated 2026-08-23 or later carries a valid cell:<slug> tag"],
+  });
+
+  // The violation this guard exists for: a decision dated on the floor, ratified with no cell.
+  await writeJson(join(repo, "records/untagged.json"), decision(2, "2026-08-23"));
+  expect("rejects a decision on the floor date with no cell tag", runCheck("check-decision-cell-tags.mjs", root), {
+    exit: 1,
+    contains: ["records/untagged.json", "carries no cell:<slug> tag at all"],
+  });
+
+  // A cell tag that does not name a slug in the vocabulary is caught by name, not waved through as
+  // "has some tag starting with cell:".
+  await writeJson(join(repo, "records/untagged.json"), decision(2, "2026-08-23", ["cell:mysticism"]));
+  expect("rejects a cell tag naming a slug outside the vocabulary", runCheck("check-decision-cell-tags.mjs", root), {
+    exit: 1,
+    contains: ["records/untagged.json", '"cell:mysticism"', "none of which names a slug in the vocabulary"],
+  });
+
+  // A valid cell tag, dated after the floor: the guard is not simply always red.
+  await writeJson(join(repo, "records/untagged.json"), decision(2, "2026-08-24", ["cell:governance"]));
+  expect("accepts a decision carrying a valid cell tag", runCheck("check-decision-cell-tags.mjs", root), {
+    exit: 0,
+    contains: ["✓ Every com.semanticops.spec/rfc-decision record dated 2026-08-23 or later carries a valid cell:<slug> tag"],
+  });
+
+  // A floor, matching the sibling guards: a walk that finds no decision record at all is not a
+  // repository with nothing wrong — it means the root argument is wrong.
+  await rm(join(repo, "records/pre-floor.json"));
+  await rm(join(repo, "records/untagged.json"));
+  expect("fails when the walk finds no rfc-decision records at all", runCheck("check-decision-cell-tags.mjs", root), {
+    exit: 1,
+    contains: ["No com.semanticops.spec/rfc-decision records found"],
+  });
+}
+
+function runInCwd(script, cwd, args = []) {
+  const r = spawnSync("node", [join(REPO, "scripts", script), ...args], { encoding: "utf8", cwd });
+  return { code: r.status, out: `${r.stdout ?? ""}${r.stderr ?? ""}` };
+}
+
 // ---- #465 — relation-type resolution covers every local package root, and fails the run ----------
 async function relationTypeResolutionCases(root) {
   console.log("#465 — relation-type resolution covers sub-package roots, and the run fails on errors");
@@ -933,6 +993,79 @@ async function relationTypeResolutionCases(root) {
   );
 }
 
+// ---- srs#461 — Decision Compass drift: bidirectional presence ------------------------------------
+async function decisionCompassDriftCases(root) {
+  console.log("srs#461 — Decision Compass drift guard (bidirectional presence)");
+
+  const decisionRecord = (id, title) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/record.json",
+    instanceId: `${id}-0000-4000-8000-000000000000`,
+    typeId: "6a000004-0000-4000-a000-000000000004",
+    typeVersion: 2,
+    typeNamespace: "com.semanticops.spec",
+    typeName: "rfc-decision",
+    fieldValues: {
+      title,
+      rfc_status: "accepted",
+      decision_date: "2026-08-21",
+      decision_statement: "fixture.",
+    },
+  });
+
+  const recordsDir = join(root, "srs/records/tier-2");
+  const compassPath = join(root, "docs/charter/decision-compass.md");
+
+  await writeJson(join(recordsDir, "rfc-decision-aaaaaaaa.json"), decisionRecord("aaaaaaaa", "Fixture ruling A"));
+  await writeJson(join(recordsDir, "rfc-decision-bbbbbbbb.json"), decisionRecord("bbbbbbbb", "Fixture ruling B"));
+
+  const goodCompass = [
+    "# The Decision Compass\n",
+    "<!-- srs-charter-ids:v1\n",
+    "aaaaaaaa bbbbbbbb\n",
+    "-->\n",
+    "Fixture ruling A: this over that. Cites `rfc-decision-aaaaaaaa`.\n",
+    "Fixture ruling B: this over that. Cites `rfc-decision-bbbbbbbb`.\n",
+  ].join("");
+  await writeText(compassPath, goodCompass);
+
+  expect(
+    "passes when every roster id is cited and every citation resolves",
+    runCheck("check-decision-compass-drift.mjs", root),
+    { exit: 0, contains: ["✓ Every roster id is cited"] },
+  );
+
+  // FORWARD violation: a citation in the body whose record no longer exists (renamed or removed
+  // out from under the compass).
+  await rm(join(recordsDir, "rfc-decision-bbbbbbbb.json"));
+  expect(
+    "rejects a body citation whose record does not exist",
+    runCheck("check-decision-compass-drift.mjs", root),
+    { exit: 1, contains: ["rfc-decision-bbbbbbbb", "does not exist", "Fix the citation or remove it"] },
+  );
+  await writeJson(join(recordsDir, "rfc-decision-bbbbbbbb.json"), decisionRecord("bbbbbbbb", "Fixture ruling B"));
+
+  // BACKWARD violation: a charter-class record added to the roster without the section that
+  // documents it — declared presence, no delivered citation.
+  await writeJson(join(recordsDir, "rfc-decision-cccccccc.json"), decisionRecord("cccccccc", "Fixture ruling C"));
+  const rosterOnlyCompass = goodCompass.replace("aaaaaaaa bbbbbbbb", "aaaaaaaa bbbbbbbb cccccccc");
+  await writeText(compassPath, rosterOnlyCompass);
+  expect(
+    "rejects a roster id with no citing section in the body",
+    runCheck("check-decision-compass-drift.mjs", root),
+    { exit: 1, contains: ["rfc-decision-cccccccc", "not cited anywhere in the compass body"] },
+  );
+  await rm(join(recordsDir, "rfc-decision-cccccccc.json"));
+  await writeText(compassPath, goodCompass);
+
+  // A roster comment id is not itself a citation — the scan must exclude the roster block, or a
+  // record could sit in the roster forever with no real section and still pass.
+  expect(
+    "still passes after restoring the fixture to its original good state",
+    runCheck("check-decision-compass-drift.mjs", root),
+    { exit: 0, contains: ["✓ Every roster id is cited"] },
+  );
+}
+
 const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
 try {
   await fieldNameCases(join(root, "field-name"));
@@ -940,6 +1073,8 @@ try {
   await validatePackageCases(join(root, "validate-package"));
   await publicationReachabilityCases(join(root, "publication-reachability"));
   await invariantPlacementCases(join(root, "invariant-placement"));
+  await decisionCompassDriftCases(join(root, "decision-compass-drift"));
+  await decisionCellTagsCases(join(root, "decision-cell-tags"));
   await relationTypeResolutionCases(join(root, "relation-type-resolution"));
 } finally {
   await rm(root, { recursive: true, force: true });

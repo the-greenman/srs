@@ -26,9 +26,10 @@
     "review_trigger": "The ritual guard extends to these: two cycles of auto-census placements recorded but never diffed or read means the operation is cut. Persistent disagreement between auto-placement and reviewed placement on the same statements is a finding against the rubric or the grid, whichever the pattern indicates - never silently against the classifier alone."
   },
   "tags": [
-    "topic:rfc"
+    "topic:rfc",
+    "cell:governance"
   ],
   "createdAt": "2026-08-23T12:22:36.133567017+00:00",
-  "updatedAt": "2026-08-23T12:22:36.133568914+00:00",
+  "updatedAt": "2026-08-23T18:55:13.836930110+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

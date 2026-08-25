@@ -4,6 +4,10 @@
     "038": {
       "issue": "the-greenman/srs#297",
       "reason": "RFC-038 is Accepted as the reviewed repository-authority and migration contract. Its normative schema, store, client, archive, and first-party corpus changes are deliberately implemented together by #297 after #242 Phase B; no partial generation-2 state is supported. Revision 7 resolves the complete first-party corpus boundary and migration dispositions. Remove this entry when #297 folds the contract into canonical records, schemas, implementations, and migrated artifacts."
+    },
+    "040": {
+      "issue": "the-greenman/srs#273",
+      "reason": "RFC-040 is Accepted as the reviewed metamodel v1.1.0 train plan; its normative changes land deliberately through the sequenced train units #477-#482 (+#483), each folding its own integration tokens. The manifest completes as the train lands and this entry retires at Implemented — self-expiring per the retirement ruling (rfc-decision-5f8204bc)."
     }
   }
 }

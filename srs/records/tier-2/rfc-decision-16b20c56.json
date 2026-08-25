@@ -26,9 +26,10 @@
     "review_trigger": "The return claimant arrives: travelling packages need trustable publishers, or agent-written content needs marking. The mechanism then designed must satisfy all three clauses."
   },
   "tags": [
-    "topic:rfc"
+    "topic:rfc",
+    "cell:attribution"
   ],
   "createdAt": "2026-08-22T11:32:54.535456298+00:00",
-  "updatedAt": "2026-08-22T11:32:54.535457947+00:00",
+  "updatedAt": "2026-08-23T18:55:12.540593724+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
