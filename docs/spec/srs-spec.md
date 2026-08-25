@@ -328,7 +328,8 @@ When `fieldType.valueDomain` is `"closed"`, a Field declares exactly one value s
 
 ```typescript
 allowedValues?: string[]   // inline anonymous closed vocabulary (sugar; retained for simple cases)
-vocabularyRef?: string     // namespace/name@version — bind to a named, installed Vocabulary
+vocabularyRef?: UUID       // LINEAGE (rfc-decision-c8704763) — bind to a named, installed
+                           // Vocabulary by bare UUID; the effective package set resolves it
 ```
 
 `allowedValues` is formally sugar for an anonymous inline closed vocabulary: the value set is fixed by the Field definition, so changing it means a new Field version. `vocabularyRef` is a **configurable** data range — the value set is managed as package configuration and evolves without reversioning the Field — and is used when the set is shared, extensible, or needs Term identity. A `vocabularyRef` MUST resolve to a `Vocabulary` with `mode: closed`. Declaring both, or neither when `valueDomain` is `"closed"`, is a validation error.
