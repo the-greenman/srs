@@ -847,6 +847,12 @@ Independent implementations of the proposed discovery rule return exactly the in
 
 **Affected Components**: com.semanticops.srs/metamodel (v1.0.0 → v1.1.0), docs/schema/2.0/{field,type,note,record,package-manifest}.json reference forms, scripts/gen-metamodel-package.mjs, scripts/lib/schema-emitter.mjs, projection-rules.md, metamodel-fidelity.md, RFC-033/RFC-035 closure tests, the RFC-031 residual allowlist, design-note 045. Draft — integration manifest is authored at acceptance.
 
+<!-- srs-integration:v1
+cell:reference
+cell:conformance
+cell:identity
+-->
+
 **Proposal Artifact Path**: rfcs/rfc-040-metamodel-v1-1-0.md
 
 **Content**: The metamodel v1.1.0 train plan for srs#273 (epic #256 spine task 4a-0): model the live post-#242 definition layer as SRS records (extension facets as separate Types via ext:type-inheritance; the seven nested value objects; the documentation-only FieldAssignment.description slot), remove both defaultValue sites and deprecatedAt per rfc-decision-0225099b and the #234 ruling, add Type.lineage/provenance, add conditional-forbidden with both-emitter conditional projection, teach the emitter the instance-facing (closed-except-meta) vs definition-facing (closed) distinction per rfc-decision-2e0cd70a, execute the reference-taxonomy definition-layer edits (rfc-decision-c8704763) and the RFC-023 sourceRole migration, implement the #274 reader projection (property table primary), and tighten the closure tests to byte-for-byte regeneration including annotations and $defs — the seed remaining authoritative (the #260 authorship flip is excluded on owner hold). Six sequenced execution units; every decision lands with its enforcing mechanism. Zero open decisions; zero parks.
