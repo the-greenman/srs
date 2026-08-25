@@ -114,7 +114,13 @@ function resolveRange(ctx, rangeType) {
 function applyOverrides(fields, extenders) {
   const overridesByFieldId = {};
   for (const ext of extenders) {
-    for (const o of ext.fieldAssignmentOverrides || []) overridesByFieldId[o.fieldId] = o;
+    // I-42: "must not reference fields declared in the specializing Type's own fields[]" — an
+    // override naming one of THIS extender's own fields is invalid and ignored, never applied.
+    const ownIds = new Set((ext.fields || []).map((f) => f.fieldId));
+    for (const o of ext.fieldAssignmentOverrides || []) {
+      if (ownIds.has(o.fieldId)) continue;
+      overridesByFieldId[o.fieldId] = o;
+    }
   }
   return fields.map((f) => {
     const o = overridesByFieldId[f.fieldId];
@@ -151,11 +157,13 @@ function declaredFieldOrder(extenders) {
 }
 
 /** A ctx whose `typesByName[typeName]` carries the merged effective fields (see `effectiveFields`),
- * and any extender's declared `fieldOrder` (for `emitBody` to apply). */
+ * and a declared `fieldOrder` (for `emitBody` to apply) — the BASE's own, if it declares one (I-41
+ * applies to any Type, extended or not), else the first extender's. */
 export function withEffectiveType(ctx, typeName) {
   const base = ctx.typesByName[typeName];
   const extenders = Object.values(ctx.typesById).filter((t) => t.extendsTypeId === base.id);
-  const merged = { ...base, fields: effectiveFields(ctx, typeName), fieldOrder: declaredFieldOrder(extenders) };
+  const fieldOrder = base.fieldOrder ?? declaredFieldOrder(extenders);
+  const merged = { ...base, fields: effectiveFields(ctx, typeName), fieldOrder };
   return { ...ctx, typesByName: { ...ctx.typesByName, [typeName]: merged } };
 }
 
@@ -315,7 +323,15 @@ function emitBody(ctx, typeName, defs) {
   let orderedFields = [...t.fields].sort((x, y) => x.order - y.order);
   if (t.fieldOrder && t.fieldOrder.length) {
     const byId = new Map(orderedFields.map((f) => [f.fieldId, f]));
-    orderedFields = t.fieldOrder.map((id) => byId.get(id)).filter(Boolean);
+    const effectiveIds = new Set(byId.keys());
+    const orderIds = new Set(t.fieldOrder);
+    // I-41: fieldOrder MUST contain exactly the effective fieldId set — no duplicate, none absent.
+    // A violation is a data error, not a silent property drop: `.filter(Boolean)` over an unresolved
+    // id would otherwise make a required property vanish from the emitted schema with no diagnostic.
+    if (orderIds.size !== t.fieldOrder.length || orderIds.size !== effectiveIds.size || [...orderIds].some((id) => !effectiveIds.has(id))) {
+      throw new Error(`schema-emitter: ${typeName}.fieldOrder is not an exact permutation of its effective field set (I-41)`);
+    }
+    orderedFields = t.fieldOrder.map((id) => byId.get(id));
   }
   const properties = {};
   const required = [];
@@ -381,8 +397,12 @@ export function emitEntity(ctx, typeName, opts = {}) {
   // above. It is placed first to match the frozen seed's property order.
   if (typeName in ENTITY_IDS) properties.$schema = { type: "string" };
   Object.assign(properties, bodyProps.properties);
-  if (facing === "instance" && !("meta" in properties)) {
-    properties.meta = { type: "object" }; // rfc-decision-2e0cd70a: the sanctioned extension carrier
+  if (facing === "instance") {
+    // rfc-decision-2e0cd70a: the sanctioned extension carrier — always the OPEN escape, even if the
+    // Type happens to declare its own Field literally named `meta` (a reserved instance-facing key;
+    // that Field's own, possibly-narrower fieldType would otherwise silently defeat the "anything may
+    // be carried in meta" guarantee the facing contract exists to make).
+    properties.meta = { type: "object" };
   }
   out.properties = properties;
   if (bodyProps.allOf) out.allOf = bodyProps.allOf;

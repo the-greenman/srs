@@ -42,6 +42,12 @@ function withoutDivergence(obj, path) {
   return clone;
 }
 
+function atPath(obj, path) {
+  let node = obj;
+  for (const seg of path) node = node?.[seg];
+  return node;
+}
+
 const ctx = loadPackage(MM);
 let fail = 0;
 for (const entity of ["field", "type"]) {
@@ -55,8 +61,19 @@ for (const entity of ["field", "type"]) {
     fail++;
     continue;
   }
-  const regeneratedMinusDivergence = ser(withoutDivergence(emitEntity(ctx, entity), DIVERGENCE_PATHS[entity]));
-  const committedMinusDivergence = ser(withoutDivergence(load(join(SEED, `${entity}.json`)), DIVERGENCE_PATHS[entity]));
+  const path = DIVERGENCE_PATHS[entity];
+  if (path) {
+    // The register entry must still genuinely diverge — an entry that no longer differs has rotted
+    // into a silent no-op and should be removed (mirrors rfc-035-closure-test.mjs's own assertion).
+    const regenValue = atPath(emitEntity(ctx, entity), path);
+    const seedValue = atPath(load(join(SEED, `${entity}.json`)), path);
+    if (JSON.stringify(regenValue) === JSON.stringify(seedValue)) {
+      fail++;
+      console.error(`  ✗ divergence register: ${entity}.${path.join(".")} no longer diverges — remove it from the register`);
+    }
+  }
+  const regeneratedMinusDivergence = ser(withoutDivergence(emitEntity(ctx, entity), path));
+  const committedMinusDivergence = ser(withoutDivergence(load(join(SEED, `${entity}.json`)), path));
   if (regeneratedMinusDivergence === committedMinusDivergence) {
     console.log(`  ✓ ${entity}.json regenerates byte-identical to the committed seed (modulo the documented divergence register)`);
   } else {

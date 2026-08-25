@@ -21,7 +21,7 @@
 import assert from "node:assert/strict";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
-import { loadPackage, emitEntity } from "../../scripts/lib/schema-emitter.mjs";
+import { loadPackage, emitEntity, resolveEffectiveType } from "../../scripts/lib/schema-emitter.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FIXTURE = join(HERE, "fixture-package");
@@ -66,5 +66,36 @@ check("ticket: mutual-exclusion projects a pairwise not-required guard (priority
   allOf.some((c) => c.not?.required?.length === 2 && c.not.required.includes("priority") && c.not.required.includes("blocker_id")));
 check("ticket: exactly 3 allOf clauses (one per validationRules entry — none dropped, none doubled)",
   allOf.length === 3);
+
+// --- reserved-key collision: `gizmo` declares its OWN Field literally named `meta` ------------------
+const gizmoDef = emitEntity(ctx, "gizmo"); // definition-facing: the Field's own (string) shape stands
+check("gizmo: definition-facing keeps the Type's own `meta` Field as declared (string)",
+  gizmoDef.properties.meta.type === "string");
+const gizmoInstance = emitEntity(ctx, "gizmo", { facing: "instance" });
+check("gizmo: instance-facing OVERRIDES an own `meta` Field with the open escape (reserved key wins)",
+  gizmoInstance.properties.meta.type === "object" && !("format" in gizmoInstance.properties.meta));
+
+// --- I-41: a malformed fieldOrder (not an exact permutation) is a thrown error, never a silent drop --
+{
+  const base = ctx.typesByName.widget;
+  const badCtx = { ...ctx, typesByName: { ...ctx.typesByName, widget: { ...base, fieldOrder: [base.fields[0].fieldId] } } };
+  assert.throws(() => emitEntity(badCtx, "widget"), /I-41/, "a fieldOrder missing a field errors, not silently drops it");
+  pass++;
+  console.log("  ✓ I-41: a fieldOrder that omits an effective field throws rather than silently emitting fewer properties");
+}
+
+// --- I-42: an override naming the SPECIALIZING Type's OWN field (not an inherited one) is ignored ---
+{
+  const gadget = ctx.typesByName.gadget;
+  const selfOverridingGadget = {
+    ...gadget,
+    fieldAssignmentOverrides: [{ fieldId: "f0000003-0000-4000-a000-000000000003", required: false }], // targets gadget's OWN `serial`, not an inherited field
+  };
+  const badCtx = { ...ctx, typesByName: { ...ctx.typesByName, gadget: selfOverridingGadget } };
+  const resolved = resolveEffectiveType(badCtx, "gadget");
+  const serialAssignment = resolved.fields.find((f) => f.fieldId === "f0000003-0000-4000-a000-000000000003");
+  check("I-42: an override naming the specializing Type's own field is ignored (serial stays required)",
+    serialAssignment.required === true);
+}
 
 console.log(`\n✓ RFC-040 Unit 3 golden fixtures: ${pass} checks passed (effective-Type resolution, facing distinction, conditional projection).`);

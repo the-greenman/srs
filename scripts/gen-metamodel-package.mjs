@@ -220,9 +220,14 @@ for (const [n, name] of FIELD_SPECS) fieldIdByName[name] = fieldUuid(n);
 // override (Change C: documentation-only annotation, projected to the property's JSON Schema
 // `description`). Assignment-level only, opt-in: the emitter never falls back to the Field's own
 // (generic, cross-context) `description` for a property fragment — see schema-emitter.mjs `emitBody`.
-// Values below are the frozen seed's EXACT existing text (docs/schema/2.0/{field,type}.json),
-// carried into the model rather than freshly authored, so the byte-closure gate (regenerate ==
-// committed seed) is meaningful evidence rather than the seed being rewritten to match new prose.
+// Values below are the seed's PRE-Unit-3 exact text (docs/schema/2.0/{field,type}.json as committed
+// before this unit regenerated them without per-property descriptions — see the PARK note above the
+// `fields:` mapper, a few lines down, for why they are authored but not yet written to records).
+// Carried in from that prior text rather than freshly authored, so that WHEN the srs-rust mirror-sync
+// follow-up unblocks corpus population, flipping the one line back on reproduces exactly what the
+// seed used to say — not new prose invented at that point. This is NOT currently exercised by the
+// byte-closure gate: the CURRENT committed seed carries no per-property descriptions (this text is
+// write-only until un-parked); no test asserts these strings until then.
 const a = (name, required, label, desc) => ({ name, required, label, desc });
 const TYPE_SPECS = {
   field: {
