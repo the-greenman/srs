@@ -901,6 +901,98 @@ async function decisionCellTagsCases(root) {
   });
 }
 
+function runInCwd(script, cwd, args = []) {
+  const r = spawnSync("node", [join(REPO, "scripts", script), ...args], { encoding: "utf8", cwd });
+  return { code: r.status, out: `${r.stdout ?? ""}${r.stderr ?? ""}` };
+}
+
+// ---- #465 — relation-type resolution covers every local package root, and fails the run ----------
+async function relationTypeResolutionCases(root) {
+  console.log("#465 — relation-type resolution covers sub-package roots, and the run fails on errors");
+
+  const repo = join(root, "srs");
+  await mkdir(join(repo, "records"), { recursive: true });
+  await cp(join(REPO, "docs/schema/2.0"), join(root, "docs/schema/2.0"), { recursive: true });
+
+  const relation = (n, type) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/relation.json",
+    relationId: `00000000-0000-4000-8000-0000000005${String(n).padStart(2, "0")}`,
+    relationType: type,
+    sourceInstanceId: `00000000-0000-4000-8000-0000000006${String(n).padStart(2, "0")}`,
+    targetInstanceId: `00000000-0000-4000-8000-0000000007${String(n).padStart(2, "0")}`,
+    createdAt: "2026-08-23T00:00:00Z",
+  });
+
+  // Root manifest declares no relation types of its own — the shape that made master read all
+  // sub-package relation types as uninstalled.
+  await writeJson(join(repo, "package/package.json"), {
+    id: "00000000-0000-4000-8000-000000000801",
+    namespace: "com.example.fixture",
+    name: "fixture-root",
+    version: "1.0.0",
+  });
+
+  // The type is declared ONLY in a sub-package root (`package/core/` in the live tree), with its
+  // `relationTypes` entry relative to ITS OWN directory, not `package/`.
+  await writeJson(join(repo, "package/core/package.json"), {
+    id: "00000000-0000-4000-8000-000000000802",
+    namespace: "com.example.fixture",
+    name: "fixture-core",
+    version: "1.0.0",
+    relationTypes: ["relation-types/contains.json"],
+  });
+  await writeJson(join(repo, "package/core/relation-types/contains.json"), {
+    $schema: "https://srs.semanticops.com/schema/2.0/relation-type.json",
+    id: "00000000-0000-4000-8000-000000000901",
+    namespace: "com.example.fixture",
+    key: "contains",
+    version: 1,
+    label: "Contains",
+    description: "fixture relation type",
+    category: "structural",
+    status: "active",
+    createdAt: "2026-08-23T00:00:00Z",
+  });
+
+  await writeJson(join(repo, "relations/one.json"), relation(1, "contains"));
+  expect(
+    "resolves a relation type declared only in a sub-package root",
+    runInCwd("validate-records.mjs", root),
+    { exit: 0, contains: ["✓ All instances are valid"] },
+  );
+
+  // The violation: a relation type genuinely absent from every local package root fails the run,
+  // with the message naming the offending type — and, per #465's second defect, the run's exit code
+  // now actually reflects it (master printed this and still exited 0).
+  await writeJson(join(repo, "relations/one.json"), relation(1, "bogus-type"));
+  expect(
+    "rejects a relation type absent from every installed package, and fails the run",
+    runInCwd("validate-records.mjs", root),
+    {
+      exit: 1,
+      contains: [
+        'relationType "bogus-type" has no installed definition',
+        "✗ Instance validation failed",
+      ],
+    },
+  );
+  await writeJson(join(repo, "relations/one.json"), relation(1, "contains"));
+
+  // A sabotaged sub-package manifest must fail loudly, not be silently skipped (the old
+  // `loadInstalledRelationTypes` caught any parse error on the single manifest it read and
+  // returned an empty map, which is silent by construction — the fix must not repeat that on any
+  // one of several roots either).
+  await writeFile(join(repo, "package/core/package.json"), "{ not json");
+  expect(
+    "fails loudly when a sub-package manifest does not parse",
+    runInCwd("validate-records.mjs", root),
+    {
+      exit: 1,
+      contains: ["package/core/package.json", "does not parse"],
+    },
+  );
+}
+
 // ---- srs#461 — Decision Compass drift: bidirectional presence ------------------------------------
 async function decisionCompassDriftCases(root) {
   console.log("srs#461 — Decision Compass drift guard (bidirectional presence)");
@@ -983,6 +1075,7 @@ try {
   await invariantPlacementCases(join(root, "invariant-placement"));
   await decisionCompassDriftCases(join(root, "decision-compass-drift"));
   await decisionCellTagsCases(join(root, "decision-cell-tags"));
+  await relationTypeResolutionCases(join(root, "relation-type-resolution"));
 } finally {
   await rm(root, { recursive: true, force: true });
 }

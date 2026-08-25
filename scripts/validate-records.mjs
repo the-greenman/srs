@@ -8,7 +8,7 @@
  *   node scripts/validate-records.mjs records
  */
 import { readFile, readdir } from 'fs/promises';
-import { join, resolve } from 'path';
+import { dirname, join, resolve } from 'path';
 import { loadSchema, validateJsonSchema } from './lib/json-schema-lite.mjs';
 import { loadRelations } from './lib/rfc-038-tree.mjs';
 
@@ -52,22 +52,60 @@ function rel(path) {
   return path.startsWith(`${SRS_RECORDS_ROOT}/`) ? path.slice(SRS_RECORDS_ROOT.length + 1) : path;
 }
 
-async function loadInstalledRelationTypes() {
-  const manifestPath = join(SRS_RECORDS_ROOT, 'package/package.json');
-  let manifest;
+// RFC-038 [R5]: a local package root is PRESENCE-keyed (any directory under `package/` holding a
+// `package.json`), not `packageRefs`-keyed — `srs/manifest.json` only lists 5 of the local package
+// roots that actually exist on disk. `package/core/package.json` (the canonical seven relation
+// types: contains, depends-on, supersedes, refines, derived-from, evidences, precedes) is one of
+// the roots a `packageRefs`-only read misses, which is why every relation using them reported "no
+// installed definition" despite the definitions being live in the tree.
+async function findPackageManifests(dir) {
+  const out = [];
+  let entries;
   try {
-    manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
+    entries = await readdir(dir, { withFileTypes: true });
   } catch {
-    return new Map();
+    return out;
   }
+  // Sorted, and excluding only `node_modules` — matching validate-all.mjs's discoverPackages(),
+  // whose walk this mirrors, so the two cannot silently diverge on which roots they find.
+  entries.sort((a, b) => a.name.localeCompare(b.name));
+  for (const entry of entries) {
+    if (entry.name === 'node_modules') continue;
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      out.push(...await findPackageManifests(full));
+    } else if (entry.name === 'package.json') {
+      out.push(full);
+    }
+  }
+  return out;
+}
+
+async function loadInstalledRelationTypes() {
+  // Sorted traversal order (above) makes a same-key collision across two roots deterministic —
+  // last-write-wins by path, not by whatever order the filesystem happens to hand back entries in.
+  const manifestPaths = await findPackageManifests(join(SRS_RECORDS_ROOT, 'package'));
   const defs = new Map();
-  for (const relativePath of manifest.relationTypes ?? []) {
+  for (const manifestPath of manifestPaths) {
+    let manifest;
     try {
-      const def = JSON.parse(await readFile(join(SRS_RECORDS_ROOT, 'package', relativePath), 'utf8'));
-      const defKey = def.key ?? def.relationType;
-      if (defKey) defs.set(defKey, def);
-    } catch {
-      // missing file will be caught by validate-package
+      manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
+    } catch (error) {
+      errors.push(`${rel(manifestPath)}: package manifest does not parse (${error.message}); its relation types cannot be resolved`);
+      continue;
+    }
+    // Each manifest's `relationTypes` entries are relative to that manifest's OWN directory, not to
+    // `package/` — true of every local package root, including the root manifest itself (whose
+    // entries reach into `spec-authoring-core/` by prefix, relative to `package/`).
+    const packageDir = dirname(manifestPath);
+    for (const relativePath of manifest.relationTypes ?? []) {
+      try {
+        const def = JSON.parse(await readFile(join(packageDir, relativePath), 'utf8'));
+        const defKey = def.key ?? def.relationType;
+        if (defKey) defs.set(defKey, def);
+      } catch {
+        // missing file will be caught by validate-package
+      }
     }
   }
   return defs;
@@ -173,7 +211,10 @@ async function main() {
     warnings.forEach(warning => console.log(`    ⚠ ${warning}`));
   }
 
-  const valid = invalidCount === 0;
+  // `errors` accumulates more than schema invalidity — relation-type resolution failures (#465) and
+  // package-manifest parse failures land here too. A run that prints them and exits 0 anyway is the
+  // defect #465 found: 222 relation errors were live on master while every CI run stayed green.
+  const valid = invalidCount === 0 && errors.length === 0;
   console.log(`\n  ${valid ? '✓ All instances are valid' : '✗ Instance validation failed'}`);
   process.exit(valid ? 0 : 1);
 }
