@@ -120,4 +120,15 @@ console.log("  ✓ gizmo: instance-facing a Type whose own Field collides with t
   console.log("  ✓ I-40: a fieldId declared twice across base + sibling extenders throws rather than silently duplicating");
 }
 
+// --- resolveForEmission: a frozen bootstrap entity (ENTITY_IDS) that ALSO declares its own --------
+// extendsTypeId is an unsupported, ambiguous combination — thrown, never silently resolved one way.
+{
+  const gizmoRenamedAsType = { ...ctx.typesByName.gizmo, name: "type", extendsTypeId: ctx.typesByName.widget.id, extendsTypeVersion: 1 };
+  const badCtx = { ...ctx, typesByName: { ...ctx.typesByName, type: gizmoRenamedAsType } };
+  assert.throws(() => emitEntity(badCtx, "type"), /unsupported combination/,
+    "a frozen entity name (ENTITY_IDS) that also declares extendsTypeId errors, not silently picks a direction");
+  pass++;
+  console.log("  ✓ resolveForEmission: an ENTITY_IDS entity with its own extendsTypeId throws (ambiguous merge direction)");
+}
+
 console.log(`\n✓ RFC-040 Unit 3 golden fixtures: ${pass} checks passed (effective-Type resolution, facing distinction, conditional projection).`);

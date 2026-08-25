@@ -9,11 +9,19 @@ source of a schema is now **`Field`/`Type` records** (RFC-032 `fieldType` model)
 `schema-definition`/`schema-member` (`ext:schema-notation`) vocabulary. The reference emitter is
 `scripts/lib/schema-emitter.mjs`; the per-node projection is RFC-032 `projectField`
 (`scripts/lib/rfc-032-fieldtype.mjs`), reused unchanged. A conforming emitter — including the `srs-projection`
-Rust twin (`srs-projection/json_schema.rs` + `rfc_035_parity.rs`), which **has shipped** (RFC-040 Unit 3,
-srs#479; the stale "deferred to #260" note this superseded referred only to the #260 **authorship flip** —
-whether the seed or the emitter owns the committed bytes — never to whether a Rust emitter exists) — MUST
-produce byte-identical output to this contract; parity between the two implementations is a closure criterion,
-tracked via the srs-rust mirror-sync follow-up filed at each schema-touching unit's landing.
+Rust twin (`srs-projection/json_schema.rs` + `rfc_035_parity.rs`) — MUST produce byte-identical output to this
+contract.
+
+**Current parity status (RFC-040 Unit 3, srs#479):** the Rust twin **has shipped** for RFC-035's original scope
+(the stale "deferred to #260" note this superseded referred only to the #260 **authorship flip** — whether the
+seed or the emitter owns the committed bytes — never to whether a Rust emitter exists at all). It does **not
+yet** implement this unit's three additions — effective-Type resolution (Change A), the facing distinction
+(Change G), or conditional projection (Change F) — verified directly against `crates/srs-projection/src/json_schema.rs`
+in `srs-rust`, which has no reference to `extends_type_id`, `field_order`, `field_assignment_overrides`, or
+`validationRules`/`allOf` conditional projection. This gap is named precisely, with its own scope, in the
+srs-rust follow-up filed at this unit's landing (a comment on srs-rust#868, which separately also covers the
+`FieldAssignment.description` schema-mirror gap and the `$defs` key rename — three distinct items, not one).
+Parity remains the eventual closure criterion; it is not yet held for Change A/F/G specifically.
 
 ## Identity (`$id`)
 

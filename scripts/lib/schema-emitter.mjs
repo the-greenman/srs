@@ -180,7 +180,11 @@ export function effectiveFields(ctx, typeName) {
 }
 
 /** Any extender's own declared `fieldOrder` (I-41) — order resolution is `emitBody`'s job; this just
- * finds the declaration to propagate onto the merged Type object. */
+ * finds the declaration to propagate onto the merged Type object. If more than one sibling extender
+ * declared a `fieldOrder`, `.find()` silently picks the first in `extenders`' (deterministic — package
+ * load order, `TYPE_ORDER`'s fixed array position for the metamodel) iteration order — the same
+ * unreachable-today, flagged-rather-than-built-out residual `applyOverrides` documents for its own
+ * last-extender-wins case; only one metamodel facet (`inheritance-facet`) currently declares one. */
 function declaredFieldOrder(extenders) {
   return extenders.map((e) => e.fieldOrder).find((fo) => fo && fo.length);
 }
@@ -237,6 +241,14 @@ export function resolveEffectiveType(ctx, typeName, seen = new Set()) {
 function resolveForEmission(ctx, typeName) {
   const t = ctx.typesByName[typeName];
   if (!t) throw new Error(`schema-emitter: unknown type ${typeName}`);
+  if (typeName in ENTITY_IDS && t.extendsTypeId) {
+    // A frozen bootstrap entity declaring its OWN extendsTypeId is an unsupported combination this
+    // resolver was never designed for: which direction wins is genuinely ambiguous (child-perspective
+    // would silently skip the sibling-merge these two entities exist to reconstitute). Loud, not a
+    // silent pick — the same "silent-drop -> throw" treatment already given to I-40/I-41/I-42 and the
+    // meta-key collision elsewhere in this file.
+    throw new Error(`schema-emitter: ${typeName} is a frozen bootstrap entity (ENTITY_IDS) AND declares its own extendsTypeId — unsupported combination, ambiguous merge direction`);
+  }
   if (t.extendsTypeId) {
     return { ...ctx, typesByName: { ...ctx.typesByName, [typeName]: resolveEffectiveType(ctx, typeName) } };
   }
