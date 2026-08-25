@@ -4,7 +4,7 @@
  * meta-model package `com.semanticops.srs/metamodel`.
  *
  * The meta-model (Field, Type, FieldAssignment, FieldType, ExactTypeRef,
- * FieldTypeConstraints, AiGuidance, AiGuidanceExample, Lineage, Provenance) is
+ * FieldTypeConstraints, AiGuidance, AiGuidanceExample, Lineage, Provenance, ...) is
  * HAND-AUTHORED here as a compact spec and emitted to srs/package/metamodel/ as
  * field/type definition files that validate against docs/schema/2.0/{field,type}.json.
  *
@@ -19,6 +19,14 @@
  *   node scripts/gen-metamodel-package.mjs --check    # fail if committed output drifts
  *
  * Pure/deterministic: no clocks, no randomness. createdAt is a fixed epoch constant.
+ *
+ * UUID pinning (RFC-040 Unit 1, srs#477): every field/type spec below names its OWN pinned
+ * `n` explicitly — never derived from array position. Numbers are append-only and never
+ * recycled: removing an entry retires its number (a comment names what claimed it), so a
+ * later addition can never silently renumber — and thereby reassign the UUID of — a survivor.
+ * This replaces the pre-#477 `fieldUuid(i + 1)` positional derivation (the `4a000001` lesson,
+ * #295, applied here to the `4b`/`4c` series after the audit in RFC-040's opening move found it
+ * could not survive the removals this same train makes).
  */
 import { mkdir, readdir, readFile, rm, writeFile } from 'fs/promises';
 import { dirname, join, resolve } from 'path';
@@ -44,95 +52,104 @@ const typeUuid = (n) => `4c${hex6(n)}-0000-4000-a000-${hex12(n)}`;
 const PACKAGE_ID = '4a000004-0000-4000-a000-000000000004';
 
 // ---------------------------------------------------------------------------------------------
-// TYPES — the ten self-hosted meta-model entities (Change A table order pins the 4c numbering).
+// TYPES — the ten self-hosted meta-model entities (Change A table order pinned the original 4c
+// numbering 1-10; explicit per RFC-040 Unit 1, append-only from here).
 // ---------------------------------------------------------------------------------------------
 const TYPE_ORDER = [
-  'field', 'type', 'field-assignment', 'field-type', 'exact-type-ref',
-  'field-type-constraints', 'ai-guidance', 'ai-guidance-example', 'lineage', 'provenance',
+  [1, 'field'],
+  [2, 'type'],
+  [3, 'field-assignment'],
+  [4, 'field-type'],
+  [5, 'exact-type-ref'],
+  [6, 'field-type-constraints'],
+  [7, 'ai-guidance'],
+  [8, 'ai-guidance-example'],
+  [9, 'lineage'],
+  [10, 'provenance'],
 ];
-const typeIdByName = Object.fromEntries(TYPE_ORDER.map((name, i) => [name, typeUuid(i + 1)]));
-const ref = (typeName, mode, cardinality) => {
+const typeIdByName = Object.fromEntries(TYPE_ORDER.map(([n, name]) => [name, typeUuid(n)]));
+const ref = (typeName, mode, cardinality, extra) => {
   const ft = { datatype: 'ref', mode, cardinality, rangeType: { typeId: typeIdByName[typeName], typeVersion: 1 } };
   if (cardinality === 'single') delete ft.cardinality; // single is the default (minimal diff)
-  return ft;
+  return extra ? { ...ft, ...extra } : ft;
 };
 const closed = (values) => ({ datatype: 'string', valueDomain: 'closed', allowedValues: values });
 
 // ---------------------------------------------------------------------------------------------
-// FIELDS — shared atomic vocabulary (define-once / reference-many; dedup by first appearance,
-// which pins the 4b numbering). Each entry: name -> { ft, description, purpose }.
-// Order here is the canonical 4b assignment order.
+// FIELDS — shared atomic vocabulary (define-once / reference-many; dedup by first appearance).
+// Each entry: [n, name, ft, description, purpose?]. `n` is the pinned 4b number — explicit,
+// append-only, never recycled (RFC-040 Unit 1).
 // ---------------------------------------------------------------------------------------------
 const FIELD_SPECS = [
   // -- common identity/lineage-agnostic fields, shared across entities --
-  ['id', { datatype: 'string', format: 'uuid' }, 'Globally unique, stable UUID identity of this entity.'],
-  ['namespace', { datatype: 'string' }, 'Reverse-DNS logical grouping.'],
-  ['name', { datatype: 'string' }, 'Machine-readable name within the namespace; snake_case.'],
-  ['version', { datatype: 'integer', constraints: { minimum: 1 } }, 'Positive integer version within the UUID lineage.'],
-  ['description', { datatype: 'string' }, 'Human-readable description of this entity.'],
-  ['created_at', { datatype: 'date-time' }, 'ISO-8601 creation timestamp.'],
+  [1, 'id', { datatype: 'string', format: 'uuid' }, 'Globally unique, stable UUID identity of this entity.'],
+  [2, 'namespace', { datatype: 'string' }, 'Reverse-DNS logical grouping.'],
+  [3, 'name', { datatype: 'string' }, 'Machine-readable name within the namespace; snake_case.'],
+  [4, 'version', { datatype: 'integer', constraints: { minimum: 1 } }, 'Positive integer version within the UUID lineage.'],
+  [5, 'description', { datatype: 'string' }, 'Human-readable description of this entity.'],
+  [6, 'created_at', { datatype: 'date-time' }, 'ISO-8601 creation timestamp.'],
   // -- Field entity --
-  ['instructions', { datatype: 'string' }, 'Fuller guidance for a human completing this field.'],
-  ['ai_guidance', ref('ai-guidance', 'inline', 'single'), 'Inline LLM guidance for extracting/populating this field or type.'],
-  ['field_type', ref('field-type', 'inline', 'single'), 'The decomposed value type (RFC-032): datatype x cardinality x value-domain x format x constraints.'],
-  ['default_value', { datatype: 'dependent', dependsOn: 'self' }, 'Default value conforming to this field\'s own fieldType (value-of-self dependent).'],
-  ['tags', { datatype: 'string', cardinality: 'list' }, 'Free-form classification tags.'],
-  ['lineage', ref('lineage', 'inline', 'single'), 'Fork/copy history of this definition.'],
-  ['provenance', ref('provenance', 'inline', 'single'), 'Import provenance of this definition.'],
-  ['deprecated_at', { datatype: 'date-time' }, 'ISO-8601 timestamp at which this definition was deprecated.'],
+  [7, 'instructions', { datatype: 'string' }, 'Fuller guidance for a human completing this field.'],
+  [8, 'ai_guidance', ref('ai-guidance', 'inline', 'single'), 'Inline LLM guidance for extracting/populating this field or type.'],
+  [9, 'field_type', ref('field-type', 'inline', 'single'), 'The decomposed value type (RFC-032): datatype x cardinality x value-domain x format x constraints.'],
+  [10, 'default_value', { datatype: 'dependent', dependsOn: 'self' }, 'Default value conforming to this field\'s own fieldType (value-of-self dependent).'],
+  [11, 'tags', { datatype: 'string', cardinality: 'list' }, 'Free-form classification tags.'],
+  [12, 'lineage', ref('lineage', 'inline', 'single'), 'Fork/copy history of this definition.'],
+  [13, 'provenance', ref('provenance', 'inline', 'single'), 'Import provenance of this definition.'],
+  [14, 'deprecated_at', { datatype: 'date-time' }, 'ISO-8601 timestamp at which this definition was deprecated.'],
   // -- FieldType --
-  ['datatype', closed(['string', 'number', 'integer', 'boolean', 'date', 'date-time', 'ref', 'dependent', 'map']), 'The base datatype facet (RFC-032 Change A).'],
-  ['cardinality', closed(['single', 'list']), 'Whether the field holds one value or an ordered list. Default single.'],
-  ['min_items', { datatype: 'integer', constraints: { minimum: 0 } }, 'Minimum list length (cardinality == list only).'],
-  ['max_items', { datatype: 'integer', constraints: { minimum: 0 } }, 'Maximum list length (cardinality == list only).'],
-  ['value_domain', closed(['open', 'closed']), 'Whether a string field is open or bound to a closed vocabulary. datatype == string only.'],
-  ['allowed_values', { datatype: 'string', cardinality: 'list' }, 'Inline, field-fixed closed vocabulary (valueDomain == closed).'],
-  ['vocabulary_ref', { datatype: 'string', constraints: { pattern: '^[^/@]+/[^/@]+@[0-9]+$' } }, 'RFC-006 Reference (namespace/name@version) to a mode:closed configurable Vocabulary.'],
-  ['format', closed(['plain', 'markdown', 'uri', 'uuid', 'email']), 'Semantic string format (JSON-Schema-aligned). datatype == string only.'],
-  ['constraints', ref('field-type-constraints', 'inline', 'single'), 'Datatype-appropriate value constraints (min/max length, pattern, numeric bounds).'],
-  ['range_type', ref('exact-type-ref', 'inline', 'single'), 'The Type this field\'s range is (datatype == ref only).'],
-  ['mode', closed(['inline', 'reference']), 'inline = nested object(s); reference = target instance id(s). datatype == ref only, fixed per Field.'],
-  ['depends_on', { datatype: 'string' }, '"self" or a sibling field name whose type the value conforms to (datatype == dependent only).'],
-  ['value_range', closed(['string', 'number', 'integer', 'boolean', 'date', 'date-time', 'open']), 'The scalar value datatype of a map, or "open" for a true extension bag. datatype == map only.'],
+  [15, 'datatype', closed(['string', 'number', 'integer', 'boolean', 'date', 'date-time', 'ref', 'dependent', 'map']), 'The base datatype facet (RFC-032 Change A).'],
+  [16, 'cardinality', closed(['single', 'list']), 'Whether the field holds one value or an ordered list. Default single.'],
+  [17, 'min_items', { datatype: 'integer', constraints: { minimum: 0 } }, 'Minimum list length (cardinality == list only).'],
+  [18, 'max_items', { datatype: 'integer', constraints: { minimum: 0 } }, 'Maximum list length (cardinality == list only).'],
+  [19, 'value_domain', closed(['open', 'closed']), 'Whether a string field is open or bound to a closed vocabulary. datatype == string only.'],
+  [20, 'allowed_values', { datatype: 'string', cardinality: 'list' }, 'Inline, field-fixed closed vocabulary (valueDomain == closed).'],
+  [21, 'vocabulary_ref', { datatype: 'string', constraints: { pattern: '^[^/@]+/[^/@]+@[0-9]+$' } }, 'RFC-006 Reference (namespace/name@version) to a mode:closed configurable Vocabulary.'],
+  [22, 'format', closed(['plain', 'markdown', 'uri', 'uuid', 'email']), 'Semantic string format (JSON-Schema-aligned). datatype == string only.'],
+  [23, 'constraints', ref('field-type-constraints', 'inline', 'single'), 'Datatype-appropriate value constraints (min/max length, pattern, numeric bounds).'],
+  [24, 'range_type', ref('exact-type-ref', 'inline', 'single'), 'The Type this field\'s range is (datatype == ref only).'],
+  [25, 'mode', closed(['inline', 'reference']), 'inline = nested object(s); reference = target instance id(s). datatype == ref only, fixed per Field.'],
+  [26, 'depends_on', { datatype: 'string' }, '"self" or a sibling field name whose type the value conforms to (datatype == dependent only).'],
+  [27, 'value_range', closed(['string', 'number', 'integer', 'boolean', 'date', 'date-time', 'open']), 'The scalar value datatype of a map, or "open" for a true extension bag. datatype == map only.'],
   // -- FieldTypeConstraints --
-  ['min_length', { datatype: 'integer', constraints: { minimum: 0 } }, 'Minimum string length (datatype == string).'],
-  ['max_length', { datatype: 'integer', constraints: { minimum: 0 } }, 'Maximum string length (datatype == string).'],
-  ['pattern', { datatype: 'string' }, 'An ECMA-262 regular expression (datatype == string).'],
-  ['minimum', { datatype: 'number' }, 'Inclusive numeric lower bound (datatype == number/integer).'],
-  ['maximum', { datatype: 'number' }, 'Inclusive numeric upper bound (datatype == number/integer).'],
+  [28, 'min_length', { datatype: 'integer', constraints: { minimum: 0 } }, 'Minimum string length (datatype == string).'],
+  [29, 'max_length', { datatype: 'integer', constraints: { minimum: 0 } }, 'Maximum string length (datatype == string).'],
+  [30, 'pattern', { datatype: 'string' }, 'An ECMA-262 regular expression (datatype == string).'],
+  [31, 'minimum', { datatype: 'number' }, 'Inclusive numeric lower bound (datatype == number/integer).'],
+  [32, 'maximum', { datatype: 'number' }, 'Inclusive numeric upper bound (datatype == number/integer).'],
   // -- ExactTypeRef --
-  ['type_id', { datatype: 'string', format: 'uuid' }, 'Stable UUID of the referenced Type.'],
-  ['type_version', { datatype: 'integer', constraints: { minimum: 1 } }, 'Version of the Type this ref targets (version-exact anchor).'],
+  [33, 'type_id', { datatype: 'string', format: 'uuid' }, 'Stable UUID of the referenced Type.'],
+  [34, 'type_version', { datatype: 'integer', constraints: { minimum: 1 } }, 'Version of the Type this ref targets (version-exact anchor).'],
   // -- AiGuidance --
-  ['purpose', { datatype: 'string' }, 'What this field/type captures (1-2 sentences).'],
-  ['extraction', { datatype: 'string' }, 'LLM instruction for how to extract or populate.'],
-  ['negative_guidance', { datatype: 'string' }, 'What the LLM must NOT include or do.'],
-  ['examples', ref('ai-guidance-example', 'inline', 'list'), 'Worked examples for the guidance.'],
+  [35, 'purpose', { datatype: 'string' }, 'What this field/type captures (1-2 sentences).'],
+  [36, 'extraction', { datatype: 'string' }, 'LLM instruction for how to extract or populate.'],
+  [37, 'negative_guidance', { datatype: 'string' }, 'What the LLM must NOT include or do.'],
+  [38, 'examples', ref('ai-guidance-example', 'inline', 'list'), 'Worked examples for the guidance.'],
   // -- AiGuidanceExample --
-  ['input', { datatype: 'string' }, 'Example input text.'],
-  ['output', { datatype: 'string' }, 'Expected output for the example input.'],
+  [39, 'input', { datatype: 'string' }, 'Example input text.'],
+  [40, 'output', { datatype: 'string' }, 'Expected output for the example input.'],
   // -- Lineage --
-  ['source_definition_id', { datatype: 'string', format: 'uuid' }, 'UUID of the definition this one was derived from.'],
-  ['source_version', { datatype: 'integer' }, 'Version of the source definition.'],
-  ['forked_from_definition_id', { datatype: 'string', format: 'uuid' }, 'UUID of the definition this one was forked from.'],
-  ['forked_from_version', { datatype: 'integer' }, 'Version of the forked-from definition.'],
+  [41, 'source_definition_id', { datatype: 'string', format: 'uuid' }, 'UUID of the definition this one was derived from.'],
+  [42, 'source_version', { datatype: 'integer' }, 'Version of the source definition.'],
+  [43, 'forked_from_definition_id', { datatype: 'string', format: 'uuid' }, 'UUID of the definition this one was forked from.'],
+  [44, 'forked_from_version', { datatype: 'integer' }, 'Version of the forked-from definition.'],
   // -- Provenance --
-  ['publisher', { datatype: 'string' }, 'Publisher of the source package.'],
-  ['source_package', { datatype: 'string' }, 'Identifier of the package this definition was imported from.'],
-  ['package_version', { datatype: 'string' }, 'Version of the source package.'],
-  ['imported_at', { datatype: 'date-time' }, 'ISO-8601 timestamp at which this definition was imported.'],
+  [45, 'publisher', { datatype: 'string' }, 'Publisher of the source package.'],
+  [46, 'source_package', { datatype: 'string' }, 'Identifier of the package this definition was imported from.'],
+  [47, 'package_version', { datatype: 'string' }, 'Version of the source package.'],
+  [48, 'imported_at', { datatype: 'date-time' }, 'ISO-8601 timestamp at which this definition was imported.'],
   // -- Type entity (core facets) --
-  ['semantic_object_type', { datatype: 'string' }, 'Optional canonical semantic classification (e.g. "decision", "policy").'],
-  ['fields', ref('field-assignment', 'inline', 'list'), 'Ordered list of FieldAssignments that make up this Type.'],
+  [49, 'semantic_object_type', { datatype: 'string' }, 'Optional canonical semantic classification (e.g. "decision", "policy").'],
+  [50, 'fields', ref('field-assignment', 'inline', 'list'), 'Ordered list of FieldAssignments that make up this Type.'],
   // -- FieldAssignment --
-  ['field_id', ref('field', 'reference', 'single'), 'References a Field by its stable id (reference mode closes the metacircular loop).'],
-  ['order', { datatype: 'integer', constraints: { minimum: 0 } }, 'The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015).'],
-  ['required', { datatype: 'boolean' }, 'Whether this field must be populated before a Record can be logged.'],
-  ['display_label', { datatype: 'string' }, 'Context-specific label override for this field within this Type.'],
-  ['assignment_default_value', { datatype: 'dependent', dependsOn: 'field_id' }, 'Optional default value conforming to the referenced Field\'s type.'],
+  [51, 'field_id', ref('field', 'reference', 'single'), 'References a Field by its stable id (reference mode closes the metacircular loop).'],
+  [52, 'order', { datatype: 'integer', constraints: { minimum: 0 } }, 'The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015).'],
+  [53, 'required', { datatype: 'boolean' }, 'Whether this field must be populated before a Record can be logged.'],
+  [54, 'display_label', { datatype: 'string' }, 'Context-specific label override for this field within this Type.'],
+  [55, 'assignment_default_value', { datatype: 'dependent', dependsOn: 'field_id' }, 'Optional default value conforming to the referenced Field\'s type.'],
 ];
 const fieldIdByName = {};
-FIELD_SPECS.forEach(([name], i) => { fieldIdByName[name] = fieldUuid(i + 1); });
+for (const [n, name] of FIELD_SPECS) fieldIdByName[name] = fieldUuid(n);
 
 // ---------------------------------------------------------------------------------------------
 // TYPE DEFINITIONS — each Type's ordered FieldAssignments (field-name, required, optional label).
@@ -238,7 +255,7 @@ function fieldFile(name, ft, description, purpose) {
   };
 }
 function typeFile(name, spec) {
-  return {
+  const out = {
     $schema: 'https://srs.semanticops.com/schema/2.0/type.json',
     aiGuidance: { purpose: spec.purpose },
     createdAt: CREATED_AT,
@@ -253,6 +270,11 @@ function typeFile(name, spec) {
     namespace: NS,
     version: 1,
   };
+  if (spec.extendsTypeId) {
+    out.extendsTypeId = spec.extendsTypeId;
+    out.extendsTypeVersion = spec.extendsTypeVersion;
+  }
+  return out;
 }
 function packageIndex() {
   return {
@@ -260,23 +282,23 @@ function packageIndex() {
     createdAt: CREATED_AT,
     dataModelRevision: 2,
     description: 'The self-hosted SRS meta-model (RFC-033): Field, Type, FieldAssignment, and value-objects expressed as SRS Type definitions. Frozen-seed source for docs/schema/2.0/{field,type}.json.',
-    fields: FIELD_SPECS.map(([name]) => `fields/${name}.json`),
+    fields: FIELD_SPECS.map(([, name]) => `fields/${name}.json`),
     id: PACKAGE_ID,
     name: 'metamodel',
     namespace: NS,
     status: 'active',
     title: 'SRS Meta-Model (frozen seed)',
-    types: TYPE_ORDER.map((name) => `types/${name}.json`),
+    types: TYPE_ORDER.map(([, name]) => `types/${name}.json`),
     version: '1.0.0',
   };
 }
 
 const files = new Map();
 files.set('package.json', packageIndex());
-for (const [name, ft, description, purpose] of FIELD_SPECS) {
+for (const [, name, ft, description, purpose] of FIELD_SPECS) {
   files.set(`fields/${name}.json`, fieldFile(name, ft, description, purpose ?? description));
 }
-for (const name of TYPE_ORDER) {
+for (const [, name] of TYPE_ORDER) {
   files.set(`types/${name}.json`, typeFile(name, TYPE_SPECS[name]));
 }
 
