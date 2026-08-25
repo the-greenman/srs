@@ -6,6 +6,10 @@ The SRS canonical specification, authored as an SRS repository. This is the sour
 
 This repo is part of a monorepo (`srs`, `srs-rust`, `srs-vscode`, `srs-web`) — when using Claude Code on the web, each repo is accessed independently.
 
+## Read first
+
+Before making or reviewing any design or spec decision, read **[`docs/charter/decision-compass.md`](docs/charter/decision-compass.md)** — the standard's governing preference layer (the Pattern Grid's six axes and twelve cells), its layer-stacking rules, decision modes, and review tests, each citing the `rfc-decision-…` record that rules it. Every new RFC and decision names its cell (and, since `rfc-decision-7caca3a1`, its decision mode) — the compass is where you find which cell and mode apply, and what the standing preference is before you propose something that contradicts it.
+
 ## SRS data model (quick reference)
 
 **Field** — atomic semantic unit. Has a stable UUID `id`, `namespace`, `name` (snake_case), `version` (integer), a `fieldType` (RFC-032: `datatype` × `cardinality` × value-domain × `format` × `constraints`, where `datatype` may be `ref` to another Type, `dependent`, or `map`), and optional `aiGuidance`. Field semantics are immutable. The pre-RFC-032 scalar `valueType` enum no longer exists.

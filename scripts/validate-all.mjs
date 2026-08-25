@@ -174,6 +174,12 @@ async function validateAll() {
   const invariantPlacementValid = await runScript('check-invariant-placement.mjs');
   if (!invariantPlacementValid) allValid = false;
 
+  // The Decision Compass (docs/charter/decision-compass.md, srs#461) stays bidirectionally in sync
+  // with the charter-class decision records it surfaces: every citation resolves to a real record,
+  // and every record in its roster is actually cited, not just listed.
+  const decisionCompassValid = await runScript('check-decision-compass-drift.mjs');
+  if (!decisionCompassValid) allValid = false;
+
   // ...and every guard demonstrably fails on the violation it exists to catch — including
   // validate-package.mjs's own ten-kind coverage (#391), whose blueprint cases would otherwise be
   // green on an empty list. A guard nobody has watched fail is indistinguishable from a guard that
