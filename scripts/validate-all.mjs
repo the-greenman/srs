@@ -255,6 +255,13 @@ async function validateAll() {
   const unit3GoldensHold = await runScript('../tests/rfc-040-unit3/run.mjs');
   if (!unit3GoldensHold) allValid = false;
 
+  // RFC-040 Change J (srs#481, the #274 ratified ledger): every com.semanticops.spec/generated-type-
+  // reference record's `content` MUST equal a fresh regenerate from the resolved effective Type —
+  // the reader-projection generator's own empty-diff gate, same discipline as gen-metamodel-package
+  // --check above. Node pipeline only (schema-emitter.mjs, ADR-004).
+  const typeReferenceTablesInSync = await runScript('gen-type-reference-tables.mjs', ['--check']);
+  if (!typeReferenceTablesInSync) allValid = false;
+
   console.log(`\n${'='.repeat(60)}`);
   console.log(allValid ? '\n✓ All validations passed' : '\n✗ Some validations failed');
   process.exit(allValid ? 0 : 1);
