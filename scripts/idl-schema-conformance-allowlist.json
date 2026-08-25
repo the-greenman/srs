@@ -1,40 +1,20 @@
 [
-  { "entity": "Type", "property": "fieldGroups", "rule": "R1", "issue": 247 },
-  { "entity": "Type", "property": "lifecycle", "rule": "R1", "issue": 247 },
-  { "entity": "Type", "property": "lifecycleRef", "rule": "R1", "issue": 247 },
-  { "entity": "Type", "property": "extendsTypeId", "rule": "R1", "issue": 247 },
-  { "entity": "Type", "property": "extendsTypeVersion", "rule": "R1", "issue": 247 },
-  { "entity": "Type", "property": "fieldOrder", "rule": "R1", "issue": 247 },
-  { "entity": "Type", "property": "fieldAssignmentOverrides", "rule": "R1", "issue": 247 },
-  { "entity": "Type", "property": "identityFieldId", "rule": "R1", "issue": 247 },
-  { "entity": "Type", "property": "validationRules", "rule": "R1", "issue": 247 },
+  { "entity": "Record", "property": "tags", "rule": "R1", "issue": 248, "expected": "schema-only" },
+  { "entity": "TypedRecord", "property": "tags", "rule": "R1", "issue": 249, "expected": "schema-only" },
 
-  { "entity": "Type.FieldAssignment", "property": "repeatable", "rule": "R1", "issue": 247 },
-  { "entity": "Type.FieldAssignment", "property": "minItems", "rule": "R1", "issue": 247 },
-  { "entity": "Type.FieldAssignment", "property": "maxItems", "rule": "R1", "issue": 247 },
+  { "entity": "SourceReference", "property": "sourceRole", "rule": "R3", "issue": 248, "expected": "schema:type=string,format=-,enum=evidence|extracted-from|quoted-from|inspired-by|attaches" },
 
-  { "entity": "Record", "property": "tags", "rule": "R1", "issue": 248 },
-  { "entity": "TypedRecord", "property": "tags", "rule": "R1", "issue": 249 },
+  { "entity": "Container", "property": "description", "rule": "R1", "issue": 252, "expected": "schema-only" },
+  { "entity": "Container", "property": "identityInstanceId", "rule": "R1", "issue": 252, "expected": "schema-only" },
+  { "entity": "Container", "property": "tags", "rule": "R1", "issue": 252, "expected": "schema-only" },
 
-  { "entity": "SourceReference", "property": "sourceRole", "rule": "R3", "issue": 248 },
+  { "entity": "Vocabulary", "property": "tags", "rule": "R1", "issue": 253, "expected": "schema-only" },
+  { "entity": "Vocabulary", "property": "lineage", "rule": "R1", "issue": 253, "expected": "prose-only" },
+  { "entity": "Vocabulary", "property": "provenance", "rule": "R1", "issue": 253, "expected": "prose-only" },
 
-  { "entity": "Relation", "property": "sourceRepositoryId", "rule": "R1", "issue": 251 },
-  { "entity": "Relation", "property": "targetRepositoryId", "rule": "R1", "issue": 251 },
+  { "entity": "Term", "property": "lineage", "rule": "R1", "issue": 254, "expected": "prose-only" },
+  { "entity": "Term", "property": "provenance", "rule": "R1", "issue": 254, "expected": "prose-only" },
+  { "entity": "Term", "property": "createdAt", "rule": "R2", "issue": 254, "expected": "idl=required,schema=optional" },
 
-  { "entity": "Container", "property": "description", "rule": "R1", "issue": 252 },
-  { "entity": "Container", "property": "identityInstanceId", "rule": "R1", "issue": 252 },
-  { "entity": "Container", "property": "tags", "rule": "R1", "issue": 252 },
-  { "entity": "Container", "property": "containerId", "rule": "R3", "issue": 252 },
-  { "entity": "Container", "property": "rootInstanceIds", "rule": "R3", "issue": 252 },
-  { "entity": "Container", "property": "memberInstanceIds", "rule": "R3", "issue": 252 },
-
-  { "entity": "Vocabulary", "property": "tags", "rule": "R1", "issue": 253 },
-  { "entity": "Vocabulary", "property": "lineage", "rule": "R1", "issue": 253 },
-  { "entity": "Vocabulary", "property": "provenance", "rule": "R1", "issue": 253 },
-
-  { "entity": "Term", "property": "lineage", "rule": "R1", "issue": 254 },
-  { "entity": "Term", "property": "provenance", "rule": "R1", "issue": 254 },
-  { "entity": "Term", "property": "createdAt", "rule": "R2", "issue": 254 },
-
-  { "entity": "RelationTypeDefinition", "property": "aliases", "rule": "R1", "issue": 254 }
+  { "entity": "RelationTypeDefinition", "property": "aliases", "rule": "R1", "issue": 254, "expected": "prose-only" }
 ]
