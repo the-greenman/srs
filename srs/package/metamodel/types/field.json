@@ -4,7 +4,7 @@
     "purpose": "Describes a single SRS Field: its identity, its decomposed value type, and its AI guidance."
   },
   "createdAt": "2026-07-29T00:00:00Z",
-  "description": "The atomic semantic unit of SRS. A reusable field definition (RFC-033 self-hosted meta-model).",
+  "description": "An atomic, reusable field definition. Fields are the shared vocabulary of SRS — defined once, referenced across many Types.",
   "fields": [
     {
       "fieldId": "4b000001-0000-4000-a000-000000000001",

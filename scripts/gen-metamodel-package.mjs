@@ -216,15 +216,27 @@ for (const [n, name] of FIELD_SPECS) fieldIdByName[name] = fieldUuid(n);
 // ---------------------------------------------------------------------------------------------
 // TYPE DEFINITIONS — each Type's ordered FieldAssignments (field-name, required, optional label).
 // ---------------------------------------------------------------------------------------------
-const a = (name, required, label) => ({ name, required, label });
+// RFC-040 Unit 3 (srs#479): `a()` gains a 4th positional arg, `desc` — a FieldAssignment.description
+// override (Change C: documentation-only annotation, projected to the property's JSON Schema
+// `description`). Assignment-level only, opt-in: the emitter never falls back to the Field's own
+// (generic, cross-context) `description` for a property fragment — see schema-emitter.mjs `emitBody`.
+// Values below are the frozen seed's EXACT existing text (docs/schema/2.0/{field,type}.json),
+// carried into the model rather than freshly authored, so the byte-closure gate (regenerate ==
+// committed seed) is meaningful evidence rather than the seed being rewritten to match new prose.
+const a = (name, required, label, desc) => ({ name, required, label, desc });
 const TYPE_SPECS = {
   field: {
-    description: 'The atomic semantic unit of SRS. A reusable field definition (RFC-033 self-hosted meta-model).',
+    description: 'An atomic, reusable field definition. Fields are the shared vocabulary of SRS — defined once, referenced across many Types.',
     purpose: 'Describes a single SRS Field: its identity, its decomposed value type, and its AI guidance.',
     assignments: [
-      a('id', true), a('namespace', true), a('name', true), a('version', true),
-      a('description', true), a('instructions', false), a('ai_guidance', true, 'AI Guidance'),
-      a('field_type', true, 'Field Type'), a('editor_hint', false, 'Editor Hint'),
+      a('id', true, undefined, 'Globally unique, stable identifier for this Field.'),
+      a('namespace', true, undefined, "Logical grouping. 'core' is reserved for SRS standard definitions."),
+      a('name', true, undefined, 'Machine-readable name within the namespace; snake_case.'),
+      a('version', true),
+      a('description', true), a('instructions', false, undefined, 'Fuller guidance for a human completing this field.'),
+      a('ai_guidance', true, 'AI Guidance'),
+      a('field_type', true, 'Field Type', 'RFC-032 — the decomposed value type: datatype × cardinality × value-domain × format × constraints. Replaces the pre-RFC-032 closed scalar `valueType` enum and its companion properties (`contentFormat`, `allowedValues`, `vocabularyRef`, `validationRules`).'),
+      a('editor_hint', false, 'Editor Hint', 'Presentation only (not part of the type model — RFC-032). Suggested UI control; implementations and Views may override. Consolidated by the rendering follow-up #262.'),
       a('tags', false), a('lineage', false), a('provenance', false), a('created_at', true),
     ],
   },
@@ -232,10 +244,14 @@ const TYPE_SPECS = {
     description: 'A named, versioned composition of Fields. Extension-owned facets (lifecycle, inheritance, cross-field-validation) are modelled as separate Types extending this one via ext:type-inheritance (RFC-040 Change A); tags and identityFieldId are core Type surface.',
     purpose: 'Describes an SRS Type: its identity and its ordered FieldAssignments.',
     assignments: [
-      a('id', true), a('namespace', true), a('name', true), a('version', true),
-      a('description', true), a('semantic_object_type', false, 'Semantic Object Type'),
-      a('ai_guidance', false, 'AI Guidance'), a('fields', true), a('tags', false),
-      a('lineage', false), a('provenance', false), a('identity_field_id', false, 'Identity Field Id'),
+      a('id', true), a('namespace', true, undefined, "Logical grouping, e.g. 'governance', 'finance'."),
+      a('name', true, undefined, 'Machine-readable name within the namespace, snake_case.'), a('version', true),
+      a('description', true),
+      a('semantic_object_type', false, 'Semantic Object Type', "Optional canonical semantic classification (e.g. 'decision', 'exercise', 'policy'). Sanctioned-until-collapsed (#383, 2026-08-15): the collapse to a Type-keyed type-query executes at #272; do not add new consumers meanwhile."),
+      a('ai_guidance', false, 'AI Guidance', 'Guidance for AI agents determining whether source material matches this Type.'),
+      a('fields', true, undefined, 'Ordered list of fields that make up this Type.'), a('tags', false),
+      a('lineage', false), a('provenance', false),
+      a('identity_field_id', false, 'Identity Field Id', "RFC-020 — names one fieldId from this Type's effective field set (own fields plus, under ext:type-inheritance, inherited fields) as the record's identity/display field. MUST reference a fieldId present in the effective field set (Rule [N+33]). Under ext:type-inheritance, a Type that declares no identityFieldId of its own inherits the effective identityFieldId of its base Type, resolved transitively up the ancestor chain (Rule [N+34]) — this cascading inheritance is specific to identityFieldId and is not shared with fieldOrder, which is single-level only."),
       a('created_at', true),
     ],
   },
@@ -243,39 +259,56 @@ const TYPE_SPECS = {
     description: 'A Field\'s use inside a Type: the reference-mode edge that closes the metacircular loop.',
     purpose: 'Describes how one Field participates in a Type (order, requiredness, label, contextual description).',
     assignments: [
-      a('field_id', true, 'Field'), a('order', true), a('required', true),
-      a('display_label', false, 'Display Label'), a('description', false),
+      a('field_id', true, 'Field', 'References a Field by its stable id.'),
+      a('order', true, undefined, 'The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015).'),
+      a('required', true, undefined, 'Whether this field must be populated before a Record can be logged.'),
+      a('display_label', false, 'Display Label', 'Context-specific label override for this field within this Type.'),
+      a('description', false, undefined, "Documentation-only contextual description of this field's use within this Type (RFC-040 Change C). On conflict, the Field's own semantics and aiGuidance win: a contextual description that contradicts them is a data error, not an override. MUST NOT be projected to a constraint keyword."),
     ],
   },
   'field-type': {
-    description: 'The decomposed value type (RFC-032): datatype x cardinality x value-domain x format x constraints. The recursive heart of the meta-model.',
+    description: 'RFC-032 Change A — orthogonal type facets. Conditional requirements (R2/R3/R9/R10) are expressed in the allOf branches below; the full semantic conformance check (R1–R11) is scripts/lib/rfc-032-fieldtype.mjs::validateFieldType.',
     purpose: 'Describes a Field\'s value model, including composite ranges (datatype: ref -> another Type).',
     assignments: [
-      a('datatype', true), a('cardinality', false), a('min_items', false, 'Min Items'),
-      a('max_items', false, 'Max Items'), a('value_domain', false, 'Value Domain'),
-      a('allowed_values', false, 'Allowed Values'), a('vocabulary_ref', false, 'Vocabulary Ref'),
-      a('format', false), a('constraints', false), a('range_type', false, 'Range Type'),
-      a('mode', false), a('depends_on', false, 'Depends On'), a('value_range', false, 'Value Range'),
+      a('datatype', true, undefined, 'The base datatype. `ref` = range is another Type (Change B); `dependent` = value-of-a-sibling-type (Change C); `map` = open string-keyed collection (Change D).'),
+      a('cardinality', false, undefined, 'Whether the field holds one value or an ordered list. Default: single. The sole cardinality mechanism (R4) — former `multiselect` and standalone `repeatable` are subsumed here.'),
+      a('min_items', false, 'Min Items', 'cardinality == list only (R4). 0 ≤ minItems ≤ maxItems.'),
+      a('max_items', false, 'Max Items', 'cardinality == list only (R4).'),
+      a('value_domain', false, 'Value Domain', 'datatype == string only (R3). Default: open. When closed, exactly one of allowedValues or vocabularyRef is present.'),
+      a('allowed_values', false, 'Allowed Values', 'Inline, field-fixed closed vocabulary (valueDomain == closed). Mutually exclusive with vocabularyRef.'),
+      a('vocabulary_ref', false, 'Vocabulary Ref', 'A CONFIGURABLE data range: a LINEAGE reference (bare UUID; rfc-decision-c8704763, migrated from the namespace/name@version pattern) to a mode:closed Vocabulary whose Terms are managed in package config — the effective package set resolves it. Mutually exclusive with allowedValues. Projects to a pure enum of the Vocabulary\'s effective Term keys at schema-generation time (Change G).'),
+      a('format', false, undefined, 'datatype == string only. Semantic string format (JSON-Schema-aligned); date/date-time are first-class datatypes, not formats.'),
+      a('constraints', false, undefined, 'Datatype-appropriate value constraints (R10). Carries the former ValidationRule facets (Change F).'),
+      a('range_type', false, 'Range Type', 'datatype == ref only, REQUIRED (R2). The Type this field\'s range is (Change B).'),
+      a('mode', false, undefined, 'datatype == ref only. inline = nested object(s) conforming to rangeType; reference = target instance id(s). Default: inline. Fixed per Field (R8).'),
+      a('depends_on', false, 'Depends On', 'datatype == dependent only, REQUIRED (R6). "self" (the field\'s own fieldType) or a sibling field name whose type the value conforms to (Change C).'),
+      a('value_range', false, 'Value Range', 'datatype == map only, REQUIRED (R9). The scalar value datatype, or "open" for a true extension bag (Change D). Composite value ranges are out of scope.'),
     ],
   },
   'exact-type-ref': {
-    description: 'A version-exact reference to a Type in the package (RFC-009 ExactTypeRef).',
+    description: 'RFC-009 I-78. A version-exact reference to a Type in the Package (PINNED, rfc-decision-c8704763). Both typeId and typeVersion are required. The pre-RFC-009 version-optional Protocol TypeRef this once contrasted with is retired — Protocol.outputType is now a bare-UUID LINEAGE reference (typeVersion dropped; version-optional hybrids are forbidden).',
     purpose: 'Names a Type by UUID + exact version.',
-    assignments: [a('type_id', true, 'Type Id'), a('type_version', true, 'Type Version')],
+    assignments: [
+      a('type_id', true, 'Type Id', 'Stable UUID of the Type.'),
+      a('type_version', true, 'Type Version', 'Version of the Type this ref targets (required — version-exact anchor validated against the Package).'),
+    ],
   },
   'field-type-constraints': {
     description: 'Datatype-appropriate value constraints carried by a FieldType (RFC-032 Change F).',
     purpose: 'The fixed-shape constraints bag: string length/pattern and numeric bounds.',
     assignments: [
-      a('min_length', false, 'Min Length'), a('max_length', false, 'Max Length'),
-      a('pattern', false), a('minimum', false), a('maximum', false),
+      a('min_length', false, 'Min Length', 'datatype == string.'), a('max_length', false, 'Max Length', 'datatype == string.'),
+      a('pattern', false, undefined, 'datatype == string; an ECMA-262 regular expression.'),
+      a('minimum', false, undefined, 'datatype == number/integer.'), a('maximum', false, undefined, 'datatype == number/integer.'),
     ],
   },
   'ai-guidance': {
     description: 'LLM guidance for extracting or populating a Field or matching a Type.',
     purpose: 'Carries purpose, extraction/negative guidance, and worked examples.',
     assignments: [
-      a('purpose', true), a('extraction', false), a('negative_guidance', false, 'Negative Guidance'),
+      a('purpose', true, undefined, 'What this field/type captures (1-2 sentences).'),
+      a('extraction', false, undefined, 'LLM instruction for how to extract or populate.'),
+      a('negative_guidance', false, 'Negative Guidance', 'What the LLM must NOT include or do.'),
       a('examples', false),
     ],
   },
@@ -305,14 +338,16 @@ const TYPE_SPECS = {
     description: 'The inline lifecycle declaration: a state machine of LifecycleStates and LifecycleTransitions (ext:lifecycle).',
     purpose: 'Describes an inline Type.lifecycle value: its states, transitions, and initial state.',
     assignments: [
-      a('states', true), a('transitions', true), a('initial_state', true, 'Initial State'),
+      a('states', true), a('transitions', true),
+      a('initial_state', true, 'Initial State', 'Must reference a state key with isInitial: true (Invariant 4).'),
     ],
   },
   'lifecycle-state': {
-    description: 'A single lifecycle state (VocabularyEntry specialization; RFC-006 unified substrate — key was name pre-RFC-006).',
+    description: 'A lifecycle state (VocabularyEntry specialization). key is the unified substrate field (was name pre-RFC-006).',
     purpose: 'Describes one state in a TypeLifecycle: its key, labels, and optional relational obligation.',
     assignments: [
-      a('id', false), a('version', false), a('namespace', false), a('key', true),
+      a('id', false), a('version', false), a('namespace', false),
+      a('key', true, undefined, 'Machine-readable state key. Unified substrate field (was name).'),
       a('label', false), a('description', false), a('aliases', false),
       a('is_initial', false, 'Is Initial'), a('is_final', false, 'Is Final'),
       a('status', false), a('requires_relation', false, 'Requires Relation'),
@@ -320,35 +355,44 @@ const TYPE_SPECS = {
     ],
   },
   'requires-relation': {
-    description: 'RFC-022 relational state: a record may only be in a lifecycle state if a relation satisfying this obligation exists.',
+    description: 'RFC-022 relational state: a record may only be in this state if a relation satisfying this obligation exists.',
     purpose: 'Describes the relation-type obligation, direction, and enforcement strength that gates a lifecycle state.',
     assignments: [
-      a('relation_type', true, 'Relation Type'), a('direction', false), a('enforcement', false),
+      a('relation_type', true, 'Relation Type', 'Relation type(s) that satisfy the obligation (any-of interpretation, unchanged from RFC-022). RFC-032 Change F normalized this declaration form from string|string[] to a list (length ≥ 1); the single-string form is removed. The distinct scalar fulfillment.relationType selector is untouched.'),
+      a('direction', false, undefined, 'incoming: an edge whose target is the record (e.g. successor → predecessor supersedes). outgoing: an edge whose source is the record.'),
+      a('enforcement', false, undefined, 'hard (default): a transition into this state MUST be rejected unless the obligation is satisfied or fulfilled (definitional relational states whose meaning is the relationship, e.g. superseded). advisory: the transition is permitted even when unsatisfied, and an unsatisfied obligation is surfaced as a warning at rest, never a rejection (evidentiary obligations that may be established later).'),
     ],
   },
   'lifecycle-transition': {
     description: 'One named edge in a TypeLifecycle, from one state key to another.',
     purpose: 'Describes a lifecycle transition: its name and its from/to state keys.',
     assignments: [
-      a('id', false), a('transition_name', true, 'Name'), a('from', true), a('to', true),
+      a('id', false, undefined, 'Stable UUID identity for this transition edge.'),
+      a('transition_name', true, 'Name'), a('from', true), a('to', true),
       a('description', false), a('properties', false),
     ],
   },
   'field-assignment-override': {
-    description: 'ext:type-inheritance — an override applied to a single inherited FieldAssignment.',
+    description: 'ext:type-inheritance — overrides for a single inherited FieldAssignment.',
     purpose: 'Describes a tighten-only required override plus rendering-only overrides (displayLabel, displayHint) for one inherited field.',
     assignments: [
-      a('field_id', true, 'Field'), a('display_label', false, 'Display Label'),
-      a('display_hint', false, 'Display Hint'), a('required', false),
+      a('field_id', true, 'Field', 'The fieldId of the inherited field being overridden.'),
+      a('display_label', false, 'Display Label', 'Rendering-only label override.'),
+      a('display_hint', false, 'Display Hint', 'Rendering-only hint text override.'),
+      a('required', false, undefined, 'May tighten (false→true) but not relax (true→false) the base field\'s required status.'),
     ],
   },
   'cross-field-rule': {
     description: 'ext:cross-field-validation — a constraint that validates a relationship between fields in a Record.',
     purpose: 'Describes one cross-field rule: its kind, the field(s) it examines, and its effect.',
     assignments: [
-      a('kind', true, 'Kind'), a('message', false), a('predicate_field_id', false, 'Predicate Field'),
-      a('predicate_value', false, 'Predicate Value'), a('target_field_id', false, 'Target Field'),
-      a('effect', false), a('field_ids', false, 'Field Ids'),
+      a('kind', true, 'Kind', 'The kind of cross-field constraint.'),
+      a('message', false, undefined, 'Optional human-readable description of the rule.'),
+      a('predicate_field_id', false, 'Predicate Field', 'Field whose value is tested. RFC-032 Rev-7 I-94: for conditional-required it must be effective-single (fieldType.cardinality absent/single — the sole cardinality mechanism since the #242 Phase-B cutover removed FieldAssignment.repeatable, RFC-039 [R7]) with datatype string, date, or date-time; string format/valueDomain do not restrict eligibility. Field-ordering uses I-92.'),
+      a('predicate_value', false, 'Predicate Value', 'Value the predicate field must equal to activate the rule (conditional-required).'),
+      a('target_field_id', false, 'Target Field', 'Field that is constrained when the rule fires (conditional-required, field-ordering).'),
+      a('effect', false, undefined, 'Ordering direction for a field-ordering rule.'),
+      a('field_ids', false, 'Field Ids', 'Fields of which at most one may be non-empty (mutual-exclusion).'),
     ],
   },
   // -- Change A: extension-owned Type facets, modelled as separate Types extending core `type` via
@@ -361,7 +405,8 @@ const TYPE_SPECS = {
     extendsTypeId: typeIdByName.type,
     extendsTypeVersion: 1,
     assignments: [
-      a('lifecycle', false), a('lifecycle_ref', false, 'Lifecycle Ref'),
+      a('lifecycle', false, undefined, 'ext:lifecycle — inline state machine declaration. Mutually exclusive with lifecycleRef.'),
+      a('lifecycle_ref', false, 'Lifecycle Ref', 'ext:lifecycle — a LINEAGE reference (bare UUID; rfc-decision-c8704763) to an installed Lifecycle — the effective package set resolves it. Mutually exclusive with lifecycle.'),
     ],
   },
   'inheritance-facet': {
@@ -369,9 +414,20 @@ const TYPE_SPECS = {
     purpose: 'Models the four properties ext:type-inheritance contributes to a Type: the base Type reference, the merged effective field order, and per-field overrides.',
     extendsTypeId: typeIdByName.type,
     extendsTypeVersion: 1,
+    // RFC-040 Unit 3 (srs#479): exercises the Type.fieldOrder facet it itself models (I-41) to pin the
+    // frozen `type.json` seed's own hand-curated property order across the flattened core+facets merge
+    // — without it, the default `.order`-tie-broken-by-declaration-position sort interleaves the three
+    // facets' properties in a way the seed's narrative grouping does not follow.
+    fieldOrder: [
+      'id', 'namespace', 'name', 'version', 'description', 'semantic_object_type', 'ai_guidance', 'fields',
+      'lifecycle', 'lifecycle_ref', 'tags', 'extends_type_id', 'extends_type_version', 'field_order',
+      'field_assignment_overrides', 'identity_field_id', 'validation_rules', 'lineage', 'provenance', 'created_at',
+    ],
     assignments: [
-      a('extends_type_id', false, 'Extends Type Id'), a('extends_type_version', false, 'Extends Type Version'),
-      a('field_order', false, 'Field Order'), a('field_assignment_overrides', false, 'Field Assignment Overrides'),
+      a('extends_type_id', false, 'Extends Type Id', 'ext:type-inheritance — the UUID of the base Type this Type specializes.'),
+      a('extends_type_version', false, 'Extends Type Version', 'ext:type-inheritance — the version of the base Type being extended.'),
+      a('field_order', false, 'Field Order', 'ext:type-inheritance — explicit declared composition order for the merged field list (base + own), overriding per-field FieldAssignment.order at the Type level. Must contain every fieldId from the effective field set exactly once.'),
+      a('field_assignment_overrides', false, 'Field Assignment Overrides', 'ext:type-inheritance — per-field overrides applied to inherited FieldAssignments.'),
     ],
   },
   'cross-field-validation-facet': {
@@ -380,7 +436,7 @@ const TYPE_SPECS = {
     extendsTypeId: typeIdByName.type,
     extendsTypeVersion: 1,
     assignments: [
-      a('validation_rules', false, 'Validation Rules'),
+      a('validation_rules', false, 'Validation Rules', 'ext:cross-field-validation — cross-field validation rules applied to Records of this Type.'),
     ],
   },
 };
@@ -410,6 +466,17 @@ function typeFile(name, spec) {
     fields: spec.assignments.map((asg, i) => {
       const fa = { fieldId: fieldIdByName[asg.name], order: i, required: asg.required };
       if (asg.label) fa.displayLabel = asg.label;
+      // RFC-040 Unit 3 (srs#479): `asg.desc` text is authored (matching the frozen seed's exact
+      // per-property annotation strings) but deliberately NOT written to `fa.description` yet. Every
+      // metamodel Type record's `fields[]` validates against `type.json#/$defs/FieldAssignment` in
+      // the PINNED srs-rust binary's own EMBEDDED schema copy (build.284, and no later release up to
+      // build.294 either) — which predates Change C and has `additionalProperties:false` there, so
+      // populating `description` on ANY FieldAssignment entry makes `srs repo validate --repo srs`
+      // fail to LOAD the catalog at all (16+ fatal diagnostics, not one). This is the exact class
+      // srs-rust#868 already parked a schema-touching srs-side change for (packageDependencies): land
+      // the mechanism, park the corpus data until the srs-rust mirror-sync ships a compatible release.
+      // Flip this back on (`if (asg.desc) fa.description = asg.desc;`) once that follow-up lands and
+      // the pin advances — the text is already here, byte-matched against the seed, ready to go.
       return fa;
     }),
     id: typeIdByName[name],
@@ -421,6 +488,7 @@ function typeFile(name, spec) {
     out.extendsTypeId = spec.extendsTypeId;
     out.extendsTypeVersion = spec.extendsTypeVersion;
   }
+  if (spec.fieldOrder) out.fieldOrder = spec.fieldOrder.map((n) => fieldIdByName[n]);
   return out;
 }
 function packageIndex() {
