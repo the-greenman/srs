@@ -151,12 +151,32 @@ function applyOverrides(fields, extenders) {
  * sibling Types each independently extending core `type` (RFC-040 Change A), and the frozen seed is
  * one flat object carrying core + all three simultaneously — reconstituting that flat shape means
  * merging ALL of a base's extenders at once, not walking one child's single ancestor chain.
+ *
+ * Exported for direct use by the closure tests (which need the merged field SET, not a full emitted
+ * schema) — real emission never calls this for an arbitrary base Type: `resolveForEmission` gates the
+ * sibling-merge to the frozen `field`/`type` entities specifically (`typeName in ENTITY_IDS`), because
+ * unioning in every child unconditionally is only correct for THAT bootstrap reconstruction, not as a
+ * general "show me this base Type" query. A caller reaching for this function directly should be
+ * doing exactly the bootstrap-reconstruction thing, not treating it as effective-Type resolution for
+ * an arbitrary base Type with children.
  */
 export function effectiveFields(ctx, typeName) {
   const base = ctx.typesByName[typeName];
   const extenders = Object.values(ctx.typesById).filter((t) => t.extendsTypeId === base.id);
   if (extenders.length === 0) return base.fields;
-  return applyOverrides([...base.fields, ...extenders.flatMap((t) => t.fields)], extenders);
+  const merged = [...base.fields, ...extenders.flatMap((t) => t.fields)];
+  // I-40: "must not declare a fieldId ... that duplicates any fieldId inherited from its base Type or
+  // any ancestor Type" — across base + every sibling extender here (no two of base/extender1/.../
+  // extenderN may declare the same fieldId). A silent duplicate would double-count that property
+  // (visible as a duplicate `required[]` entry, invalid against the JSON Schema meta-schema itself).
+  const seen = new Set();
+  for (const f of merged) {
+    if (seen.has(f.fieldId)) {
+      throw new Error(`schema-emitter: ${typeName}'s effective field set declares fieldId ${f.fieldId} more than once across base + extenders (I-40)`);
+    }
+    seen.add(f.fieldId);
+  }
+  return applyOverrides(merged, extenders);
 }
 
 /** Any extender's own declared `fieldOrder` (I-41) — order resolution is `emitBody`'s job; this just

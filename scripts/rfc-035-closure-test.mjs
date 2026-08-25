@@ -21,7 +21,7 @@
 import { readFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
-import { loadPackage, emitEntity, withEffectiveType } from "./lib/schema-emitter.mjs";
+import { loadPackage, emitEntity } from "./lib/schema-emitter.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "..");
@@ -131,11 +131,12 @@ const divergencesSeen = [];
 const excludedByEntity = {};
 
 for (const entity of ["field", "type"]) {
-  // `type` is compared as its RFC-040 Change A effective Type (core + every extending facet Type,
-  // single-level) — the frozen seed is one flat object; the metamodel deliberately is not. See
-  // schema-emitter.mjs `withEffectiveType` for why this merge lives here and not in `emitEntity`.
-  const entityCtx = entity === "type" ? withEffectiveType(ctx, "type") : ctx;
-  const e = prep(emitEntity(entityCtx, entity));
+  // RFC-040 Unit 3 (srs#479): effective-Type resolution (Change A) is now wired INSIDE `emitEntity`
+  // itself (`resolveForEmission`) — `type` is compared as its effective Type (core + every extending
+  // facet Type, single-level) automatically; no caller-side pre-merge. (Pre-merging here, as this test
+  // did before Unit 3, would now double-apply the sibling-merge, since `emitEntity` would merge an
+  // already-merged ctx a second time.)
+  const e = prep(emitEntity(ctx, entity));
   const s = prep(load(join(SEED, `${entity}.json`)));
   const div = DIVERGENCE[entity] || {};
 

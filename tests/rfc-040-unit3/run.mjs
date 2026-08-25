@@ -21,7 +21,7 @@
 import assert from "node:assert/strict";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
-import { loadPackage, emitEntity, resolveEffectiveType } from "../../scripts/lib/schema-emitter.mjs";
+import { loadPackage, emitEntity, resolveEffectiveType, withEffectiveType } from "../../scripts/lib/schema-emitter.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FIXTURE = join(HERE, "fixture-package");
@@ -106,6 +106,18 @@ console.log("  ✓ gizmo: instance-facing a Type whose own Field collides with t
   const serialAssignment = resolved.fields.find((f) => f.fieldId === "f0000003-0000-4000-a000-000000000003");
   check("I-42: an override naming the specializing Type's own field is ignored (serial stays required)",
     serialAssignment.required === true);
+}
+
+// --- I-40: a fieldId declared by more than one of base/extenders in the sibling-merge is a thrown --
+// error, never a silent duplicate (which would otherwise surface as an invalid duplicate entry in a
+// `required[]` array — JSON Schema 2020-12's own `required` has `uniqueItems: true`).
+{
+  const base = ctx.typesByName.widget;
+  const rogueExtender = { ...ctx.typesByName.gadget, extendsTypeId: base.id, fields: [base.fields[0]] }; // redeclares widget's own `name` fieldId
+  const badCtx = { ...ctx, typesById: { ...ctx.typesById, [rogueExtender.id]: rogueExtender } };
+  assert.throws(() => withEffectiveType(badCtx, "widget"), /I-40/, "a sibling extender redeclaring an existing fieldId errors, not silently duplicates it");
+  pass++;
+  console.log("  ✓ I-40: a fieldId declared twice across base + sibling extenders throws rather than silently duplicating");
 }
 
 console.log(`\n✓ RFC-040 Unit 3 golden fixtures: ${pass} checks passed (effective-Type resolution, facing distinction, conditional projection).`);
