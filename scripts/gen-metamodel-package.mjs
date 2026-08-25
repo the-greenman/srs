@@ -106,11 +106,11 @@ const FIELD_SPECS = [
   [7, 'instructions', { datatype: 'string' }, 'Fuller guidance for a human completing this field.'],
   [8, 'ai_guidance', ref('ai-guidance', 'inline', 'single'), 'Inline LLM guidance for extracting/populating this field or type.'],
   [9, 'field_type', ref('field-type', 'inline', 'single'), 'The decomposed value type (RFC-032): datatype x cardinality x value-domain x format x constraints.'],
-  [10, 'default_value', { datatype: 'dependent', dependsOn: 'self' }, 'Default value conforming to this field\'s own fieldType (value-of-self dependent).'],
+  // 10: `default_value` — REMOVED (RFC-040 Change D, srs#477; 0225099b, srs#234 2026-08-08). Never reused.
   [11, 'tags', { datatype: 'string', cardinality: 'list' }, 'Free-form classification tags.'],
   [12, 'lineage', ref('lineage', 'inline', 'single'), 'Fork/copy history of this definition.'],
   [13, 'provenance', ref('provenance', 'inline', 'single'), 'Import provenance of this definition.'],
-  [14, 'deprecated_at', { datatype: 'date-time' }, 'ISO-8601 timestamp at which this definition was deprecated.'],
+  // 14: `deprecated_at` — REMOVED (RFC-040 Change D, srs#477; srs#234 2026-08-08 ruling). Never reused.
   // -- FieldType --
   [15, 'datatype', closed(['string', 'number', 'integer', 'boolean', 'date', 'date-time', 'ref', 'dependent', 'map']), 'The base datatype facet (RFC-032 Change A).'],
   [16, 'cardinality', closed(['single', 'list']), 'Whether the field holds one value or an ordered list. Default single.'],
@@ -160,7 +160,8 @@ const FIELD_SPECS = [
   [52, 'order', { datatype: 'integer', constraints: { minimum: 0 } }, 'The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015).'],
   [53, 'required', { datatype: 'boolean' }, 'Whether this field must be populated before a Record can be logged.'],
   [54, 'display_label', { datatype: 'string' }, 'Context-specific label override for this field within this Type.'],
-  [55, 'assignment_default_value', { datatype: 'dependent', dependsOn: 'field_id' }, 'Optional default value conforming to the referenced Field\'s type.'],
+  // 55: `assignment_default_value` — REMOVED (RFC-040 Change D, srs#477; 0225099b — explicitly supersedes
+  // the #274 ledger's "Generate defaultValue" row). Never reused.
   // -- RFC-040 Unit 1 (srs#477) Change B: field.json's one remaining seed-only property. Presentation
   // (RFC-032 Rev 3), deliberately outside fieldType so 6523cf5e is not contradicted; description carries
   // the seed's own declaration verbatim.
@@ -223,8 +224,8 @@ const TYPE_SPECS = {
     assignments: [
       a('id', true), a('namespace', true), a('name', true), a('version', true),
       a('description', true), a('instructions', false), a('ai_guidance', true, 'AI Guidance'),
-      a('field_type', true, 'Field Type'), a('default_value', false), a('editor_hint', false, 'Editor Hint'),
-      a('tags', false), a('lineage', false), a('provenance', false), a('deprecated_at', false), a('created_at', true),
+      a('field_type', true, 'Field Type'), a('editor_hint', false, 'Editor Hint'),
+      a('tags', false), a('lineage', false), a('provenance', false), a('created_at', true),
     ],
   },
   type: {
@@ -244,7 +245,6 @@ const TYPE_SPECS = {
     assignments: [
       a('field_id', true, 'Field'), a('order', true), a('required', true),
       a('display_label', false, 'Display Label'), a('description', false),
-      a('assignment_default_value', false, 'Default Value'),
     ],
   },
   'field-type': {

@@ -315,10 +315,6 @@
         "description": {
           "type": "string",
           "description": "Documentation-only contextual description of this field's use within this Type (RFC-040 Change C). On conflict, the Field's own semantics and aiGuidance win: a contextual description that contradicts them is a data error, not an override. MUST NOT be projected to a constraint keyword."
-        },
-        "defaultValue": {
-          "deprecated": true,
-          "description": "DEPRECATED: ruled removed (srs#234, 2026-08-08 decision; executed in the #273 train alongside Field.defaultValue) — this ledger row is explicitly superseded. Defaults return later as a single layered-override capability designed in its own RFC. Optional default value to pre-populate the field."
         }
       }
     },

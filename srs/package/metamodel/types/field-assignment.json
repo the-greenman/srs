@@ -32,12 +32,6 @@
       "fieldId": "4b000005-0000-4000-a000-000000000005",
       "order": 4,
       "required": false
-    },
-    {
-      "fieldId": "4b000037-0000-4000-a000-000000000037",
-      "order": 5,
-      "required": false,
-      "displayLabel": "Default Value"
     }
   ],
   "id": "4c000003-0000-4000-a000-000000000003",

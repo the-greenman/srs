@@ -139,9 +139,6 @@
         },
         "description": {
           "type": "string"
-        },
-        "defaultValue": {
-          "title": "Default Value"
         }
       }
     },

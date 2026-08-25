@@ -49,39 +49,29 @@
       "displayLabel": "Field Type"
     },
     {
-      "fieldId": "4b00000a-0000-4000-a000-00000000000a",
-      "order": 8,
-      "required": false
-    },
-    {
       "fieldId": "4b000038-0000-4000-a000-000000000038",
-      "order": 9,
+      "order": 8,
       "required": false,
       "displayLabel": "Editor Hint"
     },
     {
       "fieldId": "4b00000b-0000-4000-a000-00000000000b",
-      "order": 10,
+      "order": 9,
       "required": false
     },
     {
       "fieldId": "4b00000c-0000-4000-a000-00000000000c",
-      "order": 11,
+      "order": 10,
       "required": false
     },
     {
       "fieldId": "4b00000d-0000-4000-a000-00000000000d",
-      "order": 12,
-      "required": false
-    },
-    {
-      "fieldId": "4b00000e-0000-4000-a000-00000000000e",
-      "order": 13,
+      "order": 11,
       "required": false
     },
     {
       "fieldId": "4b000006-0000-4000-a000-000000000006",
-      "order": 14,
+      "order": 12,
       "required": true
     }
   ],

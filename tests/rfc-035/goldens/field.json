@@ -43,7 +43,6 @@
       "$ref": "#/$defs/com.semanticops.srs__field-type__v1",
       "title": "Field Type"
     },
-    "defaultValue": {},
     "editorHint": {
       "type": "string",
       "enum": [
@@ -68,10 +67,6 @@
     },
     "provenance": {
       "$ref": "#/$defs/com.semanticops.srs__provenance__v1"
-    },
-    "deprecatedAt": {
-      "type": "string",
-      "format": "date-time"
     },
     "createdAt": {
       "type": "string",

@@ -67,7 +67,7 @@ const CORRESPONDENCES = [
   // substituted in below (`effective: true`) — the frozen seed is one flat object; the metamodel
   // deliberately is not. See rfc-035-closure-test.mjs / schema-emitter.mjs `withEffectiveType` for why.
   { type: 'type', file: 'type.json', pointer: [], effective: true },
-  { type: 'field-assignment', file: 'type.json', pointer: ['$defs', 'FieldAssignment'], nameOverride: { assignment_default_value: 'defaultValue' } },
+  { type: 'field-assignment', file: 'type.json', pointer: ['$defs', 'FieldAssignment'] },
   // -- RFC-040 Unit 1 (srs#477) Change B: the seven type.json value objects. --
   { type: 'type-lifecycle', file: 'type.json', pointer: ['$defs', 'TypeLifecycle'], nameOverride: { initial_state: 'initialState' } },
   { type: 'lifecycle-state', file: 'type.json', pointer: ['$defs', 'LifecycleState'], nameOverride: { is_initial: 'isInitial', is_final: 'isFinal', requires_relation: 'requiresRelation' } },

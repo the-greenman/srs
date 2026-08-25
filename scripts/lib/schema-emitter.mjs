@@ -23,9 +23,9 @@ import { projectField, rangeDefKey } from "./rfc-032-fieldtype.mjs";
 
 // --- name projection (Change E) ------------------------------------------------------------------
 /** Committed override table: metamodel Field.name -> JSON key, where lowerCamelCase is not the seed key.
- * RFC-040 Unit 1 (srs#477) Change B adds two entries for the new value-object Types; Change D later
- * retires the pre-existing `assignment_default_value` entry when that property is removed. */
-export const NAME_OVERRIDES = { assignment_default_value: "defaultValue", kind: "type", transition_name: "name" };
+ * RFC-040 Unit 1 (srs#477) Change D retires the pre-existing `assignment_default_value` entry (the
+ * property is removed); Change B adds the two entries below for the new value-object Types. */
+export const NAME_OVERRIDES = { kind: "type", transition_name: "name" };
 /** snake_case -> lowerCamelCase, deterministic and injective over the in-scope metamodel field names. */
 export function jsonKey(fieldName) {
   return NAME_OVERRIDES[fieldName] ?? fieldName.replace(/_([a-z0-9])/g, (_, c) => c.toUpperCase());

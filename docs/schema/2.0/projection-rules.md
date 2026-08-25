@@ -91,7 +91,6 @@ the intended key:
 
 | Metamodel `Field.name` | JSON key | Reason |
 |---|---|---|
-| `assignment_default_value` | `defaultValue` | `FieldAssignment.defaultValue` (mechanical would give `assignmentDefaultValue`); removed with the property (RFC-040 Change D) |
 | `kind` | `type` | `CrossFieldRule.type` (RFC-040 Change B) — the seed spells the kind discriminator `type`; the metamodel Field is named `kind` to avoid overloading `type`'s generic sense in this vocabulary |
 | `transition_name` | `name` | `LifecycleTransition.name` (RFC-040 Change B) — `name` is reserved on the shared identity Field (namespace-scoped, snake_case); a transition's name is neither |
 
