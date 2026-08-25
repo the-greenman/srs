@@ -112,13 +112,22 @@ function resolveRange(ctx, rangeType) {
  * directions below.
  */
 function applyOverrides(fields, extenders) {
+  // I-42: "must not reference fields declared in the specializing Type's own fields[]" — an override
+  // may only target a field INHERITED from the base (or an ancestor), never any extender's own. In
+  // the sibling-merge direction (multiple extenders of one base, `withEffectiveType`) no sibling is an
+  // ancestor of another, so this protects the union of every extender's own fields — not just the
+  // issuing extender's — closing the cross-sibling gap the single-extender check would miss. In the
+  // child-perspective direction (`resolveEffectiveType`) there is exactly one extender (`t` itself), so
+  // this is identical to the narrower check.
+  const allOwnIds = new Set(extenders.flatMap((e) => (e.fields || []).map((f) => f.fieldId)));
   const overridesByFieldId = {};
   for (const ext of extenders) {
-    // I-42: "must not reference fields declared in the specializing Type's own fields[]" — an
-    // override naming one of THIS extender's own fields is invalid and ignored, never applied.
-    const ownIds = new Set((ext.fields || []).map((f) => f.fieldId));
     for (const o of ext.fieldAssignmentOverrides || []) {
-      if (ownIds.has(o.fieldId)) continue;
+      if (allOwnIds.has(o.fieldId)) continue;
+      // Two different extenders both overriding the same inherited base field would silently
+      // last-extender-wins here (object-iteration order) — unreachable today (no metamodel facet
+      // declares any override), flagged rather than built out into a conflict-diagnostic for a case
+      // nothing currently exercises.
       overridesByFieldId[o.fieldId] = o;
     }
   }
@@ -191,16 +200,28 @@ export function resolveEffectiveType(ctx, typeName, seen = new Set()) {
   return { ...t, fields: merged, fieldOrder: declaredFieldOrder([t]) };
 }
 
-/** Resolve `typeName`'s effective Type by whichever direction applies: a Type that declares its own
- * `extendsTypeId` resolves via its ancestor chain (`resolveEffectiveType`); otherwise it resolves via
- * the sibling-merge (`withEffectiveType`) in case OTHER Types extend it — a no-op when none do. */
+/**
+ * Resolve `typeName`'s effective Type by whichever direction applies:
+ *   - a Type that declares its own `extendsTypeId` resolves via its ancestor chain
+ *     (`resolveEffectiveType`) — the general Change-A case (a domain Type extending a base).
+ *   - the frozen `field`/`type` entities (named in `ENTITY_IDS`) resolve via the sibling-merge
+ *     (`withEffectiveType`) — the bootstrap-specific case reconstituting their flattened seed shape
+ *     from multiple independent facet Types.
+ *   - anything else (an ordinary base Type with no `extendsTypeId` of its own, whether or not OTHER
+ *     Types happen to extend it) resolves to ITSELF, unchanged. Emitting a base Type directly must
+ *     show that Type's OWN contract, not silently absorb whatever children it happens to have — the
+ *     sibling-merge is reserved for the two entities that specifically need it, not applied to every
+ *     base Type as an automatic fallback (which would make e.g. `emitEntity(ctx, "widget")` include a
+ *     child `gadget`'s own fields whenever any child of `widget` existed in the package at all).
+ */
 function resolveForEmission(ctx, typeName) {
   const t = ctx.typesByName[typeName];
   if (!t) throw new Error(`schema-emitter: unknown type ${typeName}`);
   if (t.extendsTypeId) {
     return { ...ctx, typesByName: { ...ctx.typesByName, [typeName]: resolveEffectiveType(ctx, typeName) } };
   }
-  return withEffectiveType(ctx, typeName);
+  if (typeName in ENTITY_IDS) return withEffectiveType(ctx, typeName);
+  return ctx;
 }
 
 // --- RFC-040 Change F: conditional projection ------------------------------------------------------
@@ -398,10 +419,16 @@ export function emitEntity(ctx, typeName, opts = {}) {
   if (typeName in ENTITY_IDS) properties.$schema = { type: "string" };
   Object.assign(properties, bodyProps.properties);
   if (facing === "instance") {
-    // rfc-decision-2e0cd70a: the sanctioned extension carrier — always the OPEN escape, even if the
-    // Type happens to declare its own Field literally named `meta` (a reserved instance-facing key;
-    // that Field's own, possibly-narrower fieldType would otherwise silently defeat the "anything may
-    // be carried in meta" guarantee the facing contract exists to make).
+    // rfc-decision-2e0cd70a: `meta` is the sanctioned extension carrier and MUST stay the open
+    // escape — never silently narrowed by a Type's own Field of the same name. A Type declaring its
+    // own Field literally named `meta` is a genuine modelling conflict with this reserved
+    // instance-facing key (2e0cd70a's own standard: silent tolerance of a defect is itself a defect —
+    // "the fix to Postel's law is not less tolerance but mandatory naming of what was tolerated").
+    // Loud and immediate, matching this unit's I-41 precedent (silent-drop -> throw): rename the
+    // colliding Field rather than let it be silently overridden or silently kept undersized.
+    if ("meta" in properties) {
+      throw new Error(`schema-emitter: ${typeName} declares its own Field named "meta", which collides with the reserved instance-facing extension carrier (rfc-decision-2e0cd70a) — rename the Field`);
+    }
     properties.meta = { type: "object" };
   }
   out.properties = properties;

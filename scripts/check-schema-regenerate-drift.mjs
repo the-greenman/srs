@@ -65,9 +65,16 @@ for (const entity of ["field", "type"]) {
   if (path) {
     // The register entry must still genuinely diverge — an entry that no longer differs has rotted
     // into a silent no-op and should be removed (mirrors rfc-035-closure-test.mjs's own assertion).
+    // "Diverges" is deliberately NOT just "JSON.stringify differs": the emitter regressing to omit
+    // the property entirely (undefined) also "differs" from the seed's object, but that is a real
+    // regression, not the documented intentional upgrade — so an absent regenerated value is its own,
+    // distinct failure, checked first.
     const regenValue = atPath(emitEntity(ctx, entity), path);
     const seedValue = atPath(load(join(SEED, `${entity}.json`)), path);
-    if (JSON.stringify(regenValue) === JSON.stringify(seedValue)) {
+    if (regenValue === undefined) {
+      fail++;
+      console.error(`  ✗ divergence register: ${entity}.${path.join(".")} — emitter no longer emits this property at all (regression, not the documented divergence)`);
+    } else if (JSON.stringify(regenValue) === JSON.stringify(seedValue)) {
       fail++;
       console.error(`  ✗ divergence register: ${entity}.${path.join(".")} no longer diverges — remove it from the register`);
     }

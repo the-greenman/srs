@@ -34,6 +34,15 @@ function check(label, cond) {
 
 const ctx = loadPackage(FIXTURE);
 
+// --- widget: emitting a BASE Type directly must show ITS OWN contract, never a child's -------------
+// `gadget` extends `widget` below; `widget` itself is not one of the frozen field/type bootstrap
+// entities, so emitting it must NOT trigger the sibling-merge (that direction is reserved for `field`/
+// `type` specifically — see resolveForEmission's docstring). A regression here would silently fold a
+// child's own fields into its base's standalone schema whenever any child of a base Type existed.
+const widgetDef = emitEntity(ctx, "widget");
+check("widget: emitting a base Type directly shows only ITS OWN fields, not a child's (gadget's `serial`)",
+  Object.keys(widgetDef.properties).join(",") === "name,status" && !("serial" in widgetDef.properties));
+
 // --- 1. Effective-Type resolution + 2. facing distinction, both on `gadget` -----------------------
 const gadgetDef = emitEntity(ctx, "gadget"); // facing defaults to "definition"
 check("gadget: effective fields follow the pinned fieldOrder (serial, name, status)",
@@ -71,9 +80,10 @@ check("ticket: exactly 3 allOf clauses (one per validationRules entry — none d
 const gizmoDef = emitEntity(ctx, "gizmo"); // definition-facing: the Field's own (string) shape stands
 check("gizmo: definition-facing keeps the Type's own `meta` Field as declared (string)",
   gizmoDef.properties.meta.type === "string");
-const gizmoInstance = emitEntity(ctx, "gizmo", { facing: "instance" });
-check("gizmo: instance-facing OVERRIDES an own `meta` Field with the open escape (reserved key wins)",
-  gizmoInstance.properties.meta.type === "object" && !("format" in gizmoInstance.properties.meta));
+assert.throws(() => emitEntity(ctx, "gizmo", { facing: "instance" }), /reserved instance-facing extension carrier/,
+  "instance-facing a Type with its own `meta` Field throws (loud conflict), rather than silently overriding it");
+pass++;
+console.log("  ✓ gizmo: instance-facing a Type whose own Field collides with the reserved `meta` key throws, never silently overrides");
 
 // --- I-41: a malformed fieldOrder (not an exact permutation) is a thrown error, never a silent drop --
 {
