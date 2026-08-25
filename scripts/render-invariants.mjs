@@ -82,6 +82,23 @@ export function isInInvariantProjectionRoot(path) {
   return !rest.includes("/");
 }
 
+/**
+ * The two rendered presentations whose output MUST contain the `### Key Invariants` heading —
+ * they render the full specification via a type-query over `com.semanticops.spec/section`, which
+ * includes the Key Invariants section, so its absence from their output is a regression rather
+ * than an expected omission (unlike the rationale/RFC-catalog/RFC-decision-log presentations,
+ * which never render that section).
+ *
+ * This is orthogonal to `manifest.renderedPresentations` (#411 / RFC-015): that field is
+ * authoritative for *what is rendered* (viewId, output path, format). This set is a Node-pipeline
+ * assertion, scoped by RFC-016 [R1], about which of those renders must carry the projection — a
+ * different question with a different owner, so it is not a property on RenderedPresentation.
+ */
+export const REQUIRES_KEY_INVARIANTS_VIEW_IDS = new Set([
+  "3a000001-0000-4000-a000-000000000001", // srs-spec-document-view (docs/spec/srs-spec.md)
+  "3a000004-0000-4000-a000-000000000004", // srs-unified-document-view (docs/spec/srs-unified.md)
+]);
+
 export async function renderInvariants(repoPath) {
   const invariantsDir = join(repoPath, INVARIANT_PROJECTION_ROOT);
   const entries = await readdir(invariantsDir);

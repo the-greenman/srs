@@ -8,7 +8,7 @@
     "extension_id": "ext:changelog",
     "title": "Changelog",
     "extension_depends": "",
-    "content": "**Status: Dormant** (removed under `rfc-decision-2a1e1590`, 2026-08-21). The 2026-08-21 usage attestation found zero `changelog/changelog.json` files anywhere in the corpus — the mechanism was speculative, never exercised in production. It is removed under the dormancy rule (`rfc-decision-cce3c00e`) alongside the per-field Revision sidecar mechanism it paired with, removed by the same ruling.\n\n**Removed surface** (historical — introduced by RFC-018, srs#141): the `ChangelogCollection`/`ChangelogEntry` schema (`changelog.json`); the `srs changelog list` CLI command. `manifest.changelogPath` is deprecated, not deleted, so existing declarations remain readable.\n\n**Return trigger**: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface. When a real consumer's requirements are known, the mechanism is redesigned against them rather than reinstated as specified here."
+    "content": "**Retired as an independent content copy (srs#285 / srs#411).** The current, normative text for `ext:changelog` — including its Dormant status and return trigger — is published in §7 as subsection `07-18-ext-changelog` (`com.semanticops.spec/subsection`), byte-identical to this record's prior content. This record is kept only so `ext:changelog` continues to resolve as an RFC-integration token (`scripts/check-rfc-integration.mjs`); it is not rendered by any document view and carries no independent content of its own. Do not edit this field to add prose — edit the published subsection instead."
   },
   "tags": [
     "topic:extensions",
@@ -16,6 +16,6 @@
     "concern:audit"
   ],
   "createdAt": "2026-07-09T08:27:41.214398471+00:00",
-  "updatedAt": "2026-08-23T06:53:15.243736422+00:00",
+  "updatedAt": "2026-08-23T14:55:05.436801417+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
