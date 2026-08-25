@@ -49,6 +49,16 @@ const METAMODEL_NAMESPACE = "com.semanticops.srs";
 function wireKey(ctx, fieldName) {
   return ctx.pkg.namespace === METAMODEL_NAMESPACE ? jsonKey(fieldName) : fieldName;
 }
+/** Is `typeName` one of the two frozen bootstrap entities (`field`/`type`) — the ONLY Types the
+ * sibling-merge, the ENTITY_IDS/ENTITY_TITLES/ENTITY_COMMENTS envelope constants, and the synthetic
+ * `$schema` data-property apply to? Gated by BOTH the name AND the package namespace — `wireKey`
+ * above already scopes ITS metamodel-only mechanism this way; a domain package's own Type literally
+ * named "field" or "type" (a plausible name in any schema-authoring domain) must not hijack the
+ * frozen entities' identity, $id, title, $comment, or sibling-merge/extendsTypeId-combination guard
+ * just by sharing a name with them. */
+function isBootstrapEntity(ctx, typeName) {
+  return typeName in ENTITY_IDS && ctx.pkg.namespace === METAMODEL_NAMESPACE;
+}
 
 // --- $id / $comment / title policy (Change C, extended by Unit 3 for byte closure) ----------------
 /** The two frozen meta-model ENTITIES keep their reserved 2.0/ data-model-line ids (RFC-033 Change C item 1). */
@@ -154,7 +164,7 @@ function applyOverrides(fields, extenders) {
  *
  * Exported for direct use by the closure tests (which need the merged field SET, not a full emitted
  * schema) — real emission never calls this for an arbitrary base Type: `resolveForEmission` gates the
- * sibling-merge to the frozen `field`/`type` entities specifically (`typeName in ENTITY_IDS`), because
+ * sibling-merge to the frozen `field`/`type` entities specifically (`isBootstrapEntity`: name AND metamodel-package-namespace), because
  * unioning in every child unconditionally is only correct for THAT bootstrap reconstruction, not as a
  * general "show me this base Type" query. A caller reaching for this function directly should be
  * doing exactly the bootstrap-reconstruction thing, not treating it as effective-Type resolution for
@@ -228,7 +238,7 @@ export function resolveEffectiveType(ctx, typeName, seen = new Set()) {
  * Resolve `typeName`'s effective Type by whichever direction applies:
  *   - a Type that declares its own `extendsTypeId` resolves via its ancestor chain
  *     (`resolveEffectiveType`) — the general Change-A case (a domain Type extending a base).
- *   - the frozen `field`/`type` entities (named in `ENTITY_IDS`) resolve via the sibling-merge
+ *   - the frozen `field`/`type` entities (per `isBootstrapEntity`: name AND metamodel-package-namespace) resolve via the sibling-merge
  *     (`withEffectiveType`) — the bootstrap-specific case reconstituting their flattened seed shape
  *     from multiple independent facet Types.
  *   - anything else (an ordinary base Type with no `extendsTypeId` of its own, whether or not OTHER
@@ -241,7 +251,7 @@ export function resolveEffectiveType(ctx, typeName, seen = new Set()) {
 function resolveForEmission(ctx, typeName) {
   const t = ctx.typesByName[typeName];
   if (!t) throw new Error(`schema-emitter: unknown type ${typeName}`);
-  if (typeName in ENTITY_IDS && t.extendsTypeId) {
+  if (isBootstrapEntity(ctx, typeName) && t.extendsTypeId) {
     // A frozen bootstrap entity declaring its OWN extendsTypeId is an unsupported combination this
     // resolver was never designed for: which direction wins is genuinely ambiguous (child-perspective
     // would silently skip the sibling-merge these two entities exist to reconstitute). Loud, not a
@@ -252,7 +262,7 @@ function resolveForEmission(ctx, typeName) {
   if (t.extendsTypeId) {
     return { ...ctx, typesByName: { ...ctx.typesByName, [typeName]: resolveEffectiveType(ctx, typeName) } };
   }
-  if (typeName in ENTITY_IDS) return withEffectiveType(ctx, typeName);
+  if (isBootstrapEntity(ctx, typeName)) return withEffectiveType(ctx, typeName);
   return ctx;
 }
 
@@ -436,10 +446,11 @@ export function emitEntity(ctx, typeName, opts = {}) {
   const bodyProps = emitBody(resolvedCtx, typeName, defs); // walking the entity fills `defs` in pre-order DFS
   const out = {};
   out.$schema = "https://json-schema.org/draft/2020-12/schema";
-  out.$id = ENTITY_IDS[typeName] ?? domainId(t.namespace, t.name, t.version);
-  if (ENTITY_TITLES[typeName]) out.title = ENTITY_TITLES[typeName];
+  const isBootstrap = isBootstrapEntity(ctx, typeName);
+  out.$id = isBootstrap ? ENTITY_IDS[typeName] : domainId(t.namespace, t.name, t.version);
+  if (isBootstrap && ENTITY_TITLES[typeName]) out.title = ENTITY_TITLES[typeName];
   if (t.description) out.description = t.description;
-  if (ENTITY_COMMENTS[typeName]) out.$comment = ENTITY_COMMENTS[typeName];
+  if (isBootstrap && ENTITY_COMMENTS[typeName]) out.$comment = ENTITY_COMMENTS[typeName];
   out.type = "object";
   if (bodyProps.required) out.required = bodyProps.required;
   out.additionalProperties = false;
@@ -448,7 +459,7 @@ export function emitEntity(ctx, typeName, opts = {}) {
   // self-reference data property (RFC-031 R1 carve-out) that has no modelled counterpart — it is
   // structural framing, the same role as ENTITY_IDS/ENTITY_COMMENTS, never a FieldAssignment walked
   // above. It is placed first to match the frozen seed's property order.
-  if (typeName in ENTITY_IDS) properties.$schema = { type: "string" };
+  if (isBootstrap) properties.$schema = { type: "string" };
   Object.assign(properties, bodyProps.properties);
   if (facing === "instance") {
     // rfc-decision-2e0cd70a: `meta` is the sanctioned extension carrier and MUST stay the open

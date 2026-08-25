@@ -123,12 +123,33 @@ console.log("  ✓ gizmo: instance-facing a Type whose own Field collides with t
 // --- resolveForEmission: a frozen bootstrap entity (ENTITY_IDS) that ALSO declares its own --------
 // extendsTypeId is an unsupported, ambiguous combination — thrown, never silently resolved one way.
 {
+  // isBootstrapEntity requires BOTH the name AND the metamodel package namespace — simulate the real
+  // scenario (the actual metamodel package's own "type" gaining an extendsTypeId), not just a
+  // same-named domain Type (which, correctly, no longer triggers this check post round-5's fix).
   const gizmoRenamedAsType = { ...ctx.typesByName.gizmo, name: "type", extendsTypeId: ctx.typesByName.widget.id, extendsTypeVersion: 1 };
-  const badCtx = { ...ctx, typesByName: { ...ctx.typesByName, type: gizmoRenamedAsType } };
+  const badCtx = {
+    ...ctx,
+    pkg: { ...ctx.pkg, namespace: "com.semanticops.srs" },
+    typesByName: { ...ctx.typesByName, type: gizmoRenamedAsType },
+  };
   assert.throws(() => emitEntity(badCtx, "type"), /unsupported combination/,
     "a frozen entity name (ENTITY_IDS) that also declares extendsTypeId errors, not silently picks a direction");
   pass++;
   console.log("  ✓ resolveForEmission: an ENTITY_IDS entity with its own extendsTypeId throws (ambiguous merge direction)");
+}
+
+// --- a domain Type literally named "field"/"type" must NOT hijack the frozen bootstrap identity ----
+// (ENTITY_IDS/ENTITY_TITLES/ENTITY_COMMENTS and the sibling-merge are gated by NAME + the metamodel
+// package's namespace together, not name alone — a domain package's own "field"/"type" Type is a
+// plausible name collision in any schema-authoring domain and must get an ordinary domain schema).
+{
+  const widgetAsField = { ...ctx.typesByName.widget, name: "field" };
+  const badCtx = { ...ctx, typesByName: { ...ctx.typesByName, field: widgetAsField } };
+  const out = emitEntity(badCtx, "field");
+  check("a domain Type named \"field\" gets an ordinary domainId, not the frozen entity's reserved $id",
+    out.$id === `https://srs.semanticops.com/schema/domain/${widgetAsField.namespace}/field/${widgetAsField.version}.json`);
+  check("a domain Type named \"field\" gets no title/$comment/synthetic $schema property (those are metamodel-only)",
+    !out.title && !out.$comment && !("$schema" in out.properties));
 }
 
 console.log(`\n✓ RFC-040 Unit 3 golden fixtures: ${pass} checks passed (effective-Type resolution, facing distinction, conditional projection).`);
