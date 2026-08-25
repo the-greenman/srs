@@ -154,6 +154,14 @@ async function validateAll() {
   const vocabularyRefMigrated = await runScript('migrate-vocabulary-ref-to-lineage.mjs', ['--check']);
   if (!vocabularyRefMigrated) allValid = false;
 
+  // RFC-023 Change A/B (srs#480, RFC-040 Change I): no sourceRef under srs/records may still carry
+  // the legacy relationType field. The schema-level rejection (additionalProperties:false, the
+  // relationType property removed from note.json/record.json/relation.json/relations-collection.json/
+  // typed-record.json) already fails validate-records.mjs on a legacy entry; this guard names the
+  // migration explicitly so drift reads as "run the migration script", not a generic schema error.
+  const sourceRefRoleMigrated = await runScript('migrate-sourceref-relationtype-to-sourcerole.mjs', ['--check']);
+  if (!sourceRefRoleMigrated) allValid = false;
+
   // Field.name is snake_case (#308). The rule was stated unconditionally by field.json and record
   // 7d22d50f and enforced nowhere, so the corpus stayed conformant only by attention. Names matter
   // beyond style: srs-repository resolves several Fields by name and binds misses with

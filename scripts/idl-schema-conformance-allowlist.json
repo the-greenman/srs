@@ -16,7 +16,6 @@
   { "entity": "Record", "property": "tags", "rule": "R1", "issue": 248 },
   { "entity": "TypedRecord", "property": "tags", "rule": "R1", "issue": 249 },
 
-  { "entity": "SourceReference", "property": "relationType", "rule": "R1", "issue": 248 },
   { "entity": "SourceReference", "property": "sourceRole", "rule": "R3", "issue": 248 },
 
   { "entity": "Relation", "property": "sourceRepositoryId", "rule": "R1", "issue": 251 },

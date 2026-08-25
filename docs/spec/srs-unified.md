@@ -557,9 +557,6 @@ A pointer from a field value or instance back to source material.
   streamId?: UUID           // for transcript sources: originating stream
 
   sourceRole?: "evidence" | "extracted-from" | "quoted-from" | "inspired-by"
-  // relationType is the DEPRECATED legacy alias of sourceRole (RFC-023):
-  // accepted on read during the migration window, mapped per RFC-023
-  // Change B, never written
 
   confidence?: number       // 0.0–1.0
   note?: string
@@ -3597,7 +3594,7 @@ Conforming implementations must uphold the following invariants.
 
 #### SourceReference.sourceRole
 
-**I-88.** The `sourceRole` value set — the closed enum of the implemented schema revision, including values added by later accepted RFCs — MUST be disjoint under literal whole-key equality from the set of installed `RelationTypeDefinition` keys in the repository's effective package set. Relation-type creation MUST reject a definition whose key equals a `sourceRole` value; `repo validate` MUST report a pre-existing collision as `SOURCEROLE_RELATIONTYPE_COLLISION` (warning at rest). The legacy `relationType` enum on SourceReference is exempt. A namespaced key (e.g. `com.acme/evidence`) does not collide with a bare `sourceRole` value.
+**I-88.** The `sourceRole` value set — the closed enum of the implemented schema revision, including values added by later accepted RFCs — MUST be disjoint under literal whole-key equality from the set of installed `RelationTypeDefinition` keys in the repository's effective package set. Relation-type creation MUST reject a definition whose key equals a `sourceRole` value; `repo validate` MUST report a pre-existing collision as `SOURCEROLE_RELATIONTYPE_COLLISION` (warning at rest). A namespaced key (e.g. `com.acme/evidence`) does not collide with a bare `sourceRole` value.
 
 #### Validators, importers
 
