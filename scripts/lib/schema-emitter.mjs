@@ -46,18 +46,27 @@ export function jsonKey(fieldName) {
 const METAMODEL_NAMESPACE = "com.semanticops.srs";
 /** Emit the wire key for a Field within `ctx`'s own package: the metamodel transform if `ctx.pkg` IS
  * the metamodel package, `Field.name` verbatim for every other (domain) package. */
+/** Is `ctx`'s own package the self-hosted metamodel package? The one shared trust boundary every
+ * metamodel-only mechanism in this file gates on — never a bare name check, since a domain Type may
+ * plausibly share a name with any reserved metamodel identifier (`kind`, `field`, `type`, `field-type`,
+ * `lineage`, ... — this train has hit that collision class repeatedly). Namespace-string matching is
+ * the same trust convention the rest of this repo already uses for `com.semanticops.srs` (CLAUDE.md:
+ * "do not create records or types under ad-hoc namespaces") — not independently enforced elsewhere,
+ * but not weaker than how the wider codebase already treats it; every current caller of this file
+ * hardcodes the real metamodel package path, so it is not a live spoofing surface today. */
+function isMetamodelPackage(ctx) {
+  return ctx.pkg.namespace === METAMODEL_NAMESPACE;
+}
 function wireKey(ctx, fieldName) {
-  return ctx.pkg.namespace === METAMODEL_NAMESPACE ? jsonKey(fieldName) : fieldName;
+  return isMetamodelPackage(ctx) ? jsonKey(fieldName) : fieldName;
 }
 /** Is `typeName` one of the two frozen bootstrap entities (`field`/`type`) — the ONLY Types the
  * sibling-merge, the ENTITY_IDS/ENTITY_TITLES/ENTITY_COMMENTS envelope constants, and the synthetic
- * `$schema` data-property apply to? Gated by BOTH the name AND the package namespace — `wireKey`
- * above already scopes ITS metamodel-only mechanism this way; a domain package's own Type literally
- * named "field" or "type" (a plausible name in any schema-authoring domain) must not hijack the
- * frozen entities' identity, $id, title, $comment, or sibling-merge/extendsTypeId-combination guard
- * just by sharing a name with them. */
+ * `$schema` data-property apply to? Gated by BOTH the name AND `isMetamodelPackage` — a domain
+ * package's own Type literally named "field" or "type" must not hijack the frozen entities' identity,
+ * $id, title, $comment, or sibling-merge/extendsTypeId-combination guard just by sharing a name. */
 function isBootstrapEntity(ctx, typeName) {
-  return typeName in ENTITY_IDS && ctx.pkg.namespace === METAMODEL_NAMESPACE;
+  return typeName in ENTITY_IDS && isMetamodelPackage(ctx);
 }
 
 // --- $id / $comment / title policy (Change C, extended by Unit 3 for byte closure) ----------------
@@ -374,8 +383,11 @@ function ensureDef(ctx, parts, defs) {
  * RFC-040 Change C: `FieldAssignment.description` projects to the property's own `description`
  * (documentation-only, annotation position only — never a constraint keyword); RFC-035/RFC-040:
  * `FieldAssignment.displayLabel` projects to the property's `title`. RFC-040 Change F: a Type's own
- * `validationRules` project to `allOf` guards on this same body; `field-type` carries its own fixed
- * `allOf` envelope instead (R2/R3/R9/R10 — no Type carries both mechanisms).
+ * `validationRules` project to `allOf` guards on this same body; the metamodel's OWN `field-type`
+ * carries its own fixed `allOf` envelope instead (R2/R3/R9/R10 — no Type carries both mechanisms) —
+ * gated by `isMetamodelPackage`, not the bare name, so a domain Type merely named "field-type" gets
+ * its own real `validationRules` projected rather than having them silently discarded in favour of a
+ * hand-mirrored envelope that has nothing to do with it.
  */
 function emitBody(ctx, typeName, defs) {
   const t = ctx.typesByName[typeName];
@@ -407,12 +419,14 @@ function emitBody(ctx, typeName, defs) {
     properties[key] = frag;
     if (a.required) required.push(key);
   }
-  const allOf = typeName === "field-type" ? FIELD_TYPE_ENVELOPE : projectValidationRules(ctx, t.validationRules);
+  const isFieldTypeEnvelope = typeName === "field-type" && isMetamodelPackage(ctx);
+  const allOf = isFieldTypeEnvelope ? FIELD_TYPE_ENVELOPE : projectValidationRules(ctx, t.validationRules);
 
   const body = { type: "object" };
   if (required.length) body.required = required;
   body.additionalProperties = false;
-  if (t.description && !DEF_DESCRIPTION_SUPPRESSED.has(typeName)) body.description = t.description;
+  const descriptionSuppressed = isMetamodelPackage(ctx) && DEF_DESCRIPTION_SUPPRESSED.has(typeName);
+  if (t.description && !descriptionSuppressed) body.description = t.description;
   body.properties = properties;
   if (allOf.length) body.allOf = allOf;
   return body;
@@ -427,7 +441,10 @@ function emitBody(ctx, typeName, defs) {
  * `field-type`/`lifecycle-state`/`requires-relation`/`field-assignment-override`/`cross-field-rule`,
  * whose standalone meaning IS worth documenting at the object level and which the frozen seed does
  * carry a description for. A committed, targeted table — the same role NAME_OVERRIDES plays for key
- * spelling — rather than silently guessing a rule the data doesn't uniformly follow.
+ * spelling — rather than silently guessing a rule the data doesn't uniformly follow. Checked only
+ * under `isMetamodelPackage` (see `emitBody`'s `descriptionSuppressed`) — these seven names are
+ * plausible domain-Type names too, and a domain Type's own genuine description must never be silently
+ * dropped just for sharing one.
  */
 const DEF_DESCRIPTION_SUPPRESSED = new Set([
   "ai-guidance", "ai-guidance-example", "lineage", "provenance", "type-lifecycle", "lifecycle-transition", "field-assignment",

@@ -152,4 +152,34 @@ console.log("  ✓ gizmo: instance-facing a Type whose own Field collides with t
     !out.title && !out.$comment && !("$schema" in out.properties));
 }
 
+// --- a domain Type literally named "field-type" must NOT get the metamodel's hand-mirrored envelope
+// (that envelope is entity-specific to the METAMODEL's OWN field-type, gated by isMetamodelPackage —
+// not the bare name; a domain Type sharing that name projects its OWN validationRules like any other).
+{
+  const domainFieldType = {
+    ...ctx.typesByName.ticket,
+    id: "t0000099-0000-4000-a000-000000000099",
+    name: "field-type",
+    validationRules: [{
+      kind: "mutual-exclusion",
+      fieldIds: ["f0000005-0000-4000-a000-000000000005", "f0000006-0000-4000-a000-000000000006"],
+    }],
+  };
+  const badCtx = { ...ctx, typesByName: { ...ctx.typesByName, "field-type": domainFieldType } };
+  const out = emitEntity(badCtx, "field-type");
+  check("a domain Type named \"field-type\" projects its OWN validationRules, not the metamodel's FIELD_TYPE_ENVELOPE",
+    (out.allOf || []).some((c) => c.not?.required?.includes("priority")) &&
+    !(out.allOf || []).some((c) => c.if?.properties?.datatype));
+}
+
+// --- a domain Type literally named "lineage" (one of DEF_DESCRIPTION_SUPPRESSED's 7 names) keeps ---
+// its own genuine description — suppression is metamodel-only, gated by isMetamodelPackage.
+{
+  const domainLineage = { ...ctx.typesByName.widget, name: "lineage", description: "A domain Type that happens to share a name with a suppressed metamodel value-object." };
+  const badCtx = { ...ctx, typesByName: { ...ctx.typesByName, lineage: domainLineage } };
+  const out = emitEntity(badCtx, "lineage");
+  check("a domain Type named \"lineage\" keeps its own description (suppression is metamodel-only)",
+    out.description === domainLineage.description);
+}
+
 console.log(`\n✓ RFC-040 Unit 3 golden fixtures: ${pass} checks passed (effective-Type resolution, facing distinction, conditional projection).`);
