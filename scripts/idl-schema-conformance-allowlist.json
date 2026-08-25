@@ -11,15 +11,12 @@
   { "entity": "Type", "property": "fieldAssignmentOverrides", "rule": "R1", "issue": 247 },
   { "entity": "Type", "property": "identityFieldId", "rule": "R1", "issue": 247 },
   { "entity": "Type", "property": "validationRules", "rule": "R1", "issue": 247 },
-  { "entity": "Type", "property": "lineage", "rule": "R1", "issue": 247 },
-  { "entity": "Type", "property": "provenance", "rule": "R1", "issue": 247 },
 
   { "entity": "Type.FieldAssignment", "property": "repeatable", "rule": "R1", "issue": 247 },
   { "entity": "Type.FieldAssignment", "property": "minItems", "rule": "R1", "issue": 247 },
   { "entity": "Type.FieldAssignment", "property": "maxItems", "rule": "R1", "issue": 247 },
   { "entity": "Type.FieldAssignment", "property": "defaultValue", "rule": "R1", "issue": 247 },
   { "entity": "Type.FieldAssignment", "property": "displayHint", "rule": "R1", "issue": 247 },
-  { "entity": "Type.FieldAssignment", "property": "required", "rule": "R2", "issue": 247 },
 
   { "entity": "Record", "property": "tags", "rule": "R1", "issue": 248 },
   { "entity": "TypedRecord", "property": "tags", "rule": "R1", "issue": 249 },

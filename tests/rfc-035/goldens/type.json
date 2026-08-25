@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://srs.semanticops.com/schema/2.0/type.json",
-  "description": "A named, versioned composition of Fields (core definition facets; RFC-033 v1.0.0 defers lifecycle/inheritance/cross-field/field-groups/identity).",
+  "description": "A named, versioned composition of Fields. Extension-owned facets (lifecycle, inheritance, cross-field-validation) are modelled as separate Types extending this one via ext:type-inheritance (RFC-040 Change A); tags and identityFieldId are core Type surface.",
   "type": "object",
   "required": [
     "id",
@@ -44,6 +44,23 @@
       "items": {
         "$ref": "#/$defs/com.semanticops.srs__field-assignment__v1"
       }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "lineage": {
+      "$ref": "#/$defs/com.semanticops.srs__lineage__v1"
+    },
+    "provenance": {
+      "$ref": "#/$defs/com.semanticops.srs__provenance__v1"
+    },
+    "identityFieldId": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Identity Field Id"
     },
     "createdAt": {
       "type": "string",
@@ -120,8 +137,57 @@
           "type": "string",
           "title": "Display Label"
         },
+        "description": {
+          "type": "string"
+        },
         "defaultValue": {
           "title": "Default Value"
+        }
+      }
+    },
+    "com.semanticops.srs__lineage__v1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sourceDefinitionId": {
+          "type": "string",
+          "format": "uuid",
+          "title": "Source Definition Id"
+        },
+        "sourceVersion": {
+          "type": "integer",
+          "title": "Source Version"
+        },
+        "forkedFromDefinitionId": {
+          "type": "string",
+          "format": "uuid",
+          "title": "Forked-From Definition Id"
+        },
+        "forkedFromVersion": {
+          "type": "integer",
+          "title": "Forked-From Version"
+        }
+      }
+    },
+    "com.semanticops.srs__provenance__v1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "publisher": {
+          "type": "string"
+        },
+        "sourcePackage": {
+          "type": "string",
+          "title": "Source Package"
+        },
+        "packageVersion": {
+          "type": "string",
+          "title": "Package Version"
+        },
+        "importedAt": {
+          "type": "string",
+          "format": "date-time",
+          "title": "Imported At"
         }
       }
     }

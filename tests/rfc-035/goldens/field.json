@@ -44,6 +44,19 @@
       "title": "Field Type"
     },
     "defaultValue": {},
+    "editorHint": {
+      "type": "string",
+      "enum": [
+        "singleline",
+        "textarea",
+        "rich-text",
+        "date-picker",
+        "dropdown",
+        "multi-select",
+        "voice"
+      ],
+      "title": "Editor Hint"
+    },
     "tags": {
       "type": "array",
       "items": {

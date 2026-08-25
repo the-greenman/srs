@@ -21,7 +21,7 @@
 import { readFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
-import { loadPackage, emitEntity } from "./lib/schema-emitter.mjs";
+import { loadPackage, emitEntity, withEffectiveType } from "./lib/schema-emitter.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "..");
@@ -30,7 +30,11 @@ const SEED = join(REPO, "docs/schema/2.0");
 const load = (p) => JSON.parse(readFileSync(p, "utf8"));
 
 // Annotations + hand-authored approximated envelopes stripped on BOTH sides before comparison.
-const ANNOT = new Set(["description", "$comment", "deprecated", "title", "$id", "$schema", "x-srs-range-type"]);
+// `default` (RFC-040 Unit 1, srs#477): a JSON-Schema ANNOTATION keyword, never affects validation;
+// the model deliberately has no default mechanism post-Change-D (seed sites: RequiresRelation
+// direction/enforcement). Not currently load-bearing here (isSub only requires emitter keys ⊆ seed,
+// and the emitter never emits `default`) — stripped anyway so both closure tests document the same rule.
+const ANNOT = new Set(["description", "$comment", "deprecated", "title", "$id", "$schema", "x-srs-range-type", "default"]);
 const ENVELOPE = new Set(["allOf", "if", "then", "else", "oneOf", "anyOf", "not"]);
 
 // DIVERGENCE REGISTER (Change F): covered authoritative properties where emitter ≠ seed BY DESIGN.
@@ -118,7 +122,11 @@ const divergencesSeen = [];
 const excludedByEntity = {};
 
 for (const entity of ["field", "type"]) {
-  const e = prep(emitEntity(ctx, entity));
+  // `type` is compared as its RFC-040 Change A effective Type (core + every extending facet Type,
+  // single-level) — the frozen seed is one flat object; the metamodel deliberately is not. See
+  // schema-emitter.mjs `withEffectiveType` for why this merge lives here and not in `emitEntity`.
+  const entityCtx = entity === "type" ? withEffectiveType(ctx, "type") : ctx;
+  const e = prep(emitEntity(entityCtx, entity));
   const s = prep(load(join(SEED, `${entity}.json`)));
   const div = DIVERGENCE[entity] || {};
 

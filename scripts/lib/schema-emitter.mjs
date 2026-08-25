@@ -22,8 +22,10 @@ import { join } from "path";
 import { projectField, rangeDefKey } from "./rfc-032-fieldtype.mjs";
 
 // --- name projection (Change E) ------------------------------------------------------------------
-/** Committed override table: metamodel Field.name -> JSON key, where lowerCamelCase is not the seed key. */
-export const NAME_OVERRIDES = { assignment_default_value: "defaultValue" };
+/** Committed override table: metamodel Field.name -> JSON key, where lowerCamelCase is not the seed key.
+ * RFC-040 Unit 1 (srs#477) Change B adds two entries for the new value-object Types; Change D later
+ * retires the pre-existing `assignment_default_value` entry when that property is removed. */
+export const NAME_OVERRIDES = { assignment_default_value: "defaultValue", kind: "type", transition_name: "name" };
 /** snake_case -> lowerCamelCase, deterministic and injective over the in-scope metamodel field names. */
 export function jsonKey(fieldName) {
   return NAME_OVERRIDES[fieldName] ?? fieldName.replace(/_([a-z0-9])/g, (_, c) => c.toUpperCase());
@@ -62,6 +64,30 @@ function resolveRange(ctx, rangeType) {
   const t = ctx.typesById[rangeType.typeId];
   if (!t) throw new Error(`schema-emitter: unresolved rangeType typeId ${rangeType.typeId}`);
   return { namespace: t.namespace, name: t.name, version: rangeType.typeVersion };
+}
+
+// --- effective-Type resolution, bounded to what Unit 1's closure tests need -----------------------
+/**
+ * RFC-040 Unit 1 (srs#477) Change A models extension-owned Type facets as SEPARATE metamodel Types
+ * extending core `type` via ext:type-inheritance (single-level, I-39/I-40) rather than flattened onto
+ * it. The frozen seed's `type.json` is one flat object, so the closure tests need the MERGED effective
+ * field list (base + every Type whose extendsTypeId names it) to compare against it. This is
+ * deliberately NOT wired into `emitEntity`/`emitBody` — that full effective-Type resolution, with the
+ * facing distinction and conditional projection, is Unit 3's Change G. This helper is bounded to what
+ * Unit 1's closure tests need: a single-level union of FieldAssignments for comparison purposes only.
+ */
+export function effectiveFields(ctx, typeName) {
+  const base = ctx.typesByName[typeName];
+  const extenders = Object.values(ctx.typesById).filter((t) => t.extendsTypeId === base.id);
+  if (extenders.length === 0) return base.fields;
+  return [...base.fields, ...extenders.flatMap((t) => t.fields)];
+}
+
+/** A ctx whose `typesByName[typeName]` carries the merged effective fields (see `effectiveFields`). */
+export function withEffectiveType(ctx, typeName) {
+  const base = ctx.typesByName[typeName];
+  const merged = { ...base, fields: effectiveFields(ctx, typeName) };
+  return { ...ctx, typesByName: { ...ctx.typesByName, [typeName]: merged } };
 }
 
 // --- the JSON emitter (Change B) -----------------------------------------------------------------

@@ -41,7 +41,7 @@
     },
     "semanticObjectType": {
       "type": "string",
-      "description": "Optional canonical semantic classification (e.g. 'decision', 'exercise', 'policy')."
+      "description": "Optional canonical semantic classification (e.g. 'decision', 'exercise', 'policy'). Sanctioned-until-collapsed (#383, 2026-08-15): the collapse to a Type-keyed type-query executes at #272; do not add new consumers meanwhile."
     },
     "aiGuidance": {
       "type": "object",
@@ -117,6 +117,12 @@
       },
       "description": "ext:cross-field-validation — cross-field validation rules applied to Records of this Type."
     },
+    "lineage": {
+      "$ref": "#/$defs/Lineage"
+    },
+    "provenance": {
+      "$ref": "#/$defs/Provenance"
+    },
     "createdAt": {
       "type": "string",
       "format": "date-time"
@@ -134,10 +140,10 @@
       "properties": {
         "states": {
           "type": "array",
-          "minItems": 1,
           "items": {
             "$ref": "#/$defs/LifecycleState"
-          }
+          },
+          "minItems": 1
         },
         "transitions": {
           "type": "array",
@@ -220,11 +226,11 @@
       "properties": {
         "relationType": {
           "type": "array",
-          "minItems": 1,
           "items": {
             "type": "string",
             "minLength": 1
           },
+          "minItems": 1,
           "description": "Relation type(s) that satisfy the obligation (any-of interpretation, unchanged from RFC-022). RFC-032 Change F normalized this declaration form from string|string[] to a list (length ≥ 1); the single-string form is removed. The distinct scalar fulfillment.relationType selector is untouched."
         },
         "direction": {
@@ -306,6 +312,10 @@
           "type": "string",
           "description": "Context-specific label override for this field within this Type."
         },
+        "description": {
+          "type": "string",
+          "description": "Documentation-only contextual description of this field's use within this Type (RFC-040 Change C). On conflict, the Field's own semantics and aiGuidance win: a contextual description that contradicts them is a data error, not an override. MUST NOT be projected to a constraint keyword."
+        },
         "defaultValue": {
           "deprecated": true,
           "description": "DEPRECATED: ruled removed (srs#234, 2026-08-08 decision; executed in the #273 train alongside Field.defaultValue) — this ledger row is explicitly superseded. Defaults return later as a single layered-override capability designed in its own RFC. Optional default value to pre-populate the field."
@@ -352,7 +362,8 @@
           "enum": [
             "conditional-required",
             "field-ordering",
-            "mutual-exclusion"
+            "mutual-exclusion",
+            "conditional-forbidden"
           ],
           "description": "The kind of cross-field constraint."
         },
@@ -396,6 +407,26 @@
         "must-follow"
       ],
       "description": "Ordering direction for a field-ordering rule: the predicate field must-precede or must-follow the target."
+    },
+    "Lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sourceDefinitionId": { "type": "string", "format": "uuid" },
+        "sourceVersion": { "type": "integer" },
+        "forkedFromDefinitionId": { "type": "string", "format": "uuid" },
+        "forkedFromVersion": { "type": "integer" }
+      }
+    },
+    "Provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "publisher": { "type": "string" },
+        "sourcePackage": { "type": "string" },
+        "packageVersion": { "type": "string" },
+        "importedAt": { "type": "string", "format": "date-time" }
+      }
     }
   }
 }
