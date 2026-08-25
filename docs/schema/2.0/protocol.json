@@ -43,8 +43,11 @@
       "description": "What this Protocol is for and when to run it."
     },
     "protocolTargetType": {
-      "type": "string",
-      "description": "The Record type this Protocol converges on — a Type UUID or its canonical namespace/name form. Loose exploratory Protocols whose output is input context for a tighter Protocol may carry an empty string."
+      "oneOf": [
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "const": "" }
+      ],
+      "description": "The Record type this Protocol converges on — a LINEAGE reference (bare Type UUID; rfc-decision-c8704763). The canonical namespace/name@version form is DISPLAY-only and is never stored here. Loose exploratory Protocols whose output is input context for a tighter Protocol may carry an empty string."
     },
     "protocolStages": {
       "type": "array",
@@ -115,8 +118,9 @@
           }
         },
         "outputType": {
-          "$ref": "#/$defs/TypeRef",
-          "description": "Present when this stage produces its own intermediate Record."
+          "type": "string",
+          "format": "uuid",
+          "description": "Present when this stage produces its own intermediate Record. A LINEAGE reference (bare Type UUID; rfc-decision-c8704763) — the effective package set resolves it. Previously the version-optional TypeRef object; typeVersion is dropped (version-optional hybrids are forbidden)."
         },
         "aiGuidance": {
           "description": "Extraction guidance for an AI assistant working this stage. A plain string, or the structured AiGuidance object used elsewhere in the model.",
@@ -147,24 +151,6 @@
           "type": "string",
           "format": "uuid",
           "description": "Which Type this Field appears in, when the same fieldId appears in several."
-        }
-      }
-    },
-    "TypeRef": {
-      "type": "object",
-      "description": "The pre-RFC-009 spec-level TypeRef used in Protocol contexts: typeVersion is optional. Distinct from blueprint.json's ExactTypeRef, where it is required.",
-      "required": [
-        "typeId"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "typeId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "typeVersion": {
-          "type": "integer",
-          "minimum": 1
         }
       }
     }

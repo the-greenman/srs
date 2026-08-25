@@ -11,7 +11,7 @@
   "fieldType": {
     "datatype": "string",
     "valueDomain": "closed",
-    "vocabularyRef": "com.semanticops.rfc032fixture/relation_type@1",
+    "vocabularyRef": "bf2fcfd7-47a1-5495-a7fa-8969a500a160",
     "cardinality": "list",
     "minItems": 1
   },

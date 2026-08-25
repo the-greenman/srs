@@ -215,9 +215,9 @@
           "type": "string",
           "enum": [
             "local",
-            "external"
+            "remote"
           ],
-          "description": "'local': definitions live in the repository under package/. 'external': definitions are expected pre-installed in the consumer's registry."
+          "description": "LOCATOR (rfc-decision-c8704763; renamed from 'external', converging on the mode-discriminated shape ThemeReference already uses). 'local': definitions live in the repository under package/. 'remote': definitions are expected pre-installed in the consumer's registry."
         },
         "path": {
           "type": "string",
@@ -226,7 +226,7 @@
         "packageId": {
           "type": "string",
           "format": "uuid",
-          "description": "Stable UUID of the package. For external mode: identifies the upstream package (required per R4a, tool-behavioral, not JSON Schema enforced). For local mode: optional; when set, allows same-logical-package identity check without reading the package manifest file."
+          "description": "Stable UUID of the package. For remote mode: identifies the upstream package (required per R4a, tool-behavioral, not JSON Schema enforced). For local mode: optional; when set, allows same-logical-package identity check without reading the package manifest file."
         },
         "packageName": {
           "type": "string",
@@ -234,7 +234,7 @@
         },
         "packageVersion": {
           "type": "string",
-          "description": "Semver of the package (both local and external modes). SHOULD be set when the version is known)."
+          "description": "Semver of the package (both local and remote modes). SHOULD be set when the version is known)."
         }
       }
     },

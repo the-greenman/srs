@@ -51,9 +51,12 @@ const resolveRange = (rangeType) => {
 };
 
 // Vocabulary resolution (gen-time input): vocabularyRef -> effective Term keys (Change G).
+// Keys are LINEAGE bare UUIDs (rfc-decision-c8704763 item 6) — deterministically derived from the
+// pre-migration "namespace/name@version" strings by scripts/migrate-vocabulary-ref-to-lineage.mjs's
+// UUIDv5 formula, so this fixture's generated output matches what that migration produces.
 const VOCAB = {
-  "com.semanticops.rfc032fixture/lifecycle_state@1": ["draft", "active", "archived"],
-  "com.semanticops.rfc032fixture/relation_type@1": ["supersedes", "refines", "depends-on"],
+  "28da3300-7f68-543a-8965-4e6743acc772": ["draft", "active", "archived"], // was lifecycle_state@1
+  "bf2fcfd7-47a1-5495-a7fa-8969a500a160": ["supersedes", "refines", "depends-on"], // was relation_type@1
 };
 
 // ---- the fixture Fields: one per fieldType branch ----------------------------------------------
@@ -73,9 +76,9 @@ const FIELDS = [
   F("due_date", { datatype: "date" }, "Date."),
   F("created_at", { datatype: "date-time" }, "Date-time."),
   F("status_inline", { datatype: "string", valueDomain: "closed", allowedValues: ["draft", "active", "archived"] }, "Closed string domain with an inline, field-fixed allowedValues set (former valueType:select)."),
-  F("state_vocab", { datatype: "string", valueDomain: "closed", vocabularyRef: "com.semanticops.rfc032fixture/lifecycle_state@1" }, "Closed string domain bound to a configurable, package-managed Vocabulary; projects to a pure enum of its effective keys."),
+  F("state_vocab", { datatype: "string", valueDomain: "closed", vocabularyRef: "28da3300-7f68-543a-8965-4e6743acc772" }, "Closed string domain bound to a configurable, package-managed Vocabulary; projects to a pure enum of its effective keys."),
   F("keywords", { datatype: "string", cardinality: "list", minItems: 1, maxItems: 5 }, "List cardinality with min/max items (former multiselect / repeatable)."),
-  F("relation_type_selector", { datatype: "string", valueDomain: "closed", vocabularyRef: "com.semanticops.rfc032fixture/relation_type@1", cardinality: "list", minItems: 1 }, "RequiresRelation.relationType declaration: a list of relation-type keys from a configurable closed vocabulary (min 1) — NOT instance UUID refs."),
+  F("relation_type_selector", { datatype: "string", valueDomain: "closed", vocabularyRef: "bf2fcfd7-47a1-5495-a7fa-8969a500a160", cardinality: "list", minItems: 1 }, "RequiresRelation.relationType declaration: a list of relation-type keys from a configurable closed vocabulary (min 1) — NOT instance UUID refs."),
   F("guidance", { datatype: "ref", mode: "inline", cardinality: "single", rangeType: exactRef("ai_guidance") }, "Inline composite, single (2-level nesting via ai_guidance.examples)."),
   F("examples", { datatype: "ref", mode: "inline", cardinality: "list", rangeType: exactRef("ai_guidance_example") }, "Inline composite, list."),
   F("author_ref", { datatype: "ref", mode: "reference", cardinality: "single", rangeType: exactRef("author") }, "Reference composite, single — a target instance UUID (a value, not a Relation)."),
