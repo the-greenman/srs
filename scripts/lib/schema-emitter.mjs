@@ -220,6 +220,36 @@ export function withEffectiveType(ctx, typeName) {
 }
 
 /**
+ * Per-field provenance for the sibling-merge case (RFC-040 Change J / #274's extension-owner
+ * column): for `typeName`'s effective field set, which Type record actually declared each
+ * FieldAssignment — the base itself, or one of its extenders. Consumed by the reader-projection
+ * generator (`gen-type-reference-tables.mjs`) rather than re-deriving the base/extenders split
+ * `effectiveFields`/`withEffectiveType` already compute (consume, don't clone — layer rule 2).
+ * Returns `Map<fieldId, Type>` (the owning Type record, not just its name) so the caller can read
+ * whatever it needs (namespace, description's `ext:<name>` prefix, etc.) without a second lookup.
+ * Base-declared fields map to the base Type itself — callers distinguish "core" from "extension"
+ * by checking whether the returned owner IS `base` (reference equality), not by name.
+ *
+ * Assumes the SIBLING-MERGE shape (`typeName` is a base with independent extenders, as `field`/
+ * `type` are today) — it reads `typeName`'s OWN `extendsTypeId` chain nowhere. Calling this on a
+ * Type that is itself a child in the child-perspective sense (`resolveEffectiveType`'s case) would
+ * mislabel every field it inherited from its own ancestor as "core", since only `base.fields` is
+ * ever attributed to `base`. No current caller does this (the two bootstrap entities and
+ * `field-assignment`, which has no `extendsTypeId` of its own) — flagged for whoever extends this
+ * to a general child Type next, not built out for a case nothing exercises today.
+ */
+export function fieldOwners(ctx, typeName) {
+  const base = ctx.typesByName[typeName];
+  const extenders = Object.values(ctx.typesById).filter((t) => t.extendsTypeId === base.id);
+  const owners = new Map();
+  for (const f of base.fields) owners.set(f.fieldId, base);
+  for (const ext of extenders) {
+    for (const f of ext.fields) owners.set(f.fieldId, ext);
+  }
+  return owners;
+}
+
+/**
  * Standard child-perspective effective-Type resolution (I-39..43): given a Type T that declares its
  * OWN `extendsTypeId`, walk up the (acyclic, per I-39) ancestor chain, and merge each ancestor's
  * effective fields with T's own, applying T's own `fieldAssignmentOverrides`/`fieldOrder`. Returns a
@@ -257,7 +287,7 @@ export function resolveEffectiveType(ctx, typeName, seen = new Set()) {
  *     base Type as an automatic fallback (which would make e.g. `emitEntity(ctx, "widget")` include a
  *     child `gadget`'s own fields whenever any child of `widget` existed in the package at all).
  */
-function resolveForEmission(ctx, typeName) {
+export function resolveForEmission(ctx, typeName) {
   const t = ctx.typesByName[typeName];
   if (!t) throw new Error(`schema-emitter: unknown type ${typeName}`);
   if (isBootstrapEntity(ctx, typeName) && t.extendsTypeId) {
@@ -389,12 +419,17 @@ function ensureDef(ctx, parts, defs) {
  * its own real `validationRules` projected rather than having them silently discarded in favour of a
  * hand-mirrored envelope that has nothing to do with it.
  */
-function emitBody(ctx, typeName, defs) {
+/**
+ * Default composition order is FieldAssignment.order (ties broken by declaration position); an
+ * explicit Type.fieldOrder (I-41: an exact permutation of the effective fieldId set) overrides it.
+ * Centralized here (not in the merge helpers) so it runs exactly once regardless of merge direction,
+ * and exported so a second consumer (the reader-projection generator, `gen-type-reference-tables.mjs`)
+ * gets the exact same effective composition order `emitBody` uses for the JSON Schema `properties`
+ * key order, rather than re-deriving its own sort (consume, don't clone — layer rule 2).
+ */
+export function orderedFieldAssignments(ctx, typeName) {
   const t = ctx.typesByName[typeName];
   if (!t) throw new Error(`schema-emitter: unknown type ${typeName}`);
-  // Default composition order is FieldAssignment.order (ties broken by declaration position); an
-  // explicit Type.fieldOrder (I-41: an exact permutation of the effective fieldId set) overrides it.
-  // Centralized here (not in the merge helpers) so it runs exactly once regardless of merge direction.
   let orderedFields = [...t.fields].sort((x, y) => x.order - y.order);
   if (t.fieldOrder && t.fieldOrder.length) {
     const byId = new Map(orderedFields.map((f) => [f.fieldId, f]));
@@ -408,6 +443,13 @@ function emitBody(ctx, typeName, defs) {
     }
     orderedFields = t.fieldOrder.map((id) => byId.get(id));
   }
+  return orderedFields;
+}
+
+function emitBody(ctx, typeName, defs) {
+  const t = ctx.typesByName[typeName];
+  if (!t) throw new Error(`schema-emitter: unknown type ${typeName}`);
+  const orderedFields = orderedFieldAssignments(ctx, typeName);
   const properties = {};
   const required = [];
   for (const a of orderedFields) {

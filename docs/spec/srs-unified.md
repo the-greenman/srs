@@ -237,34 +237,7 @@ The minimum valid `AiGuidance` is `{ purpose: "..." }`.
 
 **Content**: The atomic reusable semantic unit. Fields are defined once and composed into Types. A Field's `aiGuidance` and `fieldType` — including every constraint the latter carries — belong to the Field, not to any Type that includes it.
 
-```typescript
-{
-  // Stable identity
-  id: UUID
-  namespace: string
-  name: string       // snake_case programmatic key
-  version: integer   // min: 1; increments within this id's lineage
-
-  // Semantic content
-  description: string      // one-sentence user-facing summary
-  instructions?: string    // fuller guidance for a human completing this field
-  aiGuidance: AiGuidance
-
-  // Value semantics — stable across renderers
-  fieldType: FieldType
-
-  // Editor hint — projection-specific default; implementations and Views may override
-  editorHint?: "singleline" | "textarea" | "rich-text" | "date-picker" | "dropdown" | "multi-select" | "voice"
-
-  // Classification
-  tags?: string[]
-
-  // Metadata
-  createdAt: ISO8601
-  lineage?: Lineage      // see Distribution group
-  provenance?: Provenance
-}
-```
+See the generated reference immediately below for `Field`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger) — this prose no longer hand-duplicates the property list.
 
 #### `FieldType` — the value semantics
 
@@ -354,63 +327,64 @@ Before RFC-032, value semantics were a single closed enum, `valueType`, with the
 ---
 
 
+#### Generated reference: `Field`
+
+**Referenced Type Id**: 4c000001-0000-4000-a000-000000000001
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `field` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
+| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
+| `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
+| `description` | string | yes | — | core | Human-readable description of this entity. |
+| `instructions` | string | no | — | core | Fuller guidance for a human completing this field. |
+| `aiGuidance` | ref → `ai-guidance` (inline) | yes | — | core | Inline LLM guidance for extracting/populating this field or type. |
+| `fieldType` | ref → `field-type` (inline) | yes | — | core | The decomposed value type (RFC-032): datatype x cardinality x value-domain x format x constraints. |
+| `editorHint` | string | no | enum: "singleline" \| "textarea" \| "rich-text" \| "date-picker" \| "dropdown" \| "multi-select" \| "voice" | core | Presentation only (not part of the type model — RFC-032). Suggested UI control; implementations and Views may override. Consolidated by the rendering follow-up #262. |
+| `tags` | string[] | no | — | core | Free-form classification tags. |
+| `lineage` | ref → `lineage` (inline) | no | — | core | Fork/copy history of this definition. |
+| `provenance` | ref → `provenance` (inline) | no | — | core | Import provenance of this definition. |
+| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/field.json>
+
+#### Compact pseudo-IDL
+
+```typescript
+field {
+  id: string // Globally unique, stable UUID identity of this entity.
+  namespace: string // Reverse-DNS logical grouping.
+  name: string // Machine-readable name within the namespace; snake_case.
+  version: integer // Positive integer version within the UUID lineage.
+  description: string // Human-readable description of this entity.
+  instructions?: string // Fuller guidance for a human completing this field.
+  aiGuidance: ref → `ai-guidance` (inline) // Inline LLM guidance for extracting/populating this field or type.
+  fieldType: ref → `field-type` (inline) // The decomposed value type (RFC-032): datatype x cardinality x value-domain x format x constraints.
+  editorHint?: string // Presentation only (not part of the type model — RFC-032). Suggested UI control; implementations and Views may override. Consolidated by the rendering follow-up #262.
+  tags?: string[] // Free-form classification tags.
+  lineage?: ref → `lineage` (inline) // Fork/copy history of this definition.
+  provenance?: ref → `provenance` (inline) // Import provenance of this definition.
+  createdAt: date-time // ISO-8601 creation timestamp.
+}
+```
+
+
 #### Type
 
 **Content**: A named, versioned composition of Fields for a specific semantic object type.
 
-```typescript
-{
-  // Stable identity
-  id: UUID
-  namespace: string
-  name: string
-  version: integer   // min: 1
-
-  // Content
-  description: string        // when to use this Type; what semantic object it defines
-  aiGuidance?: AiGuidance    // Type-level LLM framing; see AI guidance composition in rationale
-
-  // Semantic object type (optional, informative)
-  semanticObjectType?: string
-  // e.g. "decision", "task", "risk", "budget_line", "requirement"
-  // Free-form. Implementations may use as a rendering or grouping hint.
-  // No conforming implementation is required to act on it.
-
-  // Composition
-  fields: FieldAssignment[]
-  // type inheritance, fieldGroups, and validationRules are extensions; see
-  // ext:type-inheritance and ext:cross-field-validation
-
-  // lifecycle is an extension; see ext:lifecycle
-
-  // Classification
-  tags?: string[]
-
-  // Metadata
-  createdAt: ISO8601
-  lineage?: Lineage
-  provenance?: Provenance
-}
-```
+See the generated reference immediately below for `Type`'s current property table (including the extension-owner column — RFC-031 OQ1), optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger) — this prose no longer hand-duplicates the property list, including the extension-owned facets it could previously only gesture at as comments.
 
 #### `FieldAssignment`
 
 A Field reference within a Type. Declares this field's composition order and requiredness within the Type, without redefining field semantics.
 
-```typescript
-{
-  fieldId: UUID     // references Field.id
-  order: integer    // min: 0; declared composition order within the Type — structure, not presentation; feeds canonical serialisation and provides the render default (a View may override for display; see RFC-015)
-  required: boolean
-
-  // Documentation-only — on conflict the Field's own semantics and aiGuidance win; a contextual
-  // description that contradicts them is a data error, not an override (RFC-040 Change C)
-  description?: string
-
-  // Presentation-only — must NOT affect AI guidance, extraction, fieldType, or validation
-  displayLabel?: string
-}
-```
+See the `FieldAssignment` appendix table in the generated reference below for the current property list.
 
 `displayLabel` is strictly for rendering. If a materially different label or meaning is needed, a distinct Field with its own lineage is required.
 
@@ -447,6 +421,89 @@ lifecycleRef?: UUID        // LINEAGE reference (rfc-decision-c8704763) — reso
 Declaring both is a validation error. An inline lifecycle cannot extend; use `lifecycleRef` when the same state machine is needed across multiple Types.
 
 ---
+
+
+#### Generated reference: `Type`
+
+**Referenced Type Id**: 4c000002-0000-4000-a000-000000000002
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `type` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
+| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
+| `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
+| `description` | string | yes | — | core | Human-readable description of this entity. |
+| `semanticObjectType` | string | no | — | core | Optional canonical semantic classification (e.g. "decision", "policy"). Sanctioned-until-collapsed (#383, 2026-08-15): the collapse to a Type-keyed type-query executes at #272; do not add new consumers meanwhile. |
+| `aiGuidance` | ref → `ai-guidance` (inline) | no | — | core | Inline LLM guidance for extracting/populating this field or type. |
+| `fields` | ref → `field-assignment` (inline)[] | yes | — | core | Ordered list of FieldAssignments that make up this Type. |
+| `lifecycle` | ref → `type-lifecycle` (inline) | no | — | ext:lifecycle | ext:lifecycle — inline state machine declaration. Mutually exclusive with lifecycleRef. |
+| `lifecycleRef` | string | no | format: uuid | ext:lifecycle | ext:lifecycle — a LINEAGE reference (bare UUID; rfc-decision-c8704763) to an installed Lifecycle. Mutually exclusive with lifecycle. |
+| `tags` | string[] | no | — | core | Free-form classification tags. |
+| `extendsTypeId` | ref → `type` (id) | no | — | ext:type-inheritance | ext:type-inheritance — the UUID of the base Type this Type specializes. |
+| `extendsTypeVersion` | integer | no | minimum: 1 | ext:type-inheritance | ext:type-inheritance — the version of the base Type being extended. |
+| `fieldOrder` | ref → `field` (id)[] | no | — | ext:type-inheritance | ext:type-inheritance — explicit declared composition order for the merged (base + own) effective field list, overriding per-field FieldAssignment.order at the Type level. |
+| `fieldAssignmentOverrides` | ref → `field-assignment-override` (inline)[] | no | — | ext:type-inheritance | ext:type-inheritance — per-field overrides applied to inherited FieldAssignments. |
+| `identityFieldId` | ref → `field` (id) | no | — | core | RFC-020 — names one fieldId from this Type's effective field set as the record's identity/display field. |
+| `validationRules` | ref → `cross-field-rule` (inline)[] | no | — | ext:cross-field-validation | ext:cross-field-validation — cross-field validation rules applied to Records of this Type. Per I-97, this array is each Type's own complete and exclusive set; it is not inherited by value. |
+| `lineage` | ref → `lineage` (inline) | no | — | core | Fork/copy history of this definition. |
+| `provenance` | ref → `provenance` (inline) | no | — | core | Import provenance of this definition. |
+| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/type.json>
+
+#### `FieldAssignment` (appendix)
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `fieldId` | ref → `field` (id) | yes | — | core | References a Field by its stable id (reference mode closes the metacircular loop). |
+| `order` | integer | yes | minimum: 0 | core | The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015). |
+| `required` | boolean | yes | — | core | Whether this field must be populated before a Record can be logged. |
+| `displayLabel` | string | no | — | core | Context-specific label override for this field within this Type. |
+| `description` | string | no | — | core | Human-readable description of this entity. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/type.json#/$defs/com.semanticops.srs__field-assignment__v1>
+
+#### Compact pseudo-IDL
+
+```typescript
+type {
+  id: string // Globally unique, stable UUID identity of this entity.
+  namespace: string // Reverse-DNS logical grouping.
+  name: string // Machine-readable name within the namespace; snake_case.
+  version: integer // Positive integer version within the UUID lineage.
+  description: string // Human-readable description of this entity.
+  semanticObjectType?: string // Optional canonical semantic classification (e.g. "decision", "policy"). Sanctioned-until-collapsed (#383, 2026-08-15): the collapse to a Type-keyed type-query executes at #272; do not add new consumers meanwhile.
+  aiGuidance?: ref → `ai-guidance` (inline) // Inline LLM guidance for extracting/populating this field or type.
+  fields: ref → `field-assignment` (inline)[] // Ordered list of FieldAssignments that make up this Type.
+  lifecycle?: ref → `type-lifecycle` (inline) // ext:lifecycle — inline state machine declaration. Mutually exclusive with lifecycleRef.
+  lifecycleRef?: string // ext:lifecycle — a LINEAGE reference (bare UUID; rfc-decision-c8704763) to an installed Lifecycle. Mutually exclusive with lifecycle.
+  tags?: string[] // Free-form classification tags.
+  extendsTypeId?: ref → `type` (id) // ext:type-inheritance — the UUID of the base Type this Type specializes.
+  extendsTypeVersion?: integer // ext:type-inheritance — the version of the base Type being extended.
+  fieldOrder?: ref → `field` (id)[] // ext:type-inheritance — explicit declared composition order for the merged (base + own) effective field list, overriding per-field FieldAssignment.order at the Type level.
+  fieldAssignmentOverrides?: ref → `field-assignment-override` (inline)[] // ext:type-inheritance — per-field overrides applied to inherited FieldAssignments.
+  identityFieldId?: ref → `field` (id) // RFC-020 — names one fieldId from this Type's effective field set as the record's identity/display field.
+  validationRules?: ref → `cross-field-rule` (inline)[] // ext:cross-field-validation — cross-field validation rules applied to Records of this Type. Per I-97, this array is each Type's own complete and exclusive set; it is not inherited by value.
+  lineage?: ref → `lineage` (inline) // Fork/copy history of this definition.
+  provenance?: ref → `provenance` (inline) // Import provenance of this definition.
+  createdAt: date-time // ISO-8601 creation timestamp.
+}
+```
+
+```typescript
+field-assignment {
+  fieldId: ref → `field` (id) // References a Field by its stable id (reference mode closes the metacircular loop).
+  order: integer // The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015).
+  required: boolean // Whether this field must be populated before a Record can be logged.
+  displayLabel?: string // Context-specific label override for this field within this Type.
+  description?: string // Human-readable description of this entity.
+}
+```
 
 
 #### Record tiers

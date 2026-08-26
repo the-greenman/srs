@@ -53,12 +53,20 @@ const MAPPING = [
   // into the published record first, and the `TypedRecord.TypedField` row below is what would have
   // gone red against a stale twin. #275/PR #283 retired `field.json` on the same reasoning;
   // Note/NoteSection had always mapped this way. #285 finished the set (RFC-031 Open Question 2).
-  { entity: "Field", prose: "records/subsections/04-2-4-2-field.json", header: null, schemaFile: "field.json", pointer: "#" },
-  { entity: "Type", prose: "records/subsections/04-3-4-3-type.json", header: null, schemaFile: "type.json", pointer: "#" },
-  // RFC-040 Unit 3 (srs#479): the $defs key changed from ad hoc PascalCase to the emitter-owned
-  // `<namespace>__<name>__v<version>` spelling as part of ending $ref-resolution in the byte-closure
-  // comparison (the committed layout now equals the emitter's, not a hand-picked name).
-  { entity: "Type.FieldAssignment", prose: "records/subsections/04-3-4-3-type.json", header: "FieldAssignment", schemaFile: "type.json", pointer: "#/$defs/com.semanticops.srs__field-assignment__v1" },
+  // Field, Type, and Type.FieldAssignment are RETIRED from this mapping as of RFC-040 Change J
+  // (srs#481, the #274 ratified ledger): their prose subsections (04-2-4-2-field.json,
+  // 04-3-4-3-type.json) no longer carry a hand-authored ```typescript block for these three rows —
+  // it was replaced by a generated-type-reference record (a typed generated-view slot,
+  // scripts/gen-type-reference-tables.mjs) whose property table is generated from the SAME
+  // resolved effective Type the schema emitter (scripts/lib/schema-emitter.mjs) projects
+  // docs/schema/2.0/{field,type}.json from. Comparing two independently-generated-from-the-same-
+  // source artifacts can never catch drift a bug in the shared source wouldn't also cause, so
+  // there is nothing left for R1-R3 to usefully check here — the RFC-035/RFC-040 byte-closure
+  // tests (rfc-035-closure-test.mjs, the regenerate-and-diff gate) are this pair's real
+  // conformance gate now. This is "no hand-authored structural duplicate remains for generated
+  // targets" applied, not a silent narrowing: removing these three rows also retires every
+  // allowlist entry that named them (RFC-031 OQ1 is formally closed by the property table's
+  // extension-owner column; see rfcs/rfc-031-idl-schema-conformance-check.md's Open Questions).
   { entity: "Record", prose: "records/subsections/04-4-4-4-record-tiers.json", header: "Record", schemaFile: "record.json", pointer: "#" },
   // Record.FieldValue row dropped at the srs#242 cutover: RFC-039 [R7] deletes
   // $defs.FieldValue — the entity ceases to exist (RFC-031 Cross-references).
@@ -248,7 +256,7 @@ async function loadAllowlist() {
     throw new Error(`${ALLOWLIST_PATH}: expected a JSON array of allowlist entries`);
   }
   for (const entry of raw) {
-    const missing = ["entity", "property", "rule", "issue"].filter((k) => !(k in entry));
+    const missing = ["entity", "property", "rule", "issue", "expected"].filter((k) => !(k in entry));
     if (missing.length > 0) {
       throw new Error(
         `${ALLOWLIST_PATH}: entry ${JSON.stringify(entry)} is missing required field(s): ${missing.join(", ")}`
@@ -267,12 +275,39 @@ async function loadAllowlist() {
           `"${entry.rule}" (must be R1, R2, or R3)`
       );
     }
+    if (typeof entry.expected !== "string" || entry.expected === "") {
+      throw new Error(
+        `${ALLOWLIST_PATH}: entry for ${entry.entity}.${entry.property} is missing a non-empty ` +
+          `"expected" string - RFC-040 Change J / rfc-decision-5f8204bc: every survivor must name its ` +
+          `exact expected mismatch so the entry self-expires when the mismatch changes or disappears`
+      );
+    }
   }
   return raw;
 }
 
-function isAllowed(allowlist, entity, property, rule) {
-  return allowlist.some((e) => e.entity === entity && e.property === property && e.rule === rule);
+/**
+ * The self-expiring allowlist ledger (RFC-040 Change J / rfc-decision-5f8204bc): an entry waives a
+ * violation ONLY when the currently-observed mismatch shape (`observed`) still equals the entry's
+ * recorded `expected` string. A change in shape (the mismatch moved to something else) is reported
+ * as loudly as an unwaived violation would be - "fail when the mismatch changes", not silently
+ * re-waived under the old label. Every consulted entry is added to `consumed`; entries that match
+ * NO observed violation at all (the mismatch disappeared - the property was resolved, removed, or
+ * the two sides now agree) are reported once at the end of `main`, per the same rule's other half.
+ */
+function checkAllowlist(allowlist, consumed, entity, property, rule, observed) {
+  const entry = allowlist.find((e) => e.entity === entity && e.property === property && e.rule === rule);
+  if (!entry) return false;
+  consumed.add(entry);
+  if (entry.expected !== observed) {
+    fail(
+      `${entity}.${property} (${rule}, issue #${entry.issue}): allowlist entry is stale - its recorded ` +
+        `"expected" mismatch ("${entry.expected}") no longer matches what is currently observed ` +
+        `("${observed}") - update the entry's "expected" or retire it (rfc-decision-5f8204bc: an ` +
+        `exception dies when its cited condition changes, even if nobody noticed)`
+    );
+  }
+  return true;
 }
 
 // --- main ---------------------------------------------------------------------------------------
@@ -284,6 +319,7 @@ function fail(msg) {
 
 async function main() {
   const allowlist = await loadAllowlist();
+  const consumed = new Set();
   const proseCache = new Map();
   const schemaCache = new Map();
   let entitiesChecked = 0;
@@ -342,12 +378,12 @@ async function main() {
     // R1 - property set equality
     for (const name of schemaNames) {
       if (idlNames.has(name)) continue;
-      if (isAllowed(allowlist, row.entity, name, "R1")) continue;
+      if (checkAllowlist(allowlist, consumed, row.entity, name, "R1", "schema-only")) continue;
       fail(`${row.entity}: schema declares "${name}" (${row.schemaFile}${row.pointer === "#" ? "" : row.pointer}) with no pseudo-IDL counterpart`);
     }
     for (const name of idlNames) {
       if (schemaNames.has(name)) continue;
-      if (isAllowed(allowlist, row.entity, name, "R1")) continue;
+      if (checkAllowlist(allowlist, consumed, row.entity, name, "R1", "prose-only")) continue;
       fail(`${row.entity}: pseudo-IDL declares "${name}" with no schema counterpart (schema rejects it if additionalProperties:false)`);
     }
 
@@ -359,20 +395,40 @@ async function main() {
       const schemaRequiredHere = schemaRequired.has(name);
       const idlRequiredHere = !idl.optional;
 
-      if (idlRequiredHere !== schemaRequiredHere && !isAllowed(allowlist, row.entity, name, "R2")) {
-        fail(
-          `${row.entity}.${name}: optionality mismatch - pseudo-IDL says ${idlRequiredHere ? "required" : "optional"}, ` +
-            `schema says ${schemaRequiredHere ? "required" : "optional"}`
-        );
+      if (idlRequiredHere !== schemaRequiredHere) {
+        const observed = `idl=${idlRequiredHere ? "required" : "optional"},schema=${schemaRequiredHere ? "required" : "optional"}`;
+        if (!checkAllowlist(allowlist, consumed, row.entity, name, "R2", observed)) {
+          fail(
+            `${row.entity}.${name}: optionality mismatch - pseudo-IDL says ${idlRequiredHere ? "required" : "optional"}, ` +
+              `schema says ${schemaRequiredHere ? "required" : "optional"}`
+          );
+        }
       }
 
-      if (!typesEquivalent(idl.type, schemaProp) && !isAllowed(allowlist, row.entity, name, "R3")) {
-        fail(
-          `${row.entity}.${name}: type mismatch - pseudo-IDL says "${idl.type}", schema says ` +
-            `${JSON.stringify({ type: schemaProp.type, format: schemaProp.format, enum: schemaProp.enum })}`
-        );
+      if (!typesEquivalent(idl.type, schemaProp)) {
+        const observed = `schema:type=${schemaProp.type},format=${schemaProp.format ?? "-"},enum=${Array.isArray(schemaProp.enum) ? schemaProp.enum.join("|") : "-"}`;
+        if (!checkAllowlist(allowlist, consumed, row.entity, name, "R3", observed)) {
+          fail(
+            `${row.entity}.${name}: type mismatch - pseudo-IDL says "${idl.type}", schema says ` +
+              `${JSON.stringify({ type: schemaProp.type, format: schemaProp.format, enum: schemaProp.enum })}`
+          );
+        }
       }
     }
+  }
+
+  // RFC-040 Change J / rfc-decision-5f8204bc: an allowlist entry that never matched any observed
+  // violation this run has nothing left to waive - the mismatch it names has disappeared (the
+  // property was resolved, removed, or renamed), and per the self-expiring-exception rule that
+  // makes it stale ledger debt, not a live exception. Reported here, once, rather than silently
+  // carried forward.
+  for (const entry of allowlist) {
+    if (consumed.has(entry)) continue;
+    fail(
+      `${entry.entity}.${entry.property} (${entry.rule}, issue #${entry.issue}): allowlist entry is stale - ` +
+        `no observed mismatch matched it this run (expected "${entry.expected}") - retire this entry ` +
+        `(rfc-decision-5f8204bc: an exception dies when its cited condition disappears, even if nobody noticed)`
+    );
   }
 
   if (failures.length > 0) {
@@ -381,7 +437,7 @@ async function main() {
     console.log(`\nFAILED: ${failures.length} conformance problem(s) across ${entitiesChecked} mapped entit${entitiesChecked === 1 ? "y" : "ies"}.`);
     process.exit(1);
   }
-  console.log(`Checking IDL/schema conformance... OK (${entitiesChecked} mapped entities, allowlist covers pre-existing known gaps)`);
+  console.log(`Checking IDL/schema conformance... OK (${entitiesChecked} mapped entities, ${allowlist.length} self-expiring allowlist entries all still live)`);
 }
 
 main().catch((error) => {
