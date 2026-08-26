@@ -1,0 +1,2105 @@
+{
+  "$schema": "./census.schema.json",
+  "cycle": "2026-08-26",
+  "sourceManifest": "scripts/grid-census/census-input.json",
+  "labelSet": [
+    "assertion",
+    "attribution",
+    "conformance",
+    "containment",
+    "description",
+    "governance",
+    "identity",
+    "portability",
+    "reference",
+    "repository",
+    "succession",
+    "versioning"
+  ],
+  "counts": {
+    "total": 229,
+    "byCell": {
+      "assertion": 6,
+      "attribution": 2,
+      "conformance": 74,
+      "containment": 7,
+      "description": 14,
+      "governance": 13,
+      "identity": 22,
+      "portability": 11,
+      "reference": 41,
+      "repository": 12,
+      "succession": 5,
+      "versioning": 2
+    },
+    "none": 20,
+    "bySource": {
+      "invariant": 119,
+      "decision": 33,
+      "subsection-rule": 77
+    }
+  },
+  "entries": [
+    {
+      "id": "I-135",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-000a1338.json",
+      "cell": "governance",
+      "confidence": "high",
+      "note": "Reader must structurally detect dataModelRevision generation and refuse to coerce/skip unsupported ones — migration over drift, corpus-wide.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "1",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-001.json",
+      "cell": "identity",
+      "confidence": "high",
+      "note": "Display label/hint explicitly barred from carrying semantic weight (validation, Relations, Discovery) — identifier over label.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "2",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-002.json",
+      "cell": "identity",
+      "confidence": "medium",
+      "note": "A Type can't reuse a Field's identity for different semantics; new meaning requires a new Field id, not overloading the existing one.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "3",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-003.json",
+      "cell": "identity",
+      "confidence": "medium",
+      "note": "Semantic content (aiGuidance) belongs to the Field's own identity; Type-level framing doesn't redefine it.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "4",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-004.json",
+      "cell": null,
+      "confidence": "medium",
+      "note": "Pure internal referential-integrity rule for a Type's own lifecycle definition; no clear axis tradeoff.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "5",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-005.json",
+      "cell": null,
+      "confidence": "medium",
+      "note": "Same as initialState rule — internal well-formedness of lifecycle.transitions[], not a grid-axis preference.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "6",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-006.json",
+      "cell": "reference",
+      "confidence": "low",
+      "note": "Record.lifecycleState must declared-reference a key in the Type's own states — cross-entity declared linkage, but weak fit.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "7",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-007.json",
+      "cell": "repository",
+      "confidence": "medium",
+      "note": "Every fieldId used in a Package's Types must be catalogued in dependencyRefs — catalog over circumstance.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "8",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-008.json",
+      "cell": "repository",
+      "confidence": "medium",
+      "note": "Bundled mode requires the catalog (dependencyRefs) to be backed by actual Field entries — catalog completeness, not assumed availability.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "9",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-009.json",
+      "cell": "identity",
+      "confidence": "high",
+      "note": "Field.id is stable; a new id (not an edit) is what makes something a new definition — identifier over label, textbook fit.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "10",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-010.json",
+      "cell": "reference",
+      "confidence": "low",
+      "note": "Cross-field rules can only reference fields within the Type's own effective field list — declared scope over reaching outside.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "11",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-011.json",
+      "cell": null,
+      "confidence": "medium",
+      "note": "Pure shape/parameter requirements per validation-rule type; no evident grid tradeoff.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "12",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-012.json",
+      "cell": "identity",
+      "confidence": "low",
+      "note": "View compatibility is field-centric, not Type-bound — favors field-level identity over the coarser Type label/grouping.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "13",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-013.json",
+      "cell": "identity",
+      "confidence": "high",
+      "note": "FieldView rendering hints (displayLabel/displayHint/compositeRenderer/editorHintOverride) barred from affecting semantics — identifier over label.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "14",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-014.json",
+      "cell": "identity",
+      "confidence": "high",
+      "note": "A View must not redefine the semantic content of a Field or Type it references — semantic ownership stays with the Field's identity.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "15",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-015.json",
+      "cell": "repository",
+      "confidence": "medium",
+      "note": "typeId used by a View must be catalogued in dependencyRefs (and present in types[] when bundled) — catalog over circumstance.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "16",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-016.json",
+      "cell": "assertion",
+      "confidence": "high",
+      "note": "Fixes which Relation endpoint is the asserting instance and forbids reversing it — statement over side-effect.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "17",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-017.json",
+      "cell": "reference",
+      "confidence": "high",
+      "note": "Reserves Relation for real semantic-consequence assertions and bars using it for lightweight prose mention — declared strength over convenient reach.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "18",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-018.json",
+      "cell": "identity",
+      "confidence": "medium",
+      "note": "NoteSection.name must be unique within a Note — the name functions as a local identifier.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "19",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-019.json",
+      "cell": "identity",
+      "confidence": "medium",
+      "note": "TypedField.name must be unique within a TypedRecord — same local-identifier pattern as NoteSection.name.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "20",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-020.json",
+      "cell": "containment",
+      "confidence": "high",
+      "note": "Container.containerId is explicitly not an instance ID and can't appear as a Relation endpoint — declared containment boundary, not location/reach.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "21",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-021.json",
+      "cell": "containment",
+      "confidence": "high",
+      "note": "Container root/member lists must reference valid instance IDs — containment membership must be a real declared reference.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "28",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-028.json",
+      "cell": "identity",
+      "confidence": "high",
+      "note": "typeId/typeVersion are authoritative over the denormalised typeNamespace/typeName convenience labels — identifier over label, direct fit.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "29",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-029.json",
+      "cell": "reference",
+      "confidence": "low",
+      "note": "ProtocolStage.dependsOn must reference a stageId declared within the enclosing Protocol — declared scope over reaching outside it.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "30",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-030.json",
+      "cell": "reference",
+      "confidence": "low",
+      "note": "ProtocolStage.contributesTo must resolve within the stage's own or the Protocol's declared effective field list — same declared-scope pattern as dependsOn.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "31",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-031.json",
+      "cell": "reference",
+      "confidence": "medium",
+      "note": "dependsOn is the declared-reference authority for execution order; the order field is a convenient positional default that must not contradict it.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "32",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-032.json",
+      "cell": "portability",
+      "confidence": "high",
+      "note": "explicitly frames namespace/name form as required for cross-package resolution; bare strings leave portability of the section undefined.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "34",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-034.json",
+      "cell": "reference",
+      "confidence": "medium",
+      "note": "containerId must resolve to a valid Container reference; other Address fields stay optional pending focus narrowing.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "35",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-035.json",
+      "cell": "reference",
+      "confidence": "high",
+      "note": "renderViewId must resolve to a declared View.id, with a stricter physical-presence requirement in bundled mode.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "36",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-036.json",
+      "cell": "reference",
+      "confidence": "high",
+      "note": "TypeRef.typeId across several Blueprint fields must resolve via dependencyRefs, with bundled mode requiring physical presence.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "37",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-037.json",
+      "cell": "reference",
+      "confidence": "high",
+      "note": "Protocol/type and field references must resolve via dependencyRefs, with bundled mode requiring physical presence.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "38",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-038.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "sets one canonical interpretation (ignore format when datatype isn't string) that all implementations must follow uniformly.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "39",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-039.json",
+      "cell": "reference",
+      "confidence": "medium",
+      "note": "extendsTypeId must resolve to a valid Type; the acyclicity clause is a secondary structural touch.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "40",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-040.json",
+      "cell": null,
+      "confidence": "low",
+      "note": "a field-duplication-across-inheritance rule; doesn't map cleanly onto any cell's stated preference.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "41",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-041.json",
+      "cell": null,
+      "confidence": "low",
+      "note": "fieldOrder completeness/no-duplicate-no-omission rule is a narrow structural detail without a clean cell match.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "42",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-042.json",
+      "cell": "reference",
+      "confidence": "medium",
+      "note": "override fieldId must resolve to an inherited field; the Field-semantics-immutability clause is a secondary touch.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "43",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-043.json",
+      "cell": "reference",
+      "confidence": "high",
+      "note": "the full transitive closure of base Types must be explicitly declared in dependencyRefs, not left to convenient reach.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "44",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-044.json",
+      "cell": "reference",
+      "confidence": "high",
+      "note": "NavigationLink endpoints must resolve to a sectionId declared in the enclosing DocumentView.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "45",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-045.json",
+      "cell": "repository",
+      "confidence": "medium",
+      "note": "defines the structural markers (.srs marker + manifest.json) that make a directory a conforming repository.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "46",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-046.json",
+      "cell": "repository",
+      "confidence": "high",
+      "note": "the tree-enumerated instance set is the authoritative catalog; there is no manifest index to cross-check against (RFC-038 R1/R2).",
+      "status": "unreviewed"
+    },
+    {
+      "id": "47",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-047.json",
+      "cell": "containment",
+      "confidence": "high",
+      "note": "the manifest's declared embedded Container takes precedence over a separately-located container.json on conflict.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "48",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-048.json",
+      "cell": "reference",
+      "confidence": "high",
+      "note": "a repository-document SourceReference must resolve to a present sidecar; an unresolved documentId is invalid.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "49",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-049.json",
+      "cell": "repository",
+      "confidence": "high",
+      "note": "archive completeness is measured against the tree-enumerated catalog, not the retired manifest instanceIndex (RFC-038 R1/R2).",
+      "status": "unreviewed"
+    },
+    {
+      "id": "50",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-050.json",
+      "cell": "repository",
+      "confidence": "medium",
+      "note": "bundled local-package completeness is measured against the tree-enumerated instance set (RFC-038 R1), not a manifest index.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "51",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-051.json",
+      "cell": "portability",
+      "confidence": "medium",
+      "note": "archives must preserve referenced source-document material outright rather than relying on it being recognized/resolved elsewhere.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "52",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-052.json",
+      "cell": "reference",
+      "confidence": "high",
+      "note": "a sidecar's contentPath must resolve to an existing file; an unresolved reference is invalid and must be surfaced before use.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "53",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-053.json",
+      "cell": "identity",
+      "confidence": "medium",
+      "note": "repositoryId, not incidental circumstance, must be the identifier an importer keys existing-repo detection off of.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "54",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-054.json",
+      "cell": "assertion",
+      "confidence": "high",
+      "note": "a conflict must be surfaced as an explicit statement rather than resolved via a silent overwrite/discard side effect.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "55",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-055.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "establishes one canonical checksum string format across every checksum-bearing field in the corpus.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-63",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-063.json",
+      "cell": "reference",
+      "confidence": "high",
+      "note": "ExactTypeRef entries must resolve within the in-scope Package union; unresolved entries are diagnosed and excluded from matching.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-64",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-064.json",
+      "cell": "identity",
+      "confidence": "medium",
+      "note": "Resolved root Type is authoritative over the declared containerType label (mismatch only diagnostic, never invalidates).",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-65",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-065.json",
+      "cell": "description",
+      "confidence": "medium",
+      "note": "Vocabulary Terms give tags one canonical resolution over free-string synonyms, but only when a Vocabulary governs the key.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-66",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-066.json",
+      "cell": "repository",
+      "confidence": "high",
+      "note": "A mandatory operation providing an authoritative, always-consistent catalog of container membership across the repo.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-78",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-078.json",
+      "cell": "reference",
+      "confidence": "high",
+      "note": "ExactTypeRef (typeId+version) requires fully declared, resolved references rather than loose/convenient ones.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-79",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-079.json",
+      "cell": "containment",
+      "confidence": "high",
+      "note": "Root Container is explicitly declared in manifest.container rather than inferred from tree location.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-80",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-080.json",
+      "cell": "repository",
+      "confidence": "high",
+      "note": "Root container membership resolves against the tree-enumerated authoritative set, not a retired manifest instanceIndex.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-81",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-081.json",
+      "cell": "identity",
+      "confidence": "high",
+      "note": "identityInstanceId is the repository's identity pointer; atomic reassignment guarantees it never names a non-member.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-82",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-082.json",
+      "cell": "containment",
+      "confidence": "medium",
+      "note": "Navigation sections should be backed by a declared Container in the container set, not merely implied by structure.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-83",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-083.json",
+      "cell": "reference",
+      "confidence": "medium",
+      "note": "typeId/fieldId references must resolve across the full multi-version package union; also touches portability (must not remove a version directory a reference still needs).",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-84",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-084.json",
+      "cell": "reference",
+      "confidence": "medium",
+      "note": "upstreamPackage.packageId must be backed by an explicit matching packageRefs entry, not assumed.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-85",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-085.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "core types/fields are resolvable the same single way in every repository without per-repo packageRef configuration.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-86",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-086.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Reserving com.semanticops.core against local/external redeclaration enforces one unambiguous namespace owner.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-87",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-087.json",
+      "cell": "identity",
+      "confidence": "medium",
+      "note": "Adds a type constraint on the repository's identity record; migration-period warning-vs-error behavior is a secondary governance touch.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-88",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-088.json",
+      "cell": "conformance",
+      "confidence": "low",
+      "note": "Disjointness between sourceRole enum and RelationTypeDefinition keys prevents two systems giving one key ambiguous meaning.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-89",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-089.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Extension declaration strictly bounds which implementations the cross-field-validation rules apply to.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-90",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-090.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Mandates one prescribed evaluation model (fail-all, not fail-first) for implementations that opt in.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-91",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-091.json",
+      "cell": null,
+      "confidence": "low",
+      "note": "Narrow firing semantics of one rule type; doesn't map to a governing-preference axis.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-92",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-092.json",
+      "cell": null,
+      "confidence": "low",
+      "note": "Domain-specific field-ordering comparison semantics, not a structural design axis.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-93",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-093.json",
+      "cell": null,
+      "confidence": "low",
+      "note": "Narrow mutual-exclusion counting rule; no clear fit among the twelve cells.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-94",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-094.json",
+      "cell": null,
+      "confidence": "low",
+      "note": "Field-eligibility constraints for one rule type are extension-internal detail, not a Pattern Grid concern.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-95",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-095.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Unknown rule types must be rejected rather than silently tolerated, keeping the extension's rule set closed to one set of behaviors.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-96",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-096.json",
+      "cell": null,
+      "confidence": "low",
+      "note": "Cross-type property leakage between rule shapes is schema-purity detail, too narrow to anchor to one cell.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-97",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-097.json",
+      "cell": "assertion",
+      "confidence": "medium",
+      "note": "validationRules must be explicitly restated by a subtype rather than inherited as a side effect of extension.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-98",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-098.json",
+      "cell": "assertion",
+      "confidence": "medium",
+      "note": "A lifecycle state's relation obligation must be satisfied by an actual asserted Relation, not treated as incidental.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-99",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-099.json",
+      "cell": "succession",
+      "confidence": "medium",
+      "note": "newRecord fulfillment creates an explicit successor Record atomically rather than overwriting, with the relation asserted alongside it.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-128",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-0b8f008f.json",
+      "cell": "reference",
+      "confidence": "medium",
+      "note": "Core mechanic is resolving a viewId reference to a DocumentView, with ambiguous/unresolved references erroring out — declared strength over convenient reach; also touches conformance for the fallback-selection algorithm.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-113",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-0e6bca40.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Prescribes exact must-include/must-not-include query semantics for structured filters, i.e. one correct result set over many possible interpretations.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-139",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-0e6f7aea.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Explicitly mandates uniform wrapping behavior across every datatype rather than per-type special-casing.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-100",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-100.json",
+      "cell": "reference",
+      "confidence": "medium",
+      "note": "Routes successor-flow presentation 'from structure rather than state-name matching' — declared structural reference over convenient string matching; secondary touch to succession via state transitions.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-144",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-187b18d0.json",
+      "cell": "containment",
+      "confidence": "medium",
+      "note": "Governs how a type-query's container scope is determined (explicit/repository/subtree) via declared containerScope and contains-relation traversal.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-126",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-20bd523e.json",
+      "cell": "reference",
+      "confidence": "low",
+      "note": "Explicit declared memberOrder takes precedence over the default topological-sort fallback, echoing declared-strength-over-convenient-reach; could also read as containment given container-subset framing.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-106",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-296c61be.json",
+      "cell": "portability",
+      "confidence": "high",
+      "note": "Byte-for-byte reproducible archive export excluding host-specific metadata is exactly preserve-over-recognize.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-133",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-2b94ca42.json",
+      "cell": "attribution",
+      "confidence": "medium",
+      "note": "fieldMeta's {source, editedAt, sourceRefs} shape is explicit stated provenance on a field value; the surrounding rule is a structural key-subset validation.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-101",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-2be86c08.json",
+      "cell": "assertion",
+      "confidence": "high",
+      "note": "Attachment must be an explicit SourceReference statement and MUST NOT be modeled as a Relation edge — statement over side-effect, verbatim.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-143",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-49572823.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Defines a single deterministic order of inclusion-then-exclusion filtering and required no-op behavior when the field or extension is absent.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-138",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-4d0263c2.json",
+      "cell": "description",
+      "confidence": "high",
+      "note": "Keys projected fields by Field.name and retires the ProjectedFieldGroup/ProjectedGroupEntry constructs entirely — one name over many, directly.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-117",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-5840eeb0.json",
+      "cell": "reference",
+      "confidence": "high",
+      "note": "Declared structured-filter constraints cannot be widened or overridden by convenient content-match recall — declared strength over convenient reach, verbatim shape.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-137",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-5a7dcf06.json",
+      "cell": "reference",
+      "confidence": "medium",
+      "note": "Protects a live pinned typeId+typeVersion reference from deletion so the Record-to-Field edge doesn't break; also touches governance (type version lifecycle).",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-110",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-5e89a360.json",
+      "cell": "reference",
+      "confidence": "medium",
+      "note": "Forbids path traversal reaching outside the declared co-located directory — convenient reach disallowed in favor of the strict declared relationship.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-103",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-6341bcaa.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Mandates uniform graceful load behavior when an optional package/record is absent, rather than implementation-variable refusal.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-125",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-6970c1bc.json",
+      "cell": "assertion",
+      "confidence": "high",
+      "note": "precedes MUST be interpreted as a semantic claim, not a rendering hint — statement over side-effect, verbatim.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-107",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-6a7d674a.json",
+      "cell": "conformance",
+      "confidence": "low",
+      "note": "Bounds diagnostic/enforcement behavior for policy thresholds but explicitly permits implementation choice (MAY enforce hard rejection), weakening the one-way fit.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-116",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-6debe8a7.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Clarifies the scope of the recall-floor guarantee — inclusion is fixed, rank order is explicitly left free.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-119",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-7110cc58.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Mandates AND semantics for multi-value tag predicates (one interpretation over the ambiguous alternative); the Vocabulary canonicalization clause leans toward description as a secondary touch.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-141",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-7bdbac1c.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Requires one canonical key-serialization order (by FieldAssignment.order) so re-runs are byte-idempotent, rather than allowing varying orders.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-109",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-83410026.json",
+      "cell": "reference",
+      "confidence": "medium",
+      "note": "contentPath resolution is anchored strictly relative to the declared sourceDocumentsPath base.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-112",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-8b166381.json",
+      "cell": "reference",
+      "confidence": "medium",
+      "note": "A tombstoned reference (documentId) remains valid and conformant even when the convenient reach (actual content bytes) is unavailable.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-121",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-93320c14.json",
+      "cell": "conformance",
+      "confidence": "low",
+      "note": "Defines the mandatory text-projection segments but explicitly allows implementations to differ on optional displayLabel segments, weakening a clean one-way fit.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-131",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-99354119.json",
+      "cell": "identity",
+      "confidence": "high",
+      "note": "Duplicate Field.name within a Type's effective field set is rejected as fatal at definition time, not resolved by precedence — matches Earth's 'identity conflicts are fatal' column principle.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-120",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-99dc528c.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Precisely enumerates which datatype/format combinations MUST or MUST NOT contribute text-projection segments — one determinate searchability rule over variance.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-127",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-ab24cfd9.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Fixes one normative algorithm for combining typeFilter and memberOrder that all implementations must follow, over any local variant.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-114",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-ae111a90.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Mandates a single required recall-floor matching algorithm for ext:discovery implementations.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-122",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-b3eb90e9.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Fixes one canonical normalization algorithm (NFC + case fold) all implementations must use for matching, over ad-hoc variants.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-132",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-bbed89d6.json",
+      "cell": "description",
+      "confidence": "high",
+      "note": "Key absence is ruled the sole representation of unset, forbidding null as an alternate representation -- one shape over many.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-140",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-bca2cd6f.json",
+      "cell": null,
+      "confidence": "medium",
+      "note": "A scoping clarification (schema covers fieldValues, not envelope members) rather than an instance of any single cell's over-preference.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-130",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-bf34d7af.json",
+      "cell": "description",
+      "confidence": "high",
+      "note": "Field.name verbatim is the one required key form at every depth, with no case/separator transform -- one name over many.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-104",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-bfc2af4e.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Prescribes one uniform default behavior for absent policy that all implementations must apply.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-105",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-c348617e.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Deterministic archive production rules fix one exact byte-level output over many possible valid ZIPs.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-102",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-d85abd4c.json",
+      "cell": "reference",
+      "confidence": "high",
+      "note": "sourceId must resolve via the declared sidecar mechanism, not the convenient content file -- declared strength over convenient reach.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-115",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-dcc49425.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Clarifies conformance surface: extra results beyond the mandated recall floor don't violate the one required behavior.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-111",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-e0c51df4.json",
+      "cell": "repository",
+      "confidence": "medium",
+      "note": "Singleton-per-repository constraint on the policy record with duplicate handling, tying uniqueness to the repository catalog.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-123",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-e2788042.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Defines a fixture-driven conformance test implementations MUST pass exactly -- explicit one-way-over-many machinery.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-124",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-ed385e02.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Defines a fixture-driven conformance test (superset requirement) implementations MUST pass.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-134",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-ef57abe8.json",
+      "cell": "governance",
+      "confidence": "high",
+      "note": "Version-gated removal of deprecated field-group machinery with explicit revision resolution -- migration over drift.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-142",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-f287f47c.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Fixes one exact filtering algorithm (OR semantics, absent-state exclusion) all implementations of the query must follow.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-129",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-f448175b.json",
+      "cell": "description",
+      "confidence": "medium",
+      "note": "Requires fieldValues keys to equal Field.name from the effective field set, rejecting unknowns -- one naming scheme over many.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-136",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-fc982bf7.json",
+      "cell": "reference",
+      "confidence": "high",
+      "note": "A reference value must resolve to an instance matching the declared rangeType, not merely a reachable target -- declared strength over convenient reach.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-108",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-fcc662f0.json",
+      "cell": "identity",
+      "confidence": "high",
+      "note": "Requires identifying file type by content magic bytes, not filename or MIME label -- identifier over label.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "I-118",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-fed0ec5e.json",
+      "cell": "containment",
+      "confidence": "medium",
+      "note": "Defines the canonical three-condition container membership test (declared root/member lists plus transitive contains), though it also touches repository via the tree-authoritative-over-manifest-cache point.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-0225099b",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-0225099b.json",
+      "cell": "governance",
+      "confidence": "high",
+      "note": "Removes current defaultValue sites now and defers a single future layered-override capability, explicitly ruling out a second parallel mechanism -- migration over drift.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-16b20c56",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-16b20c56.json",
+      "cell": "attribution",
+      "confidence": "high",
+      "note": "Explicitly rules the Attribution cell's foundation principle (stated over assumed, testimony never authority).",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-19997e24",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-19997e24.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Explicitly labeled Cell: Conformance -- a single registry replacing hand-wired checks.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-1e5df0d9",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-1e5df0d9.json",
+      "cell": null,
+      "confidence": "medium",
+      "note": "Meta-guidance on what belongs in the decision log itself, not a data-model preference instance of any of the twelve cells.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-2a1e1590",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-2a1e1590.json",
+      "cell": "versioning",
+      "confidence": "high",
+      "note": "Explicitly labeled Cell: Versioning -- semantic content changes by increment/successor, with state fields carved out as the sanctioned in-place exception.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-2e0cd70a",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-2e0cd70a.json",
+      "cell": "portability",
+      "confidence": "high",
+      "note": "Unknown instance-layer content must be preserved (or loudly refused), never silently discarded -- preserve over recognize.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-2f048790",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-2f048790.json",
+      "cell": "description",
+      "confidence": "medium",
+      "note": "Records are the single semantic source with docs/schema generated from them — one canonical description, many derived renderings.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-2fb87c1e",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-2fb87c1e.json",
+      "cell": "repository",
+      "confidence": "high",
+      "note": "States what counts as the repository's authoritative catalog versus manifest.json — a repository/catalog-authority claim.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-4269c744",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-4269c744.json",
+      "cell": null,
+      "confidence": "medium",
+      "note": "A view-vs-type layering rule (expression never alters meaning) rather than a Pattern Grid preference claim.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-43249f53",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-43249f53.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Self-declared Cell: Conformance — collapses parallel workflow-state mechanisms into one Lifecycle way.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-4f1e12e5",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-4f1e12e5.json",
+      "cell": "governance",
+      "confidence": "medium",
+      "note": "Systemic evidence-driven removal of dormant constructs from the standard; individual removed items carry their own separate cell tags.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-53635966",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-53635966.json",
+      "cell": "identity",
+      "confidence": "high",
+      "note": "Self-declared Cell: Identity — collapses the tier model, identifier-bearing Record vs free-text Note.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-5c1e3068",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-5c1e3068.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "One target-neutral intermediate representation ahead of any backend — one way over many render paths.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-5f8204bc",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-5f8204bc.json",
+      "cell": "succession",
+      "confidence": "high",
+      "note": "Charter-level rule for axis 5-11 (Succession↔Conformance); the three layer mechanisms are unified under the Fire-column successor-over-overwrite preference (record's own tag: cell:succession).",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-628cf6c4",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-628cf6c4.json",
+      "cell": "description",
+      "confidence": "high",
+      "note": "Explicitly invokes Description's preference: a name is a contract, renamed only via migration, never a lingering alias.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-6523cf5e",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-6523cf5e.json",
+      "cell": null,
+      "confidence": "medium",
+      "note": "Keeps rendering hints out of fieldType facets — a presentation/meaning layer-boundary rule, not a cell preference.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-693b9458",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-693b9458.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "One declared release governs rendering behavior — one way over many, changed only via reviewable commit.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-6fc7e142",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-6fc7e142.json",
+      "cell": "description",
+      "confidence": "high",
+      "note": "Unifies the substrate escape-bag name to 'meta' everywhere — one name over many, executed as a migration.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-7255aecc",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-7255aecc.json",
+      "cell": "reference",
+      "confidence": "high",
+      "note": "Explicitly a KEYED-reference design (cites rfc-decision-c8704763) for SectionSource's typeKey resolution.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-7bd99afd",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-7bd99afd.json",
+      "cell": "description",
+      "confidence": "medium",
+      "note": "Meaning must live once in the records, not split off into a hand-maintained overlay — one canonical description.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-7caca3a1",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-7caca3a1.json",
+      "cell": "governance",
+      "confidence": "high",
+      "note": "Self-declared Cell: Governance — sets the decision-mode machinery (clear/complicated/complex/chaotic).",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-7d3dda60",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-7d3dda60.json",
+      "cell": "identity",
+      "confidence": "low",
+      "note": "Field identity within a Record recovered via name plus pinned Type rather than a repeated fieldId; also touches the Reference cell's PINNED strength.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-86f49083",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-86f49083.json",
+      "cell": "governance",
+      "confidence": "high",
+      "note": "Composes two migrations into one release train at a declared dataModelRevision — migration over drift.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-8948e43f",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-8948e43f.json",
+      "cell": "portability",
+      "confidence": "high",
+      "note": "States the axis 6-12 travel mandate directly: every held construct must have a travelling form.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-8f5aca2c",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-8f5aca2c.json",
+      "cell": "governance",
+      "confidence": "high",
+      "note": "Self-declared Cell: Governance — adds reach-marking, sequence-propagation, and balance-count operations to the framework.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-92d2da05",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-92d2da05.json",
+      "cell": "description",
+      "confidence": "high",
+      "note": "Renames DocumentView to Composition and retires 'Export' as vocabulary — one name over many.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-9ee14517",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-9ee14517.json",
+      "cell": null,
+      "confidence": "high",
+      "note": "Explicitly framed as a companion register to the Pattern Grid governing layer-stacking, not a cell placement itself.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-b9d7096e",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-b9d7096e.json",
+      "cell": "governance",
+      "confidence": "high",
+      "note": "Self-declared Cell: Governance — adds autoclassification and the stance vocabulary as grid operations.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-c4fffe93",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-c4fffe93.json",
+      "cell": null,
+      "confidence": "low",
+      "note": "Field structure decomposed into independent fieldType facets; a type-system design choice not clearly tied to one of the twelve preferences.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-c8704763",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-c8704763.json",
+      "cell": "reference",
+      "confidence": "high",
+      "note": "Self-declared Cell: Reference — defines the four reference strengths (PINNED/LINEAGE/KEYED/LOCATOR).",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-cce3c00e",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-cce3c00e.json",
+      "cell": null,
+      "confidence": "high",
+      "note": "The founding ratification of the Pattern Grid itself (all axes and cell preferences at once), not a placement into one cell.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-d67e3d76",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-d67e3d76.json",
+      "cell": "governance",
+      "confidence": "medium",
+      "note": "Describes migrating the metamodel from RFC-004's parallel schema-source vocabulary into the canonical self-hosted package — a systemic migration-over-drift move, though it also touches conformance's single-source theme.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "rfc-decision-dd0a33fc",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-dd0a33fc.json",
+      "cell": "portability",
+      "confidence": "high",
+      "note": "Authoritative-vs-approximated classification exists precisely to ensure emitters preserve information rather than silently dropping it — preserve over recognize.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "04-2-4-2-field#r1",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/04-2-4-2-field.json",
+      "cell": "reference",
+      "confidence": "high",
+      "note": "States directly that reference-mode is a declared, weaker link (target id) that must not be conflated with a Relation — the reference cell's own distinction.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "04-2-4-2-field#r2",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/04-2-4-2-field.json",
+      "cell": "versioning",
+      "confidence": "medium",
+      "note": "Turns on whether changing the value set requires a new Field version (allowedValues) or not (vocabularyRef) — the increment-over-edit tradeoff.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "04-7-vocabulary-term-substrate#r1",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/04-7-vocabulary-term-substrate.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Normalizes absent status to a single interpretation across all resolution rules, i.e. one consistent reading rather than many.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "04-7-vocabulary-term-substrate#r2",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/04-7-vocabulary-term-substrate.json",
+      "cell": null,
+      "confidence": "medium",
+      "note": "A field-requiredness inheritance rule for specializing the substrate Type — doesn't cleanly match any single cell's preference; leaning none over forcing containment or succession.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "04-7-vocabulary-term-substrate#r3",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/04-7-vocabulary-term-substrate.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Defines exactly what a 'conforming implementation' must be able to compute — the canonical one-way-over-many requirement.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "04-7-vocabulary-term-substrate#r4",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/04-7-vocabulary-term-substrate.json",
+      "cell": "reference",
+      "confidence": "medium",
+      "note": "Exclusivity between allowedValues and a vocabularyRef, plus the requirement that the ref resolve to a closed Vocabulary, is about the declared strength of that field-to-vocabulary reference; conformance is a plausible secondary read.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "04-7-vocabulary-term-substrate#r5",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/04-7-vocabulary-term-substrate.json",
+      "cell": "succession",
+      "confidence": "medium",
+      "note": "Governs reusing a retired key without silently overwriting stale references — successor over overwrite, with a reference-integrity secondary touch.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-12-ext-import-tracking#r1",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-12-ext-import-tracking.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "When two statuses could both apply, mandates one canonical status to report — one way over many.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-15-ext-repository#r1",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-15-ext-repository.json",
+      "cell": "repository",
+      "confidence": "high",
+      "note": "Defines the `.srs` marker as what makes a directory a repository, independent of where it sits — catalog over circumstance, the repository cell's core claim.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r1",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Mandates one consistent fallback behavior (ignore, don't error) for implementations lacking the extension.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r2",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "identity",
+      "confidence": "medium",
+      "note": "Uniqueness requirement on asset names within a Theme — identifier discipline over label collision.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r3",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "reference",
+      "confidence": "medium",
+      "note": "A bundled ThemeReference's themeId must actually resolve within Package.themes[] — declared reference must hold, not just be conveniently reachable.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r4",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Requires implementations to emit the same semantic CSS classes for html/pdf output — one prescribed rendering behavior.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r5",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Mandates a single uniform fallback (empty string) for inapplicable template variables across all implementations.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r6",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "description",
+      "confidence": "medium",
+      "note": "A definitional table fixing one canonical meaning per template variable name — one name over many possible readings.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r7",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Same ignore-don't-error mandate as r1, restated as a numbered rule [T-1] — one required behavior.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r8",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": null,
+      "confidence": "medium",
+      "note": "A minimum-cardinality validation rule on Theme.targets; doesn't clearly map to a single cell's preference, so leaning none.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r9",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Prescribes exactly one behavior (apply vs ignore the Theme) keyed on format membership in targets.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r10",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "portability",
+      "confidence": "medium",
+      "note": "Forbids the presentation layer from suppressing or reordering structural content passed through {{content}} — preserving structure over letting theming recognize/alter it.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r11",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "identity",
+      "confidence": "high",
+      "note": "Restates the asset-name uniqueness constraint as rule [T-4] — identifier uniqueness within the Theme.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r12",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "reference",
+      "confidence": "medium",
+      "note": "Restates the bundled-theme resolution requirement as [T-5] — a declared reference that must actually resolve.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r13",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Requires one uniform pass-through behavior for unrecognized template variables rather than implementation-specific errors.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r14",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "portability",
+      "confidence": "medium",
+      "note": "Forbids re-emitting structural headings outside {{content}} in wrapper templates — preserving the one structural rendering over letting theme templates re-derive it.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r15",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Fixes the one correct override-precedence and no-duplicate-key behavior for wrapper templates.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r16",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Mandates uniform CSS-class application and normalization; subsidiary clause echoes identity's Field.name-over-displayLabel preference.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r17",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Specifies the one correct fieldRow application order/filter and a non-wrap constraint on preamble.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r18",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Requires uniform acceptance of a new definitionType value without validation error.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r19",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Dispatch-precedence rule: exactly one of two template mechanisms applies depending on compositeRenderer.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r20",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Defines the single correct silent-ignore behavior for unmatched keys.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r21",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Precedence rule between groupFieldRowTemplates and fieldRow, one way to resolve the conflict.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r22",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Fixes the default CSS class value implementations must use absent explicit config.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r23",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Specifies exact output behavior for an explicit empty-string override.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r24",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Scopes template application strictly to the matching renderer, excluding others.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r25",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Names the single authoritative signal for format-conditional default resolution.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r26",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Silent-ignore rule for unknown config properties, one uniform behavior.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r27",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Consolidated processing rules for compositeRendererConfig keying, format signal, and sentinel handling.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r28",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "States defaults are output specification applied unconditionally, not optional configuration.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r29",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Defines exact applicability conditions for compositeFieldRowTemplates versus renderer dispatch.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r30",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "governance",
+      "confidence": "medium",
+      "note": "Deprecation/migration rule requiring keys be carried forward at the #242 cutover rather than silently lost.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r31",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "governance",
+      "confidence": "medium",
+      "note": "Ties rule retirement to the FieldGroup removal cutover, a deliberate migration timeline rather than drift.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r32",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "identity",
+      "confidence": "medium",
+      "note": "Core claim is deriving the identity class from the stable Field.name rather than the human-facing displayLabel.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r33",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Broadens a rendering requirement to apply unconditionally regardless of extension declaration.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r34",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "governance",
+      "confidence": "high",
+      "note": "Explicit dual-emission deprecation window tied to a named cutover clock, then retirement of the old form.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r35",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Fixes the fallback behavior at the terminal rung of the row-template resolution ladder.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-19-ext-slices#r1",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-19-ext-slices.json",
+      "cell": "identity",
+      "confidence": "medium",
+      "note": "Requires a fresh, distinct UUID for the archive rather than reusing/implying the origin's identity; also touches portability's standalone-artifact concern.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-19-ext-slices#r2",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-19-ext-slices.json",
+      "cell": "portability",
+      "confidence": "high",
+      "note": "Defines the closure of instances, definitions, relations, and content that MUST be preserved when exporting a slice across the repository boundary.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-19-ext-slices#r3",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-19-ext-slices.json",
+      "cell": "portability",
+      "confidence": "high",
+      "note": "Cross-boundary relations are preserved as externalRelationRefs provenance rather than requiring in-archive recognition/resolution.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-19-ext-slices#r4",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-19-ext-slices.json",
+      "cell": "portability",
+      "confidence": "medium",
+      "note": "Relaxes validator recognition requirements for a partial/boundary-crossing slice while real integrity errors still count.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-2-ext-lifecycle#r1",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-2-ext-lifecycle.json",
+      "cell": "reference",
+      "confidence": "low",
+      "note": "initialState must reference the state's key by declared identifier rather than convenient positional reach; the co-occurring uniqueness constraint (exactly one isInitial) is a secondary touch.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-2-ext-lifecycle#r2",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-2-ext-lifecycle.json",
+      "cell": null,
+      "confidence": "medium",
+      "note": "A validity constraint tying a state's isInitial flag to its status; no grid axis (identity/versioning/description/attribution etc.) is the primary claim here.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-2-ext-lifecycle#r3",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-2-ext-lifecycle.json",
+      "cell": "succession",
+      "confidence": "low",
+      "note": "Constrains which transitions (state-to-state sequencing) are valid, forbidding a final state from being a transition source.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-5-ext-type-inheritance#r1",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-5-ext-type-inheritance.json",
+      "cell": "description",
+      "confidence": "high",
+      "note": "Declared identityFieldId is preferred as the one canonical display label over any implementation-specific heuristic — one name over many.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-5-ext-type-inheritance#r2",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-5-ext-type-inheritance.json",
+      "cell": "reference",
+      "confidence": "high",
+      "note": "identityFieldId must resolve to an actual fieldId in the Type's effective field set — a declared reference that must resolve, not a convenient/loose pointer.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-5-ext-type-inheritance#r3",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-5-ext-type-inheritance.json",
+      "cell": "description",
+      "confidence": "medium",
+      "note": "Governs which single field supplies a section's heading label (identityFieldId as fallback, titleFieldId taking precedence when declared) — a display-label resolution rule; also touches the multi-site precedence pattern seen in reference/conformance rules.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-6-ext-views-l1#r1",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Fixes one canonical syntactic form for renderer identifiers, with graceful degradation for anything else — one way over many, enforced at render/validation time.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-6-ext-views-l1#r2",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "cell": "governance",
+      "confidence": "high",
+      "note": "Explicitly labeled Governance in the text: bare renderer names are namespace-controlled and only enter via ratified RFC, vs. vendor-namespaced free introduction — controlled evolution over drift.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-6-ext-views-l1#r3",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "cell": "reference",
+      "confidence": "medium",
+      "note": "A binding must reference a Field of the correct declared type/mode (ref, inline) to be honored; otherwise it is not treated as a valid reference.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-6-ext-views-l1#r4",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "cell": "reference",
+      "confidence": "medium",
+      "note": "A binding's fieldId must actually resolve on the rendered instance's Type to take effect; otherwise it is silently inert — reference validity scoped to what's actually assigned.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-6-ext-views-l1#r5",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "cell": "reference",
+      "confidence": "high",
+      "note": "Binding must target a field directly assigned to the Type; no inference is permitted for nested composites — declared strength over convenient/implicit reach.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-6-ext-views-l1#r6",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "A deterministic multi-site precedence algorithm resolves at most one binding among several possible declaration sites — one way over many possible orderings; also touches reference (more-specific declared binding wins).",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-6-ext-views-l1#r7",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Standardized fallback behavior for an unrecognised renderer value, with mandatory diagnostic — one canonical degrade path over silently varying behavior.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-6-ext-views-l1#r8",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "A deterministic tie-break algorithm (lowest order, then code-point) picks exactly one winner among ambiguous role candidates — one way over many possible resolutions.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-6-ext-views-l1#r9",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Defines a single standardized contract-satisfaction test a role Field must pass, with specified fallback on failure — process correctness, one way over many.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-6-ext-views-l1#r10",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "cell": "succession",
+      "confidence": "medium",
+      "note": "editorHintOverride, when a valid value, supersedes Field.editorHint for that View; an invalid value is dropped and the original applies — successor over overwrite, with a validity gate.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-6-ext-views-l1#r11",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Standardizes diagnostic shape, identification, and severity across all CR-036-n rules, and pins that none affect exit code — one uniform diagnostic regime over many ad hoc ones.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-7-ext-views-l2#r1",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Fixes the one baseline rendering path to use when no L1 View is selected, excluding L1 influence — one defined path over many possible fallbacks.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-7-ext-views-l2#r2",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Normative, format-independent rules for which fields emit a row and how (no empty labels, block-list for multi-entry) — standardized rendering correctness.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-7-ext-views-l2#r3",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "cell": "conformance",
+      "confidence": "low",
+      "note": "Introduces the normative field-row emission forms as the terminal rung of a defined template ladder — largely framing text pointing at a standardized output contract.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-7-ext-views-l2#r4",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Pins exact separator characters, element names/nesting/classes as normative per format, emitted unconditionally regardless of whether ext:themes-l1 is declared — one canonical baseline output over many.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-7-ext-views-l2#r5",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Fixes multi-entry values to a single normative rendering form (block list, never comma-joined) across implementations.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-7-ext-views-l2#r6",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Mandates a specific blank-line separation rule between rows, explicitly structural (CommonMark-driven) rather than cosmetic — one correct serialization over many.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-7-ext-views-l2#r7",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Specifies exact per-format continuation-line indentation rules for multi-line values — standardized output form, one way per format.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-7-ext-views-l2#r8",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Defines the one normative empty/placeholder emission behavior for the baseline path, distinct from the L1 path's own governing option — standardized process correctness.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-7-ext-views-l2#r9",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "cell": "conformance",
+      "confidence": "medium",
+      "note": "Mandates one deterministic escaping/emission behavior per output format across all implementations, not per-instance naming.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-7-ext-views-l2#r10",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Normatively fixes a single required resolution for {{heading-3}} in standalone context, forbidding the literal token — one way over many.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-7-ext-views-l2#r11",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "cell": "description",
+      "confidence": "medium",
+      "note": "Fallback rule for choosing which field's value serves as a record's rendered heading/label when no title is declared; secondary touch on identity via identityFieldId.",
+      "status": "unreviewed"
+    },
+    {
+      "id": "07-7-ext-views-l2#r12",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "cell": "conformance",
+      "confidence": "high",
+      "note": "Same pattern as r10: fixes JSON-mode heading-variable resolution to one required value, disallowing the literal token.",
+      "status": "unreviewed"
+    }
+  ]
+}
