@@ -12,7 +12,7 @@ source of a schema is now **`Field`/`Type` records** (RFC-032 `fieldType` model)
 Rust twin (`srs-projection/json_schema.rs` + `rfc_035_parity.rs`) — MUST produce byte-identical output to this
 contract.
 
-**Current parity status (RFC-040 Unit 3, srs#479):** the Rust twin **has shipped** for RFC-035's original scope
+**Current parity status (RFC-040 Unit 3, srs#479):** the Rust twin **has shipped** (srs-rust#778) for RFC-035's original scope
 (the stale "deferred to #260" note this superseded referred only to the #260 **authorship flip** — whether the
 seed or the emitter owns the committed bytes — never to whether a Rust emitter exists at all). It does **not
 yet** implement this unit's three additions — effective-Type resolution (Change A), the facing distinction
