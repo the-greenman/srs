@@ -37,7 +37,30 @@ All work happens in `srs/`. Run `git` from this directory (`/home/greenman/dev/s
 ## Stage 1 — Determine mode
 
 - If `$ARGUMENTS` references an existing GitHub issue (`#N` or a URL), fetch it with `gh issue view N --repo the-greenman/srs` and use it as the brief. Skip to **Stage 3** if the issue already has an RFC number in its title.
-- Otherwise proceed to Stage 2 to draft and file a new RFC.
+- Otherwise proceed to **Stage 1.5** — the Charter Check — before any drafting.
+
+## Stage 1.5 — Charter Check
+
+**Mandatory, and before any drafting.** An RFC continuing from an existing issue that already has an RFC number (the Stage 1 skip-to-3 path) has already been through this — it is not repeated on every resumption. A brand-new RFC always runs it first, on the brief from `$ARGUMENTS`, before Stage 2 writes a word of the draft.
+
+The governing rule (owner, 2026-08-23): *"any RFC on srs needs to be aware of the principles and past decisions at planning time, with an explicit check against principles as part of the process."* This stage produces the answers; Stage 2b carries them verbatim into the RFC's `## Charter alignment` section (srs#463).
+
+1. **Read the compass.** Read `docs/charter/decision-compass.md` in full — do not rely on memory of a prior read. It is the pointer surface; do not duplicate its content here, cite it.
+2. **Name the cell(s).** Using the Pattern Grid, locate which of the twelve cells (`♈`–`♓`) the proposal lands in — one or more. If it lands in no cell, that is itself a finding against the grid (raise it), never a reason to skip naming one.
+3. **State the governing preference.** For each cell named, state its one-line cell preference and the axis it sits on with that axis's default pole. If the proposal wants the **non-default** pole, justify it explicitly against that axis's boundary clause (quote the clause, state why it applies) — silent non-default adoption is not acceptable.
+4. **Search the decision log.** Search `docs/spec/rfcs/rfc-decision-log.md` and `records/tier-2/rfc-decision-*.json` for past decisions adjacent to the proposal's territory. List every decision id consulted. If any would be contradicted by this proposal, do **not** silently override it — flag it as a supersession question for the owner (Reliability over Renewal, axis 5–11) and carry the question into the RFC's Open Questions / PR's "Decisions you need to make".
+5. **One-way-per-goal check.** Ask: does this proposal introduce a second mechanism for a goal that already has one? Search for an existing mechanism serving the same goal. If one exists, either collapse the proposal onto it, or — if collapsing isn't right — route a supersession question to the owner instead of standing up a parallel mechanism silently (the E4/`semanticObjectType` proving case: two parallel ways to do one thing is drift, not a design choice this stage may make alone).
+6. **Layer test, from the compass.** Read the compass's "Six layer rules, three planes" and "Two review tests" sections and answer, for this proposal specifically:
+   - Which layer (MEANING/EXPRESSION/OPERATION plane, and which stack position within it) owns this construct? If its home isn't on the compass's layer map, that absence is itself a finding.
+   - Does it consume the layer below through the reference taxonomy, or does it clone/re-implement a lower-layer mechanism?
+   - Would the layer below still stand alone (complete and valid) if this proposal and everything above it were absent?
+7. **Name the decision mode.** Per `rfc-decision-7caca3a1`: is this decision **clear**, **complicated**, **complex**, **chaotic**, or **unresolved/contested**?
+   - Clear/complicated resolve through steps 2–6 above.
+   - **Complex** is never resolved by citing a cell — that is the named premature-classification pathology. Produce a **consequence map** instead: place the decision across every cell it genuinely touches, plot its options for consequences along the relevant axes and polarities, check column coherence, and look for emergence. A complex decision yields rulings for the owner, not guard compliance — say so explicitly and route it to the owner rather than resolving it in the draft.
+   - **Chaotic** is outside the spec boundary entirely — no charter process applies. Stop drafting this RFC as a charter-governed change and say so on the issue; it re-enters as complex or complicated once the situation admits mapping.
+   - Unresolved/contested defaults to the more cautious handling: complex over complicated.
+
+Write the results of steps 2–7 down now — Stage 2b's `## Charter alignment` section is this stage's output, verbatim, not a re-derivation.
 
 ## Stage 2 — Draft RFC and file GitHub issue
 
@@ -78,6 +101,30 @@ Create `srs/rfcs/rfc-NNN-<slug>.md` following this structure **exactly** (do not
 | Rev | Date | Summary |
 |---|---|---|
 | 1 | <today> | Initial draft |
+
+---
+
+## Charter alignment
+
+<Required — Stage 1.5's output, verbatim. Do not omit or thin this out; the checker enforces its presence and the consistency of its cell tokens with the integration manifest, but a human reads the content.>
+
+**Cell(s):** cell:<slug>[, cell:<slug>, ...]
+**Decision mode:** <clear | complicated | complex | chaotic | unresolved>
+
+**Governing cell preference:** <the cell's one-line "this over that" preference, and whether this proposal aligns with it>
+**Axis preference:** <axis N–M name — default pole taken, or the non-default pole with its boundary-clause justification quoted>
+
+**Decisions consulted:** <rfc-decision-... ids searched and read, comma-separated>
+**Contradictions found:** <None — or: the id, what it says, and the supersession question routed to the owner>
+
+**One-way-per-goal:** <No existing mechanism serves this goal — or: <existing mechanism named>, collapsed onto it / routed as a supersession question>
+
+**Layer test:**
+- Which layer owns this? <plane + stack position, per the compass's layer map>
+- Consume or clone downward? <answer>
+- Does the layer below stand alone without this? <answer>
+
+<If decision_mode is complex: the consequence map (cells touched, options plotted along axes, column coherence, emergence) goes here instead of a citation-only answer above.>
 
 ---
 
@@ -553,6 +600,7 @@ The records and rendered spec are now correct, but the prose docs that *describe
 
 When done, report:
 - RFC number and title
+- Charter Check (Stage 1.5): cell(s) named, decision mode, and the one-way-per-goal answer
 - GitHub issue URL
 - Current RFC status (Draft / In Progress / Accepted)
 - PR URL (if Stage 5 was reached)
