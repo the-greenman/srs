@@ -3424,7 +3424,7 @@ srs/conformance/discovery/
   scenarios.json  # named query scenarios with expectedInstanceIds and exactMatch flags
 ```
 
-An implementation that declares `ext:discovery` MUST pass all fixture scenarios (exactMatch:true scenarios exactly; exactMatch:false scenarios as a superset).
+An implementation that declares `ext:discovery` MUST pass all fixture scenarios (exactMatch:true scenarios exactly; exactMatch:false scenarios as a superset). A scenario MAY additionally carry an `expectedSegments` expectation — `{ instanceId, fieldName, segments: string[] }` — naming the exact ordered `TextSegment` sequence one field of one instance must project; when present, the implementation's segment COUNT and ORDER for that field MUST match `segments` exactly (RFC-012 R11; srs#483 closes the gap left by `expectedInstanceIds` alone, which cannot express I-120's "one segment per array element in order" rule).
 
 ---
 
@@ -3717,7 +3717,7 @@ Conforming implementations must uphold the following invariants.
 
 **I-122.** Normalization of `TextSegment.text` MUST apply Unicode Normalization Form C (NFC) followed by Unicode simple case folding (locale-independent). Implementations MUST NOT strip punctuation, diacritics, or whitespace during this normalization step; additional stemming or tokenization is permitted for ranking purposes only, not as a substitute for the normalized canonical search string. (RFC-012 R10.)
 
-**I-123.** An implementation that declares `ext:discovery` MUST pass all structured-filter conformance scenarios (`exactMatch: true`) from the fixture at `srs/conformance/discovery/scenarios.json`, returning exactly the `expectedInstanceIds` set for each such scenario. (RFC-012 R11.)
+**I-123.** An implementation that declares `ext:discovery` MUST pass all structured-filter conformance scenarios (`exactMatch: true`) from the fixture at `srs/conformance/discovery/scenarios.json`, returning exactly the `expectedInstanceIds` set for each such scenario. When a scenario also carries an `expectedSegments` expectation, the implementation's Text Projection for the named field of the named instance MUST additionally match the expected segment sequence exactly in count and order — testing I-120's list-cardinality rule ("one segment per array element in order") that `expectedInstanceIds` alone cannot express. (RFC-012 R11; srs#483.)
 
 **I-124.** An implementation that declares `ext:discovery` MUST pass all content-match conformance scenarios (`exactMatch: false`) from the fixture at `srs/conformance/discovery/scenarios.json` — its result set for each such scenario MUST be a superset of the scenario's `expectedInstanceIds`. (RFC-012 R12.)
 

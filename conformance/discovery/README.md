@@ -6,7 +6,8 @@ one adds an obligation, and changing an expectation changes what conformance mea
 
 - `fixture-repo/` — the repository under test: 11 instances across Tiers 0, 1 and 2, four Types, 27
   Fields spanning every RFC-032 `fieldType` classification I-120 rules on.
-- `scenarios.json` — 36 scenarios, each a `DiscoveryQuery` plus its expected instance ids.
+- `scenarios.json` — 37 scenarios, each a `DiscoveryQuery` plus its expected instance ids; one also
+  carries an `expectedSegments` expectation (srs#483).
 
 > **Open question before the exclusion scenarios can be relied on as conformance.** The 13
 > content-match exclusion scenarios (`exactMatch: true`, empty expected set) sit awkwardly against
@@ -150,20 +151,29 @@ the datatypes they cover leave no room to plant one:
 The two halves need each other. Without the inclusion scenarios, a `contentMatch` implementation
 that always returned nothing would pass all thirteen exclusions.
 
-## What this fixture does NOT assert, and why
+## Segment count and order (`expectedSegments`, srs#483)
 
-I-120 says a list-cardinality Field "emits **one segment per array element in order**". This fixture
-asserts that each element is independently recallable (`i120_include_list_element_first` / `_middle`
-/ `_last` over `aliases`), which rules out a projection that drops elements or concatenates them
-lossily. It does **not** assert the segment *count* or their *order*.
+I-120 says a list-cardinality Field "emits **one segment per array element in order**". The
+`i120_include_list_element_first` / `_middle` / `_last` trio over `aliases` asserts only that each
+element is independently recallable — it rules out a projection that drops elements or concatenates
+them lossily, but does not pin segment *count* or *order*, because `expectedInstanceIds` can only say
+a record matched. Nor does the hit shape help: `DiscoveryHit` carries `matched_fields`, but those are
+distinct *field names*, so three `aliases` segments and one lossily concatenated `aliases` segment
+both yield `["aliases"]`.
 
-That is a limit of the conformance contract, not an oversight. A scenario expresses expectations as
-`expectedInstanceIds`, so the strongest thing it can say about a record is that the record matched.
-Nor does the hit shape help: `DiscoveryHit` carries `matched_fields`, but those are distinct *field
-names*, so three `aliases` segments and one lossily concatenated `aliases` segment both yield
-`["aliases"]`. Nothing a scenario can say distinguishes them. Closing it needs a new expectation kind in `scenarios.json`
-(normative — it changes the RFC-012 `[R11]` interface) landed together with a runner that can
-evaluate it. Raised on #317 rather than worked around here.
+`expectedSegments` (RFC-012 `[R11]`, `docs/schema/2.0/discovery.json`) closes this: a scenario MAY
+carry `{ instanceId, fieldName, segments: string[] }` naming the exact ordered `TextSegment` sequence
+one field of one instance must project. `i120_list_segments_order` exercises it over the same
+`aliases` field as the trio above, asserting `["zzaliasalpha", "zzaliasbeta", "zzaliasgamma"]` in that
+order. Its runner is `scripts/check-discovery-conformance.mjs` (wired into `validate-all.mjs`) — it
+projects only the named field of the named instance, using the one rule `expectedSegments` exists to
+test (list → one segment per element in array order; scalar → one segment), and diffs it against
+`segments` by count then by position. It does not reimplement the full Text Projection algorithm;
+that oracle is still srs-rust's `discovery_conformance` test, which the `expectedInstanceIds`
+scenarios exercise.
+
+The srs-rust discovery runner does not yet understand `expectedSegments` — see the follow-up filed
+against srs-rust at landing (referenced from srs#483).
 
 Recursive Text Projection into inline composites is a separate, larger gap: `ref` is excluded in
 both modes knowingly, and admitting it would need traversal, cycle and nested-segment-identity

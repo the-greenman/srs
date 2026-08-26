@@ -262,6 +262,13 @@ async function validateAll() {
   const typeReferenceTablesInSync = await runScript('gen-type-reference-tables.mjs', ['--check']);
   if (!typeReferenceTablesInSync) allValid = false;
 
+  // ext:discovery conformance (RFC-012 [R11], srs#483): every scenario carrying an
+  // `expectedSegments` expectation gets its segment COUNT and ORDER actually evaluated against
+  // conformance/discovery/fixture-repo — not just prose-asserted. Node pipeline only; the pinned
+  // `srs` binary cannot read this fixture at all (see conformance/discovery/README.md).
+  const discoveryConformanceValid = await runScript('check-discovery-conformance.mjs');
+  if (!discoveryConformanceValid) allValid = false;
+
   console.log(`\n${'='.repeat(60)}`);
   console.log(allValid ? '\n✓ All validations passed' : '\n✗ Some validations failed');
   process.exit(allValid ? 0 : 1);
