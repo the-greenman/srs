@@ -158,6 +158,14 @@ async function main() {
 
   const statements = [...invariants, ...decisions, ...subsectionRules];
 
+  const seen = new Map();
+  for (const s of statements) {
+    if (seen.has(s.id)) {
+      throw new Error(`Duplicate statement id "${s.id}": ${seen.get(s.id)} and ${s.file} both produced it`);
+    }
+    seen.set(s.id, s.file);
+  }
+
   const manifest = {
     $comment:
       'Deterministic extraction of the normative corpus (srs#471). Re-run: node scripts/grid-census/extract-corpus.mjs. Two runs over an unchanged tree must be byte-identical.',

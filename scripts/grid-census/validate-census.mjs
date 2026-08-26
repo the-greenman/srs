@@ -67,6 +67,23 @@ async function main() {
       req(doc.counts.total === doc.entries.length, 'counts.total must equal entries.length');
       const actualNone = doc.entries.filter((e) => e.cell === null).length;
       req(doc.counts.none === actualNone, `counts.none (${doc.counts.none}) must equal actual none-count (${actualNone})`);
+
+      const actualByCell = {};
+      const actualBySource = {};
+      for (const e of doc.entries) {
+        if (e.cell !== null) actualByCell[e.cell] = (actualByCell[e.cell] ?? 0) + 1;
+        actualBySource[e.source] = (actualBySource[e.source] ?? 0) + 1;
+      }
+      for (const slug of slugSet) {
+        const declared = doc.counts.byCell?.[slug] ?? 0;
+        const actual = actualByCell[slug] ?? 0;
+        req(declared === actual, `counts.byCell.${slug} (${declared}) must equal actual count (${actual})`);
+      }
+      for (const key of new Set([...Object.keys(doc.counts.bySource ?? {}), ...Object.keys(actualBySource)])) {
+        const declared = doc.counts.bySource?.[key] ?? 0;
+        const actual = actualBySource[key] ?? 0;
+        req(declared === actual, `counts.bySource.${key} (${declared}) must equal actual count (${actual})`);
+      }
     }
   }
 

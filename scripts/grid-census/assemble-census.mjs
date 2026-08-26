@@ -25,7 +25,6 @@ import { fileURLToPath } from 'url';
 import { loadCellSlugs } from '../lib/pattern-grid-cells.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = join(__dirname, '..', '..');
 const INPUT_MANIFEST = join(__dirname, 'census-input.json');
 
 async function loadResults(resultsDir) {

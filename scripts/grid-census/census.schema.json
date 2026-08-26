@@ -7,6 +7,7 @@
   "additionalProperties": false,
   "required": ["cycle", "sourceManifest", "labelSet", "counts", "entries"],
   "properties": {
+    "$schema": { "type": "string" },
     "cycle": { "type": "string", "format": "date" },
     "sourceManifest": { "type": "string", "minLength": 1 },
     "labelSet": {
