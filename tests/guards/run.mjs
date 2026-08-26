@@ -1174,6 +1174,57 @@ async function charterAlignmentSectionCases(root) {
   );
 }
 
+// ---- srs#495 — checks registry membership: every scripts/check-*.mjs is declared ------------------
+async function checksRegistryMembershipCases(root) {
+  console.log("srs#495 — checks registry membership guard");
+
+  const registryPath = join(root, "scripts/checks.json");
+  const declaredCheckPath = join(root, "scripts/check-declared.mjs");
+  const undeclaredCheckPath = join(root, "scripts/check-undeclared.mjs");
+
+  const registry = (...scripts) => ({
+    checks: scripts.map((script) => ({
+      id: script.replace(/^check-/, "").replace(/\.mjs$/, ""),
+      script,
+      tier: "always",
+      cell: "conformance",
+      governing: "fixture",
+      description: "fixture entry",
+    })),
+  });
+
+  await writeText(declaredCheckPath, "// fixture check script\n");
+  await writeText(undeclaredCheckPath, "// fixture check script\n");
+  await writeJson(registryPath, registry("check-declared.mjs"));
+
+  // The violation this guard exists for: a check-*.mjs script lands on disk with nobody
+  // registering it in scripts/checks.json — the same undeclared-structure shape that shipped
+  // check-release-drift.mjs outside validate-all.mjs's surface in the PR #493 incident.
+  expect(
+    "rejects a check-*.mjs script on disk that is absent from the registry",
+    runCheck("check-checks-registry-membership.mjs", root),
+    { exit: 1, contains: ["scripts/check-undeclared.mjs", "not declared in scripts/checks.json"] },
+  );
+
+  // Declaring it clears the violation — the guard is not simply always red.
+  await writeJson(registryPath, registry("check-declared.mjs", "check-undeclared.mjs"));
+  expect(
+    "accepts once every check-*.mjs script is declared",
+    runCheck("check-checks-registry-membership.mjs", root),
+    { exit: 0, contains: ["✓ Every scripts/check-*.mjs file is declared in scripts/checks.json"] },
+  );
+
+  // A floor, matching the sibling guards: a walk that finds no check-*.mjs file at all is not a
+  // scripts/ directory with nothing wrong — it means the root argument is wrong.
+  await rm(declaredCheckPath);
+  await rm(undeclaredCheckPath);
+  expect(
+    "fails when no check-*.mjs script is found at all",
+    runCheck("check-checks-registry-membership.mjs", root),
+    { exit: 1, contains: ["No scripts/check-*.mjs files found"] },
+  );
+}
+
 const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
 try {
   await fieldNameCases(join(root, "field-name"));
@@ -1185,6 +1236,7 @@ try {
   await decisionCellTagsCases(join(root, "decision-cell-tags"));
   await relationTypeResolutionCases(join(root, "relation-type-resolution"));
   await charterAlignmentSectionCases(join(root, "charter-alignment"));
+  await checksRegistryMembershipCases(join(root, "checks-registry-membership"));
 } finally {
   await rm(root, { recursive: true, force: true });
 }

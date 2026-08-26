@@ -1,0 +1,296 @@
+{
+  "$comment": "The one declared registry of every spec-repo conformance check (rfc-decision-19997e24, issue #495). validate-all.mjs is a loop over this file's `always`-tier entries, in array order — order matters for at least one entry (see `afterId`), so this stays a JSON array, never re-sorted. `check-checks-registry-membership.mjs` (itself listed below) fails the build if a `scripts/check-*.mjs` file on disk is missing from this file. Fields per entry: `id` (stable, kebab-case), `script` (path passed to `runScript`, relative to scripts/ exactly as today — no renames), `args` (argv passed to the script), `tier` (`always` run by `node scripts/validate-all.mjs`; `pinned-cli` needs the pinned `srs` binary from scripts/fetch-pinned-srs.mjs and is not runnable from plain `node`; `ci-only` is reached only by a CI workflow step with no local entry point), `cell` (the Pattern Grid slug this check guards against drift in, per scripts/lib/pattern-grid-cells.json), `governing` (the RFC/decision/issue that introduced the rule), `description` (what the check actually asserts and why), and optionally `afterId` (this check must run after the named id — an execution-order dependency, not just a display grouping) and `expiry` (an issue tracking when a grandfathered check is expected to retire). This is a stepping stone toward checks-as-records (rfc-decision-19997e24's trajectory clause, handed to the #490 fold) — the JSON here is meant to become a generated projection, not a permanent hand-authored artifact.",
+  "tiers": ["always", "pinned-cli", "ci-only"],
+  "checks": [
+    {
+      "id": "validate-package",
+      "script": "validate-package.mjs",
+      "dynamic": "discovered-packages",
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "srs#391 (ten-kind coverage)",
+      "description": "Every package discovered under srs/package/** and packages/** (see discoverPackages() below) validates its fields/types/views/documentViews/themes/relationTypes/vocabularies/lifecycles/blueprints/protocols against their declared schemas. Runs once per discovered package — args are supplied per-invocation, not read from this entry."
+    },
+    {
+      "id": "package-id-uniqueness",
+      "script": "check-package-id-uniqueness.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "identity",
+      "governing": "srs#295",
+      "description": "No two packages, and no two definitions listed within a resolved package's index, may claim one UUID. A UUID is the primary identity in SRS and must be globally stable."
+    },
+    {
+      "id": "validate-records",
+      "script": "validate-records.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "bootstrap schema validation (docs/schema/2.0)",
+      "description": "Every instance file under records/ validates against its declared structural schema, and every relation resolves an installed relationType (#465: fails the run, not just prints, when one does not)."
+    },
+    {
+      "id": "validate-rfc-process",
+      "script": "validate-rfc-process.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "containment",
+      "governing": "RFC-004; srs#204",
+      "description": "Boundary rules keeping RFC proposal material separate from active spec state: a proposal-artifact-path must never point at active package/ or docs/schema/ state, rfc-targets-section relations resolve on both ends, and the RFC-004 proposed-package validates against its own proposed schemas without touching live ones."
+    },
+    {
+      "id": "rfc-integration",
+      "script": "check-rfc-integration.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "governance",
+      "governing": "srs#204; srs#463 (Charter Check)",
+      "description": "Every accepted/implemented RFC declares a non-empty srs-integration manifest whose tokens all resolve, its .md Status line matches the record's rfc-status, and (for RFCs created 2026-08-23 or later, individually-grandfathered ones excepted) its .md carries a complete, self-consistent `## Charter alignment` section."
+    },
+    {
+      "id": "rfc-032-paper-proof",
+      "script": "rfc-032-paper-proof.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "RFC-032",
+      "description": "The RFC-032 field-type model's owner acceptance condition made runnable: every hard meta-model shape is expressible as a fieldType, and every fieldType projects to well-formed JSON Schema 2020-12."
+    },
+    {
+      "id": "rfc-032-migration-test",
+      "script": "rfc-032-migration-test.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "governance",
+      "governing": "RFC-032",
+      "description": "migrate-rfc-032-field-type.mjs transforms its fixtures correctly (valueType -> fieldType)."
+    },
+    {
+      "id": "rfc-032-conformance-fixture",
+      "script": "../tests/rfc-032/run.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "RFC-032",
+      "description": "Regenerates the 24 RFC-032 Testability fixture Field files from its in-script table and proves them conformant. Other checks (e.g. field-name-convention) read this run's output, so anything reading tests/ fixtures must run after this entry."
+    },
+    {
+      "id": "rfc-032-migration-applied",
+      "script": "migrate-rfc-032-field-type.mjs",
+      "args": ["--check"],
+      "tier": "always",
+      "cell": "governance",
+      "governing": "RFC-032",
+      "description": "The valueType -> fieldType migration stays fully applied: no field anywhere may still carry the legacy scalar valueType."
+    },
+    {
+      "id": "cardinality-coherence",
+      "script": "check-cardinality-coherence.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "RFC-032 [R4]; srs#276",
+      "afterId": "rfc-032-conformance-fixture",
+      "description": "No Type may assign a Field as repeatable via the deprecated repeatable/minItems/maxItems trio unless that Field's own fieldType independently declares cardinality: list — Field.fieldType.cardinality is the sole cardinality mechanism."
+    },
+    {
+      "id": "vocabulary-ref-migration-applied",
+      "script": "migrate-vocabulary-ref-to-lineage.mjs",
+      "args": ["--check"],
+      "tier": "always",
+      "cell": "governance",
+      "governing": "rfc-decision-c8704763",
+      "description": "The vocabularyRef migration stays fully applied: no Field definition under tests/rfc-032/package/fields may still carry a legacy \"namespace/name@version\" vocabularyRef pattern string."
+    },
+    {
+      "id": "sourceref-role-migration-applied",
+      "script": "migrate-sourceref-relationtype-to-sourcerole.mjs",
+      "args": ["--check"],
+      "tier": "always",
+      "cell": "governance",
+      "governing": "RFC-023 Change A/B; srs#480; RFC-040 Change I",
+      "description": "No sourceRef under srs/records may still carry the legacy relationType field; names the migration explicitly rather than surfacing only as a generic schema-validation error."
+    },
+    {
+      "id": "field-name-convention",
+      "script": "check-field-name-convention.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "description",
+      "governing": "srs#308",
+      "afterId": "rfc-032-conformance-fixture",
+      "description": "Field.name is snake_case everywhere a Field definition is found, across every carrier shape (plain JSON, .srsj/.srspkg bundles, the legacy valueType carrier). Must run after the RFC-032 conformance fixture regenerates its Field files, or it reads the previous run's output."
+    },
+    {
+      "id": "schema-kind-correspondence",
+      "script": "check-schema-kind-correspondence.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "reference",
+      "governing": "srs#311",
+      "description": "Every definition kind docs/schema/2.0/package-manifest.json declares (fields, types, views, ...) resolves to an actual schema file in docs/schema/2.0/ — a declared kind is not real unless it reaches its schema."
+    },
+    {
+      "id": "package-bundle-definition-type-sync",
+      "script": "gen-package-bundle-definition-type.mjs",
+      "args": ["--check"],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "rfc-decision-c8704763 item 4",
+      "description": "package-bundle.json's $defs.Reference.definitionType enum is GENERATED from package-manifest.json's declared definition kinds, so the two lists cannot independently diverge (finding A6)."
+    },
+    {
+      "id": "publication-reachability",
+      "script": "check-publication-reachability.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "containment",
+      "governing": "srs#285",
+      "description": "Every discovered, loading record is reachable from a declared presentation (a contains edge from a query root, root-container membership, or the RFC-016 invariants projection) or its invisibility is declared in scripts/publication-reachability-exclusions.json with a live reason and issue."
+    },
+    {
+      "id": "invariant-placement",
+      "script": "check-invariant-placement.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "containment",
+      "governing": "srs#410",
+      "description": "Every com.semanticops.spec/invariant record lives directly under records/invariants/, the RFC-016 projection root — with no exclusion-list escape, unlike the #285 reachability guard."
+    },
+    {
+      "id": "decision-compass-drift",
+      "script": "check-decision-compass-drift.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "reference",
+      "governing": "srs#461",
+      "description": "docs/charter/decision-compass.md stays bidirectionally in sync with the charter-class decision records it surfaces: every roster id resolves to a real record and is cited somewhere in the body, and every body citation resolves to a real record."
+    },
+    {
+      "id": "decision-cell-tags",
+      "script": "check-decision-cell-tags.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "description",
+      "governing": "srs#462; rfc-decision-cce3c00e",
+      "description": "Every com.semanticops.spec/rfc-decision record dated 2026-08-23 or later carries at least one cell:<slug> tag naming a slug from the Pattern Grid vocabulary."
+    },
+    {
+      "id": "guards-bite",
+      "script": "../tests/guards/run.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "assertion",
+      "governing": "srs#308; srs#311; srs#391 (and every guard added since)",
+      "description": "Every enforcement check demonstrably fails on the violation it exists to catch, and passes without it — asserted on the failure message, not just the exit code, so a guard that has never been watched fail cannot pass for the wrong reason."
+    },
+    {
+      "id": "checks-registry-membership",
+      "script": "check-checks-registry-membership.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "rfc-decision-19997e24; srs#495",
+      "description": "Every scripts/check-*.mjs file on disk is declared as a `script` value somewhere in this registry — piecemeal addition of a new check without registering it fails the build. Self-referential: this very script is itself declared here."
+    },
+    {
+      "id": "metamodel-package-sync",
+      "script": "gen-metamodel-package.mjs",
+      "args": ["--check"],
+      "tier": "always",
+      "cell": "governance",
+      "governing": "RFC-033",
+      "description": "The frozen-seed self-hosted metamodel package (srs/package/metamodel/**) stays in sync with its generator (scripts/gen-metamodel-package.mjs) — a regenerate produces an empty diff."
+    },
+    {
+      "id": "rfc-033-closure",
+      "script": "rfc-033-closure-test.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "RFC-033",
+      "description": "Per-field bootstrap-closure demonstration: every fieldType in the metamodel package projects, via the projectField stand-in, to its frozen-seed authoritative fragment."
+    },
+    {
+      "id": "rfc-035-determinism",
+      "script": "../tests/rfc-035/run.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "RFC-035",
+      "description": "The RFC-035 JSON Schema emitter's whole-entity output is byte-for-byte reproducible against its committed goldens."
+    },
+    {
+      "id": "rfc-035-closure",
+      "script": "rfc-035-closure-test.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "RFC-035",
+      "description": "The RFC-035 emitter's whole-entity output is a subset of the frozen seed over the covered authoritative features (discharges RFC-033 [R4](b))."
+    },
+    {
+      "id": "schema-regenerate-drift",
+      "script": "check-schema-regenerate-drift.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "governance",
+      "governing": "RFC-040 Unit 3; srs#479",
+      "description": "A full regenerate of docs/schema/2.0/{field,type}.json from the metamodel package equals the committed files, modulo only the documented-divergence register in projection-rules.md."
+    },
+    {
+      "id": "rfc-040-unit3-goldens",
+      "script": "../tests/rfc-040-unit3/run.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "succession",
+      "governing": "RFC-040 Unit 3; srs#479",
+      "description": "Golden fixtures for effective-Type resolution on domain (non-meta-model) Types: standard single-ancestor merge, the definition-facing/instance-facing distinction, and conditional projection (allOf/if/then guards)."
+    },
+    {
+      "id": "type-reference-tables-sync",
+      "script": "gen-type-reference-tables.mjs",
+      "args": ["--check"],
+      "tier": "always",
+      "cell": "governance",
+      "governing": "RFC-040 Change J; srs#481; srs#274",
+      "description": "Every com.semanticops.spec/generated-type-reference record's content equals a fresh regenerate from its resolved effective Type — the reader-projection generator's own empty-diff gate."
+    },
+    {
+      "id": "discovery-conformance",
+      "script": "check-discovery-conformance.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "RFC-012 [R11]; srs#483",
+      "description": "Every ext:discovery scenario carrying an expectedSegments expectation has its segment count and order actually evaluated against conformance/discovery/fixture-repo, not just prose-asserted."
+    },
+    {
+      "id": "release-drift",
+      "script": "check-release-drift.mjs",
+      "args": [],
+      "tier": "pinned-cli",
+      "cell": "governance",
+      "governing": ".github/workflows/release-drift.yml (SRS_RUST_CLI_TAG pin); CLAUDE.md \"Rendered Outputs\"",
+      "description": "The committed rendered exports under docs/spec/ are byte-identical to a fresh render from the pinned srs CLI release named by SRS_RUST_CLI_TAG. Required CI check and pre-commit hook; invokes validate-all.mjs and `srs repo validate` as its first step, so it is never itself looped inside validate-all.mjs."
+    },
+    {
+      "id": "idl-schema-conformance",
+      "script": "check-idl-schema-conformance.mjs",
+      "args": [],
+      "tier": "pinned-cli",
+      "cell": "governance",
+      "governing": "RFC-031; srs#238",
+      "description": "The prose pseudo-IDL embedded in spec records and the docs/schema/2.0/*.json JSON Schema files agree on property set, optionality, and declared type, per RFC-031 R1-R3, with known gaps recorded in scripts/idl-schema-conformance-allowlist.json. Wired into check-release-drift.mjs (RFC-031 [R5]), never into validate-all.mjs directly — not in the issue #495 inventory, found during implementation."
+    },
+    {
+      "id": "gallery-conformance",
+      "script": "check-gallery-conformance.mjs",
+      "args": [],
+      "tier": "pinned-cli",
+      "cell": "conformance",
+      "governing": "srs#345; srs#313",
+      "description": "The gallery corpus target (docs/spec/examples/gallery-project-v2/) stays a conforming SRS repository: its .srs/ marker resolves as a non-empty directory, and the pinned srs CLI reports zero repo-validate errors against it. Run as its own CI workflow step, not through check-release-drift.mjs or validate-all.mjs — not in the issue #495 inventory, found during implementation."
+    }
+  ]
+}
