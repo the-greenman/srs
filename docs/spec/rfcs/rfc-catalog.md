@@ -841,7 +841,7 @@ Independent implementations of the proposed discovery rule return exactly the in
 
 **RFC Number**: 040
 
-**Status**: accepted
+**Status**: implemented
 
 **Author**: #273 planning session (scheduled, complicated-mode), assembling owner rulings of 2026-07-31 … 2026-08-23
 
@@ -851,6 +851,33 @@ Independent implementations of the proposed discovery rule return exactly the in
 cell:reference
 cell:conformance
 cell:identity
+schema:blueprint.json
+schema:document-view.json
+schema:field.json
+schema:manifest.json
+schema:note.json
+schema:package-bundle.json
+schema:package-manifest.json
+schema:protocol.json
+schema:record.json
+schema:relation.json
+schema:relations-collection.json
+schema:typed-record.json
+schema:type.json
+ext:type-inheritance
+ext:lifecycle
+ext:cross-field-validation
+I-39
+I-40
+I-41
+I-42
+I-43
+I-88
+I-97
+type:com.semanticops.srs/type
+type:com.semanticops.srs/cross-field-validation-facet
+type:com.semanticops.srs/inheritance-facet
+type:com.semanticops.srs/lifecycle-facet
 -->
 
 **Proposal Artifact Path**: rfcs/rfc-040-metamodel-v1-1-0.md

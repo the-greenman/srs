@@ -2,7 +2,7 @@
 
 # RFC-040: Metamodel v1.1.0 — the definition-layer train
 
-**Status**: Accepted (Revision 2)
+**Status**: Implemented (Revision 3)
 **Affects**: `com.semanticops.srs/metamodel` (package v1.0.0 → v1.1.0), `docs/schema/2.0/field.json`, `docs/schema/2.0/type.json`, `docs/schema/2.0/note.json` / `record.json` (SourceReference legacy-alias removal), `docs/schema/2.0/manifest.json` / `package-manifest.json` / `package-bundle.json` / `blueprint.json` / `document-view.json` / `protocol.json` (reference forms), `scripts/gen-metamodel-package.mjs`, `scripts/lib/schema-emitter.mjs`, `docs/schema/2.0/projection-rules.md`, `docs/schema/2.0/metamodel-fidelity.md`, closure tests (`rfc-033` / `rfc-035`), the RFC-031 residual allowlist, design-note 045. Builds on RFC-032 (Accepted), RFC-033 (Accepted), RFC-035 (Accepted), RFC-039 (Accepted), RFC-023 (Accepted), RFC-019 (Accepted), RFC-020 (Accepted), RFC-022 (Accepted).
 **Author**: #273 planning session (scheduled, complicated-mode), assembling owner rulings of 2026-07-31 … 2026-08-23
 **Date**: 2026-08-24
@@ -15,6 +15,7 @@
 |---|---|---|
 | 1 | 2026-08-24 | Initial draft — the metamodel v1.1.0 train plan assembled from the closed #273 decision map. Zero open decisions; zero parks. |
 | 2 | 2026-08-25 | Accepted by the owner. The one flagged reading (Change I — the C17 reconciliation discharged by the RFC-023 migration) confirmed on #480: "we want one way of doing things." No content changes. |
+| 3 | 2026-08-26 | Implemented. All six train units landed on master (#486–#489, #491, #492), each folding its own integration tokens; the RFC-040 stub record's integration manifest completes here and the `grandfathered["040"]` allowlist entry retires per its self-expiry rule. |
 
 ---
 
