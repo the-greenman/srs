@@ -15,3 +15,4 @@ Closes #<!-- issue number -->
 - [ ] Linked to a tracking issue above (`Closes #N`, or `Refs #N` with a reason)
 - [ ] Tests / validation pass locally
 - [ ] If I close this PR **without merging** and the work is still wanted, I will reopen/flag the linked issue with a pointer to the branch before abandoning it
+- [ ] **Spec-affecting PR only:** answered the compass's three-question layer test — which layer owns this, does it consume or clone downward, would the layer below stand alone without it (`docs/charter/decision-compass.md#two-review-tests`)

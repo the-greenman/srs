@@ -30,6 +30,14 @@
  *      cell:<slug> token, from the Pattern Grid vocabulary (scripts/lib/pattern-grid-cells.json) —
  *      rfc-decision-cce3c00e's standing rule, "every new RFC and decision names its cell". The
  *      existing corpus is grandfathered by the date test itself, not by an allowlist entry.
+ *   6. (srs#463) for an RFC created on or after 2026-08-23 (the same floor as #5 — one Charter
+ *      Check rule, not two independent effective dates): the .md carries a `## Charter alignment`
+ *      section, its `**Cell(s):**` line names the same cell:<slug> set as the manifest's cell:
+ *      tokens, and it carries a `**Decision mode:**` line naming a legal decision_mode
+ *      (rfc-decision-7caca3a1). Presence and cell-token consistency only — never prose quality,
+ *      a guard cannot judge judgment. RFC-040 (created 2026-08-24) predates the Charter Check
+ *      stage itself, which did not exist in written form until this rule landed on 2026-08-26; it
+ *      is individually grandfathered below rather than weakening the floor date.
  *
  * Plus a repo guard: every discovered instance parses and is reachable under a reserved
  * instance root (RFC-038 [R1]/[R3] — the manifest no longer carries an instanceIndex).
@@ -44,7 +52,10 @@ import { join, resolve } from "path";
 import { instancePaths } from "./lib/rfc-038-tree.mjs";
 import { loadCellSlugs, CELL_RULE_EFFECTIVE_DATE } from "./lib/pattern-grid-cells.mjs";
 
-const ROOT = resolve(new URL("..", import.meta.url).pathname); // srs repo root
+// Root defaults to the repo root; an explicit argument (used by tests/guards/run.mjs's fixture
+// cases) points the whole check at a temporary fixture tree instead — the same convention the
+// sibling guards (check-decision-compass-drift.mjs, check-field-name-convention.mjs, ...) use.
+const ROOT = process.argv[2] ? resolve(process.argv[2]) : resolve(new URL("..", import.meta.url).pathname);
 const REPO_ROOT = join(ROOT, "srs"); // the self-describing spec repo
 const MANIFEST = join(REPO_ROOT, "manifest.json");
 const SCHEMA_DIR = join(ROOT, "docs", "schema", "2.0");
@@ -86,6 +97,18 @@ const REQUIRES_INTEGRATION = new Set(["accepted", "implemented"]);
 // pattern-grid-cells.mjs, shared with check-decision-cell-tags.mjs's ENFORCEMENT_FLOOR, so the two
 // checks cannot drift to different effective dates for one rule.
 const CELL_RULE_FLOOR = CELL_RULE_EFFECTIVE_DATE;
+
+// srs#463: the Charter Check's `## Charter alignment` section requirement shares the cell rule's
+// floor date — one rule, not a second independently-tunable date.
+const CHARTER_ALIGNMENT_FLOOR = CELL_RULE_EFFECTIVE_DATE;
+const DECISION_MODES = new Set(["clear", "complicated", "complex", "chaotic", "unresolved"]);
+
+// RFC-040 (createdAt 2026-08-24) postdates CHARTER_ALIGNMENT_FLOOR but predates the Charter Check
+// stage's own existence (srs#463 landed 2026-08-26) — the section format did not exist in written
+// form when it was authored. Grandfathered individually, by RFC number, rather than moving the
+// floor date the cell rule (#5, srs#462) already shares. Follow-up: the-greenman/srs#498 tracks
+// backfilling its Charter alignment section.
+const CHARTER_ALIGNMENT_GRANDFATHERED = new Set(["040"]);
 
 const failures = [];
 function fail(msg) {
@@ -257,6 +280,41 @@ function parseMdStatus(mdText) {
   return match[1].trim().toLowerCase().replace(/\s+/g, "-").replace(/-\(.*$/, "");
 }
 
+// srs#463: extract the body of a level-2 markdown section by heading text (e.g. "Charter
+// alignment"), stopping at the next level-2 heading or end of file. Returns null if the heading
+// itself is absent — distinct from an empty-but-present section. A line-based scan, not a single
+// regex: a naive "next ## " lookahead is fragile against "### " subheadings inside the section,
+// which must stay part of the body, not end it.
+function extractSection(mdText, heading) {
+  const lines = mdText.split(/\r?\n/);
+  const idx = lines.findIndex((l) => l.trim() === `## ${heading}`);
+  if (idx === -1) return null;
+  const body = [];
+  for (let i = idx + 1; i < lines.length; i++) {
+    if (/^##\s/.test(lines[i])) break;
+    body.push(lines[i]);
+  }
+  return body.join("\n");
+}
+
+// A `**Label:** value` line within a section body, e.g. `**Decision mode:** complicated`.
+function parseLabelLine(sectionBody, label) {
+  const re = new RegExp(`^\\*\\*${label}:\\*\\*\\s*(.+)$`, "im");
+  const match = re.exec(sectionBody);
+  return match ? match[1].trim() : null;
+}
+
+// The set of `cell:<slug>` tokens named on a `**Cell(s):**` line, or null if the line is absent.
+function parseCellsLine(sectionBody) {
+  const line = parseLabelLine(sectionBody, "Cell\\(s\\)");
+  if (line === null) return null;
+  return new Set([...line.matchAll(/cell:([a-z-]+)/gi)].map((m) => m[1].toLowerCase()));
+}
+
+function sameSet(a, b) {
+  return a.size === b.size && [...a].every((x) => b.has(x));
+}
+
 async function checkManifestSync(indexedPaths) {
   // Guard: every .json under records/ must be indexed, and every indexed record path must exist.
   // Discovery is now the authority, so "indexed but missing" cannot arise. What can is a
@@ -296,6 +354,7 @@ async function main() {
     if (!num) fail(`${label}: missing rfc-number (${recPath})`);
 
     // 2. proposal-artifact-path present + exists
+    let mdText = null;
     if (!artifactPath) {
       fail(`${label}: missing proposal-artifact-path — every RFC record must point at its rfcs/*.md proposal`);
     } else {
@@ -303,8 +362,9 @@ async function main() {
       if (!existsSync(abs)) {
         fail(`${label}: proposal-artifact-path does not exist: ${artifactPath}`);
       } else if (artifactPath.endsWith(".md") && statSync(abs).isFile()) {
+        mdText = await readFile(abs, "utf8");
         // 3. .md status consistency
-        const mdStatus = parseMdStatus(await readFile(abs, "utf8"));
+        const mdStatus = parseMdStatus(mdText);
         if (mdStatus && LEGAL_STATUSES.has(mdStatus) && mdStatus !== status) {
           fail(`${label}: .md status "${mdStatus}" != record rfc-status "${status}" (${artifactPath})`);
         }
@@ -344,14 +404,64 @@ async function main() {
     // its cell" to check. Gated on createdAt, not rfc_status, so a pre-existing RFC that is merely
     // re-edited today does not retroactively acquire the requirement — createdAt is stamped once
     // and does not move when unrelated fields change.
+    const manifestCellTokens = new Set(
+      tokens.filter((t) => /^cell:/i.test(t)).map((t) => t.slice("cell:".length).trim().toLowerCase()),
+    );
     if (REQUIRES_INTEGRATION.has(status) && record.createdAt && record.createdAt >= CELL_RULE_FLOOR) {
-      const cellTokens = tokens.filter((t) => /^cell:/i.test(t));
-      if (cellTokens.length === 0) {
+      if (manifestCellTokens.size === 0) {
         fail(
           `${label}: created ${record.createdAt}, on or after ${CELL_RULE_FLOOR} — the integration ` +
             `manifest names no cell:<slug> token. rfc-decision-cce3c00e's standing rule requires ` +
             `every new RFC to name its cell.`,
         );
+      }
+    }
+
+    // 6. (srs#463) the Charter Check's `## Charter alignment` section — presence and cell-token
+    // consistency with the integration manifest, plus presence of a legal decision_mode token.
+    // Same floor/allowlist shape as #5: gated on createdAt (never retroactive on unrelated edits),
+    // independent of the check-#4 completeness allowlist, plus its own narrow grandfather set for
+    // an RFC that postdates the floor but predates this stage existing at all.
+    if (
+      REQUIRES_INTEGRATION.has(status) &&
+      record.createdAt &&
+      record.createdAt >= CHARTER_ALIGNMENT_FLOOR &&
+      !CHARTER_ALIGNMENT_GRANDFATHERED.has(num)
+    ) {
+      if (mdText === null) {
+        fail(
+          `${label}: created ${record.createdAt}, on or after ${CHARTER_ALIGNMENT_FLOOR} — no ` +
+            `readable .md proposal to check for a Charter alignment section (see check #2/#3 above).`,
+        );
+      } else {
+        const section = extractSection(mdText, "Charter alignment");
+        if (section === null) {
+          fail(
+            `${label}: created ${record.createdAt}, on or after ${CHARTER_ALIGNMENT_FLOOR} — the ` +
+              `.md carries no "## Charter alignment" section. The Charter Check (.claude/commands/` +
+              `rfc.md Stage 1.5) is mandatory before drafting; its output is this section.`,
+          );
+        } else {
+          const mdCellTokens = parseCellsLine(section);
+          if (mdCellTokens === null || mdCellTokens.size === 0) {
+            fail(`${label}: Charter alignment section has no "**Cell(s):**" line naming a cell:<slug> token.`);
+          } else if (!sameSet(mdCellTokens, manifestCellTokens)) {
+            fail(
+              `${label}: Charter alignment section's Cell(s) (${[...mdCellTokens].join(", ")}) does ` +
+                `not match the integration manifest's cell:<slug> tokens (${[...manifestCellTokens].join(", ") || "none"}).`,
+            );
+          }
+
+          const mode = parseLabelLine(section, "Decision mode");
+          if (mode === null) {
+            fail(`${label}: Charter alignment section has no "**Decision mode:**" line.`);
+          } else if (!DECISION_MODES.has(mode.toLowerCase())) {
+            fail(
+              `${label}: Charter alignment section names decision mode "${mode}", not one of ` +
+                `${[...DECISION_MODES].join(", ")} (rfc-decision-7caca3a1).`,
+            );
+          }
+        }
       }
     }
   }

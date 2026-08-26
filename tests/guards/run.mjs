@@ -1066,6 +1066,114 @@ async function decisionCompassDriftCases(root) {
   );
 }
 
+// ---- srs#463 — Charter Check: the `## Charter alignment` section guard --------------------------
+async function charterAlignmentSectionCases(root) {
+  console.log("srs#463 — Charter Check `## Charter alignment` section guard");
+
+  await mkdir(join(root, "docs/schema/2.0"), { recursive: true });
+
+  const mdPath = join(root, "rfcs/fixture.md");
+  const recordPath = join(root, "srs/records/rfcs/fixture.json");
+
+  const manifestBlock = (...extraTokens) =>
+    ["<!-- srs-integration:v1", "tooling-only", "cell:governance", ...extraTokens, "-->"].join("\n");
+
+  const record = (affectedComponents, { num = "901", createdAt = "2026-08-25T00:00:00Z" } = {}) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/record.json",
+    instanceId: "00000000-0000-4000-8000-000000009001",
+    typeId: "6a000001-0000-4000-a000-000000000001",
+    typeVersion: 1,
+    typeNamespace: "com.semanticops.spec",
+    typeName: "rfc",
+    fieldValues: {
+      rfc_number: num,
+      rfc_status: "accepted",
+      proposal_artifact_path: "rfcs/fixture.md",
+      affected_components: affectedComponents,
+    },
+    createdAt,
+  });
+
+  const statusLine = "**Status**: Accepted (Revision 1)\n\n";
+  const completeSection = [
+    "## Charter alignment",
+    "",
+    "**Cell(s):** cell:governance",
+    "**Decision mode:** complicated",
+    "",
+    "**Governing cell preference:** migration over drift.",
+    "**One-way-per-goal:** No existing mechanism serves this goal.",
+    "",
+  ].join("\n");
+
+  // The violation this guard exists for: a post-floor accepted RFC whose .md has no Charter
+  // alignment section at all.
+  await writeJson(recordPath, record(manifestBlock()));
+  await writeText(mdPath, `${statusLine}## Abstract\n\nFixture RFC body.\n`);
+  expect(
+    "rejects a post-floor RFC with no Charter alignment section",
+    runCheck("check-rfc-integration.mjs", root),
+    { exit: 1, contains: ["RFC-901", "carries no", "## Charter alignment"] },
+  );
+
+  // A section that names a cell not matching the integration manifest's cell:<slug> tokens.
+  const mismatchedCells = completeSection.replace("cell:governance", "cell:identity");
+  await writeText(mdPath, `${statusLine}${mismatchedCells}\n## Abstract\n\nFixture RFC body.\n`);
+  expect(
+    "rejects a Cell(s) line that does not match the integration manifest",
+    runCheck("check-rfc-integration.mjs", root),
+    { exit: 1, contains: ["does not match the integration manifest"] },
+  );
+
+  // A section with the cells right but no Decision mode line at all.
+  const noMode = completeSection
+    .split("\n")
+    .filter((l) => !l.startsWith("**Decision mode:**"))
+    .join("\n");
+  await writeText(mdPath, `${statusLine}${noMode}\n## Abstract\n\nFixture RFC body.\n`);
+  expect(
+    "rejects a Charter alignment section with no Decision mode line",
+    runCheck("check-rfc-integration.mjs", root),
+    { exit: 1, contains: ["no \"**Decision mode:**\" line"] },
+  );
+
+  // A section naming an illegal decision mode token.
+  const badMode = completeSection.replace("complicated", "vibes-based");
+  await writeText(mdPath, `${statusLine}${badMode}\n## Abstract\n\nFixture RFC body.\n`);
+  expect(
+    "rejects a Charter alignment section naming an illegal decision mode",
+    runCheck("check-rfc-integration.mjs", root),
+    { exit: 1, contains: ['decision mode "vibes-based"', "not one of"] },
+  );
+
+  // The guard is not simply always red: a complete, consistent section passes.
+  await writeText(mdPath, `${statusLine}${completeSection}\n## Abstract\n\nFixture RFC body.\n`);
+  expect(
+    "accepts a complete, consistent Charter alignment section",
+    runCheck("check-rfc-integration.mjs", root),
+    { exit: 0, contains: ["Checking RFC integration... OK"] },
+  );
+
+  // Out of scope by date: an RFC created before the floor carries no section and still passes.
+  await writeJson(recordPath, record(manifestBlock(), { createdAt: "2026-08-20T00:00:00Z" }));
+  await writeText(mdPath, `${statusLine}## Abstract\n\nFixture RFC body.\n`);
+  expect(
+    "does not require the section on an RFC created before the floor date",
+    runCheck("check-rfc-integration.mjs", root),
+    { exit: 0, contains: ["Checking RFC integration... OK"] },
+  );
+
+  // RFC-040 is individually grandfathered — created after the floor, but before the Charter Check
+  // stage existed at all. Confirms the escape hatch is number-scoped, not a floor-date change.
+  await writeJson(recordPath, record(manifestBlock(), { num: "040" }));
+  await writeText(mdPath, `${statusLine}## Abstract\n\nFixture RFC body.\n`);
+  expect(
+    "does not require the section on the individually grandfathered RFC-040",
+    runCheck("check-rfc-integration.mjs", root),
+    { exit: 0, contains: ["Checking RFC integration... OK"] },
+  );
+}
+
 const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
 try {
   await fieldNameCases(join(root, "field-name"));
@@ -1076,6 +1184,7 @@ try {
   await decisionCompassDriftCases(join(root, "decision-compass-drift"));
   await decisionCellTagsCases(join(root, "decision-cell-tags"));
   await relationTypeResolutionCases(join(root, "relation-type-resolution"));
+  await charterAlignmentSectionCases(join(root, "charter-alignment"));
 } finally {
   await rm(root, { recursive: true, force: true });
 }
