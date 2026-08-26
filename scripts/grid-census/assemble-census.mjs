@@ -89,7 +89,8 @@ async function main() {
     });
   }
 
-  const extra = [...results.keys()].filter((id) => !manifest.statements.some((s) => s.id === id));
+  const manifestIds = new Set(manifest.statements.map((s) => s.id));
+  const extra = [...results.keys()].filter((id) => !manifestIds.has(id));
 
   if (missing.length || invalidCell.length || invalidConfidence.length || extra.length) {
     if (missing.length) console.error(`Missing classification for ${missing.length} ids:`, missing.slice(0, 10));

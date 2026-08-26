@@ -14,8 +14,13 @@
  * Usage: node scripts/grid-census/compute-counts.mjs <path-to-census-file>
  */
 import { readFile } from 'fs/promises';
+import { loadCellSlugs } from '../lib/pattern-grid-cells.mjs';
 
-// The grid geometry (docs/charter/decision-compass.md), reading order 1-12.
+// The grid geometry (docs/charter/decision-compass.md), reading order 1-12. The twelve cell
+// *names* are cross-checked against scripts/lib/pattern-grid-cells.mjs at startup (below) so a
+// renamed or added slug fails loudly here instead of silently bucketing into a null row/column/
+// diagonal/axis; the row/column/diagonal/axis *geometry* itself has no machine-readable source
+// beyond the Decision Compass prose, so it stays hand-transcribed.
 const GRID = {
   Individual: { Fire: 'versioning', Earth: 'identity', Air: 'description', Water: 'attribution' },
   Relational: { Fire: 'succession', Earth: 'containment', Air: 'reference', Water: 'assertion' },
@@ -71,6 +76,15 @@ async function main() {
     console.error('Usage: node compute-counts.mjs <path-to-census-file>');
     process.exit(1);
   }
+  const slugSet = await loadCellSlugs();
+  const geometryCells = new Set(READING_ORDER);
+  const geometryDrift = [...slugSet].filter((s) => !geometryCells.has(s));
+  if (geometryDrift.length > 0) {
+    throw new Error(
+      `pattern-grid-cells.mjs declares slugs this script's hardcoded geometry doesn't know: ${geometryDrift.join(', ')} — update GRID/DIAGONALS/AXES/READING_ORDER above`
+    );
+  }
+
   const doc = JSON.parse(await readFile(path, 'utf8'));
   const placed = doc.entries.filter((e) => e.cell !== null);
   const noneEntries = doc.entries.filter((e) => e.cell === null);
@@ -84,6 +98,9 @@ async function main() {
     const col = columnOf(e.cell);
     const diag = diagonalOf(e.cell);
     const axis = axisOf(e.cell);
+    if (row === null || col === null || diag === null || axis === null) {
+      throw new Error(`Entry "${e.id}" carries cell "${e.cell}", which this script's geometry does not recognize`);
+    }
     byRow[row] = (byRow[row] ?? 0) + 1;
     byColumn[col] = (byColumn[col] ?? 0) + 1;
     byDiagonal[diag] = (byDiagonal[diag] ?? 0) + 1;
