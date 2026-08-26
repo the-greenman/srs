@@ -301,6 +301,26 @@
       "exactMatch": false
     },
     {
+      "name": "i120_list_segments_order",
+      "description": "srs#483/#317-F2: expectedSegments asserts segment COUNT and ORDER directly, closing the gap the i120_include_list_element_* trio leaves open (each of those only proves independent recallability). Same field as that trio: article-1's open list-cardinality 'aliases', which I-120 requires to emit one segment per array element in array order.",
+      "query": {
+        "contentMatch": "zzaliasalpha"
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001"
+      ],
+      "exactMatch": false,
+      "expectedSegments": {
+        "instanceId": "00000001-0000-4000-8000-000000000001",
+        "fieldName": "aliases",
+        "segments": [
+          "zzaliasalpha",
+          "zzaliasbeta",
+          "zzaliasgamma"
+        ]
+      }
+    },
+    {
       "name": "i120_exclude_format_uuid",
       "description": "I-120: format uuid contributes no segment. The token is the uuid's own leading group and appears nowhere else in the fixture, so any hit means the excluded Field was projected. Asserted against the allow-list (CC-25), not as a format!=uri test.",
       "query": {
