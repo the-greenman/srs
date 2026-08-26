@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://srs.semanticops.com/research/grid-census.schema.json",
+  "title": "Pattern Grid census (srs#471, rfc-decision-b9d7096e)",
+  "description": "Auto-classification of the normative corpus into Pattern Grid cells, one cycle. Entries are testimony (axis 4-10) — diagnostic input, never authoritative placement — until a human review promotes them.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["cycle", "sourceManifest", "labelSet", "counts", "entries"],
+  "properties": {
+    "cycle": { "type": "string", "format": "date" },
+    "sourceManifest": { "type": "string", "minLength": 1 },
+    "labelSet": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["total", "byCell", "none", "bySource"],
+      "properties": {
+        "total": { "type": "integer", "minimum": 0 },
+        "byCell": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        },
+        "none": { "type": "integer", "minimum": 0 },
+        "bySource": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "source", "file", "cell", "confidence", "note", "status"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "source": { "enum": ["invariant", "decision", "subsection-rule"] },
+          "file": { "type": "string", "minLength": 1 },
+          "cell": { "type": ["string", "null"] },
+          "confidence": { "enum": ["high", "medium", "low"] },
+          "note": { "type": "string" },
+          "status": { "enum": ["unreviewed", "reviewed"] }
+        }
+      }
+    }
+  }
+}

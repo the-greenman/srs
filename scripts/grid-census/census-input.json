@@ -1,0 +1,1920 @@
+{
+  "$comment": "Deterministic extraction of the normative corpus (srs#471). Re-run: node scripts/grid-census/extract-corpus.mjs. Two runs over an unchanged tree must be byte-identical.",
+  "counts": {
+    "invariant": 119,
+    "decision": 33,
+    "subsection-rule": 77,
+    "total": 229
+  },
+  "statements": [
+    {
+      "id": "I-135",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-000a1338.json",
+      "instanceId": "000a1338-5a48-4609-83c8-9c6a0d9a05ac",
+      "title": "Instance generation is determined structurally",
+      "text": "A reader MUST determine instance generation structurally. For a Tier-2 `Record`: an array `fieldValues` is revision <= 1, an object `fieldValues` is revision >= 2. For a Tier-1 `TypedRecord`: a `TypedField` carrying `fieldType` is revision >= 2, one without it is revision <= 1. On encountering a generation it does not support, a reader MUST emit a diagnostic naming the file and the expected `dataModelRevision` and MUST NOT coerce, partially read, or silently skip the document. (RFC-039 [R9])"
+    },
+    {
+      "id": "1",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-001.json",
+      "instanceId": "e1000001-0000-4000-a000-000000000001",
+      "title": "FieldAssignment.displayLabel and FieldAssignment.displayHint are for…",
+      "text": "`FieldAssignment.displayLabel` and `FieldAssignment.displayHint` are for rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or validation. Extended by RFC-036 [CR-036-20]: they must also not affect a Record's Relations or its Discovery Text Projection (`ext:discovery`). Two repositories differing only in these values must produce identical validation results and identical Discovery output."
+    },
+    {
+      "id": "2",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-002.json",
+      "instanceId": "e1000002-0000-4000-a000-000000000002",
+      "title": "Type must not redefine, override, or duplicate the semantic content…",
+      "text": "A `Type` must not redefine, override, or duplicate the semantic content of any `Field` it includes. If different semantics are needed for a Field in a specific Type context, a distinct `Field` with its own identity and lineage must be created."
+    },
+    {
+      "id": "3",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-003.json",
+      "instanceId": "e1000003-0000-4000-a000-000000000003",
+      "title": "Field's aiGuidance belongs to the Field.",
+      "text": "A `Field`'s `aiGuidance` belongs to the Field. Type-level `aiGuidance` provides session framing only."
+    },
+    {
+      "id": "4",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-004.json",
+      "instanceId": "e1000004-0000-4000-a000-000000000004",
+      "title": "Type.lifecycle.initialState must reference a key that appears in…",
+      "text": "`Type.lifecycle.initialState` must reference a `key` that appears in `lifecycle.states[]` and where `isInitial === true`."
+    },
+    {
+      "id": "5",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-005.json",
+      "instanceId": "e1000005-0000-4000-a000-000000000005",
+      "title": "Every from and to value in lifecycle.transitions[] must reference a…",
+      "text": "Every `from` and `to` value in `lifecycle.transitions[]` must reference a `key` that appears in `lifecycle.states[]`."
+    },
+    {
+      "id": "6",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-006.json",
+      "instanceId": "e1000006-0000-4000-a000-000000000006",
+      "title": "Record.lifecycleState, when present, must reference a key in the…",
+      "text": "`Record.lifecycleState`, when present, must reference a `key` in the associated `Type.lifecycle.states[]`."
+    },
+    {
+      "id": "7",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-007.json",
+      "instanceId": "e1000007-0000-4000-a000-000000000007",
+      "title": "Every fieldId referenced in any FieldAssignment within a…",
+      "text": "Every `fieldId` referenced in any `FieldAssignment` within a `Package.types[]` must appear as the `id` of an entry in `Package.dependencyRefs`."
+    },
+    {
+      "id": "8",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-008.json",
+      "instanceId": "e1000008-0000-4000-a000-000000000008",
+      "title": "If Package.mode === \"bundled\": every Reference in dependencyRefs must…",
+      "text": "If `Package.mode === \"bundled\"`: every `Reference` in `dependencyRefs` must have a matching `Field` in `fields[]` (matched on `id` and `version`)."
+    },
+    {
+      "id": "9",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-009.json",
+      "instanceId": "e1000009-0000-4000-a000-000000000009",
+      "title": "Field.id is stable across versions.",
+      "text": "`Field.id` is stable across versions. A new `id` means a new definition, not a new version of an existing one."
+    },
+    {
+      "id": "10",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-010.json",
+      "instanceId": "e1000010-0000-4000-a000-000000000010",
+      "title": "All fieldId values in any CrossFieldRule within…",
+      "text": "All `fieldId` values in any `CrossFieldRule` within `Type.validationRules[]` must appear in the Type's effective field list. Cross-field rules cannot reference Fields outside the Type."
+    },
+    {
+      "id": "11",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-011.json",
+      "instanceId": "e1000011-0000-4000-a000-000000000011",
+      "title": "conditional-required rule must supply predicateFieldId,…",
+      "text": "A `conditional-required` rule must supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. A `field-ordering` rule must supply `predicateFieldId`, `targetFieldId`, and `effect`. A `mutual-exclusion` rule must supply `fieldIds` with at least two entries."
+    },
+    {
+      "id": "12",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-012.json",
+      "instanceId": "e1000012-0000-4000-a000-000000000012",
+      "title": "Every fieldId in View.fieldViews[] must reference a valid Field.id",
+      "text": "Every `fieldId` in `View.fieldViews[]` must reference a valid `Field.id` in the effective package set. View compatibility is field-centric (based on required field presence), not Type-bound."
+    },
+    {
+      "id": "13",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-013.json",
+      "instanceId": "e1000013-0000-4000-a000-000000000013",
+      "title": "FieldView.displayLabel, FieldView.displayHint, and…",
+      "text": "`FieldView.displayLabel`, `FieldView.displayHint`, and `FieldView.editorHintOverride` are for rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or validation. Extended by RFC-036 [CR-036-20] to cover `FieldView.compositeRenderer` and the `DocumentSection`/`DocumentView` composite renderer directives, and to add Relations and Discovery Text Projection (`ext:discovery`) to the list of things they must not affect. [CR-036-21] additionally constrains `editorHintOverride` to the value set of `Field.editorHint`."
+    },
+    {
+      "id": "14",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-014.json",
+      "instanceId": "e1000014-0000-4000-a000-000000000014",
+      "title": "View must not override, redefine, or duplicate the semantic content…",
+      "text": "A `View` must not override, redefine, or duplicate the semantic content of any `Field` or `Type` it references. View-level `aiGuidance` is workflow framing; it does not redefine Field extraction semantics."
+    },
+    {
+      "id": "15",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-015.json",
+      "instanceId": "e1000015-0000-4000-a000-000000000015",
+      "title": "Every typeId referenced by any View in Package.views[] must appear in…",
+      "text": "Every `typeId` referenced by any `View` in `Package.views[]` must appear in `Package.dependencyRefs` with `definitionType: \"type\"`. If `mode === \"bundled\"`, that `Type` must be present in `types[]`."
+    },
+    {
+      "id": "16",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-016.json",
+      "instanceId": "e1000016-0000-4000-a000-000000000016",
+      "title": "In a Relation, sourceInstanceId is the asserting instance and…",
+      "text": "In a `Relation`, `sourceInstanceId` is the asserting instance and `targetInstanceId` is the related instance. The Relation reads: \"source [relationType] target.\" This convention must not be reversed."
+    },
+    {
+      "id": "17",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-017.json",
+      "instanceId": "e1000017-0000-4000-a000-000000000017",
+      "title": "Relation is reserved for assertions that carry semantic consequence…",
+      "text": "`Relation` is reserved for assertions that carry semantic consequence beyond simple mention or citation. Lightweight prose references that do not assert structural, causal, or governance relationships must not be modelled as `Relation` records."
+    },
+    {
+      "id": "18",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-018.json",
+      "instanceId": "e1000018-0000-4000-a000-000000000018",
+      "title": "NoteSection.name values must be unique within a Note.",
+      "text": "`NoteSection.name` values must be unique within a `Note`."
+    },
+    {
+      "id": "19",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-019.json",
+      "instanceId": "e1000019-0000-4000-a000-000000000019",
+      "title": "TypedField.name values must be unique within a Typed Record.",
+      "text": "`TypedField.name` values must be unique within a `Typed Record`."
+    },
+    {
+      "id": "20",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-020.json",
+      "instanceId": "e1000020-0000-4000-a000-000000000020",
+      "title": "Container.containerId is not an instance ID. It must not appear in…",
+      "text": "`Container.containerId` is not an instance ID. It must not appear in `Container.rootInstanceIds`, `Container.memberInstanceIds`, `Relation.sourceInstanceId`, or `Relation.targetInstanceId`."
+    },
+    {
+      "id": "21",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-021.json",
+      "instanceId": "e1000021-0000-4000-a000-000000000021",
+      "title": "Container.rootInstanceIds and Container.memberInstanceIds, when…",
+      "text": "`Container.rootInstanceIds` and `Container.memberInstanceIds`, when present, must reference valid SRS instance IDs (`Note.instanceId`, `Typed Record.instanceId`, or `Record.instanceId`)."
+    },
+    {
+      "id": "28",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-028.json",
+      "instanceId": "e1000028-0000-4000-a000-000000000028",
+      "title": "Record.typeId and Record.typeVersion are the authoritative Type…",
+      "text": "`Record.typeId` and `Record.typeVersion` are the authoritative Type binding. `typeNamespace` and `typeName` are denormalised convenience fields. If they conflict with the resolved `Type`, the `typeId`/`typeVersion` identity takes precedence and the Record is considered invalid until corrected."
+    },
+    {
+      "id": "29",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-029.json",
+      "instanceId": "e1000029-0000-4000-a000-000000000029",
+      "title": "Every stageId in ProtocolStage.dependsOn[] must reference a stageId…",
+      "text": "Every `stageId` in `ProtocolStage.dependsOn[]` must reference a `stageId` declared in the enclosing `Protocol.stages[]`. A stage may not declare a dependency on itself."
+    },
+    {
+      "id": "30",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-030.json",
+      "instanceId": "e1000030-0000-4000-a000-000000000030",
+      "title": "Every fieldId in ProtocolStage.contributesTo[] must reference a…",
+      "text": "Every `fieldId` in `ProtocolStage.contributesTo[]` must reference a `fieldId` that appears in the stage's own `outputType`'s effective field list (when `outputType` is declared), or in `Protocol.targetType`'s effective field list (when `outputType` is absent). A single stage must not contribute to both its own `outputType` and the enclosing `Protocol.targetType`. When neither `outputType` nor `Protocol.targetType` is declared, `contributesTo` must be empty."
+    },
+    {
+      "id": "31",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-031.json",
+      "instanceId": "e1000031-0000-4000-a000-000000000031",
+      "title": "For every pair of stages A and B within a Protocol where B.dependsOn…",
+      "text": "For every pair of stages A and B within a `Protocol` where B.dependsOn includes A.stageId, B.order must be greater than A.order. `order` is the declared composition order of the stages — structure, not presentation; it provides the render default. Execution sequence is determined by `dependsOn` resolution. The two must not contradict each other."
+    },
+    {
+      "id": "32",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-032.json",
+      "instanceId": "e1000032-0000-4000-a000-000000000032",
+      "title": "Any DocumentView in Package.documentViews[] that contains a…",
+      "text": "Any `DocumentView` in `Package.documentViews[]` that contains a `SectionSource` with `type === \"type-query\"` must use `namespace/name` format for `semanticObjectType` (e.g. `\"core/decision\"`, not `\"decision\"`). Bare strings are acceptable only in single-system `DocumentView` records not included in a Package. Implementations receiving a `DocumentView` from a Package with a bare `semanticObjectType` in a `type-query` section should treat the portability of that section as undefined."
+    },
+    {
+      "id": "34",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-034.json",
+      "instanceId": "e1000034-0000-4000-a000-000000000034",
+      "title": "AttentionState.containerId must reference a valid…",
+      "text": "`AttentionState.containerId` must reference a valid `Container.containerId`. Other Address components (`recordId`, `fieldId`, `protocolRunId`, `stageId`) are optional and may be absent when focus has not yet narrowed."
+    },
+    {
+      "id": "35",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-035.json",
+      "instanceId": "e1000035-0000-4000-a000-000000000035",
+      "title": "Every DocumentSection.renderViewId in any DocumentView within…",
+      "text": "Every `DocumentSection.renderViewId` in any `DocumentView` within `Package.documentViews[]` must reference a `View.id` that appears in `Package.views[]` or `Package.dependencyRefs`. If `mode === \"bundled\"`, that `View` must be present in `Package.views[]`."
+    },
+    {
+      "id": "36",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-036.json",
+      "instanceId": "e1000036-0000-4000-a000-000000000036",
+      "title": "Every TypeRef.typeId referenced in any Blueprint.rootTypes[],…",
+      "text": "Every `TypeRef.typeId` referenced in any `Blueprint.rootTypes[]`, `Blueprint.requiredTypes[]`, or in any `RelationSpec.sourceType` or `RelationSpec.targetType` within `Blueprint.structure[]`, for each Blueprint in `Package.blueprints[]`, must appear in `Package.dependencyRefs` with `definitionType: \"type\"`. If `mode === \"bundled\"`, each such Type must be present in `Package.types[]`."
+    },
+    {
+      "id": "37",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-037.json",
+      "instanceId": "e1000037-0000-4000-a000-000000000037",
+      "title": "Every Protocol.protocolTargetType and ProtocolStage.outputType referenced…",
+      "text": "Every `Protocol.protocolTargetType` (when a non-empty UUID) and every `ProtocolStage.outputType`, for each Protocol in `Package.protocols[]`, must appear in `Package.dependencyRefs` with `definitionType: \"type\"`. Every `FieldRef.fieldId` in any `ProtocolStage.contributesTo[]` must appear in `Package.dependencyRefs` with `definitionType: \"field\"`. If `mode === \"bundled\"`, those Types must be in `Package.types[]` and those Fields in `Package.fields[]`."
+    },
+    {
+      "id": "38",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-038.json",
+      "instanceId": "e1000038-0000-4000-a000-000000000038",
+      "title": "Field.fieldType.format, when present, is only meaningful when datatype…",
+      "text": "`Field.fieldType.format`, when present, is only meaningful when `fieldType.datatype` is `\"string\"`. Implementations must ignore `format` on fields with any other `datatype`."
+    },
+    {
+      "id": "39",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-039.json",
+      "instanceId": "e1000039-0000-4000-a000-000000000039",
+      "title": "Type.extendsTypeId, when present, must reference a valid Type.id.",
+      "text": "`Type.extendsTypeId`, when present, must reference a valid `Type.id`. Inheritance chains must be acyclic; a Type may not directly or transitively extend itself."
+    },
+    {
+      "id": "40",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-040.json",
+      "instanceId": "e1000040-0000-4000-a000-000000000040",
+      "title": "specializing Type must not declare a fieldId in its own fields[] that…",
+      "text": "A specializing Type must not declare a `fieldId` in its own `fields[]` that duplicates any `fieldId` inherited from its base Type or any ancestor Type."
+    },
+    {
+      "id": "41",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-041.json",
+      "instanceId": "e1000041-0000-4000-a000-000000000041",
+      "title": "When Type.fieldOrder is present, it must contain exactly the set of…",
+      "text": "When `Type.fieldOrder` is present, it must contain exactly the set of field UUIDs in the Type's effective field list. No UUID may appear more than once, and no UUID from the effective field list may be absent."
+    },
+    {
+      "id": "42",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-042.json",
+      "instanceId": "e1000042-0000-4000-a000-000000000042",
+      "title": "Every fieldId in Type.fieldAssignmentOverrides[] must reference a…",
+      "text": "Every `fieldId` in `Type.fieldAssignmentOverrides[]` must reference a field inherited from the base Type or an ancestor Type. Overrides must not reference fields declared in the specializing Type's own `fields[]`, must not alter Field semantics, and must not relax an inherited required field from `true` to `false`."
+    },
+    {
+      "id": "43",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-043.json",
+      "instanceId": "e1000043-0000-4000-a000-000000000043",
+      "title": "When ext:type-inheritance is declared, Package.dependencyRefs must…",
+      "text": "When `ext:type-inheritance` is declared, `Package.dependencyRefs` must include a `Reference` for every Type in the transitive closure of base Types for any Type in `Package.types[]`. If `mode === \"bundled\"`, all such base Types must be present in `types[]`."
+    },
+    {
+      "id": "44",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-044.json",
+      "instanceId": "e1000044-0000-4000-a000-000000000044",
+      "title": "Every NavigationLink.fromSectionId and NavigationLink.toSectionId…",
+      "text": "Every `NavigationLink.fromSectionId` and `NavigationLink.toSectionId` must reference a `sectionId` declared in the enclosing `DocumentView.sections[]`."
+    },
+    {
+      "id": "45",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-045.json",
+      "instanceId": "e1000045-0000-4000-a000-000000000045",
+      "title": "conforming repository must have a .srs marker directory and a…",
+      "text": "A conforming repository must have a `.srs` marker directory and a `manifest.json` at its root. A directory without both is not a conforming repository."
+    },
+    {
+      "id": "46",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-046.json",
+      "instanceId": "e1000046-0000-4000-a000-000000000046",
+      "title": "Every instance file's own instanceId is its identity; there is no…",
+      "text": "Every instance file discovered under a reserved instance root MUST declare an `instanceId`, and that self-declared value is the instance's identity. There is no manifest index entry to cross-check it against — `RepositoryManifest.instanceIndex` is retired (RFC-038 [R2]) and the repository's authoritative store, enumerated from the tree, is the instance set (RFC-038 [R1])."
+    },
+    {
+      "id": "47",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-047.json",
+      "instanceId": "e1000047-0000-4000-a000-000000000047",
+      "title": "RepositoryManifest.container is the canonical Container for the…",
+      "text": "`RepositoryManifest.container` is the canonical `Container` for the repository. It must satisfy all core Container invariants (Invariants 20–21). If a separate `container.json` is present in the repository root, it must be consistent with the manifest's embedded Container; the manifest takes precedence on conflict."
+    },
+    {
+      "id": "48",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-048.json",
+      "instanceId": "e1000048-0000-4000-a000-000000000048",
+      "title": "SourceReference with sourceType: \"repository-document\" must have a…",
+      "text": "A `SourceReference` with `sourceType: \"repository-document\"` must have a `sourceId` matching a `SourceDocument.documentId` whose sidecar is present in `sourceDocumentsPath`. A reference whose `documentId` cannot be resolved within the repository is invalid."
+    },
+    {
+      "id": "49",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-049.json",
+      "instanceId": "e1000049-0000-4000-a000-000000000049",
+      "title": "archive must include every instance in the authoritative store's…",
+      "text": "An archive must include every instance discovered by enumerating the repository's authoritative store — the instance set (RFC-038 [R1], [R17]) — not a manifest `instanceIndex`, which is retired (RFC-038 [R2]). An archive missing any enumerated instance file is malformed; a conforming consumer must reject it or surface the missing instances explicitly before processing."
+    },
+    {
+      "id": "50",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-050.json",
+      "instanceId": "e1000050-0000-4000-a000-000000000050",
+      "title": "When PackageRef.mode === \"local\", the package at the declared path…",
+      "text": "When `PackageRef.mode === \"local\"`, the package at the declared path must be `mode: \"bundled\"` and must include all Fields and Types referenced by any Tier 2 `Record` in the repository's instance set (RFC-038 [R1]; enumerated from the tree, not a manifest `instanceIndex`, which is retired per [R2]). This is the repository analogue of Package Invariants 7–8."
+    },
+    {
+      "id": "51",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-051.json",
+      "instanceId": "e1000051-0000-4000-a000-000000000051",
+      "title": "archive that includes a Relation containing a SourceReference with…",
+      "text": "An archive that includes a `Relation` containing a `SourceReference` with `sourceType: \"repository-document\"` must include that document's sidecar and content file, just as if the reference appeared within an instance. A conforming archiver must scan Relations for `repository-document` references and collect the corresponding source material. An archive missing such material is malformed."
+    },
+    {
+      "id": "52",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-052.json",
+      "instanceId": "e1000052-0000-4000-a000-000000000052",
+      "title": "Every SourceDocument sidecar present under sourceDocumentsPath must…",
+      "text": "Every `SourceDocument` sidecar present under `sourceDocumentsPath` must have a `contentPath` that resolves to an existing content file in the same directory. A sidecar whose `contentPath` does not resolve is invalid. A conforming producer must not emit such a sidecar; a conforming consumer must surface the resolution failure before processing any `SourceReference` pointing at that `documentId`."
+    },
+    {
+      "id": "53",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-053.json",
+      "instanceId": "e1000053-0000-4000-a000-000000000053",
+      "title": "conforming importer must use repositoryId as the key to determine…",
+      "text": "A conforming importer must use `repositoryId` as the key to determine whether an incoming repository already exists locally. An importer that unconditionally creates a new local repository for every archive it receives, without consulting `repositoryId`, is not conformant."
+    },
+    {
+      "id": "54",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-054.json",
+      "instanceId": "e1000054-0000-4000-a000-000000000054",
+      "title": "When an importer encounters an incoming object whose identity key…",
+      "text": "When an importer encounters an incoming object whose identity key matches an existing local object but whose content or checksum differs, it must surface the conflict explicitly. An importer that silently overwrites or silently discards in this case is not conformant."
+    },
+    {
+      "id": "55",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-055.json",
+      "instanceId": "e1000055-0000-4000-a000-000000000055",
+      "title": "checksum value in InstanceIndexEntry.checksum,…",
+      "text": "A checksum value in `InstanceIndexEntry.checksum`, `SourceDocumentIndexEntry.sidecarChecksum`, `SourceDocumentIndexEntry.contentChecksum`, or `RelationsChecksumEntry.checksum` must use the format `<algorithm>:<hex-encoded-digest>`. A value that does not include the `<algorithm>:` prefix is invalid."
+    },
+    {
+      "id": "I-63",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-063.json",
+      "instanceId": "87c56422-8124-43e4-993b-00e909af573b",
+      "title": "ExactTypeRef entries in DocumentView.rootTypeRefs must resolve in the Package",
+      "text": "When DocumentView.rootTypeRefs is present and non-empty, each ExactTypeRef entry MUST resolve to a Type that exists in the Package (the union of all packages in scope per packageRef/packageRefs; matched by both typeId and typeVersion). An entry that does not resolve MUST produce a diagnostic and MUST NOT be used for Container matching."
+    },
+    {
+      "id": "I-64",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-064.json",
+      "instanceId": "ba699995-0306-4dcb-be1e-27f20eedcf1d",
+      "title": "containerType should equal resolved root Type name when rootInstanceIds is present",
+      "text": "When a Container has one or more rootInstanceIds and also carries containerType, implementations SHOULD emit a diagnostic if containerType does not equal the resolved root Type name field (the local name within its namespace, not namespace/name). The root Record Type is authoritative; a mismatch does NOT make the Container invalid. Containers with no rootInstanceIds may carry any containerType value without triggering this rule."
+    },
+    {
+      "id": "I-65",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-065.json",
+      "instanceId": "be8125aa-ef62-4054-8c74-28e092111524",
+      "title": "Container tags must resolve against Vocabulary Terms when a Vocabulary governs the key",
+      "text": "When a Vocabulary in the repository package declares Term entries for a given tag key, Container tags bearing that key MUST resolve against those Terms per RFC-006 vocabulary resolution rules. Free-string tags are valid when no Vocabulary entry governs the key."
+    },
+    {
+      "id": "I-66",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-066.json",
+      "instanceId": "13b3461c-ecba-4a88-877d-ae0ea8fae0c5",
+      "title": "All conforming implementations must provide containers_for_instance",
+      "text": "All conforming SRS implementations MUST implement the containers_for_instance operation. Given an instanceId, it returns every Container whose rootInstanceIds, memberInstanceIds, or transitive contains-Relation traversal from rootInstanceIds includes the instance. The result set MUST be consistent with the current state of those fields and relations."
+    },
+    {
+      "id": "I-78",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-078.json",
+      "instanceId": "ed28a13e-4549-470e-b539-46c6101da1c9",
+      "title": "Blueprint.rootTypes entries must be ExactTypeRef (typeVersion required)",
+      "text": "Each entry in Blueprint.rootTypes MUST be an ExactTypeRef: both typeId (UUID) and typeVersion (integer >= 1) MUST be present. Implementations MUST resolve each entry against the Package (the union of all packages in scope per packageRef/packageRefs) at Blueprint load time; an entry that does not resolve MUST produce a diagnostic. An empty rootTypes array is valid and produces no diagnostics."
+    },
+    {
+      "id": "I-79",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-079.json",
+      "instanceId": "583debe6-724f-4397-9b02-cc62c98e3e0a",
+      "title": "manifest.container is required and satisfies core Container invariants 20-21",
+      "text": "Every SRS repository manifest MUST embed exactly one root Container in manifest.container. The root Container MUST satisfy the core Container invariants unchanged: Invariant 20 (its containerId is not an instance ID and never appears in rootInstanceIds, memberInstanceIds, Relation.sourceInstanceId, or Relation.targetInstanceId) and Invariant 21 (every id in rootInstanceIds/memberInstanceIds references a valid SRS instance id)."
+    },
+    {
+      "id": "I-80",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-080.json",
+      "instanceId": "80d769eb-12e0-40fe-ba4f-be9699184ad2",
+      "title": "Root container membership ids resolve in the authoritative instance set",
+      "text": "Every id in the root container's rootInstanceIds and memberInstanceIds MUST resolve to a member of the repository's authoritative instance set. There is no manifest `instanceIndex` to consult — it is retired (RFC-038 [R2]); the repository's authoritative store, enumerated from the tree, is that set (RFC-038 [R1]). This is the root-container specialization of core Invariant 21, stated separately so the required-root-container guarantee is self-contained."
+    },
+    {
+      "id": "I-81",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-081.json",
+      "instanceId": "5d527a48-5a00-4fdc-a1e0-cf3bec546dcc",
+      "title": "identityInstanceId resolves to a member of its container",
+      "text": "When present on a Container, identityInstanceId MUST equal an id contained in that Container's rootInstanceIds or memberInstanceIds. On the root container it names the repository's identity record. If it resolves to no such member, the repository is invalid. Reassigning identityInstanceId to a different member MUST NOT change the repositoryId, the container's containerId, or any instance id; the new target must already be a member before the pointer moves to it, so the repository is never transiently invalid."
+    },
+    {
+      "id": "I-82",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-082.json",
+      "instanceId": "f64d7c25-9774-4edd-bd92-a31a8fce0d7d",
+      "title": "Section roots SHOULD root a container in the container set",
+      "text": "When the repository's container set (RFC-038 [R1]) is non-empty, each non-identity section root of the root container (its navigation sections) SHOULD be the root of some Container in that set. An empty container set suppresses this diagnostic. A section root with no corresponding section container is a diagnostic, not an error, and a consumer MUST still render it as a navigation leaf rather than dropping it. `containerIndex` is retired (RFC-038 [R2]) and is no longer the membership authority for this check."
+    },
+    {
+      "id": "I-83",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-083.json",
+      "instanceId": "7e9333f3-69cc-4e74-8eb3-1fe165f65617",
+      "title": "Multi-version repository MUST resolve definition references against union of all installed package directories",
+      "text": "A tool MUST resolve every `typeId` and `fieldId` referenced by any Tier 2 Record against the union of all installed package version directories. This extends Invariant 50 to the multi-version case: a reference is resolved if it can be found in any installed version directory. A reference that cannot be found in any installed version directory MUST be reported as a validation error. A tool MUST NOT remove any prior-version package directory if doing so would leave any such reference unresolvable."
+    },
+    {
+      "id": "I-84",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-084.json",
+      "instanceId": "eb04c8d1-20cb-497a-8f2f-f05fee219c7c",
+      "title": "upstreamPackage.packageId MUST match at least one PackageRef entry's packageId",
+      "text": "When `manifest.upstreamPackage` is set, there MUST exist at least one entry in `manifest.packageRefs` (or `manifest.packageRef`) whose `packageId` matches `manifest.upstreamPackage.packageId`. A manifest where no `PackageRef` entry's `packageId` matches `upstreamPackage.packageId` MUST be reported as a validation error. Manifest-only validators MAY skip this check when no `PackageRef` entry carries `packageId` (i.e., all local-mode entries predate RFC-014 and omit the field), and SHOULD report the repository state as indeterminate rather than emitting a validation error in that case."
+    },
+    {
+      "id": "I-85",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-085.json",
+      "instanceId": "9d686444-89d9-4a30-a9c3-b08bd31b62ca",
+      "title": "com.semanticops.core/* types and fields MUST resolve in every conforming repository without any package declaration",
+      "text": "A conforming SRS implementation MUST make all `com.semanticops.core/*` types and fields resolvable in every repository without any `packageRef` or `packageRefs` declaration in the manifest. The core base package's definitions are treated as logically present in the RFC-014 R6 package union for all repositories. An implementation that fails to resolve `com.semanticops.core/*` types and fields in a structurally valid repository is non-conformant with RFC-029."
+    },
+    {
+      "id": "I-86",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-086.json",
+      "instanceId": "890d7d54-81f6-4001-bf31-30b156844431",
+      "title": "No Type or Field with namespace com.semanticops.core MAY be declared in any repository package",
+      "text": "A repository MUST NOT declare any Type or Field under the `com.semanticops.core` namespace in a local or external package. An implementation MUST reject the repository load with a conflict error if any such declaration is encountered during package loading. This reservation covers only the `com.semanticops.core` namespace; other `com.semanticops.*` sub-namespaces are governed by their own RFC or by general package conflict rules and are not affected by this invariant."
+    },
+    {
+      "id": "I-87",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-087.json",
+      "instanceId": "818d636c-8347-46a1-a9a2-c99e2ee90d21",
+      "title": "manifest.container.identityInstanceId MUST reference a Tier-2 com.semanticops.core/purpose Record",
+      "text": "`manifest.container.identityInstanceId`, when present, MUST reference a Tier-2 Record of type `com.semanticops.core/purpose`. This invariant layers on RFC-013 I-81 (membership requirement retained; I-81 is not superseded); RFC-029 adds the type constraint on top. During the RFC-029 migration grace period (R7), an implementation MUST emit a migration warning rather than a validation error for existing repositories whose `identityInstanceId` resolves to a record that is not a Tier-2 `com.semanticops.core/purpose` Record (including Tier-0 notes and Tier-1 TypedRecords of any type). All newly-created repositories (post-RFC-029) must satisfy this invariant immediately."
+    },
+    {
+      "id": "I-88",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-088.json",
+      "instanceId": "991f4c9c-71bc-4190-97c0-4ad17544bb44",
+      "title": "sourceRole vocabulary MUST be disjoint from installed RelationTypeDefinition keys",
+      "text": "The `sourceRole` value set — the closed enum of the implemented schema revision, including values added by later accepted RFCs — MUST be disjoint under literal whole-key equality from the set of installed `RelationTypeDefinition` keys in the repository's effective package set. Relation-type creation MUST reject a definition whose key equals a `sourceRole` value; `repo validate` MUST report a pre-existing collision as `SOURCEROLE_RELATIONTYPE_COLLISION` (warning at rest). A namespaced key (e.g. `com.acme/evidence`) does not collide with a bare `sourceRole` value."
+    },
+    {
+      "id": "I-89",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-089.json",
+      "instanceId": "224c0363-fdb4-4fad-b13f-f4ed6a25c1d0",
+      "title": "ext:cross-field-validation is opt-in; implementations not declaring it MUST ignore validationRules",
+      "text": "An SRS implementation that does not declare support for `ext:cross-field-validation` MUST treat `validationRules` as an unrecognized property and MUST ignore it. Conformance rules R1–R11 bind only implementations that declare support for `ext:cross-field-validation`. (RFC-019 R0.)"
+    },
+    {
+      "id": "I-90",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-090.json",
+      "instanceId": "4c9403e6-004b-4744-a0a3-e95271c77bc3",
+      "title": "All CrossFieldRules in validationRules MUST be evaluated regardless of earlier failures (fail-all)",
+      "text": "A conforming implementation that declares support for `ext:cross-field-validation` MUST evaluate each `CrossFieldRule` in `validationRules` against every Record of the Type at record-write time (create and update). Evaluation order within the array is implementation-defined; all rules MUST be evaluated regardless of earlier failures (fail-all, not fail-first). (RFC-019 R2.)"
+    },
+    {
+      "id": "I-91",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-091.json",
+      "instanceId": "3c4b5e9c-98f8-4e0b-8808-2e8a15ad9628",
+      "title": "conditional-required rule fires on string equality; target field MUST be non-empty when rule fires",
+      "text": "A `CrossFieldRule` with `type: \"conditional-required\"` fires when the field identified by `predicateFieldId` is non-empty and its stored value is equal to `predicateValue` (case-sensitive string equality). When the rule fires, the field identified by `targetFieldId` MUST be non-empty in the Record. A violation MUST be reported as a validation error. (RFC-019 R3.)"
+    },
+    {
+      "id": "I-92",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-092.json",
+      "instanceId": "94488cb9-8fe8-4c51-afa5-0c8b8bdb45c6",
+      "title": "field-ordering rule applies only to date/number fields; non-date/non-number reference is a Type-level error",
+      "text": "A `CrossFieldRule` with `type: \"field-ordering\"` fires when both `predicateFieldId` and `targetFieldId` are non-empty. It applies only to fields whose `fieldType.datatype` is `\"date\"`, `\"date-time\"`, `\"number\"`, or `\"integer\"`. When `effect` is `\"must-precede\"`, the predicate field value MUST be strictly less than the target field value (ISO 8601 lexicographic order for dates; numeric order for numbers). When `effect` is `\"must-follow\"`, the predicate field value MUST be strictly greater than the target field value. A violation MUST be reported as a validation error. If either field is non-empty but the other is absent or empty, the rule MUST NOT fire. A `field-ordering` rule whose `predicateFieldId` or `targetFieldId` resolves to a field with any other `fieldType.datatype` MUST be reported as a Type-level validation error. (RFC-019 R4.)"
+    },
+    {
+      "id": "I-93",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-093.json",
+      "instanceId": "deedaca2-4e41-44b4-be6e-2c9b76702f44",
+      "title": "mutual-exclusion rule MUST report error if more than one listed field is non-empty",
+      "text": "A `CrossFieldRule` with `type: \"mutual-exclusion\"` MUST report a validation error if more than one field in `fieldIds` is non-empty in the Record. If zero or one field is non-empty, the rule passes. (RFC-019 R5.)"
+    },
+    {
+      "id": "I-94",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-094.json",
+      "instanceId": "b2ed8b1d-90b3-4107-bf08-8b3c05cc6fb6",
+      "title": "conditional-required predicateFieldId MUST resolve to an effective-single string/date/date-time Field",
+      "text": "A `CrossFieldRule` with `type: \"conditional-required\"` MUST supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. The field identified by `predicateFieldId` MUST be effective-single (`fieldType.cardinality` absent/`\"single\"` and, until #242 Phase B, effective `FieldAssignment.repeatable !== true`) and its `fieldType.datatype` MUST be one of `{\"string\", \"date\", \"date-time\"}`. String `format` and `valueDomain` do not restrict eligibility. A rule that omits a required property, selects a list/repeatable field, or resolves to any other datatype MUST be reported as a Type-level validation error. Admission of `date-time` is intentional; the scalar requirement intentionally closes the legacy repeatable-date equality hole. (RFC-019 R6; RFC-032 Rev-7 erratum; normative extension of I-11.)"
+    },
+    {
+      "id": "I-95",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-095.json",
+      "instanceId": "d4fbd56a-ff47-4953-83ed-5dc277f4c207",
+      "title": "CrossFieldRule with unrecognized type value MUST be reported as a Type-level error; unknown types MUST NOT be silently ignored",
+      "text": "A `CrossFieldRule` with a `type` value not in `[\"conditional-required\", \"field-ordering\", \"mutual-exclusion\"]` MUST be reported as a Type-level validation error. Implementations MUST NOT silently ignore unknown rule types. (RFC-019 R9.)"
+    },
+    {
+      "id": "I-96",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-096.json",
+      "instanceId": "c86855f1-3b63-49dd-b2a9-eaea83203591",
+      "title": "CrossFieldRule property present for wrong rule type MUST be reported as a Type-level error",
+      "text": "A `CrossFieldRule` that contains a property belonging to a different rule type MUST be reported as a Type-level validation error. Specifically: a `conditional-required` or `field-ordering` rule MUST NOT supply `fieldIds`; a `mutual-exclusion` rule MUST NOT supply `predicateFieldId`, `predicateValue`, `targetFieldId`, or `effect`. (RFC-019 R10.)"
+    },
+    {
+      "id": "I-97",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-097.json",
+      "instanceId": "1b135eb4-7530-459f-a6c4-07151832f691",
+      "title": "validationRules are not inherited; a derived Type's own validationRules are the complete set",
+      "text": "`validationRules` are not inherited. A Type's `validationRules` array is the complete and exclusive set of cross-field rules evaluated for Records of that Type. When `ext:type-inheritance` is in use and Type B extends Type A, Type A's `validationRules` MUST NOT be evaluated for Records of Type B unless Type B's own `validationRules` explicitly restates them. (RFC-019 R11.)"
+    },
+    {
+      "id": "I-98",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-098.json",
+      "instanceId": "cd3c9215-04a8-4111-ab1d-582b8920b0df",
+      "title": "A Record MUST NOT occupy a lifecycle state declaring requiresRelation without a satisfying Relation",
+      "text": "A Record MUST NOT rest in a lifecycle state that declares `requiresRelation` unless at least one Relation satisfies the obligation: its type equals one of the declared `relationType`(s) and the Record is the relation's target when `direction` is `incoming` (or omitted) or its source when `direction` is `outgoing`. When the state declares `enforcement: \"hard\"` (the default), an implementation MUST reject a lifecycle transition into it unless the operation, on completion, satisfies this occupancy requirement — either because a satisfying Relation already exists, or because the operation's fulfillment establishes one. The rejection MUST be machine-readable, identifying the target state key, the required relation type(s), and the direction. When the state declares `enforcement: \"advisory\"`, the transition MUST be permitted regardless of the obligation and the unsatisfied state surfaced only as an at-rest warning, never a rejection. (RFC-022 R1–R3, R2a.)"
+    },
+    {
+      "id": "I-99",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-099.json",
+      "instanceId": "9abb5b0d-933a-4cd2-8bea-576636aae836",
+      "title": "Transition fulfillment is all-or-nothing",
+      "text": "A fulfillment supplied with a lifecycle transition MUST be applied as one all-or-nothing operation: `newRecord` creates a successor of the Record's Type in the effective lifecycle's initial state, asserts one Relation of the selected type oriented per `direction`, and transitions the Record; `existingInstanceId` asserts the Relation to the referenced instance (which MUST exist and MUST NOT be the Record itself) and transitions. If any step fails, no step's effect may remain observable. A file-backed implementation MAY realize this by write ordering in which the state change is committed last, provided every committed prefix is a valid repository under I-98. When the state declares an any-of `relationType` array, `fulfillment.relationType` MUST be one of the declared types, defaulting to the first; a `fulfillment` supplied for a target state that declares no `requiresRelation` MUST be rejected. (RFC-022 R4–R8.)"
+    },
+    {
+      "id": "I-128",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-0b8f008f.json",
+      "instanceId": "0b8f008f-0bd1-4fe4-803b-9a7bb1a92acf",
+      "title": "renderedPresentations default selection and viewId resolution",
+      "text": "When `manifest.renderedPresentations` is present and non-empty, a conformant viewer MUST select as the default presentation the first entry whose `isDefault` is `true`. When no entry carries `isDefault: true`, the first entry in the array is the default. The selected DocumentView governs the repository's presentation. When a `renderedPresentations` entry's `viewId` does not resolve to a DocumentView in the active packages, implementations MUST skip that entry and MUST emit a diagnostic; if all entries fail to resolve, behaviour falls back to implementation-defined selection as if `renderedPresentations` were absent. When `viewId` resolves to DocumentViews in more than one active package, implementations MUST report a validation error (ambiguous view reference). When `renderedPresentations` is absent or empty, viewer behaviour falls back to implementation-defined selection (existing behaviour unchanged; no conformance obligation is added for the absent case). (RFC-015 Change C.)"
+    },
+    {
+      "id": "I-113",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-0e6bca40.json",
+      "instanceId": "0e6bca40-c267-4c3f-ac36-947e63e66917",
+      "title": "Structured filter predicates are exact-match",
+      "text": "An implementation that declares `ext:discovery` MUST include in its DiscoveryQuery result set every instance that satisfies all specified structured filter predicates (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `excludeLifecycleStates`, `tier`), and MUST NOT include any instance that fails any specified structured filter predicate. (RFC-012 R1.)"
+    },
+    {
+      "id": "I-139",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-0e6f7aea.json",
+      "instanceId": "0e6f7aea-b283-4524-852b-60b7f7b51c54",
+      "title": "List cardinality array-wraps uniformly",
+      "text": "`cardinality: \"list\"` array-wraps uniformly, for every `datatype` including `map` and `dependent`, matching `projectField`'s unconditional wrap. The single-value rule states the `single` case; the wrap composes on top of it. (RFC-039 [R16])"
+    },
+    {
+      "id": "I-100",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-100.json",
+      "instanceId": "443a2ec7-2873-4e73-885e-da0dcbbde91f",
+      "title": "requiresRelation is projected structurally and validated as a warning at rest",
+      "text": "Allowed-transitions projections MUST include the target state's `requiresRelation` declaration on each transition option whose target state declares one, so clients route successor-flow presentation from structure rather than state-name matching. Repository validation MUST emit a warning-severity diagnostic for every Record at rest that violates I-98, and MUST NOT treat such a violation as a hard validation error. Transitions whose target state declares no `requiresRelation` MUST behave exactly as before RFC-022. (RFC-022 R8–R10.)"
+    },
+    {
+      "id": "I-144",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-187b18d0.json",
+      "instanceId": "187b18d0-89ab-4591-a61f-273821f2412b",
+      "title": "containerScope in SectionSource.type-query controls query boundary",
+      "text": "When SectionSource.type-query carries containerScope, implementations MUST apply the following scoping rules: (a) When containerScope is absent or \"explicit\", the query is scoped to the containers listed in containerIds[] — existing behaviour. An absent containerIds[] with explicit scope produces an empty result. (b) When containerScope is \"repository\", the query spans all containers in the repository; containerIds[] MUST be ignored. (c) When containerScope is \"subtree\", the query spans the context container and all containers reachable by contains relations from each container in containerIds[]; when containerIds[] is absent or empty, the context container is used as the subtree root. An implementation that cannot determine the context container for a subtree query MUST treat it as \"explicit\" with an empty containerIds[] and SHOULD emit a diagnostic. Implementations MUST NOT produce a validation error when containerScope is absent; absent is equivalent to \"explicit\"."
+    },
+    {
+      "id": "I-126",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-20bd523e.json",
+      "instanceId": "20bd523e-fe89-4e1b-b7a0-e499cbc96820",
+      "title": "ordering.memberOrder application algorithm",
+      "text": "When `DocumentSection.ordering.memberOrder` is present and the section's `source.type` is `container-subset`, implementations MUST apply it as the presentation sequence: (1) emit listed `instanceId`s that are current container members in the declared order; (2) skip listed `instanceId`s that are no longer container members — implementations MUST emit a diagnostic; this MUST NOT be treated as a validation failure; (3) append surviving container members not in `memberOrder`, ordered by topological sort over `precedes` edges with a `createdAt`-ascending tiebreak (the default container-subset ordering `ext:views-l2` already specifies); (4) when `ordering.direction` is `\"desc\"`, the entire output sequence produced by steps (1)–(3) MUST be reversed before emission. `memberOrder` MUST NOT be combined with `ordering.fieldId` on the same section — a section carrying both is invalid; implementations MUST report a validation error. `memberOrder` on a non-`container-subset` section MUST be ignored with a diagnostic and SHOULD be rejected at package-validation time. (RFC-015 Change B.)"
+    },
+    {
+      "id": "I-106",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-296c61be.json",
+      "instanceId": "296c61be-9c7d-4f5d-88b2-e5c827595aaf",
+      "title": "byte-identical archive per implementation across invocations",
+      "text": "Given identical repository content, a conformant archive producer MUST produce a byte-for-byte identical `.srs` file across invocations of the same implementation. Cross-implementation byte identity is not guaranteed (I-105 allows implementation-defined Store/Deflate choice). Identical content means identical archive entry paths (forward-slash-normalised) and byte contents; filesystem timestamps, permissions, and host metadata are excluded and MUST NOT influence archive output."
+    },
+    {
+      "id": "I-133",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-2b94ca42.json",
+      "instanceId": "2b94ca42-ef06-4187-b2ce-417020c1b28a",
+      "title": "fieldMeta keys are a subset of fieldValues keys",
+      "text": "`fieldMeta`, when present, MUST be an object whose keys are a subset of the sibling `fieldValues` keys, and whose values are objects of `{source?, editedAt?, sourceRefs?}`. A `fieldMeta` key with no corresponding `fieldValues` key MUST be rejected. `fieldMeta` MUST NOT appear inside an inline-composite value. (RFC-039 [R6])"
+    },
+    {
+      "id": "I-101",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-2be86c08.json",
+      "instanceId": "2be86c08-b427-4510-a1e8-25524f90ddaf",
+      "title": "attaches SourceReference acceptance",
+      "text": "A conformant implementation MUST accept `\"attaches\"` as a value of `SourceReference.sourceRole`. An attachment is a `SourceReference` with `sourceType: \"repository-document\"`, `sourceRole: \"attaches\"`, and `sourceId` equal to a source document's `documentId`. Attachment MUST NOT be modelled as a `Relation` edge; there is no `attaches` canonical `Relation` type."
+    },
+    {
+      "id": "I-143",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-49572823.json",
+      "instanceId": "49572823-6f73-42c1-9a57-4aa01fa1df43",
+      "title": "excludeLifecycleStates in SectionSource.type-query is an exclusion lifecycle filter applied after inclusion",
+      "text": "When SectionSource.type-query carries a non-empty excludeLifecycleStates array, implementations MUST exclude from the query result any Record whose lifecycleState matches any value in the array. When lifecycleStates and excludeLifecycleStates are both present and non-empty, inclusion filtering (I-142) MUST be applied first; exclusion filtering is then applied to the survivors. A Record with no lifecycleState is not excluded by excludeLifecycleStates (only Records with a matching non-null lifecycleState are excluded). When excludeLifecycleStates is absent or empty, no exclusion is applied. Implementations that do not declare ext:lifecycle MUST ignore excludeLifecycleStates and MUST NOT produce a validation error on its presence."
+    },
+    {
+      "id": "I-138",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-4d0263c2.json",
+      "instanceId": "4d0263c2-1c3d-46f1-9dbd-1f0c60f64ea7",
+      "title": "DocumentView projections key fields by Field.name",
+      "text": "A DocumentView projection MUST key `ProjectedRecord.fields` and `orderedFieldKeys` by `Field.name`, and MUST carry a composite value recursively under its own key. `ProjectedFieldGroup` and `ProjectedGroupEntry` are removed and have no successor construct. (RFC-039 [R11])"
+    },
+    {
+      "id": "I-117",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-5840eeb0.json",
+      "instanceId": "5840eeb0-ed2c-4e2e-9430-5be5265396d7",
+      "title": "Structured filters and content-match compose by conjunction",
+      "text": "When both structured filters and `contentMatch` are specified on a DiscoveryQuery, an instance MUST satisfy all structured filter predicates (exact-match, I-113) AND the content-match recall-floor predicate (I-114). The structured-filter constraints cannot be overridden or widened by content-match extra recall. (RFC-012 R5.)"
+    },
+    {
+      "id": "I-137",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-5a7dcf06.json",
+      "instanceId": "5a7dcf06-7ba3-480d-9860-d3d6fa5cc18e",
+      "title": "A referenced Type version is not deletable",
+      "text": "A Type version referenced by any instance in the repository MUST NOT be deleted. Name-keying makes the Record-to-Field edge Type-mediated: `fieldId` is recovered from `typeId` + `typeVersion` + key, so deleting the pinned Type version renders every instance of it unreadable. This rule governs versions with live referents only. (RFC-039 [R19])"
+    },
+    {
+      "id": "I-110",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-5e89a360.json",
+      "instanceId": "5e89a360-7ec5-4b4d-b0f8-9323ffa3e549",
+      "title": "sidecar must reside in same directory as its content file",
+      "text": "A sidecar MUST reside in the same directory as the content file it describes. A `contentPath` that traverses upward (e.g., `../other/file.pdf`) is non-conformant."
+    },
+    {
+      "id": "I-103",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-6341bcaa.json",
+      "instanceId": "6341bcaa-c496-46cd-b1cd-6b6bcbb5223c",
+      "title": "no-base-package: repository must load without com.semanticops.base",
+      "text": "A conformant implementation MUST NOT refuse to load, validate, or export a repository solely because the `com.semanticops.base` package is absent or because no `attachment_policy` record is present."
+    },
+    {
+      "id": "I-125",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-6970c1bc.json",
+      "instanceId": "6970c1bc-42b1-4c4c-b59e-3600f8236f3d",
+      "title": "precedes relations are semantic-only, not presentational",
+      "text": "`precedes` relations MUST be used only to express sequences where a different order would be semantically wrong (e.g. spec sections in document order, protocol stages in execution sequence). Implementations MUST NOT create `precedes` relations between instances whose ordering is presentational (layout, curation, display preference). A `precedes` relation between two container members MUST be interpreted as a semantic claim about their sequence, not as a rendering hint. (RFC-015 Change A.)"
+    },
+    {
+      "id": "I-107",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-6a7d674a.json",
+      "instanceId": "6a7d674a-ea06-4c2f-bf05-905da2d7cc35",
+      "title": "attachment_policy limit diagnostics at validate time",
+      "text": "A conformant implementation MAY enforce `attachment_policy` limits as hard rejections. If it does not, it MUST emit non-blocking warning diagnostics at `srs repo validate` time when: a source document content file exceeds `max_per_file_bytes` or `max_doc_bytes`; aggregate source-document bytes exceed `max_total_bytes`; an attached file's MIME type is not listed in `allowed_mime_types`. Non-blocking diagnostics MUST NOT prevent record storage or repository export."
+    },
+    {
+      "id": "I-116",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-6debe8a7.json",
+      "instanceId": "6debe8a7-d937-4ee5-97e5-4432c87f14d4",
+      "title": "Result ranking is implementation-defined",
+      "text": "An implementation MAY rank DiscoveryQuery results in any order. The recall-floor guarantee of I-114 applies to inclusion in the result set only, not to rank position. (RFC-012 R4.)"
+    },
+    {
+      "id": "I-119",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-7110cc58.json",
+      "instanceId": "7110cc58-63e2-4cd5-8cef-e1ab9457f952",
+      "title": "Multi-tag filter uses AND semantics with vocabulary resolution",
+      "text": "A `tag` predicate with multiple values MUST use AND semantics — all specified tags must be present on the instance. Both query tags and stored instance tags are canonicalized via RFC-006 key-or-alias resolution when a Vocabulary is declared for the tag key; when no Vocabulary is declared, raw string comparison applies (case-sensitive). (RFC-012 R7.)"
+    },
+    {
+      "id": "I-141",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-7bdbac1c.json",
+      "instanceId": "7bdbac1c-0bc5-4bcf-8d2b-37c583510ff3",
+      "title": "Instance keys serialise in FieldAssignment.order",
+      "text": "Instance `fieldValues` keys MUST be serialised in `FieldAssignment.order`, and nested composite objects likewise, so that a re-run of a transform is byte-idempotent and diffs are stable. This is the instance-side counterpart of the schema-key ordering in `projection-rules.md`; it supersedes the write-order signal of rfc-012:139. (RFC-039 [R18])"
+    },
+    {
+      "id": "I-109",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-83410026.json",
+      "instanceId": "83410026-2648-42ab-8bbb-9ed2031132d6",
+      "title": "contentPath subdirectory resolution relative to sourceDocumentsPath",
+      "text": "`contentPath` in a source-document sidecar MAY contain forward-slash-separated sub-path segments. A conformant implementation MUST resolve `contentPath` relative to `sourceDocumentsPath`."
+    },
+    {
+      "id": "I-112",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-8b166381.json",
+      "instanceId": "8b166381-c6e3-4db7-b193-bf635bd61249",
+      "title": "tombstone reference-only state: absent content file is valid",
+      "text": "A source-document sidecar entry (RFC-038 [R25], amending RFC-017 [R12]; the entry no longer lives in a manifest `sourceDocumentIndex`, which is retired per RFC-038 [R2]) whose content file (at `contentPath`) is absent is a valid tombstone (reference-only) state. A conformant implementation MUST NOT reject, refuse to load, or refuse to export a repository solely because a discovered source document's content is missing. An `attaches` `SourceReference` targeting a tombstoned `documentId` remains conformant (I-102). An implementation MAY surface an informational non-blocking diagnostic that the content is unavailable."
+    },
+    {
+      "id": "I-121",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-93320c14.json",
+      "instanceId": "93320c14-fd67-4401-8309-34352d15f298",
+      "title": "Text Projection includes tags; display labels are optional",
+      "text": "The Text Projection MUST include `tags` array entries as `TextSegment`s after field segments. An implementation MAY additionally include `FieldAssignment.displayLabel` values as segments after tags — this is not required, and two conforming implementations may differ on whether display-label segments are included. (RFC-012 R9.)"
+    },
+    {
+      "id": "I-131",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-99354119.json",
+      "instanceId": "99354119-e59f-457a-99d5-c2c3208e4a09",
+      "title": "Field.name uniqueness within a Type's effective field set",
+      "text": "Within a Type's effective field set — its own `fields`, plus fields contributed through `extendsTypeId` — every referenced `Field.name` MUST be distinct. An implementation MUST reject a Type that violates this at definition time, not at instance time. (RFC-039 [R4])"
+    },
+    {
+      "id": "I-120",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-99dc528c.json",
+      "instanceId": "99dc528c-1440-4012-a4f5-51d97b91cf9e",
+      "title": "Text Projection includes only Fields matching the RFC-032 searchability predicate",
+      "text": "For Tier 2, the Text Projection MUST include a Field only when `fieldType.datatype == \"string\"` and `fieldType.format` is absent or one of `\"plain\"`, `\"markdown\"`, or `\"uri\"`. `valueDomain` does not affect searchability. A single-cardinality Field emits one segment; a list-cardinality Field emits one segment per array element in order. Fields with `format: \"uuid\"` or `format: \"email\"`, or datatype `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, or `map`, MUST NOT contribute `TextSegment`s. Tier-1 `TypedField.valueType` continues to use the legacy classification until the #242 Phase-B carrier cutover. (RFC-012 R8; RFC-032 Rev-7 erratum.)"
+    },
+    {
+      "id": "I-127",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-ab24cfd9.json",
+      "instanceId": "ab24cfd9-a1f3-45c4-aa69-c902cb4928bd",
+      "title": "memberOrder combined with typeFilter",
+      "text": "When both `typeFilter` and `memberOrder` are present on a `container-subset` section, `typeFilter` is applied first to obtain the filtered member set; `memberOrder` is then applied over that filtered set. `memberOrder` entries naming members excluded by `typeFilter` are silently skipped (no diagnostic). Unlisted filtered survivors are appended in the same topological-sort-by-`precedes` order used in Invariant I-126 step (3). The `direction` reversal of Invariant I-126 step (4) applies to the combined result after `typeFilter` and `memberOrder` are both applied. (RFC-015 Change B.)"
+    },
+    {
+      "id": "I-114",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-ae111a90.json",
+      "instanceId": "ae111a90-1b1d-4ac9-a9a1-4248af051942",
+      "title": "Content-match is a guaranteed recall floor",
+      "text": "For a `contentMatch` predicate with normalized query string `q`, an implementation that declares `ext:discovery` MUST include every instance whose Text Projection contains at least one `TextSegment` whose normalized `text` contains `q` as a substring (case-folded NFC substring match). (RFC-012 R2.)"
+    },
+    {
+      "id": "I-122",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-b3eb90e9.json",
+      "instanceId": "b3eb90e9-5e18-44a4-9751-4d453c37e65b",
+      "title": "Text normalization is NFC + case folding, no stripping",
+      "text": "Normalization of `TextSegment.text` MUST apply Unicode Normalization Form C (NFC) followed by Unicode simple case folding (locale-independent). Implementations MUST NOT strip punctuation, diacritics, or whitespace during this normalization step; additional stemming or tokenization is permitted for ranking purposes only, not as a substitute for the normalized canonical search string. (RFC-012 R10.)"
+    },
+    {
+      "id": "I-132",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-bbed89d6.json",
+      "instanceId": "bbed89d6-f406-4d57-915c-37e57e879371",
+      "title": "Key absence is the sole representation of an unset field",
+      "text": "A `FieldAssignment` with `required: true` means its key MUST be present in `fieldValues`. Key absence is the sole representation of an unset field: a value of `null` MUST be rejected — writers MUST omit the key instead. Structural presence and rendering presence (RFC-001 Step 2, where an empty string resolves as absent) remain distinct and MUST NOT be conflated. (RFC-039 [R5]/[R5a])"
+    },
+    {
+      "id": "I-140",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-bca2cd6f.json",
+      "instanceId": "bca2cd6f-0a8f-4ab7-badb-30bd7ca9f4d7",
+      "title": "The projected schema describes the fieldValues object",
+      "text": "A Type's projected JSON Schema describes the `fieldValues` object, not the whole Record document. `instanceId`, `typeId`, `tags`, `meta`, `sourceRefs`, and `fieldMeta` are envelope members governed by `record.json`, and are outside the projected schema's `additionalProperties: false`. (RFC-039 [R17])"
+    },
+    {
+      "id": "I-130",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-bf34d7af.json",
+      "instanceId": "bf34d7af-45d8-4d9d-be41-284994eed684",
+      "title": "Instance keys are Field.name verbatim",
+      "text": "A `fieldValues` key MUST be `Field.name` verbatim, with no case or separator transformation, at every nesting depth. The name projection MUST NOT be applied to instance keys under any circumstances, including for meta-model entities stored as Records. (RFC-039 [R2b])"
+    },
+    {
+      "id": "I-104",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-bfc2af4e.json",
+      "instanceId": "bfc2af4e-b5f8-47e9-b64d-aa0b39aba902",
+      "title": "no-policy defaults when attachment_policy absent",
+      "text": "When no `attachment_policy` record exists, a conformant implementation MUST apply the no-policy defaults: all MIME types accepted, no size limits enforced, no size-or-MIME-type-policy diagnostics emitted."
+    },
+    {
+      "id": "I-105",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-c348617e.json",
+      "instanceId": "c348617e-60eb-4132-a399-48c39a57e8dc",
+      "title": "deterministic-ZIP archive production",
+      "text": "A conformant archive producer MUST produce deterministic ZIP archives: entries sorted byte-lexicographically by forward-slash-normalised path, `last mod` timestamps zeroed (`0x0000`), compression method Deflate (8) or Store (0) only with consistent per-file choice across invocations, `extra` fields empty, Language encoding flag (bit 11) set to 1."
+    },
+    {
+      "id": "I-102",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-d85abd4c.json",
+      "instanceId": "d85abd4c-ca6b-4c36-939c-fde7ad373a00",
+      "title": "attaches sourceId must resolve to a source-document sidecar entry",
+      "text": "The `sourceId` of an `attaches` `SourceReference` MUST resolve to a `documentId` in the repository's source-document set, discovered via a `.meta.json` sidecar scan of `sourceDocumentsPath` in the same repository (RFC-038 [R25], amending RFC-017 [R2]/[R12]; `sourceDocumentIndex` is retired per RFC-038 [R2]). Resolution is against the sidecar entry, not the content file. A `sourceId` that resolves to no such entry is non-conformant and MUST be reported with a diagnostic at validation time."
+    },
+    {
+      "id": "I-115",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-dcc49425.json",
+      "instanceId": "dcc49425-990e-4e85-8823-1359be6c91f0",
+      "title": "Extra content-match results are permitted",
+      "text": "An implementation MAY include instances beyond the recall-floor set defined by I-114 (e.g. via stemming, phonetic matching, or semantic similarity). Returning extra results does not violate `ext:discovery` conformance. (RFC-012 R3.)"
+    },
+    {
+      "id": "I-111",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-e0c51df4.json",
+      "instanceId": "e0c51df4-be21-4d76-965b-5b1df3e0954c",
+      "title": "at most one attachment_policy record per repository",
+      "text": "At most one `attachment_policy` record of the `com.semanticops.base/repo_settings` type MAY exist per repository. A conformant implementation encountering two or more MUST surface a diagnostic and treat the policy as absent (applying the no-policy defaults: all MIME types accepted, no size limits enforced, no size-or-MIME-type-policy diagnostics emitted)."
+    },
+    {
+      "id": "I-123",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-e2788042.json",
+      "instanceId": "e2788042-b58c-4013-8794-7fb4e6bafc9a",
+      "title": "ext:discovery conformance requires passing structured-filter fixture scenarios",
+      "text": "An implementation that declares `ext:discovery` MUST pass all structured-filter conformance scenarios (`exactMatch: true`) from the fixture at `srs/conformance/discovery/scenarios.json`, returning exactly the `expectedInstanceIds` set for each such scenario. When a scenario also carries an `expectedSegments` expectation, the implementation's Text Projection for the named field of the named instance MUST additionally match the expected segment sequence exactly in count and order — testing I-120's list-cardinality rule (\"one segment per array element in order\") that `expectedInstanceIds` alone cannot express. (RFC-012 R11; srs#483.)"
+    },
+    {
+      "id": "I-124",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-ed385e02.json",
+      "instanceId": "ed385e02-c82a-451e-8973-6aa87f01cfd1",
+      "title": "ext:discovery conformance requires passing content-match fixture scenarios",
+      "text": "An implementation that declares `ext:discovery` MUST pass all content-match conformance scenarios (`exactMatch: false`) from the fixture at `srs/conformance/discovery/scenarios.json` — its result set for each such scenario MUST be a superset of the scenario's `expectedInstanceIds`. (RFC-012 R12.)"
+    },
+    {
+      "id": "I-134",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-ef57abe8.json",
+      "instanceId": "ef57abe8-5dd2-48ef-8257-a524282df5c6",
+      "title": "Removed carrier constructs are rejected at dataModelRevision >= 2",
+      "text": "`FieldValue`, `FieldValueEntry`, `FieldGroupValue`, `FieldGroupEntry`, `Type.fieldGroups`, and `FieldAssignment.{repeatable, minItems, maxItems}` are removed. An implementation MUST reject a document containing any of them at `dataModelRevision >= 2`. Definition files carry no document-local revision discriminator, so revision MUST be resolved from the enclosing repository or package manifest before this rule is applied to a definition. A manifest at `dataModelRevision >= 2` MUST NOT declare `ext:field-groups` or `ext:repeatable-fields`; a reader encountering such a declaration MUST report an error. (RFC-039 [R7]/[R15])"
+    },
+    {
+      "id": "I-142",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-f287f47c.json",
+      "instanceId": "f287f47c-c64a-400a-b348-89374b26bbce",
+      "title": "lifecycleStates in SectionSource.type-query is an inclusive multi-value lifecycle filter",
+      "text": "When SectionSource.type-query carries a non-empty lifecycleStates array, implementations MUST restrict the query result to Records whose lifecycleState matches any value in the array (OR semantics). A Record with no lifecycleState MUST be excluded when lifecycleStates is present and non-empty. When lifecycleStates is absent or empty, no filtering by this field is applied and all lifecycle states (including absent) are included. Implementations that do not declare ext:lifecycle MUST ignore lifecycleStates and MUST NOT produce a validation error on its presence."
+    },
+    {
+      "id": "I-129",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-f448175b.json",
+      "instanceId": "f448175b-f3eb-486e-bbee-8ec4da0cb6a9",
+      "title": "Record fieldValues is a name-keyed object",
+      "text": "A Tier-2 `Record`'s `fieldValues` MUST be a JSON object. Each key MUST equal the `Field.name` of a Field in the effective field set of the Record's `typeId`@`typeVersion`. Unknown keys MUST be rejected; the projected schema asserts `additionalProperties: false`. (RFC-039 [R1])"
+    },
+    {
+      "id": "I-136",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-fc982bf7.json",
+      "instanceId": "fc982bf7-aae6-4a29-a20b-0ca6841ffaed",
+      "title": "Reference-mode values resolve in the instance set",
+      "text": "A `mode: \"reference\"` value MUST resolve to an instance present in the repository's authoritative instance set, and that instance MUST be of the Field's declared `rangeType` at the declared `typeVersion`. A dangling or type-mismatched target MUST be reported as an error naming the referring record, the key, and the target id. (RFC-039 [R14], amended by RFC-038 [R25] — the reference target is the tree-enumerated instance set, not a manifest `instanceIndex`, which is retired per RFC-038 [R2]; discharges RFC-032 OQ4, RFC-033:302, RFC-035:592)"
+    },
+    {
+      "id": "I-108",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-fcc662f0.json",
+      "instanceId": "fcc662f0-f970-40f7-b7ad-2ecbecff8168",
+      "title": "reject gzip-compressed .srsj files",
+      "text": "A conformant implementation MUST reject a gzip-compressed file presented as a `.srsj` JSON Store. Detection is by content inspection: a file whose first two bytes are `0x1f 0x8b` MUST be treated as gzip-compressed regardless of its filename or MIME type."
+    },
+    {
+      "id": "I-118",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-fed0ec5e.json",
+      "instanceId": "fed0ec5e-d150-4282-9af2-d1c4fc4d2364",
+      "title": "containerId filter uses the RFC-009 I-66 membership definition",
+      "text": "A `containerId` filter predicate MUST use the three-condition membership definition of RFC-009 I-66: (1) `instanceId` in `Container.rootInstanceIds[]`, OR (2) `instanceId` in `Container.memberInstanceIds[]`, OR (3) reachable via transitive `contains` Relation traversal from any `rootInstanceIds[]` entry. The authoritative source for membership is the instance file and the relations file — the repository's authoritative store (RFC-038 [R1]). An implementation MAY maintain a derived catalog for performance but MUST treat the store as authoritative when they differ; there is no manifest `instanceIndex` to use as a cache, as it is retired (RFC-038 [R2]). (RFC-012 R6.)"
+    },
+    {
+      "id": "rfc-decision-0225099b",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-0225099b.json",
+      "instanceId": "0225099b-c0f6-40c2-910e-0c6374c1f359",
+      "title": "Defaults arrive later, as one mechanism",
+      "text": "Defaults are an essential FUTURE capability, and both current defaultValue sites are removed now. `Field.defaultValue` (already ruled removed, #234 2026-08-08) and `FieldAssignment.defaultValue` are removed together in the #273 train — the latter EXPLICITLY SUPERSEDING #274's ledger row \"Generate defaultValue\". When defaults arrive they arrive once, as a single layered-override capability — a higher level overrides a lower: a Protocol may override a Type, which may override a Field — designed whole in its own RFC as a versioned metamodel capability. There must never be two ways of doing the job; no fragment of the old mechanism survives to seed a second way."
+    },
+    {
+      "id": "rfc-decision-16b20c56",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-16b20c56.json",
+      "instanceId": "16b20c56-b4a1-40c6-9c0d-d2b09aaddbbf",
+      "title": "Attribution is optional, single-shaped, and never authority",
+      "text": "Axis 4-10 (Office over Testimony - Athena over Aphrodite) and the Attribution cell (stated over assumed), ruled as the cell's foundation principle:\n\nOPTIONAL - attribution is never required for validity. An unattributed statement is unattributed, not invalid and not implicitly attributed to anyone.\n\nSINGLE-SHAPED - when attribution is expressed, there is ONE shape for who/when/why across the standard: one asserter vocabulary (one casing, one set of kinds - replacing the five spellings the audit found), one timestamp convention, one reference-to-source convention (sourceRefs). The concrete shape is designed when the machinery returns (see below); this ruling fixes its constraints in advance.\n\nNEVER AUTHORITY - attribution informs trust and diagnosis; it never overrides the record. The catalog, the manifest, the validated content are office; who-said-so is testimony, which fills gaps and can be PROMOTED into office only by a verification mechanism (a signature, a ratified decision, a verified publisher) - promotion is the sanctioned path by which testimony hardens, and it produces office artifacts, not privileged testimony.\n\nWith the principle ruled, the current machinery's removal (the five divergent shapes: Relation provenance fields, FieldMeta.source's divergence, RevisionAgent's casing) is safe: the cell keeps its principle and its dormancy trigger - attribution machinery returns, in the single shape, when a consumer needs it, with travelling packages needing trustable publishers as the anticipated claimant."
+    },
+    {
+      "id": "rfc-decision-19997e24",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-19997e24.json",
+      "instanceId": "19997e24-37ad-42b2-aa88-9663a6eb814e",
+      "title": "Conformance checks are declared in one registry",
+      "text": "Cell: Conformance. Every spec-repo conformance check is declared in a single registry (scripts/checks.json) rather than hand-wired: each entry names the check's id, script, arguments, tier (always | pinned-cli | ci-only), the grid cell it guards, the governing decision or RFC that introduced it, and an optional expiry for checks born of grandfathering. validate-all.mjs becomes a loop over the registry filtered by tier, and it ends every run by naming the checks deferred to other tiers, so its exit 0 can never again be mistaken for the full gate surface. A membership guard enforces the registry: a check script present on disk but absent from the registry fails the build, which makes piecemeal addition structurally impossible. New checks follow one naming convention; existing script names migrate only when next touched (rename is a migration). The registry is a stepping stone, not the destination: the end state is the checks described as records - the spec repository declaring its own conformance gates the way it declares everything else, with the JSON registry generated as a projection. Owner, 2026-08-26: as long as we keep working towards the goal where all meaning is in SRS we are going in the right direction."
+    },
+    {
+      "id": "rfc-decision-1e5df0d9",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-1e5df0d9.json",
+      "instanceId": "1e5df0d9-430f-4a5a-ae7a-b4cd21a7c72f",
+      "title": "Define the SRS decision-log inclusion boundary",
+      "text": "Maintain the SRS RFC decision log as a curated record of active consequential judgment. Record a decision when legitimate alternatives remained and the choice establishes, changes, applies with discretion, excepts, or supersedes guidance that future work may need to understand. Do not record a mechanical derivation: when competent contributors accepting the same governing decisions and evidence have only one valid outcome, record the task, implementation consequence, test, or pull request instead."
+    },
+    {
+      "id": "rfc-decision-2a1e1590",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-2a1e1590.json",
+      "instanceId": "2a1e1590-55f4-4c08-a8b1-c54e994098c0",
+      "title": "State is mutable, semantics are not: the Fire carve-out, and Revisions and Changelog are removed",
+      "text": "Cell: Versioning (Fire, individual), carving the boundary of the column principle change preserves what it replaces. The Fire principle governs SEMANTIC content: a record's meaning changes by version increment or successor-and-link, never in place. STATE is the sanctioned exception: designated state fields - lifecycleState is the canonical case - mutate in place, because a state value is the record's current position in a process, not part of its meaning. The carve-out is exact: a field is state only if it is bound to a defined machine (a Lifecycle) whose transitions make some changes legal and others not; nothing else earns in-place mutation by calling itself state.\n\nWith the carve-out ruled, the transition-history machinery loses its structural necessity and its removal follows under axis 2-8's evidence clause: per-field Revision sidecars (revisions.json) and ChangelogCollection (changelog.json) are removed from the standard, with the ext:addressability coupling that depends on revision provenance ([LC-AX2]'s provenance.lifecycleTransition matching) simplified accordingly. Dormancy rule applies: return trigger is a real consumer needing transition history or field-level audit - the muDemocracy Decision Log's governance audit surface is the anticipated first claimant, and when it arrives the history mechanism is designed against its actual requirements."
+    },
+    {
+      "id": "rfc-decision-2e0cd70a",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-2e0cd70a.json",
+      "instanceId": "2e0cd70a-8542-48c4-9a38-34b15c5b3630",
+      "title": "Carry meaning you do not recognise",
+      "text": "Unknown content in instance-layer data is governed by a three-verb contract with graded diagnostics. DETECT: unknown elements are always identified — content in `meta` gets at most a quiet mention (it is the sanctioned extension carrier; not recognising its contents is expected, not a defect); unknown fields elsewhere draw a louder warning. LOAD: unknown instance-layer content never fails a load — it must not break the reader, and the reader should not break it. WRITE: a conformant writer preserves what it does not understand (the ideal), or refuses loudly when preservation is genuinely impossible; silently discarding unknown content is the one forbidden behaviour. Emitted JSON Schemas express the PRODUCTION contract — closed except `meta` — while round-tripped out-of-contract keys are carried despite being schema-invalid: the validation complaint IS the louder diagnostic. The definition layer is unchanged by this decision: definitions remain reject-unknown (they are the trust boundary), and extension remains inheritance-only."
+    },
+    {
+      "id": "rfc-decision-2f048790",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-2f048790.json",
+      "instanceId": "2f048790-519d-441b-8f9d-1ba0652d8c4f",
+      "title": "Generate structural reference projections from semantic records",
+      "text": "Resolved Field, Type, and value-object records are the semantic source; contributors keep narrative in published subsection records around a stable typed view slot, while tooling generates a property-table reference, optional pseudo-IDL, and schema from the resolved model."
+    },
+    {
+      "id": "rfc-decision-2fb87c1e",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-2fb87c1e.json",
+      "instanceId": "2fb87c1e-dc5f-442d-ade0-67ee71979627",
+      "title": "Make the authoritative store, not the manifest, define repository content",
+      "text": "A repository's authoritative content is what its authoritative store reports across the instance, relation, container, source-document, definition, and extension sets; manifest.json is not content authority except for its inline root container."
+    },
+    {
+      "id": "rfc-decision-4269c744",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-4269c744.json",
+      "instanceId": "4269c744-8b73-4c8d-b6b9-e5b05e8bd1ef",
+      "title": "Place composite-renderer dispatch in the view layer",
+      "text": "Composite renderer selection is owned by the view layer rather than Field or Type, so different views may present the same semantic records differently."
+    },
+    {
+      "id": "rfc-decision-43249f53",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-43249f53.json",
+      "instanceId": "43249f53-b2cf-482b-83e4-9b199f3c6930",
+      "title": "One state mechanism: workflow status is a Lifecycle",
+      "text": "Cell: Conformance (one way over many), with Versioning owning the state value. Anything in the standard's own corpus or its packages that models workflow state - named stages a record moves through - is a Lifecycle (ext:lifecycle): a defined state set with transitions, bound to the Type via lifecycleRef, with the record's position carried in lifecycleState. Bare status enum Fields for workflow state are retired as a parallel mechanism. First migration: the spec's own rfc_status field (49 records, seven values, no transitions) becomes a real spec-rfc-process Lifecycle - the standard dogfoods its own state machinery, and RFC supersession gains RFC-022 requiresRelation coupling (rfc_status superseded requires the supersedes assertion it today carries only in prose).\n\nThe line this draws: Lifecycle = workflow state on records (Fire, individual: where the record is in its process). Substrate entry status (active/deprecated/tombstone/retired) is NOT workflow state - it is the retirement mechanism of the substrate layer under axis 5-11 (Reliability over Renewal) and stays as-is. Enum value domains remain legal for genuinely stateless labels; the test is transitions: if some value changes are meaningful and others are wrong, it is a Lifecycle."
+    },
+    {
+      "id": "rfc-decision-4f1e12e5",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-4f1e12e5.json",
+      "instanceId": "4f1e12e5-47fc-4675-b1c2-48cc9e560e66",
+      "title": "The attested removals: pruning the dormant machinery",
+      "text": "Under the dormancy rule (rfc-decision-cce3c00e) and axis 2-8's evidence clause, the constructs the 2026-08-21 usage attestation found exercised nowhere are removed from the standard. Each entry keeps its cell's name and carries its return trigger to the roadmap; a return re-enters through the charter as an evidence-shaped design.\n\nREMOVED:\n1. Relation provenance fields (assertedBy, confidence, status, createdBy, validFrom, validUntil) - 0 of 250 relations anywhere. Cell: Attribution; the cell's principle is ruled separately and survives the machinery. Trigger: the attribution mechanism's return claimant.\n2. Federation entities (registry, events, cross-repository relation fields) - zero data; 34 prose records and 7 invariants specify it. Cell: Portability. Return: COMMITTED, not evidence-gated - federation is core to SRS (owner, 2026-08-22); this removal is a deliberate reset of a design that predates real practice, not a judgment on the capability. The redesign returns as a planned roadmap phase, grounded in the sharing forms that actually emerged (bundles, slices, git-hosted repositories) and the axis 4-10 verification path; the owner schedules it. The travel mandate covers artifact-form portability meanwhile.\n3. Revisions sidecars + ChangelogCollection - ruled in rfc-decision-2a1e1590 (cross-referenced, not re-ruled here).\n4. SectionSource variants fixed-instances and relation-query - 0 of 13 real sections. Cell: Conformance (one way over many; container-subset and type-query are the two live ways). Trigger: a composition need neither live variant expresses.\n5. View.protection (the view-root enum, none/read-only/fill-in - corrected attribution: it sits on the View, not on FieldView) - zero use, and a hint without a contract: no enforcement semantics are defined anywhere. Cell: Description. Trigger: a real authoring surface needing edit protection, which must design the missing enforcement half. Note: FieldView.required is NOT in this entry - it is attested in production use (muSrs decision-log view) and is dispositioned separately as a form-vs-validity distinction ruling.\n6. ext:repeatable-fields - nothing beyond repeatable:false outside a stale ancestor tree. Cell: Identity. Trigger: a consumer with genuine array-valued assignments (note: RFC-032 cardinality already carries list semantics - the return may be a merge, not a revival).\n7. vocabularyRef's string form - absorbed by the reference taxonomy (becomes LINEAGE); listed for completeness.\n\nDISPOSED WITHOUT REMOVAL:\n8. sourceRole vs the deprecated relationType alias at 100% usage: MIGRATE the 231 sourceRefs to sourceRole in the #273 train; if the train slips past the next release window, un-deprecate relationType instead - one name either way (rename-is-a-migration applies).\n9. The 13 custom RelationTypeDefinitions with zero assertions: user-space corpus cleanup, not spec surface - noted to corpus owners.\n\nEXPLICITLY KEPT, with reasons of record:\n- supersedes / refines / derived-from / evidences relation types: Succession's preference (successor over overwrite) REQUIRES its mechanism - a cell preference's machinery is not removable while the preference stands. The evidences/evidence spelling reconciliation rides the #273 train.\n- ext:lifecycle and type-inheritance: attested in production use in muSrs.\n- Protocols: the definition model is kept (well-designed, near-term consumers in the Workflow Editor and the protocol-runs-first Decision Log direction); the genuinely thin RUN semantics are the dormant half, designed at consumer time. \n- Instance meta and substrate properties (renaming to meta): policy affordances, not usage-gated features.\n- ext:discovery: conformance contract, not corpus machinery."
+    },
+    {
+      "id": "rfc-decision-53635966",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-53635966.json",
+      "instanceId": "53635966-dadd-4d0d-8bed-999244550de3",
+      "title": "Tier 1 was a theory: TypedRecord is removed",
+      "text": "Cell: Identity (Earth, individual), under axis 2-8's evidence clause. The record model goes from three tiers to two: Tier 0 (Note - free text sections, no type binding) and Tier 2 (Record - instantiated Type). Tier 1 (TypedRecord - named fields without a Type binding) and the graduatedAt timestamps are removed from the standard. The gradual-refinement theory the middle tier expressed - meaning matures from free text toward typed structure - survives without it: graduation is Note to Record, linked by derived-from, and partial structure inside a Note remains what it always was, sections. Tier numbering (0 and 2) is retained as-is to keep every existing reference, invariant, and discussion stable; renumbering would be churn without meaning."
+    },
+    {
+      "id": "rfc-decision-5c1e3068",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-5c1e3068.json",
+      "instanceId": "5c1e3068-6e22-42ae-ab24-882158e8035d",
+      "title": "Put a deterministic target-neutral IR between records and emitters",
+      "text": "Projection resolves semantic meaning into a target-neutral intermediate representation before any target back end renders it."
+    },
+    {
+      "id": "rfc-decision-5f8204bc",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-5f8204bc.json",
+      "instanceId": "5f8204bc-dc8a-4280-a746-2b9fd17d02e1",
+      "title": "Retirement has one way per layer",
+      "text": "Axis 5-11 (Reliability over Renewal) applied: each layer has exactly one retirement mechanism, and renewal never silently breaks a standing contract.\n\nDEFINITIONS (Field, Type, View, Composition, Theme, Blueprint, Protocol, Package definitions) retire by DELETION, with version history as the trail - there is no deprecation state at the definition layer (the audit's carve-out C10, now stated). A definition that must signal replacement does so by a successor version; consumers pin, so deletion cannot break a pinned reference retroactively.\n\nSUBSTRATE ENTRIES (Terms, LifecycleStates, RelationTypeDefinitions) retire by STATUS - the existing four-stage vocabulary (active, deprecated, tombstone, retired) - because instance data addresses them by string key and cannot be version-pinned; the key must keep resolving while carrying its retirement.\n\nINSTANCES (Records) retire by SUPERSESSION - successor-and-link (supersedes/refines), per the Fire column principle; history stays addressable.\n\nCross-layer rules: every retirement exception (allowlist entry, grandfather clause, compatibility label) carries its expiry condition and dies when the condition is met - a justification whose cited ground has changed is expired even if nobody noticed (the self-expiring-exception rule, now charter-level after finding C5's silent expiry). JSON Schema's deprecated:true annotation accompanies every documented deprecation (machine-readable, finding C16). The word 'deprecated' is reserved for the substrate status; definitions are never 'deprecated', they are removed."
+    },
+    {
+      "id": "rfc-decision-628cf6c4",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-628cf6c4.json",
+      "instanceId": "628cf6c4-a9e4-40c2-8c5b-b73765928df9",
+      "title": "A rename is a migration",
+      "text": "Axis 3-9 (Shared Coherence over Local Autonomy) with Description's preference (one name over many): a name in the standard - a property key, a substrate key, an entity name, a spec term - is a contract, and changing one is a MIGRATION, never an edit. A rename ships as: the ruled decision naming old and new; a deterministic data/schema migration where stored forms carry the name; a generation stamp where the carrier changes (dataModelRevision); and the one-name end state - the old name does not linger as an accepted alias (KEYED is key-only per the reference taxonomy; substrate renames go through supersession status per the retirement ruling). Already-executed instances of this pattern are its precedent, not exceptions: valueType to fieldType (RFC-032), properties to meta (#433), Evolution to Governance (grid cell), DocumentView to Composition (#272). A rename that cannot afford its migration is not ready to happen."
+    },
+    {
+      "id": "rfc-decision-6523cf5e",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-6523cf5e.json",
+      "instanceId": "6523cf5e-959b-40e1-91d0-ca2f4c0834be",
+      "title": "Keep presentation hints outside the semantic type model",
+      "text": "Editor and composite-renderer hints remain presentation-layer concerns and are not encoded as fieldType facets."
+    },
+    {
+      "id": "rfc-decision-693b9458",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-693b9458.json",
+      "instanceId": "693b9458-3ee8-4db4-89d4-8b65437994db",
+      "title": "Pin the CLI that defines a required semantic drift gate",
+      "text": "The required release-drift check uses one named srs-rust release declared once, so its semantic rendering behavior changes only through a reviewable repository commit."
+    },
+    {
+      "id": "rfc-decision-6fc7e142",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-6fc7e142.json",
+      "instanceId": "6fc7e142-f9bb-4cb6-a5f5-30c2e65cfd5a",
+      "title": "One escape bag, one name: meta",
+      "text": "The per-layer escape bag has one name everywhere: `meta`. The substrate layer's `properties` bag (VocabularyEntry, Term, RelationTypeDefinition) renames to `meta`, matching the instance layer's existing convention. The per-layer POLICIES remain distinct as ruled (#237's three-layer table: definitions have no bag; substrate reject-unknown with a `meta` escape; instances tolerate with `meta`) — the name is unified, the semantics stay layered. Executed as its own small breaking unit, not a #273 rider: substrate schemas + engine structs + substrate data migration + mirror choreography together."
+    },
+    {
+      "id": "rfc-decision-7255aecc",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-7255aecc.json",
+      "instanceId": "7255aecc-0e7b-44e1-84e0-32fe2c6bc9a1",
+      "title": "Type-keyed `type-query`: KEYED namespace/name replaces semanticObjectType dispatch",
+      "text": "The `SectionSource` `type-query` variant's selection key becomes Type-keyed: a `typeKey` string in `namespace/name` form (version-independent, KEYED per rfc-decision-c8704763), resolved against the effective installed package set at query time — the same resolution `typeFilter`/`typeDispatch` already perform elsewhere in `document-view.json`. `semanticObjectType` (a bare, unscoped string with no installed-definition backing) is retired from `SectionSource` once #272 migrates every consumer; until then it stays modelled as sanctioned-until-collapsed (RFC-040 metamodel v1.1.0, #383). Every other `type-query` filter axis (lifecycleState, lifecycleStates, excludeLifecycleStates, containerIds, containerScope) is unchanged — only the selection key changes shape, from an unscoped free string to a scoped, installed-definition-backed key. A `typeKey` that does not resolve in the effective package set is a validation error at query time, not a silent empty result (matching typeFilter's existing contract) — the same fail-closed posture RFC-040 applies throughout: an unrecognised dispatch target is an error, never quietly ignored. This is a design record only: no schema file changes here. #272 owns the SectionSource schema edit, the four-site semanticObjectType retirement (type.json, view.json, relation-type.json, document-view.json), the governance package's 1.2.0 republish with migrated document-views, the srs-rust dispatch removal (SectionSource::TypeQuery, governance_scaffold_service.rs's DECISION_TYPE_KEY dispatch), the vendored-seed re-vendor, and the I-142/143/144 invariant amendments (srs#410's relocated RFC-011 invariants governing this exact SectionSource shape)."
+    },
+    {
+      "id": "rfc-decision-7bd99afd",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-7bd99afd.json",
+      "instanceId": "7bd99afd-c15b-4bba-a189-2a3d34f2e4ee",
+      "title": "Close definition-layer gaps in the model rather than a remainder overlay",
+      "text": "Metamodel v1.1.0 must express the live definition-layer surface in SRS records and emit the complete artifact; it must not depend on a hand-maintained remainder overlay for meaning the records cannot carry."
+    },
+    {
+      "id": "rfc-decision-7caca3a1",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-7caca3a1.json",
+      "instanceId": "7caca3a1-3ea9-44ba-aa2e-94927c6ab32f",
+      "title": "Decision modes: rules for the clear, geometry for the complex, a boundary against chaos",
+      "text": "Cell: Governance. Every charter-checked decision names its mode - clear, complicated, complex, chaotic, or unresolved - and the mode determines which decision machinery applies:\n\nCLEAR and COMPLICATED decisions are addressed through rules: the charter check as specified (cell citation, governing preference, boundary-clause justification for a non-default pole, past-decision search) is sufficient. Complicated decisions may additionally need expert analysis, but the charter's existing adjudication machinery governs them.\n\nCOMPLEX decisions require a stronger judgment mechanism, and charter citation alone is INSUFFICIENT - forcing a complex case into a single cell to produce a citation is the premature-classification pathology, forbidden by name. The mechanism for complexity is THE GEOMETRY OF THE MATRIX: the decision is mapped, not cited - located across the cells it genuinely touches (complex concerns straddle), its options plotted for consequences along the axes and polarities, checked for column coherence, and examined for emergence through look-ahead rather than rule application. This is the decision-map method as practiced (the #273 decision-consequence map and the construction of this charter itself are its precedents): options side-by-side, consequences plotted, tensions held visibly, probes and a review date where outcomes are genuinely unknowable in advance, and the owner in the loop. A complex decision resolves into rulings; it is never resolved by guard compliance.\n\nCHAOTIC situations are OUTSIDE THE SPEC BOUNDARY. The standard and its charter do not adjudicate chaos: no charter process applies, stabilizing action is not a spec act, and the spec's writ resumes only when the situation admits mapping again - re-entering as complex or complicated. The boundary is itself a protection: a governance system that claims jurisdiction over chaos will either paralyze the response or corrupt its own record.\n\nUNRESOLVED (mode not yet determinable) and CONTESTED mode assignments default to the more cautious handling: complex over complicated, boundary over adjudication."
+    },
+    {
+      "id": "rfc-decision-7d3dda60",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-7d3dda60.json",
+      "instanceId": "7d3dda60-baf8-4204-a7c1-cb7287ca98ca",
+      "title": "Use authored Field names as Record value keys",
+      "text": "The revision-2 Record carrier will store fieldValues as an object keyed verbatim by Field.name, with field identity recovered through the Record's version-pinned Type rather than repeated as a fieldId in each value."
+    },
+    {
+      "id": "rfc-decision-86f49083",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-86f49083.json",
+      "instanceId": "86f49083-2e06-43bf-89dc-451c0a509015",
+      "title": "Land carrier and storage changes as one final generation",
+      "text": "The RFC-039 carrier migration and RFC-038 repository-storage migration land as one composed first-party release train at dataModelRevision 2; neither design ships alone and no intermediate repository generation is supported."
+    },
+    {
+      "id": "rfc-decision-8948e43f",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-8948e43f.json",
+      "instanceId": "8948e43f-ec4f-4e86-ba14-c61f0acadc42",
+      "title": "What a container can hold, a bundle can carry",
+      "text": "Axis 6-12 (Portability over Possession) applied as the travel mandate: every construct the standard lets a repository hold MUST be expressible in the standard's travelling forms - the package bundle for definitions, the archive/slice forms for content. A capability that exists only in place is captivity, the purpose statement's named failure mode. Concretely and immediately: the package-bundle format's inability to carry Themes, Blueprints, and Protocols (srs#390) is promoted from bug to mandate violation - the bundle grows to carry every one of the package-manifest's ten definition kinds, and the two lists are derived from one source so they cannot diverge again (finding A6's enum derivation). Standing rule for every future construct: the travelling form ships in the same RFC that introduces the held form, or the RFC states the explicit axis 3-9 local-boundary exception that keeps it in place."
+    },
+    {
+      "id": "rfc-decision-8f5aca2c",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-8f5aca2c.json",
+      "instanceId": "8f5aca2c-653e-41f8-94be-e509b31495f3",
+      "title": "The grid grows three operations: reach, sequence, balance",
+      "text": "Cell: Governance. The Pattern Grid (rfc-decision-cce3c00e) gains three standing operations, adopted from their proven use in a sibling application of the same method (a launch-prep risk assessment running the identical 4x3 geometry in an operational public-service domain):\n\n1. REACH MARKING. Every cell carries a reach mark - INSIDE (assessable from the standard, its corpora, and first-party stewardship alone), SHARED (the standard's half is ours; the other half belongs to implementations, adopters, or counterparties - assess our part and NAME the missing half rather than estimate it), or BEYOND (not answerable from inside the spec boundary; carried as a named dependency on the counterparty with an owner, never as an open discovery item that quietly stays open). The rule that makes reach matter: a thin cell has two possible causes needing opposite responses - thin-and-inside is our own discovery gap; thin-and-shared-or-beyond needs a conversation, not more solo work. The evidence-first discipline applies to reach itself: do not score what cannot be seen from here. Reach is PHASE-DEPENDENT and re-marked each cycle: in formation, nearly everything is inside; the first public release migrates cells outward. Initial marking (2026-08-23, formation phase): INSIDE - Versioning, Identity, Description, Succession, Containment, Reference, Assertion, Governance, Repository. SHARED - Attribution (verification requires counterparties), Conformance (third-party implementations attest their own half; today first-party only), Portability (practice-sharing requires partners who do not yet exist - which reframes the Water column's thinness: it is partly reach, not only neglect). BEYOND - none today; expected to appear at the public release.\n\n2. SEQUENCE PROPAGATION. The twelve cells in reading order (the zodiac order the grid reproduces) form a development: a thing is versioned, has identity, describes itself, is attributed, succeeded, contained, referenced, asserted about, governed, stored, conformed, and carried - and the sequence CLOSES: position 12 feeds position 1. What returns from carried practice defines the next version's mandate - adoption feedback drives evolution. This closure is already attested in the track's own history: the muSrs usage attestation (what carried practice actually exercised) reshaped the standard (the removals ruling) - a 12-to-1 event before the operation had a name. Two uses: DIRECTIONALITY - trace a gap forward by asking what it denies the next cell (attested instance: the membership gap B6 in Containment/Repository denied Conformance - the two-condition implementation made discovery under-report); and CLOSURE - secondaries accumulating in late cells without primaries signal that causes are being recorded and consequences are not.\n\n3. CYCLICAL AXIS-BALANCE COUNTS. At each assessment cycle (audit re-run, census refresh, charter review), record the counts per row, per column, per modality diagonal, and per polarity axis - the four readings disagree usefully. Weight imbalances by load-bearing position, and check whether loaded cells are merely quiet before working visibly empty ones. An imbalance that survives re-placement is a coverage gap, not a classification error. Initial snapshot (from the 2026-08-21 census): columns - Earth and Air strong, Fire middling, Water thinnest; diagonals - the FIXED diagonal (the stability core: Identity, Succession, Assertion, Conformance) carries three of the five strong cells, which is the correct shape for a governed spec; the Mutable diagonal (where change is legal) is the thinnest; the emptiest polarity axis was 4-10 (Attribution-Repository), since given its principle. Future cycles diff against this snapshot."
+    },
+    {
+      "id": "rfc-decision-92d2da05",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-92d2da05.json",
+      "instanceId": "92d2da05-4030-4afb-b8be-48ff8e9029d8",
+      "title": "Rename DocumentView to Composition",
+      "text": "The document-composition entity is named Composition; the name DocumentView retires. The rendering-chain vocabulary is Composition → Presentation → Projection: a Composition defines how records compose into a document; a Presentation is a repository's declared commitment to render a Composition in a format (manifest.renderedPresentations); a Projection is the produced artifact. \"Export\" retires as vocabulary with the VIEW_EXPORTS mechanism."
+    },
+    {
+      "id": "rfc-decision-9ee14517",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-9ee14517.json",
+      "instanceId": "9ee14517-9c12-4d06-b7bb-c5d59684d7f5",
+      "title": "Layers stay separate: the layer rules",
+      "text": "A companion register to the Pattern Grid (rfc-decision-cce3c00e): where the grid locates concerns by element and level, the layer rules govern STACKING - what sits on what, what may know about what. The stack has three planes, each with named layers:\n\nMEANING (what things are): substrate -> definitions -> instances. Per-layer contracts already ruled: the three-layer unknown-key policy, retirement one-way-per-layer, the reference taxonomy binding the layers (instances PIN definitions; definitions KEY substrate).\n\nEXPRESSION (how meaning is shown): selection -> composition -> presentation -> projection. Selection is the one query shape (the discovery contract); composition arranges selected meaning into document structure; presentation renders it (views, themes); projection is the emitted artifact. Each stage consumes its predecessor's output and adds exactly its own concern.\n\nOPERATION (who does what): core service -> adapters (CLI, WASM, MCP) -> clients. Capability layering, raised from implementation ADR to charter level: semantics live once in the core; adapters translate; clients present.\n\nTHE SIX LAYER RULES:\n1. ONE HOME - every construct names its plane and layer; a concern expressed in two layers is drift by definition.\n2. CONSUME, DON'T CLONE - an upper layer references the lower layer's constructs through the reference taxonomy; it never re-implements a lower-layer mechanism. (The SectionSource root cause: type-query cloning the discovery axes divergently.)\n3. EXPRESSION NEVER ALTERS MEANING - nothing in selection, composition, presentation, or projection may change validity, identity, state, or relations. Meaning-plane facts are set only in the meaning plane. (FieldView.required carrying validity; relations-never-change-lifecycle, generalized.)\n4. CROSSINGS ARE DECLARED, AND THE LOWER LAYER WINS - where a layer legitimately carries another layer's data (denormalized hints, composition order as a render default), the crossing is named where it occurs and conflicts resolve downward, visibly (Invariant 28 generalized). Identity conflicts remain fatal per the Earth rule - they are not crossings.\n5. EVERY LAYER STANDS ALONE BELOW - a layer must be complete and valid with every layer above it absent: the spec without any implementation, records without any view, selection results without any composition. Deleting all expression changes nothing about meaning. (Spec independence, generalized to every boundary.)\n6. BEHAVIOR NEEDS A CONTRACT - an affordance enters the standard only with enforcement semantics; until then it is application-private behind axis 3-9's explicit-local boundary. (The protection lesson: a hint without a contract is neither testable nor portable.)\n\nTHE REVIEW TEST, three questions asked of every proposal alongside its cell: Which layer owns this? Does it consume or clone downward? Can the layer below it still stand alone?"
+    },
+    {
+      "id": "rfc-decision-b9d7096e",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-b9d7096e.json",
+      "instanceId": "b9d7096e-86e3-4474-bff3-6c479d79fed7",
+      "title": "The grid learns to read: autoclassification and the stance vocabulary",
+      "text": "Cell: Governance. Two further operations join the grid (extending rfc-decision-8f5aca2c), adopted from the Systemic Data Ethics sibling - the method's earliest large application, which mapped the external data-ethics field into the same 4x3 geometry:\n\n1. AUTOCLASSIFICATION. Statements of a corpus are classified into grid cells at scale. The label set is the twelve cell slugs (the #462 vocabulary); the rubric is the cells' definitions and preferences as recorded; the modern mechanism is LLM classification (superseding the sibling's 2021 AutoML ancestor, trained on ~732 hand-labelled citations from external ethics frameworks). Three uses, in order of adoption: (a) MECHANIZED BALANCE - the standard's own normative corpus (invariants, rules, RFC statements, decision records) is auto-placed into cells each assessment cycle, making the cyclical balance counts (rfc-decision-8f5aca2c) instrumented rather than hand-censused; (b) COVERAGE MAPS OF EXTERNAL FRAMEWORKS - any peer framework's text yields its shape (which cells it fills, where it is blind) in minutes, mechanizing the precedents research's comparison work; (c) later, the muDemocracy instrument: a community's constitution and policies, fed in, yield an instant coverage and balance diagnosis.\n\nDisciplines that bind autoclassification: placements are DIAGNOSTIC-mode input (rfc-decision-7caca3a1) and provisional - fuzzy edges are expected and carried, not forced; a statement landing in no cell is a finding to surface, never a forced fit (the premature-classification pathology applies to classifiers before it applies to people); and per axis 4-10, AUTO-PLACEMENTS ARE TESTIMONY - they inform and never override the reviewed placement of record, and they are promoted into office only by review. The sibling's own field-level finding stands as proof of yield: the data-ethics literature over-indexes on systemic aspiration (fire) and is thinnest at individual-level explainability - a balance reading of an entire field.\n\n2. THE STANCE VOCABULARY. The sixteen half-hexagram stances are named, giving the operations register a plain-language layer over the esoteric one. Lower trigrams (the internal stance): Initiative 111, Engagement 110, Integrity 101, Purpose 100, Transparency 011, Adaptation 010, Structure 001, Harmony 000. Upper trigrams (the outward expression): Leadership 111, Judgement 110, Articulation 101, Accountability 100, Visioning 011, Reflection 010, Participation 001, Care 000. Binary reads bottom-to-top, yang=1; the polarity assignments are verified identical to this charter's own (the sibling and the SRS mapping agree line for line). Applied to the ratified preference profile: SRS in formation is ENGAGEMENT x ARTICULATION - an engaged, transforming inner stance (agency, transformation, vision) expressing through structured, transparent articulation; at the precommitted Continuity flip the inner stance becomes PURPOSE x ARTICULATION. The names are grid vocabulary, refinable under rename-is-a-migration."
+    },
+    {
+      "id": "rfc-decision-c4fffe93",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-c4fffe93.json",
+      "instanceId": "c4fffe93-a726-45df-8bc3-d0079cbc5a16",
+      "title": "Replace valueType with orthogonal fieldType facets",
+      "text": "A Field expresses datatype, cardinality, value domain, format, and constraints as independent fieldType facets instead of extending the conflated valueType enum with more parallel patch properties."
+    },
+    {
+      "id": "rfc-decision-c8704763",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-c8704763.json",
+      "instanceId": "c8704763-71cb-46ad-83f7-765846702652",
+      "title": "Every reference names its strength: the Reference taxonomy",
+      "text": "Cell: Reference (Air, relational) - declared strength over convenient reach; the axis 1-7 preference (Semantic Integrity over Practical Expression) made mechanism. Four reference strengths, one form each:\n\nPINNED - this thing, this version; semantics frozen. Form: the domain-named {id, version} pair, both required. Appears as an object when the reference is a value (arrays, slots - the ExactTypeRef shape, collapsed to one shared definition) and as flat sibling properties when spread at an entity root (Record.typeId + typeVersion, the extends* pairs). One rule, two positions; the pair, not the wrapper, is the canonical thing. Used by: record-to-type binding, Blueprint.rootTypes, rootTypeRefs, inheritance extends, bundle dependencyRefs.\n\nLINEAGE - this thing, whatever version the context installs. Form: bare UUID (format: uuid); the effective package set resolves. Used by: fieldId in assignments/views/themes, renderViewId, typeDispatch values, lifecycleRef, discovery and theme typeId, vocabularyRef (migrated), Protocol TypeRef (typeVersion dropped - version-optional hybrids are forbidden).\n\nKEYED - whatever matches this name in an explicitly-scoped set. Form: string key with the scope stated by the construct: namespace/name resolves against the effective package set (typeFilter, typeDispatch keys); bare keys resolve against an installed substrate container (relationType, lifecycle state keys, term keys). Alias resolution is dropped: KEYED is key-only (one name over many); renaming a substrate entry is a supersession act through the status vocabulary. Package dependencies are the one sanctioned constraint form: KEYED with a semver range, existing only at the package layer.\n\nLOCATOR - where to fetch bytes, never what they mean. Form: one mode-discriminated shape {mode: local|remote|bundled, path|url|id}, shared by packageRef and ThemeReference (packageRef's 'external' becomes 'remote'). After fetch, identity is verified from the fetched content's own ids; a locator never overrides semantics.\n\nCross-rules: hints never resolve (Invariant 28 generalized - a denormalized companion loses to its ref, visibly); substrate entries are KEYED references and their UUIDs serve lineage and package management, not reference; the canonical string form namespace/name@version is demoted to the DISPLAY serialization of a pinned reference (CLI output, docs, diagnostics) and never a stored form; strength is declared where the reference is defined - in the metamodel, the strengths become the modes of the ref-datatype Field; no fifth strength without a charter amendment.\n\nThe axis 2-8 corollary, stated once: instances PIN; presentation and dispatch follow LINEAGE or KEYED; nothing else absorbs a version bump."
+    },
+    {
+      "id": "rfc-decision-cce3c00e",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-cce3c00e.json",
+      "instanceId": "cce3c00e-ad98-48bb-8ef7-543a16862c0f",
+      "title": "The Pattern Grid: the preference layer for spec decisions",
+      "text": "The SRS standard adopts the Pattern Grid as its decision framework: a 3x4 matrix of four elements (Fire: action/change; Earth: structure/data; Air: information/process/standards; Water: relation/connection/attribution/trust) crossed with three levels (Individual, Relational, Systemic), yielding twelve zodiac-anchored cells whose row-by-row reading reproduces the zodiac in order, with modality constant on the diagonals (Cardinal = where authority is anchored, Fixed = the stability core, Mutable = where change is legal) and opposites forming six axes.\n\nRatified with the grid, as one system:\n\nSIX AXIS PREFERENCES (default pole + boundary clause): 1-7 Semantic Integrity over Practical Expression; 2-8 Evolution over Continuity, phase-bound, precommitted to flip to Continuity at the first full public release; 3-9 Shared Coherence over Local Autonomy (all three restating subsection 01-5); 4-10 Office over Testimony (in the mythic register, Athena over Aphrodite) - the procedural record over the personal vouch; testimony fills gaps, never contradicts authority, and can be promoted into office by verification; 5-11 Reliability over Renewal - standing contracts hold; renewal only as explicit supersession at a declared boundary; 6-12 Portability over Possession - the travelling form is the test; a capability that exists only in place is captivity; the exception delegates to axis 3-9's explicit-local boundary.\n\nFOUR COLUMN PRINCIPLES, each maturing Individual to Relational to Systemic: Fire, change preserves what it replaces; Earth, structure is declared, never inferred (identity conflicts are fatal and never resolved by precedence); Air, meaning is stated once and validated against its statement (informational conflicts resolve by declared authority - the hint loses, visibly); Water, connection is explicit and carried, never implied or dropped.\n\nTWELVE CELL PREFERENCES (this over that): Versioning, increment over edit; Identity, identifier over label; Description, one name over many; Attribution, stated over assumed; Succession, successor over overwrite; Containment, declaration over location; Reference, declared strength over convenient reach; Assertion, statement over side-effect; Governance, migration over drift; Repository, catalog over circumstance; Conformance, one way over many; Portability, preserve over recognize.\n\nSTANDING RULE: every new RFC and decision names its cell. A proposal that contradicts its cell's preference is flagged at review; a proposal that lands in no cell is a finding against the grid itself, to be resolved by refining the grid, not by ignoring the proposal."
+    },
+    {
+      "id": "rfc-decision-d67e3d76",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-d67e3d76.json",
+      "instanceId": "d67e3d76-cf55-47b8-a611-fe71cad41d2d",
+      "title": "Express the definition-layer metamodel in its own Field and Type language",
+      "text": "Field, Type, FieldAssignment, and the in-scope value objects are authored as SRS definitions in the canonical com.semanticops.srs/metamodel package, replacing RFC-004's parallel schema-source vocabulary."
+    },
+    {
+      "id": "rfc-decision-dd0a33fc",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-dd0a33fc.json",
+      "instanceId": "dd0a33fc-c948-4bce-a599-8c54674f244a",
+      "title": "Make projection loss explicit in a per-emitter fidelity contract",
+      "text": "Every metamodel feature is classified as authoritative or approximated for each emitter; authoritative meaning cannot be silently dropped and approximated meaning must emit its documented lossy shape."
+    },
+    {
+      "id": "04-2-4-2-field#r1",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/04-2-4-2-field.json",
+      "instanceId": "656e5bbb-c29a-5020-9984-121191a4cf68",
+      "title": "Field",
+      "ruleTag": null,
+      "text": "A `reference`-mode value is a target instance id, and MUST NOT be interpreted as or require a `Relation`. Use `reference` for definitional composition, where the target's identity is part of the definition; model an assertion *between* instances — one needing provenance, lifecycle, or confidence — as a `Relation` instead."
+    },
+    {
+      "id": "04-2-4-2-field#r2",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/04-2-4-2-field.json",
+      "instanceId": "656e5bbb-c29a-5020-9984-121191a4cf68",
+      "title": "Field",
+      "ruleTag": null,
+      "text": "`allowedValues` is formally sugar for an anonymous inline closed vocabulary: the value set is fixed by the Field definition, so changing it means a new Field version. `vocabularyRef` is a **configurable** data range — the value set is managed as package configuration and evolves without reversioning the Field — and is used when the set is shared, extensible, or needs Term identity. A `vocabularyRef` MUST resolve to a `Vocabulary` with `mode: closed`. Declaring both, or neither when `valueDomain` is `\"closed\"`, is a validation error."
+    },
+    {
+      "id": "04-7-vocabulary-term-substrate#r1",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/04-7-vocabulary-term-substrate.json",
+      "instanceId": "45cebefe-39ce-47d9-8753-b2b03ac25a18",
+      "title": "Vocabulary and Term",
+      "ruleTag": null,
+      "text": "**Absent `status` MUST be treated as `active`.** This is normative: all resolution rules (V1, V6, V9, V10) treat absent identically to `\"active\"`."
+    },
+    {
+      "id": "04-7-vocabulary-term-substrate#r2",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/04-7-vocabulary-term-substrate.json",
+      "instanceId": "45cebefe-39ce-47d9-8753-b2b03ac25a18",
+      "title": "Vocabulary and Term",
+      "ruleTag": null,
+      "text": "**Required-field tightening.** `label` and `description` are optional so an emergent `Term` is valid before prose is written. A specialisation MAY tighten an optional substrate field to required; it MUST NOT relax a required one. `RelationTypeDefinition` requires both `label` and `description` (unchanged from RFC-005)."
+    },
+    {
+      "id": "04-7-vocabulary-term-substrate#r3",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/04-7-vocabulary-term-substrate.json",
+      "instanceId": "45cebefe-39ce-47d9-8753-b2b03ac25a18",
+      "title": "Vocabulary and Term",
+      "ruleTag": null,
+      "text": "A conforming implementation MUST be able to compute the live tag set and classify each key as: **used-and-defined**, **used-but-undefined**, or **defined-but-unused**."
+    },
+    {
+      "id": "04-7-vocabulary-term-substrate#r4",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/04-7-vocabulary-term-substrate.json",
+      "instanceId": "45cebefe-39ce-47d9-8753-b2b03ac25a18",
+      "title": "Vocabulary and Term",
+      "ruleTag": null,
+      "text": "**V3 — Field binding exclusivity and closedness.** A `select`/`multiselect` Field must declare exactly one of `allowedValues` or `vocabularyRef`. A `vocabularyRef` on a `select`/`multiselect` Field MUST resolve to a `Vocabulary` with `mode: closed`."
+    },
+    {
+      "id": "04-7-vocabulary-term-substrate#r5",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/04-7-vocabulary-term-substrate.json",
+      "instanceId": "45cebefe-39ce-47d9-8753-b2b03ac25a18",
+      "title": "Vocabulary and Term",
+      "ruleTag": null,
+      "text": "Excluding `retired` before uniqueness frees a retired key for reuse by a new entry. `tombstone` remains in the effective set and keeps occupying its key. When retiring a key that will be reused, implementations MUST surface stale references to the retiring key for operator resolution before reuse."
+    },
+    {
+      "id": "07-12-ext-import-tracking#r1",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-12-ext-import-tracking.json",
+      "instanceId": "6bb0f695-e004-5f14-a067-5cf922da5494",
+      "title": "ext:import-tracking",
+      "ruleTag": null,
+      "text": "When both `local-ahead` and `diverged` conditions hold simultaneously, implementations MUST report `diverged` as the primary status and include locally-added definitions as a supplementary list."
+    },
+    {
+      "id": "07-15-ext-repository#r1",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-15-ext-repository.json",
+      "instanceId": "a75866ba-090f-5d62-9f7c-8e179ff1825f",
+      "title": "ext:repository",
+      "ruleTag": null,
+      "text": "The `.srs` marker is a directory that identifies the repository root. It `SHOULD` contain at least one regular file — by convention `.srs/README.md`, an *About SRS* orientation document — so it survives storage and archive round-trips that do not preserve empty directories; its contents are implementation-private and carry no normative weight. A reader must locate the marker before treating a directory as a repository."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r1",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "Visual presentation layer for `DocumentView`. Attaches brand identity, typography, stylesheets, cover pages, and element wrapping to a rendered document without altering its semantic structure. Depends on `ext:views-l2`. Implementations that do not declare this extension MUST ignore `DocumentView.themeRef` and `DocumentView.themeVariants` and MUST NOT error on their presence."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r2",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "Assets are declared in `Theme.assets` as a named dictionary. Asset names MUST be unique within the Theme."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r3",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "`Package` gains `themes?: Theme[]` when `ext:themes-l1` is declared. When `ThemeReference.mode === \"bundled\"`, the referenced `themeId` MUST appear in `Package.themes[]` (Rule [T-5]). `Reference.definitionType` and `ImportRecord.definitionType` gain `\"theme\"` as a portable value."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r4",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "For `\"html\"` and `\"pdf\"` output, implementations MUST add semantic CSS classes to the rendered elements named in the table below. RFC-037 adds the field-row label and value elements, which are not wrappers."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r5",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "Variables not applicable to a given template context MUST resolve to an empty string."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r6",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "| Variable | Available in | Resolves to |\n|---|---|---|\n| `{{container-title}}` | All | Container title from manifest |\n| `{{container-id}}` | All | Container UUID |\n| `{{date}}` | All | Render date (ISO 8601 date) |\n| `{{heading-1}}` | `coverPage` only | Heading prefix at level `1 + depthOffset`. MUST resolve to empty string in all element wrapper templates. |\n| `{{asset:name}}` | All | Resolved asset reference (URL, data URI, or path) |\n| `{{section-title}}` | `sectionWrapper`, `sectionWrapperOverrides` | Value of `DocumentSection.title` |\n| `{{section-id}}` | `sectionWrapper`, `sectionWrapperOverrides` | Value of `DocumentSection.sectionId` |\n| `{{record-heading}}` | `recordWrapper`, `recordWrapperOverrides` | `titleFieldId` field value, or empty string |\n| `{{type-namespace}}` | `recordWrapper`, `recordWrapperOverrides` | `Record.typeNamespace` |\n| `{{type-name}}` | `recordWrapper`, `recordWrapperOverrides` | `Record.typeName` |\n| `{{field-label}}` | `fieldRow` | Display label for the field |\n| `{{field-value}}` | `fieldRow` | Rendered value of the field |\n| `{{field-name}}` | `fieldRow` | `Field.name` |\n| `{{content}}` | All element templates | Auto-rendered content this template wraps |\n| `{{page-number}}` | `pageHeader`, `pageFooter` | Current page number (paginated formats only) |"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r7",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[T-1]** Implementations that do not declare `ext:themes-l1` MUST ignore `DocumentView.themeRef` and MUST NOT error on its presence."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r8",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[T-1b]** `Theme.targets` MUST contain at least one entry. An absent or empty `targets` array is a validation error. Enforced at package validation time."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r9",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[T-2]** Implementations MUST apply a Theme only when `DocumentView.format` appears in `Theme.targets`. When the format does not match, the Theme MUST be ignored and structural output produced without it."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r10",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[T-3]** Element templates receive auto-rendered content via `{{content}}`. Implementations MUST render structural content first and pass it to the template; they MUST NOT suppress or reorder content through template evaluation."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r11",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[T-4]** Asset names within a single `Theme.assets` dictionary MUST be unique (case-sensitive)."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r12",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[T-5]** When `ThemeReference.mode === \"bundled\"`, the referenced `themeId` MUST appear in `Package.themes[]`. A missing theme in a bundled package is a validation error."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r13",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[T-6]** Template variables not recognised by the implementation MUST be passed through as literal text. They MUST NOT cause a rendering error."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r14",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[T-6b]** `{{heading-1}}`, `{{heading-2}}`, and `{{heading-3}}` MUST resolve to the empty string in all element wrapper templates (`documentWrapper`, `sectionWrapper`, `sectionWrapperOverrides`, `recordWrapper`, `recordWrapperOverrides`, `fieldRow`, `pageHeader`, `pageFooter`). Structural headings are delivered inside `{{content}}` and MUST NOT be re-emitted. `{{heading-1}}` is available only in `PageTemplates.coverPage`."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r15",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[T-7]** When `recordWrapperOverrides` contains an entry whose `typeId` matches the current record's `typeId`, that template MUST be used instead of `recordWrapper`. When `sectionWrapperOverrides` contains an entry whose `sectionId` matches the current section's `sectionId`, that template MUST be used instead of `sectionWrapper`. Override arrays MUST NOT contain duplicate `typeId` or `sectionId` values. Enforced at package validation time."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r16",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[T-8]** For `\"html\"` and `\"pdf\"` output, implementations MUST apply the CSS classes in the injection table to each rendered element named in that table. Class name components MUST be normalised using the five-step rule. The `{fieldName}` component MUST be derived from `Field.name` and MUST NOT be derived from `FieldAssignment.displayLabel` (RFC-037 [FR-037-12]) — `{{field-name}}` in the template variable table already carries that meaning. The rule text now names elements rather than wrapper elements because the label and value rows added by RFC-037 are not wrappers."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r17",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[T-10]** When `DocumentSection.renderViewId` is set, `fieldRow` MUST be applied to each field row that survives `ExportConfig.omitEmptyFields` filtering and is ordered by `ExportConfig.fieldOrder`. `fieldRow` MUST NOT wrap `ExportConfig.preamble` content."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r18",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[T-11]** Implementations that support `ext:themes-l1` MUST accept `\"theme\"` as a valid value for `Reference.definitionType` and (when `ext:import-tracking` is also declared) for `ImportRecord.definitionType`. A `definitionType: \"theme\"` value MUST NOT cause a validation error."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r19",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[T-Gx1]** When `FieldGroup.compositeRenderer` is set to a known value, implementations MUST NOT apply `groupFieldRowTemplates` to that group's entries. `groupFieldRowTemplates` MUST only be applied when the group is rendered by the per-field baseline (i.e. `compositeRenderer` is absent or falls back via `[FG-Cx1]`)."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r20",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[T-Gx2]** Field names in `groupFieldRowTemplates` that do not appear in the rendered group MUST be silently ignored and MUST NOT cause an error."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r21",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[T-Gx3]** When a field row in a group entry is covered by a matching key in `groupFieldRowTemplates`, implementations MUST use that template instead of `fieldRow`. The `fieldRow` template MUST NOT be applied to field rows rendered via `groupFieldRowTemplates`."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r22",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[T-Cx1]** When `compositeRendererConfig[\"table\"]` is absent or its `tableClass` property is absent, implementations MUST use `\"srs-data-table\"` as the default CSS class on the `<table>` element for HTML output."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r23",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[T-Cx2]** When `tableClass` in `compositeRendererConfig[\"table\"]` is explicitly set to an empty string `\"\"`, implementations MUST emit the `<table>` element with no `class` attribute."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r24",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[T-Cx3]** `wrapperTemplate` and `captionTemplate` in `compositeRendererConfig[\"table\"]` apply to each entry rendered by `compositeRenderer: \"table\"`. They MUST NOT affect groups with other `compositeRenderer` values or groups without a `compositeRenderer`."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r25",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[T-Cx4]** When evaluating format-conditional defaults for `wrapperTemplate` and `captionTemplate`, implementations MUST use `DocumentView.format` as the authoritative active format signal. When `wrapperTemplate` is explicitly set in `compositeRendererConfig[\"table\"]`, implementations MUST apply it regardless of output format."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r26",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[T-Cx5]** Unknown properties in a `compositeRendererConfig` sub-object for a known renderer name MUST be silently ignored and MUST NOT cause a rendering error."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r27",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[CR-036-16]** `compositeRendererConfig` is keyed by the same identifier space as a composite renderer identifier [CR-036-1]. Unknown properties within a known renderer's sub-object, and keys naming renderers the implementation does not know, MUST be silently ignored and MUST NOT cause a rendering or loading error. Config applies only to fields resolved to the corresponding renderer. `DocumentView.format` is the authoritative format signal for format-conditional defaults, and an explicitly set template applies regardless of output format. `{{subheading}}` resolves to the rendered subheading and `{{label}}` to the output of `captionTemplate`, both computed before wrapper substitution. `\"baseline\"` is a dispatch sentinel, not a renderer; a `compositeRendererConfig` key of `\"baseline\"` MUST be ignored. The `table` renderer reads:"
+    },
+    {
+      "id": "07-17-ext-themes-l1#r28",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "The `subheading` role renders as a heading at the same level as the composite's own heading. **These\ndefaults are the renderer's output specification, not configuration defaults: implementations MUST apply\nthem whether or not `ext:themes-l1` is declared and whether or not a Theme resolves.** This matters\nbecause [CR-036-19] retires the `[T-Cx*]` rules that currently house half of them, and because RFC-002\n`[T-2]` requires structural output when a Theme is ignored on format mismatch."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r29",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[CR-036-17]** `compositeFieldRowTemplates` is keyed by `Field.name` and supplies the template for an individual field row within a composite rendered by the baseline, in place of `fieldRow`. Keys matching no rendered field MUST be silently ignored. Implementations MUST NOT apply it to a composite that resolved to a renderer under [CR-036-6]; a composite that falls back to the baseline under [CR-036-7] or [CR-036-9] is baseline-rendered and MUST have it applied."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r30",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[CR-036-18]** `groupFieldRowTemplates` is deprecated by `compositeFieldRowTemplates` and retires with `FieldGroup` at the #242 cutover. While both exist, implementations MUST apply `groupFieldRowTemplates` to `FieldGroup` entries and `compositeFieldRowTemplates` to composite entries. Migrating a `FieldGroup` to a composite therefore silently disables any `groupFieldRowTemplates` key naming one of its fields: a migration that converts a group MUST carry every such key over to `compositeFieldRowTemplates`, and implementations SHOULD emit a diagnostic when a `groupFieldRowTemplates` key matches no `FieldGroup` field in the effective package set."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r31",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[CR-036-19]** RFC-007's `[FG-Cx0]`–`[FG-Cx4]`, `[T-Gx1]`–`[T-Gx3]` and `[T-Cx1]`–`[T-Cx5]` remain in force for `FieldGroup` until `FieldGroup` is removed at the #242 cutover, at which point they are retired. A `FieldGroup` MUST NOT be the target of a composite renderer binding, and a composite-range field MUST NOT be dispatched by `FieldGroup.compositeRenderer`; the two mechanisms MUST NOT interact."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r32",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[FR-037-12]** On a field row the identity class is `srs-fieldname-{fieldName}`, whose\n`{fieldName}` component MUST be derived from `Field.name` and MUST NOT be derived from\n`FieldAssignment.displayLabel`. On a relation row implementations MUST omit `srs-fieldname-*` and\nMUST emit `srs-relationtype-{relationTypeKey}` instead. Both are normalised by the five-step rule."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r33",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[FR-037-13]** Implementations MUST emit the field-row class vocabulary in baseline `html` output\nwhether or not `ext:themes-l1` is declared and whether or not a Theme resolves. This broadens\n[T-8]'s scope, which is otherwise conditional on the extension, and matches the precedent\n[CR-036-16] sets for renderer output defaults."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r34",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[FR-037-14]** For `\"html\"` and `\"pdf\"` output, implementations MUST emit both the `srs-`-prefixed\nclass names and their unprefixed aliases (`field-label`, `field-value`) until the #242 cutover, and\nMUST emit only the prefixed names thereafter. The aliases are deprecated on acceptance of RFC-037\nand retire at the same cutover that [CR-036-19] retires `FieldGroup` and the `[T-Gx*]`/`[T-Cx*]`\nrules, so the deprecation ends on a clock the project already keeps. A stylesheet claiming\nconformance MUST NOT depend on the unprefixed aliases. No `pdf` row form is yet defined, so for\n`pdf` this rule names the classes without naming the elements that carry them (RFC-037 Open\nQuestion 3)."
+    },
+    {
+      "id": "07-17-ext-themes-l1#r35",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-17-ext-themes-l1.json",
+      "instanceId": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
+      "title": "ext:themes-l1",
+      "ruleTag": null,
+      "text": "**[FR-037-19]** The row forms defined in `ext:views-l2` are the content `fieldRow` receives as\n`{{content}}`. A Theme MAY wrap the row and MUST NOT replace it, per [T-3]. When no `fieldRow`\ntemplate resolves, implementations MUST emit those forms unwrapped. This is the terminal rung of the\nRFC-036 row-template ladder."
+    },
+    {
+      "id": "07-19-ext-slices#r1",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-19-ext-slices.json",
+      "instanceId": "136187cc-8317-4705-91c0-7aaeadaf5998",
+      "title": "ext:slices",
+      "ruleTag": null,
+      "text": "The slice archive's `manifest.repositoryId` MUST be a **new UUID** distinct from `slice.origin.repositoryId`; the archive is a standalone artifact."
+    },
+    {
+      "id": "07-19-ext-slices#r2",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-19-ext-slices.json",
+      "instanceId": "136187cc-8317-4705-91c0-7aaeadaf5998",
+      "title": "ext:slices",
+      "ruleTag": null,
+      "text": "The closure root is the container identified by `spec.id`. The slice MUST include: (1) `manifest.container` set to the closure-root container; (2) all instances in the root container's `memberInstanceIds`/`rootInstanceIds`, recursively through sub-containers; (3) all type and field definitions referenced by included instances (directly or via Type FieldAssignments), copied into the slice's `package/` directory; (4) all relations with both endpoints inside the included set; (5) all `sourceDocumentIndex` entries and content files referenced by included instances; (6) any sub-container whose `memberInstanceIds` and `rootInstanceIds` are all within the included set."
+    },
+    {
+      "id": "07-19-ext-slices#r3",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-19-ext-slices.json",
+      "instanceId": "136187cc-8317-4705-91c0-7aaeadaf5998",
+      "title": "ext:slices",
+      "ruleTag": null,
+      "text": "Cross-boundary relations MUST NOT appear in the slice's relations collection. They MUST be recorded in `slice.externalRelationRefs[]` with `relationId`, `sourceInstanceId`, `targetInstanceId`, and `relationType`. A non-empty list is provenance data, not a validation error. The `relationType` value in `externalRelationRefs` entries is NOT subject to RFC-005 definition-lookup in the slice archive."
+    },
+    {
+      "id": "07-19-ext-slices#r4",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-19-ext-slices.json",
+      "instanceId": "136187cc-8317-4705-91c0-7aaeadaf5998",
+      "title": "ext:slices",
+      "ruleTag": null,
+      "text": "An RFC-026-aware validator MUST NOT treat the following as errors when a `slice` block is present: `externalRelationRefs` UUIDs absent from `instanceIndex`; absence of unreferenced type/field definitions; an incomplete `containerIndex`; tombstoned source document entries with absent content files. Dangling edges in the relations collection, unresolvable `typeId`/`fieldId` references, and instance schema validation errors remain errors regardless of slice status."
+    },
+    {
+      "id": "07-2-ext-lifecycle#r1",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-2-ext-lifecycle.json",
+      "instanceId": "d5d3f88f-8cc6-5247-8d35-41b189804dc5",
+      "title": "ext:lifecycle",
+      "ruleTag": null,
+      "text": "- Exactly one state MUST have `isInitial: true`; `initialState` MUST reference that state's `key`."
+    },
+    {
+      "id": "07-2-ext-lifecycle#r2",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-2-ext-lifecycle.json",
+      "instanceId": "d5d3f88f-8cc6-5247-8d35-41b189804dc5",
+      "title": "ext:lifecycle",
+      "ruleTag": null,
+      "text": "- The initial state MUST have effective `status: active`. A lifecycle whose initial state is deprecated, tombstone, or retired is invalid."
+    },
+    {
+      "id": "07-2-ext-lifecycle#r3",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-2-ext-lifecycle.json",
+      "instanceId": "d5d3f88f-8cc6-5247-8d35-41b189804dc5",
+      "title": "ext:lifecycle",
+      "ruleTag": null,
+      "text": "- A state with `isFinal: true` MUST NOT appear as the `from` of any transition."
+    },
+    {
+      "id": "07-5-ext-type-inheritance#r1",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-5-ext-type-inheritance.json",
+      "instanceId": "37e2f653-b3cc-5751-8f8f-2dfece3acf79",
+      "title": "ext:type-inheritance",
+      "ruleTag": "N+36",
+      "text": "Names one field, from the Type's effective field set, as the record's identity/display field — the field a conformant implementation SHOULD use to resolve a Record's display label (e.g. in list, tree, discovery, and container views), in preference to any implementation-specific heuristic (Rule [N+36])."
+    },
+    {
+      "id": "07-5-ext-type-inheritance#r2",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-5-ext-type-inheritance.json",
+      "instanceId": "37e2f653-b3cc-5751-8f8f-2dfece3acf79",
+      "title": "ext:type-inheritance",
+      "ruleTag": "N+33",
+      "text": "`identityFieldId` MUST reference a `fieldId` present in the Type's effective field set (Rule [N+33])."
+    },
+    {
+      "id": "07-5-ext-type-inheritance#r3",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-5-ext-type-inheritance.json",
+      "instanceId": "37e2f653-b3cc-5751-8f8f-2dfece3acf79",
+      "title": "ext:type-inheritance",
+      "ruleTag": "N+37",
+      "text": "**Interaction with `DocumentSection.titleFieldId` (`ext:views-l2`).** For any `DocumentSection` that does not declare `titleFieldId` — whether that section's field content renders via the Default Rendering Baseline or a dispatched L1 View — implementations SHOULD render the per-record heading using the value of the field named by the record's Type's effective `identityFieldId`, if present, in place of omitting the heading. `titleFieldId`, when declared, MUST continue to take precedence for that section's per-record heading (Rule [N+37]; see `ext:views-l2` § Heading Hierarchy)."
+    },
+    {
+      "id": "07-6-ext-views-l1#r1",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "instanceId": "d3b0ec85-760f-50d2-be4a-9edea5685740",
+      "title": "ext:views-l1",
+      "ruleTag": null,
+      "text": "**[CR-036-1]** A `renderer` identifier MUST match `^([a-z][a-z0-9-]*|[a-z0-9-]+(\\.[a-z0-9-]+)+/[^/]+)$`. An identifier that does not match MUST be treated as unrecognised, and [CR-036-7] applies. Enforced at render and validation time, not by JSON Schema, so a malformed identifier degrades gracefully rather than failing the load of an entire View or Theme."
+    },
+    {
+      "id": "07-6-ext-views-l1#r2",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "instanceId": "d3b0ec85-760f-50d2-be4a-9edea5685740",
+      "title": "ext:views-l1",
+      "ruleTag": null,
+      "text": "**[CR-036-2]** *(Governance.)* Bare `renderer` identifiers are reserved for SRS-defined renderers and MUST only be introduced by a ratified RFC. Those defined to date are `table` and the sentinel `baseline`. Vendor renderers MUST use the `{reverse-domain}/{name}` form."
+    },
+    {
+      "id": "07-6-ext-views-l1#r3",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "instanceId": "d3b0ec85-760f-50d2-be4a-9edea5685740",
+      "title": "ext:views-l1",
+      "ruleTag": null,
+      "text": "**[CR-036-3]** A binding or directive MUST reference a Field whose `fieldType.datatype` is `\"ref\"` and whose `fieldType.mode` is `\"inline\"`. Otherwise, or when the `fieldId` does not resolve in the effective package set, implementations MUST ignore the binding, MUST render the field by whatever rendering its `fieldType` normally receives, and MUST emit a diagnostic."
+    },
+    {
+      "id": "07-6-ext-views-l1#r4",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "instanceId": "d3b0ec85-760f-50d2-be4a-9edea5685740",
+      "title": "ext:views-l1",
+      "ruleTag": null,
+      "text": "**[CR-036-4]** Composite rendering applies to Tier 2 Records only. A binding whose `fieldId` does not appear on the rendered instance's resolved Type MUST be ignored without a diagnostic — the normal case for a heterogeneous section."
+    },
+    {
+      "id": "07-6-ext-views-l1#r5",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "instanceId": "d3b0ec85-760f-50d2-be4a-9edea5685740",
+      "title": "ext:views-l1",
+      "ruleTag": null,
+      "text": "**[CR-036-5]** A binding MUST target a composite field assigned directly to the rendered Record's Type. Binding a composite nested inside another composite's `rangeType` is out of scope; a nested composite is rendered by the composite baseline. Implementations MUST NOT infer a binding for a nested composite from a binding on its parent."
+    },
+    {
+      "id": "07-6-ext-views-l1#r6",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "instanceId": "d3b0ec85-760f-50d2-be4a-9edea5685740",
+      "title": "ext:views-l1",
+      "ruleTag": null,
+      "text": "**[CR-036-6]** For a given rendered Record and composite-range field, implementations MUST resolve at most one binding, taking the first that applies: (1) `FieldView.compositeRenderer` on the `FieldView` for that field in the `ext:views-l1` View selected to render the Record — chosen by `DocumentSection.typeDispatch`, else `DocumentSection.renderViewId`; (2) the matching `DocumentSection.compositeRenderers` entry; (3) the matching `DocumentView.compositeRenderers` entry. When none applies the field is unbound. A resolved `renderer` of `\"baseline\"` means unbound and MUST NOT fall through to a broader site. A `FieldView` that exists but carries no `compositeRenderer` is not an override and MUST fall through. A field not visible in the selected View is not rendered and no binding applies. When an L1 View is rendered outside any DocumentView, only site (1) exists. Duplicate `fieldId` entries within one array are a validation diagnostic; the first in array order wins."
+    },
+    {
+      "id": "07-6-ext-views-l1#r7",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "instanceId": "d3b0ec85-760f-50d2-be4a-9edea5685740",
+      "title": "ext:views-l1",
+      "ruleTag": null,
+      "text": "**[CR-036-7]** When a resolved `renderer` is not recognised, the implementation MUST fall back to the composite baseline and MUST emit a diagnostic identifying the unrecognised value and the field. The fallback MUST NOT suppress the field's content."
+    },
+    {
+      "id": "07-6-ext-views-l1#r8",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "instanceId": "d3b0ec85-760f-50d2-be4a-9edea5685740",
+      "title": "ext:views-l1",
+      "ruleTag": null,
+      "text": "**[CR-036-8]** Role resolution proceeds per role: when `roles` declares that role, its value is the bound Field and MUST resolve to an assignment on the owning Type; otherwise the role binds to the assigned Field whose `Field.name` equals the role name, compared exactly and independently of namespace. Assignments inherited via `ext:type-inheritance` are in scope. On ambiguity, implementations MUST bind the lowest `FieldAssignment.order`, with `fieldId` code-point order as tie-break, and MUST emit a diagnostic. A `roles` entry naming an undefined role MUST be silently ignored."
+    },
+    {
+      "id": "07-6-ext-views-l1#r9",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "instanceId": "d3b0ec85-760f-50d2-be4a-9edea5685740",
+      "title": "ext:views-l1",
+      "ruleTag": null,
+      "text": "**[CR-036-9]** A role Field satisfies the renderer's contract when its `fieldType` declares every key the contract specifies, matching the specified value where the contract gives a literal one. `rangeType` is presence-matched — it MUST be present and MUST resolve, and its resolved Type is what dependent roles are looked up on. A `constraints` key required by a contract is advisory and its absence MUST NOT fail the contract test. Additional `fieldType` keys, and assigned Fields filling no role, MUST be ignored. When a required role does not resolve or does not satisfy the contract, implementations MUST fall back to the composite baseline with a diagnostic; when an optional role does not satisfy it, implementations MUST drop that role only, with a diagnostic."
+    },
+    {
+      "id": "07-6-ext-views-l1#r10",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "instanceId": "d3b0ec85-760f-50d2-be4a-9edea5685740",
+      "title": "ext:views-l1",
+      "ruleTag": null,
+      "text": "**[CR-036-21]** `FieldView.editorHintOverride`, when present, MUST take a value from the same set as `Field.editorHint` (`singleline`, `textarea`, `rich-text`, `date-picker`, `dropdown`, `multi-select`, `voice`) and supersedes it for Records rendered or edited through that View. A value outside that set MUST be ignored with a diagnostic and `Field.editorHint` MUST apply. Enforced at validation and render time rather than by JSON Schema."
+    },
+    {
+      "id": "07-6-ext-views-l1#r11",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-6-ext-views-l1.json",
+      "instanceId": "d3b0ec85-760f-50d2-be4a-9edea5685740",
+      "title": "ext:views-l1",
+      "ruleTag": null,
+      "text": "**[CR-036-22]** Every diagnostic required or recommended by a `[CR-036-n]` rule MUST carry that rule's identifier and MUST identify the instance, field, and where applicable the value or row index. [CR-036-13]'s constraint bound raises validation-pass diagnostics of severity `error`; every other `[CR-036-n]` diagnostic is a render-pass `warning`, except [CR-036-6]'s duplicate-`fieldId` case, which is additionally reported at validation time. No `[CR-036-n]` diagnostic of either pass causes a non-zero exit code."
+    },
+    {
+      "id": "07-7-ext-views-l2#r1",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "instanceId": "c9c16dcc-324a-5ab7-b7a5-d53ce48426bf",
+      "title": "ext:views-l2",
+      "ruleTag": null,
+      "text": "When `DocumentSection.renderViewId` is absent, implementations MUST render each instance using the following baseline. No L1 View influences this path."
+    },
+    {
+      "id": "07-7-ext-views-l2#r2",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "instanceId": "c9c16dcc-324a-5ab7-b7a5-d53ce48426bf",
+      "title": "ext:views-l2",
+      "ruleTag": null,
+      "text": "**Step 4 — Render.** Render only present fields. A field that Step 2 resolves as absent — including one whose `FieldValue.value` is an empty string — MUST NOT emit a row, and neither MUST a field whose value sequence has no surviving entries. Implementations MUST NOT emit a label with an empty value. The sole exception is `DocumentSection.emptyBehavior` `\"show-placeholder\"` with the field `required: true`, which MUST emit a row whose value position carries the literal placeholder `(empty)`. Multi-entry values render as a block list, never comma-joined. The emitted form of a field row, and the separation between consecutive rows, is normative per output format — see *Normative Field-Row Form* below (RFC-037)."
+    },
+    {
+      "id": "07-7-ext-views-l2#r3",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "instanceId": "c9c16dcc-324a-5ab7-b7a5-d53ce48426bf",
+      "title": "ext:views-l2",
+      "ruleTag": null,
+      "text": "The emitted form of a field row on the Default Rendering Baseline, and on RFC-036 Change C's\ncomposite baseline where that baseline emits an individual field row. These forms are the content\n`ElementTemplates.fieldRow` receives as `{{content}}`; a Theme may wrap the row and MUST NOT replace\nit ([T-3]), and when no `fieldRow` template resolves the forms below are emitted unwrapped. They are\nthe terminal rung of RFC-036's row-template ladder (`compositeFieldRowTemplates` -> `fieldRow` ->\nbaseline field-row form), closing RFC-036 Open Question 2."
+    },
+    {
+      "id": "07-7-ext-views-l2#r4",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "instanceId": "c9c16dcc-324a-5ab7-b7a5-d53ce48426bf",
+      "title": "ext:views-l2",
+      "ruleTag": null,
+      "text": "In the three text formats the separator is a literal colon and single space (U+003A U+0020). In\n`html`, the element names, nesting, order, literal colon and `srs-`-prefixed class names are\nnormative; inter-element whitespace is not, following the precedent [CR-036-15] sets for pinned HTML\noutput. Implementations SHOULD emit the single-line form so conformance fixtures have a canonical\nserialisation. **These classes belong to the baseline's output specification, not to\n`ext:themes-l1`:** implementations MUST emit them whether or not that extension is declared and\nwhether or not a Theme resolves."
+    },
+    {
+      "id": "07-7-ext-views-l2#r5",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "instanceId": "c9c16dcc-324a-5ab7-b7a5-d53ce48426bf",
+      "title": "ext:views-l2",
+      "ruleTag": null,
+      "text": "**Multi-entry rows.** A multi-entry value MUST render as a block list and MUST NOT be comma-joined.\nThe label occupies its own line (in `html`, its own element) and retains its trailing colon:"
+    },
+    {
+      "id": "07-7-ext-views-l2#r6",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "instanceId": "c9c16dcc-324a-5ab7-b7a5-d53ce48426bf",
+      "title": "ext:views-l2",
+      "ruleTag": null,
+      "text": "**Row separation.** In `markdown`, `adoc` and `text`, implementations MUST emit a blank line between\nconsecutive field rows, and MUST emit a blank line after a block list's final entry before any\nfollowing row, heading or relations block. In `html` implementations MUST NOT insert a separator\nelement between rows. The same separation applies between consecutive relation rows in a links block.\nThis is structural, not cosmetic: without the blank line a following row is a CommonMark lazy\ncontinuation of the list's last item and is swallowed into it."
+    },
+    {
+      "id": "07-7-ext-views-l2#r7",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "instanceId": "c9c16dcc-324a-5ab7-b7a5-d53ce48426bf",
+      "title": "ext:views-l2",
+      "ruleTag": null,
+      "text": "**Continuation.** When a surviving entry's value spans several lines, every line after the first is\nindented two spaces in `markdown` and `text` — the width of the `- ` marker, and never more, since four\nspaces would make the continuation an indented code block. An entry whose value contains a blank line\nremains a single list item, its subsequent blocks attached at that same content column; no blank line\nterminates the item. In `adoc`, indentation does not attach a block to a list item: implementations\nMUST emit a `+` continuation line before each subsequent block, and indentation is not normative there. Continuation applies to entries only — a single-valued field's\nvalue is emitted verbatim, and any further lines sit at column zero, unindented and unaltered."
+    },
+    {
+      "id": "07-7-ext-views-l2#r8",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "instanceId": "c9c16dcc-324a-5ab7-b7a5-d53ce48426bf",
+      "title": "ext:views-l2",
+      "ruleTag": null,
+      "text": "**Empty and placeholder.** A field Step 2 resolves as absent emits no row. When\n`DocumentSection.emptyBehavior` is `\"show-placeholder\"` and the field is `required: true`,\nimplementations MUST emit a row carrying the literal `(empty)` — this supersedes Step 4's former\nMAY. The placeholder row takes scalar form regardless of cardinality. In `html` the value element\nadditionally carries `srs-empty-value`. The rule does not reach the L1 View path, where\n`ExportConfig.omitEmptyFields` governs."
+    },
+    {
+      "id": "07-7-ext-views-l2#r9",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "instanceId": "c9c16dcc-324a-5ab7-b7a5-d53ce48426bf",
+      "title": "ext:views-l2",
+      "ruleTag": null,
+      "text": "**Content.** In `markdown`, `adoc` and `text` the rendered label and value are emitted verbatim and\nMUST NOT be escaped or altered, except for the continuation above — field values in this model\nroutinely are markup. In `html`, label and value content MUST be escaped (`&`, `<`, `>`, `\"`, `'`).\nThe baseline performs no markup conversion, so a markdown-bearing value appears in `html` as literal\nsource; converted output is a Theme or L1 View concern."
+    },
+    {
+      "id": "07-7-ext-views-l2#r10",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "instanceId": "c9c16dcc-324a-5ab7-b7a5-d53ce48426bf",
+      "title": "ext:views-l2",
+      "ruleTag": null,
+      "text": "When `ExportConfig.preamble` renders inside a section, the variable `{{heading-3}}` is available, resolving to heading prefix at level `3 + depthOffset`. In standalone export context, `{{heading-3}}` MUST resolve to the empty string — implementations MUST NOT emit the literal token."
+    },
+    {
+      "id": "07-7-ext-views-l2#r11",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "instanceId": "c9c16dcc-324a-5ab7-b7a5-d53ce48426bf",
+      "title": "ext:views-l2",
+      "ruleTag": "N+37",
+      "text": "**`identityFieldId` fallback (RFC-020, Rule [N+37]).** For any `DocumentSection` that does not declare `titleFieldId` — whether that section's field content renders via the Default Rendering Baseline or a dispatched L1 View — implementations SHOULD emit the per-record heading using the value of the field named by the record's Type's effective `identityFieldId` (`ext:type-inheritance`), if present, in place of omitting the heading. `titleFieldId`, when declared, MUST continue to take precedence for that section's per-record heading."
+    },
+    {
+      "id": "07-7-ext-views-l2#r12",
+      "source": "subsection-rule",
+      "file": "srs/records/subsections/07-7-ext-views-l2.json",
+      "instanceId": "c9c16dcc-324a-5ab7-b7a5-d53ce48426bf",
+      "title": "ext:views-l2",
+      "ruleTag": null,
+      "text": "In json mode all `{{heading-N}}` variables MUST resolve to `\"\"`. Implementations MUST NOT emit the literal token."
+    }
+  ]
+}
