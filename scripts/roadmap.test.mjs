@@ -28,7 +28,7 @@ test("two-track roadmap has complete ratified contracts", () => {
   assert.deepEqual(new Set(boundaryAssessments.map((check) => check.state)), new Set(["proven", "partial", "planned", "prototype"]));
   assert.equal(roadmap.knownEpicRefs.length, 16);
   assert.equal(roadmap.epics.length, 16);
-  assert.equal(roadmap.standardContracts.filter((contract) => !roadmap.links.some((link) => link.type === "contains" && link.to === contract.id)).length, 4);
+  assert.equal(roadmap.standardContracts.filter((contract) => !roadmap.links.some((link) => link.type === "contains" && link.to === contract.id)).length, 12);
   assert.ok(roadmap.assessments.every((assessment) => assessment.assessedAt && assessment.reviewBy && assessment.evidence.every((item) => item.type && item.ref)));
   assert.equal(roadmap.standardContracts.find((contract) => contract.id === "addressability").instanceId, "a10d49a3-06ae-5690-ad9b-81edd6886b6d");
 });
@@ -47,6 +47,8 @@ test("validation rejects invalid task roles, missing issue references and depend
   invalid.links.find((link) => link.type === "contains" && link.to === "identity-and-references").from = "missing-contract";
   invalid.standardContracts.find((contract) => contract.id === "addressability").content = "copied normative prose";
   invalid.assessments.find((assessment) => assessment.kind === "contract-assessment").implementation = "almost";
+  invalid.standardContracts.find((contract) => contract.id === "attribution-mechanism").cell = "Atribution";
+  invalid.standardContracts.find((contract) => contract.id === "federation-redesign").returnTrigger = "";
   const errors = validateRoadmap(invalid).errors.join("\n");
   assert.match(errors, /invalid task role/);
   assert.match(errors, /invalid issue reference/);
@@ -60,6 +62,8 @@ test("validation rejects invalid task roles, missing issue references and depend
   assert.match(errors, /unknown source missing-contract/);
   assert.match(errors, /must reference, not duplicate, normative content/);
   assert.match(errors, /invalid implementation maturity almost/);
+  assert.match(errors, /unknown Pattern Grid cell Atribution/);
+  assert.match(errors, /returnTrigger must not be empty/);
 });
 
 test("Markdown is deterministic and renders separate tracks, explicit tasks and gaps", () => {
@@ -94,7 +98,7 @@ test("shared roadmap index resolves cross-pipeline evidence without UI-specific 
   assert.ok(index.checksByStage.get("D3").some((check) => check.id === "f1-musrs-document-corpus"));
   assert.ok(index.modesByStage.get("D3").some((mode) => mode.id === "blueprint-authoring"));
   assert.equal(index.checksByBoundary.get("F2").length, 3);
-  assert.equal(index.contractChildrenById.get(null).length, 4);
+  assert.equal(index.contractChildrenById.get(null).length, 12);
   assert.equal(capabilityArchitecture(index)[0].node.id, "semantic-kernel");
 });
 

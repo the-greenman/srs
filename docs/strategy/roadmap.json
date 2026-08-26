@@ -1,5 +1,5 @@
 {
-  "version": 10,
+  "version": 11,
   "title": "SRS strategic map",
   "purpose": "A map of the capabilities and release boundaries needed for semantic sovereignty and practical human–AI collaboration.",
   "bootstrapStatus": "This map is a curated logical SRS projection: stable strategic entities, explicit semantic links, and separate assessments. It will later materialize as SRS Records, Relations, Containers and DocumentViews after the post-#256 model settles.",
@@ -1454,6 +1454,199 @@
         "A required Git, database or archive backend",
         "AI authority to commit canonical meaning"
       ]
+    },
+    {
+      "id": "attribution-mechanism",
+      "instanceId": "4337fe8e-fbf6-48a7-9f42-e70760ce14b3",
+      "kind": "strategy-contract",
+      "name": "Attribution mechanism (relation provenance)",
+      "stability": "deferred",
+      "cell": "Attribution",
+      "promise": "When a real consumer needs who/when/why on a relation or assertion, one single-shaped attribution mechanism — one asserter vocabulary, one timestamp convention, one reference-to-source convention — expresses it; attribution is always optional and never overrides the record, and can only be promoted into office by a verification mechanism (a signature, a ratified decision, a verified publisher).",
+      "capabilities": [
+        "Sustain Trust",
+        "Preserve Meaning"
+      ],
+      "sources": [
+        {
+          "type": "srs-record",
+          "ref": "srs/records/tier-2/rfc-decision-16b20c56.json"
+        },
+        {
+          "type": "srs-record",
+          "ref": "srs/records/tier-2/rfc-decision-4f1e12e5.json"
+        }
+      ],
+      "notIncluded": [
+        "The removed five-shape provenance machinery (assertedBy, confidence, status, createdBy, validFrom, validUntil on Relation)",
+        "Attribution as a requirement for validity"
+      ],
+      "returnTrigger": "The return claimant arrives: travelling packages need trustable publishers, or agent-written content needs marking. The mechanism then designed must satisfy all three clauses."
+    },
+    {
+      "id": "federation-redesign",
+      "instanceId": "efa3cde9-481c-4839-a1cb-6caa4ca86d2a",
+      "kind": "strategy-contract",
+      "name": "Federation (registry, events, cross-repository relations)",
+      "stability": "deferred",
+      "cell": "Portability",
+      "promise": "Federation is core to SRS and returns as a planned roadmap phase — grounded in the sharing forms that actually emerged (bundles, slices, git-hosted repositories) and the axis 4-10 verification path; the removal is a deliberate reset of a design that predated real practice, not a judgment on the capability. Sits beside the integrity-and-federation contract, which covers the cryptographic-authority and negotiation layer above it.",
+      "capabilities": [
+        "Sustain Trust",
+        "Move and Reconcile"
+      ],
+      "sources": [
+        {
+          "type": "srs-record",
+          "ref": "srs/records/tier-2/rfc-decision-4f1e12e5.json"
+        }
+      ],
+      "notIncluded": [
+        "The removed federation registry, federation events, and cross-repository relation fields",
+        "Cryptographic authority or cross-community semantic negotiation (see integrity-and-federation)"
+      ],
+      "returnTrigger": "federation is core to SRS (owner, 2026-08-22); this removal is a deliberate reset of a design that predates real practice, not a judgment on the capability. The redesign returns as a planned roadmap phase, grounded in the sharing forms that actually emerged (bundles, slices, git-hosted repositories) and the axis 4-10 verification path; the owner schedules it."
+    },
+    {
+      "id": "transition-history",
+      "instanceId": "cc98972f-ad42-4c1c-b50b-995dab021854",
+      "kind": "strategy-contract",
+      "name": "Revisions and Changelog (field-level transition history)",
+      "stability": "deferred",
+      "cell": "Versioning",
+      "promise": "When a consumer needs transition history or field-level audit, a history mechanism is designed against its actual requirements. Record state (lifecycleState, the canonical case) mutates in place under the machine-bound state carve-out; semantic content still changes only by version increment or successor-and-link.",
+      "capabilities": [
+        "Preserve Meaning",
+        "Sustain Trust"
+      ],
+      "sources": [
+        {
+          "type": "srs-record",
+          "ref": "srs/records/tier-2/rfc-decision-2a1e1590.json"
+        }
+      ],
+      "notIncluded": [
+        "The removed per-field Revision sidecars (revisions.json) and ChangelogCollection (changelog.json)",
+        "The revision-dependent clauses of ext:addressability's lifecycle coupling"
+      ],
+      "returnTrigger": "The roadmap return trigger: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface. Also review if a second field class beyond lifecycleState claims the state carve-out; the machine-bound test must hold or the boundary is wrong."
+    },
+    {
+      "id": "typed-record-tier",
+      "instanceId": "6a90160a-d136-4041-b130-f7ccab911c80",
+      "kind": "strategy-contract",
+      "name": "Tier 1 (TypedRecord middle rung)",
+      "stability": "deferred",
+      "cell": "Identity",
+      "promise": "If a real consumer produces semi-structured records — named fields, no Type — that fit neither a Note's free-text sections nor a lightweight Type, the middle tier returns as an evidence-shaped design, not the removed one. Until then the record model stands at two tiers (Note, Record); graduation is expressed as Note-to-Record via derived-from.",
+      "capabilities": [
+        "Define Meaning",
+        "Work With Meaning"
+      ],
+      "sources": [
+        {
+          "type": "srs-record",
+          "ref": "srs/records/tier-2/rfc-decision-53635966.json"
+        }
+      ],
+      "notIncluded": [
+        "The removed TypedRecord entity and its graduatedAt timestamp",
+        "Tier 1 in the discovery Text Projection or the tier taxonomy prose"
+      ],
+      "returnTrigger": "The roadmap return trigger: a real consumer produces semi-structured records (named fields, no Type) that fit neither Note sections nor a lightweight Type. Until then, the two-tier model stands."
+    },
+    {
+      "id": "repeatable-fields",
+      "instanceId": "f54b3796-2017-4335-afa7-961c404717b9",
+      "kind": "strategy-contract",
+      "name": "ext:repeatable-fields",
+      "stability": "deferred",
+      "cell": "Identity",
+      "promise": "If a consumer emerges with genuine array-valued Field assignments, repeatable fields return — as a merge with RFC-032 cardinality's existing list semantics, not necessarily a revival of the removed mechanism.",
+      "capabilities": [
+        "Define Meaning"
+      ],
+      "sources": [
+        {
+          "type": "srs-record",
+          "ref": "srs/records/tier-2/rfc-decision-4f1e12e5.json"
+        }
+      ],
+      "notIncluded": [
+        "The removed ext:repeatable-fields extension outside a stale ancestor tree"
+      ],
+      "returnTrigger": "a consumer with genuine array-valued assignments (note: RFC-032 cardinality already carries list semantics - the return may be a merge, not a revival)."
+    },
+    {
+      "id": "section-source-variants",
+      "instanceId": "95f4da7b-5331-4cce-8d57-1b1b5c8523a9",
+      "kind": "strategy-contract",
+      "name": "SectionSource fixed-instances and relation-query variants",
+      "stability": "deferred",
+      "cell": "Conformance",
+      "promise": "If a document composition need arises that neither of the two live SectionSource kinds (container-subset, type-query) expresses, a variant returns designed against that need; one way over many holds until then.",
+      "capabilities": [
+        "Work With Meaning",
+        "Present Facets"
+      ],
+      "sources": [
+        {
+          "type": "srs-record",
+          "ref": "srs/records/tier-2/rfc-decision-4f1e12e5.json"
+        }
+      ],
+      "notIncluded": [
+        "The removed SectionSource fixed-instances and relation-query variants"
+      ],
+      "returnTrigger": "a composition need neither live variant expresses."
+    },
+    {
+      "id": "view-protection",
+      "instanceId": "8c9d157e-7ea6-457a-b07c-a7a56fdb7ae3",
+      "kind": "strategy-contract",
+      "name": "View.protection (view-root edit-protection enum)",
+      "stability": "deferred",
+      "cell": "Description",
+      "promise": "If a real authoring surface needs edit protection, the missing enforcement half is designed then; a hint without a contract (none/read-only/fill-in with no enforcement semantics defined anywhere) is not restored as-is.",
+      "capabilities": [
+        "Present Facets",
+        "Work With Meaning"
+      ],
+      "sources": [
+        {
+          "type": "srs-record",
+          "ref": "srs/records/tier-2/rfc-decision-4f1e12e5.json"
+        }
+      ],
+      "notIncluded": [
+        "The removed View.protection enum (corrected attribution: it sat on the View, not on FieldView)",
+        "FieldView.required, which is unaffected — attested in production use and dispositioned separately"
+      ],
+      "returnTrigger": "a real authoring surface needing edit protection, which must design the missing enforcement half."
+    },
+    {
+      "id": "reference-aliases",
+      "instanceId": "8bad314e-e7dd-4beb-9f2b-baecc39fc5e8",
+      "kind": "strategy-contract",
+      "name": "KEYED reference alias resolution",
+      "stability": "deferred",
+      "cell": "Reference",
+      "promise": "Alias resolution returns only with practice-sharing evidence. Until then, KEYED references are key-only (one name over many); renaming a substrate entry is a supersession act through the status vocabulary.",
+      "capabilities": [
+        "Define Meaning",
+        "Work With Meaning"
+      ],
+      "sources": [
+        {
+          "type": "srs-record",
+          "ref": "srs/records/tier-2/rfc-decision-c8704763.json"
+        }
+      ],
+      "notIncluded": [
+        "Alias resolution for KEYED references",
+        "A second resolution path alongside the declared reference strengths"
+      ],
+      "returnTrigger": "returns via the roadmap only with practice-sharing evidence."
     }
   ],
   "assessments": [
@@ -2338,6 +2531,11 @@
     {
       "type": "contains",
       "from": "practice-extensions",
+      "to": "integrity-and-federation"
+    },
+    {
+      "type": "depends-on",
+      "from": "federation-redesign",
       "to": "integrity-and-federation"
     },
     {
