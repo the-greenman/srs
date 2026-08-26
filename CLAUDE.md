@@ -66,6 +66,8 @@ I-90
 
 Tokens: `I-<n>`, `ext:<name>`, `schema:<file>.json`, `type:<ns>/<name>`, `section:<slug>`, `subsection:<slug>`, or `tooling-only` (no record/schema artifact — tooling/CLI/downstream-package only). `scripts/check-rfc-integration.mjs` enforces that every accepted RFC declares a non-empty manifest whose tokens all resolve, and that the `.md` `**Status**:` line matches the record `rfc-status`. Genuinely-incomplete folds are grandfathered in `rfcs/integration-allowlist.json` with a follow-up issue. See `.claude/commands/rfc.md` Stage 6.
 
+Before any of that: `.claude/commands/rfc.md` Stage 1.5 — the **Charter Check** — runs before drafting begins, naming the RFC's cell(s), decision mode, past decisions consulted, one-way-per-goal answer, and the compass's layer test; its output becomes the RFC's required `## Charter alignment` section, and `check-rfc-integration.mjs` enforces the section's presence for RFCs created after 2026-08-23 (srs#463).
+
 ## Commands
 
 ```bash
