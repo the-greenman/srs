@@ -384,6 +384,46 @@ The standard-level contracts that make the release boundaries and practice paths
     - Required by: P2, P3, G6, G7
     - Sources: [srs-spec.md](../spec/srs-spec.md), [mudemocracy-rfc-candidates.md](../../rfcs/mudemocracy-rfc-candidates.md), [025-addressability-as-a-prerequisite-for-live-facilitation.json](../../srs/records/design-notes/025-addressability-as-a-prerequisite-for-live-facilitation.json)
     - Not included: A required Git, database or archive backend; AI authority to commit canonical meaning
+- **Attribution mechanism (relation provenance)** — When a real consumer needs who/when/why on a relation or assertion, one single-shaped attribution mechanism — one asserter vocabulary, one timestamp convention, one reference-to-source convention — expresses it; attribution is always optional and never overrides the record, and can only be promoted into office by a verification mechanism (a signature, a ratified decision, a verified publisher).
+  - Stability: Deliberately deferred
+  - Required by: future work
+  - Sources: [rfc-decision-16b20c56.json](../../srs/records/tier-2/rfc-decision-16b20c56.json), [rfc-decision-4f1e12e5.json](../../srs/records/tier-2/rfc-decision-4f1e12e5.json)
+  - Not included: The removed five-shape provenance machinery (assertedBy, confidence, status, createdBy, validFrom, validUntil on Relation); Attribution as a requirement for validity
+- **Federation (registry, events, cross-repository relations)** — Federation is core to SRS and returns as a planned roadmap phase — grounded in the sharing forms that actually emerged (bundles, slices, git-hosted repositories) and the axis 4-10 verification path; the removal is a deliberate reset of a design that predated real practice, not a judgment on the capability. Sits beside the integrity-and-federation contract, which covers the cryptographic-authority and negotiation layer above it.
+  - Stability: Deliberately deferred
+  - Required by: future work
+  - Sources: [rfc-decision-4f1e12e5.json](../../srs/records/tier-2/rfc-decision-4f1e12e5.json)
+  - Not included: The removed federation registry, federation events, and cross-repository relation fields; Cryptographic authority or cross-community semantic negotiation (see integrity-and-federation)
+- **Revisions and Changelog (field-level transition history)** — When a consumer needs transition history or field-level audit, a history mechanism is designed against its actual requirements. Record state (lifecycleState, the canonical case) mutates in place under the machine-bound state carve-out; semantic content still changes only by version increment or successor-and-link.
+  - Stability: Deliberately deferred
+  - Required by: future work
+  - Sources: [rfc-decision-2a1e1590.json](../../srs/records/tier-2/rfc-decision-2a1e1590.json)
+  - Not included: The removed per-field Revision sidecars (revisions.json) and ChangelogCollection (changelog.json); The revision-dependent clauses of ext:addressability's lifecycle coupling
+- **Tier 1 (TypedRecord middle rung)** — If a real consumer produces semi-structured records — named fields, no Type — that fit neither a Note's free-text sections nor a lightweight Type, the middle tier returns as an evidence-shaped design, not the removed one. Until then the record model stands at two tiers (Note, Record); graduation is expressed as Note-to-Record via derived-from.
+  - Stability: Deliberately deferred
+  - Required by: future work
+  - Sources: [rfc-decision-53635966.json](../../srs/records/tier-2/rfc-decision-53635966.json)
+  - Not included: The removed TypedRecord entity and its graduatedAt timestamp; Tier 1 in the discovery Text Projection or the tier taxonomy prose
+- **ext:repeatable-fields** — If a consumer emerges with genuine array-valued Field assignments, repeatable fields return — as a merge with RFC-032 cardinality's existing list semantics, not necessarily a revival of the removed mechanism.
+  - Stability: Deliberately deferred
+  - Required by: future work
+  - Sources: [rfc-decision-4f1e12e5.json](../../srs/records/tier-2/rfc-decision-4f1e12e5.json)
+  - Not included: The removed ext:repeatable-fields extension outside a stale ancestor tree
+- **SectionSource fixed-instances and relation-query variants** — If a document composition need arises that neither of the two live SectionSource kinds (container-subset, type-query) expresses, a variant returns designed against that need; one way over many holds until then.
+  - Stability: Deliberately deferred
+  - Required by: future work
+  - Sources: [rfc-decision-4f1e12e5.json](../../srs/records/tier-2/rfc-decision-4f1e12e5.json)
+  - Not included: The removed SectionSource fixed-instances and relation-query variants
+- **View.protection (view-root edit-protection enum)** — If a real authoring surface needs edit protection, the missing enforcement half is designed then; a hint without a contract (none/read-only/fill-in with no enforcement semantics defined anywhere) is not restored as-is.
+  - Stability: Deliberately deferred
+  - Required by: future work
+  - Sources: [rfc-decision-4f1e12e5.json](../../srs/records/tier-2/rfc-decision-4f1e12e5.json)
+  - Not included: The removed View.protection enum (corrected attribution: it sat on the View, not on FieldView); FieldView.required, which is unaffected — attested in production use and dispositioned separately
+- **KEYED reference alias resolution** — Alias resolution returns only with practice-sharing evidence. Until then, KEYED references are key-only (one name over many); renaming a substrate entry is a supersession act through the status vocabulary.
+  - Stability: Deliberately deferred
+  - Required by: future work
+  - Sources: [rfc-decision-c8704763.json](../../srs/records/tier-2/rfc-decision-c8704763.json)
+  - Not included: Alias resolution for KEYED references; A second resolution path alongside the declared reference strengths
 
 ## Release contract readiness
 
@@ -406,6 +446,14 @@ Each row is a public SRS promise required by a boundary or practice stage. Readi
 | Protocol and AI provenance | P2, P3, G6, G7 | not assessed | not assessed | not assessed |
 | Integrity profiles and federation | future | not assessed | not assessed | not assessed |
 | Addressability and attention state | P2, P3, G6, G7 | provisional | not-implemented | unproven |
+| Attribution mechanism (relation provenance) | future | not assessed | not assessed | not assessed |
+| Federation (registry, events, cross-repository relations) | future | not assessed | not assessed | not assessed |
+| Revisions and Changelog (field-level transition history) | future | not assessed | not assessed | not assessed |
+| Tier 1 (TypedRecord middle rung) | future | not assessed | not assessed | not assessed |
+| ext:repeatable-fields | future | not assessed | not assessed | not assessed |
+| SectionSource fixed-instances and relation-query variants | future | not assessed | not assessed | not assessed |
+| View.protection (view-root edit-protection enum) | future | not assessed | not assessed | not assessed |
+| KEYED reference alias resolution | future | not assessed | not assessed | not assessed |
 
 ## Extension register
 
