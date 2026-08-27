@@ -82,7 +82,7 @@ replyToAnnotationId?: UUID
 
 **The question**: when a reviewer changes their assessment, should the old annotation be superseded via `status: "superseded"` (mutation) or via a `supersedes` Relation from the new annotation to the old (Relation graph, consistent with how Records handle revision)?
 
-The Relation graph path requires `annotationId` to be a valid value in `Relation.sourceInstanceId` or `targetInstanceId`. Currently Invariant 16 restricts Relations to instance IDs — `Note.instanceId`, `Typed Record.instanceId`, `Record.instanceId`. Promoting `annotationId` to the instance tier would mean Annotations inherit the full instance contract: Container membership, graduation, tier semantics, Relation graph traversal.
+The Relation graph path requires `annotationId` to be a valid value in `Relation.sourceInstanceId` or `targetInstanceId`. Currently Invariant 16 restricts Relations to instance IDs — `Note.instanceId`, `Record.instanceId`. Promoting `annotationId` to the instance tier would mean Annotations inherit the full instance contract: Container membership, graduation, tier semantics, Relation graph traversal.
 
 **Decision: status mutation + forward reference. Annotations are not promoted to the instance tier.**
 

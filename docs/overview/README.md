@@ -53,7 +53,7 @@ all sit on one shared **Vocabulary** substrate. Optional **Extensions** layer on
 capability without changing the core. Each of these is explained in
 [concepts.md](concepts.md).
 
-## Semantic maturity: three tiers
+## Semantic maturity: two tiers
 
 Not all information starts out structured. SRS lets a record grow up over time, from raw
 text to fully typed data, without forcing premature structure:
@@ -61,14 +61,15 @@ text to fully typed data, without forcing premature structure:
 ```mermaid
 flowchart LR
     N["<b>Tier 0 — Note</b><br/>free-text sections<br/>no type binding"]
-    TR["<b>Tier 1 — TypedRecord</b><br/>named fields with values<br/>no Type binding"]
     REC["<b>Tier 2 — Record</b><br/>bound to a Type<br/>fully validated"]
-    N -->|graduate| TR -->|graduate| REC
+    N -->|graduate| REC
 ```
 
-Capture a rough idea as a **Note**, give it named fields when the shape emerges
-(**TypedRecord**), then bind it to a published **Type** when it's ready to be validated and
-shared (**Record**). Nothing is lost on the way up.
+Capture a rough idea as a **Note**, then bind it to a published **Type** when it's ready to
+be validated and shared (**Record**) — linked back to the originating Note by a
+`derived-from` Relation. Nothing is lost on the way up. (A middle tier — named fields, no
+Type binding — was tried and removed: zero instances in any corpus, ever. Tier numbering
+keeps the gap at 1 rather than renumbering.)
 
 ## How the project is built (three repositories)
 

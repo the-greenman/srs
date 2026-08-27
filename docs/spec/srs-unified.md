@@ -12,7 +12,7 @@ This specification covers:
 
 - **Field** — atomic reusable semantic unit
 - **Type** — named composition of fields for a specific semantic object type
-- **Record** — instantiated type with field values; three semantic maturity tiers (Note, Typed Record, Record)
+- **Record** — instantiated type with field values; two semantic maturity tiers (Note, Record)
 - **Relation** — first-class typed link between records
 - **Container** — grouping boundary for record collections
 - **Distribution** — Package, Reference, Lineage, Provenance
@@ -508,15 +508,14 @@ field-assignment {
 
 #### Record tiers
 
-**Content**: SRS supports three semantic maturity tiers. Implementations are not required to support all three; they may begin at Tier 2.
+**Content**: SRS supports two semantic maturity tiers. Tier numbering keeps the historical gap at 1: Tier 1 (`Typed Record`) was removed as an unexercised construct — zero instances in any corpus, ever — under the dormancy rule (rfc-decision-53635966); renumbering the surviving tiers would be churn without meaning. Implementations are not required to support both; they may begin at Tier 2.
 
 | Tier | Type | Structure | Semantics |
 |---|---|---|---|
 | **0** | `Note` | Named sections + free text | None |
-| **1** | `Typed Record` | Named fields with types and values | Minimal |
 | **2** | `Record` | Fields bound to a `Type` definition | Full |
 
-Graduation path: Note → Typed Record → Record.
+Graduation path: Note → Record, linked by a `derived-from` Relation from the Record back to the Note (`note graduate`).
 
 #### `NoteSection`
 
@@ -544,10 +543,6 @@ A lightweight instance with no Type binding.
   tags?: string[]           // free-form topic labels; snake_case recommended
   sections: NoteSection[]
 
-  graduatedAt?: ISO8601
-  // When set, signals full formalisation. Authoritative record of successors
-  // is in derived-from Relations from the successor Records.
-
   sourceRefs?: SourceReference[]
   // Instance-level source references. Because Notes have no Fields, this is
   // the only place to record provenance for a Note as a whole.
@@ -559,48 +554,6 @@ A lightweight instance with no Type binding.
 ```
 
 `tags` are free-form labels that allow Notes to be grouped and discovered by topic. A tag is a key that *may* resolve to a `Term` in an open `Vocabulary`, giving it a label, aliases, roles, and lineage — without changing the fact that the instance stores only the string (V2). Undefined tags in an open vocabulary are valid and unenriched. Use tags for navigation and filtering; use Relations for semantic claims.
-
-#### `TypedField`
-
-A field within a Typed Record.
-
-```typescript
-{
-  name: string
-  label?: string
-  // RFC-039 [R8]: inline RFC-032 fieldType facets, self-contained (no Type
-  // binding to resolve against). datatype MUST NOT be "ref" or "dependent".
-  fieldType: { datatype: "string" | "number" | "integer" | "boolean" | "date" | "date-time" | "map", cardinality?: "single" | "list", valueDomain?: "open" | "closed", allowedValues?: string[], format?: "plain" | "markdown" | "uri" | "uuid" | "email", constraints?: object }
-  value: string | number | boolean | string[] | null
-  source?: "human" | "ai" | "imported" | "derived"
-  editedAt?: ISO8601
-}
-```
-
-#### `Typed Record`
-
-A structured instance with named, typed fields but no Type binding.
-
-```typescript
-{
-  instanceId: UUID
-
-  title?: string
-  instanceType?: string  // lightweight semantic hint; not a formal type declaration
-
-  fields: TypedField[]
-
-  graduatedAt?: ISO8601
-
-  sourceRefs?: SourceReference[]
-  // Instance-level source references. TypedField has no sourceRefs of its own,
-  // so this is the appropriate place to record provenance for the record as a whole.
-
-  createdAt?: ISO8601
-  updatedAt?: ISO8601
-  meta?: Record<string, unknown>
-}
-```
 
 #### `SourceReference`
 
@@ -1564,7 +1517,7 @@ Names one field, from the Type's effective field set, as the record's identity/d
 
 **Inheritance is cascading, unlike `fieldOrder`.** The *effective* `identityFieldId` of a Type is its own `identityFieldId`, if declared; otherwise, the effective `identityFieldId` of its base Type, resolved transitively up the ancestor chain; otherwise absent (Rule [N+32], [N+34]). A Type overrides an inherited effective `identityFieldId` by declaring its own, which need not match the base Type's and MAY point at a field the Type itself adds. This differs from `fieldOrder`, which is read only from the Type being resolved and does not search the ancestor chain when absent — `identityFieldId`'s inheritance rule is specific to this property, not a reuse of `fieldOrder`'s behavior.
 
-`identityFieldId` scopes to Tier 2 Records only; it has no defined meaning for Tier 0 (Note) or Tier 1 (TypedRecord) instances, which carry no Type binding (Rule [N+35]).
+`identityFieldId` scopes to Tier 2 Records only; it has no defined meaning for Tier 0 (Note) instances, which carry no Type binding (Rule [N+35]).
 
 **Interaction with `DocumentSection.titleFieldId` (`ext:views-l2`).** For any `DocumentSection` that does not declare `titleFieldId` — whether that section's field content renders via the Default Rendering Baseline or a dispatched L1 View — implementations SHOULD render the per-record heading using the value of the field named by the record's Type's effective `identityFieldId`, if present, in place of omitting the heading. `titleFieldId`, when declared, MUST continue to take precedence for that section's per-record heading (Rule [N+37]; see `ext:views-l2` § Heading Hierarchy).
 
@@ -1944,7 +1897,7 @@ Opt-in per-section display of each rendered member's Relations as a links block.
 Rendering rules (normative statements [I-027-1]-[I-027-8] in RFC-027):
 
 - **Edge selection.** Edges display only when their own `status` is absent or `"active"` — the filter never reads the related record's `lifecycleState`. A lifecycle-superseded record's active edges display normally.
-- **Placement.** The block renders after the member's rendered content (fields and field groups for Tier 2; fields for Tier 1; body content for Tier 0) and before nested subsection members. When no edge survives selection, the block is omitted entirely for that member, regardless of `emptyBehavior`.
+- **Placement.** The block renders after the member's rendered content (fields and field groups for Tier 2; body content for Tier 0) and before nested subsection members. When no edge survives selection, the block is omitted entirely for that member, regardless of `emptyBehavior`.
 - **Rows.** One row per (entry, direction) with at least one edge: the resolved label followed by the related instances' display labels, comma-joined. Markdown normative form: `**<label>**: <display label>, <display label>`. In `html`, `adoc` and `text` the row uses the same label/value markup the implementation emits for a field row in that format — defined by *Normative Field-Row Form* below (RFC-037 [FR-037-15]), which supplies the referent this rule has always pointed at. A relation row omits `srs-fieldname-*` and carries `srs-relationtype-{relationTypeKey}` in its place [FR-037-12]. For any other format the relation row form remains implementation-defined. Related-instance display labels resolve by: the value of the instance's effective `identityFieldId` (RFC-020, declared or inherited per [N+34]) when it resolves to a non-empty string → the instance's value for the section's `titleFieldId` when a non-empty string → the `instanceId`. Tier 0/1 related instances always fall through to `instanceId`.
 - **Determinism.** Rows follow `include[]` order, forward before inverse per entry; within a row, instances order by display label then `instanceId`, both in Unicode code point order; a related instance repeated within one (entry, direction) renders once.
 - **JSON projection.** Members that project as `ProjectedRecord` carry `relations: ProjectedRelationRow[]` (`document-view-output.json`) preserving row order; members with no surviving edges omit the property. Tier 0/1 members are outside the JSON projection's `relations` property; their rendered-format blocks are unaffected.
@@ -2199,11 +2152,7 @@ The baseline performs no markup conversion, so a markdown-bearing value appears 
 source; converted output is a Theme or L1 View concern.
 
 **Labels.** Resolution stays exactly Step 3: `FieldAssignment.displayLabel`, falling back to raw
-`Field.name`, with no humanisation or case conversion. For a Tier 1 `TypedRecord` the row label is
-`TypedField.label` falling back to `TypedField.name`, while the identity class always derives from
-`TypedField.name` — the same label/identity split that applies at Tier 2. A `TypedField` whose `value`
-is an array is multi-entry and renders in block form in array index order; any other value is
-single-valued. The placeholder rule does not apply at Tier 1 (there is no `required: true` to consult).
+`Field.name`, with no humanisation or case conversion.
 Tier 0 Notes emit no field rows.
 
 **Conformance boundary.** These forms bind any implementation emitting a `DocumentView` in
@@ -2513,7 +2462,6 @@ A conforming repository has the following root structure:
   manifest.json                  ← required: root manifest and instance index
   source-documents/              ← raw source material with sidecar metadata
   notes/                         ← Tier 0 Note instances
-  typed-records/                 ← Tier 1 TypedRecord instances
   records/                       ← Tier 2 Record instances
   relations/                     ← Relation records
   package/                       ← local Package, field, type, and view definitions
@@ -2531,7 +2479,6 @@ Reserved content folders may contain implementation-defined subfolders. For exam
 |---|---|---|
 | `source-documents/` | Raw source files with `.meta.json` sidecars | Source documents are present |
 | `notes/` | `Note` instance files (Tier 0) | Notes are present |
-| `typed-records/` | `TypedRecord` instance files (Tier 1) | Typed Records are present |
 | `records/` | `Record` instance files (Tier 2) | Records are present |
 | `relations/` | `Relation` record files | Relations are present |
 | `package/` | Local `Package` and definition source files | Local definitions are present |
@@ -2611,7 +2558,7 @@ One entry in the manifest instance index.
 ```typescript
 {
   instanceId: UUID
-  tier: 0 | 1 | 2         // 0: Note, 1: TypedRecord, 2: Record
+  tier: 0 | 2             // 0: Note, 2: Record (1 is a retired gap — Tier 1/TypedRecord, rfc-decision-53635966)
   path: string            // relative path from repository root
                           // e.g. "records/decisions/decision-mounting-system.json"
 
@@ -2739,7 +2686,7 @@ Relations are stored as a **JSON object** conforming to the relations-collection
 
 SRS repositories may evolve over time. Mutation policy is tiered:
 
-- Notes and Typed Records may be edited in place; `updatedAt` advances when the file's semantic content changes.
+- Notes may be edited in place; `updatedAt` advances when the file's semantic content changes.
 - Tier 2 Records may receive non-semantic corrections in place; `updatedAt` advances.
 - Semantic changes to Tier 2 Records create a new Record linked to the prior Record by `refines` or `supersedes`.
 
@@ -2755,7 +2702,6 @@ Every JSON file in a repository should declare its schema via a `$schema` key as
 |-----------|----------------|
 | `manifest.json` | `https://srs.semanticops.com/schema/2.0/manifest.json` |
 | Notes (Tier 0) | `https://srs.semanticops.com/schema/2.0/note.json` |
-| TypedRecords (Tier 1) | `https://srs.semanticops.com/schema/2.0/typed-record.json` |
 | Records (Tier 2) | `https://srs.semanticops.com/schema/2.0/record.json` |
 | Relations collection | `https://srs.semanticops.com/schema/2.0/relations-collection.json` |
 | Source document sidecar | `https://srs.semanticops.com/schema/2.0/source-document-meta.json` |
@@ -2820,7 +2766,7 @@ Each object type has a stable identity key:
 
 | Object | Identity key |
 |--------|-------------|
-| Note, TypedRecord, Record | `instanceId` |
+| Note, Record | `instanceId` |
 | Relation | `relationId` |
 | Source document | `documentId` |
 | Field definition | `id` + `version` |
@@ -2902,7 +2848,6 @@ Keys in `data` follow the same relative-path conventions as `ext:repository`:
 - `package/views/<filename>.json` — view definitions
 - `records/<subfolder>/<filename>.json` — Tier 2 Record instances
 - `notes/<filename>.json` — Tier 0 Note instances
-- `typed-records/<filename>.json` — Tier 1 TypedRecord instances
 - `relations/<filename>.json` — relation collections
 
 There is no `instanceIndex` in `manifest`; it is retired (RFC-038 [R2]). The authoritative list of members is the `data` object's own contents — the tree-authoritative store, enumerated the same way as a filesystem repository (RFC-038 [R1]).
@@ -3367,7 +3312,7 @@ Defines the **Discovery Contract**: a portable, implementation-agnostic specific
   containerId?:    UUID      // instance is a member of this container (RFC-009 I-66)
   tag?:            string[]  // AND semantics: all tags must be present
   lifecycleState?: string    // exact match on Record.lifecycleState (ext:lifecycle)
-  tier?:           0 | 1 | 2 // instance tier (Note=0, TypedRecord=1, Record=2)
+  tier?:           0 | 2     // instance tier (Note=0, Record=2; Tier 1/TypedRecord removed, rfc-decision-53635966 — the numbering gap is retained deliberately)
   contentMatch?:   string    // free-text recall-floor predicate
 }
 ```
@@ -3384,21 +3329,17 @@ An instance matches a `DiscoveryQuery` if and only if it satisfies all predicate
 }
 ```
 
-Sentinels: `"note-title"`, `"note-section"`, `"typed-record-title"`, `"typed-record-field"`, `"tag"`, `"label"`.
+Sentinels: `"note-title"`, `"note-section"`, `"tag"`, `"label"`.
 
 #### Searchable Field classification (RFC-032 Rev 7)
 
 For Tier 2, a Field is searchable only when `fieldType.datatype == "string"` and `fieldType.format` is absent or one of `"plain"`, `"markdown"`, or `"uri"`. `valueDomain` and cardinality do not restrict searchability. `format: "uuid"`, `format: "email"`, and datatypes `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, and `map` are non-searchable. Inline-composite recursion is not defined.
-
-Tier-1 `TypedField.valueType` continues to use the legacy searchable set `{string, text, url, select, multiselect}` until the #242 Phase-B carrier cutover.
 
 #### Text Projection algorithm
 
 **Tier 2 (Record):** for each `fieldValue` in `fieldValues` array order — resolve the Field and apply the RFC-032 Rev-7 searchability predicate. If eligible and non-empty, emit one `TextSegment` for a single-cardinality value or one per array element for list cardinality, in order. After all field values, emit one segment per tag. Optionally emit `displayLabel` segments after tags.
 
 **Tier 0 (Note):** if `title` is non-empty, emit a leading `note-title` segment. For each `section[]` in order, emit a `note-section` segment if `content` is non-empty. After sections, emit tag segments.
-
-**Tier 1 (TypedRecord):** if `title` is non-empty, emit a leading `typed-record-title` segment. For each `TypedField` in `fields[]` array order — if `valueType` is searchable (or absent with a string/array value) and value is non-empty, emit one or more `typed-record-field` segments. After fields, emit tag segments.
 
 #### Normalization (applied at match time, not at segment construction time)
 
@@ -3420,7 +3361,7 @@ A self-contained fixture repository with expected result sets lives at:
 
 ```
 srs/conformance/discovery/
-  fixture-repo/   # valid SRS repository with 8 Tier-2 Records, 2 Tier-1, 1 Tier-0, 2 Containers
+  fixture-repo/   # valid SRS repository with 8 Tier-2 Records, 1 Tier-0, 2 Containers
   scenarios.json  # named query scenarios with expectedInstanceIds and exactMatch flags
 ```
 
@@ -3505,17 +3446,15 @@ Conforming implementations must uphold the following invariants.
 
 **17.** `Relation` is reserved for assertions that carry semantic consequence beyond simple mention or citation. Lightweight prose references that do not assert structural, causal, or governance relationships must not be modelled as `Relation` records.
 
-#### core — Note/TypedRecord
+#### core — Note
 
 **18.** `NoteSection.name` values must be unique within a `Note`.
-
-**19.** `TypedField.name` values must be unique within a `Typed Record`.
 
 #### core — Container
 
 **20.** `Container.containerId` is not an instance ID. It must not appear in `Container.rootInstanceIds`, `Container.memberInstanceIds`, `Relation.sourceInstanceId`, or `Relation.targetInstanceId`.
 
-**21.** `Container.rootInstanceIds` and `Container.memberInstanceIds`, when present, must reference valid SRS instance IDs (`Note.instanceId`, `Typed Record.instanceId`, or `Record.instanceId`).
+**21.** `Container.rootInstanceIds` and `Container.memberInstanceIds`, when present, must reference valid SRS instance IDs (`Note.instanceId` or `Record.instanceId`).
 
 #### core — Record
 
@@ -3647,7 +3586,7 @@ Conforming implementations must uphold the following invariants.
 
 #### manifest.container.identityInstanceId
 
-**I-87.** `manifest.container.identityInstanceId`, when present, MUST reference a Tier-2 Record of type `com.semanticops.core/purpose`. This invariant layers on RFC-013 I-81 (membership requirement retained; I-81 is not superseded); RFC-029 adds the type constraint on top. During the RFC-029 migration grace period (R7), an implementation MUST emit a migration warning rather than a validation error for existing repositories whose `identityInstanceId` resolves to a record that is not a Tier-2 `com.semanticops.core/purpose` Record (including Tier-0 notes and Tier-1 TypedRecords of any type). All newly-created repositories (post-RFC-029) must satisfy this invariant immediately.
+**I-87.** `manifest.container.identityInstanceId`, when present, MUST reference a Tier-2 Record of type `com.semanticops.core/purpose`. This invariant layers on RFC-013 I-81 (membership requirement retained; I-81 is not superseded); RFC-029 adds the type constraint on top. During the RFC-029 migration grace period (R7), an implementation MUST emit a migration warning rather than a validation error for existing repositories whose `identityInstanceId` resolves to a record that is not a Tier-2 `com.semanticops.core/purpose` Record (including Tier-0 notes). All newly-created repositories (post-RFC-029) must satisfy this invariant immediately.
 
 #### SourceReference.sourceRole
 
@@ -3711,7 +3650,7 @@ Conforming implementations must uphold the following invariants.
 
 **I-119.** A `tag` predicate with multiple values MUST use AND semantics — all specified tags must be present on the instance. Both query tags and stored instance tags are canonicalized via RFC-006 key-or-alias resolution when a Vocabulary is declared for the tag key; when no Vocabulary is declared, raw string comparison applies (case-sensitive). (RFC-012 R7.)
 
-**I-120.** For Tier 2, the Text Projection MUST include a Field only when `fieldType.datatype == "string"` and `fieldType.format` is absent or one of `"plain"`, `"markdown"`, or `"uri"`. `valueDomain` does not affect searchability. A single-cardinality Field emits one segment; a list-cardinality Field emits one segment per array element in order. Fields with `format: "uuid"` or `format: "email"`, or datatype `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, or `map`, MUST NOT contribute `TextSegment`s. Tier-1 `TypedField.valueType` continues to use the legacy classification until the #242 Phase-B carrier cutover. (RFC-012 R8; RFC-032 Rev-7 erratum.)
+**I-120.** For Tier 2, the Text Projection MUST include a Field only when `fieldType.datatype == "string"` and `fieldType.format` is absent or one of `"plain"`, `"markdown"`, or `"uri"`. `valueDomain` does not affect searchability. A single-cardinality Field emits one segment; a list-cardinality Field emits one segment per array element in order. Fields with `format: "uuid"` or `format: "email"`, or datatype `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, or `map`, MUST NOT contribute `TextSegment`s. (RFC-012 R8; RFC-032 Rev-7 erratum.)
 
 **I-121.** The Text Projection MUST include `tags` array entries as `TextSegment`s after field segments. An implementation MAY additionally include `FieldAssignment.displayLabel` values as segments after tags — this is not required, and two conforming implementations may differ on whether display-label segments are included. (RFC-012 R9.)
 
@@ -3741,7 +3680,7 @@ Conforming implementations must uphold the following invariants.
 
 **I-134.** `FieldValue`, `FieldValueEntry`, `FieldGroupValue`, `FieldGroupEntry`, `Type.fieldGroups`, and `FieldAssignment.{repeatable, minItems, maxItems}` are removed. An implementation MUST reject a document containing any of them at `dataModelRevision >= 2`. Definition files carry no document-local revision discriminator, so revision MUST be resolved from the enclosing repository or package manifest before this rule is applied to a definition. A manifest at `dataModelRevision >= 2` MUST NOT declare `ext:field-groups` or `ext:repeatable-fields`; a reader encountering such a declaration MUST report an error. (RFC-039 [R7]/[R15])
 
-**I-135.** A reader MUST determine instance generation structurally. For a Tier-2 `Record`: an array `fieldValues` is revision <= 1, an object `fieldValues` is revision >= 2. For a Tier-1 `TypedRecord`: a `TypedField` carrying `fieldType` is revision >= 2, one without it is revision <= 1. On encountering a generation it does not support, a reader MUST emit a diagnostic naming the file and the expected `dataModelRevision` and MUST NOT coerce, partially read, or silently skip the document. (RFC-039 [R9])
+**I-135.** A reader MUST determine instance generation structurally. For a Tier-2 `Record`: an array `fieldValues` is revision <= 1, an object `fieldValues` is revision >= 2. On encountering a generation it does not support, a reader MUST emit a diagnostic naming the file and the expected `dataModelRevision` and MUST NOT coerce, partially read, or silently skip the document. (RFC-039 [R9])
 
 **I-136.** A `mode: "reference"` value MUST resolve to an instance present in the repository's authoritative instance set, and that instance MUST be of the Field's declared `rangeType` at the declared `typeVersion`. A dangling or type-mismatched target MUST be reported as an error naming the referring record, the key, and the target id. (RFC-039 [R14], amended by RFC-038 [R25] — the reference target is the tree-enumerated instance set, not a manifest `instanceIndex`, which is retired per RFC-038 [R2]; discharges RFC-032 OQ4, RFC-033:302, RFC-035:592)
 
@@ -3805,7 +3744,7 @@ SRS 2.0 Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability 
 
 **Content**: A core-conformant implementation must:
 - Accept and validate `Field`, `Type`, `Record` (Tier 2), `Relation`, and `Container` inputs against this specification
-- Enforce Invariants 1–3, 7–9, 16–21, 28, 38
+- Enforce Invariants 1–3, 7–9, 16–18, 20–21, 28, 38
 - Support the Foundation and Distribution groups in full
 - Implement the namespace format and reference format correctly
 - Not accept `relationType` strings that include `/` except in `namespace/name` format
@@ -3817,7 +3756,7 @@ SRS 2.0 Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability 
 - Enforce inline and referenced lifecycle integrity (V9).
 - Enforce `select`/`multiselect` field binding exclusivity and closedness (V3).
 
-Support for `Note` (Tier 0) and `Typed Record` (Tier 1) is optional at core conformance level.
+Support for `Note` (Tier 0) is optional at core conformance level.
 
 
 #### Extension conformance requirements
@@ -4213,7 +4152,7 @@ A standard format for exchanging full Revision history between implementations, 
 ### Graduation mapping record
 
 **Content**: 
-A structured artefact recording how a Note or Typed Record was mapped to its Record successors — which section or field names were matched, merged, split, or interpreted. Useful for AI-assisted graduation review and audit. Deferred pending implementation experience.
+A structured artefact recording how a Note was mapped to its Record successor — which section or field names were matched, merged, split, or interpreted. Useful for AI-assisted graduation review and audit. Deferred pending implementation experience.
 
 
 ### Field domains
@@ -4347,10 +4286,21 @@ Tags are a peer to Field and Type in the SRS data model — not an extension, no
 |---|---|---|
 | Definition (Field, Type, View) | reject-unknown | none — extend by inheritance |
 | Substrate (VocabularyEntry, Term, RelationTypeDefinition) | reject-unknown | `properties` bag |
-| Instance (Note, TypedRecord, Record) | tolerate | `meta` bag |
+| Instance (Note, Record) | tolerate | `meta` bag |
 
 The stated reason for the asymmetry: an instance's `meta` cannot change what the record *means*; an unknown property on a **definition** can silently change what every downstream record means. Definitions are the trust boundary.
 
 **Forward framing: cell linkage as a retrieval signal, not an ontology.** The owner-shared decision-coherence research synthesis (2026-08-23, srs#273 comment; Tier-0 note "Design Jurisprudence: the neighbourhood role of the map") repositions what a location in the Pattern Grid buys: not an answer, but a neighbourhood of prior judgements a new decision must reckon with. Cell linkage is **one retrieval signal among several** — alongside explicit links, semantic similarity, shared concerns, and scope — never the ontology of truth. The minimal relation set stays deliberately small: `consistent_with`, `distinguishes`, `conflicts_with`, `supersedes` around decisions, plus `supports` / `challenges` between decisions and principles; `generalises` is inferred from a pattern of decisions, never itself asserted. No decision ontology beyond this set is sketched here. Retrieval favours precision over completeness — the minimum useful neighbourhood, not everything potentially relevant, or the retrieval mechanism recreates the context-bloat failure it exists to avoid. Today's actual significance gate — which decisions are worth capturing at all — is the owner-ruling bottleneck, named explicitly rather than left implicit: the charter's decision records are curated by what the owner chooses to rule on, and that curation is what keeps the record from drowning in undifferentiated capture.
+
+
+### Why Record tiers exist (Note → Record)
+
+**Content**: Not all content arrives with full semantic formalisation. A meeting note, a brainstorm document, a rough plan — these are valid starting points that should be preserved and referenceable, even before anyone has decided what Types to extract from them.
+
+The two tiers let a system capture content at whatever maturity level it has, and formalise later without losing provenance. Graduation links a Note to its successor Record via a derived-from Relation. It mirrors how understanding actually develops — rough first, then formally defined.
+
+The tier model also makes SRS progressively adoptable. A team can start at Tier 0 and arrive at Tier 2 as their understanding of the semantic structure matures, without ever having to restart from scratch.
+
+A middle Tier 1 (Typed Record — named fields, no Type binding) was tried and removed: the 2026-08-21 usage attestation found zero instances of it in any corpus, ever (rfc-decision-53635966). The predecessor design note captures the original three-tier rationale; this note supersedes it with the two-tier reality. Tier numbering (0, 2) keeps the gap deliberately, for reference stability.
 
 

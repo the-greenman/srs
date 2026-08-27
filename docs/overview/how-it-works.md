@@ -20,7 +20,7 @@ my-repo/
 │   ├── relation-types/   canonical & custom relation type definitions
 │   ├── vocabularies/     controlled-value sets (Term lists)
 │   └── document-views/   how to render records into output
-├── records/          instance files (Notes, TypedRecords, Records) — one JSON each
+├── records/          instance files (Notes, Records) — one JSON each
 ├── relations/        relation files (default: relations/relations.json)
 ├── containers/       container (grouping) definitions
 └── source-documents/ reference materials with .meta.json sidecars

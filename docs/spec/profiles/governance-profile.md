@@ -764,7 +764,7 @@ Loose protocol for getting raw thinking out before structure is known.
 | Stage | Question | Output |
 |---|---|---|
 | `open_space` | What is on people’s minds about this topic? | Note |
-| `cluster` | What themes or areas are emerging? | Typed Records or candidate Records |
+| `cluster` | What themes or areas are emerging? | Candidate Records |
 | `name_components` | What are the major components we need to return to? | Component Notes / Agenda Items |
 | `next_focus` | Which component should be worked on next? | Agenda Item or Exercise |
 

@@ -64,29 +64,27 @@ A **Type** is a named, versioned bundle of Fields. It declares `fields[]` as
 semantics**. Two Records of the same Type always carry the same Field meanings regardless
 of how they're labelled in a view.
 
-## Record — an instance, in three tiers
+## Record — an instance, in two tiers
 
-A **Record** is concrete information. SRS recognises three tiers of semantic maturity, so
-information can be captured loosely and tightened over time:
+A **Record** is concrete information. SRS recognises two tiers of semantic maturity, so
+information can be captured loosely and tightened over time. Tier numbering keeps the
+historical gap at 1: an in-between tier (`TypedRecord` — named fields, no Type binding) was
+tried and removed as an unexercised construct (zero instances in any corpus, ever), so the
+numbering stays 0 and 2 rather than being renumbered for no semantic gain.
 
 ```mermaid
 flowchart LR
     subgraph t0["Tier 0 — Note"]
         N["free-text sections<br/>name + content<br/><i>no field semantics</i>"]
     end
-    subgraph t1["Tier 1 — TypedRecord"]
-        TR["named fields with values<br/>+ optional instanceType hint<br/><i>no Type binding</i>"]
-    end
     subgraph t2["Tier 2 — Record"]
         R["typeId @ typeVersion<br/>fieldValues: Field.name → value<br/><i>fully resolvable & validated</i>"]
     end
-    t0 -->|"graduatedAt"| t1 -->|"graduatedAt"| t2
+    t0 -->|"derived-from"| t2
 ```
 
 - **Tier 0 — Note**: free-text `sections[]` (each a name + content). No type binding, no
   field semantics. Good for raw capture and brainstorming.
-- **Tier 1 — TypedRecord**: named fields that carry values and value types, but with no
-  binding to a published Type. A lightweight `instanceType` string can hint at intent.
 - **Tier 2 — Record**: bound to a specific `typeId` + `typeVersion`, with a name-keyed `fieldValues` object (RFC-039)
   mapping each `fieldId` to a value. This is the fully semantic, validatable tier.
 

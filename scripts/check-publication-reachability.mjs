@@ -323,9 +323,9 @@ async function reachability(repoRoot) {
     for (const target of contains.get(id) ?? []) {
       if (surfaceOf.has(target)) continue;
       // The renderer's descent resolves each child through a Tier-2 lookup, so a `contains` edge to
-      // a Note or TypedRecord publishes nothing — it makes the whole view fail to render
-      // ("missing field 'typeId'"). Treating every target as published would report the corpus green
-      // at the moment every document stopped being produced.
+      // a Note publishes nothing — it makes the whole view fail to render ("missing field
+      // 'typeId'"). Treating every target as published would report the corpus green at the moment
+      // every document stopped being produced.
       const targetPath = pathOf.get(target);
       if (targetPath !== undefined && !tier2.has(target)) {
         fail(
