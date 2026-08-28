@@ -69,22 +69,6 @@
       "tags": []
     },
     {
-      "instanceId": "00000004-0000-4000-8000-000000000001",
-      "tier": 1,
-      "path": "records/typed-records/typed-record-1.json",
-      "title": "Discovery Feature Planning Meeting",
-      "tags": [
-        "searchable"
-      ]
-    },
-    {
-      "instanceId": "00000004-0000-4000-8000-000000000002",
-      "tier": 1,
-      "path": "records/typed-records/typed-record-2.json",
-      "title": "Implement ext:discovery",
-      "tags": []
-    },
-    {
       "instanceId": "00000005-0000-4000-8000-000000000001",
       "tier": 0,
       "path": "records/notes/note-1.json",

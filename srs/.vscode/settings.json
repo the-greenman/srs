@@ -32,12 +32,6 @@
         },
         {
             "fileMatch": [
-                "**/typed-records/*.json"
-            ],
-            "url": "file:///home/greenman/dev/semanticops/srs-vscode/schemas/2.0/typed-record.json"
-        },
-        {
-            "fileMatch": [
                 "**/package/fields/*.json"
             ],
             "url": "file:///home/greenman/dev/semanticops/srs-vscode/schemas/2.0/field.json"

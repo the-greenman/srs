@@ -236,10 +236,8 @@ EOF
 ```mermaid
 flowchart LR
     T0["Tier 0 — Note<br/><b>loose context</b><br/>free text, tags, sections<br/><i>near-zero capture cost</i>"]
-    T1["Tier 1 — TypedRecord<br/><b>named fields</b><br/>structure without a Type binding"]
     T2["Tier 2 — Record<br/><b>governed data</b><br/>instantiates a Type: required fields,<br/>typed values, validation"]
     T0 -->|graduate| T2
-    T0 -.->|"(or stop halfway)"| T1 -.-> T2
 ```
 
 **First principle: maturity is a ladder, not a gate.** The note was not deleted, and it

@@ -150,12 +150,14 @@ async function main() {
     [
       'https://srs.semanticops.com/schema/2.0/note.json',
       await loadSchema(join(SCHEMA_DIR, 'note.json'))
-    ],
-    [
-      'https://srs.semanticops.com/schema/2.0/typed-record.json',
-      await loadSchema(join(SCHEMA_DIR, 'typed-record.json'))
     ]
   ]);
+
+  // rfc-decision-53635966 (srs#448): Tier 1 (TypedRecord) is removed from the standard —
+  // typed-record.json no longer exists. A file still declaring that $schema is never silently
+  // skipped or generically "unsupported": it is rejected by name, citing the decision, so a
+  // stray Tier-1 file reads as a migration error rather than a mystery schema mismatch.
+  const RETIRED_TYPED_RECORD_SCHEMA = 'https://srs.semanticops.com/schema/2.0/typed-record.json';
 
   const [relDefs, recordFiles] = await Promise.all([
     loadInstalledRelationTypes(),
@@ -174,6 +176,13 @@ async function main() {
     }
 
     const declaredSchema = record.$schema;
+
+    if (declaredSchema === RETIRED_TYPED_RECORD_SCHEMA) {
+      invalidCount++;
+      errors.push(`${recordsDir}/${relativePath}: Tier 1 (TypedRecord) is retired (rfc-decision-53635966, srs#448) — typed-record.json no longer exists; migrate this instance to a Note (Tier 0) or a Record (Tier 2)`);
+      continue;
+    }
+
     const schema = schemasByUrl.get(declaredSchema);
 
     if (!schema) {

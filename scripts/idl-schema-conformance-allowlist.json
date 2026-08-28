@@ -1,6 +1,5 @@
 [
   { "entity": "Record", "property": "tags", "rule": "R1", "issue": 248, "expected": "schema-only" },
-  { "entity": "TypedRecord", "property": "tags", "rule": "R1", "issue": 249, "expected": "schema-only" },
 
   { "entity": "SourceReference", "property": "sourceRole", "rule": "R3", "issue": 248, "expected": "schema:type=string,format=-,enum=evidence|extracted-from|quoted-from|inspired-by|attaches" },
 

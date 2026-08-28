@@ -381,7 +381,6 @@ I-128
 <!-- srs-integration:v1
 schema:record.json
 schema:note.json
-schema:typed-record.json
 schema:relations-collection.json
 schema:source-document-meta.json
 schema:manifest.json
@@ -492,7 +491,6 @@ I-100
 <!-- srs-integration:v1
 schema:record.json
 schema:note.json
-schema:typed-record.json
 schema:relations-collection.json
 I-88
 -->
@@ -774,7 +772,6 @@ Phase A folds **no** canonical record or schema artifact — its normative chang
 <!-- srs-integration:v1
 schema:record.json
 schema:type.json
-schema:typed-record.json
 schema:document-view-output.json
 schema:theme.json
 type:com.semanticops.spec/table
@@ -862,7 +859,6 @@ schema:protocol.json
 schema:record.json
 schema:relation.json
 schema:relations-collection.json
-schema:typed-record.json
 schema:type.json
 ext:type-inheritance
 ext:lifecycle

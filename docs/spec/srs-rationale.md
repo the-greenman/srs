@@ -343,7 +343,7 @@ A standard format for exchanging full Revision history between implementations, 
 ### Graduation mapping record
 
 **Content**: 
-A structured artefact recording how a Note or Typed Record was mapped to its Record successors — which section or field names were matched, merged, split, or interpreted. Useful for AI-assisted graduation review and audit. Deferred pending implementation experience.
+A structured artefact recording how a Note was mapped to its Record successor — which section or field names were matched, merged, split, or interpreted. Useful for AI-assisted graduation review and audit. Deferred pending implementation experience.
 
 
 ### Field domains
@@ -477,10 +477,21 @@ Tags are a peer to Field and Type in the SRS data model — not an extension, no
 |---|---|---|
 | Definition (Field, Type, View) | reject-unknown | none — extend by inheritance |
 | Substrate (VocabularyEntry, Term, RelationTypeDefinition) | reject-unknown | `properties` bag |
-| Instance (Note, TypedRecord, Record) | tolerate | `meta` bag |
+| Instance (Note, Record) | tolerate | `meta` bag |
 
 The stated reason for the asymmetry: an instance's `meta` cannot change what the record *means*; an unknown property on a **definition** can silently change what every downstream record means. Definitions are the trust boundary.
 
 **Forward framing: cell linkage as a retrieval signal, not an ontology.** The owner-shared decision-coherence research synthesis (2026-08-23, srs#273 comment; Tier-0 note "Design Jurisprudence: the neighbourhood role of the map") repositions what a location in the Pattern Grid buys: not an answer, but a neighbourhood of prior judgements a new decision must reckon with. Cell linkage is **one retrieval signal among several** — alongside explicit links, semantic similarity, shared concerns, and scope — never the ontology of truth. The minimal relation set stays deliberately small: `consistent_with`, `distinguishes`, `conflicts_with`, `supersedes` around decisions, plus `supports` / `challenges` between decisions and principles; `generalises` is inferred from a pattern of decisions, never itself asserted. No decision ontology beyond this set is sketched here. Retrieval favours precision over completeness — the minimum useful neighbourhood, not everything potentially relevant, or the retrieval mechanism recreates the context-bloat failure it exists to avoid. Today's actual significance gate — which decisions are worth capturing at all — is the owner-ruling bottleneck, named explicitly rather than left implicit: the charter's decision records are curated by what the owner chooses to rule on, and that curation is what keeps the record from drowning in undifferentiated capture.
+
+
+### Why Record tiers exist (Note → Record)
+
+**Content**: Not all content arrives with full semantic formalisation. A meeting note, a brainstorm document, a rough plan — these are valid starting points that should be preserved and referenceable, even before anyone has decided what Types to extract from them.
+
+The two tiers let a system capture content at whatever maturity level it has, and formalise later without losing provenance. Graduation links a Note to its successor Record via a derived-from Relation. It mirrors how understanding actually develops — rough first, then formally defined.
+
+The tier model also makes SRS progressively adoptable. A team can start at Tier 0 and arrive at Tier 2 as their understanding of the semantic structure matures, without ever having to restart from scratch.
+
+A middle Tier 1 (Typed Record — named fields, no Type binding) was tried and removed: the 2026-08-21 usage attestation found zero instances of it in any corpus, ever (rfc-decision-53635966). The predecessor design note captures the original three-tier rationale; this note supersedes it with the two-tier reality. Tier numbering (0, 2) keeps the gap deliberately, for reference stability.
 
 

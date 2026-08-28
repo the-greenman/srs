@@ -18,9 +18,8 @@ Before making or reviewing any design or spec decision, read **[`docs/charter/de
 
 **Presentation is view-owned, never type-owned.** RFC-015 established it for ordering and RFC-036 for rendering: a composite-range Field is dispatched to a renderer by `FieldView.compositeRenderer` or a `DocumentSection`/`DocumentView` directive, not by anything on the Type. When adding a presentational capability, put it in the view layer and check it against RFC-015's test — if many concurrent arrangements over the same records are legitimate and none is a semantic claim, it is presentation.
 
-**Record tiers:**
+**Record tiers:** two tiers; numbering keeps the historical gap at 1 (Tier 1/`TypedRecord` was removed as an unexercised construct — rfc-decision-53635966, srs#448).
 - **Tier 0 (Note)**: free text sections, no type binding
-- **Tier 1 (TypedRecord)**: named fields with values, no Type binding
 - **Tier 2 (Record)**: instantiated Type via `typeId` + `typeVersion`; carries `fieldValues` — an object keyed by `Field.name` verbatim, values recursive per the Field's `fieldType` (RFC-039)
 
 **Relation** — typed edge between two instance UUIDs. Canonical types: `contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`.
@@ -122,7 +121,7 @@ The spec must remain valid without any Rust or JS implementation present. Do not
 
 Do not create records or types under ad-hoc namespaces. Match the namespace to the existing convention for the content you are adding.
 
-**`dataModelRevision` (RFC-033 / #265).** `manifest.json` and package manifests may carry an optional monotonic-integer `dataModelRevision` (absent ⇒ 0) stamping which data-model generation the data satisfies. RFC-032 (`valueType → fieldType`) is migration #1 → revision 1; the spec repo is stamped `dataModelRevision: 1`. Not dotted semver.
+**`dataModelRevision` (RFC-033 / #265).** `manifest.json` and package manifests may carry an optional monotonic-integer `dataModelRevision` (absent ⇒ 0) stamping which data-model generation the data satisfies. RFC-032 (`valueType → fieldType`) is migration #1 → revision 1; srs#448 (Tier 1/TypedRecord removed, rfc-decision-53635966) is the migration to revision 4; the spec repo is stamped `dataModelRevision: 4`. Not dotted semver.
 
 ## Rendered Outputs
 

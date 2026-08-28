@@ -50,8 +50,9 @@ const MAPPING = [
   // Invariant 20; and the `TypedField` shadow carried the current RFC-039 [R8] `fieldType` block
   // while the *published* copy still declared the pre-RFC-032 `valueType`/`selectOptions` shape.
   // That last one is why retirement could not be a pure deletion — #285 ported the current block
-  // into the published record first, and the `TypedRecord.TypedField` row below is what would have
-  // gone red against a stale twin. #275/PR #283 retired `field.json` on the same reasoning;
+  // into the published record first, and the `TypedRecord.TypedField` row (since retired at
+  // srs#448 along with Tier 1 itself) is what would have gone red against a stale twin at the
+  // time. #275/PR #283 retired `field.json` on the same reasoning;
   // Note/NoteSection had always mapped this way. #285 finished the set (RFC-031 Open Question 2).
   // Field, Type, and Type.FieldAssignment are RETIRED from this mapping as of RFC-040 Change J
   // (srs#481, the #274 ratified ledger): their prose subsections (04-2-4-2-field.json,
@@ -70,10 +71,10 @@ const MAPPING = [
   { entity: "Record", prose: "records/subsections/04-4-4-4-record-tiers.json", header: "Record", schemaFile: "record.json", pointer: "#" },
   // Record.FieldValue row dropped at the srs#242 cutover: RFC-039 [R7] deletes
   // $defs.FieldValue — the entity ceases to exist (RFC-031 Cross-references).
-  { entity: "TypedRecord", prose: "records/subsections/04-4-4-4-record-tiers.json", header: "Typed Record", schemaFile: "typed-record.json", pointer: "#" },
-  { entity: "TypedRecord.TypedField", prose: "records/subsections/04-4-4-4-record-tiers.json", header: "TypedField", schemaFile: "typed-record.json", pointer: "#/$defs/TypedField" },
+  // TypedRecord/TypedRecord.TypedField rows retired at srs#448 (rfc-decision-53635966): Tier 1
+  // is removed, typed-record.json is deleted, and the prose no longer has a "Typed Record"/
+  // "TypedField" heading to map.
   { entity: "SourceReference", prose: "records/subsections/04-4-4-4-record-tiers.json", header: "SourceReference", schemaFile: "record.json", pointer: "#/$defs/SourceReference" },
-  { entity: "SourceReference", prose: "records/subsections/04-4-4-4-record-tiers.json", header: "SourceReference", schemaFile: "typed-record.json", pointer: "#/$defs/SourceReference" },
   { entity: "SourceReference", prose: "records/subsections/04-4-4-4-record-tiers.json", header: "SourceReference", schemaFile: "note.json", pointer: "#/$defs/SourceReference" },
   { entity: "SourceReference", prose: "records/subsections/04-4-4-4-record-tiers.json", header: "SourceReference", schemaFile: "relations-collection.json", pointer: "#/$defs/SourceReference" },
   { entity: "Note", prose: "records/subsections/04-4-4-4-record-tiers.json", header: "Note", schemaFile: "note.json", pointer: "#" },
