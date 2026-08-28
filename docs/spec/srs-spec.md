@@ -767,11 +767,18 @@ Containers are not semantic objects with Fields. They do not own semantic state;
   rootInstanceIds?: UUID[]
   // Top-level instances this Container was created to hold. Implementations may
   // derive nested members by traversing contains Relations from these roots.
+  // Unordered set — no positional significance (RFC-013 [R5]).
 
   memberInstanceIds?: UUID[]
   // Explicit membership list for all instances in scope.
   // When present, allows membership queries without graph traversal.
   // When omitted, membership is defined by traversing contains Relations.
+
+  anchorInstanceId?: UUID
+  // RFC-009 (amended by srs#446). Names the member whose Type is this Container's
+  // typing anchor for DocumentView.rootTypeRefs matching and merge conflict detection.
+  // Declared, never positional. When absent, implementations fall back to
+  // rootInstanceIds[0] (transitional; withdrawn at the Continuity flip).
 
   createdAt?: ISO8601
   updatedAt?: ISO8601
@@ -3665,6 +3672,10 @@ Conforming implementations must uphold the following invariants.
 **I-142.** When SectionSource.type-query carries a non-empty lifecycleStates array, implementations MUST restrict the query result to Records whose lifecycleState matches any value in the array (OR semantics). A Record with no lifecycleState MUST be excluded when lifecycleStates is present and non-empty. When lifecycleStates is absent or empty, no filtering by this field is applied and all lifecycle states (including absent) are included. Implementations that do not declare ext:lifecycle MUST ignore lifecycleStates and MUST NOT produce a validation error on its presence.
 
 **I-143.** When SectionSource.type-query carries a non-empty excludeLifecycleStates array, implementations MUST exclude from the query result any Record whose lifecycleState matches any value in the array. When lifecycleStates and excludeLifecycleStates are both present and non-empty, inclusion filtering (I-142) MUST be applied first; exclusion filtering is then applied to the survivors. A Record with no lifecycleState is not excluded by excludeLifecycleStates (only Records with a matching non-null lifecycleState are excluded). When excludeLifecycleStates is absent or empty, no exclusion is applied. Implementations that do not declare ext:lifecycle MUST ignore excludeLifecycleStates and MUST NOT produce a validation error on its presence.
+
+#### Container (core), RFC-009 (ext:views-l2 rootTypeRefs matching), RFC-010 (ext:federation merge)
+
+**I-145.** When present on a Container, anchorInstanceId MUST equal an id contained in that Container's rootInstanceIds or memberInstanceIds. It names the record whose Type (typeId + typeVersion) is the Container's typing anchor for RFC-009 DocumentView.rootTypeRefs matching (I-63) and RFC-010 three-way-merge container-root conflict detection. If it resolves to no such member, the repository is invalid. When anchorInstanceId is absent (a repository authored before srs#446), an implementation MUST fall back to treating rootInstanceIds[0] (the first entry) as the typing anchor; this positional fallback is transitional and is withdrawn at the Continuity flip (rfc-decision-cce3c00e axis 2-8, the first full public release), after which anchorInstanceId is required wherever a typing anchor is needed. rootInstanceIds and memberInstanceIds otherwise carry no positional significance (RFC-013 [R5]).
 
 #### Other
 
