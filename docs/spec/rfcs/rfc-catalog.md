@@ -6,8 +6,6 @@
 
 **RFC Number**: 001
 
-**Status**: accepted
-
 **Affected Components**: <!-- srs-integration:v1
 ext:views-l2
 ext:views-l1
@@ -23,8 +21,6 @@ schema:view.json
 **Title**: RFC-002: ext:themes-l1 — Visual Theming for Document Views
 
 **RFC Number**: 002
-
-**Status**: accepted
 
 **Affected Components**: <!-- srs-integration:v1
 ext:themes-l1
@@ -42,8 +38,6 @@ schema:package-bundle.json
 
 **RFC Number**: 004
 
-**Status**: superseded
-
 **Proposal Artifact Path**: rfcs/rfc-004.md
 
 **Content**: Draft: `ext:schema-notation`, a semantic, target-neutral schema definition model for spec authoring (JSON Schema / TypeScript / protobuf / Rust are projections). Carries the proposed-package / proposed-schemas boundary fixture under rfcs/rfc-004/. Full text: rfcs/rfc-004.md.
@@ -53,8 +47,6 @@ schema:package-bundle.json
 
 **RFC Number**: 003
 
-**Status**: draft
-
 **Proposal Artifact Path**: rfcs/rfc-003.md
 
 **Content**: Draft: distribution model and container slices for SRS repositories. Import-tracking / package-binding sub-scope was carved out into RFC-014. Full text: rfcs/rfc-003.md.
@@ -63,8 +55,6 @@ schema:package-bundle.json
 **Title**: RFC-009: Root-record Type as the typing anchor for Containers, Document Views, and distributable units
 
 **RFC Number**: 009
-
-**Status**: accepted
 
 **Author**: Peter Brownell
 
@@ -92,8 +82,6 @@ I-78
 
 **RFC Number**: 011
 
-**Status**: accepted
-
 **Author**: Peter Brownell
 
 **Affected Components**: ext:views-l2 (SectionSource.type-query), document-view.json
@@ -111,8 +99,6 @@ schema:document-view.json
 **Title**: RFC-014: Import Tracking & Package Binding
 
 **RFC Number**: 014
-
-**Status**: accepted
 
 **Author**: Peter Brownell
 
@@ -144,8 +130,6 @@ I-84
 
 **RFC Number**: 016
 
-**Status**: accepted
-
 **Affected Components**: `com.semanticops.spec/invariant` (rendering); `scripts/publish-spec.mjs`
 
 <!-- srs-integration:v1
@@ -171,8 +155,6 @@ tooling-only
 
 **RFC Number**: 028
 
-**Status**: accepted
-
 **Author**: the-greenman (from issue the-greenman/srs#81)
 
 **Affected Components**: ext:lifecycle (CLI contract), srs-usage.md (agentic write-workflow reference)
@@ -189,8 +171,6 @@ tooling-only
 **Title**: RFC-018: Repository Changelog Extension (`ext:changelog`)
 
 **RFC Number**: 018
-
-**Status**: accepted
 
 **Author**: the-greenman
 
@@ -219,8 +199,6 @@ schema:manifest.json
 **Title**: RFC-006: Vocabulary Substrate — Terms, Vocabularies, Lifecycles, and Controlled Value Sets
 
 **RFC Number**: 006
-
-**Status**: accepted
 
 **Author**: design dialogue draft
 
@@ -251,8 +229,6 @@ type:com.semanticops.srs/lifecycle
 
 **RFC Number**: 007
 
-**Status**: accepted
-
 **Author**: Peter Brownell
 
 **Affected Components**: `FieldGroup.compositeRenderer` dispatch; `groupFieldRowTemplates`; `compositeRendererConfig` on `ElementTemplates`.
@@ -272,8 +248,6 @@ schema:theme.json
 
 **RFC Number**: 008
 
-**Status**: accepted
-
 **Author**: Peter Brownell
 
 **Affected Components**: `typeDispatch` on `DocumentSection` + `typeFilter` on `container-subset` source (both `ext:views-l2`).
@@ -291,8 +265,6 @@ schema:document-view.json
 **Title**: RFC-012: Discovery Contract & Text Projection
 
 **RFC Number**: 012
-
-**Status**: accepted
 
 **Author**: Peter Brownell
 
@@ -324,8 +296,6 @@ I-124
 
 **RFC Number**: 013
 
-**Status**: accepted
-
 **Author**: Peter Brownell
 
 **Affected Components**: `manifest.container` required; `Container.identityInstanceId`; structural navigation from membership + `precedes`.
@@ -348,8 +318,6 @@ I-82
 
 **RFC Number**: 015
 
-**Status**: accepted
-
 **Author**: the-greenman
 
 **Affected Components**: `ordering.memberOrder` on `container-subset` sections + `renderedPresentations` on the manifest. Invariants I-125–I-128 (RFC-015 Rules [N+28]-[N+31]).
@@ -371,8 +339,6 @@ I-128
 **Title**: RFC-017: Decision-log Attachments, Base-package Settings, Archive Determinism, and srsj-gzip Retirement
 
 **RFC Number**: 017
-
-**Status**: accepted
 
 **Author**: the-greenman
 
@@ -408,8 +374,6 @@ I-112
 
 **RFC Number**: 019
 
-**Status**: accepted
-
 **Author**: the-greenman
 
 **Affected Components**: `CrossFieldRule`/`CrossFieldRuleEffect` $defs + `validationRules` on `type.json` (`ext:cross-field-validation`); invariants I-89–I-97.
@@ -437,8 +401,6 @@ I-97
 
 **RFC Number**: 020
 
-**Status**: accepted
-
 **Author**: the-greenman
 
 **Affected Components**: `identityFieldId` on `Type` (`type.json`); inheritance + views-l2 fallback prose (`ext:type-inheritance`, `ext:views-l2`).
@@ -457,8 +419,6 @@ ext:views-l2
 **Title**: RFC-022: Relational lifecycle states — requiresRelation + transition fulfillment
 
 **RFC Number**: 022
-
-**Status**: accepted
 
 **Author**: the-greenman
 
@@ -482,8 +442,6 @@ I-100
 
 **RFC Number**: 023
 
-**Status**: accepted
-
 **Author**: Peter Brownell
 
 **Affected Components**: `SourceReference.sourceRole` replaces `relationType` across record/note/typed-record/relations-collection schemas; invariant I-88.
@@ -504,8 +462,6 @@ I-88
 
 **RFC Number**: 025
 
-**Status**: accepted
-
 **Author**: the-greenman
 
 **Affected Components**: Governance-package DocumentView + seed root container. No canonical spec record/schema artifact (downstream package only).
@@ -522,8 +478,6 @@ tooling-only
 **Title**: RFC-026: ext:slices — Container Slices (Subset Repository Export)
 
 **RFC Number**: 026
-
-**Status**: accepted
 
 **Author**: the-greenman (from issue the-greenman/srs#194)
 
@@ -542,8 +496,6 @@ schema:manifest.json
 **Title**: RFC-027: Per-record relation display in document views (relationsPresentation)
 
 **RFC Number**: 027
-
-**Status**: accepted
 
 **Author**: the-greenman (from issue the-greenman/srs#212)
 
@@ -564,8 +516,6 @@ subsection:ext-views-l2
 **Title**: RFC-029: Core Base Package and Required com.semanticops.core/purpose Identity Type
 
 **RFC Number**: 029
-
-**Status**: accepted
 
 **Author**: the-greenman (from issue the-greenman/srs#134)
 
@@ -589,8 +539,6 @@ I-87
 
 **RFC Number**: 030
 
-**Status**: accepted
-
 **Author**: the-greenman (from issue the-greenman/srs#232)
 
 **Affected Components**: §04-2-4-2 Field subsection (the former com.semanticops.spec/field type-definition record was a duplicate of it and is retired — #275); §03-1 Version semantics subsection; §04-7 Vocabulary and Term subsection (invariant V3); docs/schema/2.0/package-bundle.json (embedded Field shape)
@@ -611,8 +559,6 @@ schema:package-bundle.json
 
 **RFC Number**: 031
 
-**Status**: accepted
-
 **Author**: Claude Code (agent), on behalf of the repository owner (from issue the-greenman/srs#238)
 
 **Affected Components**: tooling-only — adds scripts/check-idl-schema-conformance.mjs and scripts/idl-schema-conformance-allowlist.json, wired into scripts/check-release-drift.mjs; no docs/schema/2.0/*.json or record-shape changes.
@@ -629,8 +575,6 @@ tooling-only
 **Title**: RFC-033: Self-hosting the meta-model — the frozen-seed bootstrap package
 
 **RFC Number**: 033
-
-**Status**: accepted
 
 **Author**: the-greenman
 
@@ -655,8 +599,6 @@ type:com.semanticops.srs/exact-type-ref
 **Title**: RFC-032: The Field type model — decomposed value type, composite range, maps, and FieldGroup subsumption
 
 **RFC Number**: 032
-
-**Status**: accepted
 
 **Author**: Claude Code (agent), on behalf of the repository owner (from issue the-greenman/srs#261; delivers Task #257, folds in #239)
 
@@ -684,8 +626,6 @@ ext:views-l2
 
 **RFC Number**: 035
 
-**Status**: accepted
-
 **Author**: the-greenman
 
 **Affected Components**: Defines the emitter that projects the self-hosted meta-model Type records to JSON Schema 2020-12 via a neutral IR, generalizing RFC-032's per-fieldType `projectField` to whole entities. Ships a Node reference emitter (`scripts/lib/schema-emitter.mjs`) verified two ways: Tier-1 byte-for-byte determinism goldens (`tests/rfc-035/`) and a Tier-2 `emitter ⊆ frozen seed` structural closure (`scripts/rfc-035-closure-test.mjs`, discharging RFC-033 [R4](b)). Relocates the normative `projection-rules.md` to `docs/schema/2.0/`. The `srs-projection` core service / `srs schema generate` CLI / WASM binding are specified but implemented at the #260 cutover (ADR-004). Tooling + docs only — no entity-schema or record artifact is folded into the canonical spec.
@@ -702,8 +642,6 @@ tooling-only
 **Title**: RFC-036: Composite rendering — view-owned renderer dispatch for composite-range fields
 
 **RFC Number**: 036
-
-**Status**: accepted
 
 **Author**: the-greenman
 
@@ -728,8 +666,6 @@ I-13
 **Title**: RFC-037: Normative field-row rendering baseline
 
 **RFC Number**: 037
-
-**Status**: accepted
 
 **Author**: the-greenman
 
@@ -760,8 +696,6 @@ Full proposal and design history: `rfcs/rfc-037-normative-field-row-rendering-ba
 **Title**: RFC-039: Name-keyed fieldValues — the recursive Record value carrier
 
 **RFC Number**: 039
-
-**Status**: accepted
 
 **Author**: the-greenman
 
@@ -811,8 +745,6 @@ Full proposal and design history: `rfcs/rfc-039-record-field-value-carrier.md`.
 
 **RFC Number**: 038
 
-**Status**: accepted
-
 **Author**: the-greenman
 
 **Affected Components**: Repository membership authority moves from `manifest.json` to the authoritative store, resolving a standing contradiction in which the manifest schema and the `RepositoryManifest`/JSON-Store prose call `instanceIndex` authoritative while RFC-012 [R6], RFC-013 [R2], I-80 and I-118 call it a cache that the instance files override. Resolved in favour of the already-ratified tree-authoritative rule, and supplies the enumeration contract RFC-013 [R2] never defined: reserved instance roots anchored at the repository root and at every directory holding a conforming package manifest (not at `packageRefs`, which misses 7 live instances); declared-then-validated classification with a shape fallback, because 29 live Tier-2 Records carry no `$schema` and the one record declaring `record.json` most loudly does not conform to it; a closed candidate policy using the most-specific reserved location, with package manifests admissible and source-document payloads opaque; standalone `relations/<relationId>.json` files retiring the live relations-collection; retirement of `instanceIndex`, `containerIndex`, `sourceDocumentIndex`, `relationsChecksums` and `relationsPath`; sidecar-authoritative source documents; derived catalogs gated on a store validity token; snapshots carrying all six authoritative sets; and a backend-neutral enumeration interface returning logical identifiers with paths as adapter-private locators.
@@ -837,8 +769,6 @@ Independent implementations of the proposed discovery rule return exactly the in
 **Title**: RFC-040: Metamodel v1.1.0 — the definition-layer train
 
 **RFC Number**: 040
-
-**Status**: implemented
 
 **Author**: #273 planning session (scheduled, complicated-mode), assembling owner rulings of 2026-07-31 … 2026-08-23
 
