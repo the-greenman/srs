@@ -174,7 +174,7 @@ const FIELD_SPECS = [
   [61, 'is_final', { datatype: 'boolean' }, 'Whether this is a terminal state of the lifecycle.'],
   [62, 'status', closed(['active', 'deprecated', 'tombstone', 'retired']), 'The VocabularyEntry status of this lifecycle state itself (distinct from the record-level status a Type\'s Records carry).'],
   [63, 'requires_relation', ref('requires-relation', 'inline', 'single'), 'RFC-022 relational-state obligation gating entry to this lifecycle state.'],
-  [64, 'properties', { datatype: 'map', valueRange: 'open' }, 'Open extension bag for state- or transition-specific metadata not otherwise modelled.'],
+  [64, 'meta', { datatype: 'map', valueRange: 'open' }, 'Open extension bag for state- or transition-specific metadata not otherwise modelled (rfc-decision-6fc7e142: the one escape-bag name, was `properties`).'],
   // -- TypeLifecycle --
   [65, 'states', ref('lifecycle-state', 'inline', 'list', { minItems: 1 }), 'The lifecycle\'s states; at least one, exactly one marked isInitial (Invariant 4).'],
   [66, 'transitions', ref('lifecycle-transition', 'inline', 'list'), 'The lifecycle\'s named state-to-state edges.'],
@@ -356,7 +356,7 @@ const TYPE_SPECS = {
       a('label', false), a('description', false), a('aliases', false),
       a('is_initial', false, 'Is Initial'), a('is_final', false, 'Is Final'),
       a('status', false), a('requires_relation', false, 'Requires Relation'),
-      a('properties', false),
+      a('meta', false),
     ],
   },
   'requires-relation': {
@@ -374,7 +374,7 @@ const TYPE_SPECS = {
     assignments: [
       a('id', false, undefined, 'Stable UUID identity for this transition edge.'),
       a('transition_name', true, 'Name'), a('from', true), a('to', true),
-      a('description', false), a('properties', false),
+      a('description', false), a('meta', false),
     ],
   },
   'field-assignment-override': {

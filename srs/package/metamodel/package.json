@@ -64,7 +64,7 @@
     "fields/is_final.json",
     "fields/status.json",
     "fields/requires_relation.json",
-    "fields/properties.json",
+    "fields/meta.json",
     "fields/states.json",
     "fields/transitions.json",
     "fields/initial_state.json",

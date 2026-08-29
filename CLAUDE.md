@@ -121,7 +121,7 @@ The spec must remain valid without any Rust or JS implementation present. Do not
 
 Do not create records or types under ad-hoc namespaces. Match the namespace to the existing convention for the content you are adding.
 
-**`dataModelRevision` (RFC-033 / #265).** `manifest.json` and package manifests may carry an optional monotonic-integer `dataModelRevision` (absent ⇒ 0) stamping which data-model generation the data satisfies. RFC-032 (`valueType → fieldType`) is migration #1 → revision 1; srs#448 (Tier 1/TypedRecord removed, rfc-decision-53635966) is the migration to revision 4; the spec repo is stamped `dataModelRevision: 4`. Not dotted semver.
+**`dataModelRevision` (RFC-033 / #265).** `manifest.json` and package manifests may carry an optional monotonic-integer `dataModelRevision` (absent ⇒ 0) stamping which data-model generation the data satisfies. RFC-032 (`valueType → fieldType`) is migration #1 → revision 1; srs#448 (Tier 1/TypedRecord removed, rfc-decision-53635966) is the migration to revision 4; srs#433 (substrate escape bag `properties → meta` on Term/RelationTypeDefinition/LifecycleState/LifecycleTransition — rfc-decision-6fc7e142, rfc-decision-628cf6c4) is the migration to revision 5; the spec repo is stamped `dataModelRevision: 5`. Not dotted semver.
 
 ## Rendered Outputs
 

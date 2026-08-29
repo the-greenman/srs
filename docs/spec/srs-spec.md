@@ -802,7 +802,7 @@ Containers are not semantic objects with Fields. They do not own semantic state;
   description?: string      // optional in substrate; specialisations MAY tighten to required
   aliases?: string[]        // alternate keys resolving to this entry
   status?: "active" | "deprecated" | "tombstone" | "retired"   // absent = active (normative)
-  properties?: Record<string, unknown>   // arbitrary metadata; unknown top-level fields rejected
+  meta?: Record<string, unknown>   // arbitrary metadata; unknown top-level fields rejected
   lineage?: Lineage
   provenance?: Provenance
   createdAt: ISO8601
@@ -816,7 +816,7 @@ Containers are not semantic objects with Fields. They do not own semantic state;
 
 **Required-field tightening.** `label` and `description` are optional so an emergent `Term` is valid before prose is written. A specialisation MAY tighten an optional substrate field to required; it MUST NOT relax a required one. `RelationTypeDefinition` requires both `label` and `description` (unchanged from RFC-005).
 
-**One forward-compatibility policy.** Unknown top-level fields are rejected; arbitrary entry metadata goes in `properties`.
+**One forward-compatibility policy.** Unknown top-level fields are rejected; arbitrary entry metadata goes in `meta`.
 
 ### `Vocabulary`
 
@@ -864,7 +864,7 @@ The generalisation of `TagDefinition`. A defined option within a `Vocabulary`.
   aliases?: string[]
   roles?: string[]          // e.g. "foundation", "navigation"
   status?: "active" | "deprecated" | "tombstone" | "retired"
-  properties?: Record<string, unknown>
+  meta?: Record<string, unknown>
   lineage?: Lineage
   provenance?: Provenance
   createdAt: ISO8601
@@ -886,7 +886,7 @@ A substrate specialisation that gives semantic meaning and validation rules to a
   description: string       // required (tightened from substrate)
   aliases?: string[]
   status?: "active" | "deprecated" | "tombstone" | "retired"   // absent = active
-  properties?: Record<string, unknown>   // arbitrary metadata; unknown top-level fields rejected
+  meta?: Record<string, unknown>   // arbitrary metadata; unknown top-level fields rejected
   category: "composition" | "refinement" | "dependency" | "sequence" | "derivation" | "evidence" | "governance" | "association" | "lifecycle" | "provenance" | "other"
   canonicalDirection?: string
   inverseType?: string      // key of the inverse RelationTypeDefinition
@@ -925,7 +925,7 @@ A conforming implementation MUST be able to compute the live tag set and classif
 **Emergence lifecycle** (mirrors tier graduation):
 1. Free string — exists, undefined, valid.
 2. Curate → `Term` — non-destructive; instance carries the same string.
-3. Alias-merge — a surviving Term absorbs another: absorbed key+aliases move to the survivor, absorbed entry removed (its `id` recorded in `properties.mergedFrom` and redirected); zero instance rewrites.
+3. Alias-merge — a surviving Term absorbs another: absorbed key+aliases move to the survivor, absorbed entry removed (its `id` recorded in `meta.mergedFrom` and redirected); zero instance rewrites.
 4. Optional normalize — opt-in operation that rewrites instance strings to the canonical key.
 5. Optional close — promote `mode: open → closed` (V10).
 
@@ -1201,7 +1201,7 @@ A conforming `ext:addressability` implementation must be able to assemble releva
   isInitial?: boolean       // valid starting state for new Records
   isFinal?: boolean         // no outgoing transitions permitted (V9)
   status?: "active" | "deprecated" | "tombstone" | "retired"   // absent = active
-  properties?: Record<string, unknown>
+  meta?: Record<string, unknown>
   lineage?: Lineage
   provenance?: Provenance
   createdAt: ISO8601
@@ -1218,11 +1218,11 @@ A conforming `ext:addressability` implementation must be able to assemble releva
   from: string              // a LifecycleState.key in the effective state set
   to: string                // a LifecycleState.key in the effective state set
   description?: string
-  properties?: Record<string, unknown>
+  meta?: Record<string, unknown>
 }
 ```
 
-`LifecycleTransition` is an edge, not a `VocabularyEntry` (no `key`), but carries `id` so it is addressable. It follows the same forward-compatibility policy as substrate entries: unknown top-level fields rejected; arbitrary metadata in `properties`.
+`LifecycleTransition` is an edge, not a `VocabularyEntry` (no `key`), but carries `id` so it is addressable. It follows the same forward-compatibility policy as substrate entries: unknown top-level fields rejected; arbitrary metadata in `meta`.
 
 #### `Lifecycle` container
 
@@ -2270,7 +2270,7 @@ The statement that "`RelationTypeDefinition` is optional metadata" is superseded
 
 `RelationTypeDefinition` satisfies the `VocabularyEntry` substrate contract. As of RFC-006, its key-role field is renamed from `relationType` to `key`. Instance-side reference fields (`Relation.relationType`) are unchanged.
 
-It gains `properties?: Record<string, unknown>` under the one forward-compatibility policy: unknown top-level fields are rejected; arbitrary entry metadata goes in `properties`.
+It gains `meta?: Record<string, unknown>` under the one forward-compatibility policy: unknown top-level fields are rejected; arbitrary entry metadata goes in `meta`.
 
 It **requires** both `label` and `description` (unchanged from RFC-005). The substrate making these optional in the general contract does not relax this obligation.
 
