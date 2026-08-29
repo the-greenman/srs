@@ -812,3 +812,16 @@ type:com.semanticops.srs/lifecycle-facet
 **Content**: The metamodel v1.1.0 train plan for srs#273 (epic #256 spine task 4a-0): model the live post-#242 definition layer as SRS records (extension facets as separate Types via ext:type-inheritance; the seven nested value objects; the documentation-only FieldAssignment.description slot), remove both defaultValue sites and deprecatedAt per rfc-decision-0225099b and the #234 ruling, add Type.lineage/provenance, add conditional-forbidden with both-emitter conditional projection, teach the emitter the instance-facing (closed-except-meta) vs definition-facing (closed) distinction per rfc-decision-2e0cd70a, execute the reference-taxonomy definition-layer edits (rfc-decision-c8704763) and the RFC-023 sourceRole migration, implement the #274 reader projection (property table primary), and tighten the closure tests to byte-for-byte regeneration including annotations and $defs — the seed remaining authoritative (the #260 authorship flip is excluded on owner hold). Six sequenced execution units; every decision lands with its enforcing mechanism. Zero open decisions; zero parks.
 
 
+**Title**: RFC-041: RecordPropertyView — a row kind for record-level properties in views
+
+**RFC Number**: 041
+
+**Author**: design dialogue draft (from srs-rust#889)
+
+**Affected Components**: ext:views-l1 (view.json — FieldView row model widened to admit RecordPropertyView); ext:views-l2 consumes the widened row list unchanged (no schema edit). Property vocabulary derivation mirrors rfc-decision-c8704763 item 4 (definitionType enum derivation, RFC-040 Change H.4).
+
+**Proposal Artifact Path**: rfcs/rfc-041-record-property-view.md
+
+**Content**: Adds RecordPropertyView as a sibling row kind to FieldView in ext:views-l1's row list (View.fieldViews[]), addressing record-level properties (lifecycleState, tags, createdAt, updatedAt) that sit outside fieldValues and so have no addressing mechanism today. Closes srs-rust#889: since rfc_status retired to the spec-rfc-process Lifecycle (srs#447/PR #507), the rfc-catalog/decision-log lost their rendered Status lines because FieldView only ever addresses fieldId and lifecycleState has no fieldId. RecordPropertyView.property's value domain is a closed, generated enum derived from record.json's own top-level property list, mirroring the derivation already ruled for definitionType (rfc-decision-c8704763 item 4). The FieldView-widening alternative is explicitly rejected (rfc-decision-2a1e1590's state carve-out). Charter Check: cell:description + cell:reference, decision_mode complicated.
+
+
