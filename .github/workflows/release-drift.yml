@@ -62,7 +62,7 @@ env:
   # [R21] and [R11] become fatal to the load for every non-exempt reader. It
   # cannot read the pre-cutover corpus at all, so the #297 corpus migration and
   # this bump necessarily land together.)
-  SRS_RUST_CLI_TAG: v0.1.0-build.300
+  SRS_RUST_CLI_TAG: v0.1.0-build.302
 
 jobs:
   check-release-drift:
