@@ -71,11 +71,12 @@ I-64
 I-65
 I-66
 I-78
+I-145
 -->
 
 **Proposal Artifact Path**: rfcs/rfc-009-root-record-type-anchor.md
 
-**Content**: Adds UUID-based typed anchors to the Blueprint→View→Container linkage: DocumentView.rootTypeRefs (ExactTypeRef[]) for Container matching; Blueprint.rootTypes formally defined as ExactTypeRef[]; containers_for_instance as a normative core operation; Container metadata spec alignment (description, vocabulary-backed tags). Invariants I-63 through I-66 and I-78. Tracked in srs#39 (original), srs#67 (blueprint extension).
+**Content**: Adds UUID-based typed anchors to the Blueprint→View→Container linkage: DocumentView.rootTypeRefs (ExactTypeRef[]) for Container matching; Blueprint.rootTypes formally defined as ExactTypeRef[]; containers_for_instance as a normative core operation; Container metadata spec alignment (description, vocabulary-backed tags). Invariants I-63 through I-66 and I-78. Tracked in srs#39 (original), srs#67 (blueprint extension). Amended by srs#446 (Rev 6): the typing anchor is Container.anchorInstanceId (I-145), not rootInstanceIds[0]; see rfc-decision-cce3c00e.
 
 
 **Title**: RFC-011: DocumentView query extensions — lifecycle-state exclusion and repository-wide type queries
@@ -311,7 +312,7 @@ I-82
 
 **Proposal Artifact Path**: rfcs/rfc-013-required-root-container.md
 
-**Content**: Makes `manifest.container` required, adds a reassignable identity pointer `Container.identityInstanceId` to both Container schemas, and defines a structural navigation model derived from existing primitives (container membership + `precedes` order). Full text: rfcs/rfc-013-required-root-container.md.
+**Content**: Makes `manifest.container` required, adds a reassignable identity pointer `Container.identityInstanceId` to both Container schemas, and defines a structural navigation model derived from existing primitives (container membership + `precedes` order). Full text: rfcs/rfc-013-required-root-container.md. Rev 7 (srs#446): [R9] tightened — a duplicate manifest.container/container-set containerId is fatal under RFC-038 [R12], no precedence; [R5] confirmed as holding without exception now that RFC-009 no longer relies on rootInstanceIds[0] position.
 
 
 **Title**: RFC-015: View-Owned Ordering & Declared Root Presentations

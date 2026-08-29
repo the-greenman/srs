@@ -2,7 +2,7 @@
 
 # RFC-010: Assisted three-way merge for `ext:federation`
 
-**Status**: Draft (Revision 4)
+**Status**: Draft (Revision 5)
 **Affects**: `ext:federation` (`FederationEvent`, `FederationEventsFile`), `Record` type-binding merge semantics, `Relation` merge semantics (`relations-collection.json`), `source-document-meta.json` (merge semantics), `Container` merge semantics, vocabulary-backed tag merge (RFC-006), new `merge-result.json` schema, `federation-events.json` schema
 **Author**: Peter Brownell
 **Date**: 2026-06-13
@@ -18,6 +18,7 @@
 | 2 | 2026-06-13 | Address review findings. **Blocking:** rewrite relation merge against the real point-to-point `Relation` model (no `members[]` in 2.0 schema) — ordering is graph reconciliation over pairwise `precedes` edges with a concrete edge-delta algorithm; add `relation-dangling-endpoint` conflict and post-merge referential-integrity rule (I-75). **Should-fix:** rename `MergeResult.strategy`→`mergeStrategy` and `mergedInstanceIds`→`mergedSubjectIds`; add `tag-resolution` (I-76) and `container-root` conflicts; cross-reference RFC-006/RFC-009; designate canonical `MergeBase`; pin `resolution` enum and `MergeConflict` required fields; specify federation-events property placement; note per-kind resolution restriction is validation-enforced; handle adversarial duplicate Note section names; close OQ2. **Nits:** justify `definition-collision` from the spec-level `id@version` rule (not impl type names); clarify I-72 content-vs-label determinism. |
 | 3 | 2026-06-13 | Address Rev 2 review. **Blocking:** pin ordering reconciliation to the canonical `precedes` type only (no schema mechanism exists to mark arbitrary types as "ordering"), removing the classification ambiguity that broke cross-implementation determinism. **Should-fix:** resolve the `auto-union`-vs-empty-`conflicts` contradiction by removing `auto-union` from the `Resolution` enum (clean merges are not conflicts); define `subjectId` for `ordering` (smallest node instanceId) and `tag-resolution`; coalesce `container-meta` to one conflict per container; pin the default resolution set for all unrestricted kinds. **Nits:** reorder I-74 into numeric position; note the deliberate `mergeStrategy` const-vs-enum divergence between `MergeResult` and `FederationEvent`. |
 | 4 | 2026-06-13 | Clarify versioning/addressability relationship. Add `record-type-version` conflict kind + invariant **I-77**: divergent `typeId`/`typeVersion` for the same `instanceId` forces whole-record resolution rather than unsafe cross-type-version field merge. Add Rationale subsection "Relationship to versioning and addressability" — no versioning extension required; definition versioning and record-value history are orthogonal axes; addresses are invariant under merge. |
+| 5 | 2026-08-28 | **Amended by srs#446** (Membership signature, `rfc-decision-cce3c00e`): Container merge no longer treats `rootInstanceIds[0]` as the typing anchor. `rootInstanceIds`/`memberInstanceIds` merge purely as unordered sets; `Container.anchorInstanceId` (RFC-009, amended) is the typing anchor and merges as a declared scalar (`identityInstanceId`'s pattern), with a `container-root` conflict on divergence exactly as before. Pre-#446 containers (no `anchorInstanceId`) compare via the transitional `rootInstanceIds[0]` fallback. |
 
 ---
 
@@ -102,7 +103,7 @@ For each stable UUID present in any of `base`, `ours`, `theirs`, classify and me
 - Same `documentId` with divergent `contentChecksum` on both sides is a `source-document` conflict; its only resolutions are choosing one whole side (`auto-ours`/`auto-theirs`) or `unresolved`. Content is never byte-merged, and the conflict MUST be surfaced, not silently chosen.
 - Sidecar (`.meta.json`) fields merge as a Record would (per-field), independently of the binary content.
 
-**Containers.** Containers carry no `fieldValues`. Merge `memberInstanceIds` as set-union. For `rootInstanceIds`, the **first entry is the typing anchor** (RFC-009): it determines the Container's type identity and which DocumentViews apply. If both sides retain the same `rootInstanceIds[0]`, merge the remainder as set-union cleanly. If `rootInstanceIds[0]` diverges between the two sides relative to `base`, emit a `container-root` conflict — this is a semantic divergence of the Container's type, not a clean union. Divergent `title`/`containerType`/`description` for the same `containerId` is a `container-meta` conflict.
+**Containers (amended by srs#446).** Containers carry no `fieldValues`. Merge `rootInstanceIds` and `memberInstanceIds` as set-union — both are unordered sets (RFC-013 [R5]) with no positional significance. `Container.anchorInstanceId` is the typing anchor (RFC-009, amended): it determines the Container's type identity and which DocumentViews apply, and — being a single declared scalar rather than an array position — it merges the way `identityInstanceId` merges, not the way a set field merges. If both sides retain the same `anchorInstanceId` (or both have it absent and, under the transitional fallback, agree on `rootInstanceIds[0]`), merge the remainder as set-union cleanly. If `anchorInstanceId` diverges between the two sides relative to `base`, emit a `container-root` conflict — this is a semantic divergence of the Container's type, not a clean union. A pre-#446 container merging against a post-#446 container (one side has `anchorInstanceId`, the other only the positional fallback) resolves the anchor by comparing the declared value against the fallback-derived value on the side that lacks it — a mismatch is still `container-root`, never silently resolved by precedence (Earth: identity conflicts are fatal, never resolved by precedence). Divergent `title`/`containerType`/`description` for the same `containerId` is a `container-meta` conflict.
 
 **Tags (vocabulary-coupled).** `Record.tags`, `Note.tags`, and `Container.tags` merge as set-union. Because tags may be vocabulary-backed (RFC-006: when a closed `Vocabulary` governs a tag key, the tag MUST resolve to a `Term`), a union-merged tag set is **re-validated against the merged package after definition merge completes**. Any merged tag that fails vocabulary resolution under the merged package MUST be surfaced as a `tag-resolution` conflict (see [I-76]) — for example when one side's tag depends on a `Vocabulary` that the definition merge surfaced as a `definition-collision`.
 
@@ -150,7 +151,8 @@ ConflictKind =
   | "ordering"                  // combined ordering edges are not a single total order
   | "definition-collision"      // same id@version, differing content
   | "source-document"           // same documentId, divergent binary contentChecksum
-  | "container-root"            // rootInstanceIds[0] (the type anchor) diverged
+  | "container-root"            // anchorInstanceId (the type anchor) diverged; pre-srs#446
+                                 // containers compare via the rootInstanceIds[0] fallback
   | "container-meta"            // container title/containerType/description diverged
   | "tag-resolution"            // a union-merged tag does not resolve against the merged Vocabulary
 
