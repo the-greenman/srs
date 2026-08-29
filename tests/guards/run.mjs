@@ -1163,14 +1163,15 @@ async function charterAlignmentSectionCases(root) {
     { exit: 0, contains: ["Checking RFC integration... OK"] },
   );
 
-  // RFC-040 is individually grandfathered — created after the floor, but before the Charter Check
-  // stage existed at all. Confirms the escape hatch is number-scoped, not a floor-date change.
+  // RFC-040's individual grandfather retired (srs#498 backfilled its section): RFC number "040"
+  // is no longer special-cased — a post-floor RFC numbered 040 with no section still fails, the
+  // same as any other post-floor RFC. Regression guard against the escape hatch reappearing.
   await writeJson(recordPath, record(manifestBlock(), { num: "040" }));
   await writeText(mdPath, `${statusLine}## Abstract\n\nFixture RFC body.\n`);
   expect(
-    "does not require the section on the individually grandfathered RFC-040",
+    "requires the section on RFC-040 like any other post-floor RFC (grandfather retired)",
     runCheck("check-rfc-integration.mjs", root),
-    { exit: 0, contains: ["Checking RFC integration... OK"] },
+    { exit: 1, contains: ["RFC-040", "carries no", "## Charter alignment"] },
   );
 }
 
