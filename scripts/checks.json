@@ -112,6 +112,15 @@
       "description": "No sourceRef under srs/records may still carry the legacy relationType field; names the migration explicitly rather than surfacing only as a generic schema-validation error."
     },
     {
+      "id": "substrate-properties-to-meta-migration-applied",
+      "script": "migrate-substrate-properties-to-meta.mjs",
+      "args": ["--check"],
+      "tier": "always",
+      "cell": "governance",
+      "governing": "rfc-decision-6fc7e142; rfc-decision-628cf6c4; srs#433",
+      "description": "The substrate escape-bag rename stays fully applied: no Term, RelationTypeDefinition, LifecycleState, or LifecycleTransition anywhere in the repo may still carry the legacy `properties` key."
+    },
+    {
       "id": "field-name-convention",
       "script": "check-field-name-convention.mjs",
       "args": [],
