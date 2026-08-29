@@ -35,9 +35,10 @@
  *      section, its `**Cell(s):**` line names the same cell:<slug> set as the manifest's cell:
  *      tokens, and it carries a `**Decision mode:**` line naming a legal decision_mode
  *      (rfc-decision-7caca3a1). Presence and cell-token consistency only — never prose quality,
- *      a guard cannot judge judgment. RFC-040 (created 2026-08-24) predates the Charter Check
+ *      a guard cannot judge judgment. RFC-040 (created 2026-08-24) predated the Charter Check
  *      stage itself, which did not exist in written form until this rule landed on 2026-08-26; it
- *      is individually grandfathered below rather than weakening the floor date.
+ *      was individually grandfathered until srs#498 backfilled its section, retiring the
+ *      grandfather — no RFC is exempted from this check any more.
  *
  * Plus a repo guard: every discovered instance parses and is reachable under a reserved
  * instance root (RFC-038 [R1]/[R3] — the manifest no longer carries an instanceIndex).
@@ -102,12 +103,10 @@ const CELL_RULE_FLOOR = CELL_RULE_EFFECTIVE_DATE;
 const CHARTER_ALIGNMENT_FLOOR = CELL_RULE_EFFECTIVE_DATE;
 const DECISION_MODES = new Set(["clear", "complicated", "complex", "chaotic", "unresolved"]);
 
-// RFC-040 (createdAt 2026-08-24) postdates CHARTER_ALIGNMENT_FLOOR but predates the Charter Check
-// stage's own existence (srs#463 landed 2026-08-26) — the section format did not exist in written
-// form when it was authored. Grandfathered individually, by RFC number, rather than moving the
-// floor date the cell rule (#5, srs#462) already shares. Follow-up: the-greenman/srs#498 tracks
-// backfilling its Charter alignment section.
-const CHARTER_ALIGNMENT_GRANDFATHERED = new Set(["040"]);
+// RFC-040's individual grandfather (createdAt 2026-08-24, postdating CHARTER_ALIGNMENT_FLOOR but
+// predating the Charter Check stage's own existence, srs#463 landed 2026-08-26) retired here:
+// srs#498 backfilled its `## Charter alignment` section to the machine-checkable format, so
+// RFC-040 is now checked like any post-floor RFC — no allowlist entry needed.
 
 const failures = [];
 function fail(msg) {
@@ -418,14 +417,13 @@ async function main() {
 
     // 6. (srs#463) the Charter Check's `## Charter alignment` section — presence and cell-token
     // consistency with the integration manifest, plus presence of a legal decision_mode token.
-    // Same floor/allowlist shape as #5: gated on createdAt (never retroactive on unrelated edits),
-    // independent of the check-#4 completeness allowlist, plus its own narrow grandfather set for
-    // an RFC that postdates the floor but predates this stage existing at all.
+    // Same floor shape as #5: gated on createdAt (never retroactive on unrelated edits),
+    // independent of the check-#4 completeness allowlist. RFC-040's individual grandfather
+    // retired (srs#498, its section backfilled) — no allowlist carve-out remains.
     if (
       REQUIRES_INTEGRATION.has(status) &&
       record.createdAt &&
-      record.createdAt >= CHARTER_ALIGNMENT_FLOOR &&
-      !CHARTER_ALIGNMENT_GRANDFATHERED.has(num)
+      record.createdAt >= CHARTER_ALIGNMENT_FLOOR
     ) {
       if (mdText === null) {
         fail(
