@@ -138,6 +138,18 @@ node scripts/publish-spec.mjs
 
 `release-drift.yml` also carries the procedure for advancing the pin (bump the tag and re-render in the same PR). `check-release-drift` is a required check and is **not** part of `validate-all.mjs`.
 
+## Gates and choreography (agent discipline)
+
+- **Both gates, always, by exit code.** `node scripts/validate-all.mjs` and `node scripts/check-release-drift.mjs` are separate commands — the second is NOT inside the first. Never judge by output tails (`| tail` eats exit codes). `validate-all` is registry-driven: any check added or modified must be declared in `scripts/checks.json`, or the membership guard fails.
+- **Fresh worktree from `origin/master` for every unit.** Never work in the main checkout — it may sit on an unrelated branch with local changes.
+- **Stale-local-sibling trap (srs-rust#874).** Anything that can resolve a sibling checkout or PATH binary (`../srs`, `~/.cargo/bin/srs`, `which srs`, `SRS_SPEC_DIR` fallbacks, sync scripts' auto-discovery) must be pointed at a fresh clone of `origin/master` or a checksum-verified release asset. A local green obtained through a stale sibling is not evidence.
+- **Baseline honesty.** A "pre-existing failure" claim is proven against the last GREEN master CI run (check it out and reproduce), never against current master.
+- **Revision-bump choreography, four steps in order:** (1) srs-rust support lands — supported-revision constant + migration-registry entry + fixture test; binary loads old AND new revisions; (2) release cuts with the corpus gate green; (3) the spec-side PR merges; (4) ONE pin advance — srs `SRS_RUST_CLI_TAG` in `.github/workflows/release-drift.yml` re-rendered in the same PR; srs-web `scripts/ensure-bindings.mjs`; muDemocracy.org `scripts/ensure-srs-cli.mjs`. Rev 5 / build.302 is the last bump planned this phase.
+- **Owner-merge.** Every PR carries `epic-256:owner-merge`; agents never merge; conflicts are resolved by grafting complete blocks (functions + helpers + call sites), never whole-file ours/theirs.
+- **Revival rule.** A branch or worktree that predates the newest decision record (`srs/records/tier-2/rfc-decision-*`) is re-derived against the decision log before shipping — conformance, not compilation, is the test.
+- **Tool gaps are findings.** If the CLI cannot express an operation, file the srs-rust issue and park; never hand-edit around it (the mimicry rule in `srs-usage.md`).
+- **SRS data edits go through the CLI/MCP** (`record update` is whole-object); rendered exports regenerate via `publish-spec.mjs` with the pinned CLI.
+
 ## Project & priority management
 
 Issues across the ecosystem are tracked on **Project #5 "SRS"** and prioritised **top-down from
