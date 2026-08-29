@@ -1087,10 +1087,10 @@ async function charterAlignmentSectionCases(root) {
     typeName: "rfc",
     fieldValues: {
       rfc_number: num,
-      rfc_status: "accepted",
       proposal_artifact_path: "rfcs/fixture.md",
       affected_components: affectedComponents,
     },
+    lifecycleState: "accepted", // srs#447: rfc_status retired, spec-rfc-process Lifecycle owns this
     createdAt,
   });
 

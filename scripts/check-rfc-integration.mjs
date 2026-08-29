@@ -21,9 +21,9 @@
  *     -->
  *
  * For every RFC record the gate checks:
- *   1. rfc-status is a legal enum value                    (catches the `in-progress` corruption)
+ *   1. lifecycleState is a legal state key (ext:lifecycle, spec-rfc-process; srs#447)  (catches the `in-progress` corruption)
  *   2. proposal-artifact-path is present and exists on disk
- *   3. the .md `**Status**:` line agrees with the record rfc-status
+ *   3. the .md `**Status**:` line agrees with the record's lifecycleState
  *   4. for status in {accepted, implemented} and not grandfathered: the integration manifest is
  *      non-empty and every declared token resolves to an existing canonical record/schema.
  *   5. (srs#462) for an RFC created on or after 2026-08-23: the manifest names at least one
@@ -64,7 +64,6 @@ const ALLOWLIST = join(ROOT, "rfcs", "integration-allowlist.json");
 // --- entity + field ids (verified against records on disk) ---------------------------------
 const RFC_TYPE_ID = "6a000001-0000-4000-a000-000000000001";
 const F_RFC_NUMBER = "rfc_number"; // RFC-039: carrier keys by Field.name
-const F_STATUS = "rfc_status";
 const F_AFFECTED = "affected_components";
 const F_ARTIFACT_PATH = "proposal_artifact_path";
 
@@ -343,13 +342,13 @@ async function main() {
     rfcCount++;
 
     const num = fieldValue(record, F_RFC_NUMBER);
-    const status = fieldValue(record, F_STATUS);
+    const status = record.lifecycleState; // srs#447: rfc_status retired — the spec-rfc-process Lifecycle owns this now
     const artifactPath = fieldValue(record, F_ARTIFACT_PATH);
     const label = `RFC-${num ?? `?(${recPath})`}`;
 
     // 1. status legality
     if (!LEGAL_STATUSES.has(status)) {
-      fail(`${label}: illegal rfc-status "${status}" (legal: ${[...LEGAL_STATUSES].join(", ")})`);
+      fail(`${label}: illegal lifecycleState "${status}" (legal: ${[...LEGAL_STATUSES].join(", ")})`);
     }
     if (!num) fail(`${label}: missing rfc-number (${recPath})`);
 
@@ -366,7 +365,7 @@ async function main() {
         // 3. .md status consistency
         const mdStatus = parseMdStatus(mdText);
         if (mdStatus && LEGAL_STATUSES.has(mdStatus) && mdStatus !== status) {
-          fail(`${label}: .md status "${mdStatus}" != record rfc-status "${status}" (${artifactPath})`);
+          fail(`${label}: .md status "${mdStatus}" != record lifecycleState "${status}" (${artifactPath})`);
         }
         if (mdStatus && !LEGAL_STATUSES.has(mdStatus)) {
           fail(`${label}: .md **Status**: "${mdStatus}" is not a legal status (${artifactPath})`);
@@ -401,7 +400,7 @@ async function main() {
     // one — the existing corpus is grandfathered by the createdAt test itself, not by an allowlist
     // entry. Also independent of REQUIRES_INTEGRATION's allowlist check, though still scoped to
     // accepted/implemented status, since only an RFC that has actually been accepted has "named
-    // its cell" to check. Gated on createdAt, not rfc_status, so a pre-existing RFC that is merely
+    // its cell" to check. Gated on createdAt, not lifecycleState, so a pre-existing RFC that is merely
     // re-edited today does not retroactively acquire the requirement — createdAt is stamped once
     // and does not move when unrelated fields change.
     const manifestCellTokens = new Set(

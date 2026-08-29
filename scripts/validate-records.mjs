@@ -38,7 +38,10 @@ async function findRecordFiles(dir, basePath = '') {
 
     if (entry.isDirectory()) {
       files.push(...await findRecordFiles(fullPath, relativePath));
-    } else if (entry.name.endsWith('.json')) {
+    } else if (entry.name.endsWith('.json') && !entry.name.endsWith('.revisions.json')) {
+      // `.revisions.json` is an ext:addressability sidecar (per-field revision history), not an
+      // instance — same exclusion as rfc-038-tree.mjs's walkJson, restated here because this
+      // walk predates that shared helper and hasn't been unified with it (srs#447 fixup).
       files.push({ fullPath, relativePath });
     }
   }
