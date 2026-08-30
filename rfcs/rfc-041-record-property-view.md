@@ -1,6 +1,6 @@
 # RFC-041: RecordPropertyView — a row kind for record-level properties in views
 
-**Status**: Draft (Revision 1)
+**Status**: Accepted (Revision 2)
 **Affects**: `ext:views-l1` (`view.json` — the `FieldView` row model), `ext:views-l2` (consumes the widened row list unchanged — no schema edit there)
 **Builds on**: RFC-015 (view-owned presentation), RFC-027 (`relationsPresentation` — sibling per-class precedent), RFC-037 (field-row rendering baseline, reused for value rendering), `rfc-decision-2a1e1590` (state carve-out), `rfc-decision-c8704763` (reference-taxonomy enum-derivation precedent)
 **Author**: design dialogue draft (from srs-rust#889)
@@ -13,6 +13,7 @@
 | Rev | Date | Summary |
 |---|---|---|
 | 1 | 2026-08-29 | Initial draft |
+| 2 | 2026-08-30 | Accepted. The design previously approved in PR #514 is enacted without design changes: the schema widening and deterministic record-property enum derivation land as specified. |
 
 ---
 

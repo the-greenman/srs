@@ -8,12 +8,12 @@
     "title": "RFC-041: RecordPropertyView — a row kind for record-level properties in views",
     "rfc_number": "041",
     "author": "design dialogue draft (from srs-rust#889)",
-    "affected_components": "ext:views-l1 (view.json — FieldView row model widened to admit RecordPropertyView); ext:views-l2 consumes the widened row list unchanged (no schema edit). Property vocabulary derivation mirrors rfc-decision-c8704763 item 4 (definitionType enum derivation, RFC-040 Change H.4).",
+    "affected_components": "View.fieldViews[] is widened to admit RecordPropertyView; ext:views-l2 consumes the widened row list unchanged (no schema edit). Property vocabulary derivation mirrors rfc-decision-c8704763 item 4 (definitionType enum derivation, RFC-040 Change H.4).\n\n<!-- srs-integration:v1\ncell:description\ncell:reference\next:views-l1\nschema:view.json\n-->",
     "proposal_artifact_path": "rfcs/rfc-041-record-property-view.md",
     "content": "Adds RecordPropertyView as a sibling row kind to FieldView in ext:views-l1's row list (View.fieldViews[]), addressing record-level properties (lifecycleState, tags, createdAt, updatedAt) that sit outside fieldValues and so have no addressing mechanism today. Closes srs-rust#889: since rfc_status retired to the spec-rfc-process Lifecycle (srs#447/PR #507), the rfc-catalog/decision-log lost their rendered Status lines because FieldView only ever addresses fieldId and lifecycleState has no fieldId. RecordPropertyView.property's value domain is a closed, generated enum derived from record.json's own top-level property list, mirroring the derivation already ruled for definitionType (rfc-decision-c8704763 item 4). The FieldView-widening alternative is explicitly rejected (rfc-decision-2a1e1590's state carve-out). Charter Check: cell:description + cell:reference, decision_mode complicated."
   },
-  "lifecycleState": "draft",
+  "lifecycleState": "accepted",
   "createdAt": "2026-08-29T11:32:56.451566240+00:00",
-  "updatedAt": "2026-08-29T11:32:56.451571892+00:00",
+  "updatedAt": "2026-08-30T11:22:24.881673180+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
