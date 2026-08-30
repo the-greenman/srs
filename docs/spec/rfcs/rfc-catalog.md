@@ -818,7 +818,14 @@ type:com.semanticops.srs/lifecycle-facet
 
 **Author**: design dialogue draft (from srs-rust#889)
 
-**Affected Components**: ext:views-l1 (view.json — FieldView row model widened to admit RecordPropertyView); ext:views-l2 consumes the widened row list unchanged (no schema edit). Property vocabulary derivation mirrors rfc-decision-c8704763 item 4 (definitionType enum derivation, RFC-040 Change H.4).
+**Affected Components**: View.fieldViews[] is widened to admit RecordPropertyView; ext:views-l2 consumes the widened row list unchanged (no schema edit). Property vocabulary derivation mirrors rfc-decision-c8704763 item 4 (definitionType enum derivation, RFC-040 Change H.4).
+
+<!-- srs-integration:v1
+cell:description
+cell:reference
+ext:views-l1
+schema:view.json
+-->
 
 **Proposal Artifact Path**: rfcs/rfc-041-record-property-view.md
 

@@ -1613,6 +1613,37 @@ A field reference within a View. Controls presentation for this View without alt
 
 A Field hidden with `visible: false` remains in the Record and may appear in other Views. `visible` controls rendered text output only. A field with `visible: false` must still be included in any structured projection or export of this view. To exclude a field from both rendered output and structured projections, omit it from `fieldViews[]` entirely.
 
+#### `RecordPropertyView` (RFC-041)
+
+A sibling row kind to `FieldView` in the same `View.fieldViews[]` list. It presents a top-level Record property without treating that property as a Field.
+
+```typescript
+{
+  property: "lifecycleState" | "tags" | "createdAt" | "updatedAt"
+  order: integer      // min: 0; shared display-order axis with FieldView
+  displayLabel?: string
+  visible?: boolean   // default: true
+}
+```
+
+The `property` enum is closed and generated from `record.json`'s declared top-level properties after excluding identity/type-binding properties (`$schema`, `instanceId`, `typeId`, `typeVersion`, `typeNamespace`, `typeName`), carriers (`fieldValues`, `fieldMeta`), the open `meta` bag, and `sourceRefs` (deferred because no composite-object-array field-row form is defined). `required`, `editorHintOverride`, and `compositeRenderer` do not apply to this row kind.
+
+Rows of both kinds are interleaved by their shared `order`. Labels resolve from `displayLabel`, then default to `Status`, `Tags`, `Created`, or `Updated`. `lifecycleState` resolves through the bound Lifecycle state's label when possible and otherwise renders the raw key. Tags use the RFC-037 multi-entry form; timestamps render as raw ISO-8601 strings. An absent or empty value omits the row without invalidating the Record or View.
+
+##### Conformance Rules (RFC-041)
+
+**[R1]** A View's row list (`fieldViews[]`) admits two mutually exclusive row kinds discriminated by the presence of `fieldId` (`FieldView`) XOR `property` (`RecordPropertyView`); a row item carrying neither key, or both, MUST be rejected as invalid.
+
+**[R2]** `RecordPropertyView.property` MUST be a value in the closed, generated enum. An implementation encountering an unrecognized value MUST reject it as a validation diagnostic; it MUST NOT silently accept or ignore it.
+
+**[R3]** Implementations rendering `RecordPropertyView` rows MUST NOT special-case any property name outside the mechanism defined above. The per-property default-label table and value-resolution rule above are the full extent of per-property variation; no boolean flag and no property-specific schema property may be added to `DocumentSection`, `FieldView`, or `View` for any record-level property.
+
+**[R4]** A `RecordPropertyView` row whose named property is absent or empty on the Record being rendered MUST be omitted from render output; this MUST NOT be treated as a validation failure of either the Record or the View.
+
+**[R5]** The `RecordPropertyView.property` enum in `view.json` MUST be regenerated — never hand-edited — whenever `record.json`'s set of top-level properties, with the exclusions above, changes. `validate-all.mjs` MUST run the derivation's `--check` guard.
+
+**[R6]** `lifecycleState` row-value resolution MUST use the bound Lifecycle's `LifecycleState.label` when the Record's Type carries a `lifecycleRef` and the state key resolves against it; otherwise the raw state key renders verbatim. No other humanization applies.
+
 #### `ExportConfig`
 
 Configuration for rendering a Record through this View as an exportable document.
@@ -1647,7 +1678,7 @@ A versioned presentation and export configuration over a field set. A View is co
   // purpose: the workflow context this View serves
   // extraction: session-level framing injected before field extraction
 
-  fieldViews: FieldView[]
+  fieldViews: (FieldView | RecordPropertyView)[]
 
   compatibleTypes?: string[]
   // Optional semanticObjectType hints this View was designed for.

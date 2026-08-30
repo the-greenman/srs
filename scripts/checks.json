@@ -149,6 +149,15 @@
       "description": "package-bundle.json's $defs.Reference.definitionType enum is GENERATED from package-manifest.json's declared definition kinds, so the two lists cannot independently diverge (finding A6)."
     },
     {
+      "id": "record-property-view-enum-sync",
+      "script": "gen-record-property-view-enum.mjs",
+      "args": ["--check"],
+      "tier": "always",
+      "cell": "reference",
+      "governing": "RFC-041 Change B; RFC-041 [R5]",
+      "description": "view.json's RecordPropertyView.property enum is GENERATED from record.json's declared top-level properties after RFC-041's explicit exclusions, so the two lists cannot independently diverge."
+    },
+    {
       "id": "publication-reachability",
       "script": "check-publication-reachability.mjs",
       "args": [],
