@@ -1628,7 +1628,7 @@ A sibling row kind to `FieldView` in the same `View.fieldViews[]` list. It prese
 
 The `property` enum is closed and generated from `record.json`'s declared top-level properties after excluding identity/type-binding properties (`$schema`, `instanceId`, `typeId`, `typeVersion`, `typeNamespace`, `typeName`), carriers (`fieldValues`, `fieldMeta`), the open `meta` bag, and `sourceRefs` (deferred because no composite-object-array field-row form is defined). `required`, `editorHintOverride`, and `compositeRenderer` do not apply to this row kind.
 
-Rows of both kinds are interleaved by their shared `order`. Labels resolve from `displayLabel`, then default to `Status`, `Tags`, `Created`, or `Updated`. `lifecycleState` resolves through the bound Lifecycle state's label when possible and otherwise renders the raw key. Tags use the RFC-037 multi-entry form; timestamps render as raw ISO-8601 strings. An absent or empty value omits the row without invalidating the Record or View.
+Rows of both kinds are interleaved by their shared, unique `order`. `View.fieldViews[].order` is the sole presentation and export ordering mechanism: `ExportConfig` cannot reorder rows. Labels resolve from `displayLabel`, then default to `Status`, `Tags`, `Created`, or `Updated`. `lifecycleState` resolves through the bound Lifecycle state's label when possible and otherwise renders the raw key. Tags use the RFC-037 multi-entry form; timestamps render as raw ISO-8601 strings. An absent or empty value omits the row without invalidating the Record or View.
 
 ##### Conformance Rules (RFC-041)
 
@@ -1644,6 +1644,8 @@ Rows of both kinds are interleaved by their shared `order`. Labels resolve from 
 
 **[R6]** `lifecycleState` row-value resolution MUST use the bound Lifecycle's `LifecycleState.label` when the Record's Type carries a `lifecycleRef` and the state key resolves against it; otherwise the raw state key renders verbatim. No other humanization applies.
 
+**[R7]** Every `order` value in a View's mixed `fieldViews[]` row list MUST be unique. A duplicate is a validation error. Implementations MUST render rows in ascending `order`, yielding one deterministic total presentation sequence across FieldView and RecordPropertyView rows.
+
 #### `ExportConfig`
 
 Configuration for rendering a Record through this View as an exportable document.
@@ -1656,7 +1658,6 @@ Configuration for rendering a Record through this View as an exportable document
   // Variable substitution uses {{variable-name}} syntax.
   // Standard variables: {{instance-id}}, {{date}}, {{status}}, {{namespace}}, {{name}}
 
-  fieldOrder?: UUID[]    // explicit export field ordering; defaults to fieldViews[].order
   omitEmptyFields?: boolean  // default: false
 }
 ```
@@ -3020,8 +3021,8 @@ Templates that wrap auto-rendered content at each structural level. Each templat
   fieldRow?: string
   // Wraps each field label + value pair.
   // Available: {{field-label}}, {{field-value}}, {{field-name}}, {{content}}
-  // When renderViewId is set, applies after ExportConfig.omitEmptyFields filtering
-  // and ExportConfig.fieldOrder ordering. Does NOT wrap ExportConfig.preamble content.
+  // When renderViewId is set, applies after ExportConfig.omitEmptyFields filtering.
+  // Field rows follow their position in View.fieldViews[].order. Does NOT wrap ExportConfig.preamble content.
 
   groupFieldRowTemplates?: { [fieldName: string]: string }
   // RFC-007 [T-Gx1]–[T-Gx3]: per-field-name templates for individual field rows in group entries.
@@ -3198,7 +3199,7 @@ Variables not applicable to a given template context MUST resolve to an empty st
 
 **[T-9]** A Field listed in `Theme.cssClassFields` generates a CSS class only when it is effective-single (`fieldType.cardinality` absent/`"single"` and, until #242 Phase B, effective `FieldAssignment.repeatable !== true`), `fieldType.datatype == "string"`, and `fieldType.format` is absent or one of `"plain"` or `"markdown"`. `valueDomain` may be open or closed. URI-, UUID-, and email-formatted strings, list/repeatable Fields, and every non-string or composite datatype are silently skipped. Absent or empty fields generate no class. This preserves scalar legacy `string`, `text`, and `select`; the scalar requirement intentionally closes the previously undefined array-to-one-CSS-class case. (RFC-032 Rev-7 erratum.)
 
-**[T-10]** When `DocumentSection.renderViewId` is set, `fieldRow` MUST be applied to each field row that survives `ExportConfig.omitEmptyFields` filtering and is ordered by `ExportConfig.fieldOrder`. `fieldRow` MUST NOT wrap `ExportConfig.preamble` content.
+**[T-10]** When `DocumentSection.renderViewId` is set, `fieldRow` MUST be applied to each FieldView row that survives `ExportConfig.omitEmptyFields` filtering, in `View.fieldViews[].order`. `fieldRow` MUST NOT wrap RecordPropertyView rows or `ExportConfig.preamble` content.
 
 **[T-11]** Implementations that support `ext:themes-l1` MUST accept `"theme"` as a valid value for `Reference.definitionType` and (when `ext:import-tracking` is also declared) for `ImportRecord.definitionType`. A `definitionType: "theme"` value MUST NOT cause a validation error.
 
@@ -4188,7 +4189,7 @@ The `dependsOn` field on `ProtocolStage` makes this explicit. A stage that depen
 
 The extension is intentionally narrow. It supports inherited fields, added fields, explicit ordering, and presentation/workflow overrides for inherited fields. It does not let a specializing Type change Field semantics or relax base requirements. That keeps the central promise intact: a system that understands the base Type can still process the base portion of a specialized Record.
 
-`Type.fieldOrder` and `ExportConfig.fieldOrder` share a name but operate at different layers. `Type.fieldOrder` is a Type-level ordering declaration over the full effective field list, including inherited fields. `ExportConfig.fieldOrder` is a View export setting that controls rendered output order for a particular presentation. Validators should apply the `fieldAssignmentOverrides` inherited-field restriction only to `fieldAssignmentOverrides`, not to `Type.fieldOrder`.
+`Type.fieldOrder` is a Type-level composition ordering declaration over the full effective field list, including inherited fields. `View.fieldViews[].order` is the sole View-level presentation and export ordering mechanism; it orders both FieldView and RecordPropertyView rows. Validators should apply the `fieldAssignmentOverrides` inherited-field restriction only to `fieldAssignmentOverrides`, not to `Type.fieldOrder`.
 
 ---
 

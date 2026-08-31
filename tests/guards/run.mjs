@@ -322,6 +322,38 @@ async function validatePackageCases(root) {
     contains: ["Checking 1 blueprints definitions against blueprint.json", "✓ Package is valid"],
   });
 
+  // View rows form one mixed FieldView | RecordPropertyView presentation sequence. JSON Schema
+  // cannot express uniqueness by an object property, so validate-package owns this semantic check.
+  const validView = {
+    $schema: "https://srs.semanticops.com/schema/2.0/view.json",
+    id: "00000000-0000-4000-8000-0000000v1001".replace("v", "1"),
+    namespace: "com.example.fixture",
+    name: "fixture-view",
+    version: 1,
+    description: "fixture view",
+    fieldViews: [
+      { fieldId: "00000000-0000-4000-8000-0000000f1001", order: 0 },
+      { property: "lifecycleState", order: 1 },
+    ],
+    createdAt: "2026-08-15T00:00:00Z",
+  };
+  await writeJson(join(pkgDir, "views/fixture.json"), validView);
+  await writeJson(join(pkgDir, "package.json"), { ...manifest, views: ["views/fixture.json"] });
+  expect("accepts a View with unique mixed row orders", run(), {
+    exit: 0,
+    contains: ["Checking 1 views definitions against view.json", "✓ Package is valid"],
+  });
+  await writeJson(join(pkgDir, "views/fixture.json"), {
+    ...validView,
+    fieldViews: [validView.fieldViews[0], { property: "tags", order: 0 }],
+  });
+  expect("rejects duplicate View row orders", run(), {
+    exit: 1,
+    contains: ["views/fixture.json", "fieldViews[1].order 0 duplicates fieldViews[0].order", "View row order must be unique"],
+  });
+  await writeJson(join(pkgDir, "views/fixture.json"), validView);
+  await writeJson(join(pkgDir, "package.json"), manifest);
+
   // The violation #391 is about: a malformed blueprint that passed `validate-all.mjs` in silence,
   // because no schema was ever loaded for the kind. `rootTypes` is required.
   const { rootTypes: _dropped, ...malformed } = validBlueprint;
