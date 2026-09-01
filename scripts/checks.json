@@ -284,6 +284,15 @@
       "description": "Every ext:discovery scenario carrying an expectedSegments expectation has its segment count and order actually evaluated against conformance/discovery/fixture-repo, not just prose-asserted."
     },
     {
+      "id": "ledger-completeness",
+      "script": "check-ledger-completeness.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "reference",
+      "governing": "srs#522",
+      "description": "Every docs/schema/2.0/*.json file has a row in docs/schema/2.0/generation-ledger.md (a backticked mention of its filename is sufficient) — the cheap completeness floor srs#522's ledger unit added, so a new schema file cannot land unclassified."
+    },
+    {
       "id": "release-drift",
       "script": "check-release-drift.mjs",
       "args": [],
