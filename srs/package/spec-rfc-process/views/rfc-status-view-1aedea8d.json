@@ -1,0 +1,47 @@
+{
+  "id": "1aedea8d-107f-40ff-aef3-7ff934776385",
+  "namespace": "com.semanticops.spec",
+  "name": "rfc-status-view",
+  "version": 1,
+  "description": "Renders each RFC's fields plus its Lifecycle-derived Status row (RFC-041), for rfc-document-view.",
+  "fieldViews": [
+    {
+      "fieldId": "1a000001-0000-4000-a000-000000000001",
+      "order": 0
+    },
+    {
+      "fieldId": "5a000001-0000-4000-a000-000000000001",
+      "order": 1
+    },
+    {
+      "property": "lifecycleState",
+      "order": 2,
+      "displayLabel": "Status"
+    },
+    {
+      "fieldId": "5a000003-0000-4000-a000-000000000003",
+      "order": 3
+    },
+    {
+      "fieldId": "5a000009-0000-4000-a000-000000000009",
+      "order": 4
+    },
+    {
+      "fieldId": "5a000010-0000-4000-a000-000000000010",
+      "order": 5
+    },
+    {
+      "fieldId": "5a000016-0000-4000-a000-000000000016",
+      "order": 6
+    },
+    {
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
+      "order": 7
+    }
+  ],
+  "compatibleTypes": [
+    "com.semanticops.spec/rfc"
+  ],
+  "createdAt": "2026-09-01T15:30:38.369873487+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/view.json"
+}

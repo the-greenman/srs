@@ -49,7 +49,10 @@
     "types/rfc-implementation.json",
     "types/rfc-proposed-artifact.json"
   ],
-  "views": [],
+  "views": [
+    "views/rfc-status-view-1aedea8d.json",
+    "views/rfc-decision-status-view-2cd5576f.json"
+  ],
   "documentViews": [
     "document-views/rfc-document-view.json",
     "document-views/rfc-decision-log.json"

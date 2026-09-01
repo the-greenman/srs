@@ -4,6 +4,8 @@
 
 **Title**: Adopt SRS foundational values and a phase-specific temporal stance
 
+**Status**: Accepted
+
 **Decision Date**: 2026-08-02
 
 **Decision Rationale**: Epic 256's audited decision history shows strong preferences for Semantic Integrity and Shared Coherence. Its weaker Evolution tendency reflects the standard's formation phase. The owner ratified data sovereignty through portability as the governing core, accepted evidence-led Evolution for formation, and precommitted the public standard to reverse to Continuity at its first full public release.
@@ -39,6 +41,8 @@
 
 **Title**: Define the SRS decision-log inclusion boundary
 
+**Status**: Accepted
+
 **Decision Date**: 2026-08-02
 
 **Decision Rationale**: The decision log must preserve the reasoning that future contributors need without becoming an archaeological archive or a task list. The muDemocracy guide correctly tests durability, policy effect, trade-offs, and future review value, but its strategy/tactical/operational distinction is too coarse for technical governance. A tactical choice can be mechanically determined; an operational-looking choice can establish a reusable exception or conformance boundary.
@@ -71,6 +75,8 @@
 
 **Title**: Replace valueType with orthogonal fieldType facets
 
+**Status**: Accepted
+
 **Decision Date**: 2026-07-29
 
 **Decision Rationale**: A Field needs independently composable semantic facets. Extending a single valueType enum while retaining parallel patch properties would leave datatype, cardinality, domain, format, and constraints ambiguous and unable to describe the metamodel coherently.
@@ -100,6 +106,8 @@
 
 **Title**: Keep presentation hints outside the semantic type model
 
+**Status**: Accepted
+
 **Decision Date**: 2026-07-29
 
 **Decision Rationale**: Input and display choices describe how a consumer presents meaning, not what the Field means. Keeping them outside fieldType preserves concurrent legitimate views while requiring rendering to own its own portable contract.
@@ -126,6 +134,8 @@
 
 
 **Title**: Express the definition-layer metamodel in its own Field and Type language
+
+**Status**: Accepted
 
 **Decision Date**: 2026-07-29
 
@@ -156,6 +166,8 @@
 
 **Title**: Make projection loss explicit in a per-emitter fidelity contract
 
+**Status**: Accepted
+
 **Decision Date**: 2026-07-29
 
 **Decision Rationale**: Target projections can be useful without being fully lossless, but no emitter may silently erase authoritative meaning. Per-emitter fidelity makes every approximation inspectable, testable, and comparable.
@@ -184,6 +196,8 @@
 
 **Title**: Put a deterministic target-neutral IR between records and emitters
 
+**Status**: Accepted
+
 **Decision Date**: 2026-07-29
 
 **Decision Rationale**: Semantic interpretation must be shared before targets render it. A deterministic neutral intermediate representation prevents each backend from inventing incompatible meanings while preserving target-specific output mechanics.
@@ -210,6 +224,8 @@
 
 
 **Title**: Place composite-renderer dispatch in the view layer
+
+**Status**: Accepted
 
 **Decision Date**: 2026-07-31
 
@@ -241,6 +257,8 @@
 
 **Title**: Generate structural reference projections from semantic records
 
+**Status**: Accepted
+
 **Decision Date**: 2026-07-31
 
 **Decision Rationale**: Resolved semantic records are the structural authority. Narrative stays in authored prose around stable typed slots, while tooling generates the structural reference so hand-authored pseudo-IDL and schemas cannot silently diverge.
@@ -270,6 +288,8 @@
 
 
 **Title**: Use authored Field names as Record value keys
+
+**Status**: Accepted
 
 **Decision Date**: 2026-07-31
 
@@ -302,6 +322,8 @@
 
 **Title**: Make the authoritative store, not the manifest, define repository content
 
+**Status**: Accepted
+
 **Decision Date**: 2026-08-01
 
 **Decision Rationale**: An index can become stale or disagree with the stored objects it claims to enumerate. A common logical store-authority contract makes repository content coherent across backends while leaving each backend free to implement discovery.
@@ -330,6 +352,8 @@
 
 
 **Title**: Land carrier and storage changes as one final generation
+
+**Status**: Accepted
 
 **Decision Date**: 2026-08-01
 
@@ -361,6 +385,8 @@
 
 **Title**: Close definition-layer gaps in the model rather than a remainder overlay
 
+**Status**: Accepted
+
 **Decision Date**: 2026-07-31
 
 **Decision Rationale**: A hand-maintained overlay would make part of SRS meaning repository-specific and non-portable. The model and emitters must instead become expressive enough to carry the live definition layer as one self-contained artifact.
@@ -388,6 +414,8 @@
 
 
 **Title**: Pin the CLI that defines a required semantic drift gate
+
+**Status**: Accepted
 
 **Decision Date**: 2026-08-01
 
@@ -418,6 +446,8 @@
 
 
 **Title**: Defer minting `section-purpose` until the purpose concept converges
+
+**Status**: Accepted
 
 **Decision Date**: 2026-08-10
 
@@ -457,6 +487,8 @@ Deferring the Field does not defer the discipline. Minting is the irreversible a
 
 **Title**: Rename DocumentView to Composition
 
+**Status**: Accepted
+
 **Decision Date**: 2026-08-19
 
 **Decision Rationale**: The corpus itself could not use the old name unambiguously: RFC-015's renderedPresentations.viewId points at a DocumentView, and two entities shared the word "view" across ext:views-l1/ext:views-l2. Composition names exactly what the entity does. The owner had arrived at this name previously and the decision was lost unrecorded — this record exists so it cannot be lost again.
@@ -486,6 +518,8 @@ Deferring the Field does not defer the discipline. Minting is the irreversible a
 
 **Title**: Carry meaning you do not recognise
 
+**Status**: Accepted
+
 **Decision Date**: 2026-08-20
 
 **Decision Rationale**: The governed spec exists so that meaning can be carried: a repository built in one system — and even more importantly, the packages created somewhere — must be shareable. The key motivator is the sharing of practice: fields, types, blueprints and protocols must be portable so that the process of creating meaning is shared, even more than the content itself. Interoperability cannot be sacrificed; extensibility is bounded by it. Silent tolerance (the engine's prior behaviour: a flattened catch-all with no diagnostics) and silent loss are both defects of the same kind — the fix to Postel's law is not less tolerance but mandatory naming of what was tolerated.
@@ -514,6 +548,8 @@ Deferring the Field does not defer the discipline. Minting is the irreversible a
 
 
 **Title**: Defaults arrive later, as one mechanism
+
+**Status**: Accepted
 
 **Decision Date**: 2026-08-21
 
@@ -545,6 +581,8 @@ Deferring the Field does not defer the discipline. Minting is the irreversible a
 
 **Title**: One escape bag, one name: meta
 
+**Status**: Accepted
+
 **Decision Date**: 2026-08-21
 
 **Decision Rationale**: Owner ruling, verbatim: "meta. Don't have two things!" One concept must not carry two names — the same one-way-per-goal principle that collapsed E4/semanticObjectType and rejected parallel default mechanisms, applied to naming. The original option pricing ("breaking is free exactly once" inside the #242/#297 train) expired when that train landed; the owner accepts the standalone breaking cost under the Evolution phase rather than carrying a permanent two-name split whose distinction every future reader must relearn.
@@ -572,6 +610,8 @@ Deferring the Field does not defer the discipline. Minting is the irreversible a
 
 
 **Title**: The Pattern Grid: the preference layer for spec decisions
+
+**Status**: Accepted
 
 **Decision Date**: 2026-08-21
 
@@ -618,6 +658,8 @@ STANDING RULE: every new RFC and decision names its cell. A proposal that contra
 
 **Title**: One state mechanism: workflow status is a Lifecycle
 
+**Status**: Accepted
+
 **Decision Date**: 2026-08-21
 
 **Decision Rationale**: The pattern audit found six parallel status mechanisms with four vocabularies and no two enums equal (findings C12, C13, B14): the fully-specified state machine had zero users in the spec repository while a bare enum carried the spec's primary workflow, and nothing enforced draft-to-proposed-to-accepted or prevented withdrawn-to-implemented. The attestation then showed production muSrs DOES use ext:lifecycle load-bearingly (a five-state governance lifecycle with an excludeLifecycleStates query), turning the question from removal to unification. Conformance's preference (one way over many) picks unification; the owner ruled: make status right - it should be defined as a real lifecycle. Dogfooding also closes the credibility gap of a standard that avoids its own machinery.
@@ -649,6 +691,8 @@ The line this draws: Lifecycle = workflow state on records (Fire, individual: wh
 
 **Title**: Tier 1 was a theory: TypedRecord is removed
 
+**Status**: Accepted
+
 **Decision Date**: 2026-08-21
 
 **Decision Rationale**: The 2026-08-21 attestation found zero TypedRecords in every corpus - production muSrs, the spec's own 384-record repository, and both derivative trees - and zero graduatedAt anywhere. The graduation path has had no middle rung in practice across the system's entire life. Axis 2-8's boundary clause requires evolution decisions to be evidence-led and names speculative elegance as insufficient; a tier that exists only in theory is exactly that. The owner ruled: Tier 1 is a theory... at this point there is no evidence. Lets remove it. The dormancy rule applies: the cell keeps the concept's name and its return trigger.
@@ -676,6 +720,8 @@ The line this draws: Lifecycle = workflow state on records (Fire, individual: wh
 
 
 **Title**: State is mutable, semantics are not: the Fire carve-out, and Revisions and Changelog are removed
+
+**Status**: Accepted
 
 **Decision Date**: 2026-08-21
 
@@ -707,6 +753,8 @@ With the carve-out ruled, the transition-history machinery loses its structural 
 
 
 **Title**: Every reference names its strength: the Reference taxonomy
+
+**Status**: Accepted
 
 **Decision Date**: 2026-08-21
 
@@ -748,6 +796,8 @@ The axis 2-8 corollary, stated once: instances PIN; presentation and dispatch fo
 
 **Title**: Retirement has one way per layer
 
+**Status**: Accepted
+
 **Decision Date**: 2026-08-22
 
 **Decision Rationale**: The audit found nine-plus replacement mechanisms across five layers (supersession inventory) with the same words meaning different things in different enums. The preference layer determined the shape: Reliability over Renewal demands standing contracts hold and renewal be explicit; the three-layer split follows from how each layer is referenced (pinned / keyed / linked). The owner's dispositions had already ruled the parts (deprecation-by-deletion for Fields, substrate status vocabulary, RFC-022 supersession); this record states them once as one system.
@@ -784,6 +834,8 @@ Cross-layer rules: every retirement exception (allowlist entry, grandfather clau
 
 **Title**: A rename is a migration
 
+**Status**: Accepted
+
 **Decision Date**: 2026-08-22
 
 **Decision Rationale**: The audit's naming findings (C8's five spellings, C20's double meaning, A13/C19's stale renamed references) all trace to renames executed partially - the name changed where convenient and lingered elsewhere. Shared Coherence wins by default on axis 3-9, so a name's meaning is system-wide property; changing it locally-only produces exactly the incompatible-interpretation state the axis's boundary clause forbids. The migration framing already governs carrier changes; this extends it to names as such.
@@ -811,6 +863,8 @@ Cross-layer rules: every retirement exception (allowlist entry, grandfather clau
 
 
 **Title**: What a container can hold, a bundle can carry
+
+**Status**: Accepted
 
 **Decision Date**: 2026-08-22
 
@@ -841,6 +895,8 @@ Cross-layer rules: every retirement exception (allowlist entry, grandfather clau
 
 
 **Title**: Attribution is optional, single-shaped, and never authority
+
+**Status**: Accepted
 
 **Decision Date**: 2026-08-22
 
@@ -877,6 +933,8 @@ With the principle ruled, the current machinery's removal (the five divergent sh
 
 
 **Title**: The attested removals: pruning the dormant machinery
+
+**Status**: Accepted
 
 **Decision Date**: 2026-08-22
 
@@ -927,6 +985,8 @@ EXPLICITLY KEPT, with reasons of record:
 
 **Title**: Layers stay separate: the layer rules
 
+**Status**: Accepted
+
 **Decision Date**: 2026-08-22
 
 **Decision Rationale**: The owner's ruling: layers must be kept separate, as a baked decision register. The evidence is the audit's freshest confirmed findings, each a layer violation the grid alone did not name: SectionSource re-implementing the discovery contract inside composition (rule 2), FieldView.required carrying validity in presentation (rule 3), View.exportConfig holding projection config in the presentation layer (rule 1), protection as behavior without a contract (rule 6). Each rule generalizes ground already ruled once (I-28, spec independence, capability layering, view-owned presentation, the three-layer policy) - the register states the stacking discipline in one place instead of leaving it distributed as precedent.
@@ -972,6 +1032,8 @@ THE REVIEW TEST, three questions asked of every proposal alongside its cell: Whi
 
 **Title**: Invariant normativity is RFC acceptance plus projection-root placement
 
+**Status**: Accepted
+
 **Decision Date**: 2026-08-22
 
 **Decision Rationale**: srs#410 (D4 of the #285 disposition batch) originally directed narrowing RFC-016 [R1] on the premise that the three RFC-011 invariant records under package/records/ were unratified. That premise was factually wrong: RFC-011 is Accepted (Revision 1) and the three records (invariant_number 011-1/2/3) are ordinary com.semanticops.spec/invariant records with no proposed/lifecycle marker. With the premise gone, Semantic Integrity points the other way: an accepted normative statement that reaches no reader is the census's own defect class, and RFC-016's founding purpose was precisely that invariants added via the RFC pipeline reach the rendered spec. Rule-text-matches-reality also cuts for the literal [R1] here: the rule was correct, the placement (and therefore the projection) is what failed it. Narrowing [R1] would have fixed the spec to match a buggy outcome. A residual gap remained even after relocation: the three records carried rule-set-qualified invariant_number values (011-1/2/3) that render-invariants.mjs's parseSortKey does not derive a sort key for, and no RFC-016/RFC-011/RFC-039/RFC-020 text nor prior rfc-decision defines one. The owner's 2026-08-22 disposition resolved this under the Evolution-phase default (nothing in the spec is fixed pre-ratification) plus rfc-decision-628cf6c4 (a rename is a migration): renumber to the next sequential canonical I-<n> rather than inventing a second sort-key derivation, since a projected invariant has exactly one numbering form.
@@ -1008,6 +1070,8 @@ THE REVIEW TEST, three questions asked of every proposal alongside its cell: Whi
 
 
 **Title**: Decision modes: rules for the clear, geometry for the complex, a boundary against chaos
+
+**Status**: Accepted
 
 **Decision Date**: 2026-08-23
 
@@ -1047,6 +1111,8 @@ UNRESOLVED (mode not yet determinable) and CONTESTED mode assignments default to
 
 **Title**: The grid grows three operations: reach, sequence, balance
 
+**Status**: Accepted
+
 **Decision Date**: 2026-08-23
 
 **Decision Rationale**: The owner adopted the three on 2026-08-23: practical tools that emerged from a week of work - proven not proposed. Each fills a diagnosed gap in the charter's own arc: reach marking formalizes the distinction the census lacked (the Water column's thinness conflated neglect with jurisdiction); sequence propagation names the causal reading the audit performed ad hoc (B6's knock-on into discovery conformance); cyclical balance converts the one-shot census into standing instrumentation - the presence problem solved for the map itself by cycle discipline, complementing agent enforcement. The adoption is evidence-led (axis 2-8): all three ran operationally in the sibling domain before entering the charter, and two (closure, propagation) have attested instances in this track's own history. They are diagnostic-mode operations per the decision-modes ruling (rfc-decision-7caca3a1): they serve the geometry-for-complexity mechanism, not the rules-for-the-clear path.
@@ -1082,6 +1148,8 @@ UNRESOLVED (mode not yet determinable) and CONTESTED mode assignments default to
 
 **Title**: The grid learns to read: autoclassification and the stance vocabulary
 
+**Status**: Accepted
+
 **Decision Date**: 2026-08-23
 
 **Decision Rationale**: The owner adopted both on 2026-08-23 after reading the Systemic Data Ethics artifact - the third independent domain application of the geometry (columns Alignment/Control/Explainability/Consequences confirming the invariant tetrad), and the one that pioneered the classification move: the grid used not only to locate one's own concerns but to READ OTHER FRAMEWORKS, at scale, with a trained classifier - in 2021, before language models made the mechanism trivial. Both adoptions are proven-in-sibling like the three operations before them (8f5aca2c), and autoclassification closes a loop the charter opened this week: the balance operation needs placements at scale, the #462 slugs provide the label set, and the classification prompt supplies the scale.
@@ -1116,6 +1184,8 @@ Disciplines that bind autoclassification: placements are DIAGNOSTIC-mode input (
 
 **Title**: Type-keyed `type-query`: KEYED namespace/name replaces semanticObjectType dispatch
 
+**Status**: Accepted
+
 **Decision Date**: 2026-08-25
 
 **Decision Rationale**: srs-rust#826's triage surfaced a vendored-seed divergence traced to an unexecuted ruling: the owner already ruled (the one-way-per-goal proving case, E4/semanticObjectType vs the Type system, and #383's 2026-08-15 disposition) that semanticObjectType's parallel type-selection taxonomy collapses into the Type system, but no issue ever scheduled the mechanism. #383's placement decision (2026-08-24) routes the DESIGN of the replacement into this train (RFC-040 Change K) and its EXECUTION to #272. The dispatch form itself is determined, not chosen fresh: rfc-decision-c8704763 already rules that presentation and dispatch follow LINEAGE or KEYED, never PINNED (the axis 2-8 corollary — a composition must not absorb a version bump) and never the retired semanticObjectType string taxonomy (one-way-per-goal). Of the two remaining candidates, KEYED (namespace/name, resolved against the effective package set — the same form typeFilter/typeDispatch already use) is the correct fit: a DocumentSection's type-query selection is a live, version-independent dispatch over whatever Type versions are currently installed, exactly LINEAGE/KEYED's shared use case, and specifically KEYED (not LINEAGE's bare UUID) because the authoring surface for a DocumentSection is human-edited declarative JSON where a namespace/name key is legible and stable across a Type's own version bumps, matching typeFilter's and typeDispatch's existing precedent in the same schema.
@@ -1145,6 +1215,8 @@ Disciplines that bind autoclassification: placements are DIAGNOSTIC-mode input (
 
 
 **Title**: Conformance checks are declared in one registry
+
+**Status**: Accepted
 
 **Decision Date**: 2026-08-26
 
