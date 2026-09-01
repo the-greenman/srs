@@ -1646,6 +1646,12 @@ Rows of both kinds are interleaved by their shared, unique `order`. `View.fieldV
 
 **[R7]** Every `order` value in a View's mixed `fieldViews[]` row list MUST be unique. A duplicate is a validation error. Implementations MUST render rows in ascending `order`, yielding one deterministic total presentation sequence across FieldView and RecordPropertyView rows.
 
+**[R8]** *(Revision 4.)* A `RecordPropertyView` row that is not omitted per [R4] MUST appear in the JSON projection (`document-view-output.json`) of any DocumentView that renders it, as a `ProjectedPropertyRow` (`{ property, label, value }`, Change D) on the record's `properties[]` array, in ascending `order`. `label` and `value` MUST be the *resolved* label and value — the same ones Change C renders into markup, not the raw `property` name alone. An implementation that renders a `RecordPropertyView` row in markup output MUST NOT omit its `ProjectedPropertyRow` from the JSON projection of the same render.
+
+##### JSON projection (RFC-041 Revision 4)
+
+`document-view-output.json`'s `ProjectedRecord` carries an optional `properties[]` array, sibling to its existing `relations[]` (RFC-027) and `fields`/`orderedFieldKeys` (FieldView rows). Each entry is a `ProjectedPropertyRow { property, label, value }`: `property` is the same closed enum value `RecordPropertyView.property` names; `label` and `value` are the *resolved* label and value per Change C — never the raw property name alone. `properties[]` is present only when the rendering section's View declares at least one `RecordPropertyView` row and the record has at least one surviving row, in ascending `order`, the same single axis FieldView and RecordPropertyView rows already share. Owner ruling (2026-09-01, verbatim): "Projections should ideally contain a full machine readable form so that they can enable transformations." — a projection missing content the rendered form carries cannot support the transformations that principle names as the reason projections exist.
+
 #### `ExportConfig`
 
 Configuration for rendering a Record through this View as an exportable document.
