@@ -1,6 +1,6 @@
 # RFC-041: RecordPropertyView — a row kind for record-level properties in views
 
-**Status**: Accepted (Revision 2)
+**Status**: Accepted (Revision 3)
 **Affects**: `ext:views-l1` (`view.json` — the `FieldView` row model), `ext:views-l2` (consumes the widened row list unchanged — no schema edit there)
 **Builds on**: RFC-015 (view-owned presentation), RFC-027 (`relationsPresentation` — sibling per-class precedent), RFC-037 (field-row rendering baseline, reused for value rendering), `rfc-decision-2a1e1590` (state carve-out), `rfc-decision-c8704763` (reference-taxonomy enum-derivation precedent)
 **Author**: design dialogue draft (from srs-rust#889)
@@ -14,6 +14,7 @@
 |---|---|---|
 | 1 | 2026-08-29 | Initial draft |
 | 2 | 2026-08-30 | Accepted. The design previously approved in PR #514 is enacted without design changes: the schema widening and deterministic record-property enum derivation land as specified. |
+| 3 | 2026-08-31 | [R7] unique row order added; `ExportConfig.fieldOrder` retired — `View.fieldViews[].order` is the sole presentation/export ordering. |
 
 ---
 
@@ -124,6 +125,10 @@ For each `RecordPropertyView` row, interleaved with `FieldView` rows strictly by
 > **[R5]** The `RecordPropertyView.property` enum in `view.json` MUST be regenerated — never hand-edited — whenever record.json's set of top-level properties (excluding the identity/type-binding and carrier properties named in Change B) changes. From the point this RFC's Change B lands, `validate-all.mjs` MUST run the derivation's `--check` guard.
 >
 > **[R6]** `lifecycleState` row-value resolution MUST use the bound Lifecycle's `LifecycleState.label` when the Record's Type carries a `lifecycleRef` and the state key resolves against it; otherwise the raw state key renders verbatim. No other humanization applies.
+>
+> **[R7]** Every `order` value in a View's mixed `fieldViews[]` row list MUST be unique. A duplicate is a validation error. Implementations MUST render rows in ascending `order`, yielding one deterministic total presentation sequence across FieldView and RecordPropertyView rows.
+
+**Revision 3.** [R7] retires `ExportConfig.fieldOrder`: with a single mixed row list already carrying one shared, unique `order` axis (Change A, [R1]), a second export-only ordering field on `ExportConfig` was a parallel mechanism for the same goal — one-way-per-goal requires collapsing it. `View.fieldViews[].order` is now the sole presentation and export ordering; `ExportConfig` retains `format`, `preamble`, and `omitEmptyFields` only. Zero corpus usage of `fieldOrder` at retirement.
 
 ---
 
@@ -132,6 +137,7 @@ For each `RecordPropertyView` row, interleaved with `FieldView` rows strictly by
 | Schema file | Change |
 |---|---|
 | `view.json` | `View.fieldViews[]` items become `oneOf: [FieldView, RecordPropertyView]`; add new `$defs.RecordPropertyView` (`property` enum, `order`, `displayLabel?`, `visible?`) per Change A/B. |
+| `view.json` | *(Revision 3)* `ExportConfig.fieldOrder` (`UUID[]`, explicit export field ordering) removed. `View.fieldViews[].order` is the sole presentation/export ordering ([R7]); `ExportConfig` retains `format`, `preamble`, `omitEmptyFields`. `[R1]`'s uniqueness-by-property constraint ([R7]) cannot be expressed in JSON Schema (`uniqueItems` compares whole objects) and is enforced by `scripts/validate-package.mjs` at package-validation time. |
 
 No other schema file changes. `document-view.json` needs no edit — `DocumentSection.renderViewId` already dispatches to a View's `fieldViews[]`, so the new row kind flows through the existing consumption path unchanged. `record.json` needs no edit — its properties are read by the derivation rule, never altered.
 

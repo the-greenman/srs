@@ -76,6 +76,26 @@ function pushSchemaErrors(label, schemaErrors) {
   }
 }
 
+/**
+ * `View.fieldViews` is one mixed presentation sequence (FieldView | RecordPropertyView).
+ * JSON Schema's uniqueItems compares whole objects, so it cannot enforce that their shared
+ * `order` property is unique. Keep the semantic constraint beside schema validation rather than
+ * pretending a duplicate order yields a deterministic presentation.
+ */
+function validateViewRowOrders(label, definition) {
+  if (!Array.isArray(definition.fieldViews)) return;
+  const seen = new Map();
+  definition.fieldViews.forEach((row, index) => {
+    if (!row || typeof row.order !== 'number') return; // structural schema reports this separately
+    const first = seen.get(row.order);
+    if (first !== undefined) {
+      errors.push(`${label}: fieldViews[${index}].order ${row.order} duplicates fieldViews[${first}].order; View row order must be unique`);
+    } else {
+      seen.set(row.order, index);
+    }
+  });
+}
+
 async function validatePackageManifest(dirPath) {
   const manifestPath = join(dirPath, 'package.json');
   const manifest = await loadJson(manifestPath);
@@ -249,6 +269,7 @@ async function main() {
       const definition = await loadJson(fullPath);
       if (!definition) continue;
       pushSchemaErrors(rel(fullPath), validateJsonSchema(definition, schema));
+      if (kind === 'views') validateViewRowOrders(rel(fullPath), definition);
     }
   }
 
