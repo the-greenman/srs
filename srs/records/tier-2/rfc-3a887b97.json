@@ -8,12 +8,12 @@
     "title": "RFC-041: RecordPropertyView — a row kind for record-level properties in views",
     "rfc_number": "041",
     "author": "design dialogue draft (from srs-rust#889)",
-    "affected_components": "View.fieldViews[] is widened to admit RecordPropertyView; ext:views-l2 consumes the widened row list unchanged (no schema edit). Property vocabulary derivation mirrors rfc-decision-c8704763 item 4 (definitionType enum derivation, RFC-040 Change H.4).\n\n<!-- srs-integration:v1\ncell:description\ncell:reference\next:views-l1\nschema:view.json\n-->",
+    "affected_components": "View.fieldViews[] is widened to admit RecordPropertyView; ext:views-l2 consumed the widened row list unchanged through Revision 3. Property vocabulary derivation mirrors rfc-decision-c8704763 item 4 (definitionType enum derivation, RFC-040 Change H.4).\n\nRevision 4 (srs#365, Door 3, srs#512): document-view-output.json's ProjectedRecord gains an optional properties[] array (new .ProjectedPropertyRow) so a non-omitted RecordPropertyView row survives into the JSON projection with its resolved label and value, not just rendered markup ([R8]). Owner ruling (2026-09-01, verbatim): \"Projections should ideally contain a full machine readable form so that they can enable transformations.\" Follow-up: the-greenman/srs-rust#817 (extended scope).\n\n<!-- srs-integration:v1\ncell:description\ncell:reference\next:views-l1\nschema:view.json\nschema:document-view-output.json\n-->",
     "proposal_artifact_path": "rfcs/rfc-041-record-property-view.md",
     "content": "Adds RecordPropertyView as a sibling row kind to FieldView in ext:views-l1's row list (View.fieldViews[]), addressing record-level properties (lifecycleState, tags, createdAt, updatedAt) that sit outside fieldValues and so have no addressing mechanism today. Closes srs-rust#889: since rfc_status retired to the spec-rfc-process Lifecycle (srs#447/PR #507), the rfc-catalog/decision-log lost their rendered Status lines because FieldView only ever addresses fieldId and lifecycleState has no fieldId. RecordPropertyView.property's value domain is a closed, generated enum derived from record.json's own top-level property list, mirroring the derivation already ruled for definitionType (rfc-decision-c8704763 item 4). The FieldView-widening alternative is explicitly rejected (rfc-decision-2a1e1590's state carve-out). Charter Check: cell:description + cell:reference, decision_mode complicated."
   },
   "lifecycleState": "accepted",
   "createdAt": "2026-08-29T11:32:56.451566240+00:00",
-  "updatedAt": "2026-08-30T11:22:24.881673180+00:00",
+  "updatedAt": "2026-09-01T16:48:15.480834359+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

@@ -1,7 +1,7 @@
 # RFC-041: RecordPropertyView — a row kind for record-level properties in views
 
-**Status**: Accepted (Revision 3)
-**Affects**: `ext:views-l1` (`view.json` — the `FieldView` row model), `ext:views-l2` (consumes the widened row list unchanged — no schema edit there)
+**Status**: Accepted (Revision 4)
+**Affects**: `ext:views-l1` (`view.json` — the `FieldView` row model), `ext:views-l2` (`document-view-output.json` — the JSON projection now carries property rows, Revision 4)
 **Builds on**: RFC-015 (view-owned presentation), RFC-027 (`relationsPresentation` — sibling per-class precedent), RFC-037 (field-row rendering baseline, reused for value rendering), `rfc-decision-2a1e1590` (state carve-out), `rfc-decision-c8704763` (reference-taxonomy enum-derivation precedent)
 **Author**: design dialogue draft (from srs-rust#889)
 **Date**: 2026-08-29
@@ -15,6 +15,7 @@
 | 1 | 2026-08-29 | Initial draft |
 | 2 | 2026-08-30 | Accepted. The design previously approved in PR #514 is enacted without design changes: the schema widening and deterministic record-property enum derivation land as specified. |
 | 3 | 2026-08-31 | [R7] unique row order added; `ExportConfig.fieldOrder` retired — `View.fieldViews[].order` is the sole presentation/export ordering. |
+| 4 | 2026-09-01 | Door 3 revision (srs#365, srs#272, srs#512). [R8] added: RecordPropertyView rows MUST appear in the `document-view-output.json` JSON projection, carrying their resolved label and value, on the same terms as they render in markup. Closes the gap srs#365's review found — the exclusion had stood only as an inline `srs-rust` code comment, an implementation deciding spec law. Owner ruling (2026-09-01, verbatim): "Projections should ideally contain a full machine readable form so that they can enable transformations." |
 
 ---
 
@@ -110,6 +111,20 @@ For each `RecordPropertyView` row, interleaved with `FieldView` rows strictly by
 - **Value — `createdAt` / `updatedAt`.** Render the raw ISO-8601 string via RFC-037 Change A's scalar field-row form, verbatim — no date formatting or localization, consistent with the baseline's existing "no markup/format conversion" restraint for field values.
 - **Omission, not failure.** A `RecordPropertyView` row for an absent or empty property value is silently omitted from render output — never a validation failure of the Record or the View, matching `titleFieldId`'s [N+1] and RFC-027's rule-6 "omit, not fail" precedent.
 
+### Change D — *(Revision 4)* Property rows are part of the JSON projection, not just rendered markup
+
+**Projection-completeness principle.** Owner ruling (2026-09-01, verbatim): "Projections should ideally contain a full machine readable form so that they can enable transformations." A `RecordPropertyView` row is real record content, selected and ordered by a View exactly like a `FieldView` row (Change A); a reader of `document-view-output.json` — the machine-readable surface a report generator, chart tool, or static-site generator consumes — has no way to recover a Status/Tags/Created/Updated value that only ever reaches rendered markup. srs#365's review found this gap was papered over by an inline `srs-rust` code comment asserting "RecordPropertyView rows have no JSON-projection field form... and are excluded here" — an implementation deciding spec law that this Revision settles instead as a normative rule.
+
+`ProjectedRecord` (the per-record shape in `document-view-output.json`, `ext:views-l2`) gains an optional `properties[]` array, sibling to its existing `relations[]` (RFC-027) and `fields`/`orderedFieldKeys` (FieldView rows). Each entry is a `ProjectedPropertyRow`:
+
+| Property | Type | Required | Meaning |
+|---|---|---|---|
+| `property` | enum (Change B's closed vocabulary) | yes | Which record-level property this row presents — the same value `RecordPropertyView.property` names. |
+| `label` | string | yes | The row's *resolved* display label per Change C (`displayLabel` override, else the per-property default). |
+| `value` | string, or array of strings for `tags` | yes | The row's *resolved* value per Change C — `lifecycleState` resolved through the bound Lifecycle's label when [R6] applies, otherwise the raw values Change C already defines. |
+
+`properties[]` is present on a `ProjectedRecord` only when the rendering section's View declares at least one `RecordPropertyView` row and the record has at least one surviving (non-omitted, [R4]) row; entries appear in ascending `order` ([R7]), the same single axis `FieldView` and `RecordPropertyView` rows already share — no second ordering is introduced. A property omitted per [R4] is simply absent from `properties[]`, the JSON-side mirror of its omission from rendered markup.
+
 ---
 
 ## Conformance Rules
@@ -127,6 +142,10 @@ For each `RecordPropertyView` row, interleaved with `FieldView` rows strictly by
 > **[R6]** `lifecycleState` row-value resolution MUST use the bound Lifecycle's `LifecycleState.label` when the Record's Type carries a `lifecycleRef` and the state key resolves against it; otherwise the raw state key renders verbatim. No other humanization applies.
 >
 > **[R7]** Every `order` value in a View's mixed `fieldViews[]` row list MUST be unique. A duplicate is a validation error. Implementations MUST render rows in ascending `order`, yielding one deterministic total presentation sequence across FieldView and RecordPropertyView rows.
+>
+> **[R8]** *(Revision 4.)* A `RecordPropertyView` row that is not omitted per [R4] MUST appear in the JSON projection (`document-view-output.json`) of any DocumentView that renders it, as a `ProjectedPropertyRow` (`{ property, label, value }`, Change D) on the record's `properties[]` array, in ascending `order`. `label` and `value` MUST be the *resolved* label and value — the same ones Change C renders into markup, not the raw `property` name alone. An implementation that renders a `RecordPropertyView` row in markup output MUST NOT omit its `ProjectedPropertyRow` from the JSON projection of the same render.
+
+**Revision 4.** [R8] closes the gap srs#365's review found: the JSON projection excluded property rows on the authority of an inline `srs-rust` implementation comment, not a spec rule — Door 3 folds the missing rule into this RFC's own surface rather than leaving an implementation detail stand in for one. This follows directly from the projection-completeness principle stated in Change D: a projection that is missing content the rendered form carries cannot support the transformations the owner ruling names as the reason projections exist.
 
 **Revision 3.** [R7] retires `ExportConfig.fieldOrder`: with a single mixed row list already carrying one shared, unique `order` axis (Change A, [R1]), a second export-only ordering field on `ExportConfig` was a parallel mechanism for the same goal — one-way-per-goal requires collapsing it. `View.fieldViews[].order` is now the sole presentation and export ordering; `ExportConfig` retains `format`, `preamble`, and `omitEmptyFields` only. Zero corpus usage of `fieldOrder` at retirement.
 
@@ -138,8 +157,9 @@ For each `RecordPropertyView` row, interleaved with `FieldView` rows strictly by
 |---|---|
 | `view.json` | `View.fieldViews[]` items become `oneOf: [FieldView, RecordPropertyView]`; add new `$defs.RecordPropertyView` (`property` enum, `order`, `displayLabel?`, `visible?`) per Change A/B. |
 | `view.json` | *(Revision 3)* `ExportConfig.fieldOrder` (`UUID[]`, explicit export field ordering) removed. `View.fieldViews[].order` is the sole presentation/export ordering ([R7]); `ExportConfig` retains `format`, `preamble`, `omitEmptyFields`. `[R1]`'s uniqueness-by-property constraint ([R7]) cannot be expressed in JSON Schema (`uniqueItems` compares whole objects) and is enforced by `scripts/validate-package.mjs` at package-validation time. |
+| `document-view-output.json` | *(Revision 4)* `ProjectedRecord` gains an optional `properties` array of a new `$defs.ProjectedPropertyRow` (`property` enum, `label`, `value`) per Change D/[R8]. `additionalProperties: false` stays intact — `properties` is declared, not merely tolerated. |
 
-No other schema file changes. `document-view.json` needs no edit — `DocumentSection.renderViewId` already dispatches to a View's `fieldViews[]`, so the new row kind flows through the existing consumption path unchanged. `record.json` needs no edit — its properties are read by the derivation rule, never altered.
+`document-view.json` needs no edit — `DocumentSection.renderViewId` already dispatches to a View's `fieldViews[]`, so the new row kind flows through the existing consumption path unchanged. `record.json` needs no edit — its properties are read by the derivation rule, never altered.
 
 Schema changes must be synced to:
 - `srs-rust/crates/srs-schema/schemas/2.0/` (via the release artifact + `scripts/sync-schemas-from-spec.sh`)
@@ -150,6 +170,8 @@ Schema changes must be synced to:
 ## Rationale
 
 The gap srs-rust#889 diagnosed is structural, not cosmetic: `FieldView` only ever addressed `fieldId`, and `lifecycleState` was deliberately made not-a-Field by `rfc-decision-2a1e1590` (state is mutable; Fields are versioned semantic content). Those two facts together mean no existing mechanism could ever have reached `lifecycleState` without either re-Fielding it (reversing a settled ruling) or inventing a per-property special case (reproducing the drift one-way-per-goal exists to prevent). A sibling row kind — the same shape RFC-027 already used for Relations, the third class of record content after Fields and Relations — fills the gap once, generally, for every present and future record-level property, and folds into the *same* ordering list FieldView already uses rather than opening a second one. The property vocabulary's derivation rule is not new invention either: it is the identical discipline `rfc-decision-c8704763` already ruled for `definitionType`, applied to a second enum with the identical shape of problem (a hand-listed vocabulary that must track a single upstream source of truth).
+
+**Revision 4.** Whether a `RecordPropertyView` row belongs in the JSON projection is a normative question about what the projection is *for* — precisely the class of question a spec rule answers and a code comment cannot, however reasonable the comment's author was in the moment. Once Change A already committed to one row list, one ordering axis, and one rendering mechanism for FieldView and RecordPropertyView rows alike, excluding RecordPropertyView rows from the JSON projection while including FieldView rows and RFC-027's relations would have been the exact per-kind special-casing [R3] already forbids for markup rendering — just relocated to the projection surface instead of settled there too.
 
 ---
 

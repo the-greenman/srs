@@ -890,13 +890,16 @@ type:com.semanticops.srs/lifecycle-facet
 
 **Author**: design dialogue draft (from srs-rust#889)
 
-**Affected Components**: View.fieldViews[] is widened to admit RecordPropertyView; ext:views-l2 consumes the widened row list unchanged (no schema edit). Property vocabulary derivation mirrors rfc-decision-c8704763 item 4 (definitionType enum derivation, RFC-040 Change H.4).
+**Affected Components**: View.fieldViews[] is widened to admit RecordPropertyView; ext:views-l2 consumed the widened row list unchanged through Revision 3. Property vocabulary derivation mirrors rfc-decision-c8704763 item 4 (definitionType enum derivation, RFC-040 Change H.4).
+
+Revision 4 (srs#365, Door 3, srs#512): document-view-output.json's ProjectedRecord gains an optional properties[] array (new .ProjectedPropertyRow) so a non-omitted RecordPropertyView row survives into the JSON projection with its resolved label and value, not just rendered markup ([R8]). Owner ruling (2026-09-01, verbatim): "Projections should ideally contain a full machine readable form so that they can enable transformations." Follow-up: the-greenman/srs-rust#817 (extended scope).
 
 <!-- srs-integration:v1
 cell:description
 cell:reference
 ext:views-l1
 schema:view.json
+schema:document-view-output.json
 -->
 
 **Proposal Artifact Path**: rfcs/rfc-041-record-property-view.md
