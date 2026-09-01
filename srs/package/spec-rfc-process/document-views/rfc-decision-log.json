@@ -1,11 +1,9 @@
 {
-  "$schema": "https://srs.semanticops.com/schema/2.0/document-view.json",
   "id": "7a000002-0000-4000-a000-000000000002",
   "namespace": "com.semanticops.spec",
   "name": "rfc-decision-log",
   "version": 1,
   "description": "Renders structured decisions made through the SRS RFC process as an ongoing public decision log.",
-  "format": "markdown",
   "sections": [
     {
       "sectionId": "rfc-decisions",
@@ -15,8 +13,11 @@
         "type": "type-query",
         "semanticObjectType": "com.semanticops.spec/rfc-decision"
       },
+      "renderViewId": "2cd5576f-de83-4326-9ae3-eb9b8d2c49bf",
       "emptyBehavior": "hide"
     }
   ],
-  "createdAt": "2026-08-02T00:00:00Z"
+  "format": "markdown",
+  "createdAt": "2026-08-02T00:00:00Z",
+  "$schema": "https://srs.semanticops.com/schema/2.0/document-view.json"
 }
