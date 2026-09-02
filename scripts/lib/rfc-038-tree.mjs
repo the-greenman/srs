@@ -5,7 +5,10 @@
  * `instanceIndex`, `containerIndex`, `sourceDocumentIndex` or `relationsPath`, and [R2]
  * denies those properties outright at data-model revision >= 2. Relations are one object
  * per file under `relations/` ([R11]); the collection form describes generation-<=1
- * artifacts only.
+ * artifacts only. Revision 12 retired [R3]'s local-package-root instance-anchor branch
+ * (owner ruling 2026-09-02: packages carry definitions, not content; distribution is
+ * slices/seeds) — a reserved instance root is a `records/` directory at the repository
+ * root only, never nested under a local package root.
  *
  * These helpers are the single place the Node scripts enumerate a repository, so the
  * discovery rule is stated once rather than re-derived per script. The `srs` binary is
@@ -16,15 +19,12 @@ import { readdir, readFile } from "fs/promises";
 import { existsSync } from "fs";
 import { join } from "path";
 
-/** Reserved instance roots ([R3]): `records/` at the repository root, and `records/`
- *  immediately below any local package root. */
+/** Reserved instance roots ([R3], Revision 12): `records/` at the repository root only —
+ *  a local package root MUST NOT anchor an instance root (packages carry definitions,
+ *  never instances; content distribution is a slice or a seed). */
 export async function instanceRoots(repoRoot) {
   const roots = [];
   if (existsSync(join(repoRoot, "records"))) roots.push("records");
-  const pkg = join(repoRoot, "package");
-  if (existsSync(join(pkg, "package.json")) && existsSync(join(pkg, "records"))) {
-    roots.push("package/records");
-  }
   return roots;
 }
 

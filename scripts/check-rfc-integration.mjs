@@ -332,8 +332,9 @@ async function main() {
 
   await checkManifestSync(resolvers.indexedPaths);
 
-  // Every RFC-typed record in the repository (records/rfcs/, records/tier-2/, package/records/, …),
-  // discovered via the manifest index — not just files under records/rfcs/.
+  // Every RFC-typed record in the repository (records/rfcs/, records/tier-2/, …), discovered via
+  // the tree walk (RFC-038 [R3], Revision 12: `records/` at the repository root only — a package
+  // root does not anchor an instance root) — not just files under records/rfcs/.
   const rfcRecords = resolvers.rfcRecords;
   let rfcCount = 0;
 
