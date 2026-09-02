@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * tests/guards/run.mjs — the negative tests for the enforcement checks (#308, #311, #391).
+ * tests/guards/run.mjs — the negative tests for the enforcement checks (#308, #311, #391, #522).
  *
  * All three pass over the live tree today, which is the whole problem with trusting them: a check
  * that has never been watched fail is indistinguishable from one that cannot fail. Each case
@@ -1258,6 +1258,38 @@ async function checksRegistryMembershipCases(root) {
   );
 }
 
+// ---- #522 — every docs/schema/2.0/*.json file has a ledger row -----------------------------------
+async function ledgerCompletenessCases(root) {
+  console.log("srs#522 — generation ledger completeness guard");
+
+  const schemaDir = join(root, "docs/schema/2.0");
+  await cp(join(REPO, "docs/schema/2.0"), schemaDir, { recursive: true });
+
+  expect(
+    "passes on the canonical, fully-classified schema set",
+    runCheck("check-ledger-completeness.mjs", root),
+    { exit: 0, contains: ["✓ Every schema file in docs/schema/2.0/ has a row in the generation ledger"] },
+  );
+
+  // The violation this guard exists for: a new schema file lands with no ledger row — exactly the
+  // "unclassified schema" state #522 was filed to close off going forward.
+  const throwaway = join(schemaDir, "widget.json");
+  await writeJson(throwaway, { $schema: "https://json-schema.org/draft/2020-12/schema", title: "fixture" });
+  expect(
+    "rejects a new schema file with no ledger row",
+    runCheck("check-ledger-completeness.mjs", root),
+    { exit: 1, contains: ["widget.json", "no row in docs/schema/2.0/generation-ledger.md"] },
+  );
+
+  // Removing it clears the violation — the guard is not simply always red.
+  await rm(throwaway);
+  expect(
+    "passes again once the unclassified file is gone",
+    runCheck("check-ledger-completeness.mjs", root),
+    { exit: 0, contains: ["✓ Every schema file in docs/schema/2.0/ has a row in the generation ledger"] },
+  );
+}
+
 const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
 try {
   await fieldNameCases(join(root, "field-name"));
@@ -1270,6 +1302,7 @@ try {
   await relationTypeResolutionCases(join(root, "relation-type-resolution"));
   await charterAlignmentSectionCases(join(root, "charter-alignment"));
   await checksRegistryMembershipCases(join(root, "checks-registry-membership"));
+  await ledgerCompletenessCases(join(root, "ledger-completeness"));
 } finally {
   await rm(root, { recursive: true, force: true });
 }
