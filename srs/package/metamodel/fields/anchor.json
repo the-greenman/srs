@@ -1,0 +1,20 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Locator of an excerpt within its parent source document."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Locator of an excerpt within its parent source document.",
+  "id": "4b00008c-0000-4000-a000-00000000008c",
+  "name": "anchor",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "rangeType": {
+      "typeId": "4c000020-0000-4000-a000-000000000020",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

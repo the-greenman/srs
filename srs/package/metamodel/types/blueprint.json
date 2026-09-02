@@ -1,0 +1,66 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a Blueprint: the root Record Types it produces, its Relation structure, and required Types."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:blueprint — declares a document type for Record extraction and container instantiation.",
+  "fields": [
+    {
+      "fieldId": "4b000001-0000-4000-a000-000000000001",
+      "order": 0,
+      "required": true
+    },
+    {
+      "fieldId": "4b000002-0000-4000-a000-000000000002",
+      "order": 1,
+      "required": true
+    },
+    {
+      "fieldId": "4b000003-0000-4000-a000-000000000003",
+      "order": 2,
+      "required": true
+    },
+    {
+      "fieldId": "4b000004-0000-4000-a000-000000000004",
+      "order": 3,
+      "required": true
+    },
+    {
+      "fieldId": "4b000005-0000-4000-a000-000000000005",
+      "order": 4,
+      "required": true
+    },
+    {
+      "fieldId": "4b000076-0000-4000-a000-000000000076",
+      "order": 5,
+      "required": true,
+      "displayLabel": "Root Types"
+    },
+    {
+      "fieldId": "4b000077-0000-4000-a000-000000000077",
+      "order": 6,
+      "required": false
+    },
+    {
+      "fieldId": "4b000078-0000-4000-a000-000000000078",
+      "order": 7,
+      "required": false,
+      "displayLabel": "Required Types"
+    },
+    {
+      "fieldId": "4b00000b-0000-4000-a000-00000000000b",
+      "order": 8,
+      "required": false
+    },
+    {
+      "fieldId": "4b000006-0000-4000-a000-000000000006",
+      "order": 9,
+      "required": true
+    }
+  ],
+  "id": "4c00001b-0000-4000-a000-00000000001b",
+  "name": "blueprint",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Locator value, e.g. \"241-260\", or a human-readable note."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Locator value, e.g. \"241-260\", or a human-readable note.",
+  "id": "4b000091-0000-4000-a000-000000000091",
+  "name": "value",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

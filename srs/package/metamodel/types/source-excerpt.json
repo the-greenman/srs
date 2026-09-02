@@ -1,0 +1,43 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a SourceExcerpt: its parent document, locator, and capture provenance."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-017 — repository-local excerpt provenance: the content file is a frozen captured snippet from another source document in the same repository.",
+  "fields": [
+    {
+      "fieldId": "4b00008b-0000-4000-a000-00000000008b",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Source Document Id"
+    },
+    {
+      "fieldId": "4b00008c-0000-4000-a000-00000000008c",
+      "order": 1,
+      "required": false
+    },
+    {
+      "fieldId": "4b00008d-0000-4000-a000-00000000008d",
+      "order": 2,
+      "required": false,
+      "displayLabel": "Captured At"
+    },
+    {
+      "fieldId": "4b00008e-0000-4000-a000-00000000008e",
+      "order": 3,
+      "required": false,
+      "displayLabel": "Captured By"
+    },
+    {
+      "fieldId": "4b00008f-0000-4000-a000-00000000008f",
+      "order": 4,
+      "required": false,
+      "displayLabel": "Source Checksum At Capture"
+    }
+  ],
+  "id": "4c000021-0000-4000-a000-000000000021",
+  "name": "source-excerpt",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

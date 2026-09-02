@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Denormalized hint: the name of the bound Type. If it conflicts with the resolved Type, typeId wins."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Denormalized hint: the name of the bound Type. If it conflicts with the resolved Type, typeId wins.",
+  "id": "4b00005c-0000-4000-a000-00000000005c",
+  "name": "type_name",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

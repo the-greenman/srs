@@ -1,0 +1,30 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a SourceAnchor: how the excerpt location is expressed and its locator value."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-017 — locates an excerpt within its parent source document.",
+  "fields": [
+    {
+      "fieldId": "4b000090-0000-4000-a000-000000000090",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Kind"
+    },
+    {
+      "fieldId": "4b000091-0000-4000-a000-000000000091",
+      "order": 1,
+      "required": true
+    },
+    {
+      "fieldId": "4b000070-0000-4000-a000-000000000070",
+      "order": 2,
+      "required": false
+    }
+  ],
+  "id": "4c000020-0000-4000-a000-000000000020",
+  "name": "source-anchor",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

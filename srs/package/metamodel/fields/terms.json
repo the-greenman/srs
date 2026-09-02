@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "The Vocabulary's Term entries."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "The Vocabulary's Term entries.",
+  "id": "4b000092-0000-4000-a000-000000000092",
+  "name": "terms",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "cardinality": "list",
+    "rangeType": {
+      "typeId": "4c00001c-0000-4000-a000-00000000001c",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

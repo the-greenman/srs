@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Caveats about quality or completeness of the source material."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Caveats about quality or completeness of the source material.",
+  "id": "4b000088-0000-4000-a000-000000000088",
+  "name": "processing_note",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

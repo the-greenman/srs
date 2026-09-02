@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "When this Vocabulary adds terms to an upstream Vocabulary."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "When this Vocabulary adds terms to an upstream Vocabulary.",
+  "id": "4b00007e-0000-4000-a000-00000000007e",
+  "name": "extends_vocabulary_id",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "format": "uuid"
+  },
+  "version": 1
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Who or what extracted an excerpt."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Who or what extracted an excerpt.",
+  "id": "4b00008e-0000-4000-a000-00000000008e",
+  "name": "captured_by",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

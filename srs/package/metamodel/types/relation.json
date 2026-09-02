@@ -1,0 +1,54 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a Relation: its type, its source and target instances, and provenance."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-038 — a single standalone Relation: a typed binary edge between two instance UUIDs.",
+  "fields": [
+    {
+      "fieldId": "4b000065-0000-4000-a000-000000000065",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Relation Id"
+    },
+    {
+      "fieldId": "4b000066-0000-4000-a000-000000000066",
+      "order": 1,
+      "required": true,
+      "displayLabel": "Relation Type"
+    },
+    {
+      "fieldId": "4b000067-0000-4000-a000-000000000067",
+      "order": 2,
+      "required": true,
+      "displayLabel": "Source Instance Id"
+    },
+    {
+      "fieldId": "4b000068-0000-4000-a000-000000000068",
+      "order": 3,
+      "required": true,
+      "displayLabel": "Target Instance Id"
+    },
+    {
+      "fieldId": "4b000006-0000-4000-a000-000000000006",
+      "order": 4,
+      "required": false
+    },
+    {
+      "fieldId": "4b000069-0000-4000-a000-000000000069",
+      "order": 5,
+      "required": false
+    },
+    {
+      "fieldId": "4b00005f-0000-4000-a000-00000000005f",
+      "order": 6,
+      "required": false,
+      "displayLabel": "Source Refs"
+    }
+  ],
+  "id": "4c000018-0000-4000-a000-000000000018",
+  "name": "relation",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

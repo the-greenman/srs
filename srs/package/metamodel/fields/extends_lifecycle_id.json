@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "When this installable Lifecycle extends an upstream Lifecycle."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "When this installable Lifecycle extends an upstream Lifecycle.",
+  "id": "4b000081-0000-4000-a000-000000000081",
+  "name": "extends_lifecycle_id",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "format": "uuid"
+  },
+  "version": 1
+}

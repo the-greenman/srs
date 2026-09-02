@@ -1,0 +1,43 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a RelationSpec: its relation type, source/target Types, and cardinality/required constraints."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:blueprint — declares an expected Relation between two Record types within a Blueprint.",
+  "fields": [
+    {
+      "fieldId": "4b000066-0000-4000-a000-000000000066",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Relation Type"
+    },
+    {
+      "fieldId": "4b000079-0000-4000-a000-000000000079",
+      "order": 1,
+      "required": true,
+      "displayLabel": "Source Type"
+    },
+    {
+      "fieldId": "4b00007a-0000-4000-a000-00000000007a",
+      "order": 2,
+      "required": true,
+      "displayLabel": "Target Type"
+    },
+    {
+      "fieldId": "4b00007b-0000-4000-a000-00000000007b",
+      "order": 3,
+      "required": false,
+      "displayLabel": "Cardinality"
+    },
+    {
+      "fieldId": "4b000035-0000-4000-a000-000000000035",
+      "order": 4,
+      "required": false
+    }
+  ],
+  "id": "4c00001a-0000-4000-a000-00000000001a",
+  "name": "relation-spec",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

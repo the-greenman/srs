@@ -248,6 +248,15 @@
       "description": "The RFC-035 emitter's whole-entity output is a subset of the frozen seed over the covered authoritative features (discharges RFC-033 [R4](b))."
     },
     {
+      "id": "rfc-272-closure",
+      "script": "rfc-272-closure-test.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "srs#526 (epic #256/#272 Task 4b/2)",
+      "description": "The nine in-scope instance-layer metamodel Types (Record, Note, Relation, Container, Blueprint, Term, Vocabulary, Lifecycle, SourceDocumentMeta) emit output that is a subset of their committed docs/schema/2.0/*.json seed over the covered authoritative features, same discipline as rfc-035-closure. Proves the metamodel could generate these files without overwriting them (authorship flip is #260)."
+    },
+    {
       "id": "schema-regenerate-drift",
       "script": "check-schema-regenerate-drift.mjs",
       "args": [],

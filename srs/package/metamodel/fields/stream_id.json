@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Identifies a stream this source reference belongs to."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Identifies a stream this source reference belongs to.",
+  "id": "4b00006d-0000-4000-a000-00000000006d",
+  "name": "stream_id",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "format": "uuid"
+  },
+  "version": 1
+}

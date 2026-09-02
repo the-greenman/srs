@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Relative path from source-documents/ to the document file (RFC-017)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Relative path from source-documents/ to the document file (RFC-017).",
+  "id": "4b000084-0000-4000-a000-000000000084",
+  "name": "content_path",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

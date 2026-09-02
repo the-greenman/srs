@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "ext:blueprint — expected Relation structure between extracted Records."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:blueprint — expected Relation structure between extracted Records.",
+  "id": "4b000077-0000-4000-a000-000000000077",
+  "name": "structure",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "cardinality": "list",
+    "rangeType": {
+      "typeId": "4c00001a-0000-4000-a000-00000000001a",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

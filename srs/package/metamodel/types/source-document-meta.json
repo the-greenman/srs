@@ -1,0 +1,84 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a SourceDocumentMeta: the document's content locator, type, and provenance."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:repository — metadata sidecar for a source document in source-documents/.",
+  "fields": [
+    {
+      "fieldId": "4b000083-0000-4000-a000-000000000083",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Document Id"
+    },
+    {
+      "fieldId": "4b000084-0000-4000-a000-000000000084",
+      "order": 1,
+      "required": true,
+      "displayLabel": "Content Path"
+    },
+    {
+      "fieldId": "4b000085-0000-4000-a000-000000000085",
+      "order": 2,
+      "required": true,
+      "displayLabel": "Content Type"
+    },
+    {
+      "fieldId": "4b000086-0000-4000-a000-000000000086",
+      "order": 3,
+      "required": false
+    },
+    {
+      "fieldId": "4b000087-0000-4000-a000-000000000087",
+      "order": 4,
+      "required": false
+    },
+    {
+      "fieldId": "4b000061-0000-4000-a000-000000000061",
+      "order": 5,
+      "required": false
+    },
+    {
+      "fieldId": "4b000005-0000-4000-a000-000000000005",
+      "order": 6,
+      "required": false
+    },
+    {
+      "fieldId": "4b000088-0000-4000-a000-000000000088",
+      "order": 7,
+      "required": false,
+      "displayLabel": "Processing Note"
+    },
+    {
+      "fieldId": "4b000089-0000-4000-a000-000000000089",
+      "order": 8,
+      "required": false
+    },
+    {
+      "fieldId": "4b00008a-0000-4000-a000-00000000008a",
+      "order": 9,
+      "required": false
+    },
+    {
+      "fieldId": "4b00000b-0000-4000-a000-00000000000b",
+      "order": 10,
+      "required": false
+    },
+    {
+      "fieldId": "4b000006-0000-4000-a000-000000000006",
+      "order": 11,
+      "required": true
+    },
+    {
+      "fieldId": "4b000030-0000-4000-a000-000000000030",
+      "order": 12,
+      "required": false,
+      "displayLabel": "Imported At"
+    }
+  ],
+  "id": "4c000022-0000-4000-a000-000000000022",
+  "name": "source-document-meta",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

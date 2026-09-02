@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "ext:blueprint — the Record Type(s) this Blueprint produces as root Records."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:blueprint — the Record Type(s) this Blueprint produces as root Records.",
+  "id": "4b000076-0000-4000-a000-000000000076",
+  "name": "root_types",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "cardinality": "list",
+    "rangeType": {
+      "typeId": "4c000005-0000-4000-a000-000000000005",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes one SourceReference: what kind of source it is, its locator, and the role it plays."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-023/RFC-017 — a reference to source material an instance was derived from, evidenced by, or attaches. Modelled once and referenced by Record, Note, and Relation (srs#526, per #272's \"model SourceReference once\" acceptance criterion).",
+  "fields": [
+    {
+      "fieldId": "4b00006a-0000-4000-a000-00000000006a",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Source Type"
+    },
+    {
+      "fieldId": "4b00006b-0000-4000-a000-00000000006b",
+      "order": 1,
+      "required": true,
+      "displayLabel": "Source Id"
+    },
+    {
+      "fieldId": "4b00006c-0000-4000-a000-00000000006c",
+      "order": 2,
+      "required": false,
+      "displayLabel": "Source Standard"
+    },
+    {
+      "fieldId": "4b00006d-0000-4000-a000-00000000006d",
+      "order": 3,
+      "required": false,
+      "displayLabel": "Stream Id"
+    },
+    {
+      "fieldId": "4b00006e-0000-4000-a000-00000000006e",
+      "order": 4,
+      "required": false,
+      "displayLabel": "Source Role"
+    },
+    {
+      "fieldId": "4b00006f-0000-4000-a000-00000000006f",
+      "order": 5,
+      "required": false
+    },
+    {
+      "fieldId": "4b000070-0000-4000-a000-000000000070",
+      "order": 6,
+      "required": false
+    }
+  ],
+  "id": "4c000014-0000-4000-a000-000000000014",
+  "name": "source-reference",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

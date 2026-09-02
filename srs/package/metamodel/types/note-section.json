@@ -1,0 +1,40 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a NoteSection: its key, optional label, content, and content hint."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "One named text section within a Tier 0 Note.",
+  "fields": [
+    {
+      "fieldId": "4b000003-0000-4000-a000-000000000003",
+      "order": 0,
+      "required": true
+    },
+    {
+      "fieldId": "4b00003a-0000-4000-a000-00000000003a",
+      "order": 1,
+      "required": false
+    },
+    {
+      "fieldId": "4b000063-0000-4000-a000-000000000063",
+      "order": 2,
+      "required": true
+    },
+    {
+      "fieldId": "4b000064-0000-4000-a000-000000000064",
+      "order": 3,
+      "required": false,
+      "displayLabel": "Content Hint"
+    },
+    {
+      "fieldId": "4b00000b-0000-4000-a000-00000000000b",
+      "order": 4,
+      "required": false
+    }
+  ],
+  "id": "4c000015-0000-4000-a000-000000000015",
+  "name": "note-section",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

@@ -1,0 +1,52 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a Note: its identity, ordered sections, and source references."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Tier 0 — a lightweight instance with no Type binding. The lowest-ceremony entry point in SRS.",
+  "fields": [
+    {
+      "fieldId": "4b00005a-0000-4000-a000-00000000005a",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Instance Id"
+    },
+    {
+      "fieldId": "4b000061-0000-4000-a000-000000000061",
+      "order": 1,
+      "required": false
+    },
+    {
+      "fieldId": "4b00000b-0000-4000-a000-00000000000b",
+      "order": 2,
+      "required": false
+    },
+    {
+      "fieldId": "4b000062-0000-4000-a000-000000000062",
+      "order": 3,
+      "required": true
+    },
+    {
+      "fieldId": "4b00005f-0000-4000-a000-00000000005f",
+      "order": 4,
+      "required": false,
+      "displayLabel": "Source Refs"
+    },
+    {
+      "fieldId": "4b000006-0000-4000-a000-000000000006",
+      "order": 5,
+      "required": false
+    },
+    {
+      "fieldId": "4b000060-0000-4000-a000-000000000060",
+      "order": 6,
+      "required": false,
+      "displayLabel": "Updated At"
+    }
+  ],
+  "id": "4c000016-0000-4000-a000-000000000016",
+  "name": "note",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

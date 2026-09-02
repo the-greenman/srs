@@ -1,0 +1,77 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes an installable Lifecycle: its states, transitions, and initial state."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "A standalone, installable, referenceable lifecycle container — a closed vocabulary of states plus transitions and an initial state (distinct from the inline type-lifecycle facet).",
+  "fields": [
+    {
+      "fieldId": "4b000001-0000-4000-a000-000000000001",
+      "order": 0,
+      "required": true
+    },
+    {
+      "fieldId": "4b000004-0000-4000-a000-000000000004",
+      "order": 1,
+      "required": true
+    },
+    {
+      "fieldId": "4b000002-0000-4000-a000-000000000002",
+      "order": 2,
+      "required": true
+    },
+    {
+      "fieldId": "4b000003-0000-4000-a000-000000000003",
+      "order": 3,
+      "required": true
+    },
+    {
+      "fieldId": "4b000041-0000-4000-a000-000000000041",
+      "order": 4,
+      "required": true
+    },
+    {
+      "fieldId": "4b000042-0000-4000-a000-000000000042",
+      "order": 5,
+      "required": true
+    },
+    {
+      "fieldId": "4b000043-0000-4000-a000-000000000043",
+      "order": 6,
+      "required": true,
+      "displayLabel": "Initial State"
+    },
+    {
+      "fieldId": "4b000081-0000-4000-a000-000000000081",
+      "order": 7,
+      "required": false,
+      "displayLabel": "Extends Lifecycle Id"
+    },
+    {
+      "fieldId": "4b000082-0000-4000-a000-000000000082",
+      "order": 8,
+      "required": false,
+      "displayLabel": "Extends Lifecycle Version"
+    },
+    {
+      "fieldId": "4b000005-0000-4000-a000-000000000005",
+      "order": 9,
+      "required": false
+    },
+    {
+      "fieldId": "4b00000b-0000-4000-a000-00000000000b",
+      "order": 10,
+      "required": false
+    },
+    {
+      "fieldId": "4b000006-0000-4000-a000-000000000006",
+      "order": 11,
+      "required": true
+    }
+  ],
+  "id": "4c00001f-0000-4000-a000-00000000001f",
+  "name": "lifecycle",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

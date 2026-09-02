@@ -1,0 +1,22 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "RFC-023 SourceReference kind. repository-document is added by ext:repository."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-023 SourceReference kind. repository-document is added by ext:repository.",
+  "id": "4b00006a-0000-4000-a000-00000000006a",
+  "name": "source_type",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "transcript-chunk",
+      "transcript-segment",
+      "external-document",
+      "repository-document"
+    ]
+  },
+  "version": 1
+}

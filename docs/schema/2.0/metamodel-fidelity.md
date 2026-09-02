@@ -56,3 +56,19 @@ The **JSON Schema 2020-12** column is machine-checked at two granularities (both
 
 The `future` columns (protobuf / TypeScript / Rust) are declarative until their emitters land; RFC-035's neutral
 IR is designed so they slot in, at which point each MUST be filled in by the same discipline.
+
+## Instance-layer entities (srs#526, Task 4b/2)
+
+The same JSON Schema 2020-12 column and verification discipline now also covers nine instance-layer
+entities — Record, Note, Relation, Container, Blueprint, Term, Vocabulary, Lifecycle (installable),
+SourceDocumentMeta — proven by `scripts/rfc-272-closure-test.mjs` (`emitter ⊆ committed seed` over
+`docs/schema/2.0/{record,note,relation,container,blueprint,term,vocabulary,lifecycle,
+source-document-meta}.json`), reusing the same comparison machinery as the field/type check
+(`scripts/lib/schema-closure.mjs`). See `docs/schema/2.0/projection-rules.md`'s "Instance-layer
+entities" section for the per-entity exclusions, the `meta`/facing handling, and the one documented
+divergence (`lifecycle.states`, a pre-existing drift between `type.json` and `lifecycle.json`
+surfaced by Field reuse, not created by it). `Record.fieldValues` uses the existing `dependent`
+datatype row above (approximated, deliberately lossy `{}`) — the same mechanism `FieldAssignment`'s
+former default-value facet used, generalized here to "the value is shaped by the sibling `typeId`'s
+resolved Type," which the frozen `dependent` datatype was never designed to express precisely but
+covers adequately as a documented lossy shape.

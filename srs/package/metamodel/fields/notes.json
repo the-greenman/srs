@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Free-form annotation on a Relation."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Free-form annotation on a Relation.",
+  "id": "4b000069-0000-4000-a000-000000000069",
+  "name": "notes",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "ISO-8601 timestamp of the most recent update."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ISO-8601 timestamp of the most recent update.",
+  "id": "4b000060-0000-4000-a000-000000000060",
+  "name": "updated_at",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "date-time"
+  },
+  "version": 1
+}
