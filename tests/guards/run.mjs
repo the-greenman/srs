@@ -663,13 +663,17 @@ async function publicationReachabilityCases(root) {
   // out is unpublished. Otherwise "it is an invariant" would be the rule — and outside this
   // reachability guard's own escape hatch (an exclusion entry), a stray invariant is what
   // check-invariant-placement.mjs (srs#410) exists to reject outright, unconditionally.
+  // (RFC-038 Revision 12 retired the local-package-root instance-anchor branch of [R3] — a package
+  // root no longer anchors an instance root at all, so a record placed there is not discovered as
+  // an instance any more, not merely misplaced. The one-level-out fixture now lives directly under
+  // the sole reserved instance root, `records/`, rather than under `package/records/`.)
   await rm(join(repo, "records/invariants"), { recursive: true });
-  await writeJson(join(repo, "package/records/inv.json"), record(3, "invariant"));
+  await writeJson(join(repo, "records/inv.json"), record(3, "invariant"));
   expect("does not project an invariant outside records/invariants/", runCheck("check-publication-reachability.mjs", root), {
     exit: 1,
-    contains: ["package/records/inv.json", "unreachable from every declared presentation"],
+    contains: ["records/inv.json", "unreachable from every declared presentation"],
   });
-  await rm(join(repo, "package/records"), { recursive: true });
+  await rm(join(repo, "records/inv.json"));
 
   // `document-view.json` admits four source kinds and this guard resolves one. The other three are
   // refused by name rather than skipped: an unresolved section can only shrink the reachable set,
@@ -842,18 +846,15 @@ async function invariantPlacementCases(root) {
   // The violation this guard exists for: an RFC-authoring invariant record that sits outside the
   // projection root. Unlike #285's reachability guard, there is no exclusion file that can clear
   // this — the srs#410 defect was exactly a stale exclusion entry papering over this exact shape.
-  await writeJson(join(repo, "package/package.json"), {
-    id: "00000000-0000-4000-8000-000000000701",
-    namespace: "com.example.fixture",
-    name: "fixture-package",
-    version: "1.0.0",
-  });
-  await writeJson(join(repo, "package/records/stray.json"), invariant(2, "011-1"));
+  // (RFC-038 Revision 12 retired package/records as an instance root altogether — packages carry
+  // definitions, not instances — so the fixture no longer needs a package root at all; it sits
+  // directly under the sole reserved instance root, one level out of records/invariants/.)
+  await writeJson(join(repo, "records/stray.json"), invariant(2, "011-1"));
   expect("rejects an invariant record outside the projection root", runCheck("check-invariant-placement.mjs", root), {
     exit: 1,
-    contains: ["package/records/stray.json", "outside records/invariants/", "no exclusion escape"],
+    contains: ["records/stray.json", "outside records/invariants/", "no exclusion escape"],
   });
-  await rm(join(repo, "package/records"), { recursive: true });
+  await rm(join(repo, "records/stray.json"));
 
   // The projection root is a flat readdir (render-invariants.mjs), so a record one directory deeper
   // is not projected either — this guard must agree with what actually renders, not just with the
