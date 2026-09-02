@@ -36,10 +36,6 @@
     "description": {
       "type": "string"
     },
-    "semanticObjectType": {
-      "type": "string",
-      "title": "Semantic Object Type"
-    },
     "aiGuidance": {
       "$ref": "#/$defs/com.semanticops.srs__ai-guidance__v1",
       "title": "AI Guidance"

@@ -33,7 +33,7 @@ async function loadChecksRegistry() {
  *
  * A hardcoded list is the same defect #391 fixes at the kind level, one level up: `package/base`
  * and `package/core` carried package.json files that no run ever reached, and the published
- * governance packages — the only ones populating `views`, `documentViews`, `lifecycles`,
+ * governance packages — the only ones populating `views`, `compositions`, `lifecycles`,
  * `blueprints` and `protocols`, so the only ones that exercise five of the ten kinds against
  * anything — were never validated either. Adding a 1.2.0 to a list would have left it unvalidated
  * forever, silently. So nothing is listed: the two package roots are walked.

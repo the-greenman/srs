@@ -4,9 +4,9 @@
  *
  * ALL TEN definition kinds are covered (#391). Until this change, `fields`, `types`, `views` and
  * `relationTypes` were path-checked and only the first, second and fourth were schema-validated;
- * `documentViews`, `themes`, `vocabularies`, `lifecycles`, `blueprints` and `protocols` were
+ * `compositions`, `themes`, `vocabularies`, `lifecycles`, `blueprints` and `protocols` were
  * neither. Live packages declare them — `srs/package/base`, and
- * `packages/com.mudemocracy.governance/1.1.0` declares 4 documentViews, 1 view, 1 lifecycle,
+ * `packages/com.mudemocracy.governance/1.1.0` declares 4 compositions, 1 view, 1 lifecycle,
  * 1 blueprint and 1 protocol — so a malformed blueprint, or one listed at a path that does not
  * exist, passed `validate-all.mjs` in silence while #311's gate correctly reported
  * `blueprints → blueprint.json ✓`. A schema existing is not a validator being wired up.
@@ -136,7 +136,7 @@ async function validateManifestPaths(dirPath, manifest, kind) {
  * holds three unlisted view files today and master warns about them; with an empty `views` array
  * there is no entry to take a dirname from. A kind-named folder alone is the kebab-case bug. So
  * both: every dirname the manifest references, plus every kind-named folder that actually exists on
- * disk (checked, never constructed — `documentViews/` does not exist and is simply not found).
+ * disk (checked, never constructed — `compositions/` does not exist and is simply not found).
  *
  * Folders inside a SUB-PACKAGE are then dropped, which is what makes the "does not descend" claim
  * above true of the dirname half too: a manifest may index across the boundary —
@@ -155,8 +155,8 @@ async function validateManifestPaths(dirPath, manifest, kind) {
  *
  * Known limit, stated because the fix for it is a guess this file refuses to make: a kebab-case
  * folder is only reached when the manifest indexes at least one entry in it. Drop the whole
- * `documentViews` array and leave the files, and they go unwarned — there is no dirname left to
- * derive and `documentViews/` does not exist on disk. camelCase kinds (`fields`, `types`, `views`)
+ * `compositions` array and leave the files, and they go unwarned — there is no dirname left to
+ * derive and `compositions/` does not exist on disk. camelCase kinds (`fields`, `types`, `views`)
  * have no such hole, since the kind-named-folder check covers them. Closing it needs a kind →
  * folder mapping, which is the string surgery this codebase already refuses for kind → schema.
  */

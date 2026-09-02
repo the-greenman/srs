@@ -170,7 +170,8 @@ const FIELD_SPECS = [
   [47, 'package_version', { datatype: 'string' }, 'Version of the source package.'],
   [48, 'imported_at', { datatype: 'date-time' }, 'ISO-8601 timestamp at which this definition was imported.'],
   // -- Type entity (core facets) --
-  [49, 'semantic_object_type', { datatype: 'string' }, 'Optional canonical semantic classification (e.g. "decision", "policy"). Sanctioned-until-collapsed (#383, 2026-08-15): the collapse to a Type-keyed type-query executes at #272; do not add new consumers meanwhile.'],
+  // 49: `semantic_object_type` — REMOVED (owner ruling on #383, srs#372/#481/#524, rfc-decision-c8704763;
+  // collapsed onto the Type system at srs#523/#524, dataModelRevision 6). Never reused.
   [50, 'fields', ref('field-assignment', 'inline', 'list'), 'Ordered list of FieldAssignments that make up this Type.'],
   // -- FieldAssignment --
   [51, 'field_id', ref('field', 'reference', 'single'), 'References a Field by its stable id (reference mode closes the metacircular loop).'],
@@ -334,7 +335,6 @@ const TYPE_SPECS = {
       a('id', true), a('namespace', true, undefined, "Logical grouping, e.g. 'governance', 'finance'."),
       a('name', true, undefined, 'Machine-readable name within the namespace, snake_case.'), a('version', true),
       a('description', true),
-      a('semantic_object_type', false, 'Semantic Object Type', "Optional canonical semantic classification (e.g. 'decision', 'exercise', 'policy'). Sanctioned-until-collapsed (#383, 2026-08-15): the collapse to a Type-keyed type-query executes at #272; do not add new consumers meanwhile."),
       a('ai_guidance', false, 'AI Guidance', 'Guidance for AI agents determining whether source material matches this Type.'),
       a('fields', true, undefined, 'Ordered list of fields that make up this Type.'), a('tags', false),
       a('lineage', false), a('provenance', false),
@@ -506,7 +506,7 @@ const TYPE_SPECS = {
     // — without it, the default `.order`-tie-broken-by-declaration-position sort interleaves the three
     // facets' properties in a way the seed's narrative grouping does not follow.
     fieldOrder: [
-      'id', 'namespace', 'name', 'version', 'description', 'semantic_object_type', 'ai_guidance', 'fields',
+      'id', 'namespace', 'name', 'version', 'description', 'ai_guidance', 'fields',
       'lifecycle', 'lifecycle_ref', 'tags', 'extends_type_id', 'extends_type_version', 'field_order',
       'field_assignment_overrides', 'identity_field_id', 'validation_rules', 'lineage', 'provenance', 'created_at',
     ],

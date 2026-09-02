@@ -464,7 +464,6 @@ Declaring both is a validation error. An inline lifecycle cannot extend; use `li
 | `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
 | `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
 | `description` | string | yes | — | core | Human-readable description of this entity. |
-| `semanticObjectType` | string | no | — | core | Optional canonical semantic classification (e.g. "decision", "policy"). Sanctioned-until-collapsed (#383, 2026-08-15): the collapse to a Type-keyed type-query executes at #272; do not add new consumers meanwhile. |
 | `aiGuidance` | ref → `ai-guidance` (inline) | no | — | core | Inline LLM guidance for extracting/populating this field or type. |
 | `fields` | ref → `field-assignment` (inline)[] | yes | — | core | Ordered list of FieldAssignments that make up this Type. |
 | `lifecycle` | ref → `type-lifecycle` (inline) | no | — | ext:lifecycle | ext:lifecycle — inline state machine declaration. Mutually exclusive with lifecycleRef. |
@@ -503,7 +502,6 @@ type {
   name: string // Machine-readable name within the namespace; snake_case.
   version: integer // Positive integer version within the UUID lineage.
   description: string // Human-readable description of this entity.
-  semanticObjectType?: string // Optional canonical semantic classification (e.g. "decision", "policy"). Sanctioned-until-collapsed (#383, 2026-08-15): the collapse to a Type-keyed type-query executes at #272; do not add new consumers meanwhile.
   aiGuidance?: ref → `ai-guidance` (inline) // Inline LLM guidance for extracting/populating this field or type.
   fields: ref → `field-assignment` (inline)[] // Ordered list of FieldAssignments that make up this Type.
   lifecycle?: ref → `type-lifecycle` (inline) // ext:lifecycle — inline state machine declaration. Mutually exclusive with lifecycleRef.
@@ -802,7 +800,7 @@ Containers are not semantic objects with Fields. They do not own semantic state;
 
   anchorInstanceId?: UUID
   // RFC-009 (amended by srs#446). Names the member whose Type is this Container's
-  // typing anchor for DocumentView.rootTypeRefs matching and merge conflict detection.
+  // typing anchor for Composition.rootTypeRefs matching and merge conflict detection.
   // Declared, never positional. When absent, implementations fall back to
   // rootInstanceIds[0] (transitional; withdrawn at the Continuity flip).
 
@@ -924,9 +922,7 @@ A substrate specialisation that gives semantic meaning and validation rules to a
   canonicalDirection?: string
   inverseType?: string      // key of the inverse RelationTypeDefinition
   irreflexive?: boolean
-  allowedSourceTypes?: string[]
-  allowedTargetTypes?: string[]
-  requireSameSemanticObjectType?: boolean
+  requireSameType?: boolean  // srs#523/#524, srs-rust#910: re-keyed onto the Type system (owner ruling on #383, rfc-decision-c8704763); allowedSourceTypes/allowedTargetTypes/requireSameSemanticObjectType retired with no successor
   createdAt: ISO8601
   updatedAt?: ISO8601
 }
@@ -1019,7 +1015,7 @@ A grace window is declared in `Vocabulary.promotionWindow.until`. Until that bou
   fields: Field[]
   types: Type[]
   views?: View[]             // ext:views-l1; omit if not in use
-  documentViews?: DocumentView[]  // ext:views-l2; omit if not in use
+  compositions?: Composition[]  // ext:views-l2; omit if not in use
   blueprints?: Blueprint[]   // core; omit if not in use
   protocols?: Protocol[]     // ext:protocol; omit if not in use
   relationTypes?: RelationTypeDefinition[]  // relation type definitions
@@ -1028,7 +1024,7 @@ A grace window is declared in `Vocabulary.promotionWindow.until`. Until that bou
 
   mode: "bundled" | "standalone"
 
-  dependencyRefs: Reference[]
+  packageDependencies: Reference[]
 }
 ```
 
@@ -1036,10 +1032,10 @@ A grace window is declared in `Vocabulary.promotionWindow.until`. Until that bou
 
 | Mode | Meaning |
 |---|---|
-| `"bundled"` | All Field records referenced by any Type, all Type records referenced by any Type or View, and all View records referenced by any DocumentView are included in their respective arrays. Self-contained. |
-| `"standalone"` | Dependencies are expected pre-installed in the consumer's registry. `dependencyRefs` is the required manifest. |
+| `"bundled"` | All Field records referenced by any Type, all Type records referenced by any Type or View, and all View records referenced by any Composition are included in their respective arrays. Self-contained. |
+| `"standalone"` | Dependencies are expected pre-installed in the consumer's registry. `packageDependencies` is the required manifest. |
 
-`dependencyRefs` is required in both modes. Consumers use it to validate completeness without parsing content internals.
+`packageDependencies` is required in both modes. Consumers use it to validate completeness without parsing content internals.
 
 ---
 
@@ -1646,7 +1642,7 @@ Rows of both kinds are interleaved by their shared, unique `order`. `View.fieldV
 
 **[R7]** Every `order` value in a View's mixed `fieldViews[]` row list MUST be unique. A duplicate is a validation error. Implementations MUST render rows in ascending `order`, yielding one deterministic total presentation sequence across FieldView and RecordPropertyView rows.
 
-**[R8]** *(Revision 4.)* A `RecordPropertyView` row that is not omitted per [R4] MUST appear in the JSON projection (`document-view-output.json`) of any DocumentView that renders it, as a `ProjectedPropertyRow` (`{ property, label, value }`, Change D) on the record's `properties[]` array, in ascending `order`. `label` and `value` MUST be the *resolved* label and value — the same ones Change C renders into markup, not the raw `property` name alone. An implementation that renders a `RecordPropertyView` row in markup output MUST NOT omit its `ProjectedPropertyRow` from the JSON projection of the same render.
+**[R8]** *(Revision 4.)* A `RecordPropertyView` row that is not omitted per [R4] MUST appear in the JSON projection (`document-view-output.json`) of any Composition that renders it, as a `ProjectedPropertyRow` (`{ property, label, value }`, Change D) on the record's `properties[]` array, in ascending `order`. `label` and `value` MUST be the *resolved* label and value — the same ones Change C renders into markup, not the raw `property` name alone. An implementation that renders a `RecordPropertyView` row in markup output MUST NOT omit its `ProjectedPropertyRow` from the JSON projection of the same render.
 
 ##### JSON projection (RFC-041 Revision 4)
 
@@ -1688,7 +1684,7 @@ A versioned presentation and export configuration over a field set. A View is co
   fieldViews: (FieldView | RecordPropertyView)[]
 
   compatibleTypes?: string[]
-  // Optional semanticObjectType hints this View was designed for.
+  // Optional Type-key (namespace/name) hints this View was designed for.
   // Informative only. Compatibility is determined by field presence.
 
   exportConfig?: ExportConfig
@@ -1743,7 +1739,7 @@ CompositeRendererBinding {
 A composite-range Field that resolves to no renderer — unbound per [CR-036-6], or fallen back per
 [CR-036-7] or [CR-036-9] — is rendered by the **composite baseline**: a heading when a label resolves
 (`FieldAssignment.displayLabel`, overridable by `FieldView.displayLabel`) at level `4 + d` shifted by
-`DocumentView.depthOffset`, where `d` is nesting depth; then one block per value in value order; within
+`Composition.depthOffset`, where `d` is nesting depth; then one block per value in value order; within
 each block one field row per assignment on the composite's `rangeType`, ascending by
 `FieldAssignment.order` with `fieldId` code-point order as tie-break. A field with no value, or whose
 value renders to nothing, is omitted unconditionally. An assignment that is itself `ref`/`inline` expands
@@ -1781,7 +1777,7 @@ sequence. This replaces the `FieldGroup` + `compositeRenderer` mechanism of RFC-
 
 **[CR-036-5]** A binding MUST target a composite field assigned directly to the rendered Record's Type. Binding a composite nested inside another composite's `rangeType` is out of scope; a nested composite is rendered by the composite baseline. Implementations MUST NOT infer a binding for a nested composite from a binding on its parent.
 
-**[CR-036-6]** For a given rendered Record and composite-range field, implementations MUST resolve at most one binding, taking the first that applies: (1) `FieldView.compositeRenderer` on the `FieldView` for that field in the `ext:views-l1` View selected to render the Record — chosen by `DocumentSection.typeDispatch`, else `DocumentSection.renderViewId`; (2) the matching `DocumentSection.compositeRenderers` entry; (3) the matching `DocumentView.compositeRenderers` entry. When none applies the field is unbound. A resolved `renderer` of `"baseline"` means unbound and MUST NOT fall through to a broader site. A `FieldView` that exists but carries no `compositeRenderer` is not an override and MUST fall through. A field not visible in the selected View is not rendered and no binding applies. When an L1 View is rendered outside any DocumentView, only site (1) exists. Duplicate `fieldId` entries within one array are a validation diagnostic; the first in array order wins.
+**[CR-036-6]** For a given rendered Record and composite-range field, implementations MUST resolve at most one binding, taking the first that applies: (1) `FieldView.compositeRenderer` on the `FieldView` for that field in the `ext:views-l1` View selected to render the Record — chosen by `DocumentSection.typeDispatch`, else `DocumentSection.renderViewId`; (2) the matching `DocumentSection.compositeRenderers` entry; (3) the matching `Composition.compositeRenderers` entry. When none applies the field is unbound. A resolved `renderer` of `"baseline"` means unbound and MUST NOT fall through to a broader site. A `FieldView` that exists but carries no `compositeRenderer` is not an override and MUST fall through. A field not visible in the selected View is not rendered and no binding applies. When an L1 View is rendered outside any Composition, only site (1) exists. Duplicate `fieldId` entries within one array are a validation diagnostic; the first in array order wins.
 
 **[CR-036-7]** When a resolved `renderer` is not recognised, the implementation MUST fall back to the composite baseline and MUST emit a diagnostic identifying the unrecognised value and the field. The fallback MUST NOT suppress the field's content.
 
@@ -1809,11 +1805,13 @@ Defines how a section's instances are selected from a Container.
 type SectionSource =
   | {
       type: "type-query"
-      semanticObjectType: string
-      // For cross-system portability, use namespace/name format (e.g. "core/decision").
-      // A bare string like "decision" is a single-system convention.
+      typeKey: string
+      // KEYED namespace/name (version-independent), resolved against the effective
+      // package set (srs-rust#910, rfc-decision-c8704763). Renamed from the retired
+      // semanticObjectType — no bare-string form; the value must resolve to an
+      // installed Type's namespace/name.
       lifecycleState?: string
-      // Single-state filter (back-compat). Prefer lifecycleStates for new DocumentViews.
+      // Single-state filter (back-compat). Prefer lifecycleStates for new Compositions.
       lifecycleStates?: string[]
       // RFC-011. When present and non-empty, restricts to Records whose lifecycleState
       // matches any listed value (OR semantics). Requires ext:lifecycle. Invariant I-011-1.
@@ -1845,7 +1843,7 @@ type SectionSource =
 
 #### `DocumentSection`
 
-One section in a Document View.
+One section in a Composition.
 
 ```typescript
 {
@@ -1903,7 +1901,7 @@ One section in a Document View.
   compositeRenderers?: CompositeRendererDirective[]   // RFC-036
   // Composite renderer dispatch for records rendered by this section. The primary
   // ext:views-l2 declaration site, following RFC-027's placement of relationsPresentation.
-  // Resolved after FieldView.compositeRenderer and before DocumentView.compositeRenderers
+  // Resolved after FieldView.compositeRenderer and before Composition.compositeRenderers
   // ([CR-036-6]). More than one entry for the same fieldId is a validation diagnostic; the
   // first in array order wins.
 }
@@ -1979,7 +1977,7 @@ Link labels prefer the identity field over the section's `titleFieldId` — the 
 
 #### `NavigationLink`
 
-An assembly-time cross-section link in a Document View. Navigation links are reading aids for the rendered document, not semantic assertions about Records. They do not appear in the Relation graph.
+An assembly-time cross-section link in a Composition. Navigation links are reading aids for the rendered document, not semantic assertions about Records. They do not appear in the Relation graph.
 
 ```typescript
 {
@@ -2005,11 +2003,11 @@ A pointer to a Theme (ext:themes-l1). Follows the same `mode`-based reference pa
 
 #### `ThemeVariant`
 
-A named alternative theme selectable at render time instead of `DocumentView.themeRef`.
+A named alternative theme selectable at render time instead of `Composition.themeRef`.
 
 ```typescript
 {
-  name: string           // case-sensitive; MUST be unique within DocumentView.themeVariants
+  name: string           // case-sensitive; MUST be unique within Composition.themeVariants
   description?: string
   themeRef: ThemeReference
 }
@@ -2017,7 +2015,7 @@ A named alternative theme selectable at render time instead of `DocumentView.the
 
 Variant name uniqueness is enforced at package validation time.
 
-#### `DocumentView`
+#### `Composition`
 
 A versioned, Container-level projection. Defines how a Container's Records are assembled into a readable document.
 
@@ -2047,7 +2045,7 @@ A versioned, Container-level projection. Defines how a Container's Records are a
   // Portable values: "markdown", "adoc", "html", "text", "json".
   // Implementations MAY support additional values; non-portable values MUST NOT
   // cause a validation error. When absent, output format is implementation-defined.
-  // DocumentView.format governs all section rendering; ExportConfig.format on a
+  // Composition.format governs all section rendering; ExportConfig.format on a
   // referenced L1 View is ignored for section rendering.
   //
   // When format is "json", implementations MUST produce a structured JSON
@@ -2085,9 +2083,9 @@ A versioned, Container-level projection. Defines how a Container's Records are a
 }
 ```
 
-A `DocumentView` may reference one or more `View` records (via `DocumentSection.renderViewId`). A single field-centric View may render mixed Record Types when the Records contain the required fields. The DocumentView orchestrates; it does not replace L1 Views.
+A `Composition` may reference one or more `View` records (via `DocumentSection.renderViewId`). A single field-centric View may render mixed Record Types when the Records contain the required fields. The Composition orchestrates; it does not replace L1 Views.
 
-`DocumentSection.renderViewId` references a `View.id` (from `ext:views-l1`). A `DocumentView.id` is not a valid value for `renderViewId` — Document Views are not nestable.
+`DocumentSection.renderViewId` references a `View.id` (from `ext:views-l1`). A `Composition.id` is not a valid value for `renderViewId` — Compositions are not nestable.
 
 Use `navigationLinks` when a rendered document should include "see also" or related-section links. Use `Relation` only when the relationship is a semantic assertion about Records.
 
@@ -2226,9 +2224,9 @@ source; converted output is a Theme or L1 View concern.
 `Field.name`, with no humanisation or case conversion.
 Tier 0 Notes emit no field rows.
 
-**Conformance boundary.** These forms bind any implementation emitting a `DocumentView` in
+**Conformance boundary.** These forms bind any implementation emitting a `Composition` in
 `markdown`, `adoc`, `text` or `html` through this baseline. They do not bind native application UI
-that is not emitting a `DocumentView`; a client-side `DocumentView` renderer in a covered format is
+that is not emitting a `Composition`; a client-side `Composition` renderer in a covered format is
 not exempt.
 
 ---
@@ -2239,7 +2237,7 @@ When `DocumentSection.renderViewId` is set, the referenced L1 View's `ExportConf
 
 | Property | In section rendering context |
 |---|---|
-| `format` | **Superseded.** `DocumentView.format` governs. |
+| `format` | **Superseded.** `Composition.format` governs. |
 | `preamble` | **Applies.** Rendered before each record's field values. |
 | `fieldOrder` | **Applies.** Overrides `FieldAssignment.order` for field rendering. |
 | `omitEmptyFields` | **Applies.** Controls absent field rendering. |
@@ -2265,7 +2263,7 @@ For `format: "text"` or implementation-defined values, heading level semantics d
 
 #### Preamble Template Variables
 
-Standard variables in `DocumentView.preamble`:
+Standard variables in `Composition.preamble`:
 
 | Variable | Resolves to |
 |---|---|
@@ -2953,7 +2951,7 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 
 #### ext:themes-l1
 
-**Content**: Visual presentation layer for `DocumentView`. Attaches brand identity, typography, stylesheets, cover pages, and element wrapping to a rendered document without altering its semantic structure. Depends on `ext:views-l2`. Implementations that do not declare this extension MUST ignore `DocumentView.themeRef` and `DocumentView.themeVariants` and MUST NOT error on their presence.
+**Content**: Visual presentation layer for `Composition`. Attaches brand identity, typography, stylesheets, cover pages, and element wrapping to a rendered document without altering its semantic structure. Depends on `ext:views-l2`. Implementations that do not declare this extension MUST ignore `Composition.themeRef` and `Composition.themeVariants` and MUST NOT error on their presence.
 
 #### `AssetDeclaration`
 
@@ -2980,8 +2978,8 @@ Page-level chrome for paginated output formats (`"pdf"`, `"docx"`). Ignored for 
 ```typescript
 {
   coverPage?: string
-  // Available variables: all DocumentView preamble variables + {{asset:*}}
-  // {{heading-1}} is available here only (resolves via DocumentView.depthOffset).
+  // Available variables: all Composition preamble variables + {{asset:*}}
+  // {{heading-1}} is available here only (resolves via Composition.depthOffset).
 
   pageHeader?: string
   // Available: {{page-number}}, {{asset:*}}
@@ -3107,7 +3105,7 @@ Informative declarations. No normative rendering behaviour is derived from these
 
   targets: string[]   // required; min 1 entry
   // Output formats this theme is designed for (e.g. "html", "markdown", "adoc").
-  // Implementations apply this theme only when DocumentView.format appears in this list.
+  // Implementations apply this theme only when Composition.format appears in this list.
   // An empty targets array is a validation error (Rule [T-1b]).
 
   assets?: { [assetName: string]: AssetDeclaration }
@@ -3183,11 +3181,11 @@ Variables not applicable to a given template context MUST resolve to an empty st
 
 #### Conformance Rules
 
-**[T-1]** Implementations that do not declare `ext:themes-l1` MUST ignore `DocumentView.themeRef` and MUST NOT error on its presence.
+**[T-1]** Implementations that do not declare `ext:themes-l1` MUST ignore `Composition.themeRef` and MUST NOT error on its presence.
 
 **[T-1b]** `Theme.targets` MUST contain at least one entry. An absent or empty `targets` array is a validation error. Enforced at package validation time.
 
-**[T-2]** Implementations MUST apply a Theme only when `DocumentView.format` appears in `Theme.targets`. When the format does not match, the Theme MUST be ignored and structural output produced without it.
+**[T-2]** Implementations MUST apply a Theme only when `Composition.format` appears in `Theme.targets`. When the format does not match, the Theme MUST be ignored and structural output produced without it.
 
 **[T-3]** Element templates receive auto-rendered content via `{{content}}`. Implementations MUST render structural content first and pass it to the template; they MUST NOT suppress or reorder content through template evaluation.
 
@@ -3221,7 +3219,7 @@ Variables not applicable to a given template context MUST resolve to an empty st
 
 **[T-Cx3]** `wrapperTemplate` and `captionTemplate` in `compositeRendererConfig["table"]` apply to each entry rendered by `compositeRenderer: "table"`. They MUST NOT affect groups with other `compositeRenderer` values or groups without a `compositeRenderer`.
 
-**[T-Cx4]** When evaluating format-conditional defaults for `wrapperTemplate` and `captionTemplate`, implementations MUST use `DocumentView.format` as the authoritative active format signal. When `wrapperTemplate` is explicitly set in `compositeRendererConfig["table"]`, implementations MUST apply it regardless of output format.
+**[T-Cx4]** When evaluating format-conditional defaults for `wrapperTemplate` and `captionTemplate`, implementations MUST use `Composition.format` as the authoritative active format signal. When `wrapperTemplate` is explicitly set in `compositeRendererConfig["table"]`, implementations MUST apply it regardless of output format.
 
 **[T-Cx5]** Unknown properties in a `compositeRendererConfig` sub-object for a known renderer name MUST be silently ignored and MUST NOT cause a rendering error.
 
@@ -3236,7 +3234,7 @@ cutover.
 (`tableClass`, `wrapperTemplate`, `captionTemplate`), with `additionalProperties: true` retained at both
 levels so vendor renderer keys and unknown sub-properties stay valid.
 
-**[CR-036-16]** `compositeRendererConfig` is keyed by the same identifier space as a composite renderer identifier [CR-036-1]. Unknown properties within a known renderer's sub-object, and keys naming renderers the implementation does not know, MUST be silently ignored and MUST NOT cause a rendering or loading error. Config applies only to fields resolved to the corresponding renderer. `DocumentView.format` is the authoritative format signal for format-conditional defaults, and an explicitly set template applies regardless of output format. `{{subheading}}` resolves to the rendered subheading and `{{label}}` to the output of `captionTemplate`, both computed before wrapper substitution. `"baseline"` is a dispatch sentinel, not a renderer; a `compositeRendererConfig` key of `"baseline"` MUST be ignored. The `table` renderer reads:
+**[CR-036-16]** `compositeRendererConfig` is keyed by the same identifier space as a composite renderer identifier [CR-036-1]. Unknown properties within a known renderer's sub-object, and keys naming renderers the implementation does not know, MUST be silently ignored and MUST NOT cause a rendering or loading error. Config applies only to fields resolved to the corresponding renderer. `Composition.format` is the authoritative format signal for format-conditional defaults, and an explicitly set template applies regardless of output format. `{{subheading}}` resolves to the rendered subheading and `{{label}}` to the output of `captionTemplate`, both computed before wrapper substitution. `"baseline"` is a dispatch sentinel, not a renderer; a `compositeRendererConfig` key of `"baseline"` MUST be ignored. The `table` renderer reads:
 
 | Property | Effect | Default |
 |---|---|---|
@@ -3469,9 +3467,9 @@ Conforming implementations must uphold the following invariants.
 
 #### core — Package
 
-**7.** Every `fieldId` referenced in any `FieldAssignment` within a `Package.types[]` must appear as the `id` of an entry in `Package.dependencyRefs`.
+**7.** Every `fieldId` referenced in any `FieldAssignment` within a `Package.types[]` must appear as the `id` of an entry in `Package.packageDependencies`.
 
-**8.** If `Package.mode === "bundled"`: every `Reference` in `dependencyRefs` must have a matching `Field` in `fields[]` (matched on `id` and `version`).
+**8.** If `Package.mode === "bundled"`: every `Reference` in `packageDependencies` must have a matching `Field` in `fields[]` (matched on `id` and `version`).
 
 **9.** `Field.id` is stable across versions. A new `id` means a new definition, not a new version of an existing one.
 
@@ -3503,13 +3501,13 @@ Conforming implementations must uphold the following invariants.
 
 **12.** Every `fieldId` in `View.fieldViews[]` must reference a valid `Field.id` in the effective package set. View compatibility is field-centric (based on required field presence), not Type-bound.
 
-**13.** `FieldView.displayLabel`, `FieldView.displayHint`, and `FieldView.editorHintOverride` are for rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or validation. Extended by RFC-036 [CR-036-20] to cover `FieldView.compositeRenderer` and the `DocumentSection`/`DocumentView` composite renderer directives, and to add Relations and Discovery Text Projection (`ext:discovery`) to the list of things they must not affect. [CR-036-21] additionally constrains `editorHintOverride` to the value set of `Field.editorHint`.
+**13.** `FieldView.displayLabel`, `FieldView.displayHint`, and `FieldView.editorHintOverride` are for rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or validation. Extended by RFC-036 [CR-036-20] to cover `FieldView.compositeRenderer` and the `DocumentSection`/`Composition` composite renderer directives, and to add Relations and Discovery Text Projection (`ext:discovery`) to the list of things they must not affect. [CR-036-21] additionally constrains `editorHintOverride` to the value set of `Field.editorHint`.
 
 **14.** A `View` must not override, redefine, or duplicate the semantic content of any `Field` or `Type` it references. View-level `aiGuidance` is workflow framing; it does not redefine Field extraction semantics.
 
 #### ext:views-l1 — Distribution
 
-**15.** Every `typeId` referenced by any `View` in `Package.views[]` must appear in `Package.dependencyRefs` with `definitionType: "type"`. If `mode === "bundled"`, that `Type` must be present in `types[]`.
+**15.** Every `typeId` referenced by any `View` in `Package.views[]` must appear in `Package.packageDependencies` with `definitionType: "type"`. If `mode === "bundled"`, that `Type` must be present in `types[]`.
 
 #### core — Relation
 
@@ -3541,9 +3539,9 @@ Conforming implementations must uphold the following invariants.
 
 #### ext:views-l2
 
-**32.** Any `DocumentView` in `Package.documentViews[]` that contains a `SectionSource` with `type === "type-query"` must use `namespace/name` format for `semanticObjectType` (e.g. `"core/decision"`, not `"decision"`). Bare strings are acceptable only in single-system `DocumentView` records not included in a Package. Implementations receiving a `DocumentView` from a Package with a bare `semanticObjectType` in a `type-query` section should treat the portability of that section as undefined.
+**32.** Any `Composition` in `Package.compositions[]` that contains a `SectionSource` with `type === "type-query"` MUST use KEYED `namespace/name` format for `typeKey` (e.g. `"core/decision"`), resolved against the effective package set. `semanticObjectType` is retired (owner ruling on #383, srs#372/#481/#524, rfc-decision-c8704763); there is no bare-string form — the prior single-system exception is removed with the collapse, closing the loose-string-match gap that motivated it.
 
-**I-63.** When DocumentView.rootTypeRefs is present and non-empty, each ExactTypeRef entry MUST resolve to a Type that exists in the Package (the union of all packages in scope per packageRef/packageRefs; matched by both typeId and typeVersion). An entry that does not resolve MUST produce a diagnostic and MUST NOT be used for Container matching.
+**I-63.** When Composition.rootTypeRefs is present and non-empty, each ExactTypeRef entry MUST resolve to a Type that exists in the Package (the union of all packages in scope per packageRef/packageRefs; matched by both typeId and typeVersion). An entry that does not resolve MUST produce a diagnostic and MUST NOT be used for Container matching.
 
 **I-125.** `precedes` relations MUST be used only to express sequences where a different order would be semantically wrong (e.g. spec sections in document order, protocol stages in execution sequence). Implementations MUST NOT create `precedes` relations between instances whose ordering is presentational (layout, curation, display preference). A `precedes` relation between two container members MUST be interpreted as a semantic claim about their sequence, not as a rendering hint. (RFC-015 Change A.)
 
@@ -3559,15 +3557,15 @@ Conforming implementations must uphold the following invariants.
 
 #### ext:views-l2 — Distribution
 
-**35.** Every `DocumentSection.renderViewId` in any `DocumentView` within `Package.documentViews[]` must reference a `View.id` that appears in `Package.views[]` or `Package.dependencyRefs`. If `mode === "bundled"`, that `View` must be present in `Package.views[]`.
+**35.** Every `DocumentSection.renderViewId` in any `Composition` within `Package.compositions[]` must reference a `View.id` that appears in `Package.views[]` or `Package.packageDependencies`. If `mode === "bundled"`, that `View` must be present in `Package.views[]`. (`packageDependencies`: srs-rust#873/#910, folded onto this same rev-6 stamp.)
 
 #### ext:blueprint — Distribution
 
-**36.** Every `TypeRef.typeId` referenced in any `Blueprint.rootTypes[]`, `Blueprint.requiredTypes[]`, or in any `RelationSpec.sourceType` or `RelationSpec.targetType` within `Blueprint.structure[]`, for each Blueprint in `Package.blueprints[]`, must appear in `Package.dependencyRefs` with `definitionType: "type"`. If `mode === "bundled"`, each such Type must be present in `Package.types[]`.
+**36.** Every `TypeRef.typeId` referenced in any `Blueprint.rootTypes[]`, `Blueprint.requiredTypes[]`, or in any `RelationSpec.sourceType` or `RelationSpec.targetType` within `Blueprint.structure[]`, for each Blueprint in `Package.blueprints[]`, must appear in `Package.packageDependencies` with `definitionType: "type"`. If `mode === "bundled"`, each such Type must be present in `Package.types[]`.
 
 #### ext:protocol — Distribution
 
-**37.** Every `Protocol.protocolTargetType` (when a non-empty UUID) and every `ProtocolStage.outputType`, for each Protocol in `Package.protocols[]`, must appear in `Package.dependencyRefs` with `definitionType: "type"`. Every `FieldRef.fieldId` in any `ProtocolStage.contributesTo[]` must appear in `Package.dependencyRefs` with `definitionType: "field"`. If `mode === "bundled"`, those Types must be in `Package.types[]` and those Fields in `Package.fields[]`.
+**37.** Every `Protocol.protocolTargetType` (when a non-empty UUID) and every `ProtocolStage.outputType`, for each Protocol in `Package.protocols[]`, must appear in `Package.packageDependencies` with `definitionType: "type"`. Every `FieldRef.fieldId` in any `ProtocolStage.contributesTo[]` must appear in `Package.packageDependencies` with `definitionType: "field"`. If `mode === "bundled"`, those Types must be in `Package.types[]` and those Fields in `Package.fields[]`.
 
 #### core — Field.contentFormat
 
@@ -3583,11 +3581,11 @@ Conforming implementations must uphold the following invariants.
 
 **42.** Every `fieldId` in `Type.fieldAssignmentOverrides[]` must reference a field inherited from the base Type or an ancestor Type. Overrides must not reference fields declared in the specializing Type's own `fields[]`, must not alter Field semantics, and must not relax an inherited required field from `true` to `false`.
 
-**43.** When `ext:type-inheritance` is declared, `Package.dependencyRefs` must include a `Reference` for every Type in the transitive closure of base Types for any Type in `Package.types[]`. If `mode === "bundled"`, all such base Types must be present in `types[]`.
+**43.** When `ext:type-inheritance` is declared, `Package.packageDependencies` must include a `Reference` for every Type in the transitive closure of base Types for any Type in `Package.types[]`. If `mode === "bundled"`, all such base Types must be present in `types[]`.
 
 #### ext:views-l2 — Navigation
 
-**44.** Every `NavigationLink.fromSectionId` and `NavigationLink.toSectionId` must reference a `sectionId` declared in the enclosing `DocumentView.sections[]`.
+**44.** Every `NavigationLink.fromSectionId` and `NavigationLink.toSectionId` must reference a `sectionId` declared in the enclosing `Composition.sections[]`.
 
 #### ext:repository
 
@@ -3613,7 +3611,7 @@ Conforming implementations must uphold the following invariants.
 
 **55.** A checksum value in `InstanceIndexEntry.checksum`, `SourceDocumentIndexEntry.sidecarChecksum`, `SourceDocumentIndexEntry.contentChecksum`, or `RelationsChecksumEntry.checksum` must use the format `<algorithm>:<hex-encoded-digest>`. A value that does not include the `<algorithm>:` prefix is invalid.
 
-**I-128.** When `manifest.renderedPresentations` is present and non-empty, a conformant viewer MUST select as the default presentation the first entry whose `isDefault` is `true`. When no entry carries `isDefault: true`, the first entry in the array is the default. The selected DocumentView governs the repository's presentation. When a `renderedPresentations` entry's `viewId` does not resolve to a DocumentView in the active packages, implementations MUST skip that entry and MUST emit a diagnostic; if all entries fail to resolve, behaviour falls back to implementation-defined selection as if `renderedPresentations` were absent. When `viewId` resolves to DocumentViews in more than one active package, implementations MUST report a validation error (ambiguous view reference). When `renderedPresentations` is absent or empty, viewer behaviour falls back to implementation-defined selection (existing behaviour unchanged; no conformance obligation is added for the absent case). (RFC-015 Change C.)
+**I-128.** When `manifest.renderedPresentations` is present and non-empty, a conformant viewer MUST select as the default presentation the first entry whose `isDefault` is `true`. When no entry carries `isDefault: true`, the first entry in the array is the default. The selected Composition governs the repository's presentation. When a `renderedPresentations` entry's `compositionId` does not resolve to a Composition in the active packages, implementations MUST skip that entry and MUST emit a diagnostic; if all entries fail to resolve, behaviour falls back to implementation-defined selection as if `renderedPresentations` were absent. When `compositionId` resolves to Compositions in more than one active package, implementations MUST report a validation error (ambiguous composition reference). When `renderedPresentations` is absent or empty, viewer behaviour falls back to implementation-defined selection (existing behaviour unchanged; no conformance obligation is added for the absent case). (RFC-015 Change C.)
 
 #### Container (core)
 
@@ -3739,7 +3737,7 @@ Conforming implementations must uphold the following invariants.
 
 #### Container (core), RFC-009 (ext:views-l2 rootTypeRefs matching), RFC-010 (ext:federation merge)
 
-**I-145.** When present on a Container, anchorInstanceId MUST equal an id contained in that Container's rootInstanceIds or memberInstanceIds. It names the record whose Type (typeId + typeVersion) is the Container's typing anchor for RFC-009 DocumentView.rootTypeRefs matching (I-63) and RFC-010 three-way-merge container-root conflict detection. If it resolves to no such member, the repository is invalid. When anchorInstanceId is absent (a repository authored before srs#446), an implementation MUST fall back to treating rootInstanceIds[0] (the first entry) as the typing anchor; this positional fallback is transitional and is withdrawn at the Continuity flip (rfc-decision-cce3c00e axis 2-8, the first full public release), after which anchorInstanceId is required wherever a typing anchor is needed. rootInstanceIds and memberInstanceIds otherwise carry no positional significance (RFC-013 [R5]).
+**I-145.** When present on a Container, anchorInstanceId MUST equal an id contained in that Container's rootInstanceIds or memberInstanceIds. It names the record whose Type (typeId + typeVersion) is the Container's typing anchor for RFC-009 Composition.rootTypeRefs matching (I-63) and RFC-010 three-way-merge container-root conflict detection. If it resolves to no such member, the repository is invalid. When anchorInstanceId is absent (a repository authored before srs#446), an implementation MUST fall back to treating rootInstanceIds[0] (the first entry) as the typing anchor; this positional fallback is transitional and is withdrawn at the Continuity flip (rfc-decision-cce3c00e axis 2-8, the first full public release), after which anchorInstanceId is required wherever a typing anchor is needed. rootInstanceIds and memberInstanceIds otherwise carry no positional significance (RFC-013 [R5]).
 
 #### Other
 
@@ -3761,7 +3759,7 @@ Conforming implementations must uphold the following invariants.
 
 **I-137.** A Type version referenced by any instance in the repository MUST NOT be deleted. Name-keying makes the Record-to-Field edge Type-mediated: `fieldId` is recovered from `typeId` + `typeVersion` + key, so deleting the pinned Type version renders every instance of it unreadable. This rule governs versions with live referents only. (RFC-039 [R19])
 
-**I-138.** A DocumentView projection MUST key `ProjectedRecord.fields` and `orderedFieldKeys` by `Field.name`, and MUST carry a composite value recursively under its own key. `ProjectedFieldGroup` and `ProjectedGroupEntry` are removed and have no successor construct. (RFC-039 [R11])
+**I-138.** A Composition projection MUST key `ProjectedRecord.fields` and `orderedFieldKeys` by `Field.name`, and MUST carry a composite value recursively under its own key. `ProjectedFieldGroup` and `ProjectedGroupEntry` are removed and have no successor construct. (RFC-039 [R11])
 
 **I-139.** `cardinality: "list"` array-wraps uniformly, for every `datatype` including `map` and `dependent`, matching `projectField`'s unconditional wrap. The single-value rule states the `single` case; the wrap composes on top of it. (RFC-039 [R16])
 

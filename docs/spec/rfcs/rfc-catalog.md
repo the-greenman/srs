@@ -11,7 +11,7 @@
 **Affected Components**: <!-- srs-integration:v1
 ext:views-l2
 ext:views-l1
-schema:document-view.json
+schema:composition.json
 schema:view.json
 -->
 
@@ -72,7 +72,7 @@ schema:package-bundle.json
 
 <!-- srs-integration:v1
 ext:views-l2
-schema:document-view.json
+schema:composition.json
 schema:container.json
 schema:manifest.json
 schema:blueprint.json
@@ -101,7 +101,7 @@ I-145
 
 <!-- srs-integration:v1
 ext:views-l2
-schema:document-view.json
+schema:composition.json
 -->
 
 **Proposal Artifact Path**: rfcs/rfc-011-documentview-query-extensions.md
@@ -281,7 +281,7 @@ schema:theme.json
 
 <!-- srs-integration:v1
 ext:views-l2
-schema:document-view.json
+schema:composition.json
 -->
 
 **Proposal Artifact Path**: rfcs/rfc-008-heterogeneous-container-subset-sections.md
@@ -356,7 +356,7 @@ I-82
 **Affected Components**: `ordering.memberOrder` on `container-subset` sections + `renderedPresentations` on the manifest. Invariants I-125–I-128 (RFC-015 Rules [N+28]-[N+31]).
 
 <!-- srs-integration:v1
-schema:document-view.json
+schema:composition.json
 schema:manifest.json
 I-125
 I-126
@@ -552,7 +552,7 @@ schema:manifest.json
 
 <!-- srs-integration:v1
 ext:views-l2
-schema:document-view.json
+schema:composition.json
 schema:document-view-output.json
 subsection:ext-views-l2
 -->
@@ -668,7 +668,7 @@ schema:field.json
 schema:type.json
 schema:package-bundle.json
 schema:theme.json
-schema:document-view.json
+schema:composition.json
 I-94
 I-120
 ext:discovery
@@ -715,7 +715,7 @@ ext:views-l1
 ext:views-l2
 ext:themes-l1
 schema:view.json
-schema:document-view.json
+schema:composition.json
 schema:theme.json
 I-1
 I-13
@@ -850,7 +850,7 @@ cell:reference
 cell:conformance
 cell:identity
 schema:blueprint.json
-schema:document-view.json
+schema:composition.json
 schema:field.json
 schema:manifest.json
 schema:note.json

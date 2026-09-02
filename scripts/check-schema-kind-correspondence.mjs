@@ -3,7 +3,7 @@
  * check-schema-kind-correspondence.mjs — every declared definition kind resolves to a schema (#311).
  *
  * `docs/schema/2.0/package-manifest.json` declares the definition kinds a package may index —
- * `fields`, `types`, `views`, `documentViews`, `themes`, `relationTypes`, `vocabularies`,
+ * `fields`, `types`, `views`, `compositions`, `themes`, `relationTypes`, `vocabularies`,
  * `lifecycles`, `blueprints`, `protocols`. Each names files that must themselves be validatable, so
  * each kind needs a schema in `docs/schema/2.0/`. Nothing asserted that. `protocols` was declarable
  * for months with no `protocol.json` behind it (landed later by #378) and no check noticed, because
@@ -19,7 +19,7 @@
  *      So every declared property needs a row, and a new one fails until it has one.
  *
  *   2. THE KIND → SCHEMA MAPPING IS EXPLICIT. Naive singularization is wrong for half the rows
- *      (`documentViews` → `document-view.json`, `relationTypes` → `relation-type.json`,
+ *      (`compositions` → `composition.json`, `relationTypes` → `relation-type.json`,
  *      `vocabularies` → `vocabulary.json`), and a rule that guesses is a rule that will guess wrong
  *      when the next kind is added. A new kind is given a schema and a row deliberately, not
  *      resolved by string surgery.
@@ -60,7 +60,7 @@ export const PROPERTY_SCHEMA = {
   fields: "field.json",
   types: "type.json",
   views: "view.json",
-  documentViews: "document-view.json",
+  compositions: "composition.json", // srs#523/#524, srs-rust#910: renamed from documentViews (rfc-decision-92d2da05)
   themes: "theme.json",
   relationTypes: "relation-type.json",
   vocabularies: "vocabulary.json",
@@ -77,7 +77,7 @@ export const PROPERTY_SCHEMA = {
   title: null,
   description: null,
   status: null,
-  dependencyRefs: null, // packages this package depends on, not definition files (rename to packageDependencies PARKED — srs#478, ADR-004 conflict with the pinned srs-rust binary)
+  packageDependencies: null, // packages this package depends on, not definition files. Renamed from dependencyRefs (srs#478, srs-rust#873/#910, rfc-decision-c8704763 item 2) — the PARK from ADR-004 is lifted: the fold rides the rev-6 composition-cutover stamp (srs#523/#524).
   createdAt: null,
   updatedAt: null,
 };

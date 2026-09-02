@@ -50,7 +50,6 @@
     "fields/source_package.json",
     "fields/package_version.json",
     "fields/imported_at.json",
-    "fields/semantic_object_type.json",
     "fields/fields.json",
     "fields/field_id.json",
     "fields/order.json",

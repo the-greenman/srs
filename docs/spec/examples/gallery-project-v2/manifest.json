@@ -1,5 +1,4 @@
 {
-  "title": "Limoma",
   "container": {
     "containerId": "4e4c9501-2709-4220-bb47-486f6f78a937",
     "title": "Limoma",
@@ -10,10 +9,11 @@
       "bf64442b-1e2b-4597-95e7-a665439c7f6f"
     ]
   },
-  "srsVersion": "2.0-draft",
   "$schema": "https://srs.semanticops.com/schema/2.0/manifest.json",
   "createdAt": "2026-05-25T00:00:00Z",
-  "dataModelRevision": 2,
+  "dataModelRevision": 6,
   "namespace": "com.limoma",
-  "repositoryId": "8ae058dc-b52d-4e52-8e7e-969018532a04"
+  "repositoryId": "8ae058dc-b52d-4e52-8e7e-969018532a04",
+  "srsVersion": "2.0-draft",
+  "title": "Limoma"
 }
