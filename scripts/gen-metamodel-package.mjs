@@ -80,6 +80,23 @@ const TYPE_ORDER = [
   [17, 'lifecycle-facet'],
   [18, 'inheritance-facet'],
   [19, 'cross-field-validation-facet'],
+  // -- srs#526 (Task 4b/2, epic #256/#272): instance-layer entities. Value objects before the
+  // entities that reference them; order is for readability only (numbering is what's pinned).
+  [20, 'source-reference'],
+  [21, 'note-section'],
+  [22, 'note'],
+  [23, 'record'],
+  [24, 'relation'],
+  [25, 'container'],
+  [26, 'relation-spec'],
+  [27, 'blueprint'],
+  [28, 'term'],
+  [29, 'promotion-window'],
+  [30, 'vocabulary'],
+  [31, 'lifecycle'],
+  [32, 'source-anchor'],
+  [33, 'source-excerpt'],
+  [34, 'source-document-meta'],
 ];
 const typeIdByName = Object.fromEntries(TYPE_ORDER.map(([n, name]) => [name, typeUuid(n)]));
 const ref = (typeName, mode, cardinality, extra) => {
@@ -209,6 +226,71 @@ const FIELD_SPECS = [
   [88, 'identity_field_id', ref('field', 'reference', 'single'), 'RFC-020 — names one fieldId from this Type\'s effective field set as the record\'s identity/display field.'],
   // -- Change A: ext:cross-field-validation facet (RFC-019) --
   [89, 'validation_rules', ref('cross-field-rule', 'inline', 'list'), 'ext:cross-field-validation — cross-field validation rules applied to Records of this Type. Per I-97, this array is each Type\'s own complete and exclusive set; it is not inherited by value.'],
+  // -- srs#526 (Task 4b/2): instance-layer entities (Record/Note/Relation/Container/Blueprint/
+  // Term/Vocabulary/Lifecycle(installable)/SourceDocumentMeta) and their value objects. Reuses the
+  // shared identity/lineage Fields above wherever semantics genuinely match (id/namespace/name/
+  // version/description/created_at/tags/label/status/meta/key/imported_at/exact-type-ref); instance
+  // identity (instanceId/relationId/containerId) gets its own Fields, distinct from the
+  // definition-layer id+namespace/name/version lineage (srs#526's own open decomposition question,
+  // resolved: instance tiers are NOT definition lineages).
+  [90, 'instance_id', { datatype: 'string', format: 'uuid' }, 'Stable UUID identity of a Tier 0 (Note) or Tier 2 (Record) instance — distinct from a definition\'s id+namespace/name/version lineage.'],
+  [91, 'type_namespace', { datatype: 'string' }, 'Denormalized hint: the namespace of the bound Type. If it conflicts with the resolved Type, typeId wins.'],
+  [92, 'type_name', { datatype: 'string' }, 'Denormalized hint: the name of the bound Type. If it conflicts with the resolved Type, typeId wins.'],
+  [93, 'lifecycle_state', { datatype: 'string' }, 'ext:lifecycle — current lifecycle state of this Record.'],
+  [94, 'field_values', { datatype: 'dependent', dependsOn: 'type_id' }, 'RFC-039: the name-keyed recursive value carrier, shaped by the Record\'s bound Type (resolved via typeId). Deliberately lossy at this envelope layer (approximated, per metamodel-fidelity.md); the Type\'s own projected schema validates the interior.'],
+  [95, 'source_refs', ref('source-reference', 'inline', 'list'), 'References to source material this instance was derived from or attaches to (RFC-017/RFC-023).'],
+  [96, 'updated_at', { datatype: 'date-time' }, 'ISO-8601 timestamp of the most recent update.'],
+  [97, 'title', { datatype: 'string' }, 'Human-readable title.'],
+  [98, 'sections', ref('note-section', 'inline', 'list'), 'Ordered list of named text sections (Tier 0 Note).'],
+  [99, 'content', { datatype: 'string' }, 'Free text content.'],
+  [100, 'content_hint', closed(['text', 'markdown', 'plain']), 'Rendering hint for a Note section\'s content. Default: text.'],
+  [101, 'relation_id', { datatype: 'string', format: 'uuid' }, 'Stable UUID for this standalone Relation (RFC-038).'],
+  [102, 'relation_type_name', { datatype: 'string' }, 'The Relation type name: a canonical vocabulary entry (contains, depends-on, supersedes, refines, derived-from, evidences, precedes) or a custom namespace/name form. Shared by Relation.relationType and RelationSpec.relationType (srs#526: same meaning, different Types — reuse over duplication).'],
+  [103, 'source_instance_id', { datatype: 'string', format: 'uuid' }, 'The asserting instance. Reads: source [relationType] target.'],
+  [104, 'target_instance_id', { datatype: 'string', format: 'uuid' }, 'The related instance.'],
+  [105, 'notes', { datatype: 'string' }, 'Free-form annotation on a Relation.'],
+  [106, 'source_type', closed(['transcript-chunk', 'transcript-segment', 'external-document', 'repository-document']), 'RFC-023 SourceReference kind. repository-document is added by ext:repository.'],
+  [107, 'source_id', { datatype: 'string' }, 'Free-form when sourceType is transcript-chunk/transcript-segment/external-document. When sourceType is repository-document, MUST be a SourceDocumentMeta.documentId.'],
+  [108, 'source_standard', { datatype: 'string' }, 'Identifies the standard/convention the sourceId is expressed in.'],
+  [109, 'stream_id', { datatype: 'string', format: 'uuid' }, 'Identifies a stream this source reference belongs to.'],
+  [110, 'source_role', closed(['evidence', 'extracted-from', 'quoted-from', 'inspired-by', 'attaches']), 'RFC-023 — the role the source material plays for this instance. attaches added by RFC-017.'],
+  [111, 'confidence', { datatype: 'number', constraints: { minimum: 0, maximum: 1 } }, 'Confidence score for this source reference, 0-1.'],
+  [112, 'note', { datatype: 'string' }, 'Free-form human clarification. Shared by SourceReference.note and SourceAnchor.note.'],
+  [113, 'container_id', { datatype: 'string', format: 'uuid' }, 'Stable UUID for this Container. Must not appear in Relation.sourceInstanceId or targetInstanceId.'],
+  [114, 'root_instance_ids', { datatype: 'string', format: 'uuid', cardinality: 'list' }, 'Top-level instances this Container was created to hold.'],
+  [115, 'member_instance_ids', { datatype: 'string', format: 'uuid', cardinality: 'list' }, 'Explicit membership list for all instances in scope.'],
+  [116, 'identity_instance_id', { datatype: 'string', format: 'uuid' }, 'RFC-013/RFC-029 — the instance id of this Container\'s identity/purpose record.'],
+  [117, 'anchor_instance_id', { datatype: 'string', format: 'uuid' }, 'RFC-009 (amended srs#446) — the instance id whose Type is this Container\'s typing anchor.'],
+  [118, 'root_types', ref('exact-type-ref', 'inline', 'list'), 'ext:blueprint — the Record Type(s) this Blueprint produces as root Records.'],
+  [119, 'structure', ref('relation-spec', 'inline', 'list'), 'ext:blueprint — expected Relation structure between extracted Records.'],
+  [120, 'required_types', ref('exact-type-ref', 'inline', 'list'), 'ext:blueprint — TypeIds that must be present for this Blueprint to be considered complete.'],
+  [121, 'spec_source_type', ref('exact-type-ref', 'inline', 'single'), 'ext:blueprint — the Record Type on the source end of a RelationSpec.'],
+  [122, 'spec_target_type', ref('exact-type-ref', 'inline', 'single'), 'ext:blueprint — the Record Type on the target end of a RelationSpec.'],
+  [123, 'relation_spec_cardinality', closed(['one-to-one', 'one-to-many', 'many-to-one', 'many-to-many']), 'ext:blueprint — expected multiplicity constraint for a RelationSpec.'],
+  [124, 'roles', { datatype: 'string', cardinality: 'list' }, 'Semantic roles of a Term. Well-known values: foundation, navigation.'],
+  [125, 'vocabulary_mode', closed(['open', 'closed']), 'open: values not in any Term are valid. closed: values MUST resolve to a Term.'],
+  [126, 'extends_vocabulary_id', { datatype: 'string', format: 'uuid' }, 'When this Vocabulary adds terms to an upstream Vocabulary.'],
+  [127, 'extends_vocabulary_version', { datatype: 'integer', constraints: { minimum: 1 } }, 'Must match the upstream Vocabulary\'s version exactly.'],
+  [128, 'until', { datatype: 'string' }, 'ISO8601 date or target package version bounding a Vocabulary promotion window.'],
+  [129, 'extends_lifecycle_id', { datatype: 'string', format: 'uuid' }, 'When this installable Lifecycle extends an upstream Lifecycle.'],
+  [130, 'extends_lifecycle_version', { datatype: 'integer', constraints: { minimum: 1 } }, 'Must match the upstream Lifecycle\'s version exactly.'],
+  [131, 'document_id', { datatype: 'string', format: 'uuid' }, 'ext:repository — stable identifier for a source document, used as SourceReference.sourceId when sourceType is repository-document.'],
+  [132, 'content_path', { datatype: 'string' }, 'Relative path from source-documents/ to the document file (RFC-017).'],
+  [133, 'content_type', { datatype: 'string' }, 'MIME type of the source document content.'],
+  [134, 'encoding', { datatype: 'string' }, 'Character encoding of the content file, e.g. utf-8.'],
+  [135, 'language', { datatype: 'string' }, 'BCP 47 language tag, e.g. en-GB.'],
+  [136, 'processing_note', { datatype: 'string' }, 'Caveats about quality or completeness of the source material.'],
+  [137, 'excerpt', ref('source-excerpt', 'inline', 'single'), 'ext:repository — repository-local excerpt provenance (RFC-017).'],
+  [138, 'date', { datatype: 'date' }, 'Date the source document was produced or recorded.'],
+  [139, 'source_document_id', { datatype: 'string', format: 'uuid' }, 'documentId of the repository-local parent source document an excerpt was captured from.'],
+  [140, 'anchor', ref('source-anchor', 'inline', 'single'), 'Locator of an excerpt within its parent source document.'],
+  [141, 'captured_at', { datatype: 'date-time' }, 'When an excerpt was extracted from its parent source.'],
+  [142, 'captured_by', { datatype: 'string' }, 'Who or what extracted an excerpt.'],
+  [143, 'source_checksum_at_capture', { datatype: 'string', constraints: { pattern: '^[a-z0-9]+:.+$' } }, 'Optional digest of the parent source content at extraction time: "<algorithm>:<hex>".'],
+  [144, 'anchor_kind', closed(['line-range', 'char-range', 'timestamp-range', 'message-id', 'json-pointer', 'custom']), 'How an excerpt location is expressed in the parent source document.'],
+  [145, 'value', { datatype: 'string' }, 'Locator value, e.g. "241-260", or a human-readable note.'],
+  [146, 'terms', ref('term', 'inline', 'list'), 'The Vocabulary\'s Term entries.'],
+  [147, 'promotion_window', ref('promotion-window', 'inline', 'single'), 'RFC-006 V10 — grace window for a Vocabulary\'s open-to-closed promotion.'],
 ];
 const fieldIdByName = {};
 for (const [n, name] of FIELD_SPECS) fieldIdByName[name] = fieldUuid(n);
@@ -442,6 +524,156 @@ const TYPE_SPECS = {
     extendsTypeVersion: 1,
     assignments: [
       a('validation_rules', false, 'Validation Rules', 'ext:cross-field-validation — cross-field validation rules applied to Records of this Type.'),
+    ],
+  },
+  // -- srs#526 (Task 4b/2, epic #256/#272): instance-layer entities. Generated from
+  // docs/schema/2.0/{record,note,relation,container,blueprint,term,vocabulary,lifecycle,
+  // source-document-meta}.json (the current hand-authored seeds); proven via
+  // scripts/rfc-272-closure-test.mjs (emitter ⊆ committed seed), never overwriting them (the
+  // authorship flip is #260, same as RFC-033/RFC-040). Deliberately excluded from every entity
+  // below (documented, not silent): each entity's own hand-authored `$schema` const-pin property
+  // (no per-entity string-const fieldType primitive exists yet), and any bare
+  // "implementation-defined, additionalProperties:true" bag with no real internal structure to
+  // model (Blueprint.aiGuidance/lineage/provenance). `meta` is NOT modelled as a Field on Record/
+  // Note/Relation/Container/SourceDocumentMeta — those five are emitted with
+  // `emitEntity(ctx, name, { facing: "instance" })`, whose synthetic `meta: {type:"object"}`
+  // property matches their bare (no additionalProperties) committed shape exactly; Term instead
+  // gets a REAL `meta` FieldAssignment (reusing the existing `meta` Field, #64) because Term is
+  // also emitted as a NESTED $def (vocabulary.json $defs.Term), where the facing synthesis does
+  // not apply, and because Term's committed `meta` carries `additionalProperties:true` (matching
+  // the map/open Field, unlike the other four's bare form).
+  'source-reference': {
+    description: 'RFC-023/RFC-017 — a reference to source material an instance was derived from, evidenced by, or attaches. Modelled once and referenced by Record, Note, and Relation (srs#526, per #272\'s "model SourceReference once" acceptance criterion).',
+    purpose: 'Describes one SourceReference: what kind of source it is, its locator, and the role it plays.',
+    assignments: [
+      a('source_type', true, 'Source Type'), a('source_id', true, 'Source Id'),
+      a('source_standard', false, 'Source Standard'), a('stream_id', false, 'Stream Id'),
+      a('source_role', false, 'Source Role'), a('confidence', false), a('note', false),
+    ],
+  },
+  'note-section': {
+    description: 'One named text section within a Tier 0 Note.',
+    purpose: 'Describes a NoteSection: its key, optional label, content, and content hint.',
+    assignments: [
+      a('name', true, undefined, 'Section key; unique within the Note; snake_case recommended.'),
+      a('label', false), a('content', true), a('content_hint', false, 'Content Hint'), a('tags', false),
+    ],
+  },
+  note: {
+    description: 'Tier 0 — a lightweight instance with no Type binding. The lowest-ceremony entry point in SRS.',
+    purpose: 'Describes a Note: its identity, ordered sections, and source references.',
+    assignments: [
+      a('instance_id', true, 'Instance Id'), a('title', false), a('tags', false),
+      a('sections', true), a('source_refs', false, 'Source Refs'),
+      a('created_at', false), a('updated_at', false, 'Updated At'),
+    ],
+  },
+  record: {
+    description: 'Tier 2 — an instantiated Type with field values. A fully structured, settled instance.',
+    purpose: 'Describes a Record: its bound Type, its field values, and its lifecycle/source/discovery metadata.',
+    assignments: [
+      a('instance_id', true, 'Instance Id'), a('type_id', true, 'Type Id'), a('type_version', true, 'Type Version'),
+      a('type_namespace', true, 'Type Namespace'), a('type_name', true, 'Type Name'),
+      a('lifecycle_state', false, 'Lifecycle State'), a('field_values', true, 'Field Values'),
+      a('source_refs', false, 'Source Refs'), a('tags', false),
+      a('created_at', false), a('updated_at', false, 'Updated At'),
+    ],
+  },
+  relation: {
+    description: 'RFC-038 — a single standalone Relation: a typed binary edge between two instance UUIDs.',
+    purpose: 'Describes a Relation: its type, its source and target instances, and provenance.',
+    assignments: [
+      a('relation_id', true, 'Relation Id'), a('relation_type_name', true, 'Relation Type'),
+      a('source_instance_id', true, 'Source Instance Id'), a('target_instance_id', true, 'Target Instance Id'),
+      a('created_at', false), a('notes', false), a('source_refs', false, 'Source Refs'),
+    ],
+  },
+  container: {
+    description: 'A lightweight grouping boundary over a collection of instances.',
+    purpose: 'Describes a Container: its identity, membership, typing anchor, and identity record.',
+    assignments: [
+      a('container_id', true, 'Container Id'), a('title', true), a('namespace', false), a('name', false),
+      a('description', false), a('root_instance_ids', false, 'Root Instance Ids'),
+      a('member_instance_ids', false, 'Member Instance Ids'), a('identity_instance_id', false, 'Identity Instance Id'),
+      a('anchor_instance_id', false, 'Anchor Instance Id'), a('tags', false),
+      a('created_at', false), a('updated_at', false, 'Updated At'),
+    ],
+  },
+  'relation-spec': {
+    description: 'ext:blueprint — declares an expected Relation between two Record types within a Blueprint.',
+    purpose: 'Describes a RelationSpec: its relation type, source/target Types, and cardinality/required constraints.',
+    assignments: [
+      a('relation_type_name', true, 'Relation Type'), a('spec_source_type', true, 'Source Type'),
+      a('spec_target_type', true, 'Target Type'), a('relation_spec_cardinality', false, 'Cardinality'),
+      a('required', false),
+    ],
+  },
+  blueprint: {
+    description: 'ext:blueprint — declares a document type for Record extraction and container instantiation.',
+    purpose: 'Describes a Blueprint: the root Record Types it produces, its Relation structure, and required Types.',
+    assignments: [
+      a('id', true), a('namespace', true), a('name', true), a('version', true), a('description', true),
+      a('root_types', true, 'Root Types'), a('structure', false), a('required_types', false, 'Required Types'),
+      a('tags', false), a('created_at', true),
+    ],
+  },
+  term: {
+    description: 'A defined entry within a Vocabulary. Terms carry stable identity, a key, optional enrichment, and status.',
+    purpose: 'Describes a Term: its key, aliases, roles, and status.',
+    assignments: [
+      a('id', true), a('version', true), a('namespace', true),
+      a('key', true, undefined, 'The string that appears in instance data. Unified substrate key field.'),
+      a('label', false), a('description', false), a('aliases', false), a('roles', false),
+      a('status', false), a('meta', false), a('created_at', false), a('updated_at', false, 'Updated At'),
+    ],
+  },
+  'promotion-window': {
+    description: 'RFC-006 V10 — a grace window for a Vocabulary\'s open-to-closed promotion.',
+    purpose: 'Describes the bound (date or package version) after which open-mode violations become errors.',
+    assignments: [a('until', true)],
+  },
+  vocabulary: {
+    description: 'A named, versioned set of Term entries. Mode open means usage-authoritative; mode closed means vocabulary-authoritative.',
+    purpose: 'Describes a Vocabulary: its mode, its Terms, and optional upstream-extension/promotion-window metadata.',
+    assignments: [
+      a('id', true), a('version', true), a('namespace', true), a('name', true),
+      a('vocabulary_mode', true, 'Mode'), a('terms', true),
+      a('extends_vocabulary_id', false, 'Extends Vocabulary Id'), a('extends_vocabulary_version', false, 'Extends Vocabulary Version'),
+      a('promotion_window', false, 'Promotion Window'), a('description', false), a('tags', false), a('created_at', true),
+    ],
+  },
+  lifecycle: {
+    description: 'A standalone, installable, referenceable lifecycle container — a closed vocabulary of states plus transitions and an initial state (distinct from the inline type-lifecycle facet).',
+    purpose: 'Describes an installable Lifecycle: its states, transitions, and initial state.',
+    assignments: [
+      a('id', true), a('version', true), a('namespace', true), a('name', true),
+      a('states', true), a('transitions', true), a('initial_state', true, 'Initial State'),
+      a('extends_lifecycle_id', false, 'Extends Lifecycle Id'), a('extends_lifecycle_version', false, 'Extends Lifecycle Version'),
+      a('description', false), a('tags', false), a('created_at', true),
+    ],
+  },
+  'source-anchor': {
+    description: 'RFC-017 — locates an excerpt within its parent source document.',
+    purpose: 'Describes a SourceAnchor: how the excerpt location is expressed and its locator value.',
+    assignments: [a('anchor_kind', true, 'Kind'), a('value', true), a('note', false)],
+  },
+  'source-excerpt': {
+    description: 'RFC-017 — repository-local excerpt provenance: the content file is a frozen captured snippet from another source document in the same repository.',
+    purpose: 'Describes a SourceExcerpt: its parent document, locator, and capture provenance.',
+    assignments: [
+      a('source_document_id', true, 'Source Document Id'), a('anchor', false),
+      a('captured_at', false, 'Captured At'), a('captured_by', false, 'Captured By'),
+      a('source_checksum_at_capture', false, 'Source Checksum At Capture'),
+    ],
+  },
+  'source-document-meta': {
+    description: 'ext:repository — metadata sidecar for a source document in source-documents/.',
+    purpose: 'Describes a SourceDocumentMeta: the document\'s content locator, type, and provenance.',
+    assignments: [
+      a('document_id', true, 'Document Id'), a('content_path', true, 'Content Path'), a('content_type', true, 'Content Type'),
+      a('encoding', false), a('language', false), a('title', false), a('description', false),
+      a('processing_note', false, 'Processing Note'), a('excerpt', false), a('date', false),
+      a('tags', false), a('created_at', true), a('imported_at', false, 'Imported At'),
     ],
   },
 };

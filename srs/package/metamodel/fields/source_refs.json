@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "References to source material this instance was derived from or attaches to (RFC-017/RFC-023)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "References to source material this instance was derived from or attaches to (RFC-017/RFC-023).",
+  "id": "4b00005f-0000-4000-a000-00000000005f",
+  "name": "source_refs",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "cardinality": "list",
+    "rangeType": {
+      "typeId": "4c000014-0000-4000-a000-000000000014",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

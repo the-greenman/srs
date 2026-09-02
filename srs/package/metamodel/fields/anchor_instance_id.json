@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "RFC-009 (amended srs#446) — the instance id whose Type is this Container's typing anchor."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-009 (amended srs#446) — the instance id whose Type is this Container's typing anchor.",
+  "id": "4b000075-0000-4000-a000-000000000075",
+  "name": "anchor_instance_id",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "format": "uuid"
+  },
+  "version": 1
+}

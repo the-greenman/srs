@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "ext:lifecycle — current lifecycle state of this Record."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:lifecycle — current lifecycle state of this Record.",
+  "id": "4b00005d-0000-4000-a000-00000000005d",
+  "name": "lifecycle_state",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

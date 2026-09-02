@@ -1,0 +1,18 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Optional digest of the parent source content at extraction time: \"<algorithm>:<hex>\"."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Optional digest of the parent source content at extraction time: \"<algorithm>:<hex>\".",
+  "id": "4b00008f-0000-4000-a000-00000000008f",
+  "name": "source_checksum_at_capture",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "constraints": {
+      "pattern": "^[a-z0-9]+:.+$"
+    }
+  },
+  "version": 1
+}

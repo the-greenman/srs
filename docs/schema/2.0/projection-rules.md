@@ -228,6 +228,59 @@ committed seed and the regenerate-and-diff gate's baseline, not a gap the gate i
 Portable constraints render to their closest JSON Schema equivalents: numeric bounds (`minimum`/`maximum`),
 string length (`minLength`/`maxLength`), `pattern`, and array `minItems`/`maxItems`.
 
+## Instance-layer entities (srs#526, Task 4b/2, epic #256/#272)
+
+Nine instance-layer structural entities — `Record`, `Note`, `Relation`, `Container`, `Blueprint`,
+`Term`, `Vocabulary`, `Lifecycle` (the installable, `lifecycleRef`-targeted kind), and
+`SourceDocumentMeta` — are now ALSO modelled as `com.semanticops.srs/metamodel` Types, proving
+`docs/schema/2.0/{record,note,relation,container,blueprint,term,vocabulary,lifecycle,
+source-document-meta}.json` are generatable, same discipline as RFC-033/RFC-040 did for
+`field.json`/`type.json`. **Authorship does not flip** (srs#260 is owner-held): these nine files
+remain hand-authored and loaded as committed; `scripts/rfc-272-closure-test.mjs` proves `emitter ⊆
+committed seed` (Tier 2, same comparison machinery as `rfc-035-closure-test.mjs`, factored into
+`scripts/lib/schema-closure.mjs` so neither test reimplements it). Per-entity exclusions (properties
+deliberately not modelled, not silently dropped — the seed may always carry more) are printed by the
+check each run: each entity's own `$schema` const-pin (no per-entity string-const `fieldType`
+primitive exists yet); `Container.containerType` (already `deprecated: true` in the seed);
+`Blueprint.aiGuidance`/`lineage`/`provenance` (bare "implementation-defined" bags with no real
+internal structure — modelling them would invent structure the seed itself does not declare).
+
+**`meta` handling.** Record/Note/Relation/Container/SourceDocumentMeta are emitted with
+`emitEntity(ctx, name, { facing: "instance" })`: the facing mechanism's synthetic
+`meta: {type:"object"}` (RFC-040 Change G) matches these five entities' bare (no
+`additionalProperties`) committed `meta` shape exactly, so none of them declares a `meta`
+FieldAssignment of its own. `Term` is the one exception: it also appears as a nested `$def`
+(`vocabulary.json $defs.Term`), where facing-synthesis does not apply (it only fires at the
+outermost `emitEntity` call), and its committed `meta` carries `additionalProperties: true` — so
+`Term.meta` is a REAL FieldAssignment reusing the existing `meta` Field (`map`/`open`, RFC-040 Unit
+1), which matches both the top-level `term.json` and the nested `vocabulary.json $defs.Term` shape
+identically. Blueprint/Vocabulary/Lifecycle carry no `meta` at all in their committed schemas and use
+the default `"definition"` facing.
+
+**Formerly-documented divergence, now resolved.** `lifecycle.states` reuses `lifecycle-state` (and
+its nested `requiresRelation`/`relation-type`) verbatim from RFC-040's inline `type-lifecycle`
+facet — the same Invariant 4 ("at least one state, exactly one `isInitial`") governs an installable
+`Lifecycle` exactly as it governs the inline facet. This reuse originally surfaced a pre-existing
+drift in the committed seed (`type.json`'s `TypeLifecycle.states` already declared `minItems: 1`
+while `lifecycle.json`'s `states` didn't; `lifecycle.json`'s `$defs.RequiresRelation.relationType`
+was still the pre-RFC-032-Rev-7 `oneOf: [string, string[]]` form). **srs#537 normalized
+`lifecycle.json`** to match `type.json`'s already-correct shape, so no divergence register entry
+remains — `rfc-272-closure-test.mjs` covers `lifecycle.json` cleanly with zero registered
+divergences.
+
+**Reuse decision (srs#526's own open question, resolved).** The instance layer does NOT reuse the
+definition layer's `id`/`namespace`/`name`/`version` identity lineage — a Record/Note/Relation/
+Container's `instanceId`/`relationId`/`containerId` is its own Field, semantically distinct from a
+Field/Type/Blueprint/Term/Vocabulary/Lifecycle's `id` + `namespace`/`name`/`version` definition
+lineage. Where an instance-layer entity genuinely IS definition-lineage-shaped (Blueprint, Term,
+Vocabulary, Lifecycle — all `id`+`namespace`+`name`/`key`+`version`, confirmed against each
+committed schema), it reuses the existing `id`/`namespace`/`name`/`version`/`description`/
+`created_at`/`tags` Fields verbatim, per the immutable-Field-semantics rule. `Lifecycle.states`/
+`transitions`/`initialState` reuse the RFC-040 `lifecycle-state`/`lifecycle-transition`/
+`initial_state` Fields outright (identical committed shape). `SourceReference` is modelled once
+(`source-reference` Type) and referenced by `Record`, `Note`, and `Relation` — #272's own "model
+SourceReference once" acceptance criterion.
+
 ## Amendment note — RFC-033 [R4](b), superseded by RFC-040's byte-closure contract
 
 RFC-035 had refined RFC-033 [R4](b) to say literal byte-equality against the seed was unachievable (emitter-owned

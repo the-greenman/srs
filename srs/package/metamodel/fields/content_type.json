@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "MIME type of the source document content."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "MIME type of the source document content.",
+  "id": "4b000085-0000-4000-a000-000000000085",
+  "name": "content_type",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

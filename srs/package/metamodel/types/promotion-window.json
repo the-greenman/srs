@@ -1,0 +1,19 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes the bound (date or package version) after which open-mode violations become errors."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-006 V10 — a grace window for a Vocabulary's open-to-closed promotion.",
+  "fields": [
+    {
+      "fieldId": "4b000080-0000-4000-a000-000000000080",
+      "order": 0,
+      "required": true
+    }
+  ],
+  "id": "4c00001d-0000-4000-a000-00000000001d",
+  "name": "promotion-window",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

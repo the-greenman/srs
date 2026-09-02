@@ -1,0 +1,24 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "How an excerpt location is expressed in the parent source document."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "How an excerpt location is expressed in the parent source document.",
+  "id": "4b000090-0000-4000-a000-000000000090",
+  "name": "anchor_kind",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "line-range",
+      "char-range",
+      "timestamp-range",
+      "message-id",
+      "json-pointer",
+      "custom"
+    ]
+  },
+  "version": 1
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "RFC-039: the name-keyed recursive value carrier, shaped by the Record's bound Type (resolved via typeId). Deliberately lossy at this envelope layer (approximated, per metamodel-fidelity.md); the Type's own projected schema validates the interior."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-039: the name-keyed recursive value carrier, shaped by the Record's bound Type (resolved via typeId). Deliberately lossy at this envelope layer (approximated, per metamodel-fidelity.md); the Type's own projected schema validates the interior.",
+  "id": "4b00005e-0000-4000-a000-00000000005e",
+  "name": "field_values",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "dependent",
+    "dependsOn": "type_id"
+  },
+  "version": 1
+}

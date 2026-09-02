@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Stable UUID for this standalone Relation (RFC-038)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Stable UUID for this standalone Relation (RFC-038).",
+  "id": "4b000065-0000-4000-a000-000000000065",
+  "name": "relation_id",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "format": "uuid"
+  },
+  "version": 1
+}

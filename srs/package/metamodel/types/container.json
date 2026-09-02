@@ -1,0 +1,80 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a Container: its identity, membership, typing anchor, and identity record."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "A lightweight grouping boundary over a collection of instances.",
+  "fields": [
+    {
+      "fieldId": "4b000071-0000-4000-a000-000000000071",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Container Id"
+    },
+    {
+      "fieldId": "4b000061-0000-4000-a000-000000000061",
+      "order": 1,
+      "required": true
+    },
+    {
+      "fieldId": "4b000002-0000-4000-a000-000000000002",
+      "order": 2,
+      "required": false
+    },
+    {
+      "fieldId": "4b000003-0000-4000-a000-000000000003",
+      "order": 3,
+      "required": false
+    },
+    {
+      "fieldId": "4b000005-0000-4000-a000-000000000005",
+      "order": 4,
+      "required": false
+    },
+    {
+      "fieldId": "4b000072-0000-4000-a000-000000000072",
+      "order": 5,
+      "required": false,
+      "displayLabel": "Root Instance Ids"
+    },
+    {
+      "fieldId": "4b000073-0000-4000-a000-000000000073",
+      "order": 6,
+      "required": false,
+      "displayLabel": "Member Instance Ids"
+    },
+    {
+      "fieldId": "4b000074-0000-4000-a000-000000000074",
+      "order": 7,
+      "required": false,
+      "displayLabel": "Identity Instance Id"
+    },
+    {
+      "fieldId": "4b000075-0000-4000-a000-000000000075",
+      "order": 8,
+      "required": false,
+      "displayLabel": "Anchor Instance Id"
+    },
+    {
+      "fieldId": "4b00000b-0000-4000-a000-00000000000b",
+      "order": 9,
+      "required": false
+    },
+    {
+      "fieldId": "4b000006-0000-4000-a000-000000000006",
+      "order": 10,
+      "required": false
+    },
+    {
+      "fieldId": "4b000060-0000-4000-a000-000000000060",
+      "order": 11,
+      "required": false,
+      "displayLabel": "Updated At"
+    }
+  ],
+  "id": "4c000019-0000-4000-a000-000000000019",
+  "name": "container",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

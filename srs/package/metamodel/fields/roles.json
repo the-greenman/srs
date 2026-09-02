@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Semantic roles of a Term. Well-known values: foundation, navigation."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Semantic roles of a Term. Well-known values: foundation, navigation.",
+  "id": "4b00007c-0000-4000-a000-00000000007c",
+  "name": "roles",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "cardinality": "list"
+  },
+  "version": 1
+}

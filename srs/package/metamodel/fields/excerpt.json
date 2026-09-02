@@ -1,0 +1,20 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "ext:repository — repository-local excerpt provenance (RFC-017)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:repository — repository-local excerpt provenance (RFC-017).",
+  "id": "4b000089-0000-4000-a000-000000000089",
+  "name": "excerpt",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "rangeType": {
+      "typeId": "4c000021-0000-4000-a000-000000000021",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

@@ -1,0 +1,78 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a Record: its bound Type, its field values, and its lifecycle/source/discovery metadata."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Tier 2 — an instantiated Type with field values. A fully structured, settled instance.",
+  "fields": [
+    {
+      "fieldId": "4b00005a-0000-4000-a000-00000000005a",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Instance Id"
+    },
+    {
+      "fieldId": "4b000021-0000-4000-a000-000000000021",
+      "order": 1,
+      "required": true,
+      "displayLabel": "Type Id"
+    },
+    {
+      "fieldId": "4b000022-0000-4000-a000-000000000022",
+      "order": 2,
+      "required": true,
+      "displayLabel": "Type Version"
+    },
+    {
+      "fieldId": "4b00005b-0000-4000-a000-00000000005b",
+      "order": 3,
+      "required": true,
+      "displayLabel": "Type Namespace"
+    },
+    {
+      "fieldId": "4b00005c-0000-4000-a000-00000000005c",
+      "order": 4,
+      "required": true,
+      "displayLabel": "Type Name"
+    },
+    {
+      "fieldId": "4b00005d-0000-4000-a000-00000000005d",
+      "order": 5,
+      "required": false,
+      "displayLabel": "Lifecycle State"
+    },
+    {
+      "fieldId": "4b00005e-0000-4000-a000-00000000005e",
+      "order": 6,
+      "required": true,
+      "displayLabel": "Field Values"
+    },
+    {
+      "fieldId": "4b00005f-0000-4000-a000-00000000005f",
+      "order": 7,
+      "required": false,
+      "displayLabel": "Source Refs"
+    },
+    {
+      "fieldId": "4b00000b-0000-4000-a000-00000000000b",
+      "order": 8,
+      "required": false
+    },
+    {
+      "fieldId": "4b000006-0000-4000-a000-000000000006",
+      "order": 9,
+      "required": false
+    },
+    {
+      "fieldId": "4b000060-0000-4000-a000-000000000060",
+      "order": 10,
+      "required": false,
+      "displayLabel": "Updated At"
+    }
+  ],
+  "id": "4c000017-0000-4000-a000-000000000017",
+  "name": "record",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

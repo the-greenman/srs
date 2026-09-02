@@ -1,0 +1,23 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "RFC-023 — the role the source material plays for this instance. attaches added by RFC-017."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-023 — the role the source material plays for this instance. attaches added by RFC-017.",
+  "id": "4b00006e-0000-4000-a000-00000000006e",
+  "name": "source_role",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "evidence",
+      "extracted-from",
+      "quoted-from",
+      "inspired-by",
+      "attaches"
+    ]
+  },
+  "version": 1
+}

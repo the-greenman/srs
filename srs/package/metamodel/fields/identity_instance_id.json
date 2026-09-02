@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "RFC-013/RFC-029 — the instance id of this Container's identity/purpose record."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-013/RFC-029 — the instance id of this Container's identity/purpose record.",
+  "id": "4b000074-0000-4000-a000-000000000074",
+  "name": "identity_instance_id",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "format": "uuid"
+  },
+  "version": 1
+}

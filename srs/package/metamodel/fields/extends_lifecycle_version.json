@@ -1,0 +1,18 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Must match the upstream Lifecycle's version exactly."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Must match the upstream Lifecycle's version exactly.",
+  "id": "4b000082-0000-4000-a000-000000000082",
+  "name": "extends_lifecycle_version",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "integer",
+    "constraints": {
+      "minimum": 1
+    }
+  },
+  "version": 1
+}

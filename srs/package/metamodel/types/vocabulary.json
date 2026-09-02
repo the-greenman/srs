@@ -1,0 +1,78 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a Vocabulary: its mode, its Terms, and optional upstream-extension/promotion-window metadata."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "A named, versioned set of Term entries. Mode open means usage-authoritative; mode closed means vocabulary-authoritative.",
+  "fields": [
+    {
+      "fieldId": "4b000001-0000-4000-a000-000000000001",
+      "order": 0,
+      "required": true
+    },
+    {
+      "fieldId": "4b000004-0000-4000-a000-000000000004",
+      "order": 1,
+      "required": true
+    },
+    {
+      "fieldId": "4b000002-0000-4000-a000-000000000002",
+      "order": 2,
+      "required": true
+    },
+    {
+      "fieldId": "4b000003-0000-4000-a000-000000000003",
+      "order": 3,
+      "required": true
+    },
+    {
+      "fieldId": "4b00007d-0000-4000-a000-00000000007d",
+      "order": 4,
+      "required": true,
+      "displayLabel": "Mode"
+    },
+    {
+      "fieldId": "4b000092-0000-4000-a000-000000000092",
+      "order": 5,
+      "required": true
+    },
+    {
+      "fieldId": "4b00007e-0000-4000-a000-00000000007e",
+      "order": 6,
+      "required": false,
+      "displayLabel": "Extends Vocabulary Id"
+    },
+    {
+      "fieldId": "4b00007f-0000-4000-a000-00000000007f",
+      "order": 7,
+      "required": false,
+      "displayLabel": "Extends Vocabulary Version"
+    },
+    {
+      "fieldId": "4b000093-0000-4000-a000-000000000093",
+      "order": 8,
+      "required": false,
+      "displayLabel": "Promotion Window"
+    },
+    {
+      "fieldId": "4b000005-0000-4000-a000-000000000005",
+      "order": 9,
+      "required": false
+    },
+    {
+      "fieldId": "4b00000b-0000-4000-a000-00000000000b",
+      "order": 10,
+      "required": false
+    },
+    {
+      "fieldId": "4b000006-0000-4000-a000-000000000006",
+      "order": 11,
+      "required": true
+    }
+  ],
+  "id": "4c00001e-0000-4000-a000-00000000001e",
+  "name": "vocabulary",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

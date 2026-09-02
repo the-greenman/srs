@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "ext:repository — stable identifier for a source document, used as SourceReference.sourceId when sourceType is repository-document."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:repository — stable identifier for a source document, used as SourceReference.sourceId when sourceType is repository-document.",
+  "id": "4b000083-0000-4000-a000-000000000083",
+  "name": "document_id",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "format": "uuid"
+  },
+  "version": 1
+}

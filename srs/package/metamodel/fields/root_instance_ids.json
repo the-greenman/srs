@@ -1,0 +1,17 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Top-level instances this Container was created to hold."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Top-level instances this Container was created to hold.",
+  "id": "4b000072-0000-4000-a000-000000000072",
+  "name": "root_instance_ids",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "format": "uuid",
+    "cardinality": "list"
+  },
+  "version": 1
+}

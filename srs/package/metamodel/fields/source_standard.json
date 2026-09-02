@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Identifies the standard/convention the sourceId is expressed in."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Identifies the standard/convention the sourceId is expressed in.",
+  "id": "4b00006c-0000-4000-a000-00000000006c",
+  "name": "source_standard",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

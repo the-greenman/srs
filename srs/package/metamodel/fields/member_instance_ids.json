@@ -1,0 +1,17 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Explicit membership list for all instances in scope."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Explicit membership list for all instances in scope.",
+  "id": "4b000073-0000-4000-a000-000000000073",
+  "name": "member_instance_ids",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "format": "uuid",
+    "cardinality": "list"
+  },
+  "version": 1
+}

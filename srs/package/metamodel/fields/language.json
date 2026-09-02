@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "BCP 47 language tag, e.g. en-GB."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "BCP 47 language tag, e.g. en-GB.",
+  "id": "4b000087-0000-4000-a000-000000000087",
+  "name": "language",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

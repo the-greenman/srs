@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "When an excerpt was extracted from its parent source."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "When an excerpt was extracted from its parent source.",
+  "id": "4b00008d-0000-4000-a000-00000000008d",
+  "name": "captured_at",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "date-time"
+  },
+  "version": 1
+}

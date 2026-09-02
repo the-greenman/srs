@@ -33,7 +33,19 @@ import { projectField, rangeDefKey } from "./rfc-032-fieldtype.mjs";
 /** Committed override table: metamodel Field.name -> JSON key, where lowerCamelCase is not the seed key.
  * RFC-040 Unit 1 (srs#477) Change D retires the pre-existing `assignment_default_value` entry (the
  * property is removed); Change B adds the two entries below for the new value-object Types. */
-export const NAME_OVERRIDES = { kind: "type", transition_name: "name" };
+export const NAME_OVERRIDES = {
+  kind: "type",
+  transition_name: "name",
+  // srs#526 (Task 4b/2): instance-layer entities reuse a shared field under a Type-specific wire
+  // key, or need a Type-specific enum domain that collides in name with an existing, differently-
+  // scoped Field. Same mechanism as the two RFC-040 entries above, not a new one.
+  relation_type_name: "relationType",
+  spec_source_type: "sourceType",
+  spec_target_type: "targetType",
+  relation_spec_cardinality: "cardinality",
+  vocabulary_mode: "mode",
+  anchor_kind: "kind",
+};
 /** snake_case -> lowerCamelCase, deterministic and injective over the in-scope metamodel field names. */
 export function jsonKey(fieldName) {
   return NAME_OVERRIDES[fieldName] ?? fieldName.replace(/_([a-z0-9])/g, (_, c) => c.toUpperCase());

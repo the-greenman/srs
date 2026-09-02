@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Stable UUID for this Container. Must not appear in Relation.sourceInstanceId or targetInstanceId."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Stable UUID for this Container. Must not appear in Relation.sourceInstanceId or targetInstanceId.",
+  "id": "4b000071-0000-4000-a000-000000000071",
+  "name": "container_id",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "format": "uuid"
+  },
+  "version": 1
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Free text content."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Free text content.",
+  "id": "4b000063-0000-4000-a000-000000000063",
+  "name": "content",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}
