@@ -127,7 +127,9 @@ async function validateManifestPaths(dirPath, manifest, kind) {
  * parent of five others, each with its own manifest and its own separately-validated definitions,
  * so a recursive walk reports every sub-package's files as "unlisted" — 181 warnings where 1 is
  * real, which buries the finding it exists to surface. It would also flag nested `package.json`
- * files and the Tier-2 records under `package/records/`, neither of which is a definition.
+ * files, which are not definitions. (`package/records/` — the RFC-011 stub and its rfc-change
+ * records, previously excluded here too — was relocated into `records/tier-2/` per srs#530; it no
+ * longer exists, so this walk no longer needs to know about it.)
  *
  * The folder set is the union of two sources, because neither alone is enough. Dirnames of listed
  * entries alone would drop the folders where NOTHING is indexed — `spec-authoring-core/views/`

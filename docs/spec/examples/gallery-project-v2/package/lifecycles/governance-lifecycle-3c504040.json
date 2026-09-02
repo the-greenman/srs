@@ -38,7 +38,7 @@
       "description": "Replaced by a successor record.",
       "isFinal": true,
       "requiresRelation": {
-        "relationType": "supersedes"
+        "relationType": ["supersedes"]
       }
     },
     {

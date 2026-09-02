@@ -65,9 +65,11 @@ SourceDocumentMeta — proven by `scripts/rfc-272-closure-test.mjs` (`emitter �
 `docs/schema/2.0/{record,note,relation,container,blueprint,term,vocabulary,lifecycle,
 source-document-meta}.json`), reusing the same comparison machinery as the field/type check
 (`scripts/lib/schema-closure.mjs`). See `docs/schema/2.0/projection-rules.md`'s "Instance-layer
-entities" section for the per-entity exclusions, the `meta`/facing handling, and the one documented
-divergence (`lifecycle.states`, a pre-existing drift between `type.json` and `lifecycle.json`
-surfaced by Field reuse, not created by it). `Record.fieldValues` uses the existing `dependent`
+entities" section for the per-entity exclusions and the `meta`/facing handling. There are zero
+registered divergences: `lifecycle.states` originally surfaced a pre-existing drift between
+`type.json` and `lifecycle.json` (Field reuse revealing it, not creating it), resolved by srs#537
+normalizing `lifecycle.json` to match — no divergence register entry remains.
+`Record.fieldValues` uses the existing `dependent`
 datatype row above (approximated, deliberately lossy `{}`) — the same mechanism `FieldAssignment`'s
 former default-value facet used, generalized here to "the value is shaped by the sibling `typeId`'s
 resolved Type," which the frozen `dependent` datatype was never designed to express precisely but

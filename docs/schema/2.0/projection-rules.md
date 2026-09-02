@@ -257,16 +257,16 @@ outermost `emitEntity` call), and its committed `meta` carries `additionalProper
 identically. Blueprint/Vocabulary/Lifecycle carry no `meta` at all in their committed schemas and use
 the default `"definition"` facing.
 
-**Documented divergence.** `lifecycle.states` reuses `lifecycle-state` (and its nested
-`requiresRelation`/`relation-type`) verbatim from RFC-040's inline `type-lifecycle` facet — the same
-Invariant 4 ("at least one state, exactly one `isInitial`") governs an installable `Lifecycle`
-exactly as it governs the inline facet. This surfaces a **pre-existing** drift in the committed
-seed, not something this unit introduces: `type.json`'s `TypeLifecycle.states` already declares
-`minItems: 1`; `lifecycle.json`'s `states` does not, and `lifecycle.json`'s own
-`$defs.RequiresRelation.relationType` is still the pre-RFC-032-Rev-7 `oneOf: [string, string[]]`
-form, never updated to the list-only form `type.json`'s copy already uses. Flagged as a Door-1
-fixup candidate for a future unit (execute the already-ratified RFC-032 Rev-7 normalization onto the
-one committed file that missed it) — not hand-edited here.
+**Formerly-documented divergence, now resolved.** `lifecycle.states` reuses `lifecycle-state` (and
+its nested `requiresRelation`/`relation-type`) verbatim from RFC-040's inline `type-lifecycle`
+facet — the same Invariant 4 ("at least one state, exactly one `isInitial`") governs an installable
+`Lifecycle` exactly as it governs the inline facet. This reuse originally surfaced a pre-existing
+drift in the committed seed (`type.json`'s `TypeLifecycle.states` already declared `minItems: 1`
+while `lifecycle.json`'s `states` didn't; `lifecycle.json`'s `$defs.RequiresRelation.relationType`
+was still the pre-RFC-032-Rev-7 `oneOf: [string, string[]]` form). **srs#537 normalized
+`lifecycle.json`** to match `type.json`'s already-correct shape, so no divergence register entry
+remains — `rfc-272-closure-test.mjs` covers `lifecycle.json` cleanly with zero registered
+divergences.
 
 **Reuse decision (srs#526's own open question, resolved).** The instance layer does NOT reuse the
 definition layer's `id`/`namespace`/`name`/`version` identity lineage — a Record/Note/Relation/

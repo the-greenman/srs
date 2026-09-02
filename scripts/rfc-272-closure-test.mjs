@@ -50,29 +50,12 @@ const MM = join(REPO, "srs/package/metamodel");
 const SEED = join(REPO, "docs/schema/2.0");
 const load = (p) => JSON.parse(readFileSync(p, "utf8"));
 
-// DIVERGENCE REGISTER: covered top-level properties where the emitter genuinely differs from the
-// committed seed BY DESIGN (never silently passed — asserted to still diverge, below). One entry,
-// on `lifecycle.states`: `lifecycle-state` is REUSED verbatim (srs#526's whole point — this Type
-// and its `requiresRelation`/`relation-type` value objects already exist for RFC-040's inline
-// `type-lifecycle` facet, and Invariant 4 — "at least one state, exactly one isInitial" — governs
-// an installable Lifecycle exactly as it governs the inline facet). Reuse surfaces a PRE-EXISTING
-// drift in the committed seed, not something this unit introduces:
-//   (a) `type.json`'s inline `TypeLifecycle.states` already declares `minItems: 1`; the committed
-//       `lifecycle.json`'s `states` does not — an inconsistency between the two committed files for
-//       what should be the same invariant, surfaced by reuse, not created by it.
-//   (b) `lifecycle.json`'s own `$defs.RequiresRelation.relationType` is still the PRE-RFC-032-Rev-7
-//       `oneOf: [string, string[]]` form; `type.json`'s copy was already normalized to list-only
-//       (Field #71's own doc comment: "RFC-032 Change F normalized this declaration form from
-//       string|string[] to a list (length >= 1); the single-string form is removed"). `lifecycle.json`
-//       was evidently never updated to match — a real, pre-existing fidelity gap on the SEED side,
-//       flagged here and in the PR body for a future fixup unit (Door 1: execute the already-ratified
-//       RFC-032 Rev-7 normalization onto the one committed file that missed it), not hand-edited now.
-const DIVERGENCE = {
-  lifecycle: {
-    states:
-      "lifecycle-state (incl. its nested requiresRelation/relation-type) is reused verbatim from the RFC-040 type-lifecycle facet. The reused Field's minItems:1 (Invariant 4) and normalized list-only RequiresRelation.relationType are both correct against the model; lifecycle.json's committed `states`/`requiresRelation.relationType` have not been updated to match (pre-existing drift between type.json and lifecycle.json, surfaced by this unit's reuse — a Door-1 fixup candidate, not actioned here).",
-  },
-};
+// No DIVERGENCE register: `lifecycle.states` (`lifecycle-state`, reused verbatim from the RFC-040
+// type-lifecycle facet) used to diverge from the committed `lifecycle.json` — missing `minItems:1`
+// and a stale pre-RFC-032-Rev-7 `oneOf` RequiresRelation.relationType — but srs#537 normalized
+// `lifecycle.json` to match (states minItems:1, relationType list-only), so the register entry this
+// unit originally carried has rotted into a no-op and was removed rather than left as dead weight.
+const DIVERGENCE = {};
 
 // entity (metamodel Type name) -> [seed file, facing].
 const ENTITIES = [

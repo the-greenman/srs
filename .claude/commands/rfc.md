@@ -72,9 +72,9 @@ The `rfcs/` directory is the authoritative numbering registry. Find the highest 
 # 1. Highest number in rfcs/ markdown files
 ls rfcs/rfc-*.md 2>/dev/null | grep -oP 'rfc-\K\d+' | sort -n | tail -1
 
-# 2. Highest rfc-number field value in the SRS package records (catches fast-track RFCs
-#    that went straight to Stage 6 without a markdown draft)
-grep -r '"5a000001-0000-4000-a000-000000000001"' srs/package/records/ -A1 \
+# 2. Highest rfc-number field value across srs/records/ (catches fast-track RFCs that went
+#    straight to Stage 6 without a markdown draft)
+grep -r '"5a000001-0000-4000-a000-000000000001"' srs/records/ -A1 \
   | grep '"value"' | grep -oP '"value": "\K\d+' | sort -n | tail -1
 ```
 
