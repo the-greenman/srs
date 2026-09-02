@@ -62,7 +62,7 @@ which the completeness check (below) does not require a row for.
 RFC-039 `[R13]` forbids glob-enumeration as a fallback mechanism, so both of these need an explicit
 classification rather than "the enumerator will find it eventually."
 
-- **`srs/package/records/`** — 5 files: 4 Tier-2 Records (`com.semanticops.spec/rfc`,
+- ~~**`srs/package/records/`** — 5 files: 4 Tier-2 Records (`com.semanticops.spec/rfc`,
   `com.semanticops.spec/rfc-change` ×3) plus 1 `.revisions.json` sidecar. **3 of the 4 records carry
   no `$schema`** (verified: `rfc-change-{05fc673c,77e89353,819fea19}.json`; only `rfc-ffe44c91.json`
   has one). All 4 are structurally valid Records (`instanceId`/`typeId`/`fieldValues` present, would
@@ -73,7 +73,16 @@ classification rather than "the enumerator will find it eventually."
   open srs issue. **Classification: real Records, currently unvalidated by any registered check.**
   Fixing the enumeration gap is implementation work (extend `validate-records.mjs` or add a sibling
   check to also walk `package/records/`), out of #522's own classification-only scope — flagged
-  prominently in the PR body rather than actioned here.
+  prominently in the PR body rather than actioned here.~~ **RESOLVED (srs#530, this PR):** owner
+  disposition was relocate, not validate-in-place ("accommodate by repair, never tolerance: no new
+  check legitimizing the wrong location"). The RFC-011 stub (`rfc-ffe44c91.json`) and its three
+  rfc-change records moved (`git mv`, `instanceId`s unchanged) into `records/tier-2/`, matching where
+  every other hex-UUID-named `rfc`/`rfc-change` record already lives (the `.revisions.json` sidecar
+  was already deleted by srs#531). The three records missing `$schema` gained it, matching siblings
+  exactly. `package/records/` no longer exists; `validate-package.mjs`'s doc comment no longer
+  mentions it. The four records are now reached by `validate-records.mjs`, `srs repo validate`, and
+  every other check that walks `records/` — the enumeration gap is closed by removing the second root
+  entirely, not by teaching a check to reach it. Gap closed.
 - **`tests/rfc-032/`** — no manifest, no `.srs` marker; **already ratified as not a repository** by
   RFC-038 itself (`rfcs/rfc-038-tree-authoritative-storage.md`, "Resolved migration dispositions":
   *"`tests/rfc-032/` is unit-test input, not a repository: it has a test runner, goldens and one
@@ -106,11 +115,12 @@ it as generation).
 | Owed, ownership assigned to this unit, authoring deferred | 1 | `{srsj, manifest, data}` envelope |
 | Explicit exclusion, retired-dormant | 1 | `.revisions.json` sidecar schema |
 | Historical, already retired (informational, not counted against the 22) | 3 | federation-events.json, federation-registry.json, typed-record.json |
-| Enumeration-invisible instance trees, classified | 2 | `srs/package/records/` (real gap, flagged), `tests/rfc-032/` (covered, no gap) |
+| Enumeration-invisible instance trees, classified | 2 | `srs/package/records/` (real gap, flagged, **resolved by relocation — srs#530**), `tests/rfc-032/` (covered, no gap) |
 
 **22 live schema files, all classified. Zero unclassified schema files.** One blocking prerequisite
 decision (`#379`, protocol.json), one open mechanism conflict (`#390` / `package-bundle.json`), one
 anomaly flagged for awareness and since **resolved** (72 orphan `.revisions.json` sidecars deleted —
-srs#531, see §2's row above), and one new enumeration gap flagged for awareness (`srs/package/records/`,
-3 unvalidated Records) — none of which block this unit's own completion, since #522's job is the
-ledger and the owner-review gate, not resolving them.
+srs#531, see §2's row above), and one enumeration gap flagged for awareness and since **resolved**
+(`srs/package/records/` relocated into `records/tier-2/` — srs#530, see §3's row above) — none of
+which blocked this unit's own completion, since #522's job was the ledger and the owner-review gate,
+not resolving them.

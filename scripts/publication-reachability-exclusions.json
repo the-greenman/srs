@@ -3,19 +3,19 @@
   "exclusions": [
     {
       "instanceId": "05fc673c-0d59-45ae-80d5-0c1a879d32d4",
-      "path": "package/records/rfc-change-05fc673c.json",
+      "path": "records/tier-2/rfc-change-05fc673c.json",
       "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "issue": "#285"
     },
     {
       "instanceId": "77e89353-7399-4527-859a-9fd92df73497",
-      "path": "package/records/rfc-change-77e89353.json",
+      "path": "records/tier-2/rfc-change-77e89353.json",
       "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "issue": "#285"
     },
     {
       "instanceId": "819fea19-2c4f-489a-a7bb-ec81fcb38bb3",
-      "path": "package/records/rfc-change-819fea19.json",
+      "path": "records/tier-2/rfc-change-819fea19.json",
       "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "issue": "#285"
     },
