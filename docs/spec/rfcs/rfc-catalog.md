@@ -384,7 +384,7 @@ I-128
 <!-- srs-integration:v1
 schema:record.json
 schema:note.json
-schema:relations-collection.json
+schema:relation.json
 schema:source-document-meta.json
 schema:manifest.json
 type:com.semanticops.base/repo_settings
@@ -494,7 +494,7 @@ I-100
 <!-- srs-integration:v1
 schema:record.json
 schema:note.json
-schema:relations-collection.json
+schema:relation.json
 I-88
 -->
 
@@ -861,7 +861,6 @@ schema:package-manifest.json
 schema:protocol.json
 schema:record.json
 schema:relation.json
-schema:relations-collection.json
 schema:type.json
 ext:type-inheritance
 ext:lifecycle
