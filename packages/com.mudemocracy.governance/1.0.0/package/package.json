@@ -5,12 +5,6 @@
   ],
   "createdAt": "2026-01-01T00:00:00Z",
   "description": "Canonical MuDemocracy governance package. At v1.0.0 it captures decisions (the initial form of a group's governance document): decision, article, role, and decision-log types with their governance lifecycle, blueprint, document views, and decision protocol. Promoted from com.limoma/governance-core @1.0.0 with all field/type/lifecycle/blueprint/view/protocol UUIDs preserved.",
-  "documentViews": [
-    "document-views/articles-and-roles-78b11038.json",
-    "document-views/decision-deliberation-5a3ce87e.json",
-    "document-views/decision-log-b5c8d124.json",
-    "document-views/governance-document-732a982b.json"
-  ],
   "fields": [
     "fields/title-d7e82557.json",
     "fields/decisionstatement-de1296e0.json",
@@ -61,5 +55,11 @@
   "views": [
     "views/decision-log-faebd240.json"
   ],
-  "dataModelRevision": 2
+  "dataModelRevision": 2,
+  "compositions": [
+    "compositions/articles-and-roles-78b11038.json",
+    "compositions/decision-deliberation-5a3ce87e.json",
+    "compositions/decision-log-b5c8d124.json",
+    "compositions/governance-document-732a982b.json"
+  ]
 }

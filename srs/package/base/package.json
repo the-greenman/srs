@@ -1,7 +1,7 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/package-manifest.json",
   "blueprints": [],
-  "documentViews": [],
+  "createdAt": "2026-07-08T00:00:00Z",
   "fields": [
     "fields/allowedmimetypes-8912f486.json",
     "fields/maxperfilebytes-f1bce663.json",
@@ -21,5 +21,5 @@
   "title": "SRS Base Package",
   "description": "Base package for repository-level settings. Provides com.semanticops.base/repo_settings and the attachment-limit Fields it composes (RFC-017).",
   "status": "active",
-  "createdAt": "2026-07-08T00:00:00Z"
+  "compositions": []
 }

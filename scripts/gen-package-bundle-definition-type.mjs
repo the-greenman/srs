@@ -9,7 +9,7 @@
  * bundle's enum GENERATED from the one source of truth: `check-schema-kind-correspondence.mjs`'s
  * `definitionKinds()` (#311), which already derives the kind list from package-manifest.json's
  * declared properties. The enum value for each kind is its schema's basename (already the correct
- * singular-kebab form: field.json -> "field", document-view.json -> "document-view", ...), so there
+ * singular-kebab form: field.json -> "field", composition.json -> "composition", ...), so there
  * is no separate naming table to keep in sync either.
  *
  *   node scripts/gen-package-bundle-definition-type.mjs           # write docs/schema/2.0/package-bundle.json

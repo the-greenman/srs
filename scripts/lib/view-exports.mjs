@@ -53,20 +53,25 @@ function loadRenderedPresentations() {
   }
   return presentations.map((entry, i) => {
     const where = `${MANIFEST_PATH} renderedPresentations[${i}]`;
-    if (typeof entry.viewId !== "string" || !entry.viewId) {
-      throw new Error(`view-exports: ${where} is missing a string viewId`);
+    // srs#523/#524, srs-rust#910: RFC-015's schema key renamed viewId -> compositionId
+    // (rfc-decision-92d2da05). This reader follows the rename; the module's own
+    // VIEW_EXPORTS/EXPORTED_VIEW_IDS/"view" vocabulary is unrenamed here — decision
+    // 92d2da05 retires "Export" as a name too, but that is a separate internal-tooling
+    // rename, parked (not required for the schema/corpus cutover to gate green).
+    if (typeof entry.compositionId !== "string" || !entry.compositionId) {
+      throw new Error(`view-exports: ${where} is missing a string compositionId`);
     }
     if (typeof entry.outputPath !== "string" || !entry.outputPath) {
-      throw new Error(`view-exports: ${where} (${entry.viewId}) is missing a string outputPath`);
+      throw new Error(`view-exports: ${where} (${entry.compositionId}) is missing a string outputPath`);
     }
     // outputPath is stored relative to the manifest's own directory (srs/); consumers expect
     // repository-root-relative paths (docs/spec/...), so resolve through REPO_ROOT and re-express
     // relative to ROOT here, once, instead of in every consumer.
     const output = relative(ROOT, resolve(REPO_ROOT, entry.outputPath));
     return {
-      id: entry.viewId,
+      id: entry.compositionId,
       output,
-      ...(REQUIRES_KEY_INVARIANTS_VIEW_IDS.has(entry.viewId) ? { requiresKeyInvariants: true } : {}),
+      ...(REQUIRES_KEY_INVARIANTS_VIEW_IDS.has(entry.compositionId) ? { requiresKeyInvariants: true } : {}),
     };
   });
 }

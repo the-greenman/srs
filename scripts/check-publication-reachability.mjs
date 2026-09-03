@@ -20,9 +20,9 @@
  * A discovered instance is reachable when some *declared* presentation surface can reach it. Three
  * surfaces exist in this repository, and all three are derived from declarations rather than listed:
  *
- *   1. **DocumentView sections** — every `document-views/*.json` reachable from every package
+ *   1. **Composition sections** — every `compositions/*.json` reachable from every package
  *      manifest in the tree. A `type-query` section's roots are the instances whose
- *      `typeNamespace/typeName` equals its `semanticObjectType`.
+ *      `typeNamespace/typeName` equals its `typeKey` (srs#523/#524: renamed from `semanticObjectType`).
  *   2. **Root container membership** — `manifest.container` only (RFC-013's required root container,
  *      the top of structural navigation): `identityInstanceId`, `memberInstanceIds`,
  *      `rootInstanceIds`. A Container under `containers/` is deliberately NOT a surface — see the
@@ -30,7 +30,7 @@
  *   3. **The RFC-016 invariant projection** — [R1]: every `com.semanticops.spec/invariant` record
  *      MUST appear in the rendered Key Invariants region of each view marked `requiresKeyInvariants`.
  *      This surface is a *post-render injection*, not a view section, so a definition quantifying
- *      only over DocumentViews would report all 124 invariant records as invisible. They are the
+ *      only over Compositions would report all 124 invariant records as invisible. They are the
  *      most-published records in the corpus. The projection's scope is imported from
  *      `render-invariants.mjs` rather than restated — see INVARIANT_PROJECTION_ROOT there.
  *
@@ -92,9 +92,9 @@ const problems = [];
 const fail = (msg) => problems.push(msg);
 
 /**
- * Every DocumentView the repository declares, discovered through package manifests.
+ * Every Composition the repository declares, discovered through package manifests.
  *
- * Keyed on the manifests rather than on `**\/document-views/*.json`, because a view file that no
+ * Keyed on the manifests rather than on `**\/compositions/*.json`, because a view file that no
  * package declares is not a declared presentation — it renders nothing and must not confer
  * reachability. The walk finds package manifests by presence (RFC-038 Change B), so a package that
  * `packageRefs` omits still contributes: `srs/package/package.json` is exactly such a package (it
@@ -123,7 +123,10 @@ async function declaredDocumentViews(repoRoot) {
         // why. Fail-closed in outcome, useless in diagnosis.
         fail(`package manifest does not parse: ${join(dir, "package.json")}: ${error.message}`);
       }
-      for (const rel of manifest?.documentViews ?? []) {
+      // srs#523/#524, srs-rust#910: package-manifest.json's kind renamed documentViews -> compositions
+      // (rfc-decision-92d2da05). Function/variable names below are unrenamed (matches lib/view-exports.mjs's
+      // own park) — only the wire property this reads follows the rename.
+      for (const rel of manifest?.compositions ?? []) {
         try {
           const view = JSON.parse(await readFile(join(dir, rel), "utf8"));
           // Declared is not published. `publish-spec.mjs` renders exactly the ids in
@@ -140,7 +143,7 @@ async function declaredDocumentViews(repoRoot) {
           // A declared view that will not parse is validate-package.mjs's diagnostic to raise. Not
           // swallowed silently here either: it becomes lost reachability, which the guard reports as
           // unreachable records rather than as a parse error — so record it.
-          fail(`declared DocumentView does not parse: ${join(dir, rel)}`);
+          fail(`declared Composition does not parse: ${join(dir, rel)}`);
         }
       }
     }
@@ -218,14 +221,14 @@ async function reachability(repoRoot) {
     contains.get(relation.sourceInstanceId).push(relation.targetInstanceId);
   }
 
-  // Surface 1 — DocumentView type-query sections. `descends` records whether the section's roots
+  // Surface 1 — Composition type-query sections. `descends` records whether the section's roots
   // also publish their `contains` subtree; see the header note on `titleFieldId`.
   const roots = [];
   const { views, unexported } = await declaredDocumentViews(repoRoot);
-  const queried = new Map(); // semanticObjectType -> { descends, via }
+  const queried = new Map(); // typeKey -> { descends, via }
   for (const { path, view } of views) {
     for (const section of view.sections ?? []) {
-      // `document-view.json` admits four source kinds; only `type-query` is used in this
+      // `composition.json` admits four source kinds; only `type-query` is used in this
       // repository, so only it is implemented. The other three are refused rather than skipped.
       // Skipping is fail-closed here — an unread section can only shrink the reachable set, so it
       // surfaces as a false violation rather than a missed one — but it would report the *wrong
@@ -239,9 +242,9 @@ async function reachability(repoRoot) {
         );
         continue;
       }
-      const t = section.source?.semanticObjectType;
+      const t = section.source?.typeKey;
       if (!t) {
-        fail(`${path} section "${section.sectionId}" is a type-query with no semanticObjectType`);
+        fail(`${path} section "${section.sectionId}" is a type-query with no typeKey`);
         continue;
       }
       // A type-query may also carry `lifecycleState`, `lifecycleStates`, `excludeLifecycleStates`,
@@ -280,7 +283,7 @@ async function reachability(repoRoot) {
   }
   for (const { path, record } of instances) {
     const q = queried.get(`${record?.typeNamespace}/${record?.typeName}`);
-    if (q) roots.push({ id: record.instanceId, surface: `document-view type-query ${q.via}`, path, descends: q.descends });
+    if (q) roots.push({ id: record.instanceId, surface: `composition type-query ${q.via}`, path, descends: q.descends });
   }
 
   // Surface 2 — Container membership.
@@ -403,7 +406,7 @@ async function main() {
   // A floor. Every other failure mode here is "too many unreachable"; this one is "the walk found
   // nothing", which would otherwise read as a clean bill of health.
   if (instances.length === 0) fail(`no instances discovered under ${REPO} — the walk found nothing`);
-  if (views.length === 0) fail(`no DocumentView is declared by any package under ${REPO}/package`);
+  if (views.length === 0) fail(`no Composition is declared by any package under ${REPO}/package`);
 
   const undeclared = unreachable.filter((u) => !excludedById.has(u.id));
   for (const u of undeclared) {
@@ -449,7 +452,7 @@ async function main() {
     }
     console.log(`# Publication reachability — ${REPO}`);
     console.log(`\ninstances discovered : ${instances.length}`);
-    console.log(`DocumentViews published   : ${views.length}`);
+    console.log(`Compositions published    : ${views.length}`);
     for (const u of unexported) {
       // Reported, not failed: a view declared by a package but rendered by nothing publishes no
       // record, which is this guard's concern and is handled by not counting it. Whether such a view

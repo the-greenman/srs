@@ -32,46 +32,40 @@
       "required": true
     },
     {
-      "fieldId": "4b000031-0000-4000-a000-000000000031",
-      "order": 5,
-      "required": false,
-      "displayLabel": "Semantic Object Type"
-    },
-    {
       "fieldId": "4b000008-0000-4000-a000-000000000008",
-      "order": 6,
+      "order": 5,
       "required": false,
       "displayLabel": "AI Guidance"
     },
     {
       "fieldId": "4b000032-0000-4000-a000-000000000032",
-      "order": 7,
+      "order": 6,
       "required": true
     },
     {
       "fieldId": "4b00000b-0000-4000-a000-00000000000b",
-      "order": 8,
+      "order": 7,
       "required": false
     },
     {
       "fieldId": "4b00000c-0000-4000-a000-00000000000c",
-      "order": 9,
+      "order": 8,
       "required": false
     },
     {
       "fieldId": "4b00000d-0000-4000-a000-00000000000d",
-      "order": 10,
+      "order": 9,
       "required": false
     },
     {
       "fieldId": "4b000058-0000-4000-a000-000000000058",
-      "order": 11,
+      "order": 10,
       "required": false,
       "displayLabel": "Identity Field Id"
     },
     {
       "fieldId": "4b000006-0000-4000-a000-000000000006",
-      "order": 12,
+      "order": 11,
       "required": true
     }
   ],

@@ -98,7 +98,7 @@ async function renderFreshViews(tempDir) {
       "--repo",
       REPO_ROOT,
       "render",
-      "document-view",
+      "composition", // srs#523/#524, srs-rust#910: CLI command renamed from document-view (rfc-decision-92d2da05)
       "--view",
       entry.id,
       "--output",

@@ -3,7 +3,6 @@
   "version": 1,
   "namespace": "governance",
   "name": "governance_lifecycle",
-  "description": "Shared governance lifecycle for Articles, Roles, and Decisions. A record is drafted, proposed to the group, and ratified once agreed. Ratified records either close (obligation discharged), are superseded by a successor, or are abandoned (withdrawn without a successor). closed, superseded, and abandoned are final.",
   "states": [
     {
       "id": "f439ed11-6ad7-466a-9544-c6f68946e7d1",
@@ -38,7 +37,9 @@
       "description": "Replaced by a successor record.",
       "isFinal": true,
       "requiresRelation": {
-        "relationType": ["supersedes"]
+        "relationType": [
+          "supersedes"
+        ]
       }
     },
     {
@@ -108,5 +109,6 @@
     }
   ],
   "initialState": "draft",
+  "description": "Shared governance lifecycle for Articles, Roles, and Decisions. A record is drafted, proposed to the group, and ratified once agreed. Ratified records either close (obligation discharged), are superseded by a successor, or are abandoned (withdrawn without a successor). closed, superseded, and abandoned are final.",
   "createdAt": "2026-06-08T00:00:00Z"
 }

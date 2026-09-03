@@ -377,7 +377,7 @@ async function validatePackageCases(root) {
     "fields definitions against field.json",
     "types definitions against type.json",
     "views definitions against view.json",
-    "documentViews definitions against document-view.json",
+    "compositions definitions against composition.json",
     "themes definitions against theme.json",
     "relationTypes definitions against relation-type.json",
     "vocabularies definitions against vocabulary.json",
@@ -437,18 +437,18 @@ async function validatePackageCases(root) {
   await writeFile(manifestSchema, `${JSON.stringify(doc, null, 2)}\n`);
 
   // A definition file sitting beside indexed ones but not itself indexed is a warning, and it must
-  // fire for the KEBAB-CASE folders too. `documentViews` lives in `document-views/`, so a scan that
+  // fire for the KEBAB-CASE folders too. `compositions` lives in `compositions/`, so a scan that
   // looks in a folder named after the kind finds nothing — the check silently stopped existing for
   // exactly the kinds #391 added.
   //
-  // The package indexes a real documentView first, which is the shape this applies to in the wild
+  // The package indexes a real composition first, which is the shape this applies to in the wild
   // (the governance packages index four). It also keeps the case honest: the folder is reached
   // because the manifest references it, not because the fixture was arranged around the scan.
-  await writeJson(join(pkgDir, "document-views/real.json"), {
-    $schema: "https://srs.semanticops.com/schema/2.0/document-view.json",
+  await writeJson(join(pkgDir, "compositions/real.json"), {
+    $schema: "https://srs.semanticops.com/schema/2.0/composition.json",
     id: "00000000-0000-4000-8000-0000000d1001",
     namespace: "com.example.fixture",
-    name: "fixture-document-view",
+    name: "fixture-composition",
     version: 1,
     description: "fixture document view",
     sections: [],
@@ -456,19 +456,19 @@ async function validatePackageCases(root) {
   });
   await writeJson(join(pkgDir, "package.json"), {
     ...manifest,
-    documentViews: ["document-views/real.json"],
+    compositions: ["compositions/real.json"],
   });
-  expect("accepts an indexed documentView in a kebab-case folder", run(), {
+  expect("accepts an indexed composition in a kebab-case folder", run(), {
     exit: 0,
-    contains: ["Checking 1 documentViews definitions against document-view.json", "✓ Package is valid"],
+    contains: ["Checking 1 compositions definitions against composition.json", "✓ Package is valid"],
   });
 
-  await writeJson(join(pkgDir, "document-views/stray.json"), { id: "unused" });
+  await writeJson(join(pkgDir, "compositions/stray.json"), { id: "unused" });
   expect("warns about an unlisted file in a kebab-case folder", run(), {
     exit: 0,
-    contains: ["document-views/stray.json exists but is not listed in package.json"],
+    contains: ["compositions/stray.json exists but is not listed in package.json"],
   });
-  await rm(join(pkgDir, "document-views/stray.json"));
+  await rm(join(pkgDir, "compositions/stray.json"));
   await writeJson(join(pkgDir, "package.json"), manifest);
 
   // Back to the baseline: the fixture minus every violation still passes.
@@ -485,7 +485,7 @@ async function publicationReachabilityCases(root) {
   const ID = (n) => `00000000-0000-4000-8000-0000000002${String(n).padStart(2, "0")}`;
   const TITLE_FIELD = "1a000001-0000-4000-a000-000000000001";
 
-  // A minimal repository: one package declaring one DocumentView, one type-query section, and
+  // A minimal repository: one package declaring one Composition, one type-query section, and
   // records under the reserved instance root. Everything the guard reads is built here, so a case
   // that passes for a reason other than the one it names shows up as a message mismatch.
   const record = (n, typeName, extra = {}) => ({
@@ -516,7 +516,7 @@ async function publicationReachabilityCases(root) {
   // reachability, so a synthetic id here would make every case below vacuously fail.
   const EXPORTED_ID = "3a000001-0000-4000-a000-000000000001";
   const view = (titleFieldId, id = EXPORTED_ID) => ({
-    $schema: "https://srs.semanticops.com/schema/2.0/document-view.json",
+    $schema: "https://srs.semanticops.com/schema/2.0/composition.json",
     id,
     namespace: "com.example.fixture",
     name: "fixture-view",
@@ -527,7 +527,7 @@ async function publicationReachabilityCases(root) {
         sectionId: "roots",
         title: "Roots",
         order: 0,
-        source: { type: "type-query", semanticObjectType: "com.example.fixture/root" },
+        source: { type: "type-query", typeKey: "com.example.fixture/root" },
         ...(titleFieldId ? { titleFieldId } : {}),
       },
     ],
@@ -547,9 +547,9 @@ async function publicationReachabilityCases(root) {
     namespace: "com.example.fixture",
     name: "fixture-package",
     version: "1.0.0",
-    documentViews: ["document-views/fixture-view.json"],
+    compositions: ["compositions/fixture-view.json"],
   });
-  await writeJson(join(repo, "package/document-views/fixture-view.json"), view(TITLE_FIELD));
+  await writeJson(join(repo, "package/compositions/fixture-view.json"), view(TITLE_FIELD));
   await writeJson(join(repo, "records/root.json"), record(1, "root"));
   await exclusions();
 
@@ -604,12 +604,12 @@ async function publicationReachabilityCases(root) {
 
   // The same tree with `titleFieldId` removed. The renderer stops descending, so the contained
   // record is published nowhere — and an unconditional descent would call this green.
-  await writeJson(join(repo, "package/document-views/fixture-view.json"), view(null));
+  await writeJson(join(repo, "package/compositions/fixture-view.json"), view(null));
   expect("rejects it when the section declares no titleFieldId", runCheck("check-publication-reachability.mjs", root), {
     exit: 1,
     contains: ["records/orphan.json", "unreachable from every declared presentation"],
   });
-  await writeJson(join(repo, "package/document-views/fixture-view.json"), view(TITLE_FIELD));
+  await writeJson(join(repo, "package/compositions/fixture-view.json"), view(TITLE_FIELD));
 
   // `precedes` sequences records that are already published; it does not publish one. Traversing it
   // would have reported the eight unrendered RFC-017 change records as fine.
@@ -649,7 +649,7 @@ async function publicationReachabilityCases(root) {
   await rm(join(repo, "containers/orphan.json"));
 
   // RFC-016 [R1]: the invariant projection publishes `records/invariants/` after render, so no view
-  // selects it. A definition quantifying only over DocumentViews calls all 124 live ones invisible.
+  // selects it. A definition quantifying only over Compositions calls all 124 live ones invisible.
   // The orphan is excluded here so this case turns on the invariant alone: a run that reports the
   // invariant cannot reach exit 0, and one that reports nothing else cannot pass for another reason.
   await exclusions(orphanEntry);
@@ -675,13 +675,13 @@ async function publicationReachabilityCases(root) {
   });
   await rm(join(repo, "records/inv.json"));
 
-  // `document-view.json` admits four source kinds and this guard resolves one. The other three are
+  // `composition.json` admits four source kinds and this guard resolves one. The other three are
   // refused by name rather than skipped: an unresolved section can only shrink the reachable set,
   // so it surfaces as a false violation — with the wrong reason attached, which is how a guard
   // quietly stops covering what it was written for.
   const containerSubset = view(TITLE_FIELD);
   containerSubset.sections[0].source = { type: "container-subset", containerId: "00000000-0000-4000-8000-000000000602" };
-  await writeJson(join(repo, "package/document-views/fixture-view.json"), containerSubset);
+  await writeJson(join(repo, "package/compositions/fixture-view.json"), containerSubset);
   expect("refuses a section source kind it cannot resolve", runCheck("check-publication-reachability.mjs", root), {
     exit: 1,
     contains: ["container-subset", "this guard does not resolve"],
@@ -693,35 +693,35 @@ async function publicationReachabilityCases(root) {
   const filtered = view(TITLE_FIELD);
   filtered.sections[0].source = {
     type: "type-query",
-    semanticObjectType: "com.example.fixture/root",
+    typeKey: "com.example.fixture/root",
     excludeLifecycleStates: ["archived"],
   };
-  await writeJson(join(repo, "package/document-views/fixture-view.json"), filtered);
+  await writeJson(join(repo, "package/compositions/fixture-view.json"), filtered);
   expect("refuses a type-query it cannot filter", runCheck("check-publication-reachability.mjs", root), {
     exit: 1,
     contains: ["excludeLifecycleStates", "this guard does not apply"],
   });
-  await writeJson(join(repo, "package/document-views/fixture-view.json"), view(TITLE_FIELD));
+  await writeJson(join(repo, "package/compositions/fixture-view.json"), view(TITLE_FIELD));
 
   // Declared is not published. `publish-spec.mjs` renders a fixed set of view ids; a view outside it
   // produces no artifact, so honouring it would be the same free "publish" lever the `containers/**`
   // glob was — worse, in fact, since a stale exclusion is an error, so one line added to a
-  // `documentViews[]` array would *demand* the matching exclusions be deleted.
+  // `compositions[]` array would *demand* the matching exclusions be deleted.
   await exclusions(); // the orphan must be undeclared here, or this case passes for the wrong reason
   const ghost = view(TITLE_FIELD, "00000000-0000-4000-8000-000000000499");
   ghost.name = "ghost-view";
-  ghost.sections[0].source = { type: "type-query", semanticObjectType: "com.example.fixture/leaf" };
-  await writeJson(join(repo, "package/document-views/ghost.json"), ghost);
+  ghost.sections[0].source = { type: "type-query", typeKey: "com.example.fixture/leaf" };
+  await writeJson(join(repo, "package/compositions/ghost.json"), ghost);
   const withGhost = JSON.parse(await readFile(join(repo, "package/package.json"), "utf8"));
   await writeJson(join(repo, "package/package.json"), {
     ...withGhost,
-    documentViews: [...withGhost.documentViews, "document-views/ghost.json"],
+    compositions: [...withGhost.compositions, "compositions/ghost.json"],
   });
   expect("a view no export renders publishes nothing", runCheck("check-publication-reachability.mjs", root), {
     exit: 1,
     contains: ["records/orphan.json", "unreachable from every declared presentation"],
   });
-  await rm(join(repo, "package/document-views/ghost.json"));
+  await rm(join(repo, "package/compositions/ghost.json"));
   await writeJson(join(repo, "package/package.json"), withGhost);
 
   // The RFC-016 projection does a flat `readdir`, so a record one directory deeper is not projected.
@@ -797,11 +797,11 @@ async function publicationReachabilityCases(root) {
     namespace: "com.example.fixture",
     name: "fixture-package",
     version: "1.0.0",
-    documentViews: [],
+    compositions: [],
   });
-  expect("fails when no DocumentView is declared", runCheck("check-publication-reachability.mjs", root), {
+  expect("fails when no Composition is declared", runCheck("check-publication-reachability.mjs", root), {
     exit: 1,
-    contains: ["no DocumentView is declared"],
+    contains: ["no Composition is declared"],
   });
 
   const bare = join(root, "bare");

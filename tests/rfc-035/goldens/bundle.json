@@ -1,5 +1,5 @@
 {
-  "dataModelRevision": 5,
+  "dataModelRevision": 6,
   "schemas": {
     "field": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -478,10 +478,6 @@
         },
         "description": {
           "type": "string"
-        },
-        "semanticObjectType": {
-          "type": "string",
-          "title": "Semantic Object Type"
         },
         "aiGuidance": {
           "$ref": "#/$defs/com.semanticops.srs__ai-guidance__v1",

@@ -1,5 +1,4 @@
 {
-  "updatedAt": "2026-06-03T00:00:00Z",
   "container": {
     "containerId": "6587bc86-9461-43f4-b790-504b2bcbddb5",
     "title": "Semantic Record System Specification",
@@ -18,12 +17,10 @@
       "e538ea64-f93f-5c51-ade0-6cd358605e8c"
     ]
   },
-  "title": "Semantic Record System Specification",
   "sourceDocumentsPath": "source-documents",
-  "srsVersion": "2.0-draft",
   "$schema": "https://srs.semanticops.com/schema/2.0/manifest.json",
   "createdAt": "2026-05-28T00:00:00Z",
-  "dataModelRevision": 5,
+  "dataModelRevision": 6,
   "declaredExtensions": [
     "ext:addressability",
     "ext:lifecycle",
@@ -34,7 +31,7 @@
     "ext:views-l1",
     "ext:views-l2"
   ],
-  "description": "The SRS specification, authored as an SRS repository. The rendered specification is a DocumentView export of the records in this repository.",
+  "description": "The SRS specification, authored as an SRS repository. The rendered specification is a Composition export of the records in this repository.",
   "meta": {
     "sourceOfTruth": "records"
   },
@@ -61,33 +58,36 @@
       "path": "package/metamodel"
     }
   ],
-  "repositoryId": "4172fada-bc38-5479-ac18-4be3194a68ca",
   "renderedPresentations": [
     {
       "format": "markdown",
       "outputPath": "../docs/spec/srs-spec.md",
-      "viewId": "3a000001-0000-4000-a000-000000000001"
+      "compositionId": "3a000001-0000-4000-a000-000000000001"
     },
     {
       "format": "markdown",
       "outputPath": "../docs/spec/srs-rationale.md",
-      "viewId": "3a000003-0000-4000-a000-000000000003"
+      "compositionId": "3a000003-0000-4000-a000-000000000003"
     },
     {
       "format": "markdown",
       "isDefault": true,
       "outputPath": "../docs/spec/srs-unified.md",
-      "viewId": "3a000004-0000-4000-a000-000000000004"
+      "compositionId": "3a000004-0000-4000-a000-000000000004"
     },
     {
       "format": "markdown",
       "outputPath": "../docs/spec/rfcs/rfc-catalog.md",
-      "viewId": "7a000001-0000-4000-a000-000000000001"
+      "compositionId": "7a000001-0000-4000-a000-000000000001"
     },
     {
       "format": "markdown",
       "outputPath": "../docs/spec/rfcs/rfc-decision-log.md",
-      "viewId": "7a000002-0000-4000-a000-000000000002"
+      "compositionId": "7a000002-0000-4000-a000-000000000002"
     }
-  ]
+  ],
+  "repositoryId": "4172fada-bc38-5479-ac18-4be3194a68ca",
+  "srsVersion": "2.0-draft",
+  "title": "Semantic Record System Specification",
+  "updatedAt": "2026-06-03T00:00:00Z"
 }

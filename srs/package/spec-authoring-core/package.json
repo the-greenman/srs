@@ -61,12 +61,12 @@
   "views": [
     "views/table-record-view-77f51737.json"
   ],
-  "documentViews": [
-    "document-views/spec-document-view.json",
-    "document-views/rationale-document-view.json",
-    "document-views/unified-document-view.json"
-  ],
+  "dataModelRevision": 3,
   "createdAt": "2026-05-27T00:00:00Z",
   "updatedAt": "2026-05-29T00:00:00Z",
-  "dataModelRevision": 3
+  "compositions": [
+    "compositions/spec-document-view.json",
+    "compositions/rationale-document-view.json",
+    "compositions/unified-document-view.json"
+  ]
 }

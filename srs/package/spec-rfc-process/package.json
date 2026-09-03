@@ -7,12 +7,9 @@
   "title": "Spec RFC Process",
   "description": "Types, structured decisions, and public projections for RFC-based change management in a specification. Repositories that do not use an RFC process do not need this package.",
   "status": "draft",
-  "dependencyRefs": [
-    {
-      "namespace": "com.semanticops.spec",
-      "name": "spec-authoring-core",
-      "version": "1.0.0"
-    }
+  "compositions": [
+    "compositions/rfc-document-view.json",
+    "compositions/rfc-decision-log.json"
   ],
   "fields": [
     "fields/rfc-number.json",
@@ -53,10 +50,7 @@
     "views/rfc-status-view-1aedea8d.json",
     "views/rfc-decision-status-view-2cd5576f.json"
   ],
-  "documentViews": [
-    "document-views/rfc-document-view.json",
-    "document-views/rfc-decision-log.json"
-  ],
+  "dataModelRevision": 3,
   "relationTypes": [
     "relation-types/rfc-targets-section.json",
     "relation-types/rfc-change-sequence.json",
@@ -65,5 +59,11 @@
   ],
   "createdAt": "2026-05-27T00:00:00Z",
   "updatedAt": "2026-08-02T00:00:00Z",
-  "dataModelRevision": 3
+  "packageDependencies": [
+    {
+      "namespace": "com.semanticops.spec",
+      "name": "spec-authoring-core",
+      "version": "1.0.0"
+    }
+  ]
 }
