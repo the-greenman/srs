@@ -1,0 +1,35 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a RecordPropertyView: which record-level property it presents, its order, and rendering overrides."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:views-l1 — presentation configuration for one record-level property (lifecycleState/tags/createdAt/updatedAt) within a View.",
+  "fields": [
+    {
+      "fieldId": "4b0000e0-0000-4000-a000-0000000000e0",
+      "order": 0,
+      "required": true
+    },
+    {
+      "fieldId": "4b000034-0000-4000-a000-000000000034",
+      "order": 1,
+      "required": true
+    },
+    {
+      "fieldId": "4b000036-0000-4000-a000-000000000036",
+      "order": 2,
+      "required": false,
+      "displayLabel": "Display Label"
+    },
+    {
+      "fieldId": "4b0000dd-0000-4000-a000-0000000000dd",
+      "order": 3,
+      "required": false
+    }
+  ],
+  "id": "4c00003b-0000-4000-a000-00000000003b",
+  "name": "record-property-view",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

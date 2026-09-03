@@ -1,0 +1,38 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a RenderedPresentation: which Composition it points to, and rendering hints."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-015 [N+31] — a declared presentation of a repository: a Composition that a conformant viewer should offer as a rendered entry point.",
+  "fields": [
+    {
+      "fieldId": "4b0000ac-0000-4000-a000-0000000000ac",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Composition Id"
+    },
+    {
+      "fieldId": "4b0000ad-0000-4000-a000-0000000000ad",
+      "order": 1,
+      "required": false,
+      "displayLabel": "Is Default"
+    },
+    {
+      "fieldId": "4b00009e-0000-4000-a000-00000000009e",
+      "order": 2,
+      "required": false,
+      "displayLabel": "Format"
+    },
+    {
+      "fieldId": "4b0000ae-0000-4000-a000-0000000000ae",
+      "order": 3,
+      "required": false,
+      "displayLabel": "Output Path"
+    }
+  ],
+  "id": "4c000027-0000-4000-a000-000000000027",
+  "name": "rendered-presentation",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

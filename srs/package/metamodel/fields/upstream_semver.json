@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Semver of the upstream Package recorded at install/upgrade time, e.g. '1.0.0'."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Semver of the upstream Package recorded at install/upgrade time, e.g. '1.0.0'.",
+  "id": "4b0000b0-0000-4000-a000-0000000000b0",
+  "name": "upstream_semver",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

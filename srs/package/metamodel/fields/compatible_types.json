@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Optional Type-key hints (namespace/name) a View was designed for. Informational only."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Optional Type-key hints (namespace/name) a View was designed for. Informational only.",
+  "id": "4b0000db-0000-4000-a000-0000000000db",
+  "name": "compatible_types",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "cardinality": "list"
+  },
+  "version": 1
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "ext:discovery DiscoveryQuery.lifecycleStates — inclusive multi-value lifecycle filter, OR semantics (RFC-012 Rev 11, srs#525)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:discovery DiscoveryQuery.lifecycleStates — inclusive multi-value lifecycle filter, OR semantics (RFC-012 Rev 11, srs#525).",
+  "id": "4b000096-0000-4000-a000-000000000096",
+  "name": "lifecycle_states",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "cardinality": "list"
+  },
+  "version": 1
+}

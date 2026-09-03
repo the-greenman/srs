@@ -1,0 +1,22 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Record-level property presented by a RecordPropertyView row."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Record-level property presented by a RecordPropertyView row.",
+  "id": "4b0000e0-0000-4000-a000-0000000000e0",
+  "name": "property",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "lifecycleState",
+      "tags",
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  "version": 1
+}

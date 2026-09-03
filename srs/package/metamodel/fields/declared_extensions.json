@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "SRS extensions this repository conforms to, e.g. ['ext:lifecycle', 'ext:views-l1']."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "SRS extensions this repository conforms to, e.g. ['ext:lifecycle', 'ext:views-l1'].",
+  "id": "4b0000a4-0000-4000-a000-0000000000a4",
+  "name": "declared_extensions",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "cardinality": "list"
+  },
+  "version": 1
+}

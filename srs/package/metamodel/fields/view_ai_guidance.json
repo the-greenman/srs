@@ -1,0 +1,20 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Guidance for AI agents using a View (View.aiGuidance — a distinct, narrower shape from the generic AiGuidance value object: purpose + extraction only)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Guidance for AI agents using a View (View.aiGuidance — a distinct, narrower shape from the generic AiGuidance value object: purpose + extraction only).",
+  "id": "4b0000dc-0000-4000-a000-0000000000dc",
+  "name": "view_ai_guidance",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "rangeType": {
+      "typeId": "4c000039-0000-4000-a000-000000000039",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

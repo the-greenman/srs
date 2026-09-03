@@ -1,0 +1,82 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a DocumentSection: its identity, ordering, rendering dispatch, and per-record presentation directives."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "One section within a Composition. `source` (SectionSource) is excluded — a JSON-Schema `oneOf` of two anonymous discriminated branches with no flat properties bag outside the union; no discriminated-union datatype exists in the metamodel today (srs#541 finding, filed as its own emitter-capability gap).",
+  "fields": [
+    {
+      "fieldId": "4b0000be-0000-4000-a000-0000000000be",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Section Id"
+    },
+    {
+      "fieldId": "4b000061-0000-4000-a000-000000000061",
+      "order": 1,
+      "required": false
+    },
+    {
+      "fieldId": "4b000005-0000-4000-a000-000000000005",
+      "order": 2,
+      "required": false
+    },
+    {
+      "fieldId": "4b000034-0000-4000-a000-000000000034",
+      "order": 3,
+      "required": true
+    },
+    {
+      "fieldId": "4b0000bf-0000-4000-a000-0000000000bf",
+      "order": 4,
+      "required": false,
+      "displayLabel": "Render View Id"
+    },
+    {
+      "fieldId": "4b0000c0-0000-4000-a000-0000000000c0",
+      "order": 5,
+      "required": false,
+      "displayLabel": "Type Dispatch"
+    },
+    {
+      "fieldId": "4b0000c1-0000-4000-a000-0000000000c1",
+      "order": 6,
+      "required": false,
+      "displayLabel": "Title Field Id"
+    },
+    {
+      "fieldId": "4b0000c4-0000-4000-a000-0000000000c4",
+      "order": 7,
+      "required": false,
+      "displayLabel": "Ordering"
+    },
+    {
+      "fieldId": "4b000035-0000-4000-a000-000000000035",
+      "order": 8,
+      "required": false
+    },
+    {
+      "fieldId": "4b0000c5-0000-4000-a000-0000000000c5",
+      "order": 9,
+      "required": false,
+      "displayLabel": "Empty Behavior"
+    },
+    {
+      "fieldId": "4b0000c6-0000-4000-a000-0000000000c6",
+      "order": 10,
+      "required": false,
+      "displayLabel": "Composite Renderers"
+    },
+    {
+      "fieldId": "4b0000c7-0000-4000-a000-0000000000c7",
+      "order": 11,
+      "required": false,
+      "displayLabel": "Relations Presentation"
+    }
+  ],
+  "id": "4c000036-0000-4000-a000-000000000036",
+  "name": "document-section",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

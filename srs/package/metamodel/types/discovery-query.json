@@ -1,0 +1,67 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a DiscoveryQuery: its structured filter predicates over type, container, tags, lifecycle state, and free text."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:discovery (RFC-012) — a conjunction of zero or more structured filter predicates. An instance matches if and only if it satisfies all predicates whose values are specified. Modelled minus `tier` (a bare untyped-integer enum — the #534-tracked emitter gap; documented exclusion, same latitude every other entity already has, e.g. Container.containerType).",
+  "fields": [
+    {
+      "fieldId": "4b000021-0000-4000-a000-000000000021",
+      "order": 0,
+      "required": false,
+      "displayLabel": "Type Id"
+    },
+    {
+      "fieldId": "4b00005b-0000-4000-a000-00000000005b",
+      "order": 1,
+      "required": false,
+      "displayLabel": "Type Namespace"
+    },
+    {
+      "fieldId": "4b00005c-0000-4000-a000-00000000005c",
+      "order": 2,
+      "required": false,
+      "displayLabel": "Type Name"
+    },
+    {
+      "fieldId": "4b000095-0000-4000-a000-000000000095",
+      "order": 3,
+      "required": false,
+      "displayLabel": "Container Id"
+    },
+    {
+      "fieldId": "4b000094-0000-4000-a000-000000000094",
+      "order": 4,
+      "required": false
+    },
+    {
+      "fieldId": "4b00005d-0000-4000-a000-00000000005d",
+      "order": 5,
+      "required": false,
+      "displayLabel": "Lifecycle State"
+    },
+    {
+      "fieldId": "4b000096-0000-4000-a000-000000000096",
+      "order": 6,
+      "required": false,
+      "displayLabel": "Lifecycle States"
+    },
+    {
+      "fieldId": "4b000097-0000-4000-a000-000000000097",
+      "order": 7,
+      "required": false,
+      "displayLabel": "Exclude Lifecycle States"
+    },
+    {
+      "fieldId": "4b000098-0000-4000-a000-000000000098",
+      "order": 8,
+      "required": false,
+      "displayLabel": "Content Match"
+    }
+  ],
+  "id": "4c000024-0000-4000-a000-000000000024",
+  "name": "discovery-query",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

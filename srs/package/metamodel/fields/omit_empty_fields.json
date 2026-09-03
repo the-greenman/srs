@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Default: false. When true, fields with no value are omitted from output."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Default: false. When true, fields with no value are omitted from output.",
+  "id": "4b0000a0-0000-4000-a000-0000000000a0",
+  "name": "omit_empty_fields",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "boolean"
+  },
+  "version": 1
+}

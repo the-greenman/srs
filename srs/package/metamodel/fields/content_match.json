@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "ext:discovery DiscoveryQuery.contentMatch — free-text recall-floor predicate over the Text Projection."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:discovery DiscoveryQuery.contentMatch — free-text recall-floor predicate over the Text Projection.",
+  "id": "4b000098-0000-4000-a000-000000000098",
+  "name": "content_match",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

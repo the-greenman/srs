@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "The sectionId a NavigationLink departs from."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "The sectionId a NavigationLink departs from.",
+  "id": "4b0000cc-0000-4000-a000-0000000000cc",
+  "name": "from_section_id",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

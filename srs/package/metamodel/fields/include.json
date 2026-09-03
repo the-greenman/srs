@@ -1,0 +1,22 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "RFC-027 — which relation types a RelationsPresentation displays, in display order."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-027 — which relation types a RelationsPresentation displays, in display order.",
+  "id": "4b0000c8-0000-4000-a000-0000000000c8",
+  "name": "include",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "cardinality": "list",
+    "rangeType": {
+      "typeId": "4c00002f-0000-4000-a000-00000000002f",
+      "typeVersion": 1
+    },
+    "minItems": 1
+  },
+  "version": 1
+}

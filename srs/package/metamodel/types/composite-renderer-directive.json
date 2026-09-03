@@ -1,0 +1,31 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a CompositeRendererDirective: which Field it binds and which renderer dispatches it."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-036 Change B (ext:views-l2) — a CompositeRendererBinding plus the composite-range Field it binds. Presentation only.",
+  "fields": [
+    {
+      "fieldId": "4b000033-0000-4000-a000-000000000033",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Field"
+    },
+    {
+      "fieldId": "4b0000d4-0000-4000-a000-0000000000d4",
+      "order": 1,
+      "required": true
+    },
+    {
+      "fieldId": "4b0000d5-0000-4000-a000-0000000000d5",
+      "order": 2,
+      "required": false,
+      "displayLabel": "Roles"
+    }
+  ],
+  "id": "4c000034-0000-4000-a000-000000000034",
+  "name": "composite-renderer-directive",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

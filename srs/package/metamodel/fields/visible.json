@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Default: true. Whether a FieldView/RecordPropertyView row is shown."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Default: true. Whether a FieldView/RecordPropertyView row is shown.",
+  "id": "4b0000dd-0000-4000-a000-0000000000dd",
+  "name": "visible",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "boolean"
+  },
+  "version": 1
+}

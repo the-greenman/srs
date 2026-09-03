@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Key of the derived inverse (e.g. supersedes -> superseded-by); need not resolve — display-only (Invariant 16)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Key of the derived inverse (e.g. supersedes -> superseded-by); need not resolve — display-only (Invariant 16).",
+  "id": "4b00009b-0000-4000-a000-00000000009b",
+  "name": "inverse_type",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

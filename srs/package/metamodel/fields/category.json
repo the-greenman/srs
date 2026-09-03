@@ -1,0 +1,29 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Structural category of a relation type."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Structural category of a relation type.",
+  "id": "4b000099-0000-4000-a000-000000000099",
+  "name": "category",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "composition",
+      "refinement",
+      "dependency",
+      "sequence",
+      "derivation",
+      "evidence",
+      "governance",
+      "association",
+      "lifecycle",
+      "provenance",
+      "other"
+    ]
+  },
+  "version": 1
+}

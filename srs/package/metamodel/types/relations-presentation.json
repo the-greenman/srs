@@ -1,0 +1,24 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a RelationsPresentation: which relation types to display, in order."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-027 — when present on a DocumentSection, render a deterministic per-member links block after each member the section renders.",
+  "fields": [
+    {
+      "fieldId": "4b0000c8-0000-4000-a000-0000000000c8",
+      "order": 0,
+      "required": true
+    },
+    {
+      "fieldId": "4b00003a-0000-4000-a000-00000000003a",
+      "order": 1,
+      "required": false
+    }
+  ],
+  "id": "4c000030-0000-4000-a000-000000000030",
+  "name": "relations-presentation",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

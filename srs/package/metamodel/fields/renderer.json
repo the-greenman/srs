@@ -1,0 +1,18 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Composite renderer identifier (RFC-036). 'baseline' is the reserved sentinel meaning explicitly no renderer."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Composite renderer identifier (RFC-036). 'baseline' is the reserved sentinel meaning explicitly no renderer.",
+  "id": "4b0000d4-0000-4000-a000-0000000000d4",
+  "name": "renderer",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "constraints": {
+      "minLength": 1
+    }
+  },
+  "version": 1
+}

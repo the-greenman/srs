@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "RFC-009 — when set, a Composition applies to Containers whose root Record's resolved Type matches one of these refs."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-009 — when set, a Composition applies to Containers whose root Record's resolved Type matches one of these refs.",
+  "id": "4b0000d7-0000-4000-a000-0000000000d7",
+  "name": "root_type_refs",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "cardinality": "list",
+    "rangeType": {
+      "typeId": "4c000005-0000-4000-a000-000000000005",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

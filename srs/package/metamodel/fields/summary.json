@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Repository-level AI comprehension summary."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Repository-level AI comprehension summary.",
+  "id": "4b0000ba-0000-4000-a000-0000000000ba",
+  "name": "summary",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

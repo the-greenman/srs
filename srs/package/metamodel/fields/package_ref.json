@@ -1,0 +1,20 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Reference to the SRS Package that supplies field and type definitions (single package)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Reference to the SRS Package that supplies field and type definitions (single package).",
+  "id": "4b0000aa-0000-4000-a000-0000000000aa",
+  "name": "package_ref",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "rangeType": {
+      "typeId": "4c000026-0000-4000-a000-000000000026",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

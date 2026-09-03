@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "View (ext:views-l1) used to render each instance in a DocumentSection."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "View (ext:views-l1) used to render each instance in a DocumentSection.",
+  "id": "4b0000bf-0000-4000-a000-0000000000bf",
+  "name": "render_view_id",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "format": "uuid"
+  },
+  "version": 1
+}

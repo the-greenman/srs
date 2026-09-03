@@ -1,0 +1,30 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a ThemeVariant: its name and the ThemeReference it selects."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "A named alternative theme selectable at render time instead of Composition.themeRef.",
+  "fields": [
+    {
+      "fieldId": "4b000003-0000-4000-a000-000000000003",
+      "order": 0,
+      "required": true
+    },
+    {
+      "fieldId": "4b000005-0000-4000-a000-000000000005",
+      "order": 1,
+      "required": false
+    },
+    {
+      "fieldId": "4b0000d2-0000-4000-a000-0000000000d2",
+      "order": 2,
+      "required": true,
+      "displayLabel": "Theme Ref"
+    }
+  ],
+  "id": "4c000033-0000-4000-a000-000000000033",
+  "name": "theme-variant",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

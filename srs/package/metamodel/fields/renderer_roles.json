@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "RFC-036 — explicit, UUID-anchored role -> Field.id binding, overriding the by-name defaults of a composite renderer."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-036 — explicit, UUID-anchored role -> Field.id binding, overriding the by-name defaults of a composite renderer.",
+  "id": "4b0000d5-0000-4000-a000-0000000000d5",
+  "name": "renderer_roles",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "map",
+    "valueRange": "string"
+  },
+  "version": 1
+}

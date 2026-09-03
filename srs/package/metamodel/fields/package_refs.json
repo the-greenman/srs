@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "References to one or more SRS Packages (RFC-014 Change C, multi-package/multi-version repositories)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "References to one or more SRS Packages (RFC-014 Change C, multi-package/multi-version repositories).",
+  "id": "4b0000ab-0000-4000-a000-0000000000ab",
+  "name": "package_refs",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "cardinality": "list",
+    "rangeType": {
+      "typeId": "4c000026-0000-4000-a000-000000000026",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

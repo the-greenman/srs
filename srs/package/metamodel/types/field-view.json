@@ -1,0 +1,59 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a FieldView: which Field it presents, its order, and rendering overrides."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:views-l1 — presentation configuration for one Field within a View.",
+  "fields": [
+    {
+      "fieldId": "4b000033-0000-4000-a000-000000000033",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Field"
+    },
+    {
+      "fieldId": "4b000034-0000-4000-a000-000000000034",
+      "order": 1,
+      "required": true
+    },
+    {
+      "fieldId": "4b000035-0000-4000-a000-000000000035",
+      "order": 2,
+      "required": false
+    },
+    {
+      "fieldId": "4b0000dd-0000-4000-a000-0000000000dd",
+      "order": 3,
+      "required": false
+    },
+    {
+      "fieldId": "4b000036-0000-4000-a000-000000000036",
+      "order": 4,
+      "required": false,
+      "displayLabel": "Display Label"
+    },
+    {
+      "fieldId": "4b00004a-0000-4000-a000-00000000004a",
+      "order": 5,
+      "required": false,
+      "displayLabel": "Display Hint"
+    },
+    {
+      "fieldId": "4b0000de-0000-4000-a000-0000000000de",
+      "order": 6,
+      "required": false,
+      "displayLabel": "Editor Hint Override"
+    },
+    {
+      "fieldId": "4b0000df-0000-4000-a000-0000000000df",
+      "order": 7,
+      "required": false,
+      "displayLabel": "Composite Renderer"
+    }
+  ],
+  "id": "4c00003a-0000-4000-a000-00000000003a",
+  "name": "field-view",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

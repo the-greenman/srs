@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Human-readable name of a package."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Human-readable name of a package.",
+  "id": "4b0000a9-0000-4000-a000-0000000000a9",
+  "name": "package_name",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

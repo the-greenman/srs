@@ -1,0 +1,38 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a SliceExternalRef: the cut relation's identity, endpoints, and type."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:slices (RFC-026) — a relation cut at export time because exactly one endpoint was outside the closure.",
+  "fields": [
+    {
+      "fieldId": "4b000065-0000-4000-a000-000000000065",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Relation Id"
+    },
+    {
+      "fieldId": "4b000067-0000-4000-a000-000000000067",
+      "order": 1,
+      "required": true,
+      "displayLabel": "Source Instance Id"
+    },
+    {
+      "fieldId": "4b000068-0000-4000-a000-000000000068",
+      "order": 2,
+      "required": true,
+      "displayLabel": "Target Instance Id"
+    },
+    {
+      "fieldId": "4b000066-0000-4000-a000-000000000066",
+      "order": 3,
+      "required": true,
+      "displayLabel": "Relation Type"
+    }
+  ],
+  "id": "4c00002b-0000-4000-a000-00000000002b",
+  "name": "slice-external-ref",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

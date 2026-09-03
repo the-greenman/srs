@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "ext:discovery DiscoveryQuery.excludeLifecycleStates — exclusion filter, applied after lifecycleState/lifecycleStates."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:discovery DiscoveryQuery.excludeLifecycleStates — exclusion filter, applied after lifecycleState/lifecycleStates.",
+  "id": "4b000097-0000-4000-a000-000000000097",
+  "name": "exclude_lifecycle_states",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "cardinality": "list"
+  },
+  "version": 1
+}

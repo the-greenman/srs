@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "UUID of the Composition (Composition.id) constituting a declared presentation (srs-rust#910: renamed from viewId)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "UUID of the Composition (Composition.id) constituting a declared presentation (srs-rust#910: renamed from viewId).",
+  "id": "4b0000ac-0000-4000-a000-0000000000ac",
+  "name": "composition_id",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "format": "uuid"
+  },
+  "version": 1
+}

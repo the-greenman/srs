@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "AND-conjunction: the instance's tags array must contain ALL of the specified values (ext:discovery DiscoveryQuery.tag)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "AND-conjunction: the instance's tags array must contain ALL of the specified values (ext:discovery DiscoveryQuery.tag).",
+  "id": "4b000094-0000-4000-a000-000000000094",
+  "name": "tag",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "cardinality": "list"
+  },
+  "version": 1
+}

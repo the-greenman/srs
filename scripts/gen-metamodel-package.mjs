@@ -97,6 +97,36 @@ const TYPE_ORDER = [
   [32, 'source-anchor'],
   [33, 'source-excerpt'],
   [34, 'source-document-meta'],
+  // -- srs#541 (Task 4b/6 residual): the six entities #526 parked (Composition, DiscoveryQuery, the
+  // shared ExportConfig, View, Manifest, RelationTypeDefinition), plus their nested value objects.
+  // Value objects ordered before the entities that reference them; numbering itself is pinned and
+  // append-only, order is for readability only.
+  [35, 'relation-type-definition'],
+  [36, 'discovery-query'],
+  [37, 'export-config'],
+  [38, 'package-ref'],
+  [39, 'rendered-presentation'],
+  [40, 'upstream-package'],
+  [41, 'slice-origin'],
+  [42, 'slice-spec'],
+  [43, 'slice-external-ref'],
+  [44, 'slice'],
+  [45, 'repository-ai-guidance'],
+  [46, 'manifest'],
+  [47, 'relation-presentation-entry'],
+  [48, 'relations-presentation'],
+  [49, 'navigation-link'],
+  [50, 'theme-reference'],
+  [51, 'theme-variant'],
+  [52, 'composite-renderer-directive'],
+  [53, 'section-ordering'],
+  [54, 'document-section'],
+  [55, 'composition'],
+  [56, 'composite-renderer-binding'],
+  [57, 'view-ai-guidance'],
+  [58, 'field-view'],
+  [59, 'record-property-view'],
+  [60, 'view'],
 ];
 const typeIdByName = Object.fromEntries(TYPE_ORDER.map(([n, name]) => [name, typeUuid(n)]));
 const ref = (typeName, mode, cardinality, extra) => {
@@ -292,6 +322,95 @@ const FIELD_SPECS = [
   [145, 'value', { datatype: 'string' }, 'Locator value, e.g. "241-260", or a human-readable note.'],
   [146, 'terms', ref('term', 'inline', 'list'), 'The Vocabulary\'s Term entries.'],
   [147, 'promotion_window', ref('promotion-window', 'inline', 'single'), 'RFC-006 V10 — grace window for a Vocabulary\'s open-to-closed promotion.'],
+  // -- srs#541 (Task 4b/6 residual): DiscoveryQuery (docs/schema/2.0/discovery.json, modelled minus
+  // `tier` — a bare untyped-integer enum, the same #534-tracked emitter gap discovery.json's own
+  // standalone generation is gated on; this is a documented per-entity exclusion, same latitude
+  // Container.containerType already has, not a fix to #534 here).
+  [148, 'tag', { datatype: 'string', cardinality: 'list' }, 'AND-conjunction: the instance\'s tags array must contain ALL of the specified values (ext:discovery DiscoveryQuery.tag).'],
+  [149, 'discovery_container_id', { datatype: 'string', format: 'uuid' }, 'ext:discovery DiscoveryQuery.containerId — instance is a member of this container (RFC-009 I-66).'],
+  [150, 'lifecycle_states', { datatype: 'string', cardinality: 'list' }, 'ext:discovery DiscoveryQuery.lifecycleStates — inclusive multi-value lifecycle filter, OR semantics (RFC-012 Rev 11, srs#525).'],
+  [151, 'exclude_lifecycle_states', { datatype: 'string', cardinality: 'list' }, 'ext:discovery DiscoveryQuery.excludeLifecycleStates — exclusion filter, applied after lifecycleState/lifecycleStates.'],
+  [152, 'content_match', { datatype: 'string' }, 'ext:discovery DiscoveryQuery.contentMatch — free-text recall-floor predicate over the Text Projection.'],
+  // -- RelationTypeDefinition (docs/schema/2.0/relation-type.json, closes #254's remainder).
+  [153, 'category', closed(['composition', 'refinement', 'dependency', 'sequence', 'derivation', 'evidence', 'governance', 'association', 'lifecycle', 'provenance', 'other']), 'Structural category of a relation type.'],
+  [154, 'canonical_direction', { datatype: 'string' }, 'Human-readable description of which end is source and which is target, or what members represent.'],
+  [155, 'inverse_type', { datatype: 'string' }, 'Key of the derived inverse (e.g. supersedes -> superseded-by); need not resolve — display-only (Invariant 16).'],
+  [156, 'irreflexive', { datatype: 'boolean' }, 'When true, a relation from an instance to itself is invalid.'],
+  [157, 'require_same_type', { datatype: 'boolean' }, 'When true, source and target must resolve to the same bound Type (srs-rust#910, re-keyed onto the Type system).'],
+  // -- ExportConfig (shared: Composition.exportConfig, View.exportConfig, srs#525 "one shape, two
+  // attachment points") and RenderedPresentation.format (manifest.json), which reuses the same
+  // `format` Field — same meaning, different owning Types.
+  [158, 'export_format', { datatype: 'string' }, 'Target output format. Portable values: markdown, adoc, html, text.'],
+  [159, 'preamble', { datatype: 'string' }, 'Template string rendered before field values.'],
+  [160, 'omit_empty_fields', { datatype: 'boolean' }, 'Default: false. When true, fields with no value are omitted from output.'],
+  // -- Manifest (docs/schema/2.0/manifest.json, RFC-038 descriptor-only shape) and its value objects.
+  [161, 'srs_version', { datatype: 'string' }, 'SRS spec version this repository conforms to, e.g. \'2.0\' or \'2.0-draft\'.'],
+  [162, 'data_model_revision', { datatype: 'integer', constraints: { minimum: 0 } }, 'RFC-033/#265 — monotonic integer generation stamp for operational data-model migrations. Absent means revision 0.'],
+  [163, 'repository_id', { datatype: 'string', format: 'uuid' }, 'Stable UUID for this repository (or, on a Slice, the source repository it was exported from). Never changes on copy or export.'],
+  [164, 'declared_extensions', { datatype: 'string', cardinality: 'list' }, 'SRS extensions this repository conforms to, e.g. [\'ext:lifecycle\', \'ext:views-l1\'].'],
+  [165, 'container', ref('container', 'inline', 'single'), 'Embedded Container record — canonical source of truth for this repository\'s identity.'],
+  [166, 'package_ref_mode', closed(['local', 'remote']), 'LOCATOR (rfc-decision-c8704763). local: definitions live in the repository under package/. remote: pre-installed in the consumer\'s registry.'],
+  [167, 'path', { datatype: 'string' }, 'Relative path to a referenced file (a package directory/package.json, or a Theme JSON file).'],
+  [168, 'package_id', { datatype: 'string', format: 'uuid' }, 'Stable UUID of a package.'],
+  [169, 'package_name', { datatype: 'string' }, 'Human-readable name of a package.'],
+  [170, 'package_ref', ref('package-ref', 'inline', 'single'), 'Reference to the SRS Package that supplies field and type definitions (single package).'],
+  [171, 'package_refs', ref('package-ref', 'inline', 'list'), 'References to one or more SRS Packages (RFC-014 Change C, multi-package/multi-version repositories).'],
+  [172, 'composition_id', { datatype: 'string', format: 'uuid' }, 'UUID of the Composition (Composition.id) constituting a declared presentation (srs-rust#910: renamed from viewId).'],
+  [173, 'is_default', { datatype: 'boolean' }, 'When true, this is the presentation a viewer opens by default.'],
+  [174, 'output_path', { datatype: 'string' }, 'Relative path hint for rendered export scripts. Informational only.'],
+  [175, 'rendered_presentations', ref('rendered-presentation', 'inline', 'list'), 'RFC-015 [N+31] — declared presentations for this repository.'],
+  [176, 'upstream_semver', { datatype: 'string' }, 'Semver of the upstream Package recorded at install/upgrade time, e.g. \'1.0.0\'.'],
+  [177, 'installed_at', { datatype: 'date-time' }, 'When this upstream Package version was installed into the repository.'],
+  [178, 'upstream_package', ref('upstream-package', 'inline', 'single'), 'RFC-014 (ext:import-tracking) — top-level normative provenance stamp for a repository initialised from an upstream Package.'],
+  [179, 'slice_spec_type', closed(['container']), 'Closure rule identifying the boundary that scoped a Slice. \'container\' = container-membership closure.'],
+  [180, 'slice_origin', ref('slice-origin', 'inline', 'single'), 'ext:slices (RFC-026) — identifies the source repository a Slice was exported from.'],
+  [181, 'exported_at', { datatype: 'date-time' }, 'When a Slice was produced.'],
+  [182, 'external_relation_refs', ref('slice-external-ref', 'inline', 'list'), 'RFC-026 — Relations cut at export because exactly one endpoint fell outside the closure.'],
+  [183, 'spec', ref('slice-spec', 'inline', 'single'), 'Identifies the closure rule and boundary that scoped a Slice.'],
+  [184, 'slice', ref('slice', 'inline', 'single'), 'ext:slices (RFC-026) — present when this archive is a partial export (slice) of a source repository.'],
+  [185, 'source_documents_path', { datatype: 'string' }, 'Relative path from manifest.json to the source-documents/ directory.'],
+  [186, 'summary', { datatype: 'string' }, 'Repository-level AI comprehension summary.'],
+  [187, 'suggested_entry_points', { datatype: 'string', cardinality: 'list' }, 'Suggested entry points for an AI agent reading this repository.'],
+  [188, 'navigation_hints', { datatype: 'string' }, 'Navigation hints for an AI agent reading this repository.'],
+  [189, 'repository_ai_guidance', ref('repository-ai-guidance', 'inline', 'single'), 'Comprehension guidance for AI agents reading this repository (Manifest.aiGuidance — a distinct, narrower shape from the generic AiGuidance value object).'],
+  // -- Composition (docs/schema/2.0/composition.json, renamed from document-view.json) and its
+  // nested value objects.
+  [190, 'section_id', { datatype: 'string' }, 'Stable identifier for a DocumentSection within its Composition.'],
+  [191, 'render_view_id', { datatype: 'string', format: 'uuid' }, 'View (ext:views-l1) used to render each instance in a DocumentSection.'],
+  [192, 'type_dispatch', { datatype: 'map', valueRange: 'string' }, 'RFC-008 (ext:views-l2) — map from a record\'s resolved type key to the ext:views-l1 View UUID used to render records of that type within a DocumentSection.'],
+  [193, 'title_field_id', { datatype: 'string', format: 'uuid' }, 'The fieldId whose value provides the per-record heading within a DocumentSection.'],
+  [194, 'sort_direction', closed(['asc', 'desc']), 'Sort direction for a DocumentSection\'s field-based ordering. Default: asc.'],
+  [195, 'member_order', { datatype: 'string', format: 'uuid', cardinality: 'list' }, 'RFC-015 [N+29] — view-owned explicit presentation sequence for container-subset sections.'],
+  [196, 'section_ordering', ref('section-ordering', 'inline', 'single'), 'DocumentSection.ordering — field-based or explicit member-order presentation directive.'],
+  [197, 'empty_behavior', closed(['hide', 'show-placeholder']), 'What to do when a DocumentSection has no records. Default: hide.'],
+  [198, 'composite_renderers', ref('composite-renderer-directive', 'inline', 'list'), 'RFC-036 — composite renderer dispatch declared at a Composition or a DocumentSection.'],
+  [199, 'relations_presentation', ref('relations-presentation', 'inline', 'single'), 'RFC-027 — when present, render a deterministic per-member links block after each member a DocumentSection renders.'],
+  [200, 'include', ref('relation-presentation-entry', 'inline', 'list', { minItems: 1 }), 'RFC-027 — which relation types a RelationsPresentation displays, in display order.'],
+  [201, 'directions', closed(['forward', 'inverse', 'both']), 'Which edge directions a RelationPresentationEntry displays for the member. Default: forward.'],
+  [202, 'forward_label', { datatype: 'string' }, 'Row-label override for edges where the member is the source.'],
+  [203, 'inverse_label', { datatype: 'string' }, 'Row-label override for edges where the member is the target.'],
+  [204, 'from_section_id', { datatype: 'string' }, 'The sectionId a NavigationLink departs from.'],
+  [205, 'to_section_id', { datatype: 'string' }, 'The sectionId a NavigationLink arrives at.'],
+  [206, 'bidirectional', { datatype: 'boolean' }, 'Default: false. Whether a NavigationLink should also be read in reverse.'],
+  [207, 'theme_reference_mode', closed(['local', 'remote', 'bundled']), 'A ThemeReference\'s locator mode: local/remote/bundled, following the same mode-discriminated pattern as PackageRef.'],
+  [208, 'url', { datatype: 'string' }, 'URL to a referenced file (e.g. a Theme JSON file, ThemeReference.mode === remote).'],
+  [209, 'theme_id', { datatype: 'string', format: 'uuid' }, 'References Theme.id in Package.themes[] (ThemeReference.mode === bundled).'],
+  [210, 'theme_ref', ref('theme-reference', 'inline', 'single'), 'A pointer to a Theme (ext:themes-l1): Composition.themeRef, or a ThemeVariant\'s own themeRef.'],
+  [211, 'theme_variants', ref('theme-variant', 'inline', 'list'), 'Named alternative themes selectable at render invocation.'],
+  [212, 'renderer', { datatype: 'string', constraints: { minLength: 1 } }, 'Composite renderer identifier (RFC-036). \'baseline\' is the reserved sentinel meaning explicitly no renderer.'],
+  [213, 'renderer_roles', { datatype: 'map', valueRange: 'string' }, 'RFC-036 — explicit, UUID-anchored role -> Field.id binding, overriding the by-name defaults of a composite renderer.'],
+  [214, 'document_sections', ref('document-section', 'inline', 'list'), 'Ordered list of sections that make up a Composition.'],
+  [215, 'root_type_refs', ref('exact-type-ref', 'inline', 'list'), 'RFC-009 — when set, a Composition applies to Containers whose root Record\'s resolved Type matches one of these refs.'],
+  [216, 'navigation_links', ref('navigation-link', 'inline', 'list'), 'Assembly-time cross-section reading aids. Do not appear in the Relation graph.'],
+  [217, 'export_config', ref('export-config', 'inline', 'single'), 'The shared render-output configuration shape (ext:views-l1), attached at both Composition and View (srs#525: one shape, two attachment points).'],
+  [218, 'depth_offset', { datatype: 'integer', constraints: { minimum: 0 } }, 'Shifts all auto-rendered heading levels by this amount. Default: 0.'],
+  // -- View (docs/schema/2.0/view.json, ext:views-l1) and its nested value objects.
+  [219, 'compatible_types', { datatype: 'string', cardinality: 'list' }, 'Optional Type-key hints (namespace/name) a View was designed for. Informational only.'],
+  [220, 'view_ai_guidance', ref('view-ai-guidance', 'inline', 'single'), 'Guidance for AI agents using a View (View.aiGuidance — a distinct, narrower shape from the generic AiGuidance value object: purpose + extraction only).'],
+  [221, 'visible', { datatype: 'boolean' }, 'Default: true. Whether a FieldView/RecordPropertyView row is shown.'],
+  [222, 'editor_hint_override', { datatype: 'string' }, 'Presentation only (RFC-036 [CR-036-20]/[CR-036-21]). Supersedes Field.editorHint for Records rendered/edited through this View.'],
+  [223, 'composite_renderer', ref('composite-renderer-binding', 'inline', 'single'), 'RFC-036 — render a FieldView\'s composite-range value through a named composite renderer.'],
+  [224, 'property', closed(['lifecycleState', 'tags', 'createdAt', 'updatedAt']), 'Record-level property presented by a RecordPropertyView row.'],
 ];
 const fieldIdByName = {};
 for (const [n, name] of FIELD_SPECS) fieldIdByName[name] = fieldUuid(n);
@@ -674,6 +793,231 @@ const TYPE_SPECS = {
       a('encoding', false), a('language', false), a('title', false), a('description', false),
       a('processing_note', false, 'Processing Note'), a('excerpt', false), a('date', false),
       a('tags', false), a('created_at', true), a('imported_at', false, 'Imported At'),
+    ],
+  },
+  // -------------------------------------------------------------------------------------------
+  // srs#541 (Task 4b/6 residual): the six entities #526 parked, plus their nested value objects.
+  // Per-entity exclusions (documented, not silent — the seed may always carry more, same latitude
+  // every prior entity already has): DiscoveryQuery.tier (bare untyped-integer enum, the #534-
+  // tracked emitter gap); Container.containerType (already modelled, reused here); Manifest.
+  // changelogPath (deprecated, no per-property deprecation mechanism — same reason as Container.
+  // containerType) and Manifest.meta (an openly-shaped bag with one documented-but-optional legacy
+  // key, not a clean map — unlike RelationTypeDefinition.meta/lifecycle-state.meta, which ARE plain
+  // maps and reuse the `meta` Field as a real FieldAssignment); Composition/View's own aiGuidance
+  // is EITHER excluded (Composition: bare `{type:object}`, no structure to model, same as
+  // Blueprint's own aiGuidance/lineage/provenance) OR modelled via its own narrower value-object
+  // Type when the seed genuinely has structure (Manifest.aiGuidance, View.aiGuidance — each
+  // distinct in shape from the generic `ai-guidance` Type and each other); Composition/View's
+  // lineage/provenance are bare `{type:object}` in the committed seed (unlike the definition-layer
+  // Lineage/Provenance value objects) and are excluded for the same reason as Blueprint's.
+  //
+  // DocumentSection.source (SectionSource) and View.fieldViews are NOT modelled at all — both are
+  // JSON-Schema `oneOf` unions (SectionSource: two anonymous, differently-required, discriminated
+  // object branches with no base `properties` bag outside the union; View.fieldViews: an array
+  // whose `items` is `oneOf` of two DIFFERENT $refs). The metamodel's FieldType system has no
+  // discriminated-union datatype — every Type composes to one flat object — so nothing here can
+  // emit a shape that would close against either seed's `oneOf` (which itself collapses to `{}`
+  // under scripts/lib/schema-closure.mjs's envelope-stripping, since neither has a flat properties
+  // bag alongside the union). This is a genuine FINDING (the #535 lifecycle precedent), not
+  // sloppiness or an #534 gap (#534's own three gaps — map-of-$ref, $defs-only bundles, untyped-
+  // integer enums — do not cover a discriminated union): filed as its own emitter-capability gap,
+  // srs#543, sibling to #534. FieldView and RecordPropertyView are each independently
+  // modelled and closure-proven against their OWN `$def` (view.json#/$defs/FieldView and
+  // #/$defs/RecordPropertyView, both plain flat objects on their own) — the exclusion is scoped to
+  // exactly the discriminated wrapper, not the row shapes themselves.
+  // -------------------------------------------------------------------------------------------
+  'relation-type-definition': {
+    description: 'Declares a named relation type within a package\'s relation type vocabulary. Relation types describe the semantic meaning and structural shape of a class of relations.',
+    purpose: 'Describes a RelationTypeDefinition: its key, category, direction/inverse hints, and structural constraints.',
+    assignments: [
+      a('id', true), a('version', true), a('key', true), a('namespace', true), a('label', true),
+      a('description', true), a('category', true), a('canonical_direction', false, 'Canonical Direction'),
+      a('inverse_type', false, 'Inverse Type'), a('irreflexive', false), a('require_same_type', false, 'Require Same Type'),
+      a('status', false), a('created_at', true), a('updated_at', false, 'Updated At'), a('meta', false),
+    ],
+  },
+  'discovery-query': {
+    description: 'ext:discovery (RFC-012) — a conjunction of zero or more structured filter predicates. An instance matches if and only if it satisfies all predicates whose values are specified. Modelled minus `tier` (a bare untyped-integer enum — the #534-tracked emitter gap; documented exclusion, same latitude every other entity already has, e.g. Container.containerType).',
+    purpose: 'Describes a DiscoveryQuery: its structured filter predicates over type, container, tags, lifecycle state, and free text.',
+    assignments: [
+      a('type_id', false, 'Type Id'), a('type_namespace', false, 'Type Namespace'), a('type_name', false, 'Type Name'),
+      a('discovery_container_id', false, 'Container Id'), a('tag', false),
+      a('lifecycle_state', false, 'Lifecycle State'), a('lifecycle_states', false, 'Lifecycle States'),
+      a('exclude_lifecycle_states', false, 'Exclude Lifecycle States'), a('content_match', false, 'Content Match'),
+    ],
+  },
+  'export-config': {
+    description: 'ext:views-l1 — configuration for rendering a Record (or a Composition\'s document-level output) as an exportable document. Shared by View.exportConfig and Composition.exportConfig (srs#525: one shape, two attachment points, no override semantics between them).',
+    purpose: 'Describes an ExportConfig: target output format, preamble template, and empty-field handling.',
+    assignments: [a('export_format', false, 'Format'), a('preamble', false), a('omit_empty_fields', false, 'Omit Empty Fields')],
+  },
+  'package-ref': {
+    description: 'A reference to an SRS Package that supplies field and type definitions, either local (in-repository) or remote (pre-installed in the consumer\'s registry).',
+    purpose: 'Describes a PackageRef: its locator mode and package identity hints.',
+    assignments: [
+      a('package_ref_mode', true, 'Mode'), a('path', false), a('package_id', false, 'Package Id'),
+      a('package_name', false, 'Package Name'), a('package_version', false, 'Package Version'),
+    ],
+  },
+  'rendered-presentation': {
+    description: 'RFC-015 [N+31] — a declared presentation of a repository: a Composition that a conformant viewer should offer as a rendered entry point.',
+    purpose: 'Describes a RenderedPresentation: which Composition it points to, and rendering hints.',
+    assignments: [
+      a('composition_id', true, 'Composition Id'), a('is_default', false, 'Is Default'),
+      a('export_format', false, 'Format'), a('output_path', false, 'Output Path'),
+    ],
+  },
+  'upstream-package': {
+    description: 'RFC-014 (ext:import-tracking) — normative provenance stamp recording the upstream Package a repository was initialised from.',
+    purpose: 'Describes an UpstreamPackage: its identity, version, and install time.',
+    assignments: [
+      a('package_id', true, 'Package Id'), a('namespace', true), a('name', true),
+      a('upstream_semver', true, 'Version'), a('installed_at', true, 'Installed At'),
+    ],
+  },
+  'slice-origin': {
+    description: 'ext:slices (RFC-026) — identifies the source repository a Slice was exported from.',
+    purpose: 'Describes a Slice\'s origin: the source repositoryId.',
+    assignments: [a('repository_id', true, 'Repository Id')],
+  },
+  'slice-spec': {
+    description: 'ext:slices (RFC-026) — identifies the closure rule and boundary that scoped a Slice.',
+    purpose: 'Describes a SliceSpec: its closure rule type and boundary UUID.',
+    assignments: [a('slice_spec_type', true, 'Type'), a('id', true)],
+  },
+  'slice-external-ref': {
+    description: 'ext:slices (RFC-026) — a relation cut at export time because exactly one endpoint was outside the closure.',
+    purpose: 'Describes a SliceExternalRef: the cut relation\'s identity, endpoints, and type.',
+    assignments: [
+      a('relation_id', true, 'Relation Id'), a('source_instance_id', true, 'Source Instance Id'),
+      a('target_instance_id', true, 'Target Instance Id'), a('relation_type_name', true, 'Relation Type'),
+    ],
+  },
+  slice: {
+    description: 'ext:slices (RFC-026) — present when this archive is a partial export (slice) of a source repository.',
+    purpose: 'Describes a Slice: its origin, closure spec, export time, and cut external relation refs.',
+    assignments: [
+      a('slice_origin', true, 'Origin'), a('spec', true), a('exported_at', true, 'Exported At'),
+      a('external_relation_refs', false, 'External Relation Refs'),
+    ],
+  },
+  'repository-ai-guidance': {
+    description: 'Comprehension guidance for AI agents reading a repository (Manifest.aiGuidance) — distinct in shape from the generic AiGuidance value object (RFC-033), which serves Field/Type guidance instead.',
+    purpose: 'Describes a repository\'s AI guidance: a summary, suggested entry points, and navigation hints.',
+    assignments: [a('summary', false), a('suggested_entry_points', false, 'Suggested Entry Points'), a('navigation_hints', false, 'Navigation Hints')],
+  },
+  manifest: {
+    description: 'RFC-038 — root file for an ext:repository: the repository identity and entry point. Membership is the tree (RFC-038 [R1]); the manifest carries no index.',
+    purpose: 'Describes a repository Manifest: its identity, package references, root Container, and declared presentations.',
+    assignments: [
+      a('srs_version', true, 'Srs Version'), a('data_model_revision', false, 'Data Model Revision'),
+      a('repository_id', true, 'Repository Id'), a('namespace', false),
+      a('title', true), a('description', false), a('declared_extensions', false, 'Declared Extensions'),
+      a('container', true), a('package_ref', false, 'Package Ref'), a('package_refs', false, 'Package Refs'),
+      a('upstream_package', false, 'Upstream Package'), a('source_documents_path', false, 'Source Documents Path'),
+      a('repository_ai_guidance', false, 'Ai Guidance'), a('rendered_presentations', false, 'Rendered Presentations'),
+      a('slice', false), a('created_at', true), a('updated_at', false, 'Updated At'),
+    ],
+  },
+  'relation-presentation-entry': {
+    description: 'RFC-027 — declares which relation type a RelationsPresentation displays for a member, and how.',
+    purpose: 'Describes a RelationPresentationEntry: its relation type, display directions, and label overrides.',
+    assignments: [
+      a('relation_type_name', true, 'Relation Type'), a('directions', false),
+      a('forward_label', false, 'Forward Label'), a('inverse_label', false, 'Inverse Label'),
+    ],
+  },
+  'relations-presentation': {
+    description: 'RFC-027 — when present on a DocumentSection, render a deterministic per-member links block after each member the section renders.',
+    purpose: 'Describes a RelationsPresentation: which relation types to display, in order.',
+    assignments: [a('include', true), a('label', false)],
+  },
+  'navigation-link': {
+    description: 'Assembly-time cross-section reading aid within a Composition. Does not appear in the Relation graph.',
+    purpose: 'Describes a NavigationLink: the two sections it connects, an optional label, and directionality.',
+    assignments: [
+      a('from_section_id', true, 'From Section Id'), a('to_section_id', true, 'To Section Id'),
+      a('label', false), a('bidirectional', false),
+    ],
+  },
+  'theme-reference': {
+    description: 'ext:themes-l1 — a pointer to a Theme, following the same mode-based reference pattern as Manifest.packageRef.',
+    purpose: 'Describes a ThemeReference: its locator mode and theme identity hints.',
+    assignments: [
+      a('theme_reference_mode', true, 'Mode'), a('path', false), a('url', false), a('theme_id', false, 'Theme Id'),
+    ],
+  },
+  'theme-variant': {
+    description: 'A named alternative theme selectable at render time instead of Composition.themeRef.',
+    purpose: 'Describes a ThemeVariant: its name and the ThemeReference it selects.',
+    assignments: [a('name', true), a('description', false), a('theme_ref', true, 'Theme Ref')],
+  },
+  'composite-renderer-directive': {
+    description: 'RFC-036 Change B (ext:views-l2) — a CompositeRendererBinding plus the composite-range Field it binds. Presentation only.',
+    purpose: 'Describes a CompositeRendererDirective: which Field it binds and which renderer dispatches it.',
+    assignments: [a('field_id', true, 'Field'), a('renderer', true), a('renderer_roles', false, 'Roles')],
+  },
+  'section-ordering': {
+    description: 'DocumentSection.ordering — field-based sort direction, or an explicit member-order presentation sequence, for a DocumentSection.',
+    purpose: 'Describes a DocumentSection\'s ordering directive.',
+    assignments: [a('field_id', false, 'Field'), a('sort_direction', false, 'Direction'), a('member_order', false, 'Member Order')],
+  },
+  'document-section': {
+    description: 'One section within a Composition. `source` (SectionSource) is excluded — a JSON-Schema `oneOf` of two anonymous discriminated branches with no flat properties bag outside the union; no discriminated-union datatype exists in the metamodel today (srs#541 finding, filed as its own emitter-capability gap).',
+    purpose: 'Describes a DocumentSection: its identity, ordering, rendering dispatch, and per-record presentation directives.',
+    assignments: [
+      a('section_id', true, 'Section Id'), a('title', false), a('description', false), a('order', true),
+      a('render_view_id', false, 'Render View Id'), a('type_dispatch', false, 'Type Dispatch'),
+      a('title_field_id', false, 'Title Field Id'), a('section_ordering', false, 'Ordering'),
+      a('required', false), a('empty_behavior', false, 'Empty Behavior'),
+      a('composite_renderers', false, 'Composite Renderers'), a('relations_presentation', false, 'Relations Presentation'),
+    ],
+  },
+  composition: {
+    description: 'RFC-038/srs#523 (renamed from DocumentView) — a versioned, Container-level projection assembling multiple Records from a Container into a coherent, ordered document (ext:views-l2). `containerType` (deprecated, no per-property deprecation mechanism modelled), `aiGuidance`/`lineage`/`provenance` (bare implementation-defined bags in this file, no real internal structure — same reasoning as Blueprint\'s own) are excluded.',
+    purpose: 'Describes a Composition: its identity, sections, rendering configuration, and theming.',
+    assignments: [
+      a('id', true), a('namespace', true), a('name', true), a('version', true), a('description', true),
+      a('root_type_refs', false, 'Root Type Refs'), a('document_sections', true, 'Sections'),
+      a('composite_renderers', false, 'Composite Renderers'), a('navigation_links', false, 'Navigation Links'),
+      a('export_config', false, 'Export Config'), a('depth_offset', false, 'Depth Offset'),
+      a('theme_ref', false, 'Theme Ref'), a('theme_variants', false, 'Theme Variants'),
+      a('tags', false), a('created_at', true), a('updated_at', false, 'Updated At'),
+    ],
+  },
+  'composite-renderer-binding': {
+    description: 'RFC-036 Change A (ext:views-l1) — a view-owned composite rendering dispatch record. Presentation only.',
+    purpose: 'Describes a CompositeRendererBinding: which named renderer to dispatch to, and role bindings.',
+    assignments: [a('renderer', true), a('renderer_roles', false, 'Roles')],
+  },
+  'view-ai-guidance': {
+    description: 'Guidance for AI agents using a View (View.aiGuidance) — a narrower shape than the generic AiGuidance value object (RFC-033): purpose + extraction only, no negativeGuidance/examples.',
+    purpose: 'Describes a View\'s AI guidance: its purpose and extraction instruction.',
+    assignments: [a('purpose', false), a('extraction', false)],
+  },
+  'field-view': {
+    description: 'ext:views-l1 — presentation configuration for one Field within a View.',
+    purpose: 'Describes a FieldView: which Field it presents, its order, and rendering overrides.',
+    assignments: [
+      a('field_id', true, 'Field'), a('order', true), a('required', false), a('visible', false),
+      a('display_label', false, 'Display Label'), a('display_hint', false, 'Display Hint'),
+      a('editor_hint_override', false, 'Editor Hint Override'), a('composite_renderer', false, 'Composite Renderer'),
+    ],
+  },
+  'record-property-view': {
+    description: 'ext:views-l1 — presentation configuration for one record-level property (lifecycleState/tags/createdAt/updatedAt) within a View.',
+    purpose: 'Describes a RecordPropertyView: which record-level property it presents, its order, and rendering overrides.',
+    assignments: [
+      a('property', true), a('order', true), a('display_label', false, 'Display Label'), a('visible', false),
+    ],
+  },
+  view: {
+    description: 'ext:views-l1 — a versioned presentation and export configuration over a field set. `fieldViews` (a `oneOf` of FieldView | RecordPropertyView) and `lineage`/`provenance` (bare implementation-defined bags in this file) are excluded — see the srs#541 finding above.',
+    purpose: 'Describes a View: its identity, compatible types, export configuration, and AI guidance.',
+    assignments: [
+      a('id', true), a('namespace', true), a('name', true), a('version', true), a('description', true),
+      a('compatible_types', false, 'Compatible Types'), a('export_config', false, 'Export Config'),
+      a('view_ai_guidance', false, 'Ai Guidance'), a('tags', false), a('created_at', true), a('updated_at', false, 'Updated At'),
     ],
   },
 };

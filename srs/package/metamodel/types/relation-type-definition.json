@@ -1,0 +1,93 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a RelationTypeDefinition: its key, category, direction/inverse hints, and structural constraints."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Declares a named relation type within a package's relation type vocabulary. Relation types describe the semantic meaning and structural shape of a class of relations.",
+  "fields": [
+    {
+      "fieldId": "4b000001-0000-4000-a000-000000000001",
+      "order": 0,
+      "required": true
+    },
+    {
+      "fieldId": "4b000004-0000-4000-a000-000000000004",
+      "order": 1,
+      "required": true
+    },
+    {
+      "fieldId": "4b000039-0000-4000-a000-000000000039",
+      "order": 2,
+      "required": true
+    },
+    {
+      "fieldId": "4b000002-0000-4000-a000-000000000002",
+      "order": 3,
+      "required": true
+    },
+    {
+      "fieldId": "4b00003a-0000-4000-a000-00000000003a",
+      "order": 4,
+      "required": true
+    },
+    {
+      "fieldId": "4b000005-0000-4000-a000-000000000005",
+      "order": 5,
+      "required": true
+    },
+    {
+      "fieldId": "4b000099-0000-4000-a000-000000000099",
+      "order": 6,
+      "required": true
+    },
+    {
+      "fieldId": "4b00009a-0000-4000-a000-00000000009a",
+      "order": 7,
+      "required": false,
+      "displayLabel": "Canonical Direction"
+    },
+    {
+      "fieldId": "4b00009b-0000-4000-a000-00000000009b",
+      "order": 8,
+      "required": false,
+      "displayLabel": "Inverse Type"
+    },
+    {
+      "fieldId": "4b00009c-0000-4000-a000-00000000009c",
+      "order": 9,
+      "required": false
+    },
+    {
+      "fieldId": "4b00009d-0000-4000-a000-00000000009d",
+      "order": 10,
+      "required": false,
+      "displayLabel": "Require Same Type"
+    },
+    {
+      "fieldId": "4b00003e-0000-4000-a000-00000000003e",
+      "order": 11,
+      "required": false
+    },
+    {
+      "fieldId": "4b000006-0000-4000-a000-000000000006",
+      "order": 12,
+      "required": true
+    },
+    {
+      "fieldId": "4b000060-0000-4000-a000-000000000060",
+      "order": 13,
+      "required": false,
+      "displayLabel": "Updated At"
+    },
+    {
+      "fieldId": "4b000040-0000-4000-a000-000000000040",
+      "order": 14,
+      "required": false
+    }
+  ],
+  "id": "4c000023-0000-4000-a000-000000000023",
+  "name": "relation-type-definition",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Suggested entry points for an AI agent reading this repository."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Suggested entry points for an AI agent reading this repository.",
+  "id": "4b0000bb-0000-4000-a000-0000000000bb",
+  "name": "suggested_entry_points",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "cardinality": "list"
+  },
+  "version": 1
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "ext:slices (RFC-026) — present when this archive is a partial export (slice) of a source repository."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:slices (RFC-026) — present when this archive is a partial export (slice) of a source repository.",
+  "id": "4b0000b8-0000-4000-a000-0000000000b8",
+  "name": "slice",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "rangeType": {
+      "typeId": "4c00002c-0000-4000-a000-00000000002c",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

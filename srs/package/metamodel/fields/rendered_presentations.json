@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "RFC-015 [N+31] — declared presentations for this repository."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-015 [N+31] — declared presentations for this repository.",
+  "id": "4b0000af-0000-4000-a000-0000000000af",
+  "name": "rendered_presentations",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "cardinality": "list",
+    "rangeType": {
+      "typeId": "4c000027-0000-4000-a000-000000000027",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

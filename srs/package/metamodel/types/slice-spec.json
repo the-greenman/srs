@@ -1,0 +1,25 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a SliceSpec: its closure rule type and boundary UUID."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:slices (RFC-026) — identifies the closure rule and boundary that scoped a Slice.",
+  "fields": [
+    {
+      "fieldId": "4b0000b3-0000-4000-a000-0000000000b3",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Type"
+    },
+    {
+      "fieldId": "4b000001-0000-4000-a000-000000000001",
+      "order": 1,
+      "required": true
+    }
+  ],
+  "id": "4c00002a-0000-4000-a000-00000000002a",
+  "name": "slice-spec",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

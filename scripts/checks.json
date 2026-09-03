@@ -257,6 +257,15 @@
       "description": "The nine in-scope instance-layer metamodel Types (Record, Note, Relation, Container, Blueprint, Term, Vocabulary, Lifecycle, SourceDocumentMeta) emit output that is a subset of their committed docs/schema/2.0/*.json seed over the covered authoritative features, same discipline as rfc-035-closure. Proves the metamodel could generate these files without overwriting them (authorship flip is #260)."
     },
     {
+      "id": "rfc-541-closure",
+      "script": "rfc-541-closure-test.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "srs#541 (epic #256/#272 Task 4b/6 residual)",
+      "description": "The residual entities #526/PR#533 parked (RelationTypeDefinition, DiscoveryQuery minus tier, the shared ExportConfig, Manifest, Composition, View, plus View's own FieldView/RecordPropertyView row shapes) emit output that is a subset of their committed docs/schema/2.0/*.json seed over the covered authoritative features, same discipline as rfc-272-closure. Proves the metamodel could generate these files without overwriting them (authorship flip is #260). DocumentSection.source and View.fieldViews stay excluded (srs#543, a discriminated-union emitter gap)."
+    },
+    {
       "id": "schema-regenerate-drift",
       "script": "check-schema-regenerate-drift.mjs",
       "args": [],
