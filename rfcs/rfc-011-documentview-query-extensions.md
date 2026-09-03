@@ -2,8 +2,8 @@
 
 # RFC-011: DocumentView query extensions — lifecycle-state exclusion and repository-wide type queries
 
-**Status**: Accepted (Revision 1)
-**Affects**: `ext:views-l2` (`SectionSource.type-query`), `document-view.json` schema
+**Status**: Accepted (Revision 2)
+**Affects**: `ext:views-l2` (`SectionSource.discovery-query`, formerly `type-query`), `composition.json` schema (formerly `document-view.json`), `ext:discovery` (`DiscoveryQuery`, RFC-012)
 **Author**: Peter Brownell
 **Date**: 2026-06-25
 
@@ -14,6 +14,7 @@
 | Rev | Date | Summary |
 |---|---|---|
 | 1 | 2026-06-25 | Initial draft and acceptance; spec records authored in srs/srs |
+| 2 | 2026-09-03 | SectionSource → DiscoveryQuery collapse (srs#525, rfc-decision-cce3c00e "one way over many" + rfc-decision-9ee14517 layer rules). Changes A (`lifecycleStates`) and B (`excludeLifecycleStates`) are RETIRED from `SectionSource.type-query` — a section no longer carries its own copy of these axes. Their normative force continues unbroken under **RFC-012's** `DiscoveryQuery.lifecycleStates`/`excludeLifecycleStates` (I-142/I-143 amended in place, not renumbered — same invariants, new governing schema location). Change C (`containerScope`, I-144) is UNCHANGED in substance and stays governed by this RFC, re-attached to the successor `SectionSource.discovery-query` variant (`type: "discovery-query"`, selection carried by a `query: DiscoveryQuery` property; `typeKey` retired in favor of `query.typeNamespace` + `query.typeName`, already independently true after rfc-decision-c8704763). Zero-compat cutover (owner ruling, srs#272 comment 5496985508): no alias, no dual-shape support: `type-query` no longer exists in `composition.json`'s `SectionSource` `oneOf`. Live corpus (`srs` self-hosting packages, `com.mudemocracy.governance` 1.0.0/1.1.0/1.2.0, `gallery-project-v2` example) migrated in the same commit. **Known gap at this revision**: the `srs-rust` engine has no released build that deserializes `SectionSource::DiscoveryQuery` yet (confirmed: `v0.1.0-build.318` hard-fails `unknown variant` deserializing every migrated Composition) — `docs/spec/**.md` cannot be re-rendered with any currently-released binary until that support lands and releases; tracked as a filed srs-rust follow-up, binary-first per the standard revision-bump choreography. |
 
 ---
 

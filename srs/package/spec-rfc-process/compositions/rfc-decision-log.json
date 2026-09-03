@@ -10,14 +10,19 @@
       "title": "RFC decision log",
       "order": 0,
       "source": {
-        "type": "type-query",
-        "typeKey": "com.semanticops.spec/rfc-decision"
+        "type": "discovery-query",
+        "query": {
+          "typeNamespace": "com.semanticops.spec",
+          "typeName": "rfc-decision"
+        }
       },
       "renderViewId": "2cd5576f-de83-4326-9ae3-eb9b8d2c49bf",
       "emptyBehavior": "hide"
     }
   ],
-  "format": "markdown",
   "createdAt": "2026-08-02T00:00:00Z",
-  "$schema": "https://srs.semanticops.com/schema/2.0/composition.json"
+  "$schema": "https://srs.semanticops.com/schema/2.0/composition.json",
+  "exportConfig": {
+    "format": "markdown"
+  }
 }

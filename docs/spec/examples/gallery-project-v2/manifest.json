@@ -11,7 +11,7 @@
   },
   "$schema": "https://srs.semanticops.com/schema/2.0/manifest.json",
   "createdAt": "2026-05-25T00:00:00Z",
-  "dataModelRevision": 6,
+  "dataModelRevision": 7,
   "namespace": "com.limoma",
   "repositoryId": "8ae058dc-b52d-4e52-8e7e-969018532a04",
   "srsVersion": "2.0-draft",

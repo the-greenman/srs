@@ -485,7 +485,7 @@ async function publicationReachabilityCases(root) {
   const ID = (n) => `00000000-0000-4000-8000-0000000002${String(n).padStart(2, "0")}`;
   const TITLE_FIELD = "1a000001-0000-4000-a000-000000000001";
 
-  // A minimal repository: one package declaring one Composition, one type-query section, and
+  // A minimal repository: one package declaring one Composition, one discovery-query section, and
   // records under the reserved instance root. Everything the guard reads is built here, so a case
   // that passes for a reason other than the one it names shows up as a message mismatch.
   const record = (n, typeName, extra = {}) => ({
@@ -527,7 +527,7 @@ async function publicationReachabilityCases(root) {
         sectionId: "roots",
         title: "Roots",
         order: 0,
-        source: { type: "type-query", typeKey: "com.example.fixture/root" },
+        source: { type: "discovery-query", query: { typeNamespace: "com.example.fixture", typeName: "root" } },
         ...(titleFieldId ? { titleFieldId } : {}),
       },
     ],
@@ -687,17 +687,21 @@ async function publicationReachabilityCases(root) {
     contains: ["container-subset", "this guard does not resolve"],
   });
 
-  // A type-query may also filter by lifecycle state or container, and the renderer applies those.
-  // Ignoring them is fail-OPEN, not fail-closed: a section excluding `archived` records would
-  // otherwise confer publication on every archived record of the type. Refused for that reason.
+  // A discovery-query may also filter by lifecycle state or container, and the renderer applies
+  // those. Ignoring them is fail-OPEN, not fail-closed: a section excluding `archived` records
+  // would otherwise confer publication on every archived record of the type. Refused for that
+  // reason.
   const filtered = view(TITLE_FIELD);
   filtered.sections[0].source = {
-    type: "type-query",
-    typeKey: "com.example.fixture/root",
-    excludeLifecycleStates: ["archived"],
+    type: "discovery-query",
+    query: {
+      typeNamespace: "com.example.fixture",
+      typeName: "root",
+      excludeLifecycleStates: ["archived"],
+    },
   };
   await writeJson(join(repo, "package/compositions/fixture-view.json"), filtered);
-  expect("refuses a type-query it cannot filter", runCheck("check-publication-reachability.mjs", root), {
+  expect("refuses a discovery-query it cannot filter", runCheck("check-publication-reachability.mjs", root), {
     exit: 1,
     contains: ["excludeLifecycleStates", "this guard does not apply"],
   });
@@ -710,7 +714,10 @@ async function publicationReachabilityCases(root) {
   await exclusions(); // the orphan must be undeclared here, or this case passes for the wrong reason
   const ghost = view(TITLE_FIELD, "00000000-0000-4000-8000-000000000499");
   ghost.name = "ghost-view";
-  ghost.sections[0].source = { type: "type-query", typeKey: "com.example.fixture/leaf" };
+  ghost.sections[0].source = {
+    type: "discovery-query",
+    query: { typeNamespace: "com.example.fixture", typeName: "leaf" },
+  };
   await writeJson(join(repo, "package/compositions/ghost.json"), ghost);
   const withGhost = JSON.parse(await readFile(join(repo, "package/package.json"), "utf8"));
   await writeJson(join(repo, "package/package.json"), {
