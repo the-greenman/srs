@@ -20,7 +20,9 @@
       "emptyBehavior": "hide"
     }
   ],
-  "format": "markdown",
   "createdAt": "2026-08-02T00:00:00Z",
-  "$schema": "https://srs.semanticops.com/schema/2.0/composition.json"
+  "$schema": "https://srs.semanticops.com/schema/2.0/composition.json",
+  "exportConfig": {
+    "format": "markdown"
+  }
 }

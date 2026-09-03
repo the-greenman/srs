@@ -74,13 +74,9 @@
       },
       "description": "Assembly-time cross-section reading aids. Do not appear in the Relation graph."
     },
-    "preamble": {
-      "type": "string",
-      "description": "Template string rendered before all sections. Standard variables: {{container-title}}, {{date}}, {{container-id}}, {{heading-1}}, {{heading-2}}. When absent and format is 'markdown', 'html', or 'adoc', implementations MUST render a document title heading at level 1 + depthOffset."
-    },
-    "format": {
-      "type": "string",
-      "description": "Output format for all section rendering. Portable values: 'markdown', 'adoc', 'html', 'text'. Governs all section rendering; ExportConfig.format on a referenced L1 View is ignored. When absent, output format is implementation-defined."
+    "exportConfig": {
+      "$ref": "#/$defs/ExportConfig",
+      "description": "The shared render-output configuration shape (ext:views-l1), also carried by View. format/preamble here govern this Composition's document-level rendering (all section rendering, the document title/preamble). When a section dispatches per-record rendering to an L1 View (renderViewId/typeDispatch), that View's own exportConfig continues to govern its own render context (per-record preamble, omitEmptyFields) -- a different render context, not an override of this one (srs#525: one shape, two attachment points, no precedence semantics between them)."
     },
     "depthOffset": {
       "type": "integer",
@@ -521,6 +517,25 @@
           "type": "integer",
           "minimum": 1,
           "description": "Version of the Type this ref targets (required — version-exact anchor validated against the Package)."
+        }
+      }
+    },
+    "ExportConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Configuration for rendering a Record through this View as an exportable document.",
+      "properties": {
+        "format": {
+          "type": "string",
+          "description": "Target output format. Portable values: 'markdown', 'adoc', 'html', 'text'. Governs this View's own render context: standalone rendering when the View is used outside any Composition, and per-record rendering when a Composition section dispatches to this View (renderViewId/typeDispatch) -- but a dispatching Composition's document-level format comes from that Composition's own exportConfig.format, not from here (srs#525: one shape, two attachment points, no precedence between them)."
+        },
+        "preamble": {
+          "type": "string",
+          "description": "Template string rendered before field values. Standard variables: {{instance-id}}, {{date}}, {{status}}, {{namespace}}, {{name}}. In section rendering context, {{heading-3}} is also available (resolves to heading level 3 + depthOffset)."
+        },
+        "omitEmptyFields": {
+          "type": "boolean",
+          "description": "Default: false. When true, fields with no value are omitted from output."
         }
       }
     }
