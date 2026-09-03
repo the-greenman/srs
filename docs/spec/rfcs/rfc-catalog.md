@@ -17,7 +17,7 @@ schema:view.json
 
 **Proposal Artifact Path**: rfcs/rfc-001.md
 
-**Content**: Defines the default (View-agnostic) rendering baseline, a normative heading hierarchy (`depthOffset`/`titleFieldId`), a portable `format` vocabulary with an L1/L2 precedence rule, and reserves `themeRef`/`themeVariants` plus the `ThemeReference`/`ThemeVariant` types on `DocumentView` for RFC-002. Full text: rfcs/rfc-001.md.
+**Content**: Defines the default (View-agnostic) rendering baseline, a normative heading hierarchy (`depthOffset`/`titleFieldId`), a portable `format` vocabulary, and reserves `themeRef`/`themeVariants` plus the `ThemeReference`/`ThemeVariant` types on `DocumentView` for RFC-002. Rev 10 (srs#525): the L1/L2 `format`/`preamble` split is no longer a precedence rule -- `Composition.exportConfig` (retiring Composition's own inline `format`/`preamble`) and a dispatched View's `exportConfig` each govern their own render context, with no attachment overriding the other. Full text: rfcs/rfc-001.md.
 
 
 **Title**: RFC-002: ext:themes-l1 — Visual Theming for Document Views
@@ -97,7 +97,7 @@ I-145
 
 **Author**: Peter Brownell
 
-**Affected Components**: ext:views-l2 (SectionSource.type-query), document-view.json
+**Affected Components**: ext:views-l2 (SectionSource.discovery-query, formerly type-query), composition.json (formerly document-view.json), ext:discovery (DiscoveryQuery, RFC-012)
 
 <!-- srs-integration:v1
 ext:views-l2
@@ -297,7 +297,7 @@ schema:composition.json
 
 **Author**: Peter Brownell
 
-**Affected Components**: `discovery.json` schema + conformance fixture landed. `ext:discovery` extension record and I-113–I-124 invariants (R1–R12) authored (#206).
+**Affected Components**: `discovery.json` schema + conformance fixture landed. `ext:discovery` extension record and I-113–I-124 invariants (R1–R12) authored (#206). Rev 12 (srs#525): DiscoveryQuery gains `lifecycleStates` and formally takes over governance of I-142/I-143 (formerly SectionSource.type-query axes under RFC-011, now retired there — see RFC-011 Rev 2) as part of the SectionSource → DiscoveryQuery collapse.
 
 <!-- srs-integration:v1
 schema:discovery.json
@@ -314,6 +314,8 @@ I-121
 I-122
 I-123
 I-124
+I-142
+I-143
 -->
 
 **Proposal Artifact Path**: rfcs/rfc-012-discovery-contract-text-projection.md

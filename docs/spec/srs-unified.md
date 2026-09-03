@@ -1650,7 +1650,7 @@ Rows of both kinds are interleaved by their shared, unique `order`. `View.fieldV
 
 #### `ExportConfig`
 
-Configuration for rendering a Record through this View as an exportable document.
+Configuration for rendering a Record through this View as an exportable document. One shared shape, attached at two points (srs#525): here on `View`, and on `Composition` (`ext:views-l2`) for document-level rendering. Neither attachment overrides the other — each governs its own render context. See `ext:views-l2`'s *L1/L2 ExportConfig* note for how the two coexist when a Composition section dispatches to a View.
 
 ```typescript
 {
@@ -1804,26 +1804,21 @@ Defines how a section's instances are selected from a Container.
 ```typescript
 type SectionSource =
   | {
-      type: "type-query"
-      typeKey: string
-      // KEYED namespace/name (version-independent), resolved against the effective
-      // package set (srs-rust#910, rfc-decision-c8704763). Renamed from the retired
-      // semanticObjectType — no bare-string form; the value must resolve to an
-      // installed Type's namespace/name.
-      lifecycleState?: string
-      // Single-state filter (back-compat). Prefer lifecycleStates for new Compositions.
-      lifecycleStates?: string[]
-      // RFC-011. When present and non-empty, restricts to Records whose lifecycleState
-      // matches any listed value (OR semantics). Requires ext:lifecycle. Invariant I-011-1.
-      excludeLifecycleStates?: string[]
-      // RFC-011. When present and non-empty, excludes Records whose lifecycleState matches
-      // any listed value. Applied after lifecycleStates. Requires ext:lifecycle. Invariant I-011-2.
+      type: "discovery-query"
+      query: DiscoveryQuery   // ext:discovery (RFC-012)
+      // The selection predicate. typeNamespace + typeName together replace the retired
+      // typeKey (namespace/name) axis; lifecycleState/lifecycleStates/excludeLifecycleStates
+      // replace the SectionSource-local copies of the same axes (formerly RFC-011 Changes
+      // A/B, now governed by RFC-012 Rev 12 — I-142/I-143). See the ext:discovery extension's
+      // `DiscoveryQuery` shape for the full predicate set.
       containerIds?: UUID[]
       containerScope?: "explicit" | "repository" | "subtree"
-      // RFC-011. Controls which containers are queried. Default: "explicit" (scope to
-      // containerIds[]). "repository": all containers; containerIds[] ignored.
-      // "subtree": context container and its contains-reachable descendants.
-      // Absent is equivalent to "explicit". Invariant I-011-3.
+      // RFC-011 [N+27] / I-144 — arrangement, not selection: which containers bound the
+      // candidate set, layered on top of query rather than folded into it (DiscoveryQuery's
+      // own containerId predicate is single-valued and non-traversing; it cannot express
+      // this). Default: "explicit" (scope to containerIds[]). "repository": all containers;
+      // containerIds[] ignored. "subtree": context container and its contains-reachable
+      // descendants. Absent is equivalent to "explicit".
     }
   | {
       type: "container-subset"
@@ -1839,7 +1834,9 @@ type SectionSource =
     }
 ```
 
-**Note (2026-08-22, `rfc-decision-4f1e12e5` entry 4)**: the `fixed-instances` and `relation-query` `SectionSource` variants previously specified here are removed under the dormancy rule (`rfc-decision-cce3c00e`) — zero corpus use across the 13 real sections in the attested corpus (2026-08-21 usage attestation). `type-query` and `container-subset` remain the two live ways to source a section. Return trigger: a composition need neither live variant expresses.
+**Note (2026-08-22, `rfc-decision-4f1e12e5` entry 4)**: the `fixed-instances` and `relation-query` `SectionSource` variants previously specified here were removed under the dormancy rule (`rfc-decision-cce3c00e`) — zero corpus use across the 13 real sections in the attested corpus (2026-08-21 usage attestation).
+
+**Note (2026-09-03, srs#525, `rfc-decision-cce3c00e` + `rfc-decision-9ee14517`)**: `type-query` is retired and replaced by `discovery-query`, which consumes the one structured query mechanism (`DiscoveryQuery`, `ext:discovery`) instead of re-implementing its own divergent copy of the same filter axes. `discovery-query` and `container-subset` are the two live ways to source a section. Return trigger: a composition need neither live variant expresses.
 
 #### `DocumentSection`
 
@@ -2034,26 +2031,30 @@ A versioned, Container-level projection. Defines how a Container's Records are a
 
   navigationLinks?: NavigationLink[]
 
-  preamble?: string
-  // Template string rendered before all sections.
-  // Standard variables: {{container-title}}, {{date}}, {{container-id}},
-  //   {{heading-1}}, {{heading-2}}
-  // When absent and format is "markdown", "html", or "adoc", implementations MUST
-  // render a document title heading at level 1 + depthOffset containing container-title.
-
-  format?: string
-  // Portable values: "markdown", "adoc", "html", "text", "json".
-  // Implementations MAY support additional values; non-portable values MUST NOT
-  // cause a validation error. When absent, output format is implementation-defined.
-  // Composition.format governs all section rendering; ExportConfig.format on a
-  // referenced L1 View is ignored for section rendering.
-  //
-  // When format is "json", implementations MUST produce a structured JSON
-  // projection conforming to the document-view-output.json schema instead of
-  // rendered markup. In json mode: theme application, heading injection, and
-  // depthOffset do not apply; {{heading-N}} variables in preamble templates
-  // MUST be substituted as empty strings; containerId is resolved from the
-  // first container-subset SectionSource, or null when none is present.
+  exportConfig?: ExportConfig   // ext:views-l1 -- the shape View.exportConfig also uses
+  // format?: string
+  //   Portable values: "markdown", "adoc", "html", "text", "json". Implementations MAY
+  //   support additional values; non-portable values MUST NOT cause a validation error.
+  //   When absent, output format is implementation-defined. Governs this Composition's own
+  //   document-level rendering (all section rendering, the document title). A dispatched L1
+  //   View's own exportConfig.format has no effect here -- a different render context, not
+  //   an override (srs#525: one shape, two attachment points, no precedence between them).
+  //   When format is "json", implementations MUST produce a structured JSON projection
+  //   conforming to the document-view-output.json schema instead of rendered markup. In
+  //   json mode: theme application, heading injection, and depthOffset do not apply;
+  //   {{heading-N}} variables in preamble templates MUST be substituted as empty strings;
+  //   containerId is resolved from the first container-subset SectionSource, or null when
+  //   none is present.
+  // preamble?: string
+  //   Template string rendered before all sections. Standard variables: {{container-title}},
+  //   {{date}}, {{container-id}}, {{heading-1}}, {{heading-2}}. When absent and format is
+  //   "markdown", "html", or "adoc", implementations MUST render a document title heading at
+  //   level 1 + depthOffset containing container-title.
+  // omitEmptyFields?: boolean
+  //   Available on this shape for consistency with View.exportConfig; no normative rule at
+  //   Composition level currently reads it (empty-section display is DocumentSection.
+  //   emptyBehavior; empty-field display in the Default Rendering Baseline follows the
+  //   Normative Field-Row Form rules below).
 
   depthOffset?: integer   // min: 0; default: 0
   // Shifts all auto-rendered heading levels by this amount.
@@ -2231,18 +2232,16 @@ not exempt.
 
 ---
 
-#### L1/L2 ExportConfig Boundary
+#### L1/L2 ExportConfig — two attachment points, no precedence (srs#525)
 
-When `DocumentSection.renderViewId` is set, the referenced L1 View's `ExportConfig` properties apply as follows:
+`ExportConfig` (ext:views-l1) is one shared shape attached at two points: `View.exportConfig` and `Composition.exportConfig`. Each attachment governs its own render context; neither overrides the other, because they never describe the same concern:
 
-| Property | In section rendering context |
-|---|---|
-| `format` | **Superseded.** `Composition.format` governs. |
-| `preamble` | **Applies.** Rendered before each record's field values. |
-| `fieldOrder` | **Applies.** Overrides `FieldAssignment.order` for field rendering. |
-| `omitEmptyFields` | **Applies.** Controls absent field rendering. |
+- **`Composition.exportConfig`** governs this Composition's document-level rendering: `format` (all section rendering, superseding nothing because a dispatched View's own `format` simply has no effect here), and the document `preamble` (rendered once, before all sections).
+- **A dispatched L1 View's `exportConfig`** (`DocumentSection.renderViewId`/`typeDispatch`), when set, continues to govern *that View's own render context* — rendering one record through it — independently of the Composition it's dispatched within: its `preamble` renders before that record's field values (not the document preamble), and its `omitEmptyFields` controls that record's absent-field rendering.
 
-When `ExportConfig.preamble` renders inside a section, the variable `{{heading-3}}` is available, resolving to heading prefix at level `3 + depthOffset`. In standalone export context, `{{heading-3}}` MUST resolve to the empty string — implementations MUST NOT emit the literal token.
+There is no property either attachment "wins": `Composition.exportConfig.format` is the only format that applies in section rendering because it is the only one describing that concern; a dispatched View's `exportConfig.format` describes a different concern (that View's own standalone-rendering format, when it is rendered outside any Composition) that section rendering never consults.
+
+When a dispatched View's `exportConfig.preamble` renders inside a section, the variable `{{heading-3}}` is available, resolving to heading prefix at level `3 + depthOffset`. In standalone export context (that View rendered outside any Composition), `{{heading-3}}` MUST resolve to the empty string — implementations MUST NOT emit the literal token.
 
 ---
 
@@ -2263,7 +2262,7 @@ For `format: "text"` or implementation-defined values, heading level semantics d
 
 #### Preamble Template Variables
 
-Standard variables in `Composition.preamble`:
+Standard variables in `Composition.exportConfig.preamble`:
 
 | Variable | Resolves to |
 |---|---|
@@ -3381,6 +3380,8 @@ Defines the **Discovery Contract**: a portable, implementation-agnostic specific
   containerId?:    UUID      // instance is a member of this container (RFC-009 I-66)
   tag?:            string[]  // AND semantics: all tags must be present
   lifecycleState?: string    // exact match on Record.lifecycleState (ext:lifecycle)
+  lifecycleStates?: string[] // OR semantics: matches ANY listed lifecycleState (ext:lifecycle) [RFC-012 Rev 12, srs#525]
+  excludeLifecycleStates?: string[] // excludes instances whose lifecycleState matches any listed value, applied after lifecycleState/lifecycleStates (ext:lifecycle) [RFC-012 Rev 7]
   tier?:           0 | 2     // instance tier (Note=0, Record=2; Tier 1/TypedRecord removed, rfc-decision-53635966 — the numbering gap is retained deliberately)
   contentMatch?:   string    // free-text recall-floor predicate
 }
@@ -3418,7 +3419,7 @@ For Tier 2, a Field is searchable only when `fieldType.datatype == "string"` and
 
 #### Consistency rule
 
-Structured filter axes (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `tier`) are **exact-match predicates**: two conforming implementations with identical data MUST return identical result sets.
+Structured filter axes (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `lifecycleStates`, `excludeLifecycleStates`, `tier`) are **exact-match predicates**: two conforming implementations with identical data MUST return identical result sets.
 
 Content matching (`contentMatch`) is a **recall-floor rule**: implementations MUST include every instance whose Text Projection contains a segment whose normalized text contains the normalized query as a substring. Additional results and alternative ranking are explicitly permitted.
 
@@ -3537,19 +3538,9 @@ Conforming implementations must uphold the following invariants.
 
 **31.** For every pair of stages A and B within a `Protocol` where B.dependsOn includes A.stageId, B.order must be greater than A.order. `order` is the declared composition order of the stages — structure, not presentation; it provides the render default. Execution sequence is determined by `dependsOn` resolution. The two must not contradict each other.
 
-#### ext:views-l2
+#### ext:views-l2 + ext:discovery
 
-**32.** Any `Composition` in `Package.compositions[]` that contains a `SectionSource` with `type === "type-query"` MUST use KEYED `namespace/name` format for `typeKey` (e.g. `"core/decision"`), resolved against the effective package set. `semanticObjectType` is retired (owner ruling on #383, srs#372/#481/#524, rfc-decision-c8704763); there is no bare-string form — the prior single-system exception is removed with the collapse, closing the loose-string-match gap that motivated it.
-
-**I-63.** When Composition.rootTypeRefs is present and non-empty, each ExactTypeRef entry MUST resolve to a Type that exists in the Package (the union of all packages in scope per packageRef/packageRefs; matched by both typeId and typeVersion). An entry that does not resolve MUST produce a diagnostic and MUST NOT be used for Container matching.
-
-**I-125.** `precedes` relations MUST be used only to express sequences where a different order would be semantically wrong (e.g. spec sections in document order, protocol stages in execution sequence). Implementations MUST NOT create `precedes` relations between instances whose ordering is presentational (layout, curation, display preference). A `precedes` relation between two container members MUST be interpreted as a semantic claim about their sequence, not as a rendering hint. (RFC-015 Change A.)
-
-**I-126.** When `DocumentSection.ordering.memberOrder` is present and the section's `source.type` is `container-subset`, implementations MUST apply it as the presentation sequence: (1) emit listed `instanceId`s that are current container members in the declared order; (2) skip listed `instanceId`s that are no longer container members — implementations MUST emit a diagnostic; this MUST NOT be treated as a validation failure; (3) append surviving container members not in `memberOrder`, ordered by topological sort over `precedes` edges with a `createdAt`-ascending tiebreak (the default container-subset ordering `ext:views-l2` already specifies); (4) when `ordering.direction` is `"desc"`, the entire output sequence produced by steps (1)–(3) MUST be reversed before emission. `memberOrder` MUST NOT be combined with `ordering.fieldId` on the same section — a section carrying both is invalid; implementations MUST report a validation error. `memberOrder` on a non-`container-subset` section MUST be ignored with a diagnostic and SHOULD be rejected at package-validation time. (RFC-015 Change B.)
-
-**I-127.** When both `typeFilter` and `memberOrder` are present on a `container-subset` section, `typeFilter` is applied first to obtain the filtered member set; `memberOrder` is then applied over that filtered set. `memberOrder` entries naming members excluded by `typeFilter` are silently skipped (no diagnostic). Unlisted filtered survivors are appended in the same topological-sort-by-`precedes` order used in Invariant I-126 step (3). The `direction` reversal of Invariant I-126 step (4) applies to the combined result after `typeFilter` and `memberOrder` are both applied. (RFC-015 Change B.)
-
-**I-144.** When SectionSource.type-query carries containerScope, implementations MUST apply the following scoping rules: (a) When containerScope is absent or "explicit", the query is scoped to the containers listed in containerIds[] — existing behaviour. An absent containerIds[] with explicit scope produces an empty result. (b) When containerScope is "repository", the query spans all containers in the repository; containerIds[] MUST be ignored. (c) When containerScope is "subtree", the query spans the context container and all containers reachable by contains relations from each container in containerIds[]; when containerIds[] is absent or empty, the context container is used as the subtree root. An implementation that cannot determine the context container for a subtree query MUST treat it as "explicit" with an empty containerIds[] and SHOULD emit a diagnostic. Implementations MUST NOT produce a validation error when containerScope is absent; absent is equivalent to "explicit".
+**32.** Any `Composition` in `Package.compositions[]` that contains a `SectionSource` with `type === "discovery-query"` MUST express its type-selection through the embedded `DiscoveryQuery`'s independent `typeNamespace`/`typeName` string predicates, resolved against the effective package set. There is no combined `namespace/name` key field on `DiscoveryQuery` or `SectionSource` -- `typeKey` (the KEYED namespace/name string introduced by the semanticObjectType collapse, owner ruling on #383, srs#372/#481/#524, rfc-decision-c8704763) and `semanticObjectType` before it are both retired with no successor field; the srs#525 SectionSource -> DiscoveryQuery collapse (rfc-decision-cce3c00e, rfc-decision-9ee14517) replaced the single combined-key convention with DiscoveryQuery's two separate predicates, closing the door on reintroducing a combined-key form.
 
 #### ext:addressability
 
@@ -3612,6 +3603,18 @@ Conforming implementations must uphold the following invariants.
 **55.** A checksum value in `InstanceIndexEntry.checksum`, `SourceDocumentIndexEntry.sidecarChecksum`, `SourceDocumentIndexEntry.contentChecksum`, or `RelationsChecksumEntry.checksum` must use the format `<algorithm>:<hex-encoded-digest>`. A value that does not include the `<algorithm>:` prefix is invalid.
 
 **I-128.** When `manifest.renderedPresentations` is present and non-empty, a conformant viewer MUST select as the default presentation the first entry whose `isDefault` is `true`. When no entry carries `isDefault: true`, the first entry in the array is the default. The selected Composition governs the repository's presentation. When a `renderedPresentations` entry's `compositionId` does not resolve to a Composition in the active packages, implementations MUST skip that entry and MUST emit a diagnostic; if all entries fail to resolve, behaviour falls back to implementation-defined selection as if `renderedPresentations` were absent. When `compositionId` resolves to Compositions in more than one active package, implementations MUST report a validation error (ambiguous composition reference). When `renderedPresentations` is absent or empty, viewer behaviour falls back to implementation-defined selection (existing behaviour unchanged; no conformance obligation is added for the absent case). (RFC-015 Change C.)
+
+#### ext:views-l2
+
+**I-63.** When Composition.rootTypeRefs is present and non-empty, each ExactTypeRef entry MUST resolve to a Type that exists in the Package (the union of all packages in scope per packageRef/packageRefs; matched by both typeId and typeVersion). An entry that does not resolve MUST produce a diagnostic and MUST NOT be used for Container matching.
+
+**I-125.** `precedes` relations MUST be used only to express sequences where a different order would be semantically wrong (e.g. spec sections in document order, protocol stages in execution sequence). Implementations MUST NOT create `precedes` relations between instances whose ordering is presentational (layout, curation, display preference). A `precedes` relation between two container members MUST be interpreted as a semantic claim about their sequence, not as a rendering hint. (RFC-015 Change A.)
+
+**I-126.** When `DocumentSection.ordering.memberOrder` is present and the section's `source.type` is `container-subset`, implementations MUST apply it as the presentation sequence: (1) emit listed `instanceId`s that are current container members in the declared order; (2) skip listed `instanceId`s that are no longer container members — implementations MUST emit a diagnostic; this MUST NOT be treated as a validation failure; (3) append surviving container members not in `memberOrder`, ordered by topological sort over `precedes` edges with a `createdAt`-ascending tiebreak (the default container-subset ordering `ext:views-l2` already specifies); (4) when `ordering.direction` is `"desc"`, the entire output sequence produced by steps (1)–(3) MUST be reversed before emission. `memberOrder` MUST NOT be combined with `ordering.fieldId` on the same section — a section carrying both is invalid; implementations MUST report a validation error. `memberOrder` on a non-`container-subset` section MUST be ignored with a diagnostic and SHOULD be rejected at package-validation time. (RFC-015 Change B.)
+
+**I-127.** When both `typeFilter` and `memberOrder` are present on a `container-subset` section, `typeFilter` is applied first to obtain the filtered member set; `memberOrder` is then applied over that filtered set. `memberOrder` entries naming members excluded by `typeFilter` are silently skipped (no diagnostic). Unlisted filtered survivors are appended in the same topological-sort-by-`precedes` order used in Invariant I-126 step (3). The `direction` reversal of Invariant I-126 step (4) applies to the combined result after `typeFilter` and `memberOrder` are both applied. (RFC-015 Change B.)
+
+**I-144.** When SectionSource.discovery-query carries containerScope, implementations MUST apply the following scoping rules: (a) When containerScope is absent or "explicit", the query is scoped to the containers listed in containerIds[] -- existing behaviour. An absent containerIds[] with explicit scope produces an empty result. (b) When containerScope is "repository", the query spans all containers in the repository; containerIds[] MUST be ignored. (c) When containerScope is "subtree", the query spans the context container and all containers reachable by contains relations from each container in containerIds[]; when containerIds[] is absent or empty, the context container is used as the subtree root. An implementation that cannot determine the context container for a subtree query MUST treat it as "explicit" with an empty containerIds[] and SHOULD emit a diagnostic. Implementations MUST NOT produce a validation error when containerScope is absent; absent is equivalent to "explicit". containerScope is arrangement, not selection: it is layered on top of the section's DiscoveryQuery, not a DiscoveryQuery predicate itself (DiscoveryQuery.containerId is single-valued and non-traversing; containerScope's multi-container/subtree semantics have no DiscoveryQuery equivalent).
 
 #### Container (core)
 
@@ -3729,11 +3732,11 @@ Conforming implementations must uphold the following invariants.
 
 **I-124.** An implementation that declares `ext:discovery` MUST pass all content-match conformance scenarios (`exactMatch: false`) from the fixture at `srs/conformance/discovery/scenarios.json` — its result set for each such scenario MUST be a superset of the scenario's `expectedInstanceIds`. (RFC-012 R12.)
 
-#### ext:views-l2 + ext:lifecycle
+#### ext:discovery + ext:lifecycle
 
-**I-142.** When SectionSource.type-query carries a non-empty lifecycleStates array, implementations MUST restrict the query result to Records whose lifecycleState matches any value in the array (OR semantics). A Record with no lifecycleState MUST be excluded when lifecycleStates is present and non-empty. When lifecycleStates is absent or empty, no filtering by this field is applied and all lifecycle states (including absent) are included. Implementations that do not declare ext:lifecycle MUST ignore lifecycleStates and MUST NOT produce a validation error on its presence.
+**I-142.** When DiscoveryQuery carries a non-empty lifecycleStates array, implementations MUST restrict the query result to instances whose lifecycleState matches any value in the array (OR semantics). An instance with no lifecycleState MUST be excluded when lifecycleStates is present and non-empty. When lifecycleStates is absent or empty, no filtering by this field is applied and all lifecycle states (including absent) are included. Implementations that do not declare ext:lifecycle MUST ignore lifecycleStates and MUST NOT produce a validation error on its presence.
 
-**I-143.** When SectionSource.type-query carries a non-empty excludeLifecycleStates array, implementations MUST exclude from the query result any Record whose lifecycleState matches any value in the array. When lifecycleStates and excludeLifecycleStates are both present and non-empty, inclusion filtering (I-142) MUST be applied first; exclusion filtering is then applied to the survivors. A Record with no lifecycleState is not excluded by excludeLifecycleStates (only Records with a matching non-null lifecycleState are excluded). When excludeLifecycleStates is absent or empty, no exclusion is applied. Implementations that do not declare ext:lifecycle MUST ignore excludeLifecycleStates and MUST NOT produce a validation error on its presence.
+**I-143.** When DiscoveryQuery carries a non-empty excludeLifecycleStates array, implementations MUST exclude from the query result any instance whose lifecycleState matches any value in the array. When lifecycleStates and excludeLifecycleStates are both present and non-empty, inclusion filtering (I-142) MUST be applied first; exclusion filtering is then applied to the survivors. An instance with no lifecycleState is not excluded by excludeLifecycleStates (only instances with a matching non-null lifecycleState are excluded). When excludeLifecycleStates is absent or empty, no exclusion is applied. Implementations that do not declare ext:lifecycle MUST ignore excludeLifecycleStates and MUST NOT produce a validation error on its presence.
 
 #### Container (core), RFC-009 (ext:views-l2 rootTypeRefs matching), RFC-010 (ext:federation merge)
 
