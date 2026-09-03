@@ -1,0 +1,17 @@
+{
+  "instanceId": "e0ab6b5b-506f-48a1-a255-8edb8ada6be3",
+  "typeId": "2a000014-0000-4000-a000-000000000014",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "generated-type-reference",
+  "fieldValues": {
+    "title": "Generated reference: `Relation`",
+    "referenced_type_id": "4c000018-0000-4000-a000-000000000018",
+    "referenced_type_version": 1,
+    "presentation_profile": "property-table-and-pseudo-idl",
+    "content": "Generated from the resolved effective `relation` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.\n\n| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |\n|---|---|---|---|---|---|\n| `relationId` | string | yes | format: uuid | core | Stable UUID for this standalone Relation (RFC-038). |\n| `relationType` | string | yes | — | core | The Relation type name: a canonical vocabulary entry (contains, depends-on, supersedes, refines, derived-from, evidences, precedes) or a custom namespace/name form. Shared by Relation.relationType and RelationSpec.relationType (srs#526: same meaning, different Types — reuse over duplication). |\n| `sourceInstanceId` | string | yes | format: uuid | core | The asserting instance. Reads: source [relationType] target. |\n| `targetInstanceId` | string | yes | format: uuid | core | The related instance. |\n| `createdAt` | date-time | no | — | core | ISO-8601 creation timestamp. |\n| `notes` | string | no | — | core | Free-form annotation on a Relation. |\n| `sourceRefs` | ref → `source-reference` (inline)[] | no | — | core | References to source material this instance was derived from or attaches to (RFC-017/RFC-023). |\n\nRaw JSON Schema: <https://srs.semanticops.com/schema/2.0/relation.json>\n\n#### Compact pseudo-IDL\n\n```typescript\nrelation {\n  relationId: string // Stable UUID for this standalone Relation (RFC-038).\n  relationType: string // The Relation type name: a canonical vocabulary entry (contains, depends-on, supersedes, refines, derived-from, evidences, precedes) or a custom namespace/name form. Shared by Relation.relationType and RelationSpec.relationType (srs#526: same meaning, different Types — reuse over duplication).\n  sourceInstanceId: string // The asserting instance. Reads: source [relationType] target.\n  targetInstanceId: string // The related instance.\n  createdAt?: date-time // ISO-8601 creation timestamp.\n  notes?: string // Free-form annotation on a Relation.\n  sourceRefs?: ref → `source-reference` (inline)[] // References to source material this instance was derived from or attaches to (RFC-017/RFC-023).\n}\n```"
+  },
+  "createdAt": "2026-09-03T16:15:19.271925+00:00",
+  "updatedAt": "2026-09-03T16:15:19.271925+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

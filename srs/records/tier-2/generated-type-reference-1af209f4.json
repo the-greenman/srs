@@ -1,0 +1,17 @@
+{
+  "instanceId": "1af209f4-71ff-4687-9bbd-7aef2973be7f",
+  "typeId": "2a000014-0000-4000-a000-000000000014",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "generated-type-reference",
+  "fieldValues": {
+    "title": "Generated reference: `SourceReference`",
+    "referenced_type_id": "4c000014-0000-4000-a000-000000000014",
+    "referenced_type_version": 1,
+    "presentation_profile": "property-table-and-pseudo-idl",
+    "content": "Generated from the resolved effective `source-reference` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.\n\n| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |\n|---|---|---|---|---|---|\n| `sourceType` | string | yes | enum: \"transcript-chunk\" \\| \"transcript-segment\" \\| \"external-document\" \\| \"repository-document\" | core | RFC-023 SourceReference kind. repository-document is added by ext:repository. |\n| `sourceId` | string | yes | — | core | Free-form when sourceType is transcript-chunk/transcript-segment/external-document. When sourceType is repository-document, MUST be a SourceDocumentMeta.documentId. |\n| `sourceStandard` | string | no | — | core | Identifies the standard/convention the sourceId is expressed in. |\n| `streamId` | string | no | format: uuid | core | Identifies a stream this source reference belongs to. |\n| `sourceRole` | string | no | enum: \"evidence\" \\| \"extracted-from\" \\| \"quoted-from\" \\| \"inspired-by\" \\| \"attaches\" | core | RFC-023 — the role the source material plays for this instance. attaches added by RFC-017. |\n| `confidence` | number | no | minimum: 0, maximum: 1 | core | Confidence score for this source reference, 0-1. |\n| `note` | string | no | — | core | Free-form human clarification. Shared by SourceReference.note and SourceAnchor.note. |\n\nRaw JSON Schema: <https://srs.semanticops.com/schema/2.0/record.json#/$defs/SourceReference>\n\n#### Compact pseudo-IDL\n\n```typescript\nsource-reference {\n  sourceType: string // RFC-023 SourceReference kind. repository-document is added by ext:repository.\n  sourceId: string // Free-form when sourceType is transcript-chunk/transcript-segment/external-document. When sourceType is repository-document, MUST be a SourceDocumentMeta.documentId.\n  sourceStandard?: string // Identifies the standard/convention the sourceId is expressed in.\n  streamId?: string // Identifies a stream this source reference belongs to.\n  sourceRole?: string // RFC-023 — the role the source material plays for this instance. attaches added by RFC-017.\n  confidence?: number // Confidence score for this source reference, 0-1.\n  note?: string // Free-form human clarification. Shared by SourceReference.note and SourceAnchor.note.\n}\n```"
+  },
+  "createdAt": "2026-09-03T16:15:19.271925+00:00",
+  "updatedAt": "2026-09-03T16:15:19.271925+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

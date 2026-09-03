@@ -1,0 +1,17 @@
+{
+  "instanceId": "2d633fa8-4bc2-4bf6-b7b5-6ac1491b6798",
+  "typeId": "2a000014-0000-4000-a000-000000000014",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "generated-type-reference",
+  "fieldValues": {
+    "title": "Generated reference: `Term`",
+    "referenced_type_id": "4c00001c-0000-4000-a000-00000000001c",
+    "referenced_type_version": 1,
+    "presentation_profile": "property-table-and-pseudo-idl",
+    "content": "Generated from the resolved effective `term` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.\n\n| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |\n|---|---|---|---|---|---|\n| `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |\n| `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |\n| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |\n| `key` | string | yes | — | core | Machine-readable state key. Unified substrate field (was name pre-RFC-006). |\n| `label` | string | no | — | core | Human-readable display label for this lifecycle state. |\n| `description` | string | no | — | core | Human-readable description of this entity. |\n| `aliases` | string[] | no | — | core | Alternate keys this lifecycle state is also known by. |\n| `roles` | string[] | no | — | core | Semantic roles of a Term. Well-known values: foundation, navigation. |\n| `status` | string | no | enum: \"active\" \\| \"deprecated\" \\| \"tombstone\" \\| \"retired\" | core | The VocabularyEntry status of this lifecycle state itself (distinct from the record-level status a Type's Records carry). |\n| `meta` | map<string, open> | no | — | core | Open extension bag for state- or transition-specific metadata not otherwise modelled (rfc-decision-6fc7e142: the one escape-bag name, was `properties`). |\n| `createdAt` | date-time | no | — | core | ISO-8601 creation timestamp. |\n| `updatedAt` | date-time | no | — | core | ISO-8601 timestamp of the most recent update. |\n\nRaw JSON Schema: <https://srs.semanticops.com/schema/2.0/term.json>\n\n#### Compact pseudo-IDL\n\n```typescript\nterm {\n  id: string // Globally unique, stable UUID identity of this entity.\n  version: integer // Positive integer version within the UUID lineage.\n  namespace: string // Reverse-DNS logical grouping.\n  key: string // Machine-readable state key. Unified substrate field (was name pre-RFC-006).\n  label?: string // Human-readable display label for this lifecycle state.\n  description?: string // Human-readable description of this entity.\n  aliases?: string[] // Alternate keys this lifecycle state is also known by.\n  roles?: string[] // Semantic roles of a Term. Well-known values: foundation, navigation.\n  status?: string // The VocabularyEntry status of this lifecycle state itself (distinct from the record-level status a Type's Records carry).\n  meta?: map<string, open> // Open extension bag for state- or transition-specific metadata not otherwise modelled (rfc-decision-6fc7e142: the one escape-bag name, was `properties`).\n  createdAt?: date-time // ISO-8601 creation timestamp.\n  updatedAt?: date-time // ISO-8601 timestamp of the most recent update.\n}\n```"
+  },
+  "createdAt": "2026-09-03T16:15:19.271925+00:00",
+  "updatedAt": "2026-09-03T16:15:19.271925+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

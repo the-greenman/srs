@@ -1,0 +1,17 @@
+{
+  "instanceId": "49b35d62-1ce4-4c39-8c11-8837b1f635ff",
+  "typeId": "2a000014-0000-4000-a000-000000000014",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "generated-type-reference",
+  "fieldValues": {
+    "title": "Generated reference: `NoteSection`",
+    "referenced_type_id": "4c000015-0000-4000-a000-000000000015",
+    "referenced_type_version": 1,
+    "presentation_profile": "property-table-and-pseudo-idl",
+    "content": "Generated from the resolved effective `note-section` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.\n\n| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |\n|---|---|---|---|---|---|\n| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |\n| `label` | string | no | — | core | Human-readable display label for this lifecycle state. |\n| `content` | string | yes | — | core | Free text content. |\n| `contentHint` | string | no | enum: \"text\" \\| \"markdown\" \\| \"plain\" | core | Rendering hint for a Note section's content. Default: text. |\n| `tags` | string[] | no | — | core | Free-form classification tags. |\n\nRaw JSON Schema: <https://srs.semanticops.com/schema/2.0/note.json#/$defs/NoteSection>\n\n#### Compact pseudo-IDL\n\n```typescript\nnote-section {\n  name: string // Machine-readable name within the namespace; snake_case.\n  label?: string // Human-readable display label for this lifecycle state.\n  content: string // Free text content.\n  contentHint?: string // Rendering hint for a Note section's content. Default: text.\n  tags?: string[] // Free-form classification tags.\n}\n```"
+  },
+  "createdAt": "2026-09-03T16:15:19.271925+00:00",
+  "updatedAt": "2026-09-03T16:15:19.271925+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
