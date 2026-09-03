@@ -5,10 +5,10 @@
   "typeNamespace": "com.semanticops.spec",
   "typeName": "rfc",
   "fieldValues": {
-    "title": "RFC-023: SourceReference vocabulary disjointness — sourceRole replaces relationType",
+    "title": "RFC-023: SourceReference vocabulary disjointness \u2014 sourceRole replaces relationType",
     "rfc_number": "023",
     "author": "Peter Brownell",
-    "affected_components": "`SourceReference.sourceRole` replaces `relationType` across record/note/typed-record/relations-collection schemas; invariant I-88.\n\n<!-- srs-integration:v1\nschema:record.json\nschema:note.json\nschema:relations-collection.json\nI-88\n-->",
+    "affected_components": "`SourceReference.sourceRole` replaces `relationType` across record/note/typed-record/relations-collection schemas; invariant I-88.\n\n<!-- srs-integration:v1\nschema:record.json\nschema:note.json\nschema:relation.json\nI-88\n-->",
     "proposal_artifact_path": "rfcs/rfc-023-sourceref-vocabulary-disjointness.md",
     "content": "Renames `SourceReference.relationType` to `sourceRole`, de-collides its enum against the Relation vocabulary, defines the graduation mapping between the two, and adds a permanent disjointness conformance rule. Full text: rfcs/rfc-023-sourceref-vocabulary-disjointness.md."
   },
