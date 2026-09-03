@@ -545,37 +545,13 @@ Graduation path: Note → Record, linked by a `derived-from` Relation from the R
 
 A named text section within a Note.
 
-```typescript
-{
-  name: string          // section key; unique within the Note; snake_case recommended
-  label?: string
-  content: string
-  contentHint?: "text" | "markdown" | "plain"  // hint only; default: "text"
-  tags?: string[]       // section-level topic labels; supplements or narrows Note-level tags
-}
-```
+See the generated reference below for `NoteSection`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
 
 #### `Note`
 
 A lightweight instance with no Type binding.
 
-```typescript
-{
-  instanceId: UUID
-
-  title?: string
-  tags?: string[]           // free-form topic labels; snake_case recommended
-  sections: NoteSection[]
-
-  sourceRefs?: SourceReference[]
-  // Instance-level source references. Because Notes have no Fields, this is
-  // the only place to record provenance for a Note as a whole.
-
-  createdAt?: ISO8601
-  updatedAt?: ISO8601
-  meta?: Record<string, unknown>
-}
-```
+See the generated reference below for `Note`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
 
 `tags` are free-form labels that allow Notes to be grouped and discovered by topic. A tag is a key that *may* resolve to a `Term` in an open `Vocabulary`, giving it a label, aliases, roles, and lineage — without changing the fact that the instance stores only the string (V2). Undefined tags in an open vocabulary are valid and unenriched. Use tags for navigation and filtering; use Relations for semantic claims.
 
@@ -583,19 +559,7 @@ A lightweight instance with no Type binding.
 
 A pointer from a field value or instance back to source material.
 
-```typescript
-{
-  sourceType: "transcript-chunk" | "transcript-segment" | "external-document" | "repository-document"
-  sourceId: string
-  sourceStandard?: string   // versioned standard the source conforms to
-  streamId?: UUID           // for transcript sources: originating stream
-
-  sourceRole?: "evidence" | "extracted-from" | "quoted-from" | "inspired-by"
-
-  confidence?: number       // 0.0–1.0
-  note?: string
-}
-```
+See the generated reference below for `SourceReference`'s current property table (modelled once and shared across `Record`, `Note`, and `Relation`), optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
 
 `"transcript-chunk"` and `"transcript-segment"` are intended for implementations that have a stable conversation or time-stream layer with durable chunk or segment identifiers. A standalone repository that stores transcript exports, chat dumps, email threads, or similar source material directly under `source-documents/` should generally cite those files using `sourceType: "repository-document"` (see `ext:repository`) rather than inventing pseudo-chunk IDs.
 
@@ -618,36 +582,7 @@ objects, `groupValues`, and `FieldGroup` carriers are removed (I-134).
 
 An instantiated Type with field values.
 
-```typescript
-{
-  instanceId: UUID
-  typeId: UUID         // references Type.id
-  typeVersion: integer
-  typeNamespace: string
-  typeName: string
-
-  // lifecycleState is ext:lifecycle
-  lifecycleState?: string
-
-  // RFC-039: the name-keyed recursive value carrier. Keys are Field.name
-  // verbatim (I-130); each value follows the recursive Change-B rule for the
-  // Field's fieldType — an inline-composite value is itself a fieldValues
-  // object (or an array of them for a list). null is not a value (I-132).
-  fieldValues: { [fieldName: string]: FieldValue }
-
-  // RFC-039: per-field provenance keyed identically to fieldValues (I-133).
-  fieldMeta?: { [fieldName: string]: { source?: "human" | "ai" | "imported" | "derived", editedAt?: ISO8601, sourceRefs?: SourceReference[] } }
-
-  sourceRefs?: SourceReference[]
-
-  createdAt?: ISO8601
-  updatedAt?: ISO8601
-  meta?: Record<string, unknown>
-  // Use meta for implementation-local concerns: lock state, visibility,
-  // session references. Cross-system keys should be namespaced,
-  // e.g. "com.acme.locking.locked-by".
-}
-```
+See the generated reference below for `Record`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
 
 `typeNamespace` and `typeName` are denormalised convenience fields. If they conflict with the resolved Type, the `typeId`/`typeVersion` identity takes precedence and the Record is considered invalid until corrected.
 
@@ -688,6 +623,150 @@ Implementations may automate graduation suggestions by matching section or field
 
 
 
+#### Generated reference: `NoteSection`
+
+**Referenced Type Id**: 4c000015-0000-4000-a000-000000000015
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `note-section` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
+| `label` | string | no | — | core | Human-readable display label for this lifecycle state. |
+| `content` | string | yes | — | core | Free text content. |
+| `contentHint` | string | no | enum: "text" \| "markdown" \| "plain" | core | Rendering hint for a Note section's content. Default: text. |
+| `tags` | string[] | no | — | core | Free-form classification tags. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/note.json#/$defs/NoteSection>
+
+#### Compact pseudo-IDL
+
+```typescript
+note-section {
+  name: string // Machine-readable name within the namespace; snake_case.
+  label?: string // Human-readable display label for this lifecycle state.
+  content: string // Free text content.
+  contentHint?: string // Rendering hint for a Note section's content. Default: text.
+  tags?: string[] // Free-form classification tags.
+}
+```
+
+
+#### Generated reference: `Note`
+
+**Referenced Type Id**: 4c000016-0000-4000-a000-000000000016
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `note` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `instanceId` | string | yes | format: uuid | core | Stable UUID identity of a Tier 0 (Note) or Tier 2 (Record) instance — distinct from a definition's id+namespace/name/version lineage. |
+| `title` | string | no | — | core | Human-readable title. |
+| `tags` | string[] | no | — | core | Free-form classification tags. |
+| `sections` | ref → `note-section` (inline)[] | yes | — | core | Ordered list of named text sections (Tier 0 Note). |
+| `sourceRefs` | ref → `source-reference` (inline)[] | no | — | core | References to source material this instance was derived from or attaches to (RFC-017/RFC-023). |
+| `createdAt` | date-time | no | — | core | ISO-8601 creation timestamp. |
+| `updatedAt` | date-time | no | — | core | ISO-8601 timestamp of the most recent update. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/note.json>
+
+#### Compact pseudo-IDL
+
+```typescript
+note {
+  instanceId: string // Stable UUID identity of a Tier 0 (Note) or Tier 2 (Record) instance — distinct from a definition's id+namespace/name/version lineage.
+  title?: string // Human-readable title.
+  tags?: string[] // Free-form classification tags.
+  sections: ref → `note-section` (inline)[] // Ordered list of named text sections (Tier 0 Note).
+  sourceRefs?: ref → `source-reference` (inline)[] // References to source material this instance was derived from or attaches to (RFC-017/RFC-023).
+  createdAt?: date-time // ISO-8601 creation timestamp.
+  updatedAt?: date-time // ISO-8601 timestamp of the most recent update.
+}
+```
+
+
+#### Generated reference: `SourceReference`
+
+**Referenced Type Id**: 4c000014-0000-4000-a000-000000000014
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `source-reference` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `sourceType` | string | yes | enum: "transcript-chunk" \| "transcript-segment" \| "external-document" \| "repository-document" | core | RFC-023 SourceReference kind. repository-document is added by ext:repository. |
+| `sourceId` | string | yes | — | core | Free-form when sourceType is transcript-chunk/transcript-segment/external-document. When sourceType is repository-document, MUST be a SourceDocumentMeta.documentId. |
+| `sourceStandard` | string | no | — | core | Identifies the standard/convention the sourceId is expressed in. |
+| `streamId` | string | no | format: uuid | core | Identifies a stream this source reference belongs to. |
+| `sourceRole` | string | no | enum: "evidence" \| "extracted-from" \| "quoted-from" \| "inspired-by" \| "attaches" | core | RFC-023 — the role the source material plays for this instance. attaches added by RFC-017. |
+| `confidence` | number | no | minimum: 0, maximum: 1 | core | Confidence score for this source reference, 0-1. |
+| `note` | string | no | — | core | Free-form human clarification. Shared by SourceReference.note and SourceAnchor.note. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/record.json#/$defs/SourceReference>
+
+#### Compact pseudo-IDL
+
+```typescript
+source-reference {
+  sourceType: string // RFC-023 SourceReference kind. repository-document is added by ext:repository.
+  sourceId: string // Free-form when sourceType is transcript-chunk/transcript-segment/external-document. When sourceType is repository-document, MUST be a SourceDocumentMeta.documentId.
+  sourceStandard?: string // Identifies the standard/convention the sourceId is expressed in.
+  streamId?: string // Identifies a stream this source reference belongs to.
+  sourceRole?: string // RFC-023 — the role the source material plays for this instance. attaches added by RFC-017.
+  confidence?: number // Confidence score for this source reference, 0-1.
+  note?: string // Free-form human clarification. Shared by SourceReference.note and SourceAnchor.note.
+}
+```
+
+
+#### Generated reference: `Record`
+
+**Referenced Type Id**: 4c000017-0000-4000-a000-000000000017
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `record` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `instanceId` | string | yes | format: uuid | core | Stable UUID identity of a Tier 0 (Note) or Tier 2 (Record) instance — distinct from a definition's id+namespace/name/version lineage. |
+| `typeId` | string | yes | format: uuid | core | Stable UUID of the referenced Type. |
+| `typeVersion` | integer | yes | minimum: 1 | core | Version of the Type this ref targets (version-exact anchor). |
+| `typeNamespace` | string | yes | — | core | Denormalized hint: the namespace of the bound Type. If it conflicts with the resolved Type, typeId wins. |
+| `typeName` | string | yes | — | core | Denormalized hint: the name of the bound Type. If it conflicts with the resolved Type, typeId wins. |
+| `lifecycleState` | string | no | — | core | ext:lifecycle — current lifecycle state of this Record. |
+| `fieldValues` | dependent → type_id | yes | — | core | RFC-039: the name-keyed recursive value carrier, shaped by the Record's bound Type (resolved via typeId). Deliberately lossy at this envelope layer (approximated, per metamodel-fidelity.md); the Type's own projected schema validates the interior. |
+| `sourceRefs` | ref → `source-reference` (inline)[] | no | — | core | References to source material this instance was derived from or attaches to (RFC-017/RFC-023). |
+| `tags` | string[] | no | — | core | Free-form classification tags. |
+| `createdAt` | date-time | no | — | core | ISO-8601 creation timestamp. |
+| `updatedAt` | date-time | no | — | core | ISO-8601 timestamp of the most recent update. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/record.json>
+
+#### Compact pseudo-IDL
+
+```typescript
+record {
+  instanceId: string // Stable UUID identity of a Tier 0 (Note) or Tier 2 (Record) instance — distinct from a definition's id+namespace/name/version lineage.
+  typeId: string // Stable UUID of the referenced Type.
+  typeVersion: integer // Version of the Type this ref targets (version-exact anchor).
+  typeNamespace: string // Denormalized hint: the namespace of the bound Type. If it conflicts with the resolved Type, typeId wins.
+  typeName: string // Denormalized hint: the name of the bound Type. If it conflicts with the resolved Type, typeId wins.
+  lifecycleState?: string // ext:lifecycle — current lifecycle state of this Record.
+  fieldValues: dependent → type_id // RFC-039: the name-keyed recursive value carrier, shaped by the Record's bound Type (resolved via typeId). Deliberately lossy at this envelope layer (approximated, per metamodel-fidelity.md); the Type's own projected schema validates the interior.
+  sourceRefs?: ref → `source-reference` (inline)[] // References to source material this instance was derived from or attaches to (RFC-017/RFC-023).
+  tags?: string[] // Free-form classification tags.
+  createdAt?: date-time // ISO-8601 creation timestamp.
+  updatedAt?: date-time // ISO-8601 timestamp of the most recent update.
+}
+```
+
+
 **Intro**: The underlying question: *Would a reasonable reader, encountering this Record a year later, recognise it as the same understanding they would have read before the change?*
 
 **Outro**: Cross-check: if a `supersedes` Relation would feel misleading — as if the group reversed itself when it only clarified — it is probably an edit. If a silent edit would feel misleading — as if the record was silently revised after the fact — it is probably a new Record.
@@ -706,26 +785,7 @@ Implementations may automate graduation suggestions by matching section or field
 
 **Content**: A first-class typed link between instances. Relations allow implementations to construct semantic graphs for navigation, analysis, projection, and reasoning.
 
-```typescript
-{
-  relationId: UUID
-
-  relationType: string
-  // Must resolve to an installed RelationTypeDefinition in the effective
-  // package set (RFC-005; conformance V1). Canonical types ship in the core
-  // package; custom types use namespace/name form and install their own definition.
-
-  // source [relationType] target
-  sourceInstanceId: UUID    // the asserting instance
-  targetInstanceId: UUID    // the related instance
-
-  createdAt?: ISO8601
-
-  notes?: string
-  sourceRefs?: SourceReference[]
-  meta?: Record<string, unknown>
-}
-```
+See the generated reference below for `Relation`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
 
 Relations span tiers. A Note may be the target of `derived-from` Relations from the Records it graduated into.
 
@@ -771,48 +831,97 @@ Custom types not covered by these should use `namespace/name` format (e.g. `com.
 
 
 
+#### Generated reference: `Relation`
+
+**Referenced Type Id**: 4c000018-0000-4000-a000-000000000018
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `relation` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `relationId` | string | yes | format: uuid | core | Stable UUID for this standalone Relation (RFC-038). |
+| `relationType` | string | yes | — | core | The Relation type name: a canonical vocabulary entry (contains, depends-on, supersedes, refines, derived-from, evidences, precedes) or a custom namespace/name form. Shared by Relation.relationType and RelationSpec.relationType (srs#526: same meaning, different Types — reuse over duplication). |
+| `sourceInstanceId` | string | yes | format: uuid | core | The asserting instance. Reads: source [relationType] target. |
+| `targetInstanceId` | string | yes | format: uuid | core | The related instance. |
+| `createdAt` | date-time | no | — | core | ISO-8601 creation timestamp. |
+| `notes` | string | no | — | core | Free-form annotation on a Relation. |
+| `sourceRefs` | ref → `source-reference` (inline)[] | no | — | core | References to source material this instance was derived from or attaches to (RFC-017/RFC-023). |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/relation.json>
+
+#### Compact pseudo-IDL
+
+```typescript
+relation {
+  relationId: string // Stable UUID for this standalone Relation (RFC-038).
+  relationType: string // The Relation type name: a canonical vocabulary entry (contains, depends-on, supersedes, refines, derived-from, evidences, precedes) or a custom namespace/name form. Shared by Relation.relationType and RelationSpec.relationType (srs#526: same meaning, different Types — reuse over duplication).
+  sourceInstanceId: string // The asserting instance. Reads: source [relationType] target.
+  targetInstanceId: string // The related instance.
+  createdAt?: date-time // ISO-8601 creation timestamp.
+  notes?: string // Free-form annotation on a Relation.
+  sourceRefs?: ref → `source-reference` (inline)[] // References to source material this instance was derived from or attaches to (RFC-017/RFC-023).
+}
+```
+
+
 #### Container
 
 **Content**: A lightweight grouping boundary over a collection of instances. Containers answer scoping questions — which instances belong together, what constitutes "this project" — that the Relation graph alone cannot answer.
 
 Containers are not semantic objects with Fields. They do not own semantic state; Records do. A `contains` Relation asserts "A is part of B" (a semantic claim); a Container asserts "these instances form a unit for boundary purposes" (a scope claim). Both are needed; neither replaces the other.
 
-```typescript
-{
-  containerId: UUID
-
-  namespace?: string
-  name?: string
-
-  title: string              // human-readable label
-
-  containerType?: string     // free-form hint; e.g. "project", "meeting", "sprint"
-
-  rootInstanceIds?: UUID[]
-  // Top-level instances this Container was created to hold. Implementations may
-  // derive nested members by traversing contains Relations from these roots.
-  // Unordered set — no positional significance (RFC-013 [R5]).
-
-  memberInstanceIds?: UUID[]
-  // Explicit membership list for all instances in scope.
-  // When present, allows membership queries without graph traversal.
-  // When omitted, membership is defined by traversing contains Relations.
-
-  anchorInstanceId?: UUID
-  // RFC-009 (amended by srs#446). Names the member whose Type is this Container's
-  // typing anchor for Composition.rootTypeRefs matching and merge conflict detection.
-  // Declared, never positional. When absent, implementations fall back to
-  // rootInstanceIds[0] (transitional; withdrawn at the Continuity flip).
-
-  createdAt?: ISO8601
-  updatedAt?: ISO8601
-  meta?: Record<string, unknown>
-}
-```
+See the generated reference below for `Container`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
 
 `Container.containerId` is not an instance ID and must not appear in `Relation.sourceInstanceId` or `targetInstanceId`. See Invariant 20.
 
 ---
+
+
+#### Generated reference: `Container`
+
+**Referenced Type Id**: 4c000019-0000-4000-a000-000000000019
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `container` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `containerId` | string | yes | format: uuid | core | Stable UUID for this Container. Must not appear in Relation.sourceInstanceId or targetInstanceId. |
+| `title` | string | yes | — | core | Human-readable title. |
+| `namespace` | string | no | — | core | Reverse-DNS logical grouping. |
+| `name` | string | no | — | core | Machine-readable name within the namespace; snake_case. |
+| `description` | string | no | — | core | Human-readable description of this entity. |
+| `rootInstanceIds` | string[] | no | format: uuid | core | Top-level instances this Container was created to hold. |
+| `memberInstanceIds` | string[] | no | format: uuid | core | Explicit membership list for all instances in scope. |
+| `identityInstanceId` | string | no | format: uuid | core | RFC-013/RFC-029 — the instance id of this Container's identity/purpose record. |
+| `anchorInstanceId` | string | no | format: uuid | core | RFC-009 (amended srs#446) — the instance id whose Type is this Container's typing anchor. |
+| `tags` | string[] | no | — | core | Free-form classification tags. |
+| `createdAt` | date-time | no | — | core | ISO-8601 creation timestamp. |
+| `updatedAt` | date-time | no | — | core | ISO-8601 timestamp of the most recent update. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/container.json>
+
+#### Compact pseudo-IDL
+
+```typescript
+container {
+  containerId: string // Stable UUID for this Container. Must not appear in Relation.sourceInstanceId or targetInstanceId.
+  title: string // Human-readable title.
+  namespace?: string // Reverse-DNS logical grouping.
+  name?: string // Machine-readable name within the namespace; snake_case.
+  description?: string // Human-readable description of this entity.
+  rootInstanceIds?: string[] // Top-level instances this Container was created to hold.
+  memberInstanceIds?: string[] // Explicit membership list for all instances in scope.
+  identityInstanceId?: string // RFC-013/RFC-029 — the instance id of this Container's identity/purpose record.
+  anchorInstanceId?: string // RFC-009 (amended srs#446) — the instance id whose Type is this Container's typing anchor.
+  tags?: string[] // Free-form classification tags.
+  createdAt?: date-time // ISO-8601 creation timestamp.
+  updatedAt?: date-time // ISO-8601 timestamp of the most recent update.
+}
+```
 
 
 #### Vocabulary and Term
@@ -853,55 +962,13 @@ Containers are not semantic objects with Fields. They do not own semantic state;
 
 A named, versioned set of `Term` entries.
 
-```typescript
-{
-  id: UUID
-  namespace: string
-  name: string
-  version: integer          // min: 1
-
-  mode: "open" | "closed"
-  // open   — instances define what exists; Vocabulary is a curation overlay
-  // closed — values MUST resolve to a Term (V1)
-
-  terms: Term[]
-
-  extendsVocabularyId?: UUID
-  extendsVocabularyVersion?: integer   // required when extendsVocabularyId is present
-
-  promotionWindow?: {
-    until: string            // ISO8601 date or target package version; required when present
-  }
-
-  description?: string
-  createdAt: ISO8601
-  lineage?: Lineage
-  provenance?: Provenance
-}
-```
+See the generated reference below for `Vocabulary`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
 
 ### `Term`
 
 The generalisation of `TagDefinition`. A defined option within a `Vocabulary`.
 
-```typescript
-{
-  id: UUID
-  version: integer
-  namespace: string
-  key: string
-  label?: string
-  description?: string
-  aliases?: string[]
-  roles?: string[]          // e.g. "foundation", "navigation"
-  status?: "active" | "deprecated" | "tombstone" | "retired"
-  meta?: Record<string, unknown>
-  lineage?: Lineage
-  provenance?: Provenance
-  createdAt: ISO8601
-  updatedAt?: ISO8601
-}
-```
+See the generated reference below for `Term`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
 
 ### `RelationTypeDefinition`
 
@@ -989,6 +1056,141 @@ Excluding `retired` before uniqueness frees a retired key for reuse by a new ent
 - *used-and-active*: fine.
 
 A grace window is declared in `Vocabulary.promotionWindow.until`. Until that bound, violations are warnings; after it, V1 applies unconditionally. Absent `promotionWindow` means the promotion takes effect immediately. There is no unbounded window.
+
+
+#### Generated reference: `Vocabulary`
+
+**Referenced Type Id**: 4c00001e-0000-4000-a000-00000000001e
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `vocabulary` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
+| `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
+| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
+| `mode` | string | yes | enum: "open" \| "closed" | core | open: values not in any Term are valid. closed: values MUST resolve to a Term. |
+| `terms` | ref → `term` (inline)[] | yes | — | core | The Vocabulary's Term entries. |
+| `extendsVocabularyId` | string | no | format: uuid | core | When this Vocabulary adds terms to an upstream Vocabulary. |
+| `extendsVocabularyVersion` | integer | no | minimum: 1 | core | Must match the upstream Vocabulary's version exactly. |
+| `promotionWindow` | ref → `promotion-window` (inline) | no | — | core | RFC-006 V10 — grace window for a Vocabulary's open-to-closed promotion. |
+| `description` | string | no | — | core | Human-readable description of this entity. |
+| `tags` | string[] | no | — | core | Free-form classification tags. |
+| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/vocabulary.json>
+
+#### Compact pseudo-IDL
+
+```typescript
+vocabulary {
+  id: string // Globally unique, stable UUID identity of this entity.
+  version: integer // Positive integer version within the UUID lineage.
+  namespace: string // Reverse-DNS logical grouping.
+  name: string // Machine-readable name within the namespace; snake_case.
+  mode: string // open: values not in any Term are valid. closed: values MUST resolve to a Term.
+  terms: ref → `term` (inline)[] // The Vocabulary's Term entries.
+  extendsVocabularyId?: string // When this Vocabulary adds terms to an upstream Vocabulary.
+  extendsVocabularyVersion?: integer // Must match the upstream Vocabulary's version exactly.
+  promotionWindow?: ref → `promotion-window` (inline) // RFC-006 V10 — grace window for a Vocabulary's open-to-closed promotion.
+  description?: string // Human-readable description of this entity.
+  tags?: string[] // Free-form classification tags.
+  createdAt: date-time // ISO-8601 creation timestamp.
+}
+```
+
+
+#### Generated reference: `Term`
+
+**Referenced Type Id**: 4c00001c-0000-4000-a000-00000000001c
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `term` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
+| `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
+| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `key` | string | yes | — | core | Machine-readable state key. Unified substrate field (was name pre-RFC-006). |
+| `label` | string | no | — | core | Human-readable display label for this lifecycle state. |
+| `description` | string | no | — | core | Human-readable description of this entity. |
+| `aliases` | string[] | no | — | core | Alternate keys this lifecycle state is also known by. |
+| `roles` | string[] | no | — | core | Semantic roles of a Term. Well-known values: foundation, navigation. |
+| `status` | string | no | enum: "active" \| "deprecated" \| "tombstone" \| "retired" | core | The VocabularyEntry status of this lifecycle state itself (distinct from the record-level status a Type's Records carry). |
+| `meta` | map<string, open> | no | — | core | Open extension bag for state- or transition-specific metadata not otherwise modelled (rfc-decision-6fc7e142: the one escape-bag name, was `properties`). |
+| `createdAt` | date-time | no | — | core | ISO-8601 creation timestamp. |
+| `updatedAt` | date-time | no | — | core | ISO-8601 timestamp of the most recent update. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/term.json>
+
+#### Compact pseudo-IDL
+
+```typescript
+term {
+  id: string // Globally unique, stable UUID identity of this entity.
+  version: integer // Positive integer version within the UUID lineage.
+  namespace: string // Reverse-DNS logical grouping.
+  key: string // Machine-readable state key. Unified substrate field (was name pre-RFC-006).
+  label?: string // Human-readable display label for this lifecycle state.
+  description?: string // Human-readable description of this entity.
+  aliases?: string[] // Alternate keys this lifecycle state is also known by.
+  roles?: string[] // Semantic roles of a Term. Well-known values: foundation, navigation.
+  status?: string // The VocabularyEntry status of this lifecycle state itself (distinct from the record-level status a Type's Records carry).
+  meta?: map<string, open> // Open extension bag for state- or transition-specific metadata not otherwise modelled (rfc-decision-6fc7e142: the one escape-bag name, was `properties`).
+  createdAt?: date-time // ISO-8601 creation timestamp.
+  updatedAt?: date-time // ISO-8601 timestamp of the most recent update.
+}
+```
+
+
+#### Generated reference: `Lifecycle`
+
+**Referenced Type Id**: 4c00001f-0000-4000-a000-00000000001f
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `lifecycle` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
+| `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
+| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
+| `states` | ref → `lifecycle-state` (inline)[] | yes | minItems: 1 | core | The lifecycle's states; at least one, exactly one marked isInitial (Invariant 4). |
+| `transitions` | ref → `lifecycle-transition` (inline)[] | yes | — | core | The lifecycle's named state-to-state edges. |
+| `initialState` | string | yes | — | core | Must reference a state key with isInitial: true (Invariant 4). |
+| `extendsLifecycleId` | string | no | format: uuid | core | When this installable Lifecycle extends an upstream Lifecycle. |
+| `extendsLifecycleVersion` | integer | no | minimum: 1 | core | Must match the upstream Lifecycle's version exactly. |
+| `description` | string | no | — | core | Human-readable description of this entity. |
+| `tags` | string[] | no | — | core | Free-form classification tags. |
+| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/lifecycle.json>
+
+#### Compact pseudo-IDL
+
+```typescript
+lifecycle {
+  id: string // Globally unique, stable UUID identity of this entity.
+  version: integer // Positive integer version within the UUID lineage.
+  namespace: string // Reverse-DNS logical grouping.
+  name: string // Machine-readable name within the namespace; snake_case.
+  states: ref → `lifecycle-state` (inline)[] // The lifecycle's states; at least one, exactly one marked isInitial (Invariant 4).
+  transitions: ref → `lifecycle-transition` (inline)[] // The lifecycle's named state-to-state edges.
+  initialState: string // Must reference a state key with isInitial: true (Invariant 4).
+  extendsLifecycleId?: string // When this installable Lifecycle extends an upstream Lifecycle.
+  extendsLifecycleVersion?: integer // Must match the upstream Lifecycle's version exactly.
+  description?: string // Human-readable description of this entity.
+  tags?: string[] // Free-form classification tags.
+  createdAt: date-time // ISO-8601 creation timestamp.
+}
+```
 
 
 
@@ -1453,43 +1655,13 @@ Views (`ext:views-l1`) no longer contain facilitation logic. A View is a present
 
 Declares an expected Relation between two Record types within a Blueprint.
 
-```typescript
-{
-  relationType: string
-  sourceType: TypeRef
-  targetType: TypeRef
-  cardinality?: "one-to-one" | "one-to-many" | "many-to-many"
-  required?: boolean
-}
-```
+See the generated reference below for `RelationSpec`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list (and no longer risks drifting from the current `ExactTypeRef`-based schema, as the superseded prose here had).
 
 #### `Blueprint`
 
 The definition of a complete document type — which Types it contains, what Relations exist between resulting Records, and what "complete" means. A Blueprint is the artefact handed to an extraction pipeline.
 
-```typescript
-{
-  id: UUID
-  namespace: string
-  name: string
-  version: integer   // min: 1
-
-  description: string
-
-  rootTypes: TypeRef[]        // Types to extract
-  structure: RelationSpec[]   // expected Relations between extracted Records
-  requiredTypes: TypeRef[]    // what "complete" means for this document type
-
-  aiGuidance?: AiGuidance
-  // purpose: what kind of document type this Blueprint defines
-  // extraction: framing for extraction pipelines
-
-  tags?: string[]
-  createdAt: ISO8601
-  lineage?: Lineage
-  provenance?: Provenance
-}
-```
+See the generated reference below for `Blueprint`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
 
 **Blueprint vs View:**
 
@@ -1501,6 +1673,78 @@ The definition of a complete document type — which Types it contains, what Rel
 | Output | Extraction instructions → Records | Rendered document |
 
 ---
+
+
+#### Generated reference: `RelationSpec`
+
+**Referenced Type Id**: 4c00001a-0000-4000-a000-00000000001a
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `relation-spec` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `relationType` | string | yes | — | core | The Relation type name: a canonical vocabulary entry (contains, depends-on, supersedes, refines, derived-from, evidences, precedes) or a custom namespace/name form. Shared by Relation.relationType and RelationSpec.relationType (srs#526: same meaning, different Types — reuse over duplication). |
+| `sourceType` | ref → `exact-type-ref` (inline) | yes | — | core | ext:blueprint — the Record Type on the source end of a RelationSpec. |
+| `targetType` | ref → `exact-type-ref` (inline) | yes | — | core | ext:blueprint — the Record Type on the target end of a RelationSpec. |
+| `cardinality` | string | no | enum: "one-to-one" \| "one-to-many" \| "many-to-one" \| "many-to-many" | core | ext:blueprint — expected multiplicity constraint for a RelationSpec. |
+| `required` | boolean | no | — | core | Whether this field must be populated before a Record can be logged. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/blueprint.json#/$defs/RelationSpec>
+
+#### Compact pseudo-IDL
+
+```typescript
+relation-spec {
+  relationType: string // The Relation type name: a canonical vocabulary entry (contains, depends-on, supersedes, refines, derived-from, evidences, precedes) or a custom namespace/name form. Shared by Relation.relationType and RelationSpec.relationType (srs#526: same meaning, different Types — reuse over duplication).
+  sourceType: ref → `exact-type-ref` (inline) // ext:blueprint — the Record Type on the source end of a RelationSpec.
+  targetType: ref → `exact-type-ref` (inline) // ext:blueprint — the Record Type on the target end of a RelationSpec.
+  cardinality?: string // ext:blueprint — expected multiplicity constraint for a RelationSpec.
+  required?: boolean // Whether this field must be populated before a Record can be logged.
+}
+```
+
+
+#### Generated reference: `Blueprint`
+
+**Referenced Type Id**: 4c00001b-0000-4000-a000-00000000001b
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `blueprint` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
+| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
+| `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
+| `description` | string | yes | — | core | Human-readable description of this entity. |
+| `rootTypes` | ref → `exact-type-ref` (inline)[] | yes | — | core | ext:blueprint — the Record Type(s) this Blueprint produces as root Records. |
+| `structure` | ref → `relation-spec` (inline)[] | no | — | core | ext:blueprint — expected Relation structure between extracted Records. |
+| `requiredTypes` | ref → `exact-type-ref` (inline)[] | no | — | core | ext:blueprint — TypeIds that must be present for this Blueprint to be considered complete. |
+| `tags` | string[] | no | — | core | Free-form classification tags. |
+| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/blueprint.json>
+
+#### Compact pseudo-IDL
+
+```typescript
+blueprint {
+  id: string // Globally unique, stable UUID identity of this entity.
+  namespace: string // Reverse-DNS logical grouping.
+  name: string // Machine-readable name within the namespace; snake_case.
+  version: integer // Positive integer version within the UUID lineage.
+  description: string // Human-readable description of this entity.
+  rootTypes: ref → `exact-type-ref` (inline)[] // ext:blueprint — the Record Type(s) this Blueprint produces as root Records.
+  structure?: ref → `relation-spec` (inline)[] // ext:blueprint — expected Relation structure between extracted Records.
+  requiredTypes?: ref → `exact-type-ref` (inline)[] // ext:blueprint — TypeIds that must be present for this Blueprint to be considered complete.
+  tags?: string[] // Free-form classification tags.
+  createdAt: date-time // ISO-8601 creation timestamp.
+}
+```
 
 
 #### ext:type-inheritance
@@ -2443,6 +2687,53 @@ Divergence is surfaced using the same `conflictState` vocabulary already defined
 When both `local-ahead` and `diverged` conditions hold simultaneously, implementations MUST report `diverged` as the primary status and include locally-added definitions as a supplementary list.
 
 The `"upstream-ahead"` state (a newer version exists upstream) requires `ext:registry` and is out of scope for local divergence detection.
+
+
+#### Generated reference: `SourceDocumentMeta`
+
+**Referenced Type Id**: 4c000022-0000-4000-a000-000000000022
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `source-document-meta` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `documentId` | string | yes | format: uuid | core | ext:repository — stable identifier for a source document, used as SourceReference.sourceId when sourceType is repository-document. |
+| `contentPath` | string | yes | — | core | Relative path from source-documents/ to the document file (RFC-017). |
+| `contentType` | string | yes | — | core | MIME type of the source document content. |
+| `encoding` | string | no | — | core | Character encoding of the content file, e.g. utf-8. |
+| `language` | string | no | — | core | BCP 47 language tag, e.g. en-GB. |
+| `title` | string | no | — | core | Human-readable title. |
+| `description` | string | no | — | core | Human-readable description of this entity. |
+| `processingNote` | string | no | — | core | Caveats about quality or completeness of the source material. |
+| `excerpt` | ref → `source-excerpt` (inline) | no | — | core | ext:repository — repository-local excerpt provenance (RFC-017). |
+| `date` | date | no | — | core | Date the source document was produced or recorded. |
+| `tags` | string[] | no | — | core | Free-form classification tags. |
+| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
+| `importedAt` | date-time | no | — | core | ISO-8601 timestamp at which this definition was imported. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/source-document-meta.json>
+
+#### Compact pseudo-IDL
+
+```typescript
+source-document-meta {
+  documentId: string // ext:repository — stable identifier for a source document, used as SourceReference.sourceId when sourceType is repository-document.
+  contentPath: string // Relative path from source-documents/ to the document file (RFC-017).
+  contentType: string // MIME type of the source document content.
+  encoding?: string // Character encoding of the content file, e.g. utf-8.
+  language?: string // BCP 47 language tag, e.g. en-GB.
+  title?: string // Human-readable title.
+  description?: string // Human-readable description of this entity.
+  processingNote?: string // Caveats about quality or completeness of the source material.
+  excerpt?: ref → `source-excerpt` (inline) // ext:repository — repository-local excerpt provenance (RFC-017).
+  date?: date // Date the source document was produced or recorded.
+  tags?: string[] // Free-form classification tags.
+  createdAt: date-time // ISO-8601 creation timestamp.
+  importedAt?: date-time // ISO-8601 timestamp at which this definition was imported.
+}
+```
 
 
 #### ext:registry

@@ -50,6 +50,30 @@ const GENERATED_TYPE_REFERENCE_TYPE_ID = "2a000014-0000-4000-a000-000000000014";
 // new nested value-object Type means adding its appendix wiring here, not a new mechanism.
 const FIELD_ASSIGNMENT_TYPE_NAME = "field-assignment";
 
+// srs#527 (epic #256/#272 Task 4b/6): raw-schema links for the instance-layer entities modelled
+// at srs#526 and their nested value-object Types. Each gets its OWN top-level generated-type-
+// reference record (no appendix special-casing, unlike FieldAssignment/Type) because several of
+// these are shared across more than one owning entity (SourceReference: Record/Note/Relation) -
+// picking one "owner" to host an appendix would be arbitrary. These seed files are hand-authored
+// (not emitter-owned), so their $defs keys are the ad hoc PascalCase spelling actually committed,
+// never the emitter's own `<namespace>__<name>__v<version>` convention (that convention applies
+// only to type.json's FieldAssignment nest, RFC-040 Unit 3) - hand-spelled here deliberately,
+// verified against the committed files, not derived from rangeDefKey.
+const RAW_SCHEMA_LINKS = {
+  record: "https://srs.semanticops.com/schema/2.0/record.json",
+  note: "https://srs.semanticops.com/schema/2.0/note.json",
+  relation: "https://srs.semanticops.com/schema/2.0/relation.json",
+  container: "https://srs.semanticops.com/schema/2.0/container.json",
+  vocabulary: "https://srs.semanticops.com/schema/2.0/vocabulary.json",
+  term: "https://srs.semanticops.com/schema/2.0/term.json",
+  blueprint: "https://srs.semanticops.com/schema/2.0/blueprint.json",
+  lifecycle: "https://srs.semanticops.com/schema/2.0/lifecycle.json",
+  "source-document-meta": "https://srs.semanticops.com/schema/2.0/source-document-meta.json",
+  "note-section": "https://srs.semanticops.com/schema/2.0/note.json#/$defs/NoteSection",
+  "source-reference": "https://srs.semanticops.com/schema/2.0/record.json#/$defs/SourceReference",
+  "relation-spec": "https://srs.semanticops.com/schema/2.0/blueprint.json#/$defs/RelationSpec",
+};
+
 async function findJsonFiles(dir) {
   const out = [];
   let entries;
@@ -178,6 +202,7 @@ function rawSchemaLink(typeName) {
   if (typeName === FIELD_ASSIGNMENT_TYPE_NAME) {
     return `${ENTITY_IDS.type}#/$defs/${rangeDefKey({ namespace: "com.semanticops.srs", name: "field-assignment", version: 1 })}`;
   }
+  if (RAW_SCHEMA_LINKS[typeName]) return RAW_SCHEMA_LINKS[typeName];
   throw new Error(`gen-type-reference-tables: no raw-schema link known for "${typeName}" — extend rawSchemaLink`);
 }
 

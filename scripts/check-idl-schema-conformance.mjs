@@ -68,21 +68,34 @@ const MAPPING = [
   // targets" applied, not a silent narrowing: removing these three rows also retires every
   // allowlist entry that named them (RFC-031 OQ1 is formally closed by the property table's
   // extension-owner column; see rfcs/rfc-031-idl-schema-conformance-check.md's Open Questions).
-  { entity: "Record", prose: "records/subsections/04-4-4-4-record-tiers.json", header: "Record", schemaFile: "record.json", pointer: "#" },
+  // Record, SourceReference (x3), Note, Note.NoteSection, Relation, Container, Vocabulary, and Term
+  // are RETIRED from this mapping as of srs#527 (epic #256/#272 Task 4b/6, extending RFC-040 Change
+  // J's Field/Type precedent to the nine srs#526 instance-layer entities): their prose subsections
+  // (04-4-4-4-record-tiers.json, 04-5-4-5-relation.json, 04-6-4-6-container.json,
+  // 04-7-vocabulary-term-substrate.json) no longer carry a hand-authored ```typescript block for
+  // these rows — each was replaced by its own generated-type-reference record (a typed
+  // generated-view slot, scripts/gen-type-reference-tables.mjs) whose property table is generated
+  // from the SAME resolved effective Type the schema emitter projects the corresponding
+  // docs/schema/2.0/*.json from. Comparing two independently-generated-from-the-same-source
+  // artifacts can never catch drift a bug in the shared source wouldn't also cause, so there is
+  // nothing left for R1-R3 to usefully check here — rfc-272-closure-test.mjs (emitter ⊆ committed
+  // seed) and type-reference-tables-sync (gen-type-reference-tables.mjs --check, the reader-
+  // projection's own empty-diff gate) are these entities' real conformance gates now. This is "no
+  // hand-authored structural duplicate remains for generated targets" applied a second time (see
+  // srs#481's Field/Type retirement above for the first): removing these rows also retires every
+  // allowlist entry that named them.
+  //
   // Record.FieldValue row dropped at the srs#242 cutover: RFC-039 [R7] deletes
   // $defs.FieldValue — the entity ceases to exist (RFC-031 Cross-references).
   // TypedRecord/TypedRecord.TypedField rows retired at srs#448 (rfc-decision-53635966): Tier 1
   // is removed, typed-record.json is deleted, and the prose no longer has a "Typed Record"/
   // "TypedField" heading to map.
-  { entity: "SourceReference", prose: "records/subsections/04-4-4-4-record-tiers.json", header: "SourceReference", schemaFile: "record.json", pointer: "#/$defs/SourceReference" },
-  { entity: "SourceReference", prose: "records/subsections/04-4-4-4-record-tiers.json", header: "SourceReference", schemaFile: "note.json", pointer: "#/$defs/SourceReference" },
-  { entity: "SourceReference", prose: "records/subsections/04-4-4-4-record-tiers.json", header: "SourceReference", schemaFile: "relations-collection.json", pointer: "#/$defs/SourceReference" },
-  { entity: "Note", prose: "records/subsections/04-4-4-4-record-tiers.json", header: "Note", schemaFile: "note.json", pointer: "#" },
-  { entity: "Note.NoteSection", prose: "records/subsections/04-4-4-4-record-tiers.json", header: "NoteSection", schemaFile: "note.json", pointer: "#/$defs/NoteSection" },
-  { entity: "Relation", prose: "records/subsections/04-5-4-5-relation.json", header: null, schemaFile: "relations-collection.json", pointer: "#/$defs/Relation" },
-  { entity: "Container", prose: "records/subsections/04-6-4-6-container.json", header: null, schemaFile: "container.json", pointer: "#" },
-  { entity: "Vocabulary", prose: "records/subsections/04-7-vocabulary-term-substrate.json", header: "Vocabulary", schemaFile: "vocabulary.json", pointer: "#" },
-  { entity: "Term", prose: "records/subsections/04-7-vocabulary-term-substrate.json", header: "Term", schemaFile: "term.json", pointer: "#" },
+  //
+  // RelationTypeDefinition is the sole survivor: relation-type.json is re-keyed (srs#524) but not
+  // yet metamodel-Type-modelled (still parked — see docs/schema/2.0/generation-ledger.md and the
+  // srs#527 follow-up filed for Composition/DiscoveryQuery/ExportConfig/View/Manifest/
+  // RelationTypeDefinition Type-modelling), so its hand-authored prose block stays, and this row
+  // stays live.
   { entity: "RelationTypeDefinition", prose: "records/subsections/04-7-vocabulary-term-substrate.json", header: "RelationTypeDefinition", schemaFile: "relation-type.json", pointer: "#" },
   // VocabularyEntry is an abstract base contract with no schema file - deliberately not mapped.
 ];

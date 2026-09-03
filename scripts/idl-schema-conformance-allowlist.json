@@ -1,19 +1,3 @@
 [
-  { "entity": "Record", "property": "tags", "rule": "R1", "issue": 248, "expected": "schema-only" },
-
-  { "entity": "SourceReference", "property": "sourceRole", "rule": "R3", "issue": 248, "expected": "schema:type=string,format=-,enum=evidence|extracted-from|quoted-from|inspired-by|attaches" },
-
-  { "entity": "Container", "property": "description", "rule": "R1", "issue": 252, "expected": "schema-only" },
-  { "entity": "Container", "property": "identityInstanceId", "rule": "R1", "issue": 252, "expected": "schema-only" },
-  { "entity": "Container", "property": "tags", "rule": "R1", "issue": 252, "expected": "schema-only" },
-
-  { "entity": "Vocabulary", "property": "tags", "rule": "R1", "issue": 253, "expected": "schema-only" },
-  { "entity": "Vocabulary", "property": "lineage", "rule": "R1", "issue": 253, "expected": "prose-only" },
-  { "entity": "Vocabulary", "property": "provenance", "rule": "R1", "issue": 253, "expected": "prose-only" },
-
-  { "entity": "Term", "property": "lineage", "rule": "R1", "issue": 254, "expected": "prose-only" },
-  { "entity": "Term", "property": "provenance", "rule": "R1", "issue": 254, "expected": "prose-only" },
-  { "entity": "Term", "property": "createdAt", "rule": "R2", "issue": 254, "expected": "idl=required,schema=optional" },
-
   { "entity": "RelationTypeDefinition", "property": "aliases", "rule": "R1", "issue": 254, "expected": "prose-only" }
 ]

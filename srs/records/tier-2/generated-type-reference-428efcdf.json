@@ -1,0 +1,17 @@
+{
+  "instanceId": "428efcdf-d481-4f68-9124-a78c5e812350",
+  "typeId": "2a000014-0000-4000-a000-000000000014",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "generated-type-reference",
+  "fieldValues": {
+    "title": "Generated reference: `Lifecycle`",
+    "referenced_type_id": "4c00001f-0000-4000-a000-00000000001f",
+    "referenced_type_version": 1,
+    "presentation_profile": "property-table-and-pseudo-idl",
+    "content": "Generated from the resolved effective `lifecycle` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.\n\n| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |\n|---|---|---|---|---|---|\n| `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |\n| `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |\n| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |\n| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |\n| `states` | ref → `lifecycle-state` (inline)[] | yes | minItems: 1 | core | The lifecycle's states; at least one, exactly one marked isInitial (Invariant 4). |\n| `transitions` | ref → `lifecycle-transition` (inline)[] | yes | — | core | The lifecycle's named state-to-state edges. |\n| `initialState` | string | yes | — | core | Must reference a state key with isInitial: true (Invariant 4). |\n| `extendsLifecycleId` | string | no | format: uuid | core | When this installable Lifecycle extends an upstream Lifecycle. |\n| `extendsLifecycleVersion` | integer | no | minimum: 1 | core | Must match the upstream Lifecycle's version exactly. |\n| `description` | string | no | — | core | Human-readable description of this entity. |\n| `tags` | string[] | no | — | core | Free-form classification tags. |\n| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |\n\nRaw JSON Schema: <https://srs.semanticops.com/schema/2.0/lifecycle.json>\n\n#### Compact pseudo-IDL\n\n```typescript\nlifecycle {\n  id: string // Globally unique, stable UUID identity of this entity.\n  version: integer // Positive integer version within the UUID lineage.\n  namespace: string // Reverse-DNS logical grouping.\n  name: string // Machine-readable name within the namespace; snake_case.\n  states: ref → `lifecycle-state` (inline)[] // The lifecycle's states; at least one, exactly one marked isInitial (Invariant 4).\n  transitions: ref → `lifecycle-transition` (inline)[] // The lifecycle's named state-to-state edges.\n  initialState: string // Must reference a state key with isInitial: true (Invariant 4).\n  extendsLifecycleId?: string // When this installable Lifecycle extends an upstream Lifecycle.\n  extendsLifecycleVersion?: integer // Must match the upstream Lifecycle's version exactly.\n  description?: string // Human-readable description of this entity.\n  tags?: string[] // Free-form classification tags.\n  createdAt: date-time // ISO-8601 creation timestamp.\n}\n```"
+  },
+  "createdAt": "2026-09-03T16:15:19.271925+00:00",
+  "updatedAt": "2026-09-03T16:15:19.271925+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

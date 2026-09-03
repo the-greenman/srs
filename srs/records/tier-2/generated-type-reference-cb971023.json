@@ -1,0 +1,17 @@
+{
+  "instanceId": "cb971023-ed2d-4756-b6fb-680bb846e89c",
+  "typeId": "2a000014-0000-4000-a000-000000000014",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "generated-type-reference",
+  "fieldValues": {
+    "title": "Generated reference: `RelationSpec`",
+    "referenced_type_id": "4c00001a-0000-4000-a000-00000000001a",
+    "referenced_type_version": 1,
+    "presentation_profile": "property-table-and-pseudo-idl",
+    "content": "Generated from the resolved effective `relation-spec` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.\n\n| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |\n|---|---|---|---|---|---|\n| `relationType` | string | yes | — | core | The Relation type name: a canonical vocabulary entry (contains, depends-on, supersedes, refines, derived-from, evidences, precedes) or a custom namespace/name form. Shared by Relation.relationType and RelationSpec.relationType (srs#526: same meaning, different Types — reuse over duplication). |\n| `sourceType` | ref → `exact-type-ref` (inline) | yes | — | core | ext:blueprint — the Record Type on the source end of a RelationSpec. |\n| `targetType` | ref → `exact-type-ref` (inline) | yes | — | core | ext:blueprint — the Record Type on the target end of a RelationSpec. |\n| `cardinality` | string | no | enum: \"one-to-one\" \\| \"one-to-many\" \\| \"many-to-one\" \\| \"many-to-many\" | core | ext:blueprint — expected multiplicity constraint for a RelationSpec. |\n| `required` | boolean | no | — | core | Whether this field must be populated before a Record can be logged. |\n\nRaw JSON Schema: <https://srs.semanticops.com/schema/2.0/blueprint.json#/$defs/RelationSpec>\n\n#### Compact pseudo-IDL\n\n```typescript\nrelation-spec {\n  relationType: string // The Relation type name: a canonical vocabulary entry (contains, depends-on, supersedes, refines, derived-from, evidences, precedes) or a custom namespace/name form. Shared by Relation.relationType and RelationSpec.relationType (srs#526: same meaning, different Types — reuse over duplication).\n  sourceType: ref → `exact-type-ref` (inline) // ext:blueprint — the Record Type on the source end of a RelationSpec.\n  targetType: ref → `exact-type-ref` (inline) // ext:blueprint — the Record Type on the target end of a RelationSpec.\n  cardinality?: string // ext:blueprint — expected multiplicity constraint for a RelationSpec.\n  required?: boolean // Whether this field must be populated before a Record can be logged.\n}\n```"
+  },
+  "createdAt": "2026-09-03T16:15:19.271925+00:00",
+  "updatedAt": "2026-09-03T16:15:19.271925+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,17 @@
+{
+  "instanceId": "12df7f22-7b22-4ecd-88ca-e4a2a37d0378",
+  "typeId": "2a000014-0000-4000-a000-000000000014",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "generated-type-reference",
+  "fieldValues": {
+    "title": "Generated reference: `Blueprint`",
+    "referenced_type_id": "4c00001b-0000-4000-a000-00000000001b",
+    "referenced_type_version": 1,
+    "presentation_profile": "property-table-and-pseudo-idl",
+    "content": "Generated from the resolved effective `blueprint` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.\n\n| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |\n|---|---|---|---|---|---|\n| `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |\n| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |\n| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |\n| `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |\n| `description` | string | yes | — | core | Human-readable description of this entity. |\n| `rootTypes` | ref → `exact-type-ref` (inline)[] | yes | — | core | ext:blueprint — the Record Type(s) this Blueprint produces as root Records. |\n| `structure` | ref → `relation-spec` (inline)[] | no | — | core | ext:blueprint — expected Relation structure between extracted Records. |\n| `requiredTypes` | ref → `exact-type-ref` (inline)[] | no | — | core | ext:blueprint — TypeIds that must be present for this Blueprint to be considered complete. |\n| `tags` | string[] | no | — | core | Free-form classification tags. |\n| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |\n\nRaw JSON Schema: <https://srs.semanticops.com/schema/2.0/blueprint.json>\n\n#### Compact pseudo-IDL\n\n```typescript\nblueprint {\n  id: string // Globally unique, stable UUID identity of this entity.\n  namespace: string // Reverse-DNS logical grouping.\n  name: string // Machine-readable name within the namespace; snake_case.\n  version: integer // Positive integer version within the UUID lineage.\n  description: string // Human-readable description of this entity.\n  rootTypes: ref → `exact-type-ref` (inline)[] // ext:blueprint — the Record Type(s) this Blueprint produces as root Records.\n  structure?: ref → `relation-spec` (inline)[] // ext:blueprint — expected Relation structure between extracted Records.\n  requiredTypes?: ref → `exact-type-ref` (inline)[] // ext:blueprint — TypeIds that must be present for this Blueprint to be considered complete.\n  tags?: string[] // Free-form classification tags.\n  createdAt: date-time // ISO-8601 creation timestamp.\n}\n```"
+  },
+  "createdAt": "2026-09-03T16:15:19.271925+00:00",
+  "updatedAt": "2026-09-03T16:15:19.271925+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

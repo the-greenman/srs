@@ -1,0 +1,17 @@
+{
+  "instanceId": "d03a6f95-2667-41fa-b00e-fad01e73d9d0",
+  "typeId": "2a000014-0000-4000-a000-000000000014",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "generated-type-reference",
+  "fieldValues": {
+    "title": "Generated reference: `Container`",
+    "referenced_type_id": "4c000019-0000-4000-a000-000000000019",
+    "referenced_type_version": 1,
+    "presentation_profile": "property-table-and-pseudo-idl",
+    "content": "Generated from the resolved effective `container` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.\n\n| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |\n|---|---|---|---|---|---|\n| `containerId` | string | yes | format: uuid | core | Stable UUID for this Container. Must not appear in Relation.sourceInstanceId or targetInstanceId. |\n| `title` | string | yes | — | core | Human-readable title. |\n| `namespace` | string | no | — | core | Reverse-DNS logical grouping. |\n| `name` | string | no | — | core | Machine-readable name within the namespace; snake_case. |\n| `description` | string | no | — | core | Human-readable description of this entity. |\n| `rootInstanceIds` | string[] | no | format: uuid | core | Top-level instances this Container was created to hold. |\n| `memberInstanceIds` | string[] | no | format: uuid | core | Explicit membership list for all instances in scope. |\n| `identityInstanceId` | string | no | format: uuid | core | RFC-013/RFC-029 — the instance id of this Container's identity/purpose record. |\n| `anchorInstanceId` | string | no | format: uuid | core | RFC-009 (amended srs#446) — the instance id whose Type is this Container's typing anchor. |\n| `tags` | string[] | no | — | core | Free-form classification tags. |\n| `createdAt` | date-time | no | — | core | ISO-8601 creation timestamp. |\n| `updatedAt` | date-time | no | — | core | ISO-8601 timestamp of the most recent update. |\n\nRaw JSON Schema: <https://srs.semanticops.com/schema/2.0/container.json>\n\n#### Compact pseudo-IDL\n\n```typescript\ncontainer {\n  containerId: string // Stable UUID for this Container. Must not appear in Relation.sourceInstanceId or targetInstanceId.\n  title: string // Human-readable title.\n  namespace?: string // Reverse-DNS logical grouping.\n  name?: string // Machine-readable name within the namespace; snake_case.\n  description?: string // Human-readable description of this entity.\n  rootInstanceIds?: string[] // Top-level instances this Container was created to hold.\n  memberInstanceIds?: string[] // Explicit membership list for all instances in scope.\n  identityInstanceId?: string // RFC-013/RFC-029 — the instance id of this Container's identity/purpose record.\n  anchorInstanceId?: string // RFC-009 (amended srs#446) — the instance id whose Type is this Container's typing anchor.\n  tags?: string[] // Free-form classification tags.\n  createdAt?: date-time // ISO-8601 creation timestamp.\n  updatedAt?: date-time // ISO-8601 timestamp of the most recent update.\n}\n```"
+  },
+  "createdAt": "2026-09-03T16:15:19.271925+00:00",
+  "updatedAt": "2026-09-03T16:15:19.271925+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
