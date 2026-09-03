@@ -12,8 +12,11 @@
       "order": 0,
       "sectionId": "decisions",
       "source": {
-        "type": "type-query",
-        "typeKey": "governance/decision",
+        "type": "discovery-query",
+        "query": {
+          "typeNamespace": "governance",
+          "typeName": "decision"
+        },
         "containerScope": "repository"
       },
       "title": "Decisions",

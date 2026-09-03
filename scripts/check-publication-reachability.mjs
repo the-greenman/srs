@@ -21,8 +21,10 @@
  * surfaces exist in this repository, and all three are derived from declarations rather than listed:
  *
  *   1. **Composition sections** — every `compositions/*.json` reachable from every package
- *      manifest in the tree. A `type-query` section's roots are the instances whose
- *      `typeNamespace/typeName` equals its `typeKey` (srs#523/#524: renamed from `semanticObjectType`).
+ *      manifest in the tree. A `discovery-query` section's roots are the instances whose
+ *      `typeNamespace/typeName` equals its `query.typeNamespace`/`query.typeName` (srs#525: the
+ *      SectionSource → DiscoveryQuery collapse — succeeds the retired `type-query`/`typeKey`
+ *      shape from srs#523/#524, itself renamed from `semanticObjectType`).
  *   2. **Root container membership** — `manifest.container` only (RFC-013's required root container,
  *      the top of structural navigation): `identityInstanceId`, `memberInstanceIds`,
  *      `rootInstanceIds`. A Container under `containers/` is deliberately NOT a surface — see the
@@ -163,7 +165,7 @@ async function declaredDocumentViews(repoRoot) {
  * RFC-013 makes `manifest.container` the repository's identity object and the top of structural
  * navigation, so its members are reached by a reader navigating the repository. **A Container under
  * `containers/` is not a presentation surface by existing.** It becomes one when a `container-subset`
- * section or a `containerIds` type-query filter names it, and this guard refuses both of those
+ * section or a `containerIds` discovery-query filter names it, and this guard refuses both of those
  * rather than resolving them — so any `containers/**` file it honoured would be a free "publish"
  * lever with no reader behind it.
  *
@@ -221,39 +223,48 @@ async function reachability(repoRoot) {
     contains.get(relation.sourceInstanceId).push(relation.targetInstanceId);
   }
 
-  // Surface 1 — Composition type-query sections. `descends` records whether the section's roots
+  // Surface 1 — Composition discovery-query sections. `descends` records whether the section's roots
   // also publish their `contains` subtree; see the header note on `titleFieldId`.
   const roots = [];
   const { views, unexported } = await declaredDocumentViews(repoRoot);
-  const queried = new Map(); // typeKey -> { descends, via }
+  const queried = new Map(); // typeNamespace/typeName -> { descends, via }
   for (const { path, view } of views) {
     for (const section of view.sections ?? []) {
-      // `composition.json` admits four source kinds; only `type-query` is used in this
-      // repository, so only it is implemented. The other three are refused rather than skipped.
-      // Skipping is fail-closed here — an unread section can only shrink the reachable set, so it
-      // surfaces as a false violation rather than a missed one — but it would report the *wrong
-      // reason*, sending whoever hits it hunting for a missing relation instead of an unimplemented
-      // source kind. It is also how a guard quietly stops covering the thing it was written for.
+      // `composition.json` admits two source kinds; only `discovery-query` is used in this
+      // repository (srs#525 collapsed the retired `type-query` into it), so only it is
+      // implemented. The other kind is refused rather than skipped. Skipping is fail-closed
+      // here — an unread section can only shrink the reachable set, so it surfaces as a false
+      // violation rather than a missed one — but it would report the *wrong reason*, sending
+      // whoever hits it hunting for a missing relation instead of an unimplemented source kind.
+      // It is also how a guard quietly stops covering the thing it was written for.
       const kind = section.source?.type;
-      if (kind !== "type-query") {
+      if (kind !== "discovery-query") {
         fail(
           `${path} section "${section.sectionId}" uses source kind "${kind}", which this guard does ` +
             `not resolve — implement it here, or the records it publishes will be reported unreachable`,
         );
         continue;
       }
-      const t = section.source?.typeKey;
-      if (!t) {
-        fail(`${path} section "${section.sectionId}" is a type-query with no typeKey`);
+      const query = section.source?.query ?? {};
+      const ns = query.typeNamespace;
+      const name = query.typeName;
+      if (!ns || !name) {
+        fail(
+          `${path} section "${section.sectionId}" is a discovery-query with no query.typeNamespace/` +
+            `query.typeName (the DiscoveryQuery axes this guard resolves)`,
+        );
         continue;
       }
-      // A type-query may also carry `lifecycleState`, `lifecycleStates`, `excludeLifecycleStates`,
-      // `containerIds` and `containerScope`, and `render_service.rs` applies every one of them. This
-      // guard resolves the type alone, so a filtered section would confer reachability on records it
-      // never renders — fail-OPEN, unlike the unresolved source kinds above. Refused for that reason:
-      // a section that excludes `archived` records would otherwise let every archived record in the
-      // type read as published.
-      const FILTERS = ["lifecycleState", "lifecycleStates", "excludeLifecycleStates", "containerIds", "containerScope"];
+      const t = `${ns}/${name}`;
+      // A DiscoveryQuery may also carry `lifecycleState`, `lifecycleStates`, `excludeLifecycleStates`
+      // (ext:discovery, srs#525) alongside SectionSource's own `containerIds`/`containerScope`
+      // arrangement, and `render_service.rs` applies every one of them. This guard resolves the
+      // type alone, so a filtered section would confer reachability on records it never renders —
+      // fail-OPEN, unlike the unresolved source kinds above. Refused for that reason: a section
+      // that excludes `archived` records would otherwise let every archived record in the type
+      // read as published.
+      const QUERY_FILTERS = ["lifecycleState", "lifecycleStates", "excludeLifecycleStates"];
+      const SOURCE_FILTERS = ["containerIds", "containerScope"];
       // Refused on filters that actually narrow, not on their presence. The renderer discards an
       // empty list, ignores a null, and treats `containerScope: "repository"` as "no container
       // filtering" — so the *most explicit* spelling of "this section filters nothing" would
@@ -264,10 +275,13 @@ async function reachability(repoRoot) {
         if (k === "containerScope") return v !== "repository";
         return true;
       };
-      const applied = FILTERS.filter((k) => narrows(k, section.source[k]));
+      const applied = [
+        ...QUERY_FILTERS.filter((k) => narrows(k, query[k])),
+        ...SOURCE_FILTERS.filter((k) => narrows(k, section.source[k])),
+      ];
       if (applied.length) {
         fail(
-          `${path} section "${section.sectionId}" filters its type-query by ${applied.join(", ")}, ` +
+          `${path} section "${section.sectionId}" filters its discovery-query by ${applied.join(", ")}, ` +
             `which this guard does not apply — resolving the type alone would report records the ` +
             `section filters out as published`,
         );
@@ -283,7 +297,7 @@ async function reachability(repoRoot) {
   }
   for (const { path, record } of instances) {
     const q = queried.get(`${record?.typeNamespace}/${record?.typeName}`);
-    if (q) roots.push({ id: record.instanceId, surface: `composition type-query ${q.via}`, path, descends: q.descends });
+    if (q) roots.push({ id: record.instanceId, surface: `composition discovery-query ${q.via}`, path, descends: q.descends });
   }
 
   // Surface 2 — Container membership.

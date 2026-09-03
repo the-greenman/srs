@@ -10,8 +10,11 @@
       "title": "RFCs",
       "order": 0,
       "source": {
-        "type": "type-query",
-        "typeKey": "com.semanticops.spec/rfc"
+        "type": "discovery-query",
+        "query": {
+          "typeNamespace": "com.semanticops.spec",
+          "typeName": "rfc"
+        }
       },
       "renderViewId": "1aedea8d-107f-40ff-aef3-7ff934776385",
       "emptyBehavior": "hide"

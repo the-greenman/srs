@@ -16,8 +16,11 @@
       },
       "sectionId": "articles",
       "source": {
-        "type": "type-query",
-        "typeKey": "governance/article",
+        "type": "discovery-query",
+        "query": {
+          "typeNamespace": "governance",
+          "typeName": "article"
+        },
         "containerScope": "repository"
       },
       "title": "Articles of Association",
@@ -28,8 +31,11 @@
       "order": 1,
       "sectionId": "roles",
       "source": {
-        "type": "type-query",
-        "typeKey": "governance/role",
+        "type": "discovery-query",
+        "query": {
+          "typeNamespace": "governance",
+          "typeName": "role"
+        },
         "containerScope": "repository"
       },
       "title": "Roles",
@@ -40,8 +46,11 @@
       "order": 2,
       "sectionId": "decisions",
       "source": {
-        "type": "type-query",
-        "typeKey": "governance/decision",
+        "type": "discovery-query",
+        "query": {
+          "typeNamespace": "governance",
+          "typeName": "decision"
+        },
         "containerScope": "repository"
       },
       "title": "Decision Log",

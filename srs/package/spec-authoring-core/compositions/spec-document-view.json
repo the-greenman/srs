@@ -10,8 +10,11 @@
       "title": "Specification",
       "order": 0,
       "source": {
-        "type": "type-query",
-        "typeKey": "com.semanticops.spec/section"
+        "type": "discovery-query",
+        "query": {
+          "typeNamespace": "com.semanticops.spec",
+          "typeName": "section"
+        }
       },
       "typeDispatch": {
         "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"

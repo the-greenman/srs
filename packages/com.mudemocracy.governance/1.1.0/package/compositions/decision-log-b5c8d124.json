@@ -19,14 +19,17 @@
       "renderViewId": "faebd240-83c4-4bc8-a383-8335f841a234",
       "sectionId": "decisions",
       "source": {
-        "containerScope": "repository",
-        "excludeLifecycleStates": [
-          "superseded",
-          "closed",
-          "abandoned"
-        ],
-        "typeKey": "governance/decision",
-        "type": "type-query"
+        "type": "discovery-query",
+        "query": {
+          "typeNamespace": "governance",
+          "typeName": "decision",
+          "excludeLifecycleStates": [
+            "superseded",
+            "closed",
+            "abandoned"
+          ]
+        },
+        "containerScope": "repository"
       },
       "title": "Decision Log",
       "titleFieldId": "d7e82557-9045-5e92-a494-d99112bbec4a"

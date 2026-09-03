@@ -84,7 +84,7 @@ export function isInInvariantProjectionRoot(path) {
 
 /**
  * The two rendered presentations whose output MUST contain the `### Key Invariants` heading —
- * they render the full specification via a type-query over `com.semanticops.spec/section`, which
+ * they render the full specification via a discovery-query over `com.semanticops.spec/section`, which
  * includes the Key Invariants section, so its absence from their output is a regression rather
  * than an expected omission (unlike the rationale/RFC-catalog/RFC-decision-log presentations,
  * which never render that section).
