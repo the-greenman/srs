@@ -1,0 +1,17 @@
+{
+  "instanceId": "c006b6e2-49d0-4282-aa62-518d981b925b",
+  "typeId": "2a000014-0000-4000-a000-000000000014",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "generated-type-reference",
+  "fieldValues": {
+    "title": "Generated reference: `RecordPropertyView`",
+    "referenced_type_id": "4c00003b-0000-4000-a000-00000000003b",
+    "referenced_type_version": 1,
+    "presentation_profile": "property-table-and-pseudo-idl",
+    "content": "Generated from the resolved effective `record-property-view` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.\n\n| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |\n|---|---|---|---|---|---|\n| `property` | string | yes | enum: \"lifecycleState\" \\| \"tags\" \\| \"createdAt\" \\| \"updatedAt\" | core | Record-level property presented by a RecordPropertyView row. |\n| `order` | integer | yes | minimum: 0 | core | The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015). |\n| `displayLabel` | string | no | — | core | Context-specific label override for this field within this Type. |\n| `visible` | boolean | no | — | core | Default: true. Whether a FieldView/RecordPropertyView row is shown. |\n\nRaw JSON Schema: <https://srs.semanticops.com/schema/2.0/view.json#/$defs/RecordPropertyView>\n\n#### Compact pseudo-IDL\n\n```typescript\nrecord-property-view {\n  property: string // Record-level property presented by a RecordPropertyView row.\n  order: integer // The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015).\n  displayLabel?: string // Context-specific label override for this field within this Type.\n  visible?: boolean // Default: true. Whether a FieldView/RecordPropertyView row is shown.\n}\n```"
+  },
+  "createdAt": "2026-09-03T18:00:00Z",
+  "updatedAt": "2026-09-03T18:00:00Z",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

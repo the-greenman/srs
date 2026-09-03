@@ -72,6 +72,18 @@ const RAW_SCHEMA_LINKS = {
   "note-section": "https://srs.semanticops.com/schema/2.0/note.json#/$defs/NoteSection",
   "source-reference": "https://srs.semanticops.com/schema/2.0/record.json#/$defs/SourceReference",
   "relation-spec": "https://srs.semanticops.com/schema/2.0/blueprint.json#/$defs/RelationSpec",
+  // srs#541 (Task 4b/6 residual): the six entities srs#526/PR#533 parked, plus their nested value
+  // objects. Same discipline: top-level entities link their own file; nested value objects link
+  // into their owning file's `$defs` (hand-spelled PascalCase, verified against the committed file
+  // — these seed files are not emitter-owned).
+  "relation-type-definition": "https://srs.semanticops.com/schema/2.0/relation-type.json",
+  manifest: "https://srs.semanticops.com/schema/2.0/manifest.json",
+  composition: "https://srs.semanticops.com/schema/2.0/composition.json",
+  view: "https://srs.semanticops.com/schema/2.0/view.json",
+  "discovery-query": "https://srs.semanticops.com/schema/2.0/discovery.json#/$defs/DiscoveryQuery",
+  "export-config": "https://srs.semanticops.com/schema/2.0/composition.json#/$defs/ExportConfig",
+  "field-view": "https://srs.semanticops.com/schema/2.0/view.json#/$defs/FieldView",
+  "record-property-view": "https://srs.semanticops.com/schema/2.0/view.json#/$defs/RecordPropertyView",
 };
 
 async function findJsonFiles(dir) {
