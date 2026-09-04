@@ -13,18 +13,18 @@
       "displayLabel": "Instance Id"
     },
     {
-      "fieldId": "4b0000e3-0000-4000-a000-0000000000e3",
+      "fieldId": "4b0000eb-0000-4000-a000-0000000000eb",
       "order": 1,
       "required": true,
       "displayLabel": "Field Name"
     },
     {
-      "fieldId": "4b0000e7-0000-4000-a000-0000000000e7",
+      "fieldId": "4b0000ef-0000-4000-a000-0000000000ef",
       "order": 2,
       "required": true
     }
   ],
-  "id": "4c00003e-0000-4000-a000-00000000003e",
+  "id": "4c000041-0000-4000-a000-000000000041",
   "name": "expected-segments",
   "namespace": "com.semanticops.srs",
   "version": 1

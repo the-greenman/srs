@@ -32,35 +32,35 @@
       "required": true
     },
     {
-      "fieldId": "4b000105-0000-4000-a000-000000000105",
+      "fieldId": "4b00010d-0000-4000-a000-00000000010d",
       "order": 5,
       "required": true
     },
     {
-      "fieldId": "4b000100-0000-4000-a000-000000000100",
+      "fieldId": "4b000108-0000-4000-a000-000000000108",
       "order": 6,
       "required": false,
       "displayLabel": "Css Class Fields"
     },
     {
-      "fieldId": "4b000103-0000-4000-a000-000000000103",
+      "fieldId": "4b00010b-0000-4000-a000-00000000010b",
       "order": 7,
       "required": false,
       "displayLabel": "Page Templates"
     },
     {
-      "fieldId": "4b000104-0000-4000-a000-000000000104",
+      "fieldId": "4b00010c-0000-4000-a000-00000000010c",
       "order": 8,
       "required": false,
       "displayLabel": "Element Templates"
     },
     {
-      "fieldId": "4b000102-0000-4000-a000-000000000102",
+      "fieldId": "4b00010a-0000-4000-a000-00000000010a",
       "order": 9,
       "required": false
     },
     {
-      "fieldId": "4b000101-0000-4000-a000-000000000101",
+      "fieldId": "4b000109-0000-4000-a000-000000000109",
       "order": 10,
       "required": false
     },
@@ -81,7 +81,7 @@
       "displayLabel": "Updated At"
     }
   ],
-  "id": "4c000047-0000-4000-a000-000000000047",
+  "id": "4c00004a-0000-4000-a000-00000000004a",
   "name": "theme",
   "namespace": "com.semanticops.srs",
   "version": 1

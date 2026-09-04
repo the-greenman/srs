@@ -127,22 +127,30 @@ const TYPE_ORDER = [
   [58, 'field-view'],
   [59, 'record-property-view'],
   [60, 'view'],
+  // -- srs#379: ext:protocol (a package-declared definition entity like Blueprint, not an
+  // instance-layer entity — value objects before the entity that references them).
+  [61, 'field-ref'],
+  [62, 'protocol-stage'],
+  [63, 'protocol'],
   // -- srs#534: the two files #526/#541 parked on emitter-capability gaps (map-of-$ref, $defs-only
   // bundles, untyped integer enums) — discovery.json's remaining $defs entities, theme.json's
   // entity + nested value objects, and the owed {srsj,manifest,data} archive envelope schema.
   // Value objects before the entities that reference them; numbering is pinned/append-only.
-  [61, 'text-segment'],
-  [62, 'expected-segments'],
-  [63, 'conformance-scenario'],
-  [64, 'asset-declaration'],
-  [65, 'page-templates'],
-  [66, 'element-templates'],
-  [67, 'section-wrapper-override'],
-  [68, 'record-wrapper-override'],
-  [69, 'stylesheet-declaration'],
-  [70, 'typography-hints'],
-  [71, 'theme'],
-  [72, 'srsj-envelope'],
+  // Renumbered 61-72 -> 64-75 during merge reconciliation with #545 (protocol/379), which merged
+  // first and took 61-63/225-232 — append-only means the later-landing branch moves, never the
+  // merged one.
+  [64, 'text-segment'],
+  [65, 'expected-segments'],
+  [66, 'conformance-scenario'],
+  [67, 'asset-declaration'],
+  [68, 'page-templates'],
+  [69, 'element-templates'],
+  [70, 'section-wrapper-override'],
+  [71, 'record-wrapper-override'],
+  [72, 'stylesheet-declaration'],
+  [73, 'typography-hints'],
+  [74, 'theme'],
+  [75, 'srsj-envelope'],
 ];
 const typeIdByName = Object.fromEntries(TYPE_ORDER.map(([n, name]) => [name, typeUuid(n)]));
 const ref = (typeName, mode, cardinality, extra) => {
@@ -433,10 +441,25 @@ const FIELD_SPECS = [
   [222, 'editor_hint_override', { datatype: 'string' }, 'Presentation only (RFC-036 [CR-036-20]/[CR-036-21]). Supersedes Field.editorHint for Records rendered/edited through this View.'],
   [223, 'composite_renderer', ref('composite-renderer-binding', 'inline', 'single'), 'RFC-036 — render a FieldView\'s composite-range value through a named composite renderer.'],
   [224, 'property', closed(['lifecycleState', 'tags', 'createdAt', 'updatedAt']), 'Record-level property presented by a RecordPropertyView row.'],
+  // -- srs#379: Protocol/ProtocolStage/FieldRef (ext:protocol). Reuses shared identity Fields
+  // (id/namespace/name/version/description/created_at/tags, #1-6/#11), `ai_guidance` (#8, reused
+  // for ProtocolStage's own guidance — structured over serialised, no string alternative), `order`
+  // (#52, reused with a stage-specific desc override), `field_id`/`type_id` (#51/#33, reused for
+  // FieldRef). New Fields below are the ones with no existing semantic match.
+  [225, 'stage_id', { datatype: 'string' }, 'Stable key within this Protocol. Referenced by other stages\' dependsOn (Invariant 29).'],
+  [226, 'stage_depends_on', { datatype: 'string', cardinality: 'list' }, 'stageId values within the enclosing Protocol — epistemic dependencies, not just ordering. A stage may not depend on itself (Invariant 29).'],
+  [227, 'completion_criteria', { datatype: 'string' }, 'How to know this stage is sufficient to proceed.'],
+  [228, 'question', { datatype: 'string' }, 'The core question this stage answers.'],
+  [229, 'contributes_to', ref('field-ref', 'inline', 'list'), 'The Record Fields this stage feeds (Invariant 30).'],
+  [230, 'output_type', { datatype: 'string', format: 'uuid' }, 'Present when this stage produces its own intermediate Record. A LINEAGE reference (bare UUID; rfc-decision-c8704763) to the Type this stage produces its own intermediate Record as — the effective package set resolves it. typeVersion is dropped (version-optional hybrids are forbidden).'],
+  [231, 'target_type', { datatype: 'string', format: 'uuid' }, 'The Record type this Protocol converges on — a LINEAGE reference (bare UUID; rfc-decision-c8704763), never the canonical namespace/name@version form (DISPLAY-only, never stored). Empty string for loose, exploratory Protocols whose output is input context for a tighter Protocol.'],
+  [232, 'stages', ref('protocol-stage', 'inline', 'list'), 'The stages, in declaration order. Execution sequence is determined by dependsOn resolution, not array position; order is the declared composition order (Invariant 31).'],
   // -- srs#534: discovery.json's remaining $defs (TextSegment, ConformanceScenario,
   // ExpectedSegments). `DiscoveryQuery.tier` itself is NOT added to the live corpus here — see the
-  // "225: tier" note below.
-  // 225: `tier` (closedInt([0, 2])) — the untyped-integer-enum capability IS implemented (see
+  // "233: tier" note below. Renumbered 225-264 -> 233-272 during merge reconciliation with #545
+  // (protocol/379), which merged first and took 225-232 — append-only means the later-landing
+  // branch moves, never the merged one.
+  // 233: `tier` (closedInt([0, 2])) — the untyped-integer-enum capability IS implemented (see
   // rfc-032-fieldtype.mjs `projectScalar`/R3, tested against synthetic fixtures in
   // tests/rfc-534-emitter-capabilities/run.mjs) and the SCHEMA capability is committed
   // (docs/schema/2.0/field.json's `allowedValues.items` now admits string|integer). But populating
@@ -448,56 +471,56 @@ const FIELD_SPECS = [
   // — land the mechanism and the schema capability, park the LIVE corpus population until a
   // compatible srs-rust release ships and the pin advances (srs-rust#932). `DiscoveryQuery.tier` therefore stays a documented exclusion in
   // rfc-534-closure-test.mjs, same latitude every other tooling-gap exclusion already has — never
-  // recycle 225 for anything else.
-  [226, 'segment_field_id', { datatype: 'string' }, "UUID of the field definition for package-resolved fields; sentinel string for special segments: 'note-title', 'note-section', 'tag', 'label'."],
-  [227, 'segment_field_name', { datatype: 'string' }, 'Field name (snake_case) for package-resolved fields; sentinel string for special segments matching fieldId sentinels; or NoteSection.name for named special segments.'],
-  [228, 'text', { datatype: 'string' }, 'The raw stored text value of a TextSegment. Normalization is applied at match time, not at segment construction time.'],
-  [229, 'expected_instance_ids', { datatype: 'string', format: 'uuid', cardinality: 'list' }, 'Minimum required result set for a ConformanceScenario. For exactMatch:true scenarios, this is also the maximum.'],
-  [230, 'exact_match', { datatype: 'boolean' }, 'If true, the result set MUST equal expectedInstanceIds exactly. If false, the result set MUST be a superset.'],
-  [231, 'segments', { datatype: 'string', cardinality: 'list' }, 'The exact ordered list of TextSegment.text values expected for one field of one instance (ExpectedSegments).'],
-  [232, 'query', ref('discovery-query', 'inline', 'single'), 'The DiscoveryQuery a ConformanceScenario executes against the fixture repo.'],
-  [233, 'expected_segments', ref('expected-segments', 'inline', 'single'), 'Optional structured expectation over one field of one instance\'s exact ordered TextSegment sequence (ConformanceScenario.expectedSegments).'],
+  // recycle 233 for anything else.
+  [234, 'segment_field_id', { datatype: 'string' }, "UUID of the field definition for package-resolved fields; sentinel string for special segments: 'note-title', 'note-section', 'tag', 'label'."],
+  [235, 'segment_field_name', { datatype: 'string' }, 'Field name (snake_case) for package-resolved fields; sentinel string for special segments matching fieldId sentinels; or NoteSection.name for named special segments.'],
+  [236, 'text', { datatype: 'string' }, 'The raw stored text value of a TextSegment. Normalization is applied at match time, not at segment construction time.'],
+  [237, 'expected_instance_ids', { datatype: 'string', format: 'uuid', cardinality: 'list' }, 'Minimum required result set for a ConformanceScenario. For exactMatch:true scenarios, this is also the maximum.'],
+  [238, 'exact_match', { datatype: 'boolean' }, 'If true, the result set MUST equal expectedInstanceIds exactly. If false, the result set MUST be a superset.'],
+  [239, 'segments', { datatype: 'string', cardinality: 'list' }, 'The exact ordered list of TextSegment.text values expected for one field of one instance (ExpectedSegments).'],
+  [240, 'query', ref('discovery-query', 'inline', 'single'), 'The DiscoveryQuery a ConformanceScenario executes against the fixture repo.'],
+  [241, 'expected_segments', ref('expected-segments', 'inline', 'single'), 'Optional structured expectation over one field of one instance\'s exact ordered TextSegment sequence (ConformanceScenario.expectedSegments).'],
   // -- srs#534: theme.json's Theme entity + nested value objects.
-  [234, 'asset_type', closed(['image', 'font', 'stylesheet', 'data']), 'AssetDeclaration.type — the kind of asset declared.'],
-  [235, 'asset_mode', closed(['local', 'remote', 'inline']), "AssetDeclaration.mode — the asset's locator mode."],
-  [236, 'mime_type', { datatype: 'string' }, "e.g. 'image/png', 'font/woff2', 'text/css'."],
-  [237, 'asset_data', { datatype: 'string' }, "Base64 for binary asset types; raw text for stylesheet/data. Required when AssetDeclaration.mode === 'inline'."],
-  [238, 'cover_page', { datatype: 'string' }, 'Rendered as the first page of a paginated output format. Available variables: all Composition preamble variables, {{asset:*}}, {{heading-1}}.'],
-  [239, 'page_header', { datatype: 'string' }, 'Repeated at the top of each page. Additional variable: {{page-number}}.'],
-  [240, 'page_footer', { datatype: 'string' }, 'Repeated at the bottom of each page. Additional variable: {{page-number}}.'],
-  [241, 'document_wrapper', { datatype: 'string' }, 'Wraps the entire rendered document body. Available: {{content}}, {{container-title}}, {{date}}, {{asset:*}}.'],
-  [242, 'section_wrapper', { datatype: 'string' }, 'Wraps each section. Available: {{content}}, {{section-title}}, {{section-id}}, {{asset:*}}.'],
-  [243, 'record_wrapper', { datatype: 'string' }, 'Wraps each record. Available: {{content}}, {{record-heading}}, {{type-namespace}}, {{type-name}}, {{asset:*}}.'],
-  [244, 'field_row', { datatype: 'string' }, 'Wraps each field label+value pair. Available: {{field-label}}, {{field-value}}, {{field-name}}, {{content}}.'],
-  [245, 'composite_field_row_templates', { datatype: 'map', valueRange: 'string' }, 'ext:themes-l1 RFC-036 [CR-036-17] — per-field-name templates for individual field rows within a composite-range value rendered by the composite baseline.'],
-  [246, 'template', { datatype: 'string' }, 'A per-section or per-type wrapper template override string (SectionWrapperOverride.template / RecordWrapperOverride.template).'],
-  [247, 'section_wrapper_overrides', ref('section-wrapper-override', 'inline', 'list'), 'Per-section wrapper overrides. Takes precedence over sectionWrapper when sectionId matches.'],
-  [248, 'record_wrapper_overrides', ref('record-wrapper-override', 'inline', 'list'), 'Per-type wrapper overrides. Takes precedence over recordWrapper when typeId matches.'],
-  [249, 'stylesheet_mode', closed(['inline', 'local', 'remote']), "StylesheetDeclaration.mode — the stylesheet's locator mode."],
-  [250, 'base_font', { datatype: 'string' }, 'Informative typography declaration. No normative rendering behaviour is derived from it.'],
-  [251, 'heading_font', { datatype: 'string' }, 'Informative typography declaration. No normative rendering behaviour is derived from it.'],
-  [252, 'mono_font', { datatype: 'string' }, 'Informative typography declaration. No normative rendering behaviour is derived from it.'],
-  [253, 'base_font_size', { datatype: 'string' }, "Informative, e.g. '16px', '1rem', '11pt'. No normative rendering behaviour is derived from it."],
-  [254, 'line_height', { datatype: 'string' }, "Informative, e.g. '1.5', '24px'. No normative rendering behaviour is derived from it."],
-  // 255: `assets` (mapRef('asset-declaration')) — the map-of-$ref capability IS implemented (see
+  [242, 'asset_type', closed(['image', 'font', 'stylesheet', 'data']), 'AssetDeclaration.type — the kind of asset declared.'],
+  [243, 'asset_mode', closed(['local', 'remote', 'inline']), "AssetDeclaration.mode — the asset's locator mode."],
+  [244, 'mime_type', { datatype: 'string' }, "e.g. 'image/png', 'font/woff2', 'text/css'."],
+  [245, 'asset_data', { datatype: 'string' }, "Base64 for binary asset types; raw text for stylesheet/data. Required when AssetDeclaration.mode === 'inline'."],
+  [246, 'cover_page', { datatype: 'string' }, 'Rendered as the first page of a paginated output format. Available variables: all Composition preamble variables, {{asset:*}}, {{heading-1}}.'],
+  [247, 'page_header', { datatype: 'string' }, 'Repeated at the top of each page. Additional variable: {{page-number}}.'],
+  [248, 'page_footer', { datatype: 'string' }, 'Repeated at the bottom of each page. Additional variable: {{page-number}}.'],
+  [249, 'document_wrapper', { datatype: 'string' }, 'Wraps the entire rendered document body. Available: {{content}}, {{container-title}}, {{date}}, {{asset:*}}.'],
+  [250, 'section_wrapper', { datatype: 'string' }, 'Wraps each section. Available: {{content}}, {{section-title}}, {{section-id}}, {{asset:*}}.'],
+  [251, 'record_wrapper', { datatype: 'string' }, 'Wraps each record. Available: {{content}}, {{record-heading}}, {{type-namespace}}, {{type-name}}, {{asset:*}}.'],
+  [252, 'field_row', { datatype: 'string' }, 'Wraps each field label+value pair. Available: {{field-label}}, {{field-value}}, {{field-name}}, {{content}}.'],
+  [253, 'composite_field_row_templates', { datatype: 'map', valueRange: 'string' }, 'ext:themes-l1 RFC-036 [CR-036-17] — per-field-name templates for individual field rows within a composite-range value rendered by the composite baseline.'],
+  [254, 'template', { datatype: 'string' }, 'A per-section or per-type wrapper template override string (SectionWrapperOverride.template / RecordWrapperOverride.template).'],
+  [255, 'section_wrapper_overrides', ref('section-wrapper-override', 'inline', 'list'), 'Per-section wrapper overrides. Takes precedence over sectionWrapper when sectionId matches.'],
+  [256, 'record_wrapper_overrides', ref('record-wrapper-override', 'inline', 'list'), 'Per-type wrapper overrides. Takes precedence over recordWrapper when typeId matches.'],
+  [257, 'stylesheet_mode', closed(['inline', 'local', 'remote']), "StylesheetDeclaration.mode — the stylesheet's locator mode."],
+  [258, 'base_font', { datatype: 'string' }, 'Informative typography declaration. No normative rendering behaviour is derived from it.'],
+  [259, 'heading_font', { datatype: 'string' }, 'Informative typography declaration. No normative rendering behaviour is derived from it.'],
+  [260, 'mono_font', { datatype: 'string' }, 'Informative typography declaration. No normative rendering behaviour is derived from it.'],
+  [261, 'base_font_size', { datatype: 'string' }, "Informative, e.g. '16px', '1rem', '11pt'. No normative rendering behaviour is derived from it."],
+  [262, 'line_height', { datatype: 'string' }, "Informative, e.g. '1.5', '24px'. No normative rendering behaviour is derived from it."],
+  // 263: `assets` (mapRef('asset-declaration')) — the map-of-$ref capability IS implemented (see
   // rfc-032-fieldtype.mjs `projectField`'s map branch, schema-emitter.mjs `renderNode`, tested
   // against synthetic fixtures in tests/rfc-534-emitter-capabilities/run.mjs) and the SCHEMA
   // capability is committed (docs/schema/2.0/field.json's `valueRange` enum now admits `ref`). Same
-  // srs-rust binary parity gap as `tier` above (225) — populating this Field in the LIVE
+  // srs-rust binary parity gap as `tier` above (233) — populating this Field in the LIVE
   // self-hosted metamodel corpus breaks `srs repo validate --repo srs` under the pinned build.320
   // binary. Mechanism + schema land here; corpus population is parked pending a compatible
   // srs-rust release (srs-rust#932). `Theme.assets` stays a documented
-  // exclusion in rfc-534-closure-test.mjs — never recycle 255 for anything else.
-  [256, 'css_class_fields', { datatype: 'string', format: 'uuid', cardinality: 'list' }, 'fieldIds whose values are injected as CSS classes on record wrapper elements (RFC-032 Rev-7 [T-9]).'],
-  [257, 'typography', ref('typography-hints', 'inline', 'single'), 'Theme.typography — informative typography hints.'],
-  [258, 'stylesheet', ref('stylesheet-declaration', 'inline', 'single'), 'Theme.stylesheet — the theme\'s CSS declaration.'],
-  [259, 'page_templates', ref('page-templates', 'inline', 'single'), 'Theme.pageTemplates — page-level chrome for paginated output formats.'],
-  [260, 'element_templates', ref('element-templates', 'inline', 'single'), 'Theme.elementTemplates — templates that wrap auto-rendered content at each structural level.'],
-  [261, 'targets', { datatype: 'string', cardinality: 'list', minItems: 1 }, "Output formats a Theme is designed for (e.g. 'html', 'markdown'). MUST contain at least one entry (Rule [T-1b])."],
+  // exclusion in rfc-534-closure-test.mjs — never recycle 263 for anything else.
+  [264, 'css_class_fields', { datatype: 'string', format: 'uuid', cardinality: 'list' }, 'fieldIds whose values are injected as CSS classes on record wrapper elements (RFC-032 Rev-7 [T-9]).'],
+  [265, 'typography', ref('typography-hints', 'inline', 'single'), 'Theme.typography — informative typography hints.'],
+  [266, 'stylesheet', ref('stylesheet-declaration', 'inline', 'single'), 'Theme.stylesheet — the theme\'s CSS declaration.'],
+  [267, 'page_templates', ref('page-templates', 'inline', 'single'), 'Theme.pageTemplates — page-level chrome for paginated output formats.'],
+  [268, 'element_templates', ref('element-templates', 'inline', 'single'), 'Theme.elementTemplates — templates that wrap auto-rendered content at each structural level.'],
+  [269, 'targets', { datatype: 'string', cardinality: 'list', minItems: 1 }, "Output formats a Theme is designed for (e.g. 'html', 'markdown'). MUST contain at least one entry (Rule [T-1b])."],
   // -- srs#534/#522/RFC-038/RFC-039: the owed {srsj,manifest,data} archive envelope schema.
-  [262, 'srsj', { datatype: 'string' }, "The .srsj archive's version-gate string ([R24])."],
-  [263, 'envelope_data', { datatype: 'map', valueRange: 'open' }, "Flat map keyed by the file's relative path within the repository tree to that file's parsed JSON content. Distinct from the `meta` extension bag — this is the archive's actual file payload, not open metadata."],
-  [264, 'manifest', ref('manifest', 'inline', 'single'), "The archived repository's Manifest (validates against manifest.json)."],
+  [270, 'srsj', { datatype: 'string' }, "The .srsj archive's version-gate string ([R24])."],
+  [271, 'envelope_data', { datatype: 'map', valueRange: 'open' }, "Flat map keyed by the file's relative path within the repository tree to that file's parsed JSON content. Distinct from the `meta` extension bag — this is the archive's actual file payload, not open metadata."],
+  [272, 'manifest', ref('manifest', 'inline', 'single'), "The archived repository's Manifest (validates against manifest.json)."],
 ];
 const fieldIdByName = {};
 for (const [n, name] of FIELD_SPECS) fieldIdByName[name] = fieldUuid(n);
@@ -1123,6 +1146,44 @@ const TYPE_SPECS = {
       a('id', true), a('namespace', true), a('name', true), a('version', true), a('description', true),
       a('compatible_types', false, 'Compatible Types'), a('export_config', false, 'Export Config'),
       a('view_ai_guidance', false, 'Ai Guidance'), a('tags', false), a('created_at', true), a('updated_at', false, 'Updated At'),
+    ],
+  },
+  // -- srs#379: ext:protocol. Generated from docs/schema/2.0/protocol.json (the ruled, unprefixed
+  // shape a decision record settled — the interim `protocol`-prefixed shape #297/#378 shipped no
+  // longer matches this prose); proven via scripts/rfc-379-closure-test.mjs, same discipline as
+  // rfc-272/rfc-541 (emitter ⊆ committed seed, never overwriting it — the authorship flip is #260).
+  // A package-declared definition entity, exactly parallel to Blueprint, not an instance-layer one.
+  'field-ref': {
+    description: 'ext:protocol — a reference to a Field within a Type, optionally scoped to which Type it appears in.',
+    purpose: 'Describes a FieldRef: the Field it points to, and which Type it appears in when the same fieldId appears in several.',
+    assignments: [
+      a('field_id', true, 'Field', 'References a Field by its stable id.'),
+      a('type_id', false, 'Type Id', 'Which Type this Field appears in, when the same fieldId appears in several.'),
+    ],
+  },
+  'protocol-stage': {
+    description: 'ext:protocol — a named stage in a Protocol. Stages carry epistemic dependencies (dependsOn), not merely ordering: a stage may proceed only when its dependencies are sufficient.',
+    purpose: 'Describes a ProtocolStage: its identity, composition order, epistemic dependencies, and what it contributes.',
+    assignments: [
+      a('stage_id', true, 'Stage Id'),
+      a('name', true, undefined, 'Short, human-readable stage name (e.g. "Background", "Key requirements") — not the definitional snake_case name every other entity\'s `name` property carries.'),
+      a('order', true, undefined, 'The declared composition order of the stages — structure, not presentation; provides the render default. Execution order is determined by dependsOn (Invariant 31).'),
+      a('purpose', false, undefined, 'What understanding this stage builds.'),
+      a('question', false),
+      a('stage_depends_on', false, 'Depends On'),
+      a('completion_criteria', false, 'Completion Criteria'),
+      a('contributes_to', false, 'Contributes To'),
+      a('output_type', false, 'Output Type'),
+      a('ai_guidance', false, 'AI Guidance', 'Extraction guidance for an AI assistant working this stage.'),
+    ],
+  },
+  protocol: {
+    description: 'ext:protocol — an epistemically ordered process for building quality Records through structured conversation or facilitation. A package definition (package.json `protocols[]`), not an instance Record.',
+    purpose: 'Describes a Protocol: its identity, the Type it converges on, and its ordered stages.',
+    assignments: [
+      a('id', true), a('namespace', true), a('name', true), a('version', true), a('description', false),
+      a('target_type', true, 'Target Type'), a('stages', true),
+      a('tags', false), a('created_at', true),
     ],
   },
   // -------------------------------------------------------------------------------------------

@@ -5,7 +5,7 @@
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "The archived repository's Manifest (validates against manifest.json).",
-  "id": "4b000108-0000-4000-a000-000000000108",
+  "id": "4b000110-0000-4000-a000-000000000110",
   "name": "manifest",
   "namespace": "com.semanticops.srs",
   "fieldType": {

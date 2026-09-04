@@ -84,6 +84,10 @@ const RAW_SCHEMA_LINKS = {
   "export-config": "https://srs.semanticops.com/schema/2.0/composition.json#/$defs/ExportConfig",
   "field-view": "https://srs.semanticops.com/schema/2.0/view.json#/$defs/FieldView",
   "record-property-view": "https://srs.semanticops.com/schema/2.0/view.json#/$defs/RecordPropertyView",
+  // srs#379: ext:protocol. Protocol links its own file; ProtocolStage/FieldRef are nested $defs.
+  protocol: "https://srs.semanticops.com/schema/2.0/protocol.json",
+  "protocol-stage": "https://srs.semanticops.com/schema/2.0/protocol.json#/$defs/ProtocolStage",
+  "field-ref": "https://srs.semanticops.com/schema/2.0/protocol.json#/$defs/FieldRef",
   // srs#534: theme.json's entity + the remaining discovery.json $defs, plus the newly-authored
   // srsj-envelope.json. Same discipline: top-level entities link their own file; nested value
   // objects link into discovery.json's own $defs (hand-spelled PascalCase, verified against the

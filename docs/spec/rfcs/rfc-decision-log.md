@@ -1247,3 +1247,38 @@ Disciplines that bind autoclassification: placements are DIAGNOSTIC-mode input (
 **Review Trigger**: Fold the registry into records and generate the JSON as a projection when SRS-for-Specs authoring (srs#214 / the #490 pass) makes records the natural home. Review earlier if a second gate is ever discovered outside the declared surface - that would mean the tier vocabulary or the membership guard is incomplete.
 
 
+**Title**: Protocol shape: unprefixed identity wins, aiGuidance is structured-only (srs#379)
+
+**Status**: Accepted
+
+**Decision Date**: 2026-09-04
+
+**Decision Rationale**: srs#379 found the normative prose (id/namespace/name/version/description/stages/createdAt, structured aiGuidance) and the implementation+corpus (protocolId/protocolNamespace/protocolName/protocolVersion/protocolDescription/protocolStages/protocolCreatedAt, plain-string aiGuidance) genuinely disagree, and #297/#378 authored docs/schema/2.0/protocol.json to the implementation shape as an interim, owed-schema expedient. Ruling which side is canonical for the metamodel self-hosting generator (srs#526/#541's own machinery) to model Protocol/ProtocolStage against. Decision mode: Clear (a rename executing an already-ratified rule, not a fresh axis tension) — rfc-decision-cce3c00e's Identity cell ("identifier over label") and Description cell ("one name over many"), plus rfc-decision-628cf6c4 ("a rename is a migration"). Decisive technical evidence: EVERY OTHER package-declared definition entity in the metamodel — Type, Field, Vocabulary, Lifecycle, RelationTypeDefinition, Theme, Blueprint — reuses the shared identity Fields #1-6 (id/namespace/name/version/description/createdAt) unprefixed; the self-hosting generator's own stated principle is "reuse over duplication" (scripts/gen-metamodel-package.mjs, srs#526 FIELD_SPECS comment). Protocol's prefixed shape is the one outlier (finding A10 of the srs#435 pattern-consistency audit, parked in the CHARTER:naming bucket, never itself resolved) and cannot be modelled through the generator without inventing duplicate one-off identity Fields that violate that stated principle — the generator's own construction settles the question the audit left open. Separately, ProtocolStage.aiGuidance's `oneOf: [string, object]` is exactly the JSON-in-a-text-field shape the standing structured-over-serialised rule forbids (feedback_structured_over_serialised); Field.aiGuidance is core/typed/always (rfc-decision list, srs#512) with zero string escape hatch anywhere else in the model — ProtocolStage gets no exception. ProtocolStage.name (required by the implementation and every corpus instance) was simply missing from the pre-existing prose — a documentation gap, not a disagreement, fixed as part of the same prose rewrite. protocolTargetType/outputType's LINEAGE bare-UUID shape (rfc-decision-c8704763) and ProtocolStage.order's structure-not-presentation reframing (rfc-decision on ordering, executed at srs#445/PR#454, "P7") were already ruled and executed before this decision; this record does not reopen them, only renames the property that carries the already-ruled targetType value from `protocolTargetType` to `targetType` for the same one-name reason as the rest of the identity block.
+
+**Decision**: Protocol's identity and structural properties are UNPREFIXED, matching every other package-declared definition entity: `id`, `namespace`, `name`, `version`, `description` (optional), `targetType` (required, LINEAGE bare-UUID-or-empty-string, unchanged value shape — renamed only), `stages` (required), `tags` (optional), `createdAt` (required). ProtocolStage keeps its already-correct property names (`stageId`, `name`, `order`, `purpose`, `question`, `dependsOn`, `completionCriteria`, `contributesTo`, `outputType`) and additionally: `name` becomes documented as required (it always was, in the implementation and every corpus instance — the old prose simply omitted it); `aiGuidance` becomes the closed, structured `AiGuidance` object exclusively (`purpose` required, `extraction`/`negativeGuidance`/`examples[]` optional) — the `string` alternative is retired. `docs/schema/2.0/protocol.json` and the canonical prose (`records/subsections/07-3-ext-protocol.json`) both move to this shape in the same change (Door 1 — no RFC owns ext:protocol's surface; RFC-038 [R8] only obligated a schema, never claimed ext:protocol's normative content). The metamodel models Protocol/ProtocolStage/FieldRef to this shape via the srs#526/#541 generator. Execution is staged like every other rename (rfc-decision-628cf6c4): this repository's own corpus that the pinned Rust binary structurally validates through a typed `Protocol` struct (currently `docs/spec/examples/gallery-project-v2`'s vendored protocol definition) is NOT migrated in this same change — the pinned binary's struct still requires the old prefixed shape and rejecting it is a srs-rust change, filed as a follow-up, that must land (with a registered migration) before that corpus file moves; the vendored `packages/com.mudemocracy.governance/*` package copies, validated only by this repo's own Node/AJV pipeline (never the pinned binary), ARE migrated in this change together with the schema.
+
+**Scope**: ext:protocol's Protocol and ProtocolStage property names and ProtocolStage.aiGuidance's value shape, in docs/schema/2.0/protocol.json, records/subsections/07-3-ext-protocol.json, the com.semanticops.srs/metamodel package, and this repo's own Node-validated package corpus.
+
+**Governing Values**:
+- shared-coherence
+- evolution
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Keep the prefixed shape as canonical and rewrite prose to match (srs#379's own "cheaper, matches every witness" framing): rejected — it is cheaper only until the entity is modelled through the self-hosting generator, at which point it requires either duplicating the shared identity Fields under Protocol-only names (violating the generator's own reuse-over-duplication principle) or hand-authoring Protocol's schema outside the generator (a second, undisciplined path the srs#526/#541 units exist to retire, violating one-way-per-goal). Leaving aiGuidance as `oneOf:[string,object]` on the grounds every live instance is currently a string: rejected — that is the definition of accepted structural debt the structured-over-serialised rule exists to prevent, and every instance's string content already fits `{purpose: <text>}` losslessly.
+
+**Accepted Costs**: A srs-rust follow-up must rename the `Protocol`/`ProtocolStage` struct fields, retire `catalog.rs`'s protocolId-presence classification shim (RFC-038 [R8] already mandates classification by declared package-manifest kind, not field sniffing), update the CLI/MCP payloads and test fixtures, and migrate the gallery example + any real external consumer (muDemocracy.org's governance package, out of this repo's reach) before that corpus content can move — until it lands, the gallery's vendored protocol definition stays on the pre-ruling shape, a known, tracked, temporary asymmetry (not silently left inconsistent).
+
+**Evidence**:
+- the-greenman/srs#379
+- the-greenman/srs#435 finding A10
+- the-greenman/srs#297, srs#378
+- rfc-decision-628cf6c4
+- rfc-decision-cce3c00e
+- rfc-decision-c8704763
+- the-greenman/srs#445, PR #454 (P7 ordering reframe)
+- scripts/gen-metamodel-package.mjs FIELD_SPECS reuse-over-duplication comment (srs#526)
+
+**Review Trigger**: Review if the srs-rust follow-up finds the struct rename materially more expensive than assessed here (e.g. a real external consumer beyond the gallery and the vendored governance package copies).
+
+

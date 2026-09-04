@@ -6,7 +6,7 @@
   "typeName": "generated-type-reference",
   "fieldValues": {
     "title": "Generated reference: `SrsjEnvelope`",
-    "referenced_type_id": "4c000048-0000-4000-a000-000000000048",
+    "referenced_type_id": "4c00004b-0000-4000-a000-00000000004b",
     "referenced_type_version": 1,
     "presentation_profile": "property-table-and-pseudo-idl",
     "content": "Generated from the resolved effective `srsj-envelope` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.\n\n| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |\n|---|---|---|---|---|---|\n| `srsj` | string | yes | — | core | The .srsj archive's version-gate string ([R24]). |\n| `manifest` | ref → `manifest` (inline) | yes | — | core | The archived repository's Manifest (validates against manifest.json). |\n| `data` | map<string, open> | yes | — | core | Flat map keyed by the file's relative path within the repository tree to that file's parsed JSON content. Distinct from the `meta` extension bag — this is the archive's actual file payload, not open metadata. |\n\nRaw JSON Schema: <https://srs.semanticops.com/schema/2.0/srsj-envelope.json>\n\n#### Compact pseudo-IDL\n\n```typescript\nsrsj-envelope {\n  srsj: string // The .srsj archive's version-gate string ([R24]).\n  manifest: ref → `manifest` (inline) // The archived repository's Manifest (validates against manifest.json).\n  data: map<string, open> // Flat map keyed by the file's relative path within the repository tree to that file's parsed JSON content. Distinct from the `meta` extension bag — this is the archive's actual file payload, not open metadata.\n}\n```"

@@ -5,7 +5,7 @@
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "AssetDeclaration.mode — the asset's locator mode.",
-  "id": "4b0000eb-0000-4000-a000-0000000000eb",
+  "id": "4b0000f3-0000-4000-a000-0000000000f3",
   "name": "asset_mode",
   "namespace": "com.semanticops.srs",
   "fieldType": {

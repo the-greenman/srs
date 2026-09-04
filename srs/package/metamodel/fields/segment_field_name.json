@@ -5,7 +5,7 @@
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "Field name (snake_case) for package-resolved fields; sentinel string for special segments matching fieldId sentinels; or NoteSection.name for named special segments.",
-  "id": "4b0000e3-0000-4000-a000-0000000000e3",
+  "id": "4b0000eb-0000-4000-a000-0000000000eb",
   "name": "segment_field_name",
   "namespace": "com.semanticops.srs",
   "fieldType": {

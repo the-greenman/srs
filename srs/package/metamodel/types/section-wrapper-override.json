@@ -13,12 +13,12 @@
       "displayLabel": "Section Id"
     },
     {
-      "fieldId": "4b0000f6-0000-4000-a000-0000000000f6",
+      "fieldId": "4b0000fe-0000-4000-a000-0000000000fe",
       "order": 1,
       "required": true
     }
   ],
-  "id": "4c000043-0000-4000-a000-000000000043",
+  "id": "4c000046-0000-4000-a000-000000000046",
   "name": "section-wrapper-override",
   "namespace": "com.semanticops.srs",
   "version": 1

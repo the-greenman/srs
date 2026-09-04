@@ -5,14 +5,14 @@
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "Theme.stylesheet — the theme's CSS declaration.",
-  "id": "4b000102-0000-4000-a000-000000000102",
+  "id": "4b00010a-0000-4000-a000-00000000010a",
   "name": "stylesheet",
   "namespace": "com.semanticops.srs",
   "fieldType": {
     "datatype": "ref",
     "mode": "inline",
     "rangeType": {
-      "typeId": "4c000045-0000-4000-a000-000000000045",
+      "typeId": "4c000048-0000-4000-a000-000000000048",
       "typeVersion": 1
     }
   },

@@ -5,7 +5,7 @@
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "Base64 for binary asset types; raw text for stylesheet/data. Required when AssetDeclaration.mode === 'inline'.",
-  "id": "4b0000ed-0000-4000-a000-0000000000ed",
+  "id": "4b0000f5-0000-4000-a000-0000000000f5",
   "name": "asset_data",
   "namespace": "com.semanticops.srs",
   "fieldType": {

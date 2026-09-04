@@ -7,7 +7,7 @@
   "description": "ext:themes-l1 — a Theme's stylesheet, following the same mode-based locator pattern as ThemeReference/PackageRef.",
   "fields": [
     {
-      "fieldId": "4b0000f9-0000-4000-a000-0000000000f9",
+      "fieldId": "4b000101-0000-4000-a000-000000000101",
       "order": 0,
       "required": true,
       "displayLabel": "Mode"
@@ -28,7 +28,7 @@
       "required": false
     }
   ],
-  "id": "4c000045-0000-4000-a000-000000000045",
+  "id": "4c000048-0000-4000-a000-000000000048",
   "name": "stylesheet-declaration",
   "namespace": "com.semanticops.srs",
   "version": 1

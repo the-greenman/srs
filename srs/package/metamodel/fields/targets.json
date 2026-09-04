@@ -5,7 +5,7 @@
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "Output formats a Theme is designed for (e.g. 'html', 'markdown'). MUST contain at least one entry (Rule [T-1b]).",
-  "id": "4b000105-0000-4000-a000-000000000105",
+  "id": "4b00010d-0000-4000-a000-00000000010d",
   "name": "targets",
   "namespace": "com.semanticops.srs",
   "fieldType": {

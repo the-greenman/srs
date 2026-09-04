@@ -5,7 +5,7 @@
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "The raw stored text value of a TextSegment. Normalization is applied at match time, not at segment construction time.",
-  "id": "4b0000e4-0000-4000-a000-0000000000e4",
+  "id": "4b0000ec-0000-4000-a000-0000000000ec",
   "name": "text",
   "namespace": "com.semanticops.srs",
   "fieldType": {

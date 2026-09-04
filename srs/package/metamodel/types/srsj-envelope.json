@@ -7,23 +7,23 @@
   "description": "RFC-038/RFC-039 — the {srsj, manifest, data} bundle envelope for a .srsj repository archive. `srsj` is the archive format version-gate string ([R24]); `manifest` is the archived repository's Manifest; `data` is a flat map keyed by each file's relative path within the repository tree to that file's parsed JSON content.",
   "fields": [
     {
-      "fieldId": "4b000106-0000-4000-a000-000000000106",
+      "fieldId": "4b00010e-0000-4000-a000-00000000010e",
       "order": 0,
       "required": true
     },
     {
-      "fieldId": "4b000108-0000-4000-a000-000000000108",
+      "fieldId": "4b000110-0000-4000-a000-000000000110",
       "order": 1,
       "required": true
     },
     {
-      "fieldId": "4b000107-0000-4000-a000-000000000107",
+      "fieldId": "4b00010f-0000-4000-a000-00000000010f",
       "order": 2,
       "required": true,
       "displayLabel": "Data"
     }
   ],
-  "id": "4c000048-0000-4000-a000-000000000048",
+  "id": "4c00004b-0000-4000-a000-00000000004b",
   "name": "srsj-envelope",
   "namespace": "com.semanticops.srs",
   "version": 1

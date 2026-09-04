@@ -5,14 +5,14 @@
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "Theme.typography — informative typography hints.",
-  "id": "4b000101-0000-4000-a000-000000000101",
+  "id": "4b000109-0000-4000-a000-000000000109",
   "name": "typography",
   "namespace": "com.semanticops.srs",
   "fieldType": {
     "datatype": "ref",
     "mode": "inline",
     "rangeType": {
-      "typeId": "4c000046-0000-4000-a000-000000000046",
+      "typeId": "4c000049-0000-4000-a000-000000000049",
       "typeVersion": 1
     }
   },

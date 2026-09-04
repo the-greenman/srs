@@ -5,14 +5,14 @@
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "Optional structured expectation over one field of one instance's exact ordered TextSegment sequence (ConformanceScenario.expectedSegments).",
-  "id": "4b0000e9-0000-4000-a000-0000000000e9",
+  "id": "4b0000f1-0000-4000-a000-0000000000f1",
   "name": "expected_segments",
   "namespace": "com.semanticops.srs",
   "fieldType": {
     "datatype": "ref",
     "mode": "inline",
     "rangeType": {
-      "typeId": "4c00003e-0000-4000-a000-00000000003e",
+      "typeId": "4c000041-0000-4000-a000-000000000041",
       "typeVersion": 1
     }
   },

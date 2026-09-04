@@ -7,13 +7,13 @@
   "description": "ext:themes-l1 — a named asset referenced in Theme templates via {{asset:name}}.",
   "fields": [
     {
-      "fieldId": "4b0000ea-0000-4000-a000-0000000000ea",
+      "fieldId": "4b0000f2-0000-4000-a000-0000000000f2",
       "order": 0,
       "required": true,
       "displayLabel": "Type"
     },
     {
-      "fieldId": "4b0000eb-0000-4000-a000-0000000000eb",
+      "fieldId": "4b0000f3-0000-4000-a000-0000000000f3",
       "order": 1,
       "required": true,
       "displayLabel": "Mode"
@@ -29,19 +29,19 @@
       "required": false
     },
     {
-      "fieldId": "4b0000ed-0000-4000-a000-0000000000ed",
+      "fieldId": "4b0000f5-0000-4000-a000-0000000000f5",
       "order": 4,
       "required": false,
       "displayLabel": "Data"
     },
     {
-      "fieldId": "4b0000ec-0000-4000-a000-0000000000ec",
+      "fieldId": "4b0000f4-0000-4000-a000-0000000000f4",
       "order": 5,
       "required": false,
       "displayLabel": "Mime Type"
     }
   ],
-  "id": "4c000040-0000-4000-a000-000000000040",
+  "id": "4c000043-0000-4000-a000-000000000043",
   "name": "asset-declaration",
   "namespace": "com.semanticops.srs",
   "version": 1

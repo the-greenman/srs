@@ -5,7 +5,7 @@
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "The DiscoveryQuery a ConformanceScenario executes against the fixture repo.",
-  "id": "4b0000e8-0000-4000-a000-0000000000e8",
+  "id": "4b0000f0-0000-4000-a000-0000000000f0",
   "name": "query",
   "namespace": "com.semanticops.srs",
   "fieldType": {

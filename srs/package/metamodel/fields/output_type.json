@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Present when this stage produces its own intermediate Record. A LINEAGE reference (bare UUID; rfc-decision-c8704763) to the Type this stage produces its own intermediate Record as — the effective package set resolves it. typeVersion is dropped (version-optional hybrids are forbidden)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Present when this stage produces its own intermediate Record. A LINEAGE reference (bare UUID; rfc-decision-c8704763) to the Type this stage produces its own intermediate Record as — the effective package set resolves it. typeVersion is dropped (version-optional hybrids are forbidden).",
+  "id": "4b0000e6-0000-4000-a000-0000000000e6",
+  "name": "output_type",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "format": "uuid"
+  },
+  "version": 1
+}

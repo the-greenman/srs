@@ -61,6 +61,10 @@ export const NAME_OVERRIDES = {
   renderer_roles: "roles",
   export_format: "format",
   sort_direction: "direction",
+  // srs#379 (ext:protocol): `depends_on` (#26, FieldType's own dependent-datatype detail) is
+  // already taken with an incompatible shape (single scalar, not a list) — same mechanism as
+  // above, a Type-specific wire key for a Field minted under its own name to avoid the collision.
+  stage_depends_on: "dependsOn",
   // srs#534: theme.json's nested value objects and the srsj-envelope entity each reuse a shared
   // Field under a Type-specific wire key, or need a Type-specific enum domain colliding in name
   // with an existing, differently-scoped Field. Same mechanism as every entry above.

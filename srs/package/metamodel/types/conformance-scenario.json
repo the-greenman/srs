@@ -17,30 +17,30 @@
       "required": true
     },
     {
-      "fieldId": "4b0000e8-0000-4000-a000-0000000000e8",
+      "fieldId": "4b0000f0-0000-4000-a000-0000000000f0",
       "order": 2,
       "required": true
     },
     {
-      "fieldId": "4b0000e5-0000-4000-a000-0000000000e5",
+      "fieldId": "4b0000ed-0000-4000-a000-0000000000ed",
       "order": 3,
       "required": true,
       "displayLabel": "Expected Instance Ids"
     },
     {
-      "fieldId": "4b0000e6-0000-4000-a000-0000000000e6",
+      "fieldId": "4b0000ee-0000-4000-a000-0000000000ee",
       "order": 4,
       "required": true,
       "displayLabel": "Exact Match"
     },
     {
-      "fieldId": "4b0000e9-0000-4000-a000-0000000000e9",
+      "fieldId": "4b0000f1-0000-4000-a000-0000000000f1",
       "order": 5,
       "required": false,
       "displayLabel": "Expected Segments"
     }
   ],
-  "id": "4c00003f-0000-4000-a000-00000000003f",
+  "id": "4c000042-0000-4000-a000-000000000042",
   "name": "conformance-scenario",
   "namespace": "com.semanticops.srs",
   "version": 1

@@ -5,7 +5,7 @@
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "Wraps the entire rendered document body. Available: {{content}}, {{container-title}}, {{date}}, {{asset:*}}.",
-  "id": "4b0000f1-0000-4000-a000-0000000000f1",
+  "id": "4b0000f9-0000-4000-a000-0000000000f9",
   "name": "document_wrapper",
   "namespace": "com.semanticops.srs",
   "fieldType": {

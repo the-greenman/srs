@@ -5,7 +5,7 @@
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "StylesheetDeclaration.mode — the stylesheet's locator mode.",
-  "id": "4b0000f9-0000-4000-a000-0000000000f9",
+  "id": "4b000101-0000-4000-a000-000000000101",
   "name": "stylesheet_mode",
   "namespace": "com.semanticops.srs",
   "fieldType": {

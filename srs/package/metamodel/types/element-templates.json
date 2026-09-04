@@ -7,49 +7,49 @@
   "description": "ext:themes-l1 — templates that wrap auto-rendered content at each structural level. Each receives {{content}} and returns the full output. `compositeRendererConfig` is excluded (see the file header comment above) — it resists static modelling by design.",
   "fields": [
     {
-      "fieldId": "4b0000f1-0000-4000-a000-0000000000f1",
+      "fieldId": "4b0000f9-0000-4000-a000-0000000000f9",
       "order": 0,
       "required": false,
       "displayLabel": "Document Wrapper"
     },
     {
-      "fieldId": "4b0000f2-0000-4000-a000-0000000000f2",
+      "fieldId": "4b0000fa-0000-4000-a000-0000000000fa",
       "order": 1,
       "required": false,
       "displayLabel": "Section Wrapper"
     },
     {
-      "fieldId": "4b0000f7-0000-4000-a000-0000000000f7",
+      "fieldId": "4b0000ff-0000-4000-a000-0000000000ff",
       "order": 2,
       "required": false,
       "displayLabel": "Section Wrapper Overrides"
     },
     {
-      "fieldId": "4b0000f3-0000-4000-a000-0000000000f3",
+      "fieldId": "4b0000fb-0000-4000-a000-0000000000fb",
       "order": 3,
       "required": false,
       "displayLabel": "Record Wrapper"
     },
     {
-      "fieldId": "4b0000f8-0000-4000-a000-0000000000f8",
+      "fieldId": "4b000100-0000-4000-a000-000000000100",
       "order": 4,
       "required": false,
       "displayLabel": "Record Wrapper Overrides"
     },
     {
-      "fieldId": "4b0000f4-0000-4000-a000-0000000000f4",
+      "fieldId": "4b0000fc-0000-4000-a000-0000000000fc",
       "order": 5,
       "required": false,
       "displayLabel": "Field Row"
     },
     {
-      "fieldId": "4b0000f5-0000-4000-a000-0000000000f5",
+      "fieldId": "4b0000fd-0000-4000-a000-0000000000fd",
       "order": 6,
       "required": false,
       "displayLabel": "Composite Field Row Templates"
     }
   ],
-  "id": "4c000042-0000-4000-a000-000000000042",
+  "id": "4c000045-0000-4000-a000-000000000045",
   "name": "element-templates",
   "namespace": "com.semanticops.srs",
   "version": 1

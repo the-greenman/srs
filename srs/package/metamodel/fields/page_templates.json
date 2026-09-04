@@ -5,14 +5,14 @@
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "Theme.pageTemplates — page-level chrome for paginated output formats.",
-  "id": "4b000103-0000-4000-a000-000000000103",
+  "id": "4b00010b-0000-4000-a000-00000000010b",
   "name": "page_templates",
   "namespace": "com.semanticops.srs",
   "fieldType": {
     "datatype": "ref",
     "mode": "inline",
     "rangeType": {
-      "typeId": "4c000041-0000-4000-a000-000000000041",
+      "typeId": "4c000044-0000-4000-a000-000000000044",
       "typeVersion": 1
     }
   },

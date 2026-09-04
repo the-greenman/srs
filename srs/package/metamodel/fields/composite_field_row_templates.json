@@ -5,7 +5,7 @@
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "ext:themes-l1 RFC-036 [CR-036-17] — per-field-name templates for individual field rows within a composite-range value rendered by the composite baseline.",
-  "id": "4b0000f5-0000-4000-a000-0000000000f5",
+  "id": "4b0000fd-0000-4000-a000-0000000000fd",
   "name": "composite_field_row_templates",
   "namespace": "com.semanticops.srs",
   "fieldType": {

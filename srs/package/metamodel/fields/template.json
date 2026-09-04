@@ -5,7 +5,7 @@
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "A per-section or per-type wrapper template override string (SectionWrapperOverride.template / RecordWrapperOverride.template).",
-  "id": "4b0000f6-0000-4000-a000-0000000000f6",
+  "id": "4b0000fe-0000-4000-a000-0000000000fe",
   "name": "template",
   "namespace": "com.semanticops.srs",
   "fieldType": {

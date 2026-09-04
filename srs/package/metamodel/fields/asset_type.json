@@ -5,7 +5,7 @@
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "AssetDeclaration.type — the kind of asset declared.",
-  "id": "4b0000ea-0000-4000-a000-0000000000ea",
+  "id": "4b0000f2-0000-4000-a000-0000000000f2",
   "name": "asset_type",
   "namespace": "com.semanticops.srs",
   "fieldType": {

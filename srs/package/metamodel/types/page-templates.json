@@ -7,25 +7,25 @@
   "description": "ext:themes-l1 — page-level chrome for paginated output formats (pdf, docx). Ignored for non-paginated formats.",
   "fields": [
     {
-      "fieldId": "4b0000ee-0000-4000-a000-0000000000ee",
+      "fieldId": "4b0000f6-0000-4000-a000-0000000000f6",
       "order": 0,
       "required": false,
       "displayLabel": "Cover Page"
     },
     {
-      "fieldId": "4b0000ef-0000-4000-a000-0000000000ef",
+      "fieldId": "4b0000f7-0000-4000-a000-0000000000f7",
       "order": 1,
       "required": false,
       "displayLabel": "Page Header"
     },
     {
-      "fieldId": "4b0000f0-0000-4000-a000-0000000000f0",
+      "fieldId": "4b0000f8-0000-4000-a000-0000000000f8",
       "order": 2,
       "required": false,
       "displayLabel": "Page Footer"
     }
   ],
-  "id": "4c000041-0000-4000-a000-000000000041",
+  "id": "4c000044-0000-4000-a000-000000000044",
   "name": "page-templates",
   "namespace": "com.semanticops.srs",
   "version": 1

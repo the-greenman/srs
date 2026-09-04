@@ -5,7 +5,7 @@
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "Per-section wrapper overrides. Takes precedence over sectionWrapper when sectionId matches.",
-  "id": "4b0000f7-0000-4000-a000-0000000000f7",
+  "id": "4b0000ff-0000-4000-a000-0000000000ff",
   "name": "section_wrapper_overrides",
   "namespace": "com.semanticops.srs",
   "fieldType": {
@@ -13,7 +13,7 @@
     "mode": "inline",
     "cardinality": "list",
     "rangeType": {
-      "typeId": "4c000043-0000-4000-a000-000000000043",
+      "typeId": "4c000046-0000-4000-a000-000000000046",
       "typeVersion": 1
     }
   },

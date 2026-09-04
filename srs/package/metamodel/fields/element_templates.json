@@ -5,14 +5,14 @@
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "Theme.elementTemplates — templates that wrap auto-rendered content at each structural level.",
-  "id": "4b000104-0000-4000-a000-000000000104",
+  "id": "4b00010c-0000-4000-a000-00000000010c",
   "name": "element_templates",
   "namespace": "com.semanticops.srs",
   "fieldType": {
     "datatype": "ref",
     "mode": "inline",
     "rangeType": {
-      "typeId": "4c000042-0000-4000-a000-000000000042",
+      "typeId": "4c000045-0000-4000-a000-000000000045",
       "typeVersion": 1
     }
   },

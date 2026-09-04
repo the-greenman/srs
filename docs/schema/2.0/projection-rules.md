@@ -337,6 +337,48 @@ Field reused at both attachment points, not duplicated. `container.json`'s alrea
 `container` Type (srs#526) is reused verbatim for `Manifest.container` — its committed shape is
 byte-identical to `manifest.json`'s own embedded `Container` `$def`.
 
+## ext:protocol (srs#379, epic #256/#272)
+
+`Protocol`, `ProtocolStage`, and `FieldRef` are modelled as `com.semanticops.srs/metamodel` Types,
+proving `docs/schema/2.0/protocol.json` is generatable — same discipline as srs#526/#541.
+`scripts/rfc-379-closure-test.mjs` proves `emitter ⊆ committed seed`. A package-declared definition
+entity, exactly parallel to `Blueprint`, not an instance-layer one.
+
+**The shape itself was ruled, not merely modelled.** #297/#378 had shipped `protocol.json` with
+`protocol`-prefixed property names (`protocolId`, `protocolStages`, ...) matching the implementation
+of the day — the ONE package-declared definition entity in the whole schema surface that does not
+reuse the shared identity Fields (`id`/`namespace`/`name`/`version`/`description`/`createdAt`)
+unprefixed. This could not be modelled through the generator at all without either inventing
+duplicate one-off identity Fields (violating "reuse over duplication", the same principle the
+`FIELD_SPECS` comment states outright) or hand-authoring the schema outside the generator — so
+modelling this entity required ruling the shape first (a decision record, srs#379), not merely
+translating whatever was on disk. The ruled, unprefixed shape is what `protocol.json` and the
+canonical prose (`records/subsections/07-3-ext-protocol.json`) now carry.
+
+Reused Fields: `id`/`namespace`/`name`/`version`/`description`/`created_at`/`tags` (the shared
+identity block), `ai_guidance` (`#8`, for `ProtocolStage.aiGuidance` — no string alternative,
+structured over serialised), `order` (`#52`, stage-specific `desc` override), `field_id`/`type_id`
+(`#51`/`#33`, for `FieldRef`). `ProtocolStage.dependsOn` needed a Type-specific wire key
+(`stage_depends_on` → `dependsOn`, added to `NAME_OVERRIDES`) because `depends_on` (`#26`) is
+already taken by `FieldType`'s own dependent-datatype detail, an incompatible shape (single scalar,
+not a list) — same mechanism as `transition_name`/`relation_type_name`, not a new one.
+
+One documented divergence: `protocol.targetType` is a required LINEAGE reference with an
+empty-string sentinel (`oneOf: [{format:uuid}, {const:""}]`, for loose exploratory Protocols) — the
+metamodel's plain bare-UUID Field (the same shape every other LINEAGE reference in the model uses,
+e.g. `lifecycleRef`) cannot express the sentinel. `protocol-stage.outputType` has no such wrinkle
+(optional, simply omitted when absent) and needs no divergence entry.
+
+**Corpus migration, staged.** The vendored `packages/com.mudemocracy.governance/*` Protocol
+definitions — validated only by this repo's own Node/AJV pipeline (`validate-package.mjs`) — move
+to the ruled shape in the same change (`scripts/migrate-379-protocol-shape.mjs`, converting each
+stage's plain-string `aiGuidance` to `{purpose: <text>}` too). `docs/spec/examples/gallery-project-
+v2`'s vendored Protocol definition does NOT move: it is structurally validated by the **pinned Rust
+binary**'s typed `Protocol` struct (`check-gallery-conformance.mjs`), which still requires the old
+prefixed shape and rejects the new one (`deny_unknown_fields` + missing required fields) — moving it
+needs a srs-rust struct rename landing first, filed as a follow-up, per the standard revision-bump
+choreography (rfc-decision-628cf6c4).
+
 ## Emitter capabilities (srs#534)
 
 Three capabilities the emitter previously lacked, closed in this unit to unblock `theme.json` and

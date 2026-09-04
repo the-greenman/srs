@@ -5,7 +5,7 @@
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "Wraps each record. Available: {{content}}, {{record-heading}}, {{type-namespace}}, {{type-name}}, {{asset:*}}.",
-  "id": "4b0000f3-0000-4000-a000-0000000000f3",
+  "id": "4b0000fb-0000-4000-a000-0000000000fb",
   "name": "record_wrapper",
   "namespace": "com.semanticops.srs",
   "fieldType": {

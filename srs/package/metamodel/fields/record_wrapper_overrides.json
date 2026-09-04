@@ -5,7 +5,7 @@
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "Per-type wrapper overrides. Takes precedence over recordWrapper when typeId matches.",
-  "id": "4b0000f8-0000-4000-a000-0000000000f8",
+  "id": "4b000100-0000-4000-a000-000000000100",
   "name": "record_wrapper_overrides",
   "namespace": "com.semanticops.srs",
   "fieldType": {
@@ -13,7 +13,7 @@
     "mode": "inline",
     "cardinality": "list",
     "rangeType": {
-      "typeId": "4c000044-0000-4000-a000-000000000044",
+      "typeId": "4c000047-0000-4000-a000-000000000047",
       "typeVersion": 1
     }
   },

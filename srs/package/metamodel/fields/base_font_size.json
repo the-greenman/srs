@@ -5,7 +5,7 @@
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "Informative, e.g. '16px', '1rem', '11pt'. No normative rendering behaviour is derived from it.",
-  "id": "4b0000fd-0000-4000-a000-0000000000fd",
+  "id": "4b000105-0000-4000-a000-000000000105",
   "name": "base_font_size",
   "namespace": "com.semanticops.srs",
   "fieldType": {

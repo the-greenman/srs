@@ -13,12 +13,12 @@
       "displayLabel": "Type Id"
     },
     {
-      "fieldId": "4b0000f6-0000-4000-a000-0000000000f6",
+      "fieldId": "4b0000fe-0000-4000-a000-0000000000fe",
       "order": 1,
       "required": true
     }
   ],
-  "id": "4c000044-0000-4000-a000-000000000044",
+  "id": "4c000047-0000-4000-a000-000000000047",
   "name": "record-wrapper-override",
   "namespace": "com.semanticops.srs",
   "version": 1

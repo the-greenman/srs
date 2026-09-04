@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "The core question this stage answers."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "The core question this stage answers.",
+  "id": "4b0000e4-0000-4000-a000-0000000000e4",
+  "name": "question",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}
