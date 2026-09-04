@@ -1,0 +1,47 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a ConformanceScenario: its query, expected result set, and optional expected segment sequence."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:discovery (RFC-012) — a single named test scenario for the discovery conformance fixture.",
+  "fields": [
+    {
+      "fieldId": "4b000003-0000-4000-a000-000000000003",
+      "order": 0,
+      "required": true
+    },
+    {
+      "fieldId": "4b000005-0000-4000-a000-000000000005",
+      "order": 1,
+      "required": true
+    },
+    {
+      "fieldId": "4b0000e8-0000-4000-a000-0000000000e8",
+      "order": 2,
+      "required": true
+    },
+    {
+      "fieldId": "4b0000e5-0000-4000-a000-0000000000e5",
+      "order": 3,
+      "required": true,
+      "displayLabel": "Expected Instance Ids"
+    },
+    {
+      "fieldId": "4b0000e6-0000-4000-a000-0000000000e6",
+      "order": 4,
+      "required": true,
+      "displayLabel": "Exact Match"
+    },
+    {
+      "fieldId": "4b0000e9-0000-4000-a000-0000000000e9",
+      "order": 5,
+      "required": false,
+      "displayLabel": "Expected Segments"
+    }
+  ],
+  "id": "4c00003f-0000-4000-a000-00000000003f",
+  "name": "conformance-scenario",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

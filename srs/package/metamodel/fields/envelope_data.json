@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Flat map keyed by the file's relative path within the repository tree to that file's parsed JSON content. Distinct from the `meta` extension bag — this is the archive's actual file payload, not open metadata."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Flat map keyed by the file's relative path within the repository tree to that file's parsed JSON content. Distinct from the `meta` extension bag — this is the archive's actual file payload, not open metadata.",
+  "id": "4b000107-0000-4000-a000-000000000107",
+  "name": "envelope_data",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "map",
+    "valueRange": "open"
+  },
+  "version": 1
+}

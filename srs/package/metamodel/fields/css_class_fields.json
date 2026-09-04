@@ -1,0 +1,17 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "fieldIds whose values are injected as CSS classes on record wrapper elements (RFC-032 Rev-7 [T-9])."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "fieldIds whose values are injected as CSS classes on record wrapper elements (RFC-032 Rev-7 [T-9]).",
+  "id": "4b000100-0000-4000-a000-000000000100",
+  "name": "css_class_fields",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "format": "uuid",
+    "cardinality": "list"
+  },
+  "version": 1
+}

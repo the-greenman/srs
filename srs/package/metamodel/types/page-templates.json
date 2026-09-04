@@ -1,0 +1,32 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a Theme's PageTemplates: cover page, header, and footer templates."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:themes-l1 — page-level chrome for paginated output formats (pdf, docx). Ignored for non-paginated formats.",
+  "fields": [
+    {
+      "fieldId": "4b0000ee-0000-4000-a000-0000000000ee",
+      "order": 0,
+      "required": false,
+      "displayLabel": "Cover Page"
+    },
+    {
+      "fieldId": "4b0000ef-0000-4000-a000-0000000000ef",
+      "order": 1,
+      "required": false,
+      "displayLabel": "Page Header"
+    },
+    {
+      "fieldId": "4b0000f0-0000-4000-a000-0000000000f0",
+      "order": 2,
+      "required": false,
+      "displayLabel": "Page Footer"
+    }
+  ],
+  "id": "4c000041-0000-4000-a000-000000000041",
+  "name": "page-templates",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

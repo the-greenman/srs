@@ -1,0 +1,56 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a Theme's ElementTemplates: wrapper templates at each structural level, plus per-section/per-type overrides."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:themes-l1 — templates that wrap auto-rendered content at each structural level. Each receives {{content}} and returns the full output. `compositeRendererConfig` is excluded (see the file header comment above) — it resists static modelling by design.",
+  "fields": [
+    {
+      "fieldId": "4b0000f1-0000-4000-a000-0000000000f1",
+      "order": 0,
+      "required": false,
+      "displayLabel": "Document Wrapper"
+    },
+    {
+      "fieldId": "4b0000f2-0000-4000-a000-0000000000f2",
+      "order": 1,
+      "required": false,
+      "displayLabel": "Section Wrapper"
+    },
+    {
+      "fieldId": "4b0000f7-0000-4000-a000-0000000000f7",
+      "order": 2,
+      "required": false,
+      "displayLabel": "Section Wrapper Overrides"
+    },
+    {
+      "fieldId": "4b0000f3-0000-4000-a000-0000000000f3",
+      "order": 3,
+      "required": false,
+      "displayLabel": "Record Wrapper"
+    },
+    {
+      "fieldId": "4b0000f8-0000-4000-a000-0000000000f8",
+      "order": 4,
+      "required": false,
+      "displayLabel": "Record Wrapper Overrides"
+    },
+    {
+      "fieldId": "4b0000f4-0000-4000-a000-0000000000f4",
+      "order": 5,
+      "required": false,
+      "displayLabel": "Field Row"
+    },
+    {
+      "fieldId": "4b0000f5-0000-4000-a000-0000000000f5",
+      "order": 6,
+      "required": false,
+      "displayLabel": "Composite Field Row Templates"
+    }
+  ],
+  "id": "4c000042-0000-4000-a000-000000000042",
+  "name": "element-templates",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

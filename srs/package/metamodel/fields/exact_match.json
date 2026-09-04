@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "If true, the result set MUST equal expectedInstanceIds exactly. If false, the result set MUST be a superset."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "If true, the result set MUST equal expectedInstanceIds exactly. If false, the result set MUST be a superset.",
+  "id": "4b0000e6-0000-4000-a000-0000000000e6",
+  "name": "exact_match",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "boolean"
+  },
+  "version": 1
+}

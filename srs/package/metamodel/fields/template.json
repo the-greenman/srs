@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "A per-section or per-type wrapper template override string (SectionWrapperOverride.template / RecordWrapperOverride.template)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "A per-section or per-type wrapper template override string (SectionWrapperOverride.template / RecordWrapperOverride.template).",
+  "id": "4b0000f6-0000-4000-a000-0000000000f6",
+  "name": "template",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "The .srsj archive's version-gate string ([R24])."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "The .srsj archive's version-gate string ([R24]).",
+  "id": "4b000106-0000-4000-a000-000000000106",
+  "name": "srsj",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Theme.elementTemplates — templates that wrap auto-rendered content at each structural level."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Theme.elementTemplates — templates that wrap auto-rendered content at each structural level.",
+  "id": "4b000104-0000-4000-a000-000000000104",
+  "name": "element_templates",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "rangeType": {
+      "typeId": "4c000042-0000-4000-a000-000000000042",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

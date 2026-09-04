@@ -1,0 +1,48 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes an AssetDeclaration: its asset kind, locator mode, and locator/payload fields."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:themes-l1 — a named asset referenced in Theme templates via {{asset:name}}.",
+  "fields": [
+    {
+      "fieldId": "4b0000ea-0000-4000-a000-0000000000ea",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Type"
+    },
+    {
+      "fieldId": "4b0000eb-0000-4000-a000-0000000000eb",
+      "order": 1,
+      "required": true,
+      "displayLabel": "Mode"
+    },
+    {
+      "fieldId": "4b0000a7-0000-4000-a000-0000000000a7",
+      "order": 2,
+      "required": false
+    },
+    {
+      "fieldId": "4b0000d0-0000-4000-a000-0000000000d0",
+      "order": 3,
+      "required": false
+    },
+    {
+      "fieldId": "4b0000ed-0000-4000-a000-0000000000ed",
+      "order": 4,
+      "required": false,
+      "displayLabel": "Data"
+    },
+    {
+      "fieldId": "4b0000ec-0000-4000-a000-0000000000ec",
+      "order": 5,
+      "required": false,
+      "displayLabel": "Mime Type"
+    }
+  ],
+  "id": "4c000040-0000-4000-a000-000000000040",
+  "name": "asset-declaration",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

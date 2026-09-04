@@ -2790,6 +2790,169 @@ discovery-query {
 ```
 
 
+#### Generated reference: `TextSegment`
+
+**Referenced Type Id**: 4c00003d-0000-4000-a000-00000000003d
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `text-segment` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `fieldId` | string | yes | — | core | UUID of the field definition for package-resolved fields; sentinel string for special segments: 'note-title', 'note-section', 'tag', 'label'. |
+| `fieldName` | string | yes | — | core | Field name (snake_case) for package-resolved fields; sentinel string for special segments matching fieldId sentinels; or NoteSection.name for named special segments. |
+| `text` | string | yes | — | core | The raw stored text value of a TextSegment. Normalization is applied at match time, not at segment construction time. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/discovery.json#/$defs/TextSegment>
+
+#### Compact pseudo-IDL
+
+```typescript
+text-segment {
+  fieldId: string // UUID of the field definition for package-resolved fields; sentinel string for special segments: 'note-title', 'note-section', 'tag', 'label'.
+  fieldName: string // Field name (snake_case) for package-resolved fields; sentinel string for special segments matching fieldId sentinels; or NoteSection.name for named special segments.
+  text: string // The raw stored text value of a TextSegment. Normalization is applied at match time, not at segment construction time.
+}
+```
+
+
+#### Generated reference: `ExpectedSegments`
+
+**Referenced Type Id**: 4c00003e-0000-4000-a000-00000000003e
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `expected-segments` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `instanceId` | string | yes | format: uuid | core | Stable UUID identity of a Tier 0 (Note) or Tier 2 (Record) instance — distinct from a definition's id+namespace/name/version lineage. |
+| `fieldName` | string | yes | — | core | Field name (snake_case) for package-resolved fields; sentinel string for special segments matching fieldId sentinels; or NoteSection.name for named special segments. |
+| `segments` | string[] | yes | — | core | The exact ordered list of TextSegment.text values expected for one field of one instance (ExpectedSegments). |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/discovery.json#/$defs/ExpectedSegments>
+
+#### Compact pseudo-IDL
+
+```typescript
+expected-segments {
+  instanceId: string // Stable UUID identity of a Tier 0 (Note) or Tier 2 (Record) instance — distinct from a definition's id+namespace/name/version lineage.
+  fieldName: string // Field name (snake_case) for package-resolved fields; sentinel string for special segments matching fieldId sentinels; or NoteSection.name for named special segments.
+  segments: string[] // The exact ordered list of TextSegment.text values expected for one field of one instance (ExpectedSegments).
+}
+```
+
+
+#### Generated reference: `ConformanceScenario`
+
+**Referenced Type Id**: 4c00003f-0000-4000-a000-00000000003f
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `conformance-scenario` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
+| `description` | string | yes | — | core | Human-readable description of this entity. |
+| `query` | ref → `discovery-query` (inline) | yes | — | core | The DiscoveryQuery a ConformanceScenario executes against the fixture repo. |
+| `expectedInstanceIds` | string[] | yes | format: uuid | core | Minimum required result set for a ConformanceScenario. For exactMatch:true scenarios, this is also the maximum. |
+| `exactMatch` | boolean | yes | — | core | If true, the result set MUST equal expectedInstanceIds exactly. If false, the result set MUST be a superset. |
+| `expectedSegments` | ref → `expected-segments` (inline) | no | — | core | Optional structured expectation over one field of one instance's exact ordered TextSegment sequence (ConformanceScenario.expectedSegments). |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/discovery.json#/$defs/ConformanceScenario>
+
+#### Compact pseudo-IDL
+
+```typescript
+conformance-scenario {
+  name: string // Machine-readable name within the namespace; snake_case.
+  description: string // Human-readable description of this entity.
+  query: ref → `discovery-query` (inline) // The DiscoveryQuery a ConformanceScenario executes against the fixture repo.
+  expectedInstanceIds: string[] // Minimum required result set for a ConformanceScenario. For exactMatch:true scenarios, this is also the maximum.
+  exactMatch: boolean // If true, the result set MUST equal expectedInstanceIds exactly. If false, the result set MUST be a superset.
+  expectedSegments?: ref → `expected-segments` (inline) // Optional structured expectation over one field of one instance's exact ordered TextSegment sequence (ConformanceScenario.expectedSegments).
+}
+```
+
+
+#### Generated reference: `Theme`
+
+**Referenced Type Id**: 4c000047-0000-4000-a000-000000000047
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `theme` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
+| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
+| `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
+| `description` | string | yes | — | core | Human-readable description of this entity. |
+| `targets` | string[] | yes | minItems: 1 | core | Output formats a Theme is designed for (e.g. 'html', 'markdown'). MUST contain at least one entry (Rule [T-1b]). |
+| `cssClassFields` | string[] | no | format: uuid | core | fieldIds whose values are injected as CSS classes on record wrapper elements (RFC-032 Rev-7 [T-9]). |
+| `pageTemplates` | ref → `page-templates` (inline) | no | — | core | Theme.pageTemplates — page-level chrome for paginated output formats. |
+| `elementTemplates` | ref → `element-templates` (inline) | no | — | core | Theme.elementTemplates — templates that wrap auto-rendered content at each structural level. |
+| `stylesheet` | ref → `stylesheet-declaration` (inline) | no | — | core | Theme.stylesheet — the theme's CSS declaration. |
+| `typography` | ref → `typography-hints` (inline) | no | — | core | Theme.typography — informative typography hints. |
+| `tags` | string[] | no | — | core | Free-form classification tags. |
+| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
+| `updatedAt` | date-time | no | — | core | ISO-8601 timestamp of the most recent update. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/theme.json>
+
+#### Compact pseudo-IDL
+
+```typescript
+theme {
+  id: string // Globally unique, stable UUID identity of this entity.
+  namespace: string // Reverse-DNS logical grouping.
+  name: string // Machine-readable name within the namespace; snake_case.
+  version: integer // Positive integer version within the UUID lineage.
+  description: string // Human-readable description of this entity.
+  targets: string[] // Output formats a Theme is designed for (e.g. 'html', 'markdown'). MUST contain at least one entry (Rule [T-1b]).
+  cssClassFields?: string[] // fieldIds whose values are injected as CSS classes on record wrapper elements (RFC-032 Rev-7 [T-9]).
+  pageTemplates?: ref → `page-templates` (inline) // Theme.pageTemplates — page-level chrome for paginated output formats.
+  elementTemplates?: ref → `element-templates` (inline) // Theme.elementTemplates — templates that wrap auto-rendered content at each structural level.
+  stylesheet?: ref → `stylesheet-declaration` (inline) // Theme.stylesheet — the theme's CSS declaration.
+  typography?: ref → `typography-hints` (inline) // Theme.typography — informative typography hints.
+  tags?: string[] // Free-form classification tags.
+  createdAt: date-time // ISO-8601 creation timestamp.
+  updatedAt?: date-time // ISO-8601 timestamp of the most recent update.
+}
+```
+
+
+#### Generated reference: `SrsjEnvelope`
+
+**Referenced Type Id**: 4c000048-0000-4000-a000-000000000048
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `srsj-envelope` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `srsj` | string | yes | — | core | The .srsj archive's version-gate string ([R24]). |
+| `manifest` | ref → `manifest` (inline) | yes | — | core | The archived repository's Manifest (validates against manifest.json). |
+| `data` | map<string, open> | yes | — | core | Flat map keyed by the file's relative path within the repository tree to that file's parsed JSON content. Distinct from the `meta` extension bag — this is the archive's actual file payload, not open metadata. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/srsj-envelope.json>
+
+#### Compact pseudo-IDL
+
+```typescript
+srsj-envelope {
+  srsj: string // The .srsj archive's version-gate string ([R24]).
+  manifest: ref → `manifest` (inline) // The archived repository's Manifest (validates against manifest.json).
+  data: map<string, open> // Flat map keyed by the file's relative path within the repository tree to that file's parsed JSON content. Distinct from the `meta` extension bag — this is the archive's actual file payload, not open metadata.
+}
+```
+
+
 #### ext:cross-field-validation
 
 **Content**: > **Formalised by**: RFC-019 (srs#139). The `CrossFieldRule` shape and `validationRules` property are formally specified by RFC-019; refer to it for normative conformance rules (R0–R11).

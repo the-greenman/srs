@@ -1,0 +1,30 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes an SrsjEnvelope: the version gate, the archived Manifest, and the flattened file-tree payload."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-038/RFC-039 — the {srsj, manifest, data} bundle envelope for a .srsj repository archive. `srsj` is the archive format version-gate string ([R24]); `manifest` is the archived repository's Manifest; `data` is a flat map keyed by each file's relative path within the repository tree to that file's parsed JSON content.",
+  "fields": [
+    {
+      "fieldId": "4b000106-0000-4000-a000-000000000106",
+      "order": 0,
+      "required": true
+    },
+    {
+      "fieldId": "4b000108-0000-4000-a000-000000000108",
+      "order": 1,
+      "required": true
+    },
+    {
+      "fieldId": "4b000107-0000-4000-a000-000000000107",
+      "order": 2,
+      "required": true,
+      "displayLabel": "Data"
+    }
+  ],
+  "id": "4c000048-0000-4000-a000-000000000048",
+  "name": "srsj-envelope",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

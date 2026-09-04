@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "The raw stored text value of a TextSegment. Normalization is applied at match time, not at segment construction time."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "The raw stored text value of a TextSegment. Normalization is applied at match time, not at segment construction time.",
+  "id": "4b0000e4-0000-4000-a000-0000000000e4",
+  "name": "text",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

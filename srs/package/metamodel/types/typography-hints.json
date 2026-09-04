@@ -1,0 +1,44 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a Theme's TypographyHints: font and sizing hints."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:themes-l1 — informative typography declarations. No normative rendering behaviour is derived from these values.",
+  "fields": [
+    {
+      "fieldId": "4b0000fa-0000-4000-a000-0000000000fa",
+      "order": 0,
+      "required": false,
+      "displayLabel": "Base Font"
+    },
+    {
+      "fieldId": "4b0000fb-0000-4000-a000-0000000000fb",
+      "order": 1,
+      "required": false,
+      "displayLabel": "Heading Font"
+    },
+    {
+      "fieldId": "4b0000fc-0000-4000-a000-0000000000fc",
+      "order": 2,
+      "required": false,
+      "displayLabel": "Mono Font"
+    },
+    {
+      "fieldId": "4b0000fd-0000-4000-a000-0000000000fd",
+      "order": 3,
+      "required": false,
+      "displayLabel": "Base Font Size"
+    },
+    {
+      "fieldId": "4b0000fe-0000-4000-a000-0000000000fe",
+      "order": 4,
+      "required": false,
+      "displayLabel": "Line Height"
+    }
+  ],
+  "id": "4c000046-0000-4000-a000-000000000046",
+  "name": "typography-hints",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}
