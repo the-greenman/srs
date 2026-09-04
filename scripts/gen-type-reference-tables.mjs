@@ -84,6 +84,10 @@ const RAW_SCHEMA_LINKS = {
   "export-config": "https://srs.semanticops.com/schema/2.0/composition.json#/$defs/ExportConfig",
   "field-view": "https://srs.semanticops.com/schema/2.0/view.json#/$defs/FieldView",
   "record-property-view": "https://srs.semanticops.com/schema/2.0/view.json#/$defs/RecordPropertyView",
+  // srs#379: ext:protocol. Protocol links its own file; ProtocolStage/FieldRef are nested $defs.
+  protocol: "https://srs.semanticops.com/schema/2.0/protocol.json",
+  "protocol-stage": "https://srs.semanticops.com/schema/2.0/protocol.json#/$defs/ProtocolStage",
+  "field-ref": "https://srs.semanticops.com/schema/2.0/protocol.json#/$defs/FieldRef",
 };
 
 async function findJsonFiles(dir) {

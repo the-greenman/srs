@@ -1,0 +1,26 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a FieldRef: the Field it points to, and which Type it appears in when the same fieldId appears in several."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:protocol — a reference to a Field within a Type, optionally scoped to which Type it appears in.",
+  "fields": [
+    {
+      "fieldId": "4b000033-0000-4000-a000-000000000033",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Field"
+    },
+    {
+      "fieldId": "4b000021-0000-4000-a000-000000000021",
+      "order": 1,
+      "required": false,
+      "displayLabel": "Type Id"
+    }
+  ],
+  "id": "4c00003d-0000-4000-a000-00000000003d",
+  "name": "field-ref",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

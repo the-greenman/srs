@@ -1,0 +1,17 @@
+{
+  "instanceId": "fb31a682-2b5c-42d3-b690-fbd233b9d2ba",
+  "typeId": "2a000014-0000-4000-a000-000000000014",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "generated-type-reference",
+  "fieldValues": {
+    "title": "Generated reference: `Protocol`",
+    "referenced_type_id": "4c00003f-0000-4000-a000-00000000003f",
+    "referenced_type_version": 1,
+    "presentation_profile": "property-table-and-pseudo-idl",
+    "content": "Generated from the resolved effective `protocol` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.\n\n| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |\n|---|---|---|---|---|---|\n| `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |\n| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |\n| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |\n| `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |\n| `description` | string | no | — | core | Human-readable description of this entity. |\n| `targetType` | string | yes | format: uuid | core | The Record type this Protocol converges on — a LINEAGE reference (bare UUID; rfc-decision-c8704763), never the canonical namespace/name@version form (DISPLAY-only, never stored). Empty string for loose, exploratory Protocols whose output is input context for a tighter Protocol. |\n| `stages` | ref → `protocol-stage` (inline)[] | yes | — | core | The stages, in declaration order. Execution sequence is determined by dependsOn resolution, not array position; order is the declared composition order (Invariant 31). |\n| `tags` | string[] | no | — | core | Free-form classification tags. |\n| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |\n\nRaw JSON Schema: <https://srs.semanticops.com/schema/2.0/protocol.json>\n\n#### Compact pseudo-IDL\n\n```typescript\nprotocol {\n  id: string // Globally unique, stable UUID identity of this entity.\n  namespace: string // Reverse-DNS logical grouping.\n  name: string // Machine-readable name within the namespace; snake_case.\n  version: integer // Positive integer version within the UUID lineage.\n  description?: string // Human-readable description of this entity.\n  targetType: string // The Record type this Protocol converges on — a LINEAGE reference (bare UUID; rfc-decision-c8704763), never the canonical namespace/name@version form (DISPLAY-only, never stored). Empty string for loose, exploratory Protocols whose output is input context for a tighter Protocol.\n  stages: ref → `protocol-stage` (inline)[] // The stages, in declaration order. Execution sequence is determined by dependsOn resolution, not array position; order is the declared composition order (Invariant 31).\n  tags?: string[] // Free-form classification tags.\n  createdAt: date-time // ISO-8601 creation timestamp.\n}\n```"
+  },
+  "createdAt": "2026-09-04T08:43:02.356360979+00:00",
+  "updatedAt": "2026-09-04T08:43:02.356364863+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "The Record Fields this stage feeds (Invariant 30)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "The Record Fields this stage feeds (Invariant 30).",
+  "id": "4b0000e5-0000-4000-a000-0000000000e5",
+  "name": "contributes_to",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "cardinality": "list",
+    "rangeType": {
+      "typeId": "4c00003d-0000-4000-a000-00000000003d",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

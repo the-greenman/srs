@@ -1,0 +1,70 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a ProtocolStage: its identity, composition order, epistemic dependencies, and what it contributes."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:protocol — a named stage in a Protocol. Stages carry epistemic dependencies (dependsOn), not merely ordering: a stage may proceed only when its dependencies are sufficient.",
+  "fields": [
+    {
+      "fieldId": "4b0000e1-0000-4000-a000-0000000000e1",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Stage Id"
+    },
+    {
+      "fieldId": "4b000003-0000-4000-a000-000000000003",
+      "order": 1,
+      "required": true
+    },
+    {
+      "fieldId": "4b000034-0000-4000-a000-000000000034",
+      "order": 2,
+      "required": true
+    },
+    {
+      "fieldId": "4b000023-0000-4000-a000-000000000023",
+      "order": 3,
+      "required": false
+    },
+    {
+      "fieldId": "4b0000e4-0000-4000-a000-0000000000e4",
+      "order": 4,
+      "required": false
+    },
+    {
+      "fieldId": "4b0000e2-0000-4000-a000-0000000000e2",
+      "order": 5,
+      "required": false,
+      "displayLabel": "Depends On"
+    },
+    {
+      "fieldId": "4b0000e3-0000-4000-a000-0000000000e3",
+      "order": 6,
+      "required": false,
+      "displayLabel": "Completion Criteria"
+    },
+    {
+      "fieldId": "4b0000e5-0000-4000-a000-0000000000e5",
+      "order": 7,
+      "required": false,
+      "displayLabel": "Contributes To"
+    },
+    {
+      "fieldId": "4b0000e6-0000-4000-a000-0000000000e6",
+      "order": 8,
+      "required": false,
+      "displayLabel": "Output Type"
+    },
+    {
+      "fieldId": "4b000008-0000-4000-a000-000000000008",
+      "order": 9,
+      "required": false,
+      "displayLabel": "AI Guidance"
+    }
+  ],
+  "id": "4c00003e-0000-4000-a000-00000000003e",
+  "name": "protocol-stage",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

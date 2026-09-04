@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Stable key within this Protocol. Referenced by other stages' dependsOn (Invariant 29)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Stable key within this Protocol. Referenced by other stages' dependsOn (Invariant 29).",
+  "id": "4b0000e1-0000-4000-a000-0000000000e1",
+  "name": "stage_id",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

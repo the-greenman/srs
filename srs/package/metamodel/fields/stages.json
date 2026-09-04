@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "The stages, in declaration order. Execution sequence is determined by dependsOn resolution, not array position; order is the declared composition order (Invariant 31)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "The stages, in declaration order. Execution sequence is determined by dependsOn resolution, not array position; order is the declared composition order (Invariant 31).",
+  "id": "4b0000e8-0000-4000-a000-0000000000e8",
+  "name": "stages",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "cardinality": "list",
+    "rangeType": {
+      "typeId": "4c00003e-0000-4000-a000-00000000003e",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

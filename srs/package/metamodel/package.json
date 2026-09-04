@@ -223,7 +223,15 @@
     "fields/visible.json",
     "fields/editor_hint_override.json",
     "fields/composite_renderer.json",
-    "fields/property.json"
+    "fields/property.json",
+    "fields/stage_id.json",
+    "fields/stage_depends_on.json",
+    "fields/completion_criteria.json",
+    "fields/question.json",
+    "fields/contributes_to.json",
+    "fields/output_type.json",
+    "fields/target_type.json",
+    "fields/stages.json"
   ],
   "id": "4a000004-0000-4000-a000-000000000004",
   "name": "metamodel",
@@ -290,7 +298,10 @@
     "types/view-ai-guidance.json",
     "types/field-view.json",
     "types/record-property-view.json",
-    "types/view.json"
+    "types/view.json",
+    "types/field-ref.json",
+    "types/protocol-stage.json",
+    "types/protocol.json"
   ],
   "version": "1.1.0"
 }
