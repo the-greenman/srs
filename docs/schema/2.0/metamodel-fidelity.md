@@ -74,3 +74,30 @@ datatype row above (approximated, deliberately lossy `{}`) — the same mechanis
 former default-value facet used, generalized here to "the value is shaped by the sibling `typeId`'s
 resolved Type," which the frozen `dependent` datatype was never designed to express precisely but
 covers adequately as a documented lossy shape.
+
+## Later instance-layer waves (srs#541, srs#379, srs#534)
+
+The same JSON Schema 2020-12 column and verification discipline was extended, in three further
+units, to the remaining generatable instance-layer entities named in `docs/schema/2.0/generation-ledger.md`
+(the authoritative per-schema census — consult it for the full source-Type/exclusion/closing-issue
+detail this section does not repeat):
+
+- **srs#541** (`scripts/rfc-541-closure-test.mjs`) — `RelationTypeDefinition`, `Manifest`, `View`
+  (modulo `fieldViews`), `Composition` (modulo `DocumentSection.source`), plus `ExportConfig`,
+  `FieldView`, and `RecordPropertyView`. `View.fieldViews` and `DocumentSection.source` are named
+  v2.1 exclusions (srs#543) — both are JSON-Schema `oneOf` discriminated unions the metamodel's
+  `FieldType` system cannot yet express (every Type composes to one flat object); not a fidelity gap
+  in the sense this dashboard tracks, since no emitter attempts them.
+- **srs#379** (`scripts/rfc-379-closure-test.mjs`) — `Protocol`, `ProtocolStage`, `FieldRef`, after
+  the ext:protocol prose/implementation shape divergence was ruled (unprefixed identity properties).
+- **srs#534** (`scripts/rfc-534-closure-test.mjs`) — `Theme` and `discovery.json`'s `DiscoveryQuery`/
+  `TextSegment`/`ExpectedSegments`/`ConformanceScenario`, plus the standalone `discovery.json` file
+  via the new `emitDefsOnlyBundle` capability, and the new `srsj-envelope.json` (`SrsjEnvelope`).
+  Two properties, `Theme.assets` and `DiscoveryQuery.tier`, are modelled and closure-proven but
+  excluded from the *live* metamodel corpus for tooling-parity reasons (the pinned srs-rust binary's
+  embedded `field.json` predates the two new emitter capabilities that would express them) — tracked
+  at srs-rust#932, same disposition as the `FieldAssignment.description`/`packageDependencies`
+  precedent (srs-rust#868/#867).
+
+Per-entity exclusions and documented divergences for all of the above live in
+`docs/schema/2.0/projection-rules.md`'s divergence register, not duplicated here.
