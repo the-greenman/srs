@@ -6,8 +6,9 @@
  * section of RFC-040, "Unit 3 (emitter)" row): a full regenerate of the two frozen meta-model
  * entities, `docs/schema/2.0/field.json` and `docs/schema/2.0/type.json`, from the
  * `com.semanticops.srs/metamodel` package MUST produce content identical to what is committed —
- * modulo only the documented-divergence register (docs/schema/2.0/projection-rules.md), whose one
- * entry (`type.aiGuidance`, booked to #260) is excluded from this comparison by name, never silently.
+ * modulo only the documented-divergence register (docs/schema/2.0/projection-rules.md): `type.aiGuidance`
+ * (booked to #260) and `field.$defs.field-type.allowedValues.items` (srs#534, permanent — see below),
+ * each excluded from this comparison by name, never silently.
  *
  * This is a whole-FILE byte check (unlike tests/rfc-035/run.mjs, which checks the emitter against its
  * OWN committed goldens under tests/rfc-035/goldens/ — determinism, not seed conformance). Before this
@@ -27,11 +28,26 @@ const SEED = join(REPO, "docs/schema/2.0");
 const load = (p) => JSON.parse(readFileSync(p, "utf8"));
 const ser = (obj) => JSON.stringify(obj, null, 2) + "\n";
 
-// The one sanctioned exception (docs/schema/2.0/projection-rules.md "Documented-divergence
-// register"): the metamodel unifies type-level guidance on the full AiGuidance value-object; the
-// frozen seed carries a narrower inline shape, intentionally, booked to #260. Named explicitly, never
-// a wildcard — a future survivor here is asserted-and-documented, not silently passed.
-const DIVERGENCE_PATHS = { type: ["properties", "aiGuidance"] };
+// The sanctioned exceptions (docs/schema/2.0/projection-rules.md "Documented-divergence
+// register"), one per entity (this check supports a single path per entity — two entries land here
+// because they land on the two different frozen entities, not because either entity carries more
+// than one):
+//   - `type`: the metamodel unifies type-level guidance on the full AiGuidance value-object; the
+//     frozen seed carries a narrower inline shape, intentionally, booked to #260.
+//   - `field`: srs#534 widens field.json's own `field-type.allowedValues.items` to admit both
+//     string AND integer (so a Field like `tier` — an integer-closed domain — can validate against
+//     the frozen bootstrap schema at all). The metamodel's own `allowed_values` Field (#20, which
+//     self-describes this very property) can declare only ONE scalar datatype — there is no
+//     union/either-type primitive in the FieldType model — so the metamodel's own regenerated shape
+//     stays string-only. This is a permanent, structural divergence (a meta-circularity limit, not a
+//     regression), not booked to any future unit — the union primitive it would take is its own,
+//     separate emitter-capability gap, no smaller than #534's other three.
+// Named explicitly, never a wildcard — a future survivor here is asserted-and-documented, not
+// silently passed.
+const DIVERGENCE_PATHS = {
+  type: ["properties", "aiGuidance"],
+  field: ["$defs", "com.semanticops.srs__field-type__v1", "properties", "allowedValues", "items"],
+};
 
 function withoutDivergence(obj, path) {
   if (!path) return obj;

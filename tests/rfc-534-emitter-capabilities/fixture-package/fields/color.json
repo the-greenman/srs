@@ -1,0 +1,8 @@
+{
+  "id": "f5340004-0000-4000-a000-000000000004",
+  "namespace": "test.rfc534",
+  "name": "color",
+  "version": 1,
+  "description": "A hex color string.",
+  "fieldType": { "datatype": "string" }
+}

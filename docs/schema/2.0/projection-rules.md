@@ -208,6 +208,7 @@ passed:
 | Entity.property | Divergence | Disposition |
 |---|---|---|
 | `type.aiGuidance` | Metamodel unifies type-level guidance on the full `AiGuidance` value-object (adds `examples` + required `purpose`); the frozen seed carries a narrowed inline `{purpose, extraction, negativeGuidance}`. | Intentional upgrade by the self-hosted model; #260 regularizes the seed at the authorship flip (RFC-035 OQ4). |
+| `field.$defs.field-type.allowedValues.items.type` | srs#534 widens the frozen seed's `allowedValues.items.type` to `["string","integer"]` (so an integer-closed-domain Field like `tier` can validate at all); the metamodel's own `allowed_values` Field (#20, which self-describes this very property) can declare only ONE scalar datatype — no union/either-type primitive exists in the FieldType model — so it stays emitted as plain `"string"`. | Permanent, structural (a meta-circularity limit, not booked to any future unit — the union primitive it would take is its own emitter-capability gap, no smaller than #534's other three). `scripts/lib/schema-closure.mjs`'s `isSub` and `scripts/rfc-033-closure-test.mjs`'s `authoritativeEq` both special-case a seed `type` union: an emitted scalar type is subset-consistent when it is a member of the seed's declared array. `scripts/check-schema-regenerate-drift.mjs`'s byte-level `DIVERGENCE_PATHS.field` names this same divergence explicitly (the byte check has no such generic union rule). |
 
 **Parked, not a divergence (RFC-040 Unit 3, srs#479):** `FieldAssignment.description` values are authored in
 `gen-metamodel-package.mjs`'s `TYPE_SPECS` (byte-matched against the frozen seed's per-property annotation
@@ -335,6 +336,49 @@ not the row shapes themselves.
 Field reused at both attachment points, not duplicated. `container.json`'s already-modelled
 `container` Type (srs#526) is reused verbatim for `Manifest.container` — its committed shape is
 byte-identical to `manifest.json`'s own embedded `Container` `$def`.
+
+## Emitter capabilities (srs#534)
+
+Three capabilities the emitter previously lacked, closed in this unit to unblock `theme.json` and
+the standalone `discovery.json` file (both parked on exactly these gaps by srs#526/PR#533 and
+srs#541/PR#544):
+
+- **Map-of-$ref values.** `fieldType.datatype: "map"` previously only accepted a scalar
+  `valueRange` (a portable scalar datatype) or `"open"`. It now also accepts `valueRange: "ref"`
+  with a `rangeType` (ExactTypeRef) and optional `mode` — the same range-resolution contract the
+  top-level `datatype: "ref"` case already uses (`schema-emitter.mjs`'s `renderNode` resolves the
+  range and, for `mode !== "reference"`, ensures its `$def` via `ensureDef` before projection).
+  Projects to `{ type: "object", additionalProperties: { $ref: "#/$defs/<rangeDefKey>" } }` (inline)
+  or the id-shape (`mode: "reference"`), mirroring the plain `map` row's existing
+  `additionalProperties: <scalar-node|true>` but with a `$ref`/id-shape value instead of a scalar
+  node. Example: `Theme.assets` (`docs/schema/2.0/theme.json`), a map of asset names to inline
+  `AssetDeclaration` objects.
+- **Untyped integer enum.** `valueDomain: "closed"` previously was meaningful only for
+  `datatype: "string"` (projecting `{ type: "string", enum: [...] }`). It now also applies to
+  `datatype: "integer"`, projecting to a **bare** `{ enum: [...] }` with **no `type` keyword** —
+  valid JSON Schema (an enum alone fully constrains the value) and the exact hand-authored shape
+  the committed seed already uses for e.g. `discovery.json`'s `DiscoveryQuery.tier`
+  (`{"enum":[0,2]}`). Deliberately distinct from the string+closed row: an untyped integer enum is
+  never re-typed to `{type:"integer", enum:[...]}`.
+- **$defs-only bundle emission (`emitDefsOnlyBundle`).** `emitEntity` always emits a top-level
+  object body (`type`, `properties`, `required`, ...). Some hand-authored files have no such
+  top-level entity at all — `discovery.json`'s top level is only `$schema`/`$id`/`title`/
+  `description` followed directly by `$defs` (`DiscoveryQuery`/`TextSegment`/
+  `ConformanceScenario`/`ExpectedSegments`), with no single "the file's own entity". A new entry
+  point, `emitDefsOnlyBundle(ctx, {id, title, description, entities})`, emits exactly that shape:
+  each named Type becomes one `$defs` entry keyed by its PascalCase spelling (matching the ad hoc
+  PascalCase style the hand-authored `$defs`-only seed already uses — distinct from the
+  emitter-owned `<ns>__<name>__v<version>` spelling used everywhere else, which still applies to
+  any NESTED inline ref within a bundle member). Structural closure (`schema-closure.mjs`) fully
+  resolves `$ref`s before comparing, so `$defs` key spelling is never load-bearing for a closure
+  proof — this capability only matters for producing the FILE-level shape, not for the per-entity
+  structural comparison (which continues to compare each entity independently, the same technique
+  `rfc-541-closure-test.mjs` already established for `FieldView`/`RecordPropertyView` nested inside
+  `view.json`).
+
+`docs/schema/2.0/theme.json` and the standalone `discovery.json` file are now both closure-proven
+(`scripts/rfc-534-closure-test.mjs`) — see the ledger's "Emitter capabilities" section for the
+per-entity exclusion list. Authorship does not flip for either file (srs#260 is owner-held).
 
 ## Amendment note — RFC-033 [R4](b), superseded by RFC-040's byte-closure contract
 

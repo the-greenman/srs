@@ -61,6 +61,16 @@ export const NAME_OVERRIDES = {
   renderer_roles: "roles",
   export_format: "format",
   sort_direction: "direction",
+  // srs#534: theme.json's nested value objects and the srsj-envelope entity each reuse a shared
+  // Field under a Type-specific wire key, or need a Type-specific enum domain colliding in name
+  // with an existing, differently-scoped Field. Same mechanism as every entry above.
+  segment_field_id: "fieldId",
+  segment_field_name: "fieldName",
+  asset_type: "type",
+  asset_mode: "mode",
+  asset_data: "data",
+  stylesheet_mode: "mode",
+  envelope_data: "data",
 };
 /** snake_case -> lowerCamelCase, deterministic and injective over the in-scope metamodel field names. */
 export function jsonKey(fieldName) {
@@ -421,6 +431,15 @@ function renderNode(ctx, ft, defs) {
     if (ft.mode !== "reference") ensureDef(ctx, parts, defs); // inline -> a $def; reference -> none
     return projectField(resolvedFt, defs);
   }
+  if (ft.datatype === "map" && ft.valueRange === "ref") {
+    // srs#534 — map-of-$ref: same range-resolution/ensureDef contract as the plain `ref` datatype
+    // above, just with the resolved rangeType feeding projectField's map branch instead of its ref
+    // branch.
+    const parts = resolveRange(ctx, ft.rangeType);
+    const resolvedFt = { ...ft, rangeType: { ...ft.rangeType, ...parts } };
+    if (ft.mode !== "reference") ensureDef(ctx, parts, defs);
+    return projectField(resolvedFt, defs);
+  }
   return projectField(ft, defs);
 }
 
@@ -474,7 +493,7 @@ export function orderedFieldAssignments(ctx, typeName) {
   return orderedFields;
 }
 
-function emitBody(ctx, typeName, defs) {
+export function emitBody(ctx, typeName, defs) {
   const t = ctx.typesByName[typeName];
   if (!t) throw new Error(`schema-emitter: unknown type ${typeName}`);
   const orderedFields = orderedFieldAssignments(ctx, typeName);
@@ -586,4 +605,39 @@ export function readDataModelRevision(manifestPath) {
   } catch {
     return 0;
   }
+}
+
+// --- srs#534: $defs-only bundle emission -----------------------------------------------------
+/** PascalCase spelling of a kebab-case Type.name, for $defs-only bundle keys only — matches the ad
+ * hoc PascalCase style the hand-authored $defs-only seed already uses (e.g. discovery.json's
+ * `$defs.DiscoveryQuery`). Not used anywhere else in this file (every other $defs key is the
+ * emitter-owned `<ns>__<name>__v<version>` spelling, Change D). */
+function pascalCase(kebab) {
+  return kebab.replace(/(^|-)([a-z0-9])/g, (_, __, c) => c.toUpperCase());
+}
+
+/**
+ * Emit a $defs-only bundle (srs#534): a schema FILE whose top level carries no object body of its
+ * own — `$schema`/`$id`/`title`/`description` then `$defs` directly, no `type`/`properties`/
+ * `required` at the top. Distinct from `emitEntity`, which always emits a top-level object body;
+ * needed for a file like `discovery.json` where NONE of its several value-object Types is "the"
+ * file's own entity. Each named Type becomes one top-level `$defs` entry, keyed by its PascalCase
+ * spelling. An inline ref from one bundle member to another still goes through `emitBody`'s own
+ * pre-order-DFS `ensureDef` mechanism unchanged, landing in its own emitter-owned nested `$def` —
+ * harmless duplication for the Tier-2 structural closure comparison this bundle exists to feed,
+ * since `schema-closure.mjs` fully resolves `$ref`s before comparing (`$defs` key spelling is
+ * never load-bearing for that comparison).
+ */
+export function emitDefsOnlyBundle(ctx, { id, title, description, entities }) {
+  const defs = {};
+  for (const name of entities) {
+    const resolvedCtx = resolveForEmission(ctx, name);
+    const t = resolvedCtx.typesByName[name];
+    defs[pascalCase(t.name)] = emitBody(resolvedCtx, name, defs);
+  }
+  const out = { $schema: "https://json-schema.org/draft/2020-12/schema", $id: id };
+  if (title) out.title = title;
+  if (description) out.description = description;
+  out.$defs = defs;
+  return out;
 }

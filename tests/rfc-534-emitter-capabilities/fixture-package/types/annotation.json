@@ -1,0 +1,10 @@
+{
+  "id": "t5340001-0000-4000-a000-000000000001",
+  "namespace": "test.rfc534",
+  "name": "annotation",
+  "version": 1,
+  "description": "A single named annotation value object.",
+  "fields": [
+    { "fieldId": "f5340004-0000-4000-a000-000000000004", "order": 0, "required": true }
+  ]
+}

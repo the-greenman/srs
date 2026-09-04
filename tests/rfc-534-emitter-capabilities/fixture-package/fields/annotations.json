@@ -1,0 +1,12 @@
+{
+  "id": "f5340003-0000-4000-a000-000000000003",
+  "namespace": "test.rfc534",
+  "name": "annotations",
+  "version": 1,
+  "description": "Named annotations, each an inline Annotation (srs#534 map-of-$ref capability).",
+  "fieldType": {
+    "datatype": "map",
+    "valueRange": "ref",
+    "rangeType": { "typeId": "t5340001-0000-4000-a000-000000000001", "typeVersion": 1 }
+  }
+}

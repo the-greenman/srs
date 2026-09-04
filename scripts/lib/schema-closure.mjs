@@ -79,6 +79,15 @@ export function isSub(e, s, path, errs) {
       } else if (k === "required") {
         const sreq = new Set(s.required || []);
         for (const r of v) if (!sreq.has(r)) errs.push(`${path}.required: emitter requires "${r}" not required in seed`);
+      } else if (k === "type" && Array.isArray(s.type) && !Array.isArray(v)) {
+        // srs#534: a seed `type` keyword may declare a union (e.g. ["string","integer"]) wider than
+        // any single emitter's scalar choice — subset-consistent when the emitted type is one of the
+        // seed's allowed types. Real case: field.json's `allowedValues.items.type` is widened to
+        // ["string","integer"] (so an integer-closed-domain Field like `tier` can validate at all),
+        // while the metamodel's own `allowed_values` Field can describe only ONE scalar datatype per
+        // Field (no union primitive) — its emitted "string" is still a valid member of the seed's
+        // wider allowed set, not a divergence.
+        if (!s.type.includes(v)) errs.push(`${path}.type: emitter type "${v}" not among seed's allowed types ${JSON.stringify(s.type)}`);
       } else {
         if (!(k in s)) { errs.push(`${path}.${k}: emitter keyword "${k}" absent from seed`); continue; }
         isSub(v, s[k], `${path}.${k}`, errs);
