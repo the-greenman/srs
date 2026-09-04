@@ -61,6 +61,10 @@ export const NAME_OVERRIDES = {
   renderer_roles: "roles",
   export_format: "format",
   sort_direction: "direction",
+  // srs#379 (ext:protocol): `depends_on` (#26, FieldType's own dependent-datatype detail) is
+  // already taken with an incompatible shape (single scalar, not a list) — same mechanism as
+  // above, a Type-specific wire key for a Field minted under its own name to avoid the collision.
+  stage_depends_on: "dependsOn",
 };
 /** snake_case -> lowerCamelCase, deterministic and injective over the in-scope metamodel field names. */
 export function jsonKey(fieldName) {

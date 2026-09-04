@@ -266,6 +266,24 @@
       "description": "The residual entities #526/PR#533 parked (RelationTypeDefinition, DiscoveryQuery minus tier, the shared ExportConfig, Manifest, Composition, View, plus View's own FieldView/RecordPropertyView row shapes) emit output that is a subset of their committed docs/schema/2.0/*.json seed over the covered authoritative features, same discipline as rfc-272-closure. Proves the metamodel could generate these files without overwriting them (authorship flip is #260). DocumentSection.source and View.fieldViews stay excluded (srs#543, a discriminated-union emitter gap)."
     },
     {
+      "id": "rfc-379-closure",
+      "script": "rfc-379-closure-test.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "identity",
+      "governing": "srs#379 (epic #256/#272; Protocol shape ruling)",
+      "description": "ext:protocol's Protocol, ProtocolStage, and FieldRef emit output that is a subset of their committed docs/schema/2.0/protocol.json seed over the covered authoritative features, same discipline as rfc-272/rfc-541-closure. Proves the metamodel could generate this file without overwriting it (authorship flip is #260). protocol.targetType's empty-string sentinel is the one documented divergence."
+    },
+    {
+      "id": "protocol-shape-migration",
+      "script": "migrate-379-protocol-shape.mjs",
+      "args": ["--check"],
+      "tier": "always",
+      "cell": "identity",
+      "governing": "srs#379",
+      "description": "The vendored packages/com.mudemocracy.governance/* Protocol definitions stay on the ruled, unprefixed shape (never regress to the retired protocol-prefixed one)."
+    },
+    {
       "id": "schema-regenerate-drift",
       "script": "check-schema-regenerate-drift.mjs",
       "args": [],

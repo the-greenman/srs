@@ -127,6 +127,11 @@ const TYPE_ORDER = [
   [58, 'field-view'],
   [59, 'record-property-view'],
   [60, 'view'],
+  // -- srs#379: ext:protocol (a package-declared definition entity like Blueprint, not an
+  // instance-layer entity — value objects before the entity that references them).
+  [61, 'field-ref'],
+  [62, 'protocol-stage'],
+  [63, 'protocol'],
 ];
 const typeIdByName = Object.fromEntries(TYPE_ORDER.map(([n, name]) => [name, typeUuid(n)]));
 const ref = (typeName, mode, cardinality, extra) => {
@@ -411,6 +416,19 @@ const FIELD_SPECS = [
   [222, 'editor_hint_override', { datatype: 'string' }, 'Presentation only (RFC-036 [CR-036-20]/[CR-036-21]). Supersedes Field.editorHint for Records rendered/edited through this View.'],
   [223, 'composite_renderer', ref('composite-renderer-binding', 'inline', 'single'), 'RFC-036 — render a FieldView\'s composite-range value through a named composite renderer.'],
   [224, 'property', closed(['lifecycleState', 'tags', 'createdAt', 'updatedAt']), 'Record-level property presented by a RecordPropertyView row.'],
+  // -- srs#379: Protocol/ProtocolStage/FieldRef (ext:protocol). Reuses shared identity Fields
+  // (id/namespace/name/version/description/created_at/tags, #1-6/#11), `ai_guidance` (#8, reused
+  // for ProtocolStage's own guidance — structured over serialised, no string alternative), `order`
+  // (#52, reused with a stage-specific desc override), `field_id`/`type_id` (#51/#33, reused for
+  // FieldRef). New Fields below are the ones with no existing semantic match.
+  [225, 'stage_id', { datatype: 'string' }, 'Stable key within this Protocol. Referenced by other stages\' dependsOn (Invariant 29).'],
+  [226, 'stage_depends_on', { datatype: 'string', cardinality: 'list' }, 'stageId values within the enclosing Protocol — epistemic dependencies, not just ordering. A stage may not depend on itself (Invariant 29).'],
+  [227, 'completion_criteria', { datatype: 'string' }, 'How to know this stage is sufficient to proceed.'],
+  [228, 'question', { datatype: 'string' }, 'The core question this stage answers.'],
+  [229, 'contributes_to', ref('field-ref', 'inline', 'list'), 'The Record Fields this stage feeds (Invariant 30).'],
+  [230, 'output_type', { datatype: 'string', format: 'uuid' }, 'Present when this stage produces its own intermediate Record. A LINEAGE reference (bare UUID; rfc-decision-c8704763) to the Type this stage produces its own intermediate Record as — the effective package set resolves it. typeVersion is dropped (version-optional hybrids are forbidden).'],
+  [231, 'target_type', { datatype: 'string', format: 'uuid' }, 'The Record type this Protocol converges on — a LINEAGE reference (bare UUID; rfc-decision-c8704763), never the canonical namespace/name@version form (DISPLAY-only, never stored). Empty string for loose, exploratory Protocols whose output is input context for a tighter Protocol.'],
+  [232, 'stages', ref('protocol-stage', 'inline', 'list'), 'The stages, in declaration order. Execution sequence is determined by dependsOn resolution, not array position; order is the declared composition order (Invariant 31).'],
 ];
 const fieldIdByName = {};
 for (const [n, name] of FIELD_SPECS) fieldIdByName[name] = fieldUuid(n);
@@ -1018,6 +1036,44 @@ const TYPE_SPECS = {
       a('id', true), a('namespace', true), a('name', true), a('version', true), a('description', true),
       a('compatible_types', false, 'Compatible Types'), a('export_config', false, 'Export Config'),
       a('view_ai_guidance', false, 'Ai Guidance'), a('tags', false), a('created_at', true), a('updated_at', false, 'Updated At'),
+    ],
+  },
+  // -- srs#379: ext:protocol. Generated from docs/schema/2.0/protocol.json (the ruled, unprefixed
+  // shape a decision record settled — the interim `protocol`-prefixed shape #297/#378 shipped no
+  // longer matches this prose); proven via scripts/rfc-379-closure-test.mjs, same discipline as
+  // rfc-272/rfc-541 (emitter ⊆ committed seed, never overwriting it — the authorship flip is #260).
+  // A package-declared definition entity, exactly parallel to Blueprint, not an instance-layer one.
+  'field-ref': {
+    description: 'ext:protocol — a reference to a Field within a Type, optionally scoped to which Type it appears in.',
+    purpose: 'Describes a FieldRef: the Field it points to, and which Type it appears in when the same fieldId appears in several.',
+    assignments: [
+      a('field_id', true, 'Field', 'References a Field by its stable id.'),
+      a('type_id', false, 'Type Id', 'Which Type this Field appears in, when the same fieldId appears in several.'),
+    ],
+  },
+  'protocol-stage': {
+    description: 'ext:protocol — a named stage in a Protocol. Stages carry epistemic dependencies (dependsOn), not merely ordering: a stage may proceed only when its dependencies are sufficient.',
+    purpose: 'Describes a ProtocolStage: its identity, composition order, epistemic dependencies, and what it contributes.',
+    assignments: [
+      a('stage_id', true, 'Stage Id'),
+      a('name', true, undefined, 'Short, human-readable stage name (e.g. "Background", "Key requirements") — not the definitional snake_case name every other entity\'s `name` property carries.'),
+      a('order', true, undefined, 'The declared composition order of the stages — structure, not presentation; provides the render default. Execution order is determined by dependsOn (Invariant 31).'),
+      a('purpose', false, undefined, 'What understanding this stage builds.'),
+      a('question', false),
+      a('stage_depends_on', false, 'Depends On'),
+      a('completion_criteria', false, 'Completion Criteria'),
+      a('contributes_to', false, 'Contributes To'),
+      a('output_type', false, 'Output Type'),
+      a('ai_guidance', false, 'AI Guidance', 'Extraction guidance for an AI assistant working this stage.'),
+    ],
+  },
+  protocol: {
+    description: 'ext:protocol — an epistemically ordered process for building quality Records through structured conversation or facilitation. A package definition (package.json `protocols[]`), not an instance Record.',
+    purpose: 'Describes a Protocol: its identity, the Type it converges on, and its ordered stages.',
+    assignments: [
+      a('id', true), a('namespace', true), a('name', true), a('version', true), a('description', false),
+      a('target_type', true, 'Target Type'), a('stages', true),
+      a('tags', false), a('created_at', true),
     ],
   },
 };

@@ -1578,17 +1578,20 @@ A named stage in a Protocol. Stages have epistemic dependencies (`dependsOn`) �
 ```typescript
 {
   stageId: string       // stable key within this Protocol
+  name: string          // short, human-readable stage name (e.g. "Background", "Key requirements")
   order: integer        // min: 0; declared composition order of the stages — see note below
-  purpose: string       // what understanding this stage builds
-  question: string      // the core question this stage answers
+  purpose?: string      // what understanding this stage builds
+  question?: string     // the core question this stage answers
   dependsOn: string[]   // stageId values; epistemic dependencies, not just ordering
-  completionCriteria: string   // how to know this stage is sufficient to proceed
-  contributesTo: FieldRef[]    // which Record Fields this stage feeds
+  completionCriteria?: string  // how to know this stage is sufficient to proceed
+  contributesTo?: FieldRef[]   // which Record Fields this stage feeds
   outputType?: UUID            // LINEAGE reference (rfc-decision-c8704763) to the Type this stage
                                 // produces its own intermediate Record as; the effective
                                 // package set resolves it. typeVersion is dropped — version-
                                 // optional hybrids are forbidden.
-  aiGuidance: AiGuidance
+  aiGuidance?: AiGuidance       // the closed, structured guidance object used everywhere else in
+                                // the model (purpose/extraction/negativeGuidance/examples) — not a
+                                // plain string (rfc-decision, srs#379: structured over serialised).
 }
 ```
 
@@ -1596,7 +1599,7 @@ A named stage in a Protocol. Stages have epistemic dependencies (`dependsOn`) �
 
 #### `Protocol`
 
-An epistemically ordered process for building quality Records through structured conversation or facilitation.
+An epistemically ordered process for building quality Records through structured conversation or facilitation. A Protocol is a package definition (declared in `package.json`'s `protocols` array, stored under the package's `protocols/` subtree) — not an instance Record.
 
 ```typescript
 {
@@ -1605,9 +1608,9 @@ An epistemically ordered process for building quality Records through structured
   name: string
   version: integer   // min: 1
 
-  description: string
+  description?: string
 
-  protocolTargetType: UUID | ""
+  targetType: UUID | ""
   // The Record type this Protocol produces — a LINEAGE reference (bare UUID;
   // rfc-decision-c8704763), never the canonical namespace/name@version form (that is
   // DISPLAY-only and is never stored). Empty string for loose / exploratory Protocols
@@ -1617,10 +1620,10 @@ An epistemically ordered process for building quality Records through structured
 
   tags?: string[]
   createdAt: ISO8601
-  lineage?: Lineage
-  provenance?: Provenance
 }
 ```
+
+**Property names are unprefixed** (`id`, not `protocolId`; `stages`, not `protocolStages`; and so on) — the same convention every other package-declared definition entity uses (Type, Field, Vocabulary, Lifecycle, RelationTypeDefinition, Theme, Blueprint all reuse the shared `id`/`namespace`/`name`/`version`/`description`/`createdAt` fields unprefixed). An earlier owed-schema pass (`docs/schema/2.0/protocol.json`, #297/#378) had shipped a `protocol`-prefixed shape matching the implementation of the day; a decision record ruled the unprefixed shape canonical (srs#379) and the schema now matches this prose. The implementation-side rename (the Rust `Protocol`/`ProtocolStage` structs, the CLI, and one still-vendored example corpus) is a tracked follow-up, staged like any other rename (rfc-decision-628cf6c4) — this prose and the schema describe the ruled target shape, not necessarily every artifact's current byte-for-byte content.
 
 **The Protocol spectrum:**
 
@@ -1666,7 +1669,7 @@ Conversation chunks produced during Decision stage:
 
 Context query for R-D / F-outcome:
   → Field aiGuidance from Decision Type + outcome Field
-  → Current value + Revision history for F-outcome
+  → Current value for F-outcome
   → Chunks tagged with { recordId: R-D, fieldId: F-outcome } — chunk-43
   → Chunks tagged with { recordId: R-D } — broader session context
   → Related Records via Relations — R-OA via derived-from
@@ -1677,6 +1680,111 @@ The final Decision Record is auditable because every Protocol stage left address
 Views (`ext:views-l1`) no longer contain facilitation logic. A View is a presentation concern; a Protocol is an epistemic one.
 
 ---
+
+
+#### Generated reference: `FieldRef`
+
+**Referenced Type Id**: 4c00003d-0000-4000-a000-00000000003d
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `field-ref` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `fieldId` | ref → `field` (id) | yes | — | core | References a Field by its stable id (reference mode closes the metacircular loop). |
+| `typeId` | string | no | format: uuid | core | Stable UUID of the referenced Type. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/protocol.json#/$defs/FieldRef>
+
+#### Compact pseudo-IDL
+
+```typescript
+field-ref {
+  fieldId: ref → `field` (id) // References a Field by its stable id (reference mode closes the metacircular loop).
+  typeId?: string // Stable UUID of the referenced Type.
+}
+```
+
+
+#### Generated reference: `ProtocolStage`
+
+**Referenced Type Id**: 4c00003e-0000-4000-a000-00000000003e
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `protocol-stage` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `stageId` | string | yes | — | core | Stable key within this Protocol. Referenced by other stages' dependsOn (Invariant 29). |
+| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
+| `order` | integer | yes | minimum: 0 | core | The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015). |
+| `purpose` | string | no | — | core | What this field/type captures (1-2 sentences). |
+| `question` | string | no | — | core | The core question this stage answers. |
+| `dependsOn` | string[] | no | — | core | stageId values within the enclosing Protocol — epistemic dependencies, not just ordering. A stage may not depend on itself (Invariant 29). |
+| `completionCriteria` | string | no | — | core | How to know this stage is sufficient to proceed. |
+| `contributesTo` | ref → `field-ref` (inline)[] | no | — | core | The Record Fields this stage feeds (Invariant 30). |
+| `outputType` | string | no | format: uuid | core | Present when this stage produces its own intermediate Record. A LINEAGE reference (bare UUID; rfc-decision-c8704763) to the Type this stage produces its own intermediate Record as — the effective package set resolves it. typeVersion is dropped (version-optional hybrids are forbidden). |
+| `aiGuidance` | ref → `ai-guidance` (inline) | no | — | core | Inline LLM guidance for extracting/populating this field or type. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/protocol.json#/$defs/ProtocolStage>
+
+#### Compact pseudo-IDL
+
+```typescript
+protocol-stage {
+  stageId: string // Stable key within this Protocol. Referenced by other stages' dependsOn (Invariant 29).
+  name: string // Machine-readable name within the namespace; snake_case.
+  order: integer // The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015).
+  purpose?: string // What this field/type captures (1-2 sentences).
+  question?: string // The core question this stage answers.
+  dependsOn?: string[] // stageId values within the enclosing Protocol — epistemic dependencies, not just ordering. A stage may not depend on itself (Invariant 29).
+  completionCriteria?: string // How to know this stage is sufficient to proceed.
+  contributesTo?: ref → `field-ref` (inline)[] // The Record Fields this stage feeds (Invariant 30).
+  outputType?: string // Present when this stage produces its own intermediate Record. A LINEAGE reference (bare UUID; rfc-decision-c8704763) to the Type this stage produces its own intermediate Record as — the effective package set resolves it. typeVersion is dropped (version-optional hybrids are forbidden).
+  aiGuidance?: ref → `ai-guidance` (inline) // Inline LLM guidance for extracting/populating this field or type.
+}
+```
+
+
+#### Generated reference: `Protocol`
+
+**Referenced Type Id**: 4c00003f-0000-4000-a000-00000000003f
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `protocol` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
+| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
+| `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
+| `description` | string | no | — | core | Human-readable description of this entity. |
+| `targetType` | string | yes | format: uuid | core | The Record type this Protocol converges on — a LINEAGE reference (bare UUID; rfc-decision-c8704763), never the canonical namespace/name@version form (DISPLAY-only, never stored). Empty string for loose, exploratory Protocols whose output is input context for a tighter Protocol. |
+| `stages` | ref → `protocol-stage` (inline)[] | yes | — | core | The stages, in declaration order. Execution sequence is determined by dependsOn resolution, not array position; order is the declared composition order (Invariant 31). |
+| `tags` | string[] | no | — | core | Free-form classification tags. |
+| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/protocol.json>
+
+#### Compact pseudo-IDL
+
+```typescript
+protocol {
+  id: string // Globally unique, stable UUID identity of this entity.
+  namespace: string // Reverse-DNS logical grouping.
+  name: string // Machine-readable name within the namespace; snake_case.
+  version: integer // Positive integer version within the UUID lineage.
+  description?: string // Human-readable description of this entity.
+  targetType: string // The Record type this Protocol converges on — a LINEAGE reference (bare UUID; rfc-decision-c8704763), never the canonical namespace/name@version form (DISPLAY-only, never stored). Empty string for loose, exploratory Protocols whose output is input context for a tighter Protocol.
+  stages: ref → `protocol-stage` (inline)[] // The stages, in declaration order. Execution sequence is determined by dependsOn resolution, not array position; order is the declared composition order (Invariant 31).
+  tags?: string[] // Free-form classification tags.
+  createdAt: date-time // ISO-8601 creation timestamp.
+}
+```
 
 
 #### ext:blueprint

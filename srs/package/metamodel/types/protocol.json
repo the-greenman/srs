@@ -1,0 +1,60 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a Protocol: its identity, the Type it converges on, and its ordered stages."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:protocol — an epistemically ordered process for building quality Records through structured conversation or facilitation. A package definition (package.json `protocols[]`), not an instance Record.",
+  "fields": [
+    {
+      "fieldId": "4b000001-0000-4000-a000-000000000001",
+      "order": 0,
+      "required": true
+    },
+    {
+      "fieldId": "4b000002-0000-4000-a000-000000000002",
+      "order": 1,
+      "required": true
+    },
+    {
+      "fieldId": "4b000003-0000-4000-a000-000000000003",
+      "order": 2,
+      "required": true
+    },
+    {
+      "fieldId": "4b000004-0000-4000-a000-000000000004",
+      "order": 3,
+      "required": true
+    },
+    {
+      "fieldId": "4b000005-0000-4000-a000-000000000005",
+      "order": 4,
+      "required": false
+    },
+    {
+      "fieldId": "4b0000e7-0000-4000-a000-0000000000e7",
+      "order": 5,
+      "required": true,
+      "displayLabel": "Target Type"
+    },
+    {
+      "fieldId": "4b0000e8-0000-4000-a000-0000000000e8",
+      "order": 6,
+      "required": true
+    },
+    {
+      "fieldId": "4b00000b-0000-4000-a000-00000000000b",
+      "order": 7,
+      "required": false
+    },
+    {
+      "fieldId": "4b000006-0000-4000-a000-000000000006",
+      "order": 8,
+      "required": true
+    }
+  ],
+  "id": "4c00003f-0000-4000-a000-00000000003f",
+  "name": "protocol",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

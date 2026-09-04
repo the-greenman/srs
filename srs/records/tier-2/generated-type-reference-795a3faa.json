@@ -1,0 +1,17 @@
+{
+  "instanceId": "795a3faa-52c5-440e-bfaf-15dfa35c3f46",
+  "typeId": "2a000014-0000-4000-a000-000000000014",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "generated-type-reference",
+  "fieldValues": {
+    "title": "Generated reference: `FieldRef`",
+    "referenced_type_id": "4c00003d-0000-4000-a000-00000000003d",
+    "referenced_type_version": 1,
+    "presentation_profile": "property-table-and-pseudo-idl",
+    "content": "Generated from the resolved effective `field-ref` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.\n\n| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |\n|---|---|---|---|---|---|\n| `fieldId` | ref → `field` (id) | yes | — | core | References a Field by its stable id (reference mode closes the metacircular loop). |\n| `typeId` | string | no | format: uuid | core | Stable UUID of the referenced Type. |\n\nRaw JSON Schema: <https://srs.semanticops.com/schema/2.0/protocol.json#/$defs/FieldRef>\n\n#### Compact pseudo-IDL\n\n```typescript\nfield-ref {\n  fieldId: ref → `field` (id) // References a Field by its stable id (reference mode closes the metacircular loop).\n  typeId?: string // Stable UUID of the referenced Type.\n}\n```"
+  },
+  "createdAt": "2026-09-04T08:43:02.208465609+00:00",
+  "updatedAt": "2026-09-04T08:43:02.208469258+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

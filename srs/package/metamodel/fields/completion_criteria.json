@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "How to know this stage is sufficient to proceed."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "How to know this stage is sufficient to proceed.",
+  "id": "4b0000e3-0000-4000-a000-0000000000e3",
+  "name": "completion_criteria",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}
