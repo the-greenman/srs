@@ -1,0 +1,20 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "DocumentSection.ordering — field-based or explicit member-order presentation directive."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "DocumentSection.ordering — field-based or explicit member-order presentation directive.",
+  "id": "4b0000c4-0000-4000-a000-0000000000c4",
+  "name": "section_ordering",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "rangeType": {
+      "typeId": "4c000035-0000-4000-a000-000000000035",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

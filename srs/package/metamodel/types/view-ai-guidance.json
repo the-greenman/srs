@@ -1,0 +1,24 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a View's AI guidance: its purpose and extraction instruction."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Guidance for AI agents using a View (View.aiGuidance) — a narrower shape than the generic AiGuidance value object (RFC-033): purpose + extraction only, no negativeGuidance/examples.",
+  "fields": [
+    {
+      "fieldId": "4b000023-0000-4000-a000-000000000023",
+      "order": 0,
+      "required": false
+    },
+    {
+      "fieldId": "4b000024-0000-4000-a000-000000000024",
+      "order": 1,
+      "required": false
+    }
+  ],
+  "id": "4c000039-0000-4000-a000-000000000039",
+  "name": "view-ai-guidance",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

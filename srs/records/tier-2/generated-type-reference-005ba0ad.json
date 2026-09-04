@@ -1,0 +1,17 @@
+{
+  "instanceId": "005ba0ad-769a-4f24-92b9-717b2a097dac",
+  "typeId": "2a000014-0000-4000-a000-000000000014",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "generated-type-reference",
+  "fieldValues": {
+    "title": "Generated reference: `DiscoveryQuery`",
+    "referenced_type_id": "4c000024-0000-4000-a000-000000000024",
+    "referenced_type_version": 1,
+    "presentation_profile": "property-table-and-pseudo-idl",
+    "content": "Generated from the resolved effective `discovery-query` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.\n\n| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |\n|---|---|---|---|---|---|\n| `typeId` | string | no | format: uuid | core | Stable UUID of the referenced Type. |\n| `typeNamespace` | string | no | — | core | Denormalized hint: the namespace of the bound Type. If it conflicts with the resolved Type, typeId wins. |\n| `typeName` | string | no | — | core | Denormalized hint: the name of the bound Type. If it conflicts with the resolved Type, typeId wins. |\n| `containerId` | string | no | format: uuid | core | ext:discovery DiscoveryQuery.containerId — instance is a member of this container (RFC-009 I-66). |\n| `tag` | string[] | no | — | core | AND-conjunction: the instance's tags array must contain ALL of the specified values (ext:discovery DiscoveryQuery.tag). |\n| `lifecycleState` | string | no | — | core | ext:lifecycle — current lifecycle state of this Record. |\n| `lifecycleStates` | string[] | no | — | core | ext:discovery DiscoveryQuery.lifecycleStates — inclusive multi-value lifecycle filter, OR semantics (RFC-012 Rev 11, srs#525). |\n| `excludeLifecycleStates` | string[] | no | — | core | ext:discovery DiscoveryQuery.excludeLifecycleStates — exclusion filter, applied after lifecycleState/lifecycleStates. |\n| `contentMatch` | string | no | — | core | ext:discovery DiscoveryQuery.contentMatch — free-text recall-floor predicate over the Text Projection. |\n\nRaw JSON Schema: <https://srs.semanticops.com/schema/2.0/discovery.json#/$defs/DiscoveryQuery>\n\n#### Compact pseudo-IDL\n\n```typescript\ndiscovery-query {\n  typeId?: string // Stable UUID of the referenced Type.\n  typeNamespace?: string // Denormalized hint: the namespace of the bound Type. If it conflicts with the resolved Type, typeId wins.\n  typeName?: string // Denormalized hint: the name of the bound Type. If it conflicts with the resolved Type, typeId wins.\n  containerId?: string // ext:discovery DiscoveryQuery.containerId — instance is a member of this container (RFC-009 I-66).\n  tag?: string[] // AND-conjunction: the instance's tags array must contain ALL of the specified values (ext:discovery DiscoveryQuery.tag).\n  lifecycleState?: string // ext:lifecycle — current lifecycle state of this Record.\n  lifecycleStates?: string[] // ext:discovery DiscoveryQuery.lifecycleStates — inclusive multi-value lifecycle filter, OR semantics (RFC-012 Rev 11, srs#525).\n  excludeLifecycleStates?: string[] // ext:discovery DiscoveryQuery.excludeLifecycleStates — exclusion filter, applied after lifecycleState/lifecycleStates.\n  contentMatch?: string // ext:discovery DiscoveryQuery.contentMatch — free-text recall-floor predicate over the Text Projection.\n}\n```"
+  },
+  "createdAt": "2026-09-03T18:00:00Z",
+  "updatedAt": "2026-09-03T18:00:00Z",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

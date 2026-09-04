@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "ext:discovery DiscoveryQuery.containerId — instance is a member of this container (RFC-009 I-66)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:discovery DiscoveryQuery.containerId — instance is a member of this container (RFC-009 I-66).",
+  "id": "4b000095-0000-4000-a000-000000000095",
+  "name": "discovery_container_id",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "format": "uuid"
+  },
+  "version": 1
+}

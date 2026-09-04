@@ -1,0 +1,37 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a Slice: its origin, closure spec, export time, and cut external relation refs."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:slices (RFC-026) — present when this archive is a partial export (slice) of a source repository.",
+  "fields": [
+    {
+      "fieldId": "4b0000b4-0000-4000-a000-0000000000b4",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Origin"
+    },
+    {
+      "fieldId": "4b0000b7-0000-4000-a000-0000000000b7",
+      "order": 1,
+      "required": true
+    },
+    {
+      "fieldId": "4b0000b5-0000-4000-a000-0000000000b5",
+      "order": 2,
+      "required": true,
+      "displayLabel": "Exported At"
+    },
+    {
+      "fieldId": "4b0000b6-0000-4000-a000-0000000000b6",
+      "order": 3,
+      "required": false,
+      "displayLabel": "External Relation Refs"
+    }
+  ],
+  "id": "4c00002c-0000-4000-a000-00000000002c",
+  "name": "slice",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

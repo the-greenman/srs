@@ -1,0 +1,36 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a ThemeReference: its locator mode and theme identity hints."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:themes-l1 — a pointer to a Theme, following the same mode-based reference pattern as Manifest.packageRef.",
+  "fields": [
+    {
+      "fieldId": "4b0000cf-0000-4000-a000-0000000000cf",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Mode"
+    },
+    {
+      "fieldId": "4b0000a7-0000-4000-a000-0000000000a7",
+      "order": 1,
+      "required": false
+    },
+    {
+      "fieldId": "4b0000d0-0000-4000-a000-0000000000d0",
+      "order": 2,
+      "required": false
+    },
+    {
+      "fieldId": "4b0000d1-0000-4000-a000-0000000000d1",
+      "order": 3,
+      "required": false,
+      "displayLabel": "Theme Id"
+    }
+  ],
+  "id": "4c000032-0000-4000-a000-000000000032",
+  "name": "theme-reference",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

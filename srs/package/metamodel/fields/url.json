@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "URL to a referenced file (e.g. a Theme JSON file, ThemeReference.mode === remote)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "URL to a referenced file (e.g. a Theme JSON file, ThemeReference.mode === remote).",
+  "id": "4b0000d0-0000-4000-a000-0000000000d0",
+  "name": "url",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

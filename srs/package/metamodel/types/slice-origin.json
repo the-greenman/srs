@@ -1,0 +1,20 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a Slice's origin: the source repositoryId."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:slices (RFC-026) — identifies the source repository a Slice was exported from.",
+  "fields": [
+    {
+      "fieldId": "4b0000a3-0000-4000-a000-0000000000a3",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Repository Id"
+    }
+  ],
+  "id": "4c000029-0000-4000-a000-000000000029",
+  "name": "slice-origin",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

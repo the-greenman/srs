@@ -45,6 +45,22 @@ export const NAME_OVERRIDES = {
   relation_spec_cardinality: "cardinality",
   vocabulary_mode: "mode",
   anchor_kind: "kind",
+  // srs#541 (Task 4b/6 residual): the six entities #526 parked. Same mechanism — a shared Field
+  // reused under a Type-specific wire key, or a Type-specific enum domain colliding in name with an
+  // existing, differently-scoped Field.
+  package_ref_mode: "mode",
+  theme_reference_mode: "mode",
+  upstream_semver: "version",
+  slice_spec_type: "type",
+  slice_origin: "origin",
+  repository_ai_guidance: "aiGuidance",
+  view_ai_guidance: "aiGuidance",
+  section_ordering: "ordering",
+  document_sections: "sections",
+  discovery_container_id: "containerId",
+  renderer_roles: "roles",
+  export_format: "format",
+  sort_direction: "direction",
 };
 /** snake_case -> lowerCamelCase, deterministic and injective over the in-scope metamodel field names. */
 export function jsonKey(fieldName) {

@@ -1,0 +1,110 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a repository Manifest: its identity, package references, root Container, and declared presentations."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-038 — root file for an ext:repository: the repository identity and entry point. Membership is the tree (RFC-038 [R1]); the manifest carries no index.",
+  "fields": [
+    {
+      "fieldId": "4b0000a1-0000-4000-a000-0000000000a1",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Srs Version"
+    },
+    {
+      "fieldId": "4b0000a2-0000-4000-a000-0000000000a2",
+      "order": 1,
+      "required": false,
+      "displayLabel": "Data Model Revision"
+    },
+    {
+      "fieldId": "4b0000a3-0000-4000-a000-0000000000a3",
+      "order": 2,
+      "required": true,
+      "displayLabel": "Repository Id"
+    },
+    {
+      "fieldId": "4b000002-0000-4000-a000-000000000002",
+      "order": 3,
+      "required": false
+    },
+    {
+      "fieldId": "4b000061-0000-4000-a000-000000000061",
+      "order": 4,
+      "required": true
+    },
+    {
+      "fieldId": "4b000005-0000-4000-a000-000000000005",
+      "order": 5,
+      "required": false
+    },
+    {
+      "fieldId": "4b0000a4-0000-4000-a000-0000000000a4",
+      "order": 6,
+      "required": false,
+      "displayLabel": "Declared Extensions"
+    },
+    {
+      "fieldId": "4b0000a5-0000-4000-a000-0000000000a5",
+      "order": 7,
+      "required": true
+    },
+    {
+      "fieldId": "4b0000aa-0000-4000-a000-0000000000aa",
+      "order": 8,
+      "required": false,
+      "displayLabel": "Package Ref"
+    },
+    {
+      "fieldId": "4b0000ab-0000-4000-a000-0000000000ab",
+      "order": 9,
+      "required": false,
+      "displayLabel": "Package Refs"
+    },
+    {
+      "fieldId": "4b0000b2-0000-4000-a000-0000000000b2",
+      "order": 10,
+      "required": false,
+      "displayLabel": "Upstream Package"
+    },
+    {
+      "fieldId": "4b0000b9-0000-4000-a000-0000000000b9",
+      "order": 11,
+      "required": false,
+      "displayLabel": "Source Documents Path"
+    },
+    {
+      "fieldId": "4b0000bd-0000-4000-a000-0000000000bd",
+      "order": 12,
+      "required": false,
+      "displayLabel": "Ai Guidance"
+    },
+    {
+      "fieldId": "4b0000af-0000-4000-a000-0000000000af",
+      "order": 13,
+      "required": false,
+      "displayLabel": "Rendered Presentations"
+    },
+    {
+      "fieldId": "4b0000b8-0000-4000-a000-0000000000b8",
+      "order": 14,
+      "required": false
+    },
+    {
+      "fieldId": "4b000006-0000-4000-a000-000000000006",
+      "order": 15,
+      "required": true
+    },
+    {
+      "fieldId": "4b000060-0000-4000-a000-000000000060",
+      "order": 16,
+      "required": false,
+      "displayLabel": "Updated At"
+    }
+  ],
+  "id": "4c00002e-0000-4000-a000-00000000002e",
+  "name": "manifest",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

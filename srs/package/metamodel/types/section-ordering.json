@@ -1,0 +1,32 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a DocumentSection's ordering directive."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "DocumentSection.ordering — field-based sort direction, or an explicit member-order presentation sequence, for a DocumentSection.",
+  "fields": [
+    {
+      "fieldId": "4b000033-0000-4000-a000-000000000033",
+      "order": 0,
+      "required": false,
+      "displayLabel": "Field"
+    },
+    {
+      "fieldId": "4b0000c2-0000-4000-a000-0000000000c2",
+      "order": 1,
+      "required": false,
+      "displayLabel": "Direction"
+    },
+    {
+      "fieldId": "4b0000c3-0000-4000-a000-0000000000c3",
+      "order": 2,
+      "required": false,
+      "displayLabel": "Member Order"
+    }
+  ],
+  "id": "4c000035-0000-4000-a000-000000000035",
+  "name": "section-ordering",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

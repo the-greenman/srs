@@ -1,0 +1,31 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes an ExportConfig: target output format, preamble template, and empty-field handling."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:views-l1 — configuration for rendering a Record (or a Composition's document-level output) as an exportable document. Shared by View.exportConfig and Composition.exportConfig (srs#525: one shape, two attachment points, no override semantics between them).",
+  "fields": [
+    {
+      "fieldId": "4b00009e-0000-4000-a000-00000000009e",
+      "order": 0,
+      "required": false,
+      "displayLabel": "Format"
+    },
+    {
+      "fieldId": "4b00009f-0000-4000-a000-00000000009f",
+      "order": 1,
+      "required": false
+    },
+    {
+      "fieldId": "4b0000a0-0000-4000-a000-0000000000a0",
+      "order": 2,
+      "required": false,
+      "displayLabel": "Omit Empty Fields"
+    }
+  ],
+  "id": "4c000025-0000-4000-a000-000000000025",
+  "name": "export-config",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

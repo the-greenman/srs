@@ -1,0 +1,25 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a CompositeRendererBinding: which named renderer to dispatch to, and role bindings."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-036 Change A (ext:views-l1) — a view-owned composite rendering dispatch record. Presentation only.",
+  "fields": [
+    {
+      "fieldId": "4b0000d4-0000-4000-a000-0000000000d4",
+      "order": 0,
+      "required": true
+    },
+    {
+      "fieldId": "4b0000d5-0000-4000-a000-0000000000d5",
+      "order": 1,
+      "required": false,
+      "displayLabel": "Roles"
+    }
+  ],
+  "id": "4c000038-0000-4000-a000-000000000038",
+  "name": "composite-renderer-binding",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "RFC-026 — Relations cut at export because exactly one endpoint fell outside the closure."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-026 — Relations cut at export because exactly one endpoint fell outside the closure.",
+  "id": "4b0000b6-0000-4000-a000-0000000000b6",
+  "name": "external_relation_refs",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "cardinality": "list",
+    "rangeType": {
+      "typeId": "4c00002b-0000-4000-a000-00000000002b",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

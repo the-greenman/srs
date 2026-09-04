@@ -1,0 +1,17 @@
+{
+  "instanceId": "387ca99d-c571-493e-9be5-f55667a70057",
+  "typeId": "2a000014-0000-4000-a000-000000000014",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "generated-type-reference",
+  "fieldValues": {
+    "title": "Generated reference: `ExportConfig`",
+    "referenced_type_id": "4c000025-0000-4000-a000-000000000025",
+    "referenced_type_version": 1,
+    "presentation_profile": "property-table-and-pseudo-idl",
+    "content": "Generated from the resolved effective `export-config` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.\n\n| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |\n|---|---|---|---|---|---|\n| `format` | string | no | — | core | Target output format. Portable values: markdown, adoc, html, text. |\n| `preamble` | string | no | — | core | Template string rendered before field values. |\n| `omitEmptyFields` | boolean | no | — | core | Default: false. When true, fields with no value are omitted from output. |\n\nRaw JSON Schema: <https://srs.semanticops.com/schema/2.0/composition.json#/$defs/ExportConfig>\n\n#### Compact pseudo-IDL\n\n```typescript\nexport-config {\n  format?: string // Target output format. Portable values: markdown, adoc, html, text.\n  preamble?: string // Template string rendered before field values.\n  omitEmptyFields?: boolean // Default: false. When true, fields with no value are omitted from output.\n}\n```"
+  },
+  "createdAt": "2026-09-03T18:00:00Z",
+  "updatedAt": "2026-09-03T18:00:00Z",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Row-label override for edges where the member is the target."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Row-label override for edges where the member is the target.",
+  "id": "4b0000cb-0000-4000-a000-0000000000cb",
+  "name": "inverse_label",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Named alternative themes selectable at render invocation."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Named alternative themes selectable at render invocation.",
+  "id": "4b0000d3-0000-4000-a000-0000000000d3",
+  "name": "theme_variants",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "cardinality": "list",
+    "rangeType": {
+      "typeId": "4c000033-0000-4000-a000-000000000033",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

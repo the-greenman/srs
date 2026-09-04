@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Which edge directions a RelationPresentationEntry displays for the member. Default: forward."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Which edge directions a RelationPresentationEntry displays for the member. Default: forward.",
+  "id": "4b0000c9-0000-4000-a000-0000000000c9",
+  "name": "directions",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "forward",
+      "inverse",
+      "both"
+    ]
+  },
+  "version": 1
+}

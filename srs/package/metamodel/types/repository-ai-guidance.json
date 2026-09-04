@@ -1,0 +1,31 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a repository's AI guidance: a summary, suggested entry points, and navigation hints."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Comprehension guidance for AI agents reading a repository (Manifest.aiGuidance) — distinct in shape from the generic AiGuidance value object (RFC-033), which serves Field/Type guidance instead.",
+  "fields": [
+    {
+      "fieldId": "4b0000ba-0000-4000-a000-0000000000ba",
+      "order": 0,
+      "required": false
+    },
+    {
+      "fieldId": "4b0000bb-0000-4000-a000-0000000000bb",
+      "order": 1,
+      "required": false,
+      "displayLabel": "Suggested Entry Points"
+    },
+    {
+      "fieldId": "4b0000bc-0000-4000-a000-0000000000bc",
+      "order": 2,
+      "required": false,
+      "displayLabel": "Navigation Hints"
+    }
+  ],
+  "id": "4c00002d-0000-4000-a000-00000000002d",
+  "name": "repository-ai-guidance",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

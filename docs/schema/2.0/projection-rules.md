@@ -281,6 +281,61 @@ committed schema), it reuses the existing `id`/`namespace`/`name`/`version`/`des
 (`source-reference` Type) and referenced by `Record`, `Note`, and `Relation` — #272's own "model
 SourceReference once" acceptance criterion.
 
+## Residual entities (srs#541, Task 4b/6 residual, epic #256/#272)
+
+The six entities srs#526/PR#533 parked — `Composition` (renamed from `DocumentView`, srs#523),
+`DiscoveryQuery`, the shared `ExportConfig`, `View`, `Manifest`, and `RelationTypeDefinition` — plus
+their nested value objects, are now ALSO modelled as `com.semanticops.srs/metamodel` Types, proving
+`docs/schema/2.0/{relation-type,manifest,composition,view}.json` and the `DiscoveryQuery` entity's
+own shape (`discovery.json#/$defs/DiscoveryQuery`) are generatable, same discipline as srs#526 did
+for the nine instance-layer entities. **Authorship does not flip** (srs#260 is owner-held); these
+files remain hand-authored and loaded as committed. `scripts/rfc-541-closure-test.mjs` proves
+`emitter ⊆ committed seed` (same shared `scripts/lib/schema-closure.mjs` machinery `rfc-272-closure-
+test.mjs` uses). Per-entity exclusions (printed by the check each run):
+
+- Each entity's own `$schema` const-pin, same generic exclusion every entity already has.
+- `RelationTypeDefinition`: none — every non-`$schema` property is covered.
+- `DiscoveryQuery`: `tier` (a bare, untyped-integer enum — the #534-tracked emitter gap the
+  standalone `discovery.json` file's own generation is also gated on; documented per-entity
+  exclusion, not a fix to #534 here).
+- `Manifest`: `changelogPath` (deprecated, no per-property deprecation mechanism modelled — same
+  reason as `Container.containerType` in the srs#526 set); `meta` (an openly-shaped bag with one
+  documented-but-optional legacy nested key, unlike `RelationTypeDefinition.meta`/`lifecycle-
+  state.meta`, which are plain maps and reuse the `meta` Field as a real FieldAssignment).
+- `Composition`: `containerType` (deprecated, reused from `container.json`'s own precedent);
+  `aiGuidance`/`lineage`/`provenance` (bare `{type:object}` in this file, no real internal structure
+  — same reasoning as `Blueprint`'s own in the srs#526 set).
+- `View`: `lineage`/`provenance` (same bare-object reasoning as `Composition`'s). `View.aiGuidance`
+  IS modelled (a narrower `view-ai-guidance` value object — `{purpose, extraction}` only — distinct
+  from the generic `AiGuidance` Type, matching this file's own narrowed shape exactly), unlike
+  `Composition.aiGuidance`, which the seed leaves bare.
+
+**A new emitter-capability gap (srs#543), distinct from #534's three.** `DocumentSection.source`
+(`SectionSource`, `composition.json`) and `View.fieldViews` (`view.json`) are both JSON-Schema
+`oneOf` discriminated unions — `SectionSource` is `oneOf` of two *anonymous* object branches, each
+with its own `required`/`additionalProperties`, no flat `properties` bag outside the union;
+`View.fieldViews.items` is `oneOf` of two different named `$ref`s (`FieldView` \| `RecordPropertyView`).
+The `normalize()` step in `scripts/lib/schema-closure.mjs` strips `oneOf` as an envelope annotation
+on both sides of a comparison — correct for a shape like `FieldType`'s own R2/R3/R9/R10 conditionals,
+which sit alongside an already-flat `properties` bag, but not for a shape whose *entire own
+definition* is a bare `oneOf` with nothing else: stripping it collapses the node to `{}`, and any
+non-empty shape the emitter produces for it then reports as 100% emitter-only. The metamodel's
+`FieldType` system has no discriminated-union `datatype` — every Type composes to one flat object —
+so neither shape can close without either restructuring the committed seed (a normative change,
+needing a ruling per srs/CLAUDE.md's "which door") or adding real emitter machinery for a union
+datatype (its own RFC). Both `DocumentSection.source` and `View.fieldViews` are therefore documented
+exclusions, not divergences — a real shape disagreement is a FINDING (the srs#535 lifecycle
+precedent), never fudged closed. `FieldView` and `RecordPropertyView` are each independently
+modelled and closure-proven directly against their own `view.json` `$def` (both are plain flat
+objects on their own) — the exclusion is scoped to exactly the discriminated wrapper around them,
+not the row shapes themselves.
+
+**Shared value objects, modelled once.** `ExportConfig` (`Composition.exportConfig` and
+`View.exportConfig`, srs#525's "one shape, two attachment points, no override semantics") is one
+Field reused at both attachment points, not duplicated. `container.json`'s already-modelled
+`container` Type (srs#526) is reused verbatim for `Manifest.container` — its committed shape is
+byte-identical to `manifest.json`'s own embedded `Container` `$def`.
+
 ## Amendment note — RFC-033 [R4](b), superseded by RFC-040's byte-closure contract
 
 RFC-035 had refined RFC-033 [R4](b) to say literal byte-equality against the seed was unachievable (emitter-owned

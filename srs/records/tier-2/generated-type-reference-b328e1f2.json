@@ -1,0 +1,17 @@
+{
+  "instanceId": "b328e1f2-d70f-42cc-b8f0-b496659638d4",
+  "typeId": "2a000014-0000-4000-a000-000000000014",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "generated-type-reference",
+  "fieldValues": {
+    "title": "Generated reference: `FieldView`",
+    "referenced_type_id": "4c00003a-0000-4000-a000-00000000003a",
+    "referenced_type_version": 1,
+    "presentation_profile": "property-table-and-pseudo-idl",
+    "content": "Generated from the resolved effective `field-view` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.\n\n| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |\n|---|---|---|---|---|---|\n| `fieldId` | ref → `field` (id) | yes | — | core | References a Field by its stable id (reference mode closes the metacircular loop). |\n| `order` | integer | yes | minimum: 0 | core | The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015). |\n| `required` | boolean | no | — | core | Whether this field must be populated before a Record can be logged. |\n| `visible` | boolean | no | — | core | Default: true. Whether a FieldView/RecordPropertyView row is shown. |\n| `displayLabel` | string | no | — | core | Context-specific label override for this field within this Type. |\n| `displayHint` | string | no | — | core | Rendering-only hint text override for a single inherited FieldAssignment (presentation; stays per 6523cf5e). |\n| `editorHintOverride` | string | no | — | core | Presentation only (RFC-036 [CR-036-20]/[CR-036-21]). Supersedes Field.editorHint for Records rendered/edited through this View. |\n| `compositeRenderer` | ref → `composite-renderer-binding` (inline) | no | — | core | RFC-036 — render a FieldView's composite-range value through a named composite renderer. |\n\nRaw JSON Schema: <https://srs.semanticops.com/schema/2.0/view.json#/$defs/FieldView>\n\n#### Compact pseudo-IDL\n\n```typescript\nfield-view {\n  fieldId: ref → `field` (id) // References a Field by its stable id (reference mode closes the metacircular loop).\n  order: integer // The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015).\n  required?: boolean // Whether this field must be populated before a Record can be logged.\n  visible?: boolean // Default: true. Whether a FieldView/RecordPropertyView row is shown.\n  displayLabel?: string // Context-specific label override for this field within this Type.\n  displayHint?: string // Rendering-only hint text override for a single inherited FieldAssignment (presentation; stays per 6523cf5e).\n  editorHintOverride?: string // Presentation only (RFC-036 [CR-036-20]/[CR-036-21]). Supersedes Field.editorHint for Records rendered/edited through this View.\n  compositeRenderer?: ref → `composite-renderer-binding` (inline) // RFC-036 — render a FieldView's composite-range value through a named composite renderer.\n}\n```"
+  },
+  "createdAt": "2026-09-03T18:00:00Z",
+  "updatedAt": "2026-09-03T18:00:00Z",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

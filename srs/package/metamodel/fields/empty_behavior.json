@@ -1,0 +1,20 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "What to do when a DocumentSection has no records. Default: hide."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "What to do when a DocumentSection has no records. Default: hide.",
+  "id": "4b0000c5-0000-4000-a000-0000000000c5",
+  "name": "empty_behavior",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "hide",
+      "show-placeholder"
+    ]
+  },
+  "version": 1
+}

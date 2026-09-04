@@ -1,0 +1,18 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "RFC-033/#265 — monotonic integer generation stamp for operational data-model migrations. Absent means revision 0."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-033/#265 — monotonic integer generation stamp for operational data-model migrations. Absent means revision 0.",
+  "id": "4b0000a2-0000-4000-a000-0000000000a2",
+  "name": "data_model_revision",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "integer",
+    "constraints": {
+      "minimum": 0
+    }
+  },
+  "version": 1
+}

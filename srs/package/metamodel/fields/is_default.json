@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "When true, this is the presentation a viewer opens by default."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "When true, this is the presentation a viewer opens by default.",
+  "id": "4b0000ad-0000-4000-a000-0000000000ad",
+  "name": "is_default",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "boolean"
+  },
+  "version": 1
+}

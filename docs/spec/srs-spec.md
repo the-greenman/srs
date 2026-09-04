@@ -974,26 +974,7 @@ See the generated reference below for `Term`'s current property table, optional 
 
 A substrate specialisation that gives semantic meaning and validation rules to a class of relations. `key` is the string stored in `Relation.relationType`; this unifies the key-role field across all three substrate specialisations (RFC-006). `label` and `description` are tightened to required.
 
-```typescript
-{
-  id: UUID
-  version: integer
-  namespace: string
-  key: string               // the string stored in Relation.relationType; was "relationType" pre-RFC-006
-  label: string             // required (tightened from substrate)
-  description: string       // required (tightened from substrate)
-  aliases?: string[]
-  status?: "active" | "deprecated" | "tombstone" | "retired"   // absent = active
-  meta?: Record<string, unknown>   // arbitrary metadata; unknown top-level fields rejected
-  category: "composition" | "refinement" | "dependency" | "sequence" | "derivation" | "evidence" | "governance" | "association" | "lifecycle" | "provenance" | "other"
-  canonicalDirection?: string
-  inverseType?: string      // key of the inverse RelationTypeDefinition
-  irreflexive?: boolean
-  requireSameType?: boolean  // srs#523/#524, srs-rust#910: re-keyed onto the Type system (owner ruling on #383, rfc-decision-c8704763); allowedSourceTypes/allowedTargetTypes/requireSameSemanticObjectType retired with no successor
-  createdAt: ISO8601
-  updatedAt?: ISO8601
-}
-```
+See the generated reference below for `RelationTypeDefinition`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#541, the #274 ratified ledger extended to this entity) — this prose no longer hand-duplicates the property list.
 
 Relation type definitions live in `package.relationTypes[]` (distributable bundle) or `package/relation-types/` (repository layout). They are resolved repo-globally — all installed relation type definitions form a single flat namespace. Key uniqueness (V5) applies across this flat set.
 
@@ -1189,6 +1170,57 @@ lifecycle {
   description?: string // Human-readable description of this entity.
   tags?: string[] // Free-form classification tags.
   createdAt: date-time // ISO-8601 creation timestamp.
+}
+```
+
+
+#### Generated reference: `RelationTypeDefinition`
+
+**Referenced Type Id**: 4c000023-0000-4000-a000-000000000023
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `relation-type-definition` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
+| `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
+| `key` | string | yes | — | core | Machine-readable state key. Unified substrate field (was name pre-RFC-006). |
+| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `label` | string | yes | — | core | Human-readable display label for this lifecycle state. |
+| `description` | string | yes | — | core | Human-readable description of this entity. |
+| `category` | string | yes | enum: "composition" \| "refinement" \| "dependency" \| "sequence" \| "derivation" \| "evidence" \| "governance" \| "association" \| "lifecycle" \| "provenance" \| "other" | core | Structural category of a relation type. |
+| `canonicalDirection` | string | no | — | core | Human-readable description of which end is source and which is target, or what members represent. |
+| `inverseType` | string | no | — | core | Key of the derived inverse (e.g. supersedes -> superseded-by); need not resolve — display-only (Invariant 16). |
+| `irreflexive` | boolean | no | — | core | When true, a relation from an instance to itself is invalid. |
+| `requireSameType` | boolean | no | — | core | When true, source and target must resolve to the same bound Type (srs-rust#910, re-keyed onto the Type system). |
+| `status` | string | no | enum: "active" \| "deprecated" \| "tombstone" \| "retired" | core | The VocabularyEntry status of this lifecycle state itself (distinct from the record-level status a Type's Records carry). |
+| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
+| `updatedAt` | date-time | no | — | core | ISO-8601 timestamp of the most recent update. |
+| `meta` | map<string, open> | no | — | core | Open extension bag for state- or transition-specific metadata not otherwise modelled (rfc-decision-6fc7e142: the one escape-bag name, was `properties`). |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/relation-type.json>
+
+#### Compact pseudo-IDL
+
+```typescript
+relation-type-definition {
+  id: string // Globally unique, stable UUID identity of this entity.
+  version: integer // Positive integer version within the UUID lineage.
+  key: string // Machine-readable state key. Unified substrate field (was name pre-RFC-006).
+  namespace: string // Reverse-DNS logical grouping.
+  label: string // Human-readable display label for this lifecycle state.
+  description: string // Human-readable description of this entity.
+  category: string // Structural category of a relation type.
+  canonicalDirection?: string // Human-readable description of which end is source and which is target, or what members represent.
+  inverseType?: string // Key of the derived inverse (e.g. supersedes -> superseded-by); need not resolve — display-only (Invariant 16).
+  irreflexive?: boolean // When true, a relation from an instance to itself is invalid.
+  requireSameType?: boolean // When true, source and target must resolve to the same bound Type (srs-rust#910, re-keyed onto the Type system).
+  status?: string // The VocabularyEntry status of this lifecycle state itself (distinct from the record-level status a Type's Records carry).
+  createdAt: date-time // ISO-8601 creation timestamp.
+  updatedAt?: date-time // ISO-8601 timestamp of the most recent update.
+  meta?: map<string, open> // Open extension bag for state- or transition-specific metadata not otherwise modelled (rfc-decision-6fc7e142: the one escape-bag name, was `properties`).
 }
 ```
 
@@ -2035,6 +2067,142 @@ sequence. This replaces the `FieldGroup` + `compositeRenderer` mechanism of RFC-
 
 
 
+#### Generated reference: `View`
+
+**Referenced Type Id**: 4c00003c-0000-4000-a000-00000000003c
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `view` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
+| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
+| `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
+| `description` | string | yes | — | core | Human-readable description of this entity. |
+| `compatibleTypes` | string[] | no | — | core | Optional Type-key hints (namespace/name) a View was designed for. Informational only. |
+| `exportConfig` | ref → `export-config` (inline) | no | — | core | The shared render-output configuration shape (ext:views-l1), attached at both Composition and View (srs#525: one shape, two attachment points). |
+| `aiGuidance` | ref → `view-ai-guidance` (inline) | no | — | core | Guidance for AI agents using a View (View.aiGuidance — a distinct, narrower shape from the generic AiGuidance value object: purpose + extraction only). |
+| `tags` | string[] | no | — | core | Free-form classification tags. |
+| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
+| `updatedAt` | date-time | no | — | core | ISO-8601 timestamp of the most recent update. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/view.json>
+
+#### Compact pseudo-IDL
+
+```typescript
+view {
+  id: string // Globally unique, stable UUID identity of this entity.
+  namespace: string // Reverse-DNS logical grouping.
+  name: string // Machine-readable name within the namespace; snake_case.
+  version: integer // Positive integer version within the UUID lineage.
+  description: string // Human-readable description of this entity.
+  compatibleTypes?: string[] // Optional Type-key hints (namespace/name) a View was designed for. Informational only.
+  exportConfig?: ref → `export-config` (inline) // The shared render-output configuration shape (ext:views-l1), attached at both Composition and View (srs#525: one shape, two attachment points).
+  aiGuidance?: ref → `view-ai-guidance` (inline) // Guidance for AI agents using a View (View.aiGuidance — a distinct, narrower shape from the generic AiGuidance value object: purpose + extraction only).
+  tags?: string[] // Free-form classification tags.
+  createdAt: date-time // ISO-8601 creation timestamp.
+  updatedAt?: date-time // ISO-8601 timestamp of the most recent update.
+}
+```
+
+
+#### Generated reference: `FieldView`
+
+**Referenced Type Id**: 4c00003a-0000-4000-a000-00000000003a
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `field-view` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `fieldId` | ref → `field` (id) | yes | — | core | References a Field by its stable id (reference mode closes the metacircular loop). |
+| `order` | integer | yes | minimum: 0 | core | The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015). |
+| `required` | boolean | no | — | core | Whether this field must be populated before a Record can be logged. |
+| `visible` | boolean | no | — | core | Default: true. Whether a FieldView/RecordPropertyView row is shown. |
+| `displayLabel` | string | no | — | core | Context-specific label override for this field within this Type. |
+| `displayHint` | string | no | — | core | Rendering-only hint text override for a single inherited FieldAssignment (presentation; stays per 6523cf5e). |
+| `editorHintOverride` | string | no | — | core | Presentation only (RFC-036 [CR-036-20]/[CR-036-21]). Supersedes Field.editorHint for Records rendered/edited through this View. |
+| `compositeRenderer` | ref → `composite-renderer-binding` (inline) | no | — | core | RFC-036 — render a FieldView's composite-range value through a named composite renderer. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/view.json#/$defs/FieldView>
+
+#### Compact pseudo-IDL
+
+```typescript
+field-view {
+  fieldId: ref → `field` (id) // References a Field by its stable id (reference mode closes the metacircular loop).
+  order: integer // The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015).
+  required?: boolean // Whether this field must be populated before a Record can be logged.
+  visible?: boolean // Default: true. Whether a FieldView/RecordPropertyView row is shown.
+  displayLabel?: string // Context-specific label override for this field within this Type.
+  displayHint?: string // Rendering-only hint text override for a single inherited FieldAssignment (presentation; stays per 6523cf5e).
+  editorHintOverride?: string // Presentation only (RFC-036 [CR-036-20]/[CR-036-21]). Supersedes Field.editorHint for Records rendered/edited through this View.
+  compositeRenderer?: ref → `composite-renderer-binding` (inline) // RFC-036 — render a FieldView's composite-range value through a named composite renderer.
+}
+```
+
+
+#### Generated reference: `RecordPropertyView`
+
+**Referenced Type Id**: 4c00003b-0000-4000-a000-00000000003b
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `record-property-view` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `property` | string | yes | enum: "lifecycleState" \| "tags" \| "createdAt" \| "updatedAt" | core | Record-level property presented by a RecordPropertyView row. |
+| `order` | integer | yes | minimum: 0 | core | The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015). |
+| `displayLabel` | string | no | — | core | Context-specific label override for this field within this Type. |
+| `visible` | boolean | no | — | core | Default: true. Whether a FieldView/RecordPropertyView row is shown. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/view.json#/$defs/RecordPropertyView>
+
+#### Compact pseudo-IDL
+
+```typescript
+record-property-view {
+  property: string // Record-level property presented by a RecordPropertyView row.
+  order: integer // The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015).
+  displayLabel?: string // Context-specific label override for this field within this Type.
+  visible?: boolean // Default: true. Whether a FieldView/RecordPropertyView row is shown.
+}
+```
+
+
+#### Generated reference: `ExportConfig`
+
+**Referenced Type Id**: 4c000025-0000-4000-a000-000000000025
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `export-config` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `format` | string | no | — | core | Target output format. Portable values: markdown, adoc, html, text. |
+| `preamble` | string | no | — | core | Template string rendered before field values. |
+| `omitEmptyFields` | boolean | no | — | core | Default: false. When true, fields with no value are omitted from output. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/composition.json#/$defs/ExportConfig>
+
+#### Compact pseudo-IDL
+
+```typescript
+export-config {
+  format?: string // Target output format. Portable values: markdown, adoc, html, text.
+  preamble?: string // Template string rendered before field values.
+  omitEmptyFields?: boolean // Default: false. When true, fields with no value are omitted from output.
+}
+```
+
+
 #### ext:views-l2
 
 **Content**: **Depends on**: `ext:views-l1`
@@ -2528,6 +2696,98 @@ When `ext:themes-l1` is declared and a variant name is supplied at render invoca
 2. If found: resolve its `ThemeReference` and apply Rule [T-2] (targets check). If format matches, use that Theme. If format does not match, render **without a theme** — do NOT fall back to `themeRef`.
 3. If not found: fall back to `themeRef` (applying Rule [T-2]). If absent or format-incompatible, render without a theme.
 4. If no variant name is supplied: use `themeRef` (applying Rule [T-2]).
+
+
+#### Generated reference: `Composition`
+
+**Referenced Type Id**: 4c000037-0000-4000-a000-000000000037
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `composition` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
+| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
+| `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
+| `description` | string | yes | — | core | Human-readable description of this entity. |
+| `rootTypeRefs` | ref → `exact-type-ref` (inline)[] | no | — | core | RFC-009 — when set, a Composition applies to Containers whose root Record's resolved Type matches one of these refs. |
+| `sections` | ref → `document-section` (inline)[] | yes | — | core | Ordered list of sections that make up a Composition. |
+| `compositeRenderers` | ref → `composite-renderer-directive` (inline)[] | no | — | core | RFC-036 — composite renderer dispatch declared at a Composition or a DocumentSection. |
+| `navigationLinks` | ref → `navigation-link` (inline)[] | no | — | core | Assembly-time cross-section reading aids. Do not appear in the Relation graph. |
+| `exportConfig` | ref → `export-config` (inline) | no | — | core | The shared render-output configuration shape (ext:views-l1), attached at both Composition and View (srs#525: one shape, two attachment points). |
+| `depthOffset` | integer | no | minimum: 0 | core | Shifts all auto-rendered heading levels by this amount. Default: 0. |
+| `themeRef` | ref → `theme-reference` (inline) | no | — | core | A pointer to a Theme (ext:themes-l1): Composition.themeRef, or a ThemeVariant's own themeRef. |
+| `themeVariants` | ref → `theme-variant` (inline)[] | no | — | core | Named alternative themes selectable at render invocation. |
+| `tags` | string[] | no | — | core | Free-form classification tags. |
+| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
+| `updatedAt` | date-time | no | — | core | ISO-8601 timestamp of the most recent update. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/composition.json>
+
+#### Compact pseudo-IDL
+
+```typescript
+composition {
+  id: string // Globally unique, stable UUID identity of this entity.
+  namespace: string // Reverse-DNS logical grouping.
+  name: string // Machine-readable name within the namespace; snake_case.
+  version: integer // Positive integer version within the UUID lineage.
+  description: string // Human-readable description of this entity.
+  rootTypeRefs?: ref → `exact-type-ref` (inline)[] // RFC-009 — when set, a Composition applies to Containers whose root Record's resolved Type matches one of these refs.
+  sections: ref → `document-section` (inline)[] // Ordered list of sections that make up a Composition.
+  compositeRenderers?: ref → `composite-renderer-directive` (inline)[] // RFC-036 — composite renderer dispatch declared at a Composition or a DocumentSection.
+  navigationLinks?: ref → `navigation-link` (inline)[] // Assembly-time cross-section reading aids. Do not appear in the Relation graph.
+  exportConfig?: ref → `export-config` (inline) // The shared render-output configuration shape (ext:views-l1), attached at both Composition and View (srs#525: one shape, two attachment points).
+  depthOffset?: integer // Shifts all auto-rendered heading levels by this amount. Default: 0.
+  themeRef?: ref → `theme-reference` (inline) // A pointer to a Theme (ext:themes-l1): Composition.themeRef, or a ThemeVariant's own themeRef.
+  themeVariants?: ref → `theme-variant` (inline)[] // Named alternative themes selectable at render invocation.
+  tags?: string[] // Free-form classification tags.
+  createdAt: date-time // ISO-8601 creation timestamp.
+  updatedAt?: date-time // ISO-8601 timestamp of the most recent update.
+}
+```
+
+
+#### Generated reference: `DiscoveryQuery`
+
+**Referenced Type Id**: 4c000024-0000-4000-a000-000000000024
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `discovery-query` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `typeId` | string | no | format: uuid | core | Stable UUID of the referenced Type. |
+| `typeNamespace` | string | no | — | core | Denormalized hint: the namespace of the bound Type. If it conflicts with the resolved Type, typeId wins. |
+| `typeName` | string | no | — | core | Denormalized hint: the name of the bound Type. If it conflicts with the resolved Type, typeId wins. |
+| `containerId` | string | no | format: uuid | core | ext:discovery DiscoveryQuery.containerId — instance is a member of this container (RFC-009 I-66). |
+| `tag` | string[] | no | — | core | AND-conjunction: the instance's tags array must contain ALL of the specified values (ext:discovery DiscoveryQuery.tag). |
+| `lifecycleState` | string | no | — | core | ext:lifecycle — current lifecycle state of this Record. |
+| `lifecycleStates` | string[] | no | — | core | ext:discovery DiscoveryQuery.lifecycleStates — inclusive multi-value lifecycle filter, OR semantics (RFC-012 Rev 11, srs#525). |
+| `excludeLifecycleStates` | string[] | no | — | core | ext:discovery DiscoveryQuery.excludeLifecycleStates — exclusion filter, applied after lifecycleState/lifecycleStates. |
+| `contentMatch` | string | no | — | core | ext:discovery DiscoveryQuery.contentMatch — free-text recall-floor predicate over the Text Projection. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/discovery.json#/$defs/DiscoveryQuery>
+
+#### Compact pseudo-IDL
+
+```typescript
+discovery-query {
+  typeId?: string // Stable UUID of the referenced Type.
+  typeNamespace?: string // Denormalized hint: the namespace of the bound Type. If it conflicts with the resolved Type, typeId wins.
+  typeName?: string // Denormalized hint: the name of the bound Type. If it conflicts with the resolved Type, typeId wins.
+  containerId?: string // ext:discovery DiscoveryQuery.containerId — instance is a member of this container (RFC-009 I-66).
+  tag?: string[] // AND-conjunction: the instance's tags array must contain ALL of the specified values (ext:discovery DiscoveryQuery.tag).
+  lifecycleState?: string // ext:lifecycle — current lifecycle state of this Record.
+  lifecycleStates?: string[] // ext:discovery DiscoveryQuery.lifecycleStates — inclusive multi-value lifecycle filter, OR semantics (RFC-012 Rev 11, srs#525).
+  excludeLifecycleStates?: string[] // ext:discovery DiscoveryQuery.excludeLifecycleStates — exclusion filter, applied after lifecycleState/lifecycleStates.
+  contentMatch?: string // ext:discovery DiscoveryQuery.contentMatch — free-text recall-floor predicate over the Text Projection.
+}
+```
 
 
 #### ext:cross-field-validation
@@ -3649,6 +3909,61 @@ Cross-boundary relations MUST NOT appear in the slice's relations collection. Th
 An RFC-026-aware validator MUST NOT treat the following as errors when a `slice` block is present: `externalRelationRefs` UUIDs absent from `instanceIndex`; absence of unreferenced type/field definitions; an incomplete `containerIndex`; tombstoned source document entries with absent content files. Dangling edges in the relations collection, unresolvable `typeId`/`fieldId` references, and instance schema validation errors remain errors regardless of slice status.
 
 ---
+
+
+#### Generated reference: `Manifest`
+
+**Referenced Type Id**: 4c00002e-0000-4000-a000-00000000002e
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `manifest` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `srsVersion` | string | yes | — | core | SRS spec version this repository conforms to, e.g. '2.0' or '2.0-draft'. |
+| `dataModelRevision` | integer | no | minimum: 0 | core | RFC-033/#265 — monotonic integer generation stamp for operational data-model migrations. Absent means revision 0. |
+| `repositoryId` | string | yes | format: uuid | core | Stable UUID for this repository (or, on a Slice, the source repository it was exported from). Never changes on copy or export. |
+| `namespace` | string | no | — | core | Reverse-DNS logical grouping. |
+| `title` | string | yes | — | core | Human-readable title. |
+| `description` | string | no | — | core | Human-readable description of this entity. |
+| `declaredExtensions` | string[] | no | — | core | SRS extensions this repository conforms to, e.g. ['ext:lifecycle', 'ext:views-l1']. |
+| `container` | ref → `container` (inline) | yes | — | core | Embedded Container record — canonical source of truth for this repository's identity. |
+| `packageRef` | ref → `package-ref` (inline) | no | — | core | Reference to the SRS Package that supplies field and type definitions (single package). |
+| `packageRefs` | ref → `package-ref` (inline)[] | no | — | core | References to one or more SRS Packages (RFC-014 Change C, multi-package/multi-version repositories). |
+| `upstreamPackage` | ref → `upstream-package` (inline) | no | — | core | RFC-014 (ext:import-tracking) — top-level normative provenance stamp for a repository initialised from an upstream Package. |
+| `sourceDocumentsPath` | string | no | — | core | Relative path from manifest.json to the source-documents/ directory. |
+| `aiGuidance` | ref → `repository-ai-guidance` (inline) | no | — | core | Comprehension guidance for AI agents reading this repository (Manifest.aiGuidance — a distinct, narrower shape from the generic AiGuidance value object). |
+| `renderedPresentations` | ref → `rendered-presentation` (inline)[] | no | — | core | RFC-015 [N+31] — declared presentations for this repository. |
+| `slice` | ref → `slice` (inline) | no | — | core | ext:slices (RFC-026) — present when this archive is a partial export (slice) of a source repository. |
+| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
+| `updatedAt` | date-time | no | — | core | ISO-8601 timestamp of the most recent update. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/manifest.json>
+
+#### Compact pseudo-IDL
+
+```typescript
+manifest {
+  srsVersion: string // SRS spec version this repository conforms to, e.g. '2.0' or '2.0-draft'.
+  dataModelRevision?: integer // RFC-033/#265 — monotonic integer generation stamp for operational data-model migrations. Absent means revision 0.
+  repositoryId: string // Stable UUID for this repository (or, on a Slice, the source repository it was exported from). Never changes on copy or export.
+  namespace?: string // Reverse-DNS logical grouping.
+  title: string // Human-readable title.
+  description?: string // Human-readable description of this entity.
+  declaredExtensions?: string[] // SRS extensions this repository conforms to, e.g. ['ext:lifecycle', 'ext:views-l1'].
+  container: ref → `container` (inline) // Embedded Container record — canonical source of truth for this repository's identity.
+  packageRef?: ref → `package-ref` (inline) // Reference to the SRS Package that supplies field and type definitions (single package).
+  packageRefs?: ref → `package-ref` (inline)[] // References to one or more SRS Packages (RFC-014 Change C, multi-package/multi-version repositories).
+  upstreamPackage?: ref → `upstream-package` (inline) // RFC-014 (ext:import-tracking) — top-level normative provenance stamp for a repository initialised from an upstream Package.
+  sourceDocumentsPath?: string // Relative path from manifest.json to the source-documents/ directory.
+  aiGuidance?: ref → `repository-ai-guidance` (inline) // Comprehension guidance for AI agents reading this repository (Manifest.aiGuidance — a distinct, narrower shape from the generic AiGuidance value object).
+  renderedPresentations?: ref → `rendered-presentation` (inline)[] // RFC-015 [N+31] — declared presentations for this repository.
+  slice?: ref → `slice` (inline) // ext:slices (RFC-026) — present when this archive is a partial export (slice) of a source repository.
+  createdAt: date-time // ISO-8601 creation timestamp.
+  updatedAt?: date-time // ISO-8601 timestamp of the most recent update.
+}
+```
 
 
 #### Discovery

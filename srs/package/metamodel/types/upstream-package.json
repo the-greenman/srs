@@ -1,0 +1,42 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes an UpstreamPackage: its identity, version, and install time."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-014 (ext:import-tracking) — normative provenance stamp recording the upstream Package a repository was initialised from.",
+  "fields": [
+    {
+      "fieldId": "4b0000a8-0000-4000-a000-0000000000a8",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Package Id"
+    },
+    {
+      "fieldId": "4b000002-0000-4000-a000-000000000002",
+      "order": 1,
+      "required": true
+    },
+    {
+      "fieldId": "4b000003-0000-4000-a000-000000000003",
+      "order": 2,
+      "required": true
+    },
+    {
+      "fieldId": "4b0000b0-0000-4000-a000-0000000000b0",
+      "order": 3,
+      "required": true,
+      "displayLabel": "Version"
+    },
+    {
+      "fieldId": "4b0000b1-0000-4000-a000-0000000000b1",
+      "order": 4,
+      "required": true,
+      "displayLabel": "Installed At"
+    }
+  ],
+  "id": "4c000028-0000-4000-a000-000000000028",
+  "name": "upstream-package",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

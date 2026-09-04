@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "RFC-036 — composite renderer dispatch declared at a Composition or a DocumentSection."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-036 — composite renderer dispatch declared at a Composition or a DocumentSection.",
+  "id": "4b0000c6-0000-4000-a000-0000000000c6",
+  "name": "composite_renderers",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "cardinality": "list",
+    "rangeType": {
+      "typeId": "4c000034-0000-4000-a000-000000000034",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

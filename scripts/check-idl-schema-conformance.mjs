@@ -91,12 +91,18 @@ const MAPPING = [
   // is removed, typed-record.json is deleted, and the prose no longer has a "Typed Record"/
   // "TypedField" heading to map.
   //
-  // RelationTypeDefinition is the sole survivor: relation-type.json is re-keyed (srs#524) but not
-  // yet metamodel-Type-modelled (still parked — see docs/schema/2.0/generation-ledger.md and the
-  // srs#527 follow-up filed for Composition/DiscoveryQuery/ExportConfig/View/Manifest/
-  // RelationTypeDefinition Type-modelling), so its hand-authored prose block stays, and this row
-  // stays live.
-  { entity: "RelationTypeDefinition", prose: "records/subsections/04-7-vocabulary-term-substrate.json", header: "RelationTypeDefinition", schemaFile: "relation-type.json", pointer: "#" },
+  // RelationTypeDefinition is RETIRED from this mapping as of srs#541 (epic #256/#272 Task 4b/6
+  // residual, the last of the srs#527 "sole survivor" rows): `relation-type-definition` is now a
+  // `com.semanticops.srs/metamodel` Type, closure-proven by rfc-541-closure-test.mjs (emitter ⊆
+  // committed relation-type.json), and its prose subsection (04-7-vocabulary-term-substrate.json)
+  // no longer carries a hand-authored ```typescript``` block for this row — replaced by its own
+  // generated-type-reference record (scripts/gen-type-reference-tables.mjs), same "no hand-authored
+  // structural duplicate remains for generated targets" pattern as every other row retired above.
+  // This was the sole surviving row from srs#527's retirement of the other 8 — the MAPPING table is
+  // now empty; comparing two independently-generated-from-the-same-source artifacts can never catch
+  // drift a bug in the shared source wouldn't also cause, so there is nothing left for R1-R3 to
+  // usefully check, for any entity, ever again under this mechanism (a future entity that regains a
+  // hand-authored prose block would need its own new row, not a reason to keep this one alive).
   // VocabularyEntry is an abstract base contract with no schema file - deliberately not mapped.
 ];
 

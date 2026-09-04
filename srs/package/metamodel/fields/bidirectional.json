@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Default: false. Whether a NavigationLink should also be read in reverse."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Default: false. Whether a NavigationLink should also be read in reverse.",
+  "id": "4b0000ce-0000-4000-a000-0000000000ce",
+  "name": "bidirectional",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "boolean"
+  },
+  "version": 1
+}

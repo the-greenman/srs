@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Assembly-time cross-section reading aids. Do not appear in the Relation graph."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Assembly-time cross-section reading aids. Do not appear in the Relation graph.",
+  "id": "4b0000d8-0000-4000-a000-0000000000d8",
+  "name": "navigation_links",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "cardinality": "list",
+    "rangeType": {
+      "typeId": "4c000031-0000-4000-a000-000000000031",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a NavigationLink: the two sections it connects, an optional label, and directionality."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Assembly-time cross-section reading aid within a Composition. Does not appear in the Relation graph.",
+  "fields": [
+    {
+      "fieldId": "4b0000cc-0000-4000-a000-0000000000cc",
+      "order": 0,
+      "required": true,
+      "displayLabel": "From Section Id"
+    },
+    {
+      "fieldId": "4b0000cd-0000-4000-a000-0000000000cd",
+      "order": 1,
+      "required": true,
+      "displayLabel": "To Section Id"
+    },
+    {
+      "fieldId": "4b00003a-0000-4000-a000-00000000003a",
+      "order": 2,
+      "required": false
+    },
+    {
+      "fieldId": "4b0000ce-0000-4000-a000-0000000000ce",
+      "order": 3,
+      "required": false
+    }
+  ],
+  "id": "4c000031-0000-4000-a000-000000000031",
+  "name": "navigation-link",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

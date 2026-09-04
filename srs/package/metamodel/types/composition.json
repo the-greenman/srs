@@ -1,0 +1,103 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a Composition: its identity, sections, rendering configuration, and theming."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-038/srs#523 (renamed from DocumentView) — a versioned, Container-level projection assembling multiple Records from a Container into a coherent, ordered document (ext:views-l2). `containerType` (deprecated, no per-property deprecation mechanism modelled), `aiGuidance`/`lineage`/`provenance` (bare implementation-defined bags in this file, no real internal structure — same reasoning as Blueprint's own) are excluded.",
+  "fields": [
+    {
+      "fieldId": "4b000001-0000-4000-a000-000000000001",
+      "order": 0,
+      "required": true
+    },
+    {
+      "fieldId": "4b000002-0000-4000-a000-000000000002",
+      "order": 1,
+      "required": true
+    },
+    {
+      "fieldId": "4b000003-0000-4000-a000-000000000003",
+      "order": 2,
+      "required": true
+    },
+    {
+      "fieldId": "4b000004-0000-4000-a000-000000000004",
+      "order": 3,
+      "required": true
+    },
+    {
+      "fieldId": "4b000005-0000-4000-a000-000000000005",
+      "order": 4,
+      "required": true
+    },
+    {
+      "fieldId": "4b0000d7-0000-4000-a000-0000000000d7",
+      "order": 5,
+      "required": false,
+      "displayLabel": "Root Type Refs"
+    },
+    {
+      "fieldId": "4b0000d6-0000-4000-a000-0000000000d6",
+      "order": 6,
+      "required": true,
+      "displayLabel": "Sections"
+    },
+    {
+      "fieldId": "4b0000c6-0000-4000-a000-0000000000c6",
+      "order": 7,
+      "required": false,
+      "displayLabel": "Composite Renderers"
+    },
+    {
+      "fieldId": "4b0000d8-0000-4000-a000-0000000000d8",
+      "order": 8,
+      "required": false,
+      "displayLabel": "Navigation Links"
+    },
+    {
+      "fieldId": "4b0000d9-0000-4000-a000-0000000000d9",
+      "order": 9,
+      "required": false,
+      "displayLabel": "Export Config"
+    },
+    {
+      "fieldId": "4b0000da-0000-4000-a000-0000000000da",
+      "order": 10,
+      "required": false,
+      "displayLabel": "Depth Offset"
+    },
+    {
+      "fieldId": "4b0000d2-0000-4000-a000-0000000000d2",
+      "order": 11,
+      "required": false,
+      "displayLabel": "Theme Ref"
+    },
+    {
+      "fieldId": "4b0000d3-0000-4000-a000-0000000000d3",
+      "order": 12,
+      "required": false,
+      "displayLabel": "Theme Variants"
+    },
+    {
+      "fieldId": "4b00000b-0000-4000-a000-00000000000b",
+      "order": 13,
+      "required": false
+    },
+    {
+      "fieldId": "4b000006-0000-4000-a000-000000000006",
+      "order": 14,
+      "required": true
+    },
+    {
+      "fieldId": "4b000060-0000-4000-a000-000000000060",
+      "order": 15,
+      "required": false,
+      "displayLabel": "Updated At"
+    }
+  ],
+  "id": "4c000037-0000-4000-a000-000000000037",
+  "name": "composition",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

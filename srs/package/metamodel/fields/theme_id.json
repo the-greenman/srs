@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "References Theme.id in Package.themes[] (ThemeReference.mode === bundled)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "References Theme.id in Package.themes[] (ThemeReference.mode === bundled).",
+  "id": "4b0000d1-0000-4000-a000-0000000000d1",
+  "name": "theme_id",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "format": "uuid"
+  },
+  "version": 1
+}

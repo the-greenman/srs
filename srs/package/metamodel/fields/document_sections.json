@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Ordered list of sections that make up a Composition."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Ordered list of sections that make up a Composition.",
+  "id": "4b0000d6-0000-4000-a000-0000000000d6",
+  "name": "document_sections",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "cardinality": "list",
+    "rangeType": {
+      "typeId": "4c000036-0000-4000-a000-000000000036",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

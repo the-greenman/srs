@@ -1,0 +1,37 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a RelationPresentationEntry: its relation type, display directions, and label overrides."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-027 — declares which relation type a RelationsPresentation displays for a member, and how.",
+  "fields": [
+    {
+      "fieldId": "4b000066-0000-4000-a000-000000000066",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Relation Type"
+    },
+    {
+      "fieldId": "4b0000c9-0000-4000-a000-0000000000c9",
+      "order": 1,
+      "required": false
+    },
+    {
+      "fieldId": "4b0000ca-0000-4000-a000-0000000000ca",
+      "order": 2,
+      "required": false,
+      "displayLabel": "Forward Label"
+    },
+    {
+      "fieldId": "4b0000cb-0000-4000-a000-0000000000cb",
+      "order": 3,
+      "required": false,
+      "displayLabel": "Inverse Label"
+    }
+  ],
+  "id": "4c00002f-0000-4000-a000-00000000002f",
+  "name": "relation-presentation-entry",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "LOCATOR (rfc-decision-c8704763). local: definitions live in the repository under package/. remote: pre-installed in the consumer's registry."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "LOCATOR (rfc-decision-c8704763). local: definitions live in the repository under package/. remote: pre-installed in the consumer's registry.",
+  "id": "4b0000a6-0000-4000-a000-0000000000a6",
+  "name": "package_ref_mode",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "local",
+      "remote"
+    ]
+  },
+  "version": 1
+}

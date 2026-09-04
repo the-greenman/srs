@@ -1,0 +1,43 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a PackageRef: its locator mode and package identity hints."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "A reference to an SRS Package that supplies field and type definitions, either local (in-repository) or remote (pre-installed in the consumer's registry).",
+  "fields": [
+    {
+      "fieldId": "4b0000a6-0000-4000-a000-0000000000a6",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Mode"
+    },
+    {
+      "fieldId": "4b0000a7-0000-4000-a000-0000000000a7",
+      "order": 1,
+      "required": false
+    },
+    {
+      "fieldId": "4b0000a8-0000-4000-a000-0000000000a8",
+      "order": 2,
+      "required": false,
+      "displayLabel": "Package Id"
+    },
+    {
+      "fieldId": "4b0000a9-0000-4000-a000-0000000000a9",
+      "order": 3,
+      "required": false,
+      "displayLabel": "Package Name"
+    },
+    {
+      "fieldId": "4b00002f-0000-4000-a000-00000000002f",
+      "order": 4,
+      "required": false,
+      "displayLabel": "Package Version"
+    }
+  ],
+  "id": "4c000026-0000-4000-a000-000000000026",
+  "name": "package-ref",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

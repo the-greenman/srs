@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Relative path to a referenced file (a package directory/package.json, or a Theme JSON file)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Relative path to a referenced file (a package directory/package.json, or a Theme JSON file).",
+  "id": "4b0000a7-0000-4000-a000-0000000000a7",
+  "name": "path",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

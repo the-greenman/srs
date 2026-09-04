@@ -1,0 +1,20 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Comprehension guidance for AI agents reading this repository (Manifest.aiGuidance — a distinct, narrower shape from the generic AiGuidance value object)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Comprehension guidance for AI agents reading this repository (Manifest.aiGuidance — a distinct, narrower shape from the generic AiGuidance value object).",
+  "id": "4b0000bd-0000-4000-a000-0000000000bd",
+  "name": "repository_ai_guidance",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "rangeType": {
+      "typeId": "4c00002d-0000-4000-a000-00000000002d",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

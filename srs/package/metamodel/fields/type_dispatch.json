@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "RFC-008 (ext:views-l2) — map from a record's resolved type key to the ext:views-l1 View UUID used to render records of that type within a DocumentSection."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-008 (ext:views-l2) — map from a record's resolved type key to the ext:views-l1 View UUID used to render records of that type within a DocumentSection.",
+  "id": "4b0000c0-0000-4000-a000-0000000000c0",
+  "name": "type_dispatch",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "map",
+    "valueRange": "string"
+  },
+  "version": 1
+}

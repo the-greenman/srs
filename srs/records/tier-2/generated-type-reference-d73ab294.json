@@ -1,0 +1,17 @@
+{
+  "instanceId": "d73ab294-bdbe-4e4b-8388-36276ec964c5",
+  "typeId": "2a000014-0000-4000-a000-000000000014",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "generated-type-reference",
+  "fieldValues": {
+    "title": "Generated reference: `View`",
+    "referenced_type_id": "4c00003c-0000-4000-a000-00000000003c",
+    "referenced_type_version": 1,
+    "presentation_profile": "property-table-and-pseudo-idl",
+    "content": "Generated from the resolved effective `view` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.\n\n| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |\n|---|---|---|---|---|---|\n| `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |\n| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |\n| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |\n| `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |\n| `description` | string | yes | — | core | Human-readable description of this entity. |\n| `compatibleTypes` | string[] | no | — | core | Optional Type-key hints (namespace/name) a View was designed for. Informational only. |\n| `exportConfig` | ref → `export-config` (inline) | no | — | core | The shared render-output configuration shape (ext:views-l1), attached at both Composition and View (srs#525: one shape, two attachment points). |\n| `aiGuidance` | ref → `view-ai-guidance` (inline) | no | — | core | Guidance for AI agents using a View (View.aiGuidance — a distinct, narrower shape from the generic AiGuidance value object: purpose + extraction only). |\n| `tags` | string[] | no | — | core | Free-form classification tags. |\n| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |\n| `updatedAt` | date-time | no | — | core | ISO-8601 timestamp of the most recent update. |\n\nRaw JSON Schema: <https://srs.semanticops.com/schema/2.0/view.json>\n\n#### Compact pseudo-IDL\n\n```typescript\nview {\n  id: string // Globally unique, stable UUID identity of this entity.\n  namespace: string // Reverse-DNS logical grouping.\n  name: string // Machine-readable name within the namespace; snake_case.\n  version: integer // Positive integer version within the UUID lineage.\n  description: string // Human-readable description of this entity.\n  compatibleTypes?: string[] // Optional Type-key hints (namespace/name) a View was designed for. Informational only.\n  exportConfig?: ref → `export-config` (inline) // The shared render-output configuration shape (ext:views-l1), attached at both Composition and View (srs#525: one shape, two attachment points).\n  aiGuidance?: ref → `view-ai-guidance` (inline) // Guidance for AI agents using a View (View.aiGuidance — a distinct, narrower shape from the generic AiGuidance value object: purpose + extraction only).\n  tags?: string[] // Free-form classification tags.\n  createdAt: date-time // ISO-8601 creation timestamp.\n  updatedAt?: date-time // ISO-8601 timestamp of the most recent update.\n}\n```"
+  },
+  "createdAt": "2026-09-03T18:00:00Z",
+  "updatedAt": "2026-09-03T18:00:00Z",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
