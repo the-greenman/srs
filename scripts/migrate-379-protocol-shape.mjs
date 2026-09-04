@@ -35,6 +35,7 @@ const TARGETS = [
   'packages/com.mudemocracy.governance/1.0.0/package/protocols/decision-7a088176.json',
   'packages/com.mudemocracy.governance/1.1.0/package/protocols/decision-7a088176.json',
   'packages/com.mudemocracy.governance/1.2.0/package/protocols/decision-7a088176.json',
+  'packages/com.mudemocracy.governance/1.2.1/package/protocols/decision-7a088176.json',
 ];
 
 const RENAME = {
