@@ -48,6 +48,34 @@ function strip(schema) {
   return schema;
 }
 const eq = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+/**
+ * Authoritative equality, with one general widening (srs#534, same rule as schema-closure.mjs's
+ * `isSub`): a seed `type` keyword may declare a union (e.g. ["string","integer"]) wider than any
+ * single Field's own scalar `datatype` choice — consistent when the projected scalar type is one of
+ * the seed's allowed types. Real case: `allowed_values` (#20) projects `{type:"string"}` (its own
+ * fieldType.datatype is `string`), while field.json's `allowedValues.items.type` is widened to
+ * `["string","integer"]` so an integer-closed-domain Field (`tier`) can validate against the frozen
+ * bootstrap schema at all — the metamodel has no union/either-type primitive to describe that
+ * property's own true shape, so this one field's projection is a narrower-but-consistent member of
+ * the seed's declared set, not a mismatch.
+ */
+function authoritativeEq(got, want) {
+  if (Array.isArray(got) || Array.isArray(want)) {
+    if (!Array.isArray(got) || !Array.isArray(want) || got.length !== want.length) return false;
+    return got.every((v, i) => authoritativeEq(v, want[i]));
+  }
+  if (got && typeof got === 'object' && want && typeof want === 'object') {
+    for (const k of new Set([...Object.keys(got), ...Object.keys(want)])) {
+      if (k === 'type' && Array.isArray(want[k]) && !Array.isArray(got[k])) {
+        if (!want[k].includes(got[k])) return false;
+        continue;
+      }
+      if (!(k in got) || !(k in want) || !authoritativeEq(got[k], want[k])) return false;
+    }
+    return true;
+  }
+  return got === want;
+}
 
 // Correspondence: metamodel Type -> the seed properties bag it self-hosts.
 // nameOverride maps a metamodel field name to a differently-named seed property.
@@ -141,7 +169,7 @@ for (const corr of CORRESPONDENCES) {
       continue;
     }
     const want = strip(seedProp);
-    if (eq(got, want)) pass++;
+    if (authoritativeEq(got, want)) pass++;
     else { fail++; fails.push(`${corr.type}.${field.name} (seed ${camel}): AUTHORITATIVE mismatch\n    got : ${JSON.stringify(got)}\n    seed: ${JSON.stringify(want)}`); }
   }
 }

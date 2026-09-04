@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "The exact ordered list of TextSegment.text values expected for one field of one instance (ExpectedSegments)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "The exact ordered list of TextSegment.text values expected for one field of one instance (ExpectedSegments).",
+  "id": "4b0000ef-0000-4000-a000-0000000000ef",
+  "name": "segments",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "cardinality": "list"
+  },
+  "version": 1
+}

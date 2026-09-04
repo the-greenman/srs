@@ -88,6 +88,15 @@ const RAW_SCHEMA_LINKS = {
   protocol: "https://srs.semanticops.com/schema/2.0/protocol.json",
   "protocol-stage": "https://srs.semanticops.com/schema/2.0/protocol.json#/$defs/ProtocolStage",
   "field-ref": "https://srs.semanticops.com/schema/2.0/protocol.json#/$defs/FieldRef",
+  // srs#534: theme.json's entity + the remaining discovery.json $defs, plus the newly-authored
+  // srsj-envelope.json. Same discipline: top-level entities link their own file; nested value
+  // objects link into discovery.json's own $defs (hand-spelled PascalCase, verified against the
+  // committed file — not emitter-owned, same as discovery-query's own entry above).
+  theme: "https://srs.semanticops.com/schema/2.0/theme.json",
+  "srsj-envelope": "https://srs.semanticops.com/schema/2.0/srsj-envelope.json",
+  "text-segment": "https://srs.semanticops.com/schema/2.0/discovery.json#/$defs/TextSegment",
+  "expected-segments": "https://srs.semanticops.com/schema/2.0/discovery.json#/$defs/ExpectedSegments",
+  "conformance-scenario": "https://srs.semanticops.com/schema/2.0/discovery.json#/$defs/ConformanceScenario",
 };
 
 async function findJsonFiles(dir) {

@@ -1,0 +1,88 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a Theme: its identity, output targets, and templates."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:themes-l1 — the visual presentation layer for a Composition. Specifies assets, element templates, and stylesheets without altering semantic structure. `lineage`/`provenance` are excluded (bare implementation-defined bags in this file, no real internal structure — same reasoning as Blueprint/Composition/View elsewhere in this ledger). `assets` is excluded from the LIVE corpus — the map-of-$ref capability that projects it now exists (srs#534), but populating it here breaks the pinned srs-rust binary's repo load (a tooling parity gap, not a modelling gap); see field 255's note above.",
+  "fields": [
+    {
+      "fieldId": "4b000001-0000-4000-a000-000000000001",
+      "order": 0,
+      "required": true
+    },
+    {
+      "fieldId": "4b000002-0000-4000-a000-000000000002",
+      "order": 1,
+      "required": true
+    },
+    {
+      "fieldId": "4b000003-0000-4000-a000-000000000003",
+      "order": 2,
+      "required": true
+    },
+    {
+      "fieldId": "4b000004-0000-4000-a000-000000000004",
+      "order": 3,
+      "required": true
+    },
+    {
+      "fieldId": "4b000005-0000-4000-a000-000000000005",
+      "order": 4,
+      "required": true
+    },
+    {
+      "fieldId": "4b00010d-0000-4000-a000-00000000010d",
+      "order": 5,
+      "required": true
+    },
+    {
+      "fieldId": "4b000108-0000-4000-a000-000000000108",
+      "order": 6,
+      "required": false,
+      "displayLabel": "Css Class Fields"
+    },
+    {
+      "fieldId": "4b00010b-0000-4000-a000-00000000010b",
+      "order": 7,
+      "required": false,
+      "displayLabel": "Page Templates"
+    },
+    {
+      "fieldId": "4b00010c-0000-4000-a000-00000000010c",
+      "order": 8,
+      "required": false,
+      "displayLabel": "Element Templates"
+    },
+    {
+      "fieldId": "4b00010a-0000-4000-a000-00000000010a",
+      "order": 9,
+      "required": false
+    },
+    {
+      "fieldId": "4b000109-0000-4000-a000-000000000109",
+      "order": 10,
+      "required": false
+    },
+    {
+      "fieldId": "4b00000b-0000-4000-a000-00000000000b",
+      "order": 11,
+      "required": false
+    },
+    {
+      "fieldId": "4b000006-0000-4000-a000-000000000006",
+      "order": 12,
+      "required": true
+    },
+    {
+      "fieldId": "4b000060-0000-4000-a000-000000000060",
+      "order": 13,
+      "required": false,
+      "displayLabel": "Updated At"
+    }
+  ],
+  "id": "4c00004a-0000-4000-a000-00000000004a",
+  "name": "theme",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

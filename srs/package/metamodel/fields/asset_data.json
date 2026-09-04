@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Base64 for binary asset types; raw text for stylesheet/data. Required when AssetDeclaration.mode === 'inline'."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Base64 for binary asset types; raw text for stylesheet/data. Required when AssetDeclaration.mode === 'inline'.",
+  "id": "4b0000f5-0000-4000-a000-0000000000f5",
+  "name": "asset_data",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

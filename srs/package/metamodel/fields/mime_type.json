@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "e.g. 'image/png', 'font/woff2', 'text/css'."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "e.g. 'image/png', 'font/woff2', 'text/css'.",
+  "id": "4b0000f4-0000-4000-a000-0000000000f4",
+  "name": "mime_type",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

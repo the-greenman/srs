@@ -1,0 +1,17 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Minimum required result set for a ConformanceScenario. For exactMatch:true scenarios, this is also the maximum."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Minimum required result set for a ConformanceScenario. For exactMatch:true scenarios, this is also the maximum.",
+  "id": "4b0000ed-0000-4000-a000-0000000000ed",
+  "name": "expected_instance_ids",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "format": "uuid",
+    "cardinality": "list"
+  },
+  "version": 1
+}

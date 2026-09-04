@@ -1,0 +1,16 @@
+{
+  "id": "f5340000-0000-4000-a000-000000000000",
+  "namespace": "test.rfc534",
+  "name": "rfc-534-emitter-capabilities-fixture",
+  "version": "1.0.0",
+  "fields": [
+    "fields/name.json",
+    "fields/priority.json",
+    "fields/annotations.json",
+    "fields/color.json"
+  ],
+  "types": [
+    "types/annotation.json",
+    "types/widget.json"
+  ]
+}

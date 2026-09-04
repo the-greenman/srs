@@ -218,7 +218,8 @@
             "boolean",
             "date",
             "date-time",
-            "open"
+            "open",
+            "ref"
           ],
           "title": "Value Range"
         }

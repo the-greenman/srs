@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Wraps the entire rendered document body. Available: {{content}}, {{container-title}}, {{date}}, {{asset:*}}."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Wraps the entire rendered document body. Available: {{content}}, {{container-title}}, {{date}}, {{asset:*}}.",
+  "id": "4b0000f9-0000-4000-a000-0000000000f9",
+  "name": "document_wrapper",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

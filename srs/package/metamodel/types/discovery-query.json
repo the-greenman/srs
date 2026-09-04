@@ -4,7 +4,7 @@
     "purpose": "Describes a DiscoveryQuery: its structured filter predicates over type, container, tags, lifecycle state, and free text."
   },
   "createdAt": "2026-07-29T00:00:00Z",
-  "description": "ext:discovery (RFC-012) — a conjunction of zero or more structured filter predicates. An instance matches if and only if it satisfies all predicates whose values are specified. Modelled minus `tier` (a bare untyped-integer enum — the #534-tracked emitter gap; documented exclusion, same latitude every other entity already has, e.g. Container.containerType).",
+  "description": "ext:discovery (RFC-012) — a conjunction of zero or more structured filter predicates. An instance matches if and only if it satisfies all predicates whose values are specified. `tier` (a bare untyped-integer enum) is excluded from the LIVE corpus — the emitter capability that projects it now exists (srs#534), but populating it here breaks the pinned srs-rust binary's repo load (a tooling parity gap, not a modelling gap); see field 225's note above.",
   "fields": [
     {
       "fieldId": "4b000021-0000-4000-a000-000000000021",

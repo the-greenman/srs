@@ -1,0 +1,25 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a SectionWrapperOverride: which section it targets and its template."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:themes-l1 — a per-section override of ElementTemplates.sectionWrapper.",
+  "fields": [
+    {
+      "fieldId": "4b0000be-0000-4000-a000-0000000000be",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Section Id"
+    },
+    {
+      "fieldId": "4b0000fe-0000-4000-a000-0000000000fe",
+      "order": 1,
+      "required": true
+    }
+  ],
+  "id": "4c000046-0000-4000-a000-000000000046",
+  "name": "section-wrapper-override",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

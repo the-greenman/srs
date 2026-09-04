@@ -1,0 +1,31 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a TextSegment: which field it came from and its raw text."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:discovery (RFC-012) — a single searchable unit in the Text Projection of an instance. Normalization (NFC + Unicode simple lowercasing) is applied at match time, not at segment construction time.",
+  "fields": [
+    {
+      "fieldId": "4b0000ea-0000-4000-a000-0000000000ea",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Field Id"
+    },
+    {
+      "fieldId": "4b0000eb-0000-4000-a000-0000000000eb",
+      "order": 1,
+      "required": true,
+      "displayLabel": "Field Name"
+    },
+    {
+      "fieldId": "4b0000ec-0000-4000-a000-0000000000ec",
+      "order": 2,
+      "required": true
+    }
+  ],
+  "id": "4c000040-0000-4000-a000-000000000040",
+  "name": "text-segment",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

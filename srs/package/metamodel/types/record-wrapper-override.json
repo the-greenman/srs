@@ -1,0 +1,25 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a RecordWrapperOverride: which Type it targets and its template."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:themes-l1 — a per-type override of ElementTemplates.recordWrapper.",
+  "fields": [
+    {
+      "fieldId": "4b000021-0000-4000-a000-000000000021",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Type Id"
+    },
+    {
+      "fieldId": "4b0000fe-0000-4000-a000-0000000000fe",
+      "order": 1,
+      "required": true
+    }
+  ],
+  "id": "4c000047-0000-4000-a000-000000000047",
+  "name": "record-wrapper-override",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

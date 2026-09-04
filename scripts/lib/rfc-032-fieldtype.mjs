@@ -63,6 +63,12 @@ function projectScalar(ft) {
     // Configurable data range -> pure enum (Change G): inline allowedValues, or the Vocabulary's
     // resolved effective Term keys (supplied by the caller as _resolvedVocabKeys at gen time).
     s = { type: "string", enum: ft.allowedValues ?? ft._resolvedVocabKeys ?? [] };
+  } else if (ft.datatype === "integer" && ft.valueDomain === "closed") {
+    // srs#534 — untyped integer enum: a closed integer domain projects to a BARE `enum` with no
+    // `type` keyword (valid JSON Schema; enum alone fully constrains the value), matching the
+    // committed seed's own hand-authored shape for e.g. discovery.json's DiscoveryQuery.tier.
+    // Deliberately does NOT reuse the string branch's `{type:"string", enum}` shape.
+    s = { enum: ft.allowedValues ?? [] };
   }
   return s;
 }
@@ -78,7 +84,20 @@ export function projectField(ft, $defs = {}) {
       core = { $ref: `#/$defs/${rangeDefKey(parts)}` };
     }
   } else if (ft.datatype === "map") {
-    core = { type: "object", additionalProperties: ft.valueRange === "open" ? true : projectScalar({ datatype: ft.valueRange }) };
+    if (ft.valueRange === "ref") {
+      // srs#534 — map-of-$ref: `ft.rangeType` is already resolved to {namespace,name,version} by
+      // the caller (schema-emitter.mjs's renderNode), same contract the top-level `ref` branch
+      // above relies on.
+      const parts = rangeRefParts(ft.rangeType);
+      core = {
+        type: "object",
+        additionalProperties: ft.mode === "reference"
+          ? { type: "string", format: "uuid", "x-srs-range-type": `${parts.namespace}/${parts.name}@${parts.version}` }
+          : { $ref: `#/$defs/${rangeDefKey(parts)}` },
+      };
+    } else {
+      core = { type: "object", additionalProperties: ft.valueRange === "open" ? true : projectScalar({ datatype: ft.valueRange }) };
+    }
   } else if (ft.datatype === "dependent") {
     core = {}; // broad permissible value; conformance is a validation obligation (deliberately lossy)
   } else {
@@ -113,20 +132,23 @@ export function validateFieldType(ft, ctx = {}) {
     push("R1", `cardinality "${ft.cardinality}" must be "single" or "list"`);
   }
 
-  // R2 — ref requires rangeType (ExactTypeRef); mode defaults inline; rangeType/mode absent otherwise.
-  if (ft.datatype === "ref") {
+  // R2 — ref (or map-of-ref, srs#534) requires rangeType (ExactTypeRef); mode defaults inline;
+  // rangeType/mode absent otherwise.
+  const usesRangeType = ft.datatype === "ref" || (ft.datatype === "map" && ft.valueRange === "ref");
+  if (usesRangeType) {
     const rt = ft.rangeType;
     const ok = rt && typeof rt === "object" && typeof rt.typeId === "string" && Number.isInteger(rt.typeVersion) && rt.typeVersion >= 1;
-    if (!ok) push("R2", "datatype ref requires rangeType as a valid ExactTypeRef {typeId, typeVersion>=1}");
+    if (!ok) push("R2", "datatype ref (or map with valueRange==ref) requires rangeType as a valid ExactTypeRef {typeId, typeVersion>=1}");
     if (ft.mode != null && ft.mode !== "inline" && ft.mode !== "reference") push("R2", `mode "${ft.mode}" must be "inline" or "reference"`);
   } else {
-    if ("rangeType" in ft) push("R2", "rangeType is only permitted when datatype == ref");
-    if ("mode" in ft) push("R2", "mode is only permitted when datatype == ref");
+    if ("rangeType" in ft) push("R2", "rangeType is only permitted when datatype == ref, or datatype == map with valueRange == ref");
+    if ("mode" in ft) push("R2", "mode is only permitted when datatype == ref, or datatype == map with valueRange == ref");
   }
 
-  // R3 — valueDomain only for string; closed => exactly one of allowedValues/vocabularyRef.
+  // R3 — valueDomain only for string/integer (srs#534 adds integer); closed => exactly one of
+  // allowedValues/vocabularyRef.
   if (ft.valueDomain != null) {
-    if (ft.datatype !== "string") push("R3", "valueDomain is meaningful only for datatype == string");
+    if (ft.datatype !== "string" && ft.datatype !== "integer") push("R3", "valueDomain is meaningful only for datatype == string or integer");
     if (ft.valueDomain !== "open" && ft.valueDomain !== "closed") push("R3", `valueDomain "${ft.valueDomain}" must be "open" or "closed"`);
     if (ft.valueDomain === "closed") {
       const hasInline = Array.isArray(ft.allowedValues) && ft.allowedValues.length > 0;
@@ -154,10 +176,10 @@ export function validateFieldType(ft, ctx = {}) {
     push("R6", "dependsOn is only permitted when datatype == dependent");
   }
 
-  // R9 — map requires a scalar valueRange or "open".
+  // R9 — map requires a scalar valueRange, "open", or "ref" (srs#534 — map-of-$ref values).
   if (ft.datatype === "map") {
-    if (!(ft.valueRange === "open" || SCALAR_DATATYPES.has(ft.valueRange))) {
-      push("R9", `map valueRange "${ft.valueRange}" must be a scalar datatype or "open"`);
+    if (!(ft.valueRange === "open" || ft.valueRange === "ref" || SCALAR_DATATYPES.has(ft.valueRange))) {
+      push("R9", `map valueRange "${ft.valueRange}" must be a scalar datatype, "open", or "ref"`);
     }
   } else if ("valueRange" in ft) {
     push("R9", "valueRange is only permitted when datatype == map");

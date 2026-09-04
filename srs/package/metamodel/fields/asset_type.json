@@ -1,0 +1,22 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "AssetDeclaration.type — the kind of asset declared."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "AssetDeclaration.type — the kind of asset declared.",
+  "id": "4b0000f2-0000-4000-a000-0000000000f2",
+  "name": "asset_type",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "image",
+      "font",
+      "stylesheet",
+      "data"
+    ]
+  },
+  "version": 1
+}

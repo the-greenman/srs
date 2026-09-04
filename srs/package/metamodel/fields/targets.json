@@ -1,0 +1,17 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Output formats a Theme is designed for (e.g. 'html', 'markdown'). MUST contain at least one entry (Rule [T-1b])."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Output formats a Theme is designed for (e.g. 'html', 'markdown'). MUST contain at least one entry (Rule [T-1b]).",
+  "id": "4b00010d-0000-4000-a000-00000000010d",
+  "name": "targets",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "cardinality": "list",
+    "minItems": 1
+  },
+  "version": 1
+}

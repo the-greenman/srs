@@ -284,6 +284,24 @@
       "description": "The vendored packages/com.mudemocracy.governance/* Protocol definitions stay on the ruled, unprefixed shape (never regress to the retired protocol-prefixed one)."
     },
     {
+      "id": "rfc-534-closure",
+      "script": "rfc-534-closure-test.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "srs#534 (epic #256/#272, emitter-capability gaps)",
+      "description": "theme.json, discovery.json (via the new $defs-only bundle emission mode, over DiscoveryQuery/TextSegment/ConformanceScenario/ExpectedSegments), and the newly-authored srsj-envelope.json emit output that is a subset of their committed docs/schema/2.0/*.json seed, same discipline as rfc-272-closure/rfc-541-closure. Proves the metamodel could generate these files without overwriting them (authorship flip is #260). theme's lineage/provenance, elementTemplates.compositeRendererConfig, and (as tooling-parity exclusions, not modelling gaps) theme.assets/discoveryQuery.tier stay excluded — see tests/rfc-534-emitter-capabilities/run.mjs for the map-of-$ref/untyped-integer-enum proof against synthetic fixtures instead of the live corpus."
+    },
+    {
+      "id": "rfc-534-emitter-capabilities",
+      "script": "../tests/rfc-534-emitter-capabilities/run.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "srs#534",
+      "description": "Synthetic-fixture proof (tests/rfc-534-emitter-capabilities/fixture-package/, outside srs/package/**) that the untyped-integer-enum and map-of-$ref (inline and reference mode) emitter capabilities are load-bearing at both the per-node projectField/validateFieldType level and whole-entity schema-emitter.mjs emission — including red-case assertions that the extended R2/R3/R9 rules still reject what they always rejected. Needed because the live com.semanticops.srs/metamodel corpus deliberately does NOT populate the two Fields (Theme.assets, DiscoveryQuery.tier) that would otherwise exercise these capabilities against the real seed (srs repo validate under the pinned srs-rust binary, build.320, cannot yet load them — see rfc-534-closure-test.mjs's header)."
+    },
+    {
       "id": "schema-regenerate-drift",
       "script": "check-schema-regenerate-drift.mjs",
       "args": [],
@@ -327,6 +345,15 @@
       "cell": "reference",
       "governing": "srs#522",
       "description": "Every docs/schema/2.0/*.json file has a row in docs/schema/2.0/generation-ledger.md (a backticked mention of its filename is sufficient) — the cheap completeness floor srs#522's ledger unit added, so a new schema file cannot land unclassified."
+    },
+    {
+      "id": "srsj-envelope-conformance",
+      "script": "check-srsj-envelope-conformance.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "srs#534; srs#522; RFC-038; RFC-039",
+      "description": "Every genuine .srsj repository-archive envelope instance in the corpus (docs/spec/examples/gallery.srsj, every packages/com.mudemocracy.governance/*/seed/empty-governance-document.srsj) validates against the newly-authored docs/schema/2.0/srsj-envelope.json, using scripts/lib/json-schema-lite.mjs. packages/com.semanticops.core/1.0.0/core-bundle.srsj is excluded by name — RFC-038 states it is a bare package-bundle artifact with no srsj/manifest/data envelope at all."
     },
     {
       "id": "release-drift",

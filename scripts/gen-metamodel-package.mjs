@@ -132,6 +132,25 @@ const TYPE_ORDER = [
   [61, 'field-ref'],
   [62, 'protocol-stage'],
   [63, 'protocol'],
+  // -- srs#534: the two files #526/#541 parked on emitter-capability gaps (map-of-$ref, $defs-only
+  // bundles, untyped integer enums) — discovery.json's remaining $defs entities, theme.json's
+  // entity + nested value objects, and the owed {srsj,manifest,data} archive envelope schema.
+  // Value objects before the entities that reference them; numbering is pinned/append-only.
+  // Renumbered 61-72 -> 64-75 during merge reconciliation with #545 (protocol/379), which merged
+  // first and took 61-63/225-232 — append-only means the later-landing branch moves, never the
+  // merged one.
+  [64, 'text-segment'],
+  [65, 'expected-segments'],
+  [66, 'conformance-scenario'],
+  [67, 'asset-declaration'],
+  [68, 'page-templates'],
+  [69, 'element-templates'],
+  [70, 'section-wrapper-override'],
+  [71, 'record-wrapper-override'],
+  [72, 'stylesheet-declaration'],
+  [73, 'typography-hints'],
+  [74, 'theme'],
+  [75, 'srsj-envelope'],
 ];
 const typeIdByName = Object.fromEntries(TYPE_ORDER.map(([n, name]) => [name, typeUuid(n)]));
 const ref = (typeName, mode, cardinality, extra) => {
@@ -140,6 +159,12 @@ const ref = (typeName, mode, cardinality, extra) => {
   return extra ? { ...ft, ...extra } : ft;
 };
 const closed = (values) => ({ datatype: 'string', valueDomain: 'closed', allowedValues: values });
+// srs#534 — untyped integer enum: same shape as `closed()` but datatype:'integer' (projects to a
+// bare `enum`, no `type` keyword — schema-emitter.mjs/rfc-032-fieldtype.mjs `projectScalar`).
+const closedInt = (values) => ({ datatype: 'integer', valueDomain: 'closed', allowedValues: values });
+// srs#534 — map-of-$ref: a map Field whose values are inline refs to another Type (mode defaults
+// inline, matching ref()'s own default).
+const mapRef = (typeName) => ({ datatype: 'map', valueRange: 'ref', rangeType: { typeId: typeIdByName[typeName], typeVersion: 1 } });
 
 // ---------------------------------------------------------------------------------------------
 // FIELDS — shared atomic vocabulary (define-once / reference-many; dedup by first appearance).
@@ -176,7 +201,7 @@ const FIELD_SPECS = [
   [24, 'range_type', ref('exact-type-ref', 'inline', 'single'), 'The Type this field\'s range is (datatype == ref only).'],
   [25, 'mode', closed(['inline', 'reference']), 'inline = nested object(s); reference = target instance id(s). datatype == ref only, fixed per Field.'],
   [26, 'depends_on', { datatype: 'string' }, '"self" or a sibling field name whose type the value conforms to (datatype == dependent only).'],
-  [27, 'value_range', closed(['string', 'number', 'integer', 'boolean', 'date', 'date-time', 'open']), 'The scalar value datatype of a map, or "open" for a true extension bag. datatype == map only.'],
+  [27, 'value_range', closed(['string', 'number', 'integer', 'boolean', 'date', 'date-time', 'open', 'ref']), 'The scalar value datatype of a map, "open" for a true extension bag, or "ref" for a map whose values are inline refs to another Type (srs#534). datatype == map only.'],
   // -- FieldTypeConstraints --
   [28, 'min_length', { datatype: 'integer', constraints: { minimum: 0 } }, 'Minimum string length (datatype == string).'],
   [29, 'max_length', { datatype: 'integer', constraints: { minimum: 0 } }, 'Maximum string length (datatype == string).'],
@@ -429,6 +454,73 @@ const FIELD_SPECS = [
   [230, 'output_type', { datatype: 'string', format: 'uuid' }, 'Present when this stage produces its own intermediate Record. A LINEAGE reference (bare UUID; rfc-decision-c8704763) to the Type this stage produces its own intermediate Record as — the effective package set resolves it. typeVersion is dropped (version-optional hybrids are forbidden).'],
   [231, 'target_type', { datatype: 'string', format: 'uuid' }, 'The Record type this Protocol converges on — a LINEAGE reference (bare UUID; rfc-decision-c8704763), never the canonical namespace/name@version form (DISPLAY-only, never stored). Empty string for loose, exploratory Protocols whose output is input context for a tighter Protocol.'],
   [232, 'stages', ref('protocol-stage', 'inline', 'list'), 'The stages, in declaration order. Execution sequence is determined by dependsOn resolution, not array position; order is the declared composition order (Invariant 31).'],
+  // -- srs#534: discovery.json's remaining $defs (TextSegment, ConformanceScenario,
+  // ExpectedSegments). `DiscoveryQuery.tier` itself is NOT added to the live corpus here — see the
+  // "233: tier" note below. Renumbered 225-264 -> 233-272 during merge reconciliation with #545
+  // (protocol/379), which merged first and took 225-232 — append-only means the later-landing
+  // branch moves, never the merged one.
+  // 233: `tier` (closedInt([0, 2])) — the untyped-integer-enum capability IS implemented (see
+  // rfc-032-fieldtype.mjs `projectScalar`/R3, tested against synthetic fixtures in
+  // tests/rfc-534-emitter-capabilities/run.mjs) and the SCHEMA capability is committed
+  // (docs/schema/2.0/field.json's `allowedValues.items` now admits string|integer). But populating
+  // this Field in the LIVE self-hosted metamodel corpus makes `srs repo validate --repo srs` (and
+  // therefore rendering) fail to load the catalog entirely under the PINNED srs-rust binary
+  // (build.320): its embedded copy of field.json's FieldType schema predates this capability and
+  // rejects a non-string `allowedValues` item outright. Same class of gap srs-rust#868 already
+  // parked a schema-touching srs-side change for (FieldAssignment.description, packageDependencies)
+  // — land the mechanism and the schema capability, park the LIVE corpus population until a
+  // compatible srs-rust release ships and the pin advances (srs-rust#932). `DiscoveryQuery.tier` therefore stays a documented exclusion in
+  // rfc-534-closure-test.mjs, same latitude every other tooling-gap exclusion already has — never
+  // recycle 233 for anything else.
+  [234, 'segment_field_id', { datatype: 'string' }, "UUID of the field definition for package-resolved fields; sentinel string for special segments: 'note-title', 'note-section', 'tag', 'label'."],
+  [235, 'segment_field_name', { datatype: 'string' }, 'Field name (snake_case) for package-resolved fields; sentinel string for special segments matching fieldId sentinels; or NoteSection.name for named special segments.'],
+  [236, 'text', { datatype: 'string' }, 'The raw stored text value of a TextSegment. Normalization is applied at match time, not at segment construction time.'],
+  [237, 'expected_instance_ids', { datatype: 'string', format: 'uuid', cardinality: 'list' }, 'Minimum required result set for a ConformanceScenario. For exactMatch:true scenarios, this is also the maximum.'],
+  [238, 'exact_match', { datatype: 'boolean' }, 'If true, the result set MUST equal expectedInstanceIds exactly. If false, the result set MUST be a superset.'],
+  [239, 'segments', { datatype: 'string', cardinality: 'list' }, 'The exact ordered list of TextSegment.text values expected for one field of one instance (ExpectedSegments).'],
+  [240, 'query', ref('discovery-query', 'inline', 'single'), 'The DiscoveryQuery a ConformanceScenario executes against the fixture repo.'],
+  [241, 'expected_segments', ref('expected-segments', 'inline', 'single'), 'Optional structured expectation over one field of one instance\'s exact ordered TextSegment sequence (ConformanceScenario.expectedSegments).'],
+  // -- srs#534: theme.json's Theme entity + nested value objects.
+  [242, 'asset_type', closed(['image', 'font', 'stylesheet', 'data']), 'AssetDeclaration.type — the kind of asset declared.'],
+  [243, 'asset_mode', closed(['local', 'remote', 'inline']), "AssetDeclaration.mode — the asset's locator mode."],
+  [244, 'mime_type', { datatype: 'string' }, "e.g. 'image/png', 'font/woff2', 'text/css'."],
+  [245, 'asset_data', { datatype: 'string' }, "Base64 for binary asset types; raw text for stylesheet/data. Required when AssetDeclaration.mode === 'inline'."],
+  [246, 'cover_page', { datatype: 'string' }, 'Rendered as the first page of a paginated output format. Available variables: all Composition preamble variables, {{asset:*}}, {{heading-1}}.'],
+  [247, 'page_header', { datatype: 'string' }, 'Repeated at the top of each page. Additional variable: {{page-number}}.'],
+  [248, 'page_footer', { datatype: 'string' }, 'Repeated at the bottom of each page. Additional variable: {{page-number}}.'],
+  [249, 'document_wrapper', { datatype: 'string' }, 'Wraps the entire rendered document body. Available: {{content}}, {{container-title}}, {{date}}, {{asset:*}}.'],
+  [250, 'section_wrapper', { datatype: 'string' }, 'Wraps each section. Available: {{content}}, {{section-title}}, {{section-id}}, {{asset:*}}.'],
+  [251, 'record_wrapper', { datatype: 'string' }, 'Wraps each record. Available: {{content}}, {{record-heading}}, {{type-namespace}}, {{type-name}}, {{asset:*}}.'],
+  [252, 'field_row', { datatype: 'string' }, 'Wraps each field label+value pair. Available: {{field-label}}, {{field-value}}, {{field-name}}, {{content}}.'],
+  [253, 'composite_field_row_templates', { datatype: 'map', valueRange: 'string' }, 'ext:themes-l1 RFC-036 [CR-036-17] — per-field-name templates for individual field rows within a composite-range value rendered by the composite baseline.'],
+  [254, 'template', { datatype: 'string' }, 'A per-section or per-type wrapper template override string (SectionWrapperOverride.template / RecordWrapperOverride.template).'],
+  [255, 'section_wrapper_overrides', ref('section-wrapper-override', 'inline', 'list'), 'Per-section wrapper overrides. Takes precedence over sectionWrapper when sectionId matches.'],
+  [256, 'record_wrapper_overrides', ref('record-wrapper-override', 'inline', 'list'), 'Per-type wrapper overrides. Takes precedence over recordWrapper when typeId matches.'],
+  [257, 'stylesheet_mode', closed(['inline', 'local', 'remote']), "StylesheetDeclaration.mode — the stylesheet's locator mode."],
+  [258, 'base_font', { datatype: 'string' }, 'Informative typography declaration. No normative rendering behaviour is derived from it.'],
+  [259, 'heading_font', { datatype: 'string' }, 'Informative typography declaration. No normative rendering behaviour is derived from it.'],
+  [260, 'mono_font', { datatype: 'string' }, 'Informative typography declaration. No normative rendering behaviour is derived from it.'],
+  [261, 'base_font_size', { datatype: 'string' }, "Informative, e.g. '16px', '1rem', '11pt'. No normative rendering behaviour is derived from it."],
+  [262, 'line_height', { datatype: 'string' }, "Informative, e.g. '1.5', '24px'. No normative rendering behaviour is derived from it."],
+  // 263: `assets` (mapRef('asset-declaration')) — the map-of-$ref capability IS implemented (see
+  // rfc-032-fieldtype.mjs `projectField`'s map branch, schema-emitter.mjs `renderNode`, tested
+  // against synthetic fixtures in tests/rfc-534-emitter-capabilities/run.mjs) and the SCHEMA
+  // capability is committed (docs/schema/2.0/field.json's `valueRange` enum now admits `ref`). Same
+  // srs-rust binary parity gap as `tier` above (233) — populating this Field in the LIVE
+  // self-hosted metamodel corpus breaks `srs repo validate --repo srs` under the pinned build.320
+  // binary. Mechanism + schema land here; corpus population is parked pending a compatible
+  // srs-rust release (srs-rust#932). `Theme.assets` stays a documented
+  // exclusion in rfc-534-closure-test.mjs — never recycle 263 for anything else.
+  [264, 'css_class_fields', { datatype: 'string', format: 'uuid', cardinality: 'list' }, 'fieldIds whose values are injected as CSS classes on record wrapper elements (RFC-032 Rev-7 [T-9]).'],
+  [265, 'typography', ref('typography-hints', 'inline', 'single'), 'Theme.typography — informative typography hints.'],
+  [266, 'stylesheet', ref('stylesheet-declaration', 'inline', 'single'), 'Theme.stylesheet — the theme\'s CSS declaration.'],
+  [267, 'page_templates', ref('page-templates', 'inline', 'single'), 'Theme.pageTemplates — page-level chrome for paginated output formats.'],
+  [268, 'element_templates', ref('element-templates', 'inline', 'single'), 'Theme.elementTemplates — templates that wrap auto-rendered content at each structural level.'],
+  [269, 'targets', { datatype: 'string', cardinality: 'list', minItems: 1 }, "Output formats a Theme is designed for (e.g. 'html', 'markdown'). MUST contain at least one entry (Rule [T-1b])."],
+  // -- srs#534/#522/RFC-038/RFC-039: the owed {srsj,manifest,data} archive envelope schema.
+  [270, 'srsj', { datatype: 'string' }, "The .srsj archive's version-gate string ([R24])."],
+  [271, 'envelope_data', { datatype: 'map', valueRange: 'open' }, "Flat map keyed by the file's relative path within the repository tree to that file's parsed JSON content. Distinct from the `meta` extension bag — this is the archive's actual file payload, not open metadata."],
+  [272, 'manifest', ref('manifest', 'inline', 'single'), "The archived repository's Manifest (validates against manifest.json)."],
 ];
 const fieldIdByName = {};
 for (const [n, name] of FIELD_SPECS) fieldIdByName[name] = fieldUuid(n);
@@ -506,7 +598,7 @@ const TYPE_SPECS = {
       a('range_type', false, 'Range Type', 'datatype == ref only, REQUIRED (R2). The Type this field\'s range is (Change B).'),
       a('mode', false, undefined, 'datatype == ref only. inline = nested object(s) conforming to rangeType; reference = target instance id(s). Default: inline. Fixed per Field (R8).'),
       a('depends_on', false, 'Depends On', 'datatype == dependent only, REQUIRED (R6). "self" (the field\'s own fieldType) or a sibling field name whose type the value conforms to (Change C).'),
-      a('value_range', false, 'Value Range', 'datatype == map only, REQUIRED (R9). The scalar value datatype, or "open" for a true extension bag (Change D). Composite value ranges are out of scope.'),
+      a('value_range', false, 'Value Range', 'datatype == map only, REQUIRED (R9). The scalar value datatype, "open" for a true extension bag (Change D), or "ref" for a map whose values are inline refs to another Type (srs#534).'),
     ],
   },
   'exact-type-ref': {
@@ -855,13 +947,31 @@ const TYPE_SPECS = {
     ],
   },
   'discovery-query': {
-    description: 'ext:discovery (RFC-012) — a conjunction of zero or more structured filter predicates. An instance matches if and only if it satisfies all predicates whose values are specified. Modelled minus `tier` (a bare untyped-integer enum — the #534-tracked emitter gap; documented exclusion, same latitude every other entity already has, e.g. Container.containerType).',
+    description: 'ext:discovery (RFC-012) — a conjunction of zero or more structured filter predicates. An instance matches if and only if it satisfies all predicates whose values are specified. `tier` (a bare untyped-integer enum) is excluded from the LIVE corpus — the emitter capability that projects it now exists (srs#534), but populating it here breaks the pinned srs-rust binary\'s repo load (a tooling parity gap, not a modelling gap); see field 225\'s note above.',
     purpose: 'Describes a DiscoveryQuery: its structured filter predicates over type, container, tags, lifecycle state, and free text.',
     assignments: [
       a('type_id', false, 'Type Id'), a('type_namespace', false, 'Type Namespace'), a('type_name', false, 'Type Name'),
       a('discovery_container_id', false, 'Container Id'), a('tag', false),
       a('lifecycle_state', false, 'Lifecycle State'), a('lifecycle_states', false, 'Lifecycle States'),
       a('exclude_lifecycle_states', false, 'Exclude Lifecycle States'), a('content_match', false, 'Content Match'),
+    ],
+  },
+  'text-segment': {
+    description: 'ext:discovery (RFC-012) — a single searchable unit in the Text Projection of an instance. Normalization (NFC + Unicode simple lowercasing) is applied at match time, not at segment construction time.',
+    purpose: 'Describes a TextSegment: which field it came from and its raw text.',
+    assignments: [a('segment_field_id', true, 'Field Id'), a('segment_field_name', true, 'Field Name'), a('text', true)],
+  },
+  'expected-segments': {
+    description: 'ext:discovery (RFC-012 [R11], srs#483) — a structured expectation over the exact ordered list of TextSegments one field of one instance projects, closing the gap left by expectedInstanceIds alone (segment COUNT and ORDER are not otherwise testable).',
+    purpose: 'Describes an ExpectedSegments: which instance/field it inspects, and the exact ordered text expected.',
+    assignments: [a('instance_id', true, 'Instance Id'), a('segment_field_name', true, 'Field Name'), a('segments', true)],
+  },
+  'conformance-scenario': {
+    description: 'ext:discovery (RFC-012) — a single named test scenario for the discovery conformance fixture.',
+    purpose: 'Describes a ConformanceScenario: its query, expected result set, and optional expected segment sequence.',
+    assignments: [
+      a('name', true), a('description', true), a('query', true), a('expected_instance_ids', true, 'Expected Instance Ids'),
+      a('exact_match', true, 'Exact Match'), a('expected_segments', false, 'Expected Segments'),
     ],
   },
   'export-config': {
@@ -1075,6 +1185,85 @@ const TYPE_SPECS = {
       a('target_type', true, 'Target Type'), a('stages', true),
       a('tags', false), a('created_at', true),
     ],
+  },
+  // -------------------------------------------------------------------------------------------
+  // srs#534: theme.json (ext:themes-l1) — the entity + nested value objects PR#533 parked on the
+  // map-of-$ref emitter gap (Theme.assets), now closed. `compositeRendererConfig` (nested inside
+  // element-templates) stays UNMODELLED and is not in that Type's assignments below: its committed
+  // shape is `additionalProperties:true` COMBINED with declared named properties (`table`), a
+  // hybrid this Type system cannot express (every Type-generated object schema always emits
+  // additionalProperties:false) — the seed's own doc comment says "the key grammar is deliberately
+  // not constrained here", i.e. it resists static modelling by design. Because it is excluded,
+  // TableRendererConfig (only ever nested inside it) never needs its own Type either.
+  // -------------------------------------------------------------------------------------------
+  'asset-declaration': {
+    description: 'ext:themes-l1 — a named asset referenced in Theme templates via {{asset:name}}.',
+    purpose: 'Describes an AssetDeclaration: its asset kind, locator mode, and locator/payload fields.',
+    assignments: [
+      a('asset_type', true, 'Type'), a('asset_mode', true, 'Mode'), a('path', false),
+      a('url', false), a('asset_data', false, 'Data'), a('mime_type', false, 'Mime Type'),
+    ],
+  },
+  'page-templates': {
+    description: 'ext:themes-l1 — page-level chrome for paginated output formats (pdf, docx). Ignored for non-paginated formats.',
+    purpose: 'Describes a Theme\'s PageTemplates: cover page, header, and footer templates.',
+    assignments: [a('cover_page', false, 'Cover Page'), a('page_header', false, 'Page Header'), a('page_footer', false, 'Page Footer')],
+  },
+  'element-templates': {
+    description: 'ext:themes-l1 — templates that wrap auto-rendered content at each structural level. Each receives {{content}} and returns the full output. `compositeRendererConfig` is excluded (see the file header comment above) — it resists static modelling by design.',
+    purpose: 'Describes a Theme\'s ElementTemplates: wrapper templates at each structural level, plus per-section/per-type overrides.',
+    assignments: [
+      a('document_wrapper', false, 'Document Wrapper'), a('section_wrapper', false, 'Section Wrapper'),
+      a('section_wrapper_overrides', false, 'Section Wrapper Overrides'), a('record_wrapper', false, 'Record Wrapper'),
+      a('record_wrapper_overrides', false, 'Record Wrapper Overrides'), a('field_row', false, 'Field Row'),
+      a('composite_field_row_templates', false, 'Composite Field Row Templates'),
+    ],
+  },
+  'section-wrapper-override': {
+    description: 'ext:themes-l1 — a per-section override of ElementTemplates.sectionWrapper.',
+    purpose: 'Describes a SectionWrapperOverride: which section it targets and its template.',
+    assignments: [a('section_id', true, 'Section Id'), a('template', true)],
+  },
+  'record-wrapper-override': {
+    description: 'ext:themes-l1 — a per-type override of ElementTemplates.recordWrapper.',
+    purpose: 'Describes a RecordWrapperOverride: which Type it targets and its template.',
+    assignments: [a('type_id', true, 'Type Id'), a('template', true)],
+  },
+  'stylesheet-declaration': {
+    description: 'ext:themes-l1 — a Theme\'s stylesheet, following the same mode-based locator pattern as ThemeReference/PackageRef.',
+    purpose: 'Describes a StylesheetDeclaration: its locator mode and locator/payload fields.',
+    assignments: [a('stylesheet_mode', true, 'Mode'), a('content', false), a('path', false), a('url', false)],
+  },
+  'typography-hints': {
+    description: 'ext:themes-l1 — informative typography declarations. No normative rendering behaviour is derived from these values.',
+    purpose: 'Describes a Theme\'s TypographyHints: font and sizing hints.',
+    assignments: [
+      a('base_font', false, 'Base Font'), a('heading_font', false, 'Heading Font'), a('mono_font', false, 'Mono Font'),
+      a('base_font_size', false, 'Base Font Size'), a('line_height', false, 'Line Height'),
+    ],
+  },
+  theme: {
+    description: 'ext:themes-l1 — the visual presentation layer for a Composition. Specifies assets, element templates, and stylesheets without altering semantic structure. `lineage`/`provenance` are excluded (bare implementation-defined bags in this file, no real internal structure — same reasoning as Blueprint/Composition/View elsewhere in this ledger). `assets` is excluded from the LIVE corpus — the map-of-$ref capability that projects it now exists (srs#534), but populating it here breaks the pinned srs-rust binary\'s repo load (a tooling parity gap, not a modelling gap); see field 255\'s note above.',
+    purpose: 'Describes a Theme: its identity, output targets, and templates.',
+    assignments: [
+      a('id', true), a('namespace', true), a('name', true), a('version', true), a('description', true),
+      a('targets', true), a('css_class_fields', false, 'Css Class Fields'),
+      a('page_templates', false, 'Page Templates'), a('element_templates', false, 'Element Templates'),
+      a('stylesheet', false), a('typography', false), a('tags', false), a('created_at', true), a('updated_at', false, 'Updated At'),
+    ],
+  },
+  // -------------------------------------------------------------------------------------------
+  // srs#534/#522/RFC-038/RFC-039: the owed {srsj,manifest,data} archive envelope schema. Unlike
+  // field.json/type.json (excluded for bootstrap circularity — you cannot validate the Field
+  // schema without the Field schema existing first), this envelope has no such circularity:
+  // `data` is a plain open map (already-supported map/valueRange:open), `manifest` is a ref to the
+  // already-modelled `manifest` Type, and `srsj` is a plain string. Classified GENERATED, not a
+  // permanent exclusion.
+  // -------------------------------------------------------------------------------------------
+  'srsj-envelope': {
+    description: 'RFC-038/RFC-039 — the {srsj, manifest, data} bundle envelope for a .srsj repository archive. `srsj` is the archive format version-gate string ([R24]); `manifest` is the archived repository\'s Manifest; `data` is a flat map keyed by each file\'s relative path within the repository tree to that file\'s parsed JSON content.',
+    purpose: 'Describes an SrsjEnvelope: the version gate, the archived Manifest, and the flattened file-tree payload.',
+    assignments: [a('srsj', true), a('manifest', true), a('envelope_data', true, 'Data')],
   },
 };
 

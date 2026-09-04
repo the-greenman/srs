@@ -1,0 +1,35 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a StylesheetDeclaration: its locator mode and locator/payload fields."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:themes-l1 — a Theme's stylesheet, following the same mode-based locator pattern as ThemeReference/PackageRef.",
+  "fields": [
+    {
+      "fieldId": "4b000101-0000-4000-a000-000000000101",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Mode"
+    },
+    {
+      "fieldId": "4b000063-0000-4000-a000-000000000063",
+      "order": 1,
+      "required": false
+    },
+    {
+      "fieldId": "4b0000a7-0000-4000-a000-0000000000a7",
+      "order": 2,
+      "required": false
+    },
+    {
+      "fieldId": "4b0000d0-0000-4000-a000-0000000000d0",
+      "order": 3,
+      "required": false
+    }
+  ],
+  "id": "4c000048-0000-4000-a000-000000000048",
+  "name": "stylesheet-declaration",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

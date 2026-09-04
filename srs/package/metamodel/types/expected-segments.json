@@ -1,0 +1,31 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes an ExpectedSegments: which instance/field it inspects, and the exact ordered text expected."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "ext:discovery (RFC-012 [R11], srs#483) — a structured expectation over the exact ordered list of TextSegments one field of one instance projects, closing the gap left by expectedInstanceIds alone (segment COUNT and ORDER are not otherwise testable).",
+  "fields": [
+    {
+      "fieldId": "4b00005a-0000-4000-a000-00000000005a",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Instance Id"
+    },
+    {
+      "fieldId": "4b0000eb-0000-4000-a000-0000000000eb",
+      "order": 1,
+      "required": true,
+      "displayLabel": "Field Name"
+    },
+    {
+      "fieldId": "4b0000ef-0000-4000-a000-0000000000ef",
+      "order": 2,
+      "required": true
+    }
+  ],
+  "id": "4c000041-0000-4000-a000-000000000041",
+  "name": "expected-segments",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Per-section wrapper overrides. Takes precedence over sectionWrapper when sectionId matches."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Per-section wrapper overrides. Takes precedence over sectionWrapper when sectionId matches.",
+  "id": "4b0000ff-0000-4000-a000-0000000000ff",
+  "name": "section_wrapper_overrides",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "cardinality": "list",
+    "rangeType": {
+      "typeId": "4c000046-0000-4000-a000-000000000046",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

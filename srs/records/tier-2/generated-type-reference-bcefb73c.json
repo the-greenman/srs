@@ -1,0 +1,17 @@
+{
+  "instanceId": "bcefb73c-1936-424c-93e1-662d696d8946",
+  "typeId": "2a000014-0000-4000-a000-000000000014",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "generated-type-reference",
+  "fieldValues": {
+    "title": "Generated reference: `ConformanceScenario`",
+    "referenced_type_id": "4c000042-0000-4000-a000-000000000042",
+    "referenced_type_version": 1,
+    "presentation_profile": "property-table-and-pseudo-idl",
+    "content": "Generated from the resolved effective `conformance-scenario` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.\n\n| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |\n|---|---|---|---|---|---|\n| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |\n| `description` | string | yes | — | core | Human-readable description of this entity. |\n| `query` | ref → `discovery-query` (inline) | yes | — | core | The DiscoveryQuery a ConformanceScenario executes against the fixture repo. |\n| `expectedInstanceIds` | string[] | yes | format: uuid | core | Minimum required result set for a ConformanceScenario. For exactMatch:true scenarios, this is also the maximum. |\n| `exactMatch` | boolean | yes | — | core | If true, the result set MUST equal expectedInstanceIds exactly. If false, the result set MUST be a superset. |\n| `expectedSegments` | ref → `expected-segments` (inline) | no | — | core | Optional structured expectation over one field of one instance's exact ordered TextSegment sequence (ConformanceScenario.expectedSegments). |\n\nRaw JSON Schema: <https://srs.semanticops.com/schema/2.0/discovery.json#/$defs/ConformanceScenario>\n\n#### Compact pseudo-IDL\n\n```typescript\nconformance-scenario {\n  name: string // Machine-readable name within the namespace; snake_case.\n  description: string // Human-readable description of this entity.\n  query: ref → `discovery-query` (inline) // The DiscoveryQuery a ConformanceScenario executes against the fixture repo.\n  expectedInstanceIds: string[] // Minimum required result set for a ConformanceScenario. For exactMatch:true scenarios, this is also the maximum.\n  exactMatch: boolean // If true, the result set MUST equal expectedInstanceIds exactly. If false, the result set MUST be a superset.\n  expectedSegments?: ref → `expected-segments` (inline) // Optional structured expectation over one field of one instance's exact ordered TextSegment sequence (ConformanceScenario.expectedSegments).\n}\n```"
+  },
+  "createdAt": "2026-09-04T18:00:00Z",
+  "updatedAt": "2026-09-04T18:00:00Z",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

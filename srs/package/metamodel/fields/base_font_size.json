@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Informative, e.g. '16px', '1rem', '11pt'. No normative rendering behaviour is derived from it."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Informative, e.g. '16px', '1rem', '11pt'. No normative rendering behaviour is derived from it.",
+  "id": "4b000105-0000-4000-a000-000000000105",
+  "name": "base_font_size",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}

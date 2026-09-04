@@ -1,0 +1,20 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "The archived repository's Manifest (validates against manifest.json)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "The archived repository's Manifest (validates against manifest.json).",
+  "id": "4b000110-0000-4000-a000-000000000110",
+  "name": "manifest",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "ref",
+    "mode": "inline",
+    "rangeType": {
+      "typeId": "4c00002e-0000-4000-a000-00000000002e",
+      "typeVersion": 1
+    }
+  },
+  "version": 1
+}

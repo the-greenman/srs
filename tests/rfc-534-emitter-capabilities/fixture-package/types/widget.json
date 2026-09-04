@@ -1,0 +1,12 @@
+{
+  "id": "t5340002-0000-4000-a000-000000000002",
+  "namespace": "test.rfc534",
+  "name": "widget",
+  "version": 1,
+  "description": "Fixture Type exercising both srs#534 capabilities: a map-of-$ref field (annotations) and a closed integer enum field (priority).",
+  "fields": [
+    { "fieldId": "f5340001-0000-4000-a000-000000000001", "order": 0, "required": true },
+    { "fieldId": "f5340002-0000-4000-a000-000000000002", "order": 1, "required": false, "displayLabel": "Priority" },
+    { "fieldId": "f5340003-0000-4000-a000-000000000003", "order": 2, "required": false, "displayLabel": "Annotations" }
+  ]
+}

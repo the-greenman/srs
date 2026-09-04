@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "Wraps each field label+value pair. Available: {{field-label}}, {{field-value}}, {{field-name}}, {{content}}."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "Wraps each field label+value pair. Available: {{field-label}}, {{field-value}}, {{field-name}}, {{content}}.",
+  "id": "4b0000fc-0000-4000-a000-0000000000fc",
+  "name": "field_row",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string"
+  },
+  "version": 1
+}
