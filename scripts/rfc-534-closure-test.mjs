@@ -27,26 +27,17 @@
  *     `elementTemplates.compositeRendererConfig` (a hybrid `additionalProperties:true` + declared
  *     named properties this Type system cannot express — every Type-generated object schema always
  *     emits `additionalProperties:false`; the seed's own doc comment says "the key grammar is
- *     deliberately not constrained here", i.e. it resists static modelling by design); `assets` — a
- *     TOOLING PARITY GAP, not a modelling gap (see below), the one property left out of the LIVE
- *     corpus for a reason distinct from every other exclusion in this file.
- *   - `discovery-query`: `tier` — the SAME kind of tooling-parity exclusion as `theme.assets` (see
- *     below).
- *   - `text-segment`/`expected-segments`/`conformance-scenario`/`srsj-envelope`: none — every
- *     property of all four is covered.
+ *     deliberately not constrained here", i.e. it resists static modelling by design).
+ *   - `discovery-query`/`text-segment`/`expected-segments`/`conformance-scenario`/`srsj-envelope`:
+ *     none — every property of all five is covered.
  *
- * `theme.assets` and `discovery-query.tier` — TOOLING PARITY, not a modelling gap. Both emitter
- * capabilities (map-of-$ref, untyped integer enum) ARE implemented (rfc-032-fieldtype.mjs /
- * schema-emitter.mjs) and proven against synthetic fixtures
- * (tests/rfc-534-emitter-capabilities/run.mjs) — but the two metamodel Fields that would exercise
- * them (`assets`, `tier`) are deliberately NOT added to the LIVE `com.semanticops.srs/metamodel`
- * corpus: doing so makes `srs repo validate --repo srs` (and therefore rendering) fail to load the
- * catalog entirely under the pinned srs-rust binary (build.320), whose embedded copy of
- * `field.json`'s FieldType schema predates both capabilities. Same class of gap srs-rust#868
- * already parked a schema-touching srs-side change for (`FieldAssignment.description`,
- * `packageDependencies`): land the mechanism + the schema capability now, park the corpus
- * population until a compatible srs-rust release ships (srs-rust#932).
- * See `gen-metamodel-package.mjs`'s own notes at field numbers 225 (`tier`) and 255 (`assets`).
+ * `theme.assets` (map-of-`$ref`) and `discovery-query.tier` (untyped integer enum) were parked as
+ * TOOLING-PARITY exclusions (not modelling gaps) until a compatible srs-rust release existed:
+ * populating them in the LIVE `com.semanticops.srs/metamodel` corpus made `srs repo validate --repo
+ * srs` fail to load the catalog under the then-pinned binary (build.320), whose embedded copy of
+ * `field.json`'s FieldType schema predated both capabilities. srs-rust#932/#944 (build.330) ships
+ * that parity, so srs#551 (half 2) populates both — see `gen-metamodel-package.mjs`'s field numbers
+ * 273 (`tier`) and 274 (`assets`); 233/263 stay permanently retired, per the append-only discipline.
  *
  * Node pipeline only (ADR-004). Runs under scripts/validate-all.mjs.
  */

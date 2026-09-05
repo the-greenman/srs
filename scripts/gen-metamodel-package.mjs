@@ -459,19 +459,10 @@ const FIELD_SPECS = [
   // "233: tier" note below. Renumbered 225-264 -> 233-272 during merge reconciliation with #545
   // (protocol/379), which merged first and took 225-232 — append-only means the later-landing
   // branch moves, never the merged one.
-  // 233: `tier` (closedInt([0, 2])) — the untyped-integer-enum capability IS implemented (see
-  // rfc-032-fieldtype.mjs `projectScalar`/R3, tested against synthetic fixtures in
-  // tests/rfc-534-emitter-capabilities/run.mjs) and the SCHEMA capability is committed
-  // (docs/schema/2.0/field.json's `allowedValues.items` now admits string|integer). But populating
-  // this Field in the LIVE self-hosted metamodel corpus makes `srs repo validate --repo srs` (and
-  // therefore rendering) fail to load the catalog entirely under the PINNED srs-rust binary
-  // (build.320): its embedded copy of field.json's FieldType schema predates this capability and
-  // rejects a non-string `allowedValues` item outright. Same class of gap srs-rust#868 already
-  // parked a schema-touching srs-side change for (FieldAssignment.description, packageDependencies)
-  // — land the mechanism and the schema capability, park the LIVE corpus population until a
-  // compatible srs-rust release ships and the pin advances (srs-rust#932). `DiscoveryQuery.tier` therefore stays a documented exclusion in
-  // rfc-534-closure-test.mjs, same latitude every other tooling-gap exclusion already has — never
-  // recycle 233 for anything else.
+  // 233: `tier` — RETIRED, never reused (append-only numbering). Reserved for the untyped-
+  // integer-enum capability before a compatible srs-rust release existed; the pin was still at
+  // build.320, whose embedded field.json predated the capability entirely. Now that srs-rust#932
+  // has shipped (build.330) the field is populated below at 273, not recycled here.
   [234, 'segment_field_id', { datatype: 'string' }, "UUID of the field definition for package-resolved fields; sentinel string for special segments: 'note-title', 'note-section', 'tag', 'label'."],
   [235, 'segment_field_name', { datatype: 'string' }, 'Field name (snake_case) for package-resolved fields; sentinel string for special segments matching fieldId sentinels; or NoteSection.name for named special segments.'],
   [236, 'text', { datatype: 'string' }, 'The raw stored text value of a TextSegment. Normalization is applied at match time, not at segment construction time.'],
@@ -502,15 +493,8 @@ const FIELD_SPECS = [
   [260, 'mono_font', { datatype: 'string' }, 'Informative typography declaration. No normative rendering behaviour is derived from it.'],
   [261, 'base_font_size', { datatype: 'string' }, "Informative, e.g. '16px', '1rem', '11pt'. No normative rendering behaviour is derived from it."],
   [262, 'line_height', { datatype: 'string' }, "Informative, e.g. '1.5', '24px'. No normative rendering behaviour is derived from it."],
-  // 263: `assets` (mapRef('asset-declaration')) — the map-of-$ref capability IS implemented (see
-  // rfc-032-fieldtype.mjs `projectField`'s map branch, schema-emitter.mjs `renderNode`, tested
-  // against synthetic fixtures in tests/rfc-534-emitter-capabilities/run.mjs) and the SCHEMA
-  // capability is committed (docs/schema/2.0/field.json's `valueRange` enum now admits `ref`). Same
-  // srs-rust binary parity gap as `tier` above (233) — populating this Field in the LIVE
-  // self-hosted metamodel corpus breaks `srs repo validate --repo srs` under the pinned build.320
-  // binary. Mechanism + schema land here; corpus population is parked pending a compatible
-  // srs-rust release (srs-rust#932). `Theme.assets` stays a documented
-  // exclusion in rfc-534-closure-test.mjs — never recycle 263 for anything else.
+  // 263: `assets` — RETIRED, never reused (append-only numbering). Same tooling-parity gap as
+  // `tier`/233 above — reserved before srs-rust#932 shipped. Populated below at 274.
   [264, 'css_class_fields', { datatype: 'string', format: 'uuid', cardinality: 'list' }, 'fieldIds whose values are injected as CSS classes on record wrapper elements (RFC-032 Rev-7 [T-9]).'],
   [265, 'typography', ref('typography-hints', 'inline', 'single'), 'Theme.typography — informative typography hints.'],
   [266, 'stylesheet', ref('stylesheet-declaration', 'inline', 'single'), 'Theme.stylesheet — the theme\'s CSS declaration.'],
@@ -521,6 +505,12 @@ const FIELD_SPECS = [
   [270, 'srsj', { datatype: 'string' }, "The .srsj archive's version-gate string ([R24])."],
   [271, 'envelope_data', { datatype: 'map', valueRange: 'open' }, "Flat map keyed by the file's relative path within the repository tree to that file's parsed JSON content. Distinct from the `meta` extension bag — this is the archive's actual file payload, not open metadata."],
   [272, 'manifest', ref('manifest', 'inline', 'single'), "The archived repository's Manifest (validates against manifest.json)."],
+  // -- srs#551 (half 2): populate the two srs#534 corpus exclusions (233 `tier`, 263 `assets`)
+  // now that srs-rust#932/#944 (build.330) ships field.json parity for the untyped-integer-enum
+  // and map-of-$ref capabilities. New numbers per the append-only discipline — 233/263 stay
+  // retired, never recycled (see their notes above).
+  [273, 'tier', closedInt([0, 2]), 'ext:discovery DiscoveryQuery.tier — instance tier filter. 0 = Note, 2 = Record. Tier 1 (TypedRecord) was removed (rfc-decision-53635966); the gap in numbering is retained deliberately for reference stability.'],
+  [274, 'assets', mapRef('asset-declaration'), 'ext:themes-l1 Theme.assets — named asset declarations, keyed by name (unique within the Theme). Referenced in templates as {{asset:name}}.'],
 ];
 const fieldIdByName = {};
 for (const [n, name] of FIELD_SPECS) fieldIdByName[name] = fieldUuid(n);
@@ -947,11 +937,11 @@ const TYPE_SPECS = {
     ],
   },
   'discovery-query': {
-    description: 'ext:discovery (RFC-012) — a conjunction of zero or more structured filter predicates. An instance matches if and only if it satisfies all predicates whose values are specified. `tier` (a bare untyped-integer enum) is excluded from the LIVE corpus — the emitter capability that projects it now exists (srs#534), but populating it here breaks the pinned srs-rust binary\'s repo load (a tooling parity gap, not a modelling gap); see field 225\'s note above.',
-    purpose: 'Describes a DiscoveryQuery: its structured filter predicates over type, container, tags, lifecycle state, and free text.',
+    description: 'ext:discovery (RFC-012) — a conjunction of zero or more structured filter predicates. An instance matches if and only if it satisfies all predicates whose values are specified.',
+    purpose: 'Describes a DiscoveryQuery: its structured filter predicates over type, container, tags, lifecycle state, tier, and free text.',
     assignments: [
       a('type_id', false, 'Type Id'), a('type_namespace', false, 'Type Namespace'), a('type_name', false, 'Type Name'),
-      a('discovery_container_id', false, 'Container Id'), a('tag', false),
+      a('discovery_container_id', false, 'Container Id'), a('tag', false), a('tier', false),
       a('lifecycle_state', false, 'Lifecycle State'), a('lifecycle_states', false, 'Lifecycle States'),
       a('exclude_lifecycle_states', false, 'Exclude Lifecycle States'), a('content_match', false, 'Content Match'),
     ],
@@ -1243,11 +1233,11 @@ const TYPE_SPECS = {
     ],
   },
   theme: {
-    description: 'ext:themes-l1 — the visual presentation layer for a Composition. Specifies assets, element templates, and stylesheets without altering semantic structure. `lineage`/`provenance` are excluded (bare implementation-defined bags in this file, no real internal structure — same reasoning as Blueprint/Composition/View elsewhere in this ledger). `assets` is excluded from the LIVE corpus — the map-of-$ref capability that projects it now exists (srs#534), but populating it here breaks the pinned srs-rust binary\'s repo load (a tooling parity gap, not a modelling gap); see field 255\'s note above.',
-    purpose: 'Describes a Theme: its identity, output targets, and templates.',
+    description: 'ext:themes-l1 — the visual presentation layer for a Composition. Specifies assets, element templates, and stylesheets without altering semantic structure. `lineage`/`provenance` are excluded (bare implementation-defined bags in this file, no real internal structure — same reasoning as Blueprint/Composition/View elsewhere in this ledger).',
+    purpose: 'Describes a Theme: its identity, output targets, named assets, and templates.',
     assignments: [
       a('id', true), a('namespace', true), a('name', true), a('version', true), a('description', true),
-      a('targets', true), a('css_class_fields', false, 'Css Class Fields'),
+      a('targets', true), a('assets', false), a('css_class_fields', false, 'Css Class Fields'),
       a('page_templates', false, 'Page Templates'), a('element_templates', false, 'Element Templates'),
       a('stylesheet', false), a('typography', false), a('tags', false), a('created_at', true), a('updated_at', false, 'Updated At'),
     ],
