@@ -6,8 +6,9 @@
   "version": 1,
   "description": "Non-normative implementation guidance, edge cases, cross-references, or clarifying commentary.",
   "aiGuidance": {
-    "purpose": "Non-normative implementation guidance, edge cases, cross-references, or clarifying commentary.",
-    "extraction": "Notes are non-normative. Use for implementation tips, edge cases, and cross-references that do not belong in the normative body."
+    "purpose": "Non-normative commentary attached to a record: implementation tips, edge cases, migration hints, cross-references. Nothing here binds an implementation.",
+    "extraction": "Keep it short and keep each note to one observation. Notes earn their place by saying something the normative text deliberately leaves out — a trap, a compatibility caveat, a pointer to the record that handles the related case. If a note grows into an explanation of its own, it has become a `concept` record or a child record; move it.",
+    "negativeGuidance": "Never normative — no RFC 2119 keywords. A requirement hidden in a note will not be implemented and cannot be tested. No headings, code blocks or tables: an illustration goes in an `example` record, a matrix in a `table` record. Not a changelog and not a to-do list; history belongs to the record's lineage and open work to the issue tracker."
   },
   "fieldType": {
     "datatype": "string",

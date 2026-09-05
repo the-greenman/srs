@@ -4,10 +4,11 @@
   "namespace": "com.semanticops.spec",
   "name": "content",
   "version": 1,
-  "description": "The full prose body of a spec record in markdown. May contain normative statements (MUST/SHOULD/MAY), explanations, non-normative notes, code blocks, and tables.",
+  "description": "The prose body a spec record contributes to the specification. Prose only: structure is carried by records and relations, not by markup inside this string.",
   "aiGuidance": {
-    "purpose": "The full prose body of a spec record in markdown. May contain normative statements (MUST/SHOULD/MAY), explanations, non-normative notes, code blocks, and tables.",
-    "extraction": "Use RFC 2119 keywords (MUST, SHOULD, MAY, MUST NOT, SHOULD NOT) for normative statements within the body. Non-normative passages do not need special marking. Structure with markdown headings, lists, and code blocks as appropriate."
+    "purpose": "The prose body this record contributes to the specification. It carries prose only: the specification's structure lives in records and relations, never in markup inside this string.",
+    "extraction": "Write continuous prose about one subject. Express structure with records, not with markup.\n- Headings: a markdown heading here is a record that was never created. If you are about to write `## Something`, stop and create `Something` as its own record (`section`, `subsection`, `concept`, `requirement`, `invariant` as fits) and place it in reading order with a `precedes` relation.\n- Code: a fenced code block belongs in a `com.semanticops.spec/example` record related to this one. Short inline code spans (`typeId`) are fine.\n- Tables: a table belongs in a `com.semanticops.spec/table` record, which carries `columns` and `rows` as data. Do not write pipe markup.\n- RFC 2119 keywords (MUST, MUST NOT, SHOULD, SHOULD NOT, MAY) belong only in a statement that really is a requirement, and normally in an `invariant` or `requirement` record's `normative_statement`. Explanatory prose describing how something behaves is not a requirement and takes no keyword.\nShort bullet lists, inline emphasis and links are fine. Aim under about 400 words. Past that the record is doing more than one job: split it and relate the parts.",
+    "negativeGuidance": "Do not bake a document outline into this string — no `##`/`###` headings, no numbered section labels standing in for headings, no horizontal rules dividing topics. Do not paste a passage of existing markdown here wholesale; convert its structure into records first. Do not use RFC 2119 keywords for emphasis, and do not restate a requirement that an `invariant` or `requirement` record already states — refer to it instead."
   },
   "fieldType": {
     "datatype": "string",

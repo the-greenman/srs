@@ -1,0 +1,26 @@
+{
+  "id": "f344857a-cbbc-425f-b7b6-edab93146fa8",
+  "namespace": "com.semanticops.programme",
+  "name": "decision_mode",
+  "version": 1,
+  "description": "Cynefin decision mode governing how this unit should be approached.",
+  "aiGuidance": {
+    "purpose": "Says how the work should be approached, which is a different question from how hard it is. clear means the answer is known and only needs applying; complicated means expertise will find one right answer; complex means the answer only emerges from a probe, so ship something reversible and read the result; chaotic means act first to stabilise; unresolved means the mode itself has not been determined yet and the unit is not ready to start.",
+    "extraction": "Read the source for the shape of the uncertainty. Words like \"just apply\", \"mechanical\", \"same as before\" indicate clear. \"Needs analysis\", \"an expert call\" indicate complicated. \"We will not know until we try\", \"pilot\", \"reversible\" indicate complex. An unbounded breakage or an incident indicates chaotic. Where the source names no mode and gives no signal, use unresolved rather than guessing.",
+    "negativeGuidance": "Do not default everything to complicated because it sounds serious; over-classifying as complicated is what causes a programme to plan work that should have been probed."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "cardinality": "single",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "clear",
+      "complicated",
+      "complex",
+      "chaotic",
+      "unresolved"
+    ]
+  },
+  "editorHint": "dropdown",
+  "createdAt": "2026-09-05T21:49:04.256878877+00:00"
+}

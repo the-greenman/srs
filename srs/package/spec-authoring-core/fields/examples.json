@@ -6,8 +6,9 @@
   "version": 1,
   "description": "Concrete examples illustrating the concept, requirement, or type definition.",
   "aiGuidance": {
-    "purpose": "Concrete examples illustrating the concept, requirement, or type definition.",
-    "extraction": "Examples are non-normative. Provide realistic, specific examples that demonstrate correct usage. Use code blocks, JSON snippets, or scenario descriptions as appropriate."
+    "purpose": "A short, concrete illustration attached to a record. Non-normative: an example shows the rule working, it never adds to the rule.",
+    "extraction": "Use this field only for illustration that fits in a sentence or two — a canonical name, a representative value, a one-line scenario: \"for example, `com.semanticops.srs/meta.section@1`\". Anything larger — a JSON snippet, a worked walkthrough, anything wanting a fenced code block — belongs in its own `com.semanticops.spec/example` record, which exists for exactly this and renders as its own element. Relate it to this record. Be concrete: real names and real values, never foo/bar placeholders.",
+    "negativeGuidance": "No fenced code blocks and no headings here — that content is an `example` record. No RFC 2119 keywords: an example that introduces a requirement the normative text does not state is a specification bug. Do not use an example to cover a case the normative text has not defined."
   },
   "fieldType": {
     "datatype": "string",

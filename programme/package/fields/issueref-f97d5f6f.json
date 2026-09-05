@@ -1,0 +1,19 @@
+{
+  "id": "f97d5f6f-ba89-4daf-8c2d-661cf3553517",
+  "namespace": "com.semanticops.programme",
+  "name": "issue_ref",
+  "version": 1,
+  "description": "GitHub issues and pull requests this record corresponds to, in owner-relative short form.",
+  "aiGuidance": {
+    "purpose": "Ties a programme record back to the tracker where the work is actually executed and discussed, so the record is not a second, drifting copy of the issue. A list because one unit routinely spans an issue, its epic and the PR that lands it.",
+    "extraction": "Write each reference in short form as repo#number — srs#557, srs-rust#874, srs-vscode#89 — one entry per reference, most specific first. Convert any full GitHub URL to short form. Include the epic or parent issue when the source names one.",
+    "negativeGuidance": "Do not include bare numbers without a repository prefix; three repositories share this programme and #557 alone is ambiguous."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "cardinality": "list",
+    "format": "plain"
+  },
+  "editorHint": "singleline",
+  "createdAt": "2026-09-05T21:49:04.379496659+00:00"
+}

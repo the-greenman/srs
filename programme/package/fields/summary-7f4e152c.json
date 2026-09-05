@@ -1,0 +1,18 @@
+{
+  "id": "7f4e152c-be50-4710-acb1-392fd1c20f08",
+  "namespace": "com.semanticops.programme",
+  "name": "summary",
+  "version": 1,
+  "description": "One or two sentences stating what this record is and why it exists.",
+  "aiGuidance": {
+    "purpose": "The abstract a reader gets before deciding to open the body. One or two sentences that state the substance — what this is, and what turns on it — so a tree of these records can be read end to end without expanding anything.",
+    "extraction": "Write the claim, not the topic: prefer \"The spec's layering is invisible to a reader who arrives at a single record\" over \"About layering\". Two sentences maximum; if a third is needed the material belongs in body. Never restate the title in other words."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "cardinality": "single",
+    "format": "plain"
+  },
+  "editorHint": "textarea",
+  "createdAt": "2026-09-05T21:48:27.823382377+00:00"
+}

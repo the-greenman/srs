@@ -141,6 +141,12 @@ jobs:
           SRS_CLI_PATH: /tmp/srs-cli/srs
         run: node scripts/check-gallery-conformance.mjs
 
+      - name: Run programme repository conformance check (#580)
+        working-directory: srs
+        env:
+          SRS_CLI_PATH: /tmp/srs-cli/srs
+        run: node scripts/check-programme-conformance.mjs
+
       - name: Check owner strategic map
         working-directory: srs
         run: |

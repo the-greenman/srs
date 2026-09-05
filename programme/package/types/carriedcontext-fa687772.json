@@ -1,0 +1,35 @@
+{
+  "id": "fa687772-2129-4508-b63a-671e3e668a33",
+  "namespace": "com.semanticops.programme",
+  "name": "carried_context",
+  "version": 1,
+  "description": "A piece of context the programme must keep across sessions — a ruling not to relitigate, a constraint, a trap already paid for.",
+  "fields": [
+    {
+      "fieldId": "c42d4a91-dbd9-480a-b612-e31b5a77d9bf",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Title"
+    },
+    {
+      "fieldId": "7f4e152c-be50-4710-acb1-392fd1c20f08",
+      "order": 1,
+      "required": true,
+      "displayLabel": "Summary"
+    },
+    {
+      "fieldId": "8d91de54-d768-46c6-8c46-da5b094b3447",
+      "order": 2,
+      "required": false,
+      "displayLabel": "Rationale"
+    }
+  ],
+  "identityFieldId": "c42d4a91-dbd9-480a-b612-e31b5a77d9bf",
+  "aiGuidance": {
+    "purpose": "The programme's memory. Each record holds one thing a later worker would otherwise rediscover the hard way: a settled ruling, a standing constraint, a trap that has already cost time. The rationale is the load-bearing part — it is what stops the question being reopened.",
+    "extraction": "Create one wherever the source says a matter is settled, warns against a path, or records a constraint that outlives the unit that produced it. Put the standing statement in summary and the reasoning — including what would have to change to reopen it — in rationale.",
+    "negativeGuidance": "Not a general note store. If the item is only true for one unit, it belongs on that unit, not here."
+  },
+  "createdAt": "2026-09-05T21:50:23.130701373+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json"
+}

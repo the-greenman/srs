@@ -1,0 +1,25 @@
+{
+  "id": "e11a0e2f-d146-49e5-856e-13e70584193d",
+  "namespace": "com.semanticops.programme",
+  "name": "door",
+  "version": 1,
+  "description": "Which one-way door this unit passes through, or that it passes through none.",
+  "aiGuidance": {
+    "purpose": "Marks the irreversibility of a unit. A door is a commitment that is expensive or impossible to walk back — a published identifier, a corpus-wide data migration, a contract other repositories consume. Numbering them lets the programme order the reversible work before the doors and stage the doors themselves; non-normative marks a unit that changes nothing anyone depends on and can be redone freely.",
+    "extraction": "Ask what someone outside this repository would have to change if the unit were reverted. Nothing outside changes means non-normative. Where the source explicitly names a door, use that number; where it describes an irreversible commitment without numbering it, assign the door of the commitment it is part of rather than inventing a new one.",
+    "negativeGuidance": "Effort is not irreversibility — a large but freely redoable rewrite is non-normative. Do not mark a unit as a door merely because it is important."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "cardinality": "single",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "door-1",
+      "door-2",
+      "door-3",
+      "non-normative"
+    ]
+  },
+  "editorHint": "dropdown",
+  "createdAt": "2026-09-05T21:49:04.317218063+00:00"
+}

@@ -1,0 +1,41 @@
+{
+  "id": "127b6706-464f-4fff-9ade-cff47f8745e5",
+  "namespace": "com.semanticops.programme",
+  "name": "phase",
+  "version": 1,
+  "description": "A wave of the programme — a band of work sharing an intent, holding the units that carry it out.",
+  "fields": [
+    {
+      "fieldId": "c42d4a91-dbd9-480a-b612-e31b5a77d9bf",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Title"
+    },
+    {
+      "fieldId": "7f4e152c-be50-4710-acb1-392fd1c20f08",
+      "order": 1,
+      "required": false,
+      "displayLabel": "Summary"
+    },
+    {
+      "fieldId": "f4d64c36-556b-4cd9-b351-3da52a48131a",
+      "order": 2,
+      "required": true,
+      "displayLabel": "Wave"
+    },
+    {
+      "fieldId": "c510b202-57f6-4be7-9537-44819c7c3aa2",
+      "order": 3,
+      "required": false,
+      "displayLabel": "Body"
+    }
+  ],
+  "identityFieldId": "c42d4a91-dbd9-480a-b612-e31b5a77d9bf",
+  "aiGuidance": {
+    "purpose": "The top structural level of the programme. A phase names one of the four waves and says what that wave is for; the units doing the work hang beneath it.",
+    "extraction": "Create a phase when the source describes a band of work by its intent rather than by a specific task. There are four; do not invent a fifth.",
+    "negativeGuidance": "A phase is not a milestone or a date range — if the source is about when something happens rather than what kind of work it is, it is not a phase."
+  },
+  "createdAt": "2026-09-05T21:50:23.124600500+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json"
+}
