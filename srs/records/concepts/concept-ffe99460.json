@@ -1,0 +1,16 @@
+{
+  "instanceId": "ffe99460-9afe-4464-b62e-707559dc8ad1",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/vocabulary",
+    "title": "Vocabulary",
+    "description": "A controlled set of strings that appear in instance data and must mean something stable. Every entry, whatever specialisation it is, carries the same substrate contract: a stable id, a version, a namespace, the `key` that is the string actually stored, optional label, description and aliases, and a status of active, deprecated, tombstone or retired, where absent means active. A vocabulary is `open`, meaning unlisted values are valid and unenriched, or `closed`, meaning every value must resolve to exactly one entry.",
+    "notes": "An open vocabulary's authoritative value set is the distinct keys actually in use, not the curated entry list — the curation is an overlay that may lag or be empty. Curating a string into a Term rewrites no instance."
+  },
+  "createdAt": "2026-09-05T23:42:08.579560199+00:00",
+  "updatedAt": "2026-09-05T23:45:42.698271722+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

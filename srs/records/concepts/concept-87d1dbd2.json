@@ -1,0 +1,16 @@
+{
+  "instanceId": "87d1dbd2-5773-4828-85d3-1efb82d6ccdc",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/theme",
+    "title": "Theme",
+    "description": "A visual presentation layer attached to a rendered document (stylesheets, typography, assets, cover pages and templates that wrap each structural level of output), declared for named output formats and applied only when the render is in one of them. A theme wraps finished content and may never replace, suppress or reorder it, so removing the theme changes how output looks and never what it says.",
+    "notes": "The semantic CSS class vocabulary is part of the output specification and not of the theme extension: a conforming implementation emits it whether or not any theme resolves."
+  },
+  "createdAt": "2026-09-05T23:42:08.732673709+00:00",
+  "updatedAt": "2026-09-05T23:45:44.573583504+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,7 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/relation.json",
+  "relationId": "e451e6e5-8920-4924-a5ae-e9a07ec95c4f",
+  "relationType": "depends-on",
+  "sourceInstanceId": "67f2621d-82df-4b2f-bc4f-a21788b02aae",
+  "targetInstanceId": "1e23ee5d-0406-485d-a927-6c62dfee58f1"
+}

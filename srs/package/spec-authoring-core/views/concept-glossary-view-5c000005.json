@@ -1,0 +1,35 @@
+{
+  "id": "5c000005-0000-4000-a000-000000000005",
+  "namespace": "com.semanticops.spec",
+  "name": "concept-glossary-view",
+  "version": 1,
+  "description": "Renders a concept as a glossary entry: the definition first, then notes and examples. The title is omitted because the per-record heading already carries it.",
+  "fieldViews": [
+    {
+      "fieldId": "1a000012-0000-4000-a000-000000000012",
+      "order": 0,
+      "displayLabel": "Definition"
+    },
+    {
+      "fieldId": "1a000006-0000-4000-a000-000000000006",
+      "order": 1,
+      "displayLabel": "Notes"
+    },
+    {
+      "fieldId": "1a000005-0000-4000-a000-000000000005",
+      "order": 2,
+      "displayLabel": "Examples"
+    },
+    {
+      "fieldId": "1a000013-0000-4000-a000-000000000013",
+      "order": 3,
+      "displayLabel": "Key"
+    }
+  ],
+  "exportConfig": {
+    "format": "markdown",
+    "omitEmptyFields": true
+  },
+  "createdAt": "2026-09-05T00:00:00Z",
+  "$schema": "https://srs.semanticops.com/schema/2.0/view.json"
+}

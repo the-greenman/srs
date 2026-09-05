@@ -1,0 +1,16 @@
+{
+  "instanceId": "46a090b5-c772-4792-8c21-d97d6cee826f",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/composition",
+    "title": "Composition",
+    "description": "A container-level projection that assembles many instances into one readable document: an ordered set of sections, each selecting its members by a structured query or by container membership, each rendering them through a chosen presentation, with document-level export settings, heading depth, navigation links and an optional theme. It orchestrates; it does not replace the per-record presentation it dispatches to, and compositions do not nest inside one another.",
+    "notes": "When a section declares no view, a normative default rendering baseline applies, so theme-less and view-less output is specified, not implementation-chosen."
+  },
+  "createdAt": "2026-09-05T23:42:08.727696460+00:00",
+  "updatedAt": "2026-09-05T23:45:44.478739741+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

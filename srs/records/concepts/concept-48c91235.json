@@ -1,0 +1,16 @@
+{
+  "instanceId": "48c91235-47e9-4079-8884-30e34d5b8fc2",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/namespace",
+    "title": "Namespace",
+    "description": "A dot-separated, lowercase identifier that groups definitions under an authority and keeps names from colliding between independent publishers. Components match `[a-z0-9][a-z0-9-]*`. `core` is reserved for definitions maintained by the SRS standard, and `com.semanticops.core` is reserved such that no repository may declare a Type or Field under it. Namespace authorship is where domain vocabulary responsibility sits — the specification deliberately defines no universal ontology.",
+    "examples": "`core`, `community.adr`, `com.acme.hr`, `org.cooperative-name`"
+  },
+  "createdAt": "2026-09-05T23:42:08.512154190+00:00",
+  "updatedAt": "2026-09-05T23:45:41.775614161+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
