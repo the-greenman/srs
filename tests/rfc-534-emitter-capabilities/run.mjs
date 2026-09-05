@@ -24,6 +24,7 @@
  * inline `annotation` refs).
  */
 import assert from "node:assert/strict";
+import { readFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { loadPackage, emitEntity } from "../../scripts/lib/schema-emitter.mjs";
@@ -79,5 +80,49 @@ check("map-of-$ref with mode:reference projects an id-shape (type/format/x-srs-r
   refModeProjection.additionalProperties.format === "uuid" &&
   refModeProjection.additionalProperties["x-srs-range-type"] === "test.rfc534/annotation@1" &&
   !("$ref" in refModeProjection.additionalProperties));
+
+// --- field.json's OWN structural allOf gate (srs#551) --------------------------------------------
+// srs#534/#546 widened field.json's `valueRange` enum (+ "ref") and `allowedValues.items.type`
+// (+ "integer"), but never widened the FIRST allOf branch's `if` — so a map-of-$ref FieldType was
+// semantically valid (validateFieldType/R2 above already accepts it) yet still failed field.json's
+// own structural co-occurrence rule for rangeType/mode (confirmed empirically in srs-rust#932/#944:
+// `map_of_ref_is_semantically_valid_pending_a_spec_side_seed_fix`). This is a minimal, purpose-built
+// evaluator of exactly that one rule's shape (if[.anyOf]/then/else, all `properties.const` +
+// `required` — not a general JSON-Schema engine); it is run against the REAL committed seed, not a
+// reimplementation of the rule, so it fails if the JSON drifts from the intended shape.
+function ifMatches(obj, node) {
+  if (node.anyOf) return node.anyOf.some((branch) => ifMatches(obj, branch));
+  const propsOk = Object.entries(node.properties ?? {}).every(([k, v]) => obj[k] === v.const);
+  const reqOk = (node.required ?? []).every((k) => k in obj);
+  return propsOk && reqOk;
+}
+function rangeTypeModeForbidden(rule, obj) {
+  // else.not.anyOf[{required:[rangeType]},{required:[mode]}] — true iff either is present.
+  return rule.else.not.anyOf.some((branch) => branch.required.some((k) => k in obj));
+}
+
+const fieldJson = JSON.parse(readFileSync(join(HERE, "..", "..", "docs/schema/2.0/field.json"), "utf8"));
+const rangeTypeRule = fieldJson.$defs["com.semanticops.srs__field-type__v1"].allOf[0];
+
+const mapOfRefFt = { datatype: "map", valueRange: "ref", rangeType: { typeId: "x", typeVersion: 1 } };
+const plainStringWithRangeType = { datatype: "string", rangeType: { typeId: "x", typeVersion: 1 } };
+const refFt = { datatype: "ref" };
+
+// RED (pre-#551) shape: `if` only matched datatype:"ref" — reproduced verbatim from git history so
+// this test documents the bug it fixed, not just the fix.
+const preFix551Rule = {
+  if: { properties: { datatype: { const: "ref" } }, required: ["datatype"] },
+  else: rangeTypeRule.else,
+};
+check("PRE-#551 seed rule: rejected the RFC-032-conformant map-of-$ref shape (the bug)",
+  !ifMatches(mapOfRefFt, preFix551Rule.if) && rangeTypeModeForbidden(preFix551Rule, mapOfRefFt));
+
+check("POST-#551 seed rule: permits rangeType for the ratified map-of-$ref shape (datatype:map, valueRange:ref)",
+  ifMatches(mapOfRefFt, rangeTypeRule.if) && rangeTypeRule.then.required.includes("rangeType"));
+check("POST-#551 seed rule: still requires rangeType for plain datatype:ref (unchanged)",
+  ifMatches(refFt, rangeTypeRule.if));
+check("POST-#551 seed rule: still forbids rangeType/mode outside ref/map-of-ref (regression guard)",
+  !ifMatches(plainStringWithRangeType, rangeTypeRule.if) &&
+  rangeTypeModeForbidden(rangeTypeRule, plainStringWithRangeType));
 
 console.log(`\n✓ RFC-534 (srs#534) emitter-capability fixtures: ${pass} checks passed (untyped integer enum, map-of-$ref, both modes).`);
