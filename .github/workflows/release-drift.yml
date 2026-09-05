@@ -66,8 +66,14 @@ env:
   # map-of-$ref + untyped integer enum, mirrors srsj-envelope.json — srs#551/
   # #534/#546), #945 (repo copy carries Protocol through the package-boundary
   # snapshot — srs-rust#941), and #942 (Protocol/ProtocolStage unprefixed
-  # shape — srs#379/srs-rust#930). Unblocks srs#551 half 2 and srs#553.)
-  SRS_RUST_CLI_TAG: v0.1.0-build.330
+  # shape — srs#379/srs-rust#930). Unblocks srs#551 half 2 and srs#553.
+  # `v0.1.0-build.331` carries srs-rust PR #948 (Closes #946, #947): `repo
+  # copy`'s package-boundary reconstruction now carries package.json's real
+  # title/description/status/createdAt/packageDependencies through the round
+  # trip instead of hardcoding title<-name and description<-"". This is the
+  # gate srs#553 was waiting on — it unblocks retiring
+  # build-governance-seed.mjs's filesystem-flatten fallback.)
+  SRS_RUST_CLI_TAG: v0.1.0-build.331
 
 jobs:
   check-release-drift:
