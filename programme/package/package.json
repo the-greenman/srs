@@ -28,8 +28,13 @@
   "relationTypes": [],
   "views": [],
   "compositions": [],
-  "blueprints": [],
+  "blueprints": [
+    "blueprints/programme-unit-6f086ee5.json"
+  ],
   "lifecycles": [
     "lifecycles/programme-unit-43b4618f.json"
+  ],
+  "protocols": [
+    "protocols/programme-unit-walk-ffa65e4b.json"
   ]
 }
