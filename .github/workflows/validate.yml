@@ -1,0 +1,41 @@
+name: Validate
+
+# The repository's own conformance registry, run on every pull request.
+#
+# `scripts/checks.json` declares every spec-repo check; `validate-all.mjs` is a
+# loop over its `always`-tier entries, in array order. Until this workflow
+# existed, that loop ran only when somebody remembered to run it locally — the
+# 39 declared checks were a local habit, not a gate. The registry's own
+# membership guard (`check-checks-registry-membership.mjs`) makes a new check
+# impossible to land undeclared; this workflow makes a declared check
+# impossible to skip.
+#
+# Scope: the `always` tier only. `pinned-cli` checks need the pinned `srs`
+# binary and run in Release Drift, which already fetches and checksum-verifies
+# it. Splitting them that way keeps this job dependency-free and fast, and
+# keeps the pinned-binary reasoning in exactly one workflow.
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: validate-all
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # By exit code, never by output tail — a piped tail eats the status and
+      # turns a red gate green (CLAUDE.md, "Gates and choreography").
+      - name: Run the declared check registry
+        run: node scripts/validate-all.mjs
