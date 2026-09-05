@@ -162,7 +162,7 @@ the bug. New meaning gets a row here in the change that creates it.
 |---|---|---|
 | The conformance check registry | `scripts/checks.json` | `scripts/validate-all.mjs` is a loop over it; `check-checks-registry-membership` fails the build on an unregistered checker |
 | Pattern Grid cell slugs | `scripts/lib/pattern-grid-cells.json` via `pattern-grid-cells.mjs` | `check-decision-cell-tags`, `check-rfc-integration`, `checks.json`'s `cell` field, and the `scripts/grid-census/` tools |
-| The decision-mode vocabulary | `rfc-decision-7caca3a1` | `check-rfc-integration` — which restates it as a constant rather than reading it; #596 moves that to a shared `scripts/lib/` module, matching the cell slugs |
+| The decision-mode vocabulary | `scripts/lib/decision-modes.json` | `check-rfc-integration`, via `decision-modes.mjs`. The ruling is `rfc-decision-7caca3a1`; this file is the machine-readable set, the twin of `pattern-grid-cells.json` |
 | Agent process rules | each repo's `CLAUDE.md` | `AGENTS.md` is a pointer to it, never a restatement |
 | Agent rules for working with any SRS repository | `srs-usage.md` | agents in every repo; the tool-first rule in `CLAUDE.md` cites it |
 | The queue and the rulings not to relitigate | the-greenman/srs#580 | `CLAUDE.md`, `AGENTS.md`, every unit start |
