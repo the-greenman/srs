@@ -1,0 +1,18 @@
+{
+  "id": "c42d4a91-dbd9-480a-b612-e31b5a77d9bf",
+  "namespace": "com.semanticops.programme",
+  "name": "title",
+  "version": 1,
+  "description": "Short label naming this programme record.",
+  "aiGuidance": {
+    "purpose": "The 3-8 word noun phrase a reader scans in a tree, list or navigation sidebar to tell this record apart from its siblings. It is the record's identity in every rendered surface, so it has to be recognisable without the body.",
+    "extraction": "Take the subject the source material is actually about and compress it to a noun phrase. Drop leading articles, issue numbers and verbs of intent (\"Rework...\", \"We should...\"). If the source is a GitHub issue title, strip any prefix like \"Epic:\" or \"[spec]\" and keep the topic."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "cardinality": "single",
+    "format": "plain"
+  },
+  "editorHint": "singleline",
+  "createdAt": "2026-09-05T21:48:08.510165289+00:00"
+}

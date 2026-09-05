@@ -1,0 +1,19 @@
+{
+  "id": "8d91de54-d768-46c6-8c46-da5b094b3447",
+  "namespace": "com.semanticops.programme",
+  "name": "rationale",
+  "version": 1,
+  "description": "Why this stands as it does — the reasoning that would otherwise be lost.",
+  "aiGuidance": {
+    "purpose": "The reasoning behind a position: what was weighed, what was rejected, and what would have to change for the position to change. This is the part that stops a later reader re-opening a settled question, so it is written for someone who was not in the room.",
+    "extraction": "Capture the forces, not just the conclusion — name the alternative that was considered and say why it lost. Where the source records a trigger for revisiting (\"if federation returns...\"), keep it verbatim.",
+    "negativeGuidance": "Do not restate the conclusion as its own justification (\"we chose X because X is right\"). If no reasoning is recoverable from the source, leave the field empty rather than inventing one."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "cardinality": "single",
+    "format": "markdown"
+  },
+  "editorHint": "rich-text",
+  "createdAt": "2026-09-05T21:48:27.951045352+00:00"
+}

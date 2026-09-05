@@ -1,0 +1,35 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/package-manifest.json",
+  "id": "e0ac6f49-3f71-4c0f-b604-497d47f181b9",
+  "namespace": "com.semanticops.programme",
+  "name": "primary",
+  "version": "1.0.0",
+  "title": "primary",
+  "description": "",
+  "status": "active",
+  "createdAt": "2026-01-01T00:00:00Z",
+  "fields": [
+    "fields/title-c42d4a91.json",
+    "fields/summary-7f4e152c.json",
+    "fields/body-c510b202.json",
+    "fields/rationale-8d91de54.json",
+    "fields/wave-f4d64c36.json",
+    "fields/decisionmode-f344857a.json",
+    "fields/door-e11a0e2f.json",
+    "fields/issueref-f97d5f6f.json",
+    "fields/evidence-c650c570.json"
+  ],
+  "types": [
+    "types/phase-127b6706.json",
+    "types/unit-91474c82.json",
+    "types/finding-159cd6bd.json",
+    "types/carriedcontext-fa687772.json"
+  ],
+  "relationTypes": [],
+  "views": [],
+  "compositions": [],
+  "blueprints": [],
+  "lifecycles": [
+    "lifecycles/programme-unit-43b4618f.json"
+  ]
+}
