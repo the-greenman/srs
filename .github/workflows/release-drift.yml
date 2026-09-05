@@ -61,8 +61,13 @@ env:
   # `v0.1.0-build.284` is the RFC-038 enforcement flip (srs-rust#831): [R2],
   # [R21] and [R11] become fatal to the load for every non-exempt reader. It
   # cannot read the pre-cutover corpus at all, so the #297 corpus migration and
-  # this bump necessarily land together.)
-  SRS_RUST_CLI_TAG: v0.1.0-build.326
+  # this bump necessarily land together.
+  # `v0.1.0-build.330` carries srs-rust#944 (field.json schema parity for
+  # map-of-$ref + untyped integer enum, mirrors srsj-envelope.json — srs#551/
+  # #534/#546), #945 (repo copy carries Protocol through the package-boundary
+  # snapshot — srs-rust#941), and #942 (Protocol/ProtocolStage unprefixed
+  # shape — srs#379/srs-rust#930). Unblocks srs#551 half 2 and srs#553.)
+  SRS_RUST_CLI_TAG: v0.1.0-build.330
 
 jobs:
   check-release-drift:
