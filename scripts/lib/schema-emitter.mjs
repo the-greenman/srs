@@ -357,7 +357,12 @@ export function resolveForEmission(ctx, typeName) {
  */
 const FIELD_TYPE_ENVELOPE = [
   {
-    if: { properties: { datatype: { const: "ref" } }, required: ["datatype"] },
+    if: {
+      anyOf: [
+        { properties: { datatype: { const: "ref" } }, required: ["datatype"] },
+        { properties: { datatype: { const: "map" }, valueRange: { const: "ref" } }, required: ["datatype", "valueRange"] },
+      ],
+    },
     then: { required: ["rangeType"] },
     else: { not: { anyOf: [{ required: ["rangeType"] }, { required: ["mode"] }] } },
   },
