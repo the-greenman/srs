@@ -1,0 +1,14 @@
+{
+  "instanceId": "7a7d8945-df7e-412e-98e0-6462b5394904",
+  "typeId": "3c000001-0000-4000-a000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.core",
+  "typeName": "purpose",
+  "fieldValues": {
+    "statement": "The programme that reworks the SRS specification so it reads in layers, held as SRS records rather than as issue prose. Two claims are being tested at once: that a specification is better as a navigable semantic dataset than as a document outline, and that the programme doing the reworking can itself be run from records. This repository is also the pilot — the concept-tree pattern is proven here, on small and reversible content, before it touches the 433 records of the specification corpus.",
+    "title": "SRS spec-rework programme"
+  },
+  "createdAt": "2026-09-05T21:46:21.025527299+00:00",
+  "updatedAt": "2026-09-05T21:46:44.978039812+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

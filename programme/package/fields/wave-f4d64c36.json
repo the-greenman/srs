@@ -1,0 +1,25 @@
+{
+  "id": "f4d64c36-556b-4cd9-b351-3da52a48131a",
+  "namespace": "com.semanticops.programme",
+  "name": "wave",
+  "version": 1,
+  "description": "Which of the four programme waves this record belongs to.",
+  "aiGuidance": {
+    "purpose": "Places the record in the programme's four-part arc: ground establishes the substrate and the pilot, understand reads the existing corpus before changing it, rebuild reworks the specification in layers, prove demonstrates the result against real use. The wave is what makes the programme sequenceable without a date.",
+    "extraction": "Choose by the work's intent, not its calendar position: anything that builds tooling or the record substrate is ground; anything that surveys, maps or audits what already exists is understand; anything that rewrites or restructures spec content is rebuild; anything that validates the outcome against a reader, a client or a corpus is prove. When a unit spans two waves, take the one whose failure would block the other.",
+    "negativeGuidance": "Not a status and not a priority — a record stays in its wave whether or not the work has started or finished."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "cardinality": "single",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "ground",
+      "understand",
+      "rebuild",
+      "prove"
+    ]
+  },
+  "editorHint": "dropdown",
+  "createdAt": "2026-09-05T21:49:04.193022168+00:00"
+}

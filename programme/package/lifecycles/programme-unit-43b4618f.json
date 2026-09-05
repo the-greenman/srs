@@ -1,0 +1,130 @@
+{
+  "id": "43b4618f-ff99-495b-8336-941b96477ce2",
+  "version": 1,
+  "namespace": "com.semanticops.programme",
+  "name": "programme_unit",
+  "states": [
+    {
+      "key": "proposed",
+      "label": "Proposed",
+      "description": "Named as a unit of work, but not yet shaped — decision mode or door may still be unresolved.",
+      "isInitial": true
+    },
+    {
+      "key": "ready",
+      "label": "Ready",
+      "description": "Shaped and unblocked: mode and door are settled and the unit can be picked up as it stands."
+    },
+    {
+      "key": "in_flight",
+      "label": "In Flight",
+      "description": "Being worked on right now."
+    },
+    {
+      "key": "in_review",
+      "label": "In Review",
+      "description": "The work is complete and is being checked before it lands."
+    },
+    {
+      "key": "landed",
+      "label": "Landed",
+      "description": "The work merged and the unit is done.",
+      "isFinal": true
+    },
+    {
+      "key": "parked",
+      "label": "Parked",
+      "description": "Deliberately set aside; the unit still makes sense but is not being pursued.",
+      "isFinal": true
+    },
+    {
+      "key": "abandoned",
+      "label": "Abandoned",
+      "description": "Dropped without a successor — the unit no longer makes sense.",
+      "isFinal": true
+    }
+  ],
+  "transitions": [
+    {
+      "name": "shape",
+      "from": "proposed",
+      "to": "ready",
+      "description": "Mode and door are settled; the unit can be picked up."
+    },
+    {
+      "name": "reshape",
+      "from": "ready",
+      "to": "proposed",
+      "description": "Send a ready unit back for reshaping."
+    },
+    {
+      "name": "start",
+      "from": "ready",
+      "to": "in_flight",
+      "description": "Begin the work."
+    },
+    {
+      "name": "submit",
+      "from": "in_flight",
+      "to": "in_review",
+      "description": "Put the finished work up for checking."
+    },
+    {
+      "name": "rework",
+      "from": "in_review",
+      "to": "in_flight",
+      "description": "Review found something; go back and change it."
+    },
+    {
+      "name": "land",
+      "from": "in_review",
+      "to": "landed",
+      "description": "The work is accepted and merged."
+    },
+    {
+      "name": "park",
+      "from": "proposed",
+      "to": "parked",
+      "description": "Set aside a unit before it was shaped."
+    },
+    {
+      "name": "park",
+      "from": "ready",
+      "to": "parked",
+      "description": "Set aside a shaped unit without starting it."
+    },
+    {
+      "name": "park",
+      "from": "in_flight",
+      "to": "parked",
+      "description": "Stop work in progress and set the unit aside."
+    },
+    {
+      "name": "abandon",
+      "from": "proposed",
+      "to": "abandoned",
+      "description": "Drop a unit that no longer makes sense."
+    },
+    {
+      "name": "abandon",
+      "from": "ready",
+      "to": "abandoned",
+      "description": "Drop a shaped unit without starting it."
+    },
+    {
+      "name": "abandon",
+      "from": "in_flight",
+      "to": "abandoned",
+      "description": "Drop a unit that is part-done."
+    },
+    {
+      "name": "abandon",
+      "from": "in_review",
+      "to": "abandoned",
+      "description": "Drop a unit whose result was rejected outright."
+    }
+  ],
+  "initialState": "proposed",
+  "description": "The working lifecycle of a programme unit. A unit is proposed once someone names it, becomes ready when its decision mode and door are settled and nothing blocks it, goes in_flight while the work is being done, and in_review while the result is being checked. landed, parked and abandoned are the three off-ramps and are final: landed means the work merged, parked means it was deliberately set aside as a whole, abandoned means it was dropped without a successor.",
+  "createdAt": "2026-09-05T21:49:44.520438239+00:00"
+}

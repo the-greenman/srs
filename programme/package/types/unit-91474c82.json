@@ -1,0 +1,54 @@
+{
+  "id": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "namespace": "com.semanticops.programme",
+  "name": "unit",
+  "version": 1,
+  "description": "A single piece of programme work, sized to be started and finished as one thing, with its own decision mode, door and lifecycle.",
+  "fields": [
+    {
+      "fieldId": "c42d4a91-dbd9-480a-b612-e31b5a77d9bf",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Title"
+    },
+    {
+      "fieldId": "7f4e152c-be50-4710-acb1-392fd1c20f08",
+      "order": 1,
+      "required": false,
+      "displayLabel": "Summary"
+    },
+    {
+      "fieldId": "f344857a-cbbc-425f-b7b6-edab93146fa8",
+      "order": 2,
+      "required": false,
+      "displayLabel": "Decision Mode"
+    },
+    {
+      "fieldId": "e11a0e2f-d146-49e5-856e-13e70584193d",
+      "order": 3,
+      "required": false,
+      "displayLabel": "Door"
+    },
+    {
+      "fieldId": "f97d5f6f-ba89-4daf-8c2d-661cf3553517",
+      "order": 4,
+      "required": false,
+      "displayLabel": "Issue Refs"
+    },
+    {
+      "fieldId": "c510b202-57f6-4be7-9537-44819c7c3aa2",
+      "order": 5,
+      "required": false,
+      "displayLabel": "Body"
+    }
+  ],
+  "identityFieldId": "c42d4a91-dbd9-480a-b612-e31b5a77d9bf",
+  "lifecycleRef": "43b4618f-ff99-495b-8336-941b96477ce2",
+  "aiGuidance": {
+    "purpose": "The unit of execution. Each one is small enough to land in one pass, carries the decision mode that says how to approach it and the door that says how reversible it is, and tracks its own state through the programme_unit lifecycle.",
+    "extraction": "Create a unit for each discrete piece of work the source names. Record its GitHub references in issue_ref rather than restating the issue body; put the reasoning behind its mode or door in the body.",
+    "negativeGuidance": "Do not create a unit for an observation or a conclusion — those are findings. If the item has no work to do, it is not a unit."
+  },
+  "createdAt": "2026-09-05T21:50:23.126692236+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json"
+}
