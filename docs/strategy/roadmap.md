@@ -329,6 +329,11 @@ The standard-level contracts that make the release boundaries and practice paths
       - Required by: future work
       - Sources: [#431](https://github.com/the-greenman/srs/issues/431)
       - Not included: A separate default mechanism at each of the Field, Type and Protocol layers; Treating a default as satisfying requiredness; A current F1, F2, F3 or practice-track release gate
+    - **Nested structure and navigation** — A repository expresses structure more than one level deep, and a conforming reader reaches every node from the root: containers nest by declaration or derivation, and navigation and composition traverse to any depth under one deterministic order.
+      - Stability: Settle before F2
+      - Required by: D1, D3, D5
+      - Sources: [rfc-013-required-root-container.md](../../rfcs/rfc-013-required-root-container.md), [design-capture-directory-kind-scopes.json](../../srs/records/notes/design-capture-directory-kind-scopes.json), [#267](https://github.com/the-greenman/srs/issues/267), [#556](https://github.com/the-greenman/srs/issues/556)
+      - Not included: A navigation taxonomy; A second ordering primitive alongside precedes; Container-to-container Relations, which core Invariant 20 forbids
   - **Canonical meaning and facets** — A repository declares one repository-owned set of presentations it commits to render and can produce reproducible, readable projections from canonical meaning; neither the presentations nor their projections becomes an authoritative store.
     - Stability: Lock before F1
     - Required by: F1, F2, D2, D3, G1
@@ -435,6 +440,7 @@ Each row is a public SRS promise required by a boundary or practice stage. Readi
 | Identity and reference resolution | F1, D1, D2 | not assessed | not assessed | not assessed |
 | Definitions and structural navigation | F1, D1, D2, G1 | not assessed | not assessed | not assessed |
 | Layered default values | future | not assessed | not assessed | not assessed |
+| Nested structure and navigation | D1, D3, D5 | not assessed | not assessed | not assessed |
 | Canonical meaning and facets | F1, F2, D2, D3, G1 | not assessed | not assessed | not assessed |
 | Portable semantic publication | F2, D3, D5 | not assessed | not assessed | not assessed |
 | Definition closure and completeness | F2, D5 | not assessed | not assessed | not assessed |
