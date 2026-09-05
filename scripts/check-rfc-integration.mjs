@@ -52,6 +52,7 @@ import { existsSync, statSync } from "fs";
 import { join, resolve } from "path";
 import { instancePaths } from "./lib/rfc-038-tree.mjs";
 import { loadCellSlugs, CELL_RULE_EFFECTIVE_DATE } from "./lib/pattern-grid-cells.mjs";
+import { loadDecisionModes } from "./lib/decision-modes.mjs";
 
 // Root defaults to the repo root; an explicit argument (used by tests/guards/run.mjs's fixture
 // cases) points the whole check at a temporary fixture tree instead — the same convention the
@@ -101,7 +102,7 @@ const CELL_RULE_FLOOR = CELL_RULE_EFFECTIVE_DATE;
 // srs#463: the Charter Check's `## Charter alignment` section requirement shares the cell rule's
 // floor date — one rule, not a second independently-tunable date.
 const CHARTER_ALIGNMENT_FLOOR = CELL_RULE_EFFECTIVE_DATE;
-const DECISION_MODES = new Set(["clear", "complicated", "complex", "chaotic", "unresolved"]);
+// The mode vocabulary is loaded, not restated — see scripts/lib/decision-modes.mjs.
 
 // RFC-040's individual grandfather (createdAt 2026-08-24, postdating CHARTER_ALIGNMENT_FLOOR but
 // predating the Charter Check stage's own existence, srs#463 landed 2026-08-26) retired here:
@@ -233,8 +234,9 @@ async function buildResolvers() {
   );
 
   const cellSlugs = await loadCellSlugs();
+  const decisionModes = await loadDecisionModes();
 
-  return { invariantNumbers, extensionIds, typeKeys, sectionSlugs, subsectionSlugs, schemaFiles, indexedPaths, rfcRecords, cellSlugs };
+  return { invariantNumbers, extensionIds, typeKeys, sectionSlugs, subsectionSlugs, schemaFiles, indexedPaths, rfcRecords, cellSlugs, decisionModes };
 }
 
 // Recursively find every package.json under a directory.
@@ -453,10 +455,10 @@ async function main() {
           const mode = parseLabelLine(section, "Decision mode");
           if (mode === null) {
             fail(`${label}: Charter alignment section has no "**Decision mode:**" line.`);
-          } else if (!DECISION_MODES.has(mode.toLowerCase())) {
+          } else if (!resolvers.decisionModes.has(mode.toLowerCase())) {
             fail(
               `${label}: Charter alignment section names decision mode "${mode}", not one of ` +
-                `${[...DECISION_MODES].join(", ")} (rfc-decision-7caca3a1).`,
+                `${[...resolvers.decisionModes].join(", ")} (rfc-decision-7caca3a1).`,
             );
           }
         }
