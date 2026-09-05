@@ -269,7 +269,9 @@
     "fields/targets.json",
     "fields/srsj.json",
     "fields/envelope_data.json",
-    "fields/manifest.json"
+    "fields/manifest.json",
+    "fields/tier.json",
+    "fields/assets.json"
   ],
   "id": "4a000004-0000-4000-a000-000000000004",
   "name": "metamodel",

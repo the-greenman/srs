@@ -2874,6 +2874,7 @@ composition {
 | `typeName` | string | no | — | core | Denormalized hint: the name of the bound Type. If it conflicts with the resolved Type, typeId wins. |
 | `containerId` | string | no | format: uuid | core | ext:discovery DiscoveryQuery.containerId — instance is a member of this container (RFC-009 I-66). |
 | `tag` | string[] | no | — | core | AND-conjunction: the instance's tags array must contain ALL of the specified values (ext:discovery DiscoveryQuery.tag). |
+| `tier` | integer | no | enum: "0" \| "2" | core | ext:discovery DiscoveryQuery.tier — instance tier filter. 0 = Note, 2 = Record. Tier 1 (TypedRecord) was removed (rfc-decision-53635966); the gap in numbering is retained deliberately for reference stability. |
 | `lifecycleState` | string | no | — | core | ext:lifecycle — current lifecycle state of this Record. |
 | `lifecycleStates` | string[] | no | — | core | ext:discovery DiscoveryQuery.lifecycleStates — inclusive multi-value lifecycle filter, OR semantics (RFC-012 Rev 11, srs#525). |
 | `excludeLifecycleStates` | string[] | no | — | core | ext:discovery DiscoveryQuery.excludeLifecycleStates — exclusion filter, applied after lifecycleState/lifecycleStates. |
@@ -2890,6 +2891,7 @@ discovery-query {
   typeName?: string // Denormalized hint: the name of the bound Type. If it conflicts with the resolved Type, typeId wins.
   containerId?: string // ext:discovery DiscoveryQuery.containerId — instance is a member of this container (RFC-009 I-66).
   tag?: string[] // AND-conjunction: the instance's tags array must contain ALL of the specified values (ext:discovery DiscoveryQuery.tag).
+  tier?: integer // ext:discovery DiscoveryQuery.tier — instance tier filter. 0 = Note, 2 = Record. Tier 1 (TypedRecord) was removed (rfc-decision-53635966); the gap in numbering is retained deliberately for reference stability.
   lifecycleState?: string // ext:lifecycle — current lifecycle state of this Record.
   lifecycleStates?: string[] // ext:discovery DiscoveryQuery.lifecycleStates — inclusive multi-value lifecycle filter, OR semantics (RFC-012 Rev 11, srs#525).
   excludeLifecycleStates?: string[] // ext:discovery DiscoveryQuery.excludeLifecycleStates — exclusion filter, applied after lifecycleState/lifecycleStates.
@@ -3001,6 +3003,7 @@ conformance-scenario {
 | `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
 | `description` | string | yes | — | core | Human-readable description of this entity. |
 | `targets` | string[] | yes | minItems: 1 | core | Output formats a Theme is designed for (e.g. 'html', 'markdown'). MUST contain at least one entry (Rule [T-1b]). |
+| `assets` | map<string, ref> | no | — | core | ext:themes-l1 Theme.assets — named asset declarations, keyed by name (unique within the Theme). Referenced in templates as {{asset:name}}. |
 | `cssClassFields` | string[] | no | format: uuid | core | fieldIds whose values are injected as CSS classes on record wrapper elements (RFC-032 Rev-7 [T-9]). |
 | `pageTemplates` | ref → `page-templates` (inline) | no | — | core | Theme.pageTemplates — page-level chrome for paginated output formats. |
 | `elementTemplates` | ref → `element-templates` (inline) | no | — | core | Theme.elementTemplates — templates that wrap auto-rendered content at each structural level. |
@@ -3022,6 +3025,7 @@ theme {
   version: integer // Positive integer version within the UUID lineage.
   description: string // Human-readable description of this entity.
   targets: string[] // Output formats a Theme is designed for (e.g. 'html', 'markdown'). MUST contain at least one entry (Rule [T-1b]).
+  assets?: map<string, ref> // ext:themes-l1 Theme.assets — named asset declarations, keyed by name (unique within the Theme). Referenced in templates as {{asset:name}}.
   cssClassFields?: string[] // fieldIds whose values are injected as CSS classes on record wrapper elements (RFC-032 Rev-7 [T-9]).
   pageTemplates?: ref → `page-templates` (inline) // Theme.pageTemplates — page-level chrome for paginated output formats.
   elementTemplates?: ref → `element-templates` (inline) // Theme.elementTemplates — templates that wrap auto-rendered content at each structural level.
