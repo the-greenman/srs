@@ -1,0 +1,21 @@
+{
+  "instanceId": "28eebb3e-390a-4555-9faa-46bf2341fa6b",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "The autonomy contract: mode by door",
+    "summary": "Two existing mechanisms are composed into the merge boundary rather than a third being invented: decision mode decides who resolves a question, and which door decides what may merge. Every pull request states its mode, cell and door, so the classification is auditable rather than implied.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs#581",
+      "srs#580"
+    ]
+  },
+  "lifecycleState": "landed",
+  "createdAt": "2026-09-05T22:07:51.424548160+00:00",
+  "updatedAt": "2026-09-05T22:09:39.860986543+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

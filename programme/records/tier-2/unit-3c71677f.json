@@ -1,0 +1,23 @@
+{
+  "instanceId": "3c71677f-a514-45f0-b4a8-3d1ac71be807",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Grid census cycle two and its read-out",
+    "summary": "A second census of the corpus against the Pattern Grid, diffed against cycle one and actually read, together with the cross-reading of checks.json that shows which cells carry weight with no enforcement. It honours a live kill switch: the ruling said that counts recorded but never read make the operations ritual and cut them.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs#582",
+      "srs#490",
+      "srs#471"
+    ],
+    "body": "The corpus moved by 10 added and 1 removed out of 229, a 4 percent delta, so cycle one's placements were carried for every surviving statement and only the delta reclassified against the committed rubric. Three readings came out of it: the standard states rules about rules, with conformance and reference holding 121 of 218 placed statements; two of the four unguarded cells are an enforcement gap rather than a coverage gap; and the 20 statements that landed in no cell are two distinct classes rather than one residue."
+  },
+  "lifecycleState": "landed",
+  "createdAt": "2026-09-05T22:08:28.219371297+00:00",
+  "updatedAt": "2026-09-05T22:09:40.386466536+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

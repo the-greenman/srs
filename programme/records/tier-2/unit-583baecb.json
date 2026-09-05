@@ -1,0 +1,19 @@
+{
+  "instanceId": "583baecb-e6b2-43d0-b361-4dc4263bc2d8",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "check-spec-coherence and its allowlist",
+    "summary": "A coherence checker over the spec corpus with a seeded allowlist, each entry carrying an issue reference, in warn mode to begin with. Shrinking the allowlist is the migration, so the checker measures the rework rather than blocking it.",
+    "issue_ref": [
+      "srs#560",
+      "srs#556"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:08:28.695430457+00:00",
+  "updatedAt": "2026-09-05T22:08:28.695437207+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

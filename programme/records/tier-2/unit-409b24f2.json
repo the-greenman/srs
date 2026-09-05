@@ -1,0 +1,19 @@
+{
+  "instanceId": "409b24f2-7ecc-47aa-8f09-d3566484b29a",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "The spec authoring package",
+    "summary": "Adds the exposition_role and layer fields and the three relation types the concept tree needs, modelled on the existing conformance_level field. This is the vocabulary every later rebuild unit writes against.",
+    "issue_ref": [
+      "srs#559",
+      "srs#556"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:08:28.630464255+00:00",
+  "updatedAt": "2026-09-05T22:08:28.630471217+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

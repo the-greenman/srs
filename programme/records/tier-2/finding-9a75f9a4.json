@@ -1,0 +1,20 @@
+{
+  "instanceId": "9a75f9a4-2bb2-4b6b-be02-2da2fefe2462",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "The declared checks never ran in CI",
+    "summary": "The repository had a membership guard making a new conformance check impossible to land undeclared, and no gate making a declared check impossible to skip. 39 checks sat in the always tier and none of them ran on a pull request.",
+    "evidence": [
+      "scripts/checks.json declares 39 entries in the always tier; before srs#576 the only PR-triggered workflow was Release Drift, which runs check-release-drift, check-gallery-conformance and the roadmap checks — not the registry (srs#576).",
+      "validate-all.mjs is a loop over the always-tier entries of checks.json and ran only when a human remembered to run it locally (srs#576).",
+      "The registry itself was ratified as the one declared home for every check in rfc-decision-19997e24 (srs#495)."
+    ],
+    "body": "This is the precondition for every other autonomy claim in the programme. Auto-merge on green is only meaningful if green means the declared checks actually ran; otherwise it is a promise an agent makes about itself."
+  },
+  "createdAt": "2026-09-05T22:09:03.331727660+00:00",
+  "updatedAt": "2026-09-05T22:09:03.331731547+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

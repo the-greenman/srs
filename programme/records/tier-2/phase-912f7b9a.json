@@ -1,0 +1,16 @@
+{
+  "instanceId": "912f7b9a-d357-415d-8c75-b9a0cd7381c1",
+  "typeId": "127b6706-464f-4fff-9ade-cff47f8745e5",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "phase",
+  "fieldValues": {
+    "title": "Prove the result, and batch the decisions",
+    "summary": "Demonstrates the rebuilt structure against real use — the programme repository's own chain from Blueprint prompt to Protocol to concept tree, and an agent with no prior context working the repository out over MCP — and collects the four rulings the programme cannot make for itself into a single owner sitting. What has not been shown to work has not been proven to work.",
+    "wave": "prove",
+    "body": "## Two proofs and one sitting\n\nThe first proof is mechanical: the programme repository renders its own Protocol from a Blueprint prompt, projects its overview through compositions, and walks its concept tree with srs tree. If the pattern cannot carry a four-phase programme, it will not carry a 433-record specification.\n\nThe second proof is the one that matters to the claim. An agent that knows nothing about SRS is pointed at the repository over MCP and has to work out the concepts, the current state and the safe next actions from the records alone. A specification that reads in layers should make that possible; a document outline does not.\n\nThe wave also batches the four rulings deliberately held back, so the owner decides them together with their consequences visible, rather than one at a time as each unit stalls."
+  },
+  "createdAt": "2026-09-05T22:07:24.918653717+00:00",
+  "updatedAt": "2026-09-05T22:07:24.918660492+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

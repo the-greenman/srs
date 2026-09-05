@@ -1,0 +1,19 @@
+{
+  "instanceId": "2a04fab1-731f-45a4-b9fe-e08940435c18",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Concept records, substrate through connection",
+    "summary": "The concept type is defined in the spec package and used by nothing; this unit authors the concept records that carry the specification's ideas from substrate through to connection. They are the spine the rest of the exposition hangs from.",
+    "issue_ref": [
+      "srs#561",
+      "srs#556"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:08:28.765675647+00:00",
+  "updatedAt": "2026-09-05T22:08:28.765680683+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

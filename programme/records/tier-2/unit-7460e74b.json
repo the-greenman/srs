@@ -1,0 +1,19 @@
+{
+  "instanceId": "7460e74b-d6ba-4383-be8b-fb72eb8c234d",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "The source-of-truth map",
+    "summary": "A small pointer document, linked from the decision compass, saying for each kind of meaning which artifact holds it and which artifacts merely project it. It is the durable answer to the meaning-placement sweep, so the same question does not have to be re-derived each time.",
+    "issue_ref": [
+      "srs#490",
+      "srs#580"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:08:28.421138787+00:00",
+  "updatedAt": "2026-09-05T22:08:28.421142295+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,15 @@
+{
+  "instanceId": "c7499888-6827-471f-b55e-5acace2cec2e",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "A gate that has never gone red is unproven",
+    "summary": "A required status check that has only ever been observed passing has not been shown to block anything. Prove it by making it fail on purpose with auto-merge armed, and confirm the pull request stays blocked.",
+    "rationale": "The cheaper option was to read the branch protection settings and conclude the gate would work. It loses for the reason the programme exists: this repository has repeatedly found configuration that described an intent nothing enforced — a required context that was not configured as required, a check registry no workflow ran. Settings are a claim; a blocked pull request is evidence.\n\nThe cost of the negative test is one throwaway pull request. Pay it every time a gate's behaviour is load-bearing for autonomy, and prove the positive direction too: a green pull request that auto-merges with no human approval."
+  },
+  "createdAt": "2026-09-05T22:09:22.971659205+00:00",
+  "updatedAt": "2026-09-05T22:09:22.971664634+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

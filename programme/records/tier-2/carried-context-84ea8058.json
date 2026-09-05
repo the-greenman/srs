@@ -1,0 +1,15 @@
+{
+  "instanceId": "84ea8058-7cbb-49b7-9338-5ac7500f814b",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "A protocol with two homes is obeyed from the stale one",
+    "summary": "When the same process is written down in two places, agents follow whichever they find first, and that is usually the older one. Cloud sessions followed a retired command file over the live trigger prompt for three ticks before anyone noticed.",
+    "rationale": "The alternative considered was keeping both homes and adding a note to the retired one saying which was current. It loses because a note is still content an agent can read as instruction, and because the failure was not that the retired file was wrong — it was that it existed and was reachable. So the retired files were reduced to pointers rather than corrected.\n\nWhat would change this: if a mechanism existed that made staleness structurally visible to a reader — a version the reader must resolve rather than a file it may open — two homes could be safe. Nothing in the current tooling does that, so the rule stands: one live home per protocol, everything else a pointer."
+  },
+  "createdAt": "2026-09-05T22:09:22.900452192+00:00",
+  "updatedAt": "2026-09-05T22:09:22.900456548+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

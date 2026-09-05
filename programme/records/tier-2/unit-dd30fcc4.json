@@ -1,0 +1,19 @@
+{
+  "instanceId": "dd30fcc4-10ed-4ba7-8abf-8b9f43c18b69",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "A spec-section authoring protocol, only if earned",
+    "summary": "A Protocol for authoring a spec section, to be created only if the rebuild shows that section authoring is repeatable enough to warrant one. Stub unit, deliberately conditional so the programme does not add a mechanism it has not shown it needs.",
+    "issue_ref": [
+      "srs#566",
+      "srs#556"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:08:29.161884689+00:00",
+  "updatedAt": "2026-09-05T22:08:29.161889627+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

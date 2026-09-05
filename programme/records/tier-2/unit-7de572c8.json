@@ -1,0 +1,22 @@
+{
+  "instanceId": "7de572c8-2c90-4582-95f5-4621a953d8f9",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "The declared check registry runs in CI",
+    "summary": "The 39 always-tier checks declared in scripts/checks.json now run on every pull request, where previously the loop ran only when somebody remembered to run it locally. This is the precondition for agent-merged work: auto-merge on green is meaningless unless green means the declared checks actually ran.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs#576",
+      "srs#495"
+    ],
+    "body": "Scope is the always tier only. The three pinned-cli checks need the pinned srs binary and stay in Release Drift, which already fetches and checksum-verifies it, so the pinned-binary reasoning keeps exactly one home and the new job stays dependency-free."
+  },
+  "lifecycleState": "landed",
+  "createdAt": "2026-09-05T22:07:51.287174297+00:00",
+  "updatedAt": "2026-09-05T22:09:39.323194701+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

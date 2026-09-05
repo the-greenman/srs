@@ -1,0 +1,20 @@
+{
+  "instanceId": "7ce202a7-77aa-4f15-9c8a-681918645b67",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "RFC for the spec exposition metastructure",
+    "summary": "The RFC that states the concept-tree metastructure as a normative proposal: tree by contains, order by precedes, prerequisites by depends-on, with no new relation types and no new fields. Its Charter Check questions — cells, layer test and decision mode — are open, so the unit is not yet ready to start.",
+    "decision_mode": "unresolved",
+    "issue_ref": [
+      "srs#558",
+      "srs#556"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:09:03.085048277+00:00",
+  "updatedAt": "2026-09-05T22:09:03.085055286+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,19 @@
+{
+  "instanceId": "80f06c3e-1c9a-4e35-be83-0c7e88ca0bf9",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "The 127 markdown headings un-baked into records",
+    "summary": "The document's real outline currently lives in markdown strings inside record bodies, invisible to the record model and to every check. Un-baking those headings into records is what turns the outline into structure the tooling can see.",
+    "issue_ref": [
+      "srs#562",
+      "srs#556"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:08:28.895019375+00:00",
+  "updatedAt": "2026-09-05T22:08:28.895026010+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

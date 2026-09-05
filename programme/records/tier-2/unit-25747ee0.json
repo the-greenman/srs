@@ -1,0 +1,19 @@
+{
+  "instanceId": "25747ee0-bd34-4e76-9394-0a3e57aa5d0a",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Restoration of the five paused routines",
+    "summary": "The five scheduled routines paused during the epic-256 wind-down are restored exactly per the restoration record, not from memory. Two of the five were already off for their own separate reasons and must stay off.",
+    "issue_ref": [
+      "srs#580",
+      "srs#256"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:07:51.729402299+00:00",
+  "updatedAt": "2026-09-05T22:07:51.729405291+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
