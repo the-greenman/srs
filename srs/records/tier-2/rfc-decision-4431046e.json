@@ -1,0 +1,37 @@
+{
+  "instanceId": "4431046e-6366-4470-ad31-c8c956f62f4f",
+  "typeId": "6a000004-0000-4000-a000-000000000004",
+  "typeVersion": 2,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc-decision",
+  "fieldValues": {
+    "title": "A correction is not a refinement: how a decision record may change",
+    "decision_date": "2026-09-06",
+    "decision_rationale": "rfc-decision-4f1e12e5 was amended in place on 2026-08-22 (commit b623475). The amendment made three changes at once, and the commit message named them honestly: federation's return went from evidence-gated to COMMITTED - a reversal of position; FieldView.protection became View.protection - the original named the wrong entity; and a note was added that FieldView.required is not in the entry, preventing a misreading.\n\nOne refinement and two corrections, in one act, because the rule had no word for the second kind. It says refinements are recorded as successors and is silent on fixing an error. That silence is what let a single honest commit do both.\n\nThe rule as written, applied strictly, would require a successor record for a misspelled property name. Applied loosely, it permits a reversal of position to be written over the top of what it reverses. Neither is what Succession's preference is for, so the rule is refined to name the distinction it was always relying on.\n\nThe amendment's own subject is the sharpest evidence: rfc-decision-4f1e12e5's EXPLICITLY KEPT section reads 'supersedes / refines / derived-from / evidences relation types: Succession's preference (successor over overwrite) REQUIRES its mechanism.' The record defending the mechanism was changed without it.",
+    "decision_statement": "A decision record may change in exactly two ways, and they are not the same act.\n\nA REFINEMENT changes the position the record takes - what was decided, or on what condition it holds. A refinement is recorded as a SUCCESSOR decision record linked by a supersedes relation. The earlier record is never edited. This is rfc-decision-cce3c00e's standing rule, unchanged.\n\nA CORRECTION fixes a statement of fact that was wrong when written, without changing the position: a misidentified property, a wrong count, a mistaken citation, a scope note that prevents a misreading. A correction MAY be made in place. It MUST carry a visible marker in the record itself - not only in the commit message - naming what was corrected and when, so a reader of the corpus can see that the record once said otherwise.\n\nThe test between them: if a reader who acted on the earlier text would have acted differently, it is a refinement. If they would have acted the same way and merely held a wrong detail, it is a correction.\n\nWhy corrections are not forced through succession: a decision log that accumulates successor records for misspellings stops being read, and an unread mechanism defends nothing. Succession is reserved for changes of position so that a supersedes edge always means something happened.\n\nWhy corrections must still be visible: the Air column principle requires that informational conflicts resolve by declared authority VISIBLY. A silent in-place fix satisfies the authority half and fails the visibility half - the record then reads as though it was always right.",
+    "decision_scope": "Governs how any decision record in this repository changes after creation. Does not govern records of other types, which have their own lifecycle and versioning rules, and does not change what a decision record contains.",
+    "governing_values": [
+      "semantic-integrity",
+      "shared-coherence"
+    ],
+    "project_phase": "formation",
+    "alternatives_considered": "(1) No exception - reconstruct the whole 4f1e12e5 amendment as a successor, corrections included. Rejected: it makes a typo fix cost a decision record, and a log filled with those is skimmed rather than read. The mechanism would be formally intact and practically dead. (2) Accept the in-place edit and rule forward only. Rejected on evidence rather than principle: the pre-amendment text survives only in git history, and an SRS repository travels as a bundle of records, so the earlier position is lost on first export. (3) Make decision records mutable, dropping the successor requirement. Rejected: it contradicts the Succession cell outright and makes every past decision's audit trail retrospectively untrustworthy.",
+    "accepted_costs": "The correction/refinement boundary is a judgment, and judgments drift. The test given above is deliberately about consequence rather than about size, because a one-word change can be a reversal and a paragraph can be a clarification - but a determined author can still classify a refinement as a correction. This is mitigated by visibility, not prevented by it: a marked correction is reviewable, where a silent one is not. Accepting that a marker can be checked mechanically while the classification behind it cannot.",
+    "evidence_refs": [
+      "srs#588 (the finding)",
+      "commit b623475 (the in-place amendment, honestly titled)",
+      "rfc-decision-cce3c00e (the standing rule this refines)",
+      "rfc-decision-4f1e12e5 (the record amended; its EXPLICITLY KEPT section defends the mechanism)",
+      "srs#490 (the meaning-placement sweep that found it)"
+    ],
+    "review_trigger": "Review when a correction marker is used to carry a change of position - the boundary is then wrong or the test is unclear. Review also at the Continuity flip (axis 2-8), when overwriting anything becomes more expensive and the correction allowance may need narrowing."
+  },
+  "lifecycleState": "accepted",
+  "tags": [
+    "topic:rfc",
+    "cell:succession"
+  ],
+  "createdAt": "2026-09-05T23:17:26.417974465+00:00",
+  "updatedAt": "2026-09-05T23:18:13.462946487+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

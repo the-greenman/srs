@@ -1,0 +1,36 @@
+{
+  "instanceId": "5f18603e-476e-41ae-8de4-c69977545f87",
+  "typeId": "6a000004-0000-4000-a000-000000000004",
+  "typeVersion": 2,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc-decision",
+  "fieldValues": {
+    "title": "Federation's return is committed, not evidence-gated",
+    "decision_date": "2026-08-22",
+    "decision_rationale": "This record exists because the position it states was, until now, recoverable only from git history. An SRS repository travels as a bundle of records; a bundle carries no commits. So the prior position - that federation's return was evidence-gated - would have been lost on first export, and the corpus would have read as though the return had always been committed.\n\nThe position itself is not new and is not being re-decided here. It has been live since 2026-08-22, is stated in rfc-decision-4f1e12e5 as amended, and is carried by the roadmap's federation contract. What is new is that the CHANGE is now a record rather than a diff.\n\nAuthored under the correction-versus-refinement rule, which classifies this as a refinement - a reader who acted on 'evidence-gated' would have planned differently from one acting on 'committed' - and therefore requires a successor record rather than an in-place edit.",
+    "decision_statement": "Federation returns to SRS as a planned roadmap phase. Its return is COMMITTED and is not gated on evidence of demand - federation is core to SRS. The 2026-08-21 removal was a deliberate reset of a design that predated real practice, not a judgment on the capability.\n\nThe redesign is grounded in the sharing forms that actually emerged - bundles, slices, git-hosted repositories - and in the axis 4-10 verification path. The owner schedules it. The travel mandate covers artifact-form portability meanwhile.\n\nWHAT THIS CHANGED. rfc-decision-4f1e12e5, as accepted on 2026-08-21, gated the return on evidence. Its federation entry read, verbatim:\n\n  'Trigger: a second real repository needing live cross-repo assertions; the travel mandate covers artifact-form portability meanwhile.'\n\nThat position is superseded by this record. The change was made on 2026-08-22 (commit b623475) as an in-place edit to 4f1e12e5, before the correction-versus-refinement rule existed to say it needed a record of its own.",
+    "decision_scope": "The federation entry of rfc-decision-4f1e12e5 only. Every other entry in that record - the other removals, the dispositions without removal, and the EXPLICITLY KEPT section - stands unchanged and is not touched by this record.",
+    "governing_values": [
+      "portability",
+      "evolution"
+    ],
+    "project_phase": "formation",
+    "alternatives_considered": "(1) Leave the position in 4f1e12e5 as amended and record nothing. Rejected: the prior position survives only in git and is lost on export, which is the concrete harm rather than a procedural one. (2) Supersede 4f1e12e5 entirely with a fresh record carrying all its entries. Rejected: eight entries are unchanged, and superseding a compound record to change one entry destroys the provenance of the other eight. (3) Reconstruct the whole 2026-08-22 amendment, corrections included. Rejected by the governing rule, which reserves succession for changes of position.",
+    "accepted_costs": "rfc-decision-4f1e12e5 remains a compound record carrying nine dispositions, which is why one entry changing needed this awkward scoping. That compound shape is itself against the guidance to split independently reversible choices into separate records; it is not repaired here, and a future reader must read the two records together to know the federation position.",
+    "evidence_refs": [
+      "rfc-decision-4f1e12e5 (the record amended; its federation entry)",
+      "commit b623475 (the in-place amendment, 2026-08-22)",
+      "srs#588 (the finding)",
+      "docs/strategy/roadmap.json (the federation-redesign contract carries the committed form)"
+    ],
+    "review_trigger": "Review when the federation redesign is scheduled, at which point this record's position becomes an input to that design rather than a standing commitment."
+  },
+  "lifecycleState": "accepted",
+  "tags": [
+    "topic:rfc",
+    "cell:portability"
+  ],
+  "createdAt": "2026-09-05T23:18:40.126986064+00:00",
+  "updatedAt": "2026-09-05T23:18:54.188123897+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

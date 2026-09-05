@@ -1282,3 +1282,94 @@ Disciplines that bind autoclassification: placements are DIAGNOSTIC-mode input (
 **Review Trigger**: Review if the srs-rust follow-up finds the struct rename materially more expensive than assessed here (e.g. a real external consumer beyond the gallery and the vendored governance package copies).
 
 
+**Title**: A correction is not a refinement: how a decision record may change
+
+**Status**: Accepted
+
+**Decision Date**: 2026-09-06
+
+**Decision Rationale**: rfc-decision-4f1e12e5 was amended in place on 2026-08-22 (commit b623475). The amendment made three changes at once, and the commit message named them honestly: federation's return went from evidence-gated to COMMITTED - a reversal of position; FieldView.protection became View.protection - the original named the wrong entity; and a note was added that FieldView.required is not in the entry, preventing a misreading.
+
+One refinement and two corrections, in one act, because the rule had no word for the second kind. It says refinements are recorded as successors and is silent on fixing an error. That silence is what let a single honest commit do both.
+
+The rule as written, applied strictly, would require a successor record for a misspelled property name. Applied loosely, it permits a reversal of position to be written over the top of what it reverses. Neither is what Succession's preference is for, so the rule is refined to name the distinction it was always relying on.
+
+The amendment's own subject is the sharpest evidence: rfc-decision-4f1e12e5's EXPLICITLY KEPT section reads 'supersedes / refines / derived-from / evidences relation types: Succession's preference (successor over overwrite) REQUIRES its mechanism.' The record defending the mechanism was changed without it.
+
+**Decision**: A decision record may change in exactly two ways, and they are not the same act.
+
+A REFINEMENT changes the position the record takes - what was decided, or on what condition it holds. A refinement is recorded as a SUCCESSOR decision record linked by a supersedes relation. The earlier record is never edited. This is rfc-decision-cce3c00e's standing rule, unchanged.
+
+A CORRECTION fixes a statement of fact that was wrong when written, without changing the position: a misidentified property, a wrong count, a mistaken citation, a scope note that prevents a misreading. A correction MAY be made in place. It MUST carry a visible marker in the record itself - not only in the commit message - naming what was corrected and when, so a reader of the corpus can see that the record once said otherwise.
+
+The test between them: if a reader who acted on the earlier text would have acted differently, it is a refinement. If they would have acted the same way and merely held a wrong detail, it is a correction.
+
+Why corrections are not forced through succession: a decision log that accumulates successor records for misspellings stops being read, and an unread mechanism defends nothing. Succession is reserved for changes of position so that a supersedes edge always means something happened.
+
+Why corrections must still be visible: the Air column principle requires that informational conflicts resolve by declared authority VISIBLY. A silent in-place fix satisfies the authority half and fails the visibility half - the record then reads as though it was always right.
+
+**Scope**: Governs how any decision record in this repository changes after creation. Does not govern records of other types, which have their own lifecycle and versioning rules, and does not change what a decision record contains.
+
+**Governing Values**:
+- semantic-integrity
+- shared-coherence
+
+**Project Phase**: formation
+
+**Alternatives Considered**: (1) No exception - reconstruct the whole 4f1e12e5 amendment as a successor, corrections included. Rejected: it makes a typo fix cost a decision record, and a log filled with those is skimmed rather than read. The mechanism would be formally intact and practically dead. (2) Accept the in-place edit and rule forward only. Rejected on evidence rather than principle: the pre-amendment text survives only in git history, and an SRS repository travels as a bundle of records, so the earlier position is lost on first export. (3) Make decision records mutable, dropping the successor requirement. Rejected: it contradicts the Succession cell outright and makes every past decision's audit trail retrospectively untrustworthy.
+
+**Accepted Costs**: The correction/refinement boundary is a judgment, and judgments drift. The test given above is deliberately about consequence rather than about size, because a one-word change can be a reversal and a paragraph can be a clarification - but a determined author can still classify a refinement as a correction. This is mitigated by visibility, not prevented by it: a marked correction is reviewable, where a silent one is not. Accepting that a marker can be checked mechanically while the classification behind it cannot.
+
+**Evidence**:
+- srs#588 (the finding)
+- commit b623475 (the in-place amendment, honestly titled)
+- rfc-decision-cce3c00e (the standing rule this refines)
+- rfc-decision-4f1e12e5 (the record amended; its EXPLICITLY KEPT section defends the mechanism)
+- srs#490 (the meaning-placement sweep that found it)
+
+**Review Trigger**: Review when a correction marker is used to carry a change of position - the boundary is then wrong or the test is unclear. Review also at the Continuity flip (axis 2-8), when overwriting anything becomes more expensive and the correction allowance may need narrowing.
+
+
+**Title**: Federation's return is committed, not evidence-gated
+
+**Status**: Accepted
+
+**Decision Date**: 2026-08-22
+
+**Decision Rationale**: This record exists because the position it states was, until now, recoverable only from git history. An SRS repository travels as a bundle of records; a bundle carries no commits. So the prior position - that federation's return was evidence-gated - would have been lost on first export, and the corpus would have read as though the return had always been committed.
+
+The position itself is not new and is not being re-decided here. It has been live since 2026-08-22, is stated in rfc-decision-4f1e12e5 as amended, and is carried by the roadmap's federation contract. What is new is that the CHANGE is now a record rather than a diff.
+
+Authored under the correction-versus-refinement rule, which classifies this as a refinement - a reader who acted on 'evidence-gated' would have planned differently from one acting on 'committed' - and therefore requires a successor record rather than an in-place edit.
+
+**Decision**: Federation returns to SRS as a planned roadmap phase. Its return is COMMITTED and is not gated on evidence of demand - federation is core to SRS. The 2026-08-21 removal was a deliberate reset of a design that predated real practice, not a judgment on the capability.
+
+The redesign is grounded in the sharing forms that actually emerged - bundles, slices, git-hosted repositories - and in the axis 4-10 verification path. The owner schedules it. The travel mandate covers artifact-form portability meanwhile.
+
+WHAT THIS CHANGED. rfc-decision-4f1e12e5, as accepted on 2026-08-21, gated the return on evidence. Its federation entry read, verbatim:
+
+  'Trigger: a second real repository needing live cross-repo assertions; the travel mandate covers artifact-form portability meanwhile.'
+
+That position is superseded by this record. The change was made on 2026-08-22 (commit b623475) as an in-place edit to 4f1e12e5, before the correction-versus-refinement rule existed to say it needed a record of its own.
+
+**Scope**: The federation entry of rfc-decision-4f1e12e5 only. Every other entry in that record - the other removals, the dispositions without removal, and the EXPLICITLY KEPT section - stands unchanged and is not touched by this record.
+
+**Governing Values**:
+- portability
+- evolution
+
+**Project Phase**: formation
+
+**Alternatives Considered**: (1) Leave the position in 4f1e12e5 as amended and record nothing. Rejected: the prior position survives only in git and is lost on export, which is the concrete harm rather than a procedural one. (2) Supersede 4f1e12e5 entirely with a fresh record carrying all its entries. Rejected: eight entries are unchanged, and superseding a compound record to change one entry destroys the provenance of the other eight. (3) Reconstruct the whole 2026-08-22 amendment, corrections included. Rejected by the governing rule, which reserves succession for changes of position.
+
+**Accepted Costs**: rfc-decision-4f1e12e5 remains a compound record carrying nine dispositions, which is why one entry changing needed this awkward scoping. That compound shape is itself against the guidance to split independently reversible choices into separate records; it is not repaired here, and a future reader must read the two records together to know the federation position.
+
+**Evidence**:
+- rfc-decision-4f1e12e5 (the record amended; its federation entry)
+- commit b623475 (the in-place amendment, 2026-08-22)
+- srs#588 (the finding)
+- docs/strategy/roadmap.json (the federation-redesign contract carries the committed form)
+
+**Review Trigger**: Review when the federation redesign is scheduled, at which point this record's position becomes an input to that design rather than a standing commitment.
+
+
