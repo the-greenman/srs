@@ -210,6 +210,15 @@
       "description": "Every com.semanticops.spec/rfc-decision record dated 2026-08-23 or later carries at least one cell:<slug> tag naming a slug from the Pattern Grid vocabulary."
     },
     {
+      "id": "spec-language",
+      "script": "check-spec-language.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "description",
+      "governing": "srs#569; srs#568 (registry); srs#556",
+      "description": "Every prose field named by scripts/spec-language-registry.json obeys the registry rules marked `enforcement: \"code\"` \u2014 the banned-register `patterns`, the 400-word budget, the one-em-dash-per-paragraph cap (zero in a normative statement), RFC 2119 keywords confined to normative sites, no opening sentence restating the record title, and no all-bold bullet list. The seven `enforcement: \"review\"` rules are deliberately not implemented. Grandfathered sites live in scripts/spec-language-allowlist.json, keyed per violation site (per offending paragraph for the em-dash cap, never per file) and each citing the issue that retires it; shrinking that file is the migration."
+    },
+    {
       "id": "guards-bite",
       "script": "../tests/guards/run.mjs",
       "args": [],

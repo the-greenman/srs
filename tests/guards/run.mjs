@@ -1106,6 +1106,131 @@ async function decisionCompassDriftCases(root) {
   );
 }
 
+// ---- srs#569 — the spec-language register gate ---------------------------------------------
+async function specLanguageCases(root) {
+  console.log("srs#569 — spec-language register guard");
+
+  const recordsDir = join(root, "srs/records/subsections");
+  const cleanPath = join(recordsDir, "clean.json");
+  const subjectPath = join(recordsDir, "subject.json");
+
+  const record = (title, fields) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/record.json",
+    instanceId: "00000000-0000-4000-8000-0000000005f0",
+    typeId: "2a000003-0000-4000-a000-000000000003",
+    typeVersion: 1,
+    typeNamespace: "com.semanticops.spec",
+    typeName: "subsection",
+    fieldValues: { title, ...fields },
+  });
+
+  // A compliant record stays in the tree throughout, so "green" never means "the walk read
+  // nothing" — the fail-open guard and a genuine pass have to be distinguishable.
+  await writeJson(cleanPath, record("Loader ordering", { content: "The loader reads each file once." }));
+
+  const clean = { exit: 0, contains: ["Checking spec language... OK"] };
+
+  // 1. A banned-register pattern, reported with its substitution — the negative test #569 asks for.
+  await writeJson(subjectPath, record("Package resolution", { content: "The resolver leverages the index." }));
+  expect("rejects a banned-register phrase and names the substitution", runCheck("check-spec-language.mjs", root), {
+    exit: 1,
+    contains: ["srs/records/subsections/subject.json", "content", "leverage", "leverages", "fix:   use"],
+  });
+
+  // ...and the same field without it passes. A check that is simply always red proves nothing.
+  await writeJson(subjectPath, record("Package resolution", { content: "The resolver uses the index." }));
+  expect("accepts the same field with the phrase removed", runCheck("check-spec-language.mjs", root), clean);
+
+  // 2. RULING 2, the half that must NOT fire: one em-dash per paragraph, three times over, is
+  // compliant. If this ever goes red the allowlist would be an order of magnitude too big.
+  await writeJson(
+    subjectPath,
+    record("Package resolution", {
+      content: "The resolver reads the index — once per run.\n\nThe loader walks the tree — depth first.\n\nThe validator reports each finding — with a path.",
+    }),
+  );
+  expect("accepts three paragraphs carrying one em-dash each", runCheck("check-spec-language.mjs", root), clean);
+
+  // 2b. RULING 2, the half that must fire: two in ONE paragraph.
+  await writeJson(
+    subjectPath,
+    record("Package resolution", { content: "The resolver reads the index — once per run — and stops." }),
+  );
+  expect("rejects two em-dashes in one paragraph", runCheck("check-spec-language.mjs", root), {
+    exit: 1,
+    contains: ["em-dash-cap", "2 em-dashes in one paragraph (cap 1)"],
+  });
+
+  // 2c. Grandfathering is per SITE. Seed the fixture's own allowlist from that violation...
+  expect("seeds an allowlist from the corpus", runScript("check-spec-language.mjs", root, "--seed"), {
+    exit: 0,
+    contains: ["allowlist entries", "em-dash-cap"],
+  });
+  expect("accepts a violation once its site is grandfathered", runCheck("check-spec-language.mjs", root), {
+    exit: 0,
+    contains: ["grandfathered site(s)"],
+  });
+
+  // ...and a SECOND offending paragraph in the same field of the same file is still caught. A
+  // per-file allowlist would have swallowed it.
+  await writeJson(
+    subjectPath,
+    record("Package resolution", {
+      content: "The resolver reads the index — once per run — and stops.\n\nThe loader walks the tree — depth first — and halts.",
+    }),
+  );
+  expect("still catches a new violation in an already-grandfathered field", runCheck("check-spec-language.mjs", root), {
+    exit: 1,
+    contains: ["em-dash-cap", "depth first"],
+  });
+  await rm(join(root, "scripts/spec-language-allowlist.json"));
+
+  // 3. The em-dash cap is zero inside a normative statement, not one.
+  await writeJson(
+    subjectPath,
+    record("Package resolution", { content: "The resolver uses the index.", normative_statement: "A resolver rejects an unresolved reference — always." }),
+  );
+  expect("rejects a single em-dash inside a normative statement", runCheck("check-spec-language.mjs", root), {
+    exit: 1,
+    contains: ["normative_statement", "em-dash-cap", "(cap 0)"],
+  });
+
+  // 4. RULING 1: `title` is not a prose field. Three em-dashes in a title is not a violation.
+  await writeJson(
+    subjectPath,
+    record("Containers — membership — identity — anchors", { content: "The resolver uses the index." }),
+  );
+  expect("does not govern em-dashes in a title (RULING 1)", runCheck("check-spec-language.mjs", root), clean);
+
+  // 5. RFC 2119 keywords belong in a normative site, and only there.
+  await writeJson(subjectPath, record("Package resolution", { content: "A resolver MUST reject an unresolved reference." }));
+  expect("rejects an RFC 2119 keyword in explanatory prose", runCheck("check-spec-language.mjs", root), {
+    exit: 1,
+    contains: ["keyword-register", "MUST"],
+  });
+  await writeJson(
+    subjectPath,
+    record("Package resolution", { content: "The resolver uses the index.", normative_statement: "A resolver MUST reject an unresolved reference." }),
+  );
+  expect("accepts the same keyword in a normative_statement", runCheck("check-spec-language.mjs", root), clean);
+
+  // 6. The word budget is hard, and the message says by how much.
+  await writeJson(subjectPath, record("Package resolution", { content: `${"word ".repeat(401)}.` }));
+  expect("rejects a prose field over the word budget", runCheck("check-spec-language.mjs", root), {
+    exit: 1,
+    contains: ["word-budget", "402 words (limit 400)"],
+  });
+  await rm(subjectPath);
+
+  // 7. A walk that read no prose is not a corpus that is clean.
+  const bare = join(root, "bare");
+  await mkdir(bare, { recursive: true });
+  expect("fails when no prose field is found at all", runCheck("check-spec-language.mjs", bare), {
+    exit: 1,
+    contains: ["refusing to report success"],
+  });
+}
+
 // ---- srs#463 — Charter Check: the `## Charter alignment` section guard --------------------------
 async function charterAlignmentSectionCases(root) {
   console.log("srs#463 — Charter Check `## Charter alignment` section guard");
@@ -1310,6 +1435,7 @@ try {
   await relationTypeResolutionCases(join(root, "relation-type-resolution"));
   await charterAlignmentSectionCases(join(root, "charter-alignment"));
   await checksRegistryMembershipCases(join(root, "checks-registry-membership"));
+  await specLanguageCases(join(root, "spec-language"));
   await ledgerCompletenessCases(join(root, "ledger-completeness"));
 } finally {
   await rm(root, { recursive: true, force: true });
