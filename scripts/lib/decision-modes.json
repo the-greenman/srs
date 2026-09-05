@@ -1,0 +1,10 @@
+{
+  "$comment": "The five decision modes (rfc-decision-7caca3a1). One source of truth, mirroring scripts/lib/pattern-grid-cells.json: the RFC-integration checker reads this file rather than hardcoding its own copy. The mode determines which machinery applies to a decision — clear and complicated resolve through rules, complex resolves into rulings for the owner and never into guard compliance, chaotic is outside the spec boundary entirely, and unresolved defaults to the more cautious handling. Adding or renaming a mode is a charter amendment: it needs a successor decision record, not an edit here alone.",
+  "modes": [
+    "clear",
+    "complicated",
+    "complex",
+    "chaotic",
+    "unresolved"
+  ]
+}
