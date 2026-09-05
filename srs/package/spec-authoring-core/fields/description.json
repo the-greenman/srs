@@ -6,8 +6,9 @@
   "version": 1,
   "description": "A detailed, multi-paragraph description of this record. May include markdown formatting.",
   "aiGuidance": {
-    "purpose": "A detailed, multi-paragraph description of this record. May include markdown formatting.",
-    "extraction": "Explain the what, why, and how. Can be multi-paragraph. Distinct from `content` in that it describes the record itself rather than forming the normative body of a spec section."
+    "purpose": "What this thing is, described in its own terms. Distinct from `content`: `content` is spec prose the record contributes to the document, `description` describes the record's subject.",
+    "extraction": "Define the subject in the first sentence, then elaborate for a few paragraphs at most. Say what it is, where it sits relative to its neighbours, and what it is for. On a `concept` record this is the definition the rest of the specification presupposes, so it must stand on its own without the surrounding document. The structure rule from `content` applies unchanged: no markdown headings, no fenced code blocks, no pipe tables — those become child records, `example` records and `table` records.",
+    "negativeGuidance": "No requirements: RFC 2119 keywords belong in `invariant` or `requirement` records, not here. Not a longer copy of `summary` and not a second copy of `content`. If a description needs its own sub-headings, it is describing more than one thing."
   },
   "fieldType": {
     "datatype": "string",
