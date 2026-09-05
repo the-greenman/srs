@@ -1,0 +1,16 @@
+{
+  "instanceId": "9a584293-d7a5-4182-bb98-0dcef5f1913a",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/validation",
+    "title": "Validation",
+    "description": "Checking data against the contracts its own definitions declare, and reporting what fails as severity-tagged diagnostics, never as a crash. Contracts come from several places: a Field's own value constraints, cross-field rules that only make sense over two or more Fields together, vocabulary resolution, reference resolution, and the specification's invariants. Diagnostics are reported, not thrown — a command that ran successfully and a repository that is valid are two different questions, and conflating them hides the second.",
+    "notes": "Cross-field rules are the Type's own complete and exclusive set: they are never inherited by value from a base Type (Invariant I-97)."
+  },
+  "createdAt": "2026-09-05T23:42:08.597786855+00:00",
+  "updatedAt": "2026-09-05T23:45:42.967461878+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

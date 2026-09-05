@@ -1,0 +1,16 @@
+{
+  "instanceId": "94c41365-f841-4b49-b2ac-3711a5403fe8",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/addressability",
+    "title": "Addressability",
+    "description": "A single addressing scheme spanning document space, process space and conversation space, so that anything that can be referred to can be resolved — and so that a transcript fragment and a field on a record are co-addressable, which is what makes an assertion linking them possible. Alongside the stable address sits the live cursor: the current focus of an active process run, which moves continuously and is stamped onto conversation material as it is produced. Because it is stamped at production time, asking for everything said while attention was on this field becomes a query, not a search.",
+    "notes": "A stable address and a live cursor are structurally similar and must not be merged: one identifies an element, the other records where focus currently is. Likewise a cursor is set live and a source reference is set retrospectively."
+  },
+  "createdAt": "2026-09-05T23:42:08.759550008+00:00",
+  "updatedAt": "2026-09-05T23:45:44.929721999+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

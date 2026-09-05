@@ -1,0 +1,16 @@
+{
+  "instanceId": "be74ea8e-e2a9-4598-9f53-7f39ba8ff7f4",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/blueprint",
+    "title": "Blueprint",
+    "description": "The definition of a whole document type: which Record Types it produces at the root, what Relations are expected between the resulting Records, and which Types must be present for it to count as complete. It is the artefact handed to an extraction pipeline, and it answers a different question from a view — a Blueprint says what this document *is* and what should be extracted, at definition time, from source material; a view says how records that already exist are assembled for reading.",
+    "notes": "Its type pointers are version-exact, so the shape a Blueprint asks for cannot drift under it when a Type is reversioned."
+  },
+  "createdAt": "2026-09-05T23:42:08.711005585+00:00",
+  "updatedAt": "2026-09-05T23:45:44.210921825+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

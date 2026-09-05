@@ -1,0 +1,16 @@
+{
+  "instanceId": "785654d0-2016-4a14-89ba-fee4376f9a87",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/extension",
+    "title": "Extension",
+    "description": "An independently adoptable capability module, identified by an `ext:` name, declaring what it adds, what it depends on, and which invariants it owns. Extensions are how the specification grows without forcing every implementation to grow with it: no extension is required for core conformance, and an implementation adopts only what it needs. An implementation that does not declare one must ignore its properties instead of erroring on them, so data using an extension still loads where the extension is unknown.",
+    "notes": "Some extensions declare hard dependencies on others. A pair may also be formally independent yet functionally co-dependent for a given use, and cross-extension behavioural requirements apply only where both are declared."
+  },
+  "createdAt": "2026-09-05T23:42:08.781287139+00:00",
+  "updatedAt": "2026-09-05T23:45:45.198608862+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

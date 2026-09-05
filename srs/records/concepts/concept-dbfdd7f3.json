@@ -1,0 +1,16 @@
+{
+  "instanceId": "dbfdd7f3-4959-4d29-9ab5-2e126d23730f",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/foundational-tension",
+    "title": "Foundational tension",
+    "description": "A named opposition between two complementary necessities, resolved not by choosing a winner but by declaring which pole is the default and stating the boundary at which the other governs. Six such tensions govern decisions in the SRS standard layer: Semantic Integrity vs Practical Expression, Continuity vs Evolution, Shared Coherence vs Local Autonomy, Office vs Testimony, Reliability vs Renewal, and Portability vs Possession. A tension is phase-bound where the specification says so — the temporal default is Evolution before the first full public release and reverses to Continuity at it.",
+    "notes": "The tensions are the specification's own reading key: a rule that looks arbitrary usually reads as one pole of a declared tension holding at its boundary."
+  },
+  "createdAt": "2026-09-05T23:42:08.498078160+00:00",
+  "updatedAt": "2026-09-05T23:45:41.597817812+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

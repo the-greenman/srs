@@ -1,0 +1,16 @@
+{
+  "instanceId": "79692e5f-34e2-439c-80a4-42e020b3ca6b",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/view",
+    "title": "View",
+    "description": "A named, versioned presentation over a set of Fields: which field rows appear, in what display order, under what labels, with what editor hints, and whether each is visible. It is field-centric, not Type-bound: any Record carrying the fields a View requires can be rendered through it — and it constrains presentation only. A View may not override, redefine or duplicate the semantics of any Field or Type it references.",
+    "notes": "A row may also present a Record-level property such as lifecycle state or tags without pretending that property is a Field. Hiding a row affects rendered text only; the value stays in the Record and in any structured projection."
+  },
+  "createdAt": "2026-09-05T23:42:08.720748070+00:00",
+  "updatedAt": "2026-09-05T23:45:44.388585453+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

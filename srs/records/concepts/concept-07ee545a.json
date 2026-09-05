@@ -1,0 +1,16 @@
+{
+  "instanceId": "07ee545a-dba3-4253-bcbb-19a58330f79c",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/semantic-maturity-tier",
+    "title": "Semantic maturity tier",
+    "description": "How far a captured instance has been formalised, expressed as a tier and not as a yes-or-no. Tier 0 is a Note: named text sections, no type binding, no field semantics. Tier 2 is a Record: fields bound to a Type, fully semantic. The point of the tier model is that half-formed material is first-class — meaning may be captured before its shape is known and formalised later, instead of being lost because no template fitted it yet. An implementation may support only Tier 2.",
+    "notes": "The gap at Tier 1 is deliberate. `TypedRecord` was removed as an unexercised construct and the surviving tiers were not renumbered, so existing references stay valid."
+  },
+  "createdAt": "2026-09-05T23:42:08.610919206+00:00",
+  "updatedAt": "2026-09-05T23:45:43.147909923+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,16 @@
+{
+  "instanceId": "82e46ffb-f437-4659-8eec-dbcd6d8a52a9",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/conversation-boundary",
+    "title": "Conversation boundary",
+    "description": "The permanent architectural line between raw multimodal source material (speech, threads, annotations) and the negotiated semantic state SRS captures. The two layers reference each other in both directions but never merge: material on the conversation side is addressable evidence, and it does not become an instance automatically. A transcript chunk cited as evidence for a field value is not a Note unless someone deliberately models it as one.",
+    "notes": "The conversation layer is optional infrastructure. A repository declaring only the core plus the file-based repository format needs none of it, and source documents stored in the repository are sufficient evidence storage."
+  },
+  "createdAt": "2026-09-05T23:42:08.766509279+00:00",
+  "updatedAt": "2026-09-05T23:45:45.020943647+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

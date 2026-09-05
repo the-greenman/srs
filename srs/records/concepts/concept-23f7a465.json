@@ -1,0 +1,16 @@
+{
+  "instanceId": "23f7a465-a4e5-4623-85ad-95de44009161",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/travelling-form",
+    "title": "Travelling form",
+    "description": "The shape SRS content takes when it leaves the place it was made: a zip archive that is a self-contained snapshot of a repository, a single-file JSON store, or a slice carrying one container's closure as an independently openable archive. The standing test is that anything a repository is allowed to hold must be expressible in the corresponding travelling form — a capability that exists only in place is captivity, not a feature. Round-tripping between forms must lose nothing.",
+    "notes": "Import is identity-based, never path-based. Same key and same content is a no-op; same key and different content is a conflict to surface, because silent overwrite and silent discard are both non-conformant."
+  },
+  "createdAt": "2026-09-05T23:42:08.747961320+00:00",
+  "updatedAt": "2026-09-05T23:45:44.751601438+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

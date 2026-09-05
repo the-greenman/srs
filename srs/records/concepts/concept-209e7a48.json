@@ -1,0 +1,16 @@
+{
+  "instanceId": "209e7a48-cb65-4e7e-abaa-bc8635c35631",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/semantic-order",
+    "title": "Semantic order",
+    "description": "Sequence asserted as a claim about meaning, not as a layout preference, expressed by pairwise `precedes` edges and read by traversing the chain. It is used only where a different order would be semantically wrong — specification sections in document order, protocol stages in execution sequence. Ordering that reflects layout, curation or display preference is presentation and belongs in the view layer, and creating `precedes` edges for it is a misuse of the mechanism.",
+    "notes": "There is one ordering primitive and one only. A view may impose its own presentation sequence over the same records without contradicting the semantic chain, because the two are answering different questions."
+  },
+  "createdAt": "2026-09-05T23:42:08.684368864+00:00",
+  "updatedAt": "2026-09-05T23:45:43.930102946+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

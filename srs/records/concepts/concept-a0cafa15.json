@@ -1,0 +1,16 @@
+{
+  "instanceId": "a0cafa15-fec3-45c9-a6a8-99c9a7f88934",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/repository",
+    "title": "Repository",
+    "description": "A directory that holds SRS content as files: a marker directory identifying the root, a manifest declaring the repository's stable id, its packages, its required root container and its declared extensions, and reserved folders for instances, relations, source documents and local definitions. Membership is authoritative from the tree itself — a file present under a reserved root is a member, and there is no manifest index to disagree with it. Identity lives inside the SRS data, never in filenames or storage history.",
+    "notes": "A repository is operable with no running service, no registry and no network. That is the point of the format, not an incidental property of it."
+  },
+  "createdAt": "2026-09-05T23:42:08.740703199+00:00",
+  "updatedAt": "2026-09-05T23:45:44.660975429+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
