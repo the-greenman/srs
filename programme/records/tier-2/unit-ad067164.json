@@ -1,0 +1,19 @@
+{
+  "instanceId": "ad067164-673c-4a7d-bceb-c8dee5d28c4b",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "The programme repository's full chain",
+    "summary": "Demonstrates the whole chain on the programme repository: the Blueprint prompt renders the Protocol, compositions project the programme overview, and srs tree walks the concept tree. If the pattern cannot carry a four-phase programme it will not carry a 433-record specification.",
+    "issue_ref": [
+      "srs#580"
+    ],
+    "body": "One trap is already known and must not be reproduced: a Blueprint's first rootTypes entry must equal the Protocol's targetType, or the rendered brief carries no protocol section at all. The gallery example gets this wrong."
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:09:02.952264169+00:00",
+  "updatedAt": "2026-09-05T22:09:02.952268481+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

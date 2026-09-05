@@ -1,0 +1,16 @@
+{
+  "instanceId": "641486a6-a6c0-4193-9472-4cc8278cc7e9",
+  "typeId": "127b6706-464f-4fff-9ade-cff47f8745e5",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "phase",
+  "fieldValues": {
+    "title": "Rebuild what needs no ruling",
+    "summary": "Reworks the specification's exposition into records — concepts, examples, invariants inline, an explicit reading order — using only units that execute a recorded ruling or change nothing normative, so every one of them can auto-merge on green. This is the wave in which 288 headings and 35,302 words of prose become a navigable semantic dataset.",
+    "wave": "rebuild",
+    "body": "## The failure being repaired\n\nThe specification's own domain-definition note names the failure: prematurely treating a document outline as the semantic model. A corpus of section and subsection records holding prose blobs is exactly that. The reader arriving at one record cannot see what layer it belongs to, what it presupposes, or what it introduces.\n\nThe rework is a concept tree: tree by contains, order by precedes, prerequisites by depends-on. No new relation types and no new fields — a leaf's type is its role, Part membership is the layer, tree placement is the introduction.\n\nEvery unit in this wave either executes a ruling already recorded or touches only tooling, checks and documents. That is what makes the whole wave agent-mergeable without an owner in the loop."
+  },
+  "createdAt": "2026-09-05T22:07:24.858019999+00:00",
+  "updatedAt": "2026-09-05T22:07:24.858023417+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

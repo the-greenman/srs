@@ -4,7 +4,11 @@
     "title": "SRS spec-rework programme",
     "identityInstanceId": "7a7d8945-df7e-412e-98e0-6462b5394904",
     "memberInstanceIds": [
-      "7a7d8945-df7e-412e-98e0-6462b5394904"
+      "2ec7ee9a-e029-4809-a6f4-e6ec828001ca",
+      "48478b98-5978-4b30-9bf9-c396c8d73886",
+      "641486a6-a6c0-4193-9472-4cc8278cc7e9",
+      "7a7d8945-df7e-412e-98e0-6462b5394904",
+      "912f7b9a-d357-415d-8c75-b9a0cd7381c1"
     ]
   },
   "$schema": "https://srs.semanticops.com/schema/2.0/manifest.json",

@@ -1,0 +1,18 @@
+{
+  "instanceId": "eea145db-51f8-4615-a6a8-3079075dc7a9",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "Master had no branch protection at all",
+    "summary": "The srs repository's master branch carried no branch protection, while the process described Release Drift as a required context. A required context that is not configured as required is a description of intent, not a gate.",
+    "evidence": [
+      "No protection rule existed on srs master before the rule added under srs#576 — strict, validate-all and check-release-drift required, 0 required reviews, admins exempt.",
+      "The gate was then proved in both directions rather than assumed: srs#577 was a deliberately red pull request with auto-merge armed that stayed BLOCKED and did not merge; srs#578 auto-merged with no human approval."
+    ]
+  },
+  "createdAt": "2026-09-05T22:09:03.398331230+00:00",
+  "updatedAt": "2026-09-05T22:09:03.398335545+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

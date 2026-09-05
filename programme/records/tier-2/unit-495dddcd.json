@@ -1,0 +1,19 @@
+{
+  "instanceId": "495dddcd-d15d-48b4-820b-8b26fed80783",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "The spec language guide and banned-register registry",
+    "summary": "A language guide for AI authors of the specification, plus a registry of the registers that are banned from it. Written before the checker, because a checker with no stated rule is only a set of opinions in code.",
+    "issue_ref": [
+      "srs#568",
+      "srs#556"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:08:29.241555870+00:00",
+  "updatedAt": "2026-09-05T22:08:29.241562559+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
