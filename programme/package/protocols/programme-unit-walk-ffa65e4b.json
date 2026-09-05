@@ -1,0 +1,135 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/protocol.json",
+  "id": "ffa65e4b-673e-4dd7-8bbb-6a76319219b1",
+  "namespace": "com.semanticops.programme",
+  "name": "programme-unit-walk",
+  "version": 1,
+  "description": "The eight-stage walk a master thread performs on a single programme unit: establish the ground truth, classify the decision, check what the charter has already ruled, route it, do the work, prove the guard, land it, and harvest what the next person would otherwise rediscover.",
+  "targetType": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "tags": [
+    "programme",
+    "process"
+  ],
+  "createdAt": "2026-09-05T00:00:00Z",
+  "stages": [
+    {
+      "stageId": "ground",
+      "name": "Ground",
+      "order": 1,
+      "purpose": "Establishes what is actually true right now, before any judgement is formed about it. The working tree may be behind origin/master, and the issue may have moved since it was written.",
+      "question": "What is actually true right now?",
+      "completionCriteria": "The unit's current state is established from evidence, not assumption: the working tree's position relative to origin/master is known and read from the remote ref if behind, and the issue plus every comment on it has been read.",
+      "dependsOn": [],
+      "aiGuidance": {
+        "purpose": "Check staleness first — `git fetch origin master` then compare — and read from origin/master rather than the local tree when behind. Then read the unit's issue and every comment, including the ones that reverse an earlier one.",
+        "negativeGuidance": "Do not treat the local working tree as current, and do not read only the issue body. The rulings that matter are usually in the comments."
+      }
+    },
+    {
+      "stageId": "classify",
+      "name": "Classify",
+      "order": 2,
+      "purpose": "Names what kind of decision this unit is and who is permitted to resolve it, so the route stage has something defensible to route on.",
+      "question": "What kind of decision is this, and who may resolve it?",
+      "completionCriteria": "The Pattern Grid cell, the decision mode and the door are each named, and each is defensible against the evidence gathered in Ground.",
+      "dependsOn": [
+        "ground"
+      ],
+      "aiGuidance": {
+        "purpose": "Name the Pattern Grid cell, the decision mode per rfc-decision-7caca3a1 (clear, complicated, complex or chaotic), and the door (one-way or two-way, normative or non-normative).",
+        "negativeGuidance": "Do not pick the mode that lets you proceed. A unit whose consequences you cannot map is complex however simple its diff looks."
+      }
+    },
+    {
+      "stageId": "charter",
+      "name": "Check the charter",
+      "order": 3,
+      "purpose": "Establishes what has already been ruled, so the unit either builds on the existing decisions or surfaces its conflict with them.",
+      "question": "What has already been ruled on this?",
+      "completionCriteria": "Every consulted decision id is listed, the one-way-per-goal test and the layer test have both been run, and any contradiction with an existing ruling is surfaced rather than silently overridden.",
+      "dependsOn": [
+        "ground"
+      ],
+      "aiGuidance": {
+        "purpose": "Search the decision log for adjacent rulings, then run the one-way-per-goal test (does this add a second mechanism for a goal that already has one?) and the layer test (does this put semantics in a presentation layer, or the reverse?).",
+        "negativeGuidance": "Do not relitigate a ruled decision inside a unit. A contradiction is reported to the owner, never resolved by the thread that found it."
+      }
+    },
+    {
+      "stageId": "route",
+      "name": "Route",
+      "order": 4,
+      "purpose": "Decides whether this unit can be worked at all by this thread, or whether it belongs to the owner.",
+      "question": "Does this thread proceed, or does it go to the owner?",
+      "completionCriteria": "The unit is either dispatched to Work or parked with the question the owner must answer.",
+      "dependsOn": [
+        "classify",
+        "charter"
+      ],
+      "aiGuidance": {
+        "purpose": "Clear and complicated units proceed. Complex and chaotic units stop here and go to the owner with a consequence map: the options, what each forecloses, and what is unknown.",
+        "negativeGuidance": "Never dress a recommendation up as a decision. A consequence map that ends in 'so we should do X' is a decision the thread was not permitted to make."
+      }
+    },
+    {
+      "stageId": "work",
+      "name": "Work",
+      "order": 5,
+      "purpose": "Produces the change itself, under the constraints that keep it reproducible and keep tool gaps visible.",
+      "question": "Does the change exist, and do the gates pass?",
+      "completionCriteria": "The change exists in a fresh worktree branched from origin/master, and both gates pass by exit code.",
+      "dependsOn": [
+        "route"
+      ],
+      "aiGuidance": {
+        "purpose": "Branch a fresh worktree from origin/master, never from a stale local sibling. Reach SRS data through the CLI or the MCP server; where a verb cannot express what the unit needs, file the gap.",
+        "negativeGuidance": "Do not hand-write JSON into a package or records tree to route around a missing verb. A tool gap worked around is a tool gap that stays missing, and the file that results only mimics the semantic act."
+      }
+    },
+    {
+      "stageId": "prove",
+      "name": "Prove",
+      "order": 6,
+      "purpose": "Demonstrates that any guard the unit added actually catches what it exists to catch. A guard that has never gone red has not been shown to work.",
+      "question": "Has the guard been made to fail on the thing it exists to catch?",
+      "completionCriteria": "Any new check has been made to fail on the violation it exists to catch, and the red output is recorded.",
+      "dependsOn": [
+        "work"
+      ],
+      "aiGuidance": {
+        "purpose": "Introduce the violation deliberately, run the check, capture the red output, then revert the violation and confirm green. Record the red output in the PR.",
+        "negativeGuidance": "A green run proves nothing on its own — a check that never runs is also green. Do not claim a guard works because the suite passed."
+      }
+    },
+    {
+      "stageId": "land",
+      "name": "Land",
+      "order": 7,
+      "purpose": "Gets the change merged through the route its classification permits, and no other.",
+      "question": "Is this merged, or held — and is the reason stated?",
+      "completionCriteria": "The PR is merged, or held with its reason stated; either way the PR states the mode, the cell and the door.",
+      "dependsOn": [
+        "prove"
+      ],
+      "aiGuidance": {
+        "purpose": "State the mode, the cell and the door in the PR body. Apply gate:auto-merge only where the classification permits it, and arm auto-merge rather than merging.",
+        "negativeGuidance": "Never merge by hand what the contract reserves for the owner. A held PR with its reason stated is a finished unit; a hand-merged one is a breach."
+      }
+    },
+    {
+      "stageId": "harvest",
+      "name": "Harvest",
+      "order": 8,
+      "purpose": "Converts what this unit taught into data the next thread reads, rather than context that dies with the session.",
+      "question": "What would the next person otherwise rediscover, or get wrong?",
+      "completionCriteria": "Every durable lesson is recorded as a finding or carried_context record, or is explicitly judged not durable.",
+      "dependsOn": [
+        "land"
+      ],
+      "aiGuidance": {
+        "purpose": "Write findings for what was learned and carried_context for what the next unit must know before it starts. Relate each to the unit with contains.",
+        "negativeGuidance": "Do not leave the lesson in the PR description or the issue comments. Prose that only a human rereading the thread would find is not harvested."
+      }
+    }
+  ]
+}

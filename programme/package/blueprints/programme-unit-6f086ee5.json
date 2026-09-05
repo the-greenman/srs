@@ -1,0 +1,70 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/blueprint.json",
+  "id": "6f086ee5-b378-4983-8cc2-6129bd3138e3",
+  "namespace": "com.semanticops.programme",
+  "name": "programme-unit",
+  "version": 1,
+  "description": "A single programme unit together with what it produced and what it needs: the findings harvested from it, the carried context the next unit must read before it starts, and the units it depends on.",
+  "rootTypes": [
+    {
+      "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+      "typeVersion": 1
+    }
+  ],
+  "structure": [
+    {
+      "relationType": "contains",
+      "sourceType": {
+        "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+        "typeVersion": 1
+      },
+      "targetType": {
+        "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+        "typeVersion": 1
+      },
+      "cardinality": "one-to-many",
+      "required": false
+    },
+    {
+      "relationType": "contains",
+      "sourceType": {
+        "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+        "typeVersion": 1
+      },
+      "targetType": {
+        "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+        "typeVersion": 1
+      },
+      "cardinality": "one-to-many",
+      "required": false
+    },
+    {
+      "relationType": "depends-on",
+      "sourceType": {
+        "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+        "typeVersion": 1
+      },
+      "targetType": {
+        "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+        "typeVersion": 1
+      },
+      "cardinality": "many-to-many",
+      "required": false
+    }
+  ],
+  "requiredTypes": [
+    {
+      "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+      "typeVersion": 1
+    }
+  ],
+  "aiGuidance": {
+    "purpose": "One unit of programme work, sized to be started and finished in a single pass, recorded with everything a later thread needs to pick it up cold: the decision mode and door that say how to approach it, the findings it produced, and the carried context that must be read before the next unit starts.",
+    "extraction": "Author the unit first — title, summary, decision mode, door, issue refs, body — then attach what it produced. Each durable lesson becomes a finding contained by the unit; each thing the next unit must know before it starts becomes carried_context contained by the unit. Where this unit cannot begin until another has landed, record depends-on between the two units rather than restating the dependency in prose. Walk the programme-unit-walk Protocol to fill it: its stages are the order in which the understanding is built, not a checklist to backfill afterwards.",
+    "negativeGuidance": "Do not create a unit for an observation or a conclusion — those are findings. Do not leave a lesson in a PR description or an issue comment; if it is durable it is a record. Do not express ordering or dependency by unit title or issue number."
+  },
+  "tags": [
+    "programme"
+  ],
+  "createdAt": "2026-09-05T00:00:00Z"
+}
