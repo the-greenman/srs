@@ -1,0 +1,18 @@
+{
+  "instanceId": "df9a23de-1fd1-4e3b-b779-5379823cfaaf",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "checks.json entry tier is unvalidated",
+    "summary": "Nothing validates the tier field on a checks.json entry, so a typo in a tier name silently disables the check rather than failing loudly. The registry is the one declared home for every conformance check, which makes a silent drop-out worse than an undeclared check.",
+    "issue_ref": [
+      "srs#579"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:07:51.605271068+00:00",
+  "updatedAt": "2026-09-05T22:07:51.605274493+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

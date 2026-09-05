@@ -1,0 +1,16 @@
+{
+  "instanceId": "2ec7ee9a-e029-4809-a6f4-e6ec828001ca",
+  "typeId": "127b6706-464f-4fff-9ade-cff47f8745e5",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "phase",
+  "fieldValues": {
+    "title": "Understand the corpus before changing it",
+    "summary": "Reads what the specification and its guards currently say, before any of it is rewritten: a second grid census diffed against the first, the cells that carry corpus weight with no enforcement check, and the places where meaning sits somewhere other than in the records. It absorbs the meaning-placement review, so that the rebuild starts from measurement rather than from impression.",
+    "wave": "understand",
+    "body": "## Why a reading wave exists at all\n\nA rework driven by impression rewrites whatever the author last noticed. This wave produces the measurements the rebuild is answerable to: which cells of the Pattern Grid the corpus actually occupies, which of those cells nothing checks, and which statements the grid could not place.\n\nIt also honours a live kill switch rather than letting it fire. Ruling 8f5aca2c said that if balance counts were recorded but never read, the grid operations are ritual and should be cut. One census had run and had never been diffed or read. Reading it is the alternative to cutting it.\n\nThe second half of the wave is placement: scripts that define rather than help, documents stating rules the records do not carry, configuration carrying semantics, and single-source-of-truth breaks where the same value is written twice."
+  },
+  "createdAt": "2026-09-05T22:07:24.795089315+00:00",
+  "updatedAt": "2026-09-05T22:07:24.795093679+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

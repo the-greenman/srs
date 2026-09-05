@@ -1,0 +1,30 @@
+{
+  "containerId": "c212a489-679f-493d-b194-aef2e47df914",
+  "title": "Wave 3 — Rebuild what needs no ruling",
+  "namespace": "com.semanticops.programme",
+  "name": "wave-rebuild",
+  "description": "The rework phase: the authoring package, concept and example records, un-baked headings, reading order, invariants inline, and the language guide and its checker.",
+  "containerType": "phase",
+  "identityInstanceId": "641486a6-a6c0-4193-9472-4cc8278cc7e9",
+  "anchorInstanceId": "641486a6-a6c0-4193-9472-4cc8278cc7e9",
+  "rootInstanceIds": [
+    "641486a6-a6c0-4193-9472-4cc8278cc7e9"
+  ],
+  "memberInstanceIds": [
+    "84cd4f7f-9e6d-43a5-b718-2ea191016966",
+    "d897f99b-a217-4f48-8471-9d6e79268bb1",
+    "409b24f2-7ecc-47aa-8f09-d3566484b29a",
+    "583baecb-e6b2-43d0-b361-4dc4263bc2d8",
+    "2a04fab1-731f-45a4-b9fe-e08940435c18",
+    "f4e10759-2e2f-4384-8724-0612ad2c2641",
+    "80f06c3e-1c9a-4e35-be83-0c7e88ca0bf9",
+    "2e876361-8d5a-444b-823a-1bc1007140de",
+    "8ad8ae3a-263a-42b4-b077-8feaa835a9bf",
+    "2b07ff9c-6671-45e5-b27a-966370700ab2",
+    "dd30fcc4-10ed-4ba7-8abf-8b9f43c18b69",
+    "495dddcd-d15d-48b4-820b-8b26fed80783",
+    "dde8bbcf-6eef-4a51-a3e3-cad205dd75d9",
+    "06241152-aa55-45b6-86a2-369d1674bdc5"
+  ],
+  "createdAt": "2026-09-05T22:10:17Z"
+}

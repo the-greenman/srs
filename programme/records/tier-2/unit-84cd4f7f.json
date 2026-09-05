@@ -1,0 +1,21 @@
+{
+  "instanceId": "84cd4f7f-9e6d-43a5-b718-2ea191016966",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Deletion of the dead meta.* authoring types",
+    "summary": "The meta.* authoring type set was defined and never instantiated, and its removal resolved three canonical identity collisions at the same time. A theory with no evidence is deleted rather than carried.",
+    "decision_mode": "clear",
+    "door": "door-1",
+    "issue_ref": [
+      "srs#557",
+      "srs#585"
+    ]
+  },
+  "lifecycleState": "landed",
+  "createdAt": "2026-09-05T22:08:28.497130101+00:00",
+  "updatedAt": "2026-09-05T22:09:40.658305105+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

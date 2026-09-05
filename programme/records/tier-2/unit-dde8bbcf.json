@@ -1,0 +1,19 @@
+{
+  "instanceId": "dde8bbcf-6eef-4a51-a3e3-cad205dd75d9",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "check-spec-language and its allowlist",
+    "summary": "The checker that enforces the language guide, with a seeded allowlist whose shrinking is the migration. It can only exist once the guide states the rules it enforces.",
+    "issue_ref": [
+      "srs#569",
+      "srs#556"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:08:29.305835609+00:00",
+  "updatedAt": "2026-09-05T22:08:29.305842372+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

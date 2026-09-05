@@ -1,0 +1,20 @@
+{
+  "instanceId": "08faf3eb-2a26-4466-9186-e1fae726a362",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Recursive navigation below the root container",
+    "summary": "Whether navigation recurses below the root container, and if so by what mechanism, is a normative question the concept tree forces. It is drafted with options and a recommendation and batched for the owner sitting.",
+    "decision_mode": "complex",
+    "issue_ref": [
+      "srs#573",
+      "srs#556"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:09:03.207721746+00:00",
+  "updatedAt": "2026-09-05T22:09:03.207726963+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

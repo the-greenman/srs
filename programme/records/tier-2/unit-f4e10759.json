@@ -1,0 +1,19 @@
+{
+  "instanceId": "f4e10759-2e2f-4384-8724-0612ad2c2641",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Examples extracted from buried code fences",
+    "summary": "101 code fences are buried inside prose blobs where nothing can find, validate or reuse them, while the example type is defined and unused. Extracting them makes every example addressable and checkable.",
+    "issue_ref": [
+      "srs#580",
+      "srs#556"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:08:28.827854323+00:00",
+  "updatedAt": "2026-09-05T22:08:28.827857891+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

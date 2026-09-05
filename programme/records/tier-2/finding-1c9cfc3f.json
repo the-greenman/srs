@@ -1,0 +1,19 @@
+{
+  "instanceId": "1c9cfc3f-ba6a-4da4-8100-1c4d55e4c5da",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "repo create leaves the .srs marker unreachable by git",
+    "summary": "srs repo create produces a .srs marker directory with no regular file inside it, and git does not track empty directories. A repository created by the tool therefore stops being a repository on its first commit.",
+    "evidence": [
+      "srs-rust#959 records that srs repo create writes .srs/ containing no regular file.",
+      "Git does not track empty directories, and archive pack/unpack drops them, so the marker round-trips as absent.",
+      "check-programme-conformance.mjs asserts .srs/ holds at least one regular file precisely because repo validate cannot catch this — the defect only appears after a commit or a pack cycle."
+    ]
+  },
+  "createdAt": "2026-09-05T22:09:03.460616053+00:00",
+  "updatedAt": "2026-09-05T22:09:03.460620340+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

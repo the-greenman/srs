@@ -1,0 +1,19 @@
+{
+  "instanceId": "ef97b58a-75bb-40ff-b064-ad7a67891666",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Three single-source-of-truth breaks",
+    "summary": "Three places where the same meaning is written twice and can drift: DECISION_MODES hardcoded in check-rfc-integration.mjs, a capitalised copy of the twelve grid cells in roadmap-model.mjs, and zero supersedes relations among 37 decision records despite the rule that refinements are successor decisions. The third is the serious one, because it means the decision log cannot show its own lineage.",
+    "issue_ref": [
+      "srs#490",
+      "srs#580"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:08:28.357197870+00:00",
+  "updatedAt": "2026-09-05T22:08:28.357204902+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

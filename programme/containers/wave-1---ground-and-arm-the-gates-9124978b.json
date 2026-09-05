@@ -1,0 +1,31 @@
+{
+  "containerId": "9124978b-fbf9-4463-b62a-3f47e774dda2",
+  "title": "Wave 1 — Ground and arm the gates",
+  "namespace": "com.semanticops.programme",
+  "name": "wave-ground",
+  "description": "The grounding phase of the spec-rework programme: the gates, the autonomy contract and the programme repository itself, with the findings and carried context that came out of them.",
+  "containerType": "phase",
+  "identityInstanceId": "48478b98-5978-4b30-9bf9-c396c8d73886",
+  "anchorInstanceId": "48478b98-5978-4b30-9bf9-c396c8d73886",
+  "rootInstanceIds": [
+    "48478b98-5978-4b30-9bf9-c396c8d73886"
+  ],
+  "memberInstanceIds": [
+    "7de572c8-2c90-4582-95f5-4621a953d8f9",
+    "3a9c4afa-178e-484c-9d59-4f05c4e44ba2",
+    "28eebb3e-390a-4555-9faa-46bf2341fa6b",
+    "dc98233f-313a-4d70-a3b1-23bcb473f47f",
+    "2317ac9c-eb4b-41e1-ab06-0d49d193dddb",
+    "df9a23de-1fd1-4e3b-b779-5379823cfaaf",
+    "e66d31ae-0b60-42b3-b144-8188d9c7031c",
+    "25747ee0-bd34-4e76-9394-0a3e57aa5d0a",
+    "3efe3268-30c2-4956-9e5c-54eeb0844227",
+    "9a75f9a4-2bb2-4b6b-be02-2da2fefe2462",
+    "eea145db-51f8-4615-a6a8-3079075dc7a9",
+    "1c9cfc3f-ba6a-4da4-8100-1c4d55e4c5da",
+    "84ea8058-7cbb-49b7-9338-5ac7500f814b",
+    "c7499888-6827-471f-b55e-5acace2cec2e",
+    "a2bfd9fa-6c20-4a25-ba37-844f43192661"
+  ],
+  "createdAt": "2026-09-05T22:10:17Z"
+}

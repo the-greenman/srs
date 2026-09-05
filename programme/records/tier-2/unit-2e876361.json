@@ -1,0 +1,19 @@
+{
+  "instanceId": "2e876361-8d5a-444b-823a-1bc1007140de",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "The Parts I to IV reading order",
+    "summary": "Rewrites the reading order across Parts I to IV so the specification introduces its ideas in dependency order rather than in the order they were historically written. Part membership is the layer and tree placement is the introduction, so the order is expressed in relations rather than in prose.",
+    "issue_ref": [
+      "srs#563",
+      "srs#556"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:08:28.959116943+00:00",
+  "updatedAt": "2026-09-05T22:08:28.959121538+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

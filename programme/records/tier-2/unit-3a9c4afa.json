@@ -1,0 +1,22 @@
+{
+  "instanceId": "3a9c4afa-178e-484c-9d59-4f05c4e44ba2",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Branch protection, proved by a red pull request",
+    "summary": "Master is protected strictly with validate-all and check-release-drift required and zero required reviews, and the protection was proved in both directions rather than assumed. A deliberately red pull request with auto-merge armed stayed blocked, and a green one merged with no human approval.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs#577",
+      "srs#578",
+      "srs#580"
+    ]
+  },
+  "lifecycleState": "landed",
+  "createdAt": "2026-09-05T22:07:51.356895977+00:00",
+  "updatedAt": "2026-09-05T22:09:39.604417901+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,21 @@
+{
+  "instanceId": "dc98233f-313a-4d70-a3b1-23bcb473f47f",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Retirement of the v1 epic protocol files",
+    "summary": "The v1 epic-worker and epic-coordinator command files were reduced to pointers so the session protocol has exactly one live home. Cloud sessions had been following the retired command file over the live trigger prompt for three ticks before anyone noticed.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs#451",
+      "srs#578"
+    ]
+  },
+  "lifecycleState": "landed",
+  "createdAt": "2026-09-05T22:07:51.484959482+00:00",
+  "updatedAt": "2026-09-05T22:09:40.120638766+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

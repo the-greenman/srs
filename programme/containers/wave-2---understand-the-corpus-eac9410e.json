@@ -1,0 +1,21 @@
+{
+  "containerId": "eac9410e-e8eb-4603-9d71-62a381581319",
+  "title": "Wave 2 — Understand the corpus",
+  "namespace": "com.semanticops.programme",
+  "name": "wave-understand",
+  "description": "The reading phase: the grid census and its read-out, the meaning-placement sweep, the single-source-of-truth breaks and the source-of-truth map.",
+  "containerType": "phase",
+  "identityInstanceId": "2ec7ee9a-e029-4809-a6f4-e6ec828001ca",
+  "anchorInstanceId": "2ec7ee9a-e029-4809-a6f4-e6ec828001ca",
+  "rootInstanceIds": [
+    "2ec7ee9a-e029-4809-a6f4-e6ec828001ca"
+  ],
+  "memberInstanceIds": [
+    "3c71677f-a514-45f0-b4a8-3d1ac71be807",
+    "e49fe547-47ac-45bf-a9d1-387f119bb27c",
+    "ef97b58a-75bb-40ff-b064-ad7a67891666",
+    "7460e74b-d6ba-4383-be8b-fb72eb8c234d",
+    "5d281a22-9748-48ce-bed7-24b28a605f98"
+  ],
+  "createdAt": "2026-09-05T22:10:17Z"
+}

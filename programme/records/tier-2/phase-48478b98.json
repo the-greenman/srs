@@ -1,0 +1,16 @@
+{
+  "instanceId": "48478b98-5978-4b30-9bf9-c396c8d73886",
+  "typeId": "127b6706-464f-4fff-9ade-cff47f8745e5",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "phase",
+  "fieldValues": {
+    "title": "Ground and arm the gates",
+    "summary": "Establishes the substrate the rest of the programme runs on: the declared checks actually run on every pull request, branch protection makes them binding, and the autonomy contract states what an agent may merge without asking. Nothing later in the programme can be trusted until green means the declared checks really ran.",
+    "wave": "ground",
+    "body": "## What grounding means here\n\nThe programme is executed largely by agents merging their own work. That is only safe when three things hold at once: the declared check registry runs on every pull request, master refuses a merge when it is red, and the boundary between what an agent may merge and what the owner must decide is written down rather than implied.\n\nAll three were absent at the programme's start. The registry existed and 39 checks were declared in it; none of them ran on a pull request. Master had no branch protection at all, while Release Drift was described as required. The merge boundary lived in habit.\n\nThis wave also stands up the programme repository itself, so that the concept-tree pattern is proven on small, reversible content before it is applied to 433 spec records."
+  },
+  "createdAt": "2026-09-05T22:07:24.729060004+00:00",
+  "updatedAt": "2026-09-05T22:07:24.729064625+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

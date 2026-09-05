@@ -1,0 +1,19 @@
+{
+  "instanceId": "5d281a22-9748-48ce-bed7-24b28a605f98",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "Repository and portability carry weight with no guard",
+    "summary": "Repository and portability each carry 12 corpus statements and zero enforcement checks, while governance carries 13 statements and eleven guards. Same corpus weight, opposite enforcement — which makes this an enforcement gap, not a coverage gap.",
+    "evidence": [
+      "Census cycle two: conformance 77 statements / 17 guards, governance 13 / 11, repository 12 / 0, portability 12 / 0, attribution 3 / 0, versioning 2 / 0 (srs#582).",
+      "Versioning and attribution are thin as well as unguarded, which reads as a discovery gap; repository and portability are not thin (srs#582).",
+      "Portability is where preserve-over-recognize lives, including the carry-unknown-content rule, and nothing checks it (srs#582)."
+    ]
+  },
+  "createdAt": "2026-09-05T22:09:03.582118457+00:00",
+  "updatedAt": "2026-09-05T22:09:03.582121353+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

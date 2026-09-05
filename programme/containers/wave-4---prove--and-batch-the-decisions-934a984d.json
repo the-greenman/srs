@@ -1,0 +1,22 @@
+{
+  "containerId": "934a984d-c4be-401f-a241-80bd1db952a1",
+  "title": "Wave 4 — Prove, and batch the decisions",
+  "namespace": "com.semanticops.programme",
+  "name": "wave-prove",
+  "description": "The proving phase: the programme repository's full chain, the zero-context agent test, and the four rulings batched for a single owner sitting.",
+  "containerType": "phase",
+  "identityInstanceId": "912f7b9a-d357-415d-8c75-b9a0cd7381c1",
+  "anchorInstanceId": "912f7b9a-d357-415d-8c75-b9a0cd7381c1",
+  "rootInstanceIds": [
+    "912f7b9a-d357-415d-8c75-b9a0cd7381c1"
+  ],
+  "memberInstanceIds": [
+    "ad067164-673c-4a7d-bceb-c8dee5d28c4b",
+    "8b87b2d5-3c33-4081-a360-c1659dd933c5",
+    "7ce202a7-77aa-4f15-9c8a-681918645b67",
+    "57825db9-2ef6-426f-b087-b936c47bbd1d",
+    "08faf3eb-2a26-4466-9186-e1fae726a362",
+    "65c41ce6-2b94-4c9f-b6ea-270eeff2d767"
+  ],
+  "createdAt": "2026-09-05T22:10:17Z"
+}
