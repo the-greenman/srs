@@ -6,8 +6,9 @@
   "version": 1,
   "description": "The reasoning behind a design decision, constraint, or normative requirement.",
   "aiGuidance": {
-    "purpose": "The reasoning behind a design decision, constraint, or normative requirement.",
-    "extraction": "Explain why this is specified this way, not just what it says. Include trade-offs considered and alternatives rejected. Rationale is non-normative."
+    "purpose": "Why the accompanying requirement or design is the way it is. Always non-normative — nothing here is testable and nothing here binds an implementation.",
+    "extraction": "Give the forces, not the rule: what problem this solves, which alternatives were considered and why they were rejected, what breaks if it is done another way. Cite the decision record or RFC that settled it where one exists. A few paragraphs at most.",
+    "negativeGuidance": "Never use RFC 2119 keywords here, in any case — a requirement written into rationale is a requirement no conformance test will ever find; move it to a `normative_statement`. Do not restate the requirement the reader has just read. No headings, code blocks or tables — those are separate records."
   },
   "fieldType": {
     "datatype": "string",
