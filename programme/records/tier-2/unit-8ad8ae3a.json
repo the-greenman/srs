@@ -1,0 +1,19 @@
+{
+  "instanceId": "8ad8ae3a-263a-42b4-b077-8feaa835a9bf",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Invariants inline, index generated",
+    "summary": "Each invariant is stated where the thing it constrains is introduced, and the numbered index becomes a generated projection rather than an authored list. The index stops being a second place where an invariant can be forgotten.",
+    "issue_ref": [
+      "srs#564",
+      "srs#556"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:08:29.029533608+00:00",
+  "updatedAt": "2026-09-05T22:08:29.029539570+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

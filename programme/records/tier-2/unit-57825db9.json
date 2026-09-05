@@ -1,0 +1,20 @@
+{
+  "instanceId": "57825db9-2ef6-426f-b087-b936c47bbd1d",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "RFC-034 disposition: membership and nesting",
+    "summary": "The standing ruling is that RFC-034 stays deferred and the design must work under both membership paths. This unit puts the disposition itself to the owner with options and a recommendation rather than resolving it by agent.",
+    "decision_mode": "complex",
+    "issue_ref": [
+      "srs#572",
+      "srs#556"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:09:03.146407732+00:00",
+  "updatedAt": "2026-09-05T22:09:03.146411907+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

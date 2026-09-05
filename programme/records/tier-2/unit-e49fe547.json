@@ -1,0 +1,18 @@
+{
+  "instanceId": "e49fe547-47ac-45bf-a9d1-387f119bb27c",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "The meaning-placement sweep",
+    "summary": "A sweep for meaning held in the wrong place: scripts that define rather than help, documents stating rules the records do not carry, configuration carrying semantics, and RFC prose never folded into the corpus. Every hit is either moved into records or recorded as a deliberate exception.",
+    "issue_ref": [
+      "srs#490"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:08:28.292799575+00:00",
+  "updatedAt": "2026-09-05T22:08:28.292805475+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,18 @@
+{
+  "instanceId": "8b87b2d5-3c33-4081-a360-c1659dd933c5",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "The zero-context agent test",
+    "summary": "An agent that knows nothing about SRS is pointed at the programme repository over MCP and has to work out the concepts, the current state and the safe next actions from the records alone. This is the test the claim actually rests on: a specification that reads in layers should make that possible where a document outline does not.",
+    "issue_ref": [
+      "srs#580"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:09:03.023128413+00:00",
+  "updatedAt": "2026-09-05T22:09:03.023133299+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

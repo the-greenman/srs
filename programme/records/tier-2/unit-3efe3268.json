@@ -1,0 +1,19 @@
+{
+  "instanceId": "3efe3268-30c2-4956-9e5c-54eeb0844227",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Story 126 linked under Epic 13",
+    "summary": "Story muDemocracy.org#126 is linked under Epic 13 so the spec-rework programme appears on the product board rather than only in this repository. Priority is never hand-set; the story's MoSCoW value is the only lever.",
+    "issue_ref": [
+      "muDemocracy.org#126",
+      "muDemocracy.org#124"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:07:51.788978692+00:00",
+  "updatedAt": "2026-09-05T22:07:51.788982017+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

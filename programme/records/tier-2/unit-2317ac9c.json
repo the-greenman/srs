@@ -1,0 +1,22 @@
+{
+  "instanceId": "2317ac9c-eb4b-41e1-ab06-0d49d193dddb",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "The programme as its own SRS repository",
+    "summary": "The programme that reworks the specification is held as SRS records in programme/, with its own registered conformance check, rather than as issue prose. It doubles as the low-risk pilot for the concept-tree pattern before that pattern touches the 433-record spec corpus.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs#583",
+      "srs#580"
+    ],
+    "body": "The definition layer — types phase, unit, finding and carried_context, the programme_unit lifecycle, and check-programme-conformance.mjs — merged in srs#583. The instance layer is the phases, units, findings, carried context and the contains/precedes/depends-on tree over them, and is what makes the pilot a proof rather than a schema."
+  },
+  "lifecycleState": "in_flight",
+  "createdAt": "2026-09-05T22:07:51.545110646+00:00",
+  "updatedAt": "2026-09-05T22:09:41.050741746+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

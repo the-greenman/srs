@@ -1,0 +1,18 @@
+{
+  "instanceId": "e66d31ae-0b60-42b3-b144-8188d9c7031c",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "package-id-uniqueness ignores canonical names",
+    "summary": "The package-id-uniqueness check compares definition UUIDs but never canonical namespace/name/version, so two definitions sharing a canonical name pass while being indistinguishable to anything that resolves by name. Three real collisions were sitting in the corpus when this was found.",
+    "issue_ref": [
+      "srs#584"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:07:51.665351023+00:00",
+  "updatedAt": "2026-09-05T22:07:51.665355210+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

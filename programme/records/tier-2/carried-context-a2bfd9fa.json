@@ -1,0 +1,15 @@
+{
+  "instanceId": "a2bfd9fa-6c20-4a25-ba37-844f43192661",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "Under strict protection, parallel pull requests serialise",
+    "summary": "With strict branch protection, every open pull request goes out of date the moment another one merges, and must be updated before its checks can pass. Run gh pr update-branch after any other merge, and expect parallel units to land one at a time.",
+    "rationale": "Strictness was chosen deliberately over the looser setting: checks that ran against a stale base can pass while the merged result is broken, and the whole point of the gate is that green means the merged state is green. Serialised merges are the price of that guarantee.\n\nThe practical consequence for a programme that runs several agents at once is a scheduling rule, not a configuration change: fan work out across issues freely, but expect the merge queue to be a single file, and have each session update its branch rather than wait for someone else to notice it went stale."
+  },
+  "createdAt": "2026-09-05T22:09:23.041221295+00:00",
+  "updatedAt": "2026-09-05T22:09:23.041225402+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

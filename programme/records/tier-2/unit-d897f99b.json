@@ -1,0 +1,21 @@
+{
+  "instanceId": "d897f99b-a217-4f48-8471-9d6e79268bb1",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Rewritten authoring-field aiGuidance",
+    "summary": "The aiGuidance on the spec authoring fields was rewritten because it was the root cause of the baked markdown headings: it told authors to write documents rather than records. Fixing the guidance before un-baking the headings stops the corpus regrowing them.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs#567",
+      "srs#586"
+    ]
+  },
+  "lifecycleState": "landed",
+  "createdAt": "2026-09-05T22:08:28.564753329+00:00",
+  "updatedAt": "2026-09-05T22:09:40.921876230+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

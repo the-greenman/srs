@@ -1,0 +1,20 @@
+{
+  "instanceId": "65c41ce6-2b94-4c9f-b6ea-270eeff2d767",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "One mechanism for depth in a composition",
+    "summary": "A rendered composition currently has more than one way to express depth, which is exactly the parallel-mechanism drift the one-way-per-goal preference exists to prevent. The ruling picks the single mechanism and retires the others.",
+    "decision_mode": "complex",
+    "issue_ref": [
+      "srs#574",
+      "srs#556"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:09:03.267854438+00:00",
+  "updatedAt": "2026-09-05T22:09:03.267858968+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

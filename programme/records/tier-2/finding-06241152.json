@@ -1,0 +1,19 @@
+{
+  "instanceId": "06241152-aa55-45b6-86a2-369d1674bdc5",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "package-id-uniqueness compares UUIDs but not names",
+    "summary": "The package-id-uniqueness check compares definition UUIDs and never canonical namespace/name/version, so two definitions with the same canonical name pass while being indistinguishable to anything resolving by name. Three real collisions were live in the corpus when the gap was found.",
+    "evidence": [
+      "srs#584 records that package-id-uniqueness compares UUIDs only, so namespace/name@version collisions pass the check.",
+      "Three canonical identity collisions were resolved as a side effect of deleting the dead meta.* type set (srs#557, merged as srs#585) — they had passed every check until then."
+    ],
+    "body": "The pattern is the recurring one in this repository: a motivating example gets fixed and the general enforcement is never built. Deleting the meta.* types removed the three collisions; nothing yet stops the fourth."
+  },
+  "createdAt": "2026-09-05T22:09:03.521538141+00:00",
+  "updatedAt": "2026-09-05T22:09:03.521541096+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

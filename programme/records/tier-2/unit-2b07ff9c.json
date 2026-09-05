@@ -1,0 +1,19 @@
+{
+  "instanceId": "2b07ff9c-6671-45e5-b27a-966370700ab2",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Extensions regrouped, governance last",
+    "summary": "The extension chapters are regrouped by what they add rather than by the order they were adopted, and the governance material moves to the end where a reader needs it. Stub unit, shaped once the earlier rebuild units have settled the structure.",
+    "issue_ref": [
+      "srs#565",
+      "srs#556"
+    ]
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-05T22:08:29.099357124+00:00",
+  "updatedAt": "2026-09-05T22:08:29.099360605+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
