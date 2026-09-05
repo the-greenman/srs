@@ -19,6 +19,7 @@
  * a cross-file $ref by $id). Runs under scripts/validate-all.mjs.
  */
 import { readFile, readdir } from "fs/promises";
+import { existsSync } from "fs";
 import { join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { loadSchema, validateJsonSchema } from "./lib/json-schema-lite.mjs";
@@ -42,8 +43,22 @@ async function findSrsjFiles(dir) {
   for (const e of entries) {
     if (e.name === "node_modules" || e.name === ".git") continue;
     const abs = join(dir, e.name);
-    if (e.isDirectory()) out.push(...(await findSrsjFiles(abs)));
-    else if (e.name.endsWith(".srsj")) out.push(abs);
+    if (e.isDirectory()) {
+      // Skip anything that is itself a repository root — a nested git worktree carries a `.git`
+      // FILE (a gitdir pointer), a clone carries a `.git` directory. Either way its contents belong
+      // to a different checkout and this run does not own them.
+      //
+      // Without this, a worktree under the repo (the documented per-unit workflow puts them at
+      // ../.worktrees, but nothing stops one landing inside) is walked as if it were this tree. The
+      // failure is worse than noise: EXCLUDED is keyed by absolute path from REPO, so the worktree's
+      // copy of packages/com.semanticops.core/1.0.0/core-bundle.srsj does not match the exclusion
+      // its own twin has, and the run goes red on a file that is deliberately excluded three
+      // directories away. CI never sees it — CI has no worktrees — so it is a local-only false
+      // failure, which is the shape that teaches people to distrust a gate (srs-rust#874's
+      // stale-sibling trap, in a different costume).
+      if (existsSync(join(abs, ".git"))) continue;
+      out.push(...(await findSrsjFiles(abs)));
+    } else if (e.name.endsWith(".srsj")) out.push(abs);
   }
   return out;
 }
