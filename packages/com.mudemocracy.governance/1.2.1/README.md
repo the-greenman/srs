@@ -12,16 +12,13 @@ content changed. 1.0.0/1.1.0/1.2.0 stay published as-is (additive-only disciplin
 requires touching them).
 
 `scripts/build-governance-seed.mjs` now takes the version as an argument (`node
-scripts/build-governance-seed.mjs 1.2.1`) instead of hardcoding `1.1.0`, and falls back to a
-plain filesystem flatten of `package/` when `srs repo copy` can't load the package — which is
-the case for every version 1.0.0+ right now: the pinned CLI's `Protocol` deserializer still
-expects the retired prefixed shape (srs-rust#930, open), so it rejects the already-ratified
-unprefixed one. The fallback produces the identical `{srsj, manifest, data}` envelope shape
-`repo copy` would, without asking the engine to parse content it doesn't understand yet; the
-engine-side acceptance check (`repo validate`/`type list`) is skipped for the same documented
-reason, and the content is validated the Node/AJV way instead (`scripts/validate-all.mjs`).
-Once srs-rust#930 ships and the pin advances, re-running the script goes back to full
-engine-verified provenance automatically — see the script's header comment.
+scripts/build-governance-seed.mjs 1.2.1`) instead of hardcoding `1.1.0`. At the time this version
+was published, the script fell back to a plain filesystem flatten of `package/` whenever `srs
+repo copy` couldn't load the package (true for every version 1.0.0+ at the time: the pinned
+CLI's `Protocol` deserializer still expected the retired prefixed shape, srs-rust#930). That
+fallback has since been retired (srs#553, srs-rust build.331 — PR #948 fixed the two further
+gaps the fallback was extended to cover, srs-rust#941 and #947/#946): the script now goes
+exclusively through the sanctioned `srs repo copy` path, and this seed was rebuilt through it.
 
 
 The canonical **MuDemocracy governance package** and a pre-built empty governance-document

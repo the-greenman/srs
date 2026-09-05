@@ -1,6 +1,7 @@
 {
   "data": {
     "package/blueprints/decision-log-e2e09a77.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/blueprint.json",
       "aiGuidance": {
         "extraction": "Extract every decision made or crystallised during the conversation. Each decision gets its own Record. Link a decision to the one it replaces with supersedes, and to decisions it relies on with depends-on.",
         "purpose": "A decision log assembled from the decisions extracted out of a meeting transcript. Each decision becomes its own Record; supersession and dependency relations connect them over time."
@@ -56,11 +57,13 @@
       ],
       "version": 1
     },
-    "package/document-views/articles-and-roles-78b11038.json": {
-      "$schema": "https://srs.semanticops.com/schema/2.0/document-view.json",
+    "package/compositions/articles-and-roles-78b11038.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/composition.json",
       "createdAt": "2026-05-31T00:00:00Z",
       "description": "Renders the Articles of Association together with the current role holders.",
-      "format": "markdown",
+      "exportConfig": {
+        "format": "markdown"
+      },
       "id": "78b11038-e5d8-4269-9982-fe5c459802b2",
       "name": "articles-and-roles",
       "namespace": "governance",
@@ -75,8 +78,11 @@
           "sectionId": "articles",
           "source": {
             "containerScope": "repository",
-            "semanticObjectType": "governance/article",
-            "type": "type-query"
+            "query": {
+              "typeName": "article",
+              "typeNamespace": "governance"
+            },
+            "type": "discovery-query"
           },
           "title": "Articles of Association",
           "titleFieldId": "d7e82557-9045-5e92-a494-d99112bbec4a"
@@ -87,8 +93,11 @@
           "sectionId": "roles",
           "source": {
             "containerScope": "repository",
-            "semanticObjectType": "governance/role",
-            "type": "type-query"
+            "query": {
+              "typeName": "role",
+              "typeNamespace": "governance"
+            },
+            "type": "discovery-query"
           },
           "title": "Roles",
           "titleFieldId": "d7e82557-9045-5e92-a494-d99112bbec4a"
@@ -96,11 +105,13 @@
       ],
       "version": 1
     },
-    "package/document-views/decision-deliberation-5a3ce87e.json": {
-      "$schema": "https://srs.semanticops.com/schema/2.0/document-view.json",
+    "package/compositions/decision-deliberation-5a3ce87e.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/composition.json",
       "createdAt": "2026-05-31T00:00:00Z",
       "description": "Full deliberation view — shows all fields including question, context, friction, alternatives, requirements, statement, rationale, next steps, owner, revisit, and status.",
-      "format": "markdown",
+      "exportConfig": {
+        "format": "markdown"
+      },
       "id": "5a3ce87e-8340-4d91-a140-ab56b57f704f",
       "name": "decision-deliberation",
       "namespace": "governance",
@@ -111,8 +122,11 @@
           "sectionId": "decisions",
           "source": {
             "containerScope": "repository",
-            "semanticObjectType": "governance/decision",
-            "type": "type-query"
+            "query": {
+              "typeName": "decision",
+              "typeNamespace": "governance"
+            },
+            "type": "discovery-query"
           },
           "title": "Decisions",
           "titleFieldId": "d7e82557-9045-5e92-a494-d99112bbec4a"
@@ -120,11 +134,13 @@
       ],
       "version": 1
     },
-    "package/document-views/decision-log-b5c8d124.json": {
-      "$schema": "https://srs.semanticops.com/schema/2.0/document-view.json",
+    "package/compositions/decision-log-b5c8d124.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/composition.json",
       "createdAt": "2026-05-31T00:00:00Z",
       "description": "Decision log view — compact summary showing only decision statement, alternatives considered, rationale, and revisit trigger.",
-      "format": "markdown",
+      "exportConfig": {
+        "format": "markdown"
+      },
       "id": "b5c8d124-2084-4a6b-a231-425e800e1e55",
       "name": "decision-log",
       "namespace": "governance",
@@ -142,13 +158,16 @@
           "sectionId": "decisions",
           "source": {
             "containerScope": "repository",
-            "excludeLifecycleStates": [
-              "superseded",
-              "closed",
-              "abandoned"
-            ],
-            "semanticObjectType": "governance/decision",
-            "type": "type-query"
+            "query": {
+              "excludeLifecycleStates": [
+                "superseded",
+                "closed",
+                "abandoned"
+              ],
+              "typeName": "decision",
+              "typeNamespace": "governance"
+            },
+            "type": "discovery-query"
           },
           "title": "Decision Log",
           "titleFieldId": "d7e82557-9045-5e92-a494-d99112bbec4a"
@@ -156,11 +175,13 @@
       ],
       "version": 1
     },
-    "package/document-views/governance-document-732a982b.json": {
-      "$schema": "https://srs.semanticops.com/schema/2.0/document-view.json",
+    "package/compositions/governance-document-732a982b.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/composition.json",
       "createdAt": "2026-07-06T00:00:00Z",
       "description": "Renders the complete governance corpus — articles of association, roles, and decision log — as a single whole-document export.",
-      "format": "markdown",
+      "exportConfig": {
+        "format": "markdown"
+      },
       "id": "732a982b-3765-4f22-90e0-e456463bac54",
       "name": "governance-document",
       "namespace": "governance",
@@ -175,8 +196,11 @@
           "sectionId": "articles",
           "source": {
             "containerScope": "repository",
-            "semanticObjectType": "governance/article",
-            "type": "type-query"
+            "query": {
+              "typeName": "article",
+              "typeNamespace": "governance"
+            },
+            "type": "discovery-query"
           },
           "title": "Articles of Association",
           "titleFieldId": "d7e82557-9045-5e92-a494-d99112bbec4a"
@@ -187,8 +211,11 @@
           "sectionId": "roles",
           "source": {
             "containerScope": "repository",
-            "semanticObjectType": "governance/role",
-            "type": "type-query"
+            "query": {
+              "typeName": "role",
+              "typeNamespace": "governance"
+            },
+            "type": "discovery-query"
           },
           "title": "Roles",
           "titleFieldId": "d7e82557-9045-5e92-a494-d99112bbec4a"
@@ -199,8 +226,11 @@
           "sectionId": "decisions",
           "source": {
             "containerScope": "repository",
-            "semanticObjectType": "governance/decision",
-            "type": "type-query"
+            "query": {
+              "typeName": "decision",
+              "typeNamespace": "governance"
+            },
+            "type": "discovery-query"
           },
           "title": "Decision Log",
           "titleFieldId": "d7e82557-9045-5e92-a494-d99112bbec4a"
@@ -209,6 +239,7 @@
       "version": 1
     },
     "package/fields/alternativesconsidered-636ce948.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
       "aiGuidance": {
         "examples": [
           {
@@ -233,6 +264,7 @@
       "version": 1
     },
     "package/fields/amendmentrule-1f01bc6b.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
       "aiGuidance": {
         "purpose": ""
       },
@@ -248,6 +280,7 @@
       "version": 1
     },
     "package/fields/articlenumber-60be1468.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
       "aiGuidance": {
         "purpose": ""
       },
@@ -262,6 +295,7 @@
       "version": 1
     },
     "package/fields/articletext-8aa3eba2.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
       "aiGuidance": {
         "purpose": ""
       },
@@ -277,6 +311,7 @@
       "version": 1
     },
     "package/fields/authority-d25da548.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
       "aiGuidance": {
         "purpose": ""
       },
@@ -292,6 +327,7 @@
       "version": 1
     },
     "package/fields/boundary-3c39ee1f.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
       "aiGuidance": {
         "purpose": ""
       },
@@ -307,6 +343,7 @@
       "version": 1
     },
     "package/fields/context-9889052c.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
       "aiGuidance": {
         "examples": [
           {
@@ -331,6 +368,7 @@
       "version": 1
     },
     "package/fields/decisionquestion-73cd845a.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
       "aiGuidance": {
         "examples": [
           {
@@ -353,6 +391,7 @@
       "version": 1
     },
     "package/fields/decisionstatement-de1296e0.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
       "aiGuidance": {
         "examples": [
           {
@@ -376,6 +415,7 @@
       "version": 1
     },
     "package/fields/externallinks-fc434475.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
       "aiGuidance": {
         "examples": [
           {
@@ -399,6 +439,7 @@
       "version": 1
     },
     "package/fields/friction-1a1c0a5d.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
       "aiGuidance": {
         "examples": [
           {
@@ -423,6 +464,7 @@
       "version": 1
     },
     "package/fields/keyrequirements-a952604c.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
       "aiGuidance": {
         "examples": [
           {
@@ -446,6 +488,7 @@
       "version": 1
     },
     "package/fields/nextsteps-4181f210.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
       "aiGuidance": {
         "examples": [
           {
@@ -469,6 +512,7 @@
       "version": 1
     },
     "package/fields/owner-4b34847c.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
       "aiGuidance": {
         "examples": [
           {
@@ -491,6 +535,7 @@
       "version": 1
     },
     "package/fields/protectedstatus-0df40543.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
       "aiGuidance": {
         "purpose": ""
       },
@@ -505,6 +550,7 @@
       "version": 1
     },
     "package/fields/rationale-3340532b.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
       "aiGuidance": {
         "examples": [
           {
@@ -529,6 +575,7 @@
       "version": 1
     },
     "package/fields/revisitwhen-c04b7f84.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
       "aiGuidance": {
         "examples": [
           {
@@ -553,6 +600,7 @@
       "version": 1
     },
     "package/fields/roleholder-a6c19b95.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
       "aiGuidance": {
         "purpose": ""
       },
@@ -567,6 +615,7 @@
       "version": 1
     },
     "package/fields/sourceofauthority-9a32dc01.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
       "aiGuidance": {
         "purpose": ""
       },
@@ -614,6 +663,7 @@
       "version": 1
     },
     "package/fields/title-d7e82557.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
       "aiGuidance": {
         "examples": [
           {
@@ -635,7 +685,7 @@
       "namespace": "governance",
       "version": 1
     },
-    "package/lifecycles/governance-lifecycle-3c504040.json": {
+    "package/lifecycles/governancelifecycle-3c504040.json": {
       "createdAt": "2026-06-08T00:00:00Z",
       "description": "Shared governance lifecycle for Articles, Roles, and Decisions. A record is drafted, proposed to the group, and ratified once agreed. Ratified records either close (obligation discharged), are superseded by a successor, or are abandoned (withdrawn without a successor). closed, superseded, and abandoned are final.",
       "id": "3c504040-7920-43aa-8fbd-eda21dc7c07b",
@@ -754,15 +804,15 @@
       "blueprints": [
         "blueprints/decision-log-e2e09a77.json"
       ],
+      "compositions": [
+        "compositions/articles-and-roles-78b11038.json",
+        "compositions/decision-deliberation-5a3ce87e.json",
+        "compositions/decision-log-b5c8d124.json",
+        "compositions/governance-document-732a982b.json"
+      ],
       "createdAt": "2026-01-01T00:00:00Z",
       "dataModelRevision": 2,
       "description": "Canonical MuDemocracy governance package. At v1.1.0 it refines field aiGuidance to align with the published deliberating-decisions and decision-recording guides — notably correcting the rationale sentence-count guidance from 'one to three' to 'two to four' sentences, and sharpening alternatives-considered negativeGuidance to discourage 'none' responses more explicitly.",
-      "documentViews": [
-        "document-views/articles-and-roles-78b11038.json",
-        "document-views/decision-deliberation-5a3ce87e.json",
-        "document-views/decision-log-b5c8d124.json",
-        "document-views/governance-document-732a982b.json"
-      ],
       "fields": [
         "fields/alternativesconsidered-636ce948.json",
         "fields/amendmentrule-1f01bc6b.json",
@@ -783,11 +833,13 @@
         "fields/revisitwhen-c04b7f84.json",
         "fields/roleholder-a6c19b95.json",
         "fields/sourceofauthority-9a32dc01.json",
+        "fields/statement-3b000001.json",
+        "fields/title-3b000002.json",
         "fields/title-d7e82557.json"
       ],
       "id": "1cd9622e-3d05-4214-a683-4cb81d0c44d9",
       "lifecycles": [
-        "lifecycles/governance-lifecycle-3c504040.json"
+        "lifecycles/governancelifecycle-3c504040.json"
       ],
       "name": "governance",
       "namespace": "com.mudemocracy.governance",
@@ -795,34 +847,43 @@
         "protocols/decision-7a088176.json"
       ],
       "relationTypes": [
+        "relation-types/contains-3a1b2c4d.json",
         "relation-types/delegates-31c82363.json",
+        "relation-types/depends-on-7f8e9d0c.json",
         "relation-types/derived-from-36b78f14.json",
         "relation-types/evidences-35c7aba2.json",
         "relation-types/precedes-b24aaf29.json",
+        "relation-types/refines-e5f6a7b8.json",
         "relation-types/supersedes-6e86ebd3.json"
       ],
       "status": "active",
+      "themes": [],
       "title": "MuDemocracy Governance",
       "types": [
         "types/article-a1142ac3.json",
         "types/decision-1fcad6a2.json",
         "types/decisionlog-5a061505.json",
+        "types/purpose-3c000001.json",
         "types/role-e53dce11.json"
       ],
       "version": "1.1.0",
       "views": [
         "views/decision-log-faebd240.json"
-      ]
+      ],
+      "vocabularies": []
     },
     "package/protocols/decision-7a088176.json": {
-      "protocolCreatedAt": "2026-06-25T00:00:00Z",
-      "protocolDescription": "Nine-stage facilitation protocol for capturing a governance decision: from scene-setting through deliberation to the settled commitment, rationale, review triggers, and follow-up actions.",
-      "protocolId": "7a088176-977f-4ed9-9d0e-f8608c8a944b",
-      "protocolName": "decision",
-      "protocolNamespace": "governance",
-      "protocolStages": [
+      "$schema": "https://srs.semanticops.com/schema/2.0/protocol.json",
+      "createdAt": "2026-06-25T00:00:00Z",
+      "description": "Nine-stage facilitation protocol for capturing a governance decision: from scene-setting through deliberation to the settled commitment, rationale, review triggers, and follow-up actions.",
+      "id": "7a088176-977f-4ed9-9d0e-f8608c8a944b",
+      "name": "decision",
+      "namespace": "governance",
+      "stages": [
         {
-          "aiGuidance": "Look for background information stated before the decision point: prior agreements, historical context, changes in circumstances, or what happened to prompt this discussion. Extract the scene, not the problem. Do not include the friction or problem itself — that belongs in the Friction stage.",
+          "aiGuidance": {
+            "purpose": "Look for background information stated before the decision point: prior agreements, historical context, changes in circumstances, or what happened to prompt this discussion. Extract the scene, not the problem. Do not include the friction or problem itself — that belongs in the Friction stage."
+          },
           "completionCriteria": "The scene is set: prior agreements, historical context, or the trigger event are described without naming the problem itself.",
           "contributesTo": [
             {
@@ -837,7 +898,9 @@
           "stageId": "5e15928e-23b4-4057-a7a4-650d3a8ac0db"
         },
         {
-          "aiGuidance": "Look for expressions of frustration, tension, or a named gap in current practice. The friction answers why this needs to be decided today. Extract it as a concrete condition, not a wish. Do not describe what the group wants to do about the friction — that belongs in Alternatives or the Decision Statement.",
+          "aiGuidance": {
+            "purpose": "Look for expressions of frustration, tension, or a named gap in current practice. The friction answers why this needs to be decided today. Extract it as a concrete condition, not a wish. Do not describe what the group wants to do about the friction — that belongs in Alternatives or the Decision Statement."
+          },
           "completionCriteria": "A concrete forcing function is named — not what the group wants to do about it, but why it cannot be left unresolved.",
           "contributesTo": [
             {
@@ -854,7 +917,9 @@
           "stageId": "611a1a55-a804-4d7f-9e6c-59b0d347d448"
         },
         {
-          "aiGuidance": "Look for the moment someone names what is actually being decided: 'so the question is...', 'what we are deciding is...', or an implicit framing that narrows discussion to one choice point. If no explicit question was stated, infer the minimal question the decision statement answers.",
+          "aiGuidance": {
+            "purpose": "Look for the moment someone names what is actually being decided: 'so the question is...', 'what we are deciding is...', or an implicit framing that narrows discussion to one choice point. If no explicit question was stated, infer the minimal question the decision statement answers."
+          },
           "completionCriteria": "One specific question is stated that the decision statement will directly answer.",
           "contributesTo": [
             {
@@ -871,7 +936,9 @@
           "stageId": "c5b159ef-e997-42ac-beef-70c1940a6755"
         },
         {
-          "aiGuidance": "Look for options mentioned, proposals floated, or alternatives explicitly compared. Include any option that received real consideration, even if dismissed quickly. Include doing nothing or no change if the group acknowledged it. Do not write 'none' unless truly no alternatives were discussed. Do not merge distinct alternatives into a single blended option.",
+          "aiGuidance": {
+            "purpose": "Look for options mentioned, proposals floated, or alternatives explicitly compared. Include any option that received real consideration, even if dismissed quickly. Include doing nothing or no change if the group acknowledged it. Do not write 'none' unless truly no alternatives were discussed. Do not merge distinct alternatives into a single blended option."
+          },
           "completionCriteria": "All options that received real consideration are listed, including any 'do nothing' option if the group acknowledged it. Distinct alternatives are not merged.",
           "contributesTo": [
             {
@@ -888,7 +955,9 @@
           "stageId": "413d4b43-6fec-41d0-8867-a1949a3b58f8"
         },
         {
-          "aiGuidance": "Look for statements about what matters most, explicit trade-offs named, objections raised, and any disagreement about the decision or its criteria. Extract both the criteria used and any tension between them.",
+          "aiGuidance": {
+            "purpose": "Look for statements about what matters most, explicit trade-offs named, objections raised, and any disagreement about the decision or its criteria. Extract both the criteria used and any tension between them."
+          },
           "completionCriteria": "The criteria used to evaluate options are named, along with any tension between criteria or recorded objections.",
           "contributesTo": [
             {
@@ -905,7 +974,9 @@
           "stageId": "8e46b286-ef7d-4c1f-ac5d-45fba6f30dcc"
         },
         {
-          "aiGuidance": "Look for the moment agreement is reached — signalled by 'so we are agreed', 'let us go with', or a direct statement of resolution. Extract the commitment itself, not the discussion around it. One sentence.",
+          "aiGuidance": {
+            "purpose": "Look for the moment agreement is reached — signalled by 'so we are agreed', 'let us go with', or a direct statement of resolution. Extract the commitment itself, not the discussion around it. One sentence."
+          },
           "completionCriteria": "One concise, active-voice sentence states the settled commitment. It directly answers the decision question.",
           "contributesTo": [
             {
@@ -923,7 +994,9 @@
           "stageId": "4f3e5d2e-2236-46bf-b92a-b3f8fda44af1"
         },
         {
-          "aiGuidance": "Look for statements about why the group chose what they chose: the reasoning given for the final decision, what made this option preferable to the others. Capture the outcome logic, not the deliberation process. Do not write a blow-by-blow account of the discussion. Do not include objections that were not ultimately deciding factors.",
+          "aiGuidance": {
+            "purpose": "Look for statements about why the group chose what they chose: the reasoning given for the final decision, what made this option preferable to the others. Capture the outcome logic, not the deliberation process. Do not write a blow-by-blow account of the discussion. Do not include objections that were not ultimately deciding factors."
+          },
           "completionCriteria": "One to three sentences capture the core reasoning that made this option preferable. The rationale is the deciding logic, not a summary of the meeting.",
           "contributesTo": [
             {
@@ -940,7 +1013,9 @@
           "stageId": "ae9bbedc-ea0e-4611-b3c9-445c954424c0"
         },
         {
-          "aiGuidance": "Look for statements about when to revisit, what would change the decision, or what review conditions were set. Prefer condition-based triggers, which may reference a date as an anchor. Avoid bare dates without a condition — 'revisit in December' is weaker than 'revisit if attendance consistently drops or at the end of the pilot period'.",
+          "aiGuidance": {
+            "purpose": "Look for statements about when to revisit, what would change the decision, or what review conditions were set. Prefer condition-based triggers, which may reference a date as an anchor. Avoid bare dates without a condition — 'revisit in December' is weaker than 'revisit if attendance consistently drops or at the end of the pilot period'."
+          },
           "completionCriteria": "A condition-based trigger is named. Bare dates without a condition are insufficient — dates may anchor a condition but should not replace one.",
           "contributesTo": [
             {
@@ -957,7 +1032,9 @@
           "stageId": "d7451c29-44f5-43c2-92c2-dc2f0d3697fa"
         },
         {
-          "aiGuidance": "Look for action assignments after the decision point: 'X will do Y by Z', 'the first step is...', or concrete commitments. Extract owner and timing if named.",
+          "aiGuidance": {
+            "purpose": "Look for action assignments after the decision point: 'X will do Y by Z', 'the first step is...', or concrete commitments. Extract owner and timing if named."
+          },
           "completionCriteria": "Follow-up actions are listed with named owners and timing where stated. May be empty if no follow-up actions were recorded.",
           "contributesTo": [
             {
@@ -974,12 +1051,26 @@
           "stageId": "adb176b6-cc16-4ee9-b791-8dde3a6c18c4"
         }
       ],
-      "protocolTags": [
+      "tags": [
         "governance",
         "decision"
       ],
-      "protocolTargetType": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
-      "protocolVersion": 1
+      "targetType": "1fcad6a2-9f78-5e41-94ba-d82e88b822f3",
+      "version": 1
+    },
+    "package/relation-types/contains-3a1b2c4d.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation-type.json",
+      "canonicalDirection": "source is the container; target is the contained member",
+      "category": "composition",
+      "createdAt": "2026-05-29T00:00:00Z",
+      "description": "Source instance contains or is composed of target instance. Defines structural membership or composition boundaries.",
+      "id": "3a1b2c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+      "inverseType": "part-of",
+      "irreflexive": true,
+      "key": "contains",
+      "label": "Contains",
+      "namespace": "com.semanticops.srs",
+      "version": 1
     },
     "package/relation-types/delegates-31c82363.json": {
       "$schema": "https://srs.semanticops.com/schema/2.0/relation-type.json",
@@ -990,6 +1081,19 @@
       "key": "delegates",
       "label": "Delegates",
       "namespace": "governance",
+      "version": 1
+    },
+    "package/relation-types/depends-on-7f8e9d0c.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation-type.json",
+      "canonicalDirection": "source depends on target",
+      "category": "dependency",
+      "createdAt": "2026-05-29T00:00:00Z",
+      "description": "Source instance requires target instance to be complete, valid, or usable. Target is a prerequisite.",
+      "id": "7f8e9d0c-1b2a-4f3e-9d8c-7b6a5f4e3d2c",
+      "irreflexive": true,
+      "key": "depends-on",
+      "label": "Depends on",
+      "namespace": "com.semanticops.srs",
       "version": 1
     },
     "package/relation-types/derived-from-36b78f14.json": {
@@ -1024,6 +1128,19 @@
       "key": "precedes",
       "label": "Precedes",
       "namespace": "governance",
+      "version": 1
+    },
+    "package/relation-types/refines-e5f6a7b8.json": {
+      "$schema": "https://srs.semanticops.com/schema/2.0/relation-type.json",
+      "canonicalDirection": "source is the more specific instance; target is the general instance",
+      "category": "refinement",
+      "createdAt": "2026-05-29T00:00:00Z",
+      "description": "Source instance is a more specific, detailed, or precise version of target instance. Does not replace or invalidate target.",
+      "id": "e5f6a7b8-c9d0-4e1f-8a2b-3c4d5e6f7a8b",
+      "irreflexive": true,
+      "key": "refines",
+      "label": "Refines",
+      "namespace": "com.semanticops.srs",
       "version": 1
     },
     "package/relation-types/supersedes-6e86ebd3.json": {
@@ -1316,7 +1433,7 @@
       "title": "Empty Governance Document"
     },
     "createdAt": "2026-01-01T00:00:00Z",
-    "dataModelRevision": 2,
+    "dataModelRevision": 7,
     "description": "An empty governance document: the canonical MuDemocracy governance package installed with zero records, ready for a clerk to capture their first decision.",
     "meta": {
       "upstreamPackage": {

@@ -19,28 +19,23 @@
  * published version dir name (e.g. `1.2.1`) as the first positional arg to
  * (re)build its seed instead.
  *
- * Known engine gap (srs#548, srs-rust#930): the pinned CLI's Protocol
- * deserializer still requires the retired `protocol`-prefixed shape
- * (protocolId/protocolNamespace/...) that srs#379 replaced everywhere else
- * (schema, prose, every published package/ tree). `srs repo copy` therefore
- * cannot load a governance package version whose protocol definition is
- * already on the ratified unprefixed shape (every version 1.0.0+ as of
- * srs#545) — it fails the whole copy, not just the protocol file. This
- * script tries the CLI path first (so it goes back to full engine-verified
- * provenance automatically once srs-rust#930 ships and the pin advances) and
- * falls back to a plain filesystem flatten — identical output shape, just
- * produced without asking the engine to parse content it doesn't understand
- * yet — ONLY when the failure matches that specific, already-tracked gap.
- * Any other failure still aborts the build.
+ * The build goes exclusively through the sanctioned `srs repo copy` path.
+ * A filesystem-flatten fallback used to sit here for srs-rust#930 (the
+ * Protocol deserializer requiring the retired prefixed shape) and was kept
+ * past #930 landing because of srs-rust#941 (repo copy silently dropped the
+ * Protocol definition) and then srs-rust#947/#946 (repo copy hardcoded
+ * package.json's title/description and dropped packageDependencies). All
+ * three are fixed as of srs-rust build.331 (PR #948, Closes #946, #947) —
+ * see the-greenman/srs#553. Any `repo copy` failure now aborts the build.
  *
  * Usage (cwd-independent):
  *   node scripts/build-governance-seed.mjs [version]
  *   node scripts/build-governance-seed.mjs [version] --check   # build to a temp file and diff against the committed seed
  */
 import { execFileSync } from 'node:child_process';
-import { cpSync, mkdtempSync, mkdirSync, rmSync, readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
+import { cpSync, mkdtempSync, mkdirSync, rmSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { dirname, join, relative, sep } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
@@ -66,27 +61,6 @@ const STAMP_TIME = '2026-01-01T00:00:00Z';
 const SEED_DATA_MODEL_REVISION = 7;
 
 const SRS_BIN = process.env.SRS_BIN || 'srs';
-
-/** Recursively flatten a directory into a { relPath: parsedJson } map, POSIX-separated. */
-function flattenDir(root, dir = root, out = {}) {
-  for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    const abs = join(dir, entry.name);
-    if (entry.isDirectory()) {
-      flattenDir(root, abs, out);
-    } else if (entry.name.endsWith('.json')) {
-      const relPath = relative(root, abs).split(sep).join('/');
-      out[relPath] = JSON.parse(readFileSync(abs, 'utf8'));
-    }
-  }
-  return out;
-}
-
-/** Known, already-tracked engine gap: srs-rust#930 hasn't renamed Protocol's Rust
- * struct to the srs#379-ratified unprefixed shape yet, so `repo copy`/`repo
- * validate` reject any package whose protocol definition already uses it. */
-function isKnownProtocolShapeGap(message) {
-  return /protocol\.json/.test(message) && /protocolId.*required property/.test(message);
-}
 
 function srs(args, opts = {}) {
   const out = execFileSync(SRS_BIN, args, { encoding: 'utf8', ...opts });
@@ -133,31 +107,11 @@ function build(outPath) {
     };
     writeFileSync(join(repo, 'manifest.json'), `${JSON.stringify(sourceManifest, null, 2)}\n`);
 
-    // 2. Export to a self-contained .srsj bundle (package definitions inlined).
-    //    Prefer the engine (`repo copy`); fall back to a plain flatten only for
-    //    the specific, already-tracked srs-rust#930 gap (see header comment).
+    // 2. Export to a self-contained .srsj bundle (package definitions inlined)
+    //    via the sanctioned `srs repo copy` path.
     const bundlePath = join(work, 'seed.srsj');
-    let bundle;
-    try {
-      srs(['repo', 'copy', '--from', repo, '--to', bundlePath]);
-      bundle = JSON.parse(readFileSync(bundlePath, 'utf8'));
-    } catch (err) {
-      const message = String(err.stdout || err.message || err);
-      if (!isKnownProtocolShapeGap(message)) throw err;
-      console.warn(
-        '  WARNING: `srs repo copy` cannot load this package yet (srs-rust#930 — Protocol struct still expects the retired prefixed shape). Falling back to a plain filesystem flatten for the same {srsj, manifest, data} envelope shape. Re-run once srs-rust#930 ships to get engine-verified provenance back.',
-      );
-      const { packageRef: _packageRef, ...manifestSansPackageRef } = sourceManifest;
-      bundle = {
-        srsj: '2',
-        manifest: {
-          ...manifestSansPackageRef,
-          container: { containerId: SEED_REPOSITORY_ID, title: sourceManifest.title },
-        },
-        data: flattenDir(repo),
-      };
-      delete bundle.data['manifest.json'];
-    }
+    srs(['repo', 'copy', '--from', repo, '--to', bundlePath]);
+    const bundle = JSON.parse(readFileSync(bundlePath, 'utf8'));
 
     // 3. Stamp upstream-package provenance into the bundle manifest. `repo copy`
     //    drops manifest.meta, so this is the authoritative place to add it.
@@ -196,16 +150,8 @@ function validate(path) {
   const res = srs(['repo', 'validate', '--repo', path]);
   // A fatal catalog-load failure (can't even open the repo) reports as a
   // top-level `diagnostics` array with no `payload` at all — distinct from
-  // the normal ok:true-or-false-with-payload.diagnostics shape. Tolerate it
-  // ONLY for the known, already-tracked srs-rust#930 protocol-shape gap.
+  // the normal ok:true-or-false-with-payload.diagnostics shape.
   if (!res.payload) {
-    const message = (res.diagnostics || []).join('\n');
-    if (isKnownProtocolShapeGap(message)) {
-      console.warn(
-        '  WARNING: engine-side `repo validate`/`type list` cannot load this bundle yet (srs-rust#930). Content was validated the Node/AJV way instead (scripts/validate-all.mjs); skipping the engine acceptance check.',
-      );
-      return;
-    }
     console.error('Seed validation FAILED (fatal catalog load):', JSON.stringify(res, null, 2));
     process.exit(1);
   }
