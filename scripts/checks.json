@@ -48,8 +48,8 @@
       "args": [],
       "tier": "always",
       "cell": "governance",
-      "governing": "srs#204; srs#463 (Charter Check)",
-      "description": "Every accepted/implemented RFC declares a non-empty srs-integration manifest whose tokens all resolve, its .md Status line matches the record's rfc-status, and (for RFCs created 2026-08-23 or later, individually-grandfathered ones excepted) its .md carries a complete, self-consistent `## Charter alignment` section."
+      "governing": "srs#204; srs#463 (Charter Check); srs#519 (RFC banner rule-token drift)",
+      "description": "Every accepted/implemented RFC declares a non-empty srs-integration manifest whose tokens all resolve, its .md Status line matches the record's rfc-status, and (for RFCs created 2026-08-23 or later, individually-grandfathered ones excepted) its .md carries a complete, self-consistent `## Charter alignment` section. Also (srs#519): any canonical record's prose whose heading carries an \"(RFC-NNN)\" banner (e.g. \"##### Conformance Rules (RFC-041)\") must have every conformance-rule identifier it declares there (`[R7]`, `[CR-036-1]`, ...) actually appear in that RFC's own `rfcs/rfc-NNN-*.md` — the drift class PR #517 produced."
     },
     {
       "id": "rfc-032-paper-proof",
