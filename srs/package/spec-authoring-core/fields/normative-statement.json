@@ -6,8 +6,9 @@
   "version": 1,
   "description": "A single atomic normative requirement, expressed using RFC 2119 keywords.",
   "aiGuidance": {
-    "purpose": "A single atomic normative requirement, expressed using RFC 2119 keywords.",
-    "extraction": "Each statement should express exactly one requirement. Use MUST, MUST NOT, SHOULD, SHOULD NOT, or MAY. Be precise and testable — a conformance test should be derivable from this statement alone."
+    "purpose": "Exactly one atomic, testable requirement, stated with an RFC 2119 keyword. This is the field conformance is read from.",
+    "extraction": "One sentence, one requirement, one keyword: MUST, MUST NOT, SHOULD, SHOULD NOT, or MAY. Name the actor and the observable condition so that a conformance test follows from this sentence alone, with no surrounding context: \"A Record MUST resolve its typeId and typeVersion against the effective package set.\" Keep the reasoning out — it belongs in `rationale`. Keep illustrations out — they belong in an `example` record.",
+    "negativeGuidance": "No two requirements joined by \"and\" — split them into two records so each can be tested and cited separately. No rationale, no examples, no headings, no code blocks, no tables. Do not restate a requirement another record already makes; relate the records (`refines`, `supersedes`) instead. Avoid lower-case \"should\" or \"may\" as ordinary English here — in this field every such word reads as a keyword."
   },
   "fieldType": {
     "datatype": "string",
