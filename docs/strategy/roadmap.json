@@ -1197,6 +1197,41 @@
       ]
     },
     {
+      "id": "deep-structure",
+      "instanceId": "ea901c66-e70f-5f53-b30a-3f7c2b478cb0",
+      "kind": "strategy-contract",
+      "name": "Nested structure and navigation",
+      "stability": "settle-before-f2",
+      "promise": "A repository expresses structure more than one level deep, and a conforming reader reaches every node from the root: containers nest by declaration or derivation, and navigation and composition traverse to any depth under one deterministic order.",
+      "capabilities": [
+        "Work With Meaning",
+        "Present Facets"
+      ],
+      "sources": [
+        {
+          "type": "repo-path",
+          "ref": "rfcs/rfc-013-required-root-container.md"
+        },
+        {
+          "type": "repo-path",
+          "ref": "srs/records/notes/design-capture-directory-kind-scopes.json"
+        },
+        {
+          "type": "issue",
+          "ref": "srs#267"
+        },
+        {
+          "type": "issue",
+          "ref": "srs#556"
+        }
+      ],
+      "notIncluded": [
+        "A navigation taxonomy",
+        "A second ordering primitive alongside precedes",
+        "Container-to-container Relations, which core Invariant 20 forbids"
+      ]
+    },
+    {
       "id": "projection-boundary",
       "instanceId": "a399a748-1b43-57ff-9b89-e788a1102c48",
       "kind": "strategy-contract",
@@ -2277,6 +2312,26 @@
       "type": "contains",
       "from": "definitions-and-structure",
       "to": "layered-defaults"
+    },
+    {
+      "type": "contains",
+      "from": "definitions-and-structure",
+      "to": "deep-structure"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "D1",
+      "to": "deep-structure"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "D3",
+      "to": "deep-structure"
+    },
+    {
+      "type": "com.semanticops.strategy/requires-contract",
+      "from": "D5",
+      "to": "deep-structure"
     },
     {
       "type": "com.semanticops.strategy/requires-contract",
