@@ -1,0 +1,19 @@
+{
+  "id": "c650c570-c08d-4be6-9903-883e77e0fe2c",
+  "namespace": "com.semanticops.programme",
+  "name": "evidence",
+  "version": 1,
+  "description": "The concrete observations a finding rests on.",
+  "aiGuidance": {
+    "purpose": "The observable facts that make a finding checkable by someone who does not trust it yet — counts, file paths, command output, quoted lines. Separating evidence from the finding's prose is what lets a later reader re-run the observation and see whether it still holds.",
+    "extraction": "One self-contained observation per entry, each specific enough to be verified: a path with a line reference, a command and the number it printed, a quoted sentence with its source. Prefer numbers over adjectives — \"41 allowlisted gaps in check-prose-schema.mjs\" rather than \"many gaps\".",
+    "negativeGuidance": "Not a place for interpretation or recommendation — if an entry argues rather than observes, it belongs in body or rationale."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "cardinality": "list",
+    "format": "plain"
+  },
+  "editorHint": "textarea",
+  "createdAt": "2026-09-05T21:49:04.442771862+00:00"
+}

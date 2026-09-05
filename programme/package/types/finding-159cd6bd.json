@@ -1,0 +1,40 @@
+{
+  "id": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "namespace": "com.semanticops.programme",
+  "name": "finding",
+  "version": 1,
+  "description": "Something the programme learned, stated as a claim with the observations it rests on.",
+  "fields": [
+    {
+      "fieldId": "c42d4a91-dbd9-480a-b612-e31b5a77d9bf",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Title"
+    },
+    {
+      "fieldId": "7f4e152c-be50-4710-acb1-392fd1c20f08",
+      "order": 1,
+      "required": true,
+      "displayLabel": "Summary"
+    },
+    {
+      "fieldId": "c650c570-c08d-4be6-9903-883e77e0fe2c",
+      "order": 2,
+      "required": false,
+      "displayLabel": "Evidence"
+    },
+    {
+      "fieldId": "c510b202-57f6-4be7-9537-44819c7c3aa2",
+      "order": 3,
+      "required": false,
+      "displayLabel": "Body"
+    }
+  ],
+  "identityFieldId": "c42d4a91-dbd9-480a-b612-e31b5a77d9bf",
+  "aiGuidance": {
+    "purpose": "Holds what the programme discovered separately from what it plans to do about it. A finding is checkable: the claim is in summary, the observations that support it are in evidence, so a later reader can re-run them and see whether it still holds.",
+    "extraction": "Create a finding wherever the source asserts that something is the case — a gap, a count, a behaviour, a contradiction. Put the concrete observations in evidence, one per entry, and keep the claim itself in summary."
+  },
+  "createdAt": "2026-09-05T21:50:23.128868397+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json"
+}

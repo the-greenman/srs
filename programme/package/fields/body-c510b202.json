@@ -1,0 +1,19 @@
+{
+  "id": "c510b202-57f6-4be7-9537-44819c7c3aa2",
+  "namespace": "com.semanticops.programme",
+  "name": "body",
+  "version": 1,
+  "description": "The full prose content of this record, in Markdown.",
+  "aiGuidance": {
+    "purpose": "Everything the reader needs that does not fit in summary: the argument, the detail, the worked examples. Markdown so that lists, tables and code blocks survive rendering.",
+    "extraction": "Carry over the source prose largely intact rather than paraphrasing it away — this field is where the original reasoning is preserved. Use Markdown headings only from level 2 down; the record's own title supplies level 1. Move any decision or justification into rationale instead of burying it here.",
+    "negativeGuidance": "Do not use body as an overflow for structured data that a field already models — wave, door, decision_mode, issue_ref and evidence each have their own field, and duplicating them in prose defeats querying."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "cardinality": "single",
+    "format": "markdown"
+  },
+  "editorHint": "rich-text",
+  "createdAt": "2026-09-05T21:48:27.886362942+00:00"
+}

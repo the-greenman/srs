@@ -1,0 +1,17 @@
+{
+  "container": {
+    "containerId": "fb8429db-ee67-4439-9656-0f36f17ab98b",
+    "title": "SRS spec-rework programme",
+    "identityInstanceId": "7a7d8945-df7e-412e-98e0-6462b5394904",
+    "memberInstanceIds": [
+      "7a7d8945-df7e-412e-98e0-6462b5394904"
+    ]
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/manifest.json",
+  "createdAt": "2026-09-05T21:46:21.025288400+00:00",
+  "dataModelRevision": 7,
+  "namespace": "com.semanticops.programme",
+  "repositoryId": "fb8429db-ee67-4439-9656-0f36f17ab98b",
+  "srsVersion": "2.0-draft",
+  "title": "SRS spec-rework programme"
+}
