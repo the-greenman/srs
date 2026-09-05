@@ -280,8 +280,8 @@
       "args": ["--check"],
       "tier": "always",
       "cell": "identity",
-      "governing": "srs#379",
-      "description": "The vendored packages/com.mudemocracy.governance/* Protocol definitions stay on the ruled, unprefixed shape (never regress to the retired protocol-prefixed one)."
+      "governing": "srs#379; srs#552",
+      "description": "The vendored packages/com.mudemocracy.governance/* Protocol definitions, plus (as of srs#552) the gallery example's docs/spec/examples/gallery-project-v2/package/protocols/decision-7a088176.json, stay on the ruled, unprefixed shape (never regress to the retired protocol-prefixed one)."
     },
     {
       "id": "rfc-534-closure",

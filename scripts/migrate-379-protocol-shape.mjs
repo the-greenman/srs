@@ -8,15 +8,26 @@
  * plain-string `aiGuidance` into the closed, structured `{ purpose }` object (structured over
  * serialised). ProtocolStage's own property names are unchanged.
  *
- * Scope, deliberately narrow: this repo's OWN vendored `packages/com.mudemocracy.governance/*`
- * copies, validated only by this repo's Node/AJV pipeline (validate-package.mjs). It does NOT
- * touch `docs/spec/examples/gallery-project-v2/package/protocols/*.json` — that corpus is
+ * Scope: this repo's OWN vendored `packages/com.mudemocracy.governance/*` copies (validated only
+ * by this repo's Node/AJV pipeline, validate-package.mjs) PLUS, as of srs#552, the gallery
+ * example's vendored `docs/spec/examples/gallery-project-v2/package/protocols/*.json`.
+ *
+ * The gallery file was deliberately left out by the original srs#379 pass (PR #545): it is
  * structurally validated by the PINNED Rust binary (check-gallery-conformance.mjs), whose typed
- * `Protocol` struct still requires the old prefixed shape; migrating it is gated on the srs-rust
- * follow-up (struct rename + a supporting release) landing first, per the standard revision-bump
- * choreography (rfc-decision-628cf6c4). Not a registered `srs repo apply-migration` (that mechanism
- * lives in srs-rust and operates on data model revisions; this is spec-repo-side corpus content
- * with no dataModelRevision of its own to bump — additive/renamed package content, same class as
+ * `Protocol` struct required the old prefixed shape at the time. That gate was the srs-rust
+ * follow-up the-greenman/srs-rust#930/PR#942 — merged — which flips the struct to read only the
+ * unprefixed shape, so migrating the gallery file no longer conflicts with the reference
+ * implementation... at the NEXT srs-rust release. Until the pin in
+ * `.github/workflows/release-drift.yml` (SRS_RUST_CLI_TAG) advances past that release
+ * (srs#552's other half), the PINNED binary still expects the old shape and
+ * `check-gallery-conformance.mjs` / `srs repo copy` will not round-trip this file — that is a
+ * known, temporary, and expected red, not a bug in this script. Validate the migrated shape
+ * against the current `docs/schema/2.0/protocol.json` with the Node/AJV pipeline instead (see
+ * srs#552).
+ *
+ * Not a registered `srs repo apply-migration` (that mechanism lives in srs-rust and operates on
+ * data model revisions; this is spec-repo-side corpus content with no dataModelRevision of its
+ * own to bump — additive/renamed package content, same class as
  * scripts/migrate-rfc-032-field-type.mjs).
  *
  * Usage:
@@ -36,6 +47,7 @@ const TARGETS = [
   'packages/com.mudemocracy.governance/1.1.0/package/protocols/decision-7a088176.json',
   'packages/com.mudemocracy.governance/1.2.0/package/protocols/decision-7a088176.json',
   'packages/com.mudemocracy.governance/1.2.1/package/protocols/decision-7a088176.json',
+  'docs/spec/examples/gallery-project-v2/package/protocols/decision-7a088176.json',
 ];
 
 const RENAME = {
