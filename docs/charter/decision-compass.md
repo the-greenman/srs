@@ -6,7 +6,7 @@ enforces bidirectional presence: every id below must resolve to srs/records/tier
 <id>.json, and every id below must appear (as `rfc-decision-<id>`) somewhere in this file's body.
 Adding a charter-class ruling: add its id here AND write the section that cites it, in the same
 change — the guard fails on either half done alone.
-cce3c00e 9ee14517 7caca3a1 8f5aca2c b9d7096e 4431046e
+cce3c00e 9ee14517 7caca3a1 8f5aca2c b9d7096e 0750c62f 4431046e
 c8704763 2a1e1590 53635966 628cf6c4 16b20c56 5f8204bc 8948e43f
 -->
 
@@ -218,6 +218,23 @@ Succession is reserved for changes of position so that a `supersedes` edge alway
 happened. Corrections stay visible because the Air column principle requires informational
 conflicts to resolve by declared authority *visibly* — a silent in-place fix satisfies the
 authority half and fails the visibility half.
+
+## What a Container is
+
+`rfc-decision-0750c62f` — a Container is a **named, declared selection of instances** on the
+EXPRESSION plane, selection layer (kind: **rule**). It carries no meaning of its own; its identity
+record is the semantic carrier, which is why it has no Fields. Meaning between instances lives in
+Relations, and `contains` is the part-of tree.
+
+Consequences, each following from the plane rather than argued alone: membership is declared, and
+the `contains` traversal is no longer a membership rule (RFC-034 Change C, adopted); nesting is
+declared (`childContainerIds`); navigation below the root and depth in a rendered document both
+follow the part-of tree, not the container tree; `DiscoveryQuery` is the computed selection that
+consumes the declared one. **No new construct.**
+
+Grouping exists at every plane and each has its own construct — Type groups Fields, Package groups
+definitions, `contains` groups instances semantically, Container groups them operationally,
+Composition groups selections. Layer rule 1 applied to the construct that most needed it.
 
 ## Grid operations
 

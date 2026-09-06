@@ -1373,3 +1373,59 @@ That position is superseded by this record. The change was made on 2026-08-22 (c
 **Review Trigger**: Review when the federation redesign is scheduled, at which point this record's position becomes an input to that design rather than a standing commitment.
 
 
+**Title**: A Container is a declared selection: it lives on the expression plane
+
+**Status**: Accepted
+
+**Decision Date**: 2026-09-06
+
+**Decision Rationale**: Grouping exists at every plane and each plane has its own construct: Type groups Fields, Package groups definitions, contains groups instances semantically, Container groups instances operationally, Composition groups selections. Five constructs, five jobs, no overlap - provided each stays on its plane.
+
+Container never chose one. Ten accepted RFCs each gave it a job: RFC-013 an identity carrier and navigation root, RFC-009 a typing anchor, RFC-008 a section source, RFC-026 a slice boundary. Invariant I-66 then derived membership by traversing contains, and at that moment the scope claim and the semantic claim became the same thing. Design-note 013 had drawn the line exactly - 'these Records collectively form a unit for boundary purposes' is a scope claim; 'Stage A contains Task B' is a semantic claim - but it had said both strategies were valid, and nothing ever made the line binding. Every open container question of 2026 is a symptom: membership (srs#572), navigation depth (srs#573), rendered depth (srs#574), and RFC-034 itself (srs#267), unaccepted since July.
+
+The measurement that made this safe to decide: across all four corpora, 3 of 27 containers have members reachable only by traversal, all three spec-repo section containers already scheduled for rewrite, and no repository outside the spec has ever used the traversal. The concept-tree experiment (srs#608) then showed that layering is derivable from the depends-on graph, so nothing needs the container to carry meaning for the layering claim to hold.
+
+This is layer rule 1 - one home - applied to the construct that most needed it.
+
+**Decision**: A Container is a named, declared selection of instances. It lives on the EXPRESSION plane, at the selection layer. It carries no meaning of its own: its identity record is the semantic carrier, which is why a Container has no Fields (design-note 013).
+
+MEANING between instances lives in Relations. The contains relation is the part-of tree - 'A is semantically inside B' - and it is the tree that the concept graph, navigation depth, layering and the tree walk are built on. A Container never asserts a semantic claim; that is a Relation's job.
+
+Consequences, each following from the plane assignment rather than argued separately:
+
+1. MEMBERSHIP IS DECLARED. A selection is a declaration. Container.memberInstanceIds and rootInstanceIds are the membership; the contains traversal is no longer a membership rule. Invariant I-66's traversal branch is superseded. This is RFC-034 Change C, adopted.
+
+2. NESTING IS DECLARED. A sub-selection is a declaration. RFC-034's childContainerIds is the mechanism.
+
+3. NAVIGATION BELOW THE ROOT FOLLOWS THE PART-OF TREE. Containers mark where a scope begins; contains says what is inside it. There is one tree, with named scopes over it, not two trees.
+
+4. DEPTH IN A RENDERED DOCUMENT RIDES THE PART-OF TREE. A renderer that needs depth walks contains as meaning; it does not ask the container. Removing the traversal AS MEMBERSHIP does not remove the relation.
+
+5. DISCOVERYQUERY IS THE COMPUTED SELECTION. Container is the declared selection; DiscoveryQuery is the computed one and consumes Container as an axis. Two selection constructs for two goals - 'these specific things' and 'whatever matches' - and no third.
+
+What is NOT introduced: no new construct. A persisted Selection record, an authored Layer construct and a navigation construct were each considered and each is already served - by Container, by the depends-on condensation, and by a rule over the root container plus the part-of tree respectively.
+
+**Scope**: The Container construct and every consumer of it: membership resolution, navigation derivation, section sourcing, slice bounding, Composition matching, and the tree walk. Does not change the Container schema's properties; changes what they mean. Does not touch the contains relation's definition; confirms its role as the part-of tree.
+
+**Governing Values**:
+- shared-coherence
+- semantic-integrity
+
+**Project Phase**: formation
+
+**Alternatives Considered**: (1) Container on the MEANING plane: membership is a semantic claim derived from contains. Keeps I-66 as written. Rejected: the scope claim and the semantic claim collapse into one, design-note 013's distinction is retired, and a Container becomes a meaning-bearer with no Fields - a strange object. RFC-034 would be withdrawn. (2) Two constructs: a semantic grouping in MEANING and a scope in EXPRESSION, each with a schema. Rejected: a new construct plus a migration of every existing container, creating two homes for grouping-of-instances against the one-way-per-goal preference. (3) Defer for more evidence. Rejected on timing: the formation phase is where a breaking change is cheap, and the question had already been deferred three times with nothing scheduled to answer it.
+
+**Accepted Costs**: Invariant I-66's traversal branch retires and its three dependent containers gain explicit member lists - work already scheduled under the reading-order rewrite. Every existing container is re-read as a selection rather than a semantic grouping, which changes nothing on disk and everything in interpretation; consumers that treated membership as meaning must be found and corrected. The one genuinely irreversible risk is that, once relations no longer define membership, contains edges stop being maintained and the part-of tree decays - a tree nobody wrote down cannot be reconstructed. The mitigation is this record: contains is where meaning lives, and a Container is a bookmark over it.
+
+**Evidence**:
+- srs#605 (the review)
+- design-note 013 (the scope-claim / semantic-claim distinction, never made binding)
+- srs#572, #573, #574, #267 (the four open container questions this resolves)
+- srs#572 comment: 3 of 27 containers depend on traversal, all three in the spec repo
+- srs#608 (concept tree experiment: layering derives from depends-on, not from containers)
+- rfc-decision-9ee14517 (layer rule 1: one home)
+- design-capture-directory-kind-scopes (the 'different trees' observation)
+
+**Review Trigger**: Review if a real consumer emerges that needs container membership to be a semantic claim rather than a scope - that would be evidence the plane assignment is wrong, not a reason to bend it. Review also at the Continuity flip (axis 2-8), when the cost of any remaining migration rises.
+
+
