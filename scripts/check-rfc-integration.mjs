@@ -43,6 +43,17 @@
  * Plus a repo guard: every discovered instance parses and is reachable under a reserved
  * instance root (RFC-038 [R1]/[R3] — the manifest no longer carries an instanceIndex).
  *
+ * And (srs#519) a second cross-reference, independent of the manifest-token mechanism above:
+ * any canonical record's prose may hold a heading annotated with an "(RFC-NNN)" banner (e.g.
+ * "##### Conformance Rules (RFC-041)"). Every conformance-rule identifier *declared* under that
+ * heading — a bold token at the start of a line, `**[R7]**` or an RFC-specific prefixed form
+ * like `**[CR-036-1]**` — MUST also appear in that RFC's own `rfcs/rfc-NNN-*.md`. This is the
+ * guard for the exact drift PR #517 produced: canonical records claimed RFC-041 defined [R7];
+ * the RFC's own .md didn't, until Revision 3 amended it. Declaration (bold, line-initial) is
+ * distinguished from mere citation (`... (RFC-038 [R2])` inline in prose) — only declarations are
+ * checked, since a citation of another RFC's existing rule is not a claim about what the banner's
+ * own RFC defines. See extractRfcBannerRuleTokens().
+ *
  * Grandfathered RFCs (rfcs/integration-allowlist.json) skip only check #4; #1–#3 stay live.
  *
  * Modeled on scripts/check-release-drift.mjs: collect failures, print each, exit 1 on any.
@@ -137,6 +148,50 @@ function normInvariantNumber(value) {
   return /^\d+$/.test(s) ? String(parseInt(s, 10)) : s.toLowerCase();
 }
 
+// srs#519: a heading line carrying an "(RFC-NNN)" (or "(RFC-NNN Revision M)") banner, at any
+// heading depth. Capture group 2 is the bare RFC number, unpadded.
+const RFC_BANNER_HEADING_RE = /^(#{1,6})\s+.*\(RFC-(\d+)[^)]*\)\s*$/;
+// A conformance-rule token *declared* (not merely cited) at the start of a line: `**[R7]**`,
+// `**[CR-036-1]**`, `**[FR-037-12]**`. Requires the bold-then-bracket idiom every declaration in
+// the corpus uses; an inline citation like "(RFC-038 [R2])" never starts a line this way.
+const RULE_DECLARATION_RE = /^\*\*\[((?:R\d+)|(?:[A-Z]{1,6}(?:-\d+){1,3}))\]\*\*/;
+
+/**
+ * Scan one record field's markdown text for "(RFC-NNN)" banner headings and, within each
+ * heading's own section (up to the next heading of equal-or-shallower depth), the conformance-
+ * rule tokens declared there. Returns a Map<rfcNumber, Set<token>>; empty when the text has no
+ * banner heading. Exported for reuse/testing.
+ */
+export function extractRfcBannerRuleTokens(text) {
+  const out = new Map();
+  if (typeof text !== "string" || !text.includes("(RFC-")) return out;
+  const lines = text.split(/\r?\n/);
+  for (let i = 0; i < lines.length; i++) {
+    const heading = RFC_BANNER_HEADING_RE.exec(lines[i]);
+    if (!heading) continue;
+    const level = heading[1].length;
+    const rfcNumber = String(parseInt(heading[2], 10));
+    const tokens = out.get(rfcNumber) ?? new Set();
+    for (let j = i + 1; j < lines.length; j++) {
+      const nextHeading = /^(#{1,6})\s+/.exec(lines[j]);
+      if (nextHeading && nextHeading[1].length <= level) break;
+      const decl = RULE_DECLARATION_RE.exec(lines[j]);
+      if (decl) tokens.add(decl[1]);
+    }
+    if (tokens.size > 0) out.set(rfcNumber, tokens);
+  }
+  return out;
+}
+
+let rfcMdFilesCache = null;
+async function findRfcMdFile(rfcNumber) {
+  if (!rfcMdFilesCache) {
+    rfcMdFilesCache = (await readdir(join(ROOT, "rfcs"))).filter((f) => f.endsWith(".md"));
+  }
+  const re = new RegExp(`^rfc-0*${rfcNumber}(?:-.*)?\\.md$`);
+  return rfcMdFilesCache.find((f) => re.test(f)) ?? null;
+}
+
 /**
  * Extract the srs-integration token list from an affected-components field value.
  * Tokens live inside `<!-- srs-integration:v1 ... -->`, one per line; `;`-separated on a line
@@ -163,6 +218,7 @@ async function buildResolvers() {
   const subsectionSlugs = new Set();
   const indexedPaths = new Set();
   const rfcRecords = []; // { path, record } for every RFC-typed record, wherever it lives
+  const allRecords = []; // { path, record } for every instance, any type (srs#519 banner scan)
 
   for (const relPath of entries) {
     indexedPaths.add(relPath);
@@ -172,6 +228,7 @@ async function buildResolvers() {
     } catch {
       continue; // structural load failures are validate-records.mjs's job
     }
+    allRecords.push({ path: relPath, record });
     if (record.typeId === RFC_TYPE_ID) rfcRecords.push({ path: relPath, record });
     switch (record.typeId) {
       case INVARIANT_TYPE: {
@@ -236,7 +293,7 @@ async function buildResolvers() {
   const cellSlugs = await loadCellSlugs();
   const decisionModes = await loadDecisionModes();
 
-  return { invariantNumbers, extensionIds, typeKeys, sectionSlugs, subsectionSlugs, schemaFiles, indexedPaths, rfcRecords, cellSlugs, decisionModes };
+  return { invariantNumbers, extensionIds, typeKeys, sectionSlugs, subsectionSlugs, schemaFiles, indexedPaths, rfcRecords, allRecords, cellSlugs, decisionModes };
 }
 
 // Recursively find every package.json under a directory.
@@ -459,6 +516,40 @@ async function main() {
             fail(
               `${label}: Charter alignment section names decision mode "${mode}", not one of ` +
                 `${[...resolvers.decisionModes].join(", ")} (rfc-decision-7caca3a1).`,
+            );
+          }
+        }
+      }
+    }
+  }
+
+  // 7. (srs#519) conformance-rule identifiers declared under an "(RFC-NNN)" banner in ANY
+  // canonical record's prose (not just RFC stub records themselves) must exist in that RFC's own
+  // rfcs/rfc-NNN-*.md. Independent of the manifest-token / status checks above — this catches the
+  // record and the RFC document disagreeing about what the RFC defines, which #4's manifest-token
+  // resolution never reads the RFC .md at all to notice.
+  for (const { path: recPath, record } of resolvers.allRecords) {
+    for (const value of Object.values(record.fieldValues ?? {})) {
+      if (typeof value !== "string") continue;
+      const byRfc = extractRfcBannerRuleTokens(value);
+      for (const [rfcNumber, tokens] of byRfc) {
+        const mdFile = await findRfcMdFile(rfcNumber);
+        if (!mdFile) {
+          for (const token of tokens) {
+            fail(
+              `${recPath}: declares conformance rule [${token}] under an "(RFC-${rfcNumber})" ` +
+                `banner, but no rfcs/rfc-${rfcNumber}-*.md exists`,
+            );
+          }
+          continue;
+        }
+        const mdText = await readFile(join(ROOT, "rfcs", mdFile), "utf8");
+        for (const token of tokens) {
+          if (!mdText.includes(`[${token}]`)) {
+            fail(
+              `${recPath}: declares conformance rule [${token}] under an "(RFC-${rfcNumber})" ` +
+                `banner, but rfcs/${mdFile} does not contain [${token}] — the record and the RFC ` +
+                `document disagree about what RFC-${rfcNumber} defines`,
             );
           }
         }
