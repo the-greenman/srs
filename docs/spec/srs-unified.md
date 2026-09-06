@@ -876,7 +876,15 @@ See the generated reference below for `Container`'s current property table, opti
 
 `Container.containerId` is not an instance ID and must not appear in `Relation.sourceInstanceId` or `targetInstanceId`. See Invariant 20.
 
----
+##### Membership and nesting (RFC-034)
+
+A Container is a declared selection on the expression plane (rfc-decision-0750c62f). Its direct membership is the unordered set `direct(C) = rootInstanceIds ∪ memberInstanceIds`: roots anchor the scope, `memberInstanceIds` adds explicit members, and an omitted `memberInstanceIds` adds nothing (I-146).
+
+Nested scopes are declared through `childContainerIds`, an unordered set of `containerId`s and the one place a Container references another Container; nesting is never inferred from membership overlap. Effective membership is the closure `effective(C) = direct(C) ∪ ⋃ effective(child)` over the declared children (I-147). Every child id resolves to an existing, distinct Container, the child graph is acyclic, a child can be rootless, and a rooted child's roots normally sit in the parent's direct membership (I-150). A Container can have more than one parent; only the tree-shaped subset maps onto a folder hierarchy.
+
+Relations do not define membership (I-148). `contains` remains the part-of tree that navigation depth, layering and any tree walk are built on, and it is still maintained; a Container is a bookmark over that tree. This supersedes the pre-RFC-034 rule that omitted membership was derived by traversing `contains` from the roots.
+
+One definition serves every membership question: `containers_for_instance` (I-66), member listing and view resolution, RFC-012 `containerId` discovery (I-118), RFC-011 `containerScope` with `"explicit"` as `direct(C)` and `"subtree"` as `effective(C)` (I-144), and the RFC-026 slice closure (I-151). No membership array carries an order; ordering stays with `precedes` and Composition (RFC-015). A query is a separate, read-only selection and never changes membership by itself (I-149).
 
 
 #### Generated reference: `Container`
@@ -2329,16 +2337,18 @@ type SectionSource =
       // The selection predicate. typeNamespace + typeName together replace the retired
       // typeKey (namespace/name) axis; lifecycleState/lifecycleStates/excludeLifecycleStates
       // replace the SectionSource-local copies of the same axes (formerly RFC-011 Changes
-      // A/B, now governed by RFC-012 Rev 12 — I-142/I-143). See the ext:discovery extension's
+      // A/B, now governed by RFC-012 Rev 12: I-142/I-143). See the ext:discovery extension's
       // `DiscoveryQuery` shape for the full predicate set.
       containerIds?: UUID[]
       containerScope?: "explicit" | "repository" | "subtree"
-      // RFC-011 [N+27] / I-144 — arrangement, not selection: which containers bound the
+      // RFC-011 [N+27] / I-144, arrangement, not selection: which containers bound the
       // candidate set, layered on top of query rather than folded into it (DiscoveryQuery's
-      // own containerId predicate is single-valued and non-traversing; it cannot express
-      // this). Default: "explicit" (scope to containerIds[]). "repository": all containers;
-      // containerIds[] ignored. "subtree": context container and its contains-reachable
-      // descendants. Absent is equivalent to "explicit".
+      // own containerId predicate is single-valued and takes one container's effective
+      // membership; it cannot express this). One scoping vocabulary (RFC-034 [R8]).
+      // Default: "explicit" (direct(C) of each listed container: its own members, no
+      // nested subtree). "repository": all containers; containerIds[] ignored. "subtree":
+      // effective(C) — the closure over declared childContainerIds; follows child edges
+      // only, never contains Relations. Absent is equivalent to "explicit".
     }
   | {
       type: "container-subset"
@@ -2872,7 +2882,7 @@ composition {
 | `typeId` | string | no | format: uuid | core | Stable UUID of the referenced Type. |
 | `typeNamespace` | string | no | — | core | Denormalized hint: the namespace of the bound Type. If it conflicts with the resolved Type, typeId wins. |
 | `typeName` | string | no | — | core | Denormalized hint: the name of the bound Type. If it conflicts with the resolved Type, typeId wins. |
-| `containerId` | string | no | format: uuid | core | ext:discovery DiscoveryQuery.containerId — instance is a member of this container (RFC-009 I-66). |
+| `containerId` | string | no | format: uuid | core | ext:discovery DiscoveryQuery.containerId — instance is in this container's effective membership, the closure over declared roots, members and childContainerIds; a contains Relation never contributes (RFC-034 [R8], I-118). |
 | `tag` | string[] | no | — | core | AND-conjunction: the instance's tags array must contain ALL of the specified values (ext:discovery DiscoveryQuery.tag). |
 | `tier` | integer | no | enum: "0" \| "2" | core | ext:discovery DiscoveryQuery.tier — instance tier filter. 0 = Note, 2 = Record. Tier 1 (TypedRecord) was removed (rfc-decision-53635966); the gap in numbering is retained deliberately for reference stability. |
 | `lifecycleState` | string | no | — | core | ext:lifecycle — current lifecycle state of this Record. |
@@ -2889,7 +2899,7 @@ discovery-query {
   typeId?: string // Stable UUID of the referenced Type.
   typeNamespace?: string // Denormalized hint: the namespace of the bound Type. If it conflicts with the resolved Type, typeId wins.
   typeName?: string // Denormalized hint: the name of the bound Type. If it conflicts with the resolved Type, typeId wins.
-  containerId?: string // ext:discovery DiscoveryQuery.containerId — instance is a member of this container (RFC-009 I-66).
+  containerId?: string // ext:discovery DiscoveryQuery.containerId — instance is in this container's effective membership, the closure over declared roots, members and childContainerIds; a contains Relation never contributes (RFC-034 [R8], I-118).
   tag?: string[] // AND-conjunction: the instance's tags array must contain ALL of the specified values (ext:discovery DiscoveryQuery.tag).
   tier?: integer // ext:discovery DiscoveryQuery.tier — instance tier filter. 0 = Note, 2 = Record. Tier 1 (TypedRecord) was removed (rfc-decision-53635966); the gap in numbering is retained deliberately for reference stability.
   lifecycleState?: string // ext:lifecycle — current lifecycle state of this Record.
@@ -4173,7 +4183,7 @@ The slice archive's `manifest.repositoryId` MUST be a **new UUID** distinct from
 
 #### Container-membership closure
 
-The closure root is the container identified by `spec.id`. The slice MUST include: (1) `manifest.container` set to the closure-root container; (2) all instances in the root container's `memberInstanceIds`/`rootInstanceIds`, recursively through sub-containers; (3) all type and field definitions referenced by included instances (directly or via Type FieldAssignments), copied into the slice's `package/` directory; (4) all relations with both endpoints inside the included set; (5) all `sourceDocumentIndex` entries and content files referenced by included instances; (6) any sub-container whose `memberInstanceIds` and `rootInstanceIds` are all within the included set.
+The closure root is the container identified by `spec.id`. The slice includes (I-151, RFC-034 [R9]): (1) `manifest.container` set to the closure-root container; (2) the root container's effective membership, meaning its `rootInstanceIds` and `memberInstanceIds` recursively through the containers declared in `childContainerIds`; (3) all type and field definitions referenced by included instances (directly or via Type FieldAssignments), copied into the slice's `package/` directory; (4) all relations with both endpoints inside the included set; (5) all `sourceDocumentIndex` entries and content files referenced by included instances; (6) the closure-root container and every container reachable from it through `childContainerIds`, with those declared child edges preserved. An unrelated container is not included on the strength of its roots or members happening to be subsets of the included set; that pre-RFC-034 subset rule is replaced.
 
 #### Dangling-edge policy
 
@@ -4495,7 +4505,7 @@ Conforming implementations must uphold the following invariants.
 
 **I-127.** When both `typeFilter` and `memberOrder` are present on a `container-subset` section, `typeFilter` is applied first to obtain the filtered member set; `memberOrder` is then applied over that filtered set. `memberOrder` entries naming members excluded by `typeFilter` are silently skipped (no diagnostic). Unlisted filtered survivors are appended in the same topological-sort-by-`precedes` order used in Invariant I-126 step (3). The `direction` reversal of Invariant I-126 step (4) applies to the combined result after `typeFilter` and `memberOrder` are both applied. (RFC-015 Change B.)
 
-**I-144.** When SectionSource.discovery-query carries containerScope, implementations MUST apply the following scoping rules: (a) When containerScope is absent or "explicit", the query is scoped to the containers listed in containerIds[] -- existing behaviour. An absent containerIds[] with explicit scope produces an empty result. (b) When containerScope is "repository", the query spans all containers in the repository; containerIds[] MUST be ignored. (c) When containerScope is "subtree", the query spans the context container and all containers reachable by contains relations from each container in containerIds[]; when containerIds[] is absent or empty, the context container is used as the subtree root. An implementation that cannot determine the context container for a subtree query MUST treat it as "explicit" with an empty containerIds[] and SHOULD emit a diagnostic. Implementations MUST NOT produce a validation error when containerScope is absent; absent is equivalent to "explicit". containerScope is arrangement, not selection: it is layered on top of the section's DiscoveryQuery, not a DiscoveryQuery predicate itself (DiscoveryQuery.containerId is single-valued and non-traversing; containerScope's multi-container/subtree semantics have no DiscoveryQuery equivalent).
+**I-144.** When SectionSource.discovery-query carries containerScope, implementations MUST apply the following scoping rules: (a) When containerScope is absent or "explicit", the query is scoped to the containers listed in containerIds[] -- existing behaviour. An absent containerIds[] with explicit scope produces an empty result. (b) When containerScope is "repository", the query spans all containers in the repository; containerIds[] MUST be ignored. (c) When containerScope is "subtree", the query spans effective(C) for each container in containerIds[], the recursive closure over declared childContainerIds (RFC-034 [R8]; I-147); it follows declared child edges only and MUST NOT traverse contains Relations to discover child containers (amended by RFC-034, 2026-09-06: the former "reachable by contains relations" branch is superseded). "explicit" correspondingly evaluates direct(C), the container's own members without its nested subtree; when containerIds[] is absent or empty, the context container is used as the subtree root. An implementation that cannot determine the context container for a subtree query MUST treat it as "explicit" with an empty containerIds[] and SHOULD emit a diagnostic. Implementations MUST NOT produce a validation error when containerScope is absent; absent is equivalent to "explicit". containerScope is arrangement, not selection: it is layered on top of the section's DiscoveryQuery, not a DiscoveryQuery predicate itself (DiscoveryQuery.containerId is single-valued and takes one container's effective membership; containerScope's multi-container/subtree semantics have no DiscoveryQuery equivalent).
 
 #### Container (core)
 
@@ -4503,7 +4513,19 @@ Conforming implementations must uphold the following invariants.
 
 **I-65.** When a Vocabulary in the repository package declares Term entries for a given tag key, Container tags bearing that key MUST resolve against those Terms per RFC-006 vocabulary resolution rules. Free-string tags are valid when no Vocabulary entry governs the key.
 
-**I-66.** All conforming SRS implementations MUST implement the containers_for_instance operation. Given an instanceId, it returns every Container whose rootInstanceIds, memberInstanceIds, or transitive contains-Relation traversal from rootInstanceIds includes the instance. The result set MUST be consistent with the current state of those fields and relations.
+**I-66.** All conforming SRS implementations MUST implement the containers_for_instance operation. Given an instanceId, it returns every Container C for which the instance is in effective(C): the recursive, duplicate-free closure over C's declared rootInstanceIds, memberInstanceIds and childContainerIds (RFC-034 Changes A and B, [R5]; I-146, I-147). Membership is declared: a contains Relation, or any other Relation, never contributes a member (I-148). The result set MUST be consistent with the current state of those Container fields. Amended by RFC-034 (2026-09-06, rfc-decision-0750c62f): the original statement's third branch, "or transitive contains-Relation traversal from rootInstanceIds", is superseded; the traversal is no longer a membership rule, and contains remains the part-of tree where meaning lives.
+
+**I-146.** A Container's direct membership is exactly the duplicate-free, unordered union of its rootInstanceIds and memberInstanceIds. An omitted memberInstanceIds contributes no additional direct members and MUST NOT be read as opting into Relation traversal.
+
+**I-147.** A Container is an admitted child of another Container exactly when it is distinct and its containerId appears in the other Container's childContainerIds; membership-array overlap alone MUST NOT create admission. A conforming implementation MUST compute effective membership as the recursive closure over childContainerIds (effective(C) = direct(C) united with effective(child) for every declared child), MUST deduplicate instance ids, and MUST NOT infer an ordering from either membership array or from childContainerIds order.
+
+**I-148.** A Relation of any type, including contains, MUST NOT cause an instance to appear in a Container's direct or effective membership.
+
+**I-149.** A Record-selection query (srs find, a Composition SectionSource, an SQL view, a JSONPath expression, a graph traversal) MUST NOT be treated as persisted Container membership unless an authoring operation writes its selected ids to the Container's explicit membership fields.
+
+**I-150.** Every childContainerIds entry MUST reference an existing, distinct Container, and the childContainerIds graph MUST be acyclic. A missing target, self-reference, or cycle is a validation error. For any Container whose reachable child graph contains such an error, effective-membership evaluation MUST fail with a diagnostic and MUST NOT return a partial result. A rootless child is valid. When a child has roots, those roots SHOULD occur in the parent's direct membership; a violation produces a structural-coherence diagnostic but MUST NOT remove the declared edge from effective-membership evaluation.
+
+**I-151.** An RFC-026 container slice MUST include the closure root, its transitive childContainerIds descendants, and the root's effective member set. It MUST preserve declared edges among those Containers and MUST NOT include an unrelated Container solely because its roots or members are subsets of the included instance set.
 
 #### ext:blueprint (Blueprint)
 
@@ -4599,7 +4621,7 @@ Conforming implementations must uphold the following invariants.
 
 **I-117.** When both structured filters and `contentMatch` are specified on a DiscoveryQuery, an instance MUST satisfy all structured filter predicates (exact-match, I-113) AND the content-match recall-floor predicate (I-114). The structured-filter constraints cannot be overridden or widened by content-match extra recall. (RFC-012 R5.)
 
-**I-118.** A `containerId` filter predicate MUST use the three-condition membership definition of RFC-009 I-66: (1) `instanceId` in `Container.rootInstanceIds[]`, OR (2) `instanceId` in `Container.memberInstanceIds[]`, OR (3) reachable via transitive `contains` Relation traversal from any `rootInstanceIds[]` entry. The authoritative source for membership is the instance file and the relations file — the repository's authoritative store (RFC-038 [R1]). An implementation MAY maintain a derived catalog for performance but MUST treat the store as authoritative when they differ; there is no manifest `instanceIndex` to use as a cache, as it is retired (RFC-038 [R2]). (RFC-012 R6.)
+**I-118.** A `containerId` filter predicate MUST match exactly the instances in effective(C) for the named Container C: the recursive closure over the Container's declared `rootInstanceIds`, `memberInstanceIds` and `childContainerIds` (RFC-034 [R8]; I-147). Discovery scopes to the full effective (deep) closure; a `contains` Relation never contributes (I-148). The authoritative inputs are the Container objects and their declared child graph in the repository's authoritative store (RFC-038 [R1]). An implementation MAY maintain a derived catalog for performance but MUST treat the store as authoritative when they differ; there is no manifest `instanceIndex` to use as a cache, as it is retired (RFC-038 [R2]). (RFC-012 R6, as amended by RFC-034 Change D.2 on 2026-09-06: the former three-condition rule of rootInstanceIds, OR memberInstanceIds, OR reachable via transitive `contains` traversal is superseded; its traversal branch is removed.)
 
 **I-119.** A `tag` predicate with multiple values MUST use AND semantics — all specified tags must be present on the instance. Both query tags and stored instance tags are canonicalized via RFC-006 key-or-alias resolution when a Vocabulary is declared for the tag key; when no Vocabulary is declared, raw string comparison applies (case-sensitive). (RFC-012 R7.)
 
@@ -4917,7 +4939,7 @@ A Relation graph answers "what is semantically connected to what?" but not "what
 
 Container provides the boundary. "These Records collectively form a unit for boundary purposes" is a scope claim. "Stage A contains Task B" is a semantic claim. A Container can hold Records that have no `contains` Relation between them — they are grouped for operational reasons, not because one is semantically inside the other.
 
-Relationship-first implementations derive Container membership by traversing `contains` Relations from root instances. Container-first implementations use explicit `memberInstanceIds`. Both strategies are valid; neither replaces the other.
+*Corrected 2026-09-06 (RFC-034, rfc-decision-0750c62f).* This note originally closed by saying that relationship-first implementations derive Container membership by traversing `contains` Relations from root instances, that container-first implementations use explicit `memberInstanceIds`, and that both strategies are valid. That last claim is withdrawn: membership is declared (`rootInstanceIds`, `memberInstanceIds`, nested through `childContainerIds`) and a Relation never defines it. The complementarity this note argues for is unchanged — and sharpened: `contains` is the part-of tree where meaning lives and must still be maintained; a Container is a bookmark over that tree, never a replacement for it.
 
 
 ### Why the conversation layer is a permanent boundary
@@ -5259,5 +5281,22 @@ The two tiers let a system capture content at whatever maturity level it has, an
 The tier model also makes SRS progressively adoptable. A team can start at Tier 0 and arrive at Tier 2 as their understanding of the semantic structure matures, without ever having to restart from scratch.
 
 A middle Tier 1 (Typed Record — named fields, no Type binding) was tried and removed: the 2026-08-21 usage attestation found zero instances of it in any corpus, ever (rfc-decision-53635966). The predecessor design note captures the original three-tier rationale; this note supersedes it with the two-tier reality. Tier numbering (0, 2) keeps the gap deliberately, for reference stability.
+
+
+### Directory-kind scopes via typed identity records
+
+**Content**: Graduated from the Tier-0 design-capture note `design-capture-directory-kind-scopes` alongside RFC-034's acceptance (2026-09-06), as that note asked. Nothing here is normative; it records a design position that builds on RFC-034's rootless-child mechanism.
+
+**The question (owner, 2026-07-31, on RFC-034).** Instead of imposing tree-ness on all Tier 0, can a *type* of root record make a Container a directory equivalent (exclusive, filesystem-like), applied selectively?
+
+**The answer: yes, via the Container's typed identity record.** Containers are deliberately not semantic objects: no Fields (design-note 013), a declared selection (rfc-decision-0750c62f). The RFC-013 `identityInstanceId` record is the Container's semantic carrier. Define a Type, for example `com.semanticops.core/directory`; a Container whose identity record instantiates it is directory-kind. Behaviour keys off the identity record's Type — structure, not string-matching (relation principle R5).
+
+**Exclusivity rules** (R10 enforcement, as structural-coherence diagnostics): a directory-kind Container appears in at most one directory-kind parent's `childContainerIds`; an instance appears in `direct()` of at most one directory-kind Container. Non-directory Containers (scopes, collections, overlays) remain overlapping and free. The tree is opt-in per scope, not global.
+
+**Tier-0 / OKF payoff.** Folder maps to directory-kind Container. A folder with no distinguished note gets a *minted* directory identity record carrying the folder's name, which answers RFC-034's rootless-child navigation-anchor question in the same move. Every note lives in exactly one directory; loose collections overlay freely. This is the enabler for the recorded vault-migration goal, gated on a solid spec.
+
+**The wider family.** Three independent needs converged on one expressiveness class in a single day, *declared structural constraints*: (1) acyclicity (sequence-category relations; `precedes` cycles currently degrade silently, srs-rust#557/#558), (2) exclusivity/cardinality (directory-kind Containers here; exclusive relation types are the RFC-005-deferred cardinality facet), (3) uniqueness-within-scope (cross-record field uniqueness). All three are definition-keyed (R5) and validation-enforced (R10). Recommendation: one structural-constraints RFC covering the family, with directory-kind landing as a thin instance of it, not a bespoke bolt-on.
+
+**The relation-side reading** of the owner's question, an exclusive root-record *relation* type, is real but distinct: post-RFC-034, Relations do not define membership, so an exclusive `contains`-like relation yields a semantic part-of tree, not a scope tree. Both are valid wants; they are different trees (the observation rfc-decision-0750c62f cites).
 
 
