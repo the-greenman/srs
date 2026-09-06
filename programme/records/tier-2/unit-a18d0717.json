@@ -1,0 +1,22 @@
+{
+  "instanceId": "a18d0717-5225-49f0-b82a-041df2611caa",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "keyword-register keyed by paragraph, not field offset",
+    "summary": "check-spec-language.mjs's keyword-register rule keyed each allowlist site by digest(keyword:charIndex), the match's character offset into the whole field. Any edit earlier in a grandfathered field shifted every later keyword's offset, re-firing every downstream allowlist entry on prose nobody touched (39 sites from one edit in 07-7-ext-views-l2, 4 in 07-19-ext-slices). Rekeyed by digest(paragraphText:keyword:ordinalWithinParagraph), the same unit em-dash-cap already uses, so only an edit to the paragraph itself changes its sites. --seed migrated the existing 588 entries with no net count change.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs#626",
+      "srs#580"
+    ],
+    "body": "Reproduced the bug live before fixing: with the pre-fix code, inserting one word near the start of 07-7-ext-views-l2.json's content field (before its first RFC-2119 keyword) re-fired 24 keyword-register violations that the edit did not touch. Reverted, applied the paragraph-relative keying fix + --seed, repeated the identical edit: zero re-fires, still 588 grandfathered sites. Confirmed the fix does not blind the rule: a genuinely new MUST in a fresh paragraph still fails the check. Both gates (validate-all.mjs, check-release-drift.mjs) pass by exit code on the final diff. PR #641."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-06T17:46:04.588174335+00:00",
+  "updatedAt": "2026-09-06T17:46:50.071381818+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
