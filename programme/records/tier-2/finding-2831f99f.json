@@ -1,0 +1,21 @@
+{
+  "instanceId": "2831f99f-152c-479d-add2-7171ce215d12",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "Protocol run execution over MCP, previously deferred, now closed",
+    "summary": "Finding 6957c8f4 recorded that #965 deliberately shipped only the read-only Protocol resources and left create_run/advance_stage/get_run/list_runs/complete_run/abandon_run CLI-only. #977 supplied the condition that finding named for revisiting it (an agent-visible run consumer) and closed the gap with a thin adapter.",
+    "evidence": [
+      "finding 6957c8f4-9846-43f9-b0ee-cecc031b8307: 'nothing in the programme yet needs an agent to observe or advance a run' (as of the #955/#965 unit)",
+      "the-greenman/srs#580's Wave 1 findings list srs-rust#955 as filed and now shows its follow-up (#977) landing via the-greenman/srs-rust#983",
+      "protocol_run_service already had 6 fully-tested public functions (create_run, advance_stage, get_run, list_runs, list_runs_for_record, complete_run, abandon_run) before this unit — zero new srs-repository code was needed, only the srs-mcp adapter",
+      "crates/srs-mcp/src/tools.rs now advertises 19 tools (was 13), crates/srs-mcp/tests/tools.rs gained 5 integration tests plus a malformed-args case"
+    ],
+    "body": "The gap this closes was never an oversight — #965's PR body named it explicitly as a follow-up conditioned on a concrete consumer appearing (\"if run state should be agent-visible\"). The `programme-unit-walk` Protocol (srs#580) is that consumer: worker sessions like this one need to record which stage a run is on without shelling out to the CLI mid-session. Because the service layer was already complete and fully tested, the entire unit was mechanical translation — shadow structs plus `From` impls, no `srs-repository` change, no CLI change. This is the shape a well-deferred follow-up should have: cheap when its trigger condition finally arrives, because the underlying capability was built right the first time and nothing needed re-deriving."
+  },
+  "createdAt": "2026-09-06T22:11:56.304875109+00:00",
+  "updatedAt": "2026-09-06T22:11:56.304881243+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
