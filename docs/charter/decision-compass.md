@@ -6,7 +6,7 @@ enforces bidirectional presence: every id below must resolve to srs/records/tier
 <id>.json, and every id below must appear (as `rfc-decision-<id>`) somewhere in this file's body.
 Adding a charter-class ruling: add its id here AND write the section that cites it, in the same
 change — the guard fails on either half done alone.
-cce3c00e 9ee14517 7caca3a1 8f5aca2c b9d7096e 0750c62f 4431046e 0118e938
+cce3c00e 9ee14517 7caca3a1 8f5aca2c b9d7096e 0750c62f 4431046e 0118e938 e99a9437
 c8704763 2a1e1590 53635966 628cf6c4 16b20c56 5f8204bc 8948e43f
 -->
 
@@ -202,6 +202,20 @@ machinery applies (kind: **rule**):
   again admits mapping, re-entering as complex or complicated.
 - **Unresolved / contested** — default to the more cautious handling: complex over complicated,
   boundary over adjudication.
+
+## The three doors
+
+`rfc-decision-e99a9437` — every change to the spec surface names its door; merge right is decision
+mode × door (kind: **rule**).
+
+- **Door 1** executes a recorded ruling, citing its `rfc-decision-*` id. No RFC.
+- **Door 2** introduces new normative meaning: an RFC, through the Charter Check.
+- **Door 3** amends an accepted RFC's own surface: an RFC revision, records and `.md` in one PR.
+- **Non-normative** (tooling, checks, docs, `programme/`) passes through no door.
+- Mode clear/complicated **and** Door 1 or non-normative → the agent merges on green. Mode complex,
+  or Door 2/3 → the owner merges. Chaotic → stop. Unresolved → treat as complex.
+- **External work** — a PR needing an action only the owner can take (a secret, a setting, an
+  external console) — never self-merges, whatever its mode and door.
 
 ## How a decision record changes
 

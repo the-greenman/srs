@@ -1467,3 +1467,63 @@ Applied to the Container (rfc-decision-0750c62f): the plane assignment is closed
 **Review Trigger**: Review if a second construct presents a cross-layer goal that survives the stated-goal test; two real cases would justify a named crossing pattern in the charter rather than case-by-case rulings. Review also if the meaning-placement sweep finds undeclared crossings in numbers that suggest the rule is being routed around rather than followed.
 
 
+**Title**: The three doors: which change to the spec surface may merge, and by whom
+
+**Status**: Accepted
+
+**Decision Date**: 2026-09-06
+
+**Decision Rationale**: The doors were defined in CLAUDE.md as prose, and srs#581 extended them into the merge-rights contract by editing a markdown bullet. A rule that decides what may land on master without a human had no record, no roster entry and no guard, while the decision-mode vocabulary it composes with had all three. The sweep behind srs#589 found the defect in the commit that extended the rule.
+
+The doors exist because two questions were being answered with one word. The decision mode answers WHO RESOLVES a question: rules for the clear and complicated, geometry for the complex, a boundary against chaos. The door answers WHAT THE CHANGE DOES to the normative surface: executes a ruling, adds meaning, or amends an accepted RFC. A change can be complicated to resolve and still be Door 1, or trivial to resolve and still be Door 2. Merge right needs both axes.
+
+The matrix is safe to hand to an agent because the gates are enforced, not promised. srs#580 wave 1 made validate-all and check-release-drift required contexts on master. PR #577, deliberately red with auto-merge armed, stayed blocked and did not merge. PR #578, green, auto-merged with no human approval. The door rule decides which PRs may arm auto-merge; the gates decide whether an armed PR lands.
+
+**Decision**: Every change to the specification names which door it passes through. There are three doors and one category outside them.
+
+DOOR 1 - EXECUTE A RULING. The change implements a recorded decision. The PR cites the rfc-decision id it executes. No RFC is needed.
+
+DOOR 2 - NEW NORMATIVE MEANING. No ruling covers the change. It goes through an RFC, and the RFC passes the Charter Check. A draft proposes only; folds land at acceptance with the integration manifest.
+
+DOOR 3 - AMEND AN ACCEPTED RFC. A conformance rule, schema element or normative statement that lives under an existing RFC is changed by an RFC revision: the Revision is bumped, the history row is added, and the .md and the canonical records change in the same PR.
+
+NON-NORMATIVE. Tooling, checks, documentation and the programme repository carry no normative meaning. They pass through no door.
+
+HARD RULE. A conformance rule or a file under docs/schema/2.0/ never changes without one of the three door citations.
+
+MERGE RIGHT = DECISION MODE x DOOR. The decision mode (rfc-decision-7caca3a1) says who resolves the question. The door says what the change does to the normative surface. Together they say who may merge:
+
+- Mode clear or complicated, AND Door 1 or non-normative: the agent merges on green (gate:auto-merge).
+- Mode complex, OR Door 2, OR Door 3: the owner merges (gate:owner-merge). The agent stops at the PR.
+- Mode chaotic: stop. Nothing merges until the situation again admits mapping.
+- Mode unresolved or contested: treat as complex.
+
+EXTERNAL WORK. A PR that depends on an action only the owner can take - a secret, a repository setting, an external console - is external work. It never self-merges, whatever its mode and door.
+
+Every PR body states mode, cell and door, so the classification can be audited rather than inferred.
+
+**Scope**: Governs every PR against this repository that touches a conformance rule, a schema under docs/schema/2.0/, a normative statement, or a decision record, and every PR that claims a merge right. Does not change the decision modes (rfc-decision-7caca3a1), the Charter Check, or the RFC process itself. Does not govern sibling repositories, which carry their own CLAUDE.md pointer to this rule.
+
+**Governing Values**:
+- shared-coherence
+- semantic-integrity
+
+**Project Phase**: formation
+
+**Alternatives Considered**: (1) Leave the doors in CLAUDE.md prose only. Rejected: a rule with no record has no home and no drift guard. The prose can be edited by any docs-only commit, which is exactly how srs#581 changed the merge boundary without a ruling. (2) Fold the doors into the decision-modes record as a successor. Rejected: modes are about who resolves, doors are about what may merge. They are two axes, and merge right is their product. One record carrying both would hide the product as a single classification. (3) Build a checker that reads door labels off PR bodies. Rejected for now: the existing compass drift guard already binds this record to its citing section, and the merge gates on master enforce the outcome. A PR-body checker is a new mechanism with no evidence yet that the classification is being misstated.
+
+**Accepted Costs**: The door classification is a judgment, and a PR author can misfile a Door 2 change as Door 1 by citing a ruling that does not quite cover it. The rule mitigates this by requiring the citation to be named in the PR body, where it can be reviewed, rather than preventing it. The non-normative category is also a judgment at its edge: a check that enforces a rule is tooling, but the rule it enforces is not. Authors are expected to file the ruling before the check when the check would otherwise be the rule's only home.
+
+**Evidence**:
+- srs#589 (the finding: the doors had no record and no guard)
+- srs#580 (the programme queue; its autonomy contract states the mode x door matrix)
+- srs#581 (the docs-only commit that extended the doors into merge rights)
+- PR #577 (deliberately red PR with auto-merge armed: stayed blocked, proving the gate)
+- PR #578 (green PR: auto-merged with no human approval)
+- rfc-decision-7caca3a1 (decision modes, the other axis of the merge right)
+- rfc-decision-a270e98a (the first record to cite the door classification)
+- CLAUDE.md, section Changing the spec: which door (the prose this record gives a home)
+
+**Review Trigger**: Review if a PR self-merges that should have been owner-merged, or if the owner finds a Door 2 change filed as Door 1 more than once. Review also at the first full public release, when the Governance cell moves from formation to stability and the agent merge right may need narrowing.
+
+
