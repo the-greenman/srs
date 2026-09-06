@@ -7,12 +7,17 @@
   "fieldValues": {
     "title": "package-id-uniqueness ignores canonical names",
     "summary": "The package-id-uniqueness check compares definition UUIDs but never canonical namespace/name/version, so two definitions sharing a canonical name pass while being indistinguishable to anything that resolves by name. Three real collisions were sitting in the corpus when this was found.",
+    "decision_mode": "clear",
+    "door": "non-normative",
     "issue_ref": [
-      "srs#584"
-    ]
+      "srs#584",
+      "srs#592",
+      "srs#557"
+    ],
+    "body": "PR https://github.com/the-greenman/srs/pull/611 (branch claude/serene-johnson-d6hysd). Scope per the dispatch comment on #584: canonical-name identity scoped by kind (a Field and a Type sharing a name is not a conflict), plus a directory-tree sweep for definition-shaped files no manifest declares (the #592 blind spot), classifying by $schema when version/name are absent. Running the strengthened guard against the live corpus found three more instances of the #592 orphan pattern (srs/package/spec-authoring-core/views/{spec,rationale,unified}-document-view.json) invisible until this unit; deleted, mirroring #592's own resolution. Both gates green; guards-bite covers all nine new cases. Auto-merge armed (gate:auto-merge)."
   },
-  "lifecycleState": "proposed",
+  "lifecycleState": "in_review",
   "createdAt": "2026-09-05T22:07:51.665351023+00:00",
-  "updatedAt": "2026-09-05T22:07:51.665355210+00:00",
+  "updatedAt": "2026-09-06T10:00:10.098287331+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
