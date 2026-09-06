@@ -1,0 +1,15 @@
+{
+  "instanceId": "10872aad-4ed3-4dcf-8571-0ec122337a57",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "An RFC-mandated schema-mirror property addition belongs in the implementing PR, not deferred to the generic schema-sync PR",
+    "summary": "Standing policy is that any content diff to crates/srs-schema/schemas/2.0/ is owner-reviewed, never auto-merged (precedent #903/#905/#915/#926) — but that governs the automated, periodic, whole-mirror schema-drift-catchup PRs the 6-hour poll opens. A unit implementing an accepted RFC that itself specifies an exact, minimal schema property (RFC-034s own Schema Changes section, here childContainerIds) cannot be schema-valid or testable without that property existing in the mirror first. srs-rust#970 added the exact RFC-034 property directly in its implementation PR (#974) rather than waiting on the separate schema-sync PR (#968), hand-verified byte-identical against current srs canonical, and regenerated SHA256SUMS via the mandated sha256sum *.json | sort method (never by hand). The PR was labelled gate:owner-merge rather than the issues own auto-merge suggestion, specifically because it carries a schema content diff.",
+    "rationale": "Blocking implementation on a separate, unrelated, already-open schema-sync PR (here #968, which was also fixing repo-wide Schema Drift CI for unrelated PRs #971/#969/#966) would either stall the RFC-034 unit indefinitely or force a workaround. The safer line: an RFC-mandated schema property, verified byte-identical to canonical srs and regenerated via the sanctioned script method, is Door 1 execution of that RFC and may travel with its own implementing PR — but the PR must still be gate:owner-merge (never auto-merge) purely because it carries a schema diff, regardless of the RFC-execution mode/door otherwise permitting auto-merge. Reopen this only if the owner disagrees with the classification on #974."
+  },
+  "createdAt": "2026-09-06T17:33:08.274986876+00:00",
+  "updatedAt": "2026-09-06T17:33:08.274993471+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
