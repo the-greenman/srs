@@ -1,0 +1,20 @@
+{
+  "instanceId": "6e146a57-48cc-40e1-ac1f-b337277c520b",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "srs-usage.md does not document the MCP resource URIs it tells agents to prefer",
+    "summary": "srs-usage.md is the authoritative agent-facing guide and it opens by preferring the MCP server over the CLI, but it enumerates only the CLI commands. None of the srs:// resource URIs appear in it — including the five added today. An agent following the tool-first rule has to discover the surface it was told to use by listing resources at runtime.",
+    "evidence": [
+      "srs-usage.md documents the CLI command reference in full and carries no srs:// URI enumeration",
+      "Five resources landed today with no entry: tree, tree/{instanceId}, agent-index, protocol, protocol/{protocolId}",
+      "Filed as the-greenman/srs#624"
+    ],
+    "body": "The gap is the mirror of the mimicry failure mode: agents are told to prefer a surface whose vocabulary is undocumented in the one file they are told to read, so they fall back to the CLI or to raw files. Filed rather than fixed in the srs-rust unit — srs-usage.md lives in the srs repo, and a Rust PR editing a sibling repo's documentation is exactly the cross-tree edit the process forbids."
+  },
+  "createdAt": "2026-09-06T13:27:05.454501050+00:00",
+  "updatedAt": "2026-09-06T13:27:05.454506995+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

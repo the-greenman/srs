@@ -1,0 +1,20 @@
+{
+  "instanceId": "a1f76300-1789-47d9-acea-71bb1f7c895a",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "A forward-reference check against a topological order is vacuous by construction",
+    "summary": "The forward-reference check must linearise the authored tree — parent before child, siblings by the precedes chain — and use the strongly-connected components of the depends-on graph only as the exemption. Ordering the corpus by a topological sort of the condensation instead would make the check incapable of ever failing: a topological order contains no forward edges by definition.",
+    "evidence": [
+      "check-spec-coherence.mjs check 1 computes Tarjan SCCs over depends-on (44 concepts collapse to 41 components, reproducing #608's three irreducible 2-cycles) and compares against the tree's linearised order",
+      "Result on the live corpus: 89 edges, 1 forward (Record -> Field values, allowlisted to #563), 6 backward, 6 within one component, 76 unordered",
+      "Edges whose relative order the tree does not yet determine are counted as unordered, never reported as violations"
+    ],
+    "body": "The distinction is the whole check. The tree is the constraint — it is what an author wrote and what a reader walks — and the SCC is the exemption that keeps the three genuine cycles from being reported as errors. Swap them and you have a check that passes on any corpus, including one where every concept is used before it is introduced. Related: #608's own 16-forward-reference figure was measured against the rendered reading order, which this check deliberately does not consult, so the two numbers are not comparable and no script reproduces the older one."
+  },
+  "createdAt": "2026-09-06T13:27:04.221699306+00:00",
+  "updatedAt": "2026-09-06T13:27:04.221705151+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

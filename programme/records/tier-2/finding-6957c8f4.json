@@ -1,0 +1,20 @@
+{
+  "instanceId": "6957c8f4-9846-43f9-b0ee-cecc031b8307",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "Protocol run execution over MCP was deferred, deliberately and on the record",
+    "summary": "Only the read surface landed. The run verbs (create_run, advance_stage and the rest) were left out because the issue mentions them only conditionally — 'if run state should be agent-visible' — and nothing in the programme yet needs an agent to observe or advance a run.",
+    "evidence": [
+      "srs-rust#955 mentions run verbs conditionally, not as a requirement",
+      "PR #965 states the deferral explicitly under 'Not in this PR', alongside the skipped protocol_find_by_target_type tool",
+      "The programme's own protocol walking today is read-only: stages are read for guidance, run state is not recorded over MCP"
+    ],
+    "body": "Recorded so the next thread does not read the absence as an oversight and build it speculatively. Agent-visible run state is a real design question — where a run lives, who may advance it, whether an agent advancing its own run means anything — and it should be opened by a unit that has a consumer needing it, not folded silently into a read-surface PR."
+  },
+  "createdAt": "2026-09-06T13:27:06.020259729+00:00",
+  "updatedAt": "2026-09-06T13:27:06.020263759+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

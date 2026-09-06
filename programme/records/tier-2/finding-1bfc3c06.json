@@ -1,0 +1,20 @@
+{
+  "instanceId": "1bfc3c06-7292-46e5-9038-6b0fff79e481",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "ProtocolSummary carried no targetType, so nothing could find a Protocol by what it governs",
+    "summary": "The service's ProtocolSummary omitted targetType — the one field that says what a Protocol is for. Adding it to the summary is additive and flows straight through to the CLI's srs protocol list payload as well as the MCP list resource, so a client filters by target type without a second call.",
+    "evidence": [
+      "targetType is newly carried by ProtocolSummary and therefore by srs protocol list; the payload golden was regenerated",
+      "A protocol_find_by_target_type tool exists in the service but was not exposed: the list resource carries targetType, so an agent filters client-side",
+      "Before this, a Protocol was reachable over MCP only through a Blueprint prompt whose first rootTypes entry matched its targetType"
+    ],
+    "body": "The general shape worth carrying: when a summary type omits the field that answers the question the summary exists for, consumers route around it — here, through an unrelated Blueprint prompt whose match was incidental. Adding the field to the shared summary was cheaper than adding a finder verb, and it kept the CLI and MCP surfaces identical, which is what capability layering is for. An additive field on a summary struct regenerates the payload golden but breaks no consumer."
+  },
+  "createdAt": "2026-09-06T13:27:05.894836053+00:00",
+  "updatedAt": "2026-09-06T13:27:05.894843846+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

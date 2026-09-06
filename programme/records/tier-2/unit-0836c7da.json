@@ -1,0 +1,23 @@
+{
+  "instanceId": "0836c7da-a449-4037-84f1-0978f3fe2bbc",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Protocol resources over MCP",
+    "summary": "A Protocol was reachable over MCP only via a Blueprint prompt whose first rootTypes entry happened to match its targetType. This unit adds a direct read surface — a list resource and a definition-with-stages resource — as an adapter over the existing protocol service.",
+    "decision_mode": "clear",
+    "door": "door-1",
+    "issue_ref": [
+      "srs-rust#955",
+      "srs#556",
+      "srs#624"
+    ],
+    "body": "PR https://github.com/the-greenman/srs-rust/pull/965. srs://<repositoryId>/protocol lists every installed Protocol as the service's ProtocolSummary verbatim; srs://<repositoryId>/protocol/{protocolId} serves { protocol, stages } — the stored definition as srs protocol get returns it, plus stages sorted by order as srs protocol stages returns them, so dependsOn resolves forward. Unknown id returns MCP resource-not-found. Concrete resources are enumerated per Protocol, a template advertises the definition URI, and the connect-time instructions mention both. The direct consumer is this programme's own programme-unit-walk Protocol. Gates exit 0: cargo build, test, clippy -D warnings, fmt --check, with a new MCP integration test against a fixture carrying a deliberately out-of-order 2-stage Protocol."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-06T13:27:05.575932145+00:00",
+  "updatedAt": "2026-09-06T13:27:05.888486320+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

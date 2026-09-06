@@ -1,0 +1,20 @@
+{
+  "instanceId": "3939a214-75ef-498e-80cf-fe00ad9c3dea",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "187 allowlisted violations, each pinned to the unit that will clear it",
+    "summary": "The checker ships holding 187 known violations, and every entry cites a live issue: #562 (baked headings), #563 (the concept tree wiring), #564 (invariants as leaves). The allowlist fails on any violation not listed, on any entry that no longer matches, and on any entry without an issue reference — so it can only shrink.",
+    "evidence": [
+      "187 entries in scripts/spec-coherence-allowlist.json, each carrying an issue reference",
+      "164 orphan leaves (119 invariants -> #564, 45 design-notes -> #563) and 121 baked headings in 22 records (-> #562) make up the bulk",
+      "The check fails when an allowlist entry no longer matches a violation (shrink discipline) and when an entry cites no issue; both cases are covered by the guard fixture"
+    ],
+    "body": "An allowlist without a shrink rule becomes a permanent exemption list; an allowlist whose entries carry no issue reference becomes a list nobody can act on. Both failure modes are made loud here — a stale entry is an error, not a silent pass — so the count is a live measurement of the rework's remaining distance rather than accumulated debt."
+  },
+  "createdAt": "2026-09-06T13:27:04.340876956+00:00",
+  "updatedAt": "2026-09-06T13:27:04.340883336+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

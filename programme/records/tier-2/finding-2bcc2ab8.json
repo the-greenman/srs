@@ -1,0 +1,21 @@
+{
+  "instanceId": "2bcc2ab8-785d-4324-a10b-c2870425fd4c",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "srs-mcp cannot depend on srs-cli, so the service structs are the wire contract",
+    "summary": "The MCP crate sits beside srs-cli, not above it, so it cannot reuse the CLI's payload structs. The consequence is structural: srs-repository's own service result types carry Serialize and are served verbatim, which makes them the contract two adapters now depend on rather than an internal shape.",
+    "evidence": [
+      "TreeResult and TreeNode gained Serialize (camelCase) in srs-repository and are served verbatim by the MCP resource",
+      "AgentIndex was already Serialize and needed no change",
+      "No new payload struct in srs-cli, so no golden schema regeneration was required (the container payload is Value-typed)",
+      "The CLI's ASCII 'text' field on the tree result is presentation and is deliberately not carried over MCP"
+    ],
+    "body": "This is the capability-layering rule showing its teeth in a good way: the core owns the shape, and each adapter adds only presentation. It also raises the cost of changing a service result type — two adapters now observe it — which is the correct price for having one home for the semantics. The split it forces is visible in the tree resource: the recursion is shared, the ASCII rendering stays behind in the CLI."
+  },
+  "createdAt": "2026-09-06T13:27:05.210407211+00:00",
+  "updatedAt": "2026-09-06T13:27:05.210410018+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
