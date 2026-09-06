@@ -6,7 +6,7 @@ enforces bidirectional presence: every id below must resolve to srs/records/tier
 <id>.json, and every id below must appear (as `rfc-decision-<id>`) somewhere in this file's body.
 Adding a charter-class ruling: add its id here AND write the section that cites it, in the same
 change — the guard fails on either half done alone.
-cce3c00e 9ee14517 7caca3a1 8f5aca2c b9d7096e
+cce3c00e 9ee14517 7caca3a1 8f5aca2c b9d7096e 4431046e
 c8704763 2a1e1590 53635966 628cf6c4 16b20c56 5f8204bc 8948e43f
 -->
 
@@ -198,6 +198,26 @@ machinery applies (kind: **rule**):
   again admits mapping, re-entering as complex or complicated.
 - **Unresolved / contested** — default to the more cautious handling: complex over complicated,
   boundary over adjudication.
+
+## How a decision record changes
+
+`rfc-decision-4431046e` — a decision record changes in exactly two ways, and they are not the same
+act (kind: **rule**).
+
+- A **refinement** changes the position the record takes. It is recorded as a **successor** record
+  linked by `supersedes`, and the earlier record is never edited. This is `rfc-decision-cce3c00e`'s
+  standing rule, unchanged.
+- A **correction** fixes a statement of fact that was wrong when written, without changing the
+  position — a misidentified property, a wrong count, a mistaken citation. It **may** be made in
+  place, and **must** carry a visible marker in the record itself, not only in the commit message.
+
+The test: if a reader who acted on the earlier text would have acted differently, it is a
+refinement; if they would have acted the same way holding a wrong detail, it is a correction.
+
+Succession is reserved for changes of position so that a `supersedes` edge always means something
+happened. Corrections stay visible because the Air column principle requires informational
+conflicts to resolve by declared authority *visibly* — a silent in-place fix satisfies the
+authority half and fails the visibility half.
 
 ## Grid operations
 
