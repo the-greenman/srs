@@ -430,6 +430,24 @@
       "cell": "conformance",
       "governing": "srs#580",
       "description": "The spec-rework programme repository (programme/) stays a conforming SRS repository: its .srs/ marker resolves as a directory holding at least one regular file, and the pinned srs CLI reports zero repo-validate errors against it. Runs as its own step in release-drift.yml alongside gallery-conformance, not through validate-all.mjs, which stays Node-pipeline-only (ADR-004). The marker assertion is not redundant with repo validate: an empty marker directory round-trips as absent, and repo create still produces one (srs-rust#959)."
+    },
+    {
+      "id": "governance-seed-drift",
+      "script": "build-governance-seed.mjs",
+      "args": ["--check"],
+      "tier": "pinned-cli",
+      "cell": "portability",
+      "governing": "srs#550; srs#548; srs#553",
+      "description": "A freshly built empty-governance-document.srsj seed for the CURRENT com.mudemocracy.governance version (packages/com.mudemocracy.governance's highest semver directory, scripts/lib/governance-versions.mjs) byte-matches the committed seed. Historical versions are exempt as published history — a historical seed is a snapshot of what shipped, not expected to match today's package/ tree. Guards the exact staleness class srs#548 found (a shipped seed never migrated through a corpus-wide field rename) and depends on the sanctioned `srs repo copy` path only — the filesystem-flatten fallback retired at srs#553. Runs as its own step in release-drift.yml alongside gallery-conformance/programme-conformance, not through validate-all.mjs (needs the pinned CLI, ADR-004)."
+    },
+    {
+      "id": "governance-seed-drift-guard-bite",
+      "script": "../tests/governance-seed-drift/run.mjs",
+      "args": [],
+      "tier": "pinned-cli",
+      "cell": "assertion",
+      "governing": "srs#550",
+      "description": "The governance-seed-drift check demonstrably fails on a perturbed committed seed (red) and passes both on the real, unmodified corpus and once the perturbation is undone (green) — the guards-bite discipline (srs#308/#311/#391) applied to a pinned-cli check, which guards-bite itself (Node-pipeline-only) cannot reach."
     }
   ]
 }
