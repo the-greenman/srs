@@ -2029,6 +2029,86 @@ async function versioningCellCases(root) {
     runCheck("check-versioning-cell.mjs", untouched),
     { exit: 0 },
   );
+
+  // The allowlist (scripts/versioning-cell-allowlist.json), same discipline as spec-coherence's:
+  // a listed violation passes, a stale or malformed entry fails on its own.
+  const commitsOf = (dir) =>
+    git(dir, "log", "--reverse", "--format=%H").stdout.trim().split("\n");
+
+  const allowlisted = join(root, "allowlisted");
+  await buildHistory(allowlisted, [
+    { version: 1, allowedValues: ["a", "b"] },
+    { version: 1, allowedValues: ["a", "b", "c"] },
+  ]);
+  const [allowlistedFrom, allowlistedTo] = commitsOf(allowlisted);
+  await writeJson(join(allowlisted, "scripts/versioning-cell-allowlist.json"), {
+    entries: [
+      {
+        path: "srs/package/fields/status.json",
+        id: FIELD_ID,
+        fromCommit: allowlistedFrom,
+        toCommit: allowlistedTo,
+        disposition: "pending",
+        issue: "#1",
+        note: "fixture",
+      },
+    ],
+  });
+  expect(
+    "accepts a violation covered by a valid allowlist entry",
+    runCheck("check-versioning-cell.mjs", allowlisted),
+    { exit: 0, contains: ["1 known violation(s) allowlisted"] },
+  );
+
+  const staleAllowlist = join(root, "stale-allowlist");
+  await buildHistory(staleAllowlist, [
+    { version: 1, allowedValues: ["a", "b"] },
+    { version: 2, allowedValues: ["a", "b", "c"] }, // no violation here — the entry below matches nothing
+  ]);
+  const [staleFrom, staleTo] = commitsOf(staleAllowlist);
+  await writeJson(join(staleAllowlist, "scripts/versioning-cell-allowlist.json"), {
+    entries: [
+      {
+        path: "srs/package/fields/status.json",
+        id: FIELD_ID,
+        fromCommit: staleFrom,
+        toCommit: staleTo,
+        disposition: "pending",
+        issue: "#1",
+        note: "fixture",
+      },
+    ],
+  });
+  expect(
+    "rejects an allowlist entry that no longer matches a violation",
+    runCheck("check-versioning-cell.mjs", staleAllowlist),
+    { exit: 1, contains: ["no longer match a violation"] },
+  );
+
+  const malformedAllowlist = join(root, "malformed-allowlist");
+  await buildHistory(malformedAllowlist, [
+    { version: 1, allowedValues: ["a", "b"] },
+    { version: 1, allowedValues: ["a", "b", "c"] },
+  ]);
+  const [malformedFrom, malformedTo] = commitsOf(malformedAllowlist);
+  await writeJson(join(malformedAllowlist, "scripts/versioning-cell-allowlist.json"), {
+    entries: [
+      {
+        path: "srs/package/fields/status.json",
+        id: FIELD_ID,
+        fromCommit: malformedFrom,
+        toCommit: malformedTo,
+        disposition: "settled", // not "permanent" or "pending"
+        issue: "later", // not "#<number>"
+        note: "fixture",
+      },
+    ],
+  });
+  expect(
+    "rejects an allowlist entry with a bad disposition or issue reference",
+    runCheck("check-versioning-cell.mjs", malformedAllowlist),
+    { exit: 1, contains: ['must be "permanent" or "pending"', "not a GitHub issue reference"] },
+  );
 }
 
 const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
