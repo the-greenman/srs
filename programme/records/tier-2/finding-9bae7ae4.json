@@ -1,0 +1,21 @@
+{
+  "instanceId": "9bae7ae4-a1f7-4257-b637-1481114cfa32",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "Two independently green pull requests can be red together",
+    "summary": "PR #623 added check-spec-coherence and its allowlist; PR #625 added records the checker judges. Each was green on its own branch against master as it then stood. Merged in sequence, master went red on eight violations neither branch had seen, because the check and the records it judges arrived from different directions.",
+    "evidence": [
+      "#623 seeded the allowlist against the corpus as it stood before #625 merged",
+      "#625 added new invariants and a design note that the #623 checker rules score as violations",
+      "master carried 8 uncovered violations until PR #628 cleared them",
+      "Both pull requests had been armed for auto-merge on their own green runs"
+    ],
+    "body": "When one pull request adds records and another adds the check that judges them, they are not independent however cleanly their diffs separate. Serialise them, or re-run the gate on the merge result before arming auto-merge on the second: auto-merge arms on a check run against a base that the other pull request is about to change, and nothing re-derives it at merge time."
+  },
+  "createdAt": "2026-09-06T17:50:21.341311116+00:00",
+  "updatedAt": "2026-09-06T17:50:21.341317556+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

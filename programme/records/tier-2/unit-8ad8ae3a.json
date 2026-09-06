@@ -7,13 +7,19 @@
   "fieldValues": {
     "title": "Invariants inline, index generated",
     "summary": "Each invariant is stated where the thing it constrains is introduced, and the numbered index becomes a generated projection rather than an authored list. The index stops being a second place where an invariant can be forgotten.",
+    "decision_mode": "complicated",
+    "door": "door-1",
     "issue_ref": [
       "srs#564",
-      "srs#556"
-    ]
+      "srs#556",
+      "srs#609",
+      "srs#563",
+      "srs#562"
+    ],
+    "body": "Part 1 delivered by PR https://github.com/the-greenman/srs/pull/628 (merged 2026-09-06): 125 contains edges, concept to invariant, so every invariant is a leaf of the concept it constrains. Executes the 2026-09-05 spine ruling (srs#556 comment 5552715003) for the invariant leaves only. Additive relations only - no type touched, applies_to used as evidence for placement and not retired, because retiring it is RFC-042 Change E and waits on acceptance. Placement rule: the one concept whose definition the rule protects, with the rejected alternative recorded for every hard case (invariant 9 to Stable identity over Package, 15/35/36/37 to Package as distribution-completeness rules, 65 to Vocabulary over Container, 128 to Projection against its own applies_to, 151 to Travelling form over Container, among 19 listed). Counts: orphan invariants 125 to 0, one-home leaves 159 to 284 with none double-parented, allowlist 187 to 70, all 119 no-orphan-leaf entries citing #564 gone. Two entries were added for pre-existing drift outside the unit, citing #563 and #562. #609 is not closed: three of the four never-introduced concepts now carry leaves, but the specification text still has no introduction site for any of them."
   },
-  "lifecycleState": "proposed",
+  "lifecycleState": "landed",
   "createdAt": "2026-09-05T22:08:29.029533608+00:00",
-  "updatedAt": "2026-09-05T22:08:29.029539570+00:00",
+  "updatedAt": "2026-09-06T17:50:21.334570674+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

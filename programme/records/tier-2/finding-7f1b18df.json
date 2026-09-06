@@ -1,0 +1,21 @@
+{
+  "instanceId": "7f1b18df-cbdc-4095-8d81-74a6750ff671",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "Workflow permissions cannot grant pull request creation to Actions",
+    "summary": "A workflow declaring pull-requests write permission still cannot open a pull request while the repository setting allowing GitHub Actions to create and approve pull requests is off. The token scope and the repository policy are separate gates, and the failure surfaces only at the create call, after the branch has been pushed.",
+    "evidence": [
+      "The poll workflow pushed its branch successfully and failed at the pull request creation step",
+      "The workflow already declared contents write and pull-requests write permissions",
+      "The setting is off by default and is settable only in repository settings or by an admin API call",
+      "Enabling it unblocked the first real poll pull request, srs-rust#968"
+    ],
+    "body": "Any automation whose last step is opening a pull request should be run end to end once against the real repository before being scheduled. A dry run that stops at the push proves the useful half and leaves unproven the half that needs a setting nobody remembers - and the failure mode is a half-done run with an orphan branch, not a clean red."
+  },
+  "createdAt": "2026-09-06T17:50:23.593248704+00:00",
+  "updatedAt": "2026-09-06T17:50:23.593252107+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

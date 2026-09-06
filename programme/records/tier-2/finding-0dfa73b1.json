@@ -1,0 +1,20 @@
+{
+  "instanceId": "0dfa73b1-e1f5-4fbc-adb3-92d90a0dd64f",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "Examples home at the record that carried them, because no concept contains a section yet",
+    "summary": "The spine ruling puts typed content leaves under concepts, but no concept yet has a contains edge to a section or subsection - that is #563 part 2. Each example was therefore homed from the prose record that carried the fence, which under RFC-042 Change B is the mechanism-to-be. That placement survives the later rewire unchanged, because the mechanism moves with its leaves.",
+    "evidence": [
+      "No concept currently holds a contains edge to a section or subsection record",
+      "The #562 scope names the carrying record, or mechanism-to-be, as the placement",
+      "one-home went 330 to 398 records with a contains parent, 0 double-parented"
+    ],
+    "body": "The lazy placement and the correct one coincide here: homing at the eventual parent-of-the-parent would have to be undone when the concept tree is hung, while homing at the carrier is a subtree that gets re-rooted in one edge. Prefer the placement a pending structural change moves rather than invalidates."
+  },
+  "createdAt": "2026-09-06T17:50:22.340679108+00:00",
+  "updatedAt": "2026-09-06T17:50:22.340681724+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
