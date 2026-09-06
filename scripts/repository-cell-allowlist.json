@@ -1,0 +1,11 @@
+{
+  "$comment": "Known violations of scripts/check-repository-cell.mjs (srs#651), each citing the live or ratified issue that explains it. Entry shape: {path, reason, disposition, issue} — the same shape as scripts/publication-reachability-exclusions.json (carried-context-61cee7c6), reused rather than inventing a bespoke one. `disposition: \"permanent\"` means the exception is a ruled, settled outcome that never expires by issue state; it still expires if the file stops existing or the key is removed (checked below regardless of disposition). `disposition: \"pending\"` means real follow-up remains and `issue` MUST cite a currently-open issue. The check fails on any violation NOT listed here and on any entry that no longer matches a violation — shrinking this file IS the fix; growing it needs an issue.",
+  "entries": [
+    {
+      "path": "conformance/discovery/fixture-repo/manifest.json",
+      "reason": "Deliberately frozen at pre-RFC-038 storage as normative test data for the ext:discovery conformance runner (RFC-012). RFC-038 Rev 7 kept this fixture's storage un-migrated rather than inventing repository identity for it, and named an [R21]-independent reader in srs-rust — see conformance/discovery/README.md, \"Two layers, migrated independently\". Migrating its storage would reverse a ratified disposition, not fix a bug.",
+      "disposition": "permanent",
+      "issue": "#297"
+    }
+  ]
+}

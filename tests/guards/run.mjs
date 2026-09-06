@@ -2170,6 +2170,102 @@ async function versioningCellCases(root) {
   );
 }
 
+// ---- #651 — repository cell: no manifest.json carries the retired instanceIndex key --------------
+async function repositoryCellCases(root) {
+  console.log("srs#651 — repository cell: no manifest.json carries instanceIndex");
+
+  const manifest = (extra) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/manifest.json",
+    srsVersion: "2.0",
+    repositoryId: "00000000-0000-4000-8000-000000000f01",
+    title: "fixture repository",
+    container: { containerId: "00000000-0000-4000-8000-000000000f02" },
+    createdAt: "2026-08-15T00:00:00Z",
+    ...extra,
+  });
+
+  const violation = join(root, "violation");
+  await writeJson(join(violation, "manifest.json"), manifest({ instanceIndex: [] }));
+  expect(
+    "rejects a manifest.json carrying instanceIndex",
+    runCheck("check-repository-cell.mjs", violation),
+    { exit: 1, contains: ["manifest.json", "instanceIndex is retired"] },
+  );
+
+  const clean = join(root, "clean");
+  await writeJson(join(clean, "manifest.json"), manifest({}));
+  expect(
+    "accepts a manifest.json with no instanceIndex",
+    runCheck("check-repository-cell.mjs", clean),
+    { exit: 0 },
+  );
+
+  const nested = join(root, "nested");
+  await writeJson(join(nested, "programme/manifest.json"), manifest({}));
+  await writeJson(join(nested, "programme/package/fields/manifest.json"), { id: "not-a-repository-manifest" });
+  expect(
+    "walks the whole tree rather than a fixed list of roots",
+    runCheck("check-repository-cell.mjs", nested),
+    { exit: 0 },
+  );
+
+  // The allowlist (scripts/repository-cell-allowlist.json), same discipline as versioning-cell's:
+  // a listed violation passes, a stale or malformed entry fails on its own.
+  const allowlisted = join(root, "allowlisted");
+  await writeJson(join(allowlisted, "conformance/discovery/fixture-repo/manifest.json"), manifest({ instanceIndex: [] }));
+  await writeJson(join(allowlisted, "scripts/repository-cell-allowlist.json"), {
+    entries: [
+      {
+        path: "conformance/discovery/fixture-repo/manifest.json",
+        reason: "fixture",
+        disposition: "permanent",
+        issue: "#1",
+      },
+    ],
+  });
+  expect(
+    "accepts a violation covered by a valid allowlist entry",
+    runCheck("check-repository-cell.mjs", allowlisted),
+    { exit: 0, contains: ["1 known violation(s) allowlisted"] },
+  );
+
+  const staleAllowlist = join(root, "stale-allowlist");
+  await writeJson(join(staleAllowlist, "manifest.json"), manifest({})); // no violation here
+  await writeJson(join(staleAllowlist, "scripts/repository-cell-allowlist.json"), {
+    entries: [
+      {
+        path: "manifest.json",
+        reason: "fixture",
+        disposition: "permanent",
+        issue: "#1",
+      },
+    ],
+  });
+  expect(
+    "rejects an allowlist entry that no longer matches a violation",
+    runCheck("check-repository-cell.mjs", staleAllowlist),
+    { exit: 1, contains: ["no longer match a violation"] },
+  );
+
+  const malformedAllowlist = join(root, "malformed-allowlist");
+  await writeJson(join(malformedAllowlist, "manifest.json"), manifest({ instanceIndex: [] }));
+  await writeJson(join(malformedAllowlist, "scripts/repository-cell-allowlist.json"), {
+    entries: [
+      {
+        path: "manifest.json",
+        reason: "fixture",
+        disposition: "settled", // not "permanent" or "pending"
+        issue: "later", // not "#<number>"
+      },
+    ],
+  });
+  expect(
+    "rejects an allowlist entry with a bad disposition or issue reference",
+    runCheck("check-repository-cell.mjs", malformedAllowlist),
+    { exit: 1, contains: ['must be "permanent" or "pending"', "not a GitHub issue reference"] },
+  );
+}
+
 const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
 try {
   await fieldNameCases(join(root, "field-name"));
@@ -2191,6 +2287,7 @@ try {
   await specCoherenceCases(join(root, "spec-coherence"));
   await versioningCellCases(join(root, "versioning-cell"));
   await attributionCellCases(join(root, "attribution-cell"));
+  await repositoryCellCases(join(root, "repository-cell"));
 } finally {
   await rm(root, { recursive: true, force: true });
 }
