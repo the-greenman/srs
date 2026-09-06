@@ -112,7 +112,7 @@
         "prove"
       ],
       "aiGuidance": {
-        "purpose": "State the mode, the cell and the door in the PR body. Apply gate:auto-merge only where the classification permits it, and arm auto-merge rather than merging.",
+        "purpose": "State the mode, the cell and the door in the PR body. Apply gate:auto-merge only where the classification permits it, and arm auto-merge rather than merging. When the PR opens, relabel the issue gate:working to gate:in-review; the PR closes the issue, and the coordinator clears its gate label.",
         "negativeGuidance": "Never merge by hand what the contract reserves for the owner. A held PR with its reason stated is a finished unit; a hand-merged one is a breach."
       }
     },
