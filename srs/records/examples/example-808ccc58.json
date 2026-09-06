@@ -1,0 +1,14 @@
+{
+  "instanceId": "808ccc58-05b5-4979-b357-c77eea2824e2",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The top-level shape of a `.srsj` file",
+    "content": "The top-level keys of a JSON Store file:\n\n```json\n{\n  \"srsj\": \"1\",\n  \"manifest\": { ... },\n  \"data\": {\n    \"package/package.json\": { ... },\n    \"package/fields/<id>.json\": { ... },\n    \"records/<type>/<slug>.json\": { ... },\n    \"relations/relations.json\": { ... }\n  }\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:44.525641255+00:00",
+  "updatedAt": "2026-09-06T17:05:15.839362200+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

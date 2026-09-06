@@ -1,0 +1,14 @@
+{
+  "instanceId": "1a598f09-1c4d-4c6b-b8ad-5b84bd71bd5d",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `Provenance` shape",
+    "content": "`Provenance`, in pseudo-IDL:\n\n```typescript\n{\n  publisher?: string        // namespace or org of the original author\n  sourcePackage?: string    // package name that bundled this definition\n  packageVersion?: string   // semver of the source package\n  importedAt?: ISO8601\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:41.391606433+00:00",
+  "updatedAt": "2026-09-06T17:05:12.612208401+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

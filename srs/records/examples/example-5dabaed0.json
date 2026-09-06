@@ -1,0 +1,14 @@
+{
+  "instanceId": "5dabaed0-e6fa-4eea-af32-63830358d0e2",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `FieldAssignmentOverride` shape",
+    "content": "`FieldAssignmentOverride`, in pseudo-IDL:\n\n```typescript\n{\n  fieldId: UUID\n  displayLabel?: string\n  displayHint?: string\n  required?: boolean\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:47.160678259+00:00",
+  "updatedAt": "2026-09-06T17:05:18.739008853+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

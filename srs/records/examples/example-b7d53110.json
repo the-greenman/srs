@@ -1,0 +1,14 @@
+{
+  "instanceId": "b7d53110-f104-4ad4-85d7-42289574282f",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `InstanceIndexEntry` shape",
+    "content": "`InstanceIndexEntry`, in pseudo-IDL:\n\n```typescript\n{\n  instanceId: UUID\n  tier: 0 | 2             // 0: Note, 2: Record (1 is a retired gap — Tier 1/TypedRecord, rfc-decision-53635966)\n  path: string            // relative path from repository root\n                          // e.g. \"records/decisions/decision-mounting-system.json\"\n\n  typeId?: UUID           // Tier 2 only: the Type this Record instantiates\n  typeName?: string       // denormalised convenience; not authoritative\n  title?: string          // denormalised for display; not authoritative\n\n  checksum?: string       // digest of the instance file: \"<algorithm>:<hex>\"\n                          // e.g. \"sha256:4b2c...\". Enables fast no-op detection\n                          // during re-import without reading file content.\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:43.062260857+00:00",
+  "updatedAt": "2026-09-06T17:05:14.830708333+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

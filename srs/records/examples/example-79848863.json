@@ -1,0 +1,14 @@
+{
+  "instanceId": "79848863-ca4e-4750-be50-1f7766f56cc1",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `ThemeReference` shape",
+    "content": "`ThemeReference`, in pseudo-IDL:\n\n```typescript\n{\n  mode: \"local\" | \"remote\" | \"bundled\"\n  path?: string     // required when mode === \"local\"\n  url?: string      // required when mode === \"remote\"\n  themeId?: UUID    // references Theme.id in Package.themes[]; required when mode === \"bundled\"\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:48.515532006+00:00",
+  "updatedAt": "2026-09-06T17:05:20.745604686+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

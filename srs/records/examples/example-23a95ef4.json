@@ -1,0 +1,14 @@
+{
+  "instanceId": "23a95ef4-c996-4138-b940-a2de197d1c8c",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The properties `ext:type-inheritance` adds to a Type",
+    "content": "The properties this extension adds to `Type`, in pseudo-IDL:\n\n```typescript\n{\n  extendsTypeId?: UUID\n  // UUID of the base Type this Type specializes.\n  // When present, the effective field list consists of inherited fields\n  // followed by this Type's own fields[], unless fieldOrder is present.\n\n  extendsTypeVersion?: integer\n  // Version of the base Type targeted by this specialization.\n\n  fieldOrder?: UUID[]\n  // Optional explicit ordering of all fields in the effective field list:\n  // inherited fields plus this Type's own fields[].\n  // This is an ordering declaration only; it does not re-declare field\n  // assignments or change Field semantics.\n\n  fieldAssignmentOverrides?: FieldAssignmentOverride[]\n  // Presentation and workflow overrides for inherited fields only.\n\n  identityFieldId?: UUID\n  // RFC-020 — names one fieldId from this Type's effective field set\n  // (own fields plus inherited fields) as the record's identity/display\n  // field. Cascades across the ancestor chain independently of\n  // fieldOrder (see `identityFieldId` below).\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:47.154569818+00:00",
+  "updatedAt": "2026-09-06T17:05:18.570035130+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

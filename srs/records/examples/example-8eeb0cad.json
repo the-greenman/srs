@@ -1,0 +1,14 @@
+{
+  "instanceId": "8eeb0cad-bd38-4bbc-8f0e-870f6e14b4bf",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `LifecycleState` shape",
+    "content": "`LifecycleState`, in pseudo-IDL:\n\n```typescript\n{\n  id: UUID                  // stable identity\n  version: integer\n  namespace: string\n  key: string               // was name; the string stored in Record.lifecycleState\n  label?: string\n  description?: string\n  aliases?: string[]\n  isInitial?: boolean       // valid starting state for new Records\n  isFinal?: boolean         // no outgoing transitions permitted (V9)\n  status?: \"active\" | \"deprecated\" | \"tombstone\" | \"retired\"   // absent = active\n  meta?: Record<string, unknown>\n  lineage?: Lineage\n  provenance?: Provenance\n  createdAt: ISO8601\n  updatedAt?: ISO8601\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:45.829939193+00:00",
+  "updatedAt": "2026-09-06T17:05:17.210412021+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,14 @@
+{
+  "instanceId": "09a62cde-e17f-4187-a933-79bea1b13622",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `PackageRef` shape",
+    "content": "`PackageRef`, in pseudo-IDL:\n\n```typescript\n{\n  mode: \"local\" | \"remote\"  // renamed from \"external\" (rfc-decision-c8704763)\n\n  // local: definitions live in the repository under package/\n  path?: string           // relative path to package.json; default: \"package/package.json\"\n\n  // remote: definitions are expected pre-installed in the consumer's registry\n  packageId?: UUID\n  packageName?: string\n  packageVersion?: string\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:43.053240741+00:00",
+  "updatedAt": "2026-09-06T17:05:14.658048308+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

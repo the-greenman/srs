@@ -1,0 +1,14 @@
+{
+  "instanceId": "f1c28b65-65a3-473a-88cd-2aae9c97ea5b",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "A Protocol chain for a governance decision",
+    "content": "Three Protocols in sequence, from brain dump to Decision Record. Non-normative:\n\n```\nBrain Dump Protocol (loose, no targetType)\n  → AttentionState: { containerId: C1 }\n  → Produces: Note N1 (unstructured brainstorm)\n\nDecomposition Protocol (loose, targetType: Component)\n  → AttentionState: { containerId: C1, recordId: N1 }\n  → Produces: Notes N2, N3, N4  [derived-from N1]\n\nDecision Protocol (tight, targetType: Decision)\n  → AttentionState: { containerId: C1, protocolRunId: R1, stageId: \"criteria\" }\n  → Stage \"criteria\" produces: Options Analysis Record R-OA  [derived-from N2, N3]\n  → Stage \"decision\" produces: Decision Record R-D           [derived-from R-OA]\n\nConversation chunks produced during Decision stage:\n  chunk-42: { AttentionState: { containerId: C1, recordId: R-OA, fieldId: F-criteria, ... } }\n  chunk-43: { AttentionState: { containerId: C1, recordId: R-D, fieldId: F-outcome, ... } }\n\nContext query for R-D / F-outcome:\n  → Field aiGuidance from Decision Type + outcome Field\n  → Current value for F-outcome\n  → Chunks tagged with { recordId: R-D, fieldId: F-outcome } — chunk-43\n  → Chunks tagged with { recordId: R-D } — broader session context\n  → Related Records via Relations — R-OA via derived-from\n```"
+  },
+  "createdAt": "2026-09-06T17:00:46.518824920+00:00",
+  "updatedAt": "2026-09-06T17:05:18.398920351+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

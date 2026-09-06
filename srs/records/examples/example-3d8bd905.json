@@ -1,0 +1,14 @@
+{
+  "instanceId": "3d8bd905-df8b-4a5d-81b9-d78e1c15905d",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `slice` manifest property",
+    "content": "The property `ext:slices` adds to `RepositoryManifest`:\n\n```json\n\"slice\": {\n  \"origin\": { \"repositoryId\": \"<source-uuid>\" },\n  \"spec\": { \"type\": \"container\", \"id\": \"<containerId-uuid>\" },\n  \"exportedAt\": \"<ISO-8601>\",\n  \"externalRelationRefs\": [\n    {\n      \"relationId\": \"<uuid>\",\n      \"sourceInstanceId\": \"<uuid>\",\n      \"targetInstanceId\": \"<uuid>\",\n      \"relationType\": \"depends-on\"\n    }\n  ]\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:45.658005163+00:00",
+  "updatedAt": "2026-09-06T17:05:17.035562562+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

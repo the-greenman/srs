@@ -1,0 +1,14 @@
+{
+  "instanceId": "6e1cd742-d116-45a6-a63c-21cce8b18dda",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The two lifecycle declaration forms a Type may carry",
+    "content": "The inline form and the referenced form:\n\n```typescript\n// Inline (simple cases; cannot extend):\nlifecycle?: {\n  states: LifecycleState[]\n  transitions: LifecycleTransition[]\n  initialState: string\n}\n\n// Referenced (shared, installable):\nlifecycleRef?: UUID        // LINEAGE reference (rfc-decision-c8704763) — resolves to an\n                            // installed Lifecycle in the effective package set (V8)\n```"
+  },
+  "createdAt": "2026-09-06T17:00:45.853571613+00:00",
+  "updatedAt": "2026-09-06T17:05:17.716467368+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

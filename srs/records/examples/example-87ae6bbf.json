@@ -1,0 +1,14 @@
+{
+  "instanceId": "87ae6bbf-2476-48cf-9bf5-a13aabbc7c07",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "A core conformance declaration",
+    "content": "The form an implementation fills in:\n\n```\nSRS Core [+ ext:<name> ...]\n```"
+  },
+  "createdAt": "2026-09-06T17:00:39.026902013+00:00",
+  "updatedAt": "2026-09-06T17:05:10.227761558+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,14 @@
+{
+  "instanceId": "342c23db-76f6-47a2-96e5-77e3a5325248",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `TypographyHints` shape",
+    "content": "`TypographyHints`, in pseudo-IDL:\n\n```typescript\n{\n  baseFont?: string\n  headingFont?: string\n  monoFont?: string\n  baseFontSize?: string  // e.g. \"16px\", \"1rem\", \"11pt\"\n  lineHeight?: string    // e.g. \"1.5\", \"24px\"\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:44.724940994+00:00",
+  "updatedAt": "2026-09-06T17:05:16.688158885+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

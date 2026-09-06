@@ -1,0 +1,14 @@
+{
+  "instanceId": "8203d91f-8c21-4a2d-b870-1ea84aa72c97",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `RepositoryManifest` shape",
+    "content": "`RepositoryManifest`, in pseudo-IDL:\n\n```typescript\n{\n  formatVersion: string      // SRS repository format version, e.g. \"1.0\"\n  srsVersion: string         // SRS spec version, e.g. \"2.0\"\n  conformance: string        // full conformance declaration string\n\n  repositoryId: UUID         // stable identifier; does not change on export or copy\n  title: string              // human-readable name for this repository\n\n  container: Container       // inline Container — canonical; authoritative over\n                             // any separate container.json in the root\n\n  packageRef?: PackageRef    // reference to local or external package definitions\n\n  instanceIndex: InstanceIndexEntry[]\n  // Authoritative list of all SRS instances in this repository.\n  // An instance not in the index is not a member, even if its file is present.\n\n  relationsPath?: string | string[]\n  // Relative path(s) to relation file(s). Default: \"relations/relations.json\"\n\n  sourceDocumentsPath?: string\n  // Relative path to source documents folder. Default: \"source-documents/\"\n\n  sourceDocumentIndex?: SourceDocumentIndexEntry[]\n  // Optional explicit index of source documents. When present, implementations\n  // may use this for discovery instead of scanning for *.meta.json files.\n  // When absent, discovery is by sidecar scan. See Invariant 52.\n\n  relationsChecksums?: RelationsChecksumEntry[]\n  // Optional checksums for each relations file declared in relationsPath.\n  // Enables fast no-op detection for relation collections during re-import.\n\n  createdAt: ISO8601\n  updatedAt?: ISO8601\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:43.043894631+00:00",
+  "updatedAt": "2026-09-06T17:05:14.482080372+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

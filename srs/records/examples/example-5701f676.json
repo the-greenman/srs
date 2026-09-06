@@ -1,0 +1,14 @@
+{
+  "instanceId": "5701f676-59b6-4cb0-930c-15dfee6a5710",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `AssetDeclaration` shape",
+    "content": "`AssetDeclaration`, in pseudo-IDL:\n\n```typescript\n{\n  type: \"image\" | \"font\" | \"stylesheet\" | \"data\"\n  mode: \"local\" | \"remote\" | \"inline\"\n\n  path?: string      // required when mode === \"local\"\n  url?: string       // required when mode === \"remote\"\n  data?: string      // base64 for binary; raw text for stylesheet/data; required when mode === \"inline\"\n  mimeType?: string  // e.g. \"image/png\", \"font/woff2\", \"text/css\"\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:44.696910397+00:00",
+  "updatedAt": "2026-09-06T17:05:16.009177305+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
