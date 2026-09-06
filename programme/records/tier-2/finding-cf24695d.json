@@ -1,0 +1,18 @@
+{
+  "instanceId": "cf24695d-be32-4a4d-b3c3-429213e73eb7",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "RFC-011 containerScope explicit already conflated direct and effective membership before RFC-034",
+    "summary": "render_service SectionSource::DiscoveryQuery containerScope: Explicit routed through the same list_members_degraded/list_members helper as Subtree, which (pre-RFC-034) computed rootInstanceIds/memberInstanceIds plus everything reachable by transitive contains-Relation traversal. So explicit scope was never actually shallow: it silently returned the same deep set subtree would once subtree traversal shipped. Fixed in srs-rust#970 by giving explicit its own list_direct_members path; a dedicated render_service test (render_subtree_scope_descends_into_declared_children_explicit_does_not) pins the two scopes apart for the first time.",
+    "evidence": [
+      "crates/srs-repository/src/render_service.rs pre-fix: both ContainerScope::Explicit and ContainerScope::Subtree branches called list_members_degraded (i.e. container_service::list_members) with no distinct direct-only path",
+      "container_service::member_ids (pre-fix) already implemented I-66 condition 3 (contains-Relation traversal from rootInstanceIds), so any container with a contains edge out of a root had that target silently included even under containerScope: explicit"
+    ]
+  },
+  "createdAt": "2026-09-06T17:32:56.755052859+00:00",
+  "updatedAt": "2026-09-06T17:32:56.755059243+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
