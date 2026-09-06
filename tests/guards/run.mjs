@@ -1248,6 +1248,19 @@ async function specLanguageCases(root) {
   );
   expect("accepts the same keyword in a normative_statement", runCheck("check-spec-language.mjs", root), clean);
 
+  // 5b. srs#638 — a leaf's Type is its role: normativeSites.types names com.semanticops.spec/invariant,
+  // so a keyword in `content` on that Type is accepted with no normative_statement field at all.
+  await writeJson(subjectPath, {
+    $schema: "https://srs.semanticops.com/schema/2.0/record.json",
+    instanceId: "00000000-0000-4000-8000-0000000005f0",
+    typeId: "2a000006-0000-4000-a000-000000000006",
+    typeVersion: 1,
+    typeNamespace: "com.semanticops.spec",
+    typeName: "invariant",
+    fieldValues: { title: "Package resolution", content: "A resolver MUST reject an unresolved reference." },
+  });
+  expect("accepts an RFC 2119 keyword in content on a normativeSites.types Type", runCheck("check-spec-language.mjs", root), clean);
+
   // 6. The word budget is hard, and the message says by how much.
   await writeJson(subjectPath, record("Package resolution", { content: `${"word ".repeat(401)}.` }));
   expect("rejects a prose field over the word budget", runCheck("check-spec-language.mjs", root), {

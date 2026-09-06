@@ -17,8 +17,10 @@ the machine form; this page is the reason.
 ## Register
 
 RFC 2119 keywords carry conformance force. They appear only in a genuinely normative statement: a
-`normative_statement` field, or, once srs#559 lands the authoring package, an element whose
-`exposition_role` is `constraint`. Explanatory prose describes; it does not oblige.
+`normative_statement` field, or an element whose Type is named in the registry's
+`normativeSites.types` — `invariant` today, `mechanism` once RFC-042 (#620) lands. No
+`exposition_role` field exists or will: a leaf's Type is its role (srs#556 ruling, 2026-09-05).
+Explanatory prose describes; it does not oblige.
 
 A constraint states the rule and stops. Its reason belongs in a `design-note` record, linked by
 `explains`. Reasons inside constraints are how a two-line rule becomes a twelve-line paragraph that
@@ -152,8 +154,8 @@ The techniques these documents share, and where they come from:
 
 1. **Normative and informative are labelled.** [W3C QA Framework Specification
    Guidelines](https://www.w3.org/TR/qaframe-spec/), Good Practice 2. A reader can tell at a glance which
-   sentences bind an implementation. `exposition_role` in srs#559 is this
-   distinction made structural.
+   sentences bind an implementation. A leaf's Type is this
+   distinction made structural (srs#556 ruling, 2026-09-05).
 2. **Every feature gets a test assertion**, and inability to write one means the specification is
    wrong. W3C QA Framework, Good Practice 12. This is what an invariant is, per srs#564.
 3. **Terms are defined once and collected in a glossary.** W3C QA Framework, Requirement 5 and Good
@@ -180,7 +182,7 @@ Every rule above is one or the other. None sits in an undefined middle.
 | Banned phrases and their substitutions | srs#569, regex over the registry's `patterns` |
 | 400-word field budget | srs#569, counted |
 | Em-dash cap per paragraph, zero in normative statements | srs#569, counted |
-| RFC 2119 keywords outside normative sites | srs#569, once srs#559 lands `exposition_role` |
+| RFC 2119 keywords outside normative sites | srs#569, `normative_statement` field or a `normativeSites.types` Type |
 | Narrator and future tense in normative text | srs#569, regex |
 | First sentence restating the title | srs#569, token overlap between title and first sentence |
 | Bold lead-in on every bullet | srs#569, ratio of matching bullets to total |
