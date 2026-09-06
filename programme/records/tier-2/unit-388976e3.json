@@ -14,8 +14,8 @@
     ],
     "body": "PR srs#646. Mode: clear, Cell: Conformance, Door: non-normative (auto-merge eligible)."
   },
-  "lifecycleState": "in_review",
+  "lifecycleState": "landed",
   "createdAt": "2026-09-06T18:55:02.234873804+00:00",
-  "updatedAt": "2026-09-06T18:55:17.442051708+00:00",
+  "updatedAt": "2026-09-06T18:59:59.778335868+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
