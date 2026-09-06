@@ -1,0 +1,20 @@
+{
+  "instanceId": "beea2097-f997-4b0c-bf79-e4fb0960290a",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "The #592 dead-orphan pattern recurred a third time, and the strengthened guard's sweep still does not reach every package-shaped tree",
+    "summary": "Strengthening check-package-id-uniqueness.mjs to sweep resolved packages' directory trees (srs#584) immediately found three more instances of the exact #592 pattern that no prior check had seen: srs/package/spec-authoring-core/views/{spec,rationale,unified}-document-view.json, dead pre-rename orphans sharing their UUID with the live Compositions they were renamed to. The same defect class has now shown up three separate times from independent directions (#557's canonical-name collisions, #592's single orphan, and this sweep's three). The new sweep only walks the 5 directories srs/manifest.json resolves via packageRefs; it does not extend to the other package-shaped trees check-package-id-uniqueness.mjs's own assertion 3 already lists for manifest-level scanning (packages/, conformance/, docs/spec/examples/, rfcs/). A pre-rename orphan sitting in one of those trees, sharing a UUID with something live, would still be invisible to the identity guard.",
+    "evidence": [
+      "srs#584 PR (the-greenman/srs#611): running the newly-added sweep against the unmodified corpus failed with 3 'definition id ... claimed twice' errors, all under srs/package/spec-authoring-core/views/",
+      "All three had the pre-RFC-036 view.json shape (outputFormats/rootType/ordering, no sections) dated 2026-05-27, identical in class to the #592 orphan (rfc-document-view.json, also 2026-05-27, also fixed by deletion)",
+      "check-package-id-uniqueness.mjs's SEARCH_ROOTS for assertion 3 (package-id-vs-name-across-trees) is ['srs','packages','conformance','docs/spec/examples','rfcs'], five entries; the new per-package directory sweep for assertion 2 (definition identity) only walks the resolvedPackages() dirs, which is 5 directories entirely inside 'srs' — it does not walk 'packages', 'conformance', 'docs/spec/examples', or 'rfcs' at all"
+    ],
+    "body": "Not fixed in srs#584/PR #611 — that unit's assigned scope was the two blind spots named in the issue's own comments (canonical name; undeclared-in-manifest files within resolved packages). Extending the on-disk sweep to the other package-shaped trees is a natural follow-up but changes the check's performance/scope profile (rfcs/ and conformance/ are large and hold many intentionally-historical duplicate ids), so it should be its own sized unit with its own decision on which trees to include, not folded into this one silently."
+  },
+  "createdAt": "2026-09-06T10:00:45.770557707+00:00",
+  "updatedAt": "2026-09-06T10:00:45.770562983+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
