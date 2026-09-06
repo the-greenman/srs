@@ -1,0 +1,20 @@
+{
+  "instanceId": "ff013325-9b5a-476d-a4ac-61827cf9b677",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "The corpus counts in epic #556 are stale; the RFC cites measured ones",
+    "summary": "The epic's headline numbers (127 baked headings, 101 fenced blocks) no longer match the corpus. Measured on the 2026-09-06 origin/master worktree: 159 baked headings and 112 fenced blocks. The RFC cites the measured figures, not the epic's.",
+    "evidence": [
+      "Measured on the #620 worktree: 159 headings baked in prose across spec records (119 of them in 21 section/subsection records); 112 fenced blocks (73 in section/subsection)",
+      "Also measured: 10 sections, 65 subsections, 119 invariants, 44 concepts; 159 contains, 137 precedes, 90 depends-on edges",
+      "srs#556 states 127 headings and 101 fences"
+    ],
+    "body": "The corpus moves while the epic that describes it does not. Any unit that quotes a count from an issue body is quoting a measurement taken at an unknown date. Re-measure on the worktree and cite that; the divergence here was roughly 25 per cent in under a month."
+  },
+  "createdAt": "2026-09-06T13:27:03.601548525+00:00",
+  "updatedAt": "2026-09-06T13:27:03.601551984+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

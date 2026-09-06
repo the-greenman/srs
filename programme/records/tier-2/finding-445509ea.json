@@ -1,0 +1,20 @@
+{
+  "instanceId": "445509ea-09e3-4b01-93cd-453d3bf72db4",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "srs:// URIs have no query syntax, so a resource carries no knobs",
+    "summary": "There is no place in an srs:// resource URI to put a depth parameter, so the tree resource serves TreeOptions::default() and a caller wanting a different depth has no way to ask. A per-member tree URI was likewise not added: instanceId already addresses tree/{instanceId}, and a URI is adapter vocabulary that does not belong on a service struct.",
+    "evidence": [
+      "srs://<repoId>/tree serves tree_service::build_tree(TreeOptions::default()) with no way to vary depth",
+      "The descent hook is sectionContainerId — an id the client resolves — rather than a tree URI stamped onto ResolvedMember",
+      "uri.rs roundtrip and rejection tests define the accepted URI shapes; none of them admit a query string"
+    ],
+    "body": "Worth knowing before designing the next resource: anything parameterised has to become either a path segment or a tool, because the URI space is flat and unparameterised. The hook design follows from the same constraint and is the better shape anyway — handing the client an id it already knows how to address keeps adapter vocabulary out of the core's structs."
+  },
+  "createdAt": "2026-09-06T13:27:05.334462312+00:00",
+  "updatedAt": "2026-09-06T13:27:05.334466309+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
