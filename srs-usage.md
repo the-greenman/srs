@@ -25,7 +25,7 @@ Never assume you understand the repo's content from its directory listing.
 
 **Do not create, edit, or delete SRS JSON files directly.** Use the tool surfaces, in this order:
 
-1. **A mounted SRS MCP server, when your session has one.** `srs mcp serve` exposes validated tools (`find`, `record_create`, `record_update`, `relation_create`, `note_create`, `note_graduate`, `record_transition`, `container_member_add`/`remove`, `repo_validate`, `type_schema`) and resources (`srs://<repoId>/map`, `/navigation`, `/record/{id}`, `/container/{id}`). Every write enforces the repository's type and relation contracts and returns diagnostics on rejection — it is the cheapest path that is also the correct one. In agent sessions these tools may arrive deferred; load them by name before assuming they are absent.
+1. **A mounted SRS MCP server, when your session has one.** `srs mcp serve` exposes validated tools (`find`, `record_create`, `record_update`, `relation_create`, `note_create`, `note_graduate`, `record_transition`, `container_member_add`/`remove`, `repo_validate`, `type_schema`) and resources (`srs://<repoId>/map`, `/navigation`, `/tree`, `/tree/{id}`, `/agent-index`, `/record/{id}`, `/container/{id}`, `/protocol`, `/protocol/{id}`). Every write enforces the repository's type and relation contracts and returns diagnostics on rejection — it is the cheapest path that is also the correct one. In agent sessions these tools may arrive deferred; load them by name before assuming they are absent. For an agent with no prior context on the repository, `/tree` and `/agent-index` are the two resources to read first — see [5i](#5i-mcp-server-srs-mcp-serve).
 2. **The `srs` CLI** for everything else — always the current release asset, never a stale local build (a pre-cutover binary fails on a current-generation repository, and vice versa).
 3. **Direct file edits only when neither tool can express the operation** (for example, a definition kind with no `create` command yet). Then: document why, make the minimal edit, and immediately run `srs repo validate` and fix every diagnostic before continuing.
 
@@ -299,11 +299,11 @@ srs find --repo <path> --type-namespace governance --type-name decision \
 
 ```
 container resolve-view <containerId> →
-  { "containerView": { "containerId", "documentViewId"?, "root"?, "members": [...],
+  { "containerView": { "containerId", "compositionId"?, "root"?, "members": [...],
                        "columns": [...], "excludeLifecycleStates": [...], "diagnostics": [...] } }
 ```
 
-Each entry in `members` (and `root` when present) carries `{ "instanceId", "tier", "displayLabel", "isVisibleByDefault", "record" }`. `isVisibleByDefault` is `false` when the member's `lifecycleState` is in `excludeLifecycleStates`, and `true` otherwise (including when `lifecycleState` is absent). A web client uses this field to implement a "show all" toggle without re-querying the repository.
+Each entry in `members` (and `root` when present) carries `{ "instanceId", "tier", "displayLabel", "isVisibleByDefault", "record", "sectionContainerId"? }`. `isVisibleByDefault` is `false` when the member's `lifecycleState` is in `excludeLifecycleStates`, and `true` otherwise (including when `lifecycleState` is absent). A web client uses this field to implement a "show all" toggle without re-querying the repository. `sectionContainerId` (srs-rust#949) is present, not `null`, only when that member itself roots a sub-container — the descent hook documented in [5i](#5i-mcp-server-srs-mcp-serve)'s resource table.
 
 `excludeLifecycleStates` is populated only when the governing `Composition` section is a `discovery-query` whose `query` declares `excludeLifecycleStates` (else `[]`). A client renders the **default-hidden** list by passing those states to `find --exclude-lifecycle-state`, and a **show-all** toggle simply drops them. Clients consume `excludeLifecycleStates` and `isVisibleByDefault` from `resolve-view` — they do not re-derive either from the Composition source. (See S14 in `srs-rust/docs/dogfooding.md`.)
 
@@ -1590,13 +1590,18 @@ The URI scheme is implementation tooling (srs-rust ADR-037), built from existing
 | URI | Content |
 |---|---|
 | `srs://<repositoryId>/map` | Repo map: counts, package info, relation summary (JSON — same shape as `repo map`) |
-| `srs://<repositoryId>/navigation` | Identity record + ordered navigation sections (JSON — same as `repo navigation`). `identity` is **optional** — see below |
+| `srs://<repositoryId>/navigation` | Identity record + ordered navigation sections (JSON — same as `repo navigation`). `identity` is **optional** — see below. Each section also carries `sectionContainerId` (present, not `null`, only when that section itself roots a sub-container) — the descent hook that lets an agent walk navigation → section → sub-container without listing every container in the repository |
+| `srs://<repositoryId>/tree` | Recursive `contains` tree from every auto-detected root, with depth and cycle pruning (JSON — same result as `srs tree`). One of the two zero-context entry points (RFC-042 Change H, srs#620) — read this to see the whole repository's shape before reading anything else |
+| `srs://<repositoryId>/tree/{instanceId}` | The same recursive `contains` tree, rooted at one instance instead of the auto-detected roots — descend from a navigation section's or container member's `sectionContainerId` by its `instanceId`; exposed as a resource template |
+| `srs://<repositoryId>/agent-index` | AI orientation index: repository identity, counts, installed types, top-level sections, suggested entry points (JSON — same as `srs repo agent-index`). The other zero-context entry point (RFC-042 Change H, srs#620) |
 | `srs://<repositoryId>/record/{instanceId}` | One record, any tier (JSON; exposed as a resource template) |
-| `srs://<repositoryId>/container/<containerId>` | Container resolve-view: authored columns + ordered members (JSON — same as `container resolve-view`) |
-| `srs://<repositoryId>/view/<documentViewId>` | Rendered document view (markdown — same as `render document-view`) |
+| `srs://<repositoryId>/container/<containerId>` | Container resolve-view: authored columns + ordered members (JSON — same as `container resolve-view`). Each member carries `sectionContainerId`, same key and meaning as the navigation row above |
+| `srs://<repositoryId>/composition/<compositionId>` | Rendered composition (markdown — same as `render composition`). Renamed from `view`/`documentView` (srs-rust#910, `rfc-decision-92d2da05`) — no alias is kept, per the standing zero-backwards-compatibility rule |
 | `srs://<repositoryId>/type/{typeId}` | Type authoring schema (JSON — same as `type schema`): properties are keyed by `Field.name` (RFC-039) and carry `x-srs-ai-guidance`, `x-srs-description`, `x-srs-instructions`; enumerated per type and available as a template |
+| `srs://<repositoryId>/protocol` | Every installed Protocol definition: id, `namespace/name@version`, `targetType`, `stageCount` (JSON — same as `srs protocol list`) |
+| `srs://<repositoryId>/protocol/{protocolId}` | One Protocol definition plus its stages sorted by `order` — the `dependsOn` walk an agent follows (JSON — same as `srs protocol get` + `srs protocol stages` combined); enumerated per installed protocol and available as a template |
 
-Containers, document views, and **types** are enumerated in `resources/list`; records are read through the template (discover instanceIds via the `find` tool or container resources).
+Containers, compositions, **types**, and installed **protocols** are enumerated in `resources/list`; records and subtrees are read through templates (discover instanceIds via the `find` tool, container resources, or `/tree`).
 
 **`navigation.identity` is optional.** It is present only when the root container names an
 `identityInstanceId`. RFC-029 makes a root container without one **valid**, so an identity-less
