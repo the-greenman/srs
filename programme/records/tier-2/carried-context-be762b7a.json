@@ -1,0 +1,15 @@
+{
+  "instanceId": "be762b7a-ec25-43e5-9b71-b3f8bc741ab4",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "Poll instead of dispatch avoids a cross-repo credential to maintain",
+    "summary": "When one repository's CI needs to notify another of an event (a new release, in this case), prefer a scheduled poll from the receiving repo over a repository_dispatch from the sending repo, if the receiver can tolerate the added latency. Polling with the receiver's own default GITHUB_TOKEN needs no new credential; a cross-repo dispatch always needs a write-scoped PAT on the sender, regardless of either repo's visibility -- one more secret to scope correctly, rotate, and eventually let expire.",
+    "rationale": "Discovered building the srs -> srs-rust schema-sync automation (srs-rust#914, PRs srs#615 + srs-rust#962). The first cut used repository_dispatch: correctly identified that the dispatches API needs write-scoped auth to the target repo even when both repos are public (a different permission check from anonymous public read), so it needed a new DISPATCH_TOKEN fine-grained PAT. The owner rejected the design on review -- not because the credential was mis-scoped, but because the mechanism was avoidable: srs-rust can just poll srs's already-public release feed on its own schedule, since the automation's downstream PR is owner-reviewed anyway (gate:owner-merge) and a few hours of extra latency changes nothing about how that PR gets used. Re-check this the same way for any future cross-repo notification design in this ecosystem: can the receiving side just poll the sender's already-public state, before reaching for repository_dispatch or another push-style webhook that needs a bespoke credential? This would not hold if the receiver had no way to discover the event on its own (a private upstream) or the downstream work were genuinely latency-sensitive -- then a dispatch's immediacy could be worth the credential."
+  },
+  "createdAt": "2026-09-06T11:13:56.264789754+00:00",
+  "updatedAt": "2026-09-06T11:13:56.264794753+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
