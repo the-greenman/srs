@@ -1,0 +1,15 @@
+{
+  "instanceId": "61cee7c6-a024-4df6-963f-be87f44d24bf",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "A dead-issue-citation allowlist is a recurring shape, not a one-off — check every sibling before adding a third instance",
+    "summary": "Two allowlist files in this repo (publication-reachability-exclusions.json, #590; integration-allowlist.json, #591) turned out to have the identical defect: an entry citing a GitHub issue whose closure is ambiguous between \"settled ruling\" and \"dead follow-up pointer\", fixed the same way both times — a required disposition field (\"permanent\" | \"pending\"). #427 (idl-schema-conformance-allowlist carries entries for deleted properties — the self-expiring-exception rule is not enforced) names a third allowlist with the same self-expiring-exception shape and is still open. Before authoring a bespoke fix for #427, check whether it is this same defect and the same disposition pattern applies directly.",
+    "rationale": "The Conformance cell's standing preference is \"one way over many\" (rfc-decision-cce3c00e). Two independent allowlists needing the identical schema addition is itself evidence this is one recurring shape, not two coincidences — so a third instance should default to reusing the pattern (disposition: permanent|pending, validated in the check script, proved red-then-green in tests/guards/run.mjs) rather than a new bespoke mechanism, unless #427's own shape turns out to differ (e.g. no natural open/closed issue citation to key off of).\n\nWhat would change this: if #427's allowlist entries don't cite a tracking issue at all (they key on deleted schema properties, not GitHub issues per the title) — worth checking before assuming the pattern transfers verbatim; it may need a different discriminator (e.g. \"property still absent from the schema\" instead of issue state)."
+  },
+  "createdAt": "2026-09-06T16:54:04.394264513+00:00",
+  "updatedAt": "2026-09-06T16:54:04.394274995+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

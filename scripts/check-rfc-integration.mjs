@@ -54,7 +54,11 @@
  * checked, since a citation of another RFC's existing rule is not a claim about what the banner's
  * own RFC defines. See extractRfcBannerRuleTokens().
  *
- * Grandfathered RFCs (rfcs/integration-allowlist.json) skip only check #4; #1–#3 stay live.
+ * Grandfathered RFCs (rfcs/integration-allowlist.json) skip only check #4; #1–#3 stay live. Every
+ * allowlist entry MUST itself carry `issue`, `reason` and a `disposition` of `"permanent"` or
+ * `"pending"` (srs#591, mirroring srs#590's identical fix to the sibling
+ * publication-reachability-exclusions.json) — checked by checkAllowlistShape() independent of
+ * which RFCs are actually grandfathered.
  *
  * Modeled on scripts/check-release-drift.mjs: collect failures, print each, exit 1 on any.
  */
@@ -131,6 +135,32 @@ function fieldValue(record, name) {
 
 async function loadJson(path) {
   return JSON.parse(await readFile(path, "utf8"));
+}
+
+// #591: an allowlist entry's `issue` can go stale exactly like the sibling exclusions file's did
+// (srs#590, check-publication-reachability.mjs) — an entry whose citation now reads closed does
+// not by itself say whether that is a settled ruling (expected) or a dead pointer to follow-up
+// work that never happened (a regression). `disposition` names which shape an entry is, mirroring
+// #590's fix for the identical problem: `"permanent"` cites the (possibly closed) issue whose
+// ruling settled the deferral for good; `"pending"` cites the still-live issue that owns the real
+// fold. This guard cannot check GitHub issue state itself — `validate-all` is deliberately
+// dependency-free and network-free (validate.yml) — so a `pending` issue going stale is still
+// caught by re-audit, not by this script; what disposition fixes is that closure of a `permanent`
+// entry's issue stops reading as a regression waiting to be "fixed" by reopening a settled ruling.
+function checkAllowlistShape(allowlist) {
+  for (const [num, entry] of Object.entries(allowlist)) {
+    const where = `rfcs/integration-allowlist.json grandfathered["${num}"]`;
+    const missing = ["issue", "reason", "disposition"].filter(
+      (k) => typeof entry?.[k] !== "string" || !entry[k].trim(),
+    );
+    if (missing.length) {
+      fail(`${where} is missing required properties: ${missing.join(", ")}`);
+      continue;
+    }
+    if (entry.disposition !== "permanent" && entry.disposition !== "pending") {
+      fail(`${where} disposition "${entry.disposition}" must be "permanent" or "pending"`);
+    }
+  }
 }
 
 function slugify(text) {
@@ -388,6 +418,7 @@ async function main() {
   if (existsSync(ALLOWLIST)) {
     allowlist = (await loadJson(ALLOWLIST)).grandfathered ?? {};
   }
+  checkAllowlistShape(allowlist);
 
   await checkManifestSync(resolvers.indexedPaths);
 
