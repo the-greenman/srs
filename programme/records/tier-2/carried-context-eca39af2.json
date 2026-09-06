@@ -1,0 +1,15 @@
+{
+  "instanceId": "eca39af2-2eb4-41f0-8101-a4ec347158a7",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "An agent's own srs sibling is routinely non-master -- SRS_SPEC_DIR is the default, not the fallback",
+    "summary": "A cloud session working srs-rust is normally handed an srs checkout sitting on that session's own designated feature branch, not master. Any test or script that resolves a sibling srs checkout by walking up from CARGO_MANIFEST_DIR (or a fixed relative path) will, in this environment, land on that non-master branch essentially every time -- not as a rare stale-dev-machine edge case, but as the default shape of the environment. Treat SRS_SPEC_DIR pointed at a fresh origin/master clone as the routine step for any gate that reads spec-repo content, not an opt-in for unusual setups.",
+    "rationale": "Confirmed directly while working srs-rust#922: this session's own srs clone at the standard sibling path was on claude/trusting-tesla-94amp1, and two tests (discovery_conformance.rs, core_bundle_drift.rs) silently trusted it pre-fix with zero warning -- a false green produced by completely ordinary session setup, not a contrived scenario. srs-rust#874 already established the fix shape (SRS_SPEC_DIR-first, loud panic naming the branch when the sibling fallback finds one that isn't master) in rfc_035_parity.rs, but framed the risk as a stale long-lived dev sibling. The framing undersold it: in this programme's normal cloud-session shape, EVERY session's sibling is non-master by construction, so a resolver without this guard is not occasionally wrong, it is always silently trusting the wrong thing whenever SRS_SPEC_DIR is left unset. Any future unit that adds a test or script resolving spec-repo content from a sibling checkout should reach for the hardened pattern from the start, and should verify it against the session's own live sibling (which is already in the non-master state the guard needs to catch) rather than fabricating a synthetic stale checkout."
+  },
+  "createdAt": "2026-09-06T13:00:00.823317909+00:00",
+  "updatedAt": "2026-09-06T13:00:00.823325824+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,23 @@
+{
+  "instanceId": "fb3039e7-82bd-47b2-8d63-603348fdc7d7",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Harden sibling-resolution against stale branches (srs-rust#874 class), instance #2",
+    "summary": "srs-rust#874 hardened rfc_035_parity.rs's sibling-checkout resolution against a stale, non-master srs sibling (PR #879); the same unhardened pattern survived in two more places, discovery_conformance.rs and core_bundle_drift.rs (srs-rust#922). Both now prefer SRS_SPEC_DIR and panic loudly naming the branch when the walk-up/fixed-relative sibling fallback finds one that isn't on master.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs-rust#922",
+      "srs-rust#874",
+      "srs-rust#921"
+    ],
+    "body": "Dispatched from the srs-rust gate:pool queue via srs#580 tick 2026-09-06. Fix in srs-rust PR #964: SRS_SPEC_DIR-first resolution + loud panic on a non-master sibling, matching rfc_035_parity.rs::spec_repo() (PR #879) exactly. Proved by reproducing the false-green live: this session's own srs sibling sits on a non-master branch and was silently trusted by both tests pre-fix; post-fix both panic naming the branch, and both pass green against a fresh origin/master clone via SRS_SPEC_DIR. Grepped tests/ for the same shape; found one more site (integration_tests.rs's srs_spec_repo_dir() Legacy fallback) but left it alone since it is fully shadowed by a higher-priority vendored-fixture check and is dead code today."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-06T12:58:58.153272357+00:00",
+  "updatedAt": "2026-09-06T12:59:29.076997146+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
