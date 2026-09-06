@@ -1,0 +1,15 @@
+{
+  "instanceId": "f49b2125-4cb1-4cd3-a05b-7cf01b7a5062",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "A check that reads git history needs its own git-repo fixture, not the shared writeJson tree",
+    "summary": "tests/guards/run.mjs's existing case functions all build a plain-file fixture tree with writeJson/writeText and run the check against it as a live snapshot. A check whose claim is about a *change over time* (srs#649's versioning-cell check: did version increase when allowedValues changed) cannot be exercised that way -- a directory with no git history has nothing to diff, and the check would report success (0 violations) on a fixture that was never actually testing the violating case.",
+    "rationale": "versioningCellCases (added by srs#649/PR#655) builds two throwaway git repositories under its own fixture subdirectory, each with a real two-commit history (git init, then one commit per revision, with GIT_AUTHOR_NAME/EMAIL and GIT_COMMITTER_NAME/EMAIL set explicitly so the commit does not depend on any ambient git identity being configured in the runner). This is the reusable shape for testing any future check that reads git log/git show rather than the live tree: build a fresh git repository per scenario under the shared fixture root (so it does not collide with sibling cases), commit the sequence of revisions under test, then run the check against that repository's path exactly as runCheck already does for the plain-tree fixtures. To reopen this: only if a future check's own history-reading behavior cannot be expressed as a linear sequence of full-file commits (e.g. it depends on merge topology, or partial hunks within one commit) -- srs#649's check reads whole-file JSON snapshots per commit, so that case did not need to be solved here."
+  },
+  "createdAt": "2026-09-06T20:54:45.212330209+00:00",
+  "updatedAt": "2026-09-06T20:54:45.212336381+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
