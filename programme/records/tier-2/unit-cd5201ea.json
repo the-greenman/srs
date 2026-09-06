@@ -1,0 +1,22 @@
+{
+  "instanceId": "cd5201ea-e608-4c0b-9c1f-0a2d8acc201a",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Discovery-ladder list payloads gained the fields the ladder exists to surface",
+    "summary": "type list, field list and type schema each dropped a property the discovery ladder needs, forcing a get per entity. All three were already correct one layer down (RecordType on disk, FieldSummary in the service layer, editorHint on Field) — the fix projects them the rest of the way out.",
+    "decision_mode": "clear",
+    "door": "door-1",
+    "issue_ref": [
+      "srs-rust#958",
+      "srs#580"
+    ],
+    "body": "PR https://github.com/the-greenman/srs-rust/pull/975. `TypeSummary` (srs-repository) gains `identity_field_id`/`lifecycle_ref`, populated from the already-loaded `RecordType`; `TypeListEntry` (srs-cli payload) and its handler carry them through. `FieldListEntry` gains `fieldType`, sourced from `FieldSummary`, which already carried it whole — the CLI payload struct was the only gap. `type_schema_service::apply_editor_hint_widget` applies a Field's authored `editorHint` as an explicit override of the format-based `x-srs-widget` default, for any datatype, not just the string case the issue reported. WASM (`srs-bindings`) needed no change: `list_types`/`list_fields` already serialize the service structs directly. Golden schemas regenerated (`crates/srs-cli/schemas/payload/{type,field}-list.json`). Guard proven red: reverted `type-list.json` to its stale pre-fix golden while the struct carried the new fields; `payload_contracts` failed with a byte-diff panic naming the missing keys, then passed again once restored. New behavioral tests: `field_list_includes_field_type`, `type_list_includes_identity_field_id_and_lifecycle_ref`, `type_schema_honors_editor_hint_override`. All three gates (`cargo build/test/clippy -D warnings --workspace`) exit 0, `cargo test` run with `SRS_SPEC_DIR` pointed at a fresh `origin/master` clone per srs-rust#874/carried-context-eca39af2 (this session's own `srs` sibling sits on a designated feature branch, not master)."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-06T18:02:03.184585466+00:00",
+  "updatedAt": "2026-09-06T18:02:09.093542562+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
