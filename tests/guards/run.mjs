@@ -1551,6 +1551,155 @@ async function roadmapCellMirrorCases(root) {
   );
 }
 
+// ---- srs#584 — package-id-uniqueness: canonical-name identity + on-disk sweep -------------------
+async function packageIdUniquenessCases(root) {
+  console.log("srs#584 — package-id-uniqueness guard: canonical name + on-disk sweep");
+
+  await cp(join(REPO, "docs/schema/2.0"), join(root, "docs/schema/2.0"), { recursive: true });
+
+  const repo = join(root, "srs");
+  const pkgDir = join(repo, "package/a");
+  const ID = (n) => `00000000-0000-4000-8000-0000000c${String(n).padStart(4, "0")}`;
+
+  const typeDoc = (id, name, version = 1) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/type.json",
+    id, namespace: "com.example.fixture", name, version,
+    description: "fixture type", fields: [], createdAt: "2026-08-15T00:00:00Z",
+  });
+  const fieldDoc = (id, name) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/field.json",
+    id, namespace: "com.example.fixture", name, version: 1,
+    description: "fixture field", aiGuidance: "fixture",
+    fieldType: { datatype: "string" }, createdAt: "2026-08-15T00:00:00Z",
+  });
+  const manifest = (extra = {}) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/package-manifest.json",
+    id: ID(2), namespace: "com.example.fixture", name: "fixture", version: "1.0.0",
+    title: "Fixture", description: "fixture package", status: "draft",
+    createdAt: "2026-08-15T00:00:00Z", ...extra,
+  });
+
+  await writeJson(join(repo, "manifest.json"), {
+    srsVersion: "2.0-draft",
+    dataModelRevision: 5,
+    repositoryId: ID(0),
+    namespace: "com.example.fixture",
+    packageRefs: [{ mode: "local", path: "package/a" }],
+    container: { containerId: ID(1), title: "Fixture", memberInstanceIds: [] },
+  });
+
+  // Baseline: one declared Type, nothing else on disk.
+  await writeJson(join(pkgDir, "package.json"), manifest({ types: ["types/foo.json"] }));
+  await writeJson(join(pkgDir, "types/foo.json"), typeDoc(ID(10), "foo"));
+  expect("passes on a single declared definition", runCheck("check-package-id-uniqueness.mjs", root), {
+    exit: 0,
+    contains: ["✓ Package UUIDs are unique"],
+  });
+
+  // #295's own case, still covered: two declared Types sharing one UUID.
+  await writeJson(join(pkgDir, "types/bar.json"), typeDoc(ID(10), "bar"));
+  await writeJson(join(pkgDir, "package.json"), manifest({ types: ["types/foo.json", "types/bar.json"] }));
+  expect("rejects two declared definitions sharing one UUID", runCheck("check-package-id-uniqueness.mjs", root), {
+    exit: 1,
+    contains: [`definition id ${ID(10)} claimed twice`, "types/foo.json", "types/bar.json"],
+  });
+
+  // The violation #584 adds: two declared Types of the SAME kind, same namespace/name/version, but
+  // different UUIDs — the shape of the three real collisions #584 found (lifecycle@1, term@1,
+  // vocabulary@1).
+  await writeJson(join(pkgDir, "types/bar.json"), typeDoc(ID(11), "foo"));
+  expect(
+    "rejects two declared definitions of the same kind sharing one canonical name",
+    runCheck("check-package-id-uniqueness.mjs", root),
+    {
+      exit: 1,
+      contains: [
+        "canonical name types:com.example.fixture/foo@1",
+        "claimed by two definitions with different ids",
+        "identity conflicts are fatal, never resolved by precedence",
+      ],
+    },
+  );
+
+  // NOT a violation: a Field and a Type sharing one namespace/name/version. Canonical name is scoped
+  // by kind for exactly this reason — the real metamodel's `lineage` Field backs a `lineage` Type,
+  // and treating that as a conflict would be a false positive over live, correct data.
+  await writeJson(join(pkgDir, "types/bar.json"), typeDoc(ID(11), "bar"));
+  await writeJson(join(pkgDir, "fields/foo.json"), fieldDoc(ID(12), "foo"));
+  await writeJson(join(pkgDir, "package.json"), manifest({
+    types: ["types/foo.json", "types/bar.json"],
+    fields: ["fields/foo.json"],
+  }));
+  expect(
+    "accepts a Field and a Type sharing one namespace/name/version",
+    runCheck("check-package-id-uniqueness.mjs", root),
+    { exit: 0, contains: ["✓ Package UUIDs are unique"] },
+  );
+
+  // The #592 blind spot: a file on disk that NO manifest lists, sharing a UUID with a declared
+  // definition. Only the directory sweep added by this unit can see it.
+  await writeJson(join(pkgDir, "types/stray.json"), typeDoc(ID(10), "stray"));
+  expect(
+    "rejects an undeclared on-disk file sharing a UUID with a declared definition",
+    runCheck("check-package-id-uniqueness.mjs", root),
+    { exit: 1, contains: [`definition id ${ID(10)} claimed twice`, "types/stray.json"] },
+  );
+
+  // The #592 blind spot, canonical-name half: an undeclared on-disk file of the same kind sharing a
+  // declared definition's name (different id, so it is the name that collides, not the id).
+  await writeJson(join(pkgDir, "types/stray.json"), typeDoc(ID(13), "foo"));
+  expect(
+    "rejects an undeclared on-disk file sharing a canonical name with a declared definition",
+    runCheck("check-package-id-uniqueness.mjs", root),
+    {
+      exit: 1,
+      contains: ["canonical name types:com.example.fixture/foo@1", "claimed by two definitions with different ids"],
+    },
+  );
+  await rm(join(pkgDir, "types/stray.json"));
+
+  // A pre-`version`-field legacy artifact — recognisable only by `$schema`, missing `version` and
+  // `name` entirely, exactly like the live `spec-document-view.json` orphan #584 found once this
+  // guard could see it. It must still be caught by UUID, even though it cannot contribute a
+  // canonical name.
+  await writeJson(join(pkgDir, "types/legacy.json"), {
+    $schema: "https://srs.semanticops.com/schema/2.0/type.json",
+    id: ID(10),
+    namespace: "com.example.fixture",
+    title: "Legacy pre-rename artifact",
+  });
+  expect(
+    "rejects a pre-version-field legacy file sharing a UUID, classified by $schema alone",
+    runCheck("check-package-id-uniqueness.mjs", root),
+    { exit: 1, contains: [`definition id ${ID(10)} claimed twice`, "types/legacy.json"] },
+  );
+
+  // The same legacy shape, but with no id collision: it must be swept in without crashing and
+  // without a spurious canonical-name entry standing in for its missing name/version.
+  await writeJson(join(pkgDir, "types/legacy.json"), {
+    $schema: "https://srs.semanticops.com/schema/2.0/type.json",
+    id: ID(14),
+    namespace: "com.example.fixture",
+    title: "Legacy pre-rename artifact, no collision",
+  });
+  expect(
+    "sweeps in a legacy $schema-only file with no id collision cleanly",
+    runCheck("check-package-id-uniqueness.mjs", root),
+    { exit: 0, contains: ["✓ Package UUIDs are unique"] },
+  );
+  await rm(join(pkgDir, "types/legacy.json"));
+
+  // NOT a violation: an ordinary, non-definition-shaped JSON file sitting in the package tree (no
+  // UUID id, no namespace, no recognisable $schema). The sweep must not flag arbitrary data.
+  await writeJson(join(pkgDir, "types/notes.json"), { comment: "not a definition", count: 3 });
+  expect(
+    "does not flag a non-definition-shaped JSON file found by the sweep",
+    runCheck("check-package-id-uniqueness.mjs", root),
+    { exit: 0, contains: ["✓ Package UUIDs are unique"] },
+  );
+  await rm(join(pkgDir, "types/notes.json"));
+}
+
 const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
 try {
   await fieldNameCases(join(root, "field-name"));
@@ -1567,6 +1716,7 @@ try {
   await specLanguageCases(join(root, "spec-language"));
   await ledgerCompletenessCases(join(root, "ledger-completeness"));
   await roadmapCellMirrorCases(join(root, "roadmap-cell-mirror"));
+  await packageIdUniquenessCases(join(root, "package-id-uniqueness"));
 } finally {
   await rm(root, { recursive: true, force: true });
 }

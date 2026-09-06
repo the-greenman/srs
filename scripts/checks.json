@@ -21,8 +21,8 @@
       "args": [],
       "tier": "always",
       "cell": "identity",
-      "governing": "srs#295",
-      "description": "No two packages, and no two definitions listed within a resolved package's index, may claim one UUID. A UUID is the primary identity in SRS and must be globally stable."
+      "governing": "srs#295; srs#584",
+      "description": "No two packages may claim one UUID. Over every definition reachable from a resolved package — listed in its manifest arrays or found by walking its directory tree, declared or not — no two may claim one UUID, and no two of the same kind may claim one canonical name (namespace/name@version, or namespace/key@version for a RelationType). A UUID is the primary identity in SRS and must be globally stable; canonical name is how a definition is cited in prose and integration manifests, so two ids answering to one is the same identity conflict by another name."
     },
     {
       "id": "validate-records",
