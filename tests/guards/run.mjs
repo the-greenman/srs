@@ -1955,6 +1955,82 @@ async function specCoherenceCases(root) {
   });
 }
 
+// ---- srs#649 — versioning cell: Field allowedValues change requires a version increment ---------
+//
+// Unlike every other case in this file, the check under test reads real git history rather than a
+// live tree snapshot, so a plain writeJson fixture proves nothing — a directory with no commits has
+// no history to diff. Each scenario below is its own throwaway git repository with a real two-
+// commit history, built and committed here rather than shared with the other cases' fixture tree.
+async function versioningCellCases(root) {
+  console.log("srs#649 — versioning cell: Field allowedValues change requires a version increment");
+
+  const FIELD_ID = "00000000-0000-4000-8000-00000000f649";
+  const gitEnv = {
+    ...process.env,
+    GIT_AUTHOR_NAME: "srs-guard-fixture",
+    GIT_AUTHOR_EMAIL: "fixture@example.invalid",
+    GIT_COMMITTER_NAME: "srs-guard-fixture",
+    GIT_COMMITTER_EMAIL: "fixture@example.invalid",
+  };
+  const git = (cwd, ...args) => spawnSync("git", args, { cwd, env: gitEnv, encoding: "utf8" });
+
+  const fieldDoc = (version, allowedValues) => ({
+    id: FIELD_ID,
+    namespace: "com.example.fixture",
+    name: "status",
+    version,
+    description: "fixture field",
+    aiGuidance: "fixture",
+    fieldType: { datatype: "string", valueDomain: "closed", allowedValues },
+    createdAt: "2026-08-15T00:00:00Z",
+  });
+
+  // Builds a repo at `dir` with one commit per step, each rewriting the same field file.
+  const buildHistory = async (dir, steps) => {
+    await mkdir(dir, { recursive: true });
+    git(dir, "init", "-q");
+    const path = join(dir, "srs/package/fields/status.json");
+    for (const { version, allowedValues } of steps) {
+      await writeJson(path, fieldDoc(version, allowedValues));
+      git(dir, "add", "-A");
+      git(dir, "commit", "-q", "-m", `v${version}`);
+    }
+  };
+
+  const violation = join(root, "violation");
+  await buildHistory(violation, [
+    { version: 1, allowedValues: ["a", "b"] },
+    { version: 1, allowedValues: ["a", "b", "c"] }, // domain changed, version did not increase
+  ]);
+  expect(
+    "rejects a Field whose allowedValues changed with no version increase",
+    runCheck("check-versioning-cell.mjs", violation),
+    { exit: 1, contains: ["srs/package/fields/status.json", FIELD_ID, "no version increase"] },
+  );
+
+  const clean = join(root, "clean");
+  await buildHistory(clean, [
+    { version: 1, allowedValues: ["a", "b"] },
+    { version: 2, allowedValues: ["a", "b", "c"] }, // domain changed, version incremented
+  ]);
+  expect(
+    "accepts the same allowedValues change once the version increments",
+    runCheck("check-versioning-cell.mjs", clean),
+    { exit: 0 },
+  );
+
+  const untouched = join(root, "untouched");
+  await buildHistory(untouched, [
+    { version: 1, allowedValues: ["a", "b"] },
+    { version: 1, allowedValues: ["a", "b"] }, // no domain change at all — a version bump is not required
+  ]);
+  expect(
+    "does not require a version increase when allowedValues does not change",
+    runCheck("check-versioning-cell.mjs", untouched),
+    { exit: 0 },
+  );
+}
+
 const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
 try {
   await fieldNameCases(join(root, "field-name"));
@@ -1974,6 +2050,7 @@ try {
   await roadmapCellMirrorCases(join(root, "roadmap-cell-mirror"));
   await packageIdUniquenessCases(join(root, "package-id-uniqueness"));
   await specCoherenceCases(join(root, "spec-coherence"));
+  await versioningCellCases(join(root, "versioning-cell"));
 } finally {
   await rm(root, { recursive: true, force: true });
 }
