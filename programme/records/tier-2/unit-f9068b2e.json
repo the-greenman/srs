@@ -1,0 +1,23 @@
+{
+  "instanceId": "f9068b2e-effb-4936-8bc6-857862424b0b",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Enforcement check for the versioning cell: Field allowedValues change requires a version increment",
+    "summary": "Adds check-versioning-cell.mjs: diffs each Field definition file's own git history and requires version to increase whenever fieldType.allowedValues differs between two consecutive revisions of the same Field id. Registered in scripts/checks.json (always tier, versioning cell). Zero corpus violations at HEAD (545 Field files), no allowlist.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs#649",
+      "srs#655",
+      "srs#580"
+    ],
+    "body": "Dispatched from the srs gate:pool queue via srs#580 tick 2026-09-06 20:1xZ. Fix in srs PR #655. Discovered during Work that the check is meaningless under the default actions/checkout shallow (fetch-depth 1) clone -- git log on any path returns only the tip commit, so a history-diffing check could never see two revisions. Fixed by adding fetch-depth: 0 to .github/workflows/validate.yml's checkout step. Proved by building two throwaway git repositories with real commit histories in tests/guards/run.mjs (versioningCellCases) and capturing red output on a deliberately crafted allowedValues change with no version bump, then green on the same change with the version incremented and on no change at all."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-06T20:54:16.885730285+00:00",
+  "updatedAt": "2026-09-06T20:54:24.990368990+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
