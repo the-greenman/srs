@@ -1,0 +1,37 @@
+{
+  "instanceId": "0118e938-7538-4745-b52f-e4e1f6c26004",
+  "typeId": "6a000004-0000-4000-a000-000000000004",
+  "typeVersion": 2,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc-decision",
+  "fieldValues": {
+    "title": "A construct has one layer: a crossing is a stated goal, never a design option",
+    "decision_date": "2026-09-06",
+    "decision_rationale": "The owner's ruling, made while closing the container review (srs#605): the single-layer rule was the element that mattered, and a rule that names an exception in the same breath as the rule hands every future author an option they will use. 'Legitimately' was never defined; the corpus holds zero declared crossings under rule 4, so the permission has cost nothing yet - which is exactly the moment to withdraw it. The container question flip-flopped for a year because each RFC could add one more job to the Container without any rule saying a construct may not straddle planes. Rule 1 (one home) names the plane; it did not, by itself, forbid a construct from carrying a second plane's data as a 'declared crossing'. This record closes that gap: the crossing mechanism survives for the case that genuinely needs it, and stops being the path of least resistance.",
+    "decision_statement": "Layer rule 4 is refined. Its ruling clause - a crossing is declared where it occurs, and the lower layer wins - stands. Its permission clause - 'where a layer legitimately carries another layer's data' - is withdrawn as a standing option.\n\nThe rule now reads: A CONSTRUCT HAS ONE LAYER. Every construct is defined on one plane and one layer, and its schema carries only that layer's data. A layer carries another layer's data only for a specific, named goal that cannot be met within one layer. That goal is stated in the decision or RFC that introduces the crossing, the crossing is declared at the site where it occurs, and conflicts resolve downward, visibly. Absent a stated goal the layer test fails: the proposal is re-drawn inside one layer, not accepted with a declaration attached. Identity conflicts remain fatal per the Earth rule - they are not crossings.\n\nThe two examples the original rule named are re-read under this reading. Denormalized type hints on a Record (typeNamespace, typeName; Invariant 28) are a crossing with a stated goal - a record file is readable without its package present - and remain the one grandfathered crossing in the core. Composition order defaulting to the precedes chain is not a crossing at all: it is an upper layer consuming a lower one (rule 2), and is re-filed as such.\n\nApplied to the Container (rfc-decision-0750c62f): the plane assignment is closed, not provisional. A Container is a selection and nothing else; no future consumer may add semantic data to the Container schema by declaring the addition a crossing. A consumer that needs meaning attached to a scope attaches it to the scope's identity record, where Fields live.",
+    "decision_scope": "Layer rule 4 of rfc-decision-9ee14517, every construct schema in the core and the extensions, and the layer test applied to every proposal. Does not change rules 1, 2, 3, 5 or 6. Does not alter Invariant 28. Does not change any schema on disk today.",
+    "governing_values": [
+      "shared-coherence",
+      "semantic-integrity"
+    ],
+    "project_phase": "formation",
+    "alternatives_considered": "(1) Leave rule 4 as written and rely on review to judge 'legitimately' case by case. Rejected: an undefined word in a rule is a preference, not a rule, and the container history shows how a preference erodes one RFC at a time. (2) Forbid crossings outright and retire Invariant 28's hints. Rejected: the hints serve a real goal (a readable record file without its package) and removing them is a breaking change with no consumer asking for it; a goal-gated exception keeps the one real case and closes the door on speculative ones. (3) Move the tightening into the Container decision alone. Rejected: the failure is general - any construct on any plane could grow a second plane's data by declaration - so the fix belongs in the layer register, and the Container ruling becomes its first application.",
+    "accepted_costs": "Some conveniences that would have passed as declared crossings must now be re-drawn inside one layer or justified by a stated goal; that is more design work up front. A future construct with a genuine cross-layer goal must argue it explicitly rather than assert it. Any existing spec surface that quietly carries another layer's data without a declaration is now a finding, not a tolerated convenience - the meaning-placement sweep (srs#588 lineage) gains a new class of item.",
+    "evidence_refs": [
+      "rfc-decision-9ee14517 (rule 4 as originally worded)",
+      "rfc-decision-0750c62f (the container ruling this closes)",
+      "srs#605 (the container review, owner's closing ruling on the single-layer element)",
+      "Invariant 28 (the one grandfathered crossing)",
+      "corpus search 2026-09-06: zero declared crossings under rule 4 outside the charter itself"
+    ],
+    "review_trigger": "Review if a second construct presents a cross-layer goal that survives the stated-goal test; two real cases would justify a named crossing pattern in the charter rather than case-by-case rulings. Review also if the meaning-placement sweep finds undeclared crossings in numbers that suggest the rule is being routed around rather than followed."
+  },
+  "lifecycleState": "accepted",
+  "tags": [
+    "topic:rfc",
+    "cell:containment"
+  ],
+  "createdAt": "2026-09-06T10:31:20.761352302+00:00",
+  "updatedAt": "2026-09-06T10:31:38.632513928+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
