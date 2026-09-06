@@ -61,10 +61,18 @@
  * Some records are deliberately not published — document identity anchors, source notes, artifacts
  * of an unaccepted RFC. That is legitimate, but it must be *recorded*, not inferred from silence.
  * `publication-reachability-exclusions.json` is that record: one typed entry per instance, each
- * carrying a reason and the issue that owns its real resolution. It is data the guard reads, not
+ * carrying a reason, a `disposition` and the issue that tracks it. It is data the guard reads, not
  * prose in a comment. An entry naming an instance that is no longer discovered, or one that has
  * since become reachable, is itself an error — a stale exclusion is how a suppression list turns
  * into a permanent blind spot.
+ *
+ * `disposition` (#590) names which of two shapes an entry is, because "the issue this cites is
+ * closed" means opposite things for each: `"permanent"` is a ruled, settled outcome — its `issue`
+ * cites the (often closed) issue whose ruling made it so, and closure is expected, not staleness.
+ * `"pending"` means real follow-up remains — its `issue` MUST still be open; the entry is resolved
+ * (removed, or reclassified `"permanent"` citing the ruling) once that follow-up lands. Without this,
+ * 80 of 82 entries citing a closed issue read as one giant regression instead of the settled
+ * dispositions almost all of them are.
  *
  * Node pipeline only, per ADR-004: the pinned binary renders the views but has no notion of "a
  * record no view reaches", and this is an authoring-corpus rule rather than a load-time invariant —
@@ -389,14 +397,31 @@ async function loadExclusions() {
   const seen = new Set();
   for (const [i, e] of entries.entries()) {
     const where = `${EXCLUSIONS} exclusions[${i}]`;
-    const missing = ["instanceId", "path", "reason", "issue"].filter((k) => typeof e?.[k] !== "string" || !e[k].trim());
+    const missing = ["instanceId", "path", "reason", "disposition", "issue"].filter(
+      (k) => typeof e?.[k] !== "string" || !e[k].trim(),
+    );
     if (missing.length) {
       fail(`${where} is missing required properties: ${missing.join(", ")}`);
       continue;
     }
+    // #590: a stale exclusion is not only "the instance changed" (checked below, unconditionally) —
+    // it is also "the issue this cites is no longer live", and a bare `issue` string cannot say
+    // whether that is expected (a permanent, ruled disposition) or a regression (a pending follow-up
+    // whose tracking issue quietly closed). `disposition` names which this entry is, so the two
+    // failure modes stop being indistinguishable. This guard cannot check GitHub issue state itself —
+    // `validate-all` is deliberately dependency-free and network-free (validate.yml) — so a `pending`
+    // issue going stale is still caught by re-audit, not by this script; what disposition fixes is
+    // that a `permanent` entry citing a long-closed issue is no longer a false positive waiting to be
+    // "fixed" by someone re-opening a settled ruling.
+    if (e.disposition !== "permanent" && e.disposition !== "pending") {
+      fail(`${where} disposition "${e.disposition}" must be "permanent" or "pending"`);
+      continue;
+    }
     // `#<number>`, matching the issue-number requirement the sibling allowlist in
     // check-idl-schema-conformance.mjs enforces for the same reason: "later" is not a tracking issue,
-    // and a suppression nobody can navigate back to is how the list stops shrinking.
+    // and a suppression nobody can navigate back to is how the list stops shrinking. Required for both
+    // dispositions: `permanent` cites the (possibly closed) issue whose ruling settled it; `pending`
+    // cites the issue that still owns the follow-up.
     if (!/^#[1-9]\d*$/.test(e.issue)) {
       fail(`${where} issue "${e.issue}" is not a GitHub issue reference of the form #<number>`);
       continue;
@@ -485,7 +510,7 @@ async function main() {
     console.log(`\n## Unreachable instances\n`);
     for (const u of [...unreachable].sort((a, b) => a.path.localeCompare(b.path))) {
       const e = excludedById.get(u.id);
-      console.log(`- \`${u.path}\` — ${e ? `declared invisible (${e.issue}): ${e.reason}` : "**UNDECLARED**"}`);
+      console.log(`- \`${u.path}\` — ${e ? `declared invisible (${e.disposition}, ${e.issue}): ${e.reason}` : "**UNDECLARED**"}`);
     }
   }
 
