@@ -1955,6 +1955,65 @@ async function specCoherenceCases(root) {
   });
 }
 
+// ---- srs#650 — attribution cell: a fieldMeta key names a field that actually exists ----------
+async function attributionCellCases(root) {
+  console.log("srs#650 — attribution cell: fieldMeta keys are a subset of fieldValues keys (I-133)");
+
+  const ID = "00000000-0000-4000-8000-000000000650";
+  const record = (fieldValues, fieldMeta) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/record.json",
+    instanceId: ID,
+    typeId: "6a000004-0000-4000-a000-000000000004",
+    typeVersion: 1,
+    typeNamespace: "com.semanticops.spec",
+    typeName: "invariant",
+    fieldValues,
+    ...(fieldMeta !== undefined ? { fieldMeta } : {}),
+  });
+
+  const repo = join(root, "srs");
+
+  // No fieldMeta at all: the overwhelming common case, must pass.
+  await writeJson(join(repo, "records/plain.json"), record({ title: "fixture" }));
+  expect(
+    "passes a record with no fieldMeta block",
+    runCheck("check-attribution-cell.mjs", root),
+    { exit: 0, contains: ["every fieldMeta key names a field that exists in fieldValues"] },
+  );
+
+  // The violation this guard exists for: a fieldMeta key naming a field fieldValues does not have.
+  await writeJson(
+    join(repo, "records/plain.json"),
+    record({ title: "fixture" }, { summary: { source: "human" } }),
+  );
+  expect(
+    "rejects a fieldMeta key with no corresponding fieldValues key",
+    runCheck("check-attribution-cell.mjs", root),
+    { exit: 1, contains: ["records/plain.json", ID, 'fieldMeta."summary"', "no fieldValues"] },
+  );
+
+  // A fieldMeta key that does name a real fieldValues key: compliant, matching srs#650's one real
+  // corpus instance (rfc-004's proposal_artifact_path).
+  await writeJson(
+    join(repo, "records/plain.json"),
+    record({ title: "fixture" }, { title: { source: "human" } }),
+  );
+  expect(
+    "accepts a fieldMeta key that names a real fieldValues key",
+    runCheck("check-attribution-cell.mjs", root),
+    { exit: 0, contains: ["every fieldMeta key names a field that exists in fieldValues"] },
+  );
+
+  // A floor, matching the sibling cell guards: a walk that finds no Record instance at all means
+  // the root argument is wrong, not that the corpus has nothing to check.
+  await rm(join(repo, "records/plain.json"));
+  expect(
+    "fails when the walk finds no Record instances at all",
+    runCheck("check-attribution-cell.mjs", root),
+    { exit: 1, contains: ["No Record instances", "check the root argument"] },
+  );
+}
+
 const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
 try {
   await fieldNameCases(join(root, "field-name"));
@@ -1974,6 +2033,7 @@ try {
   await roadmapCellMirrorCases(join(root, "roadmap-cell-mirror"));
   await packageIdUniquenessCases(join(root, "package-id-uniqueness"));
   await specCoherenceCases(join(root, "spec-coherence"));
+  await attributionCellCases(join(root, "attribution-cell"));
 } finally {
   await rm(root, { recursive: true, force: true });
 }

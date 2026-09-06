@@ -228,6 +228,15 @@
           "description": "The spec reads in layers over the concept tree, read off canonical relations only (tree = contains, order = precedes, prerequisites = depends-on): (1) no depends-on edge between concepts points forward in the tree's linearised order, computed over the strongly-connected components of the depends-on graph so the three genuine 2-cycles (#608) are introduced together, never flagged; (2) no record has two contains parents; (3) every content leaf (section, subsection, mechanism, invariant, example, design-note, table, generated-type-reference) has a contains parent or root-container membership; (4) no depends-on edge points from an earlier Part's subtree into a later one (vacuous until #563 hangs the concept tree under the Parts, and says so); (5) no hand-authored leaf bakes a markdown heading into a text field (root cause #567). Known violations live in scripts/spec-coherence-allowlist.json, each citing a live issue; an unlisted violation fails, and so does an entry that no longer matches - shrinking the list is the migration (#562/#563/#564)."
     },
     {
+      "id": "attribution-cell",
+      "script": "check-attribution-cell.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "attribution",
+      "governing": "I-133; srs#650",
+      "description": "For every Tier-2 Record instance under srs/records/** carrying a fieldMeta block, every fieldMeta key names a field that actually exists in that record's fieldValues (I-133's sibling-keys clause, RFC-039 [R6]). I-133's other clause (each fieldMeta value's own shape, {source?, editedAt?, sourceRefs?}) is already enforced by validate-records.mjs against docs/schema/2.0/record.json's FieldMeta $def and is deliberately not re-implemented here (one mechanism per goal); a fieldMeta nested inside a composite field's own interior (I-133's third clause) is a bigger unit, left for a follow-up. No allowlist: the corpus's one real fieldMeta usage (rfc-004's proposal_artifact_path) is compliant."
+    },
+    {
       "id": "spec-language",
       "script": "check-spec-language.mjs",
       "args": [],
