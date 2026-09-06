@@ -147,6 +147,12 @@ jobs:
           SRS_CLI_PATH: /tmp/srs-cli/srs
         run: node scripts/check-programme-conformance.mjs
 
+      - name: Check governance seed drift (#550)
+        working-directory: srs
+        env:
+          SRS_CLI_PATH: /tmp/srs-cli/srs
+        run: node scripts/build-governance-seed.mjs --check
+
       - name: Check owner strategic map
         working-directory: srs
         run: |

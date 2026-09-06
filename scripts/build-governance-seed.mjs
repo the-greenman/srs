@@ -15,9 +15,11 @@
  * is RFC-003 / #37), so the provenance stamp is injected here. The output is
  * deterministic: re-running this script reproduces the seed byte-for-byte.
  *
- * Version defaults to 1.1.0 (this script's original scope) — pass another
- * published version dir name (e.g. `1.2.1`) as the first positional arg to
- * (re)build its seed instead.
+ * Version defaults to the CURRENT published version — the highest semver directory under
+ * packages/com.mudemocracy.governance (srs#550) — so `--check` with no explicit version always
+ * gates the version that's actually live, with no second place to remember to bump on republish.
+ * Pass another published version dir name (e.g. `1.1.0`) as the first positional arg to (re)build
+ * a historical version's seed instead; historical versions are exempt from the drift gate below.
  *
  * The build goes exclusively through the sanctioned `srs repo copy` path.
  * A filesystem-flatten fallback used to sit here for srs-rust#930 (the
@@ -37,12 +39,14 @@ import { cpSync, mkdtempSync, mkdirSync, rmSync, readFileSync, writeFileSync, ex
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { latestGovernanceVersion } from './lib/governance-versions.mjs';
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = dirname(SCRIPT_DIR); // srs/
 const args = process.argv.slice(2);
 const checkMode = args.includes('--check');
-const PACKAGE_VERSION = args.find((a) => a !== '--check') || '1.1.0';
+const explicitVersion = args.find((a) => a !== '--check');
+const PACKAGE_VERSION = explicitVersion || latestGovernanceVersion(REPO_ROOT);
 const PKG_VERSION_DIR = join(REPO_ROOT, 'packages', 'com.mudemocracy.governance', PACKAGE_VERSION);
 const PACKAGE_DIR = join(PKG_VERSION_DIR, 'package');
 const SEED_DIR = join(PKG_VERSION_DIR, 'seed');
@@ -60,7 +64,10 @@ const STAMP_TIME = '2026-01-01T00:00:00Z';
 // older, narrower generation than the shapes it actually contains.
 const SEED_DATA_MODEL_REVISION = 7;
 
-const SRS_BIN = process.env.SRS_BIN || 'srs';
+// SRS_BIN wins if set (this script's own long-standing override); SRS_CLI_PATH is the shared
+// pinned-CLI convention (scripts/lib/pinned-srs.mjs, fetch-pinned-srs.mjs) so a caller that already
+// resolved the pinned binary that way doesn't need a second env var name (srs#550).
+const SRS_BIN = process.env.SRS_BIN || process.env.SRS_CLI_PATH || 'srs';
 
 function srs(args, opts = {}) {
   const out = execFileSync(SRS_BIN, args, { encoding: 'utf8', ...opts });
