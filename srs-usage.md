@@ -1722,6 +1722,17 @@ The reverse lookup `containers_for_instance(instanceId) → Container[]` is a **
 
 CLI: `srs container list --member <instanceId> --repo <path>`. The result is consistent with current `rootInstanceIds`, `memberInstanceIds`, and `contains` Relations in the repository.
 
+### Building a navigation section: the anchor is a root, not a member (I-82, srs-rust#460)
+
+A container that represents a navigation section names its anchor record in `rootInstanceIds`, not `memberInstanceIds`. Set `identityInstanceId` and `anchorInstanceId` to that same record. Two ways to get this wrong, both easy to ship unnoticed:
+
+- **Listed only as a member.** The record is then not the root of any container, so **I-82** ("each non-identity section root SHOULD be the root of some Container in the container set") fires for every section built this way. It is an advisory `Warning` — `ok`/exit code are unaffected — so it is easy to miss.
+- **Listed as both root and member.** The container trips srs-rust#460, where `repository_navigation` silently empties the rendered sidebar. This shape is not merely untidy: it can produce an empty navigation with no diagnostic at all.
+
+If a record was added as a member and needs to become the section root instead, `srs container roots add` followed by `srs container members remove` moves it — `roots add` does not implicitly remove the same id from `memberInstanceIds`.
+
+The working shape lives in `programme/containers/` on master: each phase container's anchor record is its sole `rootInstanceIds` entry and does not also appear in `memberInstanceIds`. `srs repo navigation` renders all four sections in `precedes` order with zero diagnostics against that shape.
+
 ### Blueprint.rootTypes must be ExactTypeRef[] (RFC-009 I-78, Change E)
 `Blueprint.rootTypes` uses the same `ExactTypeRef` shape as `DocumentView.rootTypeRefs` — **both** `typeId` (UUID) and `typeVersion` (integer ≥ 1) are **required**. Each entry MUST resolve against the Package at Blueprint load time; an unresolvable entry produces a diagnostic but does not invalidate the whole Blueprint.
 
