@@ -1,0 +1,15 @@
+{
+  "instanceId": "c295d4f5-011f-4c8b-b9c0-a30aa0ee658a",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "workflow_dispatch is exempt from the GITHUB_TOKEN no-CI restriction; a PAT is never needed just to get checks running",
+    "summary": "GitHub never fires pull_request or push workflows for an event (a PR open, a branch push) created with the default GITHUB_TOKEN — required status checks silently never run. This is often read as a reason to reach for a PAT (owner already rejected that for cross-repo notification on srs-rust#914). It is not: workflow_dispatch and repository_dispatch ARE dispatchable by the ambient GITHUB_TOKEN, same-repo, no new credential. The fix for any workflow that opens PRs or pushes branches with the Actions token is: declare workflow_dispatch on the workflow(s) carrying the required checks (a no-op addition, safe on any workflow), then call `gh workflow run <file> --ref <branch>` right after the push.",
+    "rationale": "First found and fixed in srs-rust#979 (schema-sync.yml's scheduled PRs sat with zero checks, e.g. #978 before it was reopened by hand). The same shape will recur wherever a scheduled or bot workflow opens a PR against a repo with required status checks — srs-vscode's own schema-sync automation (still manual per srs-rust CLAUDE.md's Schema Sync section) is a named future instance. Re-open this only if GitHub changes which triggers respect GITHUB_TOKEN, or if a workflow needs dispatch on a REMOTE repository (that case still needs the poll-not-dispatch answer in carried-context-be762b7a, not this one)."
+  },
+  "createdAt": "2026-09-06T20:53:59.100453178+00:00",
+  "updatedAt": "2026-09-06T20:53:59.100460524+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
