@@ -263,16 +263,26 @@ async function main() {
       // --- rule: keyword-register --------------------------------------------------------------
       // #559 (exposition_role) has not landed, so `normative_statement` is the only normative
       // signal today — exactly what the registry's normativeSites comment says to expect.
+      //
+      // #626: keyed by paragraph text + keyword + ordinal WITHIN THE PARAGRAPH, never by the
+      // match's character offset into the whole field. A field-relative offset shifts for every
+      // keyword site whenever earlier prose in the same field is edited, so a one-word fix
+      // anywhere upstream re-fired every later, untouched allowlist entry (srs#626). Keying
+      // relative to the paragraph — the same unit em-dash-cap already uses — means only edits to
+      // that paragraph itself change its sites, matching RULING 2's intent.
       if (codeRules.has("keyword-register") && !isNormative) {
-        for (const m of value.matchAll(RFC_2119)) {
-          report(
-            relPath,
-            field,
-            "keyword-register",
-            m[0],
-            "RFC 2119 keywords belong in a normative_statement field. Describe the behaviour here, or move the requirement.",
-            digest(`${m[0]}:${m.index}`),
-          );
+        for (const para of paragraphs(value)) {
+          const matches = [...para.matchAll(RFC_2119)];
+          matches.forEach((m, ordinal) => {
+            report(
+              relPath,
+              field,
+              "keyword-register",
+              m[0],
+              "RFC 2119 keywords belong in a normative_statement field. Describe the behaviour here, or move the requirement.",
+              digest(`${para}:${m[0]}:${ordinal}`),
+            );
+          });
         }
       }
 
