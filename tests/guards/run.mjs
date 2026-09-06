@@ -1340,6 +1340,81 @@ async function charterAlignmentSectionCases(root) {
   );
 }
 
+// ---- srs#519 — RFC banner conformance-rule token drift ------------------------------------------
+async function rfcBannerRuleTokenCases(root) {
+  console.log("srs#519 — RFC banner conformance-rule token drift guard");
+
+  await mkdir(join(root, "docs/schema/2.0"), { recursive: true });
+
+  const recordPath = join(root, "srs/records/tier-2/fixture-subsection.json");
+  const mdPath = join(root, "rfcs/rfc-901-fixture.md");
+
+  const record = (content) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/record.json",
+    instanceId: "00000000-0000-4000-8000-000000009502",
+    typeId: "00000000-0000-4000-8000-00000000f1de",
+    typeVersion: 1,
+    typeNamespace: "com.example.fixture",
+    typeName: "fixture-subsection",
+    fieldValues: { title: "Fixture subsection", content },
+    createdAt: "2026-08-25T00:00:00Z",
+  });
+
+  // The exact drift class PR #517 produced: a subsection declares [R7] under an
+  // "(RFC-901)" conformance-rules banner, but the RFC's own .md never mentions [R7].
+  await writeJson(
+    recordPath,
+    record(["##### Conformance Rules (RFC-901)", "", "**[R7]** Fixture rule text.", ""].join("\n")),
+  );
+  await writeText(mdPath, "**Status**: Accepted (Revision 1)\n\n## Abstract\n\nFixture RFC body, no rules yet.\n");
+  expect(
+    "rejects a declared rule token absent from the RFC's own .md",
+    runCheck("check-rfc-integration.mjs", root),
+    {
+      exit: 1,
+      contains: ["declares conformance rule [R7]", '"(RFC-901)" banner', "rfcs/rfc-901-fixture.md does not contain [R7]"],
+    },
+  );
+
+  // A citation (inline, not bold-declared) must NOT be flagged — only declarations are checked.
+  await writeJson(
+    recordPath,
+    record(["##### Conformance Rules (RFC-901)", "", "See the existing rule (RFC-901 [R7]) for context.", ""].join("\n")),
+  );
+  expect(
+    "does not flag an inline citation as a declaration",
+    runCheck("check-rfc-integration.mjs", root),
+    { exit: 0, contains: ["Checking RFC integration... OK"] },
+  );
+
+  // Fixed forward: the RFC's own .md is amended to actually define [R7] (RFC-041 Revision 3's
+  // remedy for #517). The guard is not simply always red.
+  await writeJson(
+    recordPath,
+    record(["##### Conformance Rules (RFC-901)", "", "**[R7]** Fixture rule text.", ""].join("\n")),
+  );
+  await writeText(
+    mdPath,
+    "**Status**: Accepted (Revision 2)\n\n## Conformance Rules\n\n**[R7]** Fixture rule text.\n",
+  );
+  expect(
+    "accepts once the RFC's own .md declares the token",
+    runCheck("check-rfc-integration.mjs", root),
+    { exit: 0, contains: ["Checking RFC integration... OK"] },
+  );
+
+  // A banner citing an RFC number with no rfcs/rfc-NNN-*.md at all on disk.
+  await writeJson(
+    recordPath,
+    record(["##### Conformance Rules (RFC-999)", "", "**[R1]** Fixture rule text.", ""].join("\n")),
+  );
+  expect(
+    "rejects a banner citing an RFC with no .md on disk",
+    runCheck("check-rfc-integration.mjs", root),
+    { exit: 1, contains: ["no rfcs/rfc-999-*.md exists"] },
+  );
+}
+
 // ---- srs#495 — checks registry membership: every scripts/check-*.mjs is declared ------------------
 async function checksRegistryMembershipCases(root) {
   console.log("srs#495 — checks registry membership guard");
@@ -1487,6 +1562,7 @@ try {
   await decisionCellTagsCases(join(root, "decision-cell-tags"));
   await relationTypeResolutionCases(join(root, "relation-type-resolution"));
   await charterAlignmentSectionCases(join(root, "charter-alignment"));
+  await rfcBannerRuleTokenCases(join(root, "rfc-banner-rule-token"));
   await checksRegistryMembershipCases(join(root, "checks-registry-membership"));
   await specLanguageCases(join(root, "spec-language"));
   await ledgerCompletenessCases(join(root, "ledger-completeness"));
