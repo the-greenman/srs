@@ -1424,6 +1424,7 @@ async function checksRegistryMembershipCases(root) {
   const undeclaredCheckPath = join(root, "scripts/check-undeclared.mjs");
 
   const registry = (...scripts) => ({
+    tiers: ["always", "pinned-cli", "ci-only"],
     checks: scripts.map((script) => ({
       id: script.replace(/^check-/, "").replace(/\.mjs$/, ""),
       script,
@@ -1448,17 +1449,66 @@ async function checksRegistryMembershipCases(root) {
   );
 
   // Declaring it clears the violation — the guard is not simply always red.
-  await writeJson(registryPath, registry("check-declared.mjs", "check-undeclared.mjs"));
+  const fullRegistry = registry("check-declared.mjs", "check-undeclared.mjs");
+  await writeJson(registryPath, fullRegistry);
   expect(
     "accepts once every check-*.mjs script is declared",
     runCheck("check-checks-registry-membership.mjs", root),
     { exit: 0, contains: ["✓ Every scripts/check-*.mjs file is declared in scripts/checks.json"] },
   );
 
+  // srs#579: nothing checked the reverse direction — a declared entry naming a tier, cell or
+  // script that doesn't exist. validate-all.mjs's `entry.tier === 'always'` filter silently drops
+  // a typo'd tier into "deferred to other tiers" rather than failing, so this closes it here.
+  const withEntryField = (field, value) => ({
+    ...fullRegistry,
+    checks: fullRegistry.checks.map((entry, i) => (i === 0 ? { ...entry, [field]: value } : entry)),
+  });
+
+  await writeJson(registryPath, withEntryField("tier", "alwyas"));
+  expect(
+    "rejects a registry entry whose tier is not one of the registry's declared tiers",
+    runCheck("check-checks-registry-membership.mjs", root),
+    { exit: 1, contains: ["declares tier \"alwyas\"", "not one of"] },
+  );
+
+  await writeJson(registryPath, withEntryField("cell", "process"));
+  expect(
+    "rejects a registry entry whose cell is not one of the twelve Pattern Grid slugs",
+    runCheck("check-checks-registry-membership.mjs", root),
+    { exit: 1, contains: ["declares cell \"process\"", "twelve Pattern Grid slugs"] },
+  );
+
+  await writeJson(registryPath, withEntryField("script", "check-does-not-exist.mjs"));
+  expect(
+    "rejects a registry entry whose script does not resolve to a file on disk",
+    runCheck("check-checks-registry-membership.mjs", root),
+    { exit: 1, contains: ["declares script \"check-does-not-exist.mjs\"", "does not resolve to a file"] },
+  );
+
+  await writeJson(registryPath, { checks: fullRegistry.checks });
+  expect(
+    "rejects a registry with no declared tiers vocabulary at all",
+    runCheck("check-checks-registry-membership.mjs", root),
+    { exit: 1, contains: ["declares no \"tiers\" array"] },
+  );
+
+  // Restoring the well-formed registry clears every violation above — the guard is not simply
+  // always red.
+  await writeJson(registryPath, fullRegistry);
+  expect(
+    "accepts again once the registry is well-formed",
+    runCheck("check-checks-registry-membership.mjs", root),
+    { exit: 0, contains: ["✓ Every scripts/check-*.mjs file is declared in scripts/checks.json"] },
+  );
+
   // A floor, matching the sibling guards: a walk that finds no check-*.mjs file at all is not a
-  // scripts/ directory with nothing wrong — it means the root argument is wrong.
+  // scripts/ directory with nothing wrong — it means the root argument is wrong. Registry entries
+  // are cleared too, so this isolates the floor from the srs#579 script-resolution check above —
+  // an entry naming a now-deleted script is a different, already-covered violation.
   await rm(declaredCheckPath);
   await rm(undeclaredCheckPath);
+  await writeJson(registryPath, { tiers: fullRegistry.tiers, checks: [] });
   expect(
     "fails when no check-*.mjs script is found at all",
     runCheck("check-checks-registry-membership.mjs", root),
