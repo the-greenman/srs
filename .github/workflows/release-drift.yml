@@ -79,10 +79,15 @@ jobs:
   check-release-drift:
     runs-on: ubuntu-latest
     steps:
+      # fetch-depth: 0 (full history): this job's Validate step runs scripts/validate-all.mjs
+      # internally, same as validate.yml, and check-versioning-cell.mjs (srs#649) needs real git
+      # history to compare Field revisions — the default shallow depth-1 clone would starve it here
+      # too. See validate.yml's own checkout step for the same comment.
       - name: Checkout srs
         uses: actions/checkout@v4
         with:
           path: srs
+          fetch-depth: 0
 
       - name: Install Node
         uses: actions/setup-node@v4

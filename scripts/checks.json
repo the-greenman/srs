@@ -466,6 +466,15 @@
       "cell": "assertion",
       "governing": "srs#550",
       "description": "The governance-seed-drift check demonstrably fails on a perturbed committed seed (red) and passes both on the real, unmodified corpus and once the perturbation is undone (green) — the guards-bite discipline (srs#308/#311/#391) applied to a pinned-cli check, which guards-bite itself (Node-pipeline-only) cannot reach."
+    },
+    {
+      "id": "versioning-cell",
+      "script": "check-versioning-cell.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "versioning",
+      "governing": "rfc-decision-2a1e1590; 04-2-4-2-field#r2; srs#649",
+      "description": "For every Field definition file in the repository (rfcs/rfc-004's historical proposal excluded, matching check-field-name-convention.mjs) that carries the current post-RFC-032 fieldType shape, diffs that file's own git history in order: whenever fieldType.allowedValues differs between two consecutive in-scope revisions still carrying the same id, version must have increased. A structural diff, not a semantic one — comparison is order-independent (the domain is a set) but otherwise exact; a transition where either revision predates fieldType is out of scope and never flagged (three different historical key names carried this same concept before RFC-032). Needs real git history to mean anything, so .github/workflows/validate.yml's checkout step carries fetch-depth: 0. One known corpus violation allowlisted in scripts/versioning-cell-allowlist.json (srs#658, pending: the metamodel generator hardcodes every field's version to 1). Its guard-bite case (versioningCellCases) lives in the existing guards-bite entry's tests/guards/run.mjs, not a second registry row."
     }
   ]
 }

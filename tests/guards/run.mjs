@@ -2014,6 +2014,162 @@ async function attributionCellCases(root) {
   );
 }
 
+// ---- srs#649 — versioning cell: Field allowedValues change requires a version increment ---------
+//
+// Unlike every other case in this file, the check under test reads real git history rather than a
+// live tree snapshot, so a plain writeJson fixture proves nothing — a directory with no commits has
+// no history to diff. Each scenario below is its own throwaway git repository with a real two-
+// commit history, built and committed here rather than shared with the other cases' fixture tree.
+async function versioningCellCases(root) {
+  console.log("srs#649 — versioning cell: Field allowedValues change requires a version increment");
+
+  const FIELD_ID = "00000000-0000-4000-8000-00000000f649";
+  const gitEnv = {
+    ...process.env,
+    GIT_AUTHOR_NAME: "srs-guard-fixture",
+    GIT_AUTHOR_EMAIL: "fixture@example.invalid",
+    GIT_COMMITTER_NAME: "srs-guard-fixture",
+    GIT_COMMITTER_EMAIL: "fixture@example.invalid",
+  };
+  const git = (cwd, ...args) => spawnSync("git", args, { cwd, env: gitEnv, encoding: "utf8" });
+
+  const fieldDoc = (version, allowedValues) => ({
+    id: FIELD_ID,
+    namespace: "com.example.fixture",
+    name: "status",
+    version,
+    description: "fixture field",
+    aiGuidance: "fixture",
+    fieldType: { datatype: "string", valueDomain: "closed", allowedValues },
+    createdAt: "2026-08-15T00:00:00Z",
+  });
+
+  // Builds a repo at `dir` with one commit per step, each rewriting the same field file.
+  const buildHistory = async (dir, steps) => {
+    await mkdir(dir, { recursive: true });
+    git(dir, "init", "-q");
+    const path = join(dir, "srs/package/fields/status.json");
+    for (const { version, allowedValues } of steps) {
+      await writeJson(path, fieldDoc(version, allowedValues));
+      git(dir, "add", "-A");
+      git(dir, "commit", "-q", "-m", `v${version}`);
+    }
+  };
+
+  const violation = join(root, "violation");
+  await buildHistory(violation, [
+    { version: 1, allowedValues: ["a", "b"] },
+    { version: 1, allowedValues: ["a", "b", "c"] }, // domain changed, version did not increase
+  ]);
+  expect(
+    "rejects a Field whose allowedValues changed with no version increase",
+    runCheck("check-versioning-cell.mjs", violation),
+    { exit: 1, contains: ["srs/package/fields/status.json", FIELD_ID, "no version increase"] },
+  );
+
+  const clean = join(root, "clean");
+  await buildHistory(clean, [
+    { version: 1, allowedValues: ["a", "b"] },
+    { version: 2, allowedValues: ["a", "b", "c"] }, // domain changed, version incremented
+  ]);
+  expect(
+    "accepts the same allowedValues change once the version increments",
+    runCheck("check-versioning-cell.mjs", clean),
+    { exit: 0 },
+  );
+
+  const untouched = join(root, "untouched");
+  await buildHistory(untouched, [
+    { version: 1, allowedValues: ["a", "b"] },
+    { version: 1, allowedValues: ["a", "b"] }, // no domain change at all — a version bump is not required
+  ]);
+  expect(
+    "does not require a version increase when allowedValues does not change",
+    runCheck("check-versioning-cell.mjs", untouched),
+    { exit: 0 },
+  );
+
+  // The allowlist (scripts/versioning-cell-allowlist.json), same discipline as spec-coherence's:
+  // a listed violation passes, a stale or malformed entry fails on its own.
+  const commitsOf = (dir) =>
+    git(dir, "log", "--reverse", "--format=%H").stdout.trim().split("\n");
+
+  const allowlisted = join(root, "allowlisted");
+  await buildHistory(allowlisted, [
+    { version: 1, allowedValues: ["a", "b"] },
+    { version: 1, allowedValues: ["a", "b", "c"] },
+  ]);
+  const [allowlistedFrom, allowlistedTo] = commitsOf(allowlisted);
+  await writeJson(join(allowlisted, "scripts/versioning-cell-allowlist.json"), {
+    entries: [
+      {
+        path: "srs/package/fields/status.json",
+        id: FIELD_ID,
+        fromCommit: allowlistedFrom,
+        toCommit: allowlistedTo,
+        disposition: "pending",
+        issue: "#1",
+        note: "fixture",
+      },
+    ],
+  });
+  expect(
+    "accepts a violation covered by a valid allowlist entry",
+    runCheck("check-versioning-cell.mjs", allowlisted),
+    { exit: 0, contains: ["1 known violation(s) allowlisted"] },
+  );
+
+  const staleAllowlist = join(root, "stale-allowlist");
+  await buildHistory(staleAllowlist, [
+    { version: 1, allowedValues: ["a", "b"] },
+    { version: 2, allowedValues: ["a", "b", "c"] }, // no violation here — the entry below matches nothing
+  ]);
+  const [staleFrom, staleTo] = commitsOf(staleAllowlist);
+  await writeJson(join(staleAllowlist, "scripts/versioning-cell-allowlist.json"), {
+    entries: [
+      {
+        path: "srs/package/fields/status.json",
+        id: FIELD_ID,
+        fromCommit: staleFrom,
+        toCommit: staleTo,
+        disposition: "pending",
+        issue: "#1",
+        note: "fixture",
+      },
+    ],
+  });
+  expect(
+    "rejects an allowlist entry that no longer matches a violation",
+    runCheck("check-versioning-cell.mjs", staleAllowlist),
+    { exit: 1, contains: ["no longer match a violation"] },
+  );
+
+  const malformedAllowlist = join(root, "malformed-allowlist");
+  await buildHistory(malformedAllowlist, [
+    { version: 1, allowedValues: ["a", "b"] },
+    { version: 1, allowedValues: ["a", "b", "c"] },
+  ]);
+  const [malformedFrom, malformedTo] = commitsOf(malformedAllowlist);
+  await writeJson(join(malformedAllowlist, "scripts/versioning-cell-allowlist.json"), {
+    entries: [
+      {
+        path: "srs/package/fields/status.json",
+        id: FIELD_ID,
+        fromCommit: malformedFrom,
+        toCommit: malformedTo,
+        disposition: "settled", // not "permanent" or "pending"
+        issue: "later", // not "#<number>"
+        note: "fixture",
+      },
+    ],
+  });
+  expect(
+    "rejects an allowlist entry with a bad disposition or issue reference",
+    runCheck("check-versioning-cell.mjs", malformedAllowlist),
+    { exit: 1, contains: ['must be "permanent" or "pending"', "not a GitHub issue reference"] },
+  );
+}
+
 const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
 try {
   await fieldNameCases(join(root, "field-name"));
@@ -2033,6 +2189,7 @@ try {
   await roadmapCellMirrorCases(join(root, "roadmap-cell-mirror"));
   await packageIdUniquenessCases(join(root, "package-id-uniqueness"));
   await specCoherenceCases(join(root, "spec-coherence"));
+  await versioningCellCases(join(root, "versioning-cell"));
   await attributionCellCases(join(root, "attribution-cell"));
 } finally {
   await rm(root, { recursive: true, force: true });
