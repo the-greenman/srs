@@ -566,7 +566,13 @@ async function publicationReachabilityCases(root) {
   });
 
   // Declaring the invisibility clears it — the exclusion list is the sanctioned escape, not a flag.
-  const orphanEntry = { instanceId: ID(2), path: "records/orphan.json", reason: "fixture", issue: "#285" };
+  const orphanEntry = {
+    instanceId: ID(2),
+    path: "records/orphan.json",
+    reason: "fixture",
+    disposition: "permanent",
+    issue: "#285",
+  };
   await exclusions(orphanEntry);
   expect("accepts it once its invisibility is declared", runCheck("check-publication-reachability.mjs", root), {
     exit: 0,
@@ -574,21 +580,49 @@ async function publicationReachabilityCases(root) {
   });
 
   // ...but only as typed data. A reason-less entry is an allowlist, which is the thing this is not.
-  await exclusions({ instanceId: ID(2), path: "records/orphan.json", issue: "#285" });
+  await exclusions({ instanceId: ID(2), path: "records/orphan.json", disposition: "permanent", issue: "#285" });
   expect("rejects an exclusion entry with no reason", runCheck("check-publication-reachability.mjs", root), {
     exit: 1,
     contains: ["exclusions[0] is missing required properties: reason"],
   });
 
+  // #590: disposition names whether a closed issue citation is a settled ruling ("permanent") or a
+  // regression waiting to happen ("pending"). Neither absence nor an invented third value is legal.
+  await exclusions({ ...orphanEntry, disposition: undefined });
+  expect("rejects an exclusion entry with no disposition", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["exclusions[0] is missing required properties: disposition"],
+  });
+  await exclusions({ ...orphanEntry, disposition: "grandfathered" });
+  expect("rejects an exclusion with a disposition that is not permanent or pending", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ['disposition "grandfathered" must be "permanent" or "pending"'],
+  });
+  await exclusions({ ...orphanEntry, disposition: "pending" });
+  expect("accepts disposition \"pending\" citing an issue like any other", runCheck("check-publication-reachability.mjs", root), {
+    exit: 0,
+    contains: ["✓ Every discovered record is reachable"],
+  });
+  await exclusions(orphanEntry);
+
   // A stale exclusion is an error in both directions. First: it names an instance that is gone.
-  await exclusions(orphanEntry, { instanceId: ID(9), path: "records/vanished.json", reason: "fixture", issue: "#285" });
+  await exclusions(orphanEntry, {
+    instanceId: ID(9),
+    path: "records/vanished.json",
+    reason: "fixture",
+    disposition: "permanent",
+    issue: "#285",
+  });
   expect("rejects an exclusion for an instance that no longer exists", runCheck("check-publication-reachability.mjs", root), {
     exit: 1,
     contains: ["stale exclusion", "records/vanished.json", "no longer a discovered instance"],
   });
 
   // Second: it names one that has since become reachable, where it would hide the next regression.
-  await exclusions({ instanceId: ID(1), path: "records/root.json", reason: "fixture", issue: "#285" }, orphanEntry);
+  await exclusions(
+    { instanceId: ID(1), path: "records/root.json", reason: "fixture", disposition: "permanent", issue: "#285" },
+    orphanEntry,
+  );
   expect("rejects an exclusion for a record that is now reachable", runCheck("check-publication-reachability.mjs", root), {
     exit: 1,
     contains: ["stale exclusion", "records/root.json", "is now reachable"],
