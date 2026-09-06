@@ -1,0 +1,14 @@
+{
+  "instanceId": "37fe3898-7402-4fc5-af3a-f6e789feab90",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `ValidationRule` shape",
+    "content": "`ValidationRule`, in pseudo-IDL:\n\n```typescript\n{\n  type: \"required\" | \"minLength\" | \"maxLength\" | \"pattern\" | \"enum\"\n  value?: string | number | string[]  // required for minLength, maxLength, pattern, enum\n  message?: string\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:39.531943434+00:00",
+  "updatedAt": "2026-09-06T17:05:10.746930379+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

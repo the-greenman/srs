@@ -1,0 +1,14 @@
+{
+  "instanceId": "f3b67e2a-22c8-40e4-8447-7a29717cd1ff",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `AiGuidanceExample` shape",
+    "content": "`AiGuidanceExample`, in pseudo-IDL:\n\n```typescript\n{\n  description?: string  // labels this example\n  input?: string        // sample source text; omit for output-only examples\n  output: string        // the ideal value the AI should produce\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:39.538781083+00:00",
+  "updatedAt": "2026-09-06T17:05:10.913010067+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

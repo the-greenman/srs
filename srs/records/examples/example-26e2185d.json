@@ -1,0 +1,14 @@
+{
+  "instanceId": "26e2185d-7021-4e0e-a75d-ed2bf0004e34",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `AiGuidance` shape",
+    "content": "`AiGuidance`, in pseudo-IDL:\n\n```typescript\n{\n  purpose: string            // what this field/type captures (1-2 sentences)\n  extraction?: string        // LLM instruction for how to extract or populate\n  negativeGuidance?: string  // what the LLM must NOT include or do\n  examples?: AiGuidanceExample[]\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:39.545195376+00:00",
+  "updatedAt": "2026-09-06T17:05:11.076790723+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,14 @@
+{
+  "instanceId": "53567d1f-de8e-403f-b73b-331f47781d86",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `ExportConfig` shape",
+    "content": "`ExportConfig`, in pseudo-IDL:\n\n```typescript\n{\n  format?: string        // target format hint, e.g. \"markdown\", \"adoc\", \"json\"\n  preamble?: string\n  // Template string rendered before field values.\n  // Variable substitution uses {{variable-name}} syntax.\n  // Standard variables: {{instance-id}}, {{date}}, {{status}}, {{namespace}}, {{name}}\n\n  omitEmptyFields?: boolean  // default: false\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:47.653372997+00:00",
+  "updatedAt": "2026-09-06T17:05:19.402595770+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

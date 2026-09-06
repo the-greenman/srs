@@ -1,0 +1,14 @@
+{
+  "instanceId": "7fc60d9a-c9fe-4cf1-8c27-856d80d52318",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `Address` union",
+    "content": "`Address`, in pseudo-IDL:\n\n```typescript\ntype Address =\n  | {\n      space: \"document\"\n      containerId: UUID\n      recordId?: UUID\n      fieldId?: UUID\n    }\n  | {\n      space: \"process\"\n      runId: UUID          // Protocol run ID; requires ext:protocol\n      stageId?: string\n    }\n  | {\n      space: \"conversation\"\n      sessionId: UUID\n      chunkId?: UUID\n      annotationId?: UUID\n    }\n```"
+  },
+  "createdAt": "2026-09-06T17:00:41.558752918+00:00",
+  "updatedAt": "2026-09-06T17:05:12.778462204+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

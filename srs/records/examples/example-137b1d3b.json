@@ -1,0 +1,14 @@
+{
+  "instanceId": "137b1d3b-eeec-465b-abd6-1eb7f6ce936e",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `RegistryEntry` shape",
+    "content": "`RegistryEntry`, in pseudo-IDL:\n\n```typescript\n{\n  packageId: UUID\n  packageName: string\n  packageVersion: string\n  publisher: string\n  description?: string\n  publishedAt: ISO8601\n  homepage?: string\n  tags?: string[]\n  fieldCount: integer       // min: 0\n  typeCount: integer        // min: 0\n  viewCount?: integer\n  schemaCount?: integer\n  protocolCount?: integer\n  relationTypeCount?: integer\n  downloadUrl?: string\n  checksum?: string         // SHA-256 hex digest for integrity verification\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:42.700298240+00:00",
+  "updatedAt": "2026-09-06T17:05:13.976399943+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

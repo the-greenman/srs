@@ -1,0 +1,14 @@
+{
+  "instanceId": "8d15c80b-fe6e-48c6-8a51-6055febcc362",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `View` shape",
+    "content": "`View`, in pseudo-IDL:\n\n```typescript\n{\n  id: UUID\n  namespace: string\n  name: string\n  version: integer   // min: 1\n\n  description: string    // when to use this View; what workflow or audience it serves\n\n  aiGuidance?: AiGuidance\n  // purpose: the workflow context this View serves\n  // extraction: session-level framing injected before field extraction\n\n  fieldViews: (FieldView | RecordPropertyView)[]\n\n  compatibleTypes?: string[]\n  // Optional Type-key (namespace/name) hints this View was designed for.\n  // Informative only. Compatibility is determined by field presence.\n\n  exportConfig?: ExportConfig\n\n  tags?: string[]\n  createdAt: ISO8601\n  lineage?: Lineage\n  provenance?: Provenance\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:47.662827214+00:00",
+  "updatedAt": "2026-09-06T17:05:19.572190151+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

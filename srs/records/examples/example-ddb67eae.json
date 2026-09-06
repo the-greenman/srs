@@ -1,0 +1,14 @@
+{
+  "instanceId": "ddb67eae-9545-49e6-aa6b-acf7da79ccd8",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `Lifecycle` container shape",
+    "content": "`Lifecycle`, in pseudo-IDL:\n\n```typescript\n{\n  id: UUID\n  namespace: string\n  name: string\n  version: integer          // min: 1\n\n  states: LifecycleState[]\n  transitions: LifecycleTransition[]\n  initialState: string      // the key of the single isInitial state\n\n  extendsLifecycleId?: UUID\n  extendsLifecycleVersion?: integer   // required when extendsLifecycleId is present\n\n  description?: string\n  createdAt: ISO8601\n  lineage?: Lineage\n  provenance?: Provenance\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:45.843804328+00:00",
+  "updatedAt": "2026-09-06T17:05:17.548768315+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

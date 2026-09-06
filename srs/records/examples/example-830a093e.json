@@ -1,0 +1,14 @@
+{
+  "instanceId": "830a093e-6b37-4ad7-9b97-671e5f941878",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `SourceDocument` shape",
+    "content": "`SourceDocument`, in pseudo-IDL:\n\n```typescript\n{\n  documentId: UUID\n\n  title?: string\n  description?: string\n\n  contentType: string        // MIME type, e.g. \"text/plain\", \"audio/mp4\", \"application/pdf\"\n  encoding?: string          // e.g. \"utf-8\"; meaningful for text content types\n  language?: string          // BCP 47 language tag, e.g. \"en-GB\"\n  date?: string              // ISO 8601 date; when the source material itself was produced or recorded\n\n  contentPath: string        // filename of the content file, relative to source-documents/\n\n  processingNote?: string\n  // Free-form note about how this document was produced or processed.\n  // e.g. \"auto-transcribed via speech-to-text; transcript not reviewed\"\n\n  excerpt?: {\n    sourceDocumentId: UUID         // repository-local parent source document, when this file is an excerpt\n    anchor?: SourceAnchor          // where the excerpt came from in the parent source, if known\n    capturedAt?: ISO8601           // when the excerpt was extracted\n    capturedBy?: string            // who or what extracted it\n    sourceChecksumAtCapture?: string\n    // optional checksum of the parent source content as it existed when the excerpt was captured\n  }\n\n  createdAt: ISO8601\n  importedAt?: ISO8601\n  meta?: Record<string, unknown>\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:43.100992677+00:00",
+  "updatedAt": "2026-09-06T17:05:15.509385751+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

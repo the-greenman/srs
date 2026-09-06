@@ -1,0 +1,14 @@
+{
+  "instanceId": "0db1869a-6183-4dfe-883a-2aa52ef3539a",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `NavigationLink` shape",
+    "content": "`NavigationLink`, in pseudo-IDL:\n\n```typescript\n{\n  fromSectionId: string\n  toSectionId: string\n  label?: string\n  bidirectional?: boolean  // default: false\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:48.505719946+00:00",
+  "updatedAt": "2026-09-06T17:05:20.581075015+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

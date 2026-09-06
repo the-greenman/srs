@@ -1,0 +1,14 @@
+{
+  "instanceId": "d7bcf378-5688-4d65-8ee8-9afb149ffa62",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "Namespace grammar, with namespaces that satisfy it",
+    "content": "The grammar, then namespaces that satisfy it:\n\n```\n<component>[.<component>]*\n\ncomponent = [a-z0-9][a-z0-9-]*\n```\n\nExamples:\n```\ncore\ncommunity.adr\ncom.acme.hr\norg.cooperative-name\n```"
+  },
+  "createdAt": "2026-09-06T17:00:39.197849824+00:00",
+  "updatedAt": "2026-09-06T17:05:10.397181990+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

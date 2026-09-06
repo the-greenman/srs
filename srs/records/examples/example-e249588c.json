@@ -1,0 +1,14 @@
+{
+  "instanceId": "e249588c-0d97-40fe-b2d2-7014ba16e993",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The two value sources a closed string Field may declare",
+    "content": "The two declarations, exactly one of which a closed string Field carries:\n\n```typescript\nallowedValues?: string[]   // inline anonymous closed vocabulary (sugar; retained for simple cases)\nvocabularyRef?: UUID       // LINEAGE (rfc-decision-c8704763) — bind to a named, installed\n                           // Vocabulary by bare UUID; the effective package set resolves it\n```"
+  },
+  "createdAt": "2026-09-06T17:00:40.032944960+00:00",
+  "updatedAt": "2026-09-06T17:05:11.414644746+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

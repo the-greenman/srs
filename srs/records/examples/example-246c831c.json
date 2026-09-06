@@ -1,0 +1,14 @@
+{
+  "instanceId": "246c831c-7c80-4813-b067-d884401233c7",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `ProtocolStage` shape",
+    "content": "`ProtocolStage`, in pseudo-IDL:\n\n```typescript\n{\n  stageId: string       // stable key within this Protocol\n  name: string          // short, human-readable stage name (e.g. \"Background\", \"Key requirements\")\n  order: integer        // min: 0; declared composition order of the stages — see note below\n  purpose?: string      // what understanding this stage builds\n  question?: string     // the core question this stage answers\n  dependsOn: string[]   // stageId values; epistemic dependencies, not just ordering\n  completionCriteria?: string  // how to know this stage is sufficient to proceed\n  contributesTo?: FieldRef[]   // which Record Fields this stage feeds\n  outputType?: UUID            // LINEAGE reference (rfc-decision-c8704763) to the Type this stage\n                                // produces its own intermediate Record as; the effective\n                                // package set resolves it. typeVersion is dropped — version-\n                                // optional hybrids are forbidden.\n  aiGuidance?: AiGuidance       // the closed, structured guidance object used everywhere else in\n                                // the model (purpose/extraction/negativeGuidance/examples) — not a\n                                // plain string (rfc-decision, srs#379: structured over serialised).\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:46.502262312+00:00",
+  "updatedAt": "2026-09-06T17:05:18.050955398+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
