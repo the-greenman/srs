@@ -1,0 +1,16 @@
+{
+  "instanceId": "54b99288-9f06-4aad-a41c-c7968f7ff9cd",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "type:com.semanticops.srs/field-type",
+    "title": "Field type",
+    "description": "The complete statement of what a Field's value is, decomposed into orthogonal facets that vary independently: datatype, cardinality, value domain, string format, and value constraints. Because the facets are separate, a constraint on one never forces a choice on another — a closed list of markdown strings is expressible without inventing a datatype for it. Cardinality is declared here and nowhere else. Three composite datatypes let a value's range be another Type (`ref`), be governed by a sibling field (`dependent`), or be an open string-keyed collection (`map`).",
+    "notes": "It replaced the pre-RFC-032 `valueType` enum, which conflated four axes into one closed list and forced every independently-varying axis to be bolted on beside it. `valueType` is removed, not deprecated."
+  },
+  "createdAt": "2026-09-05T23:42:08.546180367+00:00",
+  "updatedAt": "2026-09-05T23:45:42.228141640+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

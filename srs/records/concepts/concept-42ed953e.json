@@ -1,0 +1,16 @@
+{
+  "instanceId": "42ed953e-2b89-4bb9-a1b1-a8dcad0d24e5",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/field-assignment",
+    "title": "Field assignment",
+    "description": "The entry by which a Type admits one Field: a reference to the Field by id, its declared composition order within the Type, whether it is required before a Record can be logged, and an optional display label. It is the exact boundary between what belongs to the Field and what belongs to the Type — the assignment may say where the Field sits and whether it must be filled, and may never say what it means. `displayLabel` is strictly rendering: needing a materially different label means needing a different Field.",
+    "notes": "`order` is structure, not presentation. It feeds canonical serialisation and supplies the render default; a View may override it for display."
+  },
+  "createdAt": "2026-09-05T23:42:08.566579364+00:00",
+  "updatedAt": "2026-09-05T23:45:42.506381944+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

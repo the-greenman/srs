@@ -1,0 +1,16 @@
+{
+  "instanceId": "706db1c3-08ee-42a6-9cd2-7fe4740f481d",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/discovery",
+    "title": "Discovery",
+    "description": "A portable contract for asking a repository what it holds, split deliberately into two halves that behave differently. Structured filters, over type, container, tag, tier and lifecycle state, are exact-match predicates: two conforming implementations with the same data must return the same set. Free-text content matching is a recall floor: every instance whose projected text contains the normalised query must be returned, and returning more, or ranking differently, is explicitly permitted. This is what lets a naive substring matcher and a semantic search engine both conform.",
+    "notes": "Matching runs over a deterministic text projection: an ordered sequence of segments derived from an instance by a stated rule about which fields are searchable, normalised at match time by Unicode NFC and case folding, with punctuation, diacritics and whitespace left intact."
+  },
+  "createdAt": "2026-09-05T23:42:08.775243825+00:00",
+  "updatedAt": "2026-09-05T23:45:45.112268352+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

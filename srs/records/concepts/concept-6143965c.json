@@ -1,0 +1,16 @@
+{
+  "instanceId": "6143965c-ac6f-4473-a7d2-ef21d276bdfd",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/composite-value",
+    "title": "Composite value",
+    "description": "A Field whose range is another Type, not a scalar, declared as `datatype: \"ref\"` with a `rangeType`. In `inline` mode the value is a nested object shaped by that Type — structure expressed through the type system instead of a serialised blob in a text field. In `reference` mode the value is the id of a target instance, and it is definitional composition, not an assertion: it must never be interpreted as, or required to be accompanied by, a Relation.",
+    "notes": "The test for which to use: model an assertion *between* instances (one needing provenance, lifecycle or confidence) as a Relation; use `reference` where the target's identity is part of the definition itself."
+  },
+  "createdAt": "2026-09-05T23:42:08.552531373+00:00",
+  "updatedAt": "2026-09-05T23:45:42.323003566+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

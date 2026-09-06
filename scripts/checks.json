@@ -210,6 +210,15 @@
       "description": "Every com.semanticops.spec/rfc-decision record dated 2026-08-23 or later carries at least one cell:<slug> tag naming a slug from the Pattern Grid vocabulary."
     },
     {
+      "id": "roadmap-cell-mirror",
+      "script": "check-roadmap-cell-mirror.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "description",
+      "governing": "srs#602",
+      "description": "docs/strategy/roadmap-model.mjs's capitalised PATTERN_GRID_CELLS copy stays an exact title-cased mirror of scripts/lib/pattern-grid-cells.json, in order. The copy cannot be removed \u2014 roadmap-model.mjs is loaded as a browser module by docs/strategy/index.html and has no fs \u2014 so it is declared and checked rather than tolerated, the same treatment the schema mirrors get. Order-sensitive: reading order carries meaning in the grid."
+    },
+    {
       "id": "spec-language",
       "script": "check-spec-language.mjs",
       "args": [],

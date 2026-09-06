@@ -1,0 +1,16 @@
+{
+  "instanceId": "67f2621d-82df-4b2f-bc4f-a21788b02aae",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/semantic-succession",
+    "title": "Semantic succession",
+    "description": "The rule that meaning is never silently rewritten. Correcting how something is expressed (a typo, phrasing, a clarification that leaves the understanding unchanged) is an in-place edit. Changing what was actually committed to produces a new instance linked to the prior one, and the prior one remains valid. The test is whether a reasonable reader meeting the record a year later would recognise it as the same understanding they would have read before the change.",
+    "notes": "Cross-check both ways: if a `supersedes` link would read as the group reversing itself when it only clarified, it was an edit; if a silent edit would read as the record being revised after the fact, it was a successor."
+  },
+  "createdAt": "2026-09-05T23:42:08.642770563+00:00",
+  "updatedAt": "2026-09-05T23:45:43.584909496+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

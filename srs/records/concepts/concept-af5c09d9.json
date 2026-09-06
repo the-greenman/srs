@@ -1,0 +1,16 @@
+{
+  "instanceId": "af5c09d9-e86c-4a40-baa2-a45066466d54",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/field-values",
+    "title": "Field values",
+    "description": "A Record's payload is one object keyed by `Field.name` verbatim, with no case or separator transformation at any nesting depth. Each entry is recursively shaped by what the corresponding Field declares: a scalar, an array under list cardinality, or a nested object for an inline composite. There is no wrapper construct around an entry and no entry-object form. Absence of a key is the only representation of an unset field: an explicit null is rejected and the writer must omit the key instead.",
+    "notes": "Structural presence and rendering presence are deliberately different questions: a key present with an empty string is structurally present but renders as absent."
+  },
+  "createdAt": "2026-09-05T23:42:08.630308998+00:00",
+  "updatedAt": "2026-09-05T23:46:23.942172824+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

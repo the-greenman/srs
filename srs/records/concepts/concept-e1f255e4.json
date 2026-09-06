@@ -1,0 +1,16 @@
+{
+  "instanceId": "e1f255e4-8050-481f-ad49-a44f24bfca0f",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/instance",
+    "title": "Instance",
+    "description": "A piece of captured content, as opposed to a definition that describes a shape. An instance carries its own stable `instanceId` in an id space distinct from the `id` + namespace/name/version lineage that identifies a definition, and it is the thing Relations connect and Containers scope. Confusing the two id spaces is the most common structural error: a Container's id is not an instance id and must never appear on either end of a Relation.",
+    "notes": "The self-declared `instanceId` inside the file is the identity. It is not derived from the filename or the path, and there is no manifest index to cross-check it against."
+  },
+  "createdAt": "2026-09-05T23:42:08.603476340+00:00",
+  "updatedAt": "2026-09-05T23:45:43.056975751+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

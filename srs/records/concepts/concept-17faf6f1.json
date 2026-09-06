@@ -1,0 +1,16 @@
+{
+  "instanceId": "17faf6f1-9b73-4cc5-90bd-7735b933da08",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/record",
+    "title": "Record",
+    "description": "A Tier 2 instance: a stable instance id bound to an exact Type version, carrying values for that Type's fields. The binding is by `typeId` and `typeVersion`, and it is authoritative — the denormalised `typeNamespace` and `typeName` are convenience hints, and a Record whose hints disagree with the resolved Type is invalid until corrected. Conformance is measured against the version the Record was instantiated under; publishing a new Type version does not migrate existing Records.",
+    "notes": "A Record may also carry lifecycle state, tags, source references and timestamps. Those are envelope members, governed by the Record schema and not by the Type's projected field schema."
+  },
+  "createdAt": "2026-09-05T23:42:08.624871572+00:00",
+  "updatedAt": "2026-09-05T23:45:43.326111240+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,16 @@
+{
+  "instanceId": "b6f2ee88-0d53-4396-886d-472fcee2ebb6",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/relation-type-definition",
+    "title": "Relation type definition",
+    "description": "What an edge's type string means, installed as its own entity: the key as stored on an edge, a required label and description, a structural category, which end is source and which is target, the key of its display-only inverse, and optional constraints such as irreflexivity. Relation types form a single flat, repository-global set with no per-Type scoping, and a relation whose type does not resolve in it is a validation error.",
+    "notes": "It is a vocabulary-substrate specialisation that tightens label and description from optional to required. The canonical seven ship as installed definitions in the core package; custom types use `namespace/name` form and supply their own."
+  },
+  "createdAt": "2026-09-05T23:42:08.591768350+00:00",
+  "updatedAt": "2026-09-05T23:45:42.877244414+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,16 @@
+{
+  "instanceId": "873099c5-093d-4684-8c36-46f813847c1a",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "type:com.semanticops.srs/field",
+    "title": "Field",
+    "description": "The atomic reusable semantic unit: one named, versioned, UUID-identified piece of meaning, defined once and composed into any number of Types. A Field owns its own semantics completely — its value contract and its AI guidance belong to the Field and may not be redefined, overridden or duplicated by a Type that includes it. If a context needs different meaning, that is a different Field with its own identity and lineage, not a local override.",
+    "notes": "Invariants 1-3 and 9 carry the Field's non-negotiables: rendering labels change nothing, Types may not restate Field semantics, and a new id means a new definition and not a new version."
+  },
+  "createdAt": "2026-09-05T23:42:08.540498659+00:00",
+  "updatedAt": "2026-09-05T23:45:42.139638608+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

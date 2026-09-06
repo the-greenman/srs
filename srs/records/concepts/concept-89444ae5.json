@@ -1,0 +1,16 @@
+{
+  "instanceId": "89444ae5-3dc7-4ffd-ac60-3bc9559c9331",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/ai-guidance",
+    "title": "AI guidance",
+    "description": "Structured instruction carried on a definition telling a language model what the definition captures and how to populate it: a required `purpose`, and optional `extraction`, `negativeGuidance`, and worked `examples`. It travels with the definition instead of living in an application's prompt, which is what makes a package usable by a tool that has never seen it before. Guidance belongs to the entity that owns the meaning: a Field's guidance is the Field's, and a Type's guidance supplies session framing only — it never redefines a Field's extraction semantics.",
+    "notes": "Composition order is a recommended default, not an invariant: Type framing, View framing, Field extraction, negative guidance, examples."
+  },
+  "createdAt": "2026-09-05T23:42:08.532636688+00:00",
+  "updatedAt": "2026-09-05T23:45:42.046483104+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
