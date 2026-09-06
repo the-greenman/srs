@@ -1,0 +1,23 @@
+{
+  "instanceId": "1f2cc3ca-7c05-47c5-841e-a23214009bfc",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Actions-token PRs get no CI; dispatch the required checks + dedupe by open PR",
+    "summary": "schema-sync.yml opens PRs (and now updates branches) with GITHUB_TOKEN, which never fires pull_request/push workflows, so the required checks (Test, Lint, WASM Build, Schema Drift) never ran — the first real poll PR (#978) sat with zero checks and had to be reopened by hand. Added workflow_dispatch to ci.yml and dispatch it directly against the pushed branch right after the push. Also replaced the tag-keyed duplicate guard (which let a later poll open a second PR while an earlier one was still under review, #981) with an open-PR-by-branch-prefix guard that updates the existing branch in place.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs-rust#979",
+      "srs-rust#914",
+      "srs-rust#874"
+    ],
+    "body": "Dispatched from the srs-rust gate:pool queue via srs#580 tick 2026-09-06 20:1xZ. Fix in srs-rust PR #982: workflow_dispatch added to ci.yml (no other change) and schema-sync.yml's PR step now dispatches it against the branch it just pushed. Real GitHub Actions can't be exercised from the cloud sandbox (workflow_dispatch is only dispatchable once declared on the default branch), so the changed bash was extracted verbatim and dry-run against a local mock git remote with a stubbed gh (real jq evaluating the same --jq filter) across three cases: no open sync PR, an open PR whose content is already current (no-op), and an open PR whose content is stale (update branch in place, dispatch, skip pr create). All three produced the expected git/gh call sequence. The GitHub-side half of the proof is necessarily deferred to the next scheduled poll after merge."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-06T20:53:23.355346482+00:00",
+  "updatedAt": "2026-09-06T20:53:47.993467752+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
