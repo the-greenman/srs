@@ -2,7 +2,7 @@
 
 # RFC-034: Container Structure and Nesting
 
-**Status**: Draft (Revision 5)
+**Status**: Accepted (Revision 6)
 
 **Affects**: `Container` membership semantics; a new optional `Container.childContainerIds` nesting edge; both closed Container JSON Schema definitions (`container.json` and `manifest.json#/$defs/Container`); the Container shape carried in SRSJ; `containers_for_instance`; RFC-011 `containerScope` semantics (`explicit` = `direct`, `subtree` = `effective`; supersedes the traversal branch of I-011-3); RFC-012 `containerId` filtering (R6/I-118); container view resolution; RFC-026 container-slice closure; core Container prose (subsection 4.6.4.6), I-66, and design-note 013 ("Why Containers and Relations are complementary").
 
@@ -15,6 +15,7 @@
 | 3 | 2026-07-29 | Permit explicitly composed rootless children; define invalid-edge handling; reconcile RFC-011, RFC-012, and RFC-026; specify both schema deltas and SRSJ compatibility; strengthen overlap and materialization examples. |
 | 4 | 2026-07-29 | Unify container-scope vocabulary on `direct`/`effective`: re-anchor `containerScope: "explicit"` to `direct(C)` (retaining RFC-011's original meaning and preserving shallow querying) and `"subtree"` to `effective(C)`, rather than collapsing both to effective. |
 | 5 | 2026-09-06 | Disposition ruled by `rfc-decision-0750c62f` (Container is a declared selection on the expression plane; `contains` is the part-of tree where meaning lives). Executes that ruling: adopts Change C and Change B as drafted; renames the RFC per `rfc-decision-92d2da05` from "Structural Container Composition" to "Container Structure and Nesting" so the noun `Composition` (the renamed DocumentView entity) stays unambiguous; rewrites Change E and "Authored scope versus evaluated Selection" against the current query surface — `srs find`, a Composition `SectionSource`'s `discovery-query` (ext:discovery, replacing the retired `type-query`/`relation-query`/`fixed-instances` variants per srs#525), an SQL view, JSONPath, and graph traversal — rather than the retired `DocumentView type-query`/`relation-query` vocabulary; adds an explicit one-way-door mitigation statement that `contains` remains the part-of tree and must still be maintained now that it no longer defines membership; notes that `design-capture-directory-kind-scopes` graduates alongside this RFC's acceptance; and backfills the `## Charter alignment` section (cell:containment, mode: complicated) that predates Stage 1.5, per the RFC-040/srs#498 precedent. |
+| 6 | 2026-09-06 | Accepted by the owner (srs#267, 2026-09-06T13:08Z, citing `rfc-decision-0750c62f`); spec records authored in srs/srs — RFC stub record `rfc-02618b7f` with its integration manifest; I-66, I-118 and I-144 amended in place with visible markers; Container subsection carries the membership/nesting prose; conformance rules [R1]–[R4], [R6], [R7], [R9] become invariants I-146 to I-151 ([R5] is the amended I-66, [R8] the amended I-118/I-144); Container concept, design-note 013, ext:slices closure, ext:views-l2 `containerScope` and ext:discovery `containerId` re-stated; `childContainerIds` added to `container.json`, `manifest.json#/$defs/Container` and the SRSJ Container shape; the `composition.json`/`discovery.json` `containerId` and `containerScope` descriptions corrected; `design-capture-directory-kind-scopes` graduated to design-note 046. No content change to the accepted Revision 5 text. |
 
 ---
 
@@ -24,7 +25,9 @@ This RFC predates the Charter Check stage (Stage 1.5 did not exist when Revision
 
 **Cell(s):** cell:containment
 
-**Decision mode:** complicated — the governing ruling (`rfc-decision-0750c62f`) has already resolved the underlying question (which plane Container lives on, and that Change C follows from it); what remains here is executing that ruling as a concrete RFC revision, not making a fresh decision.
+**Decision mode:** complicated
+
+The governing ruling (`rfc-decision-0750c62f`) has already resolved the underlying question (which plane Container lives on, and that Change C follows from it); what remains here is executing that ruling as a concrete RFC revision, not making a fresh decision.
 
 **Governing cell preference:** Containment's cell preference is *declaration over location* (`rfc-decision-cce3c00e`). This RFC aligns with it directly: `direct(C)`/`effective(C)` membership is always declared (`rootInstanceIds`, `memberInstanceIds`, `childContainerIds`), and Change C's whole purpose is removing the one place membership was instead derived from location in a graph (`contains`-Relation traversal from a root).
 

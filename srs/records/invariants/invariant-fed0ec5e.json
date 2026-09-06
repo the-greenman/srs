@@ -6,11 +6,11 @@
   "typeName": "invariant",
   "fieldValues": {
     "invariant_number": "I-118",
-    "title": "containerId filter uses the RFC-009 I-66 membership definition",
-    "normative_statement": "A `containerId` filter predicate MUST use the three-condition membership definition of RFC-009 I-66: (1) `instanceId` in `Container.rootInstanceIds[]`, OR (2) `instanceId` in `Container.memberInstanceIds[]`, OR (3) reachable via transitive `contains` Relation traversal from any `rootInstanceIds[]` entry. The authoritative source for membership is the instance file and the relations file — the repository's authoritative store (RFC-038 [R1]). An implementation MAY maintain a derived catalog for performance but MUST treat the store as authoritative when they differ; there is no manifest `instanceIndex` to use as a cache, as it is retired (RFC-038 [R2]). (RFC-012 R6.)",
-    "applies_to": "ext:discovery; containerId aligned to RFC-009 I-66 (RFC-012); RFC-038"
+    "title": "containerId filter uses effective container membership",
+    "normative_statement": "A `containerId` filter predicate MUST match exactly the instances in effective(C) for the named Container C: the recursive closure over the Container's declared `rootInstanceIds`, `memberInstanceIds` and `childContainerIds` (RFC-034 [R8]; I-147). Discovery scopes to the full effective (deep) closure; a `contains` Relation never contributes (I-148). The authoritative inputs are the Container objects and their declared child graph in the repository's authoritative store (RFC-038 [R1]). An implementation MAY maintain a derived catalog for performance but MUST treat the store as authoritative when they differ; there is no manifest `instanceIndex` to use as a cache, as it is retired (RFC-038 [R2]). (RFC-012 R6, as amended by RFC-034 Change D.2 on 2026-09-06: the former three-condition rule of rootInstanceIds, OR memberInstanceIds, OR reachable via transitive `contains` traversal is superseded; its traversal branch is removed.)",
+    "applies_to": "ext:discovery; containerId aligned to RFC-034 effective membership (RFC-012, RFC-034); RFC-038"
   },
   "createdAt": "2026-07-23T16:42:10.798534148+00:00",
-  "updatedAt": "2026-08-22T22:52:57.405128688+00:00",
+  "updatedAt": "2026-09-06T13:19:55.566169334+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

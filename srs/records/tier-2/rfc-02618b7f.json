@@ -1,0 +1,19 @@
+{
+  "instanceId": "02618b7f-35ea-413d-8957-0b095fe34d6f",
+  "typeId": "6a000001-0000-4000-a000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc",
+  "fieldValues": {
+    "title": "RFC-034: Container Structure and Nesting",
+    "rfc_number": "034",
+    "author": "design dialogue draft (srs#267); Revision 5 executes rfc-decision-0750c62f",
+    "affected_components": "Container membership semantics (direct/effective), the new optional Container.childContainerIds nesting edge in container.json, manifest.json#/$defs/Container and the SRSJ Container shape; containers_for_instance (I-66); RFC-012 containerId discovery (I-118, discovery.json/composition.json); RFC-011 containerScope (I-144, ext:views-l2); RFC-026 container-slice closure (ext:slices); new invariants I-146 to I-151 carrying [R1]-[R4], [R6], [R7], [R9]; the core Container subsection, Container concept and design-note 013.\n\n<!-- srs-integration:v1\ncell:containment\nschema:container.json\nschema:manifest.json\nschema:srsj-envelope.json\nschema:discovery.json\nschema:composition.json\nsubsection:container\nI-66\nI-118\nI-144\nI-146\nI-147\nI-148\nI-149\nI-150\nI-151\next:discovery\next:views-l2\next:slices\n-->",
+    "proposal_artifact_path": "rfcs/rfc-034-structural-container-composition.md",
+    "content": "Defines a Container as an explicit, declared scope on the expression plane (rfc-decision-0750c62f). Direct membership is rootInstanceIds ∪ memberInstanceIds (Change A); nesting is declared through the new optional childContainerIds edge and effective membership is the recursive, deduplicated closure over it (Change B); Relations, contains included, never define membership, while contains remains the part-of tree and must still be maintained (Change C); containers_for_instance, member resolution, RFC-011 containerScope (explicit = direct, subtree = effective), RFC-012 containerId filtering and RFC-026 slice closure use that one definition (Change D); queries are separate, read-only selections (Change E). Conformance rules [R1]–[R9]. Accepted by the owner 2026-09-06 (srs#267) as Revision 5; renamed from 'Structural Container Composition' per rfc-decision-92d2da05. Charter Check: cell:containment, decision_mode complicated."
+  },
+  "lifecycleState": "accepted",
+  "createdAt": "2026-09-06T13:16:35.029131880+00:00",
+  "updatedAt": "2026-09-06T13:23:57.565728234+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

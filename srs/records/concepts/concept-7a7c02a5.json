@@ -7,10 +7,10 @@
   "fieldValues": {
     "canonical_key": "type:com.semanticops.srs/container",
     "title": "Container",
-    "description": "A grouping boundary over a collection of instances, answering the scoping question the Relation graph cannot: which instances belong together, what counts as this project. It is not a semantic object, having no Fields and holding no semantic state, and its claim is different in kind from a `contains` Relation: an edge says one instance is part of another; a Container says these instances form a unit for boundary purposes. Membership is either an explicit list or derived by traversing `contains` from declared roots.",
-    "notes": "A Container may name one member as its identity or purpose record, and one member whose Type is the Container's typing anchor. Its own id lives in a different space from instance ids and must never appear on a Relation."
+    "description": "A grouping boundary over a collection of instances, answering the scoping question the Relation graph cannot: which instances belong together, what counts as this project. It is not a semantic object, having no Fields and holding no semantic state, and its claim is different in kind from a `contains` Relation: an edge says one instance is part of another; a Container says these instances form a unit for boundary purposes. Membership is declared: the union of its roots and explicit members, closed over declared child Containers, and never derived from a Relation (RFC-034).",
+    "notes": "A Container may name one member as its identity or purpose record, and one member whose Type is the Container's typing anchor. Its own id lives in a different space from instance ids and must never appear on a Relation. Nested scopes are declared through `childContainerIds`; `contains` remains the part-of tree where meaning lives and must still be maintained (rfc-decision-0750c62f)."
   },
   "createdAt": "2026-09-05T23:42:08.670296172+00:00",
-  "updatedAt": "2026-09-05T23:45:43.841373143+00:00",
+  "updatedAt": "2026-09-06T13:19:55.911340672+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

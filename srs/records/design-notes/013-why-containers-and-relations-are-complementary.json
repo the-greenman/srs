@@ -1,11 +1,21 @@
 {
-  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "createdAt": "2026-05-27T00:00:00Z",
+  "instanceId": "f1000013-0000-4000-a000-000000000013",
+  "typeId": "2a000012-0000-4000-a000-000000000012",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "design-note",
   "fieldValues": {
     "title": "Why Containers and Relations are complementary",
-    "content": "\nA Relation graph answers \"what is semantically connected to what?\" but not \"what should be exported or queried together?\" These are different questions. A project may contain hundreds of Records connected by many Relations. The question \"which Records are in scope for this export?\" is a scoping question, not a semantic one.\n\nContainer provides the boundary. \"These Records collectively form a unit for boundary purposes\" is a scope claim. \"Stage A contains Task B\" is a semantic claim. A Container can hold Records that have no `contains` Relation between them — they are grouped for operational reasons, not because one is semantically inside the other.\n\nRelationship-first implementations derive Container membership by traversing `contains` Relations from root instances. Container-first implementations use explicit `memberInstanceIds`. Both strategies are valid; neither replaces the other."
+    "content": "\nA Relation graph answers \"what is semantically connected to what?\" but not \"what should be exported or queried together?\" These are different questions. A project may contain hundreds of Records connected by many Relations. The question \"which Records are in scope for this export?\" is a scoping question, not a semantic one.\n\nContainer provides the boundary. \"These Records collectively form a unit for boundary purposes\" is a scope claim. \"Stage A contains Task B\" is a semantic claim. A Container can hold Records that have no `contains` Relation between them — they are grouped for operational reasons, not because one is semantically inside the other.\n\n*Corrected 2026-09-06 (RFC-034, rfc-decision-0750c62f).* This note originally closed by saying that relationship-first implementations derive Container membership by traversing `contains` Relations from root instances, that container-first implementations use explicit `memberInstanceIds`, and that both strategies are valid. That last claim is withdrawn: membership is declared (`rootInstanceIds`, `memberInstanceIds`, nested through `childContainerIds`) and a Relation never defines it. The complementarity this note argues for is unchanged — and sharpened: `contains` is the part-of tree where meaning lives and must still be maintained; a Container is a bookmark over that tree, never a replacement for it."
   },
-  "instanceId": "f1000013-0000-4000-a000-000000000013",
+  "tags": [
+    "construct:container",
+    "construct:relation",
+    "topic:foundation"
+  ],
+  "createdAt": "2026-05-27T00:00:00Z",
+  "updatedAt": "2026-09-06T13:16:17.554722799+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {
       "note": "Imported from scds-rationale.md: \"Why Containers and Relations are complementary\"",
@@ -13,14 +23,5 @@
       "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
       "sourceType": "repository-document"
     }
-  ],
-  "tags": [
-    "construct:container",
-    "construct:relation",
-    "topic:foundation"
-  ],
-  "typeId": "2a000012-0000-4000-a000-000000000012",
-  "typeName": "design-note",
-  "typeNamespace": "com.semanticops.spec",
-  "typeVersion": 1
+  ]
 }

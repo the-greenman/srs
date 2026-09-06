@@ -1,10 +1,10 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
   "aiGuidance": {
-    "purpose": "ext:discovery DiscoveryQuery.containerId — instance is a member of this container (RFC-009 I-66)."
+    "purpose": "ext:discovery DiscoveryQuery.containerId — instance is in this container's effective membership, the closure over declared roots, members and childContainerIds; a contains Relation never contributes (RFC-034 [R8], I-118)."
   },
   "createdAt": "2026-07-29T00:00:00Z",
-  "description": "ext:discovery DiscoveryQuery.containerId — instance is a member of this container (RFC-009 I-66).",
+  "description": "ext:discovery DiscoveryQuery.containerId — instance is in this container's effective membership, the closure over declared roots, members and childContainerIds; a contains Relation never contributes (RFC-034 [R8], I-118).",
   "id": "4b000095-0000-4000-a000-000000000095",
   "name": "discovery_container_id",
   "namespace": "com.semanticops.srs",

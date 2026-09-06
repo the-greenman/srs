@@ -151,7 +151,7 @@ A Relation graph answers "what is semantically connected to what?" but not "what
 
 Container provides the boundary. "These Records collectively form a unit for boundary purposes" is a scope claim. "Stage A contains Task B" is a semantic claim. A Container can hold Records that have no `contains` Relation between them — they are grouped for operational reasons, not because one is semantically inside the other.
 
-Relationship-first implementations derive Container membership by traversing `contains` Relations from root instances. Container-first implementations use explicit `memberInstanceIds`. Both strategies are valid; neither replaces the other.
+*Corrected 2026-09-06 (RFC-034, rfc-decision-0750c62f).* This note originally closed by saying that relationship-first implementations derive Container membership by traversing `contains` Relations from root instances, that container-first implementations use explicit `memberInstanceIds`, and that both strategies are valid. That last claim is withdrawn: membership is declared (`rootInstanceIds`, `memberInstanceIds`, nested through `childContainerIds`) and a Relation never defines it. The complementarity this note argues for is unchanged — and sharpened: `contains` is the part-of tree where meaning lives and must still be maintained; a Container is a bookmark over that tree, never a replacement for it.
 
 
 ### Why the conversation layer is a permanent boundary
@@ -493,5 +493,22 @@ The two tiers let a system capture content at whatever maturity level it has, an
 The tier model also makes SRS progressively adoptable. A team can start at Tier 0 and arrive at Tier 2 as their understanding of the semantic structure matures, without ever having to restart from scratch.
 
 A middle Tier 1 (Typed Record — named fields, no Type binding) was tried and removed: the 2026-08-21 usage attestation found zero instances of it in any corpus, ever (rfc-decision-53635966). The predecessor design note captures the original three-tier rationale; this note supersedes it with the two-tier reality. Tier numbering (0, 2) keeps the gap deliberately, for reference stability.
+
+
+### Directory-kind scopes via typed identity records
+
+**Content**: Graduated from the Tier-0 design-capture note `design-capture-directory-kind-scopes` alongside RFC-034's acceptance (2026-09-06), as that note asked. Nothing here is normative; it records a design position that builds on RFC-034's rootless-child mechanism.
+
+**The question (owner, 2026-07-31, on RFC-034).** Instead of imposing tree-ness on all Tier 0, can a *type* of root record make a Container a directory equivalent (exclusive, filesystem-like), applied selectively?
+
+**The answer: yes, via the Container's typed identity record.** Containers are deliberately not semantic objects: no Fields (design-note 013), a declared selection (rfc-decision-0750c62f). The RFC-013 `identityInstanceId` record is the Container's semantic carrier. Define a Type, for example `com.semanticops.core/directory`; a Container whose identity record instantiates it is directory-kind. Behaviour keys off the identity record's Type — structure, not string-matching (relation principle R5).
+
+**Exclusivity rules** (R10 enforcement, as structural-coherence diagnostics): a directory-kind Container appears in at most one directory-kind parent's `childContainerIds`; an instance appears in `direct()` of at most one directory-kind Container. Non-directory Containers (scopes, collections, overlays) remain overlapping and free. The tree is opt-in per scope, not global.
+
+**Tier-0 / OKF payoff.** Folder maps to directory-kind Container. A folder with no distinguished note gets a *minted* directory identity record carrying the folder's name, which answers RFC-034's rootless-child navigation-anchor question in the same move. Every note lives in exactly one directory; loose collections overlay freely. This is the enabler for the recorded vault-migration goal, gated on a solid spec.
+
+**The wider family.** Three independent needs converged on one expressiveness class in a single day, *declared structural constraints*: (1) acyclicity (sequence-category relations; `precedes` cycles currently degrade silently, srs-rust#557/#558), (2) exclusivity/cardinality (directory-kind Containers here; exclusive relation types are the RFC-005-deferred cardinality facet), (3) uniqueness-within-scope (cross-record field uniqueness). All three are definition-keyed (R5) and validation-enforced (R10). Recommendation: one structural-constraints RFC covering the family, with directory-kind landing as a thin instance of it, not a bespoke bolt-on.
+
+**The relation-side reading** of the owner's question, an exclusive root-record *relation* type, is real but distinct: post-RFC-034, Relations do not define membership, so an exclusive `contains`-like relation yields a semantic part-of tree, not a scope tree. Both are valid wants; they are different trees (the observation rfc-decision-0750c62f cites).
 
 
