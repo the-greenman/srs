@@ -1,0 +1,15 @@
+{
+  "instanceId": "614a23ad-5c5a-4793-913c-deb83c2eff7e",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "The three sibling container-question units predate their own ruling",
+    "summary": "programme units 57825db9 (srs#572), 08faf3eb (srs#573) and 65c41ce6 (srs#574) still read lifecycleState: proposed and decision_mode: complex, and 57825db9's summary still says RFC-034 stays deferred. All three were actually dispositioned together with srs#267 by rfc-decision-0750c62f (PR #610, merged 2026-09-06) per that PR's own comment on srs#580 (\"#572, #573, #574 each dispositioned as a consequence of the plane assignment rather than argued separately\"). A worker picking up any of the three should re-derive it against rfc-decision-0750c62f rather than trust the stored mode/summary, per the revival rule (CLAUDE.md) applied to stale unit records rather than a stale branch.",
+    "rationale": "These three units were authored 2026-09-05 (srs#583/#593) before rfc-decision-0750c62f existed (ruled 2026-09-06). Nothing re-synced them when the ruling landed, because the ruling's own PR (#610) touched srs/records/ (the decision record) and docs/charter/decision-compass.md, not programme/records/ (a different repository's data). This unit (RFC-034 Rev 5 execution, PR #616) only touched its own unit record and did not update the three siblings, since doing so was outside srs#267's dispatch scope and the coordinator, not an individual worker, owns re-syncing sibling units. What would change this: the coordinator or a dedicated unit walks 57825db9/08faf3eb/65c41ce6, re-runs Classify/Charter against rfc-decision-0750c62f, and either transitions them to landed (if fully absorbed, as #572's membership question appears to be) or rewrites their summary/decision_mode to reflect what the ruling actually left open, if anything."
+  },
+  "createdAt": "2026-09-06T10:57:41.912697259+00:00",
+  "updatedAt": "2026-09-06T10:57:41.912704846+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

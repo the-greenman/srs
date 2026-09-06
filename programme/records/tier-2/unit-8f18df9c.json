@@ -1,0 +1,21 @@
+{
+  "instanceId": "8f18df9c-7d44-4894-9a3c-783559a05cd9",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "RFC-034 Rev 5: execute the container-plane ruling",
+    "summary": "Drafts RFC-034 Revision 5, executing rfc-decision-0750c62f (Container is a declared selection on the expression plane; contains is the part-of tree) via the owner six-point list on srs#267: adopts Changes B/C as drafted, renames per rfc-decision-92d2da05, rewrites Change E against the current discovery-query/container-subset surface (srs#525), states the one-way-door contains-maintenance mitigation, notes design-capture-directory-kind-scopes graduates alongside acceptance, and backfills a Charter alignment section.",
+    "decision_mode": "complicated",
+    "door": "door-2",
+    "issue_ref": [
+      "srs#267"
+    ],
+    "body": "PR https://github.com/the-greenman/srs/pull/616 (branch claude/serene-johnson-nmcb1z). Doc-only Draft revision to an unaccepted RFC; no canonical records or schemas change. Both gates green by exit code; no new check was added so nothing to prove red-then-green. gate:owner-merge — stops at the PR, owner decides acceptance separately."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-06T10:56:30.807626423+00:00",
+  "updatedAt": "2026-09-06T10:57:13.506061124+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

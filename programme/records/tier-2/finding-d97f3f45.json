@@ -1,0 +1,20 @@
+{
+  "instanceId": "d97f3f45-582b-4ee0-b369-2b9f58f623a7",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "composition.json already contradicts itself on containerId traversal",
+    "summary": "docs/schema/2.0/composition.json documents the exact contradiction RFC-034 exists to resolve, inside the live schema rather than only in prose: DiscoveryQuery.containerid's description quotes the I-66 three-condition rule verbatim (root/member/transitive contains-Relation traversal), while the sibling containerScope description on the enclosing discovery-query SectionSource calls DiscoveryQuery.containerId single-valued and non-traversing one property away. containerScope's own subtree gloss also still reads traverse contains-relations from listed containers.",
+    "evidence": [
+      "docs/schema/2.0/composition.json $defs.DiscoveryQuery.properties.containerId.description: \"Instance is a member of this container per RFC-009 I-66: (1) instanceId in Container.rootInstanceIds[], OR (2) instanceId in Container.memberInstanceIds[], OR (3) reachable via transitive contains Relation traversal from any rootInstanceIds[] entry.\"",
+      "docs/schema/2.0/composition.json $defs.SectionSource oneOf[0].properties.containerScope.description: \"...because DiscoveryQuery.containerId is single-valued and non-traversing...\" and \"'subtree' (v1: falls back to explicit with diagnostic when containerIds absent)... traverse contains-relations from listed containers\"",
+      "Neither description was updated when srs#525 collapsed SectionSource onto DiscoveryQuery, so the two disagree on the exact question rfc-decision-0750c62f and RFC-034 Change D/R8 now resolve"
+    ],
+    "body": "Flagged in RFC-034 Rev 5 (rfcs/rfc-034-structural-container-composition.md, PR #616) under Change D items 1 and 2 as concrete Stage-6 remediation targets: correct DiscoveryQuery.containerId's description to state effective(C) rather than re-quote I-66, and correct containerScope's subtree gloss to name the childContainerIds recursion. Not fixed in PR #616 itself, since RFC-034 is still Draft and schema edits are out of scope before acceptance."
+  },
+  "createdAt": "2026-09-06T10:57:25.023297198+00:00",
+  "updatedAt": "2026-09-06T10:57:25.023306599+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
