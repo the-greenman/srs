@@ -1,0 +1,15 @@
+{
+  "instanceId": "94d40f2c-7e09-4922-a963-4b06f0a5087a",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "A struct field set to None everywhere is a signal, not noise",
+    "summary": "Grepping every construction site of a field across the codebase and finding it is always None (or always the same literal) in fixtures and tests is a fast, general way to find a field the type model carries but no code path actually consumes.",
+    "rationale": "Confirming srs-rust#958's editorHint claim didn't require reading every consumer by hand: grepping `EditorHint|editor_hint` across crates/*/src showed every non-definition site assigning `editor_hint: None` in a fixture, with zero reads anywhere outside the round-tripping field_json.rs shim. That pattern generalizes past this one field — before assuming a schema-correct property is honored downstream, grep its construction sites; if they are uniformly a placeholder value in test/fixture code and never a live read, the property is declared but unwired, and the fix is to wire it, not to add another test asserting the placeholder."
+  },
+  "createdAt": "2026-09-06T18:02:43.247255431+00:00",
+  "updatedAt": "2026-09-06T18:02:43.247265222+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
