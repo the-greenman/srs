@@ -1,0 +1,19 @@
+{
+  "instanceId": "3a68714a-2750-4a12-ba1a-ebff9d50c061",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "A closed tracking issue and a settled disposition are not the same fact, and a schema without a discriminator for them cannot self-expire correctly",
+    "summary": "publication-reachability-exclusions.json's own $comment named 'the issue that owns its real resolution' as the self-expiry mechanism, but the schema had only one field (`issue`) to carry two different facts: 'this is settled and the closed issue is its historical ruling' and 'this is still open work and the issue must stay open.' Without a discriminator, 80 of 82 entries read as one giant regression instead of the mostly-settled corpus they actually were, and two entries (the #435-cited background notes) went the other way: their own reason text said the graduation condition had NOT happened, yet nothing distinguished them from the 78 that had actually settled.",
+    "evidence": [
+      "srs#590: 80 of 82 entries cited a closed issue (#285 x49, #274 x22, #407 x6, #435 x2, #273 x1); check-publication-reachability.mjs:392,400 validated only issue format, never state.",
+      "Two of the six #435-cited entries (7e8d9753, ac55018f) had reason text reading 'graduates ... when srs#273 self-hosts the charter — this exclusion retires then', a condition that had not occurred even though the citing issue (#435) had closed over it, and even though #273 itself was a different, unrelated, already-closed task (Metamodel v1.1.0) — a stale cross-reference inside the reason text, layered under a stale issue citation in the entry's own tracking field."
+    ],
+    "body": "The general pattern: an allowlist/exclusion schema that tracks 'why is this suppressed' via a single external-tracker reference conflates two lifecycles — the tracker's own state, and whether the underlying condition the tracker was created to resolve has actually resolved. A ruled/settled disposition and a still-open follow-up both look identical in that one field once the tracker closes. The fix (adding `disposition: permanent | pending`) is generalizable to any similar file in this repo that cites a GitHub issue as its sole staleness signal: rfcs/integration-allowlist.json and the check-idl-schema-conformance.mjs allowlist both use the same bare-issue-citation pattern and would benefit from the same discriminator if they ever accumulate closed citations at this scale."
+  },
+  "createdAt": "2026-09-06T16:21:35.542012157+00:00",
+  "updatedAt": "2026-09-06T16:21:35.542022588+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

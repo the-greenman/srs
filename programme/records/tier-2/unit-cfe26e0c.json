@@ -1,0 +1,21 @@
+{
+  "instanceId": "cfe26e0c-6f92-496b-a7ee-0596e7734bc4",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "publication-reachability exclusions: express a permanent disposition",
+    "summary": "80 of 82 scripts/publication-reachability-exclusions.json entries cite a closed GitHub issue; the schema had no way to say a closed-issue citation is a settled ruling rather than a regression. Added a required disposition (permanent | pending) field, validated in check-publication-reachability.mjs, and reclassified all 82 entries.",
+    "decision_mode": "clear",
+    "issue_ref": [
+      "srs#590",
+      "srs#631",
+      "srs#632"
+    ]
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-06T16:20:29.103320110+00:00",
+  "updatedAt": "2026-09-06T16:21:08.928023807+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,15 @@
+{
+  "instanceId": "c1e0fe65-052d-4871-bb50-284fcacf4094",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "A reason field's internal cross-references go stale independently of the entry's own tracking field",
+    "summary": "When auditing an exclusion, allowlist, or grandfather-list entry for staleness, check both the entry's own tracking field (e.g. `issue`) AND any issue/PR numbers embedded in its free-text `reason`/rationale — the two can drift independently, and the embedded reference is invisible to any schema-level format check.",
+    "rationale": "Two publication-reachability-exclusions.json entries cited #435 as their tracking issue (format-valid, and #435 really did exist and really did close), so a check that validates only the tracking field's format and liveness would have called them settled. But their `reason` text separately named '#273' as the actual condition that would resolve them ('graduates ... when srs#273 self-hosts the charter'), and #273 was long since closed for an unrelated task. Neither cross-reference was wrong in isolation — #435 is a real, closed issue; #273 is a real, closed issue — but together they described a condition that had never actually occurred. Reading only the structured `issue` field, or only running a link-format validator, would have missed this; it only surfaced by reading the prose and checking what it claimed against the actual repository state (was there a `derived-from` relation? did the decision records absorb the rationale? — no). The alternative considered was trusting the entry's own disposition classification from its citation format alone (closed issue -> permanent), which would have silently mis-filed these two as permanent. It loses because a schema field can be well-formed and still encode a false claim; only checking the claim against the repository's actual current state catches that."
+  },
+  "createdAt": "2026-09-06T16:21:35.683614366+00:00",
+  "updatedAt": "2026-09-06T16:21:35.683620865+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
