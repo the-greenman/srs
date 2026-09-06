@@ -5296,9 +5296,6 @@ SCDS assumes that understanding evolves. Records, Relations, and lifecycle state
 ---
 
 
-### Design Decisions
-
-
 ### Why Field and Type are separate
 
 **Content**: 
@@ -5430,9 +5427,6 @@ The boundary makes both layers better at what they do. The connection between th
 ---
 
 
-### Usage Guidance
-
-
 ### AI guidance composition order
 
 **Content**: 
@@ -5516,9 +5510,6 @@ In a federated ecosystem, implementations will often receive SCDS content that u
 A conforming implementation should validate the core and extension content it recognises, surface unknown extension content clearly to users or downstream systems, and pass that unknown content through rather than silently discarding it. This is especially important for Records instantiated against a specializing Type: a system that knows only the base Type should still be able to read the inherited base fields correctly while preserving the specialization-specific fields.
 
 ---
-
-
-### Extension Design Notes
 
 
 ### How to decide which extensions to implement

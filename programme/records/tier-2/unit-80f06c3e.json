@@ -6,14 +6,20 @@
   "typeName": "unit",
   "fieldValues": {
     "title": "The 127 markdown headings un-baked into records",
-    "summary": "The document's real outline currently lives in markdown strings inside record bodies, invisible to the record model and to every check. Un-baking those headings into records is what turns the outline into structure the tooling can see.",
+    "summary": "The document real outline currently lives in markdown strings inside record bodies, invisible to the record model and to every check. Un-baking those headings into records is what turns the outline into structure the tooling can see.",
+    "decision_mode": "complicated",
+    "door": "door-1",
     "issue_ref": [
       "srs#562",
-      "srs#556"
-    ]
+      "srs#558",
+      "srs#556",
+      "srs-rust#973",
+      "srs#626"
+    ],
+    "body": "Part 1 delivered by PR https://github.com/the-greenman/srs/pull/637 (merged 2026-09-06): the example Type had zero records while 112 fenced code blocks sat inside prose fields. 71 lifted-eligible blocks became 68 example records under srs/records/examples/ (three sites group two adjacent blocks that make one point), with 68 contains and 41 precedes relations and 27 prose records rewritten to point at them. Executes the 2026-09-05 spine ruling and RFC-042 Change C. Rendered fence count is 214 before and after - nothing dropped, only rehomed. Left alone deliberately: two ASCII diagrams (formatting, not code), and 39 fences in design-note, extension and generated-type-reference records, the last of which is generator output that can only change at the generator. Baked headings are untouched at 122 in 23 records - that is part 2 of this unit, and the whole of what the coherence allowlist still holds."
   },
-  "lifecycleState": "proposed",
+  "lifecycleState": "landed",
   "createdAt": "2026-09-05T22:08:28.895019375+00:00",
-  "updatedAt": "2026-09-05T22:08:28.895026010+00:00",
+  "updatedAt": "2026-09-06T17:50:22.335389520+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

@@ -1,0 +1,15 @@
+{
+  "instanceId": "305f46b8-072b-45c1-ad78-7bab8268db80",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "The five-hour session limit is shared by local agents and cloud routines",
+    "summary": "Cap parallel local agents at about three, and use opus or sonnet rather than fable for bulk units. The account limit is one pool: local agents in a terminal and scheduled cloud routines draw on the same budget, so a wide local fan-out silently starves the routines.",
+    "rationale": "Measured on 2026-09-06: six parallel fable agents plus two scheduled routines hit the limit at 13:32 and cost roughly 70 minutes of the working session, with the routines failing as collateral. Fable is the expensive choice per unit of work here, so a wide fan-out of fable agents is the fastest way to reach the ceiling; opus or sonnet on bulk units buys more units per unit of budget. Three parallel local agents left headroom for the routines to run through. The rule is about the aggregate, not any single agent: check what is scheduled before opening a wide fan-out, because the routines have no way to see the local pool and will simply fail."
+  },
+  "createdAt": "2026-09-06T17:50:23.834139618+00:00",
+  "updatedAt": "2026-09-06T17:50:23.834143705+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

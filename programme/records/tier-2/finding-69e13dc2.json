@@ -1,0 +1,19 @@
+{
+  "instanceId": "69e13dc2-88b1-4f14-8417-12b7b91b6f2c",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "A ruled consequence was already implemented - #574 needed no code",
+    "summary": "srs#574 asked whether a rendered composition should recurse the part-of tree. render_service::render_record_at_level already recursed contains children at heading level plus one in structured mode. The ruling confirms existing behaviour, so the unit produced no diff and closed on evidence.",
+    "evidence": [
+      "render_service::render_record_at_level recurses contains children at one heading level deeper in structured mode",
+      "No change was needed in srs-rust for #574; the finding is recorded so the absence of a diff is not read as an oversight"
+    ],
+    "body": "The consequence map that generated #573 and #574 was written from the specification, where neither behaviour is stated, and not from the implementation, where one of them already existed. Reading the code before scoping the unit would have retired #574 at classification."
+  },
+  "createdAt": "2026-09-06T17:50:22.839291212+00:00",
+  "updatedAt": "2026-09-06T17:50:22.839295913+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,20 @@
+{
+  "instanceId": "6c1ae834-a14c-4749-a134-8b655cccc3d1",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "μDemocracy Mapping is not childless — it still contains a table record with real content",
+    "summary": "Correcting finding-51845c8c: of the four empty-outline design-notes named in srs#636, three (Design Decisions, Usage Guidance, Extension Design Notes) genuinely carried no relation but the inbound `contains` edge from their concept and were deleted. The fourth, μDemocracy Mapping, has an empty `content` field but is not childless — it holds an outbound `contains` edge to a `table` record (b1000000-0000-4000-a000-000000000005) carrying the live SCDS-to-μDemocracy vocabulary mapping, extracted from the note by scripts/migrate-tables.mjs when tables were split out of prose. Left in place per the issue own instruction (\"if any turns out to carry content, leave it and say so\"); srs#636 deleted the other three only.",
+    "evidence": [
+      "`srs relation list --repo srs` shows Design Decisions, Usage Guidance and Extension Design Notes each with exactly one relation (the inbound `contains` edge), and μDemocracy Mapping with two: the same inbound edge plus an outbound `contains` edge to table b1000000-0000-4000-a000-000000000005",
+      "The target table record's `intro` field reads verbatim: \"How the SCDS v2 vocabulary mapping to the μDemocracy application layer. Reproduced from the v1→v2 conceptual remapping document for reference.\" — live content, not scaffolding",
+      "scripts/migrate-tables.mjs (merged pre-programme, PR #544) shows the table was extracted out of design-note f1000041 and the design-note's own `content` field was blanked as part of that extraction, which is why it now reads as empty outline scaffolding despite still carrying real content one hop down"
+    ],
+    "body": "The class of finding \"empty content field, homed only to keep the tree total\" needs one more check before it licenses deletion: whether the record has an outbound `contains` edge of its own. finding-51845c8c generalised from all four notes sharing an empty `content` field to all four being safe to delete; the generalisation held for three of four. The instruction in srs#636 itself (\"If any turns out to carry content, leave it and say so\") anticipated exactly this and is why the discrepancy was caught at Ground rather than causing a live table to be silently orphaned."
+  },
+  "createdAt": "2026-09-06T19:48:46.967167214+00:00",
+  "updatedAt": "2026-09-06T19:48:46.967174662+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,20 @@
+{
+  "instanceId": "51845c8c-c0dd-4410-846d-a747454452e3",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "Four design notes are empty outline scaffolding whose right end state is deletion",
+    "summary": "Design Decisions, Usage Guidance, Extension Design Notes and the domain mapping note have empty content fields and no remaining children - they are headings from an older outline. They were homed anyway (to Foundational tension, AI guidance, Extension and Namespace) so the tree is total and the checker honest, but none of them says anything about its concept. Filed as srs#636.",
+    "evidence": [
+      "All four carry an empty content field and no child records",
+      "Three further notes with empty content have live titles and want prose, not deletion",
+      "PR #629 is additive-relations-only and deletes no record"
+    ],
+    "body": "Homing an empty container node makes the coherence check honest at the cost of a leaf that carries nothing - an acceptable trade inside an additive unit, and a debt if it is left. The deletion belongs with #562 and #569, where records are actually rewritten. srs#636."
+  },
+  "createdAt": "2026-09-06T17:50:21.914852855+00:00",
+  "updatedAt": "2026-09-06T17:50:21.914857117+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
