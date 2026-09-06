@@ -1,0 +1,24 @@
+{
+  "instanceId": "625f3d4e-a37d-4cd2-b714-127a213e3f76",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Grid census cycle three (2026-09-06), corrected read-out",
+    "summary": "srs#635 asked for \"cycle two\" diffed against census-2026-08-26.json, but PR #582 had already run cycle two (diffed against 08-26) the evening before the issue was filed. Ran the genuine next cycle instead -- cycle three, diffed against the real prior cycle (09-05) -- corpus moved 238->247 (RFC-034's Container fold: six new invariants, all `containment`, +7 there; four new decisions split none/containment/succession/governance). Gave a one-line proposal for all 21 none-placements (not just a class summary) and corrected the \"four unguarded cells\" figure to three (portability picked up a check independently since cycle two), with a smallest-honest-check proposal for each of the three. No conformance-rule changes -- proposals only.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs#635",
+      "srs#580",
+      "srs#582",
+      "srs#645",
+      "srs#490"
+    ]
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-06T18:21:28.108581137+00:00",
+  "updatedAt": "2026-09-06T18:22:11.854646458+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
