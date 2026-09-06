@@ -6,7 +6,7 @@ enforces bidirectional presence: every id below must resolve to srs/records/tier
 <id>.json, and every id below must appear (as `rfc-decision-<id>`) somewhere in this file's body.
 Adding a charter-class ruling: add its id here AND write the section that cites it, in the same
 change — the guard fails on either half done alone.
-cce3c00e 9ee14517 7caca3a1 8f5aca2c b9d7096e 0750c62f 4431046e
+cce3c00e 9ee14517 7caca3a1 8f5aca2c b9d7096e 0750c62f 4431046e 0118e938
 c8704763 2a1e1590 53635966 628cf6c4 16b20c56 5f8204bc 8948e43f
 -->
 
@@ -110,9 +110,13 @@ what (kind: **rule**).
    reference taxonomy; it never re-implements a lower-layer mechanism.
 3. **Expression never alters meaning** — nothing in selection, composition, presentation, or
    projection may change validity, identity, state, or relations.
-4. **Crossings are declared, and the lower layer wins** — where a layer legitimately carries
-   another layer's data, the crossing is named where it occurs and conflicts resolve downward,
-   visibly. Identity conflicts remain fatal per the Earth rule — they are not crossings.
+4. **A construct has one layer; a crossing is a stated goal, never an option** — a construct's
+   schema carries only its own layer's data. A layer carries another layer's data only for a
+   specific, named goal that cannot be met within one layer; that goal is stated in the decision
+   that introduces the crossing, the crossing is declared where it occurs, and conflicts resolve
+   downward, visibly. Absent a stated goal the layer test fails and the proposal is re-drawn inside
+   one layer (refined by `rfc-decision-0118e938`). Identity conflicts remain fatal per the Earth
+   rule — they are not crossings.
 5. **Every layer stands alone below** — a layer must be complete and valid with every layer above
    it absent (the spec without any implementation, records without any view, ...).
 6. **Behavior needs a contract** — an affordance enters the standard only with enforcement
@@ -235,6 +239,26 @@ consumes the declared one. **No new construct.**
 Grouping exists at every plane and each has its own construct — Type groups Fields, Package groups
 definitions, `contains` groups instances semantically, Container groups them operationally,
 Composition groups selections. Layer rule 1 applied to the construct that most needed it.
+
+The plane assignment is **closed, not provisional** (`rfc-decision-0118e938`): no future consumer
+may add semantic data to the Container schema by declaring the addition a crossing. Meaning that
+needs to sit on a scope sits on the scope's identity record, where Fields live.
+
+## One layer per construct
+
+`rfc-decision-0118e938` — refines layer rule 4 (kind: **rule**). The original rule granted a
+standing permission — "where a layer legitimately carries another layer's data" — and never
+defined *legitimately*. The permission is withdrawn; the ruling clause stands. A crossing now needs
+a specific goal that cannot be met within one layer, stated in the decision that introduces it.
+Without that goal the layer test fails, and the answer is to re-draw the proposal inside one layer,
+not to accept it with a declaration attached.
+
+The two examples the original rule named are re-read: denormalized type hints on a Record
+(`typeNamespace`, `typeName`; Invariant 28) are a crossing with a stated goal — a record file is
+readable without its package — and remain the one grandfathered crossing in the core. Composition
+order defaulting to the `precedes` chain is not a crossing: it is an upper layer consuming a lower
+one (rule 2). The corpus held zero declared crossings under rule 4 when this was ruled, so the
+change costs nothing today and closes the path the Container drifted along for a year.
 
 ## Grid operations
 
