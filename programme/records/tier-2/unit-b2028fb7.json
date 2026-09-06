@@ -1,0 +1,21 @@
+{
+  "instanceId": "b2028fb7-7057-41c1-8623-da03c68b46ab",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Enforcement check for the attribution cell: fieldMeta keys are a subset of fieldValues keys",
+    "summary": "Added scripts/check-attribution-cell.mjs guarding I-133's sibling-keys clause (RFC-039 [R6]): every fieldMeta key must name a field present in the same record's fieldValues. Registered in checks.json (cell: attribution, always tier), proven red-then-green on the one real fieldMeta usage in the corpus (rfc-004's proposal_artifact_path), guard-bite cases added to tests/guards/run.mjs.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs#650"
+    ],
+    "body": "Dispatched from the srs gate:pool queue via srs#580 (Pool top-up, 13:03Z; also #650's own dispatch comment). Charter check found I-133 actually states three clauses, not one: (1) fieldMeta keys are a subset of the sibling fieldValues keys, (2) each fieldMeta value has shape {source?, editedAt?, sourceRefs?}, (3) fieldMeta must not appear inside an inline-composite value. Clause (2) is already enforced by validate-records.mjs against docs/schema/2.0/record.json's FieldMeta $def (additionalProperties:false, source enum, editedAt date-time format) on every run under the existing validate-records check (cell: conformance) - building it again under cell:attribution would be a second mechanism for a goal that already has one, so the one-way-per-goal test excluded it. Clause (3) needs walking each Field's composite fieldType shape to find candidate nested sites, a materially bigger unit, deferred like 07-6-ext-views-l1#r19 was in the read-out. Built only clause (1): a cross-property key-subset constraint standard JSON Schema cannot express, and genuinely had no enforcement anywhere. Corpus measurement: 527 Record instances, exactly 1 carries a fieldMeta block at all (rfc-004's proposal_artifact_path), and it is compliant. PR: srs#660."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-06T21:51:04.740760650+00:00",
+  "updatedAt": "2026-09-06T21:51:34.749472710+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

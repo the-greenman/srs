@@ -1,0 +1,21 @@
+{
+  "instanceId": "5cbfad20-c79f-4155-a969-ed200025e1a4",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "I-133 has three clauses; only one (the sibling-keys cross-check) had no enforcement anywhere",
+    "summary": "The attribution cell's dispatch text (srs#650) framed I-133 as a single shape rule, but the record's normative_statement actually has three independent clauses: (1) fieldMeta keys are a subset of the sibling fieldValues keys, (2) each fieldMeta value has shape {source?, editedAt?, sourceRefs?}, (3) fieldMeta must not appear inside an inline-composite value. Clause (2) is already fully enforced by validate-records.mjs's existing schema pass against docs/schema/2.0/record.json's FieldMeta $def (additionalProperties:false, source enum, editedAt date-time format) - it runs on every corpus record already, under the pre-existing validate-records check (cell: conformance), not a new one. Only clause (1), a cross-property key-subset constraint plain JSON Schema cannot express, was genuinely unguarded.",
+    "evidence": [
+      "docs/schema/2.0/record.json $defs.FieldMeta: additionalProperties:false, source enum [human,ai,imported,derived], editedAt format:date-time",
+      "scripts/checks.json validate-records entry: cell conformance, validates every srs/records/** instance against record.json via scripts/lib/json-schema-lite.mjs",
+      "scripts/lib/json-schema-lite.mjs has no keyword for a cross-property key-subset constraint (verified by reading resolveRef/validateAgainstSchema - no such check exists)",
+      "Corpus measurement (scripts/check-attribution-cell.mjs, srs#650/PR#660): 527 Record instances, exactly 1 carries a fieldMeta block (rfc-004's proposal_artifact_path), and its one key is a real fieldValues key"
+    ],
+    "body": "Relevant to any future unit dispatched from a grid-census cell read-out that names a corpus statement as unenforced: check whether the statement's full text has multiple clauses before assuming the whole statement is uncovered, and check whether general schema validation (validate-package.mjs/validate-records.mjs via json-schema-lite.mjs) already covers part of it before writing a new cell-specific check."
+  },
+  "createdAt": "2026-09-06T21:51:46.988555069+00:00",
+  "updatedAt": "2026-09-06T21:51:46.988564062+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

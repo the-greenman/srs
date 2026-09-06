@@ -1,0 +1,15 @@
+{
+  "instanceId": "f752f44a-e17a-44a2-b834-b1e4181c176e",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "Before building a cell-specific structural check, check whether json-schema-lite's existing schema pass already covers part of the corpus statement",
+    "summary": "validate-package.mjs and validate-records.mjs already run every corpus record/package artifact through scripts/lib/json-schema-lite.mjs against docs/schema/2.0/*.json on every validate-all run (cell: conformance). A cell read-out naming a corpus statement as unenforced can still be partially covered by that generic pass - only the part standard JSON Schema literally cannot express (cross-property constraints, like one object's keys needing to be a subset of a sibling object's keys, or history-based rules like a version bump on change) is genuinely new ground for a dedicated cell-specific check.",
+    "rationale": "The one-way-per-goal charter test (rfc-decision-7caca3a1) fails if a new check re-validates a shape json-schema-lite's existing pass already enforces via additionalProperties/enum/format - that is a second mechanism for a goal the schema layer already has one for. Before writing scripts/check-<cell>-*.mjs, read the relevant docs/schema/2.0/*.json $def(s) and scripts/checks.json's validate-package/validate-records entries first; scope the new check to only the sub-clause the schema layer cannot express. This would apply directly to any future attribution/versioning/repository/portability-cell unit that guards a corpus statement about a Field, Type or Record's own declared shape. It would not change: a check needs full re-litigation only if a future ruling widens json-schema-lite itself to support cross-property constraints, which would make this carried_context (and srs#650's check-attribution-cell.mjs scope note) worth revisiting."
+  },
+  "createdAt": "2026-09-06T21:51:58.791825200+00:00",
+  "updatedAt": "2026-09-06T21:51:58.791834635+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
