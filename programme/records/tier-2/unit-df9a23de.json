@@ -7,12 +7,15 @@
   "fieldValues": {
     "title": "checks.json entry tier is unvalidated",
     "summary": "Nothing validates the tier field on a checks.json entry, so a typo in a tier name silently disables the check rather than failing loudly. The registry is the one declared home for every conformance check, which makes a silent drop-out worse than an undeclared check.",
+    "decision_mode": "clear",
+    "door": "non-normative",
     "issue_ref": [
       "srs#579"
-    ]
+    ],
+    "body": "Fixed in check-checks-registry-membership.mjs (already the registry-hygiene guard): every entry's tier is checked against checks.json's own declared tiers array, cell against the twelve Pattern Grid slugs in scripts/lib/pattern-grid-cells.json, and script against the filesystem. Proved by deliberately introducing each violation against the live registry (red), then reverting (green); the same three cases plus a missing-tiers-vocabulary case are now permanent negative tests in tests/guards/run.mjs. Both gates (validate-all.mjs, check-release-drift.mjs) pass. PR srs#630, gate:auto-merge armed."
   },
-  "lifecycleState": "proposed",
+  "lifecycleState": "in_review",
   "createdAt": "2026-09-05T22:07:51.605271068+00:00",
-  "updatedAt": "2026-09-05T22:07:51.605274493+00:00",
+  "updatedAt": "2026-09-06T15:48:43.005800699+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

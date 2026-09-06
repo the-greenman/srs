@@ -1,0 +1,20 @@
+{
+  "instanceId": "3c6b29a8-dfb4-4447-980c-118f7f3486c9",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "Adding a required registry field breaks hand-authored test fixtures silently",
+    "summary": "check-checks-registry-membership.mjs was extended (srs#579) to require scripts/checks.json to declare a non-empty top-level tiers array. tests/guards/run.mjs hand-builds a minimal registry.json fixture inline (its registry() helper) rather than deriving it from the real schema, so the new required field was absent from the fixture and every one of that guard's existing test cases went red under validate-all.mjs until the fixture was updated to match. The failure surfaced as an unrelated-looking 'declares no tiers array' message on cases that were testing something else entirely (undeclared-script rejection, the empty-scripts-dir floor), which cost real time to trace back to the fixture rather than the new guard logic.",
+    "evidence": [
+      "node scripts/validate-all.mjs went red immediately after landing the tier/cell/script validation, citing 'declares no \"tiers\" array' inside three guard cases (srs#495 checks-registry-membership) that predate srs#579 and test unrelated violations.",
+      "Root cause: tests/guards/run.mjs's registry(...) helper (used only by the checks-registry-membership guard cases) constructs { checks: [...] } literally, with no tiers key, so any new registry-level invariant checked before the disk-walk logic fails every existing case until the helper is updated.",
+      "Fixed by adding tiers to the helper's output and adding four new cases (typo'd tier, bogus cell, missing script, missing tiers vocabulary) plus a restore-to-green case, all passing under node tests/guards/run.mjs."
+    ],
+    "body": "Generalizes beyond this one guard: any hand-authored JSON/JS fixture that mimics a schema (rather than deriving from it) will silently fall out of sync the moment the schema gains a new required field, and the resulting test failure reads as unrelated to whoever is debugging it. Worth checking, before adding a new required top-level field to scripts/checks.json or a sibling registry, whether tests/guards/run.mjs (or any other suite) hand-constructs fixtures against that shape."
+  },
+  "createdAt": "2026-09-06T15:49:30.707238560+00:00",
+  "updatedAt": "2026-09-06T15:49:30.707245531+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
