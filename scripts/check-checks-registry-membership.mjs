@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * check-checks-registry-membership.mjs — every scripts/check-*.mjs file is declared in the one
- * conformance-checks registry (rfc-decision-19997e24, srs#495).
+ * conformance-checks registry (rfc-decision-19997e24, srs#495), and every declared entry is itself
+ * well-formed (srs#579).
  *
  * The registry (scripts/checks.json) exists to make piecemeal addition of a new check
  * structurally impossible: a check script landing on disk with nobody adding it to the declared
@@ -15,14 +16,26 @@
  * convention — issue #495's "no renames" ground rule binds new checks only, and only check-*.mjs
  * is a naming CONVENTION in the first place.
  *
+ * srs#579: the disk-to-registry direction above catches an undeclared script, but nothing checked
+ * the reverse — a registry entry can name a `tier` or `cell` that matches nothing, or a `script`
+ * that resolves to no file on disk, and `validate-all.mjs`'s `entry.tier === 'always'` filter
+ * silently drops it into "deferred to other tiers" rather than failing. A typo (`alwyas`,
+ * `Always`) disables the check it names while still exiting 0. This guard closes that gap for
+ * every entry in the registry, not just the check-*.mjs-named ones:
+ *   - `tier` must be one of the registry's own declared `tiers`
+ *   - `cell` must be one of the twelve slugs in scripts/lib/pattern-grid-cells.json
+ *   - `script` must resolve to a file under scripts/
+ *
  * This script is itself a check-*.mjs file, so it is declared in scripts/checks.json too —
  * self-referential, on purpose, so the registry cannot exempt its own enforcement mechanism.
  *
  *   node scripts/check-checks-registry-membership.mjs [root]   # root defaults to the repo root
  */
 import { readFile, readdir } from "fs/promises";
+import { existsSync } from "fs";
 import { join, resolve, dirname } from "path";
 import { fileURLToPath } from "url";
+import { loadCellSlugs } from "./lib/pattern-grid-cells.mjs";
 
 // `fileURLToPath`, not `new URL(..).pathname` — the percent-encoding trap the sibling guards
 // document against; getting it wrong breaks every run under a checkout path containing a space.
@@ -57,6 +70,46 @@ async function main() {
   const declared = new Set(
     entries.map((entry) => entry.script).filter((script) => CHECK_SCRIPT_PATTERN.test(script)),
   );
+
+  // The registry's own declared vocabulary for `tier` — not a hardcoded copy, so a tier added or
+  // renamed in scripts/checks.json's `tiers` array is picked up here without touching this file.
+  const declaredTiers = Array.isArray(registry.tiers) ? new Set(registry.tiers) : new Set();
+  if (declaredTiers.size === 0) {
+    console.log(`\n✗ ${REGISTRY_PATH} declares no "tiers" array — the tier vocabulary is empty`);
+    process.exit(1);
+    return;
+  }
+
+  const cellSlugs = await loadCellSlugs();
+
+  const malformed = [];
+  for (const entry of entries) {
+    if (!declaredTiers.has(entry.tier)) {
+      malformed.push(
+        `  ✗ "${entry.id}" declares tier "${entry.tier}", which is not one of ${REGISTRY_PATH}'s declared tiers (${[...declaredTiers].join(", ")})`,
+      );
+    }
+    if (!cellSlugs.has(entry.cell)) {
+      malformed.push(
+        `  ✗ "${entry.id}" declares cell "${entry.cell}", which is not one of the twelve Pattern Grid slugs in scripts/lib/pattern-grid-cells.json`,
+      );
+    }
+    if (typeof entry.script !== "string" || !existsSync(join(SCRIPTS_DIR, entry.script))) {
+      malformed.push(
+        `  ✗ "${entry.id}" declares script "${entry.script}", which does not resolve to a file under ${SCRIPTS_DIR}`,
+      );
+    }
+  }
+
+  if (malformed.length > 0) {
+    console.log("");
+    for (const line of malformed) console.log(line);
+    console.log(
+      `\n✗ ${malformed.length} malformed registry entr${malformed.length === 1 ? "y" : "ies"} in scripts/checks.json.`,
+    );
+    process.exit(1);
+    return;
+  }
 
   let dirEntries;
   try {
@@ -95,7 +148,10 @@ async function main() {
     return;
   }
 
-  console.log(`\n✓ Every scripts/check-*.mjs file is declared in scripts/checks.json (${onDisk.length} checked)`);
+  console.log(
+    `\n✓ Every scripts/check-*.mjs file is declared in scripts/checks.json (${onDisk.length} checked), ` +
+      `and every registry entry's tier, cell and script resolve (${entries.length} checked)`,
+  );
 }
 
 main().catch((err) => {

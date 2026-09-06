@@ -1,0 +1,20 @@
+{
+  "instanceId": "3807ea6d-9051-4a56-863a-1c5c793ccd3d",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "The Pattern Grid has no Process cell, and three dispatch briefs today named one",
+    "summary": "The dispatch brief for #558 instructed the unit to tag cell:process. There is no Process cell on the Pattern Grid — the twelve cells are fixed, and nothing in the charter admits a thirteenth by convention. The unit corrected to cell:containment plus cell:reference, which is what the RFC's subject matter (a tree of contains edges, referenced by depends-on) actually is.",
+    "evidence": [
+      "srs/docs/charter/decision-compass.md enumerates twelve grid cells; 'Process' is not among them",
+      "the-greenman/srs#620 body records the correction: 'the grid has no Process cell; tagged cell:containment + cell:reference'",
+      "Three separate dispatch briefs written on 2026-09-06 named a Process cell"
+    ],
+    "body": "A brief that names a cell the grid does not have is not a small typo: the Charter Check routes on the cell, and a cell nobody can look up makes the check unfalsifiable. The failure is upstream of the unit — in whatever writes the briefs — so correcting it inside the unit fixes one instance and leaves the source. Recorded as carried context as well, so the next brief-writer reads the rule rather than rediscovering it."
+  },
+  "createdAt": "2026-09-06T13:27:03.470752621+00:00",
+  "updatedAt": "2026-09-06T13:27:03.470758637+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

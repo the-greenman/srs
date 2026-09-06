@@ -1,0 +1,17 @@
+{
+  "instanceId": "c6bf308b-631d-41d0-b802-848eed02c98a",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "invariant",
+  "fieldValues": {
+    "invariant_number": "I-151",
+    "title": "A container slice closes over the root's childContainerIds descendants and effective members",
+    "normative_statement": "An RFC-026 container slice MUST include the closure root, its transitive childContainerIds descendants, and the root's effective member set. It MUST preserve declared edges among those Containers and MUST NOT include an unrelated Container solely because its roots or members are subsets of the included instance set.",
+    "applies_to": "Container (core); RFC-034",
+    "rationale": "RFC-034 [R9] (Change D.3), replacing RFC-026 Change C items 2 and 6. RFC-026's definition, relation, source-document and external-edge closure rules then apply to that member-instance set."
+  },
+  "createdAt": "2026-09-06T13:19:55.242220740+00:00",
+  "updatedAt": "2026-09-06T13:19:55.242228902+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

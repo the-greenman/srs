@@ -1,0 +1,15 @@
+{
+  "instanceId": "214cf953-eac6-41bf-8f93-c29a8616240e",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "The cloud sandbox has no gh, but it does carry a write-scoped GITHUB_TOKEN",
+    "summary": "In the cloud sandbox the gh CLI is absent, so anything reaching for it fails and the session either stalls or silently skips the step. A write-scoped GITHUB_TOKEN is present in the environment, and plain curl against the REST API covers everything the MCP GitHub tools do not — notably PATCHing an existing comment, which the tools cannot do at all. Reach for curl and the token before concluding a GitHub action is impossible from the sandbox.",
+    "rationale": "Discovered by the 2026-09-06 10:18 coordinator tick, which needed to update a ledger comment rather than append to it. The 12:13 tick did not have the recipe, concluded the edit was not available, and appended a second comment instead — so the same ledger now has two entries where one was intended, and the failure was invisible to both sessions. The dispatch prompt now carries the recipe so a tick does not have to rediscover it.\n\nThe alternative considered was installing gh in the sandbox image, which loses because it makes every session pay setup time for a tool used in a handful of calls, and because the MCP GitHub tools already cover the common reads and creates. curl plus the ambient token is the smaller surface: no install, no second credential, and the gap it fills is precisely the operations the tools omit.\n\nWhat would change this: if the MCP GitHub tool set grew comment editing and the other missing mutations, the curl path would be redundant for everything but genuinely exotic REST calls, and the recipe could shrink to a footnote."
+  },
+  "createdAt": "2026-09-06T13:27:06.145871465+00:00",
+  "updatedAt": "2026-09-06T13:27:06.145875445+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -908,3 +908,40 @@ schema:document-view-output.json
 **Content**: Adds RecordPropertyView as a sibling row kind to FieldView in ext:views-l1's row list (View.fieldViews[]), addressing record-level properties (lifecycleState, tags, createdAt, updatedAt) that sit outside fieldValues and so have no addressing mechanism today. Closes srs-rust#889: since rfc_status retired to the spec-rfc-process Lifecycle (srs#447/PR #507), the rfc-catalog/decision-log lost their rendered Status lines because FieldView only ever addresses fieldId and lifecycleState has no fieldId. RecordPropertyView.property's value domain is a closed, generated enum derived from record.json's own top-level property list, mirroring the derivation already ruled for definitionType (rfc-decision-c8704763 item 4). The FieldView-widening alternative is explicitly rejected (rfc-decision-2a1e1590's state carve-out). Charter Check: cell:description + cell:reference, decision_mode complicated.
 
 
+**Title**: RFC-034: Container Structure and Nesting
+
+**RFC Number**: 034
+
+**Status**: Accepted
+
+**Author**: design dialogue draft (srs#267); Revision 5 executes rfc-decision-0750c62f
+
+**Affected Components**: Container membership semantics (direct/effective), the new optional Container.childContainerIds nesting edge in container.json, manifest.json#/$defs/Container and the SRSJ Container shape; containers_for_instance (I-66); RFC-012 containerId discovery (I-118, discovery.json/composition.json); RFC-011 containerScope (I-144, ext:views-l2); RFC-026 container-slice closure (ext:slices); new invariants I-146 to I-151 carrying [R1]-[R4], [R6], [R7], [R9]; the core Container subsection, Container concept and design-note 013.
+
+<!-- srs-integration:v1
+cell:containment
+schema:container.json
+schema:manifest.json
+schema:srsj-envelope.json
+schema:discovery.json
+schema:composition.json
+subsection:container
+I-66
+I-118
+I-144
+I-146
+I-147
+I-148
+I-149
+I-150
+I-151
+ext:discovery
+ext:views-l2
+ext:slices
+-->
+
+**Proposal Artifact Path**: rfcs/rfc-034-structural-container-composition.md
+
+**Content**: Defines a Container as an explicit, declared scope on the expression plane (rfc-decision-0750c62f). Direct membership is rootInstanceIds ∪ memberInstanceIds (Change A); nesting is declared through the new optional childContainerIds edge and effective membership is the recursive, deduplicated closure over it (Change B); Relations, contains included, never define membership, while contains remains the part-of tree and must still be maintained (Change C); containers_for_instance, member resolution, RFC-011 containerScope (explicit = direct, subtree = effective), RFC-012 containerId filtering and RFC-026 slice closure use that one definition (Change D); queries are separate, read-only selections (Change E). Conformance rules [R1]–[R9]. Accepted by the owner 2026-09-06 (srs#267) as Revision 5; renamed from 'Structural Container Composition' per rfc-decision-92d2da05. Charter Check: cell:containment, decision_mode complicated.
+
+

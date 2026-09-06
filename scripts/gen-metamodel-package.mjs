@@ -357,7 +357,7 @@ const FIELD_SPECS = [
   // standalone generation is gated on; this is a documented per-entity exclusion, same latitude
   // Container.containerType already has, not a fix to #534 here).
   [148, 'tag', { datatype: 'string', cardinality: 'list' }, 'AND-conjunction: the instance\'s tags array must contain ALL of the specified values (ext:discovery DiscoveryQuery.tag).'],
-  [149, 'discovery_container_id', { datatype: 'string', format: 'uuid' }, 'ext:discovery DiscoveryQuery.containerId — instance is a member of this container (RFC-009 I-66).'],
+  [149, 'discovery_container_id', { datatype: 'string', format: 'uuid' }, 'ext:discovery DiscoveryQuery.containerId — instance is in this container\'s effective membership, the closure over declared roots, members and childContainerIds; a contains Relation never contributes (RFC-034 [R8], I-118).'],
   [150, 'lifecycle_states', { datatype: 'string', cardinality: 'list' }, 'ext:discovery DiscoveryQuery.lifecycleStates — inclusive multi-value lifecycle filter, OR semantics (RFC-012 Rev 11, srs#525).'],
   [151, 'exclude_lifecycle_states', { datatype: 'string', cardinality: 'list' }, 'ext:discovery DiscoveryQuery.excludeLifecycleStates — exclusion filter, applied after lifecycleState/lifecycleStates.'],
   [152, 'content_match', { datatype: 'string' }, 'ext:discovery DiscoveryQuery.contentMatch — free-text recall-floor predicate over the Text Projection.'],

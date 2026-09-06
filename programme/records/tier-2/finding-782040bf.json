@@ -1,0 +1,20 @@
+{
+  "instanceId": "782040bf-5eff-4d48-b070-cd8f9e91e2ba",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "Two more unhardened sibling-checkout resolvers found by grepping for the #874 shape",
+    "summary": "discovery_conformance.rs's conformance_dir() and core_bundle_drift.rs's canonical-bundle check both resolved a sibling srs checkout without checking it was on master -- the same false-green trap srs-rust#874 named and PR #879 hardened once already, in rfc_035_parity.rs. Grepping tests/**/*.rs for CARGO_MANIFEST_DIR plus sibling-repo resolution after fixing the two found a third site, integration_tests.rs's srs_spec_repo_dir() Legacy fallback, which turned out to be dead code (shadowed by a higher-priority vendored-fixture check) rather than a live instance.",
+    "evidence": [
+      "srs-rust#922 named discovery_conformance.rs's ext_discovery_fixture_scenarios specifically; grepping the same test tree surfaced core_bundle_drift.rs's canonical-srs check as an unhardened sibling too, unmentioned by the issue.",
+      "Reproduced live rather than hypothetically: this session's own srs sibling checkout sits on branch claude/trusting-tesla-94amp1 (its own designated feature branch, not master), and both tests silently passed against it with zero warning before the fix -- a genuine, unforced instance of the exact condition the guard exists to catch.",
+      "srs-rust PR #964 applies rfc_035_parity.rs::spec_repo()'s exact pattern (SRS_SPEC_DIR-first, loud panic naming the branch on a non-master sibling) to both sites, proved red-then-green against the live stale sibling and a fresh origin/master clone."
+    ],
+    "body": "The pattern established once in PR #879 was documented there but not swept across the rest of the test tree at the time -- each occurrence has so far been found by a human or agent tripping over it (or, per srs-rust#921's Parks note, noticing it in passing) rather than by a repo-wide check. Nothing today greps for a bare CARGO_MANIFEST_DIR-plus-sibling-walk shape and flags it as needing the SRS_SPEC_DIR/branch-check treatment; the class is closed instance-by-instance, not structurally. A registered check for this shape (or a shared test-helper crate exposing the hardened resolver, so new tests default to safe instead of opting in) would prevent a fourth occurrence rather than relying on the next grep."
+  },
+  "createdAt": "2026-09-06T12:59:49.068284698+00:00",
+  "updatedAt": "2026-09-06T12:59:49.068294650+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
