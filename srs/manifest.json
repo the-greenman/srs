@@ -84,6 +84,11 @@
       "format": "markdown",
       "outputPath": "../docs/spec/rfcs/rfc-decision-log.md",
       "compositionId": "7a000002-0000-4000-a000-000000000002"
+    },
+    {
+      "format": "markdown",
+      "outputPath": "../docs/spec/srs-glossary.md",
+      "compositionId": "3a000005-0000-4000-a000-000000000005"
     }
   ],
   "repositoryId": "4172fada-bc38-5479-ac18-4be3194a68ca",

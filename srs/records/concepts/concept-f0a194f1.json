@@ -1,0 +1,16 @@
+{
+  "instanceId": "f0a194f1-a58f-4bb6-a4ec-2a5360c84da1",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/lifecycle",
+    "title": "Lifecycle",
+    "description": "A named state machine (a closed vocabulary of states plus the transitions between them and exactly one initial state) that a Type may declare inline or reference as an installed, shareable definition. It governs where a Record stands in a process: draft, active, archived, or whatever the domain needs. Lifecycle state is changed only by an explicit transition act; asserting a Relation never moves it.",
+    "notes": "A state may declare that resting in it requires a satisfying Relation, enforced hard (the transition is rejected) or advisory (the transition proceeds and the unsatisfied state surfaces as an at-rest warning)."
+  },
+  "createdAt": "2026-09-05T23:42:08.584845308+00:00",
+  "updatedAt": "2026-09-05T23:45:42.787209906+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

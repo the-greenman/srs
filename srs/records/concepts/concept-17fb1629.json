@@ -1,0 +1,16 @@
+{
+  "instanceId": "17fb1629-855c-481f-937a-3e1db05215d8",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/note",
+    "title": "Note",
+    "description": "A Tier 0 instance: a titled set of named free-text sections with no Type binding and therefore no field-level semantics. It exists so that material can be captured at the moment it appears, before anyone knows what shape it should take. A Note has a stable instance id, may carry tags and source references, and may be the target of Relations from the Records it later gave rise to.",
+    "notes": "Section names must be unique within a Note (Invariant 18). Tags on a Note are keys that may, but need not, resolve to a Term in an open vocabulary."
+  },
+  "createdAt": "2026-09-05T23:42:08.619363820+00:00",
+  "updatedAt": "2026-09-05T23:45:43.235432393+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

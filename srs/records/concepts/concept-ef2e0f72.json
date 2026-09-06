@@ -1,0 +1,16 @@
+{
+  "instanceId": "ef2e0f72-c03e-449c-99ba-ad517fd1360b",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/type-specialisation",
+    "title": "Type specialisation",
+    "description": "Single inheritance between Types: a specialising Type names one base Type, gains its effective field list, and adds its own. The governing constraint is substitutability — a system that knows the base Type but not the specialisation must still be able to read the inherited fields and should preserve the unknown ones instead of discarding them. A specialisation may therefore tighten an inherited optional field to required, but never relax a required one, and may never alter Field semantics.",
+    "notes": "Inheritance chains must be acyclic (Invariant 39). Only some properties cascade up the ancestor chain — the effective identity field does; the explicit field order does not."
+  },
+  "createdAt": "2026-09-05T23:42:08.572814326+00:00",
+  "updatedAt": "2026-09-05T23:45:42.599536113+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,16 @@
+{
+  "instanceId": "a5c04203-5960-4748-b3cf-1ae339277cad",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/conformance",
+    "title": "Conformance",
+    "description": "What an implementation claims and what that claim obliges it to do, declared as the core plus the extensions it supports. Core conformance requires the Foundation and Distribution groups in full and enforcement of the core invariants; declaring an extension obliges accepting and validating its types, enforcing its invariants, and honouring its declared dependencies. The claim is what makes exchange predictable: two implementations at the same level produce definitions the other can consume.",
+    "notes": "Partial support is not conformance — an implementation that can produce archives but not consume them must say so explicitly. Receiving content from an unsupported extension calls for surfacing and preserving it, never silently discarding it."
+  },
+  "createdAt": "2026-09-05T23:42:08.794990750+00:00",
+  "updatedAt": "2026-09-05T23:45:45.378270060+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

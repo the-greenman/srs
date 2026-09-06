@@ -59,7 +59,8 @@
     "types/generated-type-reference-2a000014.json"
   ],
   "views": [
-    "views/table-record-view-77f51737.json"
+    "views/table-record-view-77f51737.json",
+    "views/concept-glossary-view-5c000005.json"
   ],
   "dataModelRevision": 3,
   "createdAt": "2026-05-27T00:00:00Z",
@@ -67,6 +68,7 @@
   "compositions": [
     "compositions/spec-document-view.json",
     "compositions/rationale-document-view.json",
-    "compositions/unified-document-view.json"
+    "compositions/unified-document-view.json",
+    "compositions/spec-glossary-3a000005.json"
   ]
 }

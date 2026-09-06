@@ -1,0 +1,16 @@
+{
+  "instanceId": "1188b6bb-ceb1-494e-960a-cf7a00b8c3ed",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/canonical-reference",
+    "title": "Canonical reference",
+    "description": "How one definition points at another. The human-facing canonical string form is `namespace/name@version`, with `/` and `@` reserved as separators that may not appear inside a component or a name. The stored machine form is UUID-anchored: a bare UUID for a lineage reference, or an ExactTypeRef pairing `typeId` with an explicit `typeVersion` where the pointer must be version-exact. The string form is for display and is never what gets stored, so a rename never breaks a stored pointer.",
+    "examples": "`core/decision_statement@2`; `{ typeId: <uuid>, typeVersion: 3 }`"
+  },
+  "createdAt": "2026-09-05T23:42:08.525788629+00:00",
+  "updatedAt": "2026-09-05T23:45:41.958374400+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
