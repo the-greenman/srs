@@ -1,0 +1,16 @@
+{
+  "instanceId": "00667eda-1a83-4fdc-8ae3-7b5842873132",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/projection",
+    "title": "Projection",
+    "description": "The principle that rendered output is derived from records and never the source of truth for them. Records hold the meaning; a document, a table, an export, a JSON serialisation are all views onto that meaning, produced on demand and discardable. A projection must keep a clear line back to canonical meaning and must never quietly become a second semantic source, which is what happens when someone edits the rendered artifact instead of the records.",
+    "notes": "Its practical consequence throughout the specification: presentation concerns live in the view layer, never on the Type. A rendering label, a display order or a renderer choice may never affect validation, extraction, Relations or discovery output."
+  },
+  "createdAt": "2026-09-05T23:42:08.715670241+00:00",
+  "updatedAt": "2026-09-05T23:45:44.300632303+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

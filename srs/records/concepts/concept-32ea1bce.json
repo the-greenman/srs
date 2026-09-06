@@ -1,0 +1,16 @@
+{
+  "instanceId": "32ea1bce-ac0d-4343-88e2-b70f0d6c3b8a",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/protocol",
+    "title": "Protocol",
+    "description": "An epistemically ordered process for building a good Record through structured conversation: named stages, each with the question it answers, the understanding it builds, how to tell it is sufficient, and which Record fields it feeds. Stages declare epistemic dependencies on other stages, and not an ordering: a stage may run when what it needs is established, regardless of where it sits in the declared sequence. Protocols range from loose ones that produce open material to tight ones converging on a specific Record type, and the output of a loose one is the input context for a tighter one.",
+    "notes": "A Protocol is a package definition, not an instance. It is an epistemic concern, deliberately separated from presentation: the logic that guides a session was removed from views and lives here."
+  },
+  "createdAt": "2026-09-05T23:42:08.752706243+00:00",
+  "updatedAt": "2026-09-05T23:45:44.840754130+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

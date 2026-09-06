@@ -1,0 +1,16 @@
+{
+  "instanceId": "006a853f-7e58-4842-85e4-ad75d4b0fe5d",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/package",
+    "title": "Package",
+    "description": "The distributable unit of definitions: Fields, Types, and the vocabularies, lifecycles, relation types, views, compositions, blueprints, protocols and themes built on them, with a complete dependency manifest. It is bundled, meaning everything referenced is carried inside and it is self-contained, or standalone, meaning dependencies are expected already installed. The dependency manifest is required either way, so a consumer can check completeness without parsing what is inside.",
+    "notes": "Packages are what makes a vocabulary shareable instead of private to one tool. The specification defines the package's shape; how registries publish, authenticate or federate them is deliberately out of scope."
+  },
+  "createdAt": "2026-09-05T23:42:08.698739304+00:00",
+  "updatedAt": "2026-09-05T23:45:44.028178679+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

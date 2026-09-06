@@ -1,0 +1,16 @@
+{
+  "instanceId": "12a4cf6e-f707-429a-8704-a253da88e4d8",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/source-reference",
+    "title": "Source reference",
+    "description": "A pointer from a field value or an instance back to the material it came from, naming what kind of source it is, which source, and what role that source played (evidence, extracted-from, quoted-from, inspired-by, or attaches), with an optional confidence and note. It records where meaning came from without asserting anything between two instances: source material cited this way is not itself an instance and does not become one.",
+    "notes": "Promotion converts the pointer into a Relation when the material it addresses becomes an instance, and the role decides which edge and which direction. Attachment is deliberately not modelled as a Relation edge."
+  },
+  "createdAt": "2026-09-05T23:42:08.649816066+00:00",
+  "updatedAt": "2026-09-05T23:45:43.667814484+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

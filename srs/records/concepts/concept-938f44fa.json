@@ -1,0 +1,16 @@
+{
+  "instanceId": "938f44fa-e4e5-4334-a260-4654c5661f7d",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/version-lineage",
+    "title": "Version lineage",
+    "description": "A positive integer scoped to one UUID's history, expressing how a definition has evolved while remaining the same definition. Version increments within the lineage; changing the `namespace` or the `name` is not a version bump but a new definition with a new UUID. A bump is required whenever a downstream consumer's extraction, validation or governance behaviour would differ — notably any change to `fieldType` or to the meaning of `aiGuidance`. Reworded prose alone needs no bump.",
+    "notes": "Package versions are semver strings and are a different axis: a package at 1.3.0 may carry `decision_statement@3` and `context@2`."
+  },
+  "createdAt": "2026-09-05T23:42:08.518693330+00:00",
+  "updatedAt": "2026-09-05T23:45:41.864839519+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

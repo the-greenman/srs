@@ -1,0 +1,16 @@
+{
+  "instanceId": "2f5a157e-787a-4fd6-ab96-a711f524048d",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/graduation",
+    "title": "Graduation",
+    "description": "Replacing a lower-tier instance with a higher-tier equivalent once its structure has stabilised, without destroying what came before. The original Note is preserved as the semantic root of whatever it produced, and each resulting Record links back to it. Graduation is not one-to-one: a single meeting Note may become one decision Record, three task Records and two risk Records, each with its own instance id and its own link back.",
+    "notes": "Which link, and whether the instance id survives, follows what actually happened: pure formalisation may keep the id and needs no link; interpretation during formalisation is a new id with `refines`; a split is new ids with `derived-from` from each new Record."
+  },
+  "createdAt": "2026-09-05T23:42:08.637034197+00:00",
+  "updatedAt": "2026-09-05T23:45:43.500228586+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

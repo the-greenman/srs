@@ -1,0 +1,17 @@
+{
+  "instanceId": "af14997a-09f1-4eb2-85a9-d0262024d5de",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/stable-identity",
+    "title": "Stable identity",
+    "description": "The rule that every SRS entity carries a UUID that is minted once and never changes — not when the entity is copied, exported, imported, renamed for display, or moved between repositories. Identity is declared, never inferred from a filename, a path, a storage history or a display label, and never selected by precedence: an identity conflict is fatal, never resolvable. Changing what an entity is at root means minting a new UUID, not reusing the old one.",
+    "notes": "Definition identity (Field.id, Type.id, packageId) and instance identity (instanceId, relationId, documentId, containerId) are distinct id spaces that obey the same rule.",
+    "examples": "`repositoryId` survives export and copy; an importer that mints a new repository for every archive it receives, instead of keying on `repositoryId`, is non-conformant (Invariant 53)."
+  },
+  "createdAt": "2026-09-05T23:42:08.505349040+00:00",
+  "updatedAt": "2026-09-05T23:45:41.684258424+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,17 @@
+{
+  "instanceId": "1e23ee5d-0406-485d-a927-6c62dfee58f1",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "type:com.semanticops.srs/relation",
+    "title": "Relation",
+    "description": "A first-class, typed, independently identified assertion between two instances. It is always binary, a source and a target and never a set, and it always reads in one direction: source, relation type, target. Only the forward form is stored; the inverse is derived for display and never written. A Relation is a semantic claim carrying its own provenance, not a container, not ownership, and not a lifecycle act: asserting one never changes a state.",
+    "notes": "Relations are reserved for assertions with semantic consequence. A lightweight prose mention or citation must not be modelled as one (Invariant 17). Relations span tiers, so a Note may be the target of edges from the Records it became.",
+    "examples": "The canonical seven: `contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`."
+  },
+  "createdAt": "2026-09-05T23:42:08.660012863+00:00",
+  "updatedAt": "2026-09-05T23:45:43.754111697+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

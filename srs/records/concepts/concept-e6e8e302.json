@@ -1,0 +1,16 @@
+{
+  "instanceId": "e6e8e302-7dc2-48a9-8028-c6f7f6071618",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/lineage-and-provenance",
+    "title": "Lineage and provenance",
+    "description": "Two distinct records of where a definition came from. Lineage is the relationship to what it was derived from — tracked from a source and expecting upstream updates, or deliberately forked with no further tracking, and possibly both during a transition. Provenance is the publishing origin: who published it, in which package, at what package version, imported when. Together they let a consumer answer whether a local definition has diverged from what it was copied from, and who is answerable for the original.",
+    "notes": "A package's semver and a definition's integer version are different axes and must not be conflated."
+  },
+  "createdAt": "2026-09-05T23:42:08.704535075+00:00",
+  "updatedAt": "2026-09-05T23:45:44.122278573+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

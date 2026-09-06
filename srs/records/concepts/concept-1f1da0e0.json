@@ -1,0 +1,16 @@
+{
+  "instanceId": "1f1da0e0-acae-4a66-bac3-30ec1ffd75df",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/semantic-sovereignty",
+    "title": "Semantic sovereignty",
+    "description": "The condition SRS exists to preserve: meaning stays under the control of the people who made it, and can move between tools, implementations, representations, repositories and time without captivity or silent loss. Portability alone does not achieve it — data that travels but arrives without stable identity, its relations, its provenance, or interpretable semantics has lost the meaning it was carrying. A design that improves convenience while making semantic data captive violates the purpose of SRS.",
+    "notes": "Stated in the specification's Foundational values subsection. It is the criterion every other design decision answers to, which is why it introduces nothing and depends on nothing."
+  },
+  "createdAt": "2026-09-05T23:42:08.491273161+00:00",
+  "updatedAt": "2026-09-05T23:45:41.504888293+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
