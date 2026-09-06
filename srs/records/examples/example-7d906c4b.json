@@ -1,0 +1,14 @@
+{
+  "instanceId": "7d906c4b-59fc-4e48-bbda-e4430f972c09",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `CompositeRendererBinding` shape",
+    "content": "`CompositeRendererBinding`, in pseudo-IDL:\n\n```typescript\nCompositeRendererBinding {\n  renderer: string\n  // Bare lower-kebab identifiers are SRS-reserved and introduced only by a ratified RFC:\n  //   \"table\"     — the SRS-defined composite renderer\n  //   \"baseline\"  — sentinel meaning explicitly no renderer; cancels a broader declaration site\n  // Vendor identifiers use \"{reverse-domain}/{name}\" with at least two reverse-domain labels.\n  // Grammar: ^([a-z][a-z0-9-]*|[a-z0-9-]+(\\.[a-z0-9-]+)+/[^/]+)$ — enforced at render and\n  // validation time, not by JSON Schema, so a malformed value degrades per [CR-036-7].\n\n  roles?: { [roleName: string]: UUID }\n  // Explicit, UUID-anchored role -> Field.id binding, overriding the by-name defaults.\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:47.679649534+00:00",
+  "updatedAt": "2026-09-06T17:05:19.736553727+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

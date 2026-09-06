@@ -1,0 +1,14 @@
+{
+  "instanceId": "3c23f463-4993-4419-b121-5fadf927b560",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `VocabularyEntry` substrate contract",
+    "content": "`VocabularyEntry`, in pseudo-IDL:\n\n```typescript\n{\n  id: UUID                  // stable identity\n  version: integer          // min: 1\n  namespace: string\n  key: string               // the string in instance data — unified across all specialisations\n  label?: string            // optional in substrate; specialisations MAY tighten to required\n  description?: string      // optional in substrate; specialisations MAY tighten to required\n  aliases?: string[]        // alternate keys resolving to this entry\n  status?: \"active\" | \"deprecated\" | \"tombstone\" | \"retired\"   // absent = active (normative)\n  meta?: Record<string, unknown>   // arbitrary metadata; unknown top-level fields rejected\n  lineage?: Lineage\n  provenance?: Provenance\n  createdAt: ISO8601\n  updatedAt?: ISO8601\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:40.703001608+00:00",
+  "updatedAt": "2026-09-06T17:05:11.933440357+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

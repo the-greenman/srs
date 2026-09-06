@@ -1,0 +1,14 @@
+{
+  "instanceId": "f6c4532f-97c5-4ad1-95ec-3a2f5008a119",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `CrossFieldRule` shape",
+    "content": "`CrossFieldRule`, in pseudo-IDL:\n\n```typescript\n{\n  type: \"conditional-required\" | \"field-ordering\" | \"mutual-exclusion\"\n  message?: string\n\n  // conditional-required: targetFieldId becomes required when predicateFieldId equals predicateValue\n  predicateFieldId?: UUID\n  predicateValue?: string\n  targetFieldId?: UUID\n\n  // field-ordering: targetFieldId must precede or follow predicateFieldId\n  // Applies only to fields with datatype \"date\", \"date-time\", \"number\", or \"integer\".\n  effect?: \"must-precede\" | \"must-follow\"\n\n  // mutual-exclusion: at most one of the listed fields may have a non-empty value\n  fieldIds?: UUID[]   // min: 2\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:41.886089133+00:00",
+  "updatedAt": "2026-09-06T17:05:13.123980604+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,14 @@
+{
+  "instanceId": "2b368a45-1769-4ae6-8599-580e67a6bb71",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The canonical reference form, with references that satisfy it",
+    "content": "The form, then references that satisfy it:\n\n```\nnamespace/name@version\n```\n\nExamples:\n```\ncore/decision_statement@2\ncommunity.adr/review_rationale@1\ncom.acme.hr/headcount_impact@3\n```"
+  },
+  "createdAt": "2026-09-06T17:00:39.368691650+00:00",
+  "updatedAt": "2026-09-06T17:05:10.568999816+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

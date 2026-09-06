@@ -1,0 +1,14 @@
+{
+  "instanceId": "df5d8589-a066-44c3-9ff4-f6b522f926be",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "A source document and its sidecar",
+    "content": "The content file and its metadata sidecar, sharing one filename stem:\n\n```\nsource-documents/\n  <stem>.<ext>               ← the content file (text, audio, PDF, etc.)\n  <stem>.meta.json           ← SourceDocument metadata record (sidecar)\n```"
+  },
+  "createdAt": "2026-09-06T17:00:43.128340567+00:00",
+  "updatedAt": "2026-09-06T17:05:15.675115947+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

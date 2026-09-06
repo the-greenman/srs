@@ -1,0 +1,14 @@
+{
+  "instanceId": "4d4e2049-e4aa-4318-8de5-fe01485280d1",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The html multi-entry field row",
+    "content": "One `div`, one label, and one list item per entry:\n\n```html\n<div class=\"srs-field srs-fieldname-{name}\"><strong class=\"srs-field-label field-label\">{label}</strong>:<ul><li class=\"srs-field-value field-value\">{entry}</li></ul></div>\n```"
+  },
+  "createdAt": "2026-09-06T17:00:48.569659909+00:00",
+  "updatedAt": "2026-09-06T17:06:15.461012169+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

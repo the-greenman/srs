@@ -1,0 +1,14 @@
+{
+  "instanceId": "aaacb840-e889-4212-acc6-8db6b3e90a4f",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `RelationsPresentation` shape",
+    "content": "`RelationsPresentation`, in pseudo-IDL:\n\n```typescript\n{\n  include: RelationPresentationEntry[]\n  // min 1; display order. Duplicate relationType entries are a repository-validation\n  // diagnostic; a renderer encountering them renders each independently.\n  label?: string\n  // Reserved for a future grouped/headed presentation. No rendering behaviour is\n  // defined; implementations MUST ignore it when rendering.\n}\n\n// RelationPresentationEntry\n{\n  relationType: string\n  // Bare canonical key (e.g. \"supersedes\") or namespace/name for custom types.\n  // Expected to resolve to an installed RelationTypeDefinition (RFC-005); checked at\n  // repository validation time. At render time a non-resolving, retired-only, or\n  // conflict-ambiguous entry is skipped with a diagnostic; entries resolving to\n  // active/deprecated/tombstone definitions display (rendering is a historical read).\n  // None of these conditions may abort the render.\n  directions?: \"forward\" | \"inverse\" | \"both\"   // default: \"forward\"\n  // Display-only: inverse Relations are never stored or synthesised (Invariant 16).\n  forwardLabel?: string\n  // Override for edges where the member is the source. Default ladder: installed\n  // definition label, then humanized relation type key.\n  inverseLabel?: string\n  // Override for edges where the member is the target. Default ladder: humanized\n  // declared inverseType query label (RFC-005), then forward label + \" (incoming)\".\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:48.495590615+00:00",
+  "updatedAt": "2026-09-06T17:05:20.412114793+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

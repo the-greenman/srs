@@ -1,0 +1,14 @@
+{
+  "instanceId": "64bb1177-ed5b-4ec3-8d8f-b7daef772e84",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `CompositeRendererDirective` shape",
+    "content": "`CompositeRendererDirective`, in pseudo-IDL:\n\n```typescript\n{\n  fieldId: UUID\n  // The composite-range Field this directive binds. MUST resolve to a Field whose\n  // fieldType.datatype is \"ref\" and mode is \"inline\" ([CR-036-3]); a fieldId absent from\n  // a rendered instance's Type is ignored without a diagnostic ([CR-036-4]).\n\n  renderer: string\n  // Composite renderer identifier, as `CompositeRendererBinding.renderer` (`ext:views-l1`).\n  // \"baseline\" is the reserved sentinel meaning explicitly no renderer, used to cancel a\n  // broader declaration site. Grammar enforced at render and validation time ([CR-036-1]).\n\n  roles?: { [roleName: string]: UUID }\n  // Explicit, UUID-anchored role -> Field.id binding, overriding the by-name defaults of\n  // [CR-036-8].\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:48.488275845+00:00",
+  "updatedAt": "2026-09-06T17:05:20.246483042+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

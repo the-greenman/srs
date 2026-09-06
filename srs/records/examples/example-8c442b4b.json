@@ -1,0 +1,14 @@
+{
+  "instanceId": "8c442b4b-236c-473c-be44-1bd73f1df423",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `StylesheetDeclaration` shape",
+    "content": "`StylesheetDeclaration`, in pseudo-IDL:\n\n```typescript\n{\n  mode: \"inline\" | \"local\" | \"remote\"\n  content?: string   // inline CSS; required when mode === \"inline\"\n  path?: string      // required when mode === \"local\"\n  url?: string       // required when mode === \"remote\"\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:44.717510199+00:00",
+  "updatedAt": "2026-09-06T17:05:16.518890720+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

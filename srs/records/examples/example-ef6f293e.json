@@ -1,0 +1,14 @@
+{
+  "instanceId": "ef6f293e-7288-4fa9-abe7-f070c266f0d5",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `SectionSource` union",
+    "content": "`SectionSource`, in pseudo-IDL:\n\n```typescript\ntype SectionSource =\n  | {\n      type: \"discovery-query\"\n      query: DiscoveryQuery   // ext:discovery (RFC-012)\n      // The selection predicate. typeNamespace + typeName together replace the retired\n      // typeKey (namespace/name) axis; lifecycleState/lifecycleStates/excludeLifecycleStates\n      // replace the SectionSource-local copies of the same axes (formerly RFC-011 Changes\n      // A/B, now governed by RFC-012 Rev 12: I-142/I-143). See the ext:discovery extension's\n      // `DiscoveryQuery` shape for the full predicate set.\n      containerIds?: UUID[]\n      containerScope?: \"explicit\" | \"repository\" | \"subtree\"\n      // RFC-011 [N+27] / I-144, arrangement, not selection: which containers bound the\n      // candidate set, layered on top of query rather than folded into it (DiscoveryQuery's\n      // own containerId predicate is single-valued and takes one container's effective\n      // membership; it cannot express this). One scoping vocabulary (RFC-034 [R8]).\n      // Default: \"explicit\" (direct(C) of each listed container: its own members, no\n      // nested subtree). \"repository\": all containers; containerIds[] ignored. \"subtree\":\n      // effective(C) — the closure over declared childContainerIds; follows child edges\n      // only, never contains Relations. Absent is equivalent to \"explicit\".\n    }\n  | {\n      type: \"container-subset\"\n      containerId: UUID\n      containerType?: string\n      typeFilter?: string[]   // RFC-008. namespace/name keys, version-independent.\n      // When present and non-empty, restricts members to the listed Types. Ordering is\n      // the container-wide precedes order (below) projected onto the survivors. Absent or\n      // empty = all members. Exclusive to container-subset.\n      // Default ordering: when DocumentSection.ordering is absent, members are ordered\n      // by the precedes relation chain among them; createdAt ascending is the tiebreak\n      // for members not connected by any precedes relation.\n    }\n```"
+  },
+  "createdAt": "2026-09-06T17:00:48.471100654+00:00",
+  "updatedAt": "2026-09-06T17:05:19.909768073+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

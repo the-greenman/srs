@@ -1,0 +1,14 @@
+{
+  "instanceId": "0156481c-ff01-40ad-b902-d19eca8abaaf",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `Reference` shape",
+    "content": "`Reference`, in pseudo-IDL:\n\n```typescript\n{\n  id: UUID\n  namespace: string\n  name: string\n  version: integer   // min: 1\n  definitionType?: \"field\" | \"type\" | \"view\" | \"blueprint\" | \"protocol\"\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:41.043517915+00:00",
+  "updatedAt": "2026-09-06T17:05:12.277857452+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

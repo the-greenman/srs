@@ -1,0 +1,23 @@
+{
+  "instanceId": "f5b42ef5-1a12-4e40-ad9f-2a3a864b74e8",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "RFC-038 grandfather repointed off dead #297; allowlist entries now require a disposition",
+    "summary": "rfcs/integration-allowlist.json's grandfathered[\"038\"] cited #297, closed 2026-08-14 with RFC-038's fold still undeclared. Repointed at new issue #633 (which now owns the actual manifest-declaration work), and check-rfc-integration.mjs now requires every allowlist entry to carry a disposition (\"permanent\" | \"pending\"), mirroring #590's identical fix to the sibling publication-reachability-exclusions.json.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs#591",
+      "srs#590",
+      "srs#633",
+      "srs#580"
+    ]
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-06T16:53:22.846362229+00:00",
+  "updatedAt": "2026-09-06T16:53:44.307475189+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

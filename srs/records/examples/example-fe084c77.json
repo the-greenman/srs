@@ -1,0 +1,14 @@
+{
+  "instanceId": "fe084c77-2a11-4694-a739-b9e1773f6541",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `RelationsChecksumEntry` shape",
+    "content": "`RelationsChecksumEntry`, in pseudo-IDL:\n\n```typescript\n{\n  path: string       // matches an entry in relationsPath\n  checksum: string   // digest of the relations file: \"<algorithm>:<hex>\"\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:43.078326201+00:00",
+  "updatedAt": "2026-09-06T17:05:15.170828159+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

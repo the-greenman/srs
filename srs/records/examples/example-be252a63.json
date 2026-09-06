@@ -1,0 +1,14 @@
+{
+  "instanceId": "be252a63-49ea-4a11-b29f-42c94fcb1a7e",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "A governance decision Type specialising a core decision Type",
+    "content": "A specialising Type and the fields it adds to its base.\n\n```text\nType: core/decision\n  fields: decision_statement, context, rationale, options_considered\n\nType: org.example/governance_decision\n  extendsTypeId: core/decision\n  adds: ratification_method, quorum_threshold, voting_record\n```"
+  },
+  "createdAt": "2026-09-06T17:00:47.166212130+00:00",
+  "updatedAt": "2026-09-06T17:07:04.462027142+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

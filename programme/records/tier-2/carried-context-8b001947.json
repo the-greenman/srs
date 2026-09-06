@@ -1,0 +1,15 @@
+{
+  "instanceId": "8b001947-be04-4dd1-8afa-7dfe8a787c58",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "Key an allowlist site to a stable text unit, never to a whole-field character offset",
+    "summary": "Any grandfathering allowlist that keys a violation site by its match's character offset into a whole field will re-fire every downstream, untouched site whenever earlier text in that field is edited — because every offset after the edit shifts. Key by the smallest stable text unit that contains the violation (the paragraph, for prose fields) plus the match text and its ordinal within that unit, the way em-dash-cap already does. Only an edit to that unit itself should be able to change its key.",
+    "rationale": "srs#626: check-spec-language.mjs's keyword-register rule keyed sites as digest(keyword:charIndex). A one-word edit near the start of a grandfathered field re-fired 39 sites in one record and 4 in another, none of which the edit touched. Reproduced live: inserting one word before a field's first keyword re-fired 24 sites under the offset scheme and zero under the paragraph-relative scheme, with the allowlist count unchanged (588 to 588) either way. The same failure shape can recur in any future registry-driven checker (the #568/#569 language-checker family, or any other per-site allowlist) that keys by position in the whole field rather than by a text unit stable under edits elsewhere. What would change this: a checker whose violations are inherently field-scoped with no smaller stable unit to key against (word-budget, heading-restatement already key by field, not offset, and are unaffected)."
+  },
+  "createdAt": "2026-09-06T17:47:52.039286288+00:00",
+  "updatedAt": "2026-09-06T17:47:52.039294847+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

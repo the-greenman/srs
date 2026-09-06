@@ -1,0 +1,14 @@
+{
+  "instanceId": "cba9940f-1c2a-419b-a044-a5bcd2929824",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `Lineage` shape",
+    "content": "`Lineage`, in pseudo-IDL:\n\n```typescript\n{\n  sourceDefinitionId?: UUID     // UUID of the upstream definition\n  sourceVersion?: integer       // upstream version at derivation time\n  forkedFromDefinitionId?: UUID // UUID of the definition deliberately forked from\n  forkedFromVersion?: integer   // version at the fork point\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:41.219282574+00:00",
+  "updatedAt": "2026-09-06T17:05:12.446187003+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

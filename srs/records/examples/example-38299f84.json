@@ -1,0 +1,14 @@
+{
+  "instanceId": "38299f84-c83e-4ded-8c3b-0e258ff00690",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `FieldView` shape",
+    "content": "`FieldView`, in pseudo-IDL:\n\n```typescript\n{\n  fieldId: UUID       // must reference a valid Field.id in the effective package set\n  order: integer      // min: 0; display order within this View\n  required?: boolean  // View-level workflow constraint; does not alter Field contract\n  visible?: boolean   // default: true\n\n  // Presentation overrides — View scope only\n  displayLabel?: string\n  displayHint?: string\n  editorHintOverride?: string\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:47.639284037+00:00",
+  "updatedAt": "2026-09-06T17:05:19.070089458+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
