@@ -1,0 +1,19 @@
+{
+  "instanceId": "cec39c03-2622-4b38-add0-ce16c800c4a2",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "A tracking pointer citing a closed issue is not itself detectable without a network call, and validate-all is deliberately network-free",
+    "summary": "#591's actual defect (a grandfather citing #297, closed three weeks before the entry was next touched) cannot be caught by any local, offline check — knowing whether a cited issue is open or closed requires calling the GitHub API, which check-rfc-integration.mjs and every sibling check deliberately do not do (validate.yml runs validate-all with no network, no credentials). The disposition schema (#590, applied here to integration-allowlist.json) is not a live-staleness detector; it only stops a settled, expected closure from misreading as a regression. A pending entry whose issue quietly closes is still only caught by a human or agent re-auditing the file, not by CI.",
+    "evidence": [
+      "check-publication-reachability.mjs's own comment (added by #590): \"This guard cannot check GitHub issue state itself — validate-all is deliberately dependency-free and network-free (validate.yml)\"",
+      "#591's own text floated an 'optional guard' that would 'assert its cited issues are open' — read literally that requires live GitHub state, which #590's precedent shows the repo has deliberately chosen not to build",
+      "No script under scripts/ makes an authenticated call to api.github.com; scripts/fetch-pinned-srs.mjs only fetches release artifacts, never issue state"
+    ]
+  },
+  "createdAt": "2026-09-06T16:53:53.804370578+00:00",
+  "updatedAt": "2026-09-06T16:53:53.804378264+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

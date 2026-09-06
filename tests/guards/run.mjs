@@ -1374,6 +1374,66 @@ async function charterAlignmentSectionCases(root) {
   );
 }
 
+// ---- srs#591 — integration-allowlist.json entries must carry a valid disposition ----------------
+async function integrationAllowlistDispositionCases(root) {
+  console.log("srs#591 — integration-allowlist disposition guard");
+
+  await mkdir(join(root, "docs/schema/2.0"), { recursive: true });
+  const allowlistPath = join(root, "rfcs/integration-allowlist.json");
+  const entry = (overrides = {}) => ({
+    issue: "the-greenman/srs#633",
+    disposition: "pending",
+    reason: "fixture",
+    ...overrides,
+  });
+  const writeAllowlist = (fixtureEntry) => writeJson(allowlistPath, { grandfathered: { "038": fixtureEntry } });
+
+  // The violation this guard exists for (srs#591): an entry with no disposition reads as
+  // unambiguous even though "the cited issue is now closed" means opposite things for a settled
+  // ruling versus a dead follow-up pointer nobody ever repointed.
+  const { disposition, ...noDisposition } = entry();
+  await writeAllowlist(noDisposition);
+  expect(
+    "rejects an allowlist entry with no disposition",
+    runCheck("check-rfc-integration.mjs", root),
+    { exit: 1, contains: ['grandfathered["038"] is missing required properties: disposition'] },
+  );
+
+  // Neither an invented third value...
+  await writeAllowlist(entry({ disposition: "grandfathered" }));
+  expect(
+    "rejects an allowlist entry with a disposition that is not permanent or pending",
+    runCheck("check-rfc-integration.mjs", root),
+    { exit: 1, contains: ['disposition "grandfathered" must be "permanent" or "pending"'] },
+  );
+
+  // ...nor a missing issue/reason, matching what the sibling publication-reachability-exclusions.json
+  // guard (srs#590) already requires of its own entries.
+  const { issue, ...noIssue } = entry();
+  await writeAllowlist(noIssue);
+  expect(
+    "rejects an allowlist entry with no issue",
+    runCheck("check-rfc-integration.mjs", root),
+    { exit: 1, contains: ['grandfathered["038"] is missing required properties: issue'] },
+  );
+
+  // The guard is not simply always red: "permanent" and "pending" both pass, like any other entry.
+  await writeAllowlist(entry({ disposition: "permanent" }));
+  expect(
+    "accepts disposition \"permanent\" citing an issue like any other",
+    runCheck("check-rfc-integration.mjs", root),
+    { exit: 0, contains: ["Checking RFC integration... OK"] },
+  );
+  await writeAllowlist(entry({ disposition: "pending" }));
+  expect(
+    "accepts disposition \"pending\" citing an issue like any other",
+    runCheck("check-rfc-integration.mjs", root),
+    { exit: 0, contains: ["Checking RFC integration... OK"] },
+  );
+
+  await rm(allowlistPath);
+}
+
 // ---- srs#519 — RFC banner conformance-rule token drift ------------------------------------------
 async function rfcBannerRuleTokenCases(root) {
   console.log("srs#519 — RFC banner conformance-rule token drift guard");
@@ -1893,6 +1953,7 @@ try {
   await decisionCellTagsCases(join(root, "decision-cell-tags"));
   await relationTypeResolutionCases(join(root, "relation-type-resolution"));
   await charterAlignmentSectionCases(join(root, "charter-alignment"));
+  await integrationAllowlistDispositionCases(join(root, "integration-allowlist-disposition"));
   await rfcBannerRuleTokenCases(join(root, "rfc-banner-rule-token"));
   await checksRegistryMembershipCases(join(root, "checks-registry-membership"));
   await specLanguageCases(join(root, "spec-language"));
