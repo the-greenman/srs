@@ -1,0 +1,25 @@
+{
+  "instanceId": "2c21e613-c960-4718-ab71-3f0c24641f6a",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "RFC-034 accepted: container membership is declared, nesting is explicit",
+    "summary": "Folds the accepted RFC-034 into the canonical records and schemas: direct and effective membership, childContainerIds as the one nesting mechanism, and the withdrawal of Relation traversal as a membership source. Three invariants amended in place, six new ones written, four schemas gaining one additive optional property.",
+    "decision_mode": "complicated",
+    "door": "door-1",
+    "issue_ref": [
+      "srs#267",
+      "srs#572",
+      "srs#573",
+      "srs#574",
+      "srs#626"
+    ],
+    "body": "PR https://github.com/the-greenman/srs/pull/625 (merged 2026-09-06). Stage 6 of the RFC command for RFC-034 Rev 5, executing the owner acceptance ruling posted on #267 under rfc-decision-0750c62f - Door 1 on the strength of that ruling, not on the RFC being non-normative. The RFC stub record walked draft to proposed to accepted with an integration manifest naming cell:containment, five schemas, the amended and new invariants, and three extensions. I-66, I-118 and I-144 were amended in place with dated markers; I-146 to I-151 carry [R1] [R2] [R3] [R4] [R6] [R7] [R9]. The Container subsection gained a membership-and-nesting block, design-note 013 a dated correction marker withdrawing the claim that both membership strategies are valid, and design-capture-directory-kind-scopes was graduated to design-note 046 with a derived-from relation as that note asked. Schemas took childContainerIds as an additive optional property with dataModelRevision unchanged at 5, and the two composition.json contradictions named in #616 were corrected along with the identical discovery.json text. Judgement calls: the RFC record is a stub with no per-change records, the conformance rules land as invariants rather than a banner, the amendments are in place rather than superseded, srsj-envelope.json also gains the property, and the three spec-repo containers with traversal-only members are left for #563."
+  },
+  "lifecycleState": "landed",
+  "createdAt": "2026-09-06T17:50:20.047474202+00:00",
+  "updatedAt": "2026-09-06T17:50:20.411066378+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

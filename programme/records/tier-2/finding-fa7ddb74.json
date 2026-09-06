@@ -1,0 +1,21 @@
+{
+  "instanceId": "fa7ddb74-05c2-4dad-a798-fd9a7d9a9200",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "A Tier-0 note in the tree took down the whole traversal, and the fix was at the root",
+    "summary": "tree_service read every node through the Tier-2-only get_record_by_id. RFC-013 scaffolds repository sections as Tier-0 notes, so a note anywhere in the tree raised a hard missing-typeId error that aborted the entire traversal - of a repository that repo validate calls healthy. The new child_ids resolves and orders targets by id, so a note walks like any other node.",
+    "evidence": [
+      "get_record_by_id is Tier-2 only; tree_service called it for every node",
+      "RFC-013 scaffolds section roots as Tier-0 notes",
+      "The failure was total, not partial: one note aborted the traversal for the whole repository",
+      "The same bug broke srs tree on the same corpora, not only navigation"
+    ],
+    "body": "Fixing it in the navigation caller would have left srs tree broken on the same data. One tier-aware resolution in the shared walker is both the smaller diff and the root cause - the same shape as the nav-root-is-member class of bug, where a loader assumption about tier silently empties a whole view."
+  },
+  "createdAt": "2026-09-06T17:50:22.965097284+00:00",
+  "updatedAt": "2026-09-06T17:50:22.965100729+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

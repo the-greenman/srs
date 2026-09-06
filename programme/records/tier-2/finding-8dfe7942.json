@@ -1,0 +1,20 @@
+{
+  "instanceId": "8dfe7942-9d20-4764-8e94-9e25c020333b",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "RFC-034 is spec-accepted and wholly unimplemented in srs-rust",
+    "summary": "childContainerIds appears nowhere in the srs-rust tree. The accepted nesting mechanism, the direct-versus-effective membership distinction and the retirement of the contains traversal in member_ids all have no implementation, so sectionContainerId remains the only scope marker navigation can use. Filed as srs-rust#970 and pooled.",
+    "evidence": [
+      "A search for childContainerIds across srs-rust returns nothing",
+      "container_service::member_ids still traverses contains, which RFC-034 Change C retires",
+      "The change touches find --container, container resolve-view, the MCP container resource, containers_for_instance and roughly ten tests"
+    ],
+    "body": "The acceptance pull request and the implementation are in different repositories with no gate between them, so a normative change lands as accepted with nothing red anywhere. The gap is visible only to whoever next tries to build on the accepted rule. srs-rust#970."
+  },
+  "createdAt": "2026-09-06T17:50:23.085387004+00:00",
+  "updatedAt": "2026-09-06T17:50:23.085396265+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

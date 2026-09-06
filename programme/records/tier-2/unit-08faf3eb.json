@@ -6,15 +6,20 @@
   "typeName": "unit",
   "fieldValues": {
     "title": "Recursive navigation below the root container",
-    "summary": "Whether navigation recurses below the root container, and if so by what mechanism, is a normative question the concept tree forces. It is drafted with options and a recommendation and batched for the owner sitting.",
-    "decision_mode": "complex",
+    "summary": "Whether navigation recurses below the root container, and if so by what mechanism, is a normative question the concept tree forces. It was ruled by rfc-decision-0750c62f - below the sections, navigation descends the part-of tree - and this unit implements that ruling in srs-rust.",
+    "decision_mode": "complicated",
+    "door": "door-1",
     "issue_ref": [
       "srs#573",
-      "srs#556"
-    ]
+      "srs#574",
+      "srs#556",
+      "srs-rust#969",
+      "srs-rust#970"
+    ],
+    "body": "Implemented by PR https://github.com/the-greenman/srs-rust/pull/969 (open, auto-merge armed, blocked only on the mirror sync in srs-rust#968). The unit was classified complex when it was written, before rfc-decision-0750c62f ruled consequence 3; it is complicated and Door 1 now, executing that ruling. NavigationNode gains children, skip-serialised when empty so no consumer breaks, and sectionContainerId rides every node at every depth - one tree with named scopes over it, not two trees. repository_navigation_with_depth bounds the descent, with a depth of 0 reproducing the pre-#573 flat list as an escape hatch, exposed as srs repo navigation --depth N. The children come from tree_service::build_tree rather than a second walker, so sibling precedes ordering, depth bounds and cycle pruning stay in one place. The MCP navigation resource and the WASM binding inherit the descent unchanged. Left out deliberately: the spec repo Parts data, nested containers as named scopes (RFC-034 is unimplemented in srs-rust), and RFC-034 Change C retiring the contains traversal in container_service::member_ids, which touches roughly ten tests and is a sibling unit."
   },
-  "lifecycleState": "proposed",
+  "lifecycleState": "in_review",
   "createdAt": "2026-09-05T22:09:03.207721746+00:00",
-  "updatedAt": "2026-09-05T22:09:03.207726963+00:00",
+  "updatedAt": "2026-09-06T17:50:22.832844017+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
