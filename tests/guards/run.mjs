@@ -1424,6 +1424,7 @@ async function checksRegistryMembershipCases(root) {
   const undeclaredCheckPath = join(root, "scripts/check-undeclared.mjs");
 
   const registry = (...scripts) => ({
+    tiers: ["always", "pinned-cli", "ci-only"],
     checks: scripts.map((script) => ({
       id: script.replace(/^check-/, "").replace(/\.mjs$/, ""),
       script,
@@ -1448,17 +1449,66 @@ async function checksRegistryMembershipCases(root) {
   );
 
   // Declaring it clears the violation — the guard is not simply always red.
-  await writeJson(registryPath, registry("check-declared.mjs", "check-undeclared.mjs"));
+  const fullRegistry = registry("check-declared.mjs", "check-undeclared.mjs");
+  await writeJson(registryPath, fullRegistry);
   expect(
     "accepts once every check-*.mjs script is declared",
     runCheck("check-checks-registry-membership.mjs", root),
     { exit: 0, contains: ["✓ Every scripts/check-*.mjs file is declared in scripts/checks.json"] },
   );
 
+  // srs#579: nothing checked the reverse direction — a declared entry naming a tier, cell or
+  // script that doesn't exist. validate-all.mjs's `entry.tier === 'always'` filter silently drops
+  // a typo'd tier into "deferred to other tiers" rather than failing, so this closes it here.
+  const withEntryField = (field, value) => ({
+    ...fullRegistry,
+    checks: fullRegistry.checks.map((entry, i) => (i === 0 ? { ...entry, [field]: value } : entry)),
+  });
+
+  await writeJson(registryPath, withEntryField("tier", "alwyas"));
+  expect(
+    "rejects a registry entry whose tier is not one of the registry's declared tiers",
+    runCheck("check-checks-registry-membership.mjs", root),
+    { exit: 1, contains: ["declares tier \"alwyas\"", "not one of"] },
+  );
+
+  await writeJson(registryPath, withEntryField("cell", "process"));
+  expect(
+    "rejects a registry entry whose cell is not one of the twelve Pattern Grid slugs",
+    runCheck("check-checks-registry-membership.mjs", root),
+    { exit: 1, contains: ["declares cell \"process\"", "twelve Pattern Grid slugs"] },
+  );
+
+  await writeJson(registryPath, withEntryField("script", "check-does-not-exist.mjs"));
+  expect(
+    "rejects a registry entry whose script does not resolve to a file on disk",
+    runCheck("check-checks-registry-membership.mjs", root),
+    { exit: 1, contains: ["declares script \"check-does-not-exist.mjs\"", "does not resolve to a file"] },
+  );
+
+  await writeJson(registryPath, { checks: fullRegistry.checks });
+  expect(
+    "rejects a registry with no declared tiers vocabulary at all",
+    runCheck("check-checks-registry-membership.mjs", root),
+    { exit: 1, contains: ["declares no \"tiers\" array"] },
+  );
+
+  // Restoring the well-formed registry clears every violation above — the guard is not simply
+  // always red.
+  await writeJson(registryPath, fullRegistry);
+  expect(
+    "accepts again once the registry is well-formed",
+    runCheck("check-checks-registry-membership.mjs", root),
+    { exit: 0, contains: ["✓ Every scripts/check-*.mjs file is declared in scripts/checks.json"] },
+  );
+
   // A floor, matching the sibling guards: a walk that finds no check-*.mjs file at all is not a
-  // scripts/ directory with nothing wrong — it means the root argument is wrong.
+  // scripts/ directory with nothing wrong — it means the root argument is wrong. Registry entries
+  // are cleared too, so this isolates the floor from the srs#579 script-resolution check above —
+  // an entry naming a now-deleted script is a different, already-covered violation.
   await rm(declaredCheckPath);
   await rm(undeclaredCheckPath);
+  await writeJson(registryPath, { tiers: fullRegistry.tiers, checks: [] });
   expect(
     "fails when no check-*.mjs script is found at all",
     runCheck("check-checks-registry-membership.mjs", root),
@@ -1700,6 +1750,104 @@ async function packageIdUniquenessCases(root) {
   await rm(join(pkgDir, "types/notes.json"));
 }
 
+// ---- srs#560 — spec coherence over the concept tree ---------------------------------------------
+async function specCoherenceCases(root) {
+  console.log("srs#560 — spec coherence: forward references (by SCC), one home, orphans, baked headings");
+
+  const A = "00000000-0000-4000-8000-0000000000a1"; // concept A
+  const B = "00000000-0000-4000-8000-0000000000b2"; // concept B
+  const L = "00000000-0000-4000-8000-0000000000c3"; // a subsection leaf
+  const concept = (id, title) => ({
+    instanceId: id, typeId: "2a000004-0000-4000-a000-000000000004", typeVersion: 1,
+    typeNamespace: "com.semanticops.spec", typeName: "concept",
+    fieldValues: { canonical_key: `record:concepts/${title.toLowerCase()}`, title, description: "fixture" },
+  });
+  const leaf = (content) => ({
+    instanceId: L, typeId: "2a000005-0000-4000-a000-000000000005", typeVersion: 1,
+    typeNamespace: "com.semanticops.spec", typeName: "subsection",
+    fieldValues: { title: "Leaf", content },
+  });
+  const rel = (n, relationType, source, target) => ({
+    relationId: `00000000-0000-4000-8000-0000000000${n}`, relationType,
+    sourceInstanceId: source, targetInstanceId: target, createdAt: "2026-09-06T00:00:00Z",
+  });
+  const relDir = join(root, "srs/relations");
+  const allowlist = join(root, "scripts/spec-coherence-allowlist.json");
+
+  await writeJson(join(root, "srs/manifest.json"), { container: { containerId: "00000000-0000-4000-8000-0000000000e0", memberInstanceIds: [] } });
+  await writeJson(join(root, "srs/records/concepts/a.json"), concept(A, "Alpha"));
+  await writeJson(join(root, "srs/records/concepts/b.json"), concept(B, "Beta"));
+  await writeJson(join(root, "srs/records/subsections/leaf.json"), leaf("Plain prose, no headings.\n"));
+  await writeJson(join(relDir, "r1.json"), rel("d1", "contains", A, L));
+  await writeJson(join(relDir, "r2.json"), rel("d2", "precedes", A, B));
+
+  // The violation: Alpha comes first in the reading order yet depends on Beta.
+  await writeJson(join(relDir, "r3.json"), rel("d3", "depends-on", A, B));
+  expect("rejects a depends-on edge pointing forward in the tree order", runCheck("check-spec-coherence.mjs", root), {
+    exit: 1,
+    contains: ["[no-forward-reference]", '"Alpha" is introduced before "Beta" but depends on it'],
+  });
+
+  // Same edge, flipped: Beta depends on what came before it.
+  await writeJson(join(relDir, "r3.json"), rel("d3", "depends-on", B, A));
+  expect("accepts a depends-on edge pointing backward", runCheck("check-spec-coherence.mjs", root), {
+    exit: 0,
+    contains: ["0 forward, 1 backward", "✓ Spec coherence"],
+  });
+
+  // Both directions: one strongly-connected component (the #608 result) — introduced together, not forward.
+  await writeJson(join(relDir, "r4.json"), rel("d4", "depends-on", A, B));
+  expect("does not flag an edge inside one strongly-connected component", runCheck("check-spec-coherence.mjs", root), {
+    exit: 0,
+    contains: ["2 within one component", "✓ Spec coherence"],
+  });
+  await rm(join(relDir, "r4.json"));
+
+  // An allowlisted forward reference passes — and a stale entry fails (shrink discipline).
+  await writeJson(join(relDir, "r3.json"), rel("d3", "depends-on", A, B));
+  await writeJson(allowlist, { entries: [{ check: "no-forward-reference", pair: [A, B], issue: "the-greenman/srs#563" }] });
+  expect("holds an allowlisted forward reference citing an issue", runCheck("check-spec-coherence.mjs", root), {
+    exit: 0,
+    contains: ["holding 1 of 1 violation(s)"],
+  });
+  await writeJson(join(relDir, "r3.json"), rel("d3", "depends-on", B, A));
+  expect("fails when an allowlist entry no longer matches a violation", runCheck("check-spec-coherence.mjs", root), {
+    exit: 1,
+    contains: ["no longer matches a violation"],
+  });
+  await writeJson(allowlist, { entries: [{ check: "no-forward-reference", pair: [A, B] }] });
+  await writeJson(join(relDir, "r3.json"), rel("d3", "depends-on", A, B));
+  expect("fails when an allowlist entry cites no issue", runCheck("check-spec-coherence.mjs", root), {
+    exit: 1,
+    contains: ["needs check, id|pair, and an issue reference"],
+  });
+  await rm(allowlist);
+  await writeJson(join(relDir, "r3.json"), rel("d3", "depends-on", B, A));
+
+  // Two contains parents for the leaf.
+  await writeJson(join(relDir, "r5.json"), rel("d5", "contains", B, L));
+  expect("rejects a leaf with two contains parents", runCheck("check-spec-coherence.mjs", root), {
+    exit: 1,
+    contains: ["[one-home]", '"Leaf" has 2 contains parents'],
+  });
+  await rm(join(relDir, "r5.json"));
+
+  // No contains parent at all.
+  await rm(join(relDir, "r1.json"));
+  expect("rejects an orphan leaf", runCheck("check-spec-coherence.mjs", root), {
+    exit: 1,
+    contains: ["[no-orphan-leaf]", "has no contains parent", "subsection: 1"],
+  });
+  await writeJson(join(relDir, "r1.json"), rel("d1", "contains", A, L));
+
+  // A heading baked into the prose; one inside a code fence is not a heading.
+  await writeJson(join(root, "srs/records/subsections/leaf.json"), leaf("Intro\n\n## Baked\n\n```\n# not a heading\n```\n"));
+  expect("rejects a baked markdown heading in a leaf's text", runCheck("check-spec-coherence.mjs", root), {
+    exit: 1,
+    contains: ["[no-baked-heading]", "bakes 1 markdown heading(s) into `content`"],
+  });
+}
+
 const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
 try {
   await fieldNameCases(join(root, "field-name"));
@@ -1717,6 +1865,7 @@ try {
   await ledgerCompletenessCases(join(root, "ledger-completeness"));
   await roadmapCellMirrorCases(join(root, "roadmap-cell-mirror"));
   await packageIdUniquenessCases(join(root, "package-id-uniqueness"));
+  await specCoherenceCases(join(root, "spec-coherence"));
 } finally {
   await rm(root, { recursive: true, force: true });
 }

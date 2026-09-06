@@ -6,14 +6,21 @@
   "typeName": "unit",
   "fieldValues": {
     "title": "check-spec-coherence and its allowlist",
-    "summary": "A coherence checker over the spec corpus with a seeded allowlist, each entry carrying an issue reference, in warn mode to begin with. Shrinking the allowlist is the migration, so the checker measures the rework rather than blocking it.",
+    "summary": "A coherence checker over the spec corpus with a seeded allowlist, each entry carrying an issue reference, in warn mode to begin with. Shrinking the allowlist is the migration, so the checker measures the rework rather than blocking it. Delivered as five checks over the canonical relations with 187 allowlisted violations.",
+    "decision_mode": "complicated",
+    "door": "non-normative",
     "issue_ref": [
       "srs#560",
-      "srs#556"
-    ]
+      "srs#556",
+      "srs#562",
+      "srs#563",
+      "srs#564",
+      "srs#608"
+    ],
+    "body": "PR https://github.com/the-greenman/srs/pull/623. scripts/check-spec-coherence.mjs plus scripts/spec-coherence-allowlist.json, registered in scripts/checks.json (tier always, cell conformance) and guarded in tests/guards/run.mjs. Five checks, all reading canonical relations only — no bespoke fields, no new relation types, records and relations loaded by walking the trees per RFC-038: no-forward-reference, one-home, no-orphan-leaf, part-order, no-baked-heading. Today's readings: 89 depends-on edges with 1 forward reference; 159 homed records with 0 double parents; 276 leaves with 164 orphans (119 invariants, 45 design-notes); 10 Parts with the part-order check implemented but vacuous until #563 hangs the tree; 121 baked headings in 22 records. Every gate exit 0, and the guard was made red on the live corpus and on a fixture before being allowlisted."
   },
-  "lifecycleState": "proposed",
+  "lifecycleState": "in_review",
   "createdAt": "2026-09-05T22:08:28.695430457+00:00",
-  "updatedAt": "2026-09-05T22:08:28.695437207+00:00",
+  "updatedAt": "2026-09-06T13:27:04.215738530+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

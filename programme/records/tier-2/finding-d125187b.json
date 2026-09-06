@@ -1,0 +1,20 @@
+{
+  "instanceId": "d125187b-4d73-4cec-8777-c2b65a37e6d6",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "The spec language registry names a field that will never exist",
+    "summary": "check-spec-language's registry references normativeSites.expositionRoles — an exposition_role field on records. The #556 ruling settled that a leaf's Type is its role and no exposition_role field will be introduced, so the registry names a site nothing can ever populate.",
+    "evidence": [
+      "The language registry's normativeSites entry names expositionRoles",
+      "The 2026-09-05 ruling on srs#556 (comment 5552715003): tree by contains, order by precedes, prerequisites by depends-on, zero new fields — the leaf's Type is its exposition role",
+      "PR #620 records it as a follow-on for srs#569"
+    ],
+    "body": "A registry entry pointing at a field that the governing ruling has foreclosed is dead configuration that still reads as a plan. It was left in place rather than removed inside the RFC unit: removing it is a change to a different mechanism (#569's language registry) and belongs in that unit, where the review can see the registry as a whole."
+  },
+  "createdAt": "2026-09-06T13:27:03.844567731+00:00",
+  "updatedAt": "2026-09-06T13:27:03.844572176+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

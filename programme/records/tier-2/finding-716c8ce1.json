@@ -1,0 +1,20 @@
+{
+  "instanceId": "716c8ce1-d0ed-45d7-85e7-99cbe5f79bd4",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "The doors record was called Door 2 by its issue and Door 3 by its brief",
+    "summary": "srs#589 classified itself as Door 2 (new normative meaning); the dispatch brief classified it as Door 3 (amending an accepted RFC's surface). Both readings route to the same place — owner merges either way — so the unit proceeded and stated Door 3, on the ground that the doors and the mode matrix were already ruled in #580 and this record gives them their proper home rather than introducing new meaning. The owner should say which reading applies to future charter records.",
+    "evidence": [
+      "srs#589's body classifies the unit as Door 2",
+      "The 2026-09-06 dispatch brief for the same unit classifies it as Door 3",
+      "PR #622 states 'Door: 3 (charter amendment) — owner merges'; the merge right is identical under both readings"
+    ],
+    "body": "The question that stays open is not this PR's route but the general one: when an existing ruling is moved from prose into a charter decision record, is that new normative meaning (Door 2) or an amendment to the charter's own surface (Door 3)? A charter that answers it once saves every future charter record the same argument. Worth noting the discrepancy did not bite here only because both doors happen to reserve the merge for the owner — a pair of doors that disagreed on merge rights would have made this a live routing failure."
+  },
+  "createdAt": "2026-09-06T13:27:04.770466420+00:00",
+  "updatedAt": "2026-09-06T13:27:04.770469755+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

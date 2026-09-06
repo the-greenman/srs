@@ -1,0 +1,15 @@
+{
+  "instanceId": "75cf1363-025e-4f33-92a1-0935905a488f",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "Name grid cells only from the twelve on the grid; there is no Process cell",
+    "summary": "Every Charter Check names a Pattern Grid cell, and the only admissible names are the twelve cells the grid actually defines. 'Process' is not one of them. A governance-plane process definition — a door, a protocol, a merge-rights matrix — is Sagittarius Governance. A structural containment question is Virgo Containment; a cross-reference question is Libra Reference. Check the cell against decision-compass.md before writing it into a brief or a PR.",
+    "rationale": "Three dispatch briefs written on 2026-09-06 instructed units to tag cell:process, and each unit had to correct it independently. The correction is cheap once, but the cost is not the edit — it is that the Charter Check routes on the cell, so a cell name that resolves to nothing makes the check unfalsifiable while still looking performed.\n\nThe alternative considered was adding a Process cell to the grid, and it loses on the one-way-per-goal test: governance-plane process definitions already have a home in Governance, and a second cell for the same material would split the corpus between two names with no rule for choosing. The grid's twelve cells are also load-bearing for the balance census; adding a thirteenth by convention rather than by ruling would quietly invalidate the counts.\n\nWhat would change this: a ruling that genuinely found process definitions do not fit any of the twelve — which would be a charter amendment through Door 3, with the census consequences stated, not a cell that appears because briefs kept using the word."
+  },
+  "createdAt": "2026-09-06T13:27:06.272579400+00:00",
+  "updatedAt": "2026-09-06T13:27:06.272583068+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -219,6 +219,15 @@
       "description": "docs/strategy/roadmap-model.mjs's capitalised PATTERN_GRID_CELLS copy stays an exact title-cased mirror of scripts/lib/pattern-grid-cells.json, in order. The copy cannot be removed \u2014 roadmap-model.mjs is loaded as a browser module by docs/strategy/index.html and has no fs \u2014 so it is declared and checked rather than tolerated, the same treatment the schema mirrors get. Order-sensitive: reading order carries meaning in the grid."
     },
     {
+          "id": "spec-coherence",
+          "script": "check-spec-coherence.mjs",
+          "args": [],
+          "tier": "always",
+          "cell": "conformance",
+          "governing": "srs#560; srs#556 design ruling (concept tree as spine); srs#608 (condensation, not raw graph)",
+          "description": "The spec reads in layers over the concept tree, read off canonical relations only (tree = contains, order = precedes, prerequisites = depends-on): (1) no depends-on edge between concepts points forward in the tree's linearised order, computed over the strongly-connected components of the depends-on graph so the three genuine 2-cycles (#608) are introduced together, never flagged; (2) no record has two contains parents; (3) every content leaf (section, subsection, mechanism, invariant, example, design-note, table, generated-type-reference) has a contains parent or root-container membership; (4) no depends-on edge points from an earlier Part's subtree into a later one (vacuous until #563 hangs the concept tree under the Parts, and says so); (5) no hand-authored leaf bakes a markdown heading into a text field (root cause #567). Known violations live in scripts/spec-coherence-allowlist.json, each citing a live issue; an unlisted violation fails, and so does an entry that no longer matches - shrinking the list is the migration (#562/#563/#564)."
+    },
+    {
       "id": "spec-language",
       "script": "check-spec-language.mjs",
       "args": [],

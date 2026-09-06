@@ -1,0 +1,20 @@
+{
+  "instanceId": "4145f432-242b-46d9-a978-130ad24d7f84",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "CLAUDE.md stated dataModelRevision 5 while the manifest was at 7",
+    "summary": "The monorepo CLAUDE.md described the corpus as dataModelRevision 5 and enumerated the generations up to that point. The live manifest was at 7. An agent trusting the guidance would classify a rev-6 or rev-7 corpus as newer than anything it supports, or fetch a binary two generations behind. Corrected separately in PR #621 rather than folded into the RFC.",
+    "evidence": [
+      "srs/manifest.json declares dataModelRevision 7 on 2026-09-06 origin/master",
+      "CLAUDE.md's data-model paragraph enumerated revisions 1 through 5",
+      "Correction filed as the-greenman/srs#621, separate from the RFC PR #620"
+    ],
+    "body": "Same class as the stale counts, one layer up: the guidance document is a second home for a value the manifest already carries, and the second home went stale. The lasting fix is not to restate a manifest field in prose at all; the immediate one was to correct it and keep the correction out of the RFC's diff so neither PR's review has to carry the other's subject."
+  },
+  "createdAt": "2026-09-06T13:27:03.721578749+00:00",
+  "updatedAt": "2026-09-06T13:27:03.721582204+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

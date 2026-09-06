@@ -1,0 +1,15 @@
+{
+  "instanceId": "c2bf33f8-5f30-4160-9678-b70abf83ca79",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "Local and cloud agent pools share one label protocol; claim with gate:working before the tick",
+    "summary": "A local master-thread agent pool and the cloud worker pool draw from the same issue queue and are governed by the same labels. A local thread must apply gate:working to an issue before the next coordinator tick, or the coordinator does not count it against the concurrency cap and can dispatch a cloud worker onto the same unit. The label is the claim; being locally in-flight is not.",
+    "rationale": "The 2026-09-06 split took the judgment-heavy units locally (the RFC draft, the coherence checker, the charter record) and left the small, clearly-bounded ones to the cloud pool, which is the right division: cloud workers do well on units whose scope the issue fully states, and badly on units where the answer emerges from reading the corpus. That division only holds if both pools see one queue.\n\nThe alternative considered was giving the local pool its own label namespace so the two never collide. It loses because it makes the cap per-pool rather than global, and the cap exists to bound how much unreviewed work is in flight at once, not how much any one pool is doing. Two namespaces would also mean two places to look when asking what is being worked on.\n\nWhat would change this: if the coordinator could observe local sessions directly rather than inferring occupancy from labels, the claim could be implicit. Nothing does that today, so the discipline is manual and the failure mode — a unit worked twice — is silent until two PRs open on the same issue."
+  },
+  "createdAt": "2026-09-06T13:27:06.397973768+00:00",
+  "updatedAt": "2026-09-06T13:27:06.397978235+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
