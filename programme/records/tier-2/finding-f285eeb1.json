@@ -1,0 +1,20 @@
+{
+  "instanceId": "f285eeb1-6ff3-4f3d-b85a-a50b7309e819",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "The default CI checkout defeats any git-history-diffing check",
+    "summary": "validate.yml's actions/checkout step had no fetch-depth set, so it defaulted to a shallow depth-1 clone. A check that diffs a file's own commit history (git log -- path) sees only the single tip commit in that mode -- there is never a second revision to compare against, so the check would run, exit 0, and report success without ever performing the comparison it exists to make. This is the same shape of failure the census's own framing warns about: a check that has never been observed to fail is indistinguishable from one that cannot fail, except here the cause is the CI environment rather than the check's own logic.",
+    "evidence": [
+      ".github/workflows/validate.yml's Checkout step used actions/checkout@v4 with no fetch-depth argument prior to srs#649/PR#655, i.e. the actions/checkout default (fetch-depth: 1).",
+      "git log --follow --format=%H -- <path> against a depth-1 clone returns exactly one commit hash, regardless of how many revisions the file actually has in the repository's real history.",
+      "check-versioning-cell.mjs (srs#649) is the first check in this repository to read git history rather than a live-tree snapshot; no existing check in scripts/checks.json needed this before."
+    ],
+    "body": "Any future check that needs to compare a file (or record) across commits -- not just the versioning cell's sibling cells (attribution, repository) if their own smallest-honest-check ever turns out to need history rather than a structural shape validation -- must confirm the CI checkout step it runs under actually fetches enough history first, and should say so in its own doc comment the way check-versioning-cell.mjs now does. srs#649 fixed this for validate.yml specifically (fetch-depth: 0); release-drift.yml and any other workflow that might one day run a history-diffing check would need the same fix independently -- nothing here fixes those preemptively, since none currently runs a check that needs it."
+  },
+  "createdAt": "2026-09-06T20:54:45.064149123+00:00",
+  "updatedAt": "2026-09-06T20:54:45.064155724+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
