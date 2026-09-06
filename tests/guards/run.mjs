@@ -1700,6 +1700,104 @@ async function packageIdUniquenessCases(root) {
   await rm(join(pkgDir, "types/notes.json"));
 }
 
+// ---- srs#560 — spec coherence over the concept tree ---------------------------------------------
+async function specCoherenceCases(root) {
+  console.log("srs#560 — spec coherence: forward references (by SCC), one home, orphans, baked headings");
+
+  const A = "00000000-0000-4000-8000-0000000000a1"; // concept A
+  const B = "00000000-0000-4000-8000-0000000000b2"; // concept B
+  const L = "00000000-0000-4000-8000-0000000000c3"; // a subsection leaf
+  const concept = (id, title) => ({
+    instanceId: id, typeId: "2a000004-0000-4000-a000-000000000004", typeVersion: 1,
+    typeNamespace: "com.semanticops.spec", typeName: "concept",
+    fieldValues: { canonical_key: `record:concepts/${title.toLowerCase()}`, title, description: "fixture" },
+  });
+  const leaf = (content) => ({
+    instanceId: L, typeId: "2a000005-0000-4000-a000-000000000005", typeVersion: 1,
+    typeNamespace: "com.semanticops.spec", typeName: "subsection",
+    fieldValues: { title: "Leaf", content },
+  });
+  const rel = (n, relationType, source, target) => ({
+    relationId: `00000000-0000-4000-8000-0000000000${n}`, relationType,
+    sourceInstanceId: source, targetInstanceId: target, createdAt: "2026-09-06T00:00:00Z",
+  });
+  const relDir = join(root, "srs/relations");
+  const allowlist = join(root, "scripts/spec-coherence-allowlist.json");
+
+  await writeJson(join(root, "srs/manifest.json"), { container: { containerId: "00000000-0000-4000-8000-0000000000e0", memberInstanceIds: [] } });
+  await writeJson(join(root, "srs/records/concepts/a.json"), concept(A, "Alpha"));
+  await writeJson(join(root, "srs/records/concepts/b.json"), concept(B, "Beta"));
+  await writeJson(join(root, "srs/records/subsections/leaf.json"), leaf("Plain prose, no headings.\n"));
+  await writeJson(join(relDir, "r1.json"), rel("d1", "contains", A, L));
+  await writeJson(join(relDir, "r2.json"), rel("d2", "precedes", A, B));
+
+  // The violation: Alpha comes first in the reading order yet depends on Beta.
+  await writeJson(join(relDir, "r3.json"), rel("d3", "depends-on", A, B));
+  expect("rejects a depends-on edge pointing forward in the tree order", runCheck("check-spec-coherence.mjs", root), {
+    exit: 1,
+    contains: ["[no-forward-reference]", '"Alpha" is introduced before "Beta" but depends on it'],
+  });
+
+  // Same edge, flipped: Beta depends on what came before it.
+  await writeJson(join(relDir, "r3.json"), rel("d3", "depends-on", B, A));
+  expect("accepts a depends-on edge pointing backward", runCheck("check-spec-coherence.mjs", root), {
+    exit: 0,
+    contains: ["0 forward, 1 backward", "✓ Spec coherence"],
+  });
+
+  // Both directions: one strongly-connected component (the #608 result) — introduced together, not forward.
+  await writeJson(join(relDir, "r4.json"), rel("d4", "depends-on", A, B));
+  expect("does not flag an edge inside one strongly-connected component", runCheck("check-spec-coherence.mjs", root), {
+    exit: 0,
+    contains: ["2 within one component", "✓ Spec coherence"],
+  });
+  await rm(join(relDir, "r4.json"));
+
+  // An allowlisted forward reference passes — and a stale entry fails (shrink discipline).
+  await writeJson(join(relDir, "r3.json"), rel("d3", "depends-on", A, B));
+  await writeJson(allowlist, { entries: [{ check: "no-forward-reference", pair: [A, B], issue: "the-greenman/srs#563" }] });
+  expect("holds an allowlisted forward reference citing an issue", runCheck("check-spec-coherence.mjs", root), {
+    exit: 0,
+    contains: ["holding 1 of 1 violation(s)"],
+  });
+  await writeJson(join(relDir, "r3.json"), rel("d3", "depends-on", B, A));
+  expect("fails when an allowlist entry no longer matches a violation", runCheck("check-spec-coherence.mjs", root), {
+    exit: 1,
+    contains: ["no longer matches a violation"],
+  });
+  await writeJson(allowlist, { entries: [{ check: "no-forward-reference", pair: [A, B] }] });
+  await writeJson(join(relDir, "r3.json"), rel("d3", "depends-on", A, B));
+  expect("fails when an allowlist entry cites no issue", runCheck("check-spec-coherence.mjs", root), {
+    exit: 1,
+    contains: ["needs check, id|pair, and an issue reference"],
+  });
+  await rm(allowlist);
+  await writeJson(join(relDir, "r3.json"), rel("d3", "depends-on", B, A));
+
+  // Two contains parents for the leaf.
+  await writeJson(join(relDir, "r5.json"), rel("d5", "contains", B, L));
+  expect("rejects a leaf with two contains parents", runCheck("check-spec-coherence.mjs", root), {
+    exit: 1,
+    contains: ["[one-home]", '"Leaf" has 2 contains parents'],
+  });
+  await rm(join(relDir, "r5.json"));
+
+  // No contains parent at all.
+  await rm(join(relDir, "r1.json"));
+  expect("rejects an orphan leaf", runCheck("check-spec-coherence.mjs", root), {
+    exit: 1,
+    contains: ["[no-orphan-leaf]", "has no contains parent", "subsection: 1"],
+  });
+  await writeJson(join(relDir, "r1.json"), rel("d1", "contains", A, L));
+
+  // A heading baked into the prose; one inside a code fence is not a heading.
+  await writeJson(join(root, "srs/records/subsections/leaf.json"), leaf("Intro\n\n## Baked\n\n```\n# not a heading\n```\n"));
+  expect("rejects a baked markdown heading in a leaf's text", runCheck("check-spec-coherence.mjs", root), {
+    exit: 1,
+    contains: ["[no-baked-heading]", "bakes 1 markdown heading(s) into `content`"],
+  });
+}
+
 const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
 try {
   await fieldNameCases(join(root, "field-name"));
@@ -1717,6 +1815,7 @@ try {
   await ledgerCompletenessCases(join(root, "ledger-completeness"));
   await roadmapCellMirrorCases(join(root, "roadmap-cell-mirror"));
   await packageIdUniquenessCases(join(root, "package-id-uniqueness"));
+  await specCoherenceCases(join(root, "spec-coherence"));
 } finally {
   await rm(root, { recursive: true, force: true });
 }
