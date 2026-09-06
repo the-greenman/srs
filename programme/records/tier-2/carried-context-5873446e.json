@@ -1,0 +1,15 @@
+{
+  "instanceId": "5873446e-434a-4579-95e1-08f234e23bb5",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "A dormant per-record normative signal activates for the WHOLE record, not just its designated field",
+    "summary": "check-spec-language.mjs's isNormative test is OR-structured and record-scoped: normativeSites.fields (field-name match) OR normativeSites.types (record Type match) — either one flips isNormative for EVERY prose field in that record, not just the field the mechanism was meant for. Wiring normativeSites.types to a real, always-true signal (the record's own typeName) after it sat on a dead field (exposition_role, srs#556's finding on srs#638) reactivates that OR for every invariant record's OTHER prose fields too — rationale in particular, which the rationale-in-constraint rule expects to read as free exposition, not as normative text. Fixing the registry pointer surfaced five real (previously-dormant) violations in rationale fields purely from this widening, not from the substitution itself.",
+    "rationale": "Before treating a type-based (or role-based) normative signal as a pure drop-in replacement for a field-name check, run the checker against the full corpus with --seed/dry and diff the violation count against the allowlist's current size. A zero-diff result is what proves the swap is safe; anything else means the mechanism is now widening scope it didn't widen before, and the fix is to correct the newly-true corpus content directly (never to grow the allowlist to hide it — srs#638 kept it at 588 by rewording five sites in place) or, if that is not viable, to scope the check by field name in addition to Type. This is the general trap: a mechanism that has never fired teaches nothing about whether it is correctly scoped until something makes it fire for the first time."
+  },
+  "createdAt": "2026-09-06T18:55:28.768101848+00:00",
+  "updatedAt": "2026-09-06T18:55:28.768109969+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

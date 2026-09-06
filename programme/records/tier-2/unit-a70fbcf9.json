@@ -1,0 +1,23 @@
+{
+  "instanceId": "a70fbcf9-1992-4755-bab7-683334991923",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "RFC-034: declared childContainerIds nesting, retire contains-traversal membership",
+    "summary": "srs-rust#970 implements accepted RFC-034 (Container Structure and Nesting): Container.childContainerIds, effective(C) as the recursive closure over declared root/member/child edges, and removes the pre-RFC-034 I-66 condition-3 contains-Relation traversal from membership entirely.",
+    "decision_mode": "complicated",
+    "door": "1",
+    "issue_ref": [
+      "srs-rust#970",
+      "srs-rust#969",
+      "srs-rust#968"
+    ],
+    "body": "Dispatched from the srs-rust gate:pool queue via srs#580 (coordinator dispatch comment 2026-09-06T16:18Z). Fix in srs-rust PR #974: container_service::member_ids replaced by direct_member_ids (RFC-034 [R1], containerScope explicit) and effective_member_ids (recursive closure via childContainerIds, containerScope subtree / RFC-012 containerId / containers_for_instance / container resolve-view). require_valid_child_containers enforces [R7] (existence, distinctness, acyclicity) at write time. render_service subtree stub replaced with the real implementation; explicit scope fixed to use direct(C) instead of accidentally inheriting the deep scope. Schema mirrors updated to match already-accepted RFC-034 content in srs canonical, which also fixed the repo-wide Schema Drift CI failure. cargo build/test/clippy all green; one pre-existing environment-only failure (rfc_035_parity against a non-master srs sibling) confirmed unrelated."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-06T17:32:18.192806619+00:00",
+  "updatedAt": "2026-09-06T17:32:47.473341180+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
