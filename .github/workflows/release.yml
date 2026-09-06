@@ -59,3 +59,39 @@ jobs:
 
           A matching \`schemas-2.0.tar.gz.sha256\` is attached for verification." \
             --latest
+
+      # Notifies srs-rust so its schema mirror sync (srs-rust#874) no longer waits on a human to
+      # notice and run it (srs-rust#914). Auto-PR, never auto-pull: srs-rust's own workflow decides
+      # whether anything changed and opens a PR for a human to review — this step only announces
+      # the release exists.
+      #
+      # The default GITHUB_TOKEN is scoped to THIS repository alone; the repository_dispatch API
+      # always requires a token with write access to the TARGET repo regardless of its visibility
+      # (public read and dispatch-write are different permission checks), so cross-repo dispatch
+      # needs a separate credential no matter how srs-rust is configured.
+      #
+      # Set a `DISPATCH_TOKEN` secret on THIS repository to enable it: a fine-grained PAT whose
+      # repository access is `${{ github.repository_owner }}/srs-rust` alone, with "Contents:
+      # Read and write" (the permission GitHub's dispatches endpoint requires) and nothing else.
+      # Named for its own purpose rather than reused from `BOARD_TOKEN`/`CORPUS_TOKEN` — those are
+      # srs-rust-side secrets for srs-rust's own cross-repo reads, a different direction and a
+      # different repository from this one.
+      #
+      # No `continue-on-error` and no "skip if unset" branch: unlike CORPUS_TOKEN's optional
+      # third corpus, this notification is the entire point of srs-rust#914 — a silent skip here
+      # would recreate exactly the human-toil failure mode the issue exists to remove, just
+      # quietly instead of loudly. Missing or expired, this step fails and names itself.
+      - name: Notify srs-rust of the new schema release
+        env:
+          GH_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${GH_TOKEN}" ]; then
+            echo "::error::DISPATCH_TOKEN secret is not set — cannot notify srs-rust of this release. Set a fine-grained PAT scoped to ${{ github.repository_owner }}/srs-rust with 'Contents: Read and write' as the DISPATCH_TOKEN repo secret (see this step's comment in release.yml)."
+            exit 1
+          fi
+          payload="$(jq -n \
+            --arg tag "${{ steps.package.outputs.tag }}" \
+            --arg sha "${{ github.sha }}" \
+            '{event_type: "spec-schemas-released", client_payload: {tag: $tag, sha: $sha}}')"
+          echo "${payload}" | gh api "repos/${{ github.repository_owner }}/srs-rust/dispatches" --input -
