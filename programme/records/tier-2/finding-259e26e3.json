@@ -1,0 +1,20 @@
+{
+  "instanceId": "259e26e3-7bee-4110-93f0-fa320d6b25c6",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "record transition's multi-hop mechanism already existed and was already unreachable for CLI-created records",
+    "summary": "srs-rust already had a multi-hop lifecycle-state mechanism (the retrofit-entry path from the empty lifecycleState, srs-rust#881/srs#447, documented in srs-usage.md) before srs-rust#960 was filed. The unreachability wasn't a missing multi-hop feature — it was that create_record_at_dir stamps a record's lifecycleState with the Lifecycle's initialState immediately on creation, so a CLI-created record can never be in the empty state the retrofit path requires.",
+    "evidence": [
+      "srs-usage.md line ~442 documents record transition's zero-hop/multi-hop jump from the empty currentState, added for retrofit migrations (srs-rust#881, srs#447)",
+      "record_store.rs create_record_at_dir unconditionally sets lifecycle_state = package.effective_lifecycle(record_type).map(|lc| lc.initial_state) at creation, before srs-rust#960",
+      "create_record_successor already had an unrelated second mechanism for this exact need — an optional lifecycle_state override on CreateRecordSuccessorInput, validated by a reachable-from-initialState BFS check (state_reachable_from_initial) — but it only applied to successor creation, not plain record create"
+    ],
+    "body": "Filing or fixing a 'record create needs a multi-hop jump' request should check for an existing reachability mechanism before adding a new one. Two already existed in this codebase before srs-rust#960: the retrofit-entry path in record transition, and the explicit-lifecycle_state override in create_record_successor. srs-rust#960's fix was to extend create_record_successor's existing override (and its shared validate_lifecycle_state_override helper, factored out in the same PR) to plain record create, rather than building path-walking into record transition — which would have been a third mechanism for one goal."
+  },
+  "createdAt": "2026-09-06T19:09:39.438259674+00:00",
+  "updatedAt": "2026-09-06T19:09:39.438268301+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

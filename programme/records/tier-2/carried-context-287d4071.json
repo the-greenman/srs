@@ -1,0 +1,15 @@
+{
+  "instanceId": "287d4071-4dde-4b53-9aca-e7a351f7c157",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "Before adding a multi-hop lifecycle-state mechanism, check for one that already exists",
+    "summary": "srs-rust's lifecycle machinery already has two ways to land a record directly on a non-initial state in one call: record transition's retrofit-entry path from the empty lifecycleState (srs-rust#881/srs#447), and the explicit lifecycle_state override — now shared via record_store::validate_lifecycle_state_override (srs-rust#960) — used by both create_record_successor and create_record_in_context (plain record create). A new request for 'jump straight to state X without walking every edge' is very likely already solvable by one of these, not evidence a third mechanism is needed.",
+    "rationale": "ADR-048's one-way-per-goal rule bites hardest exactly here: lifecycle state assignment looks like it needs a graph-walking feature every time someone hits the wall, but the wall has moved twice already (srs-rust#881, then srs-rust#960) without ever needing new graph-walking code — both times the fix was making an existing entry point reachable, not adding a new BFS. Before authoring a third lifecycle-jump mechanism, read validate_lifecycle_state_override and state_reachable_from_initial in record_store.rs and the retrofit-entry doc in srs-usage.md (~line 442) — that doc predates srs-rust#960 and does not yet mention the explicit-lifecycleState path on record create/record successor; updating it is a small, out-of-scope-for-srs-rust follow-up (a srs-repo doc PR, not a srs-rust code change) worth picking up opportunistically. This would reopen only if a future case needs a state unreachable from initialState by any declared-transition chain (e.g. an explicit non-transitional jump the Lifecycle graph itself cannot express)."
+  },
+  "createdAt": "2026-09-06T19:09:52.718679254+00:00",
+  "updatedAt": "2026-09-06T19:09:52.718689191+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
