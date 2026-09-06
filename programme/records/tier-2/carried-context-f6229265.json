@@ -1,0 +1,15 @@
+{
+  "instanceId": "f6229265-e8eb-40cd-bef7-5df7dc9a25d3",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "A scheduled poll's duplicate-PR guard must key on an open PR, not on this run's own release tag or timestamp",
+    "summary": "A workflow that polls on a schedule and opens a PR only when something changed needs a guard against opening a second PR while the first is still awaiting review. Keying that guard to this run's own identifier (a release tag, a run id, a branch name derived from either) only prevents a second PR for the SAME identifier — it does nothing once the upstream state advances (a new release lands) before the open PR is reviewed, so every subsequent poll opens another PR for the new identifier. The correct guard is existence of an open PR carrying the workflow's branch prefix; when one exists, update its branch in place (only if content actually changed relative to it) instead of opening a new one.",
+    "rationale": "Found live on srs-rust#979/#914's schema-sync.yml: the tag-keyed guard let #981 open as a duplicate of #978 within the hour because srs cuts a release on every master merge. Fixed in srs-rust PR #982. Generalizes to any scheduled poll-and-PR workflow in this ecosystem (this repo's own future schema-sync automation for srs-vscode, and any similar mirror-sync job) — check for this exact shape (a guard scoped to the triggering run rather than to the target branch/PR) before copying schema-sync.yml as a template."
+  },
+  "createdAt": "2026-09-06T20:54:08.972974936+00:00",
+  "updatedAt": "2026-09-06T20:54:08.972983941+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
