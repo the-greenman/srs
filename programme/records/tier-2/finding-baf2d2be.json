@@ -1,0 +1,20 @@
+{
+  "instanceId": "baf2d2be-a288-40d0-835c-a7bdf4db0b82",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "A hand-written extraction regex silently no-ops until checked against a real sample",
+    "summary": "The first cut of srs-rust's schema-sync workflow (srs-rust#914 / srs-rust#962) extracted the srs release tag from the sync script's own 'Source: ...' line with a regex requiring a literal 'v' prefix (assuming semver-style tags). srs's actual schema-release tags are 'schemas-build.<run_number>' (srs/.github/workflows/release.yml), which never matches that pattern, so the branch/PR naming silently fell back to a generic run-id form on every real invocation -- the mechanism still worked (a PR still opened), but lost the informative naming it was written for, and nothing in CI would have caught it because the fallback path is itself valid.",
+    "evidence": [
+      "sed -n 's/.*@\\(v[^ ]*\\)$/\\1/p' applied to the literal string 'Source: release asset the-greenman/srs@schemas-build.331' returns empty",
+      "srs/.github/workflows/release.yml sets tag=\"schemas-build.${{ github.run_number }}\" -- never a 'v' prefix",
+      "dropping the 'v' requirement (srs-rust#962 commit d9ffdef) and re-testing the same string returns 'schemas-build.331'"
+    ],
+    "body": "General lesson: an extraction regex written from an assumed format (here, defaulting to semver) needs to be checked against a real, current sample of the actual upstream data, not just validated for syntax. A graceful fallback for the unmatched case makes this worse, not better, here -- it masks the bug (the workflow still runs, still opens a PR) instead of failing loudly, so nothing about the mechanism's own operation would have surfaced the mismatch."
+  },
+  "createdAt": "2026-09-06T11:14:05.786726352+00:00",
+  "updatedAt": "2026-09-06T11:14:05.786732168+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
