@@ -152,7 +152,7 @@ node scripts/publish-spec.mjs
 
 ### Changing the spec: which door
 
-Before touching a conformance rule, a schema element, or any normative statement, name which door applies:
+Before touching a conformance rule, a schema element, or any normative statement, name which door applies (ruled by `rfc-decision-e99a9437`; this section is a pointer, the record is the home):
 
 - **Door 1 — Execute a ruling.** The change implements a recorded decision (`srs/records/tier-2/rfc-decision-*`). Fixup PR; cite the record id in the PR body; no RFC needed.
 - **Door 2 — New normative meaning.** No ruling covers it. RFC via `.claude/commands/rfc.md` (Stage 1.5 Charter Check mandatory). Draft proposes only; folds land at acceptance with the integration manifest.
