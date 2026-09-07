@@ -1,0 +1,15 @@
+{
+  "instanceId": "b923726e-471a-4eaa-8ae3-c5b4d2b2b121",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "A citation-drift guard belongs in scripts/lib/, shared by every citing check, not restated per surface",
+    "summary": "check-decision-compass-drift.mjs's FORWARD rule (a citation resolves to a real record) and check-rfc-integration.mjs's I-<n> manifest-token resolver were solving the identical sub-problem (does this id/number still name something real?) in two places with two separate normalization copies. When adding a third instance of the same shape (srs-usage.md's I-<n> citations, #490/#670), the number-loading logic was factored into scripts/lib/invariant-numbers.mjs first, and both the new check and check-rfc-integration.mjs's existing resolver were pointed at it, rather than writing a third copy.",
+    "rationale": "This repo has already paid for the alternative twice: DECISION_MODES was hardcoded in check-rfc-integration.mjs fifty lines below its own correct import of the cell-slug vocabulary (found by an earlier #490 unit, fixed via scripts/lib/decision-modes.mjs); roadmap-model.mjs carried an independent capitalised copy of the twelve Pattern Grid cells (srs#602). Both were the same drift class: a normalization/vocabulary rule with two homes. The Conformance cell's standing preference (rfc-decision-cce3c00e, 'one way over many') makes this a rule, not a style choice — before writing a new check that resolves ids/numbers/slugs against a corpus, check scripts/lib/ for an existing loader over the same corpus first, and if none exists but a sibling check already has the logic inline, extract it rather than copying it. Reopens only if a future consumer of invariant numbers needs a materially different normalization rule (not just a different corpus subset)."
+  },
+  "createdAt": "2026-09-07T18:23:58.641107694+00:00",
+  "updatedAt": "2026-09-07T18:23:58.641114608+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

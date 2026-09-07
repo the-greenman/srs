@@ -1,0 +1,23 @@
+{
+  "instanceId": "08a24109-0488-4a51-b5db-a1dd98e06fe7",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "srs-usage.md invariant citations: a drift guard",
+    "summary": "Added check-srs-usage-invariant-citations.mjs (FORWARD-only sibling of check-decision-compass-drift.mjs, applied to I-<n> citations in srs-usage.md against the invariant corpus) and scripts/lib/invariant-numbers.mjs, a shared invariant-number loader/normalizer factored out of check-rfc-integration.mjs's own inline copy. Registered in checks.json (always tier, cell reference). Negative test added to tests/guards/run.mjs.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs#490",
+      "srs#580",
+      "srs#670"
+    ],
+    "body": "Dispatched from srs#580's gate:dispatched queue (claim comment on #490, 2026-09-07). Picked from the #490 sweep's own prior catalogue (comment 5555111626) rather than re-deriving findings: item 'srs-usage.md ... no drift guard' with its own suggested cheap fix ('reuse that guard's FORWARD half against invariant ids'). Verified several other catalogued items from that same comment were already resolved by earlier units before starting (DECISION_MODES hardcoding: already fixed, see scripts/lib/decision-modes.mjs's own header citing #490; roadmap-model.mjs cell-copy dup: #602 closed; source-of-truth map: #639 closed; idl-schema-conformance-allowlist.json (#427): already resolved by the RFC-040 Change J self-expiring mechanism, MAPPING table is now empty — recommend closing #427 as already-fixed rather than re-touching it. Also ported the one-line versioning-cell-allowlist.json fix from #668/PR #669 so this branch's own gates run clean on current master; that fix lands independently and this port no-ops once the base carries it."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-07T18:23:25.654477678+00:00",
+  "updatedAt": "2026-09-07T18:23:34.522830421+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
