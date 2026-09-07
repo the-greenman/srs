@@ -1,0 +1,35 @@
+{
+  "$comment": "Legacy compound decision records exempted from scripts/check-decision-record-shape.mjs (srs#607, owner ruling 2026-09-07, comment 5573379090). Each pre-dates the ruling's enforcement floor (decision_date 2026-09-07 or earlier) and is grandfathered rather than decomposed — decomposing a charter-class record would itself be a rewrite of it. Entries were found by running the check's own heuristic (>=2 numbered/bulleted lines in decision_statement) over the live corpus at ruling time; growing this file for a record dated after the floor is not permitted — that is exactly the case the check exists to catch.",
+  "entries": [
+    {
+      "instanceId": "4f1e12e5-47fc-4675-b1c2-48cc9e560e66",
+      "title": "The attested removals: pruning the dormant machinery",
+      "reason": "The legacy exemplar named by the ruling itself: 14 numbered dispositions (REMOVED / DISPOSED WITHOUT REMOVAL / EXPLICITLY KEPT). Stands as-is per srs#607's ruling — decomposing it now would be a rewrite of a charter record, not a fix."
+    },
+    {
+      "instanceId": "0750c62f-b419-496d-b64c-ab7c8c4f5404",
+      "title": "A Container is a declared selection: it lives on the expression plane",
+      "reason": "5-item numbered list of consequences following from one plane assignment. Pre-dates srs#607's ruling; grandfathered rather than decomposed."
+    },
+    {
+      "instanceId": "8f5aca2c-653e-41f8-94be-e509b31495f3",
+      "title": "The grid grows three operations: reach, sequence, balance",
+      "reason": "3-item list. Pre-dates srs#607's ruling; grandfathered rather than decomposed."
+    },
+    {
+      "instanceId": "9ee14517-9c12-4d06-b7bb-c5d59684d7f5",
+      "title": "Layers stay separate: the layer rules",
+      "reason": "6-item numbered list (the six layer rules themselves). Pre-dates srs#607's ruling; grandfathered rather than decomposed."
+    },
+    {
+      "instanceId": "b9d7096e-86e3-4474-bff3-6c479d79fed7",
+      "title": "The grid learns to read: autoclassification and the stance vocabulary",
+      "reason": "2-item list. Pre-dates srs#607's ruling; grandfathered rather than decomposed."
+    },
+    {
+      "instanceId": "e99a9437-8090-4838-a1fe-56f0b74b0989",
+      "title": "The three doors: which change to the spec surface may merge, and by whom",
+      "reason": "4-item list (the door taxonomy itself). Pre-dates srs#607's ruling; grandfathered rather than decomposed."
+    }
+  ]
+}
