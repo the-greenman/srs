@@ -219,6 +219,15 @@
       "description": "Every com.semanticops.spec/rfc-decision record dated 2026-08-23 or later carries at least one cell:<slug> tag naming a slug from the Pattern Grid vocabulary."
     },
     {
+      "id": "decision-record-shape",
+      "script": "check-decision-record-shape.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "succession",
+      "governing": "srs#607; owner ruling 2026-09-07 (comment 5573379090, Option 1)",
+      "description": "Every com.semanticops.spec/rfc-decision record dated after 2026-09-07 carries exactly one independently reversible position: decision_statement contains no numbered/bulleted disposition list of two or more items. Pre-existing compound records (rfc-decision-4f1e12e5 and siblings found by the same heuristic) are grandfathered in scripts/decision-record-shape-allowlist.json, not decomposed."
+    },
+    {
       "id": "roadmap-cell-mirror",
       "script": "check-roadmap-cell-mirror.mjs",
       "args": [],

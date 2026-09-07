@@ -232,6 +232,16 @@ act (kind: **rule**).
   position — a misidentified property, a wrong count, a mistaken citation. It **may** be made in
   place, and **must** carry a visible marker in the record itself, not only in the commit message.
 
+**Correction (2026-09-07, `rfc-decision-4431046e`, srs#607):** the `supersedes` mechanism above is
+for a decision record refining a *prior decision record's own position* — a successor record, the
+earlier one never edited. It is not the relation a decision uses when refining a non-decision
+construct such as a layer rule: `rfc-decision-0750c62f` and `rfc-decision-0118e938` both refine
+layer rules recorded elsewhere in this document, and both are correctly linked by a `refines`
+relation, not `supersedes`. The wording above, read in isolation, implied every refinement goes
+through `supersedes`; it does not — `supersedes` names one case (a decision superseding a decision),
+`refines` names the other (a decision refining something else). Neither record's position changed;
+this is a statement-of-fact fix, not a new ruling.
+
 The test: if a reader who acted on the earlier text would have acted differently, it is a
 refinement; if they would have acted the same way holding a wrong detail, it is a correction.
 
