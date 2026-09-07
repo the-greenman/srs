@@ -7,8 +7,7 @@
   "fieldValues": {
     "invariant_number": "21",
     "title": "Container.rootInstanceIds and Container.memberInstanceIds, when…",
-    "normative_statement": "`Container.rootInstanceIds` and `Container.memberInstanceIds`, when present, must reference valid SRS instance IDs (`Note.instanceId` or `Record.instanceId`).",
-    "applies_to": "core — Container"
+    "normative_statement": "`Container.rootInstanceIds` and `Container.memberInstanceIds`, when present, must reference valid SRS instance IDs (`Note.instanceId` or `Record.instanceId`)."
   },
   "tags": [
     "concern:validation",
@@ -16,7 +15,7 @@
     "topic:conformance"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-08-27T18:16:01.549742541+00:00",
+  "updatedAt": "2026-09-07T19:59:34.872967363+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

@@ -8,10 +8,9 @@
     "invariant_number": "I-146",
     "title": "Container direct membership is the union of its roots and explicit members",
     "normative_statement": "A Container's direct membership is exactly the duplicate-free, unordered union of its rootInstanceIds and memberInstanceIds. An omitted memberInstanceIds contributes no additional direct members and MUST NOT be read as opting into Relation traversal.",
-    "applies_to": "Container (core); RFC-034",
     "rationale": "RFC-034 [R1] (Change A). Both arrays keep their authoring roles: roots anchor the scope, memberInstanceIds adds explicit members. The pre-RFC-034 rule that an omitted memberInstanceIds meant membership was derived by traversing contains from the roots is retired by rfc-decision-0750c62f."
   },
   "createdAt": "2026-09-06T13:19:55.177464303+00:00",
-  "updatedAt": "2026-09-06T13:19:55.177471641+00:00",
+  "updatedAt": "2026-09-07T19:59:46.045121341+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

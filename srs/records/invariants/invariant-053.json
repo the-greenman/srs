@@ -1,13 +1,21 @@
 {
-  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "createdAt": "2026-05-27T00:00:00Z",
+  "instanceId": "e1000053-0000-4000-a000-000000000053",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "invariant",
   "fieldValues": {
     "invariant_number": "53",
     "title": "conforming importer must use repositoryId as the key to determine…",
-    "normative_statement": "A conforming importer must use `repositoryId` as the key to determine whether an incoming repository already exists locally. An importer that unconditionally creates a new local repository for every archive it receives, without consulting `repositoryId`, is not conformant.",
-    "applies_to": "ext:repository"
+    "normative_statement": "A conforming importer must use `repositoryId` as the key to determine whether an incoming repository already exists locally. An importer that unconditionally creates a new local repository for every archive it receives, without consulting `repositoryId`, is not conformant."
   },
-  "instanceId": "e1000053-0000-4000-a000-000000000053",
+  "tags": [
+    "concern:validation",
+    "topic:conformance"
+  ],
+  "createdAt": "2026-05-27T00:00:00Z",
+  "updatedAt": "2026-09-07T19:59:39.698519213+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {
       "note": "Invariant 53 from srs-spec.md section 08",
@@ -15,13 +23,5 @@
       "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
       "sourceType": "repository-document"
     }
-  ],
-  "tags": [
-    "concern:validation",
-    "topic:conformance"
-  ],
-  "typeId": "2a000006-0000-4000-a000-000000000006",
-  "typeName": "invariant",
-  "typeNamespace": "com.semanticops.spec",
-  "typeVersion": 1
+  ]
 }

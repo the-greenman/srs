@@ -10,6 +10,6 @@
     "normative_statement": "A reader MUST determine instance generation structurally. For a Tier-2 `Record`: an array `fieldValues` is revision <= 1, an object `fieldValues` is revision >= 2. On encountering a generation it does not support, a reader MUST emit a diagnostic naming the file and the expected `dataModelRevision` and MUST NOT coerce, partially read, or silently skip the document. (RFC-039 [R9])"
   },
   "createdAt": "2026-08-09T14:30:00Z",
-  "updatedAt": "2026-08-27T18:13:40.776641136+00:00",
+  "updatedAt": "2026-09-07T19:59:30.918980904+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

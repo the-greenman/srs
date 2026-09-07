@@ -7,13 +7,12 @@
   "fieldValues": {
     "invariant_number": "I-102",
     "title": "attaches sourceId must resolve to a source-document sidecar entry",
-    "normative_statement": "The `sourceId` of an `attaches` `SourceReference` MUST resolve to a `documentId` in the repository's source-document set, discovered via a `.meta.json` sidecar scan of `sourceDocumentsPath` in the same repository (RFC-038 [R25], amending RFC-017 [R2]/[R12]; `sourceDocumentIndex` is retired per RFC-038 [R2]). Resolution is against the sidecar entry, not the content file. A `sourceId` that resolves to no such entry is non-conformant and MUST be reported with a diagnostic at validation time.",
-    "applies_to": "Validators; repositories using sourceRole: attaches"
+    "normative_statement": "The `sourceId` of an `attaches` `SourceReference` MUST resolve to a `documentId` in the repository's source-document set, discovered via a `.meta.json` sidecar scan of `sourceDocumentsPath` in the same repository (RFC-038 [R25], amending RFC-017 [R2]/[R12]; `sourceDocumentIndex` is retired per RFC-038 [R2]). Resolution is against the sidecar entry, not the content file. A `sourceId` that resolves to no such entry is non-conformant and MUST be reported with a diagnostic at validation time."
   },
   "tags": [
     "construct:attachment"
   ],
   "createdAt": "2026-07-17T01:41:43.780206302+00:00",
-  "updatedAt": "2026-08-22T22:52:51.105944377+00:00",
+  "updatedAt": "2026-09-07T19:59:52.449436113+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

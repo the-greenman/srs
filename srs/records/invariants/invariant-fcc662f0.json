@@ -1,19 +1,18 @@
 {
-  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "createdAt": "2026-07-17T01:42:12.295934920+00:00",
+  "instanceId": "fcc662f0-f970-40f7-b7ad-2ecbecff8168",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "invariant",
   "fieldValues": {
     "invariant_number": "I-108",
     "title": "reject gzip-compressed .srsj files",
-    "normative_statement": "A conformant implementation MUST reject a gzip-compressed file presented as a `.srsj` JSON Store. Detection is by content inspection: a file whose first two bytes are `0x1f 0x8b` MUST be treated as gzip-compressed regardless of its filename or MIME type.",
-    "applies_to": "ext:json-store importers and validators"
+    "normative_statement": "A conformant implementation MUST reject a gzip-compressed file presented as a `.srsj` JSON Store. Detection is by content inspection: a file whose first two bytes are `0x1f 0x8b` MUST be treated as gzip-compressed regardless of its filename or MIME type."
   },
-  "instanceId": "fcc662f0-f970-40f7-b7ad-2ecbecff8168",
   "tags": [
     "construct:archive"
   ],
-  "typeId": "2a000006-0000-4000-a000-000000000006",
-  "typeName": "invariant",
-  "typeNamespace": "com.semanticops.spec",
-  "typeVersion": 1,
-  "updatedAt": "2026-07-17T01:42:12.295941500+00:00"
+  "createdAt": "2026-07-17T01:42:12.295934920+00:00",
+  "updatedAt": "2026-09-07T19:59:54.578765719+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

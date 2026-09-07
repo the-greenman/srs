@@ -7,8 +7,7 @@
   "fieldValues": {
     "invariant_number": "4",
     "title": "Type.lifecycle.initialState must reference a key that appears in…",
-    "normative_statement": "`Type.lifecycle.initialState` must reference a `key` that appears in `lifecycle.states[]` and where `isInitial === true`.",
-    "applies_to": "ext:lifecycle"
+    "normative_statement": "`Type.lifecycle.initialState` must reference a `key` that appears in `lifecycle.states[]` and where `isInitial === true`."
   },
   "tags": [
     "concern:validation",
@@ -18,7 +17,7 @@
     "topic:conformance"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-08-22T22:50:20.758560743+00:00",
+  "updatedAt": "2026-09-07T19:59:31.731105475+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

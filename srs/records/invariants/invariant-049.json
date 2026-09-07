@@ -7,15 +7,14 @@
   "fieldValues": {
     "invariant_number": "49",
     "title": "archive must include every instance in the authoritative store's…",
-    "normative_statement": "An archive must include every instance discovered by enumerating the repository's authoritative store — the instance set (RFC-038 [R1], [R17]) — not a manifest `instanceIndex`, which is retired (RFC-038 [R2]). An archive missing any enumerated instance file is malformed; a conforming consumer must reject it or surface the missing instances explicitly before processing.",
-    "applies_to": "ext:repository"
+    "normative_statement": "An archive must include every instance discovered by enumerating the repository's authoritative store — the instance set (RFC-038 [R1], [R17]) — not a manifest `instanceIndex`, which is retired (RFC-038 [R2]). An archive missing any enumerated instance file is malformed; a conforming consumer must reject it or surface the missing instances explicitly before processing."
   },
   "tags": [
     "concern:validation",
     "topic:conformance"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-08-22T22:52:36.353422918+00:00",
+  "updatedAt": "2026-09-07T19:59:38.948149301+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

@@ -1,13 +1,23 @@
 {
-  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "createdAt": "2026-05-27T00:00:00Z",
+  "instanceId": "e1000034-0000-4000-a000-000000000034",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "invariant",
   "fieldValues": {
     "invariant_number": "34",
     "title": "AttentionState.containerId must reference a valid…",
-    "normative_statement": "`AttentionState.containerId` must reference a valid `Container.containerId`. Other Address components (`recordId`, `fieldId`, `protocolRunId`, `stageId`) are optional and may be absent when focus has not yet narrowed.",
-    "applies_to": "ext:addressability"
+    "normative_statement": "`AttentionState.containerId` must reference a valid `Container.containerId`. Other Address components (`recordId`, `fieldId`, `protocolRunId`, `stageId`) are optional and may be absent when focus has not yet narrowed."
   },
-  "instanceId": "e1000034-0000-4000-a000-000000000034",
+  "tags": [
+    "concern:validation",
+    "construct:container",
+    "construct:reference",
+    "topic:conformance"
+  ],
+  "createdAt": "2026-05-27T00:00:00Z",
+  "updatedAt": "2026-09-07T19:59:36.063759253+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {
       "note": "Invariant 34 from srs-spec.md section 08",
@@ -15,15 +25,5 @@
       "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
       "sourceType": "repository-document"
     }
-  ],
-  "tags": [
-    "concern:validation",
-    "construct:container",
-    "construct:reference",
-    "topic:conformance"
-  ],
-  "typeId": "2a000006-0000-4000-a000-000000000006",
-  "typeName": "invariant",
-  "typeNamespace": "com.semanticops.spec",
-  "typeVersion": 1
+  ]
 }

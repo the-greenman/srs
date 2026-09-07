@@ -10,6 +10,6 @@
     "normative_statement": "A Composition projection MUST key `ProjectedRecord.fields` and `orderedFieldKeys` by `Field.name`, and MUST carry a composite value recursively under its own key. `ProjectedFieldGroup` and `ProjectedGroupEntry` are removed and have no successor construct. (RFC-039 [R11])"
   },
   "createdAt": "2026-08-09T14:30:00Z",
-  "updatedAt": "2026-09-02T18:07:15.645600006+00:00",
+  "updatedAt": "2026-09-07T19:59:47.390539545+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
