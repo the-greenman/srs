@@ -1,0 +1,14 @@
+{
+  "instanceId": "cdf4baee-96f1-4420-ae7d-cdcc76138037",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `FieldRef` shape",
+    "content": "`FieldRef`, in pseudo-IDL:\n\n```typescript\n{\n  fieldId: UUID\n  typeId?: UUID    // which Type this Field appears in\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:46.496495147+00:00",
+  "updatedAt": "2026-09-06T17:05:17.881870783+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

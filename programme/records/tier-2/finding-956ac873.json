@@ -1,0 +1,21 @@
+{
+  "instanceId": "956ac873-ad97-4f6f-b4a5-acb3562d5c27",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "srs-usage.md's MCP resource docs drifted from the view->composition rename for the life of the rename",
+    "summary": "The srs:// resource table in srs-usage.md's MCP section still listed srs://<repositoryId>/view/<documentViewId> and the container resolve-view payload docs still showed documentViewId, both retired by the view->composition rename (srs-rust#910, rfc-decision-92d2da05, executed with no alias kept). Neither was caught until srs#624 rewrote the same table to add the tree/agent-index/protocol resources and, reading the current uri.rs and container_view_service.rs to get those additions right, noticed the existing rows no longer matched the source.",
+    "evidence": [
+      "srs-rust crates/srs-mcp/src/uri.rs: SrsUri has no View variant, only Composition(String); its module doc explicitly notes 'the view path segment renamed to composition (srs-rust#910, rfc-decision-92d2da05) -- no alias, per the standing zero-backwards-compatibility rule'",
+      "srs-rust crates/srs-repository/src/container_view_service.rs:101-103: ContainerView.composition_id (serialized compositionId), no documentViewId field",
+      "srs/srs-usage.md pre-#624: line 1596 read '`srs://<repositoryId>/view/<documentViewId>` | Rendered document view', and line 302 read '{ \"containerView\": { \"containerId\", \"documentViewId\"?, ... } }'",
+      "srs-usage.md carries no other reference to a live srs:// /view/ resource or a documentViewId payload key after srs#624's fix (grepped the whole file)"
+    ],
+    "body": "This is the same class Wave 2's meaning-placement sweep is looking for: a doc asserting a shape the records/code no longer carry. It survived because nothing enforces srs-usage.md's MCP resource table against srs-rust's actual srs:// URI parser or CLI payload shapes -- there is no guard, only the next agent who happens to read both sides while making an unrelated addition. Two prior renames touch the same surface (the view->composition field rename itself, and the container/navigation sectionContainerId descent hook added by srs-rust#949 with no doc update until this unit) -- worth a line in the source-of-truth map Wave 2 is producing: srs-usage.md's MCP section describes an srs-rust surface with no automated drift check, so it goes stale silently and only self-heals when a later unit happens to touch the same paragraph for another reason.\n\nRefs: srs#624, srs-rust#910, srs#580."
+  },
+  "createdAt": "2026-09-06T23:57:31.724656542+00:00",
+  "updatedAt": "2026-09-06T23:57:31.724663142+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

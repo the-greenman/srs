@@ -1,0 +1,14 @@
+{
+  "instanceId": "809ec39e-12f9-4e7f-96da-fbc5f202e808",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `LifecycleTransition` shape",
+    "content": "`LifecycleTransition`, in pseudo-IDL:\n\n```typescript\n{\n  id: UUID                  // stable identity for lossless future migration\n  name: string              // e.g. \"promote\", \"approve\", \"supersede\"\n  from: string              // a LifecycleState.key in the effective state set\n  to: string                // a LifecycleState.key in the effective state set\n  description?: string\n  meta?: Record<string, unknown>\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:45.837855351+00:00",
+  "updatedAt": "2026-09-06T17:05:17.374926773+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

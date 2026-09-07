@@ -27,8 +27,14 @@ jobs:
     name: validate-all
     runs-on: ubuntu-latest
     steps:
+      # fetch-depth: 0 (full history), not the default shallow depth-1 clone: check-versioning-cell.mjs
+      # (srs#649) diffs each Field file's own commit history, which needs more than the tip commit to
+      # see. A depth-1 checkout would let that check run and report green while never actually
+      # comparing two revisions of anything.
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install Node
         uses: actions/setup-node@v4

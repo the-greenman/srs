@@ -1,0 +1,15 @@
+{
+  "instanceId": "99c8f88b-7b48-429a-b4a8-54826b8f9ab7",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "A new CLI subcommand flag can silently collide with a global Cli flag — only manual invocation catches it, not cargo test",
+    "summary": "srs-rust's top-level Cli struct declares several `global = true` clap flags (--repo, --format [OutputFormat: json/yaml/text], --store, --pretty, --container). A subcommand-local flag reusing one of those names (here, `repo presentation add --format <hint>`, colliding with the global --format output-mode flag) compiles cleanly and every unit test passes, because clap's derive-generated FromArgMatches only panics with a type-downcast mismatch ('Mismatch between definition and access of `format`') at actual argument-parsing time, on a real invocation of the built binary. cargo build and cargo test --workspace both stayed green through this exact defect on srs-rust#961's `repo presentation add` command; only running the compiled `target/debug/srs` binary against real args surfaced it. Fixed by renaming the field-hint flag to --render-format.",
+    "rationale": "Before landing any new subcommand that adds a flag named after one of the Cli struct's global flags (repo, format, store, pretty, container — check crates/srs-cli/src/commands/mod.rs's `pub struct Cli` for the current list), actually run the built binary with that flag, not just `cargo test`. This programme has repeatedly found gaps between 'the test suite is green' and 'the CLI genuinely works' (srs-rust#959 repo create leaving .srs/ empty was a similar class of gap); this is the same shape one layer up, in argument parsing rather than repository output. The cheaper alternative — trusting the unit/integration test suite alone for a new CLI verb — is exactly what let this reach a rebuilt binary before being caught.\n\nWhat would change this: a workspace-level clippy lint or a build-time check that a `#[derive(Parser)]` command tree contains no long-flag-name collision between a global flag and any subcommand-local flag. None exists today; until it does, the manual-invocation step stays required for any PR touching commands/mod.rs's Subcommand enums."
+  },
+  "createdAt": "2026-09-06T19:45:41.132748812+00:00",
+  "updatedAt": "2026-09-06T19:45:41.132755708+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

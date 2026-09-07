@@ -1,0 +1,14 @@
+{
+  "instanceId": "5a411115-d6af-49c8-9a27-8136209ccc69",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `ImportSummary` shape",
+    "content": "`ImportSummary`, in pseudo-IDL:\n\n```typescript\n{\n  generatedAt: ISO8601\n  fields: ImportRecord[]\n  types: ImportRecord[]\n  views: ImportRecord[]\n  blueprints: ImportRecord[]\n  protocols: ImportRecord[]\n  relationTypes: ImportRecord[]\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:42.065978923+00:00",
+  "updatedAt": "2026-09-06T17:05:13.629087686+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

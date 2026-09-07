@@ -7,13 +7,18 @@
   "fieldValues": {
     "title": "The Parts I to IV reading order",
     "summary": "Rewrites the reading order across Parts I to IV so the specification introduces its ideas in dependency order rather than in the order they were historically written. Part membership is the layer and tree placement is the introduction, so the order is expressed in relations rather than in prose.",
+    "decision_mode": "complicated",
+    "door": "door-1",
     "issue_ref": [
       "srs#563",
-      "srs#556"
-    ]
+      "srs#556",
+      "srs#562",
+      "srs#636"
+    ],
+    "body": "Part 1 delivered by PR https://github.com/the-greenman/srs/pull/629 (merged 2026-09-06): 46 contains edges, concept to design-note, homing every design note under the concept whose definition it justifies - the design-note counterpart of what #628 did for invariants. Additive relations only; no record edited, no type touched. Hard placements recorded with the rejected alternative (Core Thesis to Semantic sovereignty over Projection, the semanticObjectType federation-risk note to Canonical reference over Composition, Session to Protocol over Addressability, among 11). The one allowlisted forward reference was settled by reversing the edge rather than reordering the tree. Counts: orphan design-notes 46 to 0, one-home leaves 284 to 330, forward references 1 to 0, allowlist 70 to 23 with every entry citing #563 gone. What remains allowlisted is the 23 no-baked-heading entries belonging to #562. Part 2 - hanging the concept tree under the Parts, which is what makes part-order non-vacuous - is not this unit."
   },
-  "lifecycleState": "proposed",
+  "lifecycleState": "landed",
   "createdAt": "2026-09-05T22:08:28.959116943+00:00",
-  "updatedAt": "2026-09-05T22:08:28.959121538+00:00",
+  "updatedAt": "2026-09-06T17:50:21.772226573+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

@@ -1,0 +1,24 @@
+{
+  "instanceId": "8ffd23de-e371-4057-93ff-b4ba4eebb1ff",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "The schema-sync poll workflow could not open its own pull request",
+    "summary": "Follow-through on the srs to srs-rust schema-sync automation: the poll workflow ran green, detected the release and pushed its branch, but could not open the pull request. GitHub Actions lacked repository permission to create pull requests - a repository setting, not a workflow permissions block.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs-rust#914",
+      "srs-rust#968",
+      "srs#615",
+      "srs-rust#962"
+    ],
+    "body": "The automation landed in srs#615 and srs-rust#962 as a scheduled poll of the srs release feed rather than a repository_dispatch, so no cross-repo credential is needed. The first scheduled run pushed its branch and then failed at pull request creation. The cause is the repository-level Actions setting allowing GitHub Actions to create and approve pull requests, which is off by default and cannot be granted from the workflow file: declaring pull-requests write permission in the workflow is necessary and not sufficient. The master thread enabled the setting; the first real poll pull request is https://github.com/the-greenman/srs-rust/pull/968, which srs-rust#969 is in turn blocked on for its Schema Drift check."
+  },
+  "lifecycleState": "landed",
+  "createdAt": "2026-09-06T17:50:23.214458499+00:00",
+  "updatedAt": "2026-09-06T17:50:23.587330898+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

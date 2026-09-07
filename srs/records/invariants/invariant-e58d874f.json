@@ -9,9 +9,9 @@
     "title": "Relations never define Container membership",
     "normative_statement": "A Relation of any type, including contains, MUST NOT cause an instance to appear in a Container's direct or effective membership.",
     "applies_to": "Container (core); RFC-034",
-    "rationale": "RFC-034 [R4] (Change C), the consequence of rfc-decision-0750c62f: a Container is a declared selection on the expression plane and a Relation is a semantic claim. contains does not retire; it remains the part-of tree that navigation depth, layering and any tree walk are built on, and it must still be maintained. A Container is a bookmark over that tree."
+    "rationale": "RFC-034 [R4] (Change C), the consequence of rfc-decision-0750c62f: a Container is a declared selection on the expression plane and a Relation is a semantic claim. contains does not retire; it remains the part-of tree that navigation depth, layering and any tree walk are built on, and it continues to be maintained. A Container is a bookmark over that tree."
   },
   "createdAt": "2026-09-06T13:19:55.197230358+00:00",
-  "updatedAt": "2026-09-06T13:19:55.197236804+00:00",
+  "updatedAt": "2026-09-06T18:49:05.760077159+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

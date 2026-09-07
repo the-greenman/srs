@@ -1,0 +1,14 @@
+{
+  "instanceId": "560b6ef1-7a88-4342-9538-edabf1cc4793",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The self-contained profile declaration",
+    "content": "The conformance string a self-contained repository declares:\n\n```\nSRS 2.0 Core + ext:repository (self-contained)\n```"
+  },
+  "createdAt": "2026-09-06T17:00:49.956509186+00:00",
+  "updatedAt": "2026-09-06T17:05:21.421866164+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

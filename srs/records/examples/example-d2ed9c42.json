@@ -1,0 +1,14 @@
+{
+  "instanceId": "d2ed9c42-8b51-4c7c-b5c9-2bad16d45992",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `ImportRecord` shape",
+    "content": "`ImportRecord`, in pseudo-IDL:\n\n```typescript\n{\n  definitionId: UUID\n  definitionType: \"field\" | \"type\" | \"view\" | \"blueprint\" | \"protocol\" | \"relation-type\"\n  namespace: string\n  name: string\n  version: integer\n\n  mode: ImportMode\n  importedAt: ISO8601\n\n  sourcePackageId: UUID\n  sourcePackageName: string\n  sourcePackageVersion: string\n\n  latestKnownUpstreamVersion?: integer\n  updateAvailable?: boolean\n  updateCheckedAt?: ISO8601\n\n  conflictState?: \"clean\" | \"local-ahead\" | \"upstream-ahead\" | \"diverged\"\n  conflictDetectedAt?: ISO8601\n\n  localVersion?: integer\n  localEditedAt?: ISO8601\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:42.060186113+00:00",
+  "updatedAt": "2026-09-06T17:05:13.463346331+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

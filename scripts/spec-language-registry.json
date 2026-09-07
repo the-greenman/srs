@@ -12,9 +12,9 @@
     "description"
   ],
   "normativeSites": {
-    "$comment": "Where RFC 2119 keywords are legitimate, and where the `normative` scope below applies. exposition_role arrives with srs#559; until then the normative_statement field is the only reliable signal.",
+    "$comment": "Where RFC 2119 keywords are legitimate, and where the `normative` scope below applies. No exposition_role field exists or will (srs#556 ruling, 2026-09-05): a leaf's Type is its role. `types` names the typeNamespace/typeName pairs whose records may carry RFC 2119 keywords outside a normative_statement field — `invariant` today; `mechanism` once RFC-042 (#620) lands.",
     "fields": ["normative_statement"],
-    "expositionRoles": ["constraint"]
+    "types": ["com.semanticops.spec/invariant"]
   },
   "limits": {
     "contentWords": 400,
@@ -64,7 +64,7 @@
   "rules": [
     { "id": "word-budget", "enforcement": "code", "limit": "limits.contentWords", "statement": "A prose field carries at most 400 words. Above that, split into child records, or move the worked example into a typed `example` record." },
     { "id": "em-dash-cap", "enforcement": "code", "limit": "limits.emDashesPerParagraph", "statement": "At most one em-dash per paragraph, and none inside a normative statement. A cap, not a ban: the em-dash is house voice, and the cap removes only the machine-gun rhythm that reads as generated." },
-    { "id": "keyword-register", "enforcement": "code", "statement": "RFC 2119 keywords appear only in a normative_statement field, or where exposition_role is `constraint` (srs#559). Explanatory prose never uses them." },
+    { "id": "keyword-register", "enforcement": "code", "statement": "RFC 2119 keywords appear only in a normative_statement field, or in a record whose Type is named in normativeSites.types (invariant today; mechanism once RFC-042 lands). Explanatory prose never uses them." },
     { "id": "heading-restatement", "enforcement": "code", "statement": "The first sentence of a prose field does not restate the record's title. Comparable mechanically: strip stopwords from both and measure the overlap." },
     { "id": "bold-lead-in-uniformity", "enforcement": "code", "statement": "Not every bullet in a list opens with a bold lead-in and a colon. Countable: bullets matching `^[-*] \\*\\*...\\*\\*:` against total bullets in the field." },
     { "id": "rationale-in-constraint", "enforcement": "review", "statement": "A constraint states the rule and nothing else. Its reason belongs in a design-note record linked by `explains`. A reviewer can see a `because` clause that a regex cannot separate from a legitimate conditional." },

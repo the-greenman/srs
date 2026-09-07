@@ -1,0 +1,20 @@
+{
+  "instanceId": "153f4d63-818d-4d2d-97d2-799a08d98009",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "The renderer forces a caption before every fence",
+    "summary": "A record whose content begins with a fenced block renders as a broken code block, because the renderer emits an inline Content label immediately before the field value. Every lifted example therefore opens with a one-sentence caption. That is editorially better anyway, but it is a renderer constraint dictating record content, not an authoring choice. Filed as srs-rust#973.",
+    "evidence": [
+      "The renderer emits the Content label inline, on the same line, before the content field value",
+      "A content value starting with a fence produces a fence opened mid-line and not recognised",
+      "All 68 example records carry a caption sentence before the block"
+    ],
+    "body": "A rendering-layer quirk that constrains what a record may contain is a layer violation in the direction the charter cares about: presentation reaching back into semantics. The captions stand on their own merit, so the unit proceeded, but the constraint should not stay load-bearing. srs-rust#973."
+  },
+  "createdAt": "2026-09-06T17:50:22.467475422+00:00",
+  "updatedAt": "2026-09-06T17:50:22.467481978+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

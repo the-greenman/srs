@@ -1,0 +1,14 @@
+{
+  "instanceId": "fbd82313-69c1-455c-864f-fef2bf11a35b",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `PageTemplates` shape",
+    "content": "`PageTemplates`, in pseudo-IDL:\n\n```typescript\n{\n  coverPage?: string\n  // Available variables: all Composition preamble variables + {{asset:*}}\n  // {{heading-1}} is available here only (resolves via Composition.depthOffset).\n\n  pageHeader?: string\n  // Available: {{page-number}}, {{asset:*}}\n\n  pageFooter?: string\n  // Available: {{page-number}}, {{asset:*}}\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:44.704707399+00:00",
+  "updatedAt": "2026-09-06T17:05:16.180236268+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

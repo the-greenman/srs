@@ -1,0 +1,20 @@
+{
+  "instanceId": "0b685ea0-5954-4150-a35e-ce74fd0a4ede",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "Invariants were amended in place with dated markers, not superseded by successors",
+    "summary": "RFC-034 changes what three existing invariants say. Both the corpus precedent (I-118 amended by RFC-038, I-144 by srs#525) and the visibility requirement in rfc-decision-4431046e point the same way: edit the invariant, mark the edit with a dated amendment marker, and leave the change of position on the decision record that owns it.",
+    "evidence": [
+      "I-118 was amended in place by RFC-038; I-144 by srs#525",
+      "rfc-decision-4431046e requires a withdrawn claim to be visibly marked rather than silently removed",
+      "I-66, I-118 and I-144 each carry a dated Amended by RFC-034 marker"
+    ],
+    "body": "Supersession machinery is for records whose old reading still needs to be readable as something someone relied on. A normative rule that has been narrowed is one rule with a new boundary, and a successor record would leave two live statements of one constraint."
+  },
+  "createdAt": "2026-09-06T17:50:20.660055898+00:00",
+  "updatedAt": "2026-09-06T17:50:20.660060884+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

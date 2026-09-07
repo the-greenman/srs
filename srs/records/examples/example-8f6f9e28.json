@@ -1,0 +1,14 @@
+{
+  "instanceId": "8f6f9e28-0762-4be2-a4a6-b08ca3c32623",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `FieldValue` union",
+    "content": "`FieldValue`, in pseudo-IDL:\n\n```typescript\ntype FieldValue = string | number | boolean\n                | FieldValue[]                       // cardinality: list\n                | { [key: string]: string | unknown } // datatype: map\n                | { [fieldName: string]: FieldValue } // inline composite: a fieldValues object for the rangeType\n```"
+  },
+  "createdAt": "2026-09-06T17:00:40.532122604+00:00",
+  "updatedAt": "2026-09-06T17:05:11.768320589+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

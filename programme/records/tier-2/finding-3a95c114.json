@@ -1,0 +1,19 @@
+{
+  "instanceId": "3a95c114-267d-4ad9-9e97-82523301977a",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "A schema that embeds a closed copy of another schema must be amended with it",
+    "summary": "RFC-034 named container.json and manifest.json as the schemas gaining childContainerIds, but srsj-envelope.json embeds its own closed Container definition. Without the property there, the RFC sentence saying SRSJ may carry childContainerIds is false - the envelope would reject it.",
+    "evidence": [
+      "srsj-envelope.json embeds a closed Container definition rather than referencing container.json",
+      "RFC-034 states that SRSJ may carry childContainerIds"
+    ],
+    "body": "Any additive schema change has to be checked against every closed embedding of the changed shape, not only the schema that defines it. The RFC author enumerated the definitions and missed the copy."
+  },
+  "createdAt": "2026-09-06T17:50:20.785124179+00:00",
+  "updatedAt": "2026-09-06T17:50:20.785128864+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

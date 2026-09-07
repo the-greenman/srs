@@ -1,0 +1,15 @@
+{
+  "instanceId": "e030d924-cc14-4fa0-83ad-042ae4528cdb",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "A dispatched issue's stated baseline can already be stale — check the artifact's own git log before trusting the issue text",
+    "summary": "A dispatch brief restated a prior report's baseline (\"diff against census-2026-08-26.json\", \"four cells with no check\") without re-checking it against current master. Both had already moved: a cycle-two run diffed against 08-26 the evening before the issue was filed, and one of the four unguarded cells picked up a check independently. The unit still executed correctly because Ground-stage discipline caught it before Work: `git log --oneline -- <the artifact's own path>` against origin/master, not the issue body, is what surfaces this — the issue and its dispatch comment are testimony about the artifact, not the artifact.",
+    "rationale": "Found working srs#635 (grid census cycle two, dispatched 2026-09-06 16:54): the issue's own text and its 17:18 dispatch comment both stated the 08-26 baseline and the four-cell figure from srs#580, itself carried from PR #582's 2026-09-05 report. PR #582 had already run the next cycle the previous evening, and a portability check landed independently between then and now. Neither change was large or hard to find — one `git log` on the census directory and one read of `scripts/checks.json` — but neither the coordinator's dispatch comment nor the issue body caught it, because both were transcribing #580's checklist rather than checking the artifact.\n\nThe alternative considered was treating the issue text as authoritative and doing exactly what it asked (diff against 08-26, report four cells) — cheaper in the moment, but it would have produced a report that silently re-litigated ground already covered by #582 and mis-stated the current enforcement gap by one cell, exactly the kind of drift the census exists to catch elsewhere in the corpus.\n\nWhat generalizes: for any unit whose issue text restates a factual baseline about a versioned artifact (a census cycle, a check-registry count, a corpus statistic), the Ground stage's `git fetch` + read-the-comments discipline is necessary but not sufficient — the artifact itself (its own commit history, its own current file) is the primary source, and the issue is only ever a claim about it as of when it was written."
+  },
+  "createdAt": "2026-09-06T18:21:08.520885972+00:00",
+  "updatedAt": "2026-09-06T18:21:08.520891978+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

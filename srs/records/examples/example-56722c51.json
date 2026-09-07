@@ -1,0 +1,14 @@
+{
+  "instanceId": "56722c51-bf3c-4b48-829f-135c04ddf393",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `SourceAnchor` shape",
+    "content": "`SourceAnchor`, in pseudo-IDL:\n\n```typescript\n{\n  kind: \"line-range\" | \"char-range\" | \"timestamp-range\" | \"message-id\" | \"json-pointer\" | \"custom\"\n  value: string\n  note?: string\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:43.085351659+00:00",
+  "updatedAt": "2026-09-06T17:05:15.339406311+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

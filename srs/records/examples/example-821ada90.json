@@ -1,0 +1,14 @@
+{
+  "instanceId": "821ada90-96e1-4e6c-a3fc-1f174a0d0f9b",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `AttentionState` shape",
+    "content": "`AttentionState`, in pseudo-IDL:\n\n```typescript\n{\n  containerId: UUID\n  recordId?: UUID\n  fieldId?: UUID\n  protocolRunId?: UUID\n  stageId?: string\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:41.566676410+00:00",
+  "updatedAt": "2026-09-06T17:05:12.945641250+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,15 @@
+{
+  "instanceId": "e9b293cd-71b6-465b-8826-97c0cbb23395",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "Two independently green pull requests can be red together",
+    "summary": "When one pull request adds records and another adds the check that judges them, serialise them, or re-run the gate on the merge result before arming auto-merge on the second. Each was green against the base it was tested on; neither was tested against the base the other created.",
+    "rationale": "The proving case is srs#623, #625 and #628 on 2026-09-06. #623 added check-spec-coherence with an allowlist seeded against the corpus as it then stood; #625 added new invariants and a design note the checker scores as violations. Both were green, both were armed for auto-merge, and master carried eight uncovered violations after the second merge until #628 cleared them. The shape is wider than checkers: any pair where one side adds a rule and the other adds instances the rule judges. Auto-merge is the specific hazard, because it arms on a check run against a base the other pull request is about to change, and nothing re-derives it at merge time. The cheap remedy is ordering: land the instances, then the rule, or re-run the gate on the merged result before arming. The structural remedy is a merge queue that re-runs required checks on the merge commit rather than on the branch."
+  },
+  "createdAt": "2026-09-06T17:50:23.715362143+00:00",
+  "updatedAt": "2026-09-06T17:50:23.715369167+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

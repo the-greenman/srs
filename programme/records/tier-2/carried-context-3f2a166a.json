@@ -1,0 +1,15 @@
+{
+  "instanceId": "3f2a166a-1beb-4372-b6da-521f95a7fed1",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "A ruled consequence may already be implemented - check the code before scoping the unit",
+    "summary": "When a decision record names consequences, read the implementation for each one before writing a unit for it. A consequence map written from the specification says nothing about what the code already does, and some of them are already true.",
+    "rationale": "srs#574 asked for depth in rendered compositions as a consequence of rfc-decision-0750c62f, and render_service::render_record_at_level already recursed contains children one heading level deeper in structured mode. The unit produced no diff at all. The cost of the wrong scoping is not only the wasted unit: a unit that closes with no change looks, in the ledger, exactly like a unit that was quietly dropped, so the finding has to be recorded explicitly for the absence to read as a result. It applies both ways - the sibling consequence in the same ruling, RFC-034 nesting, turned out to be wholly unimplemented in srs-rust (srs-rust#970), which the same read of the code established at the same time."
+  },
+  "createdAt": "2026-09-06T17:50:23.958146820+00:00",
+  "updatedAt": "2026-09-06T17:50:23.958149977+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

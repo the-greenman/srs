@@ -1,0 +1,14 @@
+{
+  "instanceId": "b24c4142-aea7-4a69-b31a-9d9410f9c37a",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `Theme` shape",
+    "content": "`Theme`, in pseudo-IDL:\n\n```typescript\n{\n  id: UUID\n  namespace: string\n  name: string\n  version: integer   // min: 1\n\n  description: string\n  // What this theme is for; intended output format and audience.\n\n  targets: string[]   // required; min 1 entry\n  // Output formats this theme is designed for (e.g. \"html\", \"markdown\", \"adoc\").\n  // Implementations apply this theme only when Composition.format appears in this list.\n  // An empty targets array is a validation error (Rule [T-1b]).\n\n  assets?: { [assetName: string]: AssetDeclaration }\n  // Named asset declarations. Names MUST be unique within the Theme.\n\n  cssClassFields?: UUID[]\n  // fieldIds whose values are injected as CSS classes on record wrapper elements.\n  // For each listed fieldId, if the record has an effective-single Field eligible\n  // under [T-9], the class srs-field-{fieldName}-{normalisedValue} is added.\n  // Only applies to \"html\" and \"pdf\" output. Other Fields are silently skipped.\n\n  pageTemplates?: PageTemplates\n  elementTemplates?: ElementTemplates\n  stylesheet?: StylesheetDeclaration\n  typography?: TypographyHints\n\n  tags?: string[]\n  createdAt: ISO8601\n  lineage?: Lineage\n  provenance?: Provenance\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:44.730203236+00:00",
+  "updatedAt": "2026-09-06T17:05:16.858984245+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,19 @@
+{
+  "instanceId": "94d99cff-f485-4765-91d6-074a4c767ded",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "The RFC record is a stub, not a set of per-change records",
+    "summary": "The task brief asked for one rfc-change record per lettered change, but every RFC record already in the corpus - RFC-038, 039, 040 and 041 - is a single stub carrying an integration manifest and no child change records, and Stage 6f of the RFC command defines it that way. The precedent was followed and the change records were not written.",
+    "evidence": [
+      "RFC-038, RFC-039, RFC-040 and RFC-041 records each consist of a single stub record with an integration manifest and no child change records",
+      "Stage 6f of the RFC command defines the RFC record as a stub"
+    ],
+    "body": "Where a brief and the corpus disagree about record shape, the corpus is the ruling: a shape that appears nowhere in four precedents is a new mechanism, and adding one inside an integration unit fails the one-way-per-goal test."
+  },
+  "createdAt": "2026-09-06T17:50:20.416334648+00:00",
+  "updatedAt": "2026-09-06T17:50:20.416336929+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -228,6 +228,15 @@
           "description": "The spec reads in layers over the concept tree, read off canonical relations only (tree = contains, order = precedes, prerequisites = depends-on): (1) no depends-on edge between concepts points forward in the tree's linearised order, computed over the strongly-connected components of the depends-on graph so the three genuine 2-cycles (#608) are introduced together, never flagged; (2) no record has two contains parents; (3) every content leaf (section, subsection, mechanism, invariant, example, design-note, table, generated-type-reference) has a contains parent or root-container membership; (4) no depends-on edge points from an earlier Part's subtree into a later one (vacuous until #563 hangs the concept tree under the Parts, and says so); (5) no hand-authored leaf bakes a markdown heading into a text field (root cause #567). Known violations live in scripts/spec-coherence-allowlist.json, each citing a live issue; an unlisted violation fails, and so does an entry that no longer matches - shrinking the list is the migration (#562/#563/#564)."
     },
     {
+      "id": "attribution-cell",
+      "script": "check-attribution-cell.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "attribution",
+      "governing": "I-133; srs#650",
+      "description": "For every Tier-2 Record instance under srs/records/** carrying a fieldMeta block, every fieldMeta key names a field that actually exists in that record's fieldValues (I-133's sibling-keys clause, RFC-039 [R6]). I-133's other clause (each fieldMeta value's own shape, {source?, editedAt?, sourceRefs?}) is already enforced by validate-records.mjs against docs/schema/2.0/record.json's FieldMeta $def and is deliberately not re-implemented here (one mechanism per goal); a fieldMeta nested inside a composite field's own interior (I-133's third clause) is a bigger unit, left for a follow-up. No allowlist: the corpus's one real fieldMeta usage (rfc-004's proposal_artifact_path) is compliant."
+    },
+    {
       "id": "spec-language",
       "script": "check-spec-language.mjs",
       "args": [],
@@ -457,6 +466,24 @@
       "cell": "assertion",
       "governing": "srs#550",
       "description": "The governance-seed-drift check demonstrably fails on a perturbed committed seed (red) and passes both on the real, unmodified corpus and once the perturbation is undone (green) — the guards-bite discipline (srs#308/#311/#391) applied to a pinned-cli check, which guards-bite itself (Node-pipeline-only) cannot reach."
+    },
+    {
+      "id": "versioning-cell",
+      "script": "check-versioning-cell.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "versioning",
+      "governing": "rfc-decision-2a1e1590; 04-2-4-2-field#r2; srs#649",
+      "description": "For every Field definition file in the repository (rfcs/rfc-004's historical proposal excluded, matching check-field-name-convention.mjs) that carries the current post-RFC-032 fieldType shape, diffs that file's own git history in order: whenever fieldType.allowedValues differs between two consecutive in-scope revisions still carrying the same id, version must have increased. A structural diff, not a semantic one — comparison is order-independent (the domain is a set) but otherwise exact; a transition where either revision predates fieldType is out of scope and never flagged (three different historical key names carried this same concept before RFC-032). Needs real git history to mean anything, so .github/workflows/validate.yml's checkout step carries fetch-depth: 0. One known corpus violation allowlisted in scripts/versioning-cell-allowlist.json (srs#658, pending: the metamodel generator hardcodes every field's version to 1). Its guard-bite case (versioningCellCases) lives in the existing guards-bite entry's tests/guards/run.mjs, not a second registry row."
+    },
+    {
+      "id": "repository-cell",
+      "script": "check-repository-cell.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "repository",
+      "governing": "invariant-049; invariant-050; invariant-080; 07-15-ext-repository; srs#651",
+      "description": "Every manifest.json in the repository (whole-tree walk, not a fixed list of roots — matching check-versioning-cell.mjs's reasoning) is parsed and asserted to carry no top-level instanceIndex key: membership is tree-authoritative (RFC-038 [R1]), and a manifest instanceIndex is retired (RFC-038 [R2]) — the rule I-49, I-50, I-80 and 07-15-ext-repository's own conformance text all restate. A live-tree scan, not a git-history diff — this cell's statement is about the current shape, not a transition, so it needs no fetch-depth: 0. One known corpus exception, conformance/discovery/fixture-repo/manifest.json, allowlisted permanently in scripts/repository-cell-allowlist.json: RFC-038 Rev 7 deliberately kept that fixture at pre-cutover storage as frozen ext:discovery test data rather than migrating it (conformance/discovery/README.md). Its guard-bite case (repositoryCellCases) lives in the existing guards-bite entry's tests/guards/run.mjs, not a second registry row."
     }
   ]
 }

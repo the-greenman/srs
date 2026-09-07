@@ -1,0 +1,14 @@
+{
+  "instanceId": "7111042d-dd85-49ab-b6ba-889ddd6b8c41",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The repository root layout",
+    "content": "The directories a conforming repository has at its root:\n\n```\n<repository-root>/\n  .srs/                          ← required marker directory\n  manifest.json                  ← required: root manifest and instance index\n  source-documents/              ← raw source material with sidecar metadata\n  notes/                         ← Tier 0 Note instances\n  records/                       ← Tier 2 Record instances\n  relations/                     ← Relation records\n  package/                       ← local Package, field, type, and view definitions\n```"
+  },
+  "createdAt": "2026-09-06T17:00:43.038206943+00:00",
+  "updatedAt": "2026-09-06T17:05:14.317156544+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

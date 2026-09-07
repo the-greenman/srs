@@ -1,0 +1,15 @@
+{
+  "instanceId": "034cb786-2ca2-42f6-b106-8b21bf153c3d",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "protocol_run_service does not validate protocol_id against installed Protocols",
+    "summary": "create_run accepts any protocol_id/protocol_version string pair and stores it verbatim; it never checks that a Protocol with that id and version is actually installed via protocol_service. A run can therefore be created, advanced and completed against a protocol_id that does not exist.",
+    "rationale": "This was observed while writing #977's MCP tools, but it is pre-existing protocol_run_service behaviour untouched by that unit — not a regression #977 introduced, and not #977's issue to fix (its scope was the MCP adapter, not the service's referential integrity). Left as-is here rather than silently worked around: a future unit that needs run-to-protocol integrity (e.g. repo validate reporting a dangling protocol_id on a run, or the CLI/MCP create verbs rejecting an unknown protocol_id up front) should treat this as its starting evidence rather than rediscovering it from scratch. Applies to any future work in protocol_run_service.create_run, and to programme-unit-walk runs specifically if a worker ever typos a protocol_id when starting one — the run will silently exist rather than fail fast."
+  },
+  "createdAt": "2026-09-06T22:11:56.496400968+00:00",
+  "updatedAt": "2026-09-06T22:11:56.496410404+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

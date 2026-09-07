@@ -1,10 +1,10 @@
 {
   "$comment": "Deterministic extraction of the normative corpus (srs#471). Re-run: node scripts/grid-census/extract-corpus.mjs. Two runs over an unchanged tree must be byte-identical.",
   "counts": {
-    "invariant": 119,
-    "decision": 34,
-    "subsection-rule": 85,
-    "total": 238
+    "invariant": 125,
+    "decision": 38,
+    "subsection-rule": 84,
+    "total": 247
   },
   "statements": [
     {
@@ -421,7 +421,7 @@
       "file": "srs/records/invariants/invariant-066.json",
       "instanceId": "13b3461c-ecba-4a88-877d-ae0ea8fae0c5",
       "title": "All conforming implementations must provide containers_for_instance",
-      "text": "All conforming SRS implementations MUST implement the containers_for_instance operation. Given an instanceId, it returns every Container whose rootInstanceIds, memberInstanceIds, or transitive contains-Relation traversal from rootInstanceIds includes the instance. The result set MUST be consistent with the current state of those fields and relations."
+      "text": "All conforming SRS implementations MUST implement the containers_for_instance operation. Given an instanceId, it returns every Container C for which the instance is in effective(C): the recursive, duplicate-free closure over C's declared rootInstanceIds, memberInstanceIds and childContainerIds (RFC-034 Changes A and B, [R5]; I-146, I-147). Membership is declared: a contains Relation, or any other Relation, never contributes a member (I-148). The result set MUST be consistent with the current state of those Container fields. Amended by RFC-034 (2026-09-06, rfc-decision-0750c62f): the original statement's third branch, \"or transitive contains-Relation traversal from rootInstanceIds\", is superseded; the traversal is no longer a membership rule, and contains remains the part-of tree where meaning lives."
     },
     {
       "id": "I-78",
@@ -632,12 +632,20 @@
       "text": "Allowed-transitions projections MUST include the target state's `requiresRelation` declaration on each transition option whose target state declares one, so clients route successor-flow presentation from structure rather than state-name matching. Repository validation MUST emit a warning-severity diagnostic for every Record at rest that violates I-98, and MUST NOT treat such a violation as a hard validation error. Transitions whose target state declares no `requiresRelation` MUST behave exactly as before RFC-022. (RFC-022 R8–R10.)"
     },
     {
+      "id": "I-146",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-18015847.json",
+      "instanceId": "18015847-34fc-4b84-9f3f-54ef72331424",
+      "title": "Container direct membership is the union of its roots and explicit members",
+      "text": "A Container's direct membership is exactly the duplicate-free, unordered union of its rootInstanceIds and memberInstanceIds. An omitted memberInstanceIds contributes no additional direct members and MUST NOT be read as opting into Relation traversal."
+    },
+    {
       "id": "I-144",
       "source": "invariant",
       "file": "srs/records/invariants/invariant-187b18d0.json",
       "instanceId": "187b18d0-89ab-4591-a61f-273821f2412b",
       "title": "containerScope in SectionSource.discovery-query controls query boundary",
-      "text": "When SectionSource.discovery-query carries containerScope, implementations MUST apply the following scoping rules: (a) When containerScope is absent or \"explicit\", the query is scoped to the containers listed in containerIds[] -- existing behaviour. An absent containerIds[] with explicit scope produces an empty result. (b) When containerScope is \"repository\", the query spans all containers in the repository; containerIds[] MUST be ignored. (c) When containerScope is \"subtree\", the query spans the context container and all containers reachable by contains relations from each container in containerIds[]; when containerIds[] is absent or empty, the context container is used as the subtree root. An implementation that cannot determine the context container for a subtree query MUST treat it as \"explicit\" with an empty containerIds[] and SHOULD emit a diagnostic. Implementations MUST NOT produce a validation error when containerScope is absent; absent is equivalent to \"explicit\". containerScope is arrangement, not selection: it is layered on top of the section's DiscoveryQuery, not a DiscoveryQuery predicate itself (DiscoveryQuery.containerId is single-valued and non-traversing; containerScope's multi-container/subtree semantics have no DiscoveryQuery equivalent)."
+      "text": "When SectionSource.discovery-query carries containerScope, implementations MUST apply the following scoping rules: (a) When containerScope is absent or \"explicit\", the query is scoped to the containers listed in containerIds[] -- existing behaviour. An absent containerIds[] with explicit scope produces an empty result. (b) When containerScope is \"repository\", the query spans all containers in the repository; containerIds[] MUST be ignored. (c) When containerScope is \"subtree\", the query spans effective(C) for each container in containerIds[], the recursive closure over declared childContainerIds (RFC-034 [R8]; I-147); it follows declared child edges only and MUST NOT traverse contains Relations to discover child containers (amended by RFC-034, 2026-09-06: the former \"reachable by contains relations\" branch is superseded). \"explicit\" correspondingly evaluates direct(C), the container's own members without its nested subtree; when containerIds[] is absent or empty, the context container is used as the subtree root. An implementation that cannot determine the context container for a subtree query MUST treat it as \"explicit\" with an empty containerIds[] and SHOULD emit a diagnostic. Implementations MUST NOT produce a validation error when containerScope is absent; absent is equivalent to \"explicit\". containerScope is arrangement, not selection: it is layered on top of the section's DiscoveryQuery, not a DiscoveryQuery predicate itself (DiscoveryQuery.containerId is single-valued and takes one container's effective membership; containerScope's multi-container/subtree semantics have no DiscoveryQuery equivalent)."
     },
     {
       "id": "I-126",
@@ -686,6 +694,14 @@
       "instanceId": "4d0263c2-1c3d-46f1-9dbd-1f0c60f64ea7",
       "title": "Composition projections key fields by Field.name",
       "text": "A Composition projection MUST key `ProjectedRecord.fields` and `orderedFieldKeys` by `Field.name`, and MUST carry a composite value recursively under its own key. `ProjectedFieldGroup` and `ProjectedGroupEntry` are removed and have no successor construct. (RFC-039 [R11])"
+    },
+    {
+      "id": "I-147",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-51b430c9.json",
+      "instanceId": "51b430c9-b723-47dd-ace9-61d202ded4c2",
+      "title": "Container nesting is declared through childContainerIds and effective membership is its closure",
+      "text": "A Container is an admitted child of another Container exactly when it is distinct and its containerId appears in the other Container's childContainerIds; membership-array overlap alone MUST NOT create admission. A conforming implementation MUST compute effective membership as the recursive closure over childContainerIds (effective(C) = direct(C) united with effective(child) for every declared child), MUST deduplicate instance ids, and MUST NOT infer an ordering from either membership array or from childContainerIds order."
     },
     {
       "id": "I-117",
@@ -872,12 +888,28 @@
       "text": "A conformant archive producer MUST produce deterministic ZIP archives: entries sorted byte-lexicographically by forward-slash-normalised path, `last mod` timestamps zeroed (`0x0000`), compression method Deflate (8) or Store (0) only with consistent per-file choice across invocations, `extra` fields empty, Language encoding flag (bit 11) set to 1."
     },
     {
+      "id": "I-151",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-c6bf308b.json",
+      "instanceId": "c6bf308b-631d-41d0-b802-848eed02c98a",
+      "title": "A container slice closes over the root's childContainerIds descendants and effective members",
+      "text": "An RFC-026 container slice MUST include the closure root, its transitive childContainerIds descendants, and the root's effective member set. It MUST preserve declared edges among those Containers and MUST NOT include an unrelated Container solely because its roots or members are subsets of the included instance set."
+    },
+    {
       "id": "I-102",
       "source": "invariant",
       "file": "srs/records/invariants/invariant-d85abd4c.json",
       "instanceId": "d85abd4c-ca6b-4c36-939c-fde7ad373a00",
       "title": "attaches sourceId must resolve to a source-document sidecar entry",
       "text": "The `sourceId` of an `attaches` `SourceReference` MUST resolve to a `documentId` in the repository's source-document set, discovered via a `.meta.json` sidecar scan of `sourceDocumentsPath` in the same repository (RFC-038 [R25], amending RFC-017 [R2]/[R12]; `sourceDocumentIndex` is retired per RFC-038 [R2]). Resolution is against the sidecar entry, not the content file. A `sourceId` that resolves to no such entry is non-conformant and MUST be reported with a diagnostic at validation time."
+    },
+    {
+      "id": "I-149",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-dc06a69d.json",
+      "instanceId": "dc06a69d-8c56-4e88-8d1d-b307454b5eb2",
+      "title": "A query result is not Container membership",
+      "text": "A Record-selection query (srs find, a Composition SectionSource, an SQL view, a JSONPath expression, a graph traversal) MUST NOT be treated as persisted Container membership unless an authoring operation writes its selected ids to the Container's explicit membership fields."
     },
     {
       "id": "I-115",
@@ -902,6 +934,14 @@
       "instanceId": "e2788042-b58c-4013-8794-7fb4e6bafc9a",
       "title": "ext:discovery conformance requires passing structured-filter fixture scenarios",
       "text": "An implementation that declares `ext:discovery` MUST pass all structured-filter conformance scenarios (`exactMatch: true`) from the fixture at `srs/conformance/discovery/scenarios.json`, returning exactly the `expectedInstanceIds` set for each such scenario. When a scenario also carries an `expectedSegments` expectation, the implementation's Text Projection for the named field of the named instance MUST additionally match the expected segment sequence exactly in count and order — testing I-120's list-cardinality rule (\"one segment per array element in order\") that `expectedInstanceIds` alone cannot express. (RFC-012 R11; srs#483.)"
+    },
+    {
+      "id": "I-148",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-e58d874f.json",
+      "instanceId": "e58d874f-eb98-4c0b-b717-1a7059c2a5de",
+      "title": "Relations never define Container membership",
+      "text": "A Relation of any type, including contains, MUST NOT cause an instance to appear in a Container's direct or effective membership."
     },
     {
       "id": "I-124",
@@ -952,12 +992,28 @@
       "text": "A conformant implementation MUST reject a gzip-compressed file presented as a `.srsj` JSON Store. Detection is by content inspection: a file whose first two bytes are `0x1f 0x8b` MUST be treated as gzip-compressed regardless of its filename or MIME type."
     },
     {
+      "id": "I-150",
+      "source": "invariant",
+      "file": "srs/records/invariants/invariant-fd9036ba.json",
+      "instanceId": "fd9036ba-6a2c-493c-84b3-362ad83adbd7",
+      "title": "childContainerIds entries resolve, are distinct, and form an acyclic graph",
+      "text": "Every childContainerIds entry MUST reference an existing, distinct Container, and the childContainerIds graph MUST be acyclic. A missing target, self-reference, or cycle is a validation error. For any Container whose reachable child graph contains such an error, effective-membership evaluation MUST fail with a diagnostic and MUST NOT return a partial result. A rootless child is valid. When a child has roots, those roots SHOULD occur in the parent's direct membership; a violation produces a structural-coherence diagnostic but MUST NOT remove the declared edge from effective-membership evaluation."
+    },
+    {
       "id": "I-118",
       "source": "invariant",
       "file": "srs/records/invariants/invariant-fed0ec5e.json",
       "instanceId": "fed0ec5e-d150-4282-9af2-d1c4fc4d2364",
-      "title": "containerId filter uses the RFC-009 I-66 membership definition",
-      "text": "A `containerId` filter predicate MUST use the three-condition membership definition of RFC-009 I-66: (1) `instanceId` in `Container.rootInstanceIds[]`, OR (2) `instanceId` in `Container.memberInstanceIds[]`, OR (3) reachable via transitive `contains` Relation traversal from any `rootInstanceIds[]` entry. The authoritative source for membership is the instance file and the relations file — the repository's authoritative store (RFC-038 [R1]). An implementation MAY maintain a derived catalog for performance but MUST treat the store as authoritative when they differ; there is no manifest `instanceIndex` to use as a cache, as it is retired (RFC-038 [R2]). (RFC-012 R6.)"
+      "title": "containerId filter uses effective container membership",
+      "text": "A `containerId` filter predicate MUST match exactly the instances in effective(C) for the named Container C: the recursive closure over the Container's declared `rootInstanceIds`, `memberInstanceIds` and `childContainerIds` (RFC-034 [R8]; I-147). Discovery scopes to the full effective (deep) closure; a `contains` Relation never contributes (I-148). The authoritative inputs are the Container objects and their declared child graph in the repository's authoritative store (RFC-038 [R1]). An implementation MAY maintain a derived catalog for performance but MUST treat the store as authoritative when they differ; there is no manifest `instanceIndex` to use as a cache, as it is retired (RFC-038 [R2]). (RFC-012 R6, as amended by RFC-034 Change D.2 on 2026-09-06: the former three-condition rule of rootInstanceIds, OR memberInstanceIds, OR reachable via transitive `contains` traversal is superseded; its traversal branch is removed.)"
+    },
+    {
+      "id": "rfc-decision-0118e938",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-0118e938.json",
+      "instanceId": "0118e938-7538-4745-b52f-e4e1f6c26004",
+      "title": "A construct has one layer: a crossing is a stated goal, never a design option",
+      "text": "Layer rule 4 is refined. Its ruling clause - a crossing is declared where it occurs, and the lower layer wins - stands. Its permission clause - 'where a layer legitimately carries another layer's data' - is withdrawn as a standing option.\n\nThe rule now reads: A CONSTRUCT HAS ONE LAYER. Every construct is defined on one plane and one layer, and its schema carries only that layer's data. A layer carries another layer's data only for a specific, named goal that cannot be met within one layer. That goal is stated in the decision or RFC that introduces the crossing, the crossing is declared at the site where it occurs, and conflicts resolve downward, visibly. Absent a stated goal the layer test fails: the proposal is re-drawn inside one layer, not accepted with a declaration attached. Identity conflicts remain fatal per the Earth rule - they are not crossings.\n\nThe two examples the original rule named are re-read under this reading. Denormalized type hints on a Record (typeNamespace, typeName; Invariant 28) are a crossing with a stated goal - a record file is readable without its package present - and remain the one grandfathered crossing in the core. Composition order defaulting to the precedes chain is not a crossing at all: it is an upper layer consuming a lower one (rule 2), and is re-filed as such.\n\nApplied to the Container (rfc-decision-0750c62f): the plane assignment is closed, not provisional. A Container is a selection and nothing else; no future consumer may add semantic data to the Container schema by declaring the addition a crossing. A consumer that needs meaning attached to a scope attaches it to the scope's identity record, where Fields live."
     },
     {
       "id": "rfc-decision-0225099b",
@@ -966,6 +1022,14 @@
       "instanceId": "0225099b-c0f6-40c2-910e-0c6374c1f359",
       "title": "Defaults arrive later, as one mechanism",
       "text": "Defaults are an essential FUTURE capability, and both current defaultValue sites are removed now. `Field.defaultValue` (already ruled removed, #234 2026-08-08) and `FieldAssignment.defaultValue` are removed together in the #273 train — the latter EXPLICITLY SUPERSEDING #274's ledger row \"Generate defaultValue\". When defaults arrive they arrive once, as a single layered-override capability — a higher level overrides a lower: a Protocol may override a Type, which may override a Field — designed whole in its own RFC as a versioned metamodel capability. There must never be two ways of doing the job; no fragment of the old mechanism survives to seed a second way."
+    },
+    {
+      "id": "rfc-decision-0750c62f",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-0750c62f.json",
+      "instanceId": "0750c62f-b419-496d-b64c-ab7c8c4f5404",
+      "title": "A Container is a declared selection: it lives on the expression plane",
+      "text": "A Container is a named, declared selection of instances. It lives on the EXPRESSION plane, at the selection layer. It carries no meaning of its own: its identity record is the semantic carrier, which is why a Container has no Fields (design-note 013).\n\nMEANING between instances lives in Relations. The contains relation is the part-of tree - 'A is semantically inside B' - and it is the tree that the concept graph, navigation depth, layering and the tree walk are built on. A Container never asserts a semantic claim; that is a Relation's job.\n\nConsequences, each following from the plane assignment rather than argued separately:\n\n1. MEMBERSHIP IS DECLARED. A selection is a declaration. Container.memberInstanceIds and rootInstanceIds are the membership; the contains traversal is no longer a membership rule. Invariant I-66's traversal branch is superseded. This is RFC-034 Change C, adopted.\n\n2. NESTING IS DECLARED. A sub-selection is a declaration. RFC-034's childContainerIds is the mechanism.\n\n3. NAVIGATION BELOW THE ROOT FOLLOWS THE PART-OF TREE. Containers mark where a scope begins; contains says what is inside it. There is one tree, with named scopes over it, not two trees.\n\n4. DEPTH IN A RENDERED DOCUMENT RIDES THE PART-OF TREE. A renderer that needs depth walks contains as meaning; it does not ask the container. Removing the traversal AS MEMBERSHIP does not remove the relation.\n\n5. DISCOVERYQUERY IS THE COMPUTED SELECTION. Container is the declared selection; DiscoveryQuery is the computed one and consumes Container as an axis. Two selection constructs for two goals - 'these specific things' and 'whatever matches' - and no third.\n\nWhat is NOT introduced: no new construct. A persisted Selection record, an authored Layer construct and a navigation construct were each considered and each is already served - by Container, by the depends-on condensation, and by a rule over the root container plus the part-of tree respectively."
     },
     {
       "id": "rfc-decision-16b20c56",
@@ -1040,6 +1104,14 @@
       "text": "Cell: Conformance (one way over many), with Versioning owning the state value. Anything in the standard's own corpus or its packages that models workflow state - named stages a record moves through - is a Lifecycle (ext:lifecycle): a defined state set with transitions, bound to the Type via lifecycleRef, with the record's position carried in lifecycleState. Bare status enum Fields for workflow state are retired as a parallel mechanism. First migration: the spec's own rfc_status field (49 records, seven values, no transitions) becomes a real spec-rfc-process Lifecycle - the standard dogfoods its own state machinery, and RFC supersession gains RFC-022 requiresRelation coupling (rfc_status superseded requires the supersedes assertion it today carries only in prose).\n\nThe line this draws: Lifecycle = workflow state on records (Fire, individual: where the record is in its process). Substrate entry status (active/deprecated/tombstone/retired) is NOT workflow state - it is the retirement mechanism of the substrate layer under axis 5-11 (Reliability over Renewal) and stays as-is. Enum value domains remain legal for genuinely stateless labels; the test is transitions: if some value changes are meaningful and others are wrong, it is a Lifecycle."
     },
     {
+      "id": "rfc-decision-4431046e",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-4431046e.json",
+      "instanceId": "4431046e-6366-4470-ad31-c8c956f62f4f",
+      "title": "A correction is not a refinement: how a decision record may change",
+      "text": "A decision record may change in exactly two ways, and they are not the same act.\n\nA REFINEMENT changes the position the record takes - what was decided, or on what condition it holds. A refinement is recorded as a SUCCESSOR decision record linked by a supersedes relation. The earlier record is never edited. This is rfc-decision-cce3c00e's standing rule, unchanged.\n\nA CORRECTION fixes a statement of fact that was wrong when written, without changing the position: a misidentified property, a wrong count, a mistaken citation, a scope note that prevents a misreading. A correction MAY be made in place. It MUST carry a visible marker in the record itself - not only in the commit message - naming what was corrected and when, so a reader of the corpus can see that the record once said otherwise.\n\nThe test between them: if a reader who acted on the earlier text would have acted differently, it is a refinement. If they would have acted the same way and merely held a wrong detail, it is a correction.\n\nWhy corrections are not forced through succession: a decision log that accumulates successor records for misspellings stops being read, and an unread mechanism defends nothing. Succession is reserved for changes of position so that a supersedes edge always means something happened.\n\nWhy corrections must still be visible: the Air column principle requires that informational conflicts resolve by declared authority VISIBLY. A silent in-place fix satisfies the authority half and fails the visibility half - the record then reads as though it was always right."
+    },
+    {
       "id": "rfc-decision-4f1e12e5",
       "source": "decision",
       "file": "srs/records/tier-2/rfc-decision-4f1e12e5.json",
@@ -1062,6 +1134,14 @@
       "instanceId": "5c1e3068-6e22-42ae-ab24-882158e8035d",
       "title": "Put a deterministic target-neutral IR between records and emitters",
       "text": "Projection resolves semantic meaning into a target-neutral intermediate representation before any target back end renders it."
+    },
+    {
+      "id": "rfc-decision-5f18603e",
+      "source": "decision",
+      "file": "srs/records/tier-2/rfc-decision-5f18603e.json",
+      "instanceId": "5f18603e-476e-41ae-8de4-c69977545f87",
+      "title": "Federation's return is committed, not evidence-gated",
+      "text": "Federation returns to SRS as a planned roadmap phase. Its return is COMMITTED and is not gated on evidence of demand - federation is core to SRS. The 2026-08-21 removal was a deliberate reset of a design that predated real practice, not a judgment on the capability.\n\nThe redesign is grounded in the sharing forms that actually emerged - bundles, slices, git-hosted repositories - and in the axis 4-10 verification path. The owner schedules it. The travel mandate covers artifact-form portability meanwhile.\n\nWHAT THIS CHANGED. rfc-decision-4f1e12e5, as accepted on 2026-08-21, gated the return on evidence. Its federation entry read, verbatim:\n\n  'Trigger: a second real repository needing live cross-repo assertions; the travel mandate covers artifact-form portability meanwhile.'\n\nThat position is superseded by this record. The change was made on 2026-08-22 (commit b623475) as an in-place edit to 4f1e12e5, before the correction-versus-refinement rule existed to say it needed a record of its own."
     },
     {
       "id": "rfc-decision-5f8204bc",
@@ -1643,19 +1723,10 @@
       "instanceId": "136187cc-8317-4705-91c0-7aaeadaf5998",
       "title": "ext:slices",
       "ruleTag": null,
-      "text": "The closure root is the container identified by `spec.id`. The slice MUST include: (1) `manifest.container` set to the closure-root container; (2) all instances in the root container's `memberInstanceIds`/`rootInstanceIds`, recursively through sub-containers; (3) all type and field definitions referenced by included instances (directly or via Type FieldAssignments), copied into the slice's `package/` directory; (4) all relations with both endpoints inside the included set; (5) all `sourceDocumentIndex` entries and content files referenced by included instances; (6) any sub-container whose `memberInstanceIds` and `rootInstanceIds` are all within the included set."
-    },
-    {
-      "id": "07-19-ext-slices#r3",
-      "source": "subsection-rule",
-      "file": "srs/records/subsections/07-19-ext-slices.json",
-      "instanceId": "136187cc-8317-4705-91c0-7aaeadaf5998",
-      "title": "ext:slices",
-      "ruleTag": null,
       "text": "Cross-boundary relations MUST NOT appear in the slice's relations collection. They MUST be recorded in `slice.externalRelationRefs[]` with `relationId`, `sourceInstanceId`, `targetInstanceId`, and `relationType`. A non-empty list is provenance data, not a validation error. The `relationType` value in `externalRelationRefs` entries is NOT subject to RFC-005 definition-lookup in the slice archive."
     },
     {
-      "id": "07-19-ext-slices#r4",
+      "id": "07-19-ext-slices#r3",
       "source": "subsection-rule",
       "file": "srs/records/subsections/07-19-ext-slices.json",
       "instanceId": "136187cc-8317-4705-91c0-7aaeadaf5998",
