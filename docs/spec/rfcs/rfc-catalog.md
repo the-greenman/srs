@@ -945,3 +945,26 @@ ext:slices
 **Content**: Defines a Container as an explicit, declared scope on the expression plane (rfc-decision-0750c62f). Direct membership is rootInstanceIds ∪ memberInstanceIds (Change A); nesting is declared through the new optional childContainerIds edge and effective membership is the recursive, deduplicated closure over it (Change B); Relations, contains included, never define membership, while contains remains the part-of tree and must still be maintained (Change C); containers_for_instance, member resolution, RFC-011 containerScope (explicit = direct, subtree = effective), RFC-012 containerId filtering and RFC-026 slice closure use that one definition (Change D); queries are separate, read-only selections (Change E). Conformance rules [R1]–[R9]. Accepted by the owner 2026-09-06 (srs#267) as Revision 5; renamed from 'Structural Container Composition' per rfc-decision-92d2da05. Charter Check: cell:containment, decision_mode complicated.
 
 
+**Title**: RFC-042: The concept tree is the spine of the specification
+
+**RFC Number**: 042
+
+**Status**: Accepted
+
+**Author**: design dialogue draft (srs#558; owner ruling 2026-09-05, srs#556 comment 5552715003)
+
+**Affected Components**: The com.semanticops.spec authoring package (srs/package/spec-authoring-core/): section and subsection retire as authored structure; a new mechanism Type; concept and example revived as carrying Types; invariant.applies_to retires; the spec repository's compositions, root container and Part containers; RFC-016 [R6] (index grouping, superseded here); the scripts/check-spec-coherence.mjs contract (srs#560); the normativeSites entry of scripts/spec-language-registry.json. No core schema, no dataModelRevision change (stays at 7). Canonical folding executes as the Wave 3 units srs#559 (mechanism Type + exposition_role/layer/relations), srs#562 (un-bake 127 headings into records), srs#563 (rewrite Parts I-IV reading order), srs#564 (invariants inline, generated index) — none has executed yet, so this record is grandfathered in rfcs/integration-allowlist.json pending their completion.
+
+<!-- srs-integration:v1
+cell:containment
+cell:reference
+tooling-only
+-->
+
+**Dependency Refs**: Builds on RFC-013 (root container and structural navigation), RFC-015 (view-owned ordering), RFC-016 (invariant projection, [R6] superseded here), RFC-020 (identityFieldId), RFC-034 (Container Structure and Nesting, Accepted Revision 6, declared membership). Consults rfc-decision-0750c62f, rfc-decision-0118e938, rfc-decision-cce3c00e, rfc-decision-9ee14517, rfc-decision-92d2da05, rfc-decision-4431046e, rfc-decision-7caca3a1, rfc-decision-53635966.
+
+**Proposal Artifact Path**: rfcs/rfc-042-concept-tree-spine.md
+
+**Content**: Establishes the concept tree as the spine the specification's structure is read from, replacing section and subsection as authored structure. The tree is Record and Relation instances joined by contains, precedes and depends-on. A leaf's Type states its role (concept, mechanism, example, invariant, requirement, design-note); its contains parent states its place in the tree; depends-on states its prerequisites. Containers, compositions, navigation and rendering depth consume this tree by traversal, and none of it re-implements the walk. Accepted by the owner 2026-09-07 (srs#558) as Revision 3. Charter Check: cell:containment, cell:reference, decision_mode complicated. Canonical folding is Wave 3 (srs#559, #562, #563, #564), landing additively; this stub is grandfathered pending that completion.
+
+
