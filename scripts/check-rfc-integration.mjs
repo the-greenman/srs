@@ -68,6 +68,7 @@ import { join, resolve } from "path";
 import { instancePaths } from "./lib/rfc-038-tree.mjs";
 import { loadCellSlugs, CELL_RULE_EFFECTIVE_DATE } from "./lib/pattern-grid-cells.mjs";
 import { loadDecisionModes } from "./lib/decision-modes.mjs";
+import { loadInvariantNumbers } from "./lib/invariant-numbers.mjs";
 
 // Root defaults to the repo root; an explicit argument (used by tests/guards/run.mjs's fixture
 // cases) points the whole check at a temporary fixture tree instead — the same convention the
@@ -84,8 +85,6 @@ const F_RFC_NUMBER = "rfc_number"; // RFC-039: carrier keys by Field.name
 const F_AFFECTED = "affected_components";
 const F_ARTIFACT_PATH = "proposal_artifact_path";
 
-const INVARIANT_TYPE = "2a000006-0000-4000-a000-000000000006";
-const F_INV_NUMBER = "invariant_number";
 const EXTENSION_TYPE = "2a000008-0000-4000-a000-000000000008";
 const F_EXT_ID = "extension_id";
 const TYPEDEF_TYPE = "2a000005-0000-4000-a000-000000000005";
@@ -171,13 +170,6 @@ function slugify(text) {
     .replace(/^-+|-+$/g, "");
 }
 
-// The invariant-number field is declared valueType:number but records store a mix of bare
-// numbers (79) and prefixed strings ("I-79"). Normalize both sides to a bare integer string.
-function normInvariantNumber(value) {
-  const s = String(value).trim().replace(/^i-/i, "");
-  return /^\d+$/.test(s) ? String(parseInt(s, 10)) : s.toLowerCase();
-}
-
 // srs#519: a heading line carrying an "(RFC-NNN)" (or "(RFC-NNN Revision M)") banner, at any
 // heading depth. Capture group 2 is the bare RFC number, unpadded.
 const RFC_BANNER_HEADING_RE = /^(#{1,6})\s+.*\(RFC-(\d+)[^)]*\)\s*$/;
@@ -241,7 +233,7 @@ async function buildResolvers() {
   // RFC-038 [R1]: the tree is membership authority; there is no instanceIndex to read.
   const entries = await instancePaths(REPO_ROOT);
 
-  const invariantNumbers = new Set();
+  const invariantNumbers = await loadInvariantNumbers(REPO_ROOT);
   const extensionIds = new Set();
   const typeKeys = new Set(); // `${namespace}/${name}`
   const sectionSlugs = new Set();
@@ -261,11 +253,6 @@ async function buildResolvers() {
     allRecords.push({ path: relPath, record });
     if (record.typeId === RFC_TYPE_ID) rfcRecords.push({ path: relPath, record });
     switch (record.typeId) {
-      case INVARIANT_TYPE: {
-        const n = fieldValue(record, F_INV_NUMBER);
-        if (n !== undefined && n !== null && n !== "") invariantNumbers.add(normInvariantNumber(n));
-        break;
-      }
       case EXTENSION_TYPE: {
         const id = fieldValue(record, F_EXT_ID);
         if (id) extensionIds.add(String(id).trim());
