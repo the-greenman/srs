@@ -1,0 +1,14 @@
+{
+  "instanceId": "511d4a2b-b21e-4716-adde-33eb9431312c",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`FieldAssignment`",
+    "content": "A named, versioned composition of Fields for a specific semantic object type.\n\nSee the generated reference immediately below for `Type`'s current property table (including the extension-owner column — RFC-031 OQ1), optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger) — this prose no longer hand-duplicates the property list, including the extension-owned facets it could previously only gesture at as comments."
+  },
+  "createdAt": "2026-09-07T19:59:47.474344885+00:00",
+  "updatedAt": "2026-09-07T20:50:39.277682820+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

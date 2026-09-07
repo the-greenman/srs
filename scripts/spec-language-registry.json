@@ -1,5 +1,5 @@
 {
-  "$comment": "The banned-register list for spec prose, held as data so the list grows without touching a script. Companion to docs/style/spec-language-guide.md, which is the human-readable form of the same rules; the guide explains, this file is what a program reads. srs#569 consumes it to build scripts/check-spec-language.mjs, together with its own allowlist of grandfathered sites. Two lists: `patterns` are regex-shaped and apply per prose field; `rules` are everything else, each declaring whether a program or a reviewer enforces it. Nothing here is a check on its own — this file has no runner and needs no entry in scripts/checks.json.",
+  "$comment": "The banned-register list for spec prose, held as data so the list grows without touching a script. Companion to docs/style/spec-language-guide.md, which is the human-readable form of the same rules; the guide explains, this file is what a program reads. srs#569 consumes it to build scripts/check-spec-language.mjs, together with its own allowlist of grandfathered sites. Two lists: `patterns` are regex-shaped and apply per prose field; `rules` are everything else, each declaring whether a program or a reviewer enforces it. Nothing here is a check on its own \u2014 this file has no runner and needs no entry in scripts/checks.json.",
   "version": 1,
   "proseFields": [
     "content",
@@ -12,9 +12,14 @@
     "description"
   ],
   "normativeSites": {
-    "$comment": "Where RFC 2119 keywords are legitimate, and where the `normative` scope below applies. No exposition_role field exists or will (srs#556 ruling, 2026-09-05): a leaf's Type is its role. `types` names the typeNamespace/typeName pairs whose records may carry RFC 2119 keywords outside a normative_statement field — `invariant` today; `mechanism` once RFC-042 (#620) lands.",
-    "fields": ["normative_statement"],
-    "types": ["com.semanticops.spec/invariant"]
+    "$comment": "Where RFC 2119 keywords are legitimate, and where the `normative` scope below applies. No exposition_role field exists or will (srs#556 ruling, 2026-09-05): a leaf's Type is its role. `types` names the typeNamespace/typeName pairs whose records may carry RFC 2119 keywords outside a normative_statement field \u2014 `invariant` and `mechanism` (RFC-042 Change G, landed via srs#562).",
+    "fields": [
+      "normative_statement"
+    ],
+    "types": [
+      "com.semanticops.spec/invariant",
+      "com.semanticops.spec/mechanism"
+    ]
   },
   "limits": {
     "contentWords": 400,
@@ -22,57 +27,335 @@
     "emDashesInNormativeStatement": 0
   },
   "patterns": [
-    { "id": "important-to-note", "pattern": "\\bit is (?:important|worth) (?:to note|noting)\\b[,:]?\\s*(?:that\\b)?", "flags": "gi", "scope": "all", "substitution": "Delete the frame and state the fact." },
-    { "id": "should-be-noted", "pattern": "\\bit (?:should|must) be noted\\b[,:]?\\s*(?:that\\b)?", "flags": "gi", "scope": "all", "substitution": "Delete the frame and state the fact." },
-    { "id": "please-note", "pattern": "(?:^|(?<=[.!?]\\s))\\s*(?:Please note|Note that|Do note)\\b[,:]?", "flags": "gim", "scope": "all", "substitution": "Delete. A specification states; it does not draw attention." },
-    { "id": "leverage", "pattern": "\\bleverag(?:e|es|ed|ing)\\b", "flags": "gi", "scope": "all", "substitution": "use" },
-    { "id": "utilise", "pattern": "\\butili[sz](?:e|es|ed|ing|ation)\\b", "flags": "gi", "scope": "all", "substitution": "use" },
-    { "id": "harness", "pattern": "\\bharness(?:es|ed|ing)?\\b", "flags": "gi", "scope": "all", "substitution": "use" },
-    { "id": "facilitate", "pattern": "\\bfacilitat(?:e|es|ed|ing|ion)\\b", "flags": "gi", "scope": "all", "substitution": "Name the actual mechanism and what it does." },
-    { "id": "enable", "pattern": "\\benabl(?:e|es|ed|ing)\\b", "flags": "gi", "scope": "all", "substitution": "Name the actual mechanism and what it does. Legitimate for a declared extension being switched on." },
-    { "id": "streamline", "pattern": "\\bstreamlin(?:e|es|ed|ing)\\b", "flags": "gi", "scope": "all", "substitution": "Name what got shorter, and by how much." },
-    { "id": "praise-adjectives", "pattern": "\\b(?:robust|powerful|seamless(?:ly)?|comprehensive(?:ly)?|elegant(?:ly)?|rich|flexible|intuitive|cutting-edge|state-of-the-art|best-in-class|world-class)\\b", "flags": "gi", "scope": "all", "substitution": "Delete. A specification does not praise its subject." },
-    { "id": "minimisers", "pattern": "\\b(?:simply|just|easily|merely|straightforwardly)\\b", "flags": "gi", "scope": "all", "substitution": "Delete. If the step were easy the sentence would be unnecessary." },
-    { "id": "in-essence", "pattern": "\\b(?:in essence|at its core|at heart|fundamentally|essentially|ultimately|in practice, what this means)\\b[,:]?", "flags": "gi", "scope": "all", "substitution": "Delete. Say the thing itself." },
-    { "id": "additive-adverbs", "pattern": "(?:^|(?<=[.!?]\\s))\\s*(?:Moreover|Furthermore|Additionally|In addition|What is more)\\b[,:]?", "flags": "gim", "scope": "all", "substitution": "Start the sentence without the connective." },
-    { "id": "this-ensures", "pattern": "\\bthis (?:ensures|guarantees|means|allows|makes it possible)\\b", "flags": "gi", "scope": "all", "substitution": "State the consequence as its own requirement, in its own sentence." },
-    { "id": "aims-to", "pattern": "\\b(?:aims? to|seeks? to|is designed to|are designed to|strives? to|is intended to|are intended to)\\b", "flags": "gi", "scope": "all", "substitution": "State what it does." },
-    { "id": "not-only", "pattern": "\\bnot only\\b[^.]{0,80}\\bbut also\\b", "flags": "gi", "scope": "all", "substitution": "X and Y." },
-    { "id": "hedges", "pattern": "\\b(?:typically|generally|usually|normally|often|in most cases|for the most part)\\b", "flags": "gi", "scope": "normative", "substitution": "State the rule, or state the exception. A normative statement carries no frequency." },
-    { "id": "soft-hedges", "pattern": "\\b(?:arguably|somewhat|fairly|rather|quite|relatively|reasonably)\\b", "flags": "gi", "scope": "all", "substitution": "Delete, or replace with the measured value." },
-    { "id": "intensifiers", "pattern": "\\b(?:very|highly|greatly|significantly|substantially|extremely|incredibly|crucial(?:ly)?|vital(?:ly)?|critical(?:ly)?)\\b", "flags": "gi", "scope": "all", "substitution": "Delete, or give the number." },
-    { "id": "future-tense", "pattern": "\\bwill\\s+(?:not\\s+)?[a-z]+\\b", "flags": "gi", "scope": "normative", "substitution": "Present tense: 'the validator rejects X', not 'X will be rejected'." },
-    { "id": "narrator", "pattern": "\\b(?:we|we're|we've|our|ours|us|let us|let's)\\b", "flags": "gi", "scope": "all", "substitution": "Name the actor: the validator, the loader, the renderer, an implementation." },
-    { "id": "reader-address", "pattern": "\\b(?:you (?:can|may|should|will|might)|your\\b)", "flags": "gi", "scope": "normative", "substitution": "Name the actor. Second person belongs in a guide, not in a constraint." },
-    { "id": "think-of-it-like", "pattern": "\\b(?:think of (?:it|this) (?:like|as)|imagine|picture (?:it|this)|in other words)\\b", "flags": "gi", "scope": "all", "substitution": "Move the analogy to a design-note record linked by `explains`." },
-    { "id": "closing-summary-marker", "pattern": "(?:^|(?<=[.!?]\\s))\\s*(?:In (?:conclusion|summary|short)|To summari[sz]e|Overall|All in all|That said|In closing)\\b[,:]?", "flags": "gim", "scope": "all", "substitution": "Delete the sentence. A section does not summarise itself." },
-    { "id": "as-mentioned", "pattern": "\\bas (?:mentioned|noted|discussed|described) (?:above|earlier|previously|below)\\b", "flags": "gi", "scope": "all", "substitution": "Link the record. Prose cross-references go stale when order changes." },
-    { "id": "wordy-in-order-to", "pattern": "\\bin order to\\b", "flags": "gi", "scope": "all", "substitution": "to" },
-    { "id": "wordy-the-fact-that", "pattern": "\\bthe fact that\\b", "flags": "gi", "scope": "all", "substitution": "Rewrite without it." },
-    { "id": "wordy-ability-to", "pattern": "\\b(?:has|have|had|is|are) (?:the ability|able) to\\b", "flags": "gi", "scope": "all", "substitution": "can" },
-    { "id": "wordy-prior-to", "pattern": "\\b(?:prior to|in advance of)\\b", "flags": "gi", "scope": "all", "substitution": "before" },
-    { "id": "wordy-subsequent-to", "pattern": "\\b(?:subsequent to|following on from)\\b", "flags": "gi", "scope": "all", "substitution": "after" },
-    { "id": "wordy-in-the-event", "pattern": "\\bin the event that\\b", "flags": "gi", "scope": "all", "substitution": "if" },
-    { "id": "wordy-with-respect-to", "pattern": "\\b(?:with (?:respect|regard) to|in terms of|when it comes to|as (?:it )?relates to)\\b", "flags": "gi", "scope": "all", "substitution": "for, about, or rewrite the sentence around the noun." },
-    { "id": "quantity-inflation", "pattern": "\\b(?:myriad|plethora|a (?:wide|broad) (?:range|variety|array) of|a host of|countless)\\b", "flags": "gi", "scope": "all", "substitution": "Give the count, or the list." },
-    { "id": "delve", "pattern": "\\b(?:delv(?:e|es|ed|ing)|dive (?:in|into|deeper)|deep dive|unpack(?:s|ed|ing)? (?:this|that|the))\\b", "flags": "gi", "scope": "all", "substitution": "Delete. The next sentence is the explanation." },
-    { "id": "marketing-frame", "pattern": "\\b(?:in today's|in the (?:modern|current) (?:landscape|world|era)|a testament to|plays? an? (?:key|major|central|important) role|unlock(?:s|ing)? the (?:power|potential))\\b", "flags": "gi", "scope": "all", "substitution": "Delete. A specification has no audience to persuade." },
-    { "id": "vague-actor", "pattern": "\\b(?:the system|the framework|the platform|the solution)\\b", "flags": "gi", "scope": "all", "substitution": "Name the actor: the validator, the loader, the renderer, the CLI, an implementation." },
-    { "id": "double-modal", "pattern": "\\b(?:MUST|SHOULD|MAY)\\s+(?:always|never|generally|typically|ideally|preferably)\\b", "flags": "g", "scope": "all", "substitution": "The keyword carries the force. Drop the adverb, or drop the keyword and describe." },
-    { "id": "lowercase-2119", "pattern": "\\b(?:must not|shall not|should not|must|shall)\\b", "flags": "g", "scope": "normative", "substitution": "RFC 2119 keywords are uppercase in a normative statement, so a reader can find them by grep." }
+    {
+      "id": "important-to-note",
+      "pattern": "\\bit is (?:important|worth) (?:to note|noting)\\b[,:]?\\s*(?:that\\b)?",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "Delete the frame and state the fact."
+    },
+    {
+      "id": "should-be-noted",
+      "pattern": "\\bit (?:should|must) be noted\\b[,:]?\\s*(?:that\\b)?",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "Delete the frame and state the fact."
+    },
+    {
+      "id": "please-note",
+      "pattern": "(?:^|(?<=[.!?]\\s))\\s*(?:Please note|Note that|Do note)\\b[,:]?",
+      "flags": "gim",
+      "scope": "all",
+      "substitution": "Delete. A specification states; it does not draw attention."
+    },
+    {
+      "id": "leverage",
+      "pattern": "\\bleverag(?:e|es|ed|ing)\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "use"
+    },
+    {
+      "id": "utilise",
+      "pattern": "\\butili[sz](?:e|es|ed|ing|ation)\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "use"
+    },
+    {
+      "id": "harness",
+      "pattern": "\\bharness(?:es|ed|ing)?\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "use"
+    },
+    {
+      "id": "facilitate",
+      "pattern": "\\bfacilitat(?:e|es|ed|ing|ion)\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "Name the actual mechanism and what it does."
+    },
+    {
+      "id": "enable",
+      "pattern": "\\benabl(?:e|es|ed|ing)\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "Name the actual mechanism and what it does. Legitimate for a declared extension being switched on."
+    },
+    {
+      "id": "streamline",
+      "pattern": "\\bstreamlin(?:e|es|ed|ing)\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "Name what got shorter, and by how much."
+    },
+    {
+      "id": "praise-adjectives",
+      "pattern": "\\b(?:robust|powerful|seamless(?:ly)?|comprehensive(?:ly)?|elegant(?:ly)?|rich|flexible|intuitive|cutting-edge|state-of-the-art|best-in-class|world-class)\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "Delete. A specification does not praise its subject."
+    },
+    {
+      "id": "minimisers",
+      "pattern": "\\b(?:simply|just|easily|merely|straightforwardly)\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "Delete. If the step were easy the sentence would be unnecessary."
+    },
+    {
+      "id": "in-essence",
+      "pattern": "\\b(?:in essence|at its core|at heart|fundamentally|essentially|ultimately|in practice, what this means)\\b[,:]?",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "Delete. Say the thing itself."
+    },
+    {
+      "id": "additive-adverbs",
+      "pattern": "(?:^|(?<=[.!?]\\s))\\s*(?:Moreover|Furthermore|Additionally|In addition|What is more)\\b[,:]?",
+      "flags": "gim",
+      "scope": "all",
+      "substitution": "Start the sentence without the connective."
+    },
+    {
+      "id": "this-ensures",
+      "pattern": "\\bthis (?:ensures|guarantees|means|allows|makes it possible)\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "State the consequence as its own requirement, in its own sentence."
+    },
+    {
+      "id": "aims-to",
+      "pattern": "\\b(?:aims? to|seeks? to|is designed to|are designed to|strives? to|is intended to|are intended to)\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "State what it does."
+    },
+    {
+      "id": "not-only",
+      "pattern": "\\bnot only\\b[^.]{0,80}\\bbut also\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "X and Y."
+    },
+    {
+      "id": "hedges",
+      "pattern": "\\b(?:typically|generally|usually|normally|often|in most cases|for the most part)\\b",
+      "flags": "gi",
+      "scope": "normative",
+      "substitution": "State the rule, or state the exception. A normative statement carries no frequency."
+    },
+    {
+      "id": "soft-hedges",
+      "pattern": "\\b(?:arguably|somewhat|fairly|rather|quite|relatively|reasonably)\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "Delete, or replace with the measured value."
+    },
+    {
+      "id": "intensifiers",
+      "pattern": "\\b(?:very|highly|greatly|significantly|substantially|extremely|incredibly|crucial(?:ly)?|vital(?:ly)?|critical(?:ly)?)\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "Delete, or give the number."
+    },
+    {
+      "id": "future-tense",
+      "pattern": "\\bwill\\s+(?:not\\s+)?[a-z]+\\b",
+      "flags": "gi",
+      "scope": "normative",
+      "substitution": "Present tense: 'the validator rejects X', not 'X will be rejected'."
+    },
+    {
+      "id": "narrator",
+      "pattern": "\\b(?:we|we're|we've|our|ours|us|let us|let's)\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "Name the actor: the validator, the loader, the renderer, an implementation."
+    },
+    {
+      "id": "reader-address",
+      "pattern": "\\b(?:you (?:can|may|should|will|might)|your\\b)",
+      "flags": "gi",
+      "scope": "normative",
+      "substitution": "Name the actor. Second person belongs in a guide, not in a constraint."
+    },
+    {
+      "id": "think-of-it-like",
+      "pattern": "\\b(?:think of (?:it|this) (?:like|as)|imagine|picture (?:it|this)|in other words)\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "Move the analogy to a design-note record linked by `explains`."
+    },
+    {
+      "id": "closing-summary-marker",
+      "pattern": "(?:^|(?<=[.!?]\\s))\\s*(?:In (?:conclusion|summary|short)|To summari[sz]e|Overall|All in all|That said|In closing)\\b[,:]?",
+      "flags": "gim",
+      "scope": "all",
+      "substitution": "Delete the sentence. A section does not summarise itself."
+    },
+    {
+      "id": "as-mentioned",
+      "pattern": "\\bas (?:mentioned|noted|discussed|described) (?:above|earlier|previously|below)\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "Link the record. Prose cross-references go stale when order changes."
+    },
+    {
+      "id": "wordy-in-order-to",
+      "pattern": "\\bin order to\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "to"
+    },
+    {
+      "id": "wordy-the-fact-that",
+      "pattern": "\\bthe fact that\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "Rewrite without it."
+    },
+    {
+      "id": "wordy-ability-to",
+      "pattern": "\\b(?:has|have|had|is|are) (?:the ability|able) to\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "can"
+    },
+    {
+      "id": "wordy-prior-to",
+      "pattern": "\\b(?:prior to|in advance of)\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "before"
+    },
+    {
+      "id": "wordy-subsequent-to",
+      "pattern": "\\b(?:subsequent to|following on from)\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "after"
+    },
+    {
+      "id": "wordy-in-the-event",
+      "pattern": "\\bin the event that\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "if"
+    },
+    {
+      "id": "wordy-with-respect-to",
+      "pattern": "\\b(?:with (?:respect|regard) to|in terms of|when it comes to|as (?:it )?relates to)\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "for, about, or rewrite the sentence around the noun."
+    },
+    {
+      "id": "quantity-inflation",
+      "pattern": "\\b(?:myriad|plethora|a (?:wide|broad) (?:range|variety|array) of|a host of|countless)\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "Give the count, or the list."
+    },
+    {
+      "id": "delve",
+      "pattern": "\\b(?:delv(?:e|es|ed|ing)|dive (?:in|into|deeper)|deep dive|unpack(?:s|ed|ing)? (?:this|that|the))\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "Delete. The next sentence is the explanation."
+    },
+    {
+      "id": "marketing-frame",
+      "pattern": "\\b(?:in today's|in the (?:modern|current) (?:landscape|world|era)|a testament to|plays? an? (?:key|major|central|important) role|unlock(?:s|ing)? the (?:power|potential))\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "Delete. A specification has no audience to persuade."
+    },
+    {
+      "id": "vague-actor",
+      "pattern": "\\b(?:the system|the framework|the platform|the solution)\\b",
+      "flags": "gi",
+      "scope": "all",
+      "substitution": "Name the actor: the validator, the loader, the renderer, the CLI, an implementation."
+    },
+    {
+      "id": "double-modal",
+      "pattern": "\\b(?:MUST|SHOULD|MAY)\\s+(?:always|never|generally|typically|ideally|preferably)\\b",
+      "flags": "g",
+      "scope": "all",
+      "substitution": "The keyword carries the force. Drop the adverb, or drop the keyword and describe."
+    },
+    {
+      "id": "lowercase-2119",
+      "pattern": "\\b(?:must not|shall not|should not|must|shall)\\b",
+      "flags": "g",
+      "scope": "normative",
+      "substitution": "RFC 2119 keywords are uppercase in a normative statement, so a reader can find them by grep."
+    }
   ],
   "rules": [
-    { "id": "word-budget", "enforcement": "code", "limit": "limits.contentWords", "statement": "A prose field carries at most 400 words. Above that, split into child records, or move the worked example into a typed `example` record." },
-    { "id": "em-dash-cap", "enforcement": "code", "limit": "limits.emDashesPerParagraph", "statement": "At most one em-dash per paragraph, and none inside a normative statement. A cap, not a ban: the em-dash is house voice, and the cap removes only the machine-gun rhythm that reads as generated." },
-    { "id": "keyword-register", "enforcement": "code", "statement": "RFC 2119 keywords appear only in a normative_statement field, or in a record whose Type is named in normativeSites.types (invariant today; mechanism once RFC-042 lands). Explanatory prose never uses them." },
-    { "id": "heading-restatement", "enforcement": "code", "statement": "The first sentence of a prose field does not restate the record's title. Comparable mechanically: strip stopwords from both and measure the overlap." },
-    { "id": "bold-lead-in-uniformity", "enforcement": "code", "statement": "Not every bullet in a list opens with a bold lead-in and a colon. Countable: bullets matching `^[-*] \\*\\*...\\*\\*:` against total bullets in the field." },
-    { "id": "rationale-in-constraint", "enforcement": "review", "statement": "A constraint states the rule and nothing else. Its reason belongs in a design-note record linked by `explains`. A reviewer can see a `because` clause that a regex cannot separate from a legitimate conditional." },
-    { "id": "term-defined-once", "enforcement": "review", "statement": "A term is defined once, as a `concept` record (srs#561), and never redefined in prose. Mechanical once concept records exist and cover the vocabulary; review-only until then." },
-    { "id": "list-over-prose", "enforcement": "review", "statement": "A bulleted list carries genuinely parallel items. Two sentences of prose beaten into three bullets is a judgement call, not a pattern." },
-    { "id": "uniform-section-length", "enforcement": "review", "statement": "Sections vary in length because subjects vary in size. Suspicious uniformity is visible across a part, not inside one field." },
-    { "id": "rule-of-three", "enforcement": "review", "statement": "Lists are as long as the subject requires. A third item added for cadence is only detectable by reading it." },
-    { "id": "must-inflation", "enforcement": "review", "statement": "A MUST marks a requirement an implementation can fail. A description of behaviour is written as a description. The corpus runs 92% mandatory, so each new MUST earns its keyword." },
-    { "id": "example-over-explanation", "enforcement": "review", "statement": "Where a worked example settles the question, write the example instead of the paragraph, as a typed `example` record." }
+    {
+      "id": "word-budget",
+      "enforcement": "code",
+      "limit": "limits.contentWords",
+      "statement": "A prose field carries at most 400 words. Above that, split into child records, or move the worked example into a typed `example` record."
+    },
+    {
+      "id": "em-dash-cap",
+      "enforcement": "code",
+      "limit": "limits.emDashesPerParagraph",
+      "statement": "At most one em-dash per paragraph, and none inside a normative statement. A cap, not a ban: the em-dash is house voice, and the cap removes only the machine-gun rhythm that reads as generated."
+    },
+    {
+      "id": "keyword-register",
+      "enforcement": "code",
+      "statement": "RFC 2119 keywords appear only in a normative_statement field, or in a record whose Type is named in normativeSites.types (invariant today; mechanism once RFC-042 lands). Explanatory prose never uses them."
+    },
+    {
+      "id": "heading-restatement",
+      "enforcement": "code",
+      "statement": "The first sentence of a prose field does not restate the record's title. Comparable mechanically: strip stopwords from both and measure the overlap."
+    },
+    {
+      "id": "bold-lead-in-uniformity",
+      "enforcement": "code",
+      "statement": "Not every bullet in a list opens with a bold lead-in and a colon. Countable: bullets matching `^[-*] \\*\\*...\\*\\*:` against total bullets in the field."
+    },
+    {
+      "id": "rationale-in-constraint",
+      "enforcement": "review",
+      "statement": "A constraint states the rule and nothing else. Its reason belongs in a design-note record linked by `explains`. A reviewer can see a `because` clause that a regex cannot separate from a legitimate conditional."
+    },
+    {
+      "id": "term-defined-once",
+      "enforcement": "review",
+      "statement": "A term is defined once, as a `concept` record (srs#561), and never redefined in prose. Mechanical once concept records exist and cover the vocabulary; review-only until then."
+    },
+    {
+      "id": "list-over-prose",
+      "enforcement": "review",
+      "statement": "A bulleted list carries genuinely parallel items. Two sentences of prose beaten into three bullets is a judgement call, not a pattern."
+    },
+    {
+      "id": "uniform-section-length",
+      "enforcement": "review",
+      "statement": "Sections vary in length because subjects vary in size. Suspicious uniformity is visible across a part, not inside one field."
+    },
+    {
+      "id": "rule-of-three",
+      "enforcement": "review",
+      "statement": "Lists are as long as the subject requires. A third item added for cadence is only detectable by reading it."
+    },
+    {
+      "id": "must-inflation",
+      "enforcement": "review",
+      "statement": "A MUST marks a requirement an implementation can fail. A description of behaviour is written as a description. The corpus runs 92% mandatory, so each new MUST earns its keyword."
+    },
+    {
+      "id": "example-over-explanation",
+      "enforcement": "review",
+      "statement": "Where a worked example settles the question, write the example instead of the paragraph, as a typed `example` record."
+    }
   ]
 }

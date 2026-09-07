@@ -1,0 +1,14 @@
+{
+  "instanceId": "3b0bc2db-629d-42fa-b822-edb36269bc2e",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "ext:cross-field-validation",
+    "content": "> **Formalised by**: RFC-019 (srs#139). The `CrossFieldRule` shape and `validationRules` property are formally specified by RFC-019; refer to it for normative conformance rules (R0–R11).\n\n**Required for**: Types with constraints that span multiple Fields.\n\n`ValidationRule` handles single-field constraints. `CrossFieldRule` handles constraints that require evaluating more than one Field together."
+  },
+  "createdAt": "2026-09-07T19:57:33.155393790+00:00",
+  "updatedAt": "2026-09-07T19:57:33.155397218+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

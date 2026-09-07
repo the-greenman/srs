@@ -1,0 +1,14 @@
+{
+  "instanceId": "baa235fe-3ca6-483e-b0d0-108031418cf8",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`identityFieldId`",
+    "content": "**Required for**: Type libraries that need formal specialization while preserving base-Type processability.\n\nDefines single inheritance for Types. A specializing Type inherits the fields and semantics of a base Type, may add fields, and remains processable as the base Type by systems that know the base Type but not the specialization.\n\nWhen `ext:type-inheritance` is in use, `Type` gains:\n\nExample: the properties `ext:type-inheritance` adds to a Type."
+  },
+  "createdAt": "2026-09-07T19:59:45.601116510+00:00",
+  "updatedAt": "2026-09-07T20:50:39.626172881+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

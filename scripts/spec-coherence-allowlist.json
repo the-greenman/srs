@@ -1,5 +1,5 @@
 {
-  "$comment": "Known violations of scripts/check-spec-coherence.mjs (srs#560), each citing the live issue that removes it. Entry shape: {check, id | pair:[sourceId,targetId], issue, note}. The check fails on any violation NOT listed here and on any entry that no longer matches a violation — shrinking this file IS the migration (#562 un-bakes headings, #563 wires the tree, #564 makes invariants leaves). Growing it needs an issue. `note` is for the human reader only; the key is check + id/pair.",
+  "$comment": "Known violations of scripts/check-spec-coherence.mjs (srs#560), each citing the live issue that removes it. Entry shape: {check, id | pair:[sourceId,targetId], issue, note}. The check fails on any violation NOT listed here and on any entry that no longer matches a violation \u2014 shrinking this file IS the migration (#562 un-bakes headings, #563 wires the tree, #564 makes invariants leaves). Growing it needs an issue. `note` is for the human reader only; the key is check + id/pair.",
   "entries": [
     {
       "check": "no-baked-heading",
@@ -21,27 +21,9 @@
     },
     {
       "check": "no-baked-heading",
-      "id": "37e2f653-b3cc-5751-8f8f-2dfece3acf79",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:type-inheritance (2 headings)"
-    },
-    {
-      "check": "no-baked-heading",
-      "id": "3db80d07-9d40-59e9-97b7-516a5ae212af",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:blueprint (2 headings)"
-    },
-    {
-      "check": "no-baked-heading",
       "id": "45cebefe-39ce-47d9-8753-b2b03ac25a18",
       "issue": "the-greenman/srs#562",
       "note": "subsection: Vocabulary and Term (8 headings)"
-    },
-    {
-      "check": "no-baked-heading",
-      "id": "4e1ca747-254d-5a7a-b0f2-d4f253189f98",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: Type (2 headings)"
     },
     {
       "check": "no-baked-heading",
@@ -54,12 +36,6 @@
       "id": "6bb0f695-e004-5f14-a067-5cf922da5494",
       "issue": "the-greenman/srs#562",
       "note": "subsection: ext:import-tracking (6 headings)"
-    },
-    {
-      "check": "no-baked-heading",
-      "id": "6d8d7d1a-0611-57ac-b2c5-654c53c941a1",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:cross-field-validation (1 headings)"
     },
     {
       "check": "no-baked-heading",
@@ -111,18 +87,6 @@
     },
     {
       "check": "no-baked-heading",
-      "id": "e327ca1f-4cc4-5322-b837-5a27906d5abf",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:recommended-relations (1 headings)"
-    },
-    {
-      "check": "no-baked-heading",
-      "id": "f1000042-0000-4000-a000-000000000042",
-      "issue": "the-greenman/srs#562",
-      "note": "design-note: Why tags exist: from clustering to definitions (2 headings)"
-    },
-    {
-      "check": "no-baked-heading",
       "id": "f58b3ca2-1d4e-5f6a-b7c8-9d0e1f2a3b4c",
       "issue": "the-greenman/srs#562",
       "note": "subsection: ext:json-store (6 headings)"
@@ -132,12 +96,6 @@
       "id": "fc31337a-1c61-4e86-9c0f-09f0e0ce56bf",
       "issue": "the-greenman/srs#562",
       "note": "subsection: Foundational values and development phase (9 headings)"
-    },
-    {
-      "check": "no-baked-heading",
-      "id": "9c202db2-d5c0-592f-b0da-7fd9f633a459",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: Container (1 heading)"
     }
   ]
 }

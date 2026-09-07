@@ -458,44 +458,7 @@ field {
 
 #### Type
 
-**Content**: A named, versioned composition of Fields for a specific semantic object type.
-
-See the generated reference immediately below for `Type`'s current property table (including the extension-owner column — RFC-031 OQ1), optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger) — this prose no longer hand-duplicates the property list, including the extension-owned facets it could previously only gesture at as comments.
-
-#### `FieldAssignment`
-
-A Field reference within a Type. Declares this field's composition order and requiredness within the Type, without redefining field semantics.
-
-See the `FieldAssignment` appendix table in the generated reference below for the current property list.
-
-`displayLabel` is strictly for rendering. If a materially different label or meaning is needed, a distinct Field with its own lineage is required.
-
-Cardinality is a property of the referenced Field (`fieldType.cardinality`, RFC-032 [R4]); the former assignment-level `repeatable`/`minItems`/`maxItems` trio is removed (RFC-039 [R7], I-134).
-
-The Type's effective field list is `fields[]` unless `ext:type-inheritance` is declared and the Type extends another Type. In that case, the effective field list also includes inherited fields as defined by `ext:type-inheritance`.
-
-**AI guidance composition order** (recommended):
-
-1. Type framing (`Type.aiGuidance.extraction`) — establishes the semantic object type
-2. View framing (`View.aiGuidance.extraction`, if `ext:views-l1` is in use) — workflow-specific context
-3. Field extraction guidance (`Field.aiGuidance.extraction`)
-4. Negative guidance (`Field.aiGuidance.negativeGuidance`)
-5. Examples (`Field.aiGuidance.examples`)
-
-This is a recommended default, not a required invariant. Implementations that compose differently will produce different AI behaviour from the same definitions.
-
-**On instance migration when a Type version changes:**
-A Record binds to a specific `typeVersion` at creation time. Existing Records do not automatically migrate when a new Type version is published. Conformance is measured against the version the Record was instantiated under. When a Record is migrated and exchanged, it should carry the version it now conforms to, and the original Record should be preserved and linked via a `supersedes` Relation.
-
-#### `lifecycleRef` — referencing shared lifecycle definitions
-
-When `ext:lifecycle` is in use, a Type declares a lifecycle in exactly one of two mutually exclusive forms (V7):
-
-Example: the two lifecycle declaration forms on a Type.
-
-Declaring both is a validation error. An inline lifecycle cannot extend; use `lifecycleRef` when the same state machine is needed across multiple Types.
-
----
+**Content**: Content relocated to mechanism leaves under the Type concept (RFC-042 Change B, srs#562). See derived-from.
 
 ##### The two lifecycle declaration forms on a Type
 
@@ -938,23 +901,7 @@ relation {
 
 #### Container
 
-**Content**: A lightweight grouping boundary over a collection of instances. Containers answer scoping questions — which instances belong together, what constitutes "this project" — that the Relation graph alone cannot answer.
-
-Containers are not semantic objects with Fields. They do not own semantic state; Records do. A `contains` Relation asserts "A is part of B" (a semantic claim); a Container asserts "these instances form a unit for boundary purposes" (a scope claim). Both are needed; neither replaces the other.
-
-See the generated reference below for `Container`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-`Container.containerId` is not an instance ID and must not appear in `Relation.sourceInstanceId` or `targetInstanceId`. See Invariant 20.
-
-##### Membership and nesting (RFC-034)
-
-A Container is a declared selection on the expression plane (rfc-decision-0750c62f). Its direct membership is the unordered set `direct(C) = rootInstanceIds ∪ memberInstanceIds`: roots anchor the scope, `memberInstanceIds` adds explicit members, and an omitted `memberInstanceIds` adds nothing (I-146).
-
-Nested scopes are declared through `childContainerIds`, an unordered set of `containerId`s and the one place a Container references another Container; nesting is never inferred from membership overlap. Effective membership is the closure `effective(C) = direct(C) ∪ ⋃ effective(child)` over the declared children (I-147). Every child id resolves to an existing, distinct Container, the child graph is acyclic, a child can be rootless, and a rooted child's roots normally sit in the parent's direct membership (I-150). A Container can have more than one parent; only the tree-shaped subset maps onto a folder hierarchy.
-
-Relations do not define membership (I-148). `contains` remains the part-of tree that navigation depth, layering and any tree walk are built on, and it is still maintained; a Container is a bookmark over that tree. This supersedes the pre-RFC-034 rule that omitted membership was derived by traversing `contains` from the roots.
-
-One definition serves every membership question: `containers_for_instance` (I-66), member listing and view resolution, RFC-012 `containerId` discovery (I-118), RFC-011 `containerScope` with `"explicit"` as `direct(C)` and `"subtree"` as `effective(C)` (I-144), and the RFC-026 slice closure (I-151). No membership array carries an order; ordering stays with `precedes` and Composition (RFC-015). A query is a separate, read-only selection and never changes membership by itself (I-149).
+**Content**: Content relocated to mechanism leaves under the Container concept (RFC-042 Change B, srs#562). See derived-from.
 
 
 #### Generated reference: `Container`
@@ -1972,30 +1919,7 @@ protocol {
 
 #### ext:blueprint
 
-**Content**: **Required for**: extraction pipelines, founding document workflows, any system that needs to specify what a document type IS before assembling it.
-
-#### `RelationSpec`
-
-Declares an expected Relation between two Record types within a Blueprint.
-
-See the generated reference below for `RelationSpec`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list (and no longer risks drifting from the current `ExactTypeRef`-based schema, as the superseded prose here had).
-
-#### `Blueprint`
-
-The definition of a complete document type — which Types it contains, what Relations exist between resulting Records, and what "complete" means. A Blueprint is the artefact handed to an extraction pipeline.
-
-See the generated reference below for `Blueprint`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-**Blueprint vs View:**
-
-| | Blueprint | View / Document View |
-|---|---|---|
-| Question it answers | What IS this document type? What should be extracted? | How are existing Records assembled into readable output? |
-| Operates at | Definition time | Projection time |
-| Input | Source material (transcripts, conversations) | Existing Records in a Container |
-| Output | Extraction instructions → Records | Rendered document |
-
----
+**Content**: Content relocated to mechanism leaves under the Blueprint concept (RFC-042 Change B, srs#562). See derived-from.
 
 
 #### Generated reference: `RelationSpec`
@@ -2072,43 +1996,7 @@ blueprint {
 
 #### ext:type-inheritance
 
-**Content**: **Required for**: Type libraries that need formal specialization while preserving base-Type processability.
-
-Defines single inheritance for Types. A specializing Type inherits the fields and semantics of a base Type, may add fields, and remains processable as the base Type by systems that know the base Type but not the specialization.
-
-When `ext:type-inheritance` is in use, `Type` gains:
-
-Example: the properties `ext:type-inheritance` adds to a Type.
-
-#### `identityFieldId`
-
-Names one field, from the Type's effective field set, as the record's identity/display field — the field a conformant implementation SHOULD use to resolve a Record's display label (e.g. in list, tree, discovery, and container views), in preference to any implementation-specific heuristic (Rule [N+36]).
-
-`identityFieldId` MUST reference a `fieldId` present in the Type's effective field set (Rule [N+33]).
-
-**Inheritance is cascading, unlike `fieldOrder`.** The *effective* `identityFieldId` of a Type is its own `identityFieldId`, if declared; otherwise, the effective `identityFieldId` of its base Type, resolved transitively up the ancestor chain; otherwise absent (Rule [N+32], [N+34]). A Type overrides an inherited effective `identityFieldId` by declaring its own, which need not match the base Type's and MAY point at a field the Type itself adds. This differs from `fieldOrder`, which is read only from the Type being resolved and does not search the ancestor chain when absent — `identityFieldId`'s inheritance rule is specific to this property, not a reuse of `fieldOrder`'s behavior.
-
-`identityFieldId` scopes to Tier 2 Records only; it has no defined meaning for Tier 0 (Note) instances, which carry no Type binding (Rule [N+35]).
-
-**Interaction with `DocumentSection.titleFieldId` (`ext:views-l2`).** For any `DocumentSection` that does not declare `titleFieldId` — whether that section's field content renders via the Default Rendering Baseline or a dispatched L1 View — implementations SHOULD render the per-record heading using the value of the field named by the record's Type's effective `identityFieldId`, if present, in place of omitting the heading. `titleFieldId`, when declared, MUST continue to take precedence for that section's per-record heading (Rule [N+37]; see `ext:views-l2` § Heading Hierarchy).
-
-#### `FieldAssignmentOverride`
-
-Overrides presentation or workflow constraints for an inherited Field in a specializing Type. It does not change the Field's semantics.
-
-Example: the `FieldAssignmentOverride` shape.
-
-`displayLabel` and `displayHint` are presentation-only. `required` may tighten an inherited optional field (`false` to `true`) for the specializing Type. It must not relax an inherited required field (`true` to `false`), because a Record instantiated against the specializing Type must remain valid when processed as the base Type.
-
-The effective field list for a specializing Type is the inherited effective field list of its base Type plus the specializing Type's own `fields[]`. A specializing Type must not duplicate an inherited `fieldId` in its own `fields[]`.
-
-Example:
-
-Example: a governance decision Type specialising a core decision Type.
-
-A system that knows `core/decision` but not `org.example/governance_decision` can still read the inherited decision fields. The specializing fields are unknown extension content to that system and should be preserved rather than discarded.
-
----
+**Content**: Content relocated to mechanism leaves under the Type specialisation concept (RFC-042 Change B, srs#562). See derived-from.
 
 ##### The properties `ext:type-inheritance` adds to a Type
 
@@ -3371,25 +3259,7 @@ srsj-envelope {
 
 #### ext:cross-field-validation
 
-**Content**: > **Formalised by**: RFC-019 (srs#139). The `CrossFieldRule` shape and `validationRules` property are formally specified by RFC-019; refer to it for normative conformance rules (R0–R11).
-
-**Required for**: Types with constraints that span multiple Fields.
-
-`ValidationRule` handles single-field constraints. `CrossFieldRule` handles constraints that require evaluating more than one Field together.
-
-#### `CrossFieldRule`
-
-Example: the `CrossFieldRule` shape.
-
-| Rule type | Required fields |
-|---|---|
-| `conditional-required` | `predicateFieldId`, `predicateValue`, `targetFieldId` |
-| `field-ordering` | `predicateFieldId`, `targetFieldId`, `effect` |
-| `mutual-exclusion` | `fieldIds` (min 2) |
-
-When `ext:cross-field-validation` is in use, `Type` gains `validationRules?: CrossFieldRule[]`.
-
----
+**Content**: Content relocated to mechanism leaves under the Validation concept (RFC-042 Change B, srs#562). See derived-from.
 
 ##### The `CrossFieldRule` shape
 
@@ -3418,21 +3288,7 @@ When `ext:cross-field-validation` is in use, `Type` gains `validationRules?: Cro
 
 #### ext:recommended-relations
 
-**Content**: **Retired as of RFC-005.** The canonical SRS relation vocabulary (`contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`) is now provided as installed `RelationTypeDefinition` records in the `com.semanticops.srs` package. See §5 (Package).
-
-Implementations that previously declared `ext:recommended-relations` may remove it. The canonical definitions are unconditionally available to any repository using the SRS package.
-
-The statement that "`RelationTypeDefinition` is optional metadata" is superseded. As of RFC-005, every `Relation.relationType` string must resolve to an installed `RelationTypeDefinition` in the effective package set before a Relation is accepted. A missing or conflicting definition is a validation error. See §9-1 (Core conformance requirements).
-
-#### `RelationTypeDefinition` as a VocabularyEntry specialisation (RFC-006)
-
-`RelationTypeDefinition` satisfies the `VocabularyEntry` substrate contract. As of RFC-006, its key-role field is renamed from `relationType` to `key`. Instance-side reference fields (`Relation.relationType`) are unchanged.
-
-It gains `meta?: Record<string, unknown>` under the one forward-compatibility policy: unknown top-level fields are rejected; arbitrary entry metadata goes in `meta`.
-
-It **requires** both `label` and `description` (unchanged from RFC-005). The substrate making these optional in the general contract does not relax this obligation.
-
-The V1 mandatory resolution requirement (every `Relation.relationType` must resolve to an installed `RelationTypeDefinition`) is a named instance of the general closed-vocabulary resolution rule. See §9 (Conformance) and the Foundation Vocabulary and Term subsection.
+**Content**: Content relocated to mechanism leaves under the Relation type definition concept (RFC-042 Change B, srs#562). See derived-from.
 
 
 #### ext:import-tracking
@@ -5240,5 +5096,182 @@ Example:
 SRS 2.0 Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability + ext:recommended-relations
 ```
 
+
+
+## Mechanisms (concept-tree leaves, RFC-042)
+
+### ext:cross-field-validation
+
+**Content**: > **Formalised by**: RFC-019 (srs#139). The `CrossFieldRule` shape and `validationRules` property are formally specified by RFC-019; refer to it for normative conformance rules (R0–R11).
+
+**Required for**: Types with constraints that span multiple Fields.
+
+`ValidationRule` handles single-field constraints. `CrossFieldRule` handles constraints that require evaluating more than one Field together.
+
+
+### `CrossFieldRule`
+
+**Content**: Example: the `CrossFieldRule` shape.
+
+| Rule type | Required fields |
+|---|---|
+| `conditional-required` | `predicateFieldId`, `predicateValue`, `targetFieldId` |
+| `field-ordering` | `predicateFieldId`, `targetFieldId`, `effect` |
+| `mutual-exclusion` | `fieldIds` (min 2) |
+
+When `ext:cross-field-validation` is in use, `Type` gains `validationRules?: CrossFieldRule[]`.
+
+
+### ext:recommended-relations
+
+**Content**: **Retired as of RFC-005.** The canonical SRS relation vocabulary (`contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`) is now provided as installed `RelationTypeDefinition` records in the `com.semanticops.srs` package. See §5 (Package).
+
+Implementations that previously declared `ext:recommended-relations` may remove it. The canonical definitions are unconditionally available to any repository using the SRS package.
+
+The statement that "`RelationTypeDefinition` is optional metadata" is superseded. As of RFC-005, every `Relation.relationType` string must resolve to an installed `RelationTypeDefinition` in the effective package set before a Relation is accepted. A missing or conflicting definition is a validation error. See §9-1 (Core conformance requirements).
+
+
+### `RelationTypeDefinition` as a VocabularyEntry specialisation (RFC-006)
+
+**Content**: `RelationTypeDefinition` satisfies the `VocabularyEntry` substrate contract. As of RFC-006, its key-role field is renamed from `relationType` to `key`. Instance-side reference fields (`Relation.relationType`) are unchanged.
+
+It gains `meta?: Record<string, unknown>` under the one forward-compatibility policy: unknown top-level fields are rejected; arbitrary entry metadata goes in `meta`.
+
+It **requires** both `label` and `description` (unchanged from RFC-005). The substrate making these optional in the general contract does not relax this obligation.
+
+The V1 mandatory resolution requirement (every `Relation.relationType` must resolve to an installed `RelationTypeDefinition`) is a named instance of the general closed-vocabulary resolution rule. See §9 (Conformance) and the Foundation Vocabulary and Term subsection.
+
+
+### Container
+
+**Content**: A lightweight grouping boundary over a collection of instances. Containers answer scoping questions — which instances belong together, what constitutes "this project" — that the Relation graph alone cannot answer.
+
+Containers are not semantic objects with Fields. They do not own semantic state; Records do. A `contains` Relation asserts "A is part of B" (a semantic claim); a Container asserts "these instances form a unit for boundary purposes" (a scope claim). Both are needed; neither replaces the other.
+
+See the generated reference below for `Container`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+
+`Container.containerId` is not an instance ID and must not appear in `Relation.sourceInstanceId` or `targetInstanceId`. See Invariant 20.
+
+
+### Membership and nesting (RFC-034)
+
+**Content**: A Container is a declared selection on the expression plane (rfc-decision-0750c62f). Its direct membership is the unordered set `direct(C) = rootInstanceIds ∪ memberInstanceIds`: roots anchor the scope, `memberInstanceIds` adds explicit members, and an omitted `memberInstanceIds` adds nothing (I-146).
+
+Nested scopes are declared through `childContainerIds`, an unordered set of `containerId`s and the one place a Container references another Container; nesting is never inferred from membership overlap. Effective membership is the closure `effective(C) = direct(C) ∪ ⋃ effective(child)` over the declared children (I-147). Every child id resolves to an existing, distinct Container, the child graph is acyclic, a child can be rootless, and a rooted child's roots normally sit in the parent's direct membership (I-150). A Container can have more than one parent; only the tree-shaped subset maps onto a folder hierarchy.
+
+Relations do not define membership (I-148). `contains` remains the part-of tree that navigation depth, layering and any tree walk are built on, and it is still maintained; a Container is a bookmark over that tree. This supersedes the pre-RFC-034 rule that omitted membership was derived by traversing `contains` from the roots.
+
+One definition serves every membership question: `containers_for_instance` (I-66), member listing and view resolution, RFC-012 `containerId` discovery (I-118), RFC-011 `containerScope` with `"explicit"` as `direct(C)` and `"subtree"` as `effective(C)` (I-144), and the RFC-026 slice closure (I-151). No membership array carries an order; ordering stays with `precedes` and Composition (RFC-015). A query is a separate, read-only selection and never changes membership by itself (I-149).
+
+
+### `identityFieldId`
+
+**Content**: **Required for**: Type libraries that need formal specialization while preserving base-Type processability.
+
+Defines single inheritance for Types. A specializing Type inherits the fields and semantics of a base Type, may add fields, and remains processable as the base Type by systems that know the base Type but not the specialization.
+
+When `ext:type-inheritance` is in use, `Type` gains:
+
+Example: the properties `ext:type-inheritance` adds to a Type.
+
+
+### identityFieldId
+
+**Content**: Names one field, from the Type's effective field set, as the record's identity/display field — the field a conformant implementation SHOULD use to resolve a Record's display label (e.g. in list, tree, discovery, and container views), in preference to any implementation-specific heuristic (Rule [N+36]).
+
+`identityFieldId` MUST reference a `fieldId` present in the Type's effective field set (Rule [N+33]).
+
+**Inheritance is cascading, unlike `fieldOrder`.** The *effective* `identityFieldId` of a Type is its own `identityFieldId`, if declared; otherwise, the effective `identityFieldId` of its base Type, resolved transitively up the ancestor chain; otherwise absent (Rule [N+32], [N+34]). A Type overrides an inherited effective `identityFieldId` by declaring its own, which need not match the base Type's and MAY point at a field the Type itself adds. This differs from `fieldOrder`, which is read only from the Type being resolved and does not search the ancestor chain when absent — `identityFieldId`'s inheritance rule is specific to this property, not a reuse of `fieldOrder`'s behavior.
+
+`identityFieldId` scopes to Tier 2 Records only; it has no defined meaning for Tier 0 (Note) instances, which carry no Type binding (Rule [N+35]).
+
+**Interaction with `DocumentSection.titleFieldId` (`ext:views-l2`).** For any `DocumentSection` that does not declare `titleFieldId` — whether that section's field content renders via the Default Rendering Baseline or a dispatched L1 View — implementations SHOULD render the per-record heading using the value of the field named by the record's Type's effective `identityFieldId`, if present, in place of omitting the heading. `titleFieldId`, when declared, MUST continue to take precedence for that section's per-record heading (Rule [N+37]; see `ext:views-l2` § Heading Hierarchy).
+
+
+### `FieldAssignmentOverride`
+
+**Content**: Overrides presentation or workflow constraints for an inherited Field in a specializing Type. It does not change the Field's semantics.
+
+Example: the `FieldAssignmentOverride` shape.
+
+`displayLabel` and `displayHint` are presentation-only. `required` may tighten an inherited optional field (`false` to `true`) for the specializing Type. It must not relax an inherited required field (`true` to `false`), because a Record instantiated against the specializing Type must remain valid when processed as the base Type.
+
+The effective field list for a specializing Type is the inherited effective field list of its base Type plus the specializing Type's own `fields[]`. A specializing Type must not duplicate an inherited `fieldId` in its own `fields[]`.
+
+Example:
+
+Example: a governance decision Type specialising a core decision Type.
+
+A system that knows `core/decision` but not `org.example/governance_decision` can still read the inherited decision fields. The specializing fields are unknown extension content to that system and should be preserved rather than discarded.
+
+
+### `RelationSpec`
+
+**Content**: **Required for**: extraction pipelines, founding document workflows, any system that needs to specify what a document type IS before assembling it.
+
+
+### RelationSpec
+
+**Content**: Declares an expected Relation between two Record types within a Blueprint.
+
+See the generated reference below for `RelationSpec`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list (and no longer risks drifting from the current `ExactTypeRef`-based schema, as the superseded prose here had).
+
+
+### `Blueprint`
+
+**Content**: The definition of a complete document type — which Types it contains, what Relations exist between resulting Records, and what "complete" means. A Blueprint is the artefact handed to an extraction pipeline.
+
+See the generated reference below for `Blueprint`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+
+**Blueprint vs View:**
+
+| | Blueprint | View / Document View |
+|---|---|---|
+| Question it answers | What IS this document type? What should be extracted? | How are existing Records assembled into readable output? |
+| Operates at | Definition time | Projection time |
+| Input | Source material (transcripts, conversations) | Existing Records in a Container |
+| Output | Extraction instructions → Records | Rendered document |
+
+
+### `FieldAssignment`
+
+**Content**: A named, versioned composition of Fields for a specific semantic object type.
+
+See the generated reference immediately below for `Type`'s current property table (including the extension-owner column — RFC-031 OQ1), optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger) — this prose no longer hand-duplicates the property list, including the extension-owned facets it could previously only gesture at as comments.
+
+
+### FieldAssignment
+
+**Content**: A Field reference within a Type. Declares this field's composition order and requiredness within the Type, without redefining field semantics.
+
+See the `FieldAssignment` appendix table in the generated reference below for the current property list.
+
+`displayLabel` is strictly for rendering. If a materially different label or meaning is needed, a distinct Field with its own lineage is required.
+
+Cardinality is a property of the referenced Field (`fieldType.cardinality`, RFC-032 [R4]); the former assignment-level `repeatable`/`minItems`/`maxItems` trio is removed (RFC-039 [R7], I-134).
+
+The Type's effective field list is `fields[]` unless `ext:type-inheritance` is declared and the Type extends another Type. In that case, the effective field list also includes inherited fields as defined by `ext:type-inheritance`.
+
+**AI guidance composition order** (recommended):
+
+1. Type framing (`Type.aiGuidance.extraction`) — establishes the semantic object type
+2. View framing (`View.aiGuidance.extraction`, if `ext:views-l1` is in use) — workflow-specific context
+3. Field extraction guidance (`Field.aiGuidance.extraction`)
+4. Negative guidance (`Field.aiGuidance.negativeGuidance`)
+5. Examples (`Field.aiGuidance.examples`)
+
+This is a recommended default, not a required invariant. Implementations that compose differently will produce different AI behaviour from the same definitions.
+
+**On instance migration when a Type version changes:**
+A Record binds to a specific `typeVersion` at creation time. Existing Records do not automatically migrate when a new Type version is published. Conformance is measured against the version the Record was instantiated under. When a Record is migrated and exchanged, it should carry the version it now conforms to, and the original Record should be preserved and linked via a `supersedes` Relation.
+
+
+### `lifecycleRef` — referencing shared lifecycle definitions
+
+**Content**: When `ext:lifecycle` is in use, a Type declares a lifecycle in exactly one of two mutually exclusive forms (V7):
+
+Example: the two lifecycle declaration forms on a Type.
+
+Declaring both is a validation error. An inline lifecycle cannot extend; use `lifecycleRef` when the same state machine is needed across multiple Types.
 
 

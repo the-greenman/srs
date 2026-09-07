@@ -1,0 +1,14 @@
+{
+  "instanceId": "4b4ef7db-db4a-409b-a79c-37ff0659cf6c",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Container",
+    "content": "A lightweight grouping boundary over a collection of instances. Containers answer scoping questions — which instances belong together, what constitutes \"this project\" — that the Relation graph alone cannot answer.\n\nContainers are not semantic objects with Fields. They do not own semantic state; Records do. A `contains` Relation asserts \"A is part of B\" (a semantic claim); a Container asserts \"these instances form a unit for boundary purposes\" (a scope claim). Both are needed; neither replaces the other.\n\nSee the generated reference below for `Container`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.\n\n`Container.containerId` is not an instance ID and must not appear in `Relation.sourceInstanceId` or `targetInstanceId`. See Invariant 20."
+  },
+  "createdAt": "2026-09-07T19:59:44.969570808+00:00",
+  "updatedAt": "2026-09-07T19:59:44.969574475+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

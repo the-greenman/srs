@@ -1,0 +1,14 @@
+{
+  "instanceId": "2be85ed5-8d29-4fa8-acac-a2549ea0ab2a",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`RelationSpec`",
+    "content": "**Required for**: extraction pipelines, founding document workflows, any system that needs to specify what a document type IS before assembling it."
+  },
+  "createdAt": "2026-09-07T19:59:46.539820729+00:00",
+  "updatedAt": "2026-09-07T20:50:38.920987486+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

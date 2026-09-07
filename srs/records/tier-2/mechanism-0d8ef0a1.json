@@ -1,0 +1,14 @@
+{
+  "instanceId": "0d8ef0a1-69c8-4535-b46f-7bf25cf8eb2c",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`Blueprint`",
+    "content": "The definition of a complete document type — which Types it contains, what Relations exist between resulting Records, and what \"complete\" means. A Blueprint is the artefact handed to an extraction pipeline.\n\nSee the generated reference below for `Blueprint`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.\n\n**Blueprint vs View:**\n\n| | Blueprint | View / Document View |\n|---|---|---|\n| Question it answers | What IS this document type? What should be extracted? | How are existing Records assembled into readable output? |\n| Operates at | Definition time | Projection time |\n| Input | Source material (transcripts, conversations) | Existing Records in a Container |\n| Output | Extraction instructions → Records | Rendered document |"
+  },
+  "createdAt": "2026-09-07T19:59:46.998862080+00:00",
+  "updatedAt": "2026-09-07T20:50:39.100158890+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
