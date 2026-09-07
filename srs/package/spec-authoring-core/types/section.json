@@ -4,7 +4,7 @@
   "namespace": "com.semanticops.spec",
   "name": "section",
   "version": 1,
-  "description": "A top-level numbered section of a specification. Ordering is determined by section-sequence relations, not by section number embedded in the title.",
+  "description": "status: deprecated (RFC-042 Change B, srs#559) - superseded by the concept/mechanism tree (contains/precedes); retained only for the 10 existing section records until they are retyped or split, then removed per rfc-decision-5f8204bc (deprecate-then-remove). A top-level numbered section of a specification. Ordering is determined by section-sequence relations, not by section number embedded in the title.",
   "fields": [
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",

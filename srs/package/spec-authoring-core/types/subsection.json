@@ -4,7 +4,7 @@
   "namespace": "com.semanticops.spec",
   "name": "subsection",
   "version": 1,
-  "description": "A numbered subsection within a top-level spec section. Ordering is determined by subsection-sequence relations.",
+  "description": "status: deprecated (RFC-042 Change B, srs#559) - superseded by mechanism (same title/content Fields, under the name that states the leaf role); retained only for the 65 existing subsection records until they are retyped or split, then removed per rfc-decision-5f8204bc (deprecate-then-remove). A numbered subsection within a top-level spec section. Ordering is determined by subsection-sequence relations.",
   "fields": [
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",
