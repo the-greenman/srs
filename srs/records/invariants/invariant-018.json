@@ -7,8 +7,7 @@
   "fieldValues": {
     "invariant_number": "18",
     "title": "NoteSection.name values must be unique within a Note.",
-    "normative_statement": "`NoteSection.name` values must be unique within a `Note`.",
-    "applies_to": "core — Note"
+    "normative_statement": "`NoteSection.name` values must be unique within a `Note`."
   },
   "tags": [
     "concern:validation",
@@ -16,7 +15,7 @@
     "topic:conformance"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-08-27T18:16:01.636652415+00:00",
+  "updatedAt": "2026-09-07T19:59:34.476741671+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

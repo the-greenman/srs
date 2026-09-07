@@ -7,15 +7,14 @@
   "fieldValues": {
     "invariant_number": "44",
     "title": "Every NavigationLink.fromSectionId and NavigationLink.toSectionId…",
-    "normative_statement": "Every `NavigationLink.fromSectionId` and `NavigationLink.toSectionId` must reference a `sectionId` declared in the enclosing `Composition.sections[]`.",
-    "applies_to": "ext:views-l2 — Navigation"
+    "normative_statement": "Every `NavigationLink.fromSectionId` and `NavigationLink.toSectionId` must reference a `sectionId` declared in the enclosing `Composition.sections[]`."
   },
   "tags": [
     "concern:validation",
     "topic:conformance"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-09-02T18:07:15.406601133+00:00",
+  "updatedAt": "2026-09-07T19:59:37.995846150+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

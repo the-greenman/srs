@@ -1,13 +1,22 @@
 {
-  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "createdAt": "2026-05-27T00:00:00Z",
+  "instanceId": "e1000052-0000-4000-a000-000000000052",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "invariant",
   "fieldValues": {
     "invariant_number": "52",
     "title": "Every SourceDocument sidecar present under sourceDocumentsPath must…",
-    "normative_statement": "Every `SourceDocument` sidecar present under `sourceDocumentsPath` must have a `contentPath` that resolves to an existing content file in the same directory. A sidecar whose `contentPath` does not resolve is invalid. A conforming producer must not emit such a sidecar; a conforming consumer must surface the resolution failure before processing any `SourceReference` pointing at that `documentId`.",
-    "applies_to": "ext:repository"
+    "normative_statement": "Every `SourceDocument` sidecar present under `sourceDocumentsPath` must have a `contentPath` that resolves to an existing content file in the same directory. A sidecar whose `contentPath` does not resolve is invalid. A conforming producer must not emit such a sidecar; a conforming consumer must surface the resolution failure before processing any `SourceReference` pointing at that `documentId`."
   },
-  "instanceId": "e1000052-0000-4000-a000-000000000052",
+  "tags": [
+    "concern:validation",
+    "construct:provenance",
+    "topic:conformance"
+  ],
+  "createdAt": "2026-05-27T00:00:00Z",
+  "updatedAt": "2026-09-07T19:59:39.512933977+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {
       "note": "Invariant 52 from srs-spec.md section 08",
@@ -15,14 +24,5 @@
       "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
       "sourceType": "repository-document"
     }
-  ],
-  "tags": [
-    "concern:validation",
-    "construct:provenance",
-    "topic:conformance"
-  ],
-  "typeId": "2a000006-0000-4000-a000-000000000006",
-  "typeName": "invariant",
-  "typeNamespace": "com.semanticops.spec",
-  "typeVersion": 1
+  ]
 }

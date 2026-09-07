@@ -7,10 +7,9 @@
   "fieldValues": {
     "invariant_number": "I-80",
     "title": "Root container membership ids resolve in the authoritative instance set",
-    "normative_statement": "Every id in the root container's rootInstanceIds and memberInstanceIds MUST resolve to a member of the repository's authoritative instance set. There is no manifest `instanceIndex` to consult — it is retired (RFC-038 [R2]); the repository's authoritative store, enumerated from the tree, is that set (RFC-038 [R1]). This is the root-container specialization of core Invariant 21, stated separately so the required-root-container guarantee is self-contained.",
-    "applies_to": "ext:repository (RepositoryManifest, Container); RFC-013; RFC-038"
+    "normative_statement": "Every id in the root container's rootInstanceIds and memberInstanceIds MUST resolve to a member of the repository's authoritative instance set. There is no manifest `instanceIndex` to consult — it is retired (RFC-038 [R2]); the repository's authoritative store, enumerated from the tree, is that set (RFC-038 [R1]). This is the root-container specialization of core Invariant 21, stated separately so the required-root-container guarantee is self-contained."
   },
   "createdAt": "2026-06-28T14:37:38.785442829+00:00",
-  "updatedAt": "2026-08-22T22:52:44.092057053+00:00",
+  "updatedAt": "2026-09-07T19:59:41.472697905+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

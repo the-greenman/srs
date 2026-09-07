@@ -7,8 +7,7 @@
   "fieldValues": {
     "invariant_number": "8",
     "title": "If Package.mode === \"bundled\": every Reference in packageDependencies must…",
-    "normative_statement": "If `Package.mode === \"bundled\"`: every `Reference` in `packageDependencies` must have a matching `Field` in `fields[]` (matched on `id` and `version`).",
-    "applies_to": "core — Package"
+    "normative_statement": "If `Package.mode === \"bundled\"`: every `Reference` in `packageDependencies` must have a matching `Field` in `fields[]` (matched on `id` and `version`)."
   },
   "tags": [
     "concern:validation",
@@ -17,7 +16,7 @@
     "topic:conformance"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-09-02T18:08:51.382221725+00:00",
+  "updatedAt": "2026-09-07T19:59:32.519738877+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

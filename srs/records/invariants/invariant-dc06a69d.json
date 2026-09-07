@@ -8,10 +8,9 @@
     "invariant_number": "I-149",
     "title": "A query result is not Container membership",
     "normative_statement": "A Record-selection query (srs find, a Composition SectionSource, an SQL view, a JSONPath expression, a graph traversal) MUST NOT be treated as persisted Container membership unless an authoring operation writes its selected ids to the Container's explicit membership fields.",
-    "applies_to": "Container (core); RFC-034",
     "rationale": "RFC-034 [R6] (Change E). Container is the declared selection and DiscoveryQuery the computed one; two selection constructs for two goals and no third (rfc-decision-0750c62f). Materialising a query result into memberInstanceIds creates a new explicit boundary; it does not make the query the boundary's live definition."
   },
   "createdAt": "2026-09-06T13:19:55.213041436+00:00",
-  "updatedAt": "2026-09-06T13:19:55.213057935+00:00",
+  "updatedAt": "2026-09-07T19:59:52.641885810+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

@@ -1,13 +1,22 @@
 {
-  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "createdAt": "2026-05-27T00:00:00Z",
+  "instanceId": "e1000054-0000-4000-a000-000000000054",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "invariant",
   "fieldValues": {
     "invariant_number": "54",
     "title": "When an importer encounters an incoming object whose identity key…",
-    "normative_statement": "When an importer encounters an incoming object whose identity key matches an existing local object but whose content or checksum differs, it must surface the conflict explicitly. An importer that silently overwrites or silently discards in this case is not conformant.",
-    "applies_to": "ext:repository"
+    "normative_statement": "When an importer encounters an incoming object whose identity key matches an existing local object but whose content or checksum differs, it must surface the conflict explicitly. An importer that silently overwrites or silently discards in this case is not conformant."
   },
-  "instanceId": "e1000054-0000-4000-a000-000000000054",
+  "tags": [
+    "concern:identity",
+    "concern:validation",
+    "topic:conformance"
+  ],
+  "createdAt": "2026-05-27T00:00:00Z",
+  "updatedAt": "2026-09-07T19:59:39.890217993+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {
       "note": "Invariant 54 from srs-spec.md section 08",
@@ -15,14 +24,5 @@
       "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
       "sourceType": "repository-document"
     }
-  ],
-  "tags": [
-    "concern:identity",
-    "concern:validation",
-    "topic:conformance"
-  ],
-  "typeId": "2a000006-0000-4000-a000-000000000006",
-  "typeName": "invariant",
-  "typeNamespace": "com.semanticops.spec",
-  "typeVersion": 1
+  ]
 }
