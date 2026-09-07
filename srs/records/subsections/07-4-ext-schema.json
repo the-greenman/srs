@@ -1,11 +1,21 @@
 {
-  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "createdAt": "2026-05-27T00:00:00Z",
+  "instanceId": "3db80d07-9d40-59e9-97b7-516a5ae212af",
+  "typeId": "2a000003-0000-4000-a000-000000000003",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "subsection",
   "fieldValues": {
     "title": "ext:blueprint",
-    "content": "**Required for**: extraction pipelines, founding document workflows, any system that needs to specify what a document type IS before assembling it.\n\n#### `RelationSpec`\n\nDeclares an expected Relation between two Record types within a Blueprint.\n\nSee the generated reference below for `RelationSpec`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) \u2014 this prose no longer hand-duplicates the property list (and no longer risks drifting from the current `ExactTypeRef`-based schema, as the superseded prose here had).\n\n#### `Blueprint`\n\nThe definition of a complete document type \u2014 which Types it contains, what Relations exist between resulting Records, and what \"complete\" means. A Blueprint is the artefact handed to an extraction pipeline.\n\nSee the generated reference below for `Blueprint`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) \u2014 this prose no longer hand-duplicates the property list.\n\n**Blueprint vs View:**\n\n| | Blueprint | View / Document View |\n|---|---|---|\n| Question it answers | What IS this document type? What should be extracted? | How are existing Records assembled into readable output? |\n| Operates at | Definition time | Projection time |\n| Input | Source material (transcripts, conversations) | Existing Records in a Container |\n| Output | Extraction instructions \u2192 Records | Rendered document |\n\n---"
+    "content": "Content relocated to mechanism leaves under the Blueprint concept (RFC-042 Change B, srs#562). See derived-from."
   },
-  "instanceId": "3db80d07-9d40-59e9-97b7-516a5ae212af",
+  "tags": [
+    "concern:extensibility",
+    "construct:blueprint",
+    "topic:extensions"
+  ],
+  "createdAt": "2026-05-27T00:00:00Z",
+  "updatedAt": "2026-09-07T19:59:47.456325366+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {
       "note": "Subsection 07-4 from srs-spec.md - coarse source anchoring during migration",
@@ -13,14 +23,5 @@
       "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
       "sourceType": "repository-document"
     }
-  ],
-  "tags": [
-    "concern:extensibility",
-    "construct:blueprint",
-    "topic:extensions"
-  ],
-  "typeId": "2a000003-0000-4000-a000-000000000003",
-  "typeName": "subsection",
-  "typeNamespace": "com.semanticops.spec",
-  "typeVersion": 1
+  ]
 }

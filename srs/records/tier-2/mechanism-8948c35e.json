@@ -1,0 +1,14 @@
+{
+  "instanceId": "8948c35e-c340-4328-9845-f1523698ff4e",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Membership and nesting (RFC-034)",
+    "content": "A Container is a declared selection on the expression plane (rfc-decision-0750c62f). Its direct membership is the unordered set `direct(C) = rootInstanceIds ∪ memberInstanceIds`: roots anchor the scope, `memberInstanceIds` adds explicit members, and an omitted `memberInstanceIds` adds nothing (I-146).\n\nNested scopes are declared through `childContainerIds`, an unordered set of `containerId`s and the one place a Container references another Container; nesting is never inferred from membership overlap. Effective membership is the closure `effective(C) = direct(C) ∪ ⋃ effective(child)` over the declared children (I-147). Every child id resolves to an existing, distinct Container, the child graph is acyclic, a child can be rootless, and a rooted child's roots normally sit in the parent's direct membership (I-150). A Container can have more than one parent; only the tree-shaped subset maps onto a folder hierarchy.\n\nRelations do not define membership (I-148). `contains` remains the part-of tree that navigation depth, layering and any tree walk are built on, and it is still maintained; a Container is a bookmark over that tree. This supersedes the pre-RFC-034 rule that omitted membership was derived by traversing `contains` from the roots.\n\nOne definition serves every membership question: `containers_for_instance` (I-66), member listing and view resolution, RFC-012 `containerId` discovery (I-118), RFC-011 `containerScope` with `\"explicit\"` as `direct(C)` and `\"subtree\"` as `effective(C)` (I-144), and the RFC-026 slice closure (I-151). No membership array carries an order; ordering stays with `precedes` and Composition (RFC-015). A query is a separate, read-only selection and never changes membership by itself (I-149)."
+  },
+  "createdAt": "2026-09-07T19:59:45.196267856+00:00",
+  "updatedAt": "2026-09-07T19:59:45.196270964+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

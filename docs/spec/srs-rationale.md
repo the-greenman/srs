@@ -405,22 +405,7 @@ Web UI comments and annotations attached to specific text within a Field value r
 
 ### Why tags exist: from clustering to definitions
 
-**Content**: Tags emerged from a concrete problem in note-taking: when building up a body of notes, there was no lightweight way to say "these notes are related" or "this note belongs to this topic cluster" without creating a formal Relation or binding to a Type.
-
-Raw string tags on Notes filled that gap. A tag is not a claim about structure — it is a claim about topic membership. Notes about the same problem domain, design thread, or concern can share a tag, and that shared tag is enough to surface them together.
-
-### Evolution to definitions
-
-As tag vocabularies grew, the tags themselves needed properties. Two problems appeared:
-
-1. **Disambiguation**: the same string could mean different things in different contexts. A label is not enough — description and aliases matter.
-2. **Roles**: some tags were structural signals rather than topic labels. The `foundation` tag marks notes that should always be included in an AI context handoff. That is a semantic role, not just a category.
-
-This led to `TagDefinition` — an addressable Tier 3 record that gives a tag a stable identity, description, roles, and aliases. A tag does not *require* a definition to be used; definitions are additive enrichment. But when a tag carries structural meaning (like `foundation`), its definition is what makes that meaning machine-readable.
-
-### Design principle
-
-Tags are a peer to Field and Type in the SRS data model — not an extension, not an afterthought. They are defined natively in the core implementation with dedicated service functions, not modelled as user-defined package types. This is because the operations that depend on tags (especially foundation note selection for AI context) are universal across all SRS repositories, not specific to any one repo's package.
+**Content**: Content relocated to design-note leaves under the Vocabulary concept (RFC-042 Change B/F, srs#562). See derived-from.
 
 
 ### Relation design principles (R1–R11)
@@ -501,5 +486,27 @@ A middle Tier 1 (Typed Record — named fields, no Type binding) was tried and r
 **The wider family.** Three independent needs converged on one expressiveness class in a single day, *declared structural constraints*: (1) acyclicity (sequence-category relations; `precedes` cycles currently degrade silently, srs-rust#557/#558), (2) exclusivity/cardinality (directory-kind Containers here; exclusive relation types are the RFC-005-deferred cardinality facet), (3) uniqueness-within-scope (cross-record field uniqueness). All three are definition-keyed (R5) and validation-enforced (R10). Recommendation: one structural-constraints RFC covering the family, with directory-kind landing as a thin instance of it, not a bespoke bolt-on.
 
 **The relation-side reading** of the owner's question, an exclusive root-record *relation* type, is real but distinct: post-RFC-034, Relations do not define membership, so an exclusive `contains`-like relation yields a semantic part-of tree, not a scope tree. Both are valid wants; they are different trees (the observation rfc-decision-0750c62f cites).
+
+
+### Why tags exist: from clustering to definitions
+
+**Content**: Tags emerged from a concrete problem in note-taking: when building up a body of notes, there was no lightweight way to say "these notes are related" or "this note belongs to this topic cluster" without creating a formal Relation or binding to a Type.
+
+Raw string tags on Notes filled that gap. A tag is not a claim about structure — it is a claim about topic membership. Notes about the same problem domain, design thread, or concern can share a tag, and that shared tag is enough to surface them together.
+
+
+### Evolution to definitions
+
+**Content**: As tag vocabularies grew, the tags themselves needed properties. Two problems appeared:
+
+1. **Disambiguation**: the same string could mean different things in different contexts. A label is not enough — description and aliases matter.
+2. **Roles**: some tags were structural signals rather than topic labels. The `foundation` tag marks notes that should always be included in an AI context handoff. That is a semantic role, not just a category.
+
+This led to `TagDefinition` — an addressable Tier 3 record that gives a tag a stable identity, description, roles, and aliases. A tag does not *require* a definition to be used; definitions are additive enrichment. But when a tag carries structural meaning (like `foundation`), its definition is what makes that meaning machine-readable.
+
+
+### Design principle
+
+**Content**: Tags are a peer to Field and Type in the SRS data model — not an extension, not an afterthought. They are defined natively in the core implementation with dedicated service functions, not modelled as user-defined package types. This is because the operations that depend on tags (especially foundation note selection for AI context) are universal across all SRS repositories, not specific to any one repo's package.
 
 

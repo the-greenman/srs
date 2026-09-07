@@ -6,7 +6,7 @@
   "typeName": "subsection",
   "fieldValues": {
     "title": "ext:recommended-relations",
-    "content": "**Retired as of RFC-005.** The canonical SRS relation vocabulary (`contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`) is now provided as installed `RelationTypeDefinition` records in the `com.semanticops.srs` package. See §5 (Package).\n\nImplementations that previously declared `ext:recommended-relations` may remove it. The canonical definitions are unconditionally available to any repository using the SRS package.\n\nThe statement that \"`RelationTypeDefinition` is optional metadata\" is superseded. As of RFC-005, every `Relation.relationType` string must resolve to an installed `RelationTypeDefinition` in the effective package set before a Relation is accepted. A missing or conflicting definition is a validation error. See §9-1 (Core conformance requirements).\n\n#### `RelationTypeDefinition` as a VocabularyEntry specialisation (RFC-006)\n\n`RelationTypeDefinition` satisfies the `VocabularyEntry` substrate contract. As of RFC-006, its key-role field is renamed from `relationType` to `key`. Instance-side reference fields (`Relation.relationType`) are unchanged.\n\nIt gains `meta?: Record<string, unknown>` under the one forward-compatibility policy: unknown top-level fields are rejected; arbitrary entry metadata goes in `meta`.\n\nIt **requires** both `label` and `description` (unchanged from RFC-005). The substrate making these optional in the general contract does not relax this obligation.\n\nThe V1 mandatory resolution requirement (every `Relation.relationType` must resolve to an installed `RelationTypeDefinition`) is a named instance of the general closed-vocabulary resolution rule. See §9 (Conformance) and the Foundation Vocabulary and Term subsection."
+    "content": "Content relocated to mechanism leaves under the Relation type definition concept (RFC-042 Change B, srs#562). See derived-from."
   },
   "tags": [
     "concern:extensibility",
@@ -14,7 +14,7 @@
     "topic:extensions"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-08-29T08:41:17.529236297+00:00",
+  "updatedAt": "2026-09-07T19:59:44.949273898+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

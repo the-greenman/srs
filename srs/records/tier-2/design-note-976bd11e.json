@@ -1,0 +1,14 @@
+{
+  "instanceId": "976bd11e-63a2-4c00-b6c4-cccac65b9ada",
+  "typeId": "2a000012-0000-4000-a000-000000000012",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "design-note",
+  "fieldValues": {
+    "title": "Why tags exist: from clustering to definitions",
+    "content": "Tags emerged from a concrete problem in note-taking: when building up a body of notes, there was no lightweight way to say \"these notes are related\" or \"this note belongs to this topic cluster\" without creating a formal Relation or binding to a Type.\n\nRaw string tags on Notes filled that gap. A tag is not a claim about structure — it is a claim about topic membership. Notes about the same problem domain, design thread, or concern can share a tag, and that shared tag is enough to surface them together."
+  },
+  "createdAt": "2026-09-07T20:00:00.698290505+00:00",
+  "updatedAt": "2026-09-07T20:00:00.698294265+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

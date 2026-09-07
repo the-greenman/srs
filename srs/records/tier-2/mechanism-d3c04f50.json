@@ -1,0 +1,14 @@
+{
+  "instanceId": "d3c04f50-c0af-49e4-90cd-d0279073063f",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`FieldAssignmentOverride`",
+    "content": "Overrides presentation or workflow constraints for an inherited Field in a specializing Type. It does not change the Field's semantics.\n\nExample: the `FieldAssignmentOverride` shape.\n\n`displayLabel` and `displayHint` are presentation-only. `required` may tighten an inherited optional field (`false` to `true`) for the specializing Type. It must not relax an inherited required field (`true` to `false`), because a Record instantiated against the specializing Type must remain valid when processed as the base Type.\n\nThe effective field list for a specializing Type is the inherited effective field list of its base Type plus the specializing Type's own `fields[]`. A specializing Type must not duplicate an inherited `fieldId` in its own `fields[]`.\n\nExample:\n\nExample: a governance decision Type specialising a core decision Type.\n\nA system that knows `core/decision` but not `org.example/governance_decision` can still read the inherited decision fields. The specializing fields are unknown extension content to that system and should be preserved rather than discarded."
+  },
+  "createdAt": "2026-09-07T19:59:46.066775454+00:00",
+  "updatedAt": "2026-09-07T20:50:39.808263587+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

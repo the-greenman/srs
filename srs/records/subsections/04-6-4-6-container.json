@@ -6,14 +6,14 @@
   "typeName": "subsection",
   "fieldValues": {
     "title": "Container",
-    "content": "A lightweight grouping boundary over a collection of instances. Containers answer scoping questions — which instances belong together, what constitutes \"this project\" — that the Relation graph alone cannot answer.\n\nContainers are not semantic objects with Fields. They do not own semantic state; Records do. A `contains` Relation asserts \"A is part of B\" (a semantic claim); a Container asserts \"these instances form a unit for boundary purposes\" (a scope claim). Both are needed; neither replaces the other.\n\nSee the generated reference below for `Container`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.\n\n`Container.containerId` is not an instance ID and must not appear in `Relation.sourceInstanceId` or `targetInstanceId`. See Invariant 20.\n\n##### Membership and nesting (RFC-034)\n\nA Container is a declared selection on the expression plane (rfc-decision-0750c62f). Its direct membership is the unordered set `direct(C) = rootInstanceIds ∪ memberInstanceIds`: roots anchor the scope, `memberInstanceIds` adds explicit members, and an omitted `memberInstanceIds` adds nothing (I-146).\n\nNested scopes are declared through `childContainerIds`, an unordered set of `containerId`s and the one place a Container references another Container; nesting is never inferred from membership overlap. Effective membership is the closure `effective(C) = direct(C) ∪ ⋃ effective(child)` over the declared children (I-147). Every child id resolves to an existing, distinct Container, the child graph is acyclic, a child can be rootless, and a rooted child's roots normally sit in the parent's direct membership (I-150). A Container can have more than one parent; only the tree-shaped subset maps onto a folder hierarchy.\n\nRelations do not define membership (I-148). `contains` remains the part-of tree that navigation depth, layering and any tree walk are built on, and it is still maintained; a Container is a bookmark over that tree. This supersedes the pre-RFC-034 rule that omitted membership was derived by traversing `contains` from the roots.\n\nOne definition serves every membership question: `containers_for_instance` (I-66), member listing and view resolution, RFC-012 `containerId` discovery (I-118), RFC-011 `containerScope` with `\"explicit\"` as `direct(C)` and `\"subtree\"` as `effective(C)` (I-144), and the RFC-026 slice closure (I-151). No membership array carries an order; ordering stays with `precedes` and Composition (RFC-015). A query is a separate, read-only selection and never changes membership by itself (I-149)."
+    "content": "Content relocated to mechanism leaves under the Container concept (RFC-042 Change B, srs#562). See derived-from."
   },
   "tags": [
     "construct:container",
     "topic:foundation"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-09-06T13:20:34.462216653+00:00",
+  "updatedAt": "2026-09-07T19:59:45.577468173+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

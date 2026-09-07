@@ -6,7 +6,7 @@
   "typeName": "subsection",
   "fieldValues": {
     "title": "ext:cross-field-validation",
-    "content": "> **Formalised by**: RFC-019 (srs#139). The `CrossFieldRule` shape and `validationRules` property are formally specified by RFC-019; refer to it for normative conformance rules (R0–R11).\n\n**Required for**: Types with constraints that span multiple Fields.\n\n`ValidationRule` handles single-field constraints. `CrossFieldRule` handles constraints that require evaluating more than one Field together.\n\n#### `CrossFieldRule`\n\nExample: the `CrossFieldRule` shape.\n\n| Rule type | Required fields |\n|---|---|\n| `conditional-required` | `predicateFieldId`, `predicateValue`, `targetFieldId` |\n| `field-ordering` | `predicateFieldId`, `targetFieldId`, `effect` |\n| `mutual-exclusion` | `fieldIds` (min 2) |\n\nWhen `ext:cross-field-validation` is in use, `Type` gains `validationRules?: CrossFieldRule[]`.\n\n---"
+    "content": "Content relocated to mechanism leaves under the Validation concept (RFC-042 Change B, srs#562). See derived-from."
   },
   "tags": [
     "concern:extensibility",
@@ -14,7 +14,7 @@
     "topic:extensions"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-09-06T17:00:41.962981977+00:00",
+  "updatedAt": "2026-09-07T19:59:44.294881888+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

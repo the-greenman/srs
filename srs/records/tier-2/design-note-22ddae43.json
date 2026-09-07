@@ -1,0 +1,14 @@
+{
+  "instanceId": "22ddae43-69a2-4e99-ae68-296f26d80497",
+  "typeId": "2a000012-0000-4000-a000-000000000012",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "design-note",
+  "fieldValues": {
+    "title": "Design principle",
+    "content": "Tags are a peer to Field and Type in the SRS data model — not an extension, not an afterthought. They are defined natively in the core implementation with dedicated service functions, not modelled as user-defined package types. This is because the operations that depend on tags (especially foundation note selection for AI context) are universal across all SRS repositories, not specific to any one repo's package."
+  },
+  "createdAt": "2026-09-07T20:00:00.913789958+00:00",
+  "updatedAt": "2026-09-07T20:00:00.913793067+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

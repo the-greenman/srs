@@ -1,0 +1,14 @@
+{
+  "instanceId": "173f5b74-8e4c-4227-833c-20ad36c5688e",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`RelationTypeDefinition` as a VocabularyEntry specialisation (RFC-006)",
+    "content": "`RelationTypeDefinition` satisfies the `VocabularyEntry` substrate contract. As of RFC-006, its key-role field is renamed from `relationType` to `key`. Instance-side reference fields (`Relation.relationType`) are unchanged.\n\nIt gains `meta?: Record<string, unknown>` under the one forward-compatibility policy: unknown top-level fields are rejected; arbitrary entry metadata goes in `meta`.\n\nIt **requires** both `label` and `description` (unchanged from RFC-005). The substrate making these optional in the general contract does not relax this obligation.\n\nThe V1 mandatory resolution requirement (every `Relation.relationType` must resolve to an installed `RelationTypeDefinition`) is a named instance of the general closed-vocabulary resolution rule. See §9 (Conformance) and the Foundation Vocabulary and Term subsection."
+  },
+  "createdAt": "2026-09-07T19:59:44.553178094+00:00",
+  "updatedAt": "2026-09-07T20:50:40.167075315+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

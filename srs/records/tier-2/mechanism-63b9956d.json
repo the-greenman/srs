@@ -1,0 +1,14 @@
+{
+  "instanceId": "63b9956d-3857-4a70-9310-b0b033e1c128",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`lifecycleRef` — referencing shared lifecycle definitions",
+    "content": "When `ext:lifecycle` is in use, a Type declares a lifecycle in exactly one of two mutually exclusive forms (V7):\n\nExample: the two lifecycle declaration forms on a Type.\n\nDeclaring both is a validation error. An inline lifecycle cannot extend; use `lifecycleRef` when the same state machine is needed across multiple Types."
+  },
+  "createdAt": "2026-09-07T19:59:47.935231568+00:00",
+  "updatedAt": "2026-09-07T20:50:39.456213734+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

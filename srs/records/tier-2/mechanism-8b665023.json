@@ -1,0 +1,14 @@
+{
+  "instanceId": "8b665023-7371-48ec-93e2-24879d91306e",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`CrossFieldRule`",
+    "content": "Example: the `CrossFieldRule` shape.\n\n| Rule type | Required fields |\n|---|---|\n| `conditional-required` | `predicateFieldId`, `predicateValue`, `targetFieldId` |\n| `field-ordering` | `predicateFieldId`, `targetFieldId`, `effect` |\n| `mutual-exclusion` | `fieldIds` (min 2) |\n\nWhen `ext:cross-field-validation` is in use, `Type` gains `validationRules?: CrossFieldRule[]`."
+  },
+  "createdAt": "2026-09-07T19:59:43.916269883+00:00",
+  "updatedAt": "2026-09-07T20:50:39.986251092+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
