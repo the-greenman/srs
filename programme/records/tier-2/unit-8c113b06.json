@@ -5,19 +5,18 @@
   "typeNamespace": "com.semanticops.programme",
   "typeName": "unit",
   "fieldValues": {
-    "title": "Negative test for check-programme-conformance.mjs, plus a base-branch gate fix",
-    "summary": "Added the missing negative test for check-programme-conformance.mjs's two assertions (srs#667), and while validating this unit's own gates, found and fixed a stale commit-pinned allowlist entry that was failing validate-all.mjs and check-release-drift.mjs on a bare origin/master checkout (srs#668).",
+    "title": "Negative test for check-programme-conformance.mjs (srs#667)",
+    "summary": "Added the missing negative test for check-programme-conformance.mjs's two assertions (srs#667). While validating this unit's own gates, misdiagnosed a shallow local git clone as a rewritten master history (srs#668) and briefly shipped an incorrect allowlist fix; caught by CI's own full-history checkout, retracted, and reverted in the same PR before merge.",
     "decision_mode": "clear",
     "door": "non-normative",
     "issue_ref": [
       "srs#667",
-      "srs#668",
       "srs#580"
     ],
-    "body": "srs#667: added a root-override argument to check-programme-conformance.mjs (mirroring every sibling check-*-cell.mjs), and a new tests/guards/run.mjs case copying the real programme/ tree, breaking each of the check's two assertions in turn (emptied .srs marker; a record with a dangling typeId reference), asserting red with the offending message, then restoring and asserting green.\n\nsrs#668: scripts/versioning-cell-allowlist.json's one entry pinned its violation by commit SHA (fromCommit 3553f2ac, toCommit 72c5d2b7). Master's history was rewritten after those commits were made: 3553f2ac no longer exists as a git object, and 72c5d2b7 is no longer an ancestor of origin/master, even though its tree content is present in the live corpus. check-versioning-cell.mjs could no longer observe the transition, so the entry stopped matching anything and both required gates failed on a bare master checkout. Fixed by shrinking the allowlist to entries: [], per the check's own documented remedy. srs#658 (the underlying semantic gap — no per-field version override in the metamodel generator) stays open."
+    "body": "srs#667: added a root-override argument to check-programme-conformance.mjs (mirroring every sibling check-*-cell.mjs), and a new tests/guards/run.mjs case copying the real programme/ tree, breaking each of the check's two assertions in turn (emptied .srs marker; a record with a dangling typeId reference), asserting red with the offending message, then restoring and asserting green.\n\nsrs#668 (filed, then retracted): initially diagnosed scripts/versioning-cell-allowlist.json's one commit-pinned entry as stale after a 'master history rewrite', because two commits it cites (3553f2ac, 72c5d2b7) looked absent/non-ancestor from this session's local clone. That clone was shallow -- git rev-parse --is-shallow-repository was never checked before drawing the conclusion. After `git fetch --unshallow`, both commits resolved correctly and the original allowlist entry was confirmed correct all along; the emptied-allowlist push was reverted before merge. See finding 07d153cf for the durable lesson."
   },
   "lifecycleState": "in_review",
   "createdAt": "2026-09-07T18:02:18.224462957+00:00",
-  "updatedAt": "2026-09-07T18:03:03.937142179+00:00",
+  "updatedAt": "2026-09-07T18:14:44.749289114+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
