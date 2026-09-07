@@ -1140,6 +1140,50 @@ async function decisionCompassDriftCases(root) {
   );
 }
 
+// ---- #490 — srs-usage.md invariant citations: FORWARD-only sibling of the compass guard ----
+async function srsUsageInvariantCitationCases(root) {
+  console.log("#490 — srs-usage.md invariant citation guard");
+
+  const invariant = (n, num) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/record.json",
+    instanceId: `00000000-0000-4000-8000-0000000006${String(n).padStart(2, "0")}`,
+    typeId: "2a000006-0000-4000-a000-000000000006",
+    typeVersion: 1,
+    typeNamespace: "com.semanticops.spec",
+    typeName: "invariant",
+    fieldValues: { invariant_number: num, title: `invariant ${n}`, normative_statement: "MUST fixture." },
+  });
+
+  await writeJson(join(root, "srs/records/invariants/one.json"), invariant(1, "I-77"));
+  const usagePath = join(root, "srs-usage.md");
+  const goodUsage = "# Usage\n\nSee I-77 for the rule.\n";
+  await writeText(usagePath, goodUsage);
+
+  expect(
+    "passes when every I-<n> citation resolves to a live invariant",
+    runCheck("check-srs-usage-invariant-citations.mjs", root),
+    { exit: 0, contains: ["✓ Every I-<n> citation"] },
+  );
+
+  // FORWARD violation: a citation to a number no live invariant carries (typo, or the invariant
+  // was renumbered/retired out from under the citing prose).
+  await writeText(usagePath, "# Usage\n\nSee I-999 for the rule.\n");
+  expect(
+    "rejects a citation whose invariant number does not exist",
+    runCheck("check-srs-usage-invariant-citations.mjs", root),
+    { exit: 1, contains: ["I-999", "no live com.semanticops.spec/invariant record"] },
+  );
+
+  // ...and the same file with the citation fixed passes again — proves the guard isn't just
+  // always red.
+  await writeText(usagePath, goodUsage);
+  expect(
+    "passes again once the citation is fixed",
+    runCheck("check-srs-usage-invariant-citations.mjs", root),
+    { exit: 0, contains: ["✓ Every I-<n> citation"] },
+  );
+}
+
 // ---- srs#569 — the spec-language register gate ---------------------------------------------
 async function specLanguageCases(root) {
   console.log("srs#569 — spec-language register guard");
@@ -2334,6 +2378,7 @@ try {
   await publicationReachabilityCases(join(root, "publication-reachability"));
   await invariantPlacementCases(join(root, "invariant-placement"));
   await decisionCompassDriftCases(join(root, "decision-compass-drift"));
+  await srsUsageInvariantCitationCases(join(root, "srs-usage-invariant-citations"));
   await decisionCellTagsCases(join(root, "decision-cell-tags"));
   await relationTypeResolutionCases(join(root, "relation-type-resolution"));
   await charterAlignmentSectionCases(join(root, "charter-alignment"));
