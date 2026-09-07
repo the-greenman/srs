@@ -23,7 +23,7 @@
  * check-gallery-conformance.mjs — consume the pattern, do not clone the file.
  *
  *   export $(node scripts/fetch-pinned-srs.mjs)
- *   node scripts/check-programme-conformance.mjs
+ *   node scripts/check-programme-conformance.mjs [root]   # root defaults to the repo root
  */
 import { readdir, stat } from "fs/promises";
 import { join, resolve } from "path";
@@ -32,7 +32,11 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import { logSrsCliProvenance, resolveSrsCli } from "./lib/pinned-srs.mjs";
 
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+// Optional root override — the negative test (tests/guards/run.mjs) points this at a fixture tree,
+// same shape as check-repository-cell.mjs and check-versioning-cell.mjs.
+const ROOT = process.argv[2]
+  ? resolve(process.argv[2])
+  : resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const REPO_REL = "programme";
 const REPO_ABS = join(ROOT, REPO_REL);
 
