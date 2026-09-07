@@ -15,8 +15,8 @@
     ],
     "body": "srs#667: added a root-override argument to check-programme-conformance.mjs (mirroring every sibling check-*-cell.mjs), and a new tests/guards/run.mjs case copying the real programme/ tree, breaking each of the check's two assertions in turn (emptied .srs marker; a record with a dangling typeId reference), asserting red with the offending message, then restoring and asserting green.\n\nsrs#668 (filed, then retracted): initially diagnosed scripts/versioning-cell-allowlist.json's one commit-pinned entry as stale after a 'master history rewrite', because two commits it cites (3553f2ac, 72c5d2b7) looked absent/non-ancestor from this session's local clone. That clone was shallow -- git rev-parse --is-shallow-repository was never checked before drawing the conclusion. After `git fetch --unshallow`, both commits resolved correctly and the original allowlist entry was confirmed correct all along; the emptied-allowlist push was reverted before merge. See finding 07d153cf for the durable lesson."
   },
-  "lifecycleState": "in_review",
+  "lifecycleState": "landed",
   "createdAt": "2026-09-07T18:02:18.224462957+00:00",
-  "updatedAt": "2026-09-07T18:14:44.749289114+00:00",
+  "updatedAt": "2026-09-07T18:23:31.054959852+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
