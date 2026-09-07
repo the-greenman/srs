@@ -1,0 +1,15 @@
+{
+  "instanceId": "6c231a2a-46ac-4cb0-8174-7808f98aefbf",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "A worktree branched from a shallow local checkout is itself shallow — verify before trusting any check that reads git history, or before calling a failure pre-existing",
+    "summary": "This session's fresh worktree (git worktree add <dir> origin/master, from the session's already-shallow main checkout) inherited that shallowness: git rev-parse --is-shallow-repository returned true. check-versioning-cell.mjs (srs#649, unrelated to this unit's own repository-cell check) failed with a stale-allowlist-entry error purely because git log/git show could not see the commit history its allowlist entry pins. Stashing out this unit's own changes and re-running the unrelated check on origin/master's tip reproduced the identical failure, which looked like exactly the 'baseline honesty' proof CLAUDE.md asks for -- but the proof itself was invalid, because the local object database was incomplete, not because the corpus regressed. git fetch origin master --unshallow (the shared main checkout and worktree share one object database) fixed it; the check went green immediately after, with no code or allowlist change.",
+    "rationale": "carried-context-e030d924 already warns that an issue's stated baseline can be stale and to check the artifact's own git log against origin/master rather than trusting the issue text -- but it assumes the local git log itself is trustworthy once you run it. This generalizes that: the log can be silently truncated by a shallow clone, and `git log`/`git show` against a shallow history fail quietly (empty or short history) rather than erroring, so a stale-looking result reads as a real corpus fact instead of a local artifact of the checkout. Any unit that (a) runs a check reading git history (git log --follow, git show <commit>:<path>) for the FIRST time in a fresh worktree, or (b) is about to declare a failure 'pre-existing on master' per CLAUDE.md's baseline-honesty rule, should first run `git rev-parse --is-shallow-repository` and, if true, `git fetch origin <default-branch> --unshallow` before trusting the result either way. This would reopen only if the sandbox's default checkout depth changes, or a future check's history walk is bounded in a way that tolerates a shallow clone by design (neither is true of check-versioning-cell.mjs today)."
+  },
+  "createdAt": "2026-09-06T22:31:44.819448241+00:00",
+  "updatedAt": "2026-09-06T22:31:44.819456796+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

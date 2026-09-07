@@ -1,0 +1,19 @@
+{
+  "instanceId": "49665803-871b-4b7a-b118-f3a40496d5f0",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "editorHint was silently dropped in this repository's own package",
+    "summary": "The programme package's own `title` field is authored editorHint: singleline, but the pinned CLI's type schema projected x-srs-widget: textarea for it anyway — confirming srs-rust#958's report was live in this repository, not hypothetical.",
+    "evidence": [
+      "srs field get --repo programme c42d4a91-dbd9-480a-b612-e31b5a77d9bf shows fieldType.format=plain and editorHint=singleline",
+      "srs type schema --repo programme <unit|finding|carried_context typeId> (pinned CLI, pre-fix) emits properties.title[\"x-srs-widget\"]=\"textarea\" for every one of the three types authored against this same title field",
+      "srs-rust PR #975 fixes this in type_schema_service::apply_editor_hint_widget; the pinned CLI installed in this session predates that PR"
+    ]
+  },
+  "createdAt": "2026-09-06T18:02:27.609312871+00:00",
+  "updatedAt": "2026-09-06T18:02:27.609323385+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

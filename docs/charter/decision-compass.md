@@ -151,6 +151,7 @@ the bug. New meaning gets a row here in the change that creates it.
 | Invariants | `srs/records/invariants/` only — placement **is** the ratification act (srs#410) | `check-invariant-placement` — fail-closed, with no exclusion-list escape, unlike the reachability guard |
 | Decisions, charter-class and otherwise | `srs/records/tier-2/rfc-decision-*.json` | this page; `check-decision-compass-drift`; `check-decision-cell-tags`; `docs/spec/rfcs/rfc-decision-log.md` |
 | Ordering, membership and repository identity | `srs/relations/` and `srs/manifest.json` | navigation, `publish-spec.mjs`, `repo validate` |
+| Known concept-tree coherence violations (grandfathered) | `scripts/spec-coherence-allowlist.json` | `check-spec-coherence` (#560, #623) |
 
 **EXPRESSION** — selection → composition → presentation → projection.
 
@@ -171,6 +172,8 @@ the bug. New meaning gets a row here in the change that creates it.
 | Agent rules for working with any SRS repository | `srs-usage.md` | agents in every repo; the tool-first rule in `CLAUDE.md` cites it |
 | The queue and the rulings not to relitigate | the-greenman/srs#580 | `CLAUDE.md`, `AGENTS.md`, every unit start |
 | Programme state — phases, units, findings | `programme/` records (its own SRS repository) | `check-programme-conformance`, via the pinned CLI |
+| Programme process — Protocol and Blueprint definitions | `programme/package/protocols/` and `programme/package/blueprints/` | `srs protocol stages` / `srs blueprint brief` over the pinned CLI; every unit's Work stage |
+| Carried context for the next unit | `programme/records/tier-2/carried-context-*.json` | dispatch briefs on the-greenman/srs#580; every unit's Ground stage |
 
 ### Known anomalies
 

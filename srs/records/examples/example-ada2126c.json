@@ -1,0 +1,14 @@
+{
+  "instanceId": "ada2126c-98e2-4ff8-b049-932e505be2d5",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `Protocol` shape",
+    "content": "`Protocol`, in pseudo-IDL:\n\n```typescript\n{\n  id: UUID\n  namespace: string\n  name: string\n  version: integer   // min: 1\n\n  description?: string\n\n  targetType: UUID | \"\"\n  // The Record type this Protocol produces — a LINEAGE reference (bare UUID;\n  // rfc-decision-c8704763), never the canonical namespace/name@version form (that is\n  // DISPLAY-only and is never stored). Empty string for loose / exploratory Protocols\n  // (Brain Dump, Decomposition) whose output is input context for a tighter Protocol.\n\n  stages: ProtocolStage[]\n\n  tags?: string[]\n  createdAt: ISO8601\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:46.509915379+00:00",
+  "updatedAt": "2026-09-06T17:05:18.227980267+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

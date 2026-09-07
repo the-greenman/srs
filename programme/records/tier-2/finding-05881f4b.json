@@ -1,0 +1,21 @@
+{
+  "instanceId": "05881f4b-7f48-4008-a8c2-fe9330e4c019",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "The forward reference was a wrong edge, not a wrong order",
+    "summary": "The corpus had one forward reference: Record depends-on Field values, where Field values is a contains child of Record. Reordering siblings was unavailable (they are parent and child) and one SCC did not hold (the genuine cycles are between peers). The definitions are not symmetric: Field values cannot be stated without Record, while Record only says it carries values. The edge ran the wrong way and was reversed.",
+    "evidence": [
+      "The Field values definition opens by calling the payload a Record property - it presupposes Record",
+      "The Record definition presupposes Type, Field and Instance, not the carrier contract",
+      "The #608 irreducible cycles (Type-FieldAssignment, Relation-RelationTypeDefinition, Conformance-Extension) are all between peers, not parent and child",
+      "Relation d6384616 deleted, 3cb26808 created in the correct direction; tree order unchanged"
+    ],
+    "body": "A forward-reference report has three possible causes and only one of them is an ordering problem. Before reordering anything, ask whether the edge itself is asserted backwards - in a corpus where depends-on was authored per record rather than derived, a child-to-parent refinement written parent-to-child is the likeliest of the three."
+  },
+  "createdAt": "2026-09-06T17:50:21.781502824+00:00",
+  "updatedAt": "2026-09-06T17:50:21.781509448+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

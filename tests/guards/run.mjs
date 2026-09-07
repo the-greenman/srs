@@ -566,7 +566,13 @@ async function publicationReachabilityCases(root) {
   });
 
   // Declaring the invisibility clears it — the exclusion list is the sanctioned escape, not a flag.
-  const orphanEntry = { instanceId: ID(2), path: "records/orphan.json", reason: "fixture", issue: "#285" };
+  const orphanEntry = {
+    instanceId: ID(2),
+    path: "records/orphan.json",
+    reason: "fixture",
+    disposition: "permanent",
+    issue: "#285",
+  };
   await exclusions(orphanEntry);
   expect("accepts it once its invisibility is declared", runCheck("check-publication-reachability.mjs", root), {
     exit: 0,
@@ -574,21 +580,49 @@ async function publicationReachabilityCases(root) {
   });
 
   // ...but only as typed data. A reason-less entry is an allowlist, which is the thing this is not.
-  await exclusions({ instanceId: ID(2), path: "records/orphan.json", issue: "#285" });
+  await exclusions({ instanceId: ID(2), path: "records/orphan.json", disposition: "permanent", issue: "#285" });
   expect("rejects an exclusion entry with no reason", runCheck("check-publication-reachability.mjs", root), {
     exit: 1,
     contains: ["exclusions[0] is missing required properties: reason"],
   });
 
+  // #590: disposition names whether a closed issue citation is a settled ruling ("permanent") or a
+  // regression waiting to happen ("pending"). Neither absence nor an invented third value is legal.
+  await exclusions({ ...orphanEntry, disposition: undefined });
+  expect("rejects an exclusion entry with no disposition", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ["exclusions[0] is missing required properties: disposition"],
+  });
+  await exclusions({ ...orphanEntry, disposition: "grandfathered" });
+  expect("rejects an exclusion with a disposition that is not permanent or pending", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: ['disposition "grandfathered" must be "permanent" or "pending"'],
+  });
+  await exclusions({ ...orphanEntry, disposition: "pending" });
+  expect("accepts disposition \"pending\" citing an issue like any other", runCheck("check-publication-reachability.mjs", root), {
+    exit: 0,
+    contains: ["✓ Every discovered record is reachable"],
+  });
+  await exclusions(orphanEntry);
+
   // A stale exclusion is an error in both directions. First: it names an instance that is gone.
-  await exclusions(orphanEntry, { instanceId: ID(9), path: "records/vanished.json", reason: "fixture", issue: "#285" });
+  await exclusions(orphanEntry, {
+    instanceId: ID(9),
+    path: "records/vanished.json",
+    reason: "fixture",
+    disposition: "permanent",
+    issue: "#285",
+  });
   expect("rejects an exclusion for an instance that no longer exists", runCheck("check-publication-reachability.mjs", root), {
     exit: 1,
     contains: ["stale exclusion", "records/vanished.json", "no longer a discovered instance"],
   });
 
   // Second: it names one that has since become reachable, where it would hide the next regression.
-  await exclusions({ instanceId: ID(1), path: "records/root.json", reason: "fixture", issue: "#285" }, orphanEntry);
+  await exclusions(
+    { instanceId: ID(1), path: "records/root.json", reason: "fixture", disposition: "permanent", issue: "#285" },
+    orphanEntry,
+  );
   expect("rejects an exclusion for a record that is now reachable", runCheck("check-publication-reachability.mjs", root), {
     exit: 1,
     contains: ["stale exclusion", "records/root.json", "is now reachable"],
@@ -1214,6 +1248,19 @@ async function specLanguageCases(root) {
   );
   expect("accepts the same keyword in a normative_statement", runCheck("check-spec-language.mjs", root), clean);
 
+  // 5b. srs#638 — a leaf's Type is its role: normativeSites.types names com.semanticops.spec/invariant,
+  // so a keyword in `content` on that Type is accepted with no normative_statement field at all.
+  await writeJson(subjectPath, {
+    $schema: "https://srs.semanticops.com/schema/2.0/record.json",
+    instanceId: "00000000-0000-4000-8000-0000000005f0",
+    typeId: "2a000006-0000-4000-a000-000000000006",
+    typeVersion: 1,
+    typeNamespace: "com.semanticops.spec",
+    typeName: "invariant",
+    fieldValues: { title: "Package resolution", content: "A resolver MUST reject an unresolved reference." },
+  });
+  expect("accepts an RFC 2119 keyword in content on a normativeSites.types Type", runCheck("check-spec-language.mjs", root), clean);
+
   // 6. The word budget is hard, and the message says by how much.
   await writeJson(subjectPath, record("Package resolution", { content: `${"word ".repeat(401)}.` }));
   expect("rejects a prose field over the word budget", runCheck("check-spec-language.mjs", root), {
@@ -1338,6 +1385,66 @@ async function charterAlignmentSectionCases(root) {
     runCheck("check-rfc-integration.mjs", root),
     { exit: 1, contains: ["RFC-040", "carries no", "## Charter alignment"] },
   );
+}
+
+// ---- srs#591 — integration-allowlist.json entries must carry a valid disposition ----------------
+async function integrationAllowlistDispositionCases(root) {
+  console.log("srs#591 — integration-allowlist disposition guard");
+
+  await mkdir(join(root, "docs/schema/2.0"), { recursive: true });
+  const allowlistPath = join(root, "rfcs/integration-allowlist.json");
+  const entry = (overrides = {}) => ({
+    issue: "the-greenman/srs#633",
+    disposition: "pending",
+    reason: "fixture",
+    ...overrides,
+  });
+  const writeAllowlist = (fixtureEntry) => writeJson(allowlistPath, { grandfathered: { "038": fixtureEntry } });
+
+  // The violation this guard exists for (srs#591): an entry with no disposition reads as
+  // unambiguous even though "the cited issue is now closed" means opposite things for a settled
+  // ruling versus a dead follow-up pointer nobody ever repointed.
+  const { disposition, ...noDisposition } = entry();
+  await writeAllowlist(noDisposition);
+  expect(
+    "rejects an allowlist entry with no disposition",
+    runCheck("check-rfc-integration.mjs", root),
+    { exit: 1, contains: ['grandfathered["038"] is missing required properties: disposition'] },
+  );
+
+  // Neither an invented third value...
+  await writeAllowlist(entry({ disposition: "grandfathered" }));
+  expect(
+    "rejects an allowlist entry with a disposition that is not permanent or pending",
+    runCheck("check-rfc-integration.mjs", root),
+    { exit: 1, contains: ['disposition "grandfathered" must be "permanent" or "pending"'] },
+  );
+
+  // ...nor a missing issue/reason, matching what the sibling publication-reachability-exclusions.json
+  // guard (srs#590) already requires of its own entries.
+  const { issue, ...noIssue } = entry();
+  await writeAllowlist(noIssue);
+  expect(
+    "rejects an allowlist entry with no issue",
+    runCheck("check-rfc-integration.mjs", root),
+    { exit: 1, contains: ['grandfathered["038"] is missing required properties: issue'] },
+  );
+
+  // The guard is not simply always red: "permanent" and "pending" both pass, like any other entry.
+  await writeAllowlist(entry({ disposition: "permanent" }));
+  expect(
+    "accepts disposition \"permanent\" citing an issue like any other",
+    runCheck("check-rfc-integration.mjs", root),
+    { exit: 0, contains: ["Checking RFC integration... OK"] },
+  );
+  await writeAllowlist(entry({ disposition: "pending" }));
+  expect(
+    "accepts disposition \"pending\" citing an issue like any other",
+    runCheck("check-rfc-integration.mjs", root),
+    { exit: 0, contains: ["Checking RFC integration... OK"] },
+  );
+
+  await rm(allowlistPath);
 }
 
 // ---- srs#519 — RFC banner conformance-rule token drift ------------------------------------------
@@ -1848,6 +1955,317 @@ async function specCoherenceCases(root) {
   });
 }
 
+// ---- srs#650 — attribution cell: a fieldMeta key names a field that actually exists ----------
+async function attributionCellCases(root) {
+  console.log("srs#650 — attribution cell: fieldMeta keys are a subset of fieldValues keys (I-133)");
+
+  const ID = "00000000-0000-4000-8000-000000000650";
+  const record = (fieldValues, fieldMeta) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/record.json",
+    instanceId: ID,
+    typeId: "6a000004-0000-4000-a000-000000000004",
+    typeVersion: 1,
+    typeNamespace: "com.semanticops.spec",
+    typeName: "invariant",
+    fieldValues,
+    ...(fieldMeta !== undefined ? { fieldMeta } : {}),
+  });
+
+  const repo = join(root, "srs");
+
+  // No fieldMeta at all: the overwhelming common case, must pass.
+  await writeJson(join(repo, "records/plain.json"), record({ title: "fixture" }));
+  expect(
+    "passes a record with no fieldMeta block",
+    runCheck("check-attribution-cell.mjs", root),
+    { exit: 0, contains: ["every fieldMeta key names a field that exists in fieldValues"] },
+  );
+
+  // The violation this guard exists for: a fieldMeta key naming a field fieldValues does not have.
+  await writeJson(
+    join(repo, "records/plain.json"),
+    record({ title: "fixture" }, { summary: { source: "human" } }),
+  );
+  expect(
+    "rejects a fieldMeta key with no corresponding fieldValues key",
+    runCheck("check-attribution-cell.mjs", root),
+    { exit: 1, contains: ["records/plain.json", ID, 'fieldMeta."summary"', "no fieldValues"] },
+  );
+
+  // A fieldMeta key that does name a real fieldValues key: compliant, matching srs#650's one real
+  // corpus instance (rfc-004's proposal_artifact_path).
+  await writeJson(
+    join(repo, "records/plain.json"),
+    record({ title: "fixture" }, { title: { source: "human" } }),
+  );
+  expect(
+    "accepts a fieldMeta key that names a real fieldValues key",
+    runCheck("check-attribution-cell.mjs", root),
+    { exit: 0, contains: ["every fieldMeta key names a field that exists in fieldValues"] },
+  );
+
+  // A floor, matching the sibling cell guards: a walk that finds no Record instance at all means
+  // the root argument is wrong, not that the corpus has nothing to check.
+  await rm(join(repo, "records/plain.json"));
+  expect(
+    "fails when the walk finds no Record instances at all",
+    runCheck("check-attribution-cell.mjs", root),
+    { exit: 1, contains: ["No Record instances", "check the root argument"] },
+  );
+}
+
+// ---- srs#649 — versioning cell: Field allowedValues change requires a version increment ---------
+//
+// Unlike every other case in this file, the check under test reads real git history rather than a
+// live tree snapshot, so a plain writeJson fixture proves nothing — a directory with no commits has
+// no history to diff. Each scenario below is its own throwaway git repository with a real two-
+// commit history, built and committed here rather than shared with the other cases' fixture tree.
+async function versioningCellCases(root) {
+  console.log("srs#649 — versioning cell: Field allowedValues change requires a version increment");
+
+  const FIELD_ID = "00000000-0000-4000-8000-00000000f649";
+  const gitEnv = {
+    ...process.env,
+    GIT_AUTHOR_NAME: "srs-guard-fixture",
+    GIT_AUTHOR_EMAIL: "fixture@example.invalid",
+    GIT_COMMITTER_NAME: "srs-guard-fixture",
+    GIT_COMMITTER_EMAIL: "fixture@example.invalid",
+  };
+  const git = (cwd, ...args) => spawnSync("git", args, { cwd, env: gitEnv, encoding: "utf8" });
+
+  const fieldDoc = (version, allowedValues) => ({
+    id: FIELD_ID,
+    namespace: "com.example.fixture",
+    name: "status",
+    version,
+    description: "fixture field",
+    aiGuidance: "fixture",
+    fieldType: { datatype: "string", valueDomain: "closed", allowedValues },
+    createdAt: "2026-08-15T00:00:00Z",
+  });
+
+  // Builds a repo at `dir` with one commit per step, each rewriting the same field file.
+  const buildHistory = async (dir, steps) => {
+    await mkdir(dir, { recursive: true });
+    git(dir, "init", "-q");
+    const path = join(dir, "srs/package/fields/status.json");
+    for (const { version, allowedValues } of steps) {
+      await writeJson(path, fieldDoc(version, allowedValues));
+      git(dir, "add", "-A");
+      git(dir, "commit", "-q", "-m", `v${version}`);
+    }
+  };
+
+  const violation = join(root, "violation");
+  await buildHistory(violation, [
+    { version: 1, allowedValues: ["a", "b"] },
+    { version: 1, allowedValues: ["a", "b", "c"] }, // domain changed, version did not increase
+  ]);
+  expect(
+    "rejects a Field whose allowedValues changed with no version increase",
+    runCheck("check-versioning-cell.mjs", violation),
+    { exit: 1, contains: ["srs/package/fields/status.json", FIELD_ID, "no version increase"] },
+  );
+
+  const clean = join(root, "clean");
+  await buildHistory(clean, [
+    { version: 1, allowedValues: ["a", "b"] },
+    { version: 2, allowedValues: ["a", "b", "c"] }, // domain changed, version incremented
+  ]);
+  expect(
+    "accepts the same allowedValues change once the version increments",
+    runCheck("check-versioning-cell.mjs", clean),
+    { exit: 0 },
+  );
+
+  const untouched = join(root, "untouched");
+  await buildHistory(untouched, [
+    { version: 1, allowedValues: ["a", "b"] },
+    { version: 1, allowedValues: ["a", "b"] }, // no domain change at all — a version bump is not required
+  ]);
+  expect(
+    "does not require a version increase when allowedValues does not change",
+    runCheck("check-versioning-cell.mjs", untouched),
+    { exit: 0 },
+  );
+
+  // The allowlist (scripts/versioning-cell-allowlist.json), same discipline as spec-coherence's:
+  // a listed violation passes, a stale or malformed entry fails on its own.
+  const commitsOf = (dir) =>
+    git(dir, "log", "--reverse", "--format=%H").stdout.trim().split("\n");
+
+  const allowlisted = join(root, "allowlisted");
+  await buildHistory(allowlisted, [
+    { version: 1, allowedValues: ["a", "b"] },
+    { version: 1, allowedValues: ["a", "b", "c"] },
+  ]);
+  const [allowlistedFrom, allowlistedTo] = commitsOf(allowlisted);
+  await writeJson(join(allowlisted, "scripts/versioning-cell-allowlist.json"), {
+    entries: [
+      {
+        path: "srs/package/fields/status.json",
+        id: FIELD_ID,
+        fromCommit: allowlistedFrom,
+        toCommit: allowlistedTo,
+        disposition: "pending",
+        issue: "#1",
+        note: "fixture",
+      },
+    ],
+  });
+  expect(
+    "accepts a violation covered by a valid allowlist entry",
+    runCheck("check-versioning-cell.mjs", allowlisted),
+    { exit: 0, contains: ["1 known violation(s) allowlisted"] },
+  );
+
+  const staleAllowlist = join(root, "stale-allowlist");
+  await buildHistory(staleAllowlist, [
+    { version: 1, allowedValues: ["a", "b"] },
+    { version: 2, allowedValues: ["a", "b", "c"] }, // no violation here — the entry below matches nothing
+  ]);
+  const [staleFrom, staleTo] = commitsOf(staleAllowlist);
+  await writeJson(join(staleAllowlist, "scripts/versioning-cell-allowlist.json"), {
+    entries: [
+      {
+        path: "srs/package/fields/status.json",
+        id: FIELD_ID,
+        fromCommit: staleFrom,
+        toCommit: staleTo,
+        disposition: "pending",
+        issue: "#1",
+        note: "fixture",
+      },
+    ],
+  });
+  expect(
+    "rejects an allowlist entry that no longer matches a violation",
+    runCheck("check-versioning-cell.mjs", staleAllowlist),
+    { exit: 1, contains: ["no longer match a violation"] },
+  );
+
+  const malformedAllowlist = join(root, "malformed-allowlist");
+  await buildHistory(malformedAllowlist, [
+    { version: 1, allowedValues: ["a", "b"] },
+    { version: 1, allowedValues: ["a", "b", "c"] },
+  ]);
+  const [malformedFrom, malformedTo] = commitsOf(malformedAllowlist);
+  await writeJson(join(malformedAllowlist, "scripts/versioning-cell-allowlist.json"), {
+    entries: [
+      {
+        path: "srs/package/fields/status.json",
+        id: FIELD_ID,
+        fromCommit: malformedFrom,
+        toCommit: malformedTo,
+        disposition: "settled", // not "permanent" or "pending"
+        issue: "later", // not "#<number>"
+        note: "fixture",
+      },
+    ],
+  });
+  expect(
+    "rejects an allowlist entry with a bad disposition or issue reference",
+    runCheck("check-versioning-cell.mjs", malformedAllowlist),
+    { exit: 1, contains: ['must be "permanent" or "pending"', "not a GitHub issue reference"] },
+  );
+}
+
+// ---- #651 — repository cell: no manifest.json carries the retired instanceIndex key --------------
+async function repositoryCellCases(root) {
+  console.log("srs#651 — repository cell: no manifest.json carries instanceIndex");
+
+  const manifest = (extra) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/manifest.json",
+    srsVersion: "2.0",
+    repositoryId: "00000000-0000-4000-8000-000000000f01",
+    title: "fixture repository",
+    container: { containerId: "00000000-0000-4000-8000-000000000f02" },
+    createdAt: "2026-08-15T00:00:00Z",
+    ...extra,
+  });
+
+  const violation = join(root, "violation");
+  await writeJson(join(violation, "manifest.json"), manifest({ instanceIndex: [] }));
+  expect(
+    "rejects a manifest.json carrying instanceIndex",
+    runCheck("check-repository-cell.mjs", violation),
+    { exit: 1, contains: ["manifest.json", "instanceIndex is retired"] },
+  );
+
+  const clean = join(root, "clean");
+  await writeJson(join(clean, "manifest.json"), manifest({}));
+  expect(
+    "accepts a manifest.json with no instanceIndex",
+    runCheck("check-repository-cell.mjs", clean),
+    { exit: 0 },
+  );
+
+  const nested = join(root, "nested");
+  await writeJson(join(nested, "programme/manifest.json"), manifest({}));
+  await writeJson(join(nested, "programme/package/fields/manifest.json"), { id: "not-a-repository-manifest" });
+  expect(
+    "walks the whole tree rather than a fixed list of roots",
+    runCheck("check-repository-cell.mjs", nested),
+    { exit: 0 },
+  );
+
+  // The allowlist (scripts/repository-cell-allowlist.json), same discipline as versioning-cell's:
+  // a listed violation passes, a stale or malformed entry fails on its own.
+  const allowlisted = join(root, "allowlisted");
+  await writeJson(join(allowlisted, "conformance/discovery/fixture-repo/manifest.json"), manifest({ instanceIndex: [] }));
+  await writeJson(join(allowlisted, "scripts/repository-cell-allowlist.json"), {
+    entries: [
+      {
+        path: "conformance/discovery/fixture-repo/manifest.json",
+        reason: "fixture",
+        disposition: "permanent",
+        issue: "#1",
+      },
+    ],
+  });
+  expect(
+    "accepts a violation covered by a valid allowlist entry",
+    runCheck("check-repository-cell.mjs", allowlisted),
+    { exit: 0, contains: ["1 known violation(s) allowlisted"] },
+  );
+
+  const staleAllowlist = join(root, "stale-allowlist");
+  await writeJson(join(staleAllowlist, "manifest.json"), manifest({})); // no violation here
+  await writeJson(join(staleAllowlist, "scripts/repository-cell-allowlist.json"), {
+    entries: [
+      {
+        path: "manifest.json",
+        reason: "fixture",
+        disposition: "permanent",
+        issue: "#1",
+      },
+    ],
+  });
+  expect(
+    "rejects an allowlist entry that no longer matches a violation",
+    runCheck("check-repository-cell.mjs", staleAllowlist),
+    { exit: 1, contains: ["no longer match a violation"] },
+  );
+
+  const malformedAllowlist = join(root, "malformed-allowlist");
+  await writeJson(join(malformedAllowlist, "manifest.json"), manifest({ instanceIndex: [] }));
+  await writeJson(join(malformedAllowlist, "scripts/repository-cell-allowlist.json"), {
+    entries: [
+      {
+        path: "manifest.json",
+        reason: "fixture",
+        disposition: "settled", // not "permanent" or "pending"
+        issue: "later", // not "#<number>"
+      },
+    ],
+  });
+  expect(
+    "rejects an allowlist entry with a bad disposition or issue reference",
+    runCheck("check-repository-cell.mjs", malformedAllowlist),
+    { exit: 1, contains: ['must be "permanent" or "pending"', "not a GitHub issue reference"] },
+  );
+}
+
 const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
 try {
   await fieldNameCases(join(root, "field-name"));
@@ -1859,6 +2277,7 @@ try {
   await decisionCellTagsCases(join(root, "decision-cell-tags"));
   await relationTypeResolutionCases(join(root, "relation-type-resolution"));
   await charterAlignmentSectionCases(join(root, "charter-alignment"));
+  await integrationAllowlistDispositionCases(join(root, "integration-allowlist-disposition"));
   await rfcBannerRuleTokenCases(join(root, "rfc-banner-rule-token"));
   await checksRegistryMembershipCases(join(root, "checks-registry-membership"));
   await specLanguageCases(join(root, "spec-language"));
@@ -1866,6 +2285,9 @@ try {
   await roadmapCellMirrorCases(join(root, "roadmap-cell-mirror"));
   await packageIdUniquenessCases(join(root, "package-id-uniqueness"));
   await specCoherenceCases(join(root, "spec-coherence"));
+  await versioningCellCases(join(root, "versioning-cell"));
+  await attributionCellCases(join(root, "attribution-cell"));
+  await repositoryCellCases(join(root, "repository-cell"));
 } finally {
   await rm(root, { recursive: true, force: true });
 }

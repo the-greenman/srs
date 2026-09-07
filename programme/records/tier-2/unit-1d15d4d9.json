@@ -1,0 +1,25 @@
+{
+  "instanceId": "1d15d4d9-8bc1-46dc-8e5b-dae3869799f2",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "srs-usage.md: document the MCP resources added today (tree, tree/{id}, agent-index, protocol, protocol/{id})",
+    "summary": "Documented the five MCP resources srs-rust#965/#966 added (protocol, protocol/{id}, tree, tree/{id}, agent-index) in srs-usage.md's MCP resource table and the Tool-First Rule's resource list, marked tree and agent-index as the zero-context entry points (RFC-042 Change H), and added the sectionContainerId descent hook to the navigation and container resource rows. Also corrected the table's stale view/documentViewId row (retired by srs-rust#910) and the resolve-view payload docs' documentViewId key, both fixed to composition/compositionId.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs#624",
+      "srs-rust#965",
+      "srs-rust#966",
+      "srs-rust#910",
+      "srs#580"
+    ],
+    "body": "Dispatched from the srs gate:pool queue via srs#580 tick 2026-09-06T23:xxZ. Both blockers named in the issue (srs-rust#965, #966) were already merged at claim time.\n\nWork: rewrote srs-usage.md's ## 5i MCP Server resource table (map, navigation, tree, tree/{id}, agent-index, record, container, composition, type, protocol, protocol/{id}) against the current srs-rust source (crates/srs-mcp/src/uri.rs, crates/srs-mcp/src/resources.rs, crates/srs-repository/src/{tree_service,agent_index_service,container_view_service}.rs), not from the issue text alone. Also updated section 2's Tool-First Rule resource enumeration and section on Authored lists' resolve-view payload shape, since both described the same surface.\n\nGate note: the local session checkout was shallow (git rev-parse --is-shallow-repository -> true), which made check-versioning-cell.mjs fail locally with a stale-allowlist-entry error unrelated to this docs-only diff -- exactly the failure mode carried-context (worktree-shallow-checkout) already documents. git fetch origin master --unshallow fixed it; both validate-all.mjs and check-release-drift.mjs then passed by exit code with no code change. Recording here only because a prior unit's carried_context didn't stop it from recurring in a fresh session -- the lesson generalizes across sessions, not just within one.\n\nHarvested finding 956ac873-ad97-4f6f-b4a5-acb3562d5c27 for the view->composition doc-drift discovery.\n\nLand: PR srs#664, gate:auto-merge armed. Mode clear, Cell Repository, Door non-normative."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-06T23:57:47.863923945+00:00",
+  "updatedAt": "2026-09-06T23:58:24.511029237+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

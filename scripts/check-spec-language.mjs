@@ -166,7 +166,7 @@ async function main() {
   const registry = await loadJson(REGISTRY_PATH);
   const proseFields = new Set(registry.proseFields);
   const normativeFields = new Set(registry.normativeSites?.fields ?? []);
-  const normativeRoles = new Set(registry.normativeSites?.expositionRoles ?? []);
+  const normativeTypes = new Set(registry.normativeSites?.types ?? []);
   const limits = registry.limits ?? {};
   const codeRules = new Set(
     (registry.rules ?? []).filter((r) => r.enforcement === "code").map((r) => r.id),
@@ -207,13 +207,16 @@ async function main() {
     const fv = record.fieldValues;
     if (!fv || typeof fv !== "object") continue;
     const title = typeof fv.title === "string" ? fv.title : "";
-    const role = typeof fv.exposition_role === "string" ? fv.exposition_role : null;
+    const typeKey =
+      typeof record.typeNamespace === "string" && typeof record.typeName === "string"
+        ? `${record.typeNamespace}/${record.typeName}`
+        : null;
 
     for (const [field, value] of Object.entries(fv)) {
       // RULING 1: `title` is not a prose field in the registry, so it is not checked here.
       if (!proseFields.has(field) || typeof value !== "string" || value.trim() === "") continue;
       fieldsChecked++;
-      const isNormative = normativeFields.has(field) || (role !== null && normativeRoles.has(role));
+      const isNormative = normativeFields.has(field) || (typeKey !== null && normativeTypes.has(typeKey));
 
       // --- registry `patterns` -----------------------------------------------------------------
       for (const p of compiled) {
@@ -261,18 +264,29 @@ async function main() {
       }
 
       // --- rule: keyword-register --------------------------------------------------------------
-      // #559 (exposition_role) has not landed, so `normative_statement` is the only normative
-      // signal today — exactly what the registry's normativeSites comment says to expect.
+      // No exposition_role field exists or ever will (srs#556 ruling, 2026-09-05): a leaf's Type
+      // is its role. `normativeSites.types` names the typeNamespace/typeName pairs — alongside
+      // `normative_statement` — that may carry RFC 2119 keywords (srs#638).
+      //
+      // #626: keyed by paragraph text + keyword + ordinal WITHIN THE PARAGRAPH, never by the
+      // match's character offset into the whole field. A field-relative offset shifts for every
+      // keyword site whenever earlier prose in the same field is edited, so a one-word fix
+      // anywhere upstream re-fired every later, untouched allowlist entry (srs#626). Keying
+      // relative to the paragraph — the same unit em-dash-cap already uses — means only edits to
+      // that paragraph itself change its sites, matching RULING 2's intent.
       if (codeRules.has("keyword-register") && !isNormative) {
-        for (const m of value.matchAll(RFC_2119)) {
-          report(
-            relPath,
-            field,
-            "keyword-register",
-            m[0],
-            "RFC 2119 keywords belong in a normative_statement field. Describe the behaviour here, or move the requirement.",
-            digest(`${m[0]}:${m.index}`),
-          );
+        for (const para of paragraphs(value)) {
+          const matches = [...para.matchAll(RFC_2119)];
+          matches.forEach((m, ordinal) => {
+            report(
+              relPath,
+              field,
+              "keyword-register",
+              m[0],
+              "RFC 2119 keywords belong in a normative_statement field. Describe the behaviour here, or move the requirement.",
+              digest(`${para}:${m[0]}:${ordinal}`),
+            );
+          });
         }
       }
 

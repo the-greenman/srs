@@ -1,0 +1,21 @@
+{
+  "instanceId": "e038f794-792a-442e-b90e-7960b8669710",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Enforcement check for the repository cell: no manifest carries a legacy instanceIndex",
+    "summary": "Added scripts/check-repository-cell.mjs guarding I-49/I-50/I-80's shared restatement of RFC-038 [R1]/[R2]: membership is tree-authoritative, and a manifest instanceIndex is retired. Whole-repo walk over every manifest.json. One live corpus exception (conformance/discovery/fixture-repo/manifest.json, RFC-038 Rev 7's deliberate pre-cutover freeze) allowlisted permanently in scripts/repository-cell-allowlist.json, reusing publication-reachability-exclusions.json's {path, reason, disposition, issue} shape. Registered in checks.json (cell: repository, always tier), guard-bite cases added to tests/guards/run.mjs.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs#651"
+    ],
+    "body": "Dispatched from the srs gate:pool queue via srs#580's dispatch comment on #651 (2026-09-06T21:18:37Z). Rebased mid-unit onto origin/master after two siblings from the same batch (#659, #660) merged in; tests/guards/run.mjs's call-site conflict resolved by grafting both new case-function calls, checks.json auto-merged cleanly. Ground stage found the local worktree was a shallow clone (git worktree add inherits shallowness from the checkout it branches off, not just from a CI shallow checkout) -- git rev-parse --is-shallow-repository returned true, and check-versioning-cell.mjs (srs#649, unrelated to this unit) reported a false stale-allowlist-entry failure purely from missing history. git fetch --unshallow fixed it and the check went green; recorded as a carried_context since this generalizes beyond versioning-cell to any future check that reads git log. Proved red-then-green by injecting instanceIndex into the live srs/manifest.json, confirming the check named the offender, then reverting. PR: srs#662."
+  },
+  "lifecycleState": "landed",
+  "createdAt": "2026-09-06T22:30:53.929739283+00:00",
+  "updatedAt": "2026-09-06T22:39:37.026577937+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

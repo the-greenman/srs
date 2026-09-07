@@ -1,0 +1,14 @@
+{
+  "instanceId": "2d432ba0-a599-4655-8b76-edfdd23c1553",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `Registry` shape",
+    "content": "`Registry`, in pseudo-IDL:\n\n```typescript\n{\n  schemaVersion: string\n  registryId: UUID\n  registryName: string\n  catalogVersion: string    // registry's own version (semver)\n  updatedAt: ISO8601\n  homepage?: string\n  entries: RegistryEntry[]\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:42.708322971+00:00",
+  "updatedAt": "2026-09-06T17:05:14.142168217+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

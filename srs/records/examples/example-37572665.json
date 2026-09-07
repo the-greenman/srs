@@ -1,0 +1,14 @@
+{
+  "instanceId": "37572665-d745-4a13-bcdd-84c071619a6a",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `ImportMode` values",
+    "content": "`ImportMode`, in pseudo-IDL:\n\n```typescript\n\"upstream-tracked\" | \"local-copy\" | \"local-fork\"\n```"
+  },
+  "createdAt": "2026-09-06T17:00:42.055106809+00:00",
+  "updatedAt": "2026-09-06T17:05:13.296314409+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

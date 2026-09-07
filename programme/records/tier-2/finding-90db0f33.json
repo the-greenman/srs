@@ -1,0 +1,20 @@
+{
+  "instanceId": "90db0f33-a6fd-4c22-bf2c-b086a76c4694",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "Conformance rules land as invariants because the language gate forbids the banner form",
+    "summary": "RFC-041 folded its conformance rules into a banner block inside a subsection. That form now survives only as grandfathered allowlist entries: check-spec-language confines RFC 2119 keywords to normative_statement records and caps subsection prose at 400 words. Six invariants, I-146 to I-151, are the compliant carrier for [R1] [R2] [R3] [R4] [R6] [R7] [R9].",
+    "evidence": [
+      "check-spec-language confines RFC 2119 keywords to normative_statement and caps subsection prose at 400 words",
+      "The surviving RFC-041 banner text sits in scripts/spec-language-allowlist.json as grandfathered entries",
+      "[R5] maps onto the amended I-66; [R8] onto the amended I-118 and I-144"
+    ],
+    "body": "The gate changed what an acceptance pull request may look like without anyone restating the RFC integration procedure. A precedent read off the corpus can be a precedent the guards no longer permit - check the guard, not only the last pull request."
+  },
+  "createdAt": "2026-09-06T17:50:20.534893278+00:00",
+  "updatedAt": "2026-09-06T17:50:20.534897046+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

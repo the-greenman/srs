@@ -1,0 +1,14 @@
+{
+  "instanceId": "a84ccfe3-4b60-4284-8b40-98741d5c5458",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The conformance declaration form",
+    "content": "The declaration form, then a filled declaration:\n\n```\nSRS <version> Core [+ ext:<name> ...]\n```\n\nExample:\n```\nSRS 2.0 Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability + ext:recommended-relations\n```"
+  },
+  "createdAt": "2026-09-06T17:00:38.848907446+00:00",
+  "updatedAt": "2026-09-06T17:05:10.061633286+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

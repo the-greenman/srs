@@ -1,0 +1,24 @@
+{
+  "instanceId": "42a8703f-d8ca-449f-8134-4029340c068f",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Protocol run execution over MCP",
+    "summary": "srs-mcp gained six tools mirroring the CLI's srs protocol run verbs (create/advance/get/list/complete/abandon), closing the deferral recorded when #965 shipped only the read-only Protocol definition resources.",
+    "decision_mode": "clear",
+    "door": "door-1",
+    "issue_ref": [
+      "srs-rust#977",
+      "srs-rust#955",
+      "srs-rust#965",
+      "srs#580"
+    ],
+    "body": "## What changed\n\n`crates/srs-mcp/src/tools.rs` gained `protocol_run_create`, `protocol_run_advance`, `protocol_run_get`, `protocol_run_list`, `protocol_run_complete`, `protocol_run_abandon` — shadow input structs mirroring `protocol_run_service`'s typed inputs field-for-field, each handler exactly one service call (ADR-037). No changes to `srs-repository` or the CLI: this is a pure adapter over the six functions the CLI's `srs protocol run ...` verbs already call.\n\n## Why this unit could proceed as Door 1\n\n#965's own PR body classified the read-only Protocol resources as Door 1 (capability-layering adapter) and named the run verbs as an explicit, conditional follow-up (\"if run state should be agent-visible\"). #977 supplied that condition: the programme's own `programme-unit-walk` Protocol (srs#580) is the first consumer that needs an agent to observe and advance run state without shelling out to the CLI. No new normative meaning was introduced — same classification as #965.\n\n## Proof\n\n`cargo build/test/clippy --workspace` all exit 0 with `SRS_SPEC_DIR` pointed at a fresh `origin/master` clone of `srs` (srs-rust#874's mechanism). New integration tests cover the full run lifecycle (create -> advance -> complete, create -> abandon) including the state-machine guard rejecting a second complete/abandon/advance on a non-Active run, plus list filtering by status and protocolId. The malformed-request guard (missing required `stageId`) was proven red on purpose - temporarily loosened the shadow struct's field to `Option`, watched the integration test fail exactly there, then reverted - before this PR shipped.\n\nPR: the-greenman/srs-rust#983."
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-06T22:11:29.961687323+00:00",
+  "updatedAt": "2026-09-06T22:11:29.961695456+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,22 @@
+{
+  "instanceId": "836c38fc-f193-450a-a918-7df02dcff452",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "record create accepts an explicit initial lifecycle state",
+    "summary": "record create always stamped the Lifecycle's initialState, so giving a freshly created record any other state cost one record transition call per edge — 4x for the programme's own batch authoring (srs-rust#593). CreateRecordInput now accepts an optional lifecycleState, validated by reusing create_record_successor's existing reachability/requiresRelation check rather than adding a second multi-hop mechanism.",
+    "decision_mode": "clear",
+    "door": "door-1",
+    "issue_ref": [
+      "srs-rust#960",
+      "srs-rust#593"
+    ],
+    "body": "PR https://github.com/the-greenman/srs-rust/pull/976. `CreateRecordInput.lifecycleState` is validated by a new `validate_lifecycle_state_override` helper factored out of `create_record_successor`'s own (behaviorally unchanged) override check: the state must be defined in the effective Lifecycle and reachable from `initialState` via declared transitions, and any `requiresRelation` obligation is enforced the same way, rolling back the created record if unmet. Threaded through the MCP `record_create` tool input for CLI/MCP parity. The alternative the issue proposed — a path-walking `record transition` — was rejected because `record transition` already has a multi-hop mechanism for exactly this (the retrofit-entry path from the empty lifecycleState, srs-rust#881/srs#447): the real gap was that `create_record_at_dir` stamps `initialState` immediately, foreclosing that entry point for any CLI-created record. Gates exit 0: cargo build/test/clippy -D warnings/fmt --check, with 5 new tests confirmed red (via temporary revert) before the fix and green after, including a memory-to-file cross-store roundtrip."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-06T19:09:13.041940741+00:00",
+  "updatedAt": "2026-09-06T19:09:22.277093155+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,14 @@
+{
+  "instanceId": "81b1b805-fac1-4bd7-9508-7a724781fad0",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `RecordPropertyView` shape",
+    "content": "`RecordPropertyView`, in pseudo-IDL:\n\n```typescript\n{\n  property: \"lifecycleState\" | \"tags\" | \"createdAt\" | \"updatedAt\"\n  order: integer      // min: 0; shared display-order axis with FieldView\n  displayLabel?: string\n  visible?: boolean   // default: true\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:47.647741932+00:00",
+  "updatedAt": "2026-09-06T17:05:19.236801905+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

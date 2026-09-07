@@ -1,0 +1,20 @@
+{
+  "instanceId": "b99f0f1a-36b2-4da7-a68a-3cfd34272324",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "The language allowlist re-keys wholesale on any upstream edit in a grandfathered field",
+    "summary": "Entries in scripts/spec-language-allowlist.json are keyed by a digest of keyword plus character offset, so editing one sentence in a field re-fires every grandfathered entry after it in that field. Two content edits in ext:views-l2 and ext:slices produced 42 re-keyed entries whose underlying sites did not change. Filed as srs#626.",
+    "evidence": [
+      "The allowlist site key is a digest of keyword and character index",
+      "39 ext:views-l2 and 3 ext:slices keyword-register entries were re-keys of unchanged sites",
+      "PR #637 saw the same churn from the other direction: 587 to 588 sites, almost all of it mechanical"
+    ],
+    "body": "The churn is not noise to be tolerated: it hides the entries that genuinely changed inside a diff of entries that did not, which is exactly the signal the allowlist exists to give. A content-addressed key would make the file diff meaningfully. srs#626."
+  },
+  "createdAt": "2026-09-06T17:50:20.909879072+00:00",
+  "updatedAt": "2026-09-06T17:50:20.909883179+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

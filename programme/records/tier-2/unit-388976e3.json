@@ -1,0 +1,21 @@
+{
+  "instanceId": "388976e3-6096-40c4-9476-3757240f4bd1",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Replace normativeSites.expositionRoles with normativeSites.types",
+    "summary": "check-spec-language's registry named an exposition_role field the srs#556 ruling forecloses forever. Replaced normativeSites.expositionRoles with normativeSites.types (typeNamespace/typeName pairs), rekeyed isNormative in check-spec-language.mjs off the record's own Type, reworded five newly-surfaced rationale-field violations in place rather than growing the allowlist, and added a guard case proving the type-keyed site.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs#638"
+    ],
+    "body": "PR srs#646. Mode: clear, Cell: Conformance, Door: non-normative (auto-merge eligible)."
+  },
+  "lifecycleState": "landed",
+  "createdAt": "2026-09-06T18:55:02.234873804+00:00",
+  "updatedAt": "2026-09-06T18:59:59.778335868+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

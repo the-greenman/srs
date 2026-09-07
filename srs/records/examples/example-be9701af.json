@@ -1,0 +1,14 @@
+{
+  "instanceId": "be9701af-229e-42fa-8969-79e98e269cfb",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `SourceDocumentIndexEntry` shape",
+    "content": "`SourceDocumentIndexEntry`, in pseudo-IDL:\n\n```typescript\n{\n  documentId: UUID          // matches SourceDocument.documentId in the sidecar\n  sidecarPath: string       // relative path from sourceDocumentsPath to the .meta.json sidecar\n  contentPath: string       // relative path from sourceDocumentsPath to the content file\n  title?: string            // denormalised for display; not authoritative\n\n  sidecarChecksum?: string  // digest of the .meta.json sidecar: \"<algorithm>:<hex>\"\n  contentChecksum?: string  // digest of the content file: \"<algorithm>:<hex>\"\n}\n```"
+  },
+  "createdAt": "2026-09-06T17:00:43.069546597+00:00",
+  "updatedAt": "2026-09-06T17:05:14.999727115+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
