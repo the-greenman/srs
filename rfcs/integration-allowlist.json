@@ -5,6 +5,11 @@
       "issue": "the-greenman/srs#633",
       "disposition": "pending",
       "reason": "RFC-038 is Accepted as the reviewed repository-authority and migration contract. Its normative schema, store, client, archive, and first-party corpus changes were deliberately implemented together by #297 (closed 2026-08-14) after #242 Phase B; no partial generation-2 state is supported. Revision 7 resolved the complete first-party corpus boundary and migration dispositions, and Revision 12 (2026-09-02) retired [R3]'s package-root branch with no canonical record yet mirroring it. #297's closure did not fold RFC-038's contract into a declared srs-integration manifest — that work is tracked live by #633. Remove this entry when #633 folds the contract into canonical records, schemas, implementations, and migrated artifacts."
+    },
+    "042": {
+      "issue": "the-greenman/srs#559",
+      "disposition": "pending",
+      "reason": "RFC-042 is Accepted (owner ruling 2026-09-07, \"lets flip rfc 42\", srs#558) as the concept tree's spine — the tree already exists additively in the corpus (44 concepts, 395 contains / 178 precedes / 90 depends-on edges per Rev 2's re-measurement) and needs no schema or dataModelRevision change. Its canonical folding is the four Wave 3 units: srs#559 (mechanism Type, exposition_role/layer fields, the three relation types), srs#562 (un-baking the 127 markdown headings into records), srs#563 (rewriting the Parts I-IV reading order and re-anchoring Part containers), and srs#564 (inlining invariants with a generated index, retiring RFC-016 [R6]) — none of which has executed yet. Remove this entry when those four units land and the RFC's srs-integration manifest can declare their resulting records/types directly instead of tooling-only."
     }
   }
 }
