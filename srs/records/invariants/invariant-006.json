@@ -7,8 +7,7 @@
   "fieldValues": {
     "invariant_number": "6",
     "title": "Record.lifecycleState, when present, must reference a key in the…",
-    "normative_statement": "`Record.lifecycleState`, when present, must reference a `key` in the associated `Type.lifecycle.states[]`.",
-    "applies_to": "ext:lifecycle"
+    "normative_statement": "`Record.lifecycleState`, when present, must reference a `key` in the associated `Type.lifecycle.states[]`."
   },
   "tags": [
     "concern:validation",
@@ -18,7 +17,7 @@
     "topic:conformance"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-08-22T22:50:25.248768041+00:00",
+  "updatedAt": "2026-09-07T19:59:32.125440733+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

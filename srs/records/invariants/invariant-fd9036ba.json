@@ -8,10 +8,9 @@
     "invariant_number": "I-150",
     "title": "childContainerIds entries resolve, are distinct, and form an acyclic graph",
     "normative_statement": "Every childContainerIds entry MUST reference an existing, distinct Container, and the childContainerIds graph MUST be acyclic. A missing target, self-reference, or cycle is a validation error. For any Container whose reachable child graph contains such an error, effective-membership evaluation MUST fail with a diagnostic and MUST NOT return a partial result. A rootless child is valid. When a child has roots, those roots SHOULD occur in the parent's direct membership; a violation produces a structural-coherence diagnostic but MUST NOT remove the declared edge from effective-membership evaluation.",
-    "applies_to": "Container (core); RFC-034",
     "rationale": "RFC-034 [R7] (Change B). Because admission is a declared edge, effective(C) is computable from C and its declared descendants alone, which keeps an RFC-026 slice self-contained. A Container may have more than one parent provided the whole graph stays acyclic; only the tree-shaped subset maps onto a folder hierarchy."
   },
   "createdAt": "2026-09-06T13:19:55.229597039+00:00",
-  "updatedAt": "2026-09-06T13:19:55.229601105+00:00",
+  "updatedAt": "2026-09-07T19:59:54.772269184+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

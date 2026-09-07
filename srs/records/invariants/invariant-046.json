@@ -7,8 +7,7 @@
   "fieldValues": {
     "invariant_number": "46",
     "title": "Every instance file's own instanceId is its identity; there is no…",
-    "normative_statement": "Every instance file discovered under a reserved instance root MUST declare an `instanceId`, and that self-declared value is the instance's identity. There is no manifest index entry to cross-check it against — `RepositoryManifest.instanceIndex` is retired (RFC-038 [R2]) and the repository's authoritative store, enumerated from the tree, is the instance set (RFC-038 [R1]).",
-    "applies_to": "ext:repository"
+    "normative_statement": "Every instance file discovered under a reserved instance root MUST declare an `instanceId`, and that self-declared value is the instance's identity. There is no manifest index entry to cross-check it against — `RepositoryManifest.instanceIndex` is retired (RFC-038 [R2]) and the repository's authoritative store, enumerated from the tree, is the instance set (RFC-038 [R1])."
   },
   "tags": [
     "concern:resolution",
@@ -16,7 +15,7 @@
     "topic:conformance"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-08-22T22:52:33.781717084+00:00",
+  "updatedAt": "2026-09-07T19:59:38.380773559+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

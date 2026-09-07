@@ -8,10 +8,9 @@
     "invariant_number": "I-147",
     "title": "Container nesting is declared through childContainerIds and effective membership is its closure",
     "normative_statement": "A Container is an admitted child of another Container exactly when it is distinct and its containerId appears in the other Container's childContainerIds; membership-array overlap alone MUST NOT create admission. A conforming implementation MUST compute effective membership as the recursive closure over childContainerIds (effective(C) = direct(C) united with effective(child) for every declared child), MUST deduplicate instance ids, and MUST NOT infer an ordering from either membership array or from childContainerIds order.",
-    "applies_to": "Container (core); RFC-034",
     "rationale": "RFC-034 [R2] and [R3] (Change B). Nesting is an authoring decision and is written as one; a Container rooted at an instance that appears in another Container's membership acquires no relationship to it unless named there. childContainerIds holds containerIds, never instance ids, so I-20 is unaffected. Ordering stays with precedes and Composition (RFC-015)."
   },
   "createdAt": "2026-09-06T13:19:55.186266550+00:00",
-  "updatedAt": "2026-09-06T13:19:55.186270681+00:00",
+  "updatedAt": "2026-09-07T19:59:47.582351133+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

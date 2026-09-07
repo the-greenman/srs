@@ -7,8 +7,7 @@
   "fieldValues": {
     "invariant_number": "32",
     "title": "Any SectionSource.discovery-query MUST express its type filter via query.typeNamespace/query.typeName, never a combined key string",
-    "normative_statement": "Any `Composition` in `Package.compositions[]` that contains a `SectionSource` with `type === \"discovery-query\"` MUST express its type-selection through the embedded `DiscoveryQuery`'s independent `typeNamespace`/`typeName` string predicates, resolved against the effective package set. There is no combined `namespace/name` key field on `DiscoveryQuery` or `SectionSource` -- `typeKey` (the KEYED namespace/name string introduced by the semanticObjectType collapse, owner ruling on #383, srs#372/#481/#524, rfc-decision-c8704763) and `semanticObjectType` before it are both retired with no successor field; the srs#525 SectionSource -> DiscoveryQuery collapse (rfc-decision-cce3c00e, rfc-decision-9ee14517) replaced the single combined-key convention with DiscoveryQuery's two separate predicates, closing the door on reintroducing a combined-key form.",
-    "applies_to": "ext:views-l2 + ext:discovery"
+    "normative_statement": "Any `Composition` in `Package.compositions[]` that contains a `SectionSource` with `type === \"discovery-query\"` MUST express its type-selection through the embedded `DiscoveryQuery`'s independent `typeNamespace`/`typeName` string predicates, resolved against the effective package set. There is no combined `namespace/name` key field on `DiscoveryQuery` or `SectionSource` -- `typeKey` (the KEYED namespace/name string introduced by the semanticObjectType collapse, owner ruling on #383, srs#372/#481/#524, rfc-decision-c8704763) and `semanticObjectType` before it are both retired with no successor field; the srs#525 SectionSource -> DiscoveryQuery collapse (rfc-decision-cce3c00e, rfc-decision-9ee14517) replaced the single combined-key convention with DiscoveryQuery's two separate predicates, closing the door on reintroducing a combined-key form."
   },
   "tags": [
     "concern:validation",
@@ -16,7 +15,7 @@
     "topic:conformance"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-09-03T11:24:03.893+00:00",
+  "updatedAt": "2026-09-07T19:59:35.868607929+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

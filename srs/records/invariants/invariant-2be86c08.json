@@ -7,14 +7,13 @@
   "fieldValues": {
     "invariant_number": "I-101",
     "title": "attaches SourceReference acceptance",
-    "normative_statement": "A conformant implementation MUST accept `\"attaches\"` as a value of `SourceReference.sourceRole`. An attachment is a `SourceReference` with `sourceType: \"repository-document\"`, `sourceRole: \"attaches\"`, and `sourceId` equal to a source document's `documentId`. Attachment MUST NOT be modelled as a `Relation` edge; there is no `attaches` canonical `Relation` type.",
-    "applies_to": "Validators, importers; SourceReference-bearing schemas (record.json, note.json, relations-collection.json)"
+    "normative_statement": "A conformant implementation MUST accept `\"attaches\"` as a value of `SourceReference.sourceRole`. An attachment is a `SourceReference` with `sourceType: \"repository-document\"`, `sourceRole: \"attaches\"`, and `sourceId` equal to a source document's `documentId`. Attachment MUST NOT be modelled as a `Relation` edge; there is no `attaches` canonical `Relation` type."
   },
   "tags": [
     "construct:attachment",
     "topic:schema"
   ],
   "createdAt": "2026-07-17T01:41:30.429631157+00:00",
-  "updatedAt": "2026-08-27T18:13:41.001073360+00:00",
+  "updatedAt": "2026-09-07T19:59:47.010702087+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

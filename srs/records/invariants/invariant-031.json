@@ -7,8 +7,7 @@
   "fieldValues": {
     "invariant_number": "31",
     "title": "For every pair of stages A and B within a Protocol where B.dependsOn…",
-    "normative_statement": "For every pair of stages A and B within a `Protocol` where B.dependsOn includes A.stageId, B.order must be greater than A.order. `order` is the declared composition order of the stages — structure, not presentation; it provides the render default. Execution sequence is determined by `dependsOn` resolution. The two must not contradict each other.",
-    "applies_to": "ext:protocol"
+    "normative_statement": "For every pair of stages A and B within a `Protocol` where B.dependsOn includes A.stageId, B.order must be greater than A.order. `order` is the declared composition order of the stages — structure, not presentation; it provides the render default. Execution sequence is determined by `dependsOn` resolution. The two must not contradict each other."
   },
   "tags": [
     "concern:validation",
@@ -16,7 +15,7 @@
     "topic:conformance"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-08-23T00:55:38.829717109+00:00",
+  "updatedAt": "2026-09-07T19:59:35.665603190+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

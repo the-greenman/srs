@@ -4,7 +4,7 @@
   "namespace": "com.semanticops.spec",
   "name": "invariant",
   "version": 1,
-  "description": "A single numbered normative invariant. Invariants are constraints that conforming implementations must always uphold. The applies_to field (fieldId 1a000021-0000-4000-a000-000000000021) is status: deprecated (RFC-042 Change B/E, srs#559) - superseded by a contains parent relation from the constrained concept; #564 drains the 129 existing values and adds the replacement relation, then removes the field per rfc-decision-5f8204bc (deprecate-then-remove).",
+  "description": "A single numbered normative invariant. Invariants are constraints that conforming implementations must always uphold. The applies_to FieldAssignment (fieldId 1a000021-0000-4000-a000-000000000021) retired here (RFC-042 Change E, srs#564): every invariant record now carries a contains parent from the concept it constrains instead. The Field definition itself is untouched pending removal as a follow-up under rfc-decision-5f8204bc (deprecate-then-remove) once no other Type references it.",
   "fields": [
     {
       "fieldId": "1a000020-0000-4000-a000-000000000020",
@@ -25,14 +25,8 @@
       "displayLabel": "Constraint"
     },
     {
-      "fieldId": "1a000021-0000-4000-a000-000000000021",
-      "order": 3,
-      "required": false,
-      "displayLabel": "Applies To (deprecated)"
-    },
-    {
       "fieldId": "1a000004-0000-4000-a000-000000000004",
-      "order": 4,
+      "order": 3,
       "required": false,
       "displayLabel": "Rationale"
     }

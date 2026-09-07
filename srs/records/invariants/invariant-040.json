@@ -1,13 +1,23 @@
 {
-  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "createdAt": "2026-05-27T00:00:00Z",
+  "instanceId": "e1000040-0000-4000-a000-000000000040",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "invariant",
   "fieldValues": {
     "invariant_number": "40",
     "title": "specializing Type must not declare a fieldId in its own fields[] that…",
-    "normative_statement": "A specializing Type must not declare a `fieldId` in its own `fields[]` that duplicates any `fieldId` inherited from its base Type or any ancestor Type.",
-    "applies_to": "ext:type-inheritance"
+    "normative_statement": "A specializing Type must not declare a `fieldId` in its own `fields[]` that duplicates any `fieldId` inherited from its base Type or any ancestor Type."
   },
-  "instanceId": "e1000040-0000-4000-a000-000000000040",
+  "tags": [
+    "concern:validation",
+    "construct:field",
+    "construct:type",
+    "topic:conformance"
+  ],
+  "createdAt": "2026-05-27T00:00:00Z",
+  "updatedAt": "2026-09-07T19:59:37.249700525+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {
       "note": "Invariant 40 from srs-spec.md section 08",
@@ -15,15 +25,5 @@
       "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
       "sourceType": "repository-document"
     }
-  ],
-  "tags": [
-    "concern:validation",
-    "construct:field",
-    "construct:type",
-    "topic:conformance"
-  ],
-  "typeId": "2a000006-0000-4000-a000-000000000006",
-  "typeName": "invariant",
-  "typeNamespace": "com.semanticops.spec",
-  "typeVersion": 1
+  ]
 }
