@@ -1,10 +1,10 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
-  "id": "2a000009-0000-4000-a000-000000000009",
+  "id": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
   "namespace": "com.semanticops.spec",
-  "name": "example",
+  "name": "mechanism",
   "version": 1,
-  "description": "A concrete, non-normative example associated with a spec section or type definition.",
+  "description": "A leaf record stating how a concept is realized in the spec's structural mechanism (RFC-042 Change B). Composed of the same two Fields as subsection (title, content) under a name that states the role: the successor authors reach for instead of section/subsection.",
   "fields": [
     {
       "fieldId": "1a000001-0000-4000-a000-000000000001",
@@ -20,5 +20,5 @@
     }
   ],
   "identityFieldId": "1a000001-0000-4000-a000-000000000001",
-  "createdAt": "2026-05-27T00:00:00Z"
+  "createdAt": "2026-09-07T00:00:00Z"
 }
