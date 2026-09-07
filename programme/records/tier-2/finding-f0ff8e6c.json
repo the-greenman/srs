@@ -1,0 +1,21 @@
+{
+  "instanceId": "f0ff8e6c-41cb-41f6-80c5-c2c565d25e13",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "check-programme-conformance.mjs's summary.errors!=0 branch has no known live trigger against this build",
+    "summary": "assertValidates() in check-programme-conformance.mjs (and its sibling check-gallery-conformance.mjs) has two failure branches: payload.ok===false ('could not load the repository', top-level diagnostics) and payload.ok===true with summary.errors!=0 ('reports N error(s)', from payload.summary.diagnostics). Against the pinned srs-rust build (v0.1.0-build.331) every corpus-level corruption tried -- a dangling typeId reference, a duplicate instanceId, a wrong-typed field value (e.g. a number where a string is expected), an invalid closed-valueDomain enum value -- took the ok:false path. None reached the summary.errors!=0 branch.",
+    "evidence": [
+      "srs#667's own dispatch comment suggested 'flip a typeId to a non-existent UUID' as the corruption and expected output containing 'reports' + an error count -- that specific wording assumes the summary.errors!=0 branch, but the actual CLI output for that corruption is 'could not load the repository' with a top-level SRS038-R13-DANGLING-REFERENCE diagnostic (the ok:false branch)",
+      "Tried and confirmed ok:false for: a dangling typeId; a duplicate instanceId across two files; fieldValues.title set to a number; a relation sourced from the containerId instead of an instance id",
+      "Tried and confirmed NO violation reported at all (summary.errors stays 0) for: an invalid value on a closed-valueDomain enum field (decision_mode set to a value outside its allowedValues) -- the pinned build's repo validate does not appear to enforce allowedValues membership as a validate-time diagnostic either",
+      "The negative test landed in srs#667/PR #669 asserts on the ok:false branch's actual wording ('could not load the repository', the SRS038-R13-DANGLING-REFERENCE code) rather than the summary.errors wording, and documents this gap inline"
+    ],
+    "body": "Anyone writing a future negative test against a check that shells out to `srs repo validate` and branches on ok vs. summary.errors should verify empirically which branch a given corruption actually takes before writing the assertion -- the CLI's own behavior does not match the intuitive assumption that a single bad field produces a soft per-instance error while only whole-repo damage is fatal to loading. If summary.errors!=0 needs its own coverage (for check-programme-conformance.mjs, check-gallery-conformance.mjs, or a future sibling), find or construct a corruption that reaches it first -- this finding did not, despite trying enum, type, and referential-integrity violations -- before assuming that branch is reachable at all against the currently pinned srs-rust build."
+  },
+  "createdAt": "2026-09-07T18:03:37.129715211+00:00",
+  "updatedAt": "2026-09-07T18:03:37.129725133+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

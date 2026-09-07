@@ -1,0 +1,22 @@
+{
+  "instanceId": "07d153cf-e401-4fab-a6cf-4829c0cee649",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "A shallow local clone silently produces wrong git-history diagnoses",
+    "summary": "This session's local checkout of srs was a shallow clone (git rev-parse --is-shallow-repository -> true). A git-history investigation (git cat-file -t <sha>, git merge-base --is-ancestor, git log -- <path>) against a shallow clone can report a real, existing commit as missing and a real ancestor as absent -- with no error or warning, since every one of those commands succeeds and returns a confident, wrong answer rather than failing loudly. This led directly to a false 'master's history was rewritten' diagnosis (srs#668, filed and retracted in the same session) over a genuine, still-live check-versioning-cell.mjs violation that the original scripts/versioning-cell-allowlist.json entry was correctly tracking all along.",
+    "evidence": [
+      "git cat-file -t 3553f2ac -> 'fatal: Not a valid object name' on the shallow clone; -> 'commit' after `git fetch --unshallow`",
+      "git merge-base --is-ancestor 72c5d2b7 origin/master -> false (shallow) vs true (unshallowed) for the exact same ref",
+      "check-versioning-cell.mjs against the ORIGINAL allowlist entry: false 'entry no longer matches a violation' on the shallow clone; correct pass ('747 Field revision(s)... 1 known violation(s) allowlisted') once unshallowed",
+      "GitHub Actions' own checkout (fetch-depth: 0, per scripts/check-versioning-cell.mjs's own doc comment) caught the mistake within one CI run: it reported the check's REAL violation message against the emptied allowlist this session had (incorrectly) pushed",
+      "This repo's own remote-session container clones shallow by default -- confirmed by inspecting .git/shallow, which listed 679dc13 (an unrelated commit) as a grafted boundary, which is exactly why that commit misleadingly appeared to introduce srs/package/metamodel/fields/value_range.json as a brand-new file"
+    ],
+    "body": "Before treating any git-history absence (a missing commit object, a commit that isn't an ancestor, a file that 'first appears' in some commit with no prior edits) as evidence about the REPOSITORY's history, first rule out that it is evidence about the LOCAL CLONE's history instead: run `git rev-parse --is-shallow-repository`, and if it prints `true`, run `git fetch --unshallow` (or at least `git fetch --depth=<enough>`) before drawing any conclusion. This applies with extra force to any check or investigation that specifically depends on deep history -- check-versioning-cell.mjs's own doc comment already names this exact hazard for CI ('a checkout that only has the tip commit ... can never see two revisions of the same file') and got a fetch-depth:0 workflow step because of it; the same hazard applies to an interactive agent session's local clone and has no equivalent safeguard here. A command that fails LOUDLY (git cat-file erroring 'Not a valid object name') is not proof of absence from the repository -- only proof of absence from what was fetched."
+  },
+  "createdAt": "2026-09-07T18:14:15.546385023+00:00",
+  "updatedAt": "2026-09-07T18:14:15.546391458+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
