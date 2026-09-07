@@ -1140,6 +1140,50 @@ async function decisionCompassDriftCases(root) {
   );
 }
 
+// ---- #490 — srs-usage.md invariant citations: FORWARD-only sibling of the compass guard ----
+async function srsUsageInvariantCitationCases(root) {
+  console.log("#490 — srs-usage.md invariant citation guard");
+
+  const invariant = (n, num) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/record.json",
+    instanceId: `00000000-0000-4000-8000-0000000006${String(n).padStart(2, "0")}`,
+    typeId: "2a000006-0000-4000-a000-000000000006",
+    typeVersion: 1,
+    typeNamespace: "com.semanticops.spec",
+    typeName: "invariant",
+    fieldValues: { invariant_number: num, title: `invariant ${n}`, normative_statement: "MUST fixture." },
+  });
+
+  await writeJson(join(root, "srs/records/invariants/one.json"), invariant(1, "I-77"));
+  const usagePath = join(root, "srs-usage.md");
+  const goodUsage = "# Usage\n\nSee I-77 for the rule.\n";
+  await writeText(usagePath, goodUsage);
+
+  expect(
+    "passes when every I-<n> citation resolves to a live invariant",
+    runCheck("check-srs-usage-invariant-citations.mjs", root),
+    { exit: 0, contains: ["✓ Every I-<n> citation"] },
+  );
+
+  // FORWARD violation: a citation to a number no live invariant carries (typo, or the invariant
+  // was renumbered/retired out from under the citing prose).
+  await writeText(usagePath, "# Usage\n\nSee I-999 for the rule.\n");
+  expect(
+    "rejects a citation whose invariant number does not exist",
+    runCheck("check-srs-usage-invariant-citations.mjs", root),
+    { exit: 1, contains: ["I-999", "no live com.semanticops.spec/invariant record"] },
+  );
+
+  // ...and the same file with the citation fixed passes again — proves the guard isn't just
+  // always red.
+  await writeText(usagePath, goodUsage);
+  expect(
+    "passes again once the citation is fixed",
+    runCheck("check-srs-usage-invariant-citations.mjs", root),
+    { exit: 0, contains: ["✓ Every I-<n> citation"] },
+  );
+}
+
 // ---- srs#569 — the spec-language register gate ---------------------------------------------
 async function specLanguageCases(root) {
   console.log("srs#569 — spec-language register guard");
@@ -2266,6 +2310,66 @@ async function repositoryCellCases(root) {
   );
 }
 
+// ---- srs#667 — check-programme-conformance.mjs: negative test -----------------------------------
+async function programmeConformanceCases(root) {
+  console.log("srs#667 — check-programme-conformance.mjs: negative test");
+
+  // This guard is binary-backed (ADR-004), so it needs the pinned `srs` CLI on the environment —
+  // unlike every other case in this file. Skip with a clear message rather than fail the whole
+  // suite when it is not there; `node scripts/validate-all.mjs` never sets it, only a caller that
+  // has run `export $(node scripts/fetch-pinned-srs.mjs)` first.
+  if (!process.env.SRS_CLI_PATH) {
+    console.log("  ⚠ skipped: SRS_CLI_PATH is not set — export $(node scripts/fetch-pinned-srs.mjs) before running this case");
+    return;
+  }
+
+  // A real copy of programme/, not a hand-built fixture: the check's second assertion shells out to
+  // `srs repo validate`, which needs a repository the pinned binary actually recognises.
+  const fixture = join(root, "programme");
+  await cp(join(REPO, "programme"), fixture, { recursive: true });
+
+  expect("passes on an unmodified copy of programme/", runCheck("check-programme-conformance.mjs", root), {
+    exit: 0,
+    contains: ["✓ programme is a conforming SRS repository."],
+  });
+
+  // Assertion 1: an empty `.srs/` marker directory round-trips as absent — git does not track empty
+  // directories, and `srs repo create` still produces exactly this defect (srs-rust#959).
+  await rm(join(fixture, ".srs", "README.md"));
+  expect("rejects an empty .srs marker directory", runCheck("check-programme-conformance.mjs", root), {
+    exit: 1,
+    contains: ["programme/.srs holds no regular file"],
+  });
+  await writeText(join(fixture, ".srs", "README.md"), "placeholder\n");
+
+  // Assertion 2: `srs repo validate --repo programme` reporting a real error. The corruption #667
+  // names — a typeId flipped to a non-existent UUID — is what this pinned build treats as fatal to
+  // loading the repository at all: `ok:false` with top-level `diagnostics`, no `payload.summary`.
+  // Every corpus-level structural corruption tried against this build (a dangling typeId, a
+  // duplicate instanceId, a wrong-typed field value) takes this same ok:false path rather than
+  // landing in payload.summary.errors — so this case asserts on what the binary actually returns,
+  // which is also the branch `assertValidates` names first: "could not load the repository".
+  const target = join(fixture, "records/tier-2/finding-6957c8f4.json");
+  const original = JSON.parse(await readFile(target, "utf8"));
+  await writeJson(target, { ...original, typeId: "00000000-0000-4000-8000-000000000000" });
+  expect("rejects a record with a dangling typeId reference", runCheck("check-programme-conformance.mjs", root), {
+    exit: 1,
+    contains: [
+      "srs repo validate --repo programme could not load the repository",
+      "SRS038-R13-DANGLING-REFERENCE",
+      "resolves to nothing in the definition set",
+    ],
+  });
+
+  // Restored: the fixture minus both violations passes again, per this file's "asserts BOTH halves"
+  // rule.
+  await writeJson(target, original);
+  expect("passes again once the marker and the record are both restored", runCheck("check-programme-conformance.mjs", root), {
+    exit: 0,
+    contains: ["✓ programme is a conforming SRS repository."],
+  });
+}
+
 const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
 try {
   await fieldNameCases(join(root, "field-name"));
@@ -2274,6 +2378,7 @@ try {
   await publicationReachabilityCases(join(root, "publication-reachability"));
   await invariantPlacementCases(join(root, "invariant-placement"));
   await decisionCompassDriftCases(join(root, "decision-compass-drift"));
+  await srsUsageInvariantCitationCases(join(root, "srs-usage-invariant-citations"));
   await decisionCellTagsCases(join(root, "decision-cell-tags"));
   await relationTypeResolutionCases(join(root, "relation-type-resolution"));
   await charterAlignmentSectionCases(join(root, "charter-alignment"));
@@ -2288,6 +2393,7 @@ try {
   await versioningCellCases(join(root, "versioning-cell"));
   await attributionCellCases(join(root, "attribution-cell"));
   await repositoryCellCases(join(root, "repository-cell"));
+  await programmeConformanceCases(join(root, "programme-conformance"));
 } finally {
   await rm(root, { recursive: true, force: true });
 }

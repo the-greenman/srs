@@ -1,0 +1,23 @@
+{
+  "instanceId": "08a24109-0488-4a51-b5db-a1dd98e06fe7",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "srs-usage.md invariant citations: a drift guard",
+    "summary": "Added check-srs-usage-invariant-citations.mjs (FORWARD-only sibling of check-decision-compass-drift.mjs, applied to I-<n> citations in srs-usage.md against the invariant corpus) and scripts/lib/invariant-numbers.mjs, a shared invariant-number loader/normalizer factored out of check-rfc-integration.mjs's own inline copy. Registered in checks.json (always tier, cell reference). Negative test added to tests/guards/run.mjs.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs#490",
+      "srs#580",
+      "srs#670"
+    ],
+    "body": "Dispatched from srs#580's gate:dispatched queue (claim comment on #490, 2026-09-07). Picked from the #490 sweep's own prior catalogue (comment 5555111626): 'srs-usage.md ... no drift guard' with its own suggested fix ('reuse that guard's FORWARD half against invariant ids'). Verified several other catalogued items were already resolved by earlier units before starting (DECISION_MODES hardcoding: fixed via scripts/lib/decision-modes.mjs; roadmap-model.mjs cell-copy dup: #602; source-of-truth map: #639; idl-schema-conformance-allowlist.json/#427: already resolved by the RFC-040 Change J self-expiring mechanism, closed with evidence).\n\nCORRECTION (post-review, before merge): initially misread PR #669's description and copied its narrated 'empty the allowlist' step into scripts/versioning-cell-allowlist.json, without noticing #669's OWN later commit had already reverted that exact change (its own shallow-clone misdiagnosis, unit-8c113b06/finding-07d153cf). This session's local checkout was independently shallow too (git rev-parse --is-shallow-repository -> true), which is why the wrong edit locally re-validated as green through two review passes. CI's full-history checkout on PR #670 caught it (validate-all red on the merged head, matching finding-07d153cf's exact failure mode). Fixed by `git fetch --unshallow`, merging current master, and restoring the file to byte-identical content with origin/master (commit ab3105d). No new finding filed — this is the same lesson finding-07d153cf already carries, not a second instance of a different one; issue_ref left as-is since this correction happened before merge, not as a follow-up."
+  },
+  "lifecycleState": "landed",
+  "createdAt": "2026-09-07T18:23:25.654477678+00:00",
+  "updatedAt": "2026-09-07T18:48:19.396321009+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

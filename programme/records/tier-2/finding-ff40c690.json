@@ -1,0 +1,20 @@
+{
+  "instanceId": "ff40c690-7f57-42f3-899d-f2008fa04b1d",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "srs#427 (idl-schema-conformance-allowlist self-expiry) is already resolved on master, unclosed",
+    "summary": "srs#427 asked for two things: delete the allowlist's stale entries, and make the checker enforce that an entry with no matching observed violation goes red. Both are already true on master. The issue is still open and untouched (no PR references, no labels) — it looks live but is dead work.",
+    "evidence": [
+      "scripts/idl-schema-conformance-allowlist.json is a bare [] at commit 679dc13 (git log shows one touching commit, srs#578, unrelated retirement of epic protocol files) — the stale entries #427 names (Type.fieldGroups, Type.FieldAssignment.{repeatable,minItems,maxItems}) are gone.",
+      "check-idl-schema-conformance.mjs's checkAllowlist() (RFC-040 Change J / rfc-decision-5f8204bc) already fails when an allowlist entry's recorded 'expected' mismatch no longer matches what's observed, AND main()'s end-of-run loop already fails on any entry that matched no observed violation at all this run — both halves #427 asked for.",
+      "The MAPPING table check-idl-schema-conformance.mjs walks is now empty (srs#541 retired the last row) — the checker has literally nothing left to check, which is a separate, larger fact than #427's original scope but confirms the mechanism half is not merely present but exercised-to-vacuity.",
+      "srs#427 (issue_read, 2026-09-07): open, zero comments, zero labels, closed_by_pull_requests.total_count 0."
+    ]
+  },
+  "createdAt": "2026-09-07T18:23:45.950268705+00:00",
+  "updatedAt": "2026-09-07T18:23:45.950276610+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

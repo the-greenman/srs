@@ -201,6 +201,15 @@
       "description": "docs/charter/decision-compass.md stays bidirectionally in sync with the charter-class decision records it surfaces: every roster id resolves to a real record and is cited somewhere in the body, and every body citation resolves to a real record."
     },
     {
+      "id": "srs-usage-invariant-citations",
+      "script": "check-srs-usage-invariant-citations.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "reference",
+      "governing": "srs#490",
+      "description": "Every I-<n> invariant citation in srs-usage.md resolves to a live com.semanticops.spec/invariant record. FORWARD-only sibling of decision-compass-drift's rfc-decision citation check, applied to the largest agent-normative prose surface with no prior drift guard (found by the #490 meaning-placement sweep)."
+    },
+    {
       "id": "decision-cell-tags",
       "script": "check-decision-cell-tags.mjs",
       "args": [],
