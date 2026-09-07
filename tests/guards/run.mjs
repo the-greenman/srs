@@ -975,6 +975,71 @@ async function decisionCellTagsCases(root) {
   });
 }
 
+// ---- srs#607 — decision-record shape guard: one independently reversible position ----------------
+async function decisionRecordShapeCases(root) {
+  console.log("srs#607 — decision-record shape guard");
+
+  const ID = (n) => `00000000-0000-4000-8000-0000000006${String(n).padStart(2, "0")}`;
+  const decision = (n, date, statement) => ({
+    $schema: "https://srs.semanticops.com/schema/2.0/record.json",
+    instanceId: ID(n),
+    typeId: "6a000004-0000-4000-a000-000000000004",
+    typeVersion: 2,
+    typeNamespace: "com.semanticops.spec",
+    typeName: "rfc-decision",
+    fieldValues: { title: `fixture decision ${n}`, decision_date: date, decision_statement: statement },
+  });
+
+  const repo = join(root, "srs");
+
+  // RED: a decision dated after the ruling's floor, carrying a numbered disposition list — the
+  // exact defect the ruling names, and not the grandfathered legacy shape.
+  await writeJson(
+    join(repo, "records/compound.json"),
+    decision(
+      1,
+      "2026-09-08",
+      "Two things are decided here:\n1. First disposition, independently reversible on its own.\n2. Second disposition, unrelated to the first.",
+    ),
+  );
+  expect("rejects a post-floor decision with a numbered disposition list", runCheck("check-decision-record-shape.mjs", root), {
+    exit: 1,
+    contains: ["records/compound.json", "2-item numbered/bulleted", "not one independently reversible position"],
+  });
+
+  // GREEN: same record, rewritten as one position with no disposition list — the guard is not
+  // simply always red.
+  await writeJson(
+    join(repo, "records/compound.json"),
+    decision(1, "2026-09-08", "One position, stated as prose with no disposition list."),
+  );
+  expect("accepts a post-floor decision with one position", runCheck("check-decision-record-shape.mjs", root), {
+    exit: 0,
+    contains: ["✓ Every com.semanticops.spec/rfc-decision record dated after 2026-09-07 carries one position"],
+  });
+
+  // A decision dated on the floor day itself (not strictly after) is out of scope even with a
+  // disposition list — the ruling's floor is "created after 2026-09-07".
+  await writeJson(
+    join(repo, "records/on-floor.json"),
+    decision(2, "2026-09-07", "1. one\n2. two"),
+  );
+  expect("passes a disposition list dated on the floor day (not strictly after)", runCheck("check-decision-record-shape.mjs", root), {
+    exit: 0,
+    contains: ["✓ Every com.semanticops.spec/rfc-decision record dated after 2026-09-07 carries one position"],
+  });
+  await rm(join(repo, "records/on-floor.json"));
+
+  // GREEN: the real corpus, as it stands, passes end to end (the legacy compound records are all
+  // pre-floor and/or allowlisted).
+  await rm(join(repo, "records/compound.json"));
+  await cp(join(REPO, "srs/records"), join(repo, "records"), { recursive: true });
+  expect("the live corpus passes", runCheck("check-decision-record-shape.mjs", root), {
+    exit: 0,
+    contains: ["✓ Every com.semanticops.spec/rfc-decision record dated after 2026-09-07 carries one position"],
+  });
+}
+
 function runInCwd(script, cwd, args = []) {
   const r = spawnSync("node", [join(REPO, "scripts", script), ...args], { encoding: "utf8", cwd });
   return { code: r.status, out: `${r.stdout ?? ""}${r.stderr ?? ""}` };
@@ -2380,6 +2445,7 @@ try {
   await decisionCompassDriftCases(join(root, "decision-compass-drift"));
   await srsUsageInvariantCitationCases(join(root, "srs-usage-invariant-citations"));
   await decisionCellTagsCases(join(root, "decision-cell-tags"));
+  await decisionRecordShapeCases(join(root, "decision-record-shape"));
   await relationTypeResolutionCases(join(root, "relation-type-resolution"));
   await charterAlignmentSectionCases(join(root, "charter-alignment"));
   await integrationAllowlistDispositionCases(join(root, "integration-allowlist-disposition"));
