@@ -1,8 +1,8 @@
 # RFC-042: The concept tree is the spine of the specification
 
-**Status**: Draft (Revision 1)
+**Status**: Draft (Revision 2)
 **Affects**: the `com.semanticops.spec` authoring package (`srs/package/spec-authoring-core/`): `section` and `subsection` retire as authored structure; a new `mechanism` Type; `concept` and `example` revived as carrying Types; `invariant.applies_to` retires; the spec repository's compositions, root container and Part containers; RFC-016 [R6] (index grouping); the `scripts/check-spec-coherence.mjs` contract (srs#560); the `normativeSites` entry of `scripts/spec-language-registry.json`. No core schema, no `dataModelRevision` change.
-**Builds on**: RFC-013 (root container and structural navigation, Rule [N+12]), RFC-016 (invariant projection), RFC-020 (`identityFieldId`), RFC-034 Rev 5 (declared container membership, Draft), `rfc-decision-0750c62f` (Container is a declared selection; `contains` is the part-of tree), `rfc-decision-0118e938` (one layer per construct), `rfc-decision-92d2da05` (Composition vocabulary)
+**Builds on**: RFC-013 (root container and structural navigation, Rule [N+12]), RFC-015 (ordering is a view-layer arrangement, never a semantic claim, applied to the tree in Change A), RFC-016 (invariant projection), RFC-020 (`identityFieldId`), RFC-034 (Container Structure and Nesting, **Accepted, Revision 6**; declared membership — `rootInstanceIds`/`memberInstanceIds` direct, `childContainerIds` effective closure — `contains`-Relation traversal retired from membership entirely, srs-rust#974), `rfc-decision-0750c62f` (Container is a declared selection on the expression plane; `contains` is the part-of tree that navigation, depth and the tree walk are built on), `rfc-decision-0118e938` (one layer per construct), `rfc-decision-92d2da05` (Composition vocabulary)
 **Author**: design dialogue draft (srs#558; owner ruling 2026-09-05, srs#556 comment 5552715003)
 **Date**: 2026-09-06
 
@@ -13,6 +13,7 @@
 | Rev | Date | Summary |
 |---|---|---|
 | 1 | 2026-09-06 | Initial draft. Executes the concept-tree ruling and consumes the srs#608 result (the concept graph is not a DAG; the unit of layering is the strongly connected component) and the srs#609 finding (four concepts never introduced). |
+| 2 | 2026-09-07 | Folds in the owner's five rulings on PR #620 (comment 5568325871): cells confirmed as tagged with the standing cross-reference-cycle note; the nine-Part list accepted as a starting point; invariant index grouping by containing concept ratified, superseding RFC-016 [R6]; [R2] (leaf-under-leaf forbidden) kept, with the sibling-`refines` escape hatch recorded; `section`/`subsection` deprecate-then-remove confirmed. Adds the owner's layered-order clause as normative text in Change A and a new Conformance Rule [R13], citing RFC-015 and the muDemocracy #73/#75 ordering-layering ruling; records the known limit that Compositions are flat (no alternate hierarchy today; re-nesting is Door 2). **Reconciles Change D, Change G, [R7], [R12] and Alt E with `rfc-decision-0750c62f` and its shipped consequences** (srs-rust#969: navigation below the root already descends the part-of tree via `NavigationNode.children`/`repository_navigation_with_depth`, closing srs#573; srs-rust#974: RFC-034 is Accepted and its `childContainerIds` declared-membership model is implemented, and the pre-RFC-034 `contains`-traversal fallback for container membership no longer exists) — Rev 1 drafted against RFC-034 as an undecided Draft and hedged accordingly; that hedge is now stale and is corrected, not merely footnoted. Re-measures the corpus: 44 concepts, 348 leaves, 395 `contains` / 178 `precedes` / 90 `depends-on` edges, 122 baked headings in 23 leaf records (`check-spec-coherence.mjs`, landed since Rev 1 as srs#560), 68 `example` records already created and 10 `section`/65 `subsection` records still unmigrated — the concept-tree migration (srs#561–#564) is already landing additively in parallel with this RFC, which is why the counts moved. Open Questions is empty; nothing raised in Rev 1 remains open. |
 
 ---
 
@@ -29,7 +30,7 @@ The brief for this unit named the first cell "♎ Process". The grid has no Proc
 
 **Decisions consulted:** `rfc-decision-0750c62f` (Container is a declared selection on the EXPRESSION plane; `contains` is the part-of tree that "the concept graph, navigation depth, layering and the tree walk are built on"; this RFC is that sentence executed), `rfc-decision-0118e938` (one layer per construct; the tree carries no presentation data and the containers carry no meaning), `rfc-decision-cce3c00e` (grid and cell preferences), `rfc-decision-9ee14517` (layer rules, applied below), `rfc-decision-92d2da05` (Composition, Presentation, Projection vocabulary, used throughout), `rfc-decision-4431046e` (correction versus refinement; RFC-016 [R6] is amended by supersession in this RFC, not edited in place), `rfc-decision-7caca3a1` (decision mode), `rfc-decision-53635966` (Tier 1 removal; the leaf types here are all Tier 2 Records).
 
-**Contradictions found:** None. One amendment is made explicitly, not silently: RFC-016 [R6] groups the generated invariant index by the free-text `applies_to` field. That field retires here, so [R6] is superseded by a rule that groups by the containing concept (Change E). RFC-034 Rev 5 is not contradicted: this RFC uses `contains` only as the part-of tree, which RFC-034 Change C names as the thing that has to keep being maintained, and it treats every container as a declared selection.
+**Contradictions found:** None. One amendment is made explicitly, not silently: RFC-016 [R6] groups the generated invariant index by the free-text `applies_to` field. That field retires here, so [R6] is superseded by a rule that groups by the containing concept (Change E). RFC-034 is not contradicted, and its acceptance since Rev 1 sharpens rather than unsettles this RFC: RFC-034 (now Accepted, Revision 6) retired the `contains`-Relation traversal from Container membership entirely (Change C) and replaced it with declared membership (`rootInstanceIds`/`memberInstanceIds`, and `childContainerIds` for nesting). This RFC never used `contains` as a membership mechanism — it uses `contains` only as the part-of tree that membership is checked *against* (Change D) — so nothing here relied on the traversal fallback RFC-034 removed. Rev 1 hedged this point ("nothing in this RFC depends on RFC-034's disposition") because RFC-034 was still Draft; Rev 2 states the now-settled position directly instead of leaving the hedge to go stale.
 
 **One-way-per-goal:** No second mechanism is introduced, and four proposed ones are removed. The original design for this epic (srs#556 body) proposed two fields (`exposition_role`, `layer`) and three relation types (`introduces`, `presupposes`, `constrains`). Each duplicated a goal that a canonical mechanism already serves: the leaf's Type is its role; Part membership in the tree is its layer; placement in the tree is its introduction; `depends-on` is "presupposes"; an invariant's `contains` parent is what it constrains. The proposal collapses onto three installed canonical relation types that every traversal in the toolchain already reads. Alternatives Considered lists the five retired mechanisms with the ruling's reasons.
 
@@ -94,6 +95,10 @@ A **node** is a `concept` record. A **leaf** is a Record of one of the leaf Type
 
 What becomes possible: an agent or a script reads the structure from relations without parsing prose. What becomes forbidden: a heading, a numbered label or a horizontal rule standing in for structure inside a prose field (Change F, check 5). What it costs: every existing section and subsection record is retyped or split (Change C), which is the migration srs#561 to srs#564 execute.
 
+**Order is layered, and the layers are independent (owner ruling, PR #620 comment 5568325871, verbatim: *"These layers are independent. Concepts can be ordered in many different ways as is contextually appropriate. At a meaning layer we are recording semantic or even temporal ordering, but we can tell a story with those elements in a different way."*).** The `precedes` chain over the tree defined above is the **semantic** (or temporal) order: a claim about the concepts and leaves themselves, at the MEANING plane, alongside `contains` and `depends-on`. A Composition (Change G) MAY present the same concepts and leaves in a different sequence; that sequence is a **presentation** arrangement at the EXPRESSION plane, never a claim, and where the two differ the Composition is a view of the meaning, not a competing statement of it. This is RFC-015's ordering test (a composite-range Field's presentational order never belongs on the Type) and the ordering-layering ruling (muDemocracy #73/#75: `precedes` is semantic order, the view layer owns presentational order) applied to the concept tree — it is why carrying two orders here is not a one-way-per-goal violation: one is semantics, one is telling. See Conformance Rule [R13].
+
+**Known limit, stated so it is not discovered later.** Compositions are flat (`ext:views-l2`; a `DocumentSection` cannot contain a `DocumentSection`) — so an alternate *reading order* over the tree is expressible today (a Composition sequences the same nodes differently) but an alternate *hierarchy* is not (a Composition cannot present a different parent-child shape than `contains` declares). Re-nesting compositions or containers to lift that limit is a Door 2 question, out of this RFC's scope; this RFC only records the boundary.
+
 ### Change B: the leaf Types, and `mechanism` replaces `subsection`
 
 The leaf's Type is its role. The leaf Types are:
@@ -122,7 +127,9 @@ The 112 fenced code blocks inside prose fields (measured 2026-09-06; 73 in secti
 
 ### Change D: Parts are the root container's navigation sections
 
-A **Part** is a root concept that is a non-identity member of the repository's root container (`manifest.container`, RFC-013). Part order is the RFC-013 navigation order: Rule [N+12] over the root container's members with the identity record removed. Each Part has one **Part container**: a Container whose `anchorInstanceId` is the Part concept and whose declared membership is the Part concept's subtree (every concept and leaf reachable from it by `contains`). Under RFC-034 Rev 5 that membership is declared in `memberInstanceIds` and refreshed by a script that runs the same walk; a Part container whose declared membership differs from the subtree is a structural-coherence diagnostic (check 4). Nothing in this RFC depends on RFC-034's disposition: under either membership reading the Part's subtree is the same set.
+A **Part** is a root concept that is a non-identity member of the repository's root container (`manifest.container`, RFC-013). Part order is the RFC-013 navigation order: Rule [N+12] over the root container's members with the identity record removed. Each Part has one **Part container**: a Container whose `anchorInstanceId` is the Part concept and whose declared membership is the Part concept's subtree (every concept and leaf reachable from it by `contains`).
+
+**Membership is declared, never derived, and this RFC never assumed otherwise.** RFC-034 is now Accepted (Revision 6) and its `childContainerIds`/declared-membership model is implemented (srs-rust#974, `rfc-decision-0750c62f`): a Container's membership is `direct(C)` — its own `rootInstanceIds` ∪ `memberInstanceIds` — closed recursively over `childContainerIds` for `effective(C)`, and the pre-RFC-034 fallback that once walked `contains` Relations to compute membership has been removed from the core entirely, not merely deprecated. A Part container therefore carries the Part's subtree in `memberInstanceIds` (Parts here are flat and do not nest, so `childContainerIds` is not needed to express one), kept in sync by a script that walks `contains` from the Part concept and writes the result — the same walk `check-spec-coherence.mjs` check 4 already performs to detect drift. A Part container whose declared `memberInstanceIds` differs from the subtree the walk computes is a structural-coherence diagnostic (check 4), because there is now exactly one membership reading (declared) to compare against, not two. Rev 1 wrote this while RFC-034 was still Draft and hedged ("under either membership reading the Part's subtree is the same set") against a `contains`-traversal reading that might still ship; that reading did not ship (RFC-034 Change C retired it), and Rev 2 states the accepted mechanism directly.
 
 The Part set is authored, not derived. The illustrative target, following the srs#556 reading order and the nine-layer condensation srs#608 measured, is: Reading this specification; Foundations; Instances; Structure; Distribution; Presentation; Extensions; Conformance; Governance. srs#563 fixes the final list. The sole constraint this RFC places on it is check 4: every non-trivial strongly connected component lies inside one Part, and no `depends-on` edge points from an earlier Part to a later one.
 
@@ -167,7 +174,7 @@ Each check is a build failure once its allowlist entries for a Part are gone; sr
 
 ### Change G: navigation, rendering and compositions
 
-Below the root container, navigation follows the part-of tree: a Part's children are the Part concept's `contains` children in sibling order, recursively, and depth is the `contains` depth (`rfc-decision-0750c62f`; the recursive-navigation rule itself is srs#573's ruling, which this RFC presupposes and does not make). Heading depth in a rendered document is the same number. The srs#574 ruling picks the renderer mechanism; this RFC constrains the outcome only: one heading per node and per leaf, at its tree depth, in reading order.
+Below the root container, navigation follows the part-of tree: a Part's children are the Part concept's `contains` children in sibling order, recursively, and depth is the `contains` depth (`rfc-decision-0750c62f`). This is now shipped, not merely ruled: srs-rust#969 (merged, closing srs#573) added `NavigationNode.children` and `repository_navigation_with_depth`, built on the same `tree_service::build_tree` walk `srs tree` already used, so navigation below the root container descends the part-of tree today rather than stopping at depth one. Heading depth in a rendered document follows the same tree: srs-rust#969's own investigation of srs#574 found `render_service::render_record_at_level` already recurses `contains` children at `heading_level + 1` in structured mode — depth in a rendered Composition already rides the part-of tree, confirming existing behaviour rather than requiring new code. This RFC constrains the outcome, which is already met: one heading per node and per leaf, at its tree depth, in reading order.
 
 For the spec repository's compositions:
 
@@ -216,6 +223,8 @@ These rules bind a repository that adopts the `com.semanticops.spec` authoring p
 > **[R11]** No record of Type `section` or `subsection` MAY be created after this RFC is accepted. Existing records are migrated by srs#561 to srs#564.
 >
 > **[R12]** A conforming reader MUST derive navigation below the root container and heading depth in a rendered document from the `contains` tree, at `contains` depth, in reading order.
+>
+> **[R13]** The `precedes` chain over the tree is the semantic (or temporal) reading order and is a claim about the concepts and leaves. A Composition MAY sequence the same nodes in a different order for presentation; that sequence MUST NOT be read as a competing claim about the concepts' semantic order, and where a Composition's order differs from the tree's `precedes` order, the tree's order is authoritative for what the elements assert about each other. A Composition MUST NOT present a parent-child shape that differs from `contains`; `ext:views-l2` compositions are flat, so an alternate hierarchy is not expressible under this RFC (Door 2, out of scope).
 
 ---
 
@@ -232,6 +241,8 @@ These rules bind a repository that adopts the `com.semanticops.spec` authoring p
 **Type as role, because a Type is what SRS has for saying what a record is.** An `exposition_role` field on a `subsection` would be a select value telling the reader what kind of thing the record is, while the Type system stands beside it doing the same job. That is the E4/`semanticObjectType` proving case again.
 
 **Components, not concepts, because the corpus said so.** The design was run as a falsifiable experiment before this RFC was written (srs#558 owner ruling 2026-09-06). Three cycles are real: a Type's normative content is assignment content and a FieldAssignment is "a Field reference within a Type"; a Relation is invalid until its type resolves to an installed definition whose `key` is the string the Relation stores; the conformance claim is literally `Core [+ ext:<name>]`. Ordering the condensation keeps "reads in layers" true and stops pretending an order exists inside the pairs. It cost 44 additive records to learn instead of a Parts I to IV rewrite that would have failed to order three pairs and never known why.
+
+**A leaf that can contain becomes a node, so [R2] stays as written, with the escape hatch recorded rather than taken (owner ruling, PR #620 comment 5568325871).** An `example` illustrating one `mechanism` is that mechanism's next sibling, never its child, because nesting a leaf under a leaf would mean a leaf can have children — and then "what is a node?" needs two rules (the Type test in Change A for concepts, plus a has-children test for leaves that turn out to contain something), which is the one-way-per-goal violation this design exists to avoid. The shared concept parent already carries the semantic claim that the mechanism and its example belong together; only their nearest-neighbour position is presentational. If that positional association ever needs to be structural instead — if "this example belongs to that mechanism" must be checkable independent of sibling order — the fix is a *relation between siblings*: `example` `refines` its `mechanism` (RFC-022 supersession semantics already cover "a more detailed / illustrative version of"), never a second contains-parent or a leaf that contains a leaf.
 
 **Parts as containers, because Parts are selection, not meaning.** A Part groups a subtree for navigation and rendering. That is a declared selection on the EXPRESSION plane, which is what a Container is (`rfc-decision-0750c62f`). Putting a `layer` field on the records would have moved a selection into the meaning layer, which layer rule 1 forbids.
 
@@ -271,7 +282,7 @@ Rejected. RFC-013 excludes a navigation taxonomy; a Part is a root concept plus 
 
 ### Alt E: nested compositions as the depth mechanism
 
-Not decided here. srs#574 rules between depth-aware `render_section` and nested `DocumentSection`. This RFC constrains only the output (one heading per node at tree depth) so that either ruling satisfies it.
+Settled since Rev 1, not by a new ruling but by inspection: srs#574 asked whether depth needs a depth-aware `render_section` or nested `DocumentSection`. srs-rust#969 found `render_service::render_record_at_level` already recurses `contains` children at `heading_level + 1` — the depth-aware mechanism already existed and needed no code change. Nested `DocumentSection` was never built and is not needed for depth; it remains the Door 2 question for an alternate *hierarchy* (the known limit recorded in Change A), not for depth, which this RFC's output constraint (one heading per node at tree depth) already covers with the shipped mechanism.
 
 ---
 
@@ -279,20 +290,22 @@ Not decided here. srs#574 rules between depth-aware `render_section` and nested 
 
 Nothing breaks in the core or in any other repository. No core schema, invariant or extension changes; `dataModelRevision` stays at 7; the `srs` binary needs no change to validate a migrated corpus, because `contains`, `precedes` and `depends-on` are installed canonical relation types and `mechanism` is an ordinary package Type.
 
-What changes in the spec repository, with counts as of 2026-09-06:
+What changes in the spec repository. Rev 1 measured 2026-09-06, before srs#561–#564 began landing; Rev 2 re-measures 2026-09-07 (`check-spec-coherence.mjs`, `srs repo map`, `srs record list`) rather than trusting the Rev 1 numbers — the migration this RFC describes is already landing additively, ahead of and independent of this RFC's acceptance, which is why several counts already moved:
 
-| Set | Count | Disposition |
-|---|---|---|
-| `section` records | 10 | become concepts or dissolve into Parts (srs#561, srs#563) |
-| `subsection` records | 65 | retyped to `mechanism` or split into several leaves (srs#562) |
-| `invariant` records | 119 | gain one `contains` parent each; `applies_to` value dropped (srs#564) |
-| fenced code blocks in prose | 112 | become `example` records (srs#562) |
-| markdown headings in prose | 159 | become records (srs#562) |
-| `generated-type-reference` records | 30 | re-parented from sections to concepts (srs#563) |
-| `design-note` records | 45 | gain a `contains` parent (srs#563); the rationale composition is unchanged |
-| `extension` records | 10 | re-parented under the Extensions Part (srs#565) |
-| `concept` records | 44 | unchanged; more are added for concepts the tree needs (srs#561) |
-| `contains` / `precedes` / `depends-on` edges | 159 / 137 / 90 | the section-to-subsection edges are replaced by concept-to-leaf edges; concept edges are kept |
+| Set | Rev 1 (2026-09-06) | Rev 2 (2026-09-07) | Disposition |
+|---|---|---|---|
+| `section` records | 10 | 10 (unchanged) | become concepts or dissolve into Parts (srs#561, srs#563) |
+| `subsection` records | 65 | 65 (unchanged) | retyped to `mechanism` or split into several leaves (srs#562); `mechanism` Type not yet minted |
+| `invariant` records | 119 | 125 | gain one `contains` parent each; `applies_to` value drops (srs#564); `applies_to` field still present on the Type as of this measurement |
+| `example` records | 0 | 68 | already being created under Change C ahead of this RFC; fenced-block migration is in progress, not yet complete |
+| fenced code blocks in prose (all spec records) | 112 | 112 (unchanged total, redistributed) | mostly moved out of `section`/`subsection` content already (2 of 112 remain there; most of the rest sit in `generated-type-reference` (31, a generator projection, exempt) and `example` (71)) |
+| baked headings in leaf records | 159 (in 21 section/subsection records) | 122 (in 23 leaf records; `check-spec-coherence.mjs` check 5, landed since Rev 1 as srs#560) | become records (srs#562) |
+| `generated-type-reference` records | 30 | 30 (unchanged) | re-parented from sections to concepts (srs#563) |
+| `design-note` records | 45 | 43 | gain a `contains` parent (srs#563); the rationale composition is unchanged |
+| `extension` records | 10 | 10 (unchanged) | re-parented under the Extensions Part (srs#565) |
+| `concept` records | 44 | 44 (unchanged) | more are added for concepts the tree needs (srs#561) |
+| `contains` / `precedes` / `depends-on` edges | 159 / 137 / 90 | 395 / 178 / 90 | `contains` and `precedes` grew as concept-to-leaf edges were added under srs#561–#564; `depends-on` (the prerequisite graph srs#608 measured) is unchanged; `check-spec-coherence.mjs` reports 395 records with a `contains` parent, 0 with more than one, 348 leaves with a home and 0 without |
+| Part containers | 0 (illustrative only) | 10 (existing RFC-013 section containers; not yet re-anchored to the illustrative nine-Part list) | `check-spec-coherence.mjs` check 4 reports this vacuous until srs#563 hangs the concept tree under the Parts |
 
 `docs/spec/srs-spec.md` changes. Heading levels are corrected, reading order moves, and invariants render inline. The RFC integration gate's `I-<n>` tokens still resolve because the invariant records keep their numbers and directory. `check-invariant-placement` is unchanged. `check-publication-reachability` needs its exclusions re-seeded once the compositions change.
 
@@ -302,8 +315,12 @@ Consumers of the rendered markdown (`srs.semanticops.com`, the schema mirrors' d
 
 ## Open Questions
 
-1. **Part list.** Change D gives an illustrative nine-Part target and leaves the final list to srs#563. Recommendation: accept the illustrative list as the starting point; the checks, not the list, are what this RFC binds.
-2. **Index grouping.** [R9] groups the generated invariant index by containing concept. The alternative is a flat numeric list with no groups (RFC-016 [R2] order only). Recommendation: group by concept; it is the one grouping the tree already carries.
-3. **Leaf parent restricted to concepts.** [R2] forbids a leaf under a leaf, so an example that illustrates one mechanism is that mechanism's next sibling, not its child. The alternative allows `mechanism contains example`. Recommendation: keep [R2]; a two-level leaf makes the leaf a node and reopens the role question.
-4. **Retire versus deprecate `section`/`subsection` Types.** Change B deprecates the definitions until the last record migrates, then removes them. Recommendation: as written.
-5. **Cell naming.** The brief named ♎ as "Process". ♎ is Reference. Recommendation: confirm `cell:containment, cell:reference`.
+None open as of Revision 2. The owner ruled on all five Rev 1 questions (PR #620 comment 5568325871, 2026-09-05) and the ruling is folded into the sections above rather than left standing here:
+
+1. **Cell naming** — settled as `cell:containment, cell:reference` (Charter alignment, above), with the standing practice recorded: cells are chosen and then refined by periodic cross-reference at the grid census, not derived once and fixed; a mis-seated statement gets re-homed there, and work is not held for cell certainty.
+2. **Part list** — settled: the illustrative nine-Part list (Change D) is accepted as the starting point; the checks ([R7], [R8]), not the list, are what this RFC binds. The final list stays srs#563's.
+3. **Index grouping** — settled: the generated invariant index groups by containing concept ([R9], Change E), superseding RFC-016 [R6].
+4. **Leaf parent restricted to concepts** — settled: [R2] is kept as written. The escape hatch is recorded, not taken (Rationale, above): a structural example-to-mechanism association is a sibling `refines` relation, never a leaf nested under a leaf.
+5. **`section`/`subsection` disposal** — settled: deprecate then remove (Change B), as written.
+
+Everything this RFC depends on that was still open when Rev 1 was drafted is now closed: RFC-034 is Accepted, srs#573 and srs#574 are both resolved in the reconciliation above (Change D, Change G, Alt E), and the owner's layered-order clause is folded into Change A and [R13]. Nothing raised against this RFC's design is outstanding; what remains is execution — srs#561 through srs#565 carrying out Changes B through E on the corpus, which this RFC does not gate on.
