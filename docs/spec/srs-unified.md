@@ -5785,3 +5785,39 @@ Example: the two lifecycle declaration forms on a Type.
 Declaring both is a validation error. An inline lifecycle cannot extend; use `lifecycleRef` when the same state machine is needed across multiple Types.
 
 
+### Stable identity
+
+**Content**: An SRS entity carries a UUID minted once, at creation, that does not change afterward. A copy, an export, an import, or a rename for display MUST NOT change an entity's UUID. Identity is declared on the entity itself, never derived from a file path, a directory position, or a storage history.
+
+A UUID conflict between two entities is a fatal error. A loader MUST NOT resolve it by precedence, and MUST NOT pick one entity as the winner over the other: doing so would discard whichever identity claim lost.
+
+Changing what an entity is at its root means minting a new UUID. A materially different entity does not reuse an old UUID: every existing reference to that UUID already points at the entity it used to be.
+
+
+### Instance
+
+**Content**: SRS separates two id spaces. A definition, such as a Field or a Type, is identified by a UUID together with namespace, name, and version: the same UUID names a lineage across versions, and version selects one point in it. An instance, such as a Note or a Record, is identified by its UUID alone, carries no version, and belongs to no lineage: it is a single piece of captured content.
+
+A Relation connects two instance UUIDs, never a definition UUID. A Container scopes a set of instances, never definitions. A Container's own id is a third kind of id: it MUST NOT appear as a Relation's source or target.
+
+Confusing a definition's UUID with an instance's UUID is a recurring correction in this specification. Reading a `typeId` as an instance id, or an `instanceId` as a definition id, produces a reference that resolves to the wrong kind of thing.
+
+
+### Semantic order
+
+**Content**: A `precedes` Relation states reading or execution order as a claim about meaning: this element comes before that one, and getting the order wrong is getting the claim wrong, not choosing a different layout. Specification sections in document order, and protocol stages in execution sequence, are both `precedes` chains: reversing either one changes what is true, not how it looks.
+
+`precedes` is one Relation among the canonical types, read by walking the chain from sibling to sibling.
+
+Order that reflects curation, display preference, or layout is presentation, not meaning, and belongs in the view layer. A Composition MAY sequence the same elements differently for rendering; that sequence is an arrangement, not a competing claim. Where the two disagree, the `precedes` chain is what the elements assert about each other. A `precedes` edge created to control how something displays is a misuse of the mechanism.
+
+
+### Projection
+
+**Content**: Rendered output is derived from records and is never itself a source of truth for them. A document, a table, an export, or a serialised copy is a view produced from the records on demand: rendering it again produces the same result, because nothing in it originates the meaning it shows.
+
+A projection keeps a traceable line back to the records it renders. Editing the rendered artifact directly, instead of the records, creates a second copy of the meaning that the records no longer agree with, and the disagreement has no mechanical way to resolve.
+
+View, Composition, and Theme are the constructs a projection is built from: View selects the presentation, Composition assembles what gets rendered, and Theme supplies the templates the rendering fills in. Each rests on the same rule: render the output, never author it directly.
+
+

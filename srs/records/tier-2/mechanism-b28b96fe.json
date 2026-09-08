@@ -1,0 +1,14 @@
+{
+  "instanceId": "b28b96fe-1a8e-4f07-920f-75cf9b645258",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Projection",
+    "content": "Rendered output is derived from records and is never itself a source of truth for them. A document, a table, an export, or a serialised copy is a view produced from the records on demand: rendering it again produces the same result, because nothing in it originates the meaning it shows.\n\nA projection keeps a traceable line back to the records it renders. Editing the rendered artifact directly, instead of the records, creates a second copy of the meaning that the records no longer agree with, and the disagreement has no mechanical way to resolve.\n\nView, Composition, and Theme are the constructs a projection is built from: View selects the presentation, Composition assembles what gets rendered, and Theme supplies the templates the rendering fills in. Each rests on the same rule: render the output, never author it directly."
+  },
+  "createdAt": "2026-09-08T11:36:26.737979684+00:00",
+  "updatedAt": "2026-09-08T11:36:26.737985809+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
