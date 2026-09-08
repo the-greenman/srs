@@ -1,0 +1,14 @@
+{
+  "instanceId": "a7fea9f4-6da7-4b7c-9fd9-2b77310aea2c",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`FieldType` — the value semantics",
+    "content": "`fieldType` carries everything about what a Field's value *is*. It decomposes value semantics into orthogonal facets — **datatype × cardinality × value-domain × format × constraints** — so each axis varies independently, and adds three composite datatypes (`ref`, `dependent`, `map`) that let a Field's range be another Type.\n\nExample: the `FieldType` shape.\n\n**`datatype` semantics:**\n\n| Value | Meaning |\n|---|---|\n| `\"string\"` | Text of any length. Length, pattern, format, and value domain are separate facets, not distinct datatypes |\n| `\"number\"` | Numeric value, fractional permitted |\n| `\"integer\"` | Whole number |\n| `\"boolean\"` | True/false |\n| `\"date\"` | ISO 8601 calendar date |\n| `\"date-time\"` | ISO 8601 date + time |\n| `\"ref\"` | The range is another Type — nested object(s) when `mode` is `\"inline\"`, target instance id(s) when `\"reference\"` |\n| `\"dependent\"` | The value conforms to the type descriptor named by `dependsOn` |\n| `\"map\"` | Open string-keyed collection whose values conform to `valueRange` |\n\nCardinality is declared **only** here. A Field holding many values is `cardinality: \"list\"`; a Type that includes it must not restate or override that — Field semantics belong to the Field (Invariant 2).\n\nA `reference`-mode value is a target instance id, and MUST NOT be interpreted as or require a `Relation`. Use `reference` for definitional composition, where the target's identity is part of the definition; model an assertion *between* instances — one needing provenance, lifecycle, or confidence — as a `Relation` instead."
+  },
+  "createdAt": "2026-09-08T18:44:54.363790559+00:00",
+  "updatedAt": "2026-09-08T18:44:54.363800364+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

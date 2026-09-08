@@ -1,0 +1,14 @@
+{
+  "instanceId": "f6727489-d943-456e-bd50-e1110db2f6d5",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`VocabularyEntry` (substrate contract)",
+    "content": "`VocabularyEntry` is a contract, not a serialised type. Every conforming entry carries:\n\nExample: the `VocabularyEntry` substrate contract.\n\n**Absent `status` MUST be treated as `active`.** This is normative: all resolution rules (V1, V6, V9, V10) treat absent identically to `\"active\"`.\n\n**Entries are keyed, not named.** Entries carry `key`, not `name`, and are addressed within their container. They are not independently `Reference`-able. Containers (`Vocabulary`, `Lifecycle`) have `name` and are the `Reference` targets.\n\n**Required-field tightening.** `label` and `description` are optional so an emergent `Term` is valid before prose is written. A specialisation MAY tighten an optional substrate field to required; it MUST NOT relax a required one. `RelationTypeDefinition` requires both `label` and `description` (unchanged from RFC-005).\n\n**One forward-compatibility policy.** Unknown top-level fields are rejected; arbitrary entry metadata goes in `meta`."
+  },
+  "createdAt": "2026-09-08T18:45:10.743777923+00:00",
+  "updatedAt": "2026-09-08T18:45:10.743785449+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,14 @@
+{
+  "instanceId": "23d4b612-b0c4-4083-afc4-7ba7a610266c",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Package integration",
+    "content": "Vocabularies are Foundation-group definition types installed in packages alongside fields, types, and relationTypes:\n- the distributable `Package` holds inline definitions: `vocabularies?: Vocabulary[]`\n- the repository `package/package.json` holds relative paths: `\"vocabularies\": [\"vocabularies/foo.json\", ...]`"
+  },
+  "createdAt": "2026-09-08T18:45:14.322489845+00:00",
+  "updatedAt": "2026-09-08T18:45:14.322498654+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
