@@ -1,0 +1,15 @@
+{
+  "instanceId": "7ce5fcea-0693-4d47-8b63-489c9967a8fa",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "part:instances",
+    "title": "Instances",
+    "description": "The instance layer: Notes and Records as the two record tiers, and how a Record instantiates a Type through typed field values."
+  },
+  "createdAt": "2026-09-08T12:13:52.231212942+00:00",
+  "updatedAt": "2026-09-08T12:13:52.231218122+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

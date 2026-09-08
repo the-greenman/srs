@@ -1,0 +1,15 @@
+{
+  "instanceId": "785e457a-98b1-4ee4-925f-514f1433d63a",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "part:governance",
+    "title": "Governance",
+    "description": "The specification's own governing rules: its foundational values, its process for continuity and evolution, and the balance between shared coherence and local autonomy."
+  },
+  "createdAt": "2026-09-08T12:13:52.724585393+00:00",
+  "updatedAt": "2026-09-08T12:13:52.724588629+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

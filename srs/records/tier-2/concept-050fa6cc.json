@@ -1,0 +1,15 @@
+{
+  "instanceId": "050fa6cc-d27c-460d-a515-57cee73c9049",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "part:distribution",
+    "title": "Distribution",
+    "description": "How definitions travel between repositories: Package, Reference, Lineage, and Provenance."
+  },
+  "createdAt": "2026-09-08T12:13:52.396375984+00:00",
+  "updatedAt": "2026-09-08T12:13:52.396379569+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,19 @@
+{
+  "containerId": "97838af7-50f8-4da2-9d8f-d7dbf9296c80",
+  "title": "Part: Distribution",
+  "anchorInstanceId": "050fa6cc-d27c-460d-a515-57cee73c9049",
+  "rootInstanceIds": [
+    "050fa6cc-d27c-460d-a515-57cee73c9049"
+  ],
+  "memberInstanceIds": [
+    "0156481c-ff01-40ad-b902-d19eca8abaaf",
+    "1a598f09-1c4d-4c6b-b8ad-5b84bd71bd5d",
+    "5b507597-f824-576b-b577-fd8141f1eaf1",
+    "60dc0cbb-6c52-559b-9014-2fe0c41bacd1",
+    "745529e6-42c1-4963-9388-529ae13c2e78",
+    "8ccf7519-68ac-532e-b32b-89c5007d4cf6",
+    "9a4a70af-dbce-55e3-abee-175d2491f656",
+    "cba9940f-1c2a-419b-a044-a5bcd2929824",
+    "f7ffc0ea-89bb-548b-876b-d320c40c8c6a"
+  ]
+}

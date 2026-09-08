@@ -1,0 +1,15 @@
+{
+  "instanceId": "69010931-a272-452e-b540-fd89d4551b92",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "part:reading-this-specification",
+    "title": "Reading this specification",
+    "description": "The nine Parts read front to back: notation, RFC 2119 keywords, and the reading order the rest of the document assumes."
+  },
+  "createdAt": "2026-09-08T12:13:52.058595650+00:00",
+  "updatedAt": "2026-09-08T12:20:26.084872151+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

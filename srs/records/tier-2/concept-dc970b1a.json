@@ -1,0 +1,15 @@
+{
+  "instanceId": "dc970b1a-9e3e-4207-a031-c04b6632c3bc",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "part:presentation",
+    "title": "Presentation",
+    "description": "How stored state becomes a document a person reads: projections, Views, and the Composition pipeline."
+  },
+  "createdAt": "2026-09-08T12:13:52.477683667+00:00",
+  "updatedAt": "2026-09-08T12:13:52.477690137+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
