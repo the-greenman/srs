@@ -39,12 +39,6 @@
     },
     {
       "check": "no-baked-heading",
-      "id": "6e28a8e1-7fad-486e-9bac-426c36a8aee8",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:themes-l1 (11 headings)"
-    },
-    {
-      "check": "no-baked-heading",
       "id": "a75866ba-090f-5d62-9f7c-8e179ff1825f",
       "issue": "the-greenman/srs#562",
       "note": "subsection: ext:repository (16 headings)"
@@ -57,12 +51,6 @@
     },
     {
       "check": "no-baked-heading",
-      "id": "c9c16dcc-324a-5ab7-b7a5-d53ce48426bf",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:views-l2 (15 headings)"
-    },
-    {
-      "check": "no-baked-heading",
       "id": "ca3ea62e-effb-503f-ac04-22ce30ca4511",
       "issue": "the-greenman/srs#562",
       "note": "subsection: ext:protocol (3 headings)"
@@ -72,18 +60,6 @@
       "id": "d1f518cc-0e25-5045-ae3d-9d68443c8150",
       "issue": "the-greenman/srs#562",
       "note": "subsection: Record tiers (5 headings)"
-    },
-    {
-      "check": "no-baked-heading",
-      "id": "d3b0ec85-760f-50d2-be4a-9edea5685740",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:views-l1 (10 headings)"
-    },
-    {
-      "check": "no-baked-heading",
-      "id": "d5d3f88f-8cc6-5247-8d35-41b189804dc5",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:lifecycle (6 headings)"
     },
     {
       "check": "no-baked-heading",

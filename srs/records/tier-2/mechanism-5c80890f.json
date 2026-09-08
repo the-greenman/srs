@@ -1,0 +1,14 @@
+{
+  "instanceId": "5c80890f-b8a9-4726-82f3-e7a56143973d",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Composite rendering — renderer dispatch (RFC-036)",
+    "content": "`FieldView` gains an optional `compositeRenderer`, a `CompositeRendererBinding` that dispatches a\ncomposite-range Field (`fieldType.datatype: \"ref\"`, `mode: \"inline\"`) to a named composite renderer.\nPresentation lives in the View, not in the Type: RFC-032 evicted `compositeRenderer` from the type model,\nand RFC-015 established that an arrangement over records with many legitimate concurrent forms is\nview-owned.\n\nExample: the `CompositeRendererBinding` shape."
+  },
+  "createdAt": "2026-09-08T17:48:43.702122291+00:00",
+  "updatedAt": "2026-09-08T17:48:43.702128899+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

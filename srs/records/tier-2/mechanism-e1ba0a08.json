@@ -1,0 +1,14 @@
+{
+  "instanceId": "e1ba0a08-a757-4f99-b162-0871f8485d04",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`RecordPropertyView` (RFC-041)",
+    "content": "A sibling row kind to `FieldView` in the same `View.fieldViews[]` list. It presents a top-level Record property without treating that property as a Field.\n\nExample: the `RecordPropertyView` shape.\n\nThe `property` enum is closed and generated from `record.json`'s declared top-level properties after excluding identity/type-binding properties (`$schema`, `instanceId`, `typeId`, `typeVersion`, `typeNamespace`, `typeName`), carriers (`fieldValues`, `fieldMeta`), the open `meta` bag, and `sourceRefs` (deferred because no composite-object-array field-row form is defined). `required`, `editorHintOverride`, and `compositeRenderer` do not apply to this row kind.\n\nRows of both kinds are interleaved by their shared, unique `order`. `View.fieldViews[].order` is the sole presentation and export ordering mechanism: `ExportConfig` cannot reorder rows. Labels resolve from `displayLabel`, then default to `Status`, `Tags`, `Created`, or `Updated`. `lifecycleState` resolves through the bound Lifecycle state's label when possible and otherwise renders the raw key. Tags use the RFC-037 multi-entry form; timestamps render as raw ISO-8601 strings. An absent or empty value omits the row without invalidating the Record or View."
+  },
+  "createdAt": "2026-09-08T17:48:42.860620700+00:00",
+  "updatedAt": "2026-09-08T17:48:42.860627138+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

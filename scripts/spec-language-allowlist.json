@@ -1442,361 +1442,6 @@
       "rule": "word-budget",
       "matched": "656 words (limit 400)"
     },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#em-dash-cap#ca00763d": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): `ElementTemplates.fieldRow` is a wrapper: it receive…"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#00341991": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#06a93aba": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#141e96b2": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#1535c3d6": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#1722eae0": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#194c8125": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#195f987c": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#21338a7a": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#256328a6": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#272e3b12": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#2b232e84": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#2e5e309d": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#2e823e0d": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#310e9ea0": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#3419bf98": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#3575abc1": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#46447302": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#46ef9a0c": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#4cccacf0": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#56190e07": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#590bc545": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#5aa3851a": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#5db01356": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#61ebd7a6": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#62ef4b63": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#67ba56d8": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#68d4e664": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#68f5725d": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#6913e85d": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#6ad445d9": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#6da38090": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#6e24790e": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#75d0bba8": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#785b6ff7": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#79337bb6": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#7c6b4439": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#7d01edad": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#7e69c14a": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#850bf50b": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#87cc845a": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#9094d9d3": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#91e4233f": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#92ef326d": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#a347f672": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#a48f0169": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#a89c7cfa": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#acfc1ea6": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MAY"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#ad3e2450": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#b1e43897": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#b4382c93": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "SHOULD"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#b48daa3f": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#b856f2d0": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#bca389b8": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#c9e35b2d": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#cba3fe8e": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#cc3caa15": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#cd96e3b3": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#d3dad970": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#ddf66aee": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#e4a218a1": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#e6d50a40": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#ea2d2232": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#ed3c0b15": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#eef43831": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#f3b9b254": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#feabfc89": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#ff322ff1": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#keyword-register#ff490815": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#soft-hedges#d1ffaf02": {
-      "issue": "the-greenman/srs#563",
-      "rule": "soft-hedges",
-      "matched": "rather"
-    },
-    "srs/records/subsections/07-17-ext-themes-l1.json#content#word-budget": {
-      "issue": "the-greenman/srs#563",
-      "rule": "word-budget",
-      "matched": "2253 words (limit 400)"
-    },
     "srs/records/subsections/07-18-ext-changelog.json#content#soft-hedges#d1ffaf02": {
       "issue": "the-greenman/srs#563",
       "rule": "soft-hedges",
@@ -1832,26 +1477,6 @@
       "rule": "word-budget",
       "matched": "498 words (limit 400)"
     },
-    "srs/records/subsections/07-2-ext-lifecycle.json#content#keyword-register#3b1b96f6": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-2-ext-lifecycle.json#content#keyword-register#44f5af10": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-2-ext-lifecycle.json#content#keyword-register#5ae567a4": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-2-ext-lifecycle.json#content#keyword-register#a0948830": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
     "srs/records/subsections/07-3-ext-protocol.json#content#em-dash-cap#d4dd1136": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
@@ -1871,471 +1496,6 @@
       "issue": "the-greenman/srs#563",
       "rule": "word-budget",
       "matched": "557 words (limit 400)"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#em-dash-cap#15371e45": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): `document-view-output.json`'s `ProjectedRecord` carr…"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#em-dash-cap#50df7096": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): A composite-range Field that resolves to no renderer…"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#em-dash-cap#e46a306d": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): **[R5]** The `RecordPropertyView.property` enum in `…"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#em-dash-cap#e82ab309": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): **Note (2026-08-22, `rfc-decision-4f1e12e5` entry 5)…"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#enable#e97166b5": {
-      "issue": "the-greenman/srs#563",
-      "rule": "enable",
-      "matched": "enable"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#facilitate#639acbef": {
-      "issue": "the-greenman/srs#563",
-      "rule": "facilitate",
-      "matched": "Facilitation"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#007513de": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#00766cdb": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#030d5818": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#0bf57313": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#0bf57724": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#0d4430e9": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#15d0ec46": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#2697adb0": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#34b6189a": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#39bc0bae": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#3c729c07": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#41ac34b2": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#43d42af8": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#4a6c2283": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#50d98696": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#57bd0cea": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#6203d321": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#65a9f449": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#7993e078": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#7d321b7a": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#816d11af": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#84639f07": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#89e68972": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#8c422607": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#9234fc2a": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#965fa0ae": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#96a5188f": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#9ac96ac1": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#9dd4ce07": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#9edb66c7": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#a93c763a": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#ab70a43c": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#b6a9ac53": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#be329af4": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#c9280ed8": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#d4415d93": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#dd4137b0": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#df920583": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#e5a29806": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#e65011bf": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#e6dd95f6": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#e759acb2": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#e9eb89af": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#ef930483": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#f6e1dfef": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#fc181c6f": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#keyword-register#fece46f5": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#praise-adjectives#7baa68f2": {
-      "issue": "the-greenman/srs#563",
-      "rule": "praise-adjectives",
-      "matched": "rich"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#soft-hedges#d1ffaf02": {
-      "issue": "the-greenman/srs#563",
-      "rule": "soft-hedges",
-      "matched": "rather"
-    },
-    "srs/records/subsections/07-6-ext-views-l1.json#content#word-budget": {
-      "issue": "the-greenman/srs#563",
-      "rule": "word-budget",
-      "matched": "2113 words (limit 400)"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#additive-adverbs#db04549c": {
-      "issue": "the-greenman/srs#563",
-      "rule": "additive-adverbs",
-      "matched": "additionally"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#em-dash-cap#2e25381a": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "3 em-dashes in one paragraph (cap 1): **Value sequence.** A field renders as multi-entry w…"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#em-dash-cap#3296c8ed": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): A record's **resolved type** for both fields is the …"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#em-dash-cap#542e5fa3": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): - **A dispatched L1 View's `exportConfig`** (`Docume…"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#em-dash-cap#65e06087": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): **Class identity.** `{name}` in `srs-fieldname-{name…"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#em-dash-cap#971fd7e2": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): Link labels prefer the identity field over the secti…"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#em-dash-cap#addbe1c3": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "4 em-dashes in one paragraph (cap 1): **Step 4 — Render.** Render only present fields. A f…"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#em-dash-cap#c2ff50cd": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): **Step 2 — Resolve values.** A field is present if i…"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#em-dash-cap#cbe61ba3": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): **Continuation.** When a surviving entry's value spa…"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#em-dash-cap#cc238f95": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): **`identityFieldId` fallback (RFC-020, Rule [N+37]).…"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#101cc5af": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#17c08da7": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#202c4cb0": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#24d1bdf1": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "SHOULD"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#2b039ef4": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#3a2fe20d": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#47480a65": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#6a2b3d5c": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#744f1978": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "SHOULD"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#7bcb01fc": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#7c9f8c55": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#8dbedfd6": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#a762314f": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#bec42471": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#c044e94b": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#c1d2a934": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#c88443a4": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#d68762a7": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#ddcb053f": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#ed3df8ba": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MAY"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#fa54cb21": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#fc09fde9": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#fcbb5938": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#keyword-register#fd08bb14": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#minimisers#0ec8b3a4": {
-      "issue": "the-greenman/srs#563",
-      "rule": "minimisers",
-      "matched": "simply"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#word-budget": {
-      "issue": "the-greenman/srs#563",
-      "rule": "word-budget",
-      "matched": "2845 words (limit 400)"
-    },
-    "srs/records/subsections/07-7-ext-views-l2.json#content#wordy-in-order-to#4c57a6e7": {
-      "issue": "the-greenman/srs#563",
-      "rule": "wordy-in-order-to",
-      "matched": "in order to"
     },
     "srs/records/subsections/08-5-2-ext-protocol-ext-addressability.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
@@ -2837,6 +1997,21 @@
       "rule": "em-dash-cap",
       "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference below for `RelationSpec`…"
     },
+    "srs/records/tier-2/mechanism-0d79f11c.json#content#em-dash-cap#0f04785d": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): **[T-8]** For `\"html\"` and `\"pdf\"` output, implement…"
+    },
+    "srs/records/tier-2/mechanism-0d79f11c.json#content#soft-hedges#d1ffaf02": {
+      "issue": "the-greenman/srs#563",
+      "rule": "soft-hedges",
+      "matched": "rather"
+    },
+    "srs/records/tier-2/mechanism-0d79f11c.json#content#word-budget": {
+      "issue": "the-greenman/srs#563",
+      "rule": "word-budget",
+      "matched": "723 words (limit 400)"
+    },
     "srs/records/tier-2/mechanism-0d8ef0a1.json#content#em-dash-cap#36d6d4e4": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
@@ -2847,10 +2022,50 @@
       "rule": "em-dash-cap",
       "matched": "1 em-dashes in one paragraph (cap 0): The definition of a complete document type — which T…"
     },
+    "srs/records/tier-2/mechanism-14edeb69.json#content#em-dash-cap#3296c8ed": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "2 em-dashes in one paragraph (cap 0): A record's **resolved type** for both fields is the …"
+    },
+    "srs/records/tier-2/mechanism-14edeb69.json#content#em-dash-cap#a1fe4cc4": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): - **`typeFilter`** (on the `container-subset` source…"
+    },
+    "srs/records/tier-2/mechanism-14edeb69.json#content#em-dash-cap#fbab0348": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): A `container-subset` section can mix Record Types — …"
+    },
     "srs/records/tier-2/mechanism-173f5b74.json#content#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
       "rule": "lowercase-2119",
       "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-1c810dc2.json#content#em-dash-cap#50df7096": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "2 em-dashes in one paragraph (cap 0): A composite-range Field that resolves to no renderer…"
+    },
+    "srs/records/tier-2/mechanism-1c810dc2.json#content#soft-hedges#d1ffaf02": {
+      "issue": "the-greenman/srs#563",
+      "rule": "soft-hedges",
+      "matched": "rather"
+    },
+    "srs/records/tier-2/mechanism-2793efa7.json#content#em-dash-cap#179cbad7": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): **[R8]** *(Revision 4.)* A `RecordPropertyView` row …"
+    },
+    "srs/records/tier-2/mechanism-2793efa7.json#content#em-dash-cap#e46a306d": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "2 em-dashes in one paragraph (cap 0): **[R5]** The `RecordPropertyView.property` enum in `…"
+    },
+    "srs/records/tier-2/mechanism-30a555c0.json#content#em-dash-cap#9014db09": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): An installable, referenceable state machine — a clos…"
     },
     "srs/records/tier-2/mechanism-3f889a7c.json#content#em-dash-cap#45cdd6fb": {
       "issue": "the-greenman/srs#563",
@@ -2866,6 +2081,21 @@
       "issue": "the-greenman/srs#563",
       "rule": "future-tense",
       "matched": "will produce"
+    },
+    "srs/records/tier-2/mechanism-468742b2.json#content#em-dash-cap#17d0a5cc": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): | Document wrapper | `srs-document` | — |"
+    },
+    "srs/records/tier-2/mechanism-468742b2.json#content#em-dash-cap#5a2feca9": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): | Field row label | `srs-field-label` (+ compatibili…"
+    },
+    "srs/records/tier-2/mechanism-468742b2.json#content#em-dash-cap#d1124438": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): | Section wrapper | `srs-section`, `srs-section-{sec…"
     },
     "srs/records/tier-2/mechanism-4b4ef7db.json#content#em-dash-cap#17372b35": {
       "issue": "the-greenman/srs#563",
@@ -2887,6 +2117,11 @@
       "rule": "em-dash-cap",
       "matched": "2 em-dashes in one paragraph (cap 0): See the generated reference immediately below for `T…"
     },
+    "srs/records/tier-2/mechanism-65537791.json#content#em-dash-cap#f09faabf": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): Templates that wrap auto-rendered content at each st…"
+    },
     "srs/records/tier-2/mechanism-6e22219b.json#content#em-dash-cap#5a39c5f8": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
@@ -2902,15 +2137,155 @@
       "rule": "em-dash-cap",
       "matched": "1 em-dashes in one paragraph (cap 0): **Inheritance is cascading, unlike `fieldOrder`.** T…"
     },
+    "srs/records/tier-2/mechanism-71458b11.json#content#em-dash-cap#cbe59dbe": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): `ext:lifecycle` is fully integrated with the vocabul…"
+    },
+    "srs/records/tier-2/mechanism-7b7a7bab.json#content#em-dash-cap#1d08674e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): **[CR-036-9]** A role Field satisfies the renderer's…"
+    },
+    "srs/records/tier-2/mechanism-7b7a7bab.json#content#em-dash-cap#2c7c4b21": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): **[CR-036-4]** Composite rendering applies to Tier 2…"
+    },
+    "srs/records/tier-2/mechanism-7b7a7bab.json#content#em-dash-cap#5eb4eeea": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): **[CR-036-6]** For a given rendered Record and compo…"
+    },
+    "srs/records/tier-2/mechanism-7b7a7bab.json#content#hedges#f885b8a1": {
+      "issue": "the-greenman/srs#563",
+      "rule": "hedges",
+      "matched": "normally"
+    },
+    "srs/records/tier-2/mechanism-7b7a7bab.json#content#praise-adjectives#7baa68f2": {
+      "issue": "the-greenman/srs#563",
+      "rule": "praise-adjectives",
+      "matched": "rich"
+    },
+    "srs/records/tier-2/mechanism-7b7a7bab.json#content#soft-hedges#d1ffaf02": {
+      "issue": "the-greenman/srs#563",
+      "rule": "soft-hedges",
+      "matched": "rather"
+    },
+    "srs/records/tier-2/mechanism-7b7a7bab.json#content#word-budget": {
+      "issue": "the-greenman/srs#563",
+      "rule": "word-budget",
+      "matched": "730 words (limit 400)"
+    },
     "srs/records/tier-2/mechanism-8948c35e.json#content#hedges#f885b8a1": {
       "issue": "the-greenman/srs#563",
       "rule": "hedges",
       "matched": "normally"
     },
+    "srs/records/tier-2/mechanism-9d31a4b7.json#content#em-dash-cap#3e9affc2": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): `ElementTemplates` gains `compositeFieldRowTemplates…"
+    },
+    "srs/records/tier-2/mechanism-9d31a4b7.json#content#word-budget": {
+      "issue": "the-greenman/srs#563",
+      "rule": "word-budget",
+      "matched": "525 words (limit 400)"
+    },
     "srs/records/tier-2/mechanism-a00fa3cd.json#content#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
       "rule": "lowercase-2119",
       "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-b4bfa826.json#content#em-dash-cap#a06edbb9": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): **Step 3 — Labels.** Use `FieldAssignment.displayLab…"
+    },
+    "srs/records/tier-2/mechanism-b4bfa826.json#content#em-dash-cap#a1dad740": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): **Step 1 — Field ordering.** Order fields ascending …"
+    },
+    "srs/records/tier-2/mechanism-b4bfa826.json#content#em-dash-cap#addbe1c3": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "4 em-dashes in one paragraph (cap 0): **Step 4 — Render.** Render only present fields. A f…"
+    },
+    "srs/records/tier-2/mechanism-b4bfa826.json#content#em-dash-cap#c2ff50cd": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "2 em-dashes in one paragraph (cap 0): **Step 2 — Resolve values.** A field is present if i…"
+    },
+    "srs/records/tier-2/mechanism-b5dc649d.json#content#em-dash-cap#d57afe98": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): Configuration for rendering a Record through this Vi…"
+    },
+    "srs/records/tier-2/mechanism-b958d855.json#content#em-dash-cap#e82ab309": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "2 em-dashes in one paragraph (cap 0): **Note (2026-08-22, `rfc-decision-4f1e12e5` entry 5)…"
+    },
+    "srs/records/tier-2/mechanism-b958d855.json#content#facilitate#639acbef": {
+      "issue": "the-greenman/srs#563",
+      "rule": "facilitate",
+      "matched": "Facilitation"
+    },
+    "srs/records/tier-2/mechanism-b958d855.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-bcf7d3d7.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-c18b43ce.json#content#em-dash-cap#542e5fa3": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "2 em-dashes in one paragraph (cap 0): - **A dispatched L1 View's `exportConfig`** (`Docume…"
+    },
+    "srs/records/tier-2/mechanism-c18b43ce.json#content#em-dash-cap#ab22f93e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): When a dispatched View's `exportConfig.preamble` ren…"
+    },
+    "srs/records/tier-2/mechanism-c18b43ce.json#content#minimisers#0ec8b3a4": {
+      "issue": "the-greenman/srs#563",
+      "rule": "minimisers",
+      "matched": "simply"
+    },
+    "srs/records/tier-2/mechanism-c388f8ab.json#content#em-dash-cap#3662a895": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): **V7 — Lifecycle exclusivity.** A Type declares exac…"
+    },
+    "srs/records/tier-2/mechanism-c388f8ab.json#content#em-dash-cap#4d020790": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): **V8 — Lifecycle reference resolution.** A `lifecycl…"
+    },
+    "srs/records/tier-2/mechanism-c388f8ab.json#content#em-dash-cap#92b3eab2": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): **V9 — Lifecycle integrity.** Over the effective sta…"
+    },
+    "srs/records/tier-2/mechanism-c388f8ab.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-c896784a.json#content#em-dash-cap#45411fb1": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): Defines Views — versioned presentations over a field…"
+    },
+    "srs/records/tier-2/mechanism-d12bf6b6.json#content#em-dash-cap#4c7fa82d": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): **Note (2026-08-22, `rfc-decision-4f1e12e5` entry 4)…"
     },
     "srs/records/tier-2/mechanism-d3c04f50.json#content#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -2926,6 +2301,141 @@
       "issue": "the-greenman/srs#563",
       "rule": "soft-hedges",
       "matched": "rather"
+    },
+    "srs/records/tier-2/mechanism-d54d1e5b.json#content#em-dash-cap#f03eeb2f": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): `DocumentSection.renderViewId` references a `View.id…"
+    },
+    "srs/records/tier-2/mechanism-de34a05e.json#content#em-dash-cap#15371e45": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "2 em-dashes in one paragraph (cap 0): `document-view-output.json`'s `ProjectedRecord` carr…"
+    },
+    "srs/records/tier-2/mechanism-de34a05e.json#content#enable#e97166b5": {
+      "issue": "the-greenman/srs#563",
+      "rule": "enable",
+      "matched": "enable"
+    },
+    "srs/records/tier-2/mechanism-e01a3121.json#content#additive-adverbs#db04549c": {
+      "issue": "the-greenman/srs#563",
+      "rule": "additive-adverbs",
+      "matched": "additionally"
+    },
+    "srs/records/tier-2/mechanism-e01a3121.json#content#em-dash-cap#0cc31198": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): **Empty and placeholder.** A field Step 2 resolves a…"
+    },
+    "srs/records/tier-2/mechanism-e01a3121.json#content#em-dash-cap#2e25381a": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "3 em-dashes in one paragraph (cap 0): **Value sequence.** A field renders as multi-entry w…"
+    },
+    "srs/records/tier-2/mechanism-e01a3121.json#content#em-dash-cap#3786d9f0": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): A composite is a Field whose `fieldType.datatype` is…"
+    },
+    "srs/records/tier-2/mechanism-e01a3121.json#content#em-dash-cap#65e06087": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "2 em-dashes in one paragraph (cap 0): **Class identity.** `{name}` in `srs-fieldname-{name…"
+    },
+    "srs/records/tier-2/mechanism-e01a3121.json#content#em-dash-cap#87da3fe7": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): **Content.** In `markdown`, `adoc` and `text` the re…"
+    },
+    "srs/records/tier-2/mechanism-e01a3121.json#content#em-dash-cap#cbe61ba3": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "2 em-dashes in one paragraph (cap 0): **Continuation.** When a surviving entry's value spa…"
+    },
+    "srs/records/tier-2/mechanism-e01a3121.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-e01a3121.json#content#lowercase-2119#df0465d9": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must not"
+    },
+    "srs/records/tier-2/mechanism-e01a3121.json#content#word-budget": {
+      "issue": "the-greenman/srs#563",
+      "rule": "word-budget",
+      "matched": "1091 words (limit 400)"
+    },
+    "srs/records/tier-2/mechanism-e01a3121.json#content#wordy-in-order-to#4c57a6e7": {
+      "issue": "the-greenman/srs#563",
+      "rule": "wordy-in-order-to",
+      "matched": "in order to"
+    },
+    "srs/records/tier-2/mechanism-e20d19af.json#content#em-dash-cap#5a7c8825": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): 2. If found: resolve its `ThemeReference` and apply …"
+    },
+    "srs/records/tier-2/mechanism-e265a135.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-e29b2203.json#content#em-dash-cap#23c5ec82": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): - **Rows.** One row per (entry, direction) with at l…"
+    },
+    "srs/records/tier-2/mechanism-e29b2203.json#content#em-dash-cap#971fd7e2": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "2 em-dashes in one paragraph (cap 0): Link labels prefer the identity field over the secti…"
+    },
+    "srs/records/tier-2/mechanism-e29b2203.json#content#em-dash-cap#d9c74b4b": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): - **Edge selection.** Edges display only when their …"
+    },
+    "srs/records/tier-2/mechanism-e29b2203.json#content#hedges#f885b8a1": {
+      "issue": "the-greenman/srs#563",
+      "rule": "hedges",
+      "matched": "normally"
+    },
+    "srs/records/tier-2/mechanism-e29b2203.json#content#word-budget": {
+      "issue": "the-greenman/srs#563",
+      "rule": "word-budget",
+      "matched": "413 words (limit 400)"
+    },
+    "srs/records/tier-2/mechanism-fa52d598.json#content#em-dash-cap#7d33eb38": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): Two naming notes. The aliases `field-label` / `field…"
+    },
+    "srs/records/tier-2/mechanism-fa52d598.json#content#em-dash-cap#ca00763d": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "2 em-dashes in one paragraph (cap 0): `ElementTemplates.fieldRow` is a wrapper: it receive…"
+    },
+    "srs/records/tier-2/mechanism-fa52d598.json#content#soft-hedges#d1ffaf02": {
+      "issue": "the-greenman/srs#563",
+      "rule": "soft-hedges",
+      "matched": "rather"
+    },
+    "srs/records/tier-2/mechanism-fe5a4dbf.json#content#em-dash-cap#3dd6a33f": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): | Per-record heading | `3 + depthOffset` | When `tit…"
+    },
+    "srs/records/tier-2/mechanism-fe5a4dbf.json#content#em-dash-cap#5b45f5e9": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): | Field label | Bold/formatted text — not a heading;…"
+    },
+    "srs/records/tier-2/mechanism-fe5a4dbf.json#content#em-dash-cap#cc238f95": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "2 em-dashes in one paragraph (cap 0): **`identityFieldId` fallback (RFC-020, Rule [N+37]).…"
     },
     "srs/records/tier-2/rfc-4071ab22.json#content#em-dash-cap#1f128cb2": {
       "issue": "the-greenman/srs#563",

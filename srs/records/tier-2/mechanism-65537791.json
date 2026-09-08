@@ -1,0 +1,14 @@
+{
+  "instanceId": "65537791-3e28-4c1f-9a1d-46058ff34a02",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`ElementTemplates`",
+    "content": "Templates that wrap auto-rendered content at each structural level. Each template receives finished content as `{{content}}` and wraps it — it does not re-render or reorder content.\n\nExample: the `ElementTemplates` shape.\n\nOverride precedence: a specific override always takes precedence over the corresponding universal template. When neither is set, the element is rendered without wrapping."
+  },
+  "createdAt": "2026-09-08T17:49:00.478029511+00:00",
+  "updatedAt": "2026-09-08T17:49:00.478039916+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
