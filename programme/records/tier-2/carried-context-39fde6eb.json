@@ -1,0 +1,15 @@
+{
+  "instanceId": "39fde6eb-267d-421f-93c0-4f532ab9463a",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "Un-baking a heading: split on every heading line flattened, mechanism type, drop bare metadata intros",
+    "summary": "The exact splitting algorithm for the remaining #562 batches (C/D, srs#686/#687), reverse-engineered from the already-merged #678 diff since its own New leaves table wording reads ambiguously. Split a subsections content on EVERY markdown heading line, level 1 through 6, treating nested headings as flat siblings rather than nesting them under their parent heading - the count this yields matches each batch issues stated heading count exactly. One new mechanism leaf per heading, titled verbatim from the heading text (backticks and parentheticals kept). A pre-heading intro becomes its own leaf titled after the record only when it carries a real defining sentence; an intro that is pure **Required for**/**Depends on** metadata is dropped, matching the Type/ext:type-inheritance precedent (no leaf was created for either in #678, despite the New leaves table listing the record itself, which is really just naming that the retiring stub survives, not that a duplicate-titled leaf was made). Wire contains from the concept to each leaf, precedes chaining leaves in original order, derived-from from each leaf back to the retiring subsection. The retiring subsection keeps its parent, precedes edges to its OWN siblings, tags, sourceRefs and any pre-existing contains-children (already-extracted example records) untouched - only content becomes a one-line residual pointer.",
+    "rationale": "Without this, each remaining batch would re-derive the same algorithm from the same ambiguous PR body, or worse, diverge (e.g. nesting sub-headings under their parent heading instead of flattening, which would undercount against the issues stated heading total and fail the heading-set diff). The alternative of nesting sub-headings as contains-children of their parent leaf was considered and rejected: it would still satisfy no-orphan-leaf and no-baked-heading, but the parent-heading records own content span would then need to exclude the nested heading text without a clear rule for where the parent ends and the child begins in the rendered document, and it doesnt match what #678 actually did (all of a records new leaves are flat siblings under the concept, never nested under each other). After landing a batch, always re-seed spec-language-allowlist.json (--seed) - mechanism was already made a normativeSites type by #678s RFC-042 Change G, so the moved prose is newly in scope, but the net allowlist size usually SHRINKS because the retiring subsections one-line residual drops more stale violations than the new leaves add."
+  },
+  "createdAt": "2026-09-08T18:25:59.378472077+00:00",
+  "updatedAt": "2026-09-08T18:25:59.378477223+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
