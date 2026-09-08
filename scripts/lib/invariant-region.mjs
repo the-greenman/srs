@@ -15,7 +15,11 @@
 // future invariant `normative_statement` containing a fenced block with a line like "## example"
 // would be misread as the boundary. No invariant record contains a code fence today (checked
 // against the corpus this fix landed against); if one ever does, this needs real markdown parsing.
-const HEADING_RE = /^### Key Invariants$/m;
+// srs#693 (RFC-042 Change G): container-subset sourcing nests "Key Invariants" one level deeper
+// than the old flat per-type discovery-query section did (it now renders under its Part), so the
+// heading level is no longer fixed at H3 — match any depth and let `level` below track whatever it
+// actually is.
+const HEADING_RE = /^#{1,6} Key Invariants$/m;
 
 /**
  * Replace the Key Invariants region body in `content` with `injectedContent`.

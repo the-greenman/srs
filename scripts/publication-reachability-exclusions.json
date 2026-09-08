@@ -574,6 +574,55 @@
       "reason": "Rung-0 background capture (design jurisprudence: the neighbourhood role of the map \u2014 the decision-coherence research synthesis). Deliberately unpublished background meaning; linked from the Decision Compass (#461) as background reading. Self-expiring in parts: graduates via derived-from into the #273/#272 charter-self-hosting design, Epic 13's framing, and the first charter review cycle.",
       "disposition": "pending",
       "issue": "#631"
+    },
+    {
+      "instanceId": "113d18d8-9b25-4f55-b997-19e1a75a042d",
+      "path": "records/tier-2/mechanism-113d18d8.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from, and unlike Projection (RFC-042 Change D's named root of the Presentation Part, re-parented directly in srs#693) Lifecycle has no RFC-named site of its own. Re-parenting it (and its `LifecycleTransition` (edge between state keys) leaf, among the other 6) is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "30a555c0-060a-42ef-8f05-6a0aa8d9efef",
+      "path": "records/tier-2/mechanism-30a555c0.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from, and unlike Projection (RFC-042 Change D's named root of the Presentation Part, re-parented directly in srs#693) Lifecycle has no RFC-named site of its own. Re-parenting it (and its `Lifecycle` container leaf, among the other 6) is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "71458b11-1533-455d-974c-352340157bc1",
+      "path": "records/tier-2/mechanism-71458b11.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from, and unlike Projection (RFC-042 Change D's named root of the Presentation Part, re-parented directly in srs#693) Lifecycle has no RFC-named site of its own. Re-parenting it (and its ext:lifecycle leaf, among the other 6) is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "7ec029e9-592b-4f72-8c9d-23a302725a82",
+      "path": "records/tier-2/mechanism-7ec029e9.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from, and unlike Projection (RFC-042 Change D's named root of the Presentation Part, re-parented directly in srs#693) Lifecycle has no RFC-named site of its own. Re-parenting it (and its Type lifecycle declaration (added by this extension) leaf, among the other 6) is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "c388f8ab-41e4-4669-851c-1c0eb4b6f0b4",
+      "path": "records/tier-2/mechanism-c388f8ab.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from, and unlike Projection (RFC-042 Change D's named root of the Presentation Part, re-parented directly in srs#693) Lifecycle has no RFC-named site of its own. Re-parenting it (and its Validation invariants (V7\u2013V9) leaf, among the other 6) is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "e265a135-9c11-478f-b390-1787f2faf83c",
+      "path": "records/tier-2/mechanism-e265a135.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from, and unlike Projection (RFC-042 Change D's named root of the Presentation Part, re-parented directly in srs#693) Lifecycle has no RFC-named site of its own. Re-parenting it (and its Record lifecycle state leaf, among the other 6) is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "f609a191-d87b-418e-9e48-f2730f454457",
+      "path": "records/tier-2/mechanism-f609a191.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from, and unlike Projection (RFC-042 Change D's named root of the Presentation Part, re-parented directly in srs#693) Lifecycle has no RFC-named site of its own. Re-parenting it (and its `LifecycleState` (VocabularyEntry specialisation) leaf, among the other 6) is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
     }
   ]
 }
