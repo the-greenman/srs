@@ -1,0 +1,14 @@
+{
+  "instanceId": "6c75ed59-c353-4cb1-afe4-d825546ecd7a",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Semantic Integrity and Practical Expression",
+    "content": "The standard defaults to **Semantic Integrity**: preserve exact meaning, identity, authority, relations, and provenance. It moves toward Practical Expression when established meaning remains recoverable and a bounded presentation, authoring, diagnostic, or review need would otherwise make correct information unusable. A projection must retain a clear line to canonical meaning and must never silently become a substitute semantic source."
+  },
+  "createdAt": "2026-09-08T20:24:31.835140050+00:00",
+  "updatedAt": "2026-09-08T20:24:31.835149339+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

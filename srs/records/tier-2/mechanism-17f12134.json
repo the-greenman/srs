@@ -1,0 +1,14 @@
+{
+  "instanceId": "17f12134-69a0-4170-8ede-8bd7183f97a0",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`ProtocolStage`",
+    "content": "A named stage in a Protocol. Stages have epistemic dependencies (`dependsOn`) — not just ordering. A stage may only proceed when its dependencies are sufficient.\n\nExample: the `ProtocolStage` shape.\n\n**`order` vs `dependsOn`:** `order` is the declared composition order of the stages — structure, not presentation (RFC-015's layering table now states this explicitly as its own row: composition order is structure; display order is presentation; sequence is assertion). It provides the render default for how stages are shown in a UI or facilitation guide; a View may override for display. Execution sequence is determined by `dependsOn` resolution: a stage runs when all its declared dependencies are satisfied, regardless of its `order` value. Authors must ensure `order` is consistent with the partial order implied by `dependsOn` (i.e. a stage's `order` value should be greater than the `order` of any stage it depends on). See Invariant 31."
+  },
+  "createdAt": "2026-09-08T20:23:37.309840813+00:00",
+  "updatedAt": "2026-09-08T20:23:37.309849479+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

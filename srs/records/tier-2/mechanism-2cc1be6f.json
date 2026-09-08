@@ -1,0 +1,14 @@
+{
+  "instanceId": "2cc1be6f-8597-4891-8bdb-0eaf1bd0579b",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Scope",
+    "content": "`ext:slices` defines **container-membership closure only**. A *package export* — distributing a package's Type/Field definitions as a `package-bundle.json` — is a different artifact class (RFC-003) and is not a slice. Record-level closure (an arbitrary set of records) is deferred to a future RFC."
+  },
+  "createdAt": "2026-09-08T20:23:51.731089552+00:00",
+  "updatedAt": "2026-09-08T20:23:51.731102525+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
