@@ -1,0 +1,14 @@
+{
+  "instanceId": "eab21cca-af84-42b8-95ed-82f0225cd360",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`NoteSection`",
+    "content": "A named text section within a Note.\n\nSee the generated reference below for `NoteSection`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list."
+  },
+  "createdAt": "2026-09-08T18:45:00.823103978+00:00",
+  "updatedAt": "2026-09-08T18:45:00.823112115+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,14 @@
+{
+  "instanceId": "80a322d7-e7f5-471a-b66f-da1e3ec7b124",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Emergent vocabularies (open vocabularies)",
+    "content": "For an open vocabulary, the authoritative set of values is `DISTINCT(tag keys across instances)` — not the `terms[]`. The `Vocabulary` is a curation overlay that may lag usage or be empty.\n\nA conforming implementation MUST be able to compute the live tag set and classify each key as: **used-and-defined**, **used-but-undefined**, or **defined-but-unused**.\n\n**Emergence lifecycle** (mirrors tier graduation):\n1. Free string — exists, undefined, valid.\n2. Curate → `Term` — non-destructive; instance carries the same string.\n3. Alias-merge — a surviving Term absorbs another: absorbed key+aliases move to the survivor, absorbed entry removed (its `id` recorded in `meta.mergedFrom` and redirected); zero instance rewrites.\n4. Optional normalize — opt-in operation that rewrites instance strings to the canonical key.\n5. Optional close — promote `mode: open → closed` (V10)."
+  },
+  "createdAt": "2026-09-08T18:45:15.199370183+00:00",
+  "updatedAt": "2026-09-08T18:45:15.199379398+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
