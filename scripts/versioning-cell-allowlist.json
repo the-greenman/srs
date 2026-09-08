@@ -1,4 +1,14 @@
 {
   "$comment": "Known violations of scripts/check-versioning-cell.mjs (srs#649), same discipline as scripts/spec-coherence-allowlist.json and scripts/publication-reachability-exclusions.json. Entry shape: {path, id, fromCommit, toCommit, disposition, issue, note}. `path`/`id` name the Field, `fromCommit`/`toCommit` (7+ hex chars, prefix-matched) pin the exact historical transition so a distinct future violation on the same Field is never silently absorbed. `disposition` is \"permanent\" (a ruled, settled outcome — closure of `issue` is expected) or \"pending\" (real follow-up remains — `issue` should still be open). The check fails on any violation NOT listed here and on any entry that no longer matches a violation — shrinking this file IS the fix; growing it needs a live issue.",
-  "entries": []
+  "entries": [
+    {
+      "path": "srs/package/metamodel/fields/value_range.json",
+      "id": "4b00001b-0000-4000-a000-00000000001b",
+      "fromCommit": "3553f2ac",
+      "toCommit": "72c5d2b7",
+      "disposition": "pending",
+      "issue": "#658",
+      "note": "srs#534 added \"ref\" to value_range's allowedValues with no version bump. Root cause: gen-metamodel-package.mjs's fieldFile() hardcodes version:1 for every generated Field — there is no per-field version override to bump. Tracked, not fixed here (out of scope for the smallest-honest-check this file's sibling check is)."
+    }
+  ]
 }
