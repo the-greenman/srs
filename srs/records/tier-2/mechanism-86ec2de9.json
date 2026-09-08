@@ -1,0 +1,14 @@
+{
+  "instanceId": "86ec2de9-51f0-4f59-85d0-1384ae8d1955",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Continuity and Evolution",
+    "content": "The temporal preference is explicitly phase-bound. **Before the first full public release**, the standard is in formation and defaults to **evidence-led Evolution**. The project must make the changes needed to correct contradictions, close semantic gaps, and establish a coherent foundation before users depend on it. Those changes must be grounded in practical implementation, corpus, migration, authoring, or user experience; speculative elegance alone is insufficient. Stable identity, deterministic migration, parity evidence, diagnostics, atomic cutover, and recovery remain required safeguards.\n\n**At the first full public release, the temporal default reverses to Continuity.** This transition is precommitted. From that point, the standard protects compatibility, identity, and established expectations by default. A breaking change requires an explicit version boundary, migration and compatibility analysis, recovery evidence, and ratification. Continuity must not preserve a demonstrated semantic contradiction indefinitely, but the burden of proof moves to the proposed change."
+  },
+  "createdAt": "2026-09-08T20:24:35.225812161+00:00",
+  "updatedAt": "2026-09-08T20:24:35.225820581+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,14 @@
+{
+  "instanceId": "078c79a4-eb81-41a3-8ee0-8d22c8006917",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`FieldRef`",
+    "content": "A reference to a Field within a Type.\n\nExample: the `FieldRef` shape."
+  },
+  "createdAt": "2026-09-08T20:23:34.047056355+00:00",
+  "updatedAt": "2026-09-08T20:50:35.850812808+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

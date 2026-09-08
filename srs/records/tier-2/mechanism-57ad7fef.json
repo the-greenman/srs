@@ -1,0 +1,14 @@
+{
+  "instanceId": "57ad7fef-5103-49b0-ac5d-c566c9f1bc67",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Validation relaxations",
+    "content": "An RFC-026-aware validator MUST NOT treat the following as errors when a `slice` block is present: `externalRelationRefs` UUIDs absent from `instanceIndex`; absence of unreferenced type/field definitions; an incomplete `containerIndex`; tombstoned source document entries with absent content files. Dangling edges in the relations collection, unresolvable `typeId`/`fieldId` references, and instance schema validation errors remain errors regardless of slice status."
+  },
+  "createdAt": "2026-09-08T20:24:05.514272627+00:00",
+  "updatedAt": "2026-09-08T20:24:05.514279875+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

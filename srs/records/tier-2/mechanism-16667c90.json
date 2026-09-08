@@ -1,0 +1,14 @@
+{
+  "instanceId": "16667c90-7092-4588-a015-b301904a99b1",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Reliability and Renewal",
+    "content": "The standard defaults to **Reliability**: standing contracts continue to hold. Renewal is legitimate only as explicit supersession at a declared boundary, expressed through the retirement mechanism of the layer concerned; it must not arrive as an overwrite, an expired exception, or silent drift. This is axis 5–11, ruled in `rfc-decision-cce3c00e` and `rfc-decision-5f8204bc`."
+  },
+  "createdAt": "2026-09-08T20:24:45.134506342+00:00",
+  "updatedAt": "2026-09-08T20:24:45.134516183+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

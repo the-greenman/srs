@@ -1,0 +1,14 @@
+{
+  "instanceId": "caaefa31-631c-43d4-9779-c878a39ba1ba",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`AttentionState`",
+    "content": "The current focus of an active Protocol run — a live cursor across the address space. `AttentionState` and `Address` are structurally related but serve distinct roles: an `Address` is a stable, resolvable identifier for a specific element; `AttentionState` is the mutable cursor that records *where focus currently is* during an active session. An `AttentionState` value at a point in time resolves to a document-space `Address`, but it is stored separately because it changes continuously as the Protocol advances.\n\nConversation material is tagged with the active `AttentionState` as it is produced. This makes context assembly efficient: \"all chunks produced while focus was on this Field\" is a queryable address predicate.\n\nExample: the `AttentionState` shape.\n\n`AttentionState` is set live by the session or Protocol runner. `SourceReference` is set retrospectively at extraction or editorial review time. Both are needed; they answer different questions."
+  },
+  "createdAt": "2026-09-08T20:24:18.320481465+00:00",
+  "updatedAt": "2026-09-08T20:24:18.320489806+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

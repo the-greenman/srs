@@ -3,18 +3,6 @@
   "entries": [
     {
       "check": "no-baked-heading",
-      "id": "136187cc-8317-4705-91c0-7aaeadaf5998",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:slices (5 headings)"
-    },
-    {
-      "check": "no-baked-heading",
-      "id": "214a7c1f-1bb4-5c86-932e-b47b4fc3b57b",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:addressability (3 headings)"
-    },
-    {
-      "check": "no-baked-heading",
       "id": "6bb0f695-e004-5f14-a067-5cf922da5494",
       "issue": "the-greenman/srs#562",
       "note": "subsection: ext:import-tracking (6 headings)"
@@ -33,21 +21,9 @@
     },
     {
       "check": "no-baked-heading",
-      "id": "ca3ea62e-effb-503f-ac04-22ce30ca4511",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:protocol (3 headings)"
-    },
-    {
-      "check": "no-baked-heading",
       "id": "f58b3ca2-1d4e-5f6a-b7c8-9d0e1f2a3b4c",
       "issue": "the-greenman/srs#562",
       "note": "subsection: ext:json-store (6 headings)"
-    },
-    {
-      "check": "no-baked-heading",
-      "id": "fc31337a-1c61-4e86-9c0f-09f0e0ce56bf",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: Foundational values and development phase (9 headings)"
     }
   ]
 }

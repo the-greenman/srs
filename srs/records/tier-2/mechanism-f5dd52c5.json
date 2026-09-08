@@ -1,0 +1,14 @@
+{
+  "instanceId": "f5dd52c5-d6bc-493a-bd45-c4f10e4da7e8",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Office and Testimony",
+    "content": "The standard defaults to **Office**: the procedural record, declared authority, and validated artifact govern over personal or automated testimony. Testimony may fill a gap, but it must not contradict authority; it becomes office only through an explicit verification mechanism that produces an authoritative artifact. Until then, who or what asserted a claim may inform trust and diagnosis, but never changes the claim's validity or precedence. This is axis 4–10, ruled in `rfc-decision-cce3c00e` and `rfc-decision-16b20c56`."
+  },
+  "createdAt": "2026-09-08T20:24:41.958059208+00:00",
+  "updatedAt": "2026-09-08T20:24:41.958069142+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
