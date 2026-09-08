@@ -1,0 +1,14 @@
+{
+  "instanceId": "35f111ea-2cfa-447b-9775-5b064b1126d9",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Interoperability",
+    "content": "A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `ext:repository`, with the following differences:\n\n| | `.srsj` JSON Store | `.srs` ZIP Archive |\n|---|---|---|\n| Format | Single JSON file | ZIP of directory tree |\n| Manifest location | Top-level `manifest` key | `manifest.json` at ZIP root |\n| Instance storage | Embedded in `data` object | Individual files in ZIP |\n| Source document content | Not included | Included as files |\n| Primary use | Tooling, fixtures, snapshots | Sharing, export, long-term storage |"
+  },
+  "createdAt": "2026-09-08T19:49:04.012198893+00:00",
+  "updatedAt": "2026-09-08T19:49:04.012205207+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,14 @@
+{
+  "instanceId": "7ee312a4-e88e-4c7b-928a-9cc1523f09f3",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`SourceReference` additions",
+    "content": "When `ext:repository` is declared, `SourceReference.sourceType` gains the value `\"repository-document\"`. A reference with `sourceType: \"repository-document\"` uses `sourceId` to carry the `SourceDocument.documentId`. The content file is located via the matching sidecar in `sourceDocumentsPath`.\n\n`\"external-document\"` remains valid for documents that are genuinely external to the repository. `\"repository-document\"` must be used for documents stored within the same repository.\n\nFor standalone transcript and chat repositories, the recommended pattern is:\n\n- store the full export or dump as a `SourceDocument`\n- cite it using `sourceType: \"repository-document\"`\n- when exact quoted provenance matters and the parent source may change, capture a repository-local excerpt as its own `SourceDocument` and cite the excerpt instead of the mutable parent"
+  },
+  "createdAt": "2026-09-08T19:48:51.223740236+00:00",
+  "updatedAt": "2026-09-08T19:48:51.223747431+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

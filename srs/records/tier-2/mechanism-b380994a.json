@@ -1,0 +1,14 @@
+{
+  "instanceId": "b380994a-ccd8-42a6-a8d3-ef805c5fa1d5",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`SourceDocument`",
+    "content": "A raw source document stored within the repository. Source documents are source material — transcripts, recordings, founding documents, email threads — that Records cite via `SourceReference`. They are not SRS instances and do not appear in the instance index.\n\nExample: the `SourceDocument` shape.\n\nEach source document is stored as a content file paired with a metadata sidecar in `source-documents/`:\n\nExample: a source document and its sidecar.\n\nThe content file and sidecar share the same filename stem. `contentPath` in the sidecar is the content filename (including extension), making the pair resolvable by scanning for `.meta.json` files without requiring the content extension to be derivable from the `documentId`.\n\nSource documents may themselves be excerpts. This supports manual, one-off chunking for provenance when the underlying source is large, awkward to cite precisely, or not guaranteed to remain immutable. An excerpt is still just a `SourceDocument`: it lives in `source-documents/`, has its own `documentId`, and is cited via `sourceType: \"repository-document\"` like any other repository-local source.\n\nWhen `excerpt` is present, the content file is the frozen captured snippet. `excerpt.sourceDocumentId` identifies the repository-local parent source document it was taken from, and `excerpt.anchor` records where it came from using a lightweight locator such as a line range, message ID, timestamp range, or JSON Pointer. `sourceChecksumAtCapture`, when present, records the parent content digest at extraction time to preserve provenance even if the parent source later changes."
+  },
+  "createdAt": "2026-09-08T19:48:50.538550914+00:00",
+  "updatedAt": "2026-09-08T19:48:50.538557779+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

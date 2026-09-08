@@ -33,24 +33,6 @@
     },
     {
       "check": "no-baked-heading",
-      "id": "6bb0f695-e004-5f14-a067-5cf922da5494",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:import-tracking (6 headings)"
-    },
-    {
-      "check": "no-baked-heading",
-      "id": "a75866ba-090f-5d62-9f7c-8e179ff1825f",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:repository (16 headings)"
-    },
-    {
-      "check": "no-baked-heading",
-      "id": "c90aef1e-af6e-550e-ad07-1d5f1bfdf67f",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:registry (2 headings)"
-    },
-    {
-      "check": "no-baked-heading",
       "id": "ca3ea62e-effb-503f-ac04-22ce30ca4511",
       "issue": "the-greenman/srs#562",
       "note": "subsection: ext:protocol (3 headings)"
@@ -60,12 +42,6 @@
       "id": "d1f518cc-0e25-5045-ae3d-9d68443c8150",
       "issue": "the-greenman/srs#562",
       "note": "subsection: Record tiers (5 headings)"
-    },
-    {
-      "check": "no-baked-heading",
-      "id": "f58b3ca2-1d4e-5f6a-b7c8-9d0e1f2a3b4c",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:json-store (6 headings)"
     },
     {
       "check": "no-baked-heading",

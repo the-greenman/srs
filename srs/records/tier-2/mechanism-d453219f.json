@@ -1,0 +1,14 @@
+{
+  "instanceId": "d453219f-5323-4caf-823c-a5c8168ac64b",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Repository layout",
+    "content": "A conforming repository has the following root structure:\n\nExample: the repository root layout.\n\nThe `.srs` marker is a directory that identifies the repository root. It `SHOULD` contain at least one regular file — by convention `.srs/README.md`, an *About SRS* orientation document — so it survives storage and archive round-trips that do not preserve empty directories; its contents are implementation-private and carry no normative weight. A reader must locate the marker before treating a directory as a repository.\n\nOnly `manifest.json` and `.srs` are required at root. Other folders are created as content is added. Implementations may add folders for application-local purposes; folder names defined by this extension are reserved.\n\nReserved content folders may contain implementation-defined subfolders. For example, a repository may store Tier 2 instances under `records/decisions/`, `records/articles/`, or `records/roles/` so long as every instance remains listed in `RepositoryManifest.instanceIndex` with its full relative path.\n\n**Folder responsibilities:**\n\n| Folder | Contents | Required when |\n|---|---|---|\n| `source-documents/` | Raw source files with `.meta.json` sidecars | Source documents are present |\n| `notes/` | `Note` instance files (Tier 0) | Notes are present |\n| `records/` | `Record` instance files (Tier 2) | Records are present |\n| `relations/` | `Relation` record files | Relations are present |\n| `package/` | Local `Package` and definition source files | Local definitions are present |"
+  },
+  "createdAt": "2026-09-08T19:48:44.015130380+00:00",
+  "updatedAt": "2026-09-08T20:28:20.163726804+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

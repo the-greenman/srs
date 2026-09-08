@@ -1,0 +1,15 @@
+{
+  "instanceId": "714cb3f8-99ec-413b-aa96-209ced47208d",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/import-tracking",
+    "title": "Import tracking",
+    "description": "How a consumer that receives packages from an upstream publisher records what it imported, whether local content has diverged from the upstream source, and whether the upstream has moved ahead. Divergence and update conflicts are detected and surfaced instead of silently overwritten or silently missed."
+  },
+  "createdAt": "2026-09-08T19:49:08.358282413+00:00",
+  "updatedAt": "2026-09-08T19:50:34.560464741+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

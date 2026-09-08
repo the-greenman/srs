@@ -1,0 +1,14 @@
+{
+  "instanceId": "9a04732c-a581-45e8-9ec3-a3a420d4d39c",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Path conventions in `data`",
+    "content": "Keys in `data` follow the same relative-path conventions as `ext:repository`:\n\n- `package/package.json` — package index\n- `package/fields/<filename>.json` — field definitions\n- `package/types/<filename>.json` — type definitions\n- `package/views/<filename>.json` — view definitions\n- `records/<subfolder>/<filename>.json` — Tier 2 Record instances\n- `notes/<filename>.json` — Tier 0 Note instances\n- `relations/<filename>.json` — relation collections\n\nThere is no `instanceIndex` in `manifest`; it is retired (RFC-038 [R2]). The authoritative list of members is the `data` object's own contents — the tree-authoritative store, enumerated the same way as a filesystem repository (RFC-038 [R1])."
+  },
+  "createdAt": "2026-09-08T19:49:01.971068031+00:00",
+  "updatedAt": "2026-09-08T19:49:01.971074799+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

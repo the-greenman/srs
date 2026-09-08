@@ -1,0 +1,14 @@
+{
+  "instanceId": "1182c712-2892-4f54-a6e0-ba4c87efae2b",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Repository mutability and semantic evolution",
+    "content": "SRS repositories may evolve over time. Mutation policy is tiered:\n\n- Notes may be edited in place; `updatedAt` advances when the file's semantic content changes.\n- Tier 2 Records may receive non-semantic corrections in place; `updatedAt` advances.\n- Semantic changes to Tier 2 Records create a new Record linked to the prior Record by `refines` or `supersedes`.\n\nStorage history does not replace semantic history. A filesystem backup, archive timestamp, or application log may prove that a JSON file changed, but SRS Relations express what the change means. A conforming repository implementation must not treat storage history as a substitute for `supersedes`, `refines`, `derived-from`, lifecycle state, or object timestamps."
+  },
+  "createdAt": "2026-09-08T19:48:52.514434662+00:00",
+  "updatedAt": "2026-09-08T19:48:52.514445114+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

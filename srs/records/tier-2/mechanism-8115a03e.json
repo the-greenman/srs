@@ -1,0 +1,14 @@
+{
+  "instanceId": "8115a03e-1ec8-455a-8228-ef99a29fa211",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Relations storage",
+    "content": "Relations are stored as a **JSON object** conforming to the relations-collection schema: a `$schema` key and a `relations` array. A bare JSON array is not a conforming relations file. The default location is `relations/relations.json`. When `relationsPath` is an array of paths, their `relations` arrays are concatenated for resolution. A `relationId` must be unique across all relation files in the repository."
+  },
+  "createdAt": "2026-09-08T19:48:51.875533046+00:00",
+  "updatedAt": "2026-09-08T19:48:51.875540271+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

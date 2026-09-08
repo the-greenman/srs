@@ -1,0 +1,14 @@
+{
+  "instanceId": "27788615-d8f3-4e56-bb3d-ccaf6684c5ab",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Schema conventions",
+    "content": "Every JSON file in a repository should declare its schema via a `$schema` key as the first property. This makes the repository self-describing to JSON Schema validators and AI agents without requiring external tooling.\n\n**Canonical schema URLs** (SRS 2.0 structural schemas):\n\n| File type | `$schema` value |\n|-----------|----------------|\n| `manifest.json` | `https://srs.semanticops.com/schema/2.0/manifest.json` |\n| Notes (Tier 0) | `https://srs.semanticops.com/schema/2.0/note.json` |\n| Records (Tier 2) | `https://srs.semanticops.com/schema/2.0/record.json` |\n| Relations collection | `https://srs.semanticops.com/schema/2.0/relations-collection.json` |\n| Source document sidecar | `https://srs.semanticops.com/schema/2.0/source-document-meta.json` |\n| Field definition | `https://srs.semanticops.com/schema/2.0/field.json` |\n| Type definition | `https://srs.semanticops.com/schema/2.0/type.json` |\n| Package | `https://srs.semanticops.com/schema/2.0/package.json` |\n\n**Domain schemas**: A package may supply additional domain schemas that validate type-specific field constraints. These narrow the structural Record schema with `allOf` and are placed in `package/schemas/`. A domain schema's `$id` should follow the pattern `https://srs.semanticops.com/schema/domain/<namespace>/<typeName>/<version>.json`. Records conforming to a specific Type may declare the domain schema `$id` instead of the generic record schema URL.\n\n**Relations collection format**: The relations file must be a JSON object with a `$schema` key and a `relations` array — not a bare array. This ensures the file is self-identifying.\n\n**Offline use**: Conforming implementations are not required to fetch schema files at runtime. The `$schema` key is a documentation and tooling hint, not a live reference. A repository may include a local copy of the structural schemas in a `schemas/` directory at the repository root for offline validation.\n\n**AI comprehension**: The presence of `$schema` in every file allows an AI agent to identify the purpose of any file without reading its full content. Combined with the `instanceIndex` in `manifest.json` and any `aiGuidance` blocks, a repository becomes traversable by an LLM without prior knowledge of its structure."
+  },
+  "createdAt": "2026-09-08T19:48:53.347008984+00:00",
+  "updatedAt": "2026-09-08T19:48:53.347016856+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

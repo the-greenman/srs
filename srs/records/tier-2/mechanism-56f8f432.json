@@ -1,0 +1,14 @@
+{
+  "instanceId": "56f8f432-ca03-4329-af3e-703f6a9082cd",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`InstanceIndexEntry`",
+    "content": "One entry in the manifest instance index.\n\nExample: the `InstanceIndexEntry` shape.\n\n`path` is the authoritative locator. If `typeName` or `title` conflict with the resolved instance file, the file content takes precedence."
+  },
+  "createdAt": "2026-09-08T19:48:47.619910150+00:00",
+  "updatedAt": "2026-09-08T19:48:47.619919637+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

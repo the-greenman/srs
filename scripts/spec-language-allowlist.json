@@ -1377,71 +1377,6 @@
       "rule": "word-budget",
       "matched": "460 words (limit 400)"
     },
-    "srs/records/subsections/07-12-ext-import-tracking.json#content#keyword-register#097dbef8": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MAY"
-    },
-    "srs/records/subsections/07-12-ext-import-tracking.json#content#keyword-register#813a255c": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-12-ext-import-tracking.json#content#minimisers#0ec8b3a4": {
-      "issue": "the-greenman/srs#563",
-      "rule": "minimisers",
-      "matched": "simply"
-    },
-    "srs/records/subsections/07-15-ext-repository.json#content#em-dash-cap#aca0089c": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): Defines the **SRS Live Repository Format**: a normat…"
-    },
-    "srs/records/subsections/07-15-ext-repository.json#content#em-dash-cap#bf29da49": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): A raw source document stored within the repository. …"
-    },
-    "srs/records/subsections/07-15-ext-repository.json#content#em-dash-cap#c7a789b8": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): To create an independent copy of a repository — not …"
-    },
-    "srs/records/subsections/07-15-ext-repository.json#content#em-dash-cap#e319e49f": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): The `.srs` marker is a directory that identifies the…"
-    },
-    "srs/records/subsections/07-15-ext-repository.json#content#keyword-register#7191e727": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "SHOULD"
-    },
-    "srs/records/subsections/07-15-ext-repository.json#content#minimisers#b2c66dfd": {
-      "issue": "the-greenman/srs#563",
-      "rule": "minimisers",
-      "matched": "just"
-    },
-    "srs/records/subsections/07-15-ext-repository.json#content#soft-hedges#d1ffaf02": {
-      "issue": "the-greenman/srs#563",
-      "rule": "soft-hedges",
-      "matched": "rather"
-    },
-    "srs/records/subsections/07-15-ext-repository.json#content#this-ensures#b39bbc0e": {
-      "issue": "the-greenman/srs#563",
-      "rule": "this-ensures",
-      "matched": "This ensures"
-    },
-    "srs/records/subsections/07-15-ext-repository.json#content#word-budget": {
-      "issue": "the-greenman/srs#563",
-      "rule": "word-budget",
-      "matched": "2119 words (limit 400)"
-    },
-    "srs/records/subsections/07-16-ext-json-store.json#content#word-budget": {
-      "issue": "the-greenman/srs#563",
-      "rule": "word-budget",
-      "matched": "656 words (limit 400)"
-    },
     "srs/records/subsections/07-18-ext-changelog.json#content#soft-hedges#d1ffaf02": {
       "issue": "the-greenman/srs#563",
       "rule": "soft-hedges",
@@ -1992,6 +1927,21 @@
       "rule": "heading-restatement",
       "matched": "Generated from the resolved effective `note` Type — regenerate with `node scripts/gen-type…"
     },
+    "srs/records/tier-2/mechanism-027b1fa3.json#content#em-dash-cap#2de21856": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): The `.srsj` extension is conventional; an implementa…"
+    },
+    "srs/records/tier-2/mechanism-027b1fa3.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-027b1fa3.json#content#lowercase-2119#df0465d9": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must not"
+    },
     "srs/records/tier-2/mechanism-02ca457f.json#content#em-dash-cap#d22dbfeb": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
@@ -2021,6 +1971,11 @@
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
       "matched": "1 em-dashes in one paragraph (cap 0): The definition of a complete document type — which T…"
+    },
+    "srs/records/tier-2/mechanism-1182c712.json#content#lowercase-2119#df0465d9": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must not"
     },
     "srs/records/tier-2/mechanism-14edeb69.json#content#em-dash-cap#3296c8ed": {
       "issue": "the-greenman/srs#563",
@@ -2052,6 +2007,21 @@
       "rule": "soft-hedges",
       "matched": "rather"
     },
+    "srs/records/tier-2/mechanism-27788615.json#content#em-dash-cap#a01d34f6": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): **Relations collection format**: The relations file …"
+    },
+    "srs/records/tier-2/mechanism-27788615.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-27788615.json#content#this-ensures#b39bbc0e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "this-ensures",
+      "matched": "This ensures"
+    },
     "srs/records/tier-2/mechanism-2793efa7.json#content#em-dash-cap#179cbad7": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
@@ -2081,6 +2051,11 @@
       "issue": "the-greenman/srs#563",
       "rule": "future-tense",
       "matched": "will produce"
+    },
+    "srs/records/tier-2/mechanism-44f70a2d.json#content#em-dash-cap#9cbc2a5a": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): When a repository is initialised from a published SR…"
     },
     "srs/records/tier-2/mechanism-468742b2.json#content#em-dash-cap#17d0a5cc": {
       "issue": "the-greenman/srs#563",
@@ -2112,10 +2087,20 @@
       "rule": "lowercase-2119",
       "matched": "must not"
     },
+    "srs/records/tier-2/mechanism-4dd74249.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
     "srs/records/tier-2/mechanism-511d4a2b.json#content#em-dash-cap#2a3b4e9b": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
       "matched": "2 em-dashes in one paragraph (cap 0): See the generated reference immediately below for `T…"
+    },
+    "srs/records/tier-2/mechanism-56554e2c.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
     },
     "srs/records/tier-2/mechanism-65537791.json#content#em-dash-cap#f09faabf": {
       "issue": "the-greenman/srs#563",
@@ -2137,10 +2122,35 @@
       "rule": "em-dash-cap",
       "matched": "1 em-dashes in one paragraph (cap 0): **Inheritance is cascading, unlike `fieldOrder`.** T…"
     },
+    "srs/records/tier-2/mechanism-7041b3fb.json#content#em-dash-cap#aca0089c": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "2 em-dashes in one paragraph (cap 0): Defines the **SRS Live Repository Format**: a normat…"
+    },
+    "srs/records/tier-2/mechanism-7041b3fb.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
     "srs/records/tier-2/mechanism-71458b11.json#content#em-dash-cap#cbe59dbe": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
       "matched": "1 em-dashes in one paragraph (cap 0): `ext:lifecycle` is fully integrated with the vocabul…"
+    },
+    "srs/records/tier-2/mechanism-72cb6238.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-72cb6238.json#content#lowercase-2119#df0465d9": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must not"
+    },
+    "srs/records/tier-2/mechanism-72cb6238.json#content#soft-hedges#d1ffaf02": {
+      "issue": "the-greenman/srs#563",
+      "rule": "soft-hedges",
+      "matched": "rather"
     },
     "srs/records/tier-2/mechanism-7b7a7bab.json#content#em-dash-cap#1d08674e": {
       "issue": "the-greenman/srs#563",
@@ -2177,10 +2187,75 @@
       "rule": "word-budget",
       "matched": "730 words (limit 400)"
     },
+    "srs/records/tier-2/mechanism-7ec42973.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-7ee312a4.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-8115a03e.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
     "srs/records/tier-2/mechanism-8948c35e.json#content#hedges#f885b8a1": {
       "issue": "the-greenman/srs#563",
       "rule": "hedges",
       "matched": "normally"
+    },
+    "srs/records/tier-2/mechanism-8e6db37f.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-9a04732c.json#content#em-dash-cap#1ebd81b0": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): - `records/<subfolder>/<filename>.json` — Tier 2 Rec…"
+    },
+    "srs/records/tier-2/mechanism-9a04732c.json#content#em-dash-cap#1f294f27": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): - `notes/<filename>.json` — Tier 0 Note instances"
+    },
+    "srs/records/tier-2/mechanism-9a04732c.json#content#em-dash-cap#28fac2f2": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): - `package/package.json` — package index"
+    },
+    "srs/records/tier-2/mechanism-9a04732c.json#content#em-dash-cap#3e4c1250": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): - `package/views/<filename>.json` — view definitions"
+    },
+    "srs/records/tier-2/mechanism-9a04732c.json#content#em-dash-cap#5b9a3880": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): - `package/fields/<filename>.json` — field definitio…"
+    },
+    "srs/records/tier-2/mechanism-9a04732c.json#content#em-dash-cap#b1cc1155": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): - `package/types/<filename>.json` — type definitions"
+    },
+    "srs/records/tier-2/mechanism-9a04732c.json#content#em-dash-cap#b7a5d870": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): - `relations/<filename>.json` — relation collections"
+    },
+    "srs/records/tier-2/mechanism-9a04732c.json#content#em-dash-cap#d9de02c2": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): There is no `instanceIndex` in `manifest`; it is ret…"
+    },
+    "srs/records/tier-2/mechanism-9a04732c.json#content#heading-restatement": {
+      "issue": "the-greenman/srs#563",
+      "rule": "heading-restatement",
+      "matched": "Keys in `data` follow the same relative-path conventions as `ext:repository`: - `package/p…"
     },
     "srs/records/tier-2/mechanism-9d31a4b7.json#content#em-dash-cap#3e9affc2": {
       "issue": "the-greenman/srs#563",
@@ -2196,6 +2271,16 @@
       "issue": "the-greenman/srs#563",
       "rule": "lowercase-2119",
       "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-b380994a.json#content#em-dash-cap#bf29da49": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "2 em-dashes in one paragraph (cap 0): A raw source document stored within the repository. …"
+    },
+    "srs/records/tier-2/mechanism-b380994a.json#content#minimisers#b2c66dfd": {
+      "issue": "the-greenman/srs#563",
+      "rule": "minimisers",
+      "matched": "just"
     },
     "srs/records/tier-2/mechanism-b4bfa826.json#content#em-dash-cap#a06edbb9": {
       "issue": "the-greenman/srs#563",
@@ -2236,6 +2321,16 @@
       "issue": "the-greenman/srs#563",
       "rule": "lowercase-2119",
       "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-b9d11414.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-b9d11414.json#content#lowercase-2119#df0465d9": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must not"
     },
     "srs/records/tier-2/mechanism-bcf7d3d7.json#content#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -2302,10 +2397,50 @@
       "rule": "soft-hedges",
       "matched": "rather"
     },
+    "srs/records/tier-2/mechanism-d453219f.json#content#em-dash-cap#e319e49f": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "2 em-dashes in one paragraph (cap 0): The `.srs` marker is a directory that identifies the…"
+    },
+    "srs/records/tier-2/mechanism-d453219f.json#content#heading-restatement": {
+      "issue": "the-greenman/srs#563",
+      "rule": "heading-restatement",
+      "matched": "A conforming repository has the following root structure: Example: the repository root lay…"
+    },
+    "srs/records/tier-2/mechanism-d453219f.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
     "srs/records/tier-2/mechanism-d54d1e5b.json#content#em-dash-cap#f03eeb2f": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
       "matched": "1 em-dashes in one paragraph (cap 0): `DocumentSection.renderViewId` references a `View.id…"
+    },
+    "srs/records/tier-2/mechanism-dd3632ff.json#content#em-dash-cap#4513dea2": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): `repositoryId` is the sync key for a repository. If …"
+    },
+    "srs/records/tier-2/mechanism-dd3632ff.json#content#em-dash-cap#c7a789b8": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "2 em-dashes in one paragraph (cap 0): To create an independent copy of a repository — not …"
+    },
+    "srs/records/tier-2/mechanism-dd3632ff.json#content#future-tense#3543779e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "future-tense",
+      "matched": "will evolve"
+    },
+    "srs/records/tier-2/mechanism-dd3632ff.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-dd3632ff.json#content#lowercase-2119#df0465d9": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must not"
     },
     "srs/records/tier-2/mechanism-de34a05e.json#content#em-dash-cap#15371e45": {
       "issue": "the-greenman/srs#563",
@@ -2436,6 +2571,11 @@
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
       "matched": "2 em-dashes in one paragraph (cap 0): **`identityFieldId` fallback (RFC-020, Rule [N+37]).…"
+    },
+    "srs/records/tier-2/mechanism-fe7bc7bd.json#content#minimisers#0ec8b3a4": {
+      "issue": "the-greenman/srs#563",
+      "rule": "minimisers",
+      "matched": "simply"
     },
     "srs/records/tier-2/rfc-4071ab22.json#content#em-dash-cap#1f128cb2": {
       "issue": "the-greenman/srs#563",

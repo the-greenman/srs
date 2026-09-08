@@ -1,0 +1,14 @@
+{
+  "instanceId": "c6699224-6edf-4663-b94e-33d9461a1f73",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`ImportRecord`",
+    "content": "One record per imported definition in a consumer's local registry.\n\nExample: the `ImportRecord` shape."
+  },
+  "createdAt": "2026-09-08T19:49:09.537980398+00:00",
+  "updatedAt": "2026-09-08T19:49:09.537985867+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
