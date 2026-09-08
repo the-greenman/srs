@@ -1,0 +1,20 @@
+{
+  "instanceId": "9c9b163a-f6ad-490d-8e28-193a805ca232",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "RFC-031's MAPPING-table lesson generalizes: hand-authored Rust structs are a permanent, not transitional, conformance target",
+    "summary": "The RFC-031 prose<->schema conformance script's MAPPING table is empty today: every entity it once checked was retired because it and its schema are now both generated from the same self-hosted metamodel records, so comparing them can never catch a drift the shared generator wouldn't also cause. srs-core's structs are different in kind: they are hand-authored, with no generator standing behind them, so a struct<->schema property-parity check for them is not a transitional scaffold that will retire the way RFC-031's rows did -- it is a permanent guard. The next agent designing a conformance check should ask 'is there a generator both sides derive from?' before assuming a RFC-031-style mapping table will eventually go empty here too.",
+    "evidence": [
+      "srs/scripts/check-idl-schema-conformance.mjs's MAPPING array is empty; every comment in the file explains a retirement because the entity's prose subsection was replaced by a generated-type-reference record sourced from the same emitter that produces the schema file.",
+      "srs-core/src/types/field.rs and record_type.rs have no such generator: Field and RecordType are hand-authored structs with hand-written serde attributes, compared against hand-authored docs/schema/2.0/field.json and type.json.",
+      "srs-rust#769 (Field::id defaulting to \"\" instead of being required) is the concrete failure this asymmetry produced, and is what srs-rust#777 names as seam 3."
+    ],
+    "body": "Filed while working srs-rust#777 (PR the-greenman/srs-rust#996). Related to that unit via `contains`."
+  },
+  "createdAt": "2026-09-08T17:02:25.289020497+00:00",
+  "updatedAt": "2026-09-08T17:02:25.289026548+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
