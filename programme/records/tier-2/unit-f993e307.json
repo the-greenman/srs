@@ -1,0 +1,21 @@
+{
+  "instanceId": "f993e307-34c0-4287-ad80-73c06ad3e518",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Close seam 3: srs-core struct vs mirrored JSON Schema property parity",
+    "summary": "Implemented srs_schema::conformance::assert_property_parity, an exhaustive-destructure-paired checker that diffs a struct's schema-facing required/optional property names against the mirrored docs/schema/2.0/*.json at build time. Wired into Field (+AiGuidance/Lineage/Provenance) and RecordType (+FieldAssignment). Reproduces srs-rust#769 as a permanent regression test.",
+    "decision_mode": "complicated",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs-rust#777"
+    ],
+    "body": "Dispatched from #580 pool top-up (2026-09-08). Ground: read #777 body plus its two prior comments (epic-256 narrowing: this issue is a named follow-on, not an epic-closure blocker) and the dispatch comment naming mode/cell/door. Classify: mode complicated, cell Conformance, door 1/non-normative (CI gate, tooling only) - matches the coordinator dispatch, no reason to override. Charter: no existing mechanism does struct-vs-schema property-set comparison; the RFC-031 MAPPING table precedent is retired/empty because its entities are now generated from the same source as the schema, which is NOT true of srs-core's hand-authored structs, so this is a genuine permanent gap, not a tautological duplicate. Route: proceeds (clear/complicated + door 1). Work: implemented in crates/srs-schema/src/conformance.rs, wired into srs-core field.rs and record_type.rs tests; both gates green (cargo build --workspace, cargo test --workspace with SRS_SPEC_DIR pointed at a fresh origin/master worktree, cargo clippy -D warnings). Prove: deliberately dropped fieldType from Field's required list, confirmed the test failed with a property-parity mismatch, reverted, confirmed green. Land: PR the-greenman/srs-rust#996, gate:auto-merge armed."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-08T17:01:49.781667971+00:00",
+  "updatedAt": "2026-09-08T17:02:10.336919777+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
