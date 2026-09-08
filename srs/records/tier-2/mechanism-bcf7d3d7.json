@@ -1,0 +1,14 @@
+{
+  "instanceId": "bcf7d3d7-3cd2-413d-9c24-dc2a0a7f5d45",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`FieldView`",
+    "content": "A field reference within a View. Controls presentation for this View without altering field semantics.\n\nExample: the `FieldView` shape.\n\nA Field hidden with `visible: false` remains in the Record and may appear in other Views. `visible` controls rendered text output only. A field with `visible: false` must still be included in any structured projection or export of this view. To exclude a field from both rendered output and structured projections, omit it from `fieldViews[]` entirely."
+  },
+  "createdAt": "2026-09-08T17:48:42.707167652+00:00",
+  "updatedAt": "2026-09-08T17:48:42.707175263+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

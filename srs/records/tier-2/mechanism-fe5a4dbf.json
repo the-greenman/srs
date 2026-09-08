@@ -1,0 +1,14 @@
+{
+  "instanceId": "fe5a4dbf-5b88-4b1e-9e16-6b8f28e61f35",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Heading Hierarchy",
+    "content": "For `format: \"markdown\"`, `\"html\"`, or `\"adoc\"`:\n\n| Element | Heading level | Condition |\n|---|---|---|\n| Document title | `1 + depthOffset` | When `preamble` is absent |\n| Section title | `2 + depthOffset` | When `DocumentSection.title` is set |\n| Per-record heading | `3 + depthOffset` | When `titleFieldId` is set on the section, or (RFC-020, Rule [N+37]) as a fallback when it is not — see below |\n| Field label | Bold/formatted text — not a heading; exact per-format form per *Normative Field-Row Form* (RFC-037) | Always |\n\nFor `format: \"text\"` or implementation-defined values, heading level semantics do not apply.\n\n**`identityFieldId` fallback (RFC-020, Rule [N+37]).** For any `DocumentSection` that does not declare `titleFieldId` — whether that section's field content renders via the Default Rendering Baseline or a dispatched L1 View — implementations SHOULD emit the per-record heading using the value of the field named by the record's Type's effective `identityFieldId` (`ext:type-inheritance`), if present, in place of omitting the heading. `titleFieldId`, when declared, MUST continue to take precedence for that section's per-record heading."
+  },
+  "createdAt": "2026-09-08T17:48:51.328439667+00:00",
+  "updatedAt": "2026-09-08T17:48:51.328446414+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

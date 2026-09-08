@@ -1,0 +1,14 @@
+{
+  "instanceId": "422810fd-eead-4e9d-a8f5-4c0f76087c0a",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`ThemeReference`",
+    "content": "A pointer to a Theme (ext:themes-l1). Follows the same `mode`-based reference pattern as `packageRef` in the manifest.\n\nExample: the `ThemeReference` shape."
+  },
+  "createdAt": "2026-09-08T17:48:50.271719353+00:00",
+  "updatedAt": "2026-09-08T17:48:50.271725080+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

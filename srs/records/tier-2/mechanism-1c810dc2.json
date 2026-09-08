@@ -1,0 +1,14 @@
+{
+  "instanceId": "1c810dc2-5706-4311-9cc6-efec264c1b08",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Composite baseline rendering",
+    "content": "A composite-range Field that resolves to no renderer — unbound per [CR-036-6], or fallen back per\n[CR-036-7] or [CR-036-9] — is rendered by the **composite baseline**: a heading when a label resolves\n(`FieldAssignment.displayLabel`, overridable by `FieldView.displayLabel`) at level `4 + d` shifted by\n`Composition.depthOffset`, where `d` is nesting depth; then one block per value in value order; within\neach block one field row per assignment on the composite's `rangeType`, ascending by\n`FieldAssignment.order` with `fieldId` code-point order as tie-break. A field with no value, or whose\nvalue renders to nothing, is omitted unconditionally. An assignment that is itself `ref`/`inline` expands\ninto a nested baseline block at depth `d + 1` rather than a field row. Field-row labels resolve by\n`FieldAssignment.displayLabel` -> `Field.name` -> `fieldId`; templates resolve by\n`ElementTemplates.compositeFieldRowTemplates[Field.name]` -> `ElementTemplates.fieldRow` -> the\nimplementation's existing top-level field-row form."
+  },
+  "createdAt": "2026-09-08T17:48:43.867337361+00:00",
+  "updatedAt": "2026-09-08T17:48:43.867344224+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

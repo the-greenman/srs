@@ -1,0 +1,14 @@
+{
+  "instanceId": "113d18d8-9b25-4f55-b997-19e1a75a042d",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`LifecycleTransition` (edge between state keys)",
+    "content": "Example: the `LifecycleTransition` shape.\n\n`LifecycleTransition` is an edge, not a `VocabularyEntry` (no `key`), but carries `id` so it is addressable. It follows the same forward-compatibility policy as substrate entries: unknown top-level fields rejected; arbitrary metadata in `meta`."
+  },
+  "createdAt": "2026-09-08T17:48:35.705508186+00:00",
+  "updatedAt": "2026-09-08T17:48:35.705518236+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -6,7 +6,7 @@
   "typeName": "subsection",
   "fieldValues": {
     "title": "ext:lifecycle",
-    "content": "**Required for**: governance tools, decision logs, any implementation where records progress through defined states.\n\n`ext:lifecycle` is fully integrated with the vocabulary substrate (RFC-006). `Lifecycle` is an installable, referenceable container — a `VocabularyEntry` specialisation whose container holds states and transitions. `LifecycleState` satisfies the `VocabularyEntry` substrate contract with `key` (was `name`) as its key-role field.\n\n#### `LifecycleState` (VocabularyEntry specialisation)\n\nExample: the `LifecycleState` shape.\n\n#### `LifecycleTransition` (edge between state keys)\n\nExample: the `LifecycleTransition` shape.\n\n`LifecycleTransition` is an edge, not a `VocabularyEntry` (no `key`), but carries `id` so it is addressable. It follows the same forward-compatibility policy as substrate entries: unknown top-level fields rejected; arbitrary metadata in `meta`.\n\n#### `Lifecycle` container\n\nAn installable, referenceable state machine — a closed vocabulary of states plus transitions.\n\nExample: the `Lifecycle` container shape.\n\nThe distributable `Package` holds inline definitions: `lifecycles?: Lifecycle[]`. The repository `package/package.json` holds relative paths: `\"lifecycles\": [\"lifecycles/foo.json\", ...]`.\n\n#### Type lifecycle declaration (added by this extension)\n\n`Type` gains a lifecycle, declared in exactly one of two mutually exclusive forms (V7):\n\nExample: the two lifecycle declaration forms a Type may carry.\n\nDeclaring both is a validation error (V7). An inline lifecycle's effective state set is exactly its own `states`/`transitions`; V5 and V9 apply identically.\n\n#### Record lifecycle state\n\n`Record.lifecycleState` must resolve to a state `key` in the Type's effective state set under V1.\n\n#### Validation invariants (V7–V9)\n\n**V7 — Lifecycle exclusivity.** A Type declares exactly one of `lifecycle` or `lifecycleRef`.\n\n**V8 — Lifecycle reference resolution.** A `lifecycleRef` must resolve to an installed `Lifecycle` in the effective package set.\n\n**V9 — Lifecycle integrity.** Over the effective state set (V5):\n- Exactly one state MUST have `isInitial: true`; `initialState` MUST reference that state's `key`.\n- The initial state MUST have effective `status: active`. A lifecycle whose initial state is deprecated, tombstone, or retired is invalid.\n- Every `transition.from`/`transition.to` must reference a state `key` in the effective state set.\n- A state with `isFinal: true` MUST NOT appear as the `from` of any transition.\n- Transition `id`s must be unique within the effective transition set.\n- `Record.lifecycleState` resolves under V1.\n\n---"
+    "content": "Content relocated to mechanism leaves under the Lifecycle concept (RFC-042 Change C, srs#562). See derived-from."
   },
   "tags": [
     "concern:extensibility",
@@ -14,7 +14,7 @@
     "topic:extensions"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-09-06T17:00:45.939685868+00:00",
+  "updatedAt": "2026-09-08T17:48:42.524177350+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

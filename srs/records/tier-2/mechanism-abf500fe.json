@@ -1,0 +1,14 @@
+{
+  "instanceId": "abf500fe-ff59-4c11-9bec-cebedc1c6d52",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`NavigationLink`",
+    "content": "An assembly-time cross-section link in a Composition. Navigation links are reading aids for the rendered document, not semantic assertions about Records. They do not appear in the Relation graph.\n\nExample: the `NavigationLink` shape."
+  },
+  "createdAt": "2026-09-08T17:48:50.126618877+00:00",
+  "updatedAt": "2026-09-08T17:48:50.126624955+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

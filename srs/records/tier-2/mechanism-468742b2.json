@@ -1,0 +1,14 @@
+{
+  "instanceId": "468742b2-1774-4583-ace6-a6ca42ed9b91",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "CSS Class Injection",
+    "content": "For `\"html\"` and `\"pdf\"` output, implementations MUST add semantic CSS classes to the rendered elements named in the table below. RFC-037 adds the field-row label and value elements, which are not wrappers.\n\n**Class name normalisation** (5-step rule applied to all identifier components):\n1. Convert to lowercase\n2. Replace underscores, spaces, and dots with hyphens\n3. Remove characters that are not alphanumeric or hyphens\n4. Collapse consecutive hyphens to a single hyphen\n5. Trim leading and trailing hyphens\n\n| Element | Classes always applied | Classes conditionally applied |\n|---|---|---|\n| Document wrapper | `srs-document` | — |\n| Section wrapper | `srs-section`, `srs-section-{sectionId}` | — |\n| Record wrapper | `srs-record`, `srs-type-{typeNamespace}-{typeName}` | `srs-field-{fieldName}-{normalisedValue}` for each `cssClassFields` entry with a matching non-empty Field eligible under [T-9] |\n| Field row | `srs-field`, `srs-fieldname-{fieldName}` where `{fieldName}` is `Field.name` | `srs-relationtype-{relationTypeKey}` in place of `srs-fieldname-*` on a relation row |\n| Field row label | `srs-field-label` (+ compatibility alias `field-label`) | — |\n| Field row value | `srs-field-value` (+ compatibility alias `field-value`) | `srs-empty-value` when the value is the `(empty)` placeholder |"
+  },
+  "createdAt": "2026-09-08T17:49:01.152638874+00:00",
+  "updatedAt": "2026-09-08T17:49:01.152646486+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

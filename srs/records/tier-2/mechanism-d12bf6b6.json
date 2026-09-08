@@ -1,0 +1,14 @@
+{
+  "instanceId": "d12bf6b6-6c84-46af-b86c-a8b580422f7d",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`SectionSource`",
+    "content": "Defines how a section's instances are selected from a Container.\n\nExample: the `SectionSource` union.\n\n**Note (2026-08-22, `rfc-decision-4f1e12e5` entry 4)**: the `fixed-instances` and `relation-query` `SectionSource` variants previously specified here were removed under the dormancy rule (`rfc-decision-cce3c00e`) — zero corpus use across the 13 real sections in the attested corpus (2026-08-21 usage attestation).\n\n**Note (2026-09-03, srs#525, `rfc-decision-cce3c00e` + `rfc-decision-9ee14517`)**: `type-query` is retired and replaced by `discovery-query`, which consumes the one structured query mechanism (`DiscoveryQuery`, `ext:discovery`) instead of re-implementing its own divergent copy of the same filter axes. `discovery-query` and `container-subset` are the two live ways to source a section. Return trigger: a composition need neither live variant expresses."
+  },
+  "createdAt": "2026-09-08T17:48:49.518048504+00:00",
+  "updatedAt": "2026-09-08T17:48:49.518055204+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
