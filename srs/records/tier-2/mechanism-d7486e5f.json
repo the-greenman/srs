@@ -1,0 +1,14 @@
+{
+  "instanceId": "d7486e5f-27b9-44ba-91cb-5198e233bb73",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Instance",
+    "content": "SRS separates two id spaces. A definition, such as a Field or a Type, is identified by a UUID together with namespace, name, and version: the same UUID names a lineage across versions, and version selects one point in it. An instance, such as a Note or a Record, is identified by its UUID alone, carries no version, and belongs to no lineage: it is a single piece of captured content.\n\nA Relation connects two instance UUIDs, never a definition UUID. A Container scopes a set of instances, never definitions. A Container's own id is a third kind of id: it MUST NOT appear as a Relation's source or target.\n\nConfusing a definition's UUID with an instance's UUID is a recurring correction in this specification. Reading a `typeId` as an instance id, or an `instanceId` as a definition id, produces a reference that resolves to the wrong kind of thing."
+  },
+  "createdAt": "2026-09-08T11:36:26.521568819+00:00",
+  "updatedAt": "2026-09-08T11:36:26.521573940+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

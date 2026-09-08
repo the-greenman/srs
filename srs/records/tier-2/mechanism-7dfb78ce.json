@@ -1,0 +1,14 @@
+{
+  "instanceId": "7dfb78ce-7111-4d25-8510-312efe5effb2",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Stable identity",
+    "content": "An SRS entity carries a UUID minted once, at creation, that does not change afterward. A copy, an export, an import, or a rename for display MUST NOT change an entity's UUID. Identity is declared on the entity itself, never derived from a file path, a directory position, or a storage history.\n\nA UUID conflict between two entities is a fatal error. A loader MUST NOT resolve it by precedence, and MUST NOT pick one entity as the winner over the other: doing so would discard whichever identity claim lost.\n\nChanging what an entity is at its root means minting a new UUID. A materially different entity does not reuse an old UUID: every existing reference to that UUID already points at the entity it used to be."
+  },
+  "createdAt": "2026-09-08T11:36:11.783578744+00:00",
+  "updatedAt": "2026-09-08T11:36:11.783587913+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
