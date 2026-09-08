@@ -1,0 +1,14 @@
+{
+  "instanceId": "b958d855-b142-4ec6-9957-f74f2e8b87f4",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`View`",
+    "content": "A versioned presentation and export configuration over a field set. A View is compatible with any Record containing its required fields.\n\nExample: the `View` shape.\n\n**Note (2026-08-22, `rfc-decision-4f1e12e5` entry 5)**: the View-root `protection` enum (`none`/`read-only`/`fill-in`) previously specified here is removed under the dormancy rule (`rfc-decision-cce3c00e`) — zero use, and it was a hint without a contract: no enforcement semantics were defined anywhere. `FieldView.required` below is untouched — it is attested in production use and is a distinct form-vs-validity mechanism. Return trigger: a real authoring surface needing edit protection, which must design the missing enforcement half.\n\nCompatibility is field-centric:\n- A Record is renderable through a View when it contains all `FieldView` entries with `required: true`.\n- Fields with `visible: true` but not required are rendered when present and omitted when absent.\n- Omitted Fields in `fieldViews[]` are treated as `visible: false`.\n\nA View may not reference unknown Fields: every `fieldId` in `View.fieldViews[]` must reference a valid `Field.id` in the effective package set.\n\n`View.protection` applies only to interactions through that View. A Record may be editable through one View and read-only through another. For record-level settlement, use `ext:lifecycle` states such as `isFinal`.\n\nFacilitation steps have been removed from View. Use `ext:protocol` Protocol stages instead."
+  },
+  "createdAt": "2026-09-08T17:48:43.530761455+00:00",
+  "updatedAt": "2026-09-08T17:48:43.530767313+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,14 @@
+{
+  "instanceId": "e265a135-9c11-478f-b390-1787f2faf83c",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Record lifecycle state",
+    "content": "`Record.lifecycleState` must resolve to a state `key` in the Type's effective state set under V1."
+  },
+  "createdAt": "2026-09-08T17:48:37.410860112+00:00",
+  "updatedAt": "2026-09-08T17:48:37.410868567+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

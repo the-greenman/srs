@@ -1,0 +1,14 @@
+{
+  "instanceId": "666dbbaf-f89d-407a-8c77-b7655c7943d3",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`StylesheetDeclaration`",
+    "content": "Example: the `StylesheetDeclaration` shape."
+  },
+  "createdAt": "2026-09-08T17:49:00.628442930+00:00",
+  "updatedAt": "2026-09-08T17:49:00.628451684+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

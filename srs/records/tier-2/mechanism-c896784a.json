@@ -1,0 +1,14 @@
+{
+  "instanceId": "c896784a-3a88-49ed-be67-3013dc211395",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "ext:views-l1",
+    "content": "**Required for**: rendering and export workflows.\n\nDefines Views — versioned presentations over a field set."
+  },
+  "createdAt": "2026-09-08T17:48:42.561353263+00:00",
+  "updatedAt": "2026-09-08T17:48:42.561359106+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

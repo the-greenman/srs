@@ -1,0 +1,14 @@
+{
+  "instanceId": "7ec029e9-592b-4f72-8c9d-23a302725a82",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Type lifecycle declaration (added by this extension)",
+    "content": "`Type` gains a lifecycle, declared in exactly one of two mutually exclusive forms (V7):\n\nExample: the two lifecycle declaration forms a Type may carry.\n\nDeclaring both is a validation error (V7). An inline lifecycle's effective state set is exactly its own `states`/`transitions`; V5 and V9 apply identically."
+  },
+  "createdAt": "2026-09-08T17:48:37.218488040+00:00",
+  "updatedAt": "2026-09-08T17:48:37.218496180+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

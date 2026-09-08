@@ -1,0 +1,14 @@
+{
+  "instanceId": "30a555c0-060a-42ef-8f05-6a0aa8d9efef",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`Lifecycle` container",
+    "content": "An installable, referenceable state machine — a closed vocabulary of states plus transitions.\n\nExample: the `Lifecycle` container shape.\n\nThe distributable `Package` holds inline definitions: `lifecycles?: Lifecycle[]`. The repository `package/package.json` holds relative paths: `\"lifecycles\": [\"lifecycles/foo.json\", ...]`."
+  },
+  "createdAt": "2026-09-08T17:48:37.062969910+00:00",
+  "updatedAt": "2026-09-08T17:48:37.062976746+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

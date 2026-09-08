@@ -1,0 +1,14 @@
+{
+  "instanceId": "51f81b07-c6b1-417b-a53f-51345b5249f3",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`Theme`",
+    "content": "Example: the `Theme` shape.\n\n`Package` gains `themes?: Theme[]` when `ext:themes-l1` is declared. When `ThemeReference.mode === \"bundled\"`, the referenced `themeId` MUST appear in `Package.themes[]` (Rule [T-5]). `Reference.definitionType` and `ImportRecord.definitionType` gain `\"theme\"` as a portable value."
+  },
+  "createdAt": "2026-09-08T17:49:00.979508206+00:00",
+  "updatedAt": "2026-09-08T17:49:00.979514387+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
