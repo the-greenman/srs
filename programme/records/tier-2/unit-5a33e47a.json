@@ -1,0 +1,23 @@
+{
+  "instanceId": "5a33e47a-a8e9-44ae-8163-abab544f4959",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Un-bake headings batch C: ext:repository, ext:json-store, ext:registry, ext:import-tracking",
+    "summary": "Splits 30 baked headings across 4 subsections into 32 mechanism leaves. ext:repository leaves parent under the existing Repository concept; ext:json-store, ext:registry and ext:import-tracking have no existing concept, so 3 new concept records are minted (JSON Store, Registry, Import tracking). Third of four batches (#684-#687) covering #562s remaining scope.",
+    "decision_mode": "complicated",
+    "door": "door-1",
+    "issue_ref": [
+      "srs#686",
+      "srs#562",
+      "srs#580"
+    ],
+    "body": "Dispatched from srs#580 gate:dispatched queue (dispatch comment 2026-09-08 ~19:15Z on #686). Claimed 2026-09-08T19:38Z. Followed carried_context-39fde6eb for the splitting algorithm. Tried the #686/#687 coordinator addendum literally first (parent each new concept under the section the source subsection sat under, here 07-extensions) and found it produces a real double-render defect in docs/spec/srs-spec.md: 15 of 32 new leaf headings rendered twice at two different depths, because a still-section-typed record already participates in a recursive contains-walk that collides with the flat mechanism discovery-query listing added by #678. Reverted the 3 section-to-concept contains edges and left the 3 new concepts as roots (matching all 53 pre-existing concept records, none of which is contains-parented today) - clean 1:1 heading diff after. Filed as finding-<see below> for #687 (batch D, not yet started) since it is the one remaining batch that would otherwise repeat the same addendum instruction verbatim. Also bundled a one-line fix to scripts/versioning-cell-allowlist.json (stale entry, confirmed pre-existing on origin/master via git stash), matching batch As (#700) independent fix of the same entry - a harmless double-fix, whichever PR merges first the other no-ops on rebase."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-08T20:44:50.756306442+00:00",
+  "updatedAt": "2026-09-08T20:45:24.193372702+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
