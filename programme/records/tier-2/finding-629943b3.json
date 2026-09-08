@@ -1,0 +1,20 @@
+{
+  "instanceId": "629943b3-8e2b-443b-b30f-e2702f9aaad2",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "C4 tag-resolution has no per-tag governing vocabulary — 'any open' is package-wide",
+    "summary": "validate_repository's C4 check (crates/srs-repository/src/validation.rs) decides whether an unresolved tag is diagnosable by asking 'is any vocabulary in the whole package open', not 'is the vocabulary that should govern this specific tag open'. Today every corpus in this codebase declares at most one vocabulary, so the distinction is invisible. A package that declares two vocabularies — one open, one closed — would silently skip the diagnostic for a tag that fails to resolve in the closed vocabulary too, as long as any other vocabulary in the package is open. srs-rust#702's fix (skip rather than downgrade for open) did not introduce this; it inherited the existing package-wide any_open scope unchanged, since narrowing it was out of the ruling's scope.",
+    "evidence": [
+      "crates/srs-repository/src/validation.rs ~L684-712 (post-#702 fix): `let any_open = package.vocabularies.iter().any(|v| matches!(v.mode, VocabularyMode::Open));` is computed once per record from ALL vocabularies in the package, then applied uniformly to every tag on that record — there is no per-tag vocabulary selection.",
+      "srs_core::types::vocabulary::Vocabulary has a `namespace` field and Term has a `key`, but no code path maps a tag string to 'the vocabulary that governs this tag' — resolve_term_by_key is tried against every vocabulary in the package in turn (`package.vocabularies.iter().any(...)`).",
+      "No corpus fixture (srs spec repo, srs-rust test fixtures) currently declares more than one Vocabulary, so this gap has never been exercised or observed to produce a wrong diagnostic in practice."
+    ],
+    "body": "Not actionable today — no multi-vocabulary corpus exists to be wrong about, and narrowing 'any_open' to a real per-tag governing vocabulary is a bigger, undecided design question (how would a tag declare which vocabulary namespace it belongs to?) that srs-rust#702's owner ruling did not ask for. Recorded so the next unit that touches C4, or that introduces a second vocabulary into any corpus, knows this scope decision exists rather than rediscovering it from the diff."
+  },
+  "createdAt": "2026-09-08T13:11:00.995805182+00:00",
+  "updatedAt": "2026-09-08T13:11:00.995812040+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
