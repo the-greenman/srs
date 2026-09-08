@@ -709,17 +709,43 @@ async function publicationReachabilityCases(root) {
   });
   await rm(join(repo, "records/inv.json"));
 
-  // `composition.json` admits four source kinds and this guard resolves one. The other three are
-  // refused by name rather than skipped: an unresolved section can only shrink the reachable set,
-  // so it surfaces as a false violation — with the wrong reason attached, which is how a guard
-  // quietly stops covering what it was written for.
-  const containerSubset = view(TITLE_FIELD);
-  containerSubset.sections[0].source = { type: "container-subset", containerId: "00000000-0000-4000-8000-000000000602" };
-  await writeJson(join(repo, "package/compositions/fixture-view.json"), containerSubset);
+  // `composition.json` admits two source kinds (`discovery-query`, `container-subset`, RFC-042
+  // Change G) and this guard resolves both. A third, unknown kind is refused by name rather than
+  // skipped: an unresolved section can only shrink the reachable set, so it surfaces as a false
+  // violation — with the wrong reason attached, which is how a guard quietly stops covering what
+  // it was written for.
+  const unknownKind = view(TITLE_FIELD);
+  unknownKind.sections[0].source = { type: "bogus-kind", containerId: "00000000-0000-4000-8000-000000000602" };
+  await writeJson(join(repo, "package/compositions/fixture-view.json"), unknownKind);
   expect("refuses a section source kind it cannot resolve", runCheck("check-publication-reachability.mjs", root), {
     exit: 1,
-    contains: ["container-subset", "this guard does not resolve"],
+    contains: ["bogus-kind", "this guard does not resolve"],
   });
+
+  // A container-subset section IS resolved: its root is the named Container's own anchor/root
+  // record, and reachability then descends `contains` from there like any other surface.
+  const containerId = "00000000-0000-4000-8000-000000000603";
+  const containerSubset = view(TITLE_FIELD);
+  containerSubset.sections[0].source = { type: "container-subset", containerId };
+  await writeJson(join(repo, "package/compositions/fixture-view.json"), containerSubset);
+  expect("a container-subset section with an unresolved containerId is refused", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: [containerId, "does not resolve to any containers"],
+  });
+  // Anchors on the existing `records/root.json` (ID(1)) rather than a fresh record — it is no
+  // longer matched by any discovery-query now that the section's source kind changed above, so
+  // reusing it here means "reachable" in this case can only be true via the container-subset
+  // resolution being added, not a discovery-query surface left over from an earlier case.
+  await writeJson(join(repo, "containers/fixture-container.json"), {
+    containerId,
+    anchorInstanceId: ID(1),
+    rootInstanceIds: [ID(1)],
+  });
+  expect("a container-subset section resolves via the named Container's anchor", runCheck("check-publication-reachability.mjs", root), {
+    exit: 0,
+    contains: ["✓ Every discovered record is reachable"],
+  });
+  await rm(join(repo, "containers/fixture-container.json"));
 
   // A discovery-query may also filter by lifecycle state or container, and the renderer applies
   // those. Ignoring them is fail-OPEN, not fail-closed: a section excluding `archived` records

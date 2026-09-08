@@ -24,11 +24,15 @@
  *      manifest in the tree. A `discovery-query` section's roots are the instances whose
  *      `typeNamespace/typeName` equals its `query.typeNamespace`/`query.typeName` (srs#525: the
  *      SectionSource → DiscoveryQuery collapse — succeeds the retired `type-query`/`typeKey`
- *      shape from srs#523/#524, itself renamed from `semanticObjectType`).
+ *      shape from srs#523/#524, itself renamed from `semanticObjectType`). A `container-subset`
+ *      section's root is the named `containers/**` Container's own anchor/root record (RFC-042
+ *      Change G's Part containers) — this is the one case a Container under `containers/` DOES
+ *      become a presentation surface, exactly because a section names it (see the note on
+ *      `containers()` below).
  *   2. **Root container membership** — `manifest.container` only (RFC-013's required root container,
  *      the top of structural navigation): `identityInstanceId`, `memberInstanceIds`,
- *      `rootInstanceIds`. A Container under `containers/` is deliberately NOT a surface — see the
- *      note on `containers()` for the wrong verdict that produced.
+ *      `rootInstanceIds`. A Container under `containers/` is deliberately NOT a surface by
+ *      existing — see the note on `containers()` for the wrong verdict that produced.
  *   3. **The RFC-016 invariant projection** — [R1]: every `com.semanticops.spec/invariant` record
  *      MUST appear in the rendered Key Invariants region of each view marked `requiresKeyInvariants`.
  *      This surface is a *post-render injection*, not a view section, so a definition quantifying
@@ -168,13 +172,17 @@ async function declaredDocumentViews(repoRoot) {
 }
 
 /**
- * The Containers that are presentation surfaces — which is `manifest.container` and nothing else.
+ * The Containers that are ALWAYS presentation surfaces regardless of naming — which is
+ * `manifest.container` and nothing else.
  *
  * RFC-013 makes `manifest.container` the repository's identity object and the top of structural
  * navigation, so its members are reached by a reader navigating the repository. **A Container under
  * `containers/` is not a presentation surface by existing.** It becomes one when a `container-subset`
- * section or a `containerIds` discovery-query filter names it, and this guard refuses both of those
- * rather than resolving them — so any `containers/**` file it honoured would be a free "publish"
+ * section names it (resolved separately, in `reachability()`'s own container-subset loop — RFC-042
+ * Change G) — that is a real presentation surface, so it is resolved, not refused. A `containerIds`
+ * discovery-query filter naming one is different: it *narrows* an existing discovery-query surface
+ * rather than declaring a new one, and this guard still refuses that (see `SOURCE_FILTERS` below) —
+ * so any `containers/**` file reached only through an unresolved filter is still not a free "publish"
  * lever with no reader behind it.
  *
  * That is not hypothetical. All 12 Containers under `srs/containers/` are referenced by nothing at
@@ -231,20 +239,88 @@ async function reachability(repoRoot) {
     contains.get(relation.sourceInstanceId).push(relation.targetInstanceId);
   }
 
-  // Surface 1 — Composition discovery-query sections. `descends` records whether the section's roots
-  // also publish their `contains` subtree; see the header note on `titleFieldId`.
+  // Every Container under `containers/**`, keyed by containerId — read here (not just via
+  // `manifest.container`) because a `container-subset` section (RFC-042 Change G) names one of
+  // these directly, and that naming is what turns it into a presentation surface (see the note
+  // on `containers()` above: a Container is not a surface by existing, only by being named).
+  const containersById = new Map();
+  for (const { path, record } of await (async () => {
+    const dir = join(repoRoot, "containers");
+    if (!existsSync(dir)) return [];
+    const out = [];
+    for (const name of (await readdir(dir)).sort()) {
+      if (!name.endsWith(".json")) continue;
+      try {
+        out.push({ path: `containers/${name}`, record: JSON.parse(await readFile(join(dir, name), "utf8")) });
+      } catch {
+        /* validate-package.mjs's diagnostic, not ours */
+      }
+    }
+    return out;
+  })()) {
+    if (record?.containerId) containersById.set(record.containerId, { path, container: record });
+  }
+
+  // Surface 1 — Composition discovery-query and container-subset sections. `descends` records
+  // whether the section's roots also publish their `contains` subtree; see the header note on
+  // `titleFieldId`.
   const roots = [];
   const { views, unexported } = await declaredDocumentViews(repoRoot);
   const queried = new Map(); // typeNamespace/typeName -> { descends, via }
+  // containerId -> { descends, via } — a container-subset section's root is the container's own
+  // anchor/root record (RFC-042's Part containers: `rootInstanceIds: [anchorInstanceId]`,
+  // `memberInstanceIds` the declared `contains` subtree). The generic `contains` descent below
+  // (shared with every other surface) walks from that anchor through the whole subtree, which is
+  // exactly the declared membership per `scripts/part-container-membership.mjs` — modelling one
+  // root plus descent, rather than re-deriving the flat member list, is what keeps this in step
+  // with the renderer's own tree-depth rendering (RFC-042 Change G) instead of a second, divergent
+  // notion of "member".
+  const containerRoots = new Map();
   for (const { path, view } of views) {
     for (const section of view.sections ?? []) {
-      // `composition.json` admits two source kinds; only `discovery-query` is used in this
-      // repository (srs#525 collapsed the retired `type-query` into it), so only it is
-      // implemented. The other kind is refused rather than skipped. Skipping is fail-closed
-      // here — an unread section can only shrink the reachable set, so it surfaces as a false
-      // violation rather than a missed one — but it would report the *wrong reason*, sending
-      // whoever hits it hunting for a missing relation instead of an unimplemented source kind.
-      // It is also how a guard quietly stops covering the thing it was written for.
+      if (section.source?.type !== "container-subset") continue;
+      const containerId = section.source?.containerId;
+      const entry = containerId ? containersById.get(containerId) : undefined;
+      if (!containerId || !entry) {
+        fail(
+          `${path} section "${section.sectionId}" is a container-subset with containerId ` +
+            `"${containerId}", which does not resolve to any containers/**/*.json file`,
+        );
+        continue;
+      }
+      if (Array.isArray(section.source?.typeFilter) && section.source.typeFilter.length > 0) {
+        fail(
+          `${path} section "${section.sectionId}" filters its container-subset by typeFilter, ` +
+            `which this guard does not apply — resolving the whole container would report ` +
+            `records the section filters out as published`,
+        );
+        continue;
+      }
+      const anchor = entry.container.anchorInstanceId ?? entry.container.rootInstanceIds?.[0];
+      if (!anchor) {
+        fail(`${entry.path} (named by ${path} section "${section.sectionId}") has no anchorInstanceId/rootInstanceIds entry to root the section on`);
+        continue;
+      }
+      const descends = section.titleFieldId !== undefined && section.titleFieldId !== null;
+      const prior = containerRoots.get(containerId);
+      if (!prior || (descends && !prior.descends)) {
+        containerRoots.set(containerId, { anchor, descends, via: `${view.namespace}/${view.name}#${section.sectionId}` });
+      }
+    }
+  }
+  for (const { anchor, descends, via } of containerRoots.values()) {
+    roots.push({ id: anchor, surface: `composition container-subset ${via}`, path: byId.get(anchor), descends });
+  }
+  for (const { path, view } of views) {
+    for (const section of view.sections ?? []) {
+      if (section.source?.type === "container-subset") continue; // handled above, its own loop
+      // `composition.json` admits two source kinds: `discovery-query` (resolved below) and
+      // `container-subset` (resolved above, RFC-042 Change G). A third kind is refused rather
+      // than skipped. Skipping is fail-closed here — an unread section can only shrink the
+      // reachable set, so it surfaces as a false violation rather than a missed one — but it
+      // would report the *wrong reason*, sending whoever hits it hunting for a missing relation
+      // instead of an unimplemented source kind. It is also how a guard quietly stops covering
+      // the thing it was written for.
       const kind = section.source?.type;
       if (kind !== "discovery-query") {
         fail(

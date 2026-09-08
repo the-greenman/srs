@@ -6,15 +6,12 @@
   "description": "Renders the specification followed by the complete design rationale as a single unified document.",
   "sections": [
     {
-      "sectionId": "spec-sections",
-      "title": "Specification",
+      "sectionId": "part-reading-this-specification",
+      "title": "Reading this specification",
       "order": 0,
       "source": {
-        "type": "discovery-query",
-        "query": {
-          "typeNamespace": "com.semanticops.spec",
-          "typeName": "section"
-        }
+        "type": "container-subset",
+        "containerId": "2ea344e1-f64e-4817-99f7-fe1b1e4046ce"
       },
       "typeDispatch": {
         "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
@@ -23,15 +20,12 @@
       "emptyBehavior": "hide"
     },
     {
-      "sectionId": "design-notes",
-      "title": "Design Rationale",
+      "sectionId": "part-foundations",
+      "title": "Foundations",
       "order": 1,
       "source": {
-        "type": "discovery-query",
-        "query": {
-          "typeNamespace": "com.semanticops.spec",
-          "typeName": "design-note"
-        }
+        "type": "container-subset",
+        "containerId": "752dad23-8a6d-44e5-98c9-f081d2cc634e"
       },
       "typeDispatch": {
         "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
@@ -40,15 +34,96 @@
       "emptyBehavior": "hide"
     },
     {
-      "sectionId": "mechanisms",
-      "title": "Mechanisms (concept-tree leaves, RFC-042)",
+      "sectionId": "part-instances",
+      "title": "Instances",
       "order": 2,
       "source": {
-        "type": "discovery-query",
-        "query": {
-          "typeNamespace": "com.semanticops.spec",
-          "typeName": "mechanism"
-        }
+        "type": "container-subset",
+        "containerId": "2da5d723-f09f-4acf-9b86-a99745193ee5"
+      },
+      "typeDispatch": {
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
+      },
+      "titleFieldId": "1a000001-0000-4000-a000-000000000001",
+      "emptyBehavior": "hide"
+    },
+    {
+      "sectionId": "part-structure",
+      "title": "Structure",
+      "order": 3,
+      "source": {
+        "type": "container-subset",
+        "containerId": "96965ce5-ad64-45b1-8d74-eccc6773db5e"
+      },
+      "typeDispatch": {
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
+      },
+      "titleFieldId": "1a000001-0000-4000-a000-000000000001",
+      "emptyBehavior": "hide"
+    },
+    {
+      "sectionId": "part-distribution",
+      "title": "Distribution",
+      "order": 4,
+      "source": {
+        "type": "container-subset",
+        "containerId": "97838af7-50f8-4da2-9d8f-d7dbf9296c80"
+      },
+      "typeDispatch": {
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
+      },
+      "titleFieldId": "1a000001-0000-4000-a000-000000000001",
+      "emptyBehavior": "hide"
+    },
+    {
+      "sectionId": "part-presentation",
+      "title": "Presentation",
+      "order": 5,
+      "source": {
+        "type": "container-subset",
+        "containerId": "fdb7d202-f9a5-4c8f-a2a8-d6c79add89ce"
+      },
+      "typeDispatch": {
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
+      },
+      "titleFieldId": "1a000001-0000-4000-a000-000000000001",
+      "emptyBehavior": "hide"
+    },
+    {
+      "sectionId": "part-extensions",
+      "title": "Extensions",
+      "order": 6,
+      "source": {
+        "type": "container-subset",
+        "containerId": "a7b772f2-0093-4ccc-8050-0f7831421eaf"
+      },
+      "typeDispatch": {
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
+      },
+      "titleFieldId": "1a000001-0000-4000-a000-000000000001",
+      "emptyBehavior": "hide"
+    },
+    {
+      "sectionId": "part-conformance",
+      "title": "Conformance",
+      "order": 7,
+      "source": {
+        "type": "container-subset",
+        "containerId": "1dc2ab2d-7873-4179-8a40-d591e9c90bb0"
+      },
+      "typeDispatch": {
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
+      },
+      "titleFieldId": "1a000001-0000-4000-a000-000000000001",
+      "emptyBehavior": "hide"
+    },
+    {
+      "sectionId": "part-governance",
+      "title": "Governance",
+      "order": 8,
+      "source": {
+        "type": "container-subset",
+        "containerId": "618920ec-c417-4f91-acce-c5ea79b743f2"
       },
       "typeDispatch": {
         "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
