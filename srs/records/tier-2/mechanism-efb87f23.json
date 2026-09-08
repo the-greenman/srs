@@ -1,0 +1,14 @@
+{
+  "instanceId": "efb87f23-16ac-4dda-95ac-71f2195a7d0d",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Field values (RFC-039)",
+    "content": "`FieldValue` — the value stored at one `fieldValues` key — is the recursive union:\n\nExample: the `FieldValue` union.\n\nThere is no wrapper construct: the pre-RFC-039 `FieldValue`/`FieldValueEntry` pair\nobjects, `groupValues`, and `FieldGroup` carriers are removed (I-134)."
+  },
+  "createdAt": "2026-09-08T18:45:03.005148640+00:00",
+  "updatedAt": "2026-09-08T18:45:03.005158554+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

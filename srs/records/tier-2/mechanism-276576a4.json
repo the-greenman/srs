@@ -1,0 +1,14 @@
+{
+  "instanceId": "276576a4-0b84-4a66-bb33-f336b6979f98",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`Vocabulary`",
+    "content": "A named, versioned set of `Term` entries.\n\nSee the generated reference below for `Vocabulary`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list."
+  },
+  "createdAt": "2026-09-08T18:45:11.428791382+00:00",
+  "updatedAt": "2026-09-08T18:45:11.428798705+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

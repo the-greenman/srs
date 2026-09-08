@@ -1,0 +1,23 @@
+{
+  "instanceId": "aafd1995-1e3c-4012-a60a-82c80e0d5859",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Un-bake headings batch A: Field, Record tiers, Supporting types, Vocabulary and Term",
+    "summary": "Splits 19 baked headings across 4 subsections into 22 leaves (21 mechanism, 1 design-note) under their concepts (Field, Field type, Vocabulary, Semantic maturity tier, Note, Source reference, Field values, Record, Validation, AI guidance, Relation type definition), wired by contains/precedes/derived-from, following the #678 procedure. First of four batches (#684-#687) covering #562's remaining scope.",
+    "decision_mode": "complicated",
+    "door": "door-1",
+    "issue_ref": [
+      "srs#684",
+      "srs#562",
+      "srs#580"
+    ],
+    "body": "Dispatched from srs#580 gate:dispatched queue (comment 5586626874 on #684, re-dispatched at 5589788134 after a stale gate:working claim was reset at 17:59Z). Claimed 2026-09-08T18:20Z. Followed the same splitting method #678 established and #685 (batch B) reverse-engineered: split content on every heading line, one mechanism (or design-note, for genuinely historical/rationale content) leaf per heading titled verbatim from the heading text; a substantive pre-heading intro gets its own leaf titled after the record; contains from the concept, precedes chained in original order, derived-from back to the retiring subsection, whose content becomes a one-line residual pointer and which otherwise keeps its existing tree position/tags/sourceRefs untouched. Re-seeded spec-language-allowlist.json (--seed) since mechanism was already a normativeSites type from RFC-042 Change G. Hit the exact shallow-clone false-positive trap finding-07d153cf/unit-08a24109 already document on scripts/versioning-cell-allowlist.json: check-versioning-cell.mjs reported the value_range.json entry as stale on a shallow worktree checkout, and a shallow verification clone (git clone --depth 5) reproduced the same false negative instead of catching it. Caught it only after reading batch B's own unit-08a24109 harvest note, which named the same symptom as a known trap. git fetch --unshallow, restored the entry, re-ran the check (747 Field revisions, 1 known violation allowlisted, correct), pushed a correcting commit, and corrected the PR body. No new finding filed — same lesson finding-07d153cf already covers. Lesson for the next unit: read the existing unit/finding records in programme/ BEFORE running a git-history-dependent check, not after being burned by it — the trap was already on record when this unit started."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-08T19:45:57.366857187+00:00",
+  "updatedAt": "2026-09-08T19:46:18.324662771+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

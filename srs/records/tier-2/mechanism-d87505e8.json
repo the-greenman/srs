@@ -1,0 +1,14 @@
+{
+  "instanceId": "d87505e8-f071-47dd-bbaa-39645863cfeb",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`vocabularyRef` — binding closed string fields to shared vocabularies",
+    "content": "When `fieldType.valueDomain` is `\"closed\"`, a Field declares exactly one value source:\n\nExample: the two value sources a closed string Field may declare.\n\n`allowedValues` is formally sugar for an anonymous inline closed vocabulary: the value set is fixed by the Field definition, so changing it means a new Field version. `vocabularyRef` is a **configurable** data range — the value set is managed as package configuration and evolves without reversioning the Field — and is used when the set is shared, extensible, or needs Term identity. A `vocabularyRef` MUST resolve to a `Vocabulary` with `mode: closed`. Declaring both, or neither when `valueDomain` is `\"closed\"`, is a validation error."
+  },
+  "createdAt": "2026-09-08T18:44:55.904706599+00:00",
+  "updatedAt": "2026-09-08T18:44:55.904715823+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
