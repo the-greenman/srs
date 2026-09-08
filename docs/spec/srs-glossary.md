@@ -58,6 +58,13 @@
 
 ### Conformance
 
+**Definition**: What an implementation must satisfy to claim SRS conformance, core and per-extension, and how that claim is declared and checked.
+
+**Key**: part:conformance
+
+
+### Conformance
+
 **Definition**: What an implementation claims and what that claim obliges it to do, declared as the core plus the extensions it supports. Core conformance requires the Foundation and Distribution groups in full and enforcement of the core invariants; declaring an extension obliges accepting and validating its types, enforcing its invariants, and honouring its declared dependencies. The claim is what makes exchange predictable: two implementations at the same level produce definitions the other can consume.
 
 **Notes**: Partial support is not conformance — an implementation that can produce archives but not consume them must say so explicitly. Receiving content from an unsupported extension calls for surfacing and preserving it, never silently discarding it.
@@ -92,6 +99,13 @@
 **Key**: record:concepts/discovery
 
 
+### Distribution
+
+**Definition**: How definitions travel between repositories: Package, Reference, Lineage, and Provenance.
+
+**Key**: part:distribution
+
+
 ### Extension
 
 **Definition**: An independently adoptable capability module, identified by an `ext:` name, declaring what it adds, what it depends on, and which invariants it owns. Extensions are how the specification grows without forcing every implementation to grow with it: no extension is required for core conformance, and an implementation adopts only what it needs. An implementation that does not declare one must ignore its properties instead of erroring on them, so data using an extension still loads where the extension is unknown.
@@ -99,6 +113,13 @@
 **Notes**: Some extensions declare hard dependencies on others. A pair may also be formally independent yet functionally co-dependent for a given use, and cross-extension behavioural requirements apply only where both are declared.
 
 **Key**: record:concepts/extension
+
+
+### Extensions
+
+**Definition**: The independently adoptable capability modules a repository may declare, and how they interact with each other and with the core.
+
+**Key**: part:extensions
 
 
 ### Field
@@ -146,6 +167,20 @@
 **Key**: record:concepts/foundational-tension
 
 
+### Foundations
+
+**Definition**: The core entity model a repository is built from: Field, Type, Vocabulary and Term, record tiers, Relation, and Container. Every later Part presupposes these.
+
+**Key**: part:foundations
+
+
+### Governance
+
+**Definition**: The specification's own governing rules: its foundational values, its process for continuity and evolution, and the balance between shared coherence and local autonomy.
+
+**Key**: part:governance
+
+
 ### Graduation
 
 **Definition**: Replacing a lower-tier instance with a higher-tier equivalent once its structure has stabilised, without destroying what came before. The original Note is preserved as the semantic root of whatever it produced, and each resulting Record links back to it. Graduation is not one-to-one: a single meeting Note may become one decision Record, three task Records and two risk Records, each with its own instance id and its own link back.
@@ -162,6 +197,13 @@
 **Notes**: The self-declared `instanceId` inside the file is the identity. It is not derived from the filename or the path, and there is no manifest index to cross-check it against.
 
 **Key**: record:concepts/instance
+
+
+### Instances
+
+**Definition**: The instance layer: Notes and Records as the two record tiers, and how a Record instantiates a Type through typed field values.
+
+**Key**: part:instances
 
 
 ### Invariant
@@ -218,6 +260,13 @@
 **Key**: record:concepts/package
 
 
+### Presentation
+
+**Definition**: How stored state becomes a document a person reads: projections, Views, and the Composition pipeline.
+
+**Key**: part:presentation
+
+
 ### Projection
 
 **Definition**: The principle that rendered output is derived from records and never the source of truth for them. Records hold the meaning; a document, a table, an export, a JSON serialisation are all views onto that meaning, produced on demand and discardable. A projection must keep a clear line back to canonical meaning and must never quietly become a second semantic source, which is what happens when someone edits the rendered artifact instead of the records.
@@ -234,6 +283,13 @@
 **Notes**: A Protocol is a package definition, not an instance. It is an epistemic concern, deliberately separated from presentation: the logic that guides a session was removed from views and lives here.
 
 **Key**: record:concepts/protocol
+
+
+### Reading this specification
+
+**Definition**: The nine Parts read front to back: notation, RFC 2119 keywords, and the reading order the rest of the document assumes.
+
+**Key**: part:reading-this-specification
 
 
 ### Record
@@ -328,6 +384,13 @@
 **Examples**: `repositoryId` survives export and copy; an importer that mints a new repository for every archive it receives, instead of keying on `repositoryId`, is non-conformant (Invariant 53).
 
 **Key**: record:concepts/stable-identity
+
+
+### Structure
+
+**Definition**: How instances connect and order themselves: the Relation model, the contains tree, and the precedes chain that gives a repository its semantic sequence.
+
+**Key**: part:structure
 
 
 ### Theme

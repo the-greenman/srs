@@ -1,0 +1,15 @@
+{
+  "instanceId": "159ae3c2-e323-40f5-87f9-44bd433aa07c",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "part:extensions",
+    "title": "Extensions",
+    "description": "The independently adoptable capability modules a repository may declare, and how they interact with each other and with the core."
+  },
+  "createdAt": "2026-09-08T12:13:52.556370396+00:00",
+  "updatedAt": "2026-09-08T12:13:52.556373410+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

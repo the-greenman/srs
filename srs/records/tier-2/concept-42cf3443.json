@@ -1,0 +1,15 @@
+{
+  "instanceId": "42cf3443-12ac-49f2-950e-443950ae921f",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "part:conformance",
+    "title": "Conformance",
+    "description": "What an implementation must satisfy to claim SRS conformance, core and per-extension, and how that claim is declared and checked."
+  },
+  "createdAt": "2026-09-08T12:13:52.638352536+00:00",
+  "updatedAt": "2026-09-08T12:13:52.638356806+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
