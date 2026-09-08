@@ -1,0 +1,23 @@
+{
+  "instanceId": "fcb52669-70cc-4524-915c-c06ac330d497",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Skip the C4 unresolved-tag diagnostic entirely for open-mode vocabularies",
+    "summary": "srs-usage.md states an open-mode vocabulary accepts any tag key, but validate_repository's C4 tag-resolution check downgraded an unresolved tag to a Warning instead of skipping it. Fixed the check in srs-repository/src/validation.rs to skip the diagnostic entirely when any vocabulary in the package is open; closed-mode vocabularies keep the Error unchanged. Flipped the existing open_vocab_unresolved_tag_produces_warning unit test to assert no diagnostic. Proved red-then-green over the srs spec corpus: 65 unresolved-tag warnings before the fix, 0 after, 0 errors either way.",
+    "decision_mode": "clear",
+    "door": "door-1",
+    "issue_ref": [
+      "srs-rust#702",
+      "srs-rust#986",
+      "srs#580"
+    ],
+    "body": "Dispatched from the srs-rust gate:pool queue via srs#580. Owner ruling on srs-rust#702 (comment 5571808444, pooled at 5584388207): engine bug, not data — skip the warning entirely rather than downgrade. Mode clear, Cell Conformance, Door 1, gate:auto-merge. PR srs-rust#986 opened against master with auto-merge armed; both cargo gates (build, test --workspace, clippy -D warnings) green by exit code, SRS_SPEC_DIR pointed at a fresh origin/master clone of srs for the parity tests."
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-08T13:10:31.997231923+00:00",
+  "updatedAt": "2026-09-08T13:10:38.989865529+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
