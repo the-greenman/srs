@@ -1,0 +1,23 @@
+{
+  "instanceId": "f7a14814-738d-47d1-85af-3370be2cb410",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Un-bake headings batch B: ext:lifecycle, ext:views-l1, ext:views-l2, ext:themes-l1",
+    "summary": "Splits 42 baked headings across 4 subsections into 45 mechanism leaves under their concepts (Lifecycle, View x2, Theme), wired by contains/precedes/derived-from, following the #678 procedure. Second of four batches (#684-#687) covering #562s remaining scope.",
+    "decision_mode": "complicated",
+    "door": "door-1",
+    "issue_ref": [
+      "srs#685",
+      "srs#562",
+      "srs#580"
+    ],
+    "body": "Dispatched from srs#580 gate:dispatched queue (dispatch comment 2026-09-08 ~17:20Z on #685, citing the same classification as batch A/#684). Claimed 2026-09-08T17:38Z. Reverse-engineered the exact splitting algorithm from the already-merged #678 diff (its own New leaves table wording is imprecise - it lists the retiring stub itself alongside genuinely new leaves, which reads as if a duplicate-titled leaf were created when in most cases none was): split content on EVERY heading line of any level 1-6 (flattened to siblings, not nested by heading level), one new `mechanism` leaf per heading titled verbatim from the heading text; a substantive pre-heading intro (more than bare **Required for**/**Depends on** metadata tags) gets its own leaf titled after the record; contains from the concept, precedes chained in original order, derived-from back to the retiring subsection, whose content becomes a one-line residual pointer and which otherwise keeps its existing tree position/tags/sourceRefs/children untouched. Re-seeded spec-language-allowlist.json (--seed) since mechanism was already a normativeSites type from #678s RFC-042 Change G - net shrink (596->498) despite 45 new sites, because the old subsections one-line residual content dropped many more stale violations than the new leaves added. Hit a false-positive stale entry on scripts/versioning-cell-allowlist.json from a shallow checkout (git rev-parse --is-shallow-repository -> true) - the same trap finding-07d153cf/unit-08a24109 already documents; git fetch --unshallow before trusting the result, no fix needed once unshallowed, no new finding filed (same lesson, not a second instance)."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-08T18:25:19.477654039+00:00",
+  "updatedAt": "2026-09-08T18:25:32.401068803+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

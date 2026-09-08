@@ -1,0 +1,14 @@
+{
+  "instanceId": "59147095-e8ab-44f2-a19f-3b1b47736b6c",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`AssetDeclaration`",
+    "content": "A named asset (image, font, stylesheet, or data file) referenced in templates via `{{asset:name}}`.\n\nExample: the `AssetDeclaration` shape.\n\nAssets are declared in `Theme.assets` as a named dictionary. Asset names MUST be unique within the Theme."
+  },
+  "createdAt": "2026-09-08T17:49:00.166758872+00:00",
+  "updatedAt": "2026-09-08T17:49:00.166765307+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

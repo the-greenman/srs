@@ -1,0 +1,14 @@
+{
+  "instanceId": "d31dc4ad-438b-4eaa-aa4b-cb3aba2df4ab",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "The `table` renderer",
+    "content": "Roles, with their owning Type and required `fieldType`:\n\n| Role | Owner | Required | `fieldType` |\n|---|---|---|---|\n| `rows` | table Type | yes | `{ datatype: \"ref\", mode: \"inline\", cardinality: \"list\", rangeType: <row Type> }` |\n| `cells` | row Type | yes | `{ datatype: \"string\", cardinality: \"list\" }` |\n| `columns` | table Type | no | `{ datatype: \"string\", cardinality: \"list\" }` |\n| `widths` | table Type | no | `{ datatype: \"number\", cardinality: \"list\", constraints: { minimum: 0, maximum: 1 } }` |\n| `subheading` | table Type | no | `{ datatype: \"string\", cardinality: \"single\" }` |\n| `label` | table Type | no | `{ datatype: \"string\", cardinality: \"single\" }` |\n\nThe composite field's own `cardinality` governs how many tables it carries: `single` is one, `list` is a\nsequence. This replaces the `FieldGroup` + `compositeRenderer` mechanism of RFC-007, which is retired with\n`FieldGroup` at the #242 cutover."
+  },
+  "createdAt": "2026-09-08T17:48:44.020993661+00:00",
+  "updatedAt": "2026-09-08T17:48:44.021001080+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

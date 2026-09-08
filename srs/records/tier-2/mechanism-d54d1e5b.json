@@ -1,0 +1,14 @@
+{
+  "instanceId": "d54d1e5b-d92f-42b1-ba3b-ec2da1b1f518",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`Composition`",
+    "content": "A versioned, Container-level projection. Defines how a Container's Records are assembled into a readable document.\n\nExample: the `Composition` shape.\n\nA `Composition` may reference one or more `View` records (via `DocumentSection.renderViewId`). A single field-centric View may render mixed Record Types when the Records contain the required fields. The Composition orchestrates; it does not replace L1 Views.\n\n`DocumentSection.renderViewId` references a `View.id` (from `ext:views-l1`). A `Composition.id` is not a valid value for `renderViewId` — Compositions are not nestable.\n\nUse `navigationLinks` when a rendered document should include \"see also\" or related-section links. Use `Relation` only when the relationship is a semantic assertion about Records."
+  },
+  "createdAt": "2026-09-08T17:48:50.563647088+00:00",
+  "updatedAt": "2026-09-08T17:48:50.563652765+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

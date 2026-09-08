@@ -1,0 +1,14 @@
+{
+  "instanceId": "2c2173d1-c588-4a09-b60e-38519c6fedc0",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "ext:themes-l1",
+    "content": "Visual presentation layer for `Composition`. Attaches brand identity, typography, stylesheets, cover pages, and element wrapping to a rendered document without altering its semantic structure. Depends on `ext:views-l2`. Implementations that do not declare this extension MUST ignore `Composition.themeRef` and `Composition.themeVariants` and MUST NOT error on their presence."
+  },
+  "createdAt": "2026-09-08T17:48:59.991136738+00:00",
+  "updatedAt": "2026-09-08T17:48:59.991142657+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

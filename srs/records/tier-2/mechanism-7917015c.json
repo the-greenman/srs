@@ -1,0 +1,14 @@
+{
+  "instanceId": "7917015c-221c-4194-8961-a87fee3cf1c5",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Template Variable Reference",
+    "content": "Variables not applicable to a given template context MUST resolve to an empty string.\n\n| Variable | Available in | Resolves to |\n|---|---|---|\n| `{{container-title}}` | All | Container title from manifest |\n| `{{container-id}}` | All | Container UUID |\n| `{{date}}` | All | Render date (ISO 8601 date) |\n| `{{heading-1}}` | `coverPage` only | Heading prefix at level `1 + depthOffset`. MUST resolve to empty string in all element wrapper templates. |\n| `{{asset:name}}` | All | Resolved asset reference (URL, data URI, or path) |\n| `{{section-title}}` | `sectionWrapper`, `sectionWrapperOverrides` | Value of `DocumentSection.title` |\n| `{{section-id}}` | `sectionWrapper`, `sectionWrapperOverrides` | Value of `DocumentSection.sectionId` |\n| `{{record-heading}}` | `recordWrapper`, `recordWrapperOverrides` | `titleFieldId` field value, or empty string |\n| `{{type-namespace}}` | `recordWrapper`, `recordWrapperOverrides` | `Record.typeNamespace` |\n| `{{type-name}}` | `recordWrapper`, `recordWrapperOverrides` | `Record.typeName` |\n| `{{field-label}}` | `fieldRow` | Display label for the field |\n| `{{field-value}}` | `fieldRow` | Rendered value of the field |\n| `{{field-name}}` | `fieldRow` | `Field.name` |\n| `{{content}}` | All element templates | Auto-rendered content this template wraps |\n| `{{page-number}}` | `pageHeader`, `pageFooter` | Current page number (paginated formats only) |"
+  },
+  "createdAt": "2026-09-08T17:49:01.305664192+00:00",
+  "updatedAt": "2026-09-08T17:49:01.305670475+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

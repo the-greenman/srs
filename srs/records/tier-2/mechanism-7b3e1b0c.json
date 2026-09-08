@@ -1,0 +1,14 @@
+{
+  "instanceId": "7b3e1b0c-645a-453c-a7f0-f5d5d2d83d4d",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`TypographyHints`",
+    "content": "Informative declarations. No normative rendering behaviour is derived from these values.\n\nExample: the `TypographyHints` shape."
+  },
+  "createdAt": "2026-09-08T17:49:00.805081969+00:00",
+  "updatedAt": "2026-09-08T17:49:00.805087810+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

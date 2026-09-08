@@ -1,0 +1,14 @@
+{
+  "instanceId": "71458b11-1533-455d-974c-352340157bc1",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "ext:lifecycle",
+    "content": "**Required for**: governance tools, decision logs, any implementation where records progress through defined states.\n\n`ext:lifecycle` is fully integrated with the vocabulary substrate (RFC-006). `Lifecycle` is an installable, referenceable container — a `VocabularyEntry` specialisation whose container holds states and transitions. `LifecycleState` satisfies the `VocabularyEntry` substrate contract with `key` (was `name`) as its key-role field."
+  },
+  "createdAt": "2026-09-08T17:48:34.526378989+00:00",
+  "updatedAt": "2026-09-08T17:48:34.526386062+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

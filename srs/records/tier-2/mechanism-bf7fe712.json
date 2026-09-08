@@ -1,0 +1,14 @@
+{
+  "instanceId": "bf7fe712-879c-4375-bf6a-1f394b597c58",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Preamble Template Variables",
+    "content": "Standard variables in `Composition.exportConfig.preamble`:\n\n| Variable | Resolves to |\n|---|---|\n| `{{container-title}}` | Container title from manifest |\n| `{{container-id}}` | Container UUID |\n| `{{date}}` | Render date |\n| `{{heading-1}}` | Heading prefix at level `1 + depthOffset` (empty string in json mode) |\n| `{{heading-2}}` | Heading prefix at level `2 + depthOffset` (empty string in json mode) |\n\nIn json mode all `{{heading-N}}` variables MUST resolve to `\"\"`. Implementations MUST NOT emit the literal token."
+  },
+  "createdAt": "2026-09-08T17:48:51.477184507+00:00",
+  "updatedAt": "2026-09-08T17:48:51.477189815+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

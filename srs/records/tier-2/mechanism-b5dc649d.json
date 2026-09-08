@@ -1,0 +1,14 @@
+{
+  "instanceId": "b5dc649d-adf6-4e55-b8d0-c85f975fb7e7",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`ExportConfig`",
+    "content": "Configuration for rendering a Record through this View as an exportable document. One shared shape, attached at two points (srs#525): here on `View`, and on `Composition` (`ext:views-l2`) for document-level rendering. Neither attachment overrides the other — each governs its own render context. See `ext:views-l2`'s *L1/L2 ExportConfig* note for how the two coexist when a Composition section dispatches to a View.\n\nExample: the `ExportConfig` shape."
+  },
+  "createdAt": "2026-09-08T17:48:43.361769355+00:00",
+  "updatedAt": "2026-09-08T17:48:43.361776022+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

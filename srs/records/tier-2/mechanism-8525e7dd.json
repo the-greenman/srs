@@ -1,0 +1,14 @@
+{
+  "instanceId": "8525e7dd-c208-4829-a3fd-4841925d8c67",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`CompositeRendererDirective` (RFC-036)",
+    "content": "A `CompositeRendererBinding` (`ext:views-l1`) plus the composite-range Field it binds. Presentation only ([CR-036-20]).\n\nExample: the `CompositeRendererDirective` shape."
+  },
+  "createdAt": "2026-09-08T17:48:49.818238551+00:00",
+  "updatedAt": "2026-09-08T17:48:49.818245739+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

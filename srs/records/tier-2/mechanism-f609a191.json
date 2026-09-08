@@ -1,0 +1,14 @@
+{
+  "instanceId": "f609a191-d87b-418e-9e48-f2730f454457",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`LifecycleState` (VocabularyEntry specialisation)",
+    "content": "Example: the `LifecycleState` shape."
+  },
+  "createdAt": "2026-09-08T17:48:35.547898550+00:00",
+  "updatedAt": "2026-09-08T17:48:35.547905986+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,14 @@
+{
+  "instanceId": "c388f8ab-41e4-4669-851c-1c0eb4b6f0b4",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Validation invariants (V7–V9)",
+    "content": "**V7 — Lifecycle exclusivity.** A Type declares exactly one of `lifecycle` or `lifecycleRef`.\n\n**V8 — Lifecycle reference resolution.** A `lifecycleRef` must resolve to an installed `Lifecycle` in the effective package set.\n\n**V9 — Lifecycle integrity.** Over the effective state set (V5):\n- Exactly one state MUST have `isInitial: true`; `initialState` MUST reference that state's `key`.\n- The initial state MUST have effective `status: active`. A lifecycle whose initial state is deprecated, tombstone, or retired is invalid.\n- Every `transition.from`/`transition.to` must reference a state `key` in the effective state set.\n- A state with `isFinal: true` MUST NOT appear as the `from` of any transition.\n- Transition `id`s must be unique within the effective transition set.\n- `Record.lifecycleState` resolves under V1."
+  },
+  "createdAt": "2026-09-08T17:48:37.563435681+00:00",
+  "updatedAt": "2026-09-08T17:48:37.563441610+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
