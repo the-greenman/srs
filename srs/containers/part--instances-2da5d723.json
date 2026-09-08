@@ -1,0 +1,11 @@
+{
+  "containerId": "2da5d723-f09f-4acf-9b86-a99745193ee5",
+  "title": "Part: Instances",
+  "anchorInstanceId": "7ce5fcea-0693-4d47-8b63-489c9967a8fa",
+  "rootInstanceIds": [
+    "7ce5fcea-0693-4d47-8b63-489c9967a8fa"
+  ],
+  "memberInstanceIds": [
+    "d7486e5f-27b9-44ba-91cb-5198e233bb73"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "instanceId": "1f57e484-f870-4704-814d-f3f0614c3641",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "part:foundations",
+    "title": "Foundations",
+    "description": "The core entity model a repository is built from: Field, Type, Vocabulary and Term, record tiers, Relation, and Container. Every later Part presupposes these."
+  },
+  "createdAt": "2026-09-08T12:13:52.145537774+00:00",
+  "updatedAt": "2026-09-08T12:13:52.145546668+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

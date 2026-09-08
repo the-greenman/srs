@@ -1,0 +1,15 @@
+{
+  "instanceId": "1ba1845b-1c54-468c-8da9-0b227ae0931f",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "part:structure",
+    "title": "Structure",
+    "description": "How instances connect and order themselves: the Relation model, the contains tree, and the precedes chain that gives a repository its semantic sequence."
+  },
+  "createdAt": "2026-09-08T12:13:52.317006138+00:00",
+  "updatedAt": "2026-09-08T12:13:52.317009839+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
