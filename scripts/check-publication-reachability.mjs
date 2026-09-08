@@ -413,7 +413,22 @@ async function reachability(repoRoot) {
   }
 
   // Descent: `contains`, and only from roots whose surface actually descends. See the header note.
+  //
+  // `surfaceOf` (is this id published, and by what) and `expanded` (have this id's OWN `contains`
+  // children been walked) are deliberately two different facts, not one. A concept can be reachable
+  // via a non-descending surface (e.g. the glossary's flat `discovery-query` over every `concept`,
+  // alphabetical, no `titleFieldId`) while ALSO being the non-root ancestor of leaves that are only
+  // reachable by descending into it from a DIFFERENT, descending surface (a Part's container-subset
+  // section, RFC-042 Change G). Gating expansion on `surfaceOf.has(target)` — as a single-fact model
+  // does — stops descending the moment the glossary (or any other non-descending surface) has
+  // already put a concept in `surfaceOf`, silently dropping every leaf beneath it. Concretely: the
+  // first cut of this container-subset descent reported 15 mechanism leaves unreachable that turned
+  // out to sit exactly one `contains` edge below a concept the glossary had already marked reachable
+  // — expansion never resumed there. Tracking `expanded` separately means a node's own children are
+  // always walked once some root can reach it with `descends: true`, regardless of what else already
+  // published the node itself.
   const surfaceOf = new Map();
+  const expanded = new Set();
   const stack = [];
   for (const r of roots) {
     if (!surfaceOf.has(r.id)) surfaceOf.set(r.id, r.surface);
@@ -421,12 +436,15 @@ async function reachability(repoRoot) {
   }
   while (stack.length) {
     const id = stack.pop();
+    if (expanded.has(id)) continue;
+    expanded.add(id);
     for (const target of contains.get(id) ?? []) {
-      if (surfaceOf.has(target)) continue;
       // The renderer's descent resolves each child through a Tier-2 lookup, so a `contains` edge to
       // a Note publishes nothing — it makes the whole view fail to render ("missing field
       // 'typeId'"). Treating every target as published would report the corpus green at the moment
-      // every document stopped being produced.
+      // every document stopped being produced. Checked on every descent into this edge, not only the
+      // first time `target` is seen, because the hazard is the edge being walked at all, independent
+      // of whether `target` is separately reachable some other way.
       const targetPath = pathOf.get(target);
       if (targetPath !== undefined && !tier2.has(target)) {
         fail(
@@ -436,8 +454,8 @@ async function reachability(repoRoot) {
         );
         continue;
       }
-      surfaceOf.set(target, `contains from ${surfaceOf.get(id)}`);
-      stack.push(target);
+      if (!surfaceOf.has(target)) surfaceOf.set(target, `contains from ${surfaceOf.get(id)}`);
+      if (!expanded.has(target)) stack.push(target);
     }
   }
 
