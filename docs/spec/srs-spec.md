@@ -236,29 +236,7 @@ When in doubt: if a downstream consumer's AI extraction, validation, or governan
 
 #### Supporting types
 
-**Content**: #### `ValidationRule`
-
-A constraint applied to a field value.
-
-Example: the `ValidationRule` shape.
-
-#### `AiGuidanceExample`
-
-A single example for AI guidance.
-
-Example: the `AiGuidanceExample` shape.
-
-`output` is required. An example without `input` demonstrates expected output form without requiring a specific source.
-
-#### `AiGuidance`
-
-Structured AI guidance for a Field or Type.
-
-Example: the `AiGuidance` shape.
-
-The minimum valid `AiGuidance` is `{ purpose: "..." }`.
-
----
+**Content**: Content relocated to mechanism/design-note leaves under the Validation and AI guidance concept(s) (RFC-042 Change B, srs#562). See derived-from.
 
 ##### The `ValidationRule` shape
 
@@ -303,60 +281,7 @@ The minimum valid `AiGuidance` is `{ purpose: "..." }`.
 
 #### Field
 
-**Content**: The atomic reusable semantic unit. Fields are defined once and composed into Types. A Field's `aiGuidance` and `fieldType` — including every constraint the latter carries — belong to the Field, not to any Type that includes it.
-
-See the generated reference immediately below for `Field`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger) — this prose no longer hand-duplicates the property list.
-
-#### `FieldType` — the value semantics
-
-`fieldType` carries everything about what a Field's value *is*. It decomposes value semantics into orthogonal facets — **datatype × cardinality × value-domain × format × constraints** — so each axis varies independently, and adds three composite datatypes (`ref`, `dependent`, `map`) that let a Field's range be another Type.
-
-Example: the `FieldType` shape.
-
-**`datatype` semantics:**
-
-| Value | Meaning |
-|---|---|
-| `"string"` | Text of any length. Length, pattern, format, and value domain are separate facets, not distinct datatypes |
-| `"number"` | Numeric value, fractional permitted |
-| `"integer"` | Whole number |
-| `"boolean"` | True/false |
-| `"date"` | ISO 8601 calendar date |
-| `"date-time"` | ISO 8601 date + time |
-| `"ref"` | The range is another Type — nested object(s) when `mode` is `"inline"`, target instance id(s) when `"reference"` |
-| `"dependent"` | The value conforms to the type descriptor named by `dependsOn` |
-| `"map"` | Open string-keyed collection whose values conform to `valueRange` |
-
-Cardinality is declared **only** here. A Field holding many values is `cardinality: "list"`; a Type that includes it must not restate or override that — Field semantics belong to the Field (Invariant 2).
-
-A `reference`-mode value is a target instance id, and MUST NOT be interpreted as or require a `Relation`. Use `reference` for definitional composition, where the target's identity is part of the definition; model an assertion *between* instances — one needing provenance, lifecycle, or confidence — as a `Relation` instead.
-
-#### `vocabularyRef` — binding closed string fields to shared vocabularies
-
-When `fieldType.valueDomain` is `"closed"`, a Field declares exactly one value source:
-
-Example: the two value sources a closed string Field may declare.
-
-`allowedValues` is formally sugar for an anonymous inline closed vocabulary: the value set is fixed by the Field definition, so changing it means a new Field version. `vocabularyRef` is a **configurable** data range — the value set is managed as package configuration and evolves without reversioning the Field — and is used when the set is shared, extensible, or needs Term identity. A `vocabularyRef` MUST resolve to a `Vocabulary` with `mode: closed`. Declaring both, or neither when `valueDomain` is `"closed"`, is a validation error.
-
-#### Historical: the pre-RFC-032 `valueType` model
-
-Before RFC-032, value semantics were a single closed enum, `valueType`, with the satellite properties `allowedValues`, `contentFormat`, `validationRules`, and a standalone `repeatable` cardinality. That enum conflated four axes at once, which is why every axis needing independent expression had to be bolted on separately. It is **removed**, not deprecated — a Field definition carrying `valueType` does not conform to this specification. Packages authored against the old model map across as:
-
-| Legacy `valueType` | Equivalent `fieldType` |
-|---|---|
-| `"string"` | `{ datatype: "string" }` (plus `format: "markdown"` if `contentFormat` was `"markdown"`) |
-| `"text"` | `{ datatype: "string", format: "plain" \| "markdown" }` |
-| `"number"` | `{ datatype: "number" }` |
-| `"boolean"` | `{ datatype: "boolean" }` |
-| `"date"` | `{ datatype: "date" }` |
-| `"url"` | `{ datatype: "string", format: "uri" }` |
-| `"select"` | `{ datatype: "string", valueDomain: "closed" }` + `allowedValues` or `vocabularyRef` |
-| `"multiselect"` | `{ datatype: "string", cardinality: "list", valueDomain: "closed" }` + `allowedValues` or `vocabularyRef` |
-
-`validationRules` entries become `fieldType.constraints` facets; an `enum` rule becomes `valueDomain: "closed"` with `allowedValues`. A `required` rule was never a Field-level concern and moves to the `FieldAssignment` that includes the Field.
-
----
+**Content**: Content relocated to mechanism/design-note leaves under the Field, Field type, and Vocabulary concept(s) (RFC-042 Change B, srs#562). See derived-from.
 
 ##### The `FieldType` shape
 
@@ -558,63 +483,7 @@ field-assignment {
 
 #### Record tiers
 
-**Content**: SRS supports two semantic maturity tiers. Tier numbering keeps the historical gap at 1: Tier 1 (`Typed Record`) was removed as an unexercised construct — zero instances in any corpus, ever — under the dormancy rule (rfc-decision-53635966); renumbering the surviving tiers would be churn without meaning. Implementations are not required to support both; they may begin at Tier 2.
-
-| Tier | Type | Structure | Semantics |
-|---|---|---|---|
-| **0** | `Note` | Named sections + free text | None |
-| **2** | `Record` | Fields bound to a `Type` definition | Full |
-
-Graduation path: Note → Record, linked by a `derived-from` Relation from the Record back to the Note (`note graduate`).
-
-#### `NoteSection`
-
-A named text section within a Note.
-
-See the generated reference below for `NoteSection`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-#### `Note`
-
-A lightweight instance with no Type binding.
-
-See the generated reference below for `Note`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-`tags` are free-form labels that allow Notes to be grouped and discovered by topic. A tag is a key that *may* resolve to a `Term` in an open `Vocabulary`, giving it a label, aliases, roles, and lineage — without changing the fact that the instance stores only the string (V2). Undefined tags in an open vocabulary are valid and unenriched. Use tags for navigation and filtering; use Relations for semantic claims.
-
-#### `SourceReference`
-
-A pointer from a field value or instance back to source material.
-
-See the generated reference below for `SourceReference`'s current property table (modelled once and shared across `Record`, `Note`, and `Relation`), optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-`"transcript-chunk"` and `"transcript-segment"` are intended for implementations that have a stable conversation or time-stream layer with durable chunk or segment identifiers. A standalone repository that stores transcript exports, chat dumps, email threads, or similar source material directly under `source-documents/` should generally cite those files using `sourceType: "repository-document"` (see `ext:repository`) rather than inventing pseudo-chunk IDs.
-
-#### Field values (RFC-039)
-
-`FieldValue` — the value stored at one `fieldValues` key — is the recursive union:
-
-Example: the `FieldValue` union.
-
-There is no wrapper construct: the pre-RFC-039 `FieldValue`/`FieldValueEntry` pair
-objects, `groupValues`, and `FieldGroup` carriers are removed (I-134).
-
-
-#### `Record`
-
-An instantiated Type with field values.
-
-See the generated reference below for `Record`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-`typeNamespace` and `typeName` are denormalised convenience fields. If they conflict with the resolved Type, the `typeId`/`typeVersion` identity takes precedence and the Record is considered invalid until corrected.
-
-**On instance revision:**
-- **In-place edits** (`updatedAt` advances, `fieldValues` mutate): for minor corrections that do not alter semantic meaning.
-- **Semantic updates**: produce a new Record linked to the prior by a `supersedes` or `refines` Relation. The prior Record remains valid.
-- **Immutable records + Relation graph**: all Records append-only; a new Record for every change. A valid implementation strategy that naturally preserves history.
-
-**Semantic meaning must not be silently rewritten.** When a change would alter what a Record means — not merely correct a transcription or formatting error — implementations must produce a successor Record linked to the prior by `supersedes` or `refines`. The prior Record remains valid. What constitutes a semantic change is determined by the Type's intended use; when in doubt, prefer a successor.
-
----
+**Content**: Content relocated to mechanism/design-note leaves under the Semantic maturity tier, Note, Source reference, Field values, and Record concept(s) (RFC-042 Change B, srs#562). See derived-from.
 
 **Intro**: Graduation is the act of replacing a lower-tier instance with a higher-tier equivalent as its structure stabilises.
 
@@ -951,101 +820,7 @@ container {
 
 #### Vocabulary and Term
 
-**Content**: SRS defines four controlled vocabularies — sets of strings that appear in instance data and must mean something stable. They share a common substrate: a `VocabularyEntry` contract satisfied by `Term`, `LifecycleState`, and `RelationTypeDefinition`.
-
-### `VocabularyEntry` (substrate contract)
-
-`VocabularyEntry` is a contract, not a serialised type. Every conforming entry carries:
-
-Example: the `VocabularyEntry` substrate contract.
-
-**Absent `status` MUST be treated as `active`.** This is normative: all resolution rules (V1, V6, V9, V10) treat absent identically to `"active"`.
-
-**Entries are keyed, not named.** Entries carry `key`, not `name`, and are addressed within their container. They are not independently `Reference`-able. Containers (`Vocabulary`, `Lifecycle`) have `name` and are the `Reference` targets.
-
-**Required-field tightening.** `label` and `description` are optional so an emergent `Term` is valid before prose is written. A specialisation MAY tighten an optional substrate field to required; it MUST NOT relax a required one. `RelationTypeDefinition` requires both `label` and `description` (unchanged from RFC-005).
-
-**One forward-compatibility policy.** Unknown top-level fields are rejected; arbitrary entry metadata goes in `meta`.
-
-### `Vocabulary`
-
-A named, versioned set of `Term` entries.
-
-See the generated reference below for `Vocabulary`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-### `Term`
-
-The generalisation of `TagDefinition`. A defined option within a `Vocabulary`.
-
-See the generated reference below for `Term`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-### `RelationTypeDefinition`
-
-A substrate specialisation that gives semantic meaning and validation rules to a class of relations. `key` is the string stored in `Relation.relationType`; this unifies the key-role field across all three substrate specialisations (RFC-006). `label` and `description` are tightened to required.
-
-See the generated reference below for `RelationTypeDefinition`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#541, the #274 ratified ledger extended to this entity) — this prose no longer hand-duplicates the property list.
-
-Relation type definitions live in `package.relationTypes[]` (distributable bundle) or `package/relation-types/` (repository layout). They are resolved repo-globally — all installed relation type definitions form a single flat namespace. Key uniqueness (V5) applies across this flat set.
-
-### The four vocabularies
-
-| Vocabulary | Binding scope | Container | Mode |
-|---|---|---|---|
-| Tags | ambient (whole repo) | `Vocabulary` (typically local, open) | `open` |
-| Relation types | repo-global (any edge) | `package.relationTypes[]` (flat global set) | closed-extensible |
-| Lifecycle states | type-bound, shareable | `Lifecycle` (inline or referenced) | `closed` |
-| Field values | field-bound | `Vocabulary` via `vocabularyRef` or inline `allowedValues` | `closed` (V3) |
-
-### Package integration
-
-Vocabularies are Foundation-group definition types installed in packages alongside fields, types, and relationTypes:
-- the distributable `Package` holds inline definitions: `vocabularies?: Vocabulary[]`
-- the repository `package/package.json` holds relative paths: `"vocabularies": ["vocabularies/foo.json", ...]`
-
-### Emergent vocabularies (open vocabularies)
-
-For an open vocabulary, the authoritative set of values is `DISTINCT(tag keys across instances)` — not the `terms[]`. The `Vocabulary` is a curation overlay that may lag usage or be empty.
-
-A conforming implementation MUST be able to compute the live tag set and classify each key as: **used-and-defined**, **used-but-undefined**, or **defined-but-unused**.
-
-**Emergence lifecycle** (mirrors tier graduation):
-1. Free string — exists, undefined, valid.
-2. Curate → `Term` — non-destructive; instance carries the same string.
-3. Alias-merge — a surviving Term absorbs another: absorbed key+aliases move to the survivor, absorbed entry removed (its `id` recorded in `meta.mergedFrom` and redirected); zero instance rewrites.
-4. Optional normalize — opt-in operation that rewrites instance strings to the canonical key.
-5. Optional close — promote `mode: open → closed` (V10).
-
-### Resolution invariants
-
-**V1 — Closed-vocabulary resolution.** Any value in a closed vocabulary must resolve to exactly one entry (matched by `key` or `alias`) in the effective entry set with `status` in {`active`, `deprecated`, `tombstone`} for reads and `active` for new writes.
-
-Applies to: `Relation.relationType`, `select`/`multiselect` field values, `Record.lifecycleState`.
-
-**V2 — Open-vocabulary resolution.** A value in an open vocabulary need not resolve; if it matches a `Term`, enrichment applies. When a value matches more than one entry (a warned V5 collision), resolution is deterministic: key match outranks alias match; ties broken by lexicographically smallest `id`.
-
-Applies to: `Note.tags`, `NoteSection.tags`.
-
-**V3 — Field binding exclusivity and closedness.** A `select`/`multiselect` Field must declare exactly one of `allowedValues` or `vocabularyRef`. A `vocabularyRef` on a `select`/`multiselect` Field MUST resolve to a `Vocabulary` with `mode: closed`.
-
-**V4 — Vocabulary reference resolution.** A `vocabularyRef` must resolve to an installed `Vocabulary` in the effective package set.
-
-**V5 — Effective entry set.** The effective entry set of a `Vocabulary` or `Lifecycle` is constructed as:
-1. Include entries with effective `status` in {`active`, `deprecated`, `tombstone`}. Exclude `retired` entirely (before uniqueness, before V1).
-2. Add transitively the entries of any extended container. The `extends*Version` must match the resolved upstream version; a mismatch is a hard validation error (not silent degradation).
-3. Check uniqueness: duplicate `id`s are an error. In closed vocabularies, the union of all `key`s and `aliases` must be globally unique (key/key, key/alias, alias/alias collisions are errors). In open vocabularies, collisions are warnings (resolved by V2 tie-break).
-
-Inline `Type.lifecycle` cannot extend; its effective set is its own `states`/`transitions`. V5 and V9 apply to inline lifecycles identically to referenced ones.
-
-Excluding `retired` before uniqueness frees a retired key for reuse by a new entry. `tombstone` remains in the effective set and keeps occupying its key. When retiring a key that will be reused, implementations MUST surface stale references to the retiring key for operator resolution before reuse.
-
-**V6 — Closed value status.** A value resolving to `deprecated` or `tombstone` follows RFC-005 E1 write semantics (resolves; new writes rejected). `retired` entries do not resolve under V1 — values referencing them are invalid as if absent.
-
-**V10 — Open→closed promotion.** Version-bumping change with a mandatory pre-flight classifying in-use keys as:
-- *will-be-invalid*: used-but-undefined, or resolving only to a `retired` entry (reads do NOT survive).
-- *read-only-after-close*: resolves to `deprecated` or `tombstone` (reads survive; new writes rejected).
-- *used-and-active*: fine.
-
-A grace window is declared in `Vocabulary.promotionWindow.until`. Until that bound, violations are warnings; after it, V1 applies unconditionally. Absent `promotionWindow` means the promotion takes effect immediately. There is no unbounded window.
+**Content**: Content relocated to mechanism/design-note leaves under the Vocabulary and Relation type definition concept(s) (RFC-042 Change B, srs#562). See derived-from.
 
 ##### The `VocabularyEntry` substrate contract
 
@@ -4981,6 +4756,242 @@ Question 3).
 `{{content}}`. A Theme MAY wrap the row and MUST NOT replace it, per [T-3]. When no `fieldRow`
 template resolves, implementations MUST emit those forms unwrapped. This is the terminal rung of the
 RFC-036 row-template ladder.
+
+
+### Field
+
+**Content**: The atomic reusable semantic unit. Fields are defined once and composed into Types. A Field's `aiGuidance` and `fieldType` — including every constraint the latter carries — belong to the Field, not to any Type that includes it.
+
+See the generated reference immediately below for `Field`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger) — this prose no longer hand-duplicates the property list.
+
+
+### `FieldType` — the value semantics
+
+**Content**: `fieldType` carries everything about what a Field's value *is*. It decomposes value semantics into orthogonal facets — **datatype × cardinality × value-domain × format × constraints** — so each axis varies independently, and adds three composite datatypes (`ref`, `dependent`, `map`) that let a Field's range be another Type.
+
+Example: the `FieldType` shape.
+
+**`datatype` semantics:**
+
+| Value | Meaning |
+|---|---|
+| `"string"` | Text of any length. Length, pattern, format, and value domain are separate facets, not distinct datatypes |
+| `"number"` | Numeric value, fractional permitted |
+| `"integer"` | Whole number |
+| `"boolean"` | True/false |
+| `"date"` | ISO 8601 calendar date |
+| `"date-time"` | ISO 8601 date + time |
+| `"ref"` | The range is another Type — nested object(s) when `mode` is `"inline"`, target instance id(s) when `"reference"` |
+| `"dependent"` | The value conforms to the type descriptor named by `dependsOn` |
+| `"map"` | Open string-keyed collection whose values conform to `valueRange` |
+
+Cardinality is declared **only** here. A Field holding many values is `cardinality: "list"`; a Type that includes it must not restate or override that — Field semantics belong to the Field (Invariant 2).
+
+A `reference`-mode value is a target instance id, and MUST NOT be interpreted as or require a `Relation`. Use `reference` for definitional composition, where the target's identity is part of the definition; model an assertion *between* instances — one needing provenance, lifecycle, or confidence — as a `Relation` instead.
+
+
+### `vocabularyRef` — binding closed string fields to shared vocabularies
+
+**Content**: When `fieldType.valueDomain` is `"closed"`, a Field declares exactly one value source:
+
+Example: the two value sources a closed string Field may declare.
+
+`allowedValues` is formally sugar for an anonymous inline closed vocabulary: the value set is fixed by the Field definition, so changing it means a new Field version. `vocabularyRef` is a **configurable** data range — the value set is managed as package configuration and evolves without reversioning the Field — and is used when the set is shared, extensible, or needs Term identity. A `vocabularyRef` MUST resolve to a `Vocabulary` with `mode: closed`. Declaring both, or neither when `valueDomain` is `"closed"`, is a validation error.
+
+
+### Record tiers
+
+**Content**: SRS supports two semantic maturity tiers. Tier numbering keeps the historical gap at 1: Tier 1 (`Typed Record`) was removed as an unexercised construct — zero instances in any corpus, ever — under the dormancy rule (rfc-decision-53635966); renumbering the surviving tiers would be churn without meaning. Implementations are not required to support both; they may begin at Tier 2.
+
+| Tier | Type | Structure | Semantics |
+|---|---|---|---|
+| **0** | `Note` | Named sections + free text | None |
+| **2** | `Record` | Fields bound to a `Type` definition | Full |
+
+Graduation path: Note → Record, linked by a `derived-from` Relation from the Record back to the Note (`note graduate`).
+
+
+### `NoteSection`
+
+**Content**: A named text section within a Note.
+
+See the generated reference below for `NoteSection`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+
+
+### `Note`
+
+**Content**: A lightweight instance with no Type binding.
+
+See the generated reference below for `Note`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+
+`tags` are free-form labels that allow Notes to be grouped and discovered by topic. A tag is a key that *may* resolve to a `Term` in an open `Vocabulary`, giving it a label, aliases, roles, and lineage — without changing the fact that the instance stores only the string (V2). Undefined tags in an open vocabulary are valid and unenriched. Use tags for navigation and filtering; use Relations for semantic claims.
+
+
+### `SourceReference`
+
+**Content**: A pointer from a field value or instance back to source material.
+
+See the generated reference below for `SourceReference`'s current property table (modelled once and shared across `Record`, `Note`, and `Relation`), optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+
+`"transcript-chunk"` and `"transcript-segment"` are intended for implementations that have a stable conversation or time-stream layer with durable chunk or segment identifiers. A standalone repository that stores transcript exports, chat dumps, email threads, or similar source material directly under `source-documents/` should generally cite those files using `sourceType: "repository-document"` (see `ext:repository`) rather than inventing pseudo-chunk IDs.
+
+
+### Field values (RFC-039)
+
+**Content**: `FieldValue` — the value stored at one `fieldValues` key — is the recursive union:
+
+Example: the `FieldValue` union.
+
+There is no wrapper construct: the pre-RFC-039 `FieldValue`/`FieldValueEntry` pair
+objects, `groupValues`, and `FieldGroup` carriers are removed (I-134).
+
+
+### `Record`
+
+**Content**: An instantiated Type with field values.
+
+See the generated reference below for `Record`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+
+`typeNamespace` and `typeName` are denormalised convenience fields. If they conflict with the resolved Type, the `typeId`/`typeVersion` identity takes precedence and the Record is considered invalid until corrected.
+
+**On instance revision:**
+- **In-place edits** (`updatedAt` advances, `fieldValues` mutate): for minor corrections that do not alter semantic meaning.
+- **Semantic updates**: produce a new Record linked to the prior by a `supersedes` or `refines` Relation. The prior Record remains valid.
+- **Immutable records + Relation graph**: all Records append-only; a new Record for every change. A valid implementation strategy that naturally preserves history.
+
+**Semantic meaning must not be silently rewritten.** When a change would alter what a Record means — not merely correct a transcription or formatting error — implementations must produce a successor Record linked to the prior by `supersedes` or `refines`. The prior Record remains valid. What constitutes a semantic change is determined by the Type's intended use; when in doubt, prefer a successor.
+
+
+### `ValidationRule`
+
+**Content**: A constraint applied to a field value.
+
+Example: the `ValidationRule` shape.
+
+
+### `AiGuidanceExample`
+
+**Content**: A single example for AI guidance.
+
+Example: the `AiGuidanceExample` shape.
+
+`output` is required. An example without `input` demonstrates expected output form without requiring a specific source.
+
+
+### `AiGuidance`
+
+**Content**: Structured AI guidance for a Field or Type.
+
+Example: the `AiGuidance` shape.
+
+The minimum valid `AiGuidance` is `{ purpose: "..." }`.
+
+
+### Vocabulary and Term
+
+**Content**: SRS defines four controlled vocabularies — sets of strings that appear in instance data and must mean something stable. They share a common substrate: a `VocabularyEntry` contract satisfied by `Term`, `LifecycleState`, and `RelationTypeDefinition`.
+
+
+### `VocabularyEntry` (substrate contract)
+
+**Content**: `VocabularyEntry` is a contract, not a serialised type. Every conforming entry carries:
+
+Example: the `VocabularyEntry` substrate contract.
+
+**Absent `status` MUST be treated as `active`.** This is normative: all resolution rules (V1, V6, V9, V10) treat absent identically to `"active"`.
+
+**Entries are keyed, not named.** Entries carry `key`, not `name`, and are addressed within their container. They are not independently `Reference`-able. Containers (`Vocabulary`, `Lifecycle`) have `name` and are the `Reference` targets.
+
+**Required-field tightening.** `label` and `description` are optional so an emergent `Term` is valid before prose is written. A specialisation MAY tighten an optional substrate field to required; it MUST NOT relax a required one. `RelationTypeDefinition` requires both `label` and `description` (unchanged from RFC-005).
+
+**One forward-compatibility policy.** Unknown top-level fields are rejected; arbitrary entry metadata goes in `meta`.
+
+
+### `Vocabulary`
+
+**Content**: A named, versioned set of `Term` entries.
+
+See the generated reference below for `Vocabulary`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+
+
+### `Term`
+
+**Content**: The generalisation of `TagDefinition`. A defined option within a `Vocabulary`.
+
+See the generated reference below for `Term`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+
+
+### `RelationTypeDefinition`
+
+**Content**: A substrate specialisation that gives semantic meaning and validation rules to a class of relations. `key` is the string stored in `Relation.relationType`; this unifies the key-role field across all three substrate specialisations (RFC-006). `label` and `description` are tightened to required.
+
+See the generated reference below for `RelationTypeDefinition`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#541, the #274 ratified ledger extended to this entity) — this prose no longer hand-duplicates the property list.
+
+Relation type definitions live in `package.relationTypes[]` (distributable bundle) or `package/relation-types/` (repository layout). They are resolved repo-globally — all installed relation type definitions form a single flat namespace. Key uniqueness (V5) applies across this flat set.
+
+
+### The four vocabularies
+
+**Content**: | Vocabulary | Binding scope | Container | Mode |
+|---|---|---|---|
+| Tags | ambient (whole repo) | `Vocabulary` (typically local, open) | `open` |
+| Relation types | repo-global (any edge) | `package.relationTypes[]` (flat global set) | closed-extensible |
+| Lifecycle states | type-bound, shareable | `Lifecycle` (inline or referenced) | `closed` |
+| Field values | field-bound | `Vocabulary` via `vocabularyRef` or inline `allowedValues` | `closed` (V3) |
+
+
+### Package integration
+
+**Content**: Vocabularies are Foundation-group definition types installed in packages alongside fields, types, and relationTypes:
+- the distributable `Package` holds inline definitions: `vocabularies?: Vocabulary[]`
+- the repository `package/package.json` holds relative paths: `"vocabularies": ["vocabularies/foo.json", ...]`
+
+
+### Emergent vocabularies (open vocabularies)
+
+**Content**: For an open vocabulary, the authoritative set of values is `DISTINCT(tag keys across instances)` — not the `terms[]`. The `Vocabulary` is a curation overlay that may lag usage or be empty.
+
+A conforming implementation MUST be able to compute the live tag set and classify each key as: **used-and-defined**, **used-but-undefined**, or **defined-but-unused**.
+
+**Emergence lifecycle** (mirrors tier graduation):
+1. Free string — exists, undefined, valid.
+2. Curate → `Term` — non-destructive; instance carries the same string.
+3. Alias-merge — a surviving Term absorbs another: absorbed key+aliases move to the survivor, absorbed entry removed (its `id` recorded in `meta.mergedFrom` and redirected); zero instance rewrites.
+4. Optional normalize — opt-in operation that rewrites instance strings to the canonical key.
+5. Optional close — promote `mode: open → closed` (V10).
+
+
+### Resolution invariants
+
+**Content**: **V1 — Closed-vocabulary resolution.** Any value in a closed vocabulary must resolve to exactly one entry (matched by `key` or `alias`) in the effective entry set with `status` in {`active`, `deprecated`, `tombstone`} for reads and `active` for new writes.
+
+Applies to: `Relation.relationType`, `select`/`multiselect` field values, `Record.lifecycleState`.
+
+**V2 — Open-vocabulary resolution.** A value in an open vocabulary need not resolve; if it matches a `Term`, enrichment applies. When a value matches more than one entry (a warned V5 collision), resolution is deterministic: key match outranks alias match; ties broken by lexicographically smallest `id`.
+
+Applies to: `Note.tags`, `NoteSection.tags`.
+
+**V3 — Field binding exclusivity and closedness.** A `select`/`multiselect` Field must declare exactly one of `allowedValues` or `vocabularyRef`. A `vocabularyRef` on a `select`/`multiselect` Field MUST resolve to a `Vocabulary` with `mode: closed`.
+
+**V4 — Vocabulary reference resolution.** A `vocabularyRef` must resolve to an installed `Vocabulary` in the effective package set.
+
+**V5 — Effective entry set.** The effective entry set of a `Vocabulary` or `Lifecycle` is constructed as:
+1. Include entries with effective `status` in {`active`, `deprecated`, `tombstone`}. Exclude `retired` entirely (before uniqueness, before V1).
+2. Add transitively the entries of any extended container. The `extends*Version` must match the resolved upstream version; a mismatch is a hard validation error (not silent degradation).
+3. Check uniqueness: duplicate `id`s are an error. In closed vocabularies, the union of all `key`s and `aliases` must be globally unique (key/key, key/alias, alias/alias collisions are errors). In open vocabularies, collisions are warnings (resolved by V2 tie-break).
+
+Inline `Type.lifecycle` cannot extend; its effective set is its own `states`/`transitions`. V5 and V9 apply to inline lifecycles identically to referenced ones.
+
+Excluding `retired` before uniqueness frees a retired key for reuse by a new entry. `tombstone` remains in the effective set and keeps occupying its key. When retiring a key that will be reused, implementations MUST surface stale references to the retiring key for operator resolution before reuse.
+
+**V6 — Closed value status.** A value resolving to `deprecated` or `tombstone` follows RFC-005 E1 write semantics (resolves; new writes rejected). `retired` entries do not resolve under V1 — values referencing them are invalid as if absent.
+
+**V10 — Open→closed promotion.** Version-bumping change with a mandatory pre-flight classifying in-use keys as:
+- *will-be-invalid*: used-but-undefined, or resolving only to a `retired` entry (reads do NOT survive).
+- *read-only-after-close*: resolves to `deprecated` or `tombstone` (reads survive; new writes rejected).
+- *used-and-active*: fine.
+
+A grace window is declared in `Vocabulary.promotionWindow.until`. Until that bound, violations are warnings; after it, V1 applies unconditionally. Absent `promotionWindow` means the promotion takes effect immediately. There is no unbounded window.
 
 
 ### ext:repository
