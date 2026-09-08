@@ -1,0 +1,14 @@
+{
+  "instanceId": "acddda1f-52ae-442e-bcd9-b59b34c97c32",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`AiGuidanceExample`",
+    "content": "A single example for AI guidance.\n\nExample: the `AiGuidanceExample` shape.\n\n`output` is required. An example without `input` demonstrates expected output form without requiring a specific source."
+  },
+  "createdAt": "2026-09-08T18:45:07.214944316+00:00",
+  "updatedAt": "2026-09-08T18:45:07.214953713+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

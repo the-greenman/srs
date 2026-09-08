@@ -1,0 +1,14 @@
+{
+  "instanceId": "d1750acd-fec2-487c-a0c1-776daf7cd9f2",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`RelationTypeDefinition`",
+    "content": "A substrate specialisation that gives semantic meaning and validation rules to a class of relations. `key` is the string stored in `Relation.relationType`; this unifies the key-role field across all three substrate specialisations (RFC-006). `label` and `description` are tightened to required.\n\nSee the generated reference below for `RelationTypeDefinition`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#541, the #274 ratified ledger extended to this entity) — this prose no longer hand-duplicates the property list.\n\nRelation type definitions live in `package.relationTypes[]` (distributable bundle) or `package/relation-types/` (repository layout). They are resolved repo-globally — all installed relation type definitions form a single flat namespace. Key uniqueness (V5) applies across this flat set."
+  },
+  "createdAt": "2026-09-08T18:45:12.951957203+00:00",
+  "updatedAt": "2026-09-08T18:45:12.951970596+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

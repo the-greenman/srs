@@ -1,0 +1,14 @@
+{
+  "instanceId": "1a197c13-8ae9-4b68-80b3-d759f12160da",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "The four vocabularies",
+    "content": "| Vocabulary | Binding scope | Container | Mode |\n|---|---|---|---|\n| Tags | ambient (whole repo) | `Vocabulary` (typically local, open) | `open` |\n| Relation types | repo-global (any edge) | `package.relationTypes[]` (flat global set) | closed-extensible |\n| Lifecycle states | type-bound, shareable | `Lifecycle` (inline or referenced) | `closed` |\n| Field values | field-bound | `Vocabulary` via `vocabularyRef` or inline `allowedValues` | `closed` (V3) |"
+  },
+  "createdAt": "2026-09-08T18:45:13.634200756+00:00",
+  "updatedAt": "2026-09-08T18:45:13.634209425+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

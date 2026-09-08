@@ -6,14 +6,14 @@
   "typeName": "subsection",
   "fieldValues": {
     "title": "Supporting types",
-    "content": "#### `ValidationRule`\n\nA constraint applied to a field value.\n\nExample: the `ValidationRule` shape.\n\n#### `AiGuidanceExample`\n\nA single example for AI guidance.\n\nExample: the `AiGuidanceExample` shape.\n\n`output` is required. An example without `input` demonstrates expected output form without requiring a specific source.\n\n#### `AiGuidance`\n\nStructured AI guidance for a Field or Type.\n\nExample: the `AiGuidance` shape.\n\nThe minimum valid `AiGuidance` is `{ purpose: \"...\" }`.\n\n---"
+    "content": "Content relocated to mechanism/design-note leaves under the Validation and AI guidance concept(s) (RFC-042 Change B, srs#562). See derived-from."
   },
   "tags": [
     "construct:type",
     "topic:foundation"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-09-06T17:00:39.628194708+00:00",
+  "updatedAt": "2026-09-08T18:45:09.989872984+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

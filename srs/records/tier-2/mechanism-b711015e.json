@@ -1,0 +1,14 @@
+{
+  "instanceId": "b711015e-291a-408f-bf28-ed2c2508fcd3",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`ValidationRule`",
+    "content": "A constraint applied to a field value.\n\nExample: the `ValidationRule` shape."
+  },
+  "createdAt": "2026-09-08T18:45:06.540914137+00:00",
+  "updatedAt": "2026-09-08T18:45:06.540925952+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

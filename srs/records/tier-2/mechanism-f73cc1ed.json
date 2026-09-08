@@ -1,0 +1,14 @@
+{
+  "instanceId": "f73cc1ed-2242-4757-9b72-ce4754fbd85c",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`Term`",
+    "content": "The generalisation of `TagDefinition`. A defined option within a `Vocabulary`.\n\nSee the generated reference below for `Term`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list."
+  },
+  "createdAt": "2026-09-08T18:45:12.288144050+00:00",
+  "updatedAt": "2026-09-08T18:45:12.288151527+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,14 @@
+{
+  "instanceId": "3b65c3dd-fb5b-44e7-be46-c8bd2d33e94a",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Record tiers",
+    "content": "SRS supports two semantic maturity tiers. Tier numbering keeps the historical gap at 1: Tier 1 (`Typed Record`) was removed as an unexercised construct — zero instances in any corpus, ever — under the dormancy rule (rfc-decision-53635966); renumbering the surviving tiers would be churn without meaning. Implementations are not required to support both; they may begin at Tier 2.\n\n| Tier | Type | Structure | Semantics |\n|---|---|---|---|\n| **0** | `Note` | Named sections + free text | None |\n| **2** | `Record` | Fields bound to a `Type` definition | Full |\n\nGraduation path: Note → Record, linked by a `derived-from` Relation from the Record back to the Note (`note graduate`)."
+  },
+  "createdAt": "2026-09-08T18:44:59.920133056+00:00",
+  "updatedAt": "2026-09-08T18:44:59.920145410+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

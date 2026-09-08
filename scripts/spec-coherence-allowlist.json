@@ -15,33 +15,9 @@
     },
     {
       "check": "no-baked-heading",
-      "id": "32edcb34-791f-5bfe-a3a0-d8a2cbea4ea7",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: Supporting types (3 headings)"
-    },
-    {
-      "check": "no-baked-heading",
-      "id": "45cebefe-39ce-47d9-8753-b2b03ac25a18",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: Vocabulary and Term (8 headings)"
-    },
-    {
-      "check": "no-baked-heading",
-      "id": "656e5bbb-c29a-5020-9984-121191a4cf68",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: Field (3 headings)"
-    },
-    {
-      "check": "no-baked-heading",
       "id": "ca3ea62e-effb-503f-ac04-22ce30ca4511",
       "issue": "the-greenman/srs#562",
       "note": "subsection: ext:protocol (3 headings)"
-    },
-    {
-      "check": "no-baked-heading",
-      "id": "d1f518cc-0e25-5045-ae3d-9d68443c8150",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: Record tiers (5 headings)"
     },
     {
       "check": "no-baked-heading",

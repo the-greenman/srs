@@ -510,3 +510,21 @@ This led to `TagDefinition` — an addressable Tier 3 record that gives a tag a 
 **Content**: Tags are a peer to Field and Type in the SRS data model — not an extension, not an afterthought. They are defined natively in the core implementation with dedicated service functions, not modelled as user-defined package types. This is because the operations that depend on tags (especially foundation note selection for AI context) are universal across all SRS repositories, not specific to any one repo's package.
 
 
+### Historical: the pre-RFC-032 `valueType` model
+
+**Content**: Before RFC-032, value semantics were a single closed enum, `valueType`, with the satellite properties `allowedValues`, `contentFormat`, `validationRules`, and a standalone `repeatable` cardinality. That enum conflated four axes at once, which is why every axis needing independent expression had to be bolted on separately. It is **removed**, not deprecated — a Field definition carrying `valueType` does not conform to this specification. Packages authored against the old model map across as:
+
+| Legacy `valueType` | Equivalent `fieldType` |
+|---|---|
+| `"string"` | `{ datatype: "string" }` (plus `format: "markdown"` if `contentFormat` was `"markdown"`) |
+| `"text"` | `{ datatype: "string", format: "plain" \| "markdown" }` |
+| `"number"` | `{ datatype: "number" }` |
+| `"boolean"` | `{ datatype: "boolean" }` |
+| `"date"` | `{ datatype: "date" }` |
+| `"url"` | `{ datatype: "string", format: "uri" }` |
+| `"select"` | `{ datatype: "string", valueDomain: "closed" }` + `allowedValues` or `vocabularyRef` |
+| `"multiselect"` | `{ datatype: "string", cardinality: "list", valueDomain: "closed" }` + `allowedValues` or `vocabularyRef` |
+
+`validationRules` entries become `fieldType.constraints` facets; an `enum` rule becomes `valueDomain: "closed"` with `allowedValues`. A `required` rule was never a Field-level concern and moves to the `FieldAssignment` that includes the Field.
+
+

@@ -1,0 +1,14 @@
+{
+  "instanceId": "18b7d630-2595-4613-b28a-4f4ac3ac6326",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`SourceReference`",
+    "content": "A pointer from a field value or instance back to source material.\n\nSee the generated reference below for `SourceReference`'s current property table (modelled once and shared across `Record`, `Note`, and `Relation`), optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.\n\n`\"transcript-chunk\"` and `\"transcript-segment\"` are intended for implementations that have a stable conversation or time-stream layer with durable chunk or segment identifiers. A standalone repository that stores transcript exports, chat dumps, email threads, or similar source material directly under `source-documents/` should generally cite those files using `sourceType: \"repository-document\"` (see `ext:repository`) rather than inventing pseudo-chunk IDs."
+  },
+  "createdAt": "2026-09-08T18:45:02.344824359+00:00",
+  "updatedAt": "2026-09-08T18:45:02.344832026+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

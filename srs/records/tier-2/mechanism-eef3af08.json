@@ -1,0 +1,14 @@
+{
+  "instanceId": "eef3af08-1766-4bc6-8d28-053f59e23e43",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`AiGuidance`",
+    "content": "Structured AI guidance for a Field or Type.\n\nExample: the `AiGuidance` shape.\n\nThe minimum valid `AiGuidance` is `{ purpose: \"...\" }`."
+  },
+  "createdAt": "2026-09-08T18:45:07.909007042+00:00",
+  "updatedAt": "2026-09-08T18:45:07.909021951+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
