@@ -1,0 +1,23 @@
+{
+  "instanceId": "157dc2a3-6006-4a57-8a02-7952263583ed",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "11 of the last 20 merged srs PR bodies would fail the new Mode/Cell/Door classification check",
+    "summary": "Before srs#716's check-pr-classification.mjs existed, the PR-body classification line was free text with no enforced shape. A scan of the last 20 merged srs PRs (fetched via the GitHub REST API, run through the finished checker) found 11 that would fail: nine used a structurally different shape (a bullet list, no colon after a label, or no Cell label at all) and one (#693) carries the exact invented-cell defect ('presentation is not a cell') the issue was filed to catch, already merged. A pipe-delimited variant (Mode: X | Cell: Y | Door: Z) is common and was deliberately supported as the same three-field shape with a different separator, not counted as a failure.",
+    "evidence": [
+      "PR #693 (merged): 'Mode: complicated · Cell: ♓ Presentation · Door: 1 ... · gate:owner-merge' -- the same defect srs#716's four artifacts (#682, #709, #714, PR #715) were filed over, in an already-merged PR the issue's own list did not include",
+      "PR #719, #718: '## Decision mode and door' / '## Mode, cell, door' sections using a bullet-list shape ('- **Decision mode:** clear') rather than one inline 'Mode: ... Cell: ... Door: ...' line",
+      "PR #692, #689, #683: 'Mode clear · Cell ♑ Repository · Door 1 ...' with no colon after 'Cell' or 'Door'",
+      "PR #719, #683: no Cell label at all -- only 'Mode clear, non-normative ...'",
+      "PR #707, #698, #697, #695, #694: no classification line of any kind",
+      "PR #703, #702, #700, #699 (merged): pipe-delimited ('Mode: complicated | Cell: ♍ Containment | Door: 1 ...') -- structurally the same three-field line, supported deliberately, not counted as a failure"
+    ],
+    "body": "Recorded so the next worker does not read a red pr-classification check on an old PR as a checker bug -- the variance predates the checker by construction, and the issue's own acceptance test names this a finding, not a blocker: 'Do not retro-fix old PRs.' Left as-is. If a future unit wants to raise the corpus's compliance rate, the honest options are (a) edit the affected PR bodies by hand (all already merged, so this only helps future git-blame legibility, not gating) or (b) accept the gap as pre-enforcement noise. Loosening the checker's grammar to swallow the bullet-list or no-colon shapes is not recommended -- see the sibling carried_context on this unit: that would blunt the same enforcement srs#716 exists to add."
+  },
+  "createdAt": "2026-09-09T21:58:00.728925606+00:00",
+  "updatedAt": "2026-09-09T21:58:00.728936590+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
