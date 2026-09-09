@@ -104,3 +104,9 @@ Schema changes are committed in `docs/schema/2.0/` and mirrored into `../srs-rus
 **Spec independence** is the foundational constraint: this repo must remain valid with no Rust or JS implementation present. Do not add content that only makes sense in the context of an implementation.
 
 See [`srs-usage.md`](srs-usage.md) for the authoritative agent rules and [`CLAUDE.md`](CLAUDE.md) for contributor guidance.
+
+## Licence
+
+The SRS specification, JSON schemas, and reference packages are released under the [Apache License 2.0](LICENSE). 
+
+Contributions to this repository are made under the terms of the [Developer Certificate of Origin](docs/CONTRIBUTING.md#developer-certificate-of-origin). By submitting a pull request, you certify that you have the right to submit that work under the Apache License 2.0 by signing off your commits with `git commit -s`.
