@@ -2,7 +2,7 @@
 
 # RFC-037: Normative field-row rendering baseline
 
-**Status**: Accepted (Revision 3)
+**Status**: Accepted (Revision 4)
 **Affects**: `ext:views-l2` (RFC-001 Change A, Default Rendering Baseline Step 4; Heading Hierarchy table; the RFC-027 Rows bullet), `ext:themes-l1` (RFC-002 Rule `[T-8]` and its class injection table, `ElementTemplates.fieldRow`), RFC-027 Change C rule 3, RFC-036 Change C (composite baseline boundary) and its Open Question 2
 **Implementation**: [the-greenman/srs-rust#782](https://github.com/the-greenman/srs-rust/issues/782)
 **Author**: the-greenman (design decisions of 2026-07-31 on #294); drafted by the epic-256 worker
@@ -17,6 +17,7 @@
 | 1 | 2026-07-31 | Initial draft. Encodes the nine owner decisions of 2026-07-31 on #294. |
 | 2 | 2026-07-31 | Spec-integrity and completeness review. Adds Change 0 (exact Step 4 replacement text) and a fold-in target table; adds row separation and block-list termination (`[FR-037-7]`), without which a block list swallows the following row; makes entry ordering cardinality-neutral; carves composite-range fields out to RFC-036 Change C; covers Tier 1 and Tier 0; resolves the relation-row class contradiction via `srs-relationtype-*`; makes class emission independent of `ext:themes-l1`; amends `[T-8]`'s rule text, not only its table; drops "or replace" (contradicted `[T-3]`); corrects the export-diff count to 86 and states the measurement; declares the MAY→MUST placeholder promotion; adds `adoc` `+` continuation. Value stringification for non-string datatypes recorded as out of scope (Open Question 2). |
 | 3 | 2026-07-31 | Accepted after two review rounds. Corrects the composite carve-out, which named `inline` as a `datatype` (it is a `mode`) and stranded reference-mode `ref` fields with no defined row form, contradicting `[CR-036-3]`; unifies continuation indentation on two spaces and folds the blank-line entry case into `[FR-037-8]`; gives the `html` multi-entry row its enclosing `div` so it can carry the classes `[T-8]` requires; defines Tier 1 array values and `TypedField.label`; extends row separation to relation rows; scopes `[FR-037-19]` to `[FR-037-1]`'s paths; makes the five-step normalisation rule normative independently of `ext:themes-l1`. Spec records authored in `srs/srs/`: `records/subsections/07-7-ext-views-l2.json` (Step 4 replacement, Rows bullet, Heading Hierarchy row, new *Normative Field-Row Form* subsection) and `records/extensions/ext-themes-l1.json` (`[T-8]` rule text and injection table, `[FR-037-12]`–`[FR-037-14]`, `[FR-037-19]`). |
+| 4 | 2026-09-09 | Owner ruling on the-greenman/srs#714, executing the disposition on srs-rust#973 after the post-#563 render review. Amends `[FR-037-3]`: a scalar value whose first line begins a block-level construct (fenced code, unordered list item, ordered list item, table row, ATX heading, blockquote, thematic break) MUST begin on the line following the label, instead of sharing the label's line; an inline value keeps the compact form unchanged. Measured on master: 21 of 366 multi-line field values render broken today (17 unordered list, 2 blockquote, 1 table, 1 ordered list; 0 fenced code, guarded only by an incidental caption convention on the 68 `example` records). Fixes the presentation layer per `finding-153f4d63` rather than constraining record content. Rejects a Theme-level fix (`compositeFieldRowTemplates`) as a second rendering path for one case, per the Conformance cell's "one way over many." Consequence: the caption sentence on the 68 `example` records is now an editorial choice, not a load-bearing workaround — removing captions is a separate, out-of-scope unit. No schema change; render is byte-unchanged in this revision (the pinned CLI does not yet implement it — srs-rust#973). Spec record updated: `srs/records/tier-2/mechanism-e01a3121.json` (*Normative Field-Row Form*, Scalar rows). |
 
 ---
 
@@ -80,6 +81,38 @@ RFC-036 specifies composite baseline rendering, whose row-template ladder is `co
 
 It becomes load-bearing at the point issue #242 reaches. The `srs` repository declares no themes, so every row of #242's spec-side parity fixture renders through precisely this undefined rung. Capturing that fixture against unspecified behaviour would freeze the current implementation as a golden without anyone having decided it is correct.
 
+### Problem 7 — The compact scalar form opens a block-level value mid-line (Revision 4)
+
+`[FR-037-3]`'s compact form — `**<label>**: <value>` — glues the value to the label's line unconditionally. When `<value>`'s first line is itself a **block-level** construct, opening it mid-line is not recognised by any CommonMark parser: the construct simply fails to parse as itself.
+
+This was measured on master, scanning all 366 multi-line field values in this repository's own committed exports:
+
+| First line of value | Count | Renders |
+|---|---:|---|
+| Unordered list | 17 | broken |
+| Blockquote | 2 | broken |
+| Table | 1 | broken |
+| Ordered list | 1 | broken |
+| Fenced code | 0 | guarded by the caption convention (below) |
+
+**21 values render broken on master today.** Confirmed in the committed output:
+
+```
+docs/spec/srs-spec.md:30   **Content**: - **Session** — live collaborative process model (future version)
+docs/spec/srs-spec.md:1439 **Content**: | Vocabulary | Binding scope | Container | Mode |
+docs/spec/srs-spec.md:4357 **Content**: > **Standalone repository note**: The conversation layer is optional…
+```
+
+Line 30 is on the opening page of the specification. The fenced-code case was noticed and absorbed by a caption sentence prefixed to all 68 `example` records (`programme/records/tier-2/finding-153f4d63.json`); the list, table, and blockquote cases were never noticed, so nothing absorbed them. That asymmetry is the evidence that the caption convention was never a fix — it happened to catch one construct and missed the rest.
+
+**Why this and not a check on content.** `finding-153f4d63` already recorded the principle:
+
+> A rendering-layer quirk that constrains what a record may contain is a layer violation in the direction the charter cares about: presentation reaching back into semantics. The captions stand on their own merit, but the constraint should not stay load-bearing.
+
+A conformance check forbidding block-first content would make the violation permanent and enforced — the wrong layer would carry the fix. The layer with the defect is presentation, and `[FR-037-3]` is presentation's own normative statement, so that is what Revision 4 changes; record content is unconstrained either way. Change A's amendment below states the rule in terms of the value's own nature — whether its first line opens a block-level construct — never in terms of what a particular renderer finds difficult.
+
+**Consequence.** The caption sentence on the 68 `example` records becomes an editorial choice once Revision 4 and its implementation (srs-rust#973) land, rather than a workaround the renderer requires. Removing captions where they no longer earn their place is a separate, meaning-layer unit and is explicitly out of scope here.
+
 ---
 
 ## Proposed Changes
@@ -98,7 +131,11 @@ The canonical Step 4 in `srs/records/subsections/07-7-ext-views-l2.json` is repl
 
 ### Change A — Normative scalar field-row form
 
-For a present single-valued field, the baseline MUST emit exactly one row, beginning on its own line, in the format-specific form below.
+For a present single-valued field, the baseline MUST emit exactly one row, beginning on its own line, in the format-specific form below. Which of the two forms applies is a property of the **value's own nature** — whether its first line itself opens a block-level construct — never a property of what a particular renderer finds difficult to emit.
+
+**A value opens a block-level construct** when its first line is: a fenced code block's opening fence (three or more `` ` `` or `~` characters); an unordered list item (`-`, `*`, or `+` followed by a space); an ordered list item (one or more digits followed by `.` or `)` and a space); a table row (beginning with `|`); an ATX heading (one to six `#` characters followed by a space, or end of line); a blockquote (beginning with `>`); or a thematic break (a line consisting solely of three or more `-`, `*`, or `_` characters, optionally space-separated). A value whose first line is none of these is **inline**.
+
+**Inline value** — the label and value share the label's line:
 
 | Format | Normative row form |
 |---|---|
@@ -107,11 +144,28 @@ For a present single-valued field, the baseline MUST emit exactly one row, begin
 | `text` | `<label>: <value>` |
 | `html` | the element structure in Change A1 |
 
+**Block-opening value (Revision 4)** — the label occupies its own line, retaining the trailing colon and carrying no value; the value begins on the line immediately following:
+
+| Format | Label line |
+|---|---|
+| `markdown` | `**<label>**:` |
+| `adoc` | `*<label>*:` |
+| `text` | `<label>:` |
+| `html` | unaffected — see below |
+
 `markdown` ratifies the form that RFC-027's Rows bullet already made normative by reference. `adoc` uses AsciiDoc bold (`*…*`), satisfying the Heading Hierarchy table's formatted-text requirement that an undecorated `Label: value` fails. `text` carries no bold requirement — the Heading Hierarchy table's **preamble** scopes it to `markdown`, `html`, and `adoc` — and plain text has no portable emphasis convention.
 
-In all three text formats the separator is a literal colon followed by a single space (U+003A U+0020).
+Where label and value share a line, the separator is a literal colon followed by a single space (U+003A U+0020); where they do not, the label line ends in the colon itself, with no trailing space.
 
-"Beginning on its own line" rather than "on its own line": a scalar value may itself contain line breaks, which Change B2 requires to be emitted verbatim at column zero. The row starts a line; it does not necessarily occupy only one.
+**`html` is unaffected.** Change A1's structure already carries the value inside its own `span`, distinct from the label's `strong`; there is no textual glue for a block-opening first line to corrupt, because `html` output is not parsed as CommonMark. `[FR-037-4]` is unchanged.
+
+"Beginning on its own line" rather than "on its own line": a scalar value may itself contain line breaks, which Change B2 requires to be emitted verbatim at column zero. The row starts a line; it does not necessarily occupy only one — and, as of Revision 4, does not necessarily start on the *same* line as its label.
+
+**Why the block-opening rule, not a constraint on content.** Recorded as a `finding` during the unit that first noticed the fenced-code case (`programme/records/tier-2/finding-153f4d63.json`):
+
+> A rendering-layer quirk that constrains what a record may contain is a layer violation in the direction the charter cares about: presentation reaching back into semantics. The captions stand on their own merit, but the constraint should not stay load-bearing.
+
+Problem 7 above records the measured evidence. The fix lives in the presentation layer because that is where the defect is: `[FR-037-3]` is presentation's own normative statement, and this amendment corrects it without touching what a record may contain.
 
 #### Change A1 — `html` scalar structure
 
@@ -297,7 +351,7 @@ Integration manifest: `ext:views-l2`, `ext:themes-l1`.
 >
 > **[FR-037-2]** A Field whose `fieldType.datatype` is `"ref"` **and** whose `fieldType.mode` is `"inline"` (the default when `mode` is absent) is a composite: it is rendered by RFC-036 Change C and is outside `[FR-037-3]`–`[FR-037-6]`, which govern the field rows *within* each composite block rather than the composite field itself. A `ref` Field whose `mode` is `"reference"` is **not** a composite and renders as an ordinary field row under these rules, per `[CR-036-3]`.
 >
-> **[FR-037-3]** For a present single-valued field, implementations MUST emit exactly one row, beginning on its own line: `markdown` — `**<label>**: <value>`; `adoc` — `*<label>*: <value>`; `text` — `<label>: <value>`; with a literal U+003A U+0020 separating label from value.
+> **[FR-037-3]** For a present single-valued field, implementations MUST emit exactly one row, beginning on its own line. Whether the value shares the label's line is a property of the value's own nature, not of the renderer: when the value's first line does not open a block-level construct (a fenced code block, an unordered list item, an ordered list item, a table row, an ATX heading, a blockquote, or a thematic break, each as defined in Change A), implementations MUST emit `markdown` — `**<label>**: <value>`; `adoc` — `*<label>*: <value>`; `text` — `<label>: <value>`; with a literal U+003A U+0020 separating label from value. **(Revision 4)** When the value's first line does open a block-level construct, implementations MUST instead emit the label on its own line — `markdown` — `**<label>**:`; `adoc` — `*<label>*:`; `text` — `<label>:` — with no trailing space, and the value MUST begin on the line immediately following. This rule does not apply to `html`, whose structure is `[FR-037-4]`.
 >
 > **[FR-037-4]** For a present single-valued field in `html`, implementations MUST emit a `div` carrying `srs-field` and the identity class, containing a `strong` carrying `srs-field-label`, a literal colon, and a `span` carrying `srs-field-value`, in that order. Element names, nesting, order, the literal colon, and the `srs-`-prefixed class names are normative; inter-element whitespace is not. Implementations SHOULD emit the structure on a single line.
 >
@@ -366,6 +420,8 @@ grep -cE '^\*\*[^*]+\*\*: $' <file>
 
 **Those deletions are not part of this RFC's own diff.** They occur only when the reference implementation changes (srs-rust#782) and the exports are re-rendered through the corrected binary. `docs/spec/` is generated output; hand-editing it to match a rule no implementation yet enforces would put a false projection in the tree. The deletion is recorded here as an expected future export-diff event, owned jointly with srs-rust#782.
 
+**Revision 4 produces no export diff of its own, for the same reason.** The pinned CLI (`SRS_RUST_CLI_TAG`) still implements pre-Revision-4 `[FR-037-3]`, so `docs/spec/**` is unchanged by this PR. The 21 block-opening values Problem 7 measures become correct only once srs-rust#973 lands and the pin advances in a follow-up PR — the same two-step choreography `srs-rust#782` already established for Problem 5's 86 empty-value rows. Accepted-but-not-yet-implemented is the normal state here.
+
 ---
 
 ## Rationale
@@ -415,6 +471,12 @@ Requiring `srs-web` cards and the `srs-vscode` record view to adopt these class 
 ### Alt E — Convert markup-bearing values to HTML in the `html` baseline
 
 This would make `html` output of this repository's own spec bodies render as formatted HTML rather than literal markdown source. Rejected because it requires a per-value markup signal the model does not carry, and because decision 3 states that content is escaped. Adopting it would also diverge from `[CR-036-15]`, which escapes all cell content. Recorded as Open Question 5 so the limitation is visible.
+
+### Alt F — Suppress the label for content-bearing fields via a Theme's `compositeFieldRowTemplates` (Revision 4)
+
+Under this alternative, `srs-rust#973`'s defect would be closed by having a Theme's `compositeFieldRowTemplates` omit the label for the affected field (the `content` field on `example` and comparable leaf Types), so the value would render as if it began the block unencumbered.
+
+Rejected on two grounds. First, it creates a **second rendering path for one case**: theme-less output (the `srs` repository declares no Theme and instantiates none) would still hit the undefined/broken form, so the fix would not close the gap for the baseline's own motivating fixture — the same reasoning Alt A was rejected on. Second, and more generally, the Conformance cell's governing preference is **one way over many** (`docs/charter/decision-compass.md`, `rfc-decision-cce3c00e`): a Theme-conditional workaround for a baseline defect is exactly the parallel-mechanism shape that preference exists to rule out. The baseline itself is what needs the fix, because the baseline is what actually renders.
 
 ---
 

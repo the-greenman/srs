@@ -3897,7 +3897,13 @@ sequence. Both mechanisms are covered without preference: `fieldType.cardinality
 the latter. Cardinality — not element count — selects the form: a one-element sequence renders in
 block form, so a Type's rendered shape does not vary with instance data.
 
-**Scalar rows.** For a present single-valued field, exactly one row, beginning on its own line:
+**Scalar rows.** For a present single-valued field, exactly one row, beginning on its own line.
+Whether the value shares the label's line is a property of the value's own nature, never of the
+renderer: a value **opens a block-level construct** when its first line is a fenced code block's
+opening fence, an unordered or ordered list item, a table row (`|`), an ATX heading (`#`), a
+blockquote (`>`), or a thematic break. A value whose first line is none of these is *inline*.
+
+**Inline**: label and value share the label's line.
 
 | Format | Normative row form |
 |---|---|
@@ -3906,13 +3912,28 @@ block form, so a Type's rendered shape does not vary with instance data.
 | `text` | `<label>: <value>` |
 | `html` | `<div class="srs-field srs-fieldname-{name}"><strong class="srs-field-label field-label">{label}</strong>: <span class="srs-field-value field-value">{value}</span></div>` |
 
-In the three text formats the separator is a literal colon and single space (U+003A U+0020). In
+**Block-opening (RFC-037 Revision 4)**: the label occupies its own line, retaining the trailing
+colon and carrying no value. The value begins on the line immediately following.
+
+| Format | Label line |
+|---|---|
+| `markdown` | `**<label>**:` |
+| `adoc` | `*<label>*:` |
+| `text` | `<label>:` |
+| `html` | unaffected: the value already sits in its own `span`, distinct from the label |
+
+In the three text formats the separator, where label and value share a line, is a literal colon and
+single space (U+003A U+0020); where they do not, the label line ends in the colon itself. In
 `html`, the element names, nesting, order, literal colon and `srs-`-prefixed class names are
 normative; inter-element whitespace is not, following the precedent [CR-036-15] sets for pinned HTML
 output. Implementations SHOULD emit the single-line form so conformance fixtures have a canonical
 serialisation. **These classes belong to the baseline's output specification, not to
 `ext:themes-l1`:** implementations MUST emit them whether or not that extension is declared and
 whether or not a Theme resolves.
+
+The block-opening rule fixes the presentation layer instead of constraining record content
+(`finding-153f4d63`): a rendering-layer quirk that dictates what a value may contain is a layer
+violation in the direction the charter cares about, and the fix belongs where the defect is.
 
 **Multi-entry rows.** A multi-entry value MUST render as a block list and MUST NOT be comma-joined.
 The label occupies its own line (in `html`, its own element) and retains its trailing colon:
