@@ -1,0 +1,20 @@
+{
+  "instanceId": "f518e2a4-b86c-47d0-82f4-b05387251a41",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "srs-rust#1004's 43-vs-33 duplicate-heading discrepancy no longer reproduces against current master",
+    "summary": "srs-rust#1004 reported that the committed render on the build.357 pin carried 43 duplicate heading occurrences in docs/spec/srs-spec.md (370 headings, 327 distinct titles) versus 33 in a fresh render -- implying re-rendering would drop 10 duplicate occurrences. Re-verified while advancing the pin to build.360 (srs#706): a fresh render is byte-identical to the currently committed docs/spec/**, both showing 43 duplicate occurrences, not 33. The gap #1004 found does not reproduce today.",
+    "evidence": [
+      "grep -oE heading pattern over docs/spec/srs-spec.md on origin/master (pre-render): 370 total headings, 327 distinct, 43 duplicate occurrences",
+      "node scripts/publish-spec.mjs re-render with the build.360 pinned CLI produced zero diff against the committed docs/spec/** tree (git status/git diff empty)",
+      "Recomputed the same heading-duplication count post-render: still 370/327/43, identical to pre-render"
+    ],
+    "body": "Not fixed here -- there is nothing to fix; a fresh render already matches what is committed. Recorded so the next unit does not treat #1004's 33 figure as the current target and go looking for a rendering bug that is not there. Most likely explanation: other content merged into the spec records since #1004 was filed changed which headings repeat, moving the count from 33 back up to 43 independent of this pin advance -- worth checking against #1004's own timestamp if the 33 count needs re-establishing as a real target."
+  },
+  "createdAt": "2026-09-09T14:00:06.318742099+00:00",
+  "updatedAt": "2026-09-09T14:00:06.318750427+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
