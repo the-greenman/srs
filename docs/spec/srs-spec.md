@@ -27,7 +27,8 @@ This specification covers:
 
 ##### What this specification does not define
 
-**Content**: - **Session** — live collaborative process model (future version)
+**Content**:
+- **Session** — live collaborative process model (future version)
 - **Registry protocol** — how registries communicate, authenticate, or federate; this specification defines data shapes only
 - **Universal semantic ontology** — domain-specific vocabularies are the responsibility of namespace authors
 
@@ -1436,7 +1437,8 @@ See the generated reference below for `Term`'s current property table, optional 
 
 ##### The four vocabularies
 
-**Content**: | Vocabulary | Binding scope | Container | Mode |
+**Content**:
+| Vocabulary | Binding scope | Container | Mode |
 |---|---|---|---|
 | Tags | ambient (whole repo) | `Vocabulary` (typically local, open) | `open` |
 | Relation types | repo-global (any edge) | `package.relationTypes[]` (flat global set) | closed-extensible |
@@ -3052,6 +3054,69 @@ Example: the `Provenance` shape.
 **Rationale**: Without this invariant a manifest could declare an `upstreamPackage` for package X while listing only `PackageRef` entries for package Y, and no validator could detect the inconsistency without cross-referencing package directory files. Using `packageId` — a stable UUID — as the linkage key (rather than namespace or name, which could change) preserves the stable-UUID-as-identity-anchor principle throughout the manifest.
 
 
+##### Import tracking
+
+**Canonical Key**: record:concepts/import-tracking
+
+**Description**: How a consumer that receives packages from an upstream publisher records what it imported, whether local content has diverged from the upstream source, and whether the upstream has moved ahead. Divergence and update conflicts are detected and surfaced instead of silently overwritten or silently missed.
+
+###### `ImportMode`
+
+**Content**: Example: the `ImportMode` values.
+
+| Mode | Meaning |
+|---|---|
+| `"upstream-tracked"` | Consumer expects updates from the source Package. Conflicts surfaced when local and upstream diverge. |
+| `"local-copy"` | Imported as a snapshot. No update tracking. |
+| `"local-fork"` | Deliberately diverged. Upstream lineage preserved for reference. |
+
+
+###### `ImportRecord`
+
+**Content**: One record per imported definition in a consumer's local registry.
+
+Example: the `ImportRecord` shape.
+
+
+###### `ImportSummary`
+
+**Content**: A consumer's complete picture of its imported definitions.
+
+Example: the `ImportSummary` shape.
+
+---
+
+
+###### Repository-Level Provenance (RFC-014)
+
+**Content**: When a repository is initialised from a published SRS Package, it records provenance in `manifest.json` at `manifest.upstreamPackage`. This is a normative top-level field — the machine-readable anchor for divergence detection and non-destructive package upgrades.
+
+
+###### `UpstreamPackage`
+
+**Content**: Shape recorded at install time and updated on upgrade:
+
+Example: the `UpstreamPackage` shape.
+
+
+###### Repository-Level Divergence Detection
+
+**Content**: When `upstreamPackage` is set, a conforming `ext:import-tracking` implementation MAY detect whether the locally installed definitions differ from the canonical content of the upstream package at that same version (RFC-014 Change E, R8). The comparison is performed against a reference copy (either a byte-for-byte snapshot stored at install time, or re-fetched from the published source if network access is available). A tool without a reference copy simply skips the check.
+
+Divergence is surfaced using the same `conflictState` vocabulary already defined for `ImportRecord`:
+
+| State | Description |
+|---|---|
+| `"clean"` | Local package content matches the reference copy at install time. No drift. |
+| `"local-ahead"` | Local package has definitions not present in the upstream at install time; all differing ids are locally-added. |
+| `"diverged"` | One or more local definition files differ from what the upstream declared under the same `id`+`version` key. |
+
+When both `local-ahead` and `diverged` conditions hold simultaneously, implementations MUST report `diverged` as the primary status and include locally-added definitions as a supplementary list.
+
+The `"upstream-ahead"` state (a newer version exists upstream) requires `ext:registry` and is out of scope for local divergence detection.
+
+
+
 
 #### Repository
 
@@ -3229,6 +3294,90 @@ A standard envelope for exchanging a Container together with its full Record set
 **Constraint**: An RFC-026 container slice MUST include the closure root, its transitive childContainerIds descendants, and the root's effective member set. It MUST preserve declared edges among those Containers and MUST NOT include an unrelated Container solely because its roots or members are subsets of the included instance set.
 
 **Rationale**: RFC-034 [R9] (Change D.3), replacing RFC-026 Change C items 2 and 6. RFC-026's definition, relation, source-document and external-edge closure rules then apply to that member-instance set.
+
+
+###### JSON Store
+
+**Canonical Key**: record:concepts/json-store
+
+**Description**: A single-file, self-contained JSON serialization of a complete SRS repository (`.srsj`), carrying identical semantic content to the filesystem repository layout defined by `ext:repository`. A conforming implementation must be able to convert between the two losslessly.
+
+**Notes**: Preferred over the filesystem layout when portability matters more than per-file inspection: emailing a repository, committing a snapshot as one artifact, or embedding a test fixture.
+
+####### ext:json-store
+
+**Content**: **Required for**: any implementation that stores an SRS repository as a single portable JSON file.
+
+**Depends on**: `ext:repository`
+
+Defines the **SRS JSON Store format** (`.srsj`): a single-file, self-contained serialization of a complete SRS repository. The JSON Store is an alternative to the filesystem layout defined by `ext:repository`. Both formats carry identical semantic content; an implementation must be able to convert between them losslessly.
+
+
+####### Purpose and trade-offs
+
+**Content**: The JSON Store is valuable when portability matters more than human readability of individual files: emailing a repository, committing a snapshot to version control as a single artifact, embedding a repository in a test fixture, or transferring between systems without ZIP tooling.
+
+The filesystem layout (`ext:repository`) is preferred when independent inspection of individual records, partial checkout, or per-file storage history is valuable.
+
+
+####### File format
+
+**Content**: A `.srsj` file is a pretty-printed UTF-8 JSON object with the following top-level structure:
+
+Example: the top-level shape of a `.srsj` file.
+
+| Field | Type | Description |
+|---|---|---|
+| `srsj` | string | Format version. Current value: `"1"`. Implementations must reject files with unrecognised versions. |
+| `manifest` | object | The `RepositoryManifest` object as defined by `ext:repository`. There is no `manifest.instanceIndex`; it is retired (RFC-038 [R2]). The `data` object's own contents are the authoritative instance set (RFC-038 [R1]), except the root container, which the manifest carries inline at `manifest.container`. |
+| `data` | object | Flat key-value store. Keys are forward-slash-normalised relative paths as they would appear in a filesystem repository. Values are the parsed JSON content of each file. |
+
+The `.srsj` extension is conventional; an implementation may accept any filename. The extension must not be used as an authoritative indicator of format — implementations must inspect the `srsj` field to confirm the format and version.
+
+
+####### Path conventions in `data`
+
+**Content**: Keys in `data` follow the same relative-path conventions as `ext:repository`:
+
+- `package/package.json` — package index
+- `package/fields/<filename>.json` — field definitions
+- `package/types/<filename>.json` — type definitions
+- `package/views/<filename>.json` — view definitions
+- `records/<subfolder>/<filename>.json` — Tier 2 Record instances
+- `notes/<filename>.json` — Tier 0 Note instances
+- `relations/<filename>.json` — relation collections
+
+There is no `instanceIndex` in `manifest`; it is retired (RFC-038 [R2]). The authoritative list of members is the `data` object's own contents — the tree-authoritative store, enumerated the same way as a filesystem repository (RFC-038 [R1]).
+
+
+####### Conformance requirements
+
+**Content**:
+1. A conforming producer must write every instance in the repository's authoritative instance set (RFC-038 [R1]) as an entry in `data` under its path.
+2. A conforming producer must write all relation files declared in `manifest.relationsPath` as entries in `data`.
+3. A conforming producer must write the local package under `package/package.json` when `packageRef.mode === "local"`.
+4. A conforming consumer must reject a `.srsj` file whose `srsj` value is not a recognised version string.
+5. A conforming consumer must apply the same identity-based import rules as `ext:repository` when loading a `.srsj` file into an existing store.
+6. A conforming implementation must be able to round-trip a repository between the JSON Store format and the filesystem layout without data loss.
+
+
+####### Source documents
+
+**Content**: Binary source document content is not included in the JSON Store. An implementation converting from a filesystem repository to `.srsj` must omit source document content files and should surface the omission to the user. Source document sidecars (`.meta.json`) may be included in `data` if they are pure JSON; their content files must not be.
+
+
+####### Interoperability
+
+**Content**: A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `ext:repository`, with the following differences:
+
+| | `.srsj` JSON Store | `.srs` ZIP Archive |
+|---|---|---|
+| Format | Single JSON file | ZIP of directory tree |
+| Manifest location | Top-level `manifest` key | `manifest.json` at ZIP root |
+| Instance storage | Embedded in `data` object | Individual files in ZIP |
+| Source document content | Not included | Included as files |
+| Primary use | Tooling, fixtures, snapshots | Sharing, export, long-term storage |
+
 
 
 ###### ext:slices
@@ -3521,6 +3670,29 @@ To create an independent copy of a repository — not a sync — the importer mu
 2. **Mint new inner IDs with lineage**: the copy mints fresh UUIDs and adds `derived-from` Relations from each new instance to the source `instanceId`. Appropriate when the copy will evolve independently.
 
 An importer must not mix strategies within a single copy operation.
+
+
+
+#### Registry
+
+**Canonical Key**: record:concepts/registry
+
+**Description**: A published, discoverable catalog of Field, Type and other definitions that a multi-publisher ecosystem can index. A Registry states no opinion on registry authority, authentication or federation between competing catalogs; a consumer may index more than one.
+
+##### `RegistryEntry`
+
+**Content**: One entry in a Registry catalog.
+
+Example: the `RegistryEntry` shape.
+
+
+##### `Registry`
+
+**Content**: A registry's published index.
+
+Example: the `Registry` shape.
+
+Multiple Registries may coexist. A consumer may index multiple catalogs. The specification does not define registry authority, authentication, or federation.
 
 
 
@@ -4375,7 +4547,8 @@ View, Composition, and Theme are the constructs a projection is built from: View
 
 #### Conversation Layer
 
-**Content**: > **Standalone repository note**: The conversation layer is optional infrastructure. An implementation declaring only `SRS 2.0 Core + ext:repository` does not require a TSS, ext:protocol, ext:addressability, AttentionState, or any live conversation store. Source documents stored in `source-documents/` are sufficient evidence storage for standalone use. This section describes the full-stack integration model; implementers building file-based or offline repositories may skip it entirely.
+**Content**:
+> **Standalone repository note**: The conversation layer is optional infrastructure. An implementation declaring only `SRS 2.0 Core + ext:repository` does not require a TSS, ext:protocol, ext:addressability, AttentionState, or any live conversation store. Source documents stored in `source-documents/` are sufficient evidence storage for standalone use. This section describes the full-stack integration model; implementers building file-based or offline repositories may skip it entirely.
 
 The conversation layer is a permanent architectural boundary distinct from SRS. It captures raw multimodal source material; SRS captures negotiated semantic state. They reference each other bidirectionally via `SourceReference` (document → conversation) and `AttentionState` tags (conversation → document, via `ext:addressability`).
 
@@ -7031,7 +7204,8 @@ SRS 2.0 Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability 
 
 ##### ext:cross-field-validation
 
-**Content**: > **Formalised by**: RFC-019 (srs#139). The `CrossFieldRule` shape and `validationRules` property are formally specified by RFC-019; refer to it for normative conformance rules (R0–R11).
+**Content**:
+> **Formalised by**: RFC-019 (srs#139). The `CrossFieldRule` shape and `validationRules` property are formally specified by RFC-019; refer to it for normative conformance rules (R0–R11).
 
 **Required for**: Types with constraints that span multiple Fields.
 
