@@ -1,0 +1,15 @@
+{
+  "instanceId": "2580bf45-c66e-4c0f-8943-c8292ff5ab68",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "migrate_carrier and its sibling migrations still silently accept partial-write risk on a bare on-disk FileStore",
+    "summary": "srs-rust#1015 made the RepositoryStore batch seam honest (abort_batch now refuses rather than lying) but deliberately did not gate migrate_carrier / migrate_discovery_query_cutover / migrate_composition_cutover / migrate_identity_service on the new supports_batch_rollback() capability, because doing so unconditionally would break ~10+ existing tests and disable these migrations in production (they run almost entirely against .srsj/MemVfs-backed sessions with no escape-hatch option struct, unlike rfc038_storage_migration_service which already has StorageMigrationOptions.allow_non_atomic).",
+    "rationale": "srs-rust#1018 proposes the fix: give each of these functions the same allow_non_atomic-style opt-in that rfc038_storage_migration_service already has, gated on !store.supports_batch_rollback(), with every existing test/CLI call site passing allow_non_atomic: true to preserve current behavior. Any future unit touching these four migration services, or reasoning about #813's remaining scope, should read srs-rust#1018 before assuming the batch seam is fixed for them — only the trait-level honesty (abort_batch's return value) is fixed; the actual up-front refusal is not yet wired into any of the four migration functions themselves."
+  },
+  "createdAt": "2026-09-09T19:21:26.212568790+00:00",
+  "updatedAt": "2026-09-09T19:21:26.212575813+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

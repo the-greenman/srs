@@ -1,0 +1,20 @@
+{
+  "instanceId": "e2f55123-3542-4413-b766-8ebbf5a198a7",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "srs-rust#1015's premise about JsonStore was stale — it was retired in #783 Phase 4",
+    "summary": "#1015 (and its parent #813) assumed a separate JsonStore struct still exists with a real batch-rollback override, distinct from FileStore's no-op default. Ground-truth reading of the current srs-rust codebase (commit da38854, 2026-09-09) shows JsonStore was retired in #783 Phase 4: there is no json_store.rs file, and the store_conformance.rs test helper init_json_store() actually returns a FileStore (opened via a .srsj session). MemoryStore also uses the RepositoryStore trait's no-op batch defaults — it never had real rollback either, contrary to the implicit assumption that only FileStore lacked it.",
+    "evidence": [
+      "grep for \"impl RepositoryStore for\" in crates/srs-repository/src found exactly three implementors: FileStore, MemoryStore, and a BrokenManifestStore test double — no JsonStore",
+      "migrate_identity_service.rs already carries its own comment (pre-dating this unit): \"No store implements in-memory rollback since JsonStore's retirement (srs-rust#813) — what protects a .srsj document is the projection boundary, and that only helps if the whole operation fails as one.\"",
+      "the store_conformance.rs test file's own #[ignore] reason on the old batch_abort_rolls_back test already said the same thing before this unit touched it"
+    ],
+    "body": "A future unit reasoning about the batch seam, JsonStore, or #813/#1015's scope should start from this ground truth rather than the issue text's premise: there are exactly two store implementors today (FileStore, MemoryStore), neither has ever supported real rollback, and the actual safety net for .srsj/session-backed operations is the projection boundary (flush-only-on-success), which is independent of RepositoryStore's batch seam entirely."
+  },
+  "createdAt": "2026-09-09T19:21:17.354341729+00:00",
+  "updatedAt": "2026-09-09T19:21:17.354348027+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
