@@ -345,6 +345,13 @@
       "issue": "#285"
     },
     {
+      "instanceId": "6cb78382-35a5-5acc-a26c-774a2c288e23",
+      "path": "records/sections/06-conversation-layer.json",
+      "reason": "Retired by succession into the new com.semanticops.spec/concept \"Conversation Layer\" (c34c0dd8-ce40-4dd9-82a4-2c5ccab8c26f), which carries a derived-from edge back to this record and inherited its Part-contains position and precedes-chain position (RFC-042 Change B, srs#710). Kept as a catalogued record rather than deleted because the derived-from relation needs a live target and no identity-preserving retype tool exists yet (srs#178, OPEN).",
+      "disposition": "permanent",
+      "issue": "#710"
+    },
+    {
       "instanceId": "717118a7-80be-49a2-bbc6-05c123ffa958",
       "path": "records/notes/design-capture-metamodel-v1-1-0.json",
       "reason": "Tier-0 design capture, graduated 2026-08-25 to `com.semanticops.spec/design-note` 045 (records/design-notes/045-inheritance-floor-and-documentation-only-rule.json, instance 6e7cb1a4) via `srs note graduate`, linked by a `derived-from` relation from the design note to this Note. The self-expiring premise in the prior reason (\"becomes reachable when the #273 RFC lands\") has resolved by graduation, not by the Note itself becoming reachable — Tier-0 Notes carry no `typeNamespace`/`typeName` and so never satisfy a type-query surface; `note graduate` preserves the Note (stamped `graduatedAt`, not deleted) as the permanent historical record of the pre-formalisation capture, same as every other entry in `records/notes/`.",
