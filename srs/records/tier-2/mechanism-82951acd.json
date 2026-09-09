@@ -1,0 +1,14 @@
+{
+  "instanceId": "82951acd-5d4f-4a44-a659-7c1f511dd1a7",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`RelationsChecksumEntry`",
+    "content": "One entry in the optional `relationsChecksums` manifest field.\n\nExample: the `RelationsChecksumEntry` shape."
+  },
+  "createdAt": "2026-09-08T19:48:49.000238210+00:00",
+  "updatedAt": "2026-09-08T19:48:49.000246166+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

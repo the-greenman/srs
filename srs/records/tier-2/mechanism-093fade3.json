@@ -1,0 +1,14 @@
+{
+  "instanceId": "093fade3-4a31-41dc-a51f-bb265a9cad73",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`ImportMode`",
+    "content": "Example: the `ImportMode` values.\n\n| Mode | Meaning |\n|---|---|\n| `\"upstream-tracked\"` | Consumer expects updates from the source Package. Conflicts surfaced when local and upstream diverge. |\n| `\"local-copy\"` | Imported as a snapshot. No update tracking. |\n| `\"local-fork\"` | Deliberately diverged. Upstream lineage preserved for reference. |"
+  },
+  "createdAt": "2026-09-08T19:49:08.887202244+00:00",
+  "updatedAt": "2026-09-08T19:49:08.887208374+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

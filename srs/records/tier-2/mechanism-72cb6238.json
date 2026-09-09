@@ -1,0 +1,14 @@
+{
+  "instanceId": "72cb6238-fede-479c-abe1-5b04f0f38fcf",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Archive format",
+    "content": "An archive is a self-contained, shareable snapshot of a live repository.\n\n**Format**: ZIP file. Recommended file extension: `.srs`.\n\n**Archive root**: The repository root maps to the ZIP root. `manifest.json` must be at the ZIP root, not inside a subdirectory.\n\n**Self-containment requirements**: A conforming archive must include:\n- `manifest.json` and the `.srs` marker\n- All instance files referenced in the manifest instance index\n- All relation files declared in `relationsPath`\n- All source document content files and sidecars referenced by any `SourceReference` within any instance **or Relation** in the archive\n- When `PackageRef.mode === \"local\"`: the full local package\n\nRemote package dependencies (`mode: \"remote\"`) are declared in `packageRef` and expected pre-installed at the consumer. They are not bundled in the archive.\n\n**Producing an archive:**\n1. Verify the manifest instance index is complete and consistent with the filesystem\n2. Collect all files per the self-containment requirements above\n3. ZIP from the repository root such that `manifest.json` is at the ZIP root\n4. Verify the archive contains `manifest.json` at root before publishing\n\n**Consuming an archive:**\n1. Unzip to a staging or working location\n2. Locate and parse `manifest.json`\n3. Read `conformance`; surface any unsupported extensions to the user before proceeding\n4. Load all instances via the instance index\n5. Load relations from `relationsPath`\n6. Resolve `repository-document` source references via `sourceDocumentsPath`\n\nA conforming consumer must not silently discard instances, relations, or source documents present in the archive. Unknown extension content should be preserved and surfaced rather than dropped.\n\nWhen importing into an existing store, apply the identity-based import rules defined in the next section."
+  },
+  "createdAt": "2026-09-08T19:48:54.061650178+00:00",
+  "updatedAt": "2026-09-08T19:48:54.061658480+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

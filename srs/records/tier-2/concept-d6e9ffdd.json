@@ -1,0 +1,16 @@
+{
+  "instanceId": "d6e9ffdd-740b-4eeb-aeeb-aef2e23bdcbb",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/json-store",
+    "title": "JSON Store",
+    "description": "A single-file, self-contained JSON serialization of a complete SRS repository (`.srsj`), carrying identical semantic content to the filesystem repository layout defined by `ext:repository`. A conforming implementation must be able to convert between the two losslessly.",
+    "notes": "Preferred over the filesystem layout when portability matters more than per-file inspection: emailing a repository, committing a snapshot as one artifact, or embedding a test fixture."
+  },
+  "createdAt": "2026-09-08T19:48:59.571887981+00:00",
+  "updatedAt": "2026-09-08T19:48:59.571893730+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

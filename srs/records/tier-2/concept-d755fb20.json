@@ -1,0 +1,15 @@
+{
+  "instanceId": "d755fb20-fb22-4dd3-8a26-f03cfd4942b7",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/registry",
+    "title": "Registry",
+    "description": "A published, discoverable catalog of Field, Type and other definitions that a multi-publisher ecosystem can index. A Registry states no opinion on registry authority, authentication or federation between competing catalogs; a consumer may index more than one."
+  },
+  "createdAt": "2026-09-08T19:49:06.098003720+00:00",
+  "updatedAt": "2026-09-08T19:49:06.098013122+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

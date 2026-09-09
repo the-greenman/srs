@@ -190,6 +190,13 @@
 **Key**: record:concepts/graduation
 
 
+### Import tracking
+
+**Definition**: How a consumer that receives packages from an upstream publisher records what it imported, whether local content has diverged from the upstream source, and whether the upstream has moved ahead. Divergence and update conflicts are detected and surfaced instead of silently overwritten or silently missed.
+
+**Key**: record:concepts/import-tracking
+
+
 ### Instance
 
 **Definition**: A piece of captured content, as opposed to a definition that describes a shape. An instance carries its own stable `instanceId` in an id space distinct from the `id` + namespace/name/version lineage that identifies a definition, and it is the thing Relations connect and Containers scope. Confusing the two id spaces is the most common structural error: a Container's id is not an instance id and must never appear on either end of a Relation.
@@ -213,6 +220,15 @@
 **Examples**: Invariant 16 fixes relation direction; Invariant 20 keeps container ids out of the instance id space; Invariant 2 forbids a Type restating a Field's semantics.
 
 **Key**: record:concepts/invariant
+
+
+### JSON Store
+
+**Definition**: A single-file, self-contained JSON serialization of a complete SRS repository (`.srsj`), carrying identical semantic content to the filesystem repository layout defined by `ext:repository`. A conforming implementation must be able to convert between the two losslessly.
+
+**Notes**: Preferred over the filesystem layout when portability matters more than per-file inspection: emailing a repository, committing a snapshot as one artifact, or embedding a test fixture.
+
+**Key**: record:concepts/json-store
 
 
 ### Lifecycle
@@ -299,6 +315,13 @@
 **Notes**: A Record may also carry lifecycle state, tags, source references and timestamps. Those are envelope members, governed by the Record schema and not by the Type's projected field schema.
 
 **Key**: record:concepts/record
+
+
+### Registry
+
+**Definition**: A published, discoverable catalog of Field, Type and other definitions that a multi-publisher ecosystem can index. A Registry states no opinion on registry authority, authentication or federation between competing catalogs; a consumer may index more than one.
+
+**Key**: record:concepts/registry
 
 
 ### Relation

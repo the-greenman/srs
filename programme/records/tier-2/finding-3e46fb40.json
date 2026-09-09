@@ -1,0 +1,21 @@
+{
+  "instanceId": "3e46fb40-7c22-463b-8a2b-39a5c66872ae",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "A new concept parented under a still-section record double-renders its leaves",
+    "summary": "The #686/#687 coordinator addendum (posted 19:09/19:12Z on both issues) instructs: every new concept a batch mints MUST get a contains parent, naming the concept or section the source subsection sat under as acceptable. Tried literally on srs#686 (parenting 3 new concepts under the 07-extensions section): every leaf under those concepts rendered TWICE in docs/spec/srs-spec.md, at two different heading depths.",
+    "evidence": [
+      "srs#686 first attempt: JSON Store/Registry/Import tracking concepts contains-parented under 07-extensions (a section-typed record)",
+      "Heading-set diff after that render: 15 of 32 new leaf titles doubled, e.g. both \"### Conformance requirements\" and \"##### Conformance requirements\" present",
+      "All 53 pre-existing concept records (Repository included) have zero incoming contains edges today - none is parented by anything",
+      "Removing the 3 section-to-concept contains edges and re-rendering produced a clean 1:1 heading diff, zero doubling, zero loss"
+    ],
+    "body": "Root cause: a section-typed record (section/subsection have not yet retired as authored structure) already participates in a recursive contains-walk when rendered, and mechanism became a flat type=mechanism discovery-query section in #678 - so a leaf reachable from BOTH paths (recursion through its section ancestor, and the flat listing) renders twice. This is the same render_record_at_level recursion PR #693s Finding 1 names for container-subset sections, just triggered by an ordinary sections pre-existing recursive rendering rather than a Parts container-subset. The addendums instruction is sound for the FUTURE state (compositions sourcing from Part containers, once #693 lands and #563/#690 re-parent the concept tree under the Parts) but actively harmful under the CURRENT renderer: any batch that follows it by parenting a new concept under a still-section ancestor will produce duplicated content in the committed spec. Until #693 merges and #563/#690 land, a new concept minted by an un-baking batch should be left as a contains-root, exactly like the 53 that already are - not given a section parent to satisfy future reachability. srs#687 (batch D, the last of the four) has not started as of this finding and would otherwise hit the same addendum instruction verbatim."
+  },
+  "createdAt": "2026-09-08T20:45:36.472538966+00:00",
+  "updatedAt": "2026-09-08T20:45:36.472546322+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -6,7 +6,7 @@
   "typeName": "subsection",
   "fieldValues": {
     "title": "ext:import-tracking",
-    "content": "**Required for**: implementations that receive packages from upstream publishers and need to track update and conflict state.\n\n#### `ImportMode`\n\nExample: the `ImportMode` values.\n\n| Mode | Meaning |\n|---|---|\n| `\"upstream-tracked\"` | Consumer expects updates from the source Package. Conflicts surfaced when local and upstream diverge. |\n| `\"local-copy\"` | Imported as a snapshot. No update tracking. |\n| `\"local-fork\"` | Deliberately diverged. Upstream lineage preserved for reference. |\n\n#### `ImportRecord`\n\nOne record per imported definition in a consumer's local registry.\n\nExample: the `ImportRecord` shape.\n\n#### `ImportSummary`\n\nA consumer's complete picture of its imported definitions.\n\nExample: the `ImportSummary` shape.\n\n---\n\n#### Repository-Level Provenance (RFC-014)\n\nWhen a repository is initialised from a published SRS Package, it records provenance in `manifest.json` at `manifest.upstreamPackage`. This is a normative top-level field — the machine-readable anchor for divergence detection and non-destructive package upgrades.\n\n#### `UpstreamPackage`\n\nShape recorded at install time and updated on upgrade:\n\nExample: the `UpstreamPackage` shape.\n\n#### Repository-Level Divergence Detection\n\nWhen `upstreamPackage` is set, a conforming `ext:import-tracking` implementation MAY detect whether the locally installed definitions differ from the canonical content of the upstream package at that same version (RFC-014 Change E, R8). The comparison is performed against a reference copy (either a byte-for-byte snapshot stored at install time, or re-fetched from the published source if network access is available). A tool without a reference copy simply skips the check.\n\nDivergence is surfaced using the same `conflictState` vocabulary already defined for `ImportRecord`:\n\n| State | Description |\n|---|---|\n| `\"clean\"` | Local package content matches the reference copy at install time. No drift. |\n| `\"local-ahead\"` | Local package has definitions not present in the upstream at install time; all differing ids are locally-added. |\n| `\"diverged\"` | One or more local definition files differ from what the upstream declared under the same `id`+`version` key. |\n\nWhen both `local-ahead` and `diverged` conditions hold simultaneously, implementations MUST report `diverged` as the primary status and include locally-added definitions as a supplementary list.\n\nThe `\"upstream-ahead\"` state (a newer version exists upstream) requires `ext:registry` and is out of scope for local divergence detection."
+    "content": "Content relocated to mechanism leaves under the Import tracking concept (RFC-042 Change B/C/F, srs#562/#686). See derived-from."
   },
   "tags": [
     "concern:extensibility",
@@ -14,7 +14,7 @@
     "topic:extensions"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-09-06T17:00:42.157752381+00:00",
+  "updatedAt": "2026-09-08T19:59:33.429346828+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

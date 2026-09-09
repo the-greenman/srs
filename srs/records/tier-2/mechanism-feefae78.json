@@ -1,0 +1,14 @@
+{
+  "instanceId": "feefae78-5529-4626-b688-fb240fc8cf0d",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Value assessment",
+    "content": "The repository format is valuable when it improves independent inspection, import/export, re-import, collaboration, provenance, and conflict handling without requiring a running service. It is not valuable if it makes simple archives tool-dependent, hides semantic identity behind filenames or storage history, or confuses storage history with SRS semantic history.\n\nFor that reason, SRS repository identity remains inside SRS data (`repositoryId`, `instanceId`, `relationId`, `documentId`, Field/Type IDs, and package IDs). Optional storage or backup systems may record how files changed, but they do not replace SRS IDs, Relations, lifecycle state, `createdAt`, or `updatedAt`."
+  },
+  "createdAt": "2026-09-08T19:48:42.571856283+00:00",
+  "updatedAt": "2026-09-08T19:48:42.571863211+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

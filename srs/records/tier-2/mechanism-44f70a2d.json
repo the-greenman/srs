@@ -1,0 +1,14 @@
+{
+  "instanceId": "44f70a2d-05c2-4372-9eec-482034e1d937",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Repository-Level Provenance (RFC-014)",
+    "content": "When a repository is initialised from a published SRS Package, it records provenance in `manifest.json` at `manifest.upstreamPackage`. This is a normative top-level field — the machine-readable anchor for divergence detection and non-destructive package upgrades."
+  },
+  "createdAt": "2026-09-08T19:49:10.909079650+00:00",
+  "updatedAt": "2026-09-08T19:49:10.909090610+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

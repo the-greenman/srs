@@ -1,0 +1,14 @@
+{
+  "instanceId": "fe7bc7bd-0a5b-4a06-a2b3-6519789a671f",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Repository-Level Divergence Detection",
+    "content": "When `upstreamPackage` is set, a conforming `ext:import-tracking` implementation MAY detect whether the locally installed definitions differ from the canonical content of the upstream package at that same version (RFC-014 Change E, R8). The comparison is performed against a reference copy (either a byte-for-byte snapshot stored at install time, or re-fetched from the published source if network access is available). A tool without a reference copy simply skips the check.\n\nDivergence is surfaced using the same `conflictState` vocabulary already defined for `ImportRecord`:\n\n| State | Description |\n|---|---|\n| `\"clean\"` | Local package content matches the reference copy at install time. No drift. |\n| `\"local-ahead\"` | Local package has definitions not present in the upstream at install time; all differing ids are locally-added. |\n| `\"diverged\"` | One or more local definition files differ from what the upstream declared under the same `id`+`version` key. |\n\nWhen both `local-ahead` and `diverged` conditions hold simultaneously, implementations MUST report `diverged` as the primary status and include locally-added definitions as a supplementary list.\n\nThe `\"upstream-ahead\"` state (a newer version exists upstream) requires `ext:registry` and is out of scope for local divergence detection."
+  },
+  "createdAt": "2026-09-08T19:49:12.211868127+00:00",
+  "updatedAt": "2026-09-08T19:49:12.211875766+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
