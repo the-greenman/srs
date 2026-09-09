@@ -502,6 +502,15 @@
       "cell": "repository",
       "governing": "invariant-049; invariant-050; invariant-080; 07-15-ext-repository; srs#651",
       "description": "Every manifest.json in the repository (whole-tree walk, not a fixed list of roots — matching check-versioning-cell.mjs's reasoning) is parsed and asserted to carry no top-level instanceIndex key: membership is tree-authoritative (RFC-038 [R1]), and a manifest instanceIndex is retired (RFC-038 [R2]) — the rule I-49, I-50, I-80 and 07-15-ext-repository's own conformance text all restate. A live-tree scan, not a git-history diff — this cell's statement is about the current shape, not a transition, so it needs no fetch-depth: 0. One known corpus exception, conformance/discovery/fixture-repo/manifest.json, allowlisted permanently in scripts/repository-cell-allowlist.json: RFC-038 Rev 7 deliberately kept that fixture at pre-cutover storage as frozen ext:discovery test data rather than migrating it (conformance/discovery/README.md). Its guard-bite case (repositoryCellCases) lives in the existing guards-bite entry's tests/guards/run.mjs, not a second registry row."
+    },
+    {
+      "id": "part-container-membership",
+      "script": "part-container-membership.mjs",
+      "args": ["--check"],
+      "tier": "always",
+      "cell": "containment",
+      "governing": "RFC-042 Change G/D; srs#563; srs#682; srs#693",
+      "description": "Each of the nine Part containers' declared memberInstanceIds equals the full contains-subtree computed by walking from the Part concept (the same walk check-spec-coherence.mjs's part-order check uses) — RFC-042's Part containers are shaped as exactly this subtree, and check-publication-reachability.mjs's container-subset descent relies on it staying true. The script has no write mode; membership is regenerated one instance at a time via `srs container members add`/`remove`, never hand-edited."
     }
   ]
 }

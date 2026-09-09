@@ -1,0 +1,23 @@
+{
+  "instanceId": "e86c15e8-8169-4e4a-af2f-4898304a1a8e",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Un-bake headings batch D: ext:protocol, ext:slices, ext:addressability, Foundational values and development phase",
+    "summary": "Splits 20 baked headings across 4 subsections into 24 mechanism leaves under their concepts (Protocol, Travelling form, Addressability, Foundational tension), wired by contains/precedes/derived-from, following the #678/#684/#685 procedure. Fourth and final batch (#684-#687) covering #562's remaining scope.",
+    "decision_mode": "complicated",
+    "door": "door-1",
+    "issue_ref": [
+      "srs#687",
+      "srs#562",
+      "srs#580"
+    ],
+    "body": "Dispatched from srs#580 gate:pool queue (dispatch comment 2026-09-08 ~19:15Z on #687, row D). Claimed 2026-09-08T19:25Z. Applied carried_context-39fde6eb's algorithm directly (no re-derivation needed). Two of the four parent-concept lookups were not 1:1 by title and needed extra verification before wiring: (1) the retiring subsection titled 'Foundational values and development phase' has no same-named concept, but its prose is verbatim the same six tensions the existing 'Foundational tension' concept's description names -- confirmed by content comparison, not name matching, before parenting there; (2) 'ext:slices' has no same-named concept at all (unlike ext:protocol/ext:addressability, which did) -- rather than mint one outside this batch's un-baking-only scope, its leaves parent under 'Travelling form', an existing broader concept whose own description already names 'a slice carrying one container's closure' as one of its cases. Filed as carried_context-cc2eb4d1 so future concept-tree work doesn't re-litigate whether a missing same-named concept means minting one. No new finding for the shallow-clone allowlist trap (git rev-parse --is-shallow-repository -> true again this session, git fetch --unshallow fixed it) -- finding-07d153cf/unit-08a24109 and unit-f7a14814 already document it; same lesson, not a second instance, so batch D's occurrence isn't itself evidence the fix failed -- each fresh worktree gets a fresh shallow clone by construction of this environment, so recurrence is expected, not a regression."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-08T20:57:44.580177598+00:00",
+  "updatedAt": "2026-09-08T20:58:34.732831739+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

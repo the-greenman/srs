@@ -1,29 +1,4 @@
 {
   "$comment": "Known violations of scripts/check-spec-coherence.mjs (srs#560), each citing the live issue that removes it. Entry shape: {check, id | pair:[sourceId,targetId], issue, note}. The check fails on any violation NOT listed here and on any entry that no longer matches a violation \u2014 shrinking this file IS the migration (#562 un-bakes headings, #563 wires the tree, #564 makes invariants leaves). Growing it needs an issue. `note` is for the human reader only; the key is check + id/pair.",
-  "entries": [
-    {
-      "check": "no-baked-heading",
-      "id": "136187cc-8317-4705-91c0-7aaeadaf5998",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:slices (5 headings)"
-    },
-    {
-      "check": "no-baked-heading",
-      "id": "214a7c1f-1bb4-5c86-932e-b47b4fc3b57b",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:addressability (3 headings)"
-    },
-    {
-      "check": "no-baked-heading",
-      "id": "ca3ea62e-effb-503f-ac04-22ce30ca4511",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:protocol (3 headings)"
-    },
-    {
-      "check": "no-baked-heading",
-      "id": "fc31337a-1c61-4e86-9c0f-09f0e0ce56bf",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: Foundational values and development phase (9 headings)"
-    }
-  ]
+  "entries": []
 }
