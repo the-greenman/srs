@@ -1,0 +1,14 @@
+{
+  "instanceId": "05e80d0b-5204-4a44-8f62-36e4e3287718",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "File naming",
+    "content": "Instance files may be named by the implementation. The authoritative identifier (`instanceId`, `relationId`, `documentId`) is stored inside the file; it is not derived from the filename.\n\nRecommended convention: `<human-readable-slug>.json`. Where uniqueness within a folder cannot be guaranteed, `<slug>-<first-8-chars-of-uuid>.json` is recommended."
+  },
+  "createdAt": "2026-09-08T19:48:44.655869540+00:00",
+  "updatedAt": "2026-09-08T20:28:04.704794890+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

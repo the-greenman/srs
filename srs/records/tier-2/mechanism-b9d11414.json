@@ -1,0 +1,14 @@
+{
+  "instanceId": "b9d11414-3056-4d95-8457-772131eadac0",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Source documents",
+    "content": "Binary source document content is not included in the JSON Store. An implementation converting from a filesystem repository to `.srsj` must omit source document content files and should surface the omission to the user. Source document sidecars (`.meta.json`) may be included in `data` if they are pure JSON; their content files must not be."
+  },
+  "createdAt": "2026-09-08T19:49:03.264100946+00:00",
+  "updatedAt": "2026-09-08T19:49:03.264107136+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

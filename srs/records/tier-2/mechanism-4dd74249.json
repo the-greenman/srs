@@ -1,0 +1,14 @@
+{
+  "instanceId": "4dd74249-94ca-402e-8405-664f13cc713f",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "ext:json-store",
+    "content": "**Required for**: any implementation that stores an SRS repository as a single portable JSON file.\n\n**Depends on**: `ext:repository`\n\nDefines the **SRS JSON Store format** (`.srsj`): a single-file, self-contained serialization of a complete SRS repository. The JSON Store is an alternative to the filesystem layout defined by `ext:repository`. Both formats carry identical semantic content; an implementation must be able to convert between them losslessly."
+  },
+  "createdAt": "2026-09-08T19:48:59.965408003+00:00",
+  "updatedAt": "2026-09-08T19:48:59.965413949+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

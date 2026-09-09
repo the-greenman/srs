@@ -1,0 +1,14 @@
+{
+  "instanceId": "56554e2c-bc17-4561-beeb-de2091426630",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Conformance requirements",
+    "content": "1. A conforming producer must write every instance in the repository's authoritative instance set (RFC-038 [R1]) as an entry in `data` under its path.\n2. A conforming producer must write all relation files declared in `manifest.relationsPath` as entries in `data`.\n3. A conforming producer must write the local package under `package/package.json` when `packageRef.mode === \"local\"`.\n4. A conforming consumer must reject a `.srsj` file whose `srsj` value is not a recognised version string.\n5. A conforming consumer must apply the same identity-based import rules as `ext:repository` when loading a `.srsj` file into an existing store.\n6. A conforming implementation must be able to round-trip a repository between the JSON Store format and the filesystem layout without data loss."
+  },
+  "createdAt": "2026-09-08T19:49:02.592775131+00:00",
+  "updatedAt": "2026-09-08T19:49:02.592781264+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

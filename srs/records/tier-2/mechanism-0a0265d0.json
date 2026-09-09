@@ -1,0 +1,14 @@
+{
+  "instanceId": "0a0265d0-e168-475d-bc10-3c9bfa2ba908",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Purpose and trade-offs",
+    "content": "The JSON Store is valuable when portability matters more than human readability of individual files: emailing a repository, committing a snapshot to version control as a single artifact, embedding a repository in a test fixture, or transferring between systems without ZIP tooling.\n\nThe filesystem layout (`ext:repository`) is preferred when independent inspection of individual records, partial checkout, or per-file storage history is valuable."
+  },
+  "createdAt": "2026-09-08T19:49:00.587000657+00:00",
+  "updatedAt": "2026-09-08T19:49:00.587022404+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

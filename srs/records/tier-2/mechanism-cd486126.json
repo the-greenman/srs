@@ -1,0 +1,14 @@
+{
+  "instanceId": "cd486126-b476-49c8-ab67-143c6c504dee",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`Registry`",
+    "content": "A registry's published index.\n\nExample: the `Registry` shape.\n\nMultiple Registries may coexist. A consumer may index multiple catalogs. The specification does not define registry authority, authentication, or federation."
+  },
+  "createdAt": "2026-09-08T19:49:07.147435992+00:00",
+  "updatedAt": "2026-09-08T19:49:07.147445634+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

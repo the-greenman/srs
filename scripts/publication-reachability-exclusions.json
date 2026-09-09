@@ -924,6 +924,230 @@
       "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
       "disposition": "pending",
       "issue": "#690"
+    },
+    {
+      "instanceId": "027b1fa3-5ed9-4717-94fd-76b7e446a6db",
+      "path": "records/tier-2/mechanism-027b1fa3.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "05e80d0b-5204-4a44-8f62-36e4e3287718",
+      "path": "records/tier-2/mechanism-05e80d0b.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "093fade3-4a31-41dc-a51f-bb265a9cad73",
+      "path": "records/tier-2/mechanism-093fade3.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "0a0265d0-e168-475d-bc10-3c9bfa2ba908",
+      "path": "records/tier-2/mechanism-0a0265d0.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "0b3e1575-27f6-4b32-821f-dd1c76a4e089",
+      "path": "records/tier-2/mechanism-0b3e1575.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "1182c712-2892-4f54-a6e0-ba4c87efae2b",
+      "path": "records/tier-2/mechanism-1182c712.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "228e3bdd-d8c1-416b-ac66-76778113d167",
+      "path": "records/tier-2/mechanism-228e3bdd.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "27788615-d8f3-4e56-bb3d-ccaf6684c5ab",
+      "path": "records/tier-2/mechanism-27788615.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "35f111ea-2cfa-447b-9775-5b064b1126d9",
+      "path": "records/tier-2/mechanism-35f111ea.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "44f70a2d-05c2-4372-9eec-482034e1d937",
+      "path": "records/tier-2/mechanism-44f70a2d.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "4dd74249-94ca-402e-8405-664f13cc713f",
+      "path": "records/tier-2/mechanism-4dd74249.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "56554e2c-bc17-4561-beeb-de2091426630",
+      "path": "records/tier-2/mechanism-56554e2c.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "56f8f432-ca03-4329-af3e-703f6a9082cd",
+      "path": "records/tier-2/mechanism-56f8f432.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "7041b3fb-4b26-4873-8929-094db16fb746",
+      "path": "records/tier-2/mechanism-7041b3fb.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "72cb6238-fede-479c-abe1-5b04f0f38fcf",
+      "path": "records/tier-2/mechanism-72cb6238.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "7ec42973-0eaf-49df-8f4c-91d26908c601",
+      "path": "records/tier-2/mechanism-7ec42973.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "7ee312a4-e88e-4c7b-928a-9cc1523f09f3",
+      "path": "records/tier-2/mechanism-7ee312a4.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "8115a03e-1ec8-455a-8228-ef99a29fa211",
+      "path": "records/tier-2/mechanism-8115a03e.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "82951acd-5d4f-4a44-a659-7c1f511dd1a7",
+      "path": "records/tier-2/mechanism-82951acd.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "8e6db37f-8c04-4b32-9a44-cfa70e043662",
+      "path": "records/tier-2/mechanism-8e6db37f.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "9a04732c-a581-45e8-9ec3-a3a420d4d39c",
+      "path": "records/tier-2/mechanism-9a04732c.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "a57ccbda-b393-42e9-ae23-a3c7900963b7",
+      "path": "records/tier-2/mechanism-a57ccbda.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "aa9cb9c5-534a-4c0e-890f-51d4fded842d",
+      "path": "records/tier-2/mechanism-aa9cb9c5.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "b380994a-ccd8-42a6-a8d3-ef805c5fa1d5",
+      "path": "records/tier-2/mechanism-b380994a.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "b9d11414-3056-4d95-8457-772131eadac0",
+      "path": "records/tier-2/mechanism-b9d11414.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "baeb09bb-400e-4be6-a14b-64d89258c179",
+      "path": "records/tier-2/mechanism-baeb09bb.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "c6699224-6edf-4663-b94e-33d9461a1f73",
+      "path": "records/tier-2/mechanism-c6699224.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "cd486126-b476-49c8-ab67-143c6c504dee",
+      "path": "records/tier-2/mechanism-cd486126.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "d453219f-5323-4caf-823c-a5c8168ac64b",
+      "path": "records/tier-2/mechanism-d453219f.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "dd3632ff-f88b-4a67-89f8-ad4de57adbb8",
+      "path": "records/tier-2/mechanism-dd3632ff.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "fe7bc7bd-0a5b-4a06-a2b3-6519789a671f",
+      "path": "records/tier-2/mechanism-fe7bc7bd.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "feefae78-5529-4626-b688-fb240fc8cf0d",
+      "path": "records/tier-2/mechanism-feefae78.json",
+      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
+      "disposition": "pending",
+      "issue": "#690"
     }
   ]
 }

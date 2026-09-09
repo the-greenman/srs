@@ -1,29 +1,4 @@
 {
   "$comment": "Known violations of scripts/check-spec-coherence.mjs (srs#560), each citing the live issue that removes it. Entry shape: {check, id | pair:[sourceId,targetId], issue, note}. The check fails on any violation NOT listed here and on any entry that no longer matches a violation \u2014 shrinking this file IS the migration (#562 un-bakes headings, #563 wires the tree, #564 makes invariants leaves). Growing it needs an issue. `note` is for the human reader only; the key is check + id/pair.",
-  "entries": [
-    {
-      "check": "no-baked-heading",
-      "id": "6bb0f695-e004-5f14-a067-5cf922da5494",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:import-tracking (6 headings)"
-    },
-    {
-      "check": "no-baked-heading",
-      "id": "a75866ba-090f-5d62-9f7c-8e179ff1825f",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:repository (16 headings)"
-    },
-    {
-      "check": "no-baked-heading",
-      "id": "c90aef1e-af6e-550e-ad07-1d5f1bfdf67f",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:registry (2 headings)"
-    },
-    {
-      "check": "no-baked-heading",
-      "id": "f58b3ca2-1d4e-5f6a-b7c8-9d0e1f2a3b4c",
-      "issue": "the-greenman/srs#562",
-      "note": "subsection: ext:json-store (6 headings)"
-    }
-  ]
+  "entries": []
 }

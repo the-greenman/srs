@@ -1,0 +1,14 @@
+{
+  "instanceId": "228e3bdd-d8c1-416b-ac66-76778113d167",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`ImportSummary`",
+    "content": "A consumer's complete picture of its imported definitions.\n\nExample: the `ImportSummary` shape.\n\n---"
+  },
+  "createdAt": "2026-09-08T19:49:10.236631952+00:00",
+  "updatedAt": "2026-09-08T19:49:10.236639178+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

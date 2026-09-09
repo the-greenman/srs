@@ -1,0 +1,14 @@
+{
+  "instanceId": "7ec42973-0eaf-49df-8f4c-91d26908c601",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`SourceDocumentIndexEntry`",
+    "content": "One entry in the optional `sourceDocumentIndex`.\n\nExample: the `SourceDocumentIndexEntry` shape.\n\nWhen `sourceDocumentIndex` is present, every entry must correspond to a valid sidecar that satisfies Invariant 52. The index does not replace sidecar resolution; consumers must still parse the sidecar to obtain the full `SourceDocument` record."
+  },
+  "createdAt": "2026-09-08T19:48:48.268769751+00:00",
+  "updatedAt": "2026-09-08T19:48:48.268778097+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,14 @@
+{
+  "instanceId": "baeb09bb-400e-4be6-a14b-64d89258c179",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`UpstreamPackage`",
+    "content": "Shape recorded at install time and updated on upgrade:\n\nExample: the `UpstreamPackage` shape."
+  },
+  "createdAt": "2026-09-08T19:49:11.544152079+00:00",
+  "updatedAt": "2026-09-08T19:49:11.544159688+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

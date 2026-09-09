@@ -1,0 +1,14 @@
+{
+  "instanceId": "027b1fa3-5ed9-4717-94fd-76b7e446a6db",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "File format",
+    "content": "A `.srsj` file is a pretty-printed UTF-8 JSON object with the following top-level structure:\n\nExample: the top-level shape of a `.srsj` file.\n\n| Field | Type | Description |\n|---|---|---|\n| `srsj` | string | Format version. Current value: `\"1\"`. Implementations must reject files with unrecognised versions. |\n| `manifest` | object | The `RepositoryManifest` object as defined by `ext:repository`. There is no `manifest.instanceIndex`; it is retired (RFC-038 [R2]). The `data` object's own contents are the authoritative instance set (RFC-038 [R1]), except the root container, which the manifest carries inline at `manifest.container`. |\n| `data` | object | Flat key-value store. Keys are forward-slash-normalised relative paths as they would appear in a filesystem repository. Values are the parsed JSON content of each file. |\n\nThe `.srsj` extension is conventional; an implementation may accept any filename. The extension must not be used as an authoritative indicator of format — implementations must inspect the `srsj` field to confirm the format and version."
+  },
+  "createdAt": "2026-09-08T19:49:01.304650680+00:00",
+  "updatedAt": "2026-09-08T19:49:01.304662013+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

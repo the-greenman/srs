@@ -1,0 +1,14 @@
+{
+  "instanceId": "7041b3fb-4b26-4873-8929-094db16fb746",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "ext:repository",
+    "content": "**Required for**: any implementation that stores SRS content as files, produces sharable SRS archives, or supports interoperable export and import.\n\nDefines the **SRS Live Repository Format**: a normative directory layout, manifest, and file conventions for SRS content stored on a filesystem. The **SRS Archive** — the shareable export format — is a self-contained snapshot of a live repository packaged as a ZIP file. The live repository is the working format; the archive is the export. Both are defined here because an archive is structurally identical to a repository snapshot.\n\nA conforming implementation must be able to round-trip between a live repository and an archive without data loss."
+  },
+  "createdAt": "2026-09-08T19:48:40.563895935+00:00",
+  "updatedAt": "2026-09-08T19:48:40.563903042+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

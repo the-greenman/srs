@@ -1,0 +1,14 @@
+{
+  "instanceId": "aa9cb9c5-534a-4c0e-890f-51d4fded842d",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`SourceAnchor`",
+    "content": "A lightweight locator for a position within a source document. Used primarily when capturing a repository-local excerpt from a larger mutable source document in a standalone repository.\n\nExample: the `SourceAnchor` shape."
+  },
+  "createdAt": "2026-09-08T19:48:49.795699279+00:00",
+  "updatedAt": "2026-09-08T19:48:49.795706399+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
