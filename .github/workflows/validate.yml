@@ -17,7 +17,14 @@ name: Validate
 
 on:
   push:
+  # `edited` (not just the default opened/synchronize/reopened) so pr-classification actually
+  # re-checks a PR body correction: the check's own PR_BODY input is GitHub Actions' frozen event
+  # payload, which a body edit alone never retriggers under the default set, and re-running the
+  # same job replays that same frozen payload rather than fetching the corrected text (found
+  # fixing srs#723's own classification line after check-pr-classification.mjs — srs#716 — landed
+  # underneath it mid-review).
   pull_request:
+    types: [opened, synchronize, reopened, edited]
 
 permissions:
   contents: read
