@@ -1,0 +1,15 @@
+{
+  "instanceId": "4c62086f-ed31-4d70-bd30-fd19cec3a3e9",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "srs-rust#973's fix needs a release cut and a pin advance before docs/spec/** shows any diff",
+    "summary": "PR srs-rust#1019 implements RFC-037 Revision 4's block-opening scalar row form in format_field_row_text, but merging it alone produces no visible change anywhere -- srs's docs/spec/** is pinned to a specific tagged srs-rust release (SRS_RUST_CLI_TAG in srs/.github/workflows/release-drift.yml) and is only re-rendered when that pin advances.",
+    "rationale": "RFC-037 Revision 4's own text (srs#714) already states this: 'the pinned CLI does not yet implement it -- srs-rust#973... Revision 4 produces no export diff of its own, for the same reason.' The next unit that wants the 21 measured broken sites (Problem 7's evidence, including docs/spec/srs-spec.md:30) to actually render correctly needs to: (1) confirm srs-rust#1019 merged, (2) cut a new srs-rust release, (3) advance SRS_RUST_CLI_TAG in srs/.github/workflows/release-drift.yml and re-render docs/spec/** in the same PR, per the two-step choreography srs-rust#782 already established for the analogous empty-value-row fix. Do not assume merging srs-rust#1019 alone closes srs#714 or the row-form defect end to end."
+  },
+  "createdAt": "2026-09-09T20:00:37.102101867+00:00",
+  "updatedAt": "2026-09-09T20:00:37.102108998+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
