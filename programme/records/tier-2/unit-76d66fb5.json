@@ -1,0 +1,23 @@
+{
+  "instanceId": "76d66fb5-4164-4cb6-b879-0474b1f0c222",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Implement RFC-037 Revision 4's block-opening scalar row form",
+    "summary": "format_field_row_text in srs-repository now starts a scalar value on the line after its label when the value's first line opens a block-level construct (fenced code, list item, table row, ATX heading, blockquote, thematic break), per srs#714's accepted RFC-037 Revision 4. Inline values and html are unchanged.",
+    "decision_mode": "clear",
+    "door": "door-1",
+    "issue_ref": [
+      "srs-rust#973",
+      "srs#714",
+      "srs#580"
+    ],
+    "body": "Dispatched from the srs#580 pool (tick 2026-09-09) after srs#714/PR #715 merged, resolving the blocked_by on srs-rust#973. Added value_opens_block_level and its seven per-construct detector functions (fence, ATX heading, blockquote, unordered list, ordered list, table row, thematic break), applied only to the Scalar arm of format_field_row_text -- Entries and Placeholder forms are unchanged, and html is unaffected by construction ([FR-037-4]). Proved with one test per construct plus an inline-unchanged and an html-unaffected case: reverted the fix, confirmed 9 of 11 new tests fail exactly on the block-opening constructs, restored it, confirmed all 46 RFC-037 tests green. All three workspace gates (build, test, clippy) green by exit code. PR srs-rust#1019 opened with gate:auto-merge armed (mode clear, Door 1). This PR alone produces no docs/spec/** diff in srs -- that requires a new srs-rust release and a pin advance, tracked as a carried_context for whichever unit does that next."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-09T20:00:21.795310984+00:00",
+  "updatedAt": "2026-09-09T20:00:29.826334649+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
