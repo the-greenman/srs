@@ -1,0 +1,25 @@
+{
+  "instanceId": "b31bcc81-3a80-4250-a883-9b07bd185d93",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "The batch seam refuses instead of lying about rollback",
+    "summary": "RepositoryStore's begin_batch/commit_batch/abort_batch had no-op defaults, so FileStore and MemoryStore silently inherited a rollback guarantee neither can keep. Removed the defaults (every implementor must answer explicitly), added supports_batch_rollback(), and made abort_batch return Err(BatchSeamUnsupported) on both stores instead of claiming success. Corrected the false ADR-021 comments in migrate_carrier and its siblings, and wired rfc038_storage_migration_service's existing hardcoded refusal to the new real capability check.",
+    "decision_mode": "clear",
+    "door": "door-1",
+    "issue_ref": [
+      "srs-rust#1015",
+      "srs-rust#1017",
+      "srs-rust#1018",
+      "srs-rust#813",
+      "srs#580"
+    ],
+    "body": "Item 3 of #1015 (\"every batch caller refuses up front before its first write\") was implemented fully only for rfc038_storage_migration_service (already precedented, zero behavior change). It was NOT applied to migrate_carrier or its sibling migrations (discovery-query-cutover, composition-cutover, migrate_identity_service), because: neither FileStore nor MemoryStore has ever supported real rollback (JsonStore, which the issue assumed still existed with a real override, was actually retired in #783 Phase 4); migrate_carrier's ~10 existing tests and its production CLI path run almost entirely through .srsj/MemVfs-backed sessions, which are safe via a separate mechanism (the projection boundary only flushes to a real file on success, see repository_portability::srsj_partial_import_is_never_projected_to_the_file), not via the batch seam; and supports_batch_rollback() as a store-type-level capability cannot honestly distinguish safe-because-session-backed from risky-because-on-disk for the same FileStore struct. Applying the refusal unconditionally would have broken ~10 currently-passing tests and disabled these migrations in production with no escape hatch. Filed srs-rust#1018 as the follow-up (add an allow_non_atomic-style opt-in mirroring rfc038_storage_migration_service's already-shipped pattern)."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-09T19:20:56.814405622+00:00",
+  "updatedAt": "2026-09-09T19:21:07.934261270+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
