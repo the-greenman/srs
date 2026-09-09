@@ -7,7 +7,7 @@
   "fieldValues": {
     "canonical_key": "record:concepts/extension-interactions",
     "title": "Extension Interactions",
-    "description": "Cross-extension interactions are behavioural requirements that apply only when an implementation declares both named extensions."
+    "description": "Declaring two named extensions together activates behavioural requirements that apply only when both are present in the same implementation."
   },
   "createdAt": "2026-09-09T21:22:34.056000985+00:00",
   "updatedAt": "2026-09-09T21:22:34.056007279+00:00",
