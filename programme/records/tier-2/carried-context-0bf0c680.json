@@ -1,0 +1,15 @@
+{
+  "instanceId": "0bf0c680-72c7-42c8-ab5b-652f9a0637b6",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "Merging N section/subsection records into one mechanism leaf: the exclusion+allowlist retirement pattern",
+    "summary": "To retire a set of section/subsection records that a merge fully absorbs (their headings must actually disappear from the render, not just get a stub), keep every source record catalogued (do not delete -- a derived-from relation needs a live target and no cross-Type identity-preserving retype ships yet, srs#178 OPEN) and do three things: (1) assert derived-from from the new leaf to each top-level retiring record (relation create, not record successor -- that verb is same-type 1:1 only); (2) cut the contains edge from the retiring records' container/Part parent so the whole retired subtree stops being reachable, and re-parent any child example/leaf records that should survive into the new leaf instead; (3) add one scripts/publication-reachability-exclusions.json entry (disposition permanent) for every record that just went unreachable -- ALL of them, not only the top-level ones, since that check is per-instance -- and one scripts/spec-coherence-allowlist.json entry (check no-orphan-leaf) for every record that lost its ONLY contains parent (only the direct children of the cut edge, not their own descendants, since no-orphan-leaf checks direct parentage not full-tree reachability). Both citing the retiring issue.",
+    "rationale": "Found doing srs#691 (merge Namespace Format + Schema Notation into one \"Notational conventions\" mechanism under the Reading this specification Part). Without step 3's two allowlist/exclusion additions, check-publication-reachability.mjs and check-spec-coherence.mjs both go red the moment the contains edge is cut -- the first because reachability is walked from the 9 Part container-subset roots and nothing else, the second because no-orphan-leaf checks direct-parent-having independent of the reachability question. Both checks explicitly document exclusion/allowlist entries as their intended escape hatch for a deliberate, ruled retirement (not a defect to route around another way), so this is the designed mechanism, not a workaround. Also remember to resync the Part's declared container membership via `srs container members add/remove` (never hand-edit the containers/*.json memberInstanceIds file even though scripts/part-container-membership.mjs can compute the right set -- it has no --write mode, it only checks). This would go stale once a bulk retire/purge verb exists that can delete a whole retired subtree (including its inbound derived-from-target role) in one atomic, referentially-safe operation, or once srs#178 (Retype) lands and a cross-Type identity-preserving retype becomes the preferred path per RFC-042 line 119."
+  },
+  "createdAt": "2026-09-09T15:49:12.102664944+00:00",
+  "updatedAt": "2026-09-09T15:49:12.102674300+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,22 @@
+{
+  "instanceId": "8cc287c6-cdee-4074-9d87-d360eeeeaffd",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "The corpus has no precedent yet for a clean N:1 record merge-and-retire; the design-note supersedes precedent keeps both headings",
+    "summary": "record successor (CLI) and the corresponding MCP record_successor are same-type, 1:1 succession only: the successor inherits the predecessor's typeId (optionally a pinned typeVersion) and the predecessor keeps rendering. That is the right shape for a like-for-like supersession (e.g. design-note 7faa986e supersedes f1000005 -- both still render as headings today). It cannot express a merge of two records into one leaf of a DIFFERENT Type (section+section -> one mechanism), which #691 needed. #562's own \"split\" precedent (stub subsection content pointing derived-from at several new mechanisms, heading kept as an anchor) is also the wrong shape for a clean merge where the acceptance bar is headings actually disappearing.",
+    "evidence": [
+      "srs record successor --help: reads {relationType, fieldValues} from stdin against one --id predecessor; no typeId override beyond the inherited one",
+      "srs-usage.md line ~1634 (record_successor MCP tool): \"The successor inherits the predecessor's typeId (and optionally a pinned typeVersion)\"",
+      "f58b3ca2 (\"ext:json-store\", subsection): kept, contains-parented, content stubbed to \"Content relocated... See derived-from\", still renders as a heading -- six mechanisms carry derived-from edges to it",
+      "7faa986e supersedes f1000005 (both design-note): predecessor design-note f1000005 still contains-parented and still renders today in both docs/spec/srs-spec.md and srs-unified.md",
+      "RFC-042 line 119: \"A retype that preserves the instanceId is preferred where the tooling offers it (srs#178); where it does not, the successor carries a derived-from edge to the retired record\" -- srs#178 (Retype) is still an OPEN stub with no shipped mechanism (confirmed via srs#562's own body)"
+    ],
+    "body": "#691 resolved this by keeping the two retiring section records and five subsections as catalogued-but-unreachable records: a derived-from relation from the new mechanism to each of the two top-level sections, contains edges from the Part cut (making the whole 7-record subtree unreachable together), and one publication-reachability-exclusions.json entry per orphaned record (7 total, disposition permanent) plus one spec-coherence-allowlist.json entry per now-parentless top-level section (2 total, check no-orphan-leaf) -- both citing #691. This keeps repo validate's referential-integrity requirement satisfied (derived-from needs a live target) while making the old headings genuinely disappear from the render, which is what #691's acceptance bar asked for and the existing supersedes/split precedents do not achieve. Recorded so the next merge-and-retire unit does not reach for record successor (wrong arity/type), copy the stub-heading pattern (wrong outcome -- keeps the heading), or read 7 new exclusion-list lines as a smell rather than the intended mechanism for this case. It becomes stale once srs#178 (Retype) ships an identity-preserving cross-Type retype, or a bulk section/subsection purge tool lands that can delete a whole retired subtree at once without breaking live derived-from targets."
+  },
+  "createdAt": "2026-09-09T15:48:51.841092256+00:00",
+  "updatedAt": "2026-09-09T15:48:51.841101078+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

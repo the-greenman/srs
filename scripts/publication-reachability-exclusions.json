@@ -282,6 +282,13 @@
       "issue": "#285"
     },
     {
+      "instanceId": "5bc9b930-462d-535d-91c5-bd9e2b17c91c",
+      "path": "records/sections/02-namespace-format.json",
+      "reason": "Retired by succession into the merged mechanism leaf \"Notational conventions\" (b3c293f9-e64e-4417-99b4-574efa810922) under the Reading this specification Part: owner ruling on #563 (comment 5586495347) item 3 to merge Namespace Format and Schema Notation into one key, executed by #691. The new leaf carries a derived-from edge to this record; content is preserved there (heading/sentence diff in the PR). Kept as a catalogued record rather than deleted because the derived-from relation needs a live target and no identity-preserving retype tool exists yet (srs#178, OPEN).",
+      "disposition": "permanent",
+      "issue": "#691"
+    },
+    {
       "instanceId": "5dca4f91-1977-439e-bdb6-ece11b45c42e",
       "path": "records/tier-2/rfc-change-5dca4f91.json",
       "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains` (edge asserted by #409 — RFC-017's stub record had no relations at all before this fix), but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into it (render_service.rs) and `rfc-catalog.md` contains none of it. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
@@ -310,6 +317,13 @@
       "issue": "#285"
     },
     {
+      "instanceId": "63065301-6afc-5ae6-8d62-59cae1a3154c",
+      "path": "records/sections/03-schema-notation.json",
+      "reason": "Retired by succession into the merged mechanism leaf \"Notational conventions\" (b3c293f9-e64e-4417-99b4-574efa810922) under the Reading this specification Part: owner ruling on #563 (comment 5586495347) item 3 to merge Namespace Format and Schema Notation into one key, executed by #691. The new leaf carries a derived-from edge to this record; content is preserved there (heading/sentence diff in the PR). Kept as a catalogued record rather than deleted because the derived-from relation needs a live target and no identity-preserving retype tool exists yet (srs#178, OPEN).",
+      "disposition": "permanent",
+      "issue": "#691"
+    },
+    {
       "instanceId": "694cfd3c-91a7-52b5-8082-20ed49976366",
       "path": "records/rfc-changes/rfc-004-change-e.json",
       "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
@@ -336,6 +350,13 @@
       "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
+    },
+    {
+      "instanceId": "7d22d50f-2dc2-51cb-ac43-dd1b0903d869",
+      "path": "records/subsections/02-4-name-convention.json",
+      "reason": "Retired by succession into the merged mechanism leaf \"Notational conventions\" (b3c293f9-e64e-4417-99b4-574efa810922) under the Reading this specification Part: owner ruling on #563 (comment 5586495347) item 3 to merge Namespace Format and Schema Notation into one key, executed by #691. The new leaf carries a derived-from edge to this record; content is preserved there (heading/sentence diff in the PR). Kept as a catalogued record rather than deleted because the derived-from relation needs a live target and no identity-preserving retype tool exists yet (srs#178, OPEN).",
+      "disposition": "permanent",
+      "issue": "#691"
     },
     {
       "instanceId": "7e8d9753-044d-4374-9aa2-0939a0d85cfd",
@@ -401,6 +422,13 @@
       "issue": "#274"
     },
     {
+      "instanceId": "8e3fb02c-3863-55a9-8bcd-0580e0c7b3a9",
+      "path": "records/subsections/03-1-version-semantics.json",
+      "reason": "Retired by succession into the merged mechanism leaf \"Notational conventions\" (b3c293f9-e64e-4417-99b4-574efa810922) under the Reading this specification Part: owner ruling on #563 (comment 5586495347) item 3 to merge Namespace Format and Schema Notation into one key, executed by #691. The new leaf carries a derived-from edge to this record; content is preserved there (heading/sentence diff in the PR). Kept as a catalogued record rather than deleted because the derived-from relation needs a live target and no identity-preserving retype tool exists yet (srs#178, OPEN).",
+      "disposition": "permanent",
+      "issue": "#691"
+    },
+    {
       "instanceId": "956c99fd-2a59-4b88-bf87-5f6aa56292ff",
       "path": "records/rfcs/rfc-009-change-a-rootTypeRefs.json",
       "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
@@ -457,6 +485,13 @@
       "issue": "#285"
     },
     {
+      "instanceId": "a79c0adc-c4a3-516e-8305-640045eda858",
+      "path": "records/subsections/02-1-convention.json",
+      "reason": "Retired by succession into the merged mechanism leaf \"Notational conventions\" (b3c293f9-e64e-4417-99b4-574efa810922) under the Reading this specification Part: owner ruling on #563 (comment 5586495347) item 3 to merge Namespace Format and Schema Notation into one key, executed by #691. The new leaf carries a derived-from edge to this record; content is preserved there (heading/sentence diff in the PR). Kept as a catalogued record rather than deleted because the derived-from relation needs a live target and no identity-preserving retype tool exists yet (srs#178, OPEN).",
+      "disposition": "permanent",
+      "issue": "#691"
+    },
+    {
       "instanceId": "a8ecf7de-c92c-4d1c-80c7-8288329b7a91",
       "path": "records/notes/protocols-as-meaning-making.json",
       "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
@@ -476,6 +511,13 @@
       "reason": "Tier-0 design capture (2026-07-31, recreated from #291): directory-kind container scopes via RFC-013 typed identity records, plus the structural-constraints family observation. Rung 0 of the capture ladder — input to RFC-034, which is unaccepted. Publishing it would present unaccepted RFC material as specification. It becomes reachable by graduating to a design-note record when srs#267 lands.",
       "disposition": "pending",
       "issue": "#267"
+    },
+    {
+      "instanceId": "b3bc0140-505a-5ab6-bfe1-4271e3c6b42f",
+      "path": "records/subsections/02-2-reserved-namespaces.json",
+      "reason": "Retired by succession into the merged mechanism leaf \"Notational conventions\" (b3c293f9-e64e-4417-99b4-574efa810922) under the Reading this specification Part: owner ruling on #563 (comment 5586495347) item 3 to merge Namespace Format and Schema Notation into one key, executed by #691. The new leaf carries a derived-from edge to this record; content is preserved there (heading/sentence diff in the PR). Kept as a catalogued record rather than deleted because the derived-from relation needs a live target and no identity-preserving retype tool exists yet (srs#178, OPEN).",
+      "disposition": "permanent",
+      "issue": "#691"
     },
     {
       "instanceId": "b9d11414-3056-4d95-8457-772131eadac0",
@@ -588,6 +630,13 @@
       "reason": "Document identity anchor, not document content: it names one of the two rendered specifications and carries its canonical key, title, version label and summary. Nothing renders it because there is nothing in it for a reader — the document it names is the presentation. Deliberately invisible.",
       "disposition": "permanent",
       "issue": "#285"
+    },
+    {
+      "instanceId": "d13710f4-628e-50a0-9f12-f297a93dc25f",
+      "path": "records/subsections/02-3-reference-format.json",
+      "reason": "Retired by succession into the merged mechanism leaf \"Notational conventions\" (b3c293f9-e64e-4417-99b4-574efa810922) under the Reading this specification Part: owner ruling on #563 (comment 5586495347) item 3 to merge Namespace Format and Schema Notation into one key, executed by #691. The new leaf carries a derived-from edge to this record; content is preserved there (heading/sentence diff in the PR). Kept as a catalogued record rather than deleted because the derived-from relation needs a live target and no identity-preserving retype tool exists yet (srs#178, OPEN).",
+      "disposition": "permanent",
+      "issue": "#691"
     },
     {
       "instanceId": "d28e2f8e-eff5-4aca-870c-151d0804d80d",
