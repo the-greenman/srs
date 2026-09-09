@@ -1,5 +1,5 @@
 {
-  "$comment": "The Pattern Grid's twelve cell slugs (rfc-decision-cce3c00e). One source of truth: the Decision Compass (#461), the decision-record guard (check-decision-cell-tags.mjs), and the RFC-integration checker (check-rfc-integration.mjs) all read this file rather than each hardcoding their own copy (srs#462).",
+  "$comment": "The Pattern Grid's twelve cell slugs (rfc-decision-cce3c00e). One source of truth: the Decision Compass (#461), the decision-record guard (check-decision-cell-tags.mjs), and the RFC-integration checker (check-rfc-integration.mjs) all read this file rather than each hardcoding their own copy (srs#462). `glyphs` is the zodiac glyph for the cell at the same array index, in the reading order fixed by the Compass's grid table (docs/charter/decision-compass.md: Individual row Fire→Water, then Relational, then Systemic) — added for srs#716 so a PR classification line's glyph (‘♒ Conformance’) resolves without a second hardcoded copy of the twelve names.",
   "cells": [
     "versioning",
     "identity",
@@ -13,5 +13,19 @@
     "repository",
     "conformance",
     "portability"
+  ],
+  "glyphs": [
+    "♈",
+    "♉",
+    "♊",
+    "♋",
+    "♌",
+    "♍",
+    "♎",
+    "♏",
+    "♐",
+    "♑",
+    "♒",
+    "♓"
   ]
 }
