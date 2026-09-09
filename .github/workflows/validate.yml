@@ -45,3 +45,31 @@ jobs:
       # turns a red gate green (CLAUDE.md, "Gates and choreography").
       - name: Run the declared check registry
         run: node scripts/validate-all.mjs
+
+  # scripts/checks.json's `pr-classification` entry is `tier: ci-only` — declaring it in the
+  # registry does not make anything run it (rfc-decision-19997e24's own accepted cost: "the
+  # ci-only tier can declare a check but cannot enforce that the CI workflow actually runs it").
+  # This job is that enforcement (srs#716). PR-only: github.event.pull_request only exists on a
+  # pull_request-triggered run, so a push run has nothing to check here.
+  pr-classification:
+    name: pr-classification
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    # The PR body and label names are read into env vars by the Actions expression evaluator, not
+    # interpolated into a shell command — a PR body is attacker-controlled text (backticks, `$(...)`,
+    # etc.), and putting it directly in a `run:` string would be a command-injection sink. The script
+    # reads them from process.env, never from argv, in this job.
+    env:
+      PR_BODY: ${{ github.event.pull_request.body }}
+      PR_LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Check the PR's Mode/Cell/Door classification line
+        run: node scripts/check-pr-classification.mjs

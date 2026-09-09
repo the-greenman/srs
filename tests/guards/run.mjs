@@ -2510,6 +2510,64 @@ async function partContainerMembershipCases(root) {
   });
 }
 
+// ---- srs#716 — check-pr-classification.mjs: the PR body's Mode/Cell/Door line resolves ----------
+// ---- against the closed vocabularies it claims, and against a gate:auto-merge label -------------
+async function prClassificationCases(root) {
+  console.log("srs#716 — check-pr-classification.mjs: negative test");
+
+  const bodyFile = join(root, "body.txt");
+
+  // The defect this check exists to catch: srs#716 found four artifacts classified with "♓
+  // Presentation" — ♓ is a real glyph (Portability's), but "Presentation" is not one of the
+  // twelve cells. Naming the twelve, not just rejecting, is the acceptance bar.
+  await writeText(bodyFile, "Mode: clear · Cell: ♓ Presentation · Door: non-normative · gate:auto-merge\n");
+  expect(
+    "rejects an invented cell even when paired with a real glyph",
+    runCheck("check-pr-classification.mjs", bodyFile, "gate:auto-merge"),
+    {
+      exit: 1,
+      contains: [
+        "does not name one of the twelve Pattern Grid cells",
+        "versioning, identity, description, attribution, succession, containment, reference, assertion, governance, repository, conformance, portability",
+      ],
+    },
+  );
+
+  // A mode that cannot carry gate:auto-merge (per the srs#580 autonomy contract) contradicts a PR
+  // that carries the label anyway — this must fail naming both the label and the contract.
+  await writeText(bodyFile, "Mode: complex · Cell: ♒ Conformance · Door: 2 · gate:auto-merge\n");
+  expect(
+    "rejects gate:auto-merge on a complex-mode, Door-2 classification",
+    runCheck("check-pr-classification.mjs", bodyFile, "gate:auto-merge"),
+    {
+      exit: 1,
+      contains: ["gate:auto-merge", "contradicts", "srs#580"],
+    },
+  );
+
+  // No classification line at all — every PR states one; a silent PR must fail, not pass by
+  // omission.
+  await writeText(bodyFile, "Just a summary, no classification line here.\n");
+  expect("rejects a PR body with no classification line", runCheck("check-pr-classification.mjs", bodyFile), {
+    exit: 1,
+    contains: ["No \"Mode: ... Cell: ... Door: ...\" classification line found"],
+  });
+
+  // A well-formed line, glyph + name together, consistent with its label — passes.
+  await writeText(
+    bodyFile,
+    "Mode: complicated · Cell: ♍ Containment · Door: 1 (executes an accepted ruling) · gate:auto-merge\n",
+  );
+  expect(
+    "accepts a well-formed classification consistent with its gate:auto-merge label",
+    runCheck("check-pr-classification.mjs", bodyFile, "gate:auto-merge"),
+    {
+      exit: 0,
+      contains: ["✓ Classification line is well-formed"],
+    },
+  );
+}
+
 const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
 try {
   await fieldNameCases(join(root, "field-name"));
@@ -2536,6 +2594,7 @@ try {
   await repositoryCellCases(join(root, "repository-cell"));
   await programmeConformanceCases(join(root, "programme-conformance"));
   await partContainerMembershipCases(join(root, "part-container-membership"));
+  await prClassificationCases(join(root, "pr-classification"));
 } finally {
   await rm(root, { recursive: true, force: true });
 }

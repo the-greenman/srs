@@ -511,6 +511,15 @@
       "cell": "containment",
       "governing": "RFC-042 Change G/D; srs#563; srs#682; srs#693",
       "description": "Each of the nine Part containers' declared memberInstanceIds equals the full contains-subtree computed by walking from the Part concept (the same walk check-spec-coherence.mjs's part-order check uses) — RFC-042's Part containers are shaped as exactly this subtree, and check-publication-reachability.mjs's container-subset descent relies on it staying true. The script has no write mode; membership is regenerated one instance at a time via `srs container members add`/`remove`, never hand-edited."
+    },
+    {
+      "id": "pr-classification",
+      "script": "check-pr-classification.mjs",
+      "args": [],
+      "tier": "ci-only",
+      "cell": "conformance",
+      "governing": "rfc-decision-19997e24; rfc-decision-7caca3a1; srs#716",
+      "description": "The PR body's `Mode: ... · Cell: ... · Door: ...` classification line resolves against the declared mode vocabulary (scripts/lib/decision-modes.json) and the twelve Pattern Grid cells (scripts/lib/pattern-grid-cells.json, glyph or name or both), the door is one of 1/2/3/non-normative, and a `gate:auto-merge` label is consistent with the stated mode/door per the autonomy contract (srs#580: mode clear/complicated AND door 1/non-normative). Reads the PR body and labels from PR_BODY/PR_LABELS (CI) or a body-file argument (the negative test) — there is no repository tree to walk, so this check has no local validate-all entry point; a CI workflow step supplies the PR event context."
     }
   ]
 }
