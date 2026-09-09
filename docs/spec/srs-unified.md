@@ -999,6 +999,169 @@ relation-type-definition {
 
 
 
+#### Stable identity
+
+**Canonical Key**: record:concepts/stable-identity
+
+**Description**: The rule that every SRS entity carries a UUID that is minted once and never changes — not when the entity is copied, exported, imported, renamed for display, or moved between repositories. Identity is declared, never inferred from a filename, a path, a storage history or a display label, and never selected by precedence: an identity conflict is fatal, never resolvable. Changing what an entity is at root means minting a new UUID, not reusing the old one.
+
+**Notes**: Definition identity (Field.id, Type.id, packageId) and instance identity (instanceId, relationId, documentId, containerId) are distinct id spaces that obey the same rule.
+
+**Examples**: `repositoryId` survives export and copy; an importer that mints a new repository for every archive it receives, instead of keying on `repositoryId`, is non-conformant (Invariant 53).
+
+##### Field.id is stable across versions.
+
+**Number**: 9
+
+**Constraint**: `Field.id` is stable across versions. A new `id` means a new definition, not a new version of an existing one.
+
+
+##### When an importer encounters an incoming object whose identity key…
+
+**Number**: 54
+
+**Constraint**: When an importer encounters an incoming object whose identity key matches an existing local object but whose content or checksum differs, it must surface the conflict explicitly. An importer that silently overwrites or silently discards in this case is not conformant.
+
+
+
+#### Namespace
+
+**Canonical Key**: record:concepts/namespace
+
+**Description**: A dot-separated, lowercase identifier that groups definitions under an authority and keeps names from colliding between independent publishers. Components match `[a-z0-9][a-z0-9-]*`. `core` is reserved for definitions maintained by the SRS standard, and `com.semanticops.core` is reserved such that no repository may declare a Type or Field under it. Namespace authorship is where domain vocabulary responsibility sits — the specification deliberately defines no universal ontology.
+
+**Examples**: `core`, `community.adr`, `com.acme.hr`, `org.cooperative-name`
+
+##### μDemocracy Mapping
+
+**Intro**: How the SCDS v2 vocabulary maps to the μDemocracy application layer. Reproduced from the v1→v2 conceptual remapping document for reference.
+
+| SCDS concept | μDemocracy application |
+| --- | --- |
+| Field | Semantic atom in a governance record |
+| Type | Decision, Proposal, Action, Role, Value, Principle, ... |
+| Record | A captured governance artefact with provenance |
+| Blueprint | Founding Document type; Decision Log type |
+| Protocol | Democracy protocol: Brain Dump, Decomposition, Decision, Proposal, ... |
+| Container | A group's governance workspace; a founding process scope |
+| Relation | `supersedes`, `derived-from`, `ratifies`, `depends-on`, ... |
+| View | Facilitator view; summary view; export for ratification |
+| Document View | Assembled founding document; full decision log |
+| Address | Stable identifier for any governance element — Field, Record, stage, chunk |
+| Attention State | Current focus of an active facilitated session |
+| Revision | Auditable history of how a governance field arrived at its current value |
+| Conversation layer | Session transcript; threaded discussion; facilitator annotations |
+
+
+
+##### com.semanticops.core/* types and fields MUST resolve in every conforming repository without any package declaration
+
+**Number**: I-85
+
+**Constraint**: A conforming SRS implementation MUST make all `com.semanticops.core/*` types and fields resolvable in every repository without any `packageRef` or `packageRefs` declaration in the manifest. The core base package's definitions are treated as logically present in the RFC-014 R6 package union for all repositories. An implementation that fails to resolve `com.semanticops.core/*` types and fields in a structurally valid repository is non-conformant with RFC-029.
+
+**Rationale**: Without this invariant an implementation could claim RFC-029 conformance while failing to expose core types to type resolution, making the always-available guarantee unverifiable. The invariant makes the expectation explicit and testable: a conformance suite can check whether `com.semanticops.core/purpose` resolves in any repository regardless of its package declarations.
+
+
+##### No Type or Field with namespace com.semanticops.core MAY be declared in any repository package
+
+**Number**: I-86
+
+**Constraint**: A repository MUST NOT declare any Type or Field under the `com.semanticops.core` namespace in a local or external package. An implementation MUST reject the repository load with a conflict error if any such declaration is encountered during package loading. This reservation covers only the `com.semanticops.core` namespace; other `com.semanticops.*` sub-namespaces are governed by their own RFC or by general package conflict rules and are not affected by this invariant.
+
+**Rationale**: The core base package's definitions are exclusively controlled by the SRS implementation, guaranteeing universal availability and consistency. Allowing repositories to declare their own `com.semanticops.core` types would create shadowing, version conflicts, and divergence between implementations. The hard conflict error (not a warning) makes this an unambiguous implementation constraint.
+
+
+
+#### Version lineage
+
+**Canonical Key**: record:concepts/version-lineage
+
+**Description**: A positive integer scoped to one UUID's history, expressing how a definition has evolved while remaining the same definition. Version increments within the lineage; changing the `namespace` or the `name` is not a version bump but a new definition with a new UUID. A bump is required whenever a downstream consumer's extraction, validation or governance behaviour would differ — notably any change to `fieldType` or to the meaning of `aiGuidance`. Reworded prose alone needs no bump.
+
+**Notes**: Package versions are semver strings and are a different axis: a package at 1.3.0 may carry `decision_statement@3` and `context@2`.
+
+##### A referenced Type version is not deletable
+
+**Number**: I-137
+
+**Constraint**: A Type version referenced by any instance in the repository MUST NOT be deleted. Name-keying makes the Record-to-Field edge Type-mediated: `fieldId` is recovered from `typeId` + `typeVersion` + key, so deleting the pinned Type version renders every instance of it unreadable. This rule governs versions with live referents only. (RFC-039 [R19])
+
+
+
+#### Canonical reference
+
+**Canonical Key**: record:concepts/canonical-reference
+
+**Description**: How one definition points at another. The human-facing canonical string form is `namespace/name@version`, with `/` and `@` reserved as separators that may not appear inside a component or a name. The stored machine form is UUID-anchored: a bare UUID for a lineage reference, or an ExactTypeRef pairing `typeId` with an explicit `typeVersion` where the pointer must be version-exact. The string form is for display and is never what gets stored, so a rename never breaks a stored pointer.
+
+**Examples**: `core/decision_statement@2`; `{ typeId: <uuid>, typeVersion: 3 }`
+
+##### `semanticObjectType` as a federation risk
+
+**Content**: 
+`semanticObjectType` on `Type` and in `SectionSource.type-query` is a free-form string. The spec recommends `namespace/name` format for portable Document Views (Invariant 32) and treats bare strings as a single-system convention. This is the minimum rule needed to ship v2.
+
+The risk: two systems can use the same bare string (`"decision"`, `"task"`) and mean different semantic Types. When graph traversal or document assembly crosses system boundaries, type-query portability becomes undefined wherever bare strings appear. This is where federation bugs will appear first.
+
+The current design is deliberately light. Possible futures in order of increasing strictness:
+- **Informative only** — `semanticObjectType` becomes advisory metadata with no query semantics; implementations must use explicit TypeRefs for cross-system queries
+- **Typed vocabulary** — `semanticObjectType` becomes a typed reference to a Type definition (a `TypeRef` rather than a bare string), giving it the same identity guarantees as a Field or Type reference
+
+The second option would require changing the type from `string` to `TypeRef | string` and a version bump. For now: prefer `namespace/name` format in any Type or SectionSource that will cross system boundaries, and treat bare strings as a scope boundary. Implementations should document which `semanticObjectType` values they recognise and what Types they map to.
+
+
+
+#### AI guidance
+
+**Canonical Key**: record:concepts/ai-guidance
+
+**Description**: Structured instruction carried on a definition telling a language model what the definition captures and how to populate it: a required `purpose`, and optional `extraction`, `negativeGuidance`, and worked `examples`. It travels with the definition instead of living in an application's prompt, which is what makes a package usable by a tool that has never seen it before. Guidance belongs to the entity that owns the meaning: a Field's guidance is the Field's, and a Type's guidance supplies session framing only — it never redefines a Field's extraction semantics.
+
+**Notes**: Composition order is a recommended default, not an invariant: Type framing, View framing, Field extraction, negative guidance, examples.
+
+##### Field's aiGuidance belongs to the Field.
+
+**Number**: 3
+
+**Constraint**: A `Field`'s `aiGuidance` belongs to the Field. Type-level `aiGuidance` provides session framing only.
+
+
+##### AI guidance composition order
+
+**Content**: 
+When assembling an AI prompt from multiple `aiGuidance` blocks:
+
+1. **Type framing** — establishes what semantic object type is being worked on
+2. **View framing** (if using `ext:views-l1`) — workflow-specific context for this View
+3. **Field extraction guidance** — specific instruction for populating each Field
+4. **Negative guidance** — constraints applied after the extraction instruction
+5. **Examples** — few-shot demonstrations last, as final grounding
+
+This ordering ensures broad context (what kind of object this is) precedes narrow directives (how to populate this specific Field). Template framing narrows the Type context — it does not replace it.
+
+This is a recommended default. Implementations that compose differently will produce different AI behaviour from the same definitions.
+
+
+##### `AiGuidanceExample`
+
+**Content**: A single example for AI guidance.
+
+Example: the `AiGuidanceExample` shape.
+
+`output` is required. An example without `input` demonstrates expected output form without requiring a specific source.
+
+
+##### `AiGuidance`
+
+**Content**: Structured AI guidance for a Field or Type.
+
+Example: the `AiGuidance` shape.
+
+The minimum valid `AiGuidance` is `{ purpose: "..." }`.
+
+
+
 #### Type
 
 **Canonical Key**: type:com.semanticops.srs/type
@@ -1088,6 +1251,9 @@ Declaring both is a validation error. An inline lifecycle cannot extend; use `li
 **Description**: Single inheritance between Types: a specialising Type names one base Type, gains its effective field list, and adds its own. The governing constraint is substitutability — a system that knows the base Type but not the specialisation must still be able to read the inherited fields and should preserve the unknown ones instead of discarding them. A specialisation may therefore tighten an inherited optional field to required, but never relax a required one, and may never alter Field semantics.
 
 **Notes**: Inheritance chains must be acyclic (Invariant 39). Only some properties cascade up the ancestor chain — the effective identity field does; the explicit field order does not.
+
+##### Type inheritance (ext:type-inheritance)
+
 
 ##### Type.extendsTypeId, when present, must reference a valid Type.id.
 
@@ -1210,6 +1376,405 @@ A system that knows `core/decision` but not `org.example/governance_decision` ca
 
 
 
+#### Vocabulary
+
+**Canonical Key**: record:concepts/vocabulary
+
+**Description**: A controlled set of strings that appear in instance data and must mean something stable. Every entry, whatever specialisation it is, carries the same substrate contract: a stable id, a version, a namespace, the `key` that is the string actually stored, optional label, description and aliases, and a status of active, deprecated, tombstone or retired, where absent means active. A vocabulary is `open`, meaning unlisted values are valid and unenriched, or `closed`, meaning every value must resolve to exactly one entry.
+
+**Notes**: An open vocabulary's authoritative value set is the distinct keys actually in use, not the curated entry list — the curation is an overlay that may lag or be empty. Curating a string into a Term rewrites no instance.
+
+##### Why tags exist: from clustering to definitions
+
+**Content**: Content relocated to design-note leaves under the Vocabulary concept (RFC-042 Change B/F, srs#562). See derived-from.
+
+
+##### Container tags must resolve against Vocabulary Terms when a Vocabulary governs the key
+
+**Number**: I-65
+
+**Constraint**: When a Vocabulary in the repository package declares Term entries for a given tag key, Container tags bearing that key MUST resolve against those Terms per RFC-006 vocabulary resolution rules. Free-string tags are valid when no Vocabulary entry governs the key.
+
+
+##### Why tags exist: from clustering to definitions
+
+**Content**: Tags emerged from a concrete problem in note-taking: when building up a body of notes, there was no lightweight way to say "these notes are related" or "this note belongs to this topic cluster" without creating a formal Relation or binding to a Type.
+
+Raw string tags on Notes filled that gap. A tag is not a claim about structure — it is a claim about topic membership. Notes about the same problem domain, design thread, or concern can share a tag, and that shared tag is enough to surface them together.
+
+
+##### Evolution to definitions
+
+**Content**: As tag vocabularies grew, the tags themselves needed properties. Two problems appeared:
+
+1. **Disambiguation**: the same string could mean different things in different contexts. A label is not enough — description and aliases matter.
+2. **Roles**: some tags were structural signals rather than topic labels. The `foundation` tag marks notes that should always be included in an AI context handoff. That is a semantic role, not just a category.
+
+This led to `TagDefinition` — an addressable Tier 3 record that gives a tag a stable identity, description, roles, and aliases. A tag does not *require* a definition to be used; definitions are additive enrichment. But when a tag carries structural meaning (like `foundation`), its definition is what makes that meaning machine-readable.
+
+
+##### Design principle
+
+**Content**: Tags are a peer to Field and Type in the SRS data model — not an extension, not an afterthought. They are defined natively in the core implementation with dedicated service functions, not modelled as user-defined package types. This is because the operations that depend on tags (especially foundation note selection for AI context) are universal across all SRS repositories, not specific to any one repo's package.
+
+
+##### `vocabularyRef` — binding closed string fields to shared vocabularies
+
+**Content**: When `fieldType.valueDomain` is `"closed"`, a Field declares exactly one value source:
+
+Example: the two value sources a closed string Field may declare.
+
+`allowedValues` is formally sugar for an anonymous inline closed vocabulary: the value set is fixed by the Field definition, so changing it means a new Field version. `vocabularyRef` is a **configurable** data range — the value set is managed as package configuration and evolves without reversioning the Field — and is used when the set is shared, extensible, or needs Term identity. A `vocabularyRef` MUST resolve to a `Vocabulary` with `mode: closed`. Declaring both, or neither when `valueDomain` is `"closed"`, is a validation error.
+
+
+##### Vocabulary and Term
+
+**Content**: SRS defines four controlled vocabularies — sets of strings that appear in instance data and must mean something stable. They share a common substrate: a `VocabularyEntry` contract satisfied by `Term`, `LifecycleState`, and `RelationTypeDefinition`.
+
+
+##### `VocabularyEntry` (substrate contract)
+
+**Content**: `VocabularyEntry` is a contract, not a serialised type. Every conforming entry carries:
+
+Example: the `VocabularyEntry` substrate contract.
+
+**Absent `status` MUST be treated as `active`.** This is normative: all resolution rules (V1, V6, V9, V10) treat absent identically to `"active"`.
+
+**Entries are keyed, not named.** Entries carry `key`, not `name`, and are addressed within their container. They are not independently `Reference`-able. Containers (`Vocabulary`, `Lifecycle`) have `name` and are the `Reference` targets.
+
+**Required-field tightening.** `label` and `description` are optional so an emergent `Term` is valid before prose is written. A specialisation MAY tighten an optional substrate field to required; it MUST NOT relax a required one. `RelationTypeDefinition` requires both `label` and `description` (unchanged from RFC-005).
+
+**One forward-compatibility policy.** Unknown top-level fields are rejected; arbitrary entry metadata goes in `meta`.
+
+
+##### `Vocabulary`
+
+**Content**: A named, versioned set of `Term` entries.
+
+See the generated reference below for `Vocabulary`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+
+
+##### `Term`
+
+**Content**: The generalisation of `TagDefinition`. A defined option within a `Vocabulary`.
+
+See the generated reference below for `Term`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+
+
+##### The four vocabularies
+
+**Content**: | Vocabulary | Binding scope | Container | Mode |
+|---|---|---|---|
+| Tags | ambient (whole repo) | `Vocabulary` (typically local, open) | `open` |
+| Relation types | repo-global (any edge) | `package.relationTypes[]` (flat global set) | closed-extensible |
+| Lifecycle states | type-bound, shareable | `Lifecycle` (inline or referenced) | `closed` |
+| Field values | field-bound | `Vocabulary` via `vocabularyRef` or inline `allowedValues` | `closed` (V3) |
+
+
+##### Package integration
+
+**Content**: Vocabularies are Foundation-group definition types installed in packages alongside fields, types, and relationTypes:
+- the distributable `Package` holds inline definitions: `vocabularies?: Vocabulary[]`
+- the repository `package/package.json` holds relative paths: `"vocabularies": ["vocabularies/foo.json", ...]`
+
+
+##### Emergent vocabularies (open vocabularies)
+
+**Content**: For an open vocabulary, the authoritative set of values is `DISTINCT(tag keys across instances)` — not the `terms[]`. The `Vocabulary` is a curation overlay that may lag usage or be empty.
+
+A conforming implementation MUST be able to compute the live tag set and classify each key as: **used-and-defined**, **used-but-undefined**, or **defined-but-unused**.
+
+**Emergence lifecycle** (mirrors tier graduation):
+1. Free string — exists, undefined, valid.
+2. Curate → `Term` — non-destructive; instance carries the same string.
+3. Alias-merge — a surviving Term absorbs another: absorbed key+aliases move to the survivor, absorbed entry removed (its `id` recorded in `meta.mergedFrom` and redirected); zero instance rewrites.
+4. Optional normalize — opt-in operation that rewrites instance strings to the canonical key.
+5. Optional close — promote `mode: open → closed` (V10).
+
+
+##### Resolution invariants
+
+**Content**: **V1 — Closed-vocabulary resolution.** Any value in a closed vocabulary must resolve to exactly one entry (matched by `key` or `alias`) in the effective entry set with `status` in {`active`, `deprecated`, `tombstone`} for reads and `active` for new writes.
+
+Applies to: `Relation.relationType`, `select`/`multiselect` field values, `Record.lifecycleState`.
+
+**V2 — Open-vocabulary resolution.** A value in an open vocabulary need not resolve; if it matches a `Term`, enrichment applies. When a value matches more than one entry (a warned V5 collision), resolution is deterministic: key match outranks alias match; ties broken by lexicographically smallest `id`.
+
+Applies to: `Note.tags`, `NoteSection.tags`.
+
+**V3 — Field binding exclusivity and closedness.** A `select`/`multiselect` Field must declare exactly one of `allowedValues` or `vocabularyRef`. A `vocabularyRef` on a `select`/`multiselect` Field MUST resolve to a `Vocabulary` with `mode: closed`.
+
+**V4 — Vocabulary reference resolution.** A `vocabularyRef` must resolve to an installed `Vocabulary` in the effective package set.
+
+**V5 — Effective entry set.** The effective entry set of a `Vocabulary` or `Lifecycle` is constructed as:
+1. Include entries with effective `status` in {`active`, `deprecated`, `tombstone`}. Exclude `retired` entirely (before uniqueness, before V1).
+2. Add transitively the entries of any extended container. The `extends*Version` must match the resolved upstream version; a mismatch is a hard validation error (not silent degradation).
+3. Check uniqueness: duplicate `id`s are an error. In closed vocabularies, the union of all `key`s and `aliases` must be globally unique (key/key, key/alias, alias/alias collisions are errors). In open vocabularies, collisions are warnings (resolved by V2 tie-break).
+
+Inline `Type.lifecycle` cannot extend; its effective set is its own `states`/`transitions`. V5 and V9 apply to inline lifecycles identically to referenced ones.
+
+Excluding `retired` before uniqueness frees a retired key for reuse by a new entry. `tombstone` remains in the effective set and keeps occupying its key. When retiring a key that will be reused, implementations MUST surface stale references to the retiring key for operator resolution before reuse.
+
+**V6 — Closed value status.** A value resolving to `deprecated` or `tombstone` follows RFC-005 E1 write semantics (resolves; new writes rejected). `retired` entries do not resolve under V1 — values referencing them are invalid as if absent.
+
+**V10 — Open→closed promotion.** Version-bumping change with a mandatory pre-flight classifying in-use keys as:
+- *will-be-invalid*: used-but-undefined, or resolving only to a `retired` entry (reads do NOT survive).
+- *read-only-after-close*: resolves to `deprecated` or `tombstone` (reads survive; new writes rejected).
+- *used-and-active*: fine.
+
+A grace window is declared in `Vocabulary.promotionWindow.until`. Until that bound, violations are warnings; after it, V1 applies unconditionally. Absent `promotionWindow` means the promotion takes effect immediately. There is no unbounded window.
+
+
+
+#### Field
+
+**Canonical Key**: type:com.semanticops.srs/field
+
+**Description**: The atomic reusable semantic unit: one named, versioned, UUID-identified piece of meaning, defined once and composed into any number of Types. A Field owns its own semantics completely — its value contract and its AI guidance belong to the Field and may not be redefined, overridden or duplicated by a Type that includes it. If a context needs different meaning, that is a different Field with its own identity and lineage, not a local override.
+
+**Notes**: Invariants 1-3 and 9 carry the Field's non-negotiables: rendering labels change nothing, Types may not restate Field semantics, and a new id means a new definition and not a new version.
+
+##### Field semantics — content format
+
+
+##### Field semantics
+
+
+##### Type must not redefine, override, or duplicate the semantic content…
+
+**Number**: 2
+
+**Constraint**: A `Type` must not redefine, override, or duplicate the semantic content of any `Field` it includes. If different semantics are needed for a Field in a specific Type context, a distinct `Field` with its own identity and lineage must be created.
+
+
+##### Why Field and Type are separate
+
+**Content**: 
+A form system where each template defines its own fields produces semantic silos: the "decision statement" in the Technology template and the "decision statement" in the Budget template are unrelated strings. They cannot be searched together, compared, or composed.
+
+In SCDS, a Field is defined once. Any number of Types may include it. When two Types share a Field, any AI extraction logic, validation rules, or downstream analysis written for that Field applies consistently across both. The Field's identity is stable across all the contexts it appears in.
+
+This is a stronger constraint than it appears. It means a Type cannot secretly redefine what a Field means for its own purposes — it can only configure presentation. If a Type genuinely needs different semantics, it must use a different Field.
+
+
+##### Field domains
+
+**Content**: 
+Named sets of Fields that travel together may become useful as Type libraries grow. For v2, ordinary shared base Types plus `ext:type-inheritance` cover the immediate reuse need with less machinery. Field domains are deferred until there is stronger evidence that reusable field sets need their own identity, versioning, and package dependency rules independent of Types.
+
+
+##### Field type
+
+**Canonical Key**: type:com.semanticops.srs/field-type
+
+**Description**: The complete statement of what a Field's value is, decomposed into orthogonal facets that vary independently: datatype, cardinality, value domain, string format, and value constraints. Because the facets are separate, a constraint on one never forces a choice on another — a closed list of markdown strings is expressible without inventing a datatype for it. Cardinality is declared here and nowhere else. Three composite datatypes let a value's range be another Type (`ref`), be governed by a sibling field (`dependent`), or be an open string-keyed collection (`map`).
+
+**Notes**: It replaced the pre-RFC-032 `valueType` enum, which conflated four axes into one closed list and forced every independently-varying axis to be bolted on beside it. `valueType` is removed, not deprecated.
+
+###### Field.fieldType.format, when present, is only meaningful when datatype…
+
+**Number**: 38
+
+**Constraint**: `Field.fieldType.format`, when present, is only meaningful when `fieldType.datatype` is `"string"`. Implementations must ignore `format` on fields with any other `datatype`.
+
+
+###### Why `valueType` and `editorHint` are separate
+
+**Content**: 
+A Field with `valueType: "text"` might be edited via textarea in a web form, captured via voice in a mobile app, or extracted directly from a transcript with no editing UI. The semantic type is stable; the editing surface is a rendering decision.
+
+AI extraction logic, validation rules, and export formatting depend only on `valueType`. `editorHint` is a default that implementations and Views may override. Conflating the two would mean that changing the preferred editor for a field could inadvertently break AI extraction rules.
+
+
+###### Choosing between repeatable fields, field groups, and separate Records
+
+
+###### List cardinality array-wraps uniformly
+
+**Number**: I-139
+
+**Constraint**: `cardinality: "list"` array-wraps uniformly, for every `datatype` including `map` and `dependent`, matching `projectField`'s unconditional wrap. The single-value rule states the `single` case; the wrap composes on top of it. (RFC-039 [R16])
+
+
+###### Composite value
+
+**Canonical Key**: record:concepts/composite-value
+
+**Description**: A Field whose range is another Type, not a scalar, declared as `datatype: "ref"` with a `rangeType`. In `inline` mode the value is a nested object shaped by that Type — structure expressed through the type system instead of a serialised blob in a text field. In `reference` mode the value is the id of a target instance, and it is definitional composition, not an assertion: it must never be interpreted as, or required to be accompanied by, a Relation.
+
+**Notes**: The test for which to use: model an assertion *between* instances (one needing provenance, lifecycle or confidence) as a Relation; use `reference` where the target's identity is part of the definition itself.
+
+####### Reference-mode values resolve in the instance set
+
+**Number**: I-136
+
+**Constraint**: A `mode: "reference"` value MUST resolve to an instance present in the repository's authoritative instance set, and that instance MUST be of the Field's declared `rangeType` at the declared `typeVersion`. A dangling or type-mismatched target MUST be reported as an error naming the referring record, the key, and the target id. (RFC-039 [R14], amended by RFC-038 [R25] — the reference target is the tree-enumerated instance set, not a manifest `instanceIndex`, which is retired per RFC-038 [R2]; discharges RFC-032 OQ4, RFC-033:302, RFC-035:592)
+
+
+
+###### `FieldType` — the value semantics
+
+**Content**: `fieldType` carries everything about what a Field's value *is*. It decomposes value semantics into orthogonal facets — **datatype × cardinality × value-domain × format × constraints** — so each axis varies independently, and adds three composite datatypes (`ref`, `dependent`, `map`) that let a Field's range be another Type.
+
+Example: the `FieldType` shape.
+
+**`datatype` semantics:**
+
+| Value | Meaning |
+|---|---|
+| `"string"` | Text of any length. Length, pattern, format, and value domain are separate facets, not distinct datatypes |
+| `"number"` | Numeric value, fractional permitted |
+| `"integer"` | Whole number |
+| `"boolean"` | True/false |
+| `"date"` | ISO 8601 calendar date |
+| `"date-time"` | ISO 8601 date + time |
+| `"ref"` | The range is another Type — nested object(s) when `mode` is `"inline"`, target instance id(s) when `"reference"` |
+| `"dependent"` | The value conforms to the type descriptor named by `dependsOn` |
+| `"map"` | Open string-keyed collection whose values conform to `valueRange` |
+
+Cardinality is declared **only** here. A Field holding many values is `cardinality: "list"`; a Type that includes it must not restate or override that — Field semantics belong to the Field (Invariant 2).
+
+A `reference`-mode value is a target instance id, and MUST NOT be interpreted as or require a `Relation`. Use `reference` for definitional composition, where the target's identity is part of the definition; model an assertion *between* instances — one needing provenance, lifecycle, or confidence — as a `Relation` instead.
+
+
+
+##### Field
+
+**Content**: The atomic reusable semantic unit. Fields are defined once and composed into Types. A Field's `aiGuidance` and `fieldType` — including every constraint the latter carries — belong to the Field, not to any Type that includes it.
+
+See the generated reference immediately below for `Field`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger) — this prose no longer hand-duplicates the property list.
+
+
+##### Historical: the pre-RFC-032 `valueType` model
+
+**Content**: Before RFC-032, value semantics were a single closed enum, `valueType`, with the satellite properties `allowedValues`, `contentFormat`, `validationRules`, and a standalone `repeatable` cardinality. That enum conflated four axes at once, which is why every axis needing independent expression had to be bolted on separately. It is **removed**, not deprecated — a Field definition carrying `valueType` does not conform to this specification. Packages authored against the old model map across as:
+
+| Legacy `valueType` | Equivalent `fieldType` |
+|---|---|
+| `"string"` | `{ datatype: "string" }` (plus `format: "markdown"` if `contentFormat` was `"markdown"`) |
+| `"text"` | `{ datatype: "string", format: "plain" \| "markdown" }` |
+| `"number"` | `{ datatype: "number" }` |
+| `"boolean"` | `{ datatype: "boolean" }` |
+| `"date"` | `{ datatype: "date" }` |
+| `"url"` | `{ datatype: "string", format: "uri" }` |
+| `"select"` | `{ datatype: "string", valueDomain: "closed" }` + `allowedValues` or `vocabularyRef` |
+| `"multiselect"` | `{ datatype: "string", cardinality: "list", valueDomain: "closed" }` + `allowedValues` or `vocabularyRef` |
+
+`validationRules` entries become `fieldType.constraints` facets; an `enum` rule becomes `valueDomain: "closed"` with `allowedValues`. A `required` rule was never a Field-level concern and moves to the `FieldAssignment` that includes the Field.
+
+
+
+#### Lifecycle
+
+**Canonical Key**: record:concepts/lifecycle
+
+**Description**: A named state machine (a closed vocabulary of states plus the transitions between them and exactly one initial state) that a Type may declare inline or reference as an installed, shareable definition. It governs where a Record stands in a process: draft, active, archived, or whatever the domain needs. Lifecycle state is changed only by an explicit transition act; asserting a Relation never moves it.
+
+**Notes**: A state may declare that resting in it requires a satisfying Relation, enforced hard (the transition is rejected) or advisory (the transition proceeds and the unsatisfied state surfaces as an at-rest warning).
+
+##### Lifecycle (ext:lifecycle)
+
+
+##### Type.lifecycle.initialState must reference a key that appears in…
+
+**Number**: 4
+
+**Constraint**: `Type.lifecycle.initialState` must reference a `key` that appears in `lifecycle.states[]` and where `isInitial === true`.
+
+
+##### Every from and to value in lifecycle.transitions[] must reference a…
+
+**Number**: 5
+
+**Constraint**: Every `from` and `to` value in `lifecycle.transitions[]` must reference a `key` that appears in `lifecycle.states[]`.
+
+
+##### Record.lifecycleState, when present, must reference a key in the…
+
+**Number**: 6
+
+**Constraint**: `Record.lifecycleState`, when present, must reference a `key` in the associated `Type.lifecycle.states[]`.
+
+
+##### A Record MUST NOT occupy a lifecycle state declaring requiresRelation without a satisfying Relation
+
+**Number**: I-98
+
+**Constraint**: A Record MUST NOT rest in a lifecycle state that declares `requiresRelation` unless at least one Relation satisfies the obligation: its type equals one of the declared `relationType`(s) and the Record is the relation's target when `direction` is `incoming` (or omitted) or its source when `direction` is `outgoing`. When the state declares `enforcement: "hard"` (the default), an implementation MUST reject a lifecycle transition into it unless the operation, on completion, satisfies this occupancy requirement — either because a satisfying Relation already exists, or because the operation's fulfillment establishes one. The rejection MUST be machine-readable, identifying the target state key, the required relation type(s), and the direction. When the state declares `enforcement: "advisory"`, the transition MUST be permitted regardless of the obligation and the unsatisfied state surfaced only as an at-rest warning, never a rejection. (RFC-022 R1–R3, R2a.)
+
+
+##### Transition fulfillment is all-or-nothing
+
+**Number**: I-99
+
+**Constraint**: A fulfillment supplied with a lifecycle transition MUST be applied as one all-or-nothing operation: `newRecord` creates a successor of the Record's Type in the effective lifecycle's initial state, asserts one Relation of the selected type oriented per `direction`, and transitions the Record; `existingInstanceId` asserts the Relation to the referenced instance (which MUST exist and MUST NOT be the Record itself) and transitions. If any step fails, no step's effect may remain observable. A file-backed implementation MAY realize this by write ordering in which the state change is committed last, provided every committed prefix is a valid repository under I-98. When the state declares an any-of `relationType` array, `fulfillment.relationType` MUST be one of the declared types, defaulting to the first; a `fulfillment` supplied for a target state that declares no `requiresRelation` MUST be rejected. (RFC-022 R4–R8.)
+
+
+##### requiresRelation is projected structurally and validated as a warning at rest
+
+**Number**: I-100
+
+**Constraint**: Allowed-transitions projections MUST include the target state's `requiresRelation` declaration on each transition option whose target state declares one, so clients route successor-flow presentation from structure rather than state-name matching. Repository validation MUST emit a warning-severity diagnostic for every Record at rest that violates I-98, and MUST NOT treat such a violation as a hard validation error. Transitions whose target state declares no `requiresRelation` MUST behave exactly as before RFC-022. (RFC-022 R8–R10.)
+
+
+##### ext:lifecycle
+
+**Content**: **Required for**: governance tools, decision logs, any implementation where records progress through defined states.
+
+`ext:lifecycle` is fully integrated with the vocabulary substrate (RFC-006). `Lifecycle` is an installable, referenceable container — a `VocabularyEntry` specialisation whose container holds states and transitions. `LifecycleState` satisfies the `VocabularyEntry` substrate contract with `key` (was `name`) as its key-role field.
+
+
+##### `LifecycleState` (VocabularyEntry specialisation)
+
+**Content**: Example: the `LifecycleState` shape.
+
+
+##### `LifecycleTransition` (edge between state keys)
+
+**Content**: Example: the `LifecycleTransition` shape.
+
+`LifecycleTransition` is an edge, not a `VocabularyEntry` (no `key`), but carries `id` so it is addressable. It follows the same forward-compatibility policy as substrate entries: unknown top-level fields rejected; arbitrary metadata in `meta`.
+
+
+##### `Lifecycle` container
+
+**Content**: An installable, referenceable state machine — a closed vocabulary of states plus transitions.
+
+Example: the `Lifecycle` container shape.
+
+The distributable `Package` holds inline definitions: `lifecycles?: Lifecycle[]`. The repository `package/package.json` holds relative paths: `"lifecycles": ["lifecycles/foo.json", ...]`.
+
+
+##### Type lifecycle declaration (added by this extension)
+
+**Content**: `Type` gains a lifecycle, declared in exactly one of two mutually exclusive forms (V7):
+
+Example: the two lifecycle declaration forms a Type may carry.
+
+Declaring both is a validation error (V7). An inline lifecycle's effective state set is exactly its own `states`/`transitions`; V5 and V9 apply identically.
+
+
+##### Record lifecycle state
+
+**Content**: `Record.lifecycleState` must resolve to a state `key` in the Type's effective state set under V1.
+
+
+##### Validation invariants (V7–V9)
+
+**Content**: **V7 — Lifecycle exclusivity.** A Type declares exactly one of `lifecycle` or `lifecycleRef`.
+
+**V8 — Lifecycle reference resolution.** A `lifecycleRef` must resolve to an installed `Lifecycle` in the effective package set.
+
+**V9 — Lifecycle integrity.** Over the effective state set (V5):
+- Exactly one state MUST have `isInitial: true`; `initialState` MUST reference that state's `key`.
+- The initial state MUST have effective `status: active`. A lifecycle whose initial state is deprecated, tombstone, or retired is invalid.
+- Every `transition.from`/`transition.to` must reference a state `key` in the effective state set.
+- A state with `isFinal: true` MUST NOT appear as the `from` of any transition.
+- Transition `id`s must be unique within the effective transition set.
+- `Record.lifecycleState` resolves under V1.
+
+
+
 #### Stable identity
 
 **Content**: An SRS entity carries a UUID minted once, at creation, that does not change afterward. A copy, an export, an import, or a rename for display MUST NOT change an entity's UUID. Identity is declared on the entity itself, never derived from a file path, a directory position, or a storage history.
@@ -1227,6 +1792,220 @@ Changing what an entity is at its root means minting a new UUID. A materially di
 **Canonical Key**: part:instances
 
 **Description**: The instance layer: Notes and Records as the two record tiers, and how a Record instantiates a Type through typed field values.
+
+#### Instance
+
+**Canonical Key**: record:concepts/instance
+
+**Description**: A piece of captured content, as opposed to a definition that describes a shape. An instance carries its own stable `instanceId` in an id space distinct from the `id` + namespace/name/version lineage that identifies a definition, and it is the thing Relations connect and Containers scope. Confusing the two id spaces is the most common structural error: a Container's id is not an instance id and must never appear on either end of a Relation.
+
+**Notes**: The self-declared `instanceId` inside the file is the identity. It is not derived from the filename or the path, and there is no manifest index to cross-check it against.
+
+##### Note
+
+**Canonical Key**: record:concepts/note
+
+**Description**: A Tier 0 instance: a titled set of named free-text sections with no Type binding and therefore no field-level semantics. It exists so that material can be captured at the moment it appears, before anyone knows what shape it should take. A Note has a stable instance id, may carry tags and source references, and may be the target of Relations from the Records it later gave rise to.
+
+**Notes**: Section names must be unique within a Note (Invariant 18). Tags on a Note are keys that may, but need not, resolve to a Term in an open vocabulary.
+
+###### Notes
+
+
+###### NoteSection.name values must be unique within a Note.
+
+**Number**: 18
+
+**Constraint**: `NoteSection.name` values must be unique within a `Note`.
+
+
+###### `NoteSection`
+
+**Content**: A named text section within a Note.
+
+See the generated reference below for `NoteSection`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+
+
+###### `Note`
+
+**Content**: A lightweight instance with no Type binding.
+
+See the generated reference below for `Note`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+
+`tags` are free-form labels that allow Notes to be grouped and discovered by topic. A tag is a key that *may* resolve to a `Term` in an open `Vocabulary`, giving it a label, aliases, roles, and lineage — without changing the fact that the instance stores only the string (V2). Undefined tags in an open vocabulary are valid and unenriched. Use tags for navigation and filtering; use Relations for semantic claims.
+
+
+
+##### Record
+
+**Canonical Key**: record:concepts/record
+
+**Description**: A Tier 2 instance: a stable instance id bound to an exact Type version, carrying values for that Type's fields. The binding is by `typeId` and `typeVersion`, and it is authoritative — the denormalised `typeNamespace` and `typeName` are convenience hints, and a Record whose hints disagree with the resolved Type is invalid until corrected. Conformance is measured against the version the Record was instantiated under; publishing a new Type version does not migrate existing Records.
+
+**Notes**: A Record may also carry lifecycle state, tags, source references and timestamps. Those are envelope members, governed by the Record schema and not by the Type's projected field schema.
+
+###### Records
+
+
+###### Record.typeId and Record.typeVersion are the authoritative Type…
+
+**Number**: 28
+
+**Constraint**: `Record.typeId` and `Record.typeVersion` are the authoritative Type binding. `typeNamespace` and `typeName` are denormalised convenience fields. If they conflict with the resolved `Type`, the `typeId`/`typeVersion` identity takes precedence and the Record is considered invalid until corrected.
+
+
+###### Field values
+
+**Canonical Key**: record:concepts/field-values
+
+**Description**: A Record's payload is one object keyed by `Field.name` verbatim, with no case or separator transformation at any nesting depth. Each entry is recursively shaped by what the corresponding Field declares: a scalar, an array under list cardinality, or a nested object for an inline composite. There is no wrapper construct around an entry and no entry-object form. Absence of a key is the only representation of an unset field: an explicit null is rejected and the writer must omit the key instead.
+
+**Notes**: Structural presence and rendering presence are deliberately different questions: a key present with an empty string is structurally present but renders as absent.
+
+####### Instance generation is determined structurally
+
+**Number**: I-135
+
+**Constraint**: A reader MUST determine instance generation structurally. For a Tier-2 `Record`: an array `fieldValues` is revision <= 1, an object `fieldValues` is revision >= 2. On encountering a generation it does not support, a reader MUST emit a diagnostic naming the file and the expected `dataModelRevision` and MUST NOT coerce, partially read, or silently skip the document. (RFC-039 [R9])
+
+
+####### fieldMeta keys are a subset of fieldValues keys
+
+**Number**: I-133
+
+**Constraint**: `fieldMeta`, when present, MUST be an object whose keys are a subset of the sibling `fieldValues` keys, and whose values are objects of `{source?, editedAt?, sourceRefs?}`. A `fieldMeta` key with no corresponding `fieldValues` key MUST be rejected. `fieldMeta` MUST NOT appear inside an inline-composite value. (RFC-039 [R6])
+
+
+####### Instance keys serialise in FieldAssignment.order
+
+**Number**: I-141
+
+**Constraint**: Instance `fieldValues` keys MUST be serialised in `FieldAssignment.order`, and nested composite objects likewise, so that a re-run of a transform is byte-idempotent and diffs are stable. This is the instance-side counterpart of the schema-key ordering in `projection-rules.md`; it supersedes the write-order signal of rfc-012:139. (RFC-039 [R18])
+
+
+####### Key absence is the sole representation of an unset field
+
+**Number**: I-132
+
+**Constraint**: A `FieldAssignment` with `required: true` means its key MUST be present in `fieldValues`. Key absence is the sole representation of an unset field: a value of `null` MUST be rejected — writers MUST omit the key instead. Structural presence and rendering presence (RFC-001 Step 2, where an empty string resolves as absent) remain distinct and MUST NOT be conflated. (RFC-039 [R5]/[R5a])
+
+
+####### The projected schema describes the fieldValues object
+
+**Number**: I-140
+
+**Constraint**: A Type's projected JSON Schema describes the `fieldValues` object, not the whole Record document. `instanceId`, `typeId`, `tags`, `meta`, `sourceRefs`, and `fieldMeta` are envelope members governed by `record.json`, and are outside the projected schema's `additionalProperties: false`. (RFC-039 [R17])
+
+
+####### Instance keys are Field.name verbatim
+
+**Number**: I-130
+
+**Constraint**: A `fieldValues` key MUST be `Field.name` verbatim, with no case or separator transformation, at every nesting depth. The name projection MUST NOT be applied to instance keys under any circumstances, including for meta-model entities stored as Records. (RFC-039 [R2b])
+
+
+####### Removed carrier constructs are rejected at dataModelRevision >= 2
+
+**Number**: I-134
+
+**Constraint**: `FieldValue`, `FieldValueEntry`, `FieldGroupValue`, `FieldGroupEntry`, `Type.fieldGroups`, and `FieldAssignment.{repeatable, minItems, maxItems}` are removed. An implementation MUST reject a document containing any of them at `dataModelRevision >= 2`. Definition files carry no document-local revision discriminator, so revision MUST be resolved from the enclosing repository or package manifest before this rule is applied to a definition. A manifest at `dataModelRevision >= 2` MUST NOT declare `ext:field-groups` or `ext:repeatable-fields`; a reader encountering such a declaration MUST report an error. (RFC-039 [R7]/[R15])
+
+
+####### Record fieldValues is a name-keyed object
+
+**Number**: I-129
+
+**Constraint**: A Tier-2 `Record`'s `fieldValues` MUST be a JSON object. Each key MUST equal the `Field.name` of a Field in the effective field set of the Record's `typeId`@`typeVersion`. Unknown keys MUST be rejected; the projected schema asserts `additionalProperties: false`. (RFC-039 [R1])
+
+
+####### Field values (RFC-039)
+
+**Content**: `FieldValue` — the value stored at one `fieldValues` key — is the recursive union:
+
+Example: the `FieldValue` union.
+
+There is no wrapper construct: the pre-RFC-039 `FieldValue`/`FieldValueEntry` pair
+objects, `groupValues`, and `FieldGroup` carriers are removed (I-134).
+
+
+
+###### `Record`
+
+**Content**: An instantiated Type with field values.
+
+See the generated reference below for `Record`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+
+`typeNamespace` and `typeName` are denormalised convenience fields. If they conflict with the resolved Type, the `typeId`/`typeVersion` identity takes precedence and the Record is considered invalid until corrected.
+
+**On instance revision:**
+- **In-place edits** (`updatedAt` advances, `fieldValues` mutate): for minor corrections that do not alter semantic meaning.
+- **Semantic updates**: produce a new Record linked to the prior by a `supersedes` or `refines` Relation. The prior Record remains valid.
+- **Immutable records + Relation graph**: all Records append-only; a new Record for every change. A valid implementation strategy that naturally preserves history.
+
+**Semantic meaning must not be silently rewritten.** When a change would alter what a Record means — not merely correct a transcription or formatting error — implementations must produce a successor Record linked to the prior by `supersedes` or `refines`. The prior Record remains valid. What constitutes a semantic change is determined by the Type's intended use; when in doubt, prefer a successor.
+
+
+
+
+#### Semantic maturity tier
+
+**Canonical Key**: record:concepts/semantic-maturity-tier
+
+**Description**: How far a captured instance has been formalised, expressed as a tier and not as a yes-or-no. Tier 0 is a Note: named text sections, no type binding, no field semantics. Tier 2 is a Record: fields bound to a Type, fully semantic. The point of the tier model is that half-formed material is first-class — meaning may be captured before its shape is known and formalised later, instead of being lost because no template fitted it yet. An implementation may support only Tier 2.
+
+**Notes**: The gap at Tier 1 is deliberate. `TypedRecord` was removed as an unexercised construct and the surviving tiers were not renumbered, so existing references stay valid.
+
+##### Why Record tiers exist (Note → Typed Record → Record)
+
+**Content**: 
+Not all content arrives with full semantic formalisation. A meeting note, a brainstorm document, a rough plan — these are valid starting points that should be preserved and referenceable, even before anyone has decided what Types to extract from them.
+
+The three tiers let a system capture content at whatever maturity level it has, and formalise later without losing provenance. The graduation path is one-way: Note → Typed Record → Record. It mirrors how understanding actually develops — rough first, then structured, then formally defined.
+
+The tier model also makes SCDS progressively adoptable. A team can start at Tier 0 and arrive at Tier 2 as their understanding of the semantic structure matures, without ever having to restart from scratch.
+
+
+##### Why Record tiers exist (Note → Record)
+
+**Content**: Not all content arrives with full semantic formalisation. A meeting note, a brainstorm document, a rough plan — these are valid starting points that should be preserved and referenceable, even before anyone has decided what Types to extract from them.
+
+The two tiers let a system capture content at whatever maturity level it has, and formalise later without losing provenance. Graduation links a Note to its successor Record via a derived-from Relation. It mirrors how understanding actually develops — rough first, then formally defined.
+
+The tier model also makes SRS progressively adoptable. A team can start at Tier 0 and arrive at Tier 2 as their understanding of the semantic structure matures, without ever having to restart from scratch.
+
+A middle Tier 1 (Typed Record — named fields, no Type binding) was tried and removed: the 2026-08-21 usage attestation found zero instances of it in any corpus, ever (rfc-decision-53635966). The predecessor design note captures the original three-tier rationale; this note supersedes it with the two-tier reality. Tier numbering (0, 2) keeps the gap deliberately, for reference stability.
+
+
+##### Graduation
+
+**Canonical Key**: record:concepts/graduation
+
+**Description**: Replacing a lower-tier instance with a higher-tier equivalent once its structure has stabilised, without destroying what came before. The original Note is preserved as the semantic root of whatever it produced, and each resulting Record links back to it. Graduation is not one-to-one: a single meeting Note may become one decision Record, three task Records and two risk Records, each with its own instance id and its own link back.
+
+**Notes**: Which link, and whether the instance id survives, follows what actually happened: pure formalisation may keep the id and needs no link; interpretation during formalisation is a new id with `refines`; a split is new ids with `derived-from` from each new Record.
+
+###### Graduation: when and how
+
+
+###### Graduation mapping record
+
+**Content**: 
+A structured artefact recording how a Note was mapped to its Record successor — which section or field names were matched, merged, split, or interpreted. Useful for AI-assisted graduation review and audit. Deferred pending implementation experience.
+
+
+
+##### Record tiers
+
+**Content**: SRS supports two semantic maturity tiers. Tier numbering keeps the historical gap at 1: Tier 1 (`Typed Record`) was removed as an unexercised construct — zero instances in any corpus, ever — under the dormancy rule (rfc-decision-53635966); renumbering the surviving tiers would be churn without meaning. Implementations are not required to support both; they may begin at Tier 2.
+
+| Tier | Type | Structure | Semantics |
+|---|---|---|---|
+| **0** | `Note` | Named sections + free text | None |
+| **2** | `Record` | Fields bound to a `Type` definition | Full |
+
+Graduation path: Note → Record, linked by a `derived-from` Relation from the Record back to the Note (`note graduate`).
+
+
 
 #### Instance
 
@@ -1325,6 +2104,134 @@ Relation type definitions live in `package.relationTypes[]` (distributable bundl
 
 
 
+#### Semantic succession
+
+**Canonical Key**: record:concepts/semantic-succession
+
+**Description**: The rule that meaning is never silently rewritten. Correcting how something is expressed (a typo, phrasing, a clarification that leaves the understanding unchanged) is an in-place edit. Changing what was actually committed to produces a new instance linked to the prior one, and the prior one remains valid. The test is whether a reasonable reader meeting the record a year later would recognise it as the same understanding they would have read before the change.
+
+**Notes**: Cross-check both ways: if a `supersedes` link would read as the group reversing itself when it only clarified, it was an edit; if a silent edit would read as the record being revised after the fact, it was a successor.
+
+##### When to edit in-place vs create a new Record
+
+
+
+#### Source reference
+
+**Canonical Key**: record:concepts/source-reference
+
+**Description**: A pointer from a field value or an instance back to the material it came from, naming what kind of source it is, which source, and what role that source played (evidence, extracted-from, quoted-from, inspired-by, or attaches), with an optional confidence and note. It records where meaning came from without asserting anything between two instances: source material cited this way is not itself an instance and does not become one.
+
+**Notes**: Promotion converts the pointer into a Relation when the material it addresses becomes an instance, and the role decides which edge and which direction. Attachment is deliberately not modelled as a Relation edge.
+
+##### SourceReference with sourceType: "repository-document" must have a…
+
+**Number**: 48
+
+**Constraint**: A `SourceReference` with `sourceType: "repository-document"` must have a `sourceId` matching a `SourceDocument.documentId` whose sidecar is present in `sourceDocumentsPath`. A reference whose `documentId` cannot be resolved within the repository is invalid.
+
+
+##### attaches SourceReference acceptance
+
+**Number**: I-101
+
+**Constraint**: A conformant implementation MUST accept `"attaches"` as a value of `SourceReference.sourceRole`. An attachment is a `SourceReference` with `sourceType: "repository-document"`, `sourceRole: "attaches"`, and `sourceId` equal to a source document's `documentId`. Attachment MUST NOT be modelled as a `Relation` edge; there is no `attaches` canonical `Relation` type.
+
+
+##### attaches sourceId must resolve to a source-document sidecar entry
+
+**Number**: I-102
+
+**Constraint**: The `sourceId` of an `attaches` `SourceReference` MUST resolve to a `documentId` in the repository's source-document set, discovered via a `.meta.json` sidecar scan of `sourceDocumentsPath` in the same repository (RFC-038 [R25], amending RFC-017 [R2]/[R12]; `sourceDocumentIndex` is retired per RFC-038 [R2]). Resolution is against the sidecar entry, not the content file. A `sourceId` that resolves to no such entry is non-conformant and MUST be reported with a diagnostic at validation time.
+
+
+##### tombstone reference-only state: absent content file is valid
+
+**Number**: I-112
+
+**Constraint**: A source-document sidecar entry (RFC-038 [R25], amending RFC-017 [R12]; the entry no longer lives in a manifest `sourceDocumentIndex`, which is retired per RFC-038 [R2]) whose content file (at `contentPath`) is absent is a valid tombstone (reference-only) state. A conformant implementation MUST NOT reject, refuse to load, or refuse to export a repository solely because a discovered source document's content is missing. An `attaches` `SourceReference` targeting a tombstoned `documentId` remains conformant (I-102). An implementation MAY surface an informational non-blocking diagnostic that the content is unavailable.
+
+
+##### `SourceReference`
+
+**Content**: A pointer from a field value or instance back to source material.
+
+See the generated reference below for `SourceReference`'s current property table (modelled once and shared across `Record`, `Note`, and `Relation`), optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+
+`"transcript-chunk"` and `"transcript-segment"` are intended for implementations that have a stable conversation or time-stream layer with durable chunk or segment identifiers. A standalone repository that stores transcript exports, chat dumps, email threads, or similar source material directly under `source-documents/` should generally cite those files using `sourceType: "repository-document"` (see `ext:repository`) rather than inventing pseudo-chunk IDs.
+
+
+
+#### Relation
+
+**Canonical Key**: type:com.semanticops.srs/relation
+
+**Description**: A first-class, typed, independently identified assertion between two instances. It is always binary, a source and a target and never a set, and it always reads in one direction: source, relation type, target. Only the forward form is stored; the inverse is derived for display and never written. A Relation is a semantic claim carrying its own provenance, not a container, not ownership, and not a lifecycle act: asserting one never changes a state.
+
+**Notes**: Relations are reserved for assertions with semantic consequence. A lightweight prose mention or citation must not be modelled as one (Invariant 17). Relations span tiers, so a Note may be the target of edges from the Records it became.
+
+**Examples**: The canonical seven: `contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`.
+
+##### Relations
+
+
+##### In a Relation, sourceInstanceId is the asserting instance and…
+
+**Number**: 16
+
+**Constraint**: In a `Relation`, `sourceInstanceId` is the asserting instance and `targetInstanceId` is the related instance. The Relation reads: "source [relationType] target." This convention must not be reversed.
+
+
+##### Relation is reserved for assertions that carry semantic consequence…
+
+**Number**: 17
+
+**Constraint**: `Relation` is reserved for assertions that carry semantic consequence beyond simple mention or citation. Lightweight prose references that do not assert structural, causal, or governance relationships must not be modelled as `Relation` records.
+
+
+##### Why the directionality invariant matters
+
+**Content**: 
+`sourceInstanceId` is the asserting instance; `targetInstanceId` is the related instance. "D-004 supersedes D-001" must always be represented as `source: D-004, target: D-001`.
+
+Without this invariant, graph traversal breaks across system boundaries. If System A stores `supersedes` with the newer Record as source and System B stores it with the older Record as source, a federated query for "all Records that supersede D-001" returns different results from each system. The invariant is the minimum agreement required for semantic interoperability on Relation graphs.
+
+The invariant does not assign agency or authority to the `source` slot — those are properties of the `relationType`. A `contains` Relation makes the source the container and the target the contained item. An `evidences` Relation makes the source the evidence and the target the claim it supports. Directionality is a slot convention; semantics come from the type.
+
+
+##### Relation design principles (R1–R11)
+
+**Content**: The Relation layer is governed by eleven ratified principles (relation-coherence epic, srs#171), written for both human authors and AI agents. They constrain how relations, their vocabulary, ordering, provenance pointers, containers, and identity transitions relate to one another. Each is normative and, per R10, has an enforcement point.
+
+**R1 — A Relation is a binary, directed, typed edge between two instance UUIDs.** There is no `members[]` or hyperedge form. A `Container.containerId` is never a relation endpoint (Invariant 20).
+
+**R2 — Direction is a slot convention; meaning lives in the type.** Every edge reads `source [relationType] target` (Invariant 16). The slots carry no agency or authority — those are properties of the `RelationTypeDefinition`. Only the canonical forward form is stored; inverse forms (`part-of`, `superseded-by`, `follows`, …) are derived, never asserted.
+
+**R3 — Relation types are installed definitions, not free strings.** Every `relationType` MUST resolve to a `RelationTypeDefinition` in the effective package set (conformance V1). A domain-specific relation is introduced by installing a `namespace/name` definition, never by writing an unresolved string.
+
+**R4 — Relations are claims; asserting one never mutates an endpoint.** No lifecycle change, no ownership, no cascade — a relation may target a record in any lifecycle state, including final. The only coupling runs the other way, and only for *definitional* relational states, whose meaning *is* a relationship (`state ⇒ relation`, never `relation ⇒ state`; e.g. `superseded` means "has a successor"). *Contextual* obligations — whose applicability depends on the kind of record — are not this coupling: they belong to the Type or lifecycle chosen (reached by retype, R11) or the ratifying process, never a conditional bolted onto a shared state.
+
+**R5 — Semantics come from structure, never from a type string.** No consumer infers meaning from a relation-type literal; behaviour keys off definition properties (`category`, `canonicalDirection`, constraint fields) or explicit structural markers. Presentation may render a type name, but no meaning is derived from matching it.
+
+**R6 — There is one semantic ordering mechanism.** Semantic sequence is the pairwise `precedes` chain, traversed in one place. Presentational ordering belongs to the view layer, not the relation graph; `precedes` MUST NOT be asserted for presentational goals.
+
+**R7 — Edges and provenance pointers are different vocabularies, and disjoint.** A Relation connects two instances; a `SourceReference` points from an instance (or edge) to source material via its own `sourceRole` vocabulary (RFC-023). The `sourceRole` value set MUST be disjoint from installed relation-type keys (Invariant I-88). When cited source material is promoted to an instance, its provenance pointer converts to a lineage edge per the RFC-023 graduation mapping — a case of R11.
+
+**R8 — Containers scope; relations mean.** Container membership — root instances plus transitive `contains` traversal, or an explicit member list — is a scope claim ("handle these together"). A `contains` edge is a semantic composition claim. Neither substitutes for the other.
+
+**R9 — Relation writes go through one validated path; compound operations compose it atomically.** Every relation write is validated (endpoint resolution, type resolution, irreflexivity, type constraints). Compound acts — successor creation, retype/promotion (R11), successor-spawning transitions — compose that path so that every intermediate state is a valid repository.
+
+**R10 — Every principle has an enforcement point.** Each principle is enforced by schema, a write-time check, an at-rest validation diagnostic, or a structured projection to clients. A principle stated in prose but enforced nowhere is a defect, to be enforced or removed.
+
+**R11 — What a record *is* changes by re-instantiation linked by a relation, never by in-place mutation.** Field values and lifecycle state mutate in place; a record's identity — its Type, its tier, its position in a supersession lineage — does not. When a record becomes something else (superseded, graduated across tiers, retyped to a specialist type, or a cited source becoming an instance), the original is preserved and a new instance is created, linked by a lineage relation; the relation graph is the authoritative record of what became what. Retype additionally rebinds the lifecycle: the new Type's state machine applies from its initial state, so a state reached under the prior Type does not survive the retype.
+
+
+##### How graduation is recorded
+
+**Content**: Graduation from a Note to a Record, or from one Record to a refined or split successor, is not itself a Relation type. It is recorded through the two Relation types the outcome calls for. Pure formalisation that keeps the same instance id needs no edge at all. Interpretation during formalisation that assigns a new instance id is recorded with `refines`, pointing back at what it formalises. A split into several Records, each with its own new instance id, is recorded with `derived-from` from each new Record back to the Note or Record it came from. Which edge applies follows what actually happened during formalisation, not a fixed rule attached to Graduation itself.
+
+
+
 #### Container
 
 **Canonical Key**: type:com.semanticops.srs/container
@@ -1332,6 +2239,9 @@ Relation type definitions live in `package.relationTypes[]` (distributable bundl
 **Description**: A grouping boundary over a collection of instances, answering the scoping question the Relation graph cannot: which instances belong together, what counts as this project. It is not a semantic object, having no Fields and holding no semantic state, and its claim is different in kind from a `contains` Relation: an edge says one instance is part of another; a Container says these instances form a unit for boundary purposes. Membership is declared: the union of its roots and explicit members, closed over declared child Containers, and never derived from a Relation (RFC-034).
 
 **Notes**: A Container may name one member as its identity or purpose record, and one member whose Type is the Container's typing anchor. Its own id lives in a different space from instance ids and must never appear on a Relation. Nested scopes are declared through `childContainerIds`; `contains` remains the part-of tree where meaning lives and must still be maintained (rfc-decision-0750c62f).
+
+##### Containers
+
 
 ##### Container.containerId is not an instance ID. It must not appear in…
 
@@ -1477,6 +2387,24 @@ One definition serves every membership question: `containers_for_instance` (I-66
 
 
 
+#### Semantic order
+
+**Canonical Key**: record:concepts/semantic-order
+
+**Description**: Sequence asserted as a claim about meaning, not as a layout preference, expressed by pairwise `precedes` edges and read by traversing the chain. It is used only where a different order would be semantically wrong — specification sections in document order, protocol stages in execution sequence. Ordering that reflects layout, curation or display preference is presentation and belongs in the view layer, and creating `precedes` edges for it is a misuse of the mechanism.
+
+**Notes**: There is one ordering primitive and one only. A view may impose its own presentation sequence over the same records without contradicting the semantic chain, because the two are answering different questions.
+
+##### precedes relations are semantic-only, not presentational
+
+**Number**: I-125
+
+**Constraint**: `precedes` relations MUST be used only to express sequences where a different order would be semantically wrong (e.g. spec sections in document order, protocol stages in execution sequence). Implementations MUST NOT create `precedes` relations between instances whose ordering is presentational (layout, curation, display preference). A `precedes` relation between two container members MUST be interpreted as a semantic claim about their sequence, not as a rendering hint. (RFC-015 Change A.)
+
+**Rationale**: RFC-013 established a normative boundary between semantic order (`precedes`) and presentational order. This invariant makes that boundary an obligation rather than a convention: without it, `precedes` could silently accrue presentational uses, making the semantic graph unreliable for any consumer that treats `precedes` as a claim about correctness of order (e.g. protocol execution sequencing).
+
+
+
 #### Blueprint
 
 **Canonical Key**: record:concepts/blueprint
@@ -1484,6 +2412,9 @@ One definition serves every membership question: `containers_for_instance` (I-66
 **Description**: The definition of a whole document type: which Record Types it produces at the root, what Relations are expected between the resulting Records, and which Types must be present for it to count as complete. It is the artefact handed to an extraction pipeline, and it answers a different question from a view — a Blueprint says what this document *is* and what should be extracted, at definition time, from source material; a view says how records that already exist are assembled for reading.
 
 **Notes**: Its type pointers are version-exact, so the shape a Blueprint asks for cannot drift under it when a Type is reversioned.
+
+##### Distribution — Blueprint (ext:blueprint)
+
 
 ##### Why Blueprint is a new concept
 
@@ -1540,6 +2471,365 @@ See the generated reference below for `Blueprint`'s current property table, opti
 | Operates at | Definition time | Projection time |
 | Input | Source material (transcripts, conversations) | Existing Records in a Container |
 | Output | Extraction instructions → Records | Rendered document |
+
+
+
+#### Protocol
+
+**Canonical Key**: record:concepts/protocol
+
+**Description**: An epistemically ordered process for building a good Record through structured conversation: named stages, each with the question it answers, the understanding it builds, how to tell it is sufficient, and which Record fields it feeds. Stages declare epistemic dependencies on other stages, and not an ordering: a stage may run when what it needs is established, regardless of where it sits in the declared sequence. Protocols range from loose ones that produce open material to tight ones converging on a specific Record type, and the output of a loose one is the input context for a tighter one.
+
+**Notes**: A Protocol is a package definition, not an instance. It is an epistemic concern, deliberately separated from presentation: the logic that guides a session was removed from views and lives here.
+
+##### Protocol (ext:protocol)
+
+
+##### Every stageId in ProtocolStage.dependsOn[] must reference a stageId…
+
+**Number**: 29
+
+**Constraint**: Every `stageId` in `ProtocolStage.dependsOn[]` must reference a `stageId` declared in the enclosing `Protocol.stages[]`. A stage may not declare a dependency on itself.
+
+
+##### Every fieldId in ProtocolStage.contributesTo[] must reference a…
+
+**Number**: 30
+
+**Constraint**: Every `fieldId` in `ProtocolStage.contributesTo[]` must reference a `fieldId` that appears in the stage's own `outputType`'s effective field list (when `outputType` is declared), or in `Protocol.targetType`'s effective field list (when `outputType` is absent). A single stage must not contribute to both its own `outputType` and the enclosing `Protocol.targetType`. When neither `outputType` nor `Protocol.targetType` is declared, `contributesTo` must be empty.
+
+
+##### For every pair of stages A and B within a Protocol where B.dependsOn…
+
+**Number**: 31
+
+**Constraint**: For every pair of stages A and B within a `Protocol` where B.dependsOn includes A.stageId, B.order must be greater than A.order. `order` is the declared composition order of the stages — structure, not presentation; it provides the render default. Execution sequence is determined by `dependsOn` resolution. The two must not contradict each other.
+
+
+##### Why Protocol replaces TemplateFacilitationStep
+
+**Content**: 
+`TemplateFacilitationStep` in v1 was field-ordering with AI guidance attached. It could specify which fields to present in which order, with optional framing. This was sufficient for a linear form-filling workflow.
+
+But the process of building a quality Record through group deliberation is not a form-filling workflow. It is an epistemically ordered process: you cannot meaningfully evaluate options before you have articulated criteria; you cannot propose a course of action before you have characterised the problem.
+
+Protocol stages have:
+- `dependsOn` — explicit epistemic dependencies, not just ordering. A stage may not proceed until its dependencies are sufficient.
+- `completionCriteria` — how to know a stage is adequate to proceed.
+- `outputType` — a stage may produce its own intermediate Record, not just fill fields in the final one.
+- `question` — the core epistemic question this stage answers.
+
+The distinction is between a View (which fields to show, in what order, for presentation purposes) and a Protocol (how to build understanding epistemically, stage by stage). These are separate concerns. Collapsing them into one construct produced a type that was adequate for neither.
+
+A Record is the *compressed output* of a Protocol run. The Protocol is the process that produced the understanding; the Record is what that understanding looks like expressed in the standard vocabulary.
+
+
+##### Protocol chaining and provenance traces
+
+**Content**: 
+Loose Protocols produce open material. Tight Protocols converge on a specific Record. The output of one Protocol is the input context for the next.
+
+Example chain for a governance decision:
+```
+Brain Dump Protocol → unstructured Notes
+Decomposition Protocol → component Notes (derived-from Brain Dump Notes)
+Options Analysis Protocol → Options Analysis Record (derived-from Decomposition Notes)
+Decision Protocol → Decision Record (derived-from Options Analysis Record)
+```
+
+When a Decision Record is challenged, you can traverse back through the full chain: Decision ← Options Analysis ← Decomposition ← Brain Dump ← transcript chunks. The quality of the final Record is auditable because every stage of the process left addressable artefacts.
+
+With `ext:addressability`, each stage's conversation chunks carry the `AttentionState` at the time they were produced. "What was being discussed when the options were evaluated?" is a queryable question.
+
+
+##### Protocol loose-to-tight spectrum
+
+**Content**: 
+The spectrum from loose to tight is not a quality ranking — it is a fitness question. A Brain Dump Protocol is the right tool when the problem space is not yet understood. A Decision Protocol is the right tool when the group is ready to converge. Starting with a tight Protocol before the problem is decomposed produces poor output because the epistemic prerequisites are not met.
+
+The `dependsOn` field on `ProtocolStage` makes this explicit. A stage that depends on decomposition results cannot run before those results exist. This is not just sequencing — it is a statement about what understanding is required before the next stage is meaningful.
+
+
+##### Session
+
+**Content**: 
+A live collaborative process model with real-time facilitation, AI assistance, and collaborative editing. A Session produces or enriches Records but does not own them. Session-level Protocol management (tracking active stage, managing participant attention) is a natural successor to `ext:protocol` and `ext:addressability`. Deferred pending implementation experience.
+
+
+##### Distribution — Protocol (ext:protocol)
+
+
+##### ext:protocol
+
+**Content**: **Required for**: facilitation tools, structured deliberation, any implementation that guides users through epistemic stages.
+
+Replaces `TemplateFacilitationStep` from v1. Protocol is epistemically richer: stages have explicit dependencies, completion criteria, and may produce intermediate Records.
+
+
+##### `FieldRef`
+
+**Content**: A reference to a Field within a Type.
+
+Example: the `FieldRef` shape.
+
+
+##### `ProtocolStage`
+
+**Content**: A named stage in a Protocol. Stages have epistemic dependencies (`dependsOn`) — not just ordering. A stage may only proceed when its dependencies are sufficient.
+
+Example: the `ProtocolStage` shape.
+
+**`order` vs `dependsOn`:** `order` is the declared composition order of the stages — structure, not presentation (RFC-015's layering table now states this explicitly as its own row: composition order is structure; display order is presentation; sequence is assertion). It provides the render default for how stages are shown in a UI or facilitation guide; a View may override for display. Execution sequence is determined by `dependsOn` resolution: a stage runs when all its declared dependencies are satisfied, regardless of its `order` value. Authors must ensure `order` is consistent with the partial order implied by `dependsOn` (i.e. a stage's `order` value should be greater than the `order` of any stage it depends on). See Invariant 31.
+
+
+##### `Protocol`
+
+**Content**: An epistemically ordered process for building quality Records through structured conversation or facilitation. A Protocol is a package definition (declared in `package.json`'s `protocols` array, stored under the package's `protocols/` subtree) — not an instance Record.
+
+Example: the `Protocol` shape.
+
+**Property names are unprefixed** (`id`, not `protocolId`; `stages`, not `protocolStages`; and so on) — the same convention every other package-declared definition entity uses (Type, Field, Vocabulary, Lifecycle, RelationTypeDefinition, Theme, Blueprint all reuse the shared `id`/`namespace`/`name`/`version`/`description`/`createdAt` fields unprefixed). An earlier owed-schema pass (`docs/schema/2.0/protocol.json`, #297/#378) had shipped a `protocol`-prefixed shape matching the implementation of the day; a decision record ruled the unprefixed shape canonical (srs#379) and the schema now matches this prose. The implementation-side rename (the Rust `Protocol`/`ProtocolStage` structs, the CLI, and one still-vendored example corpus) is a tracked follow-up, staged like any other rename (rfc-decision-628cf6c4) — this prose and the schema describe the ruled target shape, not necessarily every artifact's current byte-for-byte content.
+
+**The Protocol spectrum:**
+
+```
+Loose                                                    Tight
+─────────────────────────────────────────────────────────────
+Brain Dump → Decomposition → Options Analysis → Decision
+```
+
+Loose Protocols produce open material. Tight Protocols converge on a specific Record type. The output of a loose Protocol is the input context for something tighter.
+
+**Generic Protocols** (reusable across domains):
+- Brain Dump — externalise all thinking without constraint
+- Decomposition — identify major components from raw material
+- Review — what is established, what is still open
+- Prioritisation — which components to resolve first
+
+**Domain-specific Protocols** (target a specific Record type):
+- Decision — context → criteria → options → evaluation → decision
+- Proposal — problem → solution shape → constraints → proposal
+
+**Protocol chaining and provenance**: The output of one Protocol is the input context for the next. This derivation chain is traceable through `derived-from` Relations, making the quality and history of the final Record auditable.
+
+**Non-normative example — Protocol chain for a governance decision:**
+
+Example: a Protocol chain for a governance decision.
+
+The final Decision Record is auditable because every Protocol stage left addressable artefacts. The quality of the outcome is traceable to the conversation that produced it.
+
+Views (`ext:views-l1`) no longer contain facilitation logic. A View is a presentation concern; a Protocol is an epistemic one.
+
+
+
+#### Addressability
+
+**Canonical Key**: record:concepts/addressability
+
+**Description**: A single addressing scheme spanning document space, process space and conversation space, so that anything that can be referred to can be resolved — and so that a transcript fragment and a field on a record are co-addressable, which is what makes an assertion linking them possible. Alongside the stable address sits the live cursor: the current focus of an active process run, which moves continuously and is stamped onto conversation material as it is produced. Because it is stamped at production time, asking for everything said while attention was on this field becomes a query, not a search.
+
+**Notes**: A stable address and a live cursor are structurally similar and must not be merged: one identifies an element, the other records where focus currently is. Likewise a cursor is set live and a source reference is set retrospectively.
+
+##### Addressability (ext:addressability)
+
+
+##### AttentionState.containerId must reference a valid…
+
+**Number**: 34
+
+**Constraint**: `AttentionState.containerId` must reference a valid `Container.containerId`. Other Address components (`recordId`, `fieldId`, `protocolRunId`, `stageId`) are optional and may be absent when focus has not yet narrowed.
+
+
+##### Why Address and AttentionState are needed
+
+**Content**: 
+v1 noted "focus links" as a session-layer concern without defining a mechanism. The mechanism was absent.
+
+Without co-addressability, the transcript/SCDS separation is clean in principle but broken in practice. There is no way to say "this conversation happened while we were focused on this Field." Retrospective `SourceReference` links help, but they require someone to explicitly annotate which conversation produced which value. For real-time facilitation, that annotation needs to happen live.
+
+`AttentionState` is the live cursor. Every transcript chunk produced while a Protocol stage is active carries the current `AttentionState` as a tag. Context assembly later queries by address: "all chunks where attention was on Field X in Record Y." The annotation is free because it was captured at production time.
+
+`Address` is the addressing scheme that makes co-addressability possible. A transcript chunk and a Field Revision are in the same address space — they can reference each other because both have resolvable addresses.
+
+**Multi-Container addressing**: A Record may belong to more than one Container simultaneously (a task may exist in both a project Container and a sprint Container). That Record therefore has multiple valid document-space Addresses — one per Container context. This is intentional: `containerId` in a document-space `Address` is not a uniqueness constraint, it is a *context specifier*. `AttentionState.containerId` records which Container was active during a live session, making the contextual anchor explicit. When a session-tagged transcript chunk is later queried, the Container in the `AttentionState` tells you not just *what Record* was being discussed but *in which context* it was being discussed.
+
+
+##### Why Revision is addressable
+
+**Content**: 
+In v1, field revision was an implementation concern. The spec described when to edit in-place versus create a new Record, but individual revisions were not addressable — you could not ask "what did this field say before the last Protocol run?" at the interoperability layer.
+
+This matters for:
+- **Governance challenge**: if a Record is challenged, you need to trace which conversation produced each field value and which version was in place when a downstream decision was made.
+- **Context assembly**: when generating the next draft, knowing what changed between revision 2 and revision 3 — and what conversation produced that change — is more useful than knowing only the current value.
+- **Audit**: a complete audit trail requires addressable history, not just current state.
+
+`Revision` is the addressable audit trail. It does not replace the edit-in-place vs. new-Record judgment for minor corrections. That remains an implementation concern. Revision is the interoperability layer for cases where history itself is a first-class concern.
+
+
+##### Addressability as a prerequisite for live facilitation
+
+**Content**: 
+`ext:addressability` is not just about naming things. It is the mechanism that makes the conversation layer useful. Without `AttentionState`, transcript chunks have no address-time connection to the Records they inform. Without `Revision`, the history of a field's value is an implementation detail not visible at the interoperability layer.
+
+Any implementation that facilitates live sessions — where conversation material is produced while people are working on specific Records and Fields — should implement `ext:addressability`. Without it, context assembly is purely retrospective, and the quality of AI assistance degrades accordingly.
+
+**Diff rendering:** implementations rendering Revision history for governance review should support a diff view that shows field-level removals alongside additions, not only the current value. The Revision chain already provides the data needed for three useful modes: final (current value only), all markup (current value plus prior content shown as removed and new content as added), and original (the value at a specified Revision). This is a rendering pattern, not a separate data shape.
+
+
+##### Sub-field addressing
+
+**Content**: 
+Web UI comments and annotations attached to specific text within a Field value require addressing below the Field level. `ext:addressability` currently addresses at Field granularity. Sub-field text selection addressing is architecturally possible (the Address space accommodates it) but is deferred as a separate extension.
+
+---
+
+
+##### ext:addressability
+
+**Content**: **Required for**: any implementation with live facilitation or multi-session extraction.
+
+Defines a universal addressing scheme and the mechanisms that connect conversation material to document elements.
+
+
+##### `Address`
+
+**Content**: A stable, resolvable identifier for any element across document space, process space, and conversation space.
+
+Example: the `Address` union.
+
+Every element that can be referred to has an Address. A transcript chunk and a document-space field are co-addressable because assertions about one referencing the other require both to be resolvable.
+
+
+##### `AttentionState`
+
+**Content**: The current focus of an active Protocol run — a live cursor across the address space. `AttentionState` and `Address` are structurally related but serve distinct roles: an `Address` is a stable, resolvable identifier for a specific element; `AttentionState` is the mutable cursor that records *where focus currently is* during an active session. An `AttentionState` value at a point in time resolves to a document-space `Address`, but it is stored separately because it changes continuously as the Protocol advances.
+
+Conversation material is tagged with the active `AttentionState` as it is produced. This makes context assembly efficient: "all chunks produced while focus was on this Field" is a queryable address predicate.
+
+Example: the `AttentionState` shape.
+
+`AttentionState` is set live by the session or Protocol runner. `SourceReference` is set retrospectively at extraction or editorial review time. Both are needed; they answer different questions.
+
+
+##### Context Query (behavioural requirement)
+
+**Content**: A conforming `ext:addressability` implementation must be able to assemble relevant material given an address and a purpose. This is a behavioural requirement, not a data shape.
+
+**Required query patterns:**
+
+| Pattern | Address | Returns |
+|---|---|---|
+| Field context | `{recordId}/{fieldId}` | Current value, chunks tagged to this Field, Field `aiGuidance` |
+| Record context | `{recordId}` | All field values, chunks tagged to this Record, Relations, Protocol run history |
+| Stage context | `{runId}/{stageId}` | All chunks produced during this stage, Fields active in this stage |
+
+**Recommended assembly order for AI assistance:**
+
+1. Type and Field `aiGuidance` — what this field captures, how to extract it
+2. Current value — what has already been established
+3. Chunks tagged to this Field via AttentionState — most focused context
+4. Chunks tagged to the parent Record — broader session context
+5. Related Records via Relations — structural context
+
+**Note (2026-08-21, `rfc-decision-2a1e1590`)**: the per-field `Revision` snapshot mechanism (addressable field-value history, `revisionId`, revision chains, revision-trace queries) previously specified here is removed under the dormancy rule — zero corpus use, and it was incompletely specified (a PascalCase wire-format leak in its agent tag, and a coupling that named a pre-RFC-006 field). `Address`, `AttentionState`, and the Context Query requirement above are untouched by that removal. Return trigger: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface.
+
+
+
+#### Discovery
+
+**Canonical Key**: record:concepts/discovery
+
+**Description**: A portable contract for asking a repository what it holds, split deliberately into two halves that behave differently. Structured filters, over type, container, tag, tier and lifecycle state, are exact-match predicates: two conforming implementations with the same data must return the same set. Free-text content matching is a recall floor: every instance whose projected text contains the normalised query must be returned, and returning more, or ranking differently, is explicitly permitted. This is what lets a naive substring matcher and a semantic search engine both conform.
+
+**Notes**: Matching runs over a deterministic text projection: an ordered sequence of segments derived from an instance by a stated rule about which fields are searchable, normalised at match time by Unicode NFC and case folding, with punctuation, diacritics and whitespace left intact.
+
+##### lifecycleStates in DiscoveryQuery is an inclusive multi-value lifecycle filter
+
+**Number**: I-142
+
+**Constraint**: When DiscoveryQuery carries a non-empty lifecycleStates array, implementations MUST restrict the query result to instances whose lifecycleState matches any value in the array (OR semantics). An instance with no lifecycleState MUST be excluded when lifecycleStates is present and non-empty. When lifecycleStates is absent or empty, no filtering by this field is applied and all lifecycle states (including absent) are included. Implementations that do not declare ext:lifecycle MUST ignore lifecycleStates and MUST NOT produce a validation error on its presence.
+
+**Rationale**: Multi-value OR semantics mirrors typeFilter and enables queries that span multiple lifecycle stages (e.g. draft and active). The ext:lifecycle guard ensures that implementations without a lifecycle model are not broken by the field. Originally numbered 011-1 under RFC-011's rule-set-qualified proposal-stage numbering; relocated from package/records/ into the projection root and renumbered I-142 upon RFC-011 acceptance (srs#410, rfc-decision-628cf6c4). Retained at I-142 through the srs#525 SectionSource -> DiscoveryQuery collapse (rfc-decision-cce3c00e, rfc-decision-9ee14517): the predicate moved from SectionSource.type-query to DiscoveryQuery, now governed by RFC-012 Rev 12 (formerly RFC-011 Change A) -- identifier stability preferred over renumbering (identity over label).
+
+
+##### excludeLifecycleStates in DiscoveryQuery is an exclusion lifecycle filter applied after inclusion
+
+**Number**: I-143
+
+**Constraint**: When DiscoveryQuery carries a non-empty excludeLifecycleStates array, implementations MUST exclude from the query result any instance whose lifecycleState matches any value in the array. When lifecycleStates and excludeLifecycleStates are both present and non-empty, inclusion filtering (I-142) MUST be applied first; exclusion filtering is then applied to the survivors. An instance with no lifecycleState is not excluded by excludeLifecycleStates (only instances with a matching non-null lifecycleState are excluded). When excludeLifecycleStates is absent or empty, no exclusion is applied. Implementations that do not declare ext:lifecycle MUST ignore excludeLifecycleStates and MUST NOT produce a validation error on its presence.
+
+**Rationale**: Exclusion is more forward-compatible than inclusion for the decision-log pattern: specifying excludeLifecycleStates: [superseded, abandoned] automatically includes any new lifecycle states added in future without Composition updates. Inclusion-first-then-exclusion semantics allow fine-grained control when both fields are present. Originally numbered 011-2 under RFC-011's rule-set-qualified proposal-stage numbering; relocated from package/records/ into the projection root and renumbered I-143 upon RFC-011 acceptance (srs#410, rfc-decision-628cf6c4). Retained at I-143 through the srs#525 SectionSource -> DiscoveryQuery collapse (rfc-decision-cce3c00e, rfc-decision-9ee14517): the predicate moved from SectionSource.type-query to DiscoveryQuery, now governed by RFC-012 Rev 12 (formerly RFC-011 Change B) -- identifier stability preferred over renumbering (identity over label).
+
+
+##### Structured filter predicates are exact-match
+
+**Number**: I-113
+
+**Constraint**: An implementation that declares `ext:discovery` MUST include in its DiscoveryQuery result set every instance that satisfies all specified structured filter predicates (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `excludeLifecycleStates`, `tier`), and MUST NOT include any instance that fails any specified structured filter predicate. (RFC-012 R1.)
+
+
+##### Content-match is a guaranteed recall floor
+
+**Number**: I-114
+
+**Constraint**: For a `contentMatch` predicate with normalized query string `q`, an implementation that declares `ext:discovery` MUST include every instance whose Text Projection contains at least one `TextSegment` whose normalized `text` contains `q` as a substring (case-folded NFC substring match). (RFC-012 R2.)
+
+
+##### Extra content-match results are permitted
+
+**Number**: I-115
+
+**Constraint**: An implementation MAY include instances beyond the recall-floor set defined by I-114 (e.g. via stemming, phonetic matching, or semantic similarity). Returning extra results does not violate `ext:discovery` conformance. (RFC-012 R3.)
+
+
+##### Result ranking is implementation-defined
+
+**Number**: I-116
+
+**Constraint**: An implementation MAY rank DiscoveryQuery results in any order. The recall-floor guarantee of I-114 applies to inclusion in the result set only, not to rank position. (RFC-012 R4.)
+
+
+##### Structured filters and content-match compose by conjunction
+
+**Number**: I-117
+
+**Constraint**: When both structured filters and `contentMatch` are specified on a DiscoveryQuery, an instance MUST satisfy all structured filter predicates (exact-match, I-113) AND the content-match recall-floor predicate (I-114). The structured-filter constraints cannot be overridden or widened by content-match extra recall. (RFC-012 R5.)
+
+
+##### containerId filter uses effective container membership
+
+**Number**: I-118
+
+**Constraint**: A `containerId` filter predicate MUST match exactly the instances in effective(C) for the named Container C: the recursive closure over the Container's declared `rootInstanceIds`, `memberInstanceIds` and `childContainerIds` (RFC-034 [R8]; I-147). Discovery scopes to the full effective (deep) closure; a `contains` Relation never contributes (I-148). The authoritative inputs are the Container objects and their declared child graph in the repository's authoritative store (RFC-038 [R1]). An implementation MAY maintain a derived catalog for performance but MUST treat the store as authoritative when they differ; there is no manifest `instanceIndex` to use as a cache, as it is retired (RFC-038 [R2]). (RFC-012 R6, as amended by RFC-034 Change D.2 on 2026-09-06: the former three-condition rule of rootInstanceIds, OR memberInstanceIds, OR reachable via transitive `contains` traversal is superseded; its traversal branch is removed.)
+
+
+##### Multi-tag filter uses AND semantics with vocabulary resolution
+
+**Number**: I-119
+
+**Constraint**: A `tag` predicate with multiple values MUST use AND semantics — all specified tags must be present on the instance. Both query tags and stored instance tags are canonicalized via RFC-006 key-or-alias resolution when a Vocabulary is declared for the tag key; when no Vocabulary is declared, raw string comparison applies (case-sensitive). (RFC-012 R7.)
+
+
+##### Text Projection includes only Fields matching the RFC-032 searchability predicate
+
+**Number**: I-120
+
+**Constraint**: For Tier 2, the Text Projection MUST include a Field only when `fieldType.datatype == "string"` and `fieldType.format` is absent or one of `"plain"`, `"markdown"`, or `"uri"`. `valueDomain` does not affect searchability. A single-cardinality Field emits one segment; a list-cardinality Field emits one segment per array element in order. Fields with `format: "uuid"` or `format: "email"`, or datatype `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, or `map`, MUST NOT contribute `TextSegment`s. (RFC-012 R8; RFC-032 Rev-7 erratum.)
+
+
+##### Text Projection includes tags; display labels are optional
+
+**Number**: I-121
+
+**Constraint**: The Text Projection MUST include `tags` array entries as `TextSegment`s after field segments. An implementation MAY additionally include `FieldAssignment.displayLabel` values as segments after tags — this is not required, and two conforming implementations may differ on whether display-label segments are included. (RFC-012 R9.)
+
+
+##### Text normalization is NFC + case folding, no stripping
+
+**Number**: I-122
+
+**Constraint**: Normalization of `TextSegment.text` MUST apply Unicode Normalization Form C (NFC) followed by Unicode simple case folding (locale-independent). Implementations MUST NOT strip punctuation, diacritics, or whitespace during this normalization step; additional stemming or tokenization is permitted for ranking purposes only, not as a substitute for the normalized canonical search string. (RFC-012 R10.)
 
 
 
@@ -1698,6 +2988,322 @@ Example: the `Provenance` shape.
 
 
 
+#### Package
+
+**Canonical Key**: record:concepts/package
+
+**Description**: The distributable unit of definitions: Fields, Types, and the vocabularies, lifecycles, relation types, views, compositions, blueprints, protocols and themes built on them, with a complete dependency manifest. It is bundled, meaning everything referenced is carried inside and it is self-contained, or standalone, meaning dependencies are expected already installed. The dependency manifest is required either way, so a consumer can check completeness without parsing what is inside.
+
+**Notes**: Packages are what makes a vocabulary shareable instead of private to one tool. The specification defines the package's shape; how registries publish, authenticate or federate them is deliberately out of scope.
+
+##### Every fieldId referenced in any FieldAssignment within a…
+
+**Number**: 7
+
+**Constraint**: Every `fieldId` referenced in any `FieldAssignment` within a `Package.types[]` must appear as the `id` of an entry in `Package.packageDependencies`.
+
+
+##### If Package.mode === "bundled": every Reference in packageDependencies must…
+
+**Number**: 8
+
+**Constraint**: If `Package.mode === "bundled"`: every `Reference` in `packageDependencies` must have a matching `Field` in `fields[]` (matched on `id` and `version`).
+
+
+##### Every typeId referenced by any View in Package.views[] must appear in…
+
+**Number**: 15
+
+**Constraint**: Every `typeId` referenced by any `View` in `Package.views[]` must appear in `Package.packageDependencies` with `definitionType: "type"`. If `mode === "bundled"`, that `Type` must be present in `types[]`.
+
+
+##### Every DocumentSection.renderViewId in any Composition within…
+
+**Number**: 35
+
+**Constraint**: Every `DocumentSection.renderViewId` in any `Composition` within `Package.compositions[]` must reference a `View.id` that appears in `Package.views[]` or `Package.packageDependencies`. If `mode === "bundled"`, that `View` must be present in `Package.views[]`. (`packageDependencies`: srs-rust#873/#910, folded onto this same rev-6 stamp.)
+
+
+##### Every TypeRef.typeId referenced in any Blueprint.rootTypes[],…
+
+**Number**: 36
+
+**Constraint**: Every `TypeRef.typeId` referenced in any `Blueprint.rootTypes[]`, `Blueprint.requiredTypes[]`, or in any `RelationSpec.sourceType` or `RelationSpec.targetType` within `Blueprint.structure[]`, for each Blueprint in `Package.blueprints[]`, must appear in `Package.packageDependencies` with `definitionType: "type"`. If `mode === "bundled"`, each such Type must be present in `Package.types[]`.
+
+
+##### Every Protocol.protocolTargetType and ProtocolStage.outputType referenced…
+
+**Number**: 37
+
+**Constraint**: Every `Protocol.protocolTargetType` (when a non-empty UUID) and every `ProtocolStage.outputType`, for each Protocol in `Package.protocols[]`, must appear in `Package.packageDependencies` with `definitionType: "type"`. Every `FieldRef.fieldId` in any `ProtocolStage.contributesTo[]` must appear in `Package.packageDependencies` with `definitionType: "field"`. If `mode === "bundled"`, those Types must be in `Package.types[]` and those Fields in `Package.fields[]`.
+
+
+##### When PackageRef.mode === "local", the package at the declared path…
+
+**Number**: 50
+
+**Constraint**: When `PackageRef.mode === "local"`, the package at the declared path must be `mode: "bundled"` and must include all Fields and Types referenced by any Tier 2 `Record` in the repository's instance set (RFC-038 [R1]; enumerated from the tree, not a manifest `instanceIndex`, which is retired per [R2]). This is the repository analogue of Package Invariants 7–8.
+
+
+##### Multi-version repository MUST resolve definition references against union of all installed package directories
+
+**Number**: I-83
+
+**Constraint**: A tool MUST resolve every `typeId` and `fieldId` referenced by any Tier 2 Record against the union of all installed package version directories. This extends Invariant 50 to the multi-version case: a reference is resolved if it can be found in any installed version directory. A reference that cannot be found in any installed version directory MUST be reported as a validation error. A tool MUST NOT remove any prior-version package directory if doing so would leave any such reference unresolvable.
+
+**Rationale**: SRS records reference their type and field definitions by stable UUID. In a multi-version repository, those UUIDs may resolve to different package version directories depending on when the record was created. Requiring union resolution, rather than single-version resolution, ensures that no existing record becomes unresolvable when a new package version is installed alongside the old one. This upholds the stable-UUID guarantee: a UUID that was valid at record-creation time remains resolvable throughout the repository's lifetime.
+
+
+##### no-base-package: repository must load without com.semanticops.base
+
+**Number**: I-103
+
+**Constraint**: A conformant implementation MUST NOT refuse to load, validate, or export a repository solely because the `com.semanticops.base` package is absent or because no `attachment_policy` record is present.
+
+
+
+#### Lineage and provenance
+
+**Canonical Key**: record:concepts/lineage-and-provenance
+
+**Description**: Two distinct records of where a definition came from. Lineage is the relationship to what it was derived from — tracked from a source and expecting upstream updates, or deliberately forked with no further tracking, and possibly both during a transition. Provenance is the publishing origin: who published it, in which package, at what package version, imported when. Together they let a consumer answer whether a local definition has diverged from what it was copied from, and who is answerable for the original.
+
+**Notes**: A package's semver and a definition's integer version are different axes and must not be conflated.
+
+##### upstreamPackage.packageId MUST match at least one PackageRef entry's packageId
+
+**Number**: I-84
+
+**Constraint**: When `manifest.upstreamPackage` is set, there MUST exist at least one entry in `manifest.packageRefs` (or `manifest.packageRef`) whose `packageId` matches `manifest.upstreamPackage.packageId`. A manifest where no `PackageRef` entry's `packageId` matches `upstreamPackage.packageId` MUST be reported as a validation error. Manifest-only validators MAY skip this check when no `PackageRef` entry carries `packageId` (i.e., all local-mode entries predate RFC-014 and omit the field), and SHOULD report the repository state as indeterminate rather than emitting a validation error in that case.
+
+**Rationale**: Without this invariant a manifest could declare an `upstreamPackage` for package X while listing only `PackageRef` entries for package Y, and no validator could detect the inconsistency without cross-referencing package directory files. Using `packageId` — a stable UUID — as the linkage key (rather than namespace or name, which could change) preserves the stable-UUID-as-identity-anchor principle throughout the manifest.
+
+
+
+#### Repository
+
+**Canonical Key**: record:concepts/repository
+
+**Description**: A directory that holds SRS content as files: a marker directory identifying the root, a manifest declaring the repository's stable id, its packages, its required root container and its declared extensions, and reserved folders for instances, relations, source documents and local definitions. Membership is authoritative from the tree itself — a file present under a reserved root is a member, and there is no manifest index to disagree with it. Identity lives inside the SRS data, never in filenames or storage history.
+
+**Notes**: A repository is operable with no running service, no registry and no network. That is the point of the format, not an incidental property of it.
+
+##### Repository (ext:repository)
+
+
+##### Distribution
+
+
+##### conforming repository must have a .srs marker directory and a…
+
+**Number**: 45
+
+**Constraint**: A conforming repository must have a `.srs` marker directory and a `manifest.json` at its root. A directory without both is not a conforming repository.
+
+
+##### Every instance file's own instanceId is its identity; there is no…
+
+**Number**: 46
+
+**Constraint**: Every instance file discovered under a reserved instance root MUST declare an `instanceId`, and that self-declared value is the instance's identity. There is no manifest index entry to cross-check it against — `RepositoryManifest.instanceIndex` is retired (RFC-038 [R2]) and the repository's authoritative store, enumerated from the tree, is the instance set (RFC-038 [R1]).
+
+
+##### RepositoryManifest.container is the canonical Container for the…
+
+**Number**: 47
+
+**Constraint**: `RepositoryManifest.container` is the canonical `Container` for the repository. It must satisfy all core Container invariants (Invariants 20–21). If a separate `container.json` is present in the repository root, it must be consistent with the manifest's embedded Container; the manifest takes precedence on conflict.
+
+
+##### Every SourceDocument sidecar present under sourceDocumentsPath must…
+
+**Number**: 52
+
+**Constraint**: Every `SourceDocument` sidecar present under `sourceDocumentsPath` must have a `contentPath` that resolves to an existing content file in the same directory. A sidecar whose `contentPath` does not resolve is invalid. A conforming producer must not emit such a sidecar; a conforming consumer must surface the resolution failure before processing any `SourceReference` pointing at that `documentId`.
+
+
+##### conforming importer must use repositoryId as the key to determine…
+
+**Number**: 53
+
+**Constraint**: A conforming importer must use `repositoryId` as the key to determine whether an incoming repository already exists locally. An importer that unconditionally creates a new local repository for every archive it receives, without consulting `repositoryId`, is not conformant.
+
+
+##### checksum value in InstanceIndexEntry.checksum,…
+
+**Number**: 55
+
+**Constraint**: A checksum value in `InstanceIndexEntry.checksum`, `SourceDocumentIndexEntry.sidecarChecksum`, `SourceDocumentIndexEntry.contentChecksum`, or `RelationsChecksumEntry.checksum` must use the format `<algorithm>:<hex-encoded-digest>`. A value that does not include the `<algorithm>:` prefix is invalid.
+
+
+##### manifest.container is required and satisfies core Container invariants 20-21
+
+**Number**: I-79
+
+**Constraint**: Every SRS repository manifest MUST embed exactly one root Container in manifest.container. The root Container MUST satisfy the core Container invariants unchanged: Invariant 20 (its containerId is not an instance ID and never appears in rootInstanceIds, memberInstanceIds, Relation.sourceInstanceId, or Relation.targetInstanceId) and Invariant 21 (every id in rootInstanceIds/memberInstanceIds references a valid SRS instance id).
+
+
+##### Root container membership ids resolve in the authoritative instance set
+
+**Number**: I-80
+
+**Constraint**: Every id in the root container's rootInstanceIds and memberInstanceIds MUST resolve to a member of the repository's authoritative instance set. There is no manifest `instanceIndex` to consult — it is retired (RFC-038 [R2]); the repository's authoritative store, enumerated from the tree, is that set (RFC-038 [R1]). This is the root-container specialization of core Invariant 21, stated separately so the required-root-container guarantee is self-contained.
+
+
+##### manifest.container.identityInstanceId MUST reference a Tier-2 com.semanticops.core/purpose Record
+
+**Number**: I-87
+
+**Constraint**: `manifest.container.identityInstanceId`, when present, MUST reference a Tier-2 Record of type `com.semanticops.core/purpose`. This invariant layers on RFC-013 I-81 (membership requirement retained; I-81 is not superseded); RFC-029 adds the type constraint on top. During the RFC-029 migration grace period (R7), an implementation MUST emit a migration warning rather than a validation error for existing repositories whose `identityInstanceId` resolves to a record that is not a Tier-2 `com.semanticops.core/purpose` Record (including Tier-0 notes). All newly-created repositories (post-RFC-029) must satisfy this invariant immediately.
+
+**Rationale**: RFC-013 I-81 left the type of the identity record unconstrained, requiring only membership in the root container. This made the identity record un-navigable by the SRS type system: a consumer could not use `resolve_type`/`record_get` without a special code path for the missing-type case. By requiring a `com.semanticops.core/purpose` Record, identity resolution becomes an ordinary typed record lookup, and the RFC-013 Tier-0-note default is formally superseded.
+
+
+##### no-policy defaults when attachment_policy absent
+
+**Number**: I-104
+
+**Constraint**: When no `attachment_policy` record exists, a conformant implementation MUST apply the no-policy defaults: all MIME types accepted, no size limits enforced, no size-or-MIME-type-policy diagnostics emitted.
+
+
+##### attachment_policy limit diagnostics at validate time
+
+**Number**: I-107
+
+**Constraint**: A conformant implementation MAY enforce `attachment_policy` limits as hard rejections. If it does not, it MUST emit non-blocking warning diagnostics at `srs repo validate` time when: a source document content file exceeds `max_per_file_bytes` or `max_doc_bytes`; aggregate source-document bytes exceed `max_total_bytes`; an attached file's MIME type is not listed in `allowed_mime_types`. Non-blocking diagnostics MUST NOT prevent record storage or repository export.
+
+
+##### contentPath subdirectory resolution relative to sourceDocumentsPath
+
+**Number**: I-109
+
+**Constraint**: `contentPath` in a source-document sidecar MAY contain forward-slash-separated sub-path segments. A conformant implementation MUST resolve `contentPath` relative to `sourceDocumentsPath`.
+
+
+##### sidecar must reside in same directory as its content file
+
+**Number**: I-110
+
+**Constraint**: A sidecar MUST reside in the same directory as the content file it describes. A `contentPath` that traverses upward (e.g., `../other/file.pdf`) is non-conformant.
+
+
+##### at most one attachment_policy record per repository
+
+**Number**: I-111
+
+**Constraint**: At most one `attachment_policy` record of the `com.semanticops.base/repo_settings` type MAY exist per repository. A conformant implementation encountering two or more MUST surface a diagnostic and treat the policy as absent (applying the no-policy defaults: all MIME types accepted, no size limits enforced, no size-or-MIME-type-policy diagnostics emitted).
+
+
+##### Travelling form
+
+**Canonical Key**: record:concepts/travelling-form
+
+**Description**: The shape SRS content takes when it leaves the place it was made: a zip archive that is a self-contained snapshot of a repository, a single-file JSON store, or a slice carrying one container's closure as an independently openable archive. The standing test is that anything a repository is allowed to hold must be expressible in the corresponding travelling form — a capability that exists only in place is captivity, not a feature. Round-tripping between forms must lose nothing.
+
+**Notes**: Import is identity-based, never path-based. Same key and same content is a no-op; same key and different content is a conflict to surface, because silent overwrite and silent discard are both non-conformant.
+
+###### archive must include every instance in the authoritative store's…
+
+**Number**: 49
+
+**Constraint**: An archive must include every instance discovered by enumerating the repository's authoritative store — the instance set (RFC-038 [R1], [R17]) — not a manifest `instanceIndex`, which is retired (RFC-038 [R2]). An archive missing any enumerated instance file is malformed; a conforming consumer must reject it or surface the missing instances explicitly before processing.
+
+
+###### archive that includes a Relation containing a SourceReference with…
+
+**Number**: 51
+
+**Constraint**: An archive that includes a `Relation` containing a `SourceReference` with `sourceType: "repository-document"` must include that document's sidecar and content file, just as if the reference appeared within an instance. A conforming archiver must scan Relations for `repository-document` references and collect the corresponding source material. An archive missing such material is malformed.
+
+
+###### Revision history exchange format
+
+**Content**: 
+A standard format for exchanging full Revision history between implementations, for cases where the history itself is a first-class interoperability concern. Natural extension of `ext:addressability`. Deferred pending stabilisation of the Container and Relation layers.
+
+
+###### Instance graph exchange format
+
+**Content**: 
+A standard envelope for exchanging a Container together with its full Record set, Relations, and source references. Natural successor to `Package` at the instance layer. Likely shape: `{ container, instances[], relations[], sourceRefs[] }`. Deferred pending stabilisation of `ext:views-l2` and implementation experience.
+
+
+###### deterministic-ZIP archive production
+
+**Number**: I-105
+
+**Constraint**: A conformant archive producer MUST produce deterministic ZIP archives: entries sorted byte-lexicographically by forward-slash-normalised path, `last mod` timestamps zeroed (`0x0000`), compression method Deflate (8) or Store (0) only with consistent per-file choice across invocations, `extra` fields empty, Language encoding flag (bit 11) set to 1.
+
+
+###### byte-identical archive per implementation across invocations
+
+**Number**: I-106
+
+**Constraint**: Given identical repository content, a conformant archive producer MUST produce a byte-for-byte identical `.srs` file across invocations of the same implementation. Cross-implementation byte identity is not guaranteed (I-105 allows implementation-defined Store/Deflate choice). Identical content means identical archive entry paths (forward-slash-normalised) and byte contents; filesystem timestamps, permissions, and host metadata are excluded and MUST NOT influence archive output.
+
+
+###### reject gzip-compressed .srsj files
+
+**Number**: I-108
+
+**Constraint**: A conformant implementation MUST reject a gzip-compressed file presented as a `.srsj` JSON Store. Detection is by content inspection: a file whose first two bytes are `0x1f 0x8b` MUST be treated as gzip-compressed regardless of its filename or MIME type.
+
+
+###### A container slice closes over the root's childContainerIds descendants and effective members
+
+**Number**: I-151
+
+**Constraint**: An RFC-026 container slice MUST include the closure root, its transitive childContainerIds descendants, and the root's effective member set. It MUST preserve declared edges among those Containers and MUST NOT include an unrelated Container solely because its roots or members are subsets of the included instance set.
+
+**Rationale**: RFC-034 [R9] (Change D.3), replacing RFC-026 Change C items 2 and 6. RFC-026's definition, relation, source-document and external-edge closure rules then apply to that member-instance set.
+
+
+###### ext:slices
+
+**Content**: **Required for**: implementations that export a subset of a repository as a standalone, independently openable `.srs` archive (a *slice*).
+
+A container slice carries the records reachable from a container's membership, their type and field definitions, intra-slice relations, and referenced source documents. It is a valid `.srs` archive in the RFC-017 format — any SRS tool can open, validate, and render it.
+
+
+###### Scope
+
+**Content**: `ext:slices` defines **container-membership closure only**. A *package export* — distributing a package's Type/Field definitions as a `package-bundle.json` — is a different artifact class (RFC-003) and is not a slice. Record-level closure (an arbitrary set of records) is deferred to a future RFC.
+
+
+###### Manifest extensions (`ext:slices`)
+
+**Content**: When `ext:slices` is declared in a slice archive's `manifest.declaredExtensions`, `RepositoryManifest` gains one optional property:
+
+Example: the `slice` manifest property.
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `origin.repositoryId` | `string (uuid)` | yes | `repositoryId` of the source repository this slice was exported from. |
+| `spec.type` | `string` | yes | Closure rule. Currently only `"container"` is defined. |
+| `spec.id` | `string (uuid)` | yes | The `containerId` that scoped the slice — present in the source `containerIndex`. |
+| `exportedAt` | `string (date-time)` | yes | ISO-8601 timestamp of when the slice was produced. |
+| `externalRelationRefs` | `array` | no | Relations cut at export because exactly one endpoint fell outside the closure. Provenance only — not a validation error. |
+
+The slice archive's `manifest.repositoryId` MUST be a **new UUID** distinct from `slice.origin.repositoryId`; the archive is a standalone artifact.
+
+
+###### Container-membership closure
+
+**Content**: The closure root is the container identified by `spec.id`. The slice includes (I-151, RFC-034 [R9]): (1) `manifest.container` set to the closure-root container; (2) the root container's effective membership, meaning its `rootInstanceIds` and `memberInstanceIds` recursively through the containers declared in `childContainerIds`; (3) all type and field definitions referenced by included instances (directly or via Type FieldAssignments), copied into the slice's `package/` directory; (4) all relations with both endpoints inside the included set; (5) all `sourceDocumentIndex` entries and content files referenced by included instances; (6) the closure-root container and every container reachable from it through `childContainerIds`, with those declared child edges preserved. An unrelated container is not included on the strength of its roots or members happening to be subsets of the included set; that pre-RFC-034 subset rule is replaced.
+
+
+###### Dangling-edge policy
+
+**Content**: Cross-boundary relations MUST NOT appear in the slice's relations collection. They MUST be recorded in `slice.externalRelationRefs[]` with `relationId`, `sourceInstanceId`, `targetInstanceId`, and `relationType`. A non-empty list is provenance data, not a validation error. The `relationType` value in `externalRelationRefs` entries is NOT subject to RFC-005 definition-lookup in the slice archive.
+
+
+###### Validation relaxations
+
+**Content**: An RFC-026-aware validator MUST NOT treat the following as errors when a `slice` block is present: `externalRelationRefs` UUIDs absent from `instanceIndex`; absence of unreferenced type/field definitions; an incomplete `containerIndex`; tombstoned source document entries with absent content files. Dangling edges in the relations collection, unresolvable `typeId`/`fieldId` references, and instance schema validation errors remain errors regardless of slice status.
+
+
+
+
 
 ## Presentation
 
@@ -1738,6 +3344,18 @@ Document-level projection is addressed by `ext:views-l2`. The broader projection
 
 **Notes**: A row may also present a Record-level property such as lifecycle state or tags without pretending that property is a Field. Hiding a row affects rendered text only; the value stays in the Record and in any structured projection.
 
+###### Views L2 navigation (ext:views-l2)
+
+
+###### Views (ext:views-l1)
+
+
+###### Distribution — Views (ext:views-l1)
+
+
+###### Views L2 (ext:views-l2)
+
+
 ###### Every fieldId in View.fieldViews[] must reference a valid Field.id
 
 **Number**: 12
@@ -1777,6 +3395,9 @@ A future version may define:
 - `composesViews?: UUID[]` — mixin composition; multiple Views contribute non-overlapping configuration
 
 Current design: `View` is a leaf type. Use Lineage tracking to record inheritance relationships.
+
+
+###### Distribution — Views L2 (ext:views-l2)
 
 
 ###### ext:views-l1
@@ -5010,6 +6631,27 @@ Conversation chunks produced while `AttentionState.stageId` is set are associate
 
 
 
+#### Conversation boundary
+
+**Canonical Key**: record:concepts/conversation-boundary
+
+**Description**: The permanent architectural line between raw multimodal source material (speech, threads, annotations) and the negotiated semantic state SRS captures. The two layers reference each other in both directions but never merge: material on the conversation side is addressable evidence, and it does not become an instance automatically. A transcript chunk cited as evidence for a field value is not a Note unless someone deliberately models it as one.
+
+**Notes**: The conversation layer is optional infrastructure. A repository declaring only the core plus the file-based repository format needs none of it, and source documents stored in the repository are sufficient evidence storage.
+
+##### Why the conversation layer is a permanent boundary
+
+**Content**: 
+SCDS captures negotiated semantic state. Transcripts capture raw material — speech, threads, annotations — from which semantic state is extracted or constructed. These are different things, and conflating them would harm both.
+
+If SCDS tried to be a transcript standard, it would need to model speaker identity, timing, overlapping speech, and audio quality — none of which are semantic concerns. If the transcript standard tried to be a semantic state standard, it would need to version field definitions, track lineage, and manage inter-Record Relations — none of which are evidence concerns.
+
+The boundary makes both layers better at what they do. The connection between them — `SourceReference` and `AttentionState` — is the bidirectional bridge. Each layer references the other; neither absorbs the other.
+
+---
+
+
+
 
 ## Conformance
 
@@ -5030,6 +6672,44 @@ Conforming implementations must uphold the following invariants.
 
 **1.** `FieldAssignment.displayLabel` and `FieldAssignment.displayHint` are for rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or validation. Extended by RFC-036 [CR-036-20]: they must also not affect a Record's Relations or its Discovery Text Projection (`ext:discovery`). Two repositories differing only in these values must produce identical validation results and identical Discovery output.
 
+#### Vocabulary
+
+**I-65.** When a Vocabulary in the repository package declares Term entries for a given tag key, Container tags bearing that key MUST resolve against those Terms per RFC-006 vocabulary resolution rules. Free-string tags are valid when no Vocabulary entry governs the key.
+
+#### Stable identity
+
+**9.** `Field.id` is stable across versions. A new `id` means a new definition, not a new version of an existing one.
+
+**54.** When an importer encounters an incoming object whose identity key matches an existing local object but whose content or checksum differs, it must surface the conflict explicitly. An importer that silently overwrites or silently discards in this case is not conformant.
+
+#### Version lineage
+
+**I-137.** A Type version referenced by any instance in the repository MUST NOT be deleted. Name-keying makes the Record-to-Field edge Type-mediated: `fieldId` is recovered from `typeId` + `typeVersion` + key, so deleting the pinned Type version renders every instance of it unreadable. This rule governs versions with live referents only. (RFC-039 [R19])
+
+#### Namespace
+
+**I-85.** A conforming SRS implementation MUST make all `com.semanticops.core/*` types and fields resolvable in every repository without any `packageRef` or `packageRefs` declaration in the manifest. The core base package's definitions are treated as logically present in the RFC-014 R6 package union for all repositories. An implementation that fails to resolve `com.semanticops.core/*` types and fields in a structurally valid repository is non-conformant with RFC-029.
+
+**I-86.** A repository MUST NOT declare any Type or Field under the `com.semanticops.core` namespace in a local or external package. An implementation MUST reject the repository load with a conflict error if any such declaration is encountered during package loading. This reservation covers only the `com.semanticops.core` namespace; other `com.semanticops.*` sub-namespaces are governed by their own RFC or by general package conflict rules and are not affected by this invariant.
+
+#### Lifecycle
+
+**4.** `Type.lifecycle.initialState` must reference a `key` that appears in `lifecycle.states[]` and where `isInitial === true`.
+
+**5.** Every `from` and `to` value in `lifecycle.transitions[]` must reference a `key` that appears in `lifecycle.states[]`.
+
+**6.** `Record.lifecycleState`, when present, must reference a `key` in the associated `Type.lifecycle.states[]`.
+
+**I-98.** A Record MUST NOT rest in a lifecycle state that declares `requiresRelation` unless at least one Relation satisfies the obligation: its type equals one of the declared `relationType`(s) and the Record is the relation's target when `direction` is `incoming` (or omitted) or its source when `direction` is `outgoing`. When the state declares `enforcement: "hard"` (the default), an implementation MUST reject a lifecycle transition into it unless the operation, on completion, satisfies this occupancy requirement — either because a satisfying Relation already exists, or because the operation's fulfillment establishes one. The rejection MUST be machine-readable, identifying the target state key, the required relation type(s), and the direction. When the state declares `enforcement: "advisory"`, the transition MUST be permitted regardless of the obligation and the unsatisfied state surfaced only as an at-rest warning, never a rejection. (RFC-022 R1–R3, R2a.)
+
+**I-99.** A fulfillment supplied with a lifecycle transition MUST be applied as one all-or-nothing operation: `newRecord` creates a successor of the Record's Type in the effective lifecycle's initial state, asserts one Relation of the selected type oriented per `direction`, and transitions the Record; `existingInstanceId` asserts the Relation to the referenced instance (which MUST exist and MUST NOT be the Record itself) and transitions. If any step fails, no step's effect may remain observable. A file-backed implementation MAY realize this by write ordering in which the state change is committed last, provided every committed prefix is a valid repository under I-98. When the state declares an any-of `relationType` array, `fulfillment.relationType` MUST be one of the declared types, defaulting to the first; a `fulfillment` supplied for a target state that declares no `requiresRelation` MUST be rejected. (RFC-022 R4–R8.)
+
+**I-100.** Allowed-transitions projections MUST include the target state's `requiresRelation` declaration on each transition option whose target state declares one, so clients route successor-flow presentation from structure rather than state-name matching. Repository validation MUST emit a warning-severity diagnostic for every Record at rest that violates I-98, and MUST NOT treat such a violation as a hard validation error. Transitions whose target state declares no `requiresRelation` MUST behave exactly as before RFC-022. (RFC-022 R8–R10.)
+
+#### AI guidance
+
+**3.** A `Field`'s `aiGuidance` belongs to the Field. Type-level `aiGuidance` provides session framing only.
+
 #### Type specialisation
 
 **39.** `Type.extendsTypeId`, when present, must reference a valid `Type.id`. Inheritance chains must be acyclic; a Type may not directly or transitively extend itself.
@@ -5044,13 +6724,101 @@ Conforming implementations must uphold the following invariants.
 
 **I-97.** `validationRules` are not inherited. A Type's `validationRules` array is the complete and exclusive set of cross-field rules evaluated for Records of that Type. When `ext:type-inheritance` is in use and Type B extends Type A, Type A's `validationRules` MUST NOT be evaluated for Records of Type B unless Type B's own `validationRules` explicitly restates them. (RFC-019 R11.)
 
+#### Field
+
+**2.** A `Type` must not redefine, override, or duplicate the semantic content of any `Field` it includes. If different semantics are needed for a Field in a specific Type context, a distinct `Field` with its own identity and lineage must be created.
+
+#### Field type
+
+**38.** `Field.fieldType.format`, when present, is only meaningful when `fieldType.datatype` is `"string"`. Implementations must ignore `format` on fields with any other `datatype`.
+
+**I-139.** `cardinality: "list"` array-wraps uniformly, for every `datatype` including `map` and `dependent`, matching `projectField`'s unconditional wrap. The single-value rule states the `single` case; the wrap composes on top of it. (RFC-039 [R16])
+
+#### Composite value
+
+**I-136.** A `mode: "reference"` value MUST resolve to an instance present in the repository's authoritative instance set, and that instance MUST be of the Field's declared `rangeType` at the declared `typeVersion`. A dangling or type-mismatched target MUST be reported as an error naming the referring record, the key, and the target id. (RFC-039 [R14], amended by RFC-038 [R25] — the reference target is the tree-enumerated instance set, not a manifest `instanceIndex`, which is retired per RFC-038 [R2]; discharges RFC-032 OQ4, RFC-033:302, RFC-035:592)
+
+#### Note
+
+**18.** `NoteSection.name` values must be unique within a `Note`.
+
+#### Record
+
+**28.** `Record.typeId` and `Record.typeVersion` are the authoritative Type binding. `typeNamespace` and `typeName` are denormalised convenience fields. If they conflict with the resolved `Type`, the `typeId`/`typeVersion` identity takes precedence and the Record is considered invalid until corrected.
+
+#### Field values
+
+**I-129.** A Tier-2 `Record`'s `fieldValues` MUST be a JSON object. Each key MUST equal the `Field.name` of a Field in the effective field set of the Record's `typeId`@`typeVersion`. Unknown keys MUST be rejected; the projected schema asserts `additionalProperties: false`. (RFC-039 [R1])
+
+**I-130.** A `fieldValues` key MUST be `Field.name` verbatim, with no case or separator transformation, at every nesting depth. The name projection MUST NOT be applied to instance keys under any circumstances, including for meta-model entities stored as Records. (RFC-039 [R2b])
+
+**I-132.** A `FieldAssignment` with `required: true` means its key MUST be present in `fieldValues`. Key absence is the sole representation of an unset field: a value of `null` MUST be rejected — writers MUST omit the key instead. Structural presence and rendering presence (RFC-001 Step 2, where an empty string resolves as absent) remain distinct and MUST NOT be conflated. (RFC-039 [R5]/[R5a])
+
+**I-133.** `fieldMeta`, when present, MUST be an object whose keys are a subset of the sibling `fieldValues` keys, and whose values are objects of `{source?, editedAt?, sourceRefs?}`. A `fieldMeta` key with no corresponding `fieldValues` key MUST be rejected. `fieldMeta` MUST NOT appear inside an inline-composite value. (RFC-039 [R6])
+
+**I-134.** `FieldValue`, `FieldValueEntry`, `FieldGroupValue`, `FieldGroupEntry`, `Type.fieldGroups`, and `FieldAssignment.{repeatable, minItems, maxItems}` are removed. An implementation MUST reject a document containing any of them at `dataModelRevision >= 2`. Definition files carry no document-local revision discriminator, so revision MUST be resolved from the enclosing repository or package manifest before this rule is applied to a definition. A manifest at `dataModelRevision >= 2` MUST NOT declare `ext:field-groups` or `ext:repeatable-fields`; a reader encountering such a declaration MUST report an error. (RFC-039 [R7]/[R15])
+
+**I-135.** A reader MUST determine instance generation structurally. For a Tier-2 `Record`: an array `fieldValues` is revision <= 1, an object `fieldValues` is revision >= 2. On encountering a generation it does not support, a reader MUST emit a diagnostic naming the file and the expected `dataModelRevision` and MUST NOT coerce, partially read, or silently skip the document. (RFC-039 [R9])
+
+**I-140.** A Type's projected JSON Schema describes the `fieldValues` object, not the whole Record document. `instanceId`, `typeId`, `tags`, `meta`, `sourceRefs`, and `fieldMeta` are envelope members governed by `record.json`, and are outside the projected schema's `additionalProperties: false`. (RFC-039 [R17])
+
+**I-141.** Instance `fieldValues` keys MUST be serialised in `FieldAssignment.order`, and nested composite objects likewise, so that a re-run of a transform is byte-idempotent and diffs are stable. This is the instance-side counterpart of the schema-key ordering in `projection-rules.md`; it supersedes the write-order signal of rfc-012:139. (RFC-039 [R18])
+
+#### Discovery
+
+**I-113.** An implementation that declares `ext:discovery` MUST include in its DiscoveryQuery result set every instance that satisfies all specified structured filter predicates (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `excludeLifecycleStates`, `tier`), and MUST NOT include any instance that fails any specified structured filter predicate. (RFC-012 R1.)
+
+**I-114.** For a `contentMatch` predicate with normalized query string `q`, an implementation that declares `ext:discovery` MUST include every instance whose Text Projection contains at least one `TextSegment` whose normalized `text` contains `q` as a substring (case-folded NFC substring match). (RFC-012 R2.)
+
+**I-115.** An implementation MAY include instances beyond the recall-floor set defined by I-114 (e.g. via stemming, phonetic matching, or semantic similarity). Returning extra results does not violate `ext:discovery` conformance. (RFC-012 R3.)
+
+**I-116.** An implementation MAY rank DiscoveryQuery results in any order. The recall-floor guarantee of I-114 applies to inclusion in the result set only, not to rank position. (RFC-012 R4.)
+
+**I-117.** When both structured filters and `contentMatch` are specified on a DiscoveryQuery, an instance MUST satisfy all structured filter predicates (exact-match, I-113) AND the content-match recall-floor predicate (I-114). The structured-filter constraints cannot be overridden or widened by content-match extra recall. (RFC-012 R5.)
+
+**I-118.** A `containerId` filter predicate MUST match exactly the instances in effective(C) for the named Container C: the recursive closure over the Container's declared `rootInstanceIds`, `memberInstanceIds` and `childContainerIds` (RFC-034 [R8]; I-147). Discovery scopes to the full effective (deep) closure; a `contains` Relation never contributes (I-148). The authoritative inputs are the Container objects and their declared child graph in the repository's authoritative store (RFC-038 [R1]). An implementation MAY maintain a derived catalog for performance but MUST treat the store as authoritative when they differ; there is no manifest `instanceIndex` to use as a cache, as it is retired (RFC-038 [R2]). (RFC-012 R6, as amended by RFC-034 Change D.2 on 2026-09-06: the former three-condition rule of rootInstanceIds, OR memberInstanceIds, OR reachable via transitive `contains` traversal is superseded; its traversal branch is removed.)
+
+**I-119.** A `tag` predicate with multiple values MUST use AND semantics — all specified tags must be present on the instance. Both query tags and stored instance tags are canonicalized via RFC-006 key-or-alias resolution when a Vocabulary is declared for the tag key; when no Vocabulary is declared, raw string comparison applies (case-sensitive). (RFC-012 R7.)
+
+**I-120.** For Tier 2, the Text Projection MUST include a Field only when `fieldType.datatype == "string"` and `fieldType.format` is absent or one of `"plain"`, `"markdown"`, or `"uri"`. `valueDomain` does not affect searchability. A single-cardinality Field emits one segment; a list-cardinality Field emits one segment per array element in order. Fields with `format: "uuid"` or `format: "email"`, or datatype `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, or `map`, MUST NOT contribute `TextSegment`s. (RFC-012 R8; RFC-032 Rev-7 erratum.)
+
+**I-121.** The Text Projection MUST include `tags` array entries as `TextSegment`s after field segments. An implementation MAY additionally include `FieldAssignment.displayLabel` values as segments after tags — this is not required, and two conforming implementations may differ on whether display-label segments are included. (RFC-012 R9.)
+
+**I-122.** Normalization of `TextSegment.text` MUST apply Unicode Normalization Form C (NFC) followed by Unicode simple case folding (locale-independent). Implementations MUST NOT strip punctuation, diacritics, or whitespace during this normalization step; additional stemming or tokenization is permitted for ranking purposes only, not as a substitute for the normalized canonical search string. (RFC-012 R10.)
+
+**I-142.** When DiscoveryQuery carries a non-empty lifecycleStates array, implementations MUST restrict the query result to instances whose lifecycleState matches any value in the array (OR semantics). An instance with no lifecycleState MUST be excluded when lifecycleStates is present and non-empty. When lifecycleStates is absent or empty, no filtering by this field is applied and all lifecycle states (including absent) are included. Implementations that do not declare ext:lifecycle MUST ignore lifecycleStates and MUST NOT produce a validation error on its presence.
+
+**I-143.** When DiscoveryQuery carries a non-empty excludeLifecycleStates array, implementations MUST exclude from the query result any instance whose lifecycleState matches any value in the array. When lifecycleStates and excludeLifecycleStates are both present and non-empty, inclusion filtering (I-142) MUST be applied first; exclusion filtering is then applied to the survivors. An instance with no lifecycleState is not excluded by excludeLifecycleStates (only instances with a matching non-null lifecycleState are excluded). When excludeLifecycleStates is absent or empty, no exclusion is applied. Implementations that do not declare ext:lifecycle MUST ignore excludeLifecycleStates and MUST NOT produce a validation error on its presence.
+
+#### Source reference
+
+**48.** A `SourceReference` with `sourceType: "repository-document"` must have a `sourceId` matching a `SourceDocument.documentId` whose sidecar is present in `sourceDocumentsPath`. A reference whose `documentId` cannot be resolved within the repository is invalid.
+
+**I-101.** A conformant implementation MUST accept `"attaches"` as a value of `SourceReference.sourceRole`. An attachment is a `SourceReference` with `sourceType: "repository-document"`, `sourceRole: "attaches"`, and `sourceId` equal to a source document's `documentId`. Attachment MUST NOT be modelled as a `Relation` edge; there is no `attaches` canonical `Relation` type.
+
+**I-102.** The `sourceId` of an `attaches` `SourceReference` MUST resolve to a `documentId` in the repository's source-document set, discovered via a `.meta.json` sidecar scan of `sourceDocumentsPath` in the same repository (RFC-038 [R25], amending RFC-017 [R2]/[R12]; `sourceDocumentIndex` is retired per RFC-038 [R2]). Resolution is against the sidecar entry, not the content file. A `sourceId` that resolves to no such entry is non-conformant and MUST be reported with a diagnostic at validation time.
+
+**I-112.** A source-document sidecar entry (RFC-038 [R25], amending RFC-017 [R12]; the entry no longer lives in a manifest `sourceDocumentIndex`, which is retired per RFC-038 [R2]) whose content file (at `contentPath`) is absent is a valid tombstone (reference-only) state. A conformant implementation MUST NOT reject, refuse to load, or refuse to export a repository solely because a discovered source document's content is missing. An `attaches` `SourceReference` targeting a tombstoned `documentId` remains conformant (I-102). An implementation MAY surface an informational non-blocking diagnostic that the content is unavailable.
+
 #### Relation type definition
 
 **I-88.** The `sourceRole` value set — the closed enum of the implemented schema revision, including values added by later accepted RFCs — MUST be disjoint under literal whole-key equality from the set of installed `RelationTypeDefinition` keys in the repository's effective package set. Relation-type creation MUST reject a definition whose key equals a `sourceRole` value; `repo validate` MUST report a pre-existing collision as `SOURCEROLE_RELATIONTYPE_COLLISION` (warning at rest). A namespaced key (e.g. `com.acme/evidence`) does not collide with a bare `sourceRole` value.
 
+#### Addressability
+
+**34.** `AttentionState.containerId` must reference a valid `Container.containerId`. Other Address components (`recordId`, `fieldId`, `protocolRunId`, `stageId`) are optional and may be absent when focus has not yet narrowed.
+
 #### Blueprint
 
 **I-78.** Each entry in Blueprint.rootTypes MUST be an ExactTypeRef: both typeId (UUID) and typeVersion (integer >= 1) MUST be present. Implementations MUST resolve each entry against the Package (the union of all packages in scope per packageRef/packageRefs) at Blueprint load time; an entry that does not resolve MUST produce a diagnostic. An empty rootTypes array is valid and produces no diagnostics.
+
+#### Protocol
+
+**29.** Every `stageId` in `ProtocolStage.dependsOn[]` must reference a `stageId` declared in the enclosing `Protocol.stages[]`. A stage may not declare a dependency on itself.
+
+**30.** Every `fieldId` in `ProtocolStage.contributesTo[]` must reference a `fieldId` that appears in the stage's own `outputType`'s effective field list (when `outputType` is declared), or in `Protocol.targetType`'s effective field list (when `outputType` is absent). A single stage must not contribute to both its own `outputType` and the enclosing `Protocol.targetType`. When neither `outputType` nor `Protocol.targetType` is declared, `contributesTo` must be empty.
+
+**31.** For every pair of stages A and B within a `Protocol` where B.dependsOn includes A.stageId, B.order must be greater than A.order. `order` is the declared composition order of the stages — structure, not presentation; it provides the render default. Execution sequence is determined by `dependsOn` resolution. The two must not contradict each other.
 
 #### Container
 
@@ -5078,135 +6846,15 @@ Conforming implementations must uphold the following invariants.
 
 **I-150.** Every childContainerIds entry MUST reference an existing, distinct Container, and the childContainerIds graph MUST be acyclic. A missing target, self-reference, or cycle is a validation error. For any Container whose reachable child graph contains such an error, effective-membership evaluation MUST fail with a diagnostic and MUST NOT return a partial result. A rootless child is valid. When a child has roots, those roots SHOULD occur in the parent's direct membership; a violation produces a structural-coherence diagnostic but MUST NOT remove the declared edge from effective-membership evaluation.
 
-#### Projection
-
-**I-128.** When `manifest.renderedPresentations` is present and non-empty, a conformant viewer MUST select as the default presentation the first entry whose `isDefault` is `true`. When no entry carries `isDefault: true`, the first entry in the array is the default. The selected Composition governs the repository's presentation. When a `renderedPresentations` entry's `compositionId` does not resolve to a Composition in the active packages, implementations MUST skip that entry and MUST emit a diagnostic; if all entries fail to resolve, behaviour falls back to implementation-defined selection as if `renderedPresentations` were absent. When `compositionId` resolves to Compositions in more than one active package, implementations MUST report a validation error (ambiguous composition reference). When `renderedPresentations` is absent or empty, viewer behaviour falls back to implementation-defined selection (existing behaviour unchanged; no conformance obligation is added for the absent case). (RFC-015 Change C.)
-
-#### View
-
-**12.** Every `fieldId` in `View.fieldViews[]` must reference a valid `Field.id` in the effective package set. View compatibility is field-centric (based on required field presence), not Type-bound.
-
-**13.** `FieldView.displayLabel`, `FieldView.displayHint`, and `FieldView.editorHintOverride` are for rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or validation. Extended by RFC-036 [CR-036-20] to cover `FieldView.compositeRenderer` and the `DocumentSection`/`Composition` composite renderer directives, and to add Relations and Discovery Text Projection (`ext:discovery`) to the list of things they must not affect. [CR-036-21] additionally constrains `editorHintOverride` to the value set of `Field.editorHint`.
-
-**14.** A `View` must not override, redefine, or duplicate the semantic content of any `Field` or `Type` it references. View-level `aiGuidance` is workflow framing; it does not redefine Field extraction semantics.
-
-#### Composition
-
-**32.** Any `Composition` in `Package.compositions[]` that contains a `SectionSource` with `type === "discovery-query"` MUST express its type-selection through the embedded `DiscoveryQuery`'s independent `typeNamespace`/`typeName` string predicates, resolved against the effective package set. There is no combined `namespace/name` key field on `DiscoveryQuery` or `SectionSource` -- `typeKey` (the KEYED namespace/name string introduced by the semanticObjectType collapse, owner ruling on #383, srs#372/#481/#524, rfc-decision-c8704763) and `semanticObjectType` before it are both retired with no successor field; the srs#525 SectionSource -> DiscoveryQuery collapse (rfc-decision-cce3c00e, rfc-decision-9ee14517) replaced the single combined-key convention with DiscoveryQuery's two separate predicates, closing the door on reintroducing a combined-key form.
-
-**44.** Every `NavigationLink.fromSectionId` and `NavigationLink.toSectionId` must reference a `sectionId` declared in the enclosing `Composition.sections[]`.
-
-**I-63.** When Composition.rootTypeRefs is present and non-empty, each ExactTypeRef entry MUST resolve to a Type that exists in the Package (the union of all packages in scope per packageRef/packageRefs; matched by both typeId and typeVersion). An entry that does not resolve MUST produce a diagnostic and MUST NOT be used for Container matching.
-
-**I-126.** When `DocumentSection.ordering.memberOrder` is present and the section's `source.type` is `container-subset`, implementations MUST apply it as the presentation sequence: (1) emit listed `instanceId`s that are current container members in the declared order; (2) skip listed `instanceId`s that are no longer container members — implementations MUST emit a diagnostic; this MUST NOT be treated as a validation failure; (3) append surviving container members not in `memberOrder`, ordered by topological sort over `precedes` edges with a `createdAt`-ascending tiebreak (the default container-subset ordering `ext:views-l2` already specifies); (4) when `ordering.direction` is `"desc"`, the entire output sequence produced by steps (1)–(3) MUST be reversed before emission. `memberOrder` MUST NOT be combined with `ordering.fieldId` on the same section — a section carrying both is invalid; implementations MUST report a validation error. `memberOrder` on a non-`container-subset` section MUST be ignored with a diagnostic and SHOULD be rejected at package-validation time. (RFC-015 Change B.)
-
-**I-127.** When both `typeFilter` and `memberOrder` are present on a `container-subset` section, `typeFilter` is applied first to obtain the filtered member set; `memberOrder` is then applied over that filtered set. `memberOrder` entries naming members excluded by `typeFilter` are silently skipped (no diagnostic). Unlisted filtered survivors are appended in the same topological-sort-by-`precedes` order used in Invariant I-126 step (3). The `direction` reversal of Invariant I-126 step (4) applies to the combined result after `typeFilter` and `memberOrder` are both applied. (RFC-015 Change B.)
-
-**I-138.** A Composition projection MUST key `ProjectedRecord.fields` and `orderedFieldKeys` by `Field.name`, and MUST carry a composite value recursively under its own key. `ProjectedFieldGroup` and `ProjectedGroupEntry` are removed and have no successor construct. (RFC-039 [R11])
-
-**I-144.** When SectionSource.discovery-query carries containerScope, implementations MUST apply the following scoping rules: (a) When containerScope is absent or "explicit", the query is scoped to the containers listed in containerIds[] -- existing behaviour. An absent containerIds[] with explicit scope produces an empty result. (b) When containerScope is "repository", the query spans all containers in the repository; containerIds[] MUST be ignored. (c) When containerScope is "subtree", the query spans effective(C) for each container in containerIds[], the recursive closure over declared childContainerIds (RFC-034 [R8]; I-147); it follows declared child edges only and MUST NOT traverse contains Relations to discover child containers (amended by RFC-034, 2026-09-06: the former "reachable by contains relations" branch is superseded). "explicit" correspondingly evaluates direct(C), the container's own members without its nested subtree; when containerIds[] is absent or empty, the context container is used as the subtree root. An implementation that cannot determine the context container for a subtree query MUST treat it as "explicit" with an empty containerIds[] and SHOULD emit a diagnostic. Implementations MUST NOT produce a validation error when containerScope is absent; absent is equivalent to "explicit". containerScope is arrangement, not selection: it is layered on top of the section's DiscoveryQuery, not a DiscoveryQuery predicate itself (DiscoveryQuery.containerId is single-valued and takes one container's effective membership; containerScope's multi-container/subtree semantics have no DiscoveryQuery equivalent).
-
-#### Validation
-
-**10.** All `fieldId` values in any `CrossFieldRule` within `Type.validationRules[]` must appear in the Type's effective field list. Cross-field rules cannot reference Fields outside the Type.
-
-**11.** A `conditional-required` rule must supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. A `field-ordering` rule must supply `predicateFieldId`, `targetFieldId`, and `effect`. A `mutual-exclusion` rule must supply `fieldIds` with at least two entries.
-
-**I-89.** An SRS implementation that does not declare support for `ext:cross-field-validation` MUST treat `validationRules` as an unrecognized property and MUST ignore it. Conformance rules R1–R11 bind only implementations that declare support for `ext:cross-field-validation`. (RFC-019 R0.)
-
-**I-90.** A conforming implementation that declares support for `ext:cross-field-validation` MUST evaluate each `CrossFieldRule` in `validationRules` against every Record of the Type at record-write time (create and update). Evaluation order within the array is implementation-defined; all rules MUST be evaluated regardless of earlier failures (fail-all, not fail-first). (RFC-019 R2.)
-
-**I-91.** A `CrossFieldRule` with `type: "conditional-required"` fires when the field identified by `predicateFieldId` is non-empty and its stored value is equal to `predicateValue` (case-sensitive string equality). When the rule fires, the field identified by `targetFieldId` MUST be non-empty in the Record. A violation MUST be reported as a validation error. (RFC-019 R3.)
-
-**I-92.** A `CrossFieldRule` with `type: "field-ordering"` fires when both `predicateFieldId` and `targetFieldId` are non-empty. It applies only to fields whose `fieldType.datatype` is `"date"`, `"date-time"`, `"number"`, or `"integer"`. When `effect` is `"must-precede"`, the predicate field value MUST be strictly less than the target field value (ISO 8601 lexicographic order for dates; numeric order for numbers). When `effect` is `"must-follow"`, the predicate field value MUST be strictly greater than the target field value. A violation MUST be reported as a validation error. If either field is non-empty but the other is absent or empty, the rule MUST NOT fire. A `field-ordering` rule whose `predicateFieldId` or `targetFieldId` resolves to a field with any other `fieldType.datatype` MUST be reported as a Type-level validation error. (RFC-019 R4.)
-
-**I-93.** A `CrossFieldRule` with `type: "mutual-exclusion"` MUST report a validation error if more than one field in `fieldIds` is non-empty in the Record. If zero or one field is non-empty, the rule passes. (RFC-019 R5.)
-
-**I-94.** A `CrossFieldRule` with `type: "conditional-required"` MUST supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. The field identified by `predicateFieldId` MUST be effective-single (`fieldType.cardinality` absent/`"single"` and, until #242 Phase B, effective `FieldAssignment.repeatable !== true`) and its `fieldType.datatype` MUST be one of `{"string", "date", "date-time"}`. String `format` and `valueDomain` do not restrict eligibility. A rule that omits a required property, selects a list/repeatable field, or resolves to any other datatype MUST be reported as a Type-level validation error. Admission of `date-time` is intentional; the scalar requirement intentionally closes the legacy repeatable-date equality hole. (RFC-019 R6; RFC-032 Rev-7 erratum; normative extension of I-11.)
-
-**I-95.** A `CrossFieldRule` with a `type` value not in `["conditional-required", "field-ordering", "mutual-exclusion"]` MUST be reported as a Type-level validation error. Implementations MUST NOT silently ignore unknown rule types. (RFC-019 R9.)
-
-**I-96.** A `CrossFieldRule` that contains a property belonging to a different rule type MUST be reported as a Type-level validation error. Specifically: a `conditional-required` or `field-ordering` rule MUST NOT supply `fieldIds`; a `mutual-exclusion` rule MUST NOT supply `predicateFieldId`, `predicateValue`, `targetFieldId`, or `effect`. (RFC-019 R10.)
-
-#### Field
-
-**2.** A `Type` must not redefine, override, or duplicate the semantic content of any `Field` it includes. If different semantics are needed for a Field in a specific Type context, a distinct `Field` with its own identity and lineage must be created.
-
-#### AI guidance
-
-**3.** A `Field`'s `aiGuidance` belongs to the Field. Type-level `aiGuidance` provides session framing only.
-
-#### Lifecycle
-
-**4.** `Type.lifecycle.initialState` must reference a `key` that appears in `lifecycle.states[]` and where `isInitial === true`.
-
-**5.** Every `from` and `to` value in `lifecycle.transitions[]` must reference a `key` that appears in `lifecycle.states[]`.
-
-**6.** `Record.lifecycleState`, when present, must reference a `key` in the associated `Type.lifecycle.states[]`.
-
-**I-98.** A Record MUST NOT rest in a lifecycle state that declares `requiresRelation` unless at least one Relation satisfies the obligation: its type equals one of the declared `relationType`(s) and the Record is the relation's target when `direction` is `incoming` (or omitted) or its source when `direction` is `outgoing`. When the state declares `enforcement: "hard"` (the default), an implementation MUST reject a lifecycle transition into it unless the operation, on completion, satisfies this occupancy requirement — either because a satisfying Relation already exists, or because the operation's fulfillment establishes one. The rejection MUST be machine-readable, identifying the target state key, the required relation type(s), and the direction. When the state declares `enforcement: "advisory"`, the transition MUST be permitted regardless of the obligation and the unsatisfied state surfaced only as an at-rest warning, never a rejection. (RFC-022 R1–R3, R2a.)
-
-**I-99.** A fulfillment supplied with a lifecycle transition MUST be applied as one all-or-nothing operation: `newRecord` creates a successor of the Record's Type in the effective lifecycle's initial state, asserts one Relation of the selected type oriented per `direction`, and transitions the Record; `existingInstanceId` asserts the Relation to the referenced instance (which MUST exist and MUST NOT be the Record itself) and transitions. If any step fails, no step's effect may remain observable. A file-backed implementation MAY realize this by write ordering in which the state change is committed last, provided every committed prefix is a valid repository under I-98. When the state declares an any-of `relationType` array, `fulfillment.relationType` MUST be one of the declared types, defaulting to the first; a `fulfillment` supplied for a target state that declares no `requiresRelation` MUST be rejected. (RFC-022 R4–R8.)
-
-**I-100.** Allowed-transitions projections MUST include the target state's `requiresRelation` declaration on each transition option whose target state declares one, so clients route successor-flow presentation from structure rather than state-name matching. Repository validation MUST emit a warning-severity diagnostic for every Record at rest that violates I-98, and MUST NOT treat such a violation as a hard validation error. Transitions whose target state declares no `requiresRelation` MUST behave exactly as before RFC-022. (RFC-022 R8–R10.)
-
-#### Package
-
-**7.** Every `fieldId` referenced in any `FieldAssignment` within a `Package.types[]` must appear as the `id` of an entry in `Package.packageDependencies`.
-
-**8.** If `Package.mode === "bundled"`: every `Reference` in `packageDependencies` must have a matching `Field` in `fields[]` (matched on `id` and `version`).
-
-**15.** Every `typeId` referenced by any `View` in `Package.views[]` must appear in `Package.packageDependencies` with `definitionType: "type"`. If `mode === "bundled"`, that `Type` must be present in `types[]`.
-
-**35.** Every `DocumentSection.renderViewId` in any `Composition` within `Package.compositions[]` must reference a `View.id` that appears in `Package.views[]` or `Package.packageDependencies`. If `mode === "bundled"`, that `View` must be present in `Package.views[]`. (`packageDependencies`: srs-rust#873/#910, folded onto this same rev-6 stamp.)
-
-**36.** Every `TypeRef.typeId` referenced in any `Blueprint.rootTypes[]`, `Blueprint.requiredTypes[]`, or in any `RelationSpec.sourceType` or `RelationSpec.targetType` within `Blueprint.structure[]`, for each Blueprint in `Package.blueprints[]`, must appear in `Package.packageDependencies` with `definitionType: "type"`. If `mode === "bundled"`, each such Type must be present in `Package.types[]`.
-
-**37.** Every `Protocol.protocolTargetType` (when a non-empty UUID) and every `ProtocolStage.outputType`, for each Protocol in `Package.protocols[]`, must appear in `Package.packageDependencies` with `definitionType: "type"`. Every `FieldRef.fieldId` in any `ProtocolStage.contributesTo[]` must appear in `Package.packageDependencies` with `definitionType: "field"`. If `mode === "bundled"`, those Types must be in `Package.types[]` and those Fields in `Package.fields[]`.
-
-**50.** When `PackageRef.mode === "local"`, the package at the declared path must be `mode: "bundled"` and must include all Fields and Types referenced by any Tier 2 `Record` in the repository's instance set (RFC-038 [R1]; enumerated from the tree, not a manifest `instanceIndex`, which is retired per [R2]). This is the repository analogue of Package Invariants 7–8.
-
-**I-83.** A tool MUST resolve every `typeId` and `fieldId` referenced by any Tier 2 Record against the union of all installed package version directories. This extends Invariant 50 to the multi-version case: a reference is resolved if it can be found in any installed version directory. A reference that cannot be found in any installed version directory MUST be reported as a validation error. A tool MUST NOT remove any prior-version package directory if doing so would leave any such reference unresolvable.
-
-**I-103.** A conformant implementation MUST NOT refuse to load, validate, or export a repository solely because the `com.semanticops.base` package is absent or because no `attachment_policy` record is present.
-
-#### Stable identity
-
-**9.** `Field.id` is stable across versions. A new `id` means a new definition, not a new version of an existing one.
-
-**54.** When an importer encounters an incoming object whose identity key matches an existing local object but whose content or checksum differs, it must surface the conflict explicitly. An importer that silently overwrites or silently discards in this case is not conformant.
-
 #### Relation
 
 **16.** In a `Relation`, `sourceInstanceId` is the asserting instance and `targetInstanceId` is the related instance. The Relation reads: "source [relationType] target." This convention must not be reversed.
 
 **17.** `Relation` is reserved for assertions that carry semantic consequence beyond simple mention or citation. Lightweight prose references that do not assert structural, causal, or governance relationships must not be modelled as `Relation` records.
 
-#### Note
+#### Semantic order
 
-**18.** `NoteSection.name` values must be unique within a `Note`.
-
-#### Record
-
-**28.** `Record.typeId` and `Record.typeVersion` are the authoritative Type binding. `typeNamespace` and `typeName` are denormalised convenience fields. If they conflict with the resolved `Type`, the `typeId`/`typeVersion` identity takes precedence and the Record is considered invalid until corrected.
-
-#### Protocol
-
-**29.** Every `stageId` in `ProtocolStage.dependsOn[]` must reference a `stageId` declared in the enclosing `Protocol.stages[]`. A stage may not declare a dependency on itself.
-
-**30.** Every `fieldId` in `ProtocolStage.contributesTo[]` must reference a `fieldId` that appears in the stage's own `outputType`'s effective field list (when `outputType` is declared), or in `Protocol.targetType`'s effective field list (when `outputType` is absent). A single stage must not contribute to both its own `outputType` and the enclosing `Protocol.targetType`. When neither `outputType` nor `Protocol.targetType` is declared, `contributesTo` must be empty.
-
-**31.** For every pair of stages A and B within a `Protocol` where B.dependsOn includes A.stageId, B.order must be greater than A.order. `order` is the declared composition order of the stages — structure, not presentation; it provides the render default. Execution sequence is determined by `dependsOn` resolution. The two must not contradict each other.
-
-#### Addressability
-
-**34.** `AttentionState.containerId` must reference a valid `Container.containerId`. Other Address components (`recordId`, `fieldId`, `protocolRunId`, `stageId`) are optional and may be absent when focus has not yet narrowed.
-
-#### Field type
-
-**38.** `Field.fieldType.format`, when present, is only meaningful when `fieldType.datatype` is `"string"`. Implementations must ignore `format` on fields with any other `datatype`.
-
-**I-139.** `cardinality: "list"` array-wraps uniformly, for every `datatype` including `map` and `dependent`, matching `projectField`'s unconditional wrap. The single-value rule states the `single` case; the wrap composes on top of it. (RFC-039 [R16])
+**I-125.** `precedes` relations MUST be used only to express sequences where a different order would be semantically wrong (e.g. spec sections in document order, protocol stages in execution sequence). Implementations MUST NOT create `precedes` relations between instances whose ordering is presentational (layout, curation, display preference). A `precedes` relation between two container members MUST be interpreted as a semantic claim about their sequence, not as a rendering hint. (RFC-015 Change A.)
 
 #### Repository
 
@@ -5238,16 +6886,6 @@ Conforming implementations must uphold the following invariants.
 
 **I-111.** At most one `attachment_policy` record of the `com.semanticops.base/repo_settings` type MAY exist per repository. A conformant implementation encountering two or more MUST surface a diagnostic and treat the policy as absent (applying the no-policy defaults: all MIME types accepted, no size limits enforced, no size-or-MIME-type-policy diagnostics emitted).
 
-#### Source reference
-
-**48.** A `SourceReference` with `sourceType: "repository-document"` must have a `sourceId` matching a `SourceDocument.documentId` whose sidecar is present in `sourceDocumentsPath`. A reference whose `documentId` cannot be resolved within the repository is invalid.
-
-**I-101.** A conformant implementation MUST accept `"attaches"` as a value of `SourceReference.sourceRole`. An attachment is a `SourceReference` with `sourceType: "repository-document"`, `sourceRole: "attaches"`, and `sourceId` equal to a source document's `documentId`. Attachment MUST NOT be modelled as a `Relation` edge; there is no `attaches` canonical `Relation` type.
-
-**I-102.** The `sourceId` of an `attaches` `SourceReference` MUST resolve to a `documentId` in the repository's source-document set, discovered via a `.meta.json` sidecar scan of `sourceDocumentsPath` in the same repository (RFC-038 [R25], amending RFC-017 [R2]/[R12]; `sourceDocumentIndex` is retired per RFC-038 [R2]). Resolution is against the sidecar entry, not the content file. A `sourceId` that resolves to no such entry is non-conformant and MUST be reported with a diagnostic at validation time.
-
-**I-112.** A source-document sidecar entry (RFC-038 [R25], amending RFC-017 [R12]; the entry no longer lives in a manifest `sourceDocumentIndex`, which is retired per RFC-038 [R2]) whose content file (at `contentPath`) is absent is a valid tombstone (reference-only) state. A conformant implementation MUST NOT reject, refuse to load, or refuse to export a repository solely because a discovered source document's content is missing. An `attaches` `SourceReference` targeting a tombstoned `documentId` remains conformant (I-102). An implementation MAY surface an informational non-blocking diagnostic that the content is unavailable.
-
 #### Travelling form
 
 **49.** An archive must include every instance discovered by enumerating the repository's authoritative store — the instance set (RFC-038 [R1], [R17]) — not a manifest `instanceIndex`, which is retired (RFC-038 [R2]). An archive missing any enumerated instance file is malformed; a conforming consumer must reject it or surface the missing instances explicitly before processing.
@@ -5262,45 +6900,57 @@ Conforming implementations must uphold the following invariants.
 
 **I-151.** An RFC-026 container slice MUST include the closure root, its transitive childContainerIds descendants, and the root's effective member set. It MUST preserve declared edges among those Containers and MUST NOT include an unrelated Container solely because its roots or members are subsets of the included instance set.
 
-#### Vocabulary
-
-**I-65.** When a Vocabulary in the repository package declares Term entries for a given tag key, Container tags bearing that key MUST resolve against those Terms per RFC-006 vocabulary resolution rules. Free-string tags are valid when no Vocabulary entry governs the key.
-
 #### Lineage and provenance
 
 **I-84.** When `manifest.upstreamPackage` is set, there MUST exist at least one entry in `manifest.packageRefs` (or `manifest.packageRef`) whose `packageId` matches `manifest.upstreamPackage.packageId`. A manifest where no `PackageRef` entry's `packageId` matches `upstreamPackage.packageId` MUST be reported as a validation error. Manifest-only validators MAY skip this check when no `PackageRef` entry carries `packageId` (i.e., all local-mode entries predate RFC-014 and omit the field), and SHOULD report the repository state as indeterminate rather than emitting a validation error in that case.
 
-#### Namespace
+#### Package
 
-**I-85.** A conforming SRS implementation MUST make all `com.semanticops.core/*` types and fields resolvable in every repository without any `packageRef` or `packageRefs` declaration in the manifest. The core base package's definitions are treated as logically present in the RFC-014 R6 package union for all repositories. An implementation that fails to resolve `com.semanticops.core/*` types and fields in a structurally valid repository is non-conformant with RFC-029.
+**7.** Every `fieldId` referenced in any `FieldAssignment` within a `Package.types[]` must appear as the `id` of an entry in `Package.packageDependencies`.
 
-**I-86.** A repository MUST NOT declare any Type or Field under the `com.semanticops.core` namespace in a local or external package. An implementation MUST reject the repository load with a conflict error if any such declaration is encountered during package loading. This reservation covers only the `com.semanticops.core` namespace; other `com.semanticops.*` sub-namespaces are governed by their own RFC or by general package conflict rules and are not affected by this invariant.
+**8.** If `Package.mode === "bundled"`: every `Reference` in `packageDependencies` must have a matching `Field` in `fields[]` (matched on `id` and `version`).
 
-#### Discovery
+**15.** Every `typeId` referenced by any `View` in `Package.views[]` must appear in `Package.packageDependencies` with `definitionType: "type"`. If `mode === "bundled"`, that `Type` must be present in `types[]`.
 
-**I-113.** An implementation that declares `ext:discovery` MUST include in its DiscoveryQuery result set every instance that satisfies all specified structured filter predicates (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `excludeLifecycleStates`, `tier`), and MUST NOT include any instance that fails any specified structured filter predicate. (RFC-012 R1.)
+**35.** Every `DocumentSection.renderViewId` in any `Composition` within `Package.compositions[]` must reference a `View.id` that appears in `Package.views[]` or `Package.packageDependencies`. If `mode === "bundled"`, that `View` must be present in `Package.views[]`. (`packageDependencies`: srs-rust#873/#910, folded onto this same rev-6 stamp.)
 
-**I-114.** For a `contentMatch` predicate with normalized query string `q`, an implementation that declares `ext:discovery` MUST include every instance whose Text Projection contains at least one `TextSegment` whose normalized `text` contains `q` as a substring (case-folded NFC substring match). (RFC-012 R2.)
+**36.** Every `TypeRef.typeId` referenced in any `Blueprint.rootTypes[]`, `Blueprint.requiredTypes[]`, or in any `RelationSpec.sourceType` or `RelationSpec.targetType` within `Blueprint.structure[]`, for each Blueprint in `Package.blueprints[]`, must appear in `Package.packageDependencies` with `definitionType: "type"`. If `mode === "bundled"`, each such Type must be present in `Package.types[]`.
 
-**I-115.** An implementation MAY include instances beyond the recall-floor set defined by I-114 (e.g. via stemming, phonetic matching, or semantic similarity). Returning extra results does not violate `ext:discovery` conformance. (RFC-012 R3.)
+**37.** Every `Protocol.protocolTargetType` (when a non-empty UUID) and every `ProtocolStage.outputType`, for each Protocol in `Package.protocols[]`, must appear in `Package.packageDependencies` with `definitionType: "type"`. Every `FieldRef.fieldId` in any `ProtocolStage.contributesTo[]` must appear in `Package.packageDependencies` with `definitionType: "field"`. If `mode === "bundled"`, those Types must be in `Package.types[]` and those Fields in `Package.fields[]`.
 
-**I-116.** An implementation MAY rank DiscoveryQuery results in any order. The recall-floor guarantee of I-114 applies to inclusion in the result set only, not to rank position. (RFC-012 R4.)
+**50.** When `PackageRef.mode === "local"`, the package at the declared path must be `mode: "bundled"` and must include all Fields and Types referenced by any Tier 2 `Record` in the repository's instance set (RFC-038 [R1]; enumerated from the tree, not a manifest `instanceIndex`, which is retired per [R2]). This is the repository analogue of Package Invariants 7–8.
 
-**I-117.** When both structured filters and `contentMatch` are specified on a DiscoveryQuery, an instance MUST satisfy all structured filter predicates (exact-match, I-113) AND the content-match recall-floor predicate (I-114). The structured-filter constraints cannot be overridden or widened by content-match extra recall. (RFC-012 R5.)
+**I-83.** A tool MUST resolve every `typeId` and `fieldId` referenced by any Tier 2 Record against the union of all installed package version directories. This extends Invariant 50 to the multi-version case: a reference is resolved if it can be found in any installed version directory. A reference that cannot be found in any installed version directory MUST be reported as a validation error. A tool MUST NOT remove any prior-version package directory if doing so would leave any such reference unresolvable.
 
-**I-118.** A `containerId` filter predicate MUST match exactly the instances in effective(C) for the named Container C: the recursive closure over the Container's declared `rootInstanceIds`, `memberInstanceIds` and `childContainerIds` (RFC-034 [R8]; I-147). Discovery scopes to the full effective (deep) closure; a `contains` Relation never contributes (I-148). The authoritative inputs are the Container objects and their declared child graph in the repository's authoritative store (RFC-038 [R1]). An implementation MAY maintain a derived catalog for performance but MUST treat the store as authoritative when they differ; there is no manifest `instanceIndex` to use as a cache, as it is retired (RFC-038 [R2]). (RFC-012 R6, as amended by RFC-034 Change D.2 on 2026-09-06: the former three-condition rule of rootInstanceIds, OR memberInstanceIds, OR reachable via transitive `contains` traversal is superseded; its traversal branch is removed.)
+**I-103.** A conformant implementation MUST NOT refuse to load, validate, or export a repository solely because the `com.semanticops.base` package is absent or because no `attachment_policy` record is present.
 
-**I-119.** A `tag` predicate with multiple values MUST use AND semantics — all specified tags must be present on the instance. Both query tags and stored instance tags are canonicalized via RFC-006 key-or-alias resolution when a Vocabulary is declared for the tag key; when no Vocabulary is declared, raw string comparison applies (case-sensitive). (RFC-012 R7.)
+#### Projection
 
-**I-120.** For Tier 2, the Text Projection MUST include a Field only when `fieldType.datatype == "string"` and `fieldType.format` is absent or one of `"plain"`, `"markdown"`, or `"uri"`. `valueDomain` does not affect searchability. A single-cardinality Field emits one segment; a list-cardinality Field emits one segment per array element in order. Fields with `format: "uuid"` or `format: "email"`, or datatype `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, or `map`, MUST NOT contribute `TextSegment`s. (RFC-012 R8; RFC-032 Rev-7 erratum.)
+**I-128.** When `manifest.renderedPresentations` is present and non-empty, a conformant viewer MUST select as the default presentation the first entry whose `isDefault` is `true`. When no entry carries `isDefault: true`, the first entry in the array is the default. The selected Composition governs the repository's presentation. When a `renderedPresentations` entry's `compositionId` does not resolve to a Composition in the active packages, implementations MUST skip that entry and MUST emit a diagnostic; if all entries fail to resolve, behaviour falls back to implementation-defined selection as if `renderedPresentations` were absent. When `compositionId` resolves to Compositions in more than one active package, implementations MUST report a validation error (ambiguous composition reference). When `renderedPresentations` is absent or empty, viewer behaviour falls back to implementation-defined selection (existing behaviour unchanged; no conformance obligation is added for the absent case). (RFC-015 Change C.)
 
-**I-121.** The Text Projection MUST include `tags` array entries as `TextSegment`s after field segments. An implementation MAY additionally include `FieldAssignment.displayLabel` values as segments after tags — this is not required, and two conforming implementations may differ on whether display-label segments are included. (RFC-012 R9.)
+#### View
 
-**I-122.** Normalization of `TextSegment.text` MUST apply Unicode Normalization Form C (NFC) followed by Unicode simple case folding (locale-independent). Implementations MUST NOT strip punctuation, diacritics, or whitespace during this normalization step; additional stemming or tokenization is permitted for ranking purposes only, not as a substitute for the normalized canonical search string. (RFC-012 R10.)
+**12.** Every `fieldId` in `View.fieldViews[]` must reference a valid `Field.id` in the effective package set. View compatibility is field-centric (based on required field presence), not Type-bound.
 
-**I-142.** When DiscoveryQuery carries a non-empty lifecycleStates array, implementations MUST restrict the query result to instances whose lifecycleState matches any value in the array (OR semantics). An instance with no lifecycleState MUST be excluded when lifecycleStates is present and non-empty. When lifecycleStates is absent or empty, no filtering by this field is applied and all lifecycle states (including absent) are included. Implementations that do not declare ext:lifecycle MUST ignore lifecycleStates and MUST NOT produce a validation error on its presence.
+**13.** `FieldView.displayLabel`, `FieldView.displayHint`, and `FieldView.editorHintOverride` are for rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or validation. Extended by RFC-036 [CR-036-20] to cover `FieldView.compositeRenderer` and the `DocumentSection`/`Composition` composite renderer directives, and to add Relations and Discovery Text Projection (`ext:discovery`) to the list of things they must not affect. [CR-036-21] additionally constrains `editorHintOverride` to the value set of `Field.editorHint`.
 
-**I-143.** When DiscoveryQuery carries a non-empty excludeLifecycleStates array, implementations MUST exclude from the query result any instance whose lifecycleState matches any value in the array. When lifecycleStates and excludeLifecycleStates are both present and non-empty, inclusion filtering (I-142) MUST be applied first; exclusion filtering is then applied to the survivors. An instance with no lifecycleState is not excluded by excludeLifecycleStates (only instances with a matching non-null lifecycleState are excluded). When excludeLifecycleStates is absent or empty, no exclusion is applied. Implementations that do not declare ext:lifecycle MUST ignore excludeLifecycleStates and MUST NOT produce a validation error on its presence.
+**14.** A `View` must not override, redefine, or duplicate the semantic content of any `Field` or `Type` it references. View-level `aiGuidance` is workflow framing; it does not redefine Field extraction semantics.
+
+#### Composition
+
+**32.** Any `Composition` in `Package.compositions[]` that contains a `SectionSource` with `type === "discovery-query"` MUST express its type-selection through the embedded `DiscoveryQuery`'s independent `typeNamespace`/`typeName` string predicates, resolved against the effective package set. There is no combined `namespace/name` key field on `DiscoveryQuery` or `SectionSource` -- `typeKey` (the KEYED namespace/name string introduced by the semanticObjectType collapse, owner ruling on #383, srs#372/#481/#524, rfc-decision-c8704763) and `semanticObjectType` before it are both retired with no successor field; the srs#525 SectionSource -> DiscoveryQuery collapse (rfc-decision-cce3c00e, rfc-decision-9ee14517) replaced the single combined-key convention with DiscoveryQuery's two separate predicates, closing the door on reintroducing a combined-key form.
+
+**44.** Every `NavigationLink.fromSectionId` and `NavigationLink.toSectionId` must reference a `sectionId` declared in the enclosing `Composition.sections[]`.
+
+**I-63.** When Composition.rootTypeRefs is present and non-empty, each ExactTypeRef entry MUST resolve to a Type that exists in the Package (the union of all packages in scope per packageRef/packageRefs; matched by both typeId and typeVersion). An entry that does not resolve MUST produce a diagnostic and MUST NOT be used for Container matching.
+
+**I-126.** When `DocumentSection.ordering.memberOrder` is present and the section's `source.type` is `container-subset`, implementations MUST apply it as the presentation sequence: (1) emit listed `instanceId`s that are current container members in the declared order; (2) skip listed `instanceId`s that are no longer container members — implementations MUST emit a diagnostic; this MUST NOT be treated as a validation failure; (3) append surviving container members not in `memberOrder`, ordered by topological sort over `precedes` edges with a `createdAt`-ascending tiebreak (the default container-subset ordering `ext:views-l2` already specifies); (4) when `ordering.direction` is `"desc"`, the entire output sequence produced by steps (1)–(3) MUST be reversed before emission. `memberOrder` MUST NOT be combined with `ordering.fieldId` on the same section — a section carrying both is invalid; implementations MUST report a validation error. `memberOrder` on a non-`container-subset` section MUST be ignored with a diagnostic and SHOULD be rejected at package-validation time. (RFC-015 Change B.)
+
+**I-127.** When both `typeFilter` and `memberOrder` are present on a `container-subset` section, `typeFilter` is applied first to obtain the filtered member set; `memberOrder` is then applied over that filtered set. `memberOrder` entries naming members excluded by `typeFilter` are silently skipped (no diagnostic). Unlisted filtered survivors are appended in the same topological-sort-by-`precedes` order used in Invariant I-126 step (3). The `direction` reversal of Invariant I-126 step (4) applies to the combined result after `typeFilter` and `memberOrder` are both applied. (RFC-015 Change B.)
+
+**I-138.** A Composition projection MUST key `ProjectedRecord.fields` and `orderedFieldKeys` by `Field.name`, and MUST carry a composite value recursively under its own key. `ProjectedFieldGroup` and `ProjectedGroupEntry` are removed and have no successor construct. (RFC-039 [R11])
+
+**I-144.** When SectionSource.discovery-query carries containerScope, implementations MUST apply the following scoping rules: (a) When containerScope is absent or "explicit", the query is scoped to the containers listed in containerIds[] -- existing behaviour. An absent containerIds[] with explicit scope produces an empty result. (b) When containerScope is "repository", the query spans all containers in the repository; containerIds[] MUST be ignored. (c) When containerScope is "subtree", the query spans effective(C) for each container in containerIds[], the recursive closure over declared childContainerIds (RFC-034 [R8]; I-147); it follows declared child edges only and MUST NOT traverse contains Relations to discover child containers (amended by RFC-034, 2026-09-06: the former "reachable by contains relations" branch is superseded). "explicit" correspondingly evaluates direct(C), the container's own members without its nested subtree; when containerIds[] is absent or empty, the context container is used as the subtree root. An implementation that cannot determine the context container for a subtree query MUST treat it as "explicit" with an empty containerIds[] and SHOULD emit a diagnostic. Implementations MUST NOT produce a validation error when containerScope is absent; absent is equivalent to "explicit". containerScope is arrangement, not selection: it is layered on top of the section's DiscoveryQuery, not a DiscoveryQuery predicate itself (DiscoveryQuery.containerId is single-valued and takes one container's effective membership; containerScope's multi-container/subtree semantics have no DiscoveryQuery equivalent).
 
 #### Conformance
 
@@ -5308,35 +6958,27 @@ Conforming implementations must uphold the following invariants.
 
 **I-124.** An implementation that declares `ext:discovery` MUST pass all content-match conformance scenarios (`exactMatch: false`) from the fixture at `srs/conformance/discovery/scenarios.json` — its result set for each such scenario MUST be a superset of the scenario's `expectedInstanceIds`. (RFC-012 R12.)
 
-#### Semantic order
+#### Validation
 
-**I-125.** `precedes` relations MUST be used only to express sequences where a different order would be semantically wrong (e.g. spec sections in document order, protocol stages in execution sequence). Implementations MUST NOT create `precedes` relations between instances whose ordering is presentational (layout, curation, display preference). A `precedes` relation between two container members MUST be interpreted as a semantic claim about their sequence, not as a rendering hint. (RFC-015 Change A.)
+**10.** All `fieldId` values in any `CrossFieldRule` within `Type.validationRules[]` must appear in the Type's effective field list. Cross-field rules cannot reference Fields outside the Type.
 
-#### Field values
+**11.** A `conditional-required` rule must supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. A `field-ordering` rule must supply `predicateFieldId`, `targetFieldId`, and `effect`. A `mutual-exclusion` rule must supply `fieldIds` with at least two entries.
 
-**I-129.** A Tier-2 `Record`'s `fieldValues` MUST be a JSON object. Each key MUST equal the `Field.name` of a Field in the effective field set of the Record's `typeId`@`typeVersion`. Unknown keys MUST be rejected; the projected schema asserts `additionalProperties: false`. (RFC-039 [R1])
+**I-89.** An SRS implementation that does not declare support for `ext:cross-field-validation` MUST treat `validationRules` as an unrecognized property and MUST ignore it. Conformance rules R1–R11 bind only implementations that declare support for `ext:cross-field-validation`. (RFC-019 R0.)
 
-**I-130.** A `fieldValues` key MUST be `Field.name` verbatim, with no case or separator transformation, at every nesting depth. The name projection MUST NOT be applied to instance keys under any circumstances, including for meta-model entities stored as Records. (RFC-039 [R2b])
+**I-90.** A conforming implementation that declares support for `ext:cross-field-validation` MUST evaluate each `CrossFieldRule` in `validationRules` against every Record of the Type at record-write time (create and update). Evaluation order within the array is implementation-defined; all rules MUST be evaluated regardless of earlier failures (fail-all, not fail-first). (RFC-019 R2.)
 
-**I-132.** A `FieldAssignment` with `required: true` means its key MUST be present in `fieldValues`. Key absence is the sole representation of an unset field: a value of `null` MUST be rejected — writers MUST omit the key instead. Structural presence and rendering presence (RFC-001 Step 2, where an empty string resolves as absent) remain distinct and MUST NOT be conflated. (RFC-039 [R5]/[R5a])
+**I-91.** A `CrossFieldRule` with `type: "conditional-required"` fires when the field identified by `predicateFieldId` is non-empty and its stored value is equal to `predicateValue` (case-sensitive string equality). When the rule fires, the field identified by `targetFieldId` MUST be non-empty in the Record. A violation MUST be reported as a validation error. (RFC-019 R3.)
 
-**I-133.** `fieldMeta`, when present, MUST be an object whose keys are a subset of the sibling `fieldValues` keys, and whose values are objects of `{source?, editedAt?, sourceRefs?}`. A `fieldMeta` key with no corresponding `fieldValues` key MUST be rejected. `fieldMeta` MUST NOT appear inside an inline-composite value. (RFC-039 [R6])
+**I-92.** A `CrossFieldRule` with `type: "field-ordering"` fires when both `predicateFieldId` and `targetFieldId` are non-empty. It applies only to fields whose `fieldType.datatype` is `"date"`, `"date-time"`, `"number"`, or `"integer"`. When `effect` is `"must-precede"`, the predicate field value MUST be strictly less than the target field value (ISO 8601 lexicographic order for dates; numeric order for numbers). When `effect` is `"must-follow"`, the predicate field value MUST be strictly greater than the target field value. A violation MUST be reported as a validation error. If either field is non-empty but the other is absent or empty, the rule MUST NOT fire. A `field-ordering` rule whose `predicateFieldId` or `targetFieldId` resolves to a field with any other `fieldType.datatype` MUST be reported as a Type-level validation error. (RFC-019 R4.)
 
-**I-134.** `FieldValue`, `FieldValueEntry`, `FieldGroupValue`, `FieldGroupEntry`, `Type.fieldGroups`, and `FieldAssignment.{repeatable, minItems, maxItems}` are removed. An implementation MUST reject a document containing any of them at `dataModelRevision >= 2`. Definition files carry no document-local revision discriminator, so revision MUST be resolved from the enclosing repository or package manifest before this rule is applied to a definition. A manifest at `dataModelRevision >= 2` MUST NOT declare `ext:field-groups` or `ext:repeatable-fields`; a reader encountering such a declaration MUST report an error. (RFC-039 [R7]/[R15])
+**I-93.** A `CrossFieldRule` with `type: "mutual-exclusion"` MUST report a validation error if more than one field in `fieldIds` is non-empty in the Record. If zero or one field is non-empty, the rule passes. (RFC-019 R5.)
 
-**I-135.** A reader MUST determine instance generation structurally. For a Tier-2 `Record`: an array `fieldValues` is revision <= 1, an object `fieldValues` is revision >= 2. On encountering a generation it does not support, a reader MUST emit a diagnostic naming the file and the expected `dataModelRevision` and MUST NOT coerce, partially read, or silently skip the document. (RFC-039 [R9])
+**I-94.** A `CrossFieldRule` with `type: "conditional-required"` MUST supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. The field identified by `predicateFieldId` MUST be effective-single (`fieldType.cardinality` absent/`"single"` and, until #242 Phase B, effective `FieldAssignment.repeatable !== true`) and its `fieldType.datatype` MUST be one of `{"string", "date", "date-time"}`. String `format` and `valueDomain` do not restrict eligibility. A rule that omits a required property, selects a list/repeatable field, or resolves to any other datatype MUST be reported as a Type-level validation error. Admission of `date-time` is intentional; the scalar requirement intentionally closes the legacy repeatable-date equality hole. (RFC-019 R6; RFC-032 Rev-7 erratum; normative extension of I-11.)
 
-**I-140.** A Type's projected JSON Schema describes the `fieldValues` object, not the whole Record document. `instanceId`, `typeId`, `tags`, `meta`, `sourceRefs`, and `fieldMeta` are envelope members governed by `record.json`, and are outside the projected schema's `additionalProperties: false`. (RFC-039 [R17])
+**I-95.** A `CrossFieldRule` with a `type` value not in `["conditional-required", "field-ordering", "mutual-exclusion"]` MUST be reported as a Type-level validation error. Implementations MUST NOT silently ignore unknown rule types. (RFC-019 R9.)
 
-**I-141.** Instance `fieldValues` keys MUST be serialised in `FieldAssignment.order`, and nested composite objects likewise, so that a re-run of a transform is byte-idempotent and diffs are stable. This is the instance-side counterpart of the schema-key ordering in `projection-rules.md`; it supersedes the write-order signal of rfc-012:139. (RFC-039 [R18])
-
-#### Composite value
-
-**I-136.** A `mode: "reference"` value MUST resolve to an instance present in the repository's authoritative instance set, and that instance MUST be of the Field's declared `rangeType` at the declared `typeVersion`. A dangling or type-mismatched target MUST be reported as an error naming the referring record, the key, and the target id. (RFC-039 [R14], amended by RFC-038 [R25] — the reference target is the tree-enumerated instance set, not a manifest `instanceIndex`, which is retired per RFC-038 [R2]; discharges RFC-032 OQ4, RFC-033:302, RFC-035:592)
-
-#### Version lineage
-
-**I-137.** A Type version referenced by any instance in the repository MUST NOT be deleted. Name-keying makes the Record-to-Field edge Type-mediated: `fieldId` is recovered from `typeId` + `typeVersion` + key, so deleting the pinned Type version renders every instance of it unreadable. This rule governs versions with live referents only. (RFC-039 [R19])
+**I-96.** A `CrossFieldRule` that contains a property belonging to a different rule type MUST be reported as a Type-level validation error. Specifically: a `conditional-required` or `field-ordering` rule MUST NOT supply `fieldIds`; a `mutual-exclusion` rule MUST NOT supply `predicateFieldId`, `predicateValue`, `targetFieldId`, or `effect`. (RFC-019 R10.)
 
 #### Conformance
 
@@ -5456,6 +7098,9 @@ SRS 2.0 Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability 
 **Constraint**: A `conditional-required` rule must supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. A `field-ordering` rule must supply `predicateFieldId`, `targetFieldId`, and `effect`. A `mutual-exclusion` rule must supply `fieldIds` with at least two entries.
 
 
+##### Cross-field validation (ext:cross-field-validation)
+
+
 ##### ext:cross-field-validation is opt-in; implementations not declaring it MUST ignore validationRules
 
 **Number**: I-89
@@ -5542,6 +7187,66 @@ Example: the `ValidationRule` shape.
 
 
 
+#### Extension
+
+**Canonical Key**: record:concepts/extension
+
+**Description**: An independently adoptable capability module, identified by an `ext:` name, declaring what it adds, what it depends on, and which invariants it owns. Extensions are how the specification grows without forcing every implementation to grow with it: no extension is required for core conformance, and an implementation adopts only what it needs. An implementation that does not declare one must ignore its properties instead of erroring on them, so data using an extension still loads where the extension is unknown.
+
+**Notes**: Some extensions declare hard dependencies on others. A pair may also be formally independent yet functionally co-dependent for a given use, and cross-extension behavioural requirements apply only where both are declared.
+
+##### Graceful degradation
+
+**Content**: 
+In a federated ecosystem, implementations will often receive SCDS content that uses extensions they do not support. The useful default is: understand what you can, preserve what you cannot.
+
+A conforming implementation should validate the core and extension content it recognises, surface unknown extension content clearly to users or downstream systems, and pass that unknown content through rather than silently discarding it. This is especially important for Records instantiated against a specializing Type: a system that knows only the base Type should still be able to read the inherited base fields correctly while preserving the specialization-specific fields.
+
+---
+
+
+##### Future Extensions
+
+**Content**: 
+The following capabilities are planned but out of scope for this version.
+
+
+
+#### Conformance
+
+**Canonical Key**: record:concepts/conformance
+
+**Description**: What an implementation claims and what that claim obliges it to do, declared as the core plus the extensions it supports. Core conformance requires the Foundation and Distribution groups in full and enforcement of the core invariants; declaring an extension obliges accepting and validating its types, enforcing its invariants, and honouring its declared dependencies. The claim is what makes exchange predictable: two implementations at the same level produce definitions the other can consume.
+
+**Notes**: Partial support is not conformance — an implementation that can produce archives but not consume them must say so explicitly. Receiving content from an unsupported extension calls for surfacing and preserving it, never silently discarding it.
+
+##### How to decide which extensions to implement
+
+
+##### ext:discovery conformance requires passing structured-filter fixture scenarios
+
+**Number**: I-123
+
+**Constraint**: An implementation that declares `ext:discovery` MUST pass all structured-filter conformance scenarios (`exactMatch: true`) from the fixture at `srs/conformance/discovery/scenarios.json`, returning exactly the `expectedInstanceIds` set for each such scenario. When a scenario also carries an `expectedSegments` expectation, the implementation's Text Projection for the named field of the named instance MUST additionally match the expected segment sequence exactly in count and order — testing I-120's list-cardinality rule ("one segment per array element in order") that `expectedInstanceIds` alone cannot express. (RFC-012 R11; srs#483.)
+
+
+##### ext:discovery conformance requires passing content-match fixture scenarios
+
+**Number**: I-124
+
+**Constraint**: An implementation that declares `ext:discovery` MUST pass all content-match conformance scenarios (`exactMatch: false`) from the fixture at `srs/conformance/discovery/scenarios.json` — its result set for each such scenario MUST be a superset of the scenario's `expectedInstanceIds`. (RFC-012 R12.)
+
+
+##### Invariant
+
+**Canonical Key**: record:concepts/invariant
+
+**Description**: A numbered normative statement that must hold of conforming data and conforming implementations, assigned to core or to the extension that owns it. Invariants are where the specification's obligations are stated once and cited from everywhere else, so a rule has one home instead of several drifting restatements. An invariant is the statement; checking it is validation, and the two are deliberately distinct.
+
+**Examples**: Invariant 16 fixes relation direction; Invariant 20 keeps container ids out of the instance id space; Invariant 2 forbids a Type restating a Field's semantics.
+
+
+
 
 ## Governance
 
@@ -5554,6 +7259,112 @@ Example: the `ValidationRule` shape.
 #### Foundational values and development phase
 
 **Content**: Content relocated to mechanism leaves under the Foundational tension concept (RFC-042 Change B, srs#562/#687). See derived-from.
+
+
+#### Semantic sovereignty
+
+**Canonical Key**: record:concepts/semantic-sovereignty
+
+**Description**: The condition SRS exists to preserve: meaning stays under the control of the people who made it, and can move between tools, implementations, representations, repositories and time without captivity or silent loss. Portability alone does not achieve it — data that travels but arrives without stable identity, its relations, its provenance, or interpretable semantics has lost the meaning it was carrying. A design that improves convenience while making semantic data captive violates the purpose of SRS.
+
+**Notes**: Stated in the specification's Foundational values subsection. It is the criterion every other design decision answers to, which is why it introduces nothing and depends on nothing.
+
+##### Core Thesis
+
+**Content**: 
+Traditional document systems treat documents as primarily text.
+
+This specification treats documents as **socially negotiated semantic state**. Text is one projection of that state.
+
+Six principles follow from this:
+
+**1. Semantic state is primary; documents are projections.**
+The same semantic state may be rendered as a board paper, a governance record, a dashboard, or an AI context package. None of these projections is the source of truth.
+
+**2. Fields are reusable semantic atoms.**
+A Field defines a reusable slot of meaning with stable identity. It is not a form field. It is not tied to any specific Type or View. Its AI guidance, validation rules, and value type belong to the Field, not to the Type that uses it.
+
+**3. Types are compositions, not owners of Field semantics.**
+A Type selects and orders Fields for a specific semantic object type. It may provide session-level AI framing. It must not override or redefine the meaning of any Field it includes.
+
+**4. Lineage and provenance are first-class.**
+Definitions evolve. Forks happen. Upstream changes must be traceable. A definition without lineage is a definition that cannot be trusted to evolve cleanly.
+
+**5. Records represent negotiated semantic state, not objective truth claims.**
+A Record captures what a group understood, agreed, or committed to at a point in time. That understanding may be partial, contested, or later revised. The system preserves revision history and provenance precisely because the original state is worth keeping alongside its successors. Human prose and ambiguity are preserved, not collapsed.
+
+**6. Understanding is mutable; historical semantic state has permanent value.**
+SCDS assumes that understanding evolves. Records, Relations, and lifecycle states may be revised, superseded, refined, or contradicted without invalidating prior semantic state. A rough plan is a valid semantic object. A superseded decision is a valid semantic object. An abandoned hypothesis is a valid semantic object. Historical semantic state is not noise to be discarded — it is provenance, institutional memory, and the record of how understanding arrived at its current form.
+
+---
+
+
+
+#### Foundational tension
+
+**Canonical Key**: record:concepts/foundational-tension
+
+**Description**: A named opposition between two complementary necessities, resolved not by choosing a winner but by declaring which pole is the default and stating the boundary at which the other governs. Six such tensions govern decisions in the SRS standard layer: Semantic Integrity vs Practical Expression, Continuity vs Evolution, Shared Coherence vs Local Autonomy, Office vs Testimony, Reliability vs Renewal, and Portability vs Possession. A tension is phase-bound where the specification says so — the temporal default is Evolution before the first full public release and reverses to Continuity at it.
+
+**Notes**: The tensions are the specification's own reading key: a rule that looks arbitrary usually reads as one pole of a declared tension holding at its boundary.
+
+##### Foundational values and development phase
+
+**Content**: SRS exists to preserve **semantic sovereignty through portable data**. Meaning must remain under its owners' control and able to move between tools, implementations, representations, repositories, and time without captivity or silent semantic loss. Portability without identity, relations, provenance, and interpretable semantics is not sovereignty. A design that improves convenience while making semantic data captive violates the purpose of SRS.
+
+Six foundational tensions govern decisions in the SRS standard layer. Their poles are complementary necessities, not good and bad alternatives. Each statement names the default pole and the boundary at which the other pole governs.
+
+
+##### Semantic Integrity and Practical Expression
+
+**Content**: The standard defaults to **Semantic Integrity**: preserve exact meaning, identity, authority, relations, and provenance. It moves toward Practical Expression when established meaning remains recoverable and a bounded presentation, authoring, diagnostic, or review need would otherwise make correct information unusable. A projection must retain a clear line to canonical meaning and must never silently become a substitute semantic source.
+
+
+##### Continuity and Evolution
+
+**Content**: The temporal preference is explicitly phase-bound. **Before the first full public release**, the standard is in formation and defaults to **evidence-led Evolution**. The project must make the changes needed to correct contradictions, close semantic gaps, and establish a coherent foundation before users depend on it. Those changes must be grounded in practical implementation, corpus, migration, authoring, or user experience; speculative elegance alone is insufficient. Stable identity, deterministic migration, parity evidence, diagnostics, atomic cutover, and recovery remain required safeguards.
+
+**At the first full public release, the temporal default reverses to Continuity.** This transition is precommitted. From that point, the standard protects compatibility, identity, and established expectations by default. A breaking change requires an explicit version boundary, migration and compatibility analysis, recovery evidence, and ratification. Continuity must not preserve a demonstrated semantic contradiction indefinitely, but the burden of proof moves to the proposed change.
+
+
+##### Shared Coherence and Local Autonomy
+
+**Content**: The standard defaults to **Shared Coherence** for interchange, semantic interpretation, identity, validation, authority, and conformance. It moves toward Local Autonomy when a concern is genuinely presentation-owned, extension-owned, repository-local, or implementation-private. Local variation must remain behind an explicit boundary and must not produce incompatible interpretations of shared data.
+
+
+##### Office and Testimony
+
+**Content**: The standard defaults to **Office**: the procedural record, declared authority, and validated artifact govern over personal or automated testimony. Testimony may fill a gap, but it must not contradict authority; it becomes office only through an explicit verification mechanism that produces an authoritative artifact. Until then, who or what asserted a claim may inform trust and diagnosis, but never changes the claim's validity or precedence. This is axis 4–10, ruled in `rfc-decision-cce3c00e` and `rfc-decision-16b20c56`.
+
+
+##### Reliability and Renewal
+
+**Content**: The standard defaults to **Reliability**: standing contracts continue to hold. Renewal is legitimate only as explicit supersession at a declared boundary, expressed through the retirement mechanism of the layer concerned; it must not arrive as an overwrite, an expired exception, or silent drift. This is axis 5–11, ruled in `rfc-decision-cce3c00e` and `rfc-decision-5f8204bc`.
+
+
+##### Portability and Possession
+
+**Content**: The standard defaults to **Portability**: the travelling form is the test of a capability. Anything the standard allows a repository to hold must be expressible in the corresponding package, archive, or slice form. A capability may remain in place only behind axis 3–9's explicit local boundary; otherwise, a capability that exists only in place is captivity. This is axis 6–12, ruled in `rfc-decision-cce3c00e` and `rfc-decision-8948e43f`.
+
+
+##### Conflict resolution: identity and information
+
+**Content**: The Earth and Air columns deliberately fail differently. An **identity conflict is fatal**: identity is declared, never inferred or selected by precedence. An **informational conflict resolves by declared authority**: the authoritative statement wins and the losing hint is surfaced visibly. Treating an identity clash as a resolvable hint corrupts meaning; hard-failing an informational mismatch when an authority is declared mistakes diagnosis for identity. This distinction is ruled in `rfc-decision-cce3c00e`, RFC-038 [R12], and Invariant 28.
+
+
+##### Schemas closed, engines tolerant
+
+**Content**: Instance-facing emitted JSON Schemas state the production contract and are closed except for the sanctioned `meta` carrier; definition-facing schemas are fully closed because definitions are the trust boundary. Engines nevertheless detect and load unknown instance-layer content so that encountering unfamiliar meaning does not destroy it. On write, an engine preserves unknown content or refuses loudly when preservation is impossible; it must never discard that content silently. Schema invalidity and loadability therefore answer different questions: the diagnostic names content outside the production contract, while tolerant carriage protects it from loss. This is the three-verb DETECT / LOAD / WRITE contract ruled in `rfc-decision-2e0cd70a`.
+
+
+##### Evidence, exceptions, and amendment
+
+**Content**: The charter is answerable to observed outcomes. Repeated, attested conflict between a charter expectation and practice creates a finding against the charter, not an accusation that the decisions failed to obey it. Likewise, two waivers or distinguishings of the same clause for the same reason aggregate into a finding against that clause; exceptions are evidence about the rule and must not make the doctrine self-sealing. This empirical override was adopted in the axis-integration review on srs#435.
+
+During the single-owner phase, amendment jurisdiction rests with the owner; amendments are recorded through an explicit ruling or successor, never a silent edit.
+
+These values govern the SRS standard layer. Rust, web, and other implementation layers may adopt different preference profiles for their own concerns, but those profiles cannot weaken the standard's semantic integrity, portability, or shared conformance boundaries.
+
 
 
 

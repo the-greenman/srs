@@ -1,556 +1,556 @@
 {
-  "$comment": "Records that are deliberately reachable from no declared presentation (#285). Read by scripts/check-publication-reachability.mjs. Every entry names the instance, why it is invisible, its disposition, and the issue that tracks it. `disposition: \"permanent\"` means the invisibility is a ruled, settled outcome \u2014 `issue` cites the (possibly closed) issue whose ruling made it so, and the entry never expires by issue state; it still expires if the instance stops existing or becomes reachable (checked below regardless of disposition). `disposition: \"pending\"` means real follow-up work remains \u2014 `issue` MUST cite a currently-open issue, and the entry should be resolved (removed, or reclassified permanent with the ruling that settled it) once that issue closes. An entry for an instance that no longer exists, or one that has since become reachable, is an error either way \u2014 a stale exclusion is how a suppression list becomes a permanent blind spot.",
+  "$comment": "Records that are deliberately reachable from no declared presentation (#285). Read by scripts/check-publication-reachability.mjs. Every entry names the instance, why it is invisible, its disposition, and the issue that tracks it. `disposition: \"permanent\"` means the invisibility is a ruled, settled outcome — `issue` cites the (possibly closed) issue whose ruling made it so, and the entry never expires by issue state; it still expires if the instance stops existing or becomes reachable (checked below regardless of disposition). `disposition: \"pending\"` means real follow-up work remains — `issue` MUST cite a currently-open issue, and the entry should be resolved (removed, or reclassified permanent with the ruling that settled it) once that issue closes. An entry for an instance that no longer exists, or one that has since become reachable, is an error either way — a stale exclusion is how a suppression list becomes a permanent blind spot.",
   "exclusions": [
     {
       "instanceId": "05fc673c-0d59-45ae-80d5-0c1a879d32d4",
       "path": "records/tier-2/rfc-change-05fc673c.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "77e89353-7399-4527-859a-9fd92df73497",
       "path": "records/tier-2/rfc-change-77e89353.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "819fea19-2c4f-489a-a7bb-ec81fcb38bb3",
       "path": "records/tier-2/rfc-change-819fea19.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "a3f7c9e1-2b4d-4f8a-9c1e-5d7b3a2f6e0c",
       "path": "records/extensions/ext-themes-l1.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-17-ext-themes-l1.json` (6e28a8e1-7fad-486e-9bac-426c36a8aee8) for ext:themes-l1 \u2014 published by #414, which resolved the prior 'no published subsection counterpart at all' state. The subsection content is byte-identical to this record's content field, so this falls in the 'byte-identical: retire the shadow' disposition class already ratified on #285 (comment 5332260013); retired by #411 \u2014 the content field is now a retirement stub pointing at the published subsection, matching the pattern #407 established for ext:lifecycle / ext:recommended-relations. Kept as a record (not deleted) because `scripts/check-rfc-integration.mjs` also resolves ext:themes-l1 RFC-integration tokens against this record.",
+      "reason": "Unpublished shadow of the published subsection `records/subsections/07-17-ext-themes-l1.json` (6e28a8e1-7fad-486e-9bac-426c36a8aee8) for ext:themes-l1 — published by #414, which resolved the prior 'no published subsection counterpart at all' state. The subsection content is byte-identical to this record's content field, so this falls in the 'byte-identical: retire the shadow' disposition class already ratified on #285 (comment 5332260013); retired by #411 — the content field is now a retirement stub pointing at the published subsection, matching the pattern #407 established for ext:lifecycle / ext:recommended-relations. Kept as a record (not deleted) because `scripts/check-rfc-integration.mjs` also resolves ext:themes-l1 RFC-integration tokens against this record.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "212379f4-4bb7-465f-94e6-ffd037a718b4",
       "path": "records/extensions/extension-212379f4.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-19-ext-slices.json` (136187cc-8317-4705-91c0-7aaeadaf5998) for ext:slices \u2014 published by #414, which resolved the prior 'no published subsection counterpart at all' state. The subsection content is byte-identical to this record's content field, so this falls in the 'byte-identical: retire the shadow' disposition class already ratified on #285 (comment 5332260013); retired by #411 \u2014 the content field is now a retirement stub pointing at the published subsection, matching the pattern #407 established for ext:lifecycle / ext:recommended-relations. Kept as a record (not deleted) because `scripts/check-rfc-integration.mjs` also resolves ext:slices RFC-integration tokens against this record.",
+      "reason": "Unpublished shadow of the published subsection `records/subsections/07-19-ext-slices.json` (136187cc-8317-4705-91c0-7aaeadaf5998) for ext:slices — published by #414, which resolved the prior 'no published subsection counterpart at all' state. The subsection content is byte-identical to this record's content field, so this falls in the 'byte-identical: retire the shadow' disposition class already ratified on #285 (comment 5332260013); retired by #411 — the content field is now a retirement stub pointing at the published subsection, matching the pattern #407 established for ext:lifecycle / ext:recommended-relations. Kept as a record (not deleted) because `scripts/check-rfc-integration.mjs` also resolves ext:slices RFC-integration tokens against this record.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "86102577-a045-4087-8ddb-28ca721579a4",
       "path": "records/extensions/extension-86102577.json",
-      "reason": "Unpublished shadow of the published subsection `records/subsections/07-18-ext-changelog.json` (76e8a0c6-5c11-4639-a884-51b9f714b1f1) for ext:changelog \u2014 published by #414, which resolved the prior 'no published subsection counterpart at all' state. The subsection content is byte-identical to this record's content field, so this falls in the 'byte-identical: retire the shadow' disposition class already ratified on #285 (comment 5332260013); retired by #411 \u2014 the content field is now a retirement stub pointing at the published subsection, matching the pattern #407 established for ext:lifecycle / ext:recommended-relations. Kept as a record (not deleted) because `scripts/check-rfc-integration.mjs` also resolves ext:changelog RFC-integration tokens against this record.",
+      "reason": "Unpublished shadow of the published subsection `records/subsections/07-18-ext-changelog.json` (76e8a0c6-5c11-4639-a884-51b9f714b1f1) for ext:changelog — published by #414, which resolved the prior 'no published subsection counterpart at all' state. The subsection content is byte-identical to this record's content field, so this falls in the 'byte-identical: retire the shadow' disposition class already ratified on #285 (comment 5332260013); retired by #411 — the content field is now a retirement stub pointing at the published subsection, matching the pattern #407 established for ext:lifecycle / ext:recommended-relations. Kept as a record (not deleted) because `scripts/check-rfc-integration.mjs` also resolves ext:changelog RFC-integration tokens against this record.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "09b57270-d763-4a7c-b6fa-182e03365aab",
       "path": "records/notes/ai-native-srs-repositories.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished \u2014 none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "8c0bcb3b-bd82-4d84-b9ef-8e64f69d9ac7",
       "path": "records/notes/conversation-attention-addressability.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished \u2014 none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "f13e9f41-2a98-4f2d-a66e-55e546cd7585",
       "path": "records/notes/distributed-knowledge-ownership.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished \u2014 none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "c0f264d7-3b9e-44b9-9446-04adf55576a0",
       "path": "records/notes/domain-definition-template.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished \u2014 none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "7f46a5b2-7c5c-4c2c-9d79-6ef5a4a7c201",
       "path": "records/notes/fundamental-tensions.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished \u2014 none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "c0f7c97d-84a9-48a5-bc4d-41d7ee5f8cd9",
       "path": "records/notes/human-meaning-ai-collaboration.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished \u2014 none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "82de2b6e-9589-4b82-a59f-417eec5c59d1",
       "path": "records/notes/meaning-evolution-path.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished \u2014 none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "d5c7e536-5f7d-491a-8166-5ee25a954377",
       "path": "records/notes/origin-purpose.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished \u2014 none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "a8ecf7de-c92c-4d1c-80c7-8288329b7a91",
       "path": "records/notes/protocols-as-meaning-making.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished \u2014 none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "2bd94648-85c0-4e2a-a8a8-4db54895c65d",
       "path": "records/notes/purpose-principles-constraints.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished \u2014 none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "3ac58ecc-dfc8-45cd-8ddb-2a3b429e768e",
       "path": "records/notes/rfc-001-implementation-prerequisites.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished \u2014 none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section. This one was previously reported reachable, via membership of an orphan Container under `containers/` that no view and no manifest references \u2014 see the note on `containers()` in the guard.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section. This one was previously reported reachable, via membership of an orphan Container under `containers/` that no view and no manifest references — see the note on `containers()` in the guard.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "3718815c-d505-40c1-a754-b0ab29e90b8f",
       "path": "records/notes/rfc-005-relation-type-cardinality-decision.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished \u2014 none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "609370d7-03cf-4501-894a-02276621df8e",
       "path": "records/notes/semantic-pipeline-from-transcripts.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished \u2014 none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "4d9f78b5-3138-4d8a-a443-e39f5af0a830",
       "path": "records/notes/shared-meaning-governing-documents.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished \u2014 none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "9d78580b-bfd8-48e0-8893-f7f09602ac8d",
       "path": "records/notes/srs-domain-definition.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished \u2014 none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "5ea8cdb1-35d9-49d3-8d6e-95e2dc8239a7",
       "path": "records/notes/srs-domain-key-challenges.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished \u2014 none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "c1a5f920-9de7-4f99-8cfd-b4b8cbb7b09a",
       "path": "records/notes/srs-domain-potential-problems.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished \u2014 none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "cdd08a86-4fb8-47a0-bcfd-1fd7b9449af9",
       "path": "records/notes/tooling-design-principles-authority-and-determinism.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished \u2014 none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "fa1d2160-0117-47c3-9c86-12a811911e3e",
       "path": "records/notes/why-tags-exist-from-clustering-to-definitions.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished \u2014 none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "f3d9302c-ae06-5311-8928-54f5f01d34b1",
       "path": "records/rfc-changes/rfc-004-change-a.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "2925ab39-cbb1-58e2-8e56-7927d04e8890",
       "path": "records/rfc-changes/rfc-004-change-b.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "95aaa3b5-1866-5fa8-857b-026db49abaaf",
       "path": "records/rfc-changes/rfc-004-change-c.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "2e7aee83-a9e8-57a8-89bf-08917c91a69f",
       "path": "records/rfc-changes/rfc-004-change-d.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "694cfd3c-91a7-52b5-8082-20ed49976366",
       "path": "records/rfc-changes/rfc-004-change-e.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "29b41659-4cf6-58e3-87ad-9edf01c9309e",
       "path": "records/rfc-changes/rfc-004-change-f.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "be9b259a-0697-5f8b-8a75-8c0c9f00d297",
       "path": "records/rfc-changes/rfc-004-change-g.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "978704cf-a41a-5e7b-887f-6a328f7502d9",
       "path": "records/rfc-changes/rfc-004-change-h.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "8149374a-c3ed-5efb-81cd-a99a00d61ba1",
       "path": "records/rfc-changes/rfc-004-change-i.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "a0d914fc-2d96-576c-811b-1249e533091f",
       "path": "records/rfc-proposed-artifacts/rfc-004-artifact-core-package.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "8a4716e0-05cc-539b-8da8-ab0c884d7409",
       "path": "records/rfc-proposed-artifacts/rfc-004-artifact-field-constraints.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "ea30e14e-e860-5320-8424-e3287ff53287",
       "path": "records/rfc-proposed-artifacts/rfc-004-artifact-field-deprecated.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "60f4c2b0-a514-53b5-8d8f-af072586d47d",
       "path": "records/rfc-proposed-artifacts/rfc-004-artifact-field-member-name.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "476e9067-bba3-5e82-89da-5c7218b8824e",
       "path": "records/rfc-proposed-artifacts/rfc-004-artifact-field-nullable.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "6a8e6d05-111d-53f3-854c-a743c29a66b6",
       "path": "records/rfc-proposed-artifacts/rfc-004-artifact-field-required.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "5303679e-54c2-5514-81cc-216efa2b95fd",
       "path": "records/rfc-proposed-artifacts/rfc-004-artifact-field-schema-default-value.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "f01b93ad-0bb5-5069-8d3c-3ddef324e8eb",
       "path": "records/rfc-proposed-artifacts/rfc-004-artifact-field-schema-name.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "4f3fdbd8-e155-51d6-8488-4708b2e5c1c4",
       "path": "records/rfc-proposed-artifacts/rfc-004-artifact-field-schema.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "20277726-5f1b-582a-8ada-b28609da6101",
       "path": "records/rfc-proposed-artifacts/rfc-004-artifact-field-semantic-purpose.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "14e86242-cc76-56a2-87b6-aaea17ef627e",
       "path": "records/rfc-proposed-artifacts/rfc-004-artifact-field-type-expression.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "0ee9f736-c16b-5358-87d3-1c1ae7448b8d",
       "path": "records/rfc-proposed-artifacts/rfc-004-artifact-json-schema-package.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "4ed1593f-38ff-528c-846c-e961f0b55173",
       "path": "records/rfc-proposed-artifacts/rfc-004-artifact-json-schema-rules.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "4a12d726-5718-5215-8779-daf58477b50d",
       "path": "records/rfc-proposed-artifacts/rfc-004-artifact-package-schema.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "c7a59785-cbc5-5375-8180-0ddfe92d9abe",
       "path": "records/rfc-proposed-artifacts/rfc-004-artifact-readme.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "0912d44c-ea31-5ff1-8150-266239c49c36",
       "path": "records/rfc-proposed-artifacts/rfc-004-artifact-type-schema-definition.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "0ace152b-c847-5541-8353-6bcbf0d6e5fd",
       "path": "records/rfc-proposed-artifacts/rfc-004-artifact-type-schema-member.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "17eab013-627d-5fd2-8441-467097843508",
       "path": "records/rfc-revisions/rfc-004-revision-1.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "0f2a0ce5-cd4a-5f94-8b4e-c6b1dc600da6",
       "path": "records/rfc-revisions/rfc-004-revision-2.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "956c99fd-2a59-4b88-bf87-5f6aa56292ff",
       "path": "records/rfcs/rfc-009-change-a-rootTypeRefs.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "3deb00d2-2302-4259-a697-7a83933c8609",
       "path": "records/rfcs/rfc-009-change-b-containerType-hint.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "58054458-353c-4383-bf4b-b63901a75454",
       "path": "records/rfcs/rfc-009-change-c-container-metadata.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "c59a36db-5866-4b72-bc90-f0afa4afa1e0",
       "path": "records/rfcs/rfc-009-change-d-containers-for-instance.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "bfc32106-910e-4aa4-8cf0-a9e437c93dd9",
       "path": "records/rfcs/rfc-009-change-e-blueprint-rootTypes.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "d0100002-0000-4000-a000-000000000002",
       "path": "records/specifications/srs-rationale.json",
-      "reason": "Document identity anchor, not document content: it names one of the two rendered specifications and carries its canonical key, title, version label and summary. Nothing renders it because there is nothing in it for a reader \u2014 the document it names is the presentation. Deliberately invisible.",
+      "reason": "Document identity anchor, not document content: it names one of the two rendered specifications and carries its canonical key, title, version label and summary. Nothing renders it because there is nothing in it for a reader — the document it names is the presentation. Deliberately invisible.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "d0100001-0000-4000-a000-000000000001",
       "path": "records/specifications/srs-spec.json",
-      "reason": "Document identity anchor, not document content: it names one of the two rendered specifications and carries its canonical key, title, version label and summary. Nothing renders it because there is nothing in it for a reader \u2014 the document it names is the presentation. Deliberately invisible.",
+      "reason": "Document identity anchor, not document content: it names one of the two rendered specifications and carries its canonical key, title, version label and summary. Nothing renders it because there is nothing in it for a reader — the document it names is the presentation. Deliberately invisible.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "20e3ec0a-a334-4bbe-a8d5-448915737767",
       "path": "records/tier-2/rfc-change-20e3ec0a.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains` (edge asserted by #409 \u2014 RFC-017's stub record had no relations at all before this fix), but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into it (render_service.rs) and `rfc-catalog.md` contains none of it. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains` (edge asserted by #409 — RFC-017's stub record had no relations at all before this fix), but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into it (render_service.rs) and `rfc-catalog.md` contains none of it. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "40183288-f753-460b-af34-b7db33ae67bd",
       "path": "records/tier-2/rfc-change-40183288.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains` (edge asserted by #409 \u2014 RFC-017's stub record had no relations at all before this fix), but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into it (render_service.rs) and `rfc-catalog.md` contains none of it. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains` (edge asserted by #409 — RFC-017's stub record had no relations at all before this fix), but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into it (render_service.rs) and `rfc-catalog.md` contains none of it. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "5601eb2e-9744-4883-8a66-8beec5e2ff21",
       "path": "records/tier-2/rfc-change-5601eb2e.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "5dca4f91-1977-439e-bdb6-ece11b45c42e",
       "path": "records/tier-2/rfc-change-5dca4f91.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains` (edge asserted by #409 \u2014 RFC-017's stub record had no relations at all before this fix), but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into it (render_service.rs) and `rfc-catalog.md` contains none of it. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains` (edge asserted by #409 — RFC-017's stub record had no relations at all before this fix), but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into it (render_service.rs) and `rfc-catalog.md` contains none of it. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "9aaa1a21-7227-4628-8292-3725fe3e8131",
       "path": "records/tier-2/rfc-change-9aaa1a21.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains` (edge asserted by #409 \u2014 RFC-017's stub record had no relations at all before this fix), but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into it (render_service.rs) and `rfc-catalog.md` contains none of it. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains` (edge asserted by #409 — RFC-017's stub record had no relations at all before this fix), but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into it (render_service.rs) and `rfc-catalog.md` contains none of it. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "d8192fc3-814c-4769-b0e1-02c23e7b2ea6",
       "path": "records/tier-2/rfc-change-d8192fc3.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains` (edge asserted by #409 \u2014 RFC-017's stub record had no relations at all before this fix), but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into it (render_service.rs) and `rfc-catalog.md` contains none of it. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains` (edge asserted by #409 — RFC-017's stub record had no relations at all before this fix), but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into it (render_service.rs) and `rfc-catalog.md` contains none of it. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "d975e060-9ba8-43ea-ae1b-6776ffe8145e",
       "path": "records/tier-2/rfc-change-d975e060.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains` (edge asserted by #409 \u2014 RFC-017's stub record had no relations at all before this fix), but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into it (render_service.rs) and `rfc-catalog.md` contains none of it. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains` (edge asserted by #409 — RFC-017's stub record had no relations at all before this fix), but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into it (render_service.rs) and `rfc-catalog.md` contains none of it. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "ff2ef2e8-e078-4985-a7ef-32a949d81b53",
       "path": "records/tier-2/rfc-change-ff2ef2e8.json",
-      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains` (edge asserted by #409 \u2014 RFC-017's stub record had no relations at all before this fix), but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into it (render_service.rs) and `rfc-catalog.md` contains none of it. Kept deliberately unpublished \u2014 disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
+      "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains` (edge asserted by #409 — RFC-017's stub record had no relations at all before this fix), but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into it (render_service.rs) and `rfc-catalog.md` contains none of it. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
     },
     {
       "instanceId": "c5bb163b-93eb-5f79-8ee8-2ec0bc5df50b",
       "path": "records/extensions/ext-views-l1.json",
-      "reason": "Reconciled per srs#407 (srs#285 D2): the drifted duplicate prose was merged into the published subsection `records/subsections/07-6-ext-views-l1.json`, and this record's `content` was reduced to a retirement stub. It stays unreachable \u2014 and stays as a record rather than being deleted \u2014 because `scripts/check-rfc-integration.mjs` resolves `ext:views-l1` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:views-l1`.",
+      "reason": "Reconciled per srs#407 (srs#285 D2): the drifted duplicate prose was merged into the published subsection `records/subsections/07-6-ext-views-l1.json`, and this record's `content` was reduced to a retirement stub. It stays unreachable — and stays as a record rather than being deleted — because `scripts/check-rfc-integration.mjs` resolves `ext:views-l1` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:views-l1`.",
       "disposition": "permanent",
       "issue": "#407"
     },
     {
       "instanceId": "87e912b6-b3f3-5207-a71b-73ce5cd6b8b7",
       "path": "records/extensions/ext-views-l2.json",
-      "reason": "Reconciled per srs#407 (srs#285 D2): the drifted duplicate prose was merged into the published subsection `records/subsections/07-7-ext-views-l2.json`, and this record's `content` was reduced to a retirement stub. It stays unreachable \u2014 and stays as a record rather than being deleted \u2014 because `scripts/check-rfc-integration.mjs` resolves `ext:views-l2` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:views-l2`.",
+      "reason": "Reconciled per srs#407 (srs#285 D2): the drifted duplicate prose was merged into the published subsection `records/subsections/07-7-ext-views-l2.json`, and this record's `content` was reduced to a retirement stub. It stays unreachable — and stays as a record rather than being deleted — because `scripts/check-rfc-integration.mjs` resolves `ext:views-l2` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:views-l2`.",
       "disposition": "permanent",
       "issue": "#407"
     },
     {
       "instanceId": "ef180de4-5ec3-5e92-94e4-0077fdc12ebe",
       "path": "records/extensions/ext-lifecycle.json",
-      "reason": "Reconciled per srs#407 (srs#285 D2): the published subsection `records/subsections/07-2-ext-lifecycle.json` was already current (it reflects a later RFC than the drifted shadow content did); no merge was needed, and this record's `content` was reduced to a retirement stub. It stays unreachable \u2014 and stays as a record rather than being deleted \u2014 because `scripts/check-rfc-integration.mjs` resolves `ext:lifecycle` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:lifecycle`.",
+      "reason": "Reconciled per srs#407 (srs#285 D2): the published subsection `records/subsections/07-2-ext-lifecycle.json` was already current (it reflects a later RFC than the drifted shadow content did); no merge was needed, and this record's `content` was reduced to a retirement stub. It stays unreachable — and stays as a record rather than being deleted — because `scripts/check-rfc-integration.mjs` resolves `ext:lifecycle` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:lifecycle`.",
       "disposition": "permanent",
       "issue": "#407"
     },
     {
       "instanceId": "ed9f0446-800c-5428-8780-09bb499f76aa",
       "path": "records/extensions/ext-recommended-relations.json",
-      "reason": "Reconciled per srs#407 (srs#285 D2): the published subsection `records/subsections/07-11-ext-recommended-relations.json` was already current (it reflects a later RFC than the drifted shadow content did); no merge was needed, and this record's `content` was reduced to a retirement stub. It stays unreachable \u2014 and stays as a record rather than being deleted \u2014 because `scripts/check-rfc-integration.mjs` resolves `ext:recommended-relations` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:recommended-relations`.",
+      "reason": "Reconciled per srs#407 (srs#285 D2): the published subsection `records/subsections/07-11-ext-recommended-relations.json` was already current (it reflects a later RFC than the drifted shadow content did); no merge was needed, and this record's `content` was reduced to a retirement stub. It stays unreachable — and stays as a record rather than being deleted — because `scripts/check-rfc-integration.mjs` resolves `ext:recommended-relations` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:recommended-relations`.",
       "disposition": "permanent",
       "issue": "#407"
     },
     {
       "instanceId": "279877f5-dd9d-569c-94d6-358ad177a6fb",
       "path": "records/extensions/ext-import-tracking.json",
-      "reason": "Reconciled per srs#407 (srs#285 D2): the drifted duplicate prose was merged into the published subsection `records/subsections/07-12-ext-import-tracking.json`, and this record's `content` was reduced to a retirement stub. It stays unreachable \u2014 and stays as a record rather than being deleted \u2014 because `scripts/check-rfc-integration.mjs` resolves `ext:import-tracking` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:import-tracking`.",
+      "reason": "Reconciled per srs#407 (srs#285 D2): the drifted duplicate prose was merged into the published subsection `records/subsections/07-12-ext-import-tracking.json`, and this record's `content` was reduced to a retirement stub. It stays unreachable — and stays as a record rather than being deleted — because `scripts/check-rfc-integration.mjs` resolves `ext:import-tracking` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:import-tracking`.",
       "disposition": "permanent",
       "issue": "#407"
     },
     {
       "instanceId": "c16793d7-005a-58d2-88d0-9e7d9b4967b1",
       "path": "records/extensions/ext-cross-field-validation.json",
-      "reason": "Reconciled per srs#407 (srs#285 D2): the drifted duplicate prose was merged into the published subsection `records/subsections/07-10-ext-cross-field-validation.json`, and this record's `content` was reduced to a retirement stub. It stays unreachable \u2014 and stays as a record rather than being deleted \u2014 because `scripts/check-rfc-integration.mjs` resolves `ext:cross-field-validation` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:cross-field-validation`.",
+      "reason": "Reconciled per srs#407 (srs#285 D2): the drifted duplicate prose was merged into the published subsection `records/subsections/07-10-ext-cross-field-validation.json`, and this record's `content` was reduced to a retirement stub. It stays unreachable — and stays as a record rather than being deleted — because `scripts/check-rfc-integration.mjs` resolves `ext:cross-field-validation` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:cross-field-validation`.",
       "disposition": "permanent",
       "issue": "#407"
     },
     {
       "instanceId": "04ff8b51-c105-434d-8032-fe0269571efc",
       "path": "records/notes/design-brief-core-relation-set.json",
-      "reason": "Tier-0 design capture (2026-07-31, recreated from #291): the mechanism-backed criterion for the core relation set and the proposed 4+3 core/recommended split. Rung 0 of the capture ladder \u2014 a working note whose four decision asks are still open with the owner, not ratified guidance. Publishing it would present an unratified criterion as though it were settled. It becomes reachable by graduating to a `com.semanticops.spec/design-note` record when srs#171 ratifies the criterion.",
+      "reason": "Tier-0 design capture (2026-07-31, recreated from #291): the mechanism-backed criterion for the core relation set and the proposed 4+3 core/recommended split. Rung 0 of the capture ladder — a working note whose four decision asks are still open with the owner, not ratified guidance. Publishing it would present an unratified criterion as though it were settled. It becomes reachable by graduating to a `com.semanticops.spec/design-note` record when srs#171 ratifies the criterion.",
       "disposition": "pending",
       "issue": "#171"
     },
     {
       "instanceId": "addba041-752f-4365-a70d-7ff65feee761",
       "path": "records/notes/design-capture-directory-kind-scopes.json",
-      "reason": "Tier-0 design capture (2026-07-31, recreated from #291): directory-kind container scopes via RFC-013 typed identity records, plus the structural-constraints family observation. Rung 0 of the capture ladder \u2014 input to RFC-034, which is unaccepted. Publishing it would present unaccepted RFC material as specification. It becomes reachable by graduating to a design-note record when srs#267 lands.",
+      "reason": "Tier-0 design capture (2026-07-31, recreated from #291): directory-kind container scopes via RFC-013 typed identity records, plus the structural-constraints family observation. Rung 0 of the capture ladder — input to RFC-034, which is unaccepted. Publishing it would present unaccepted RFC material as specification. It becomes reachable by graduating to a design-note record when srs#267 lands.",
       "disposition": "pending",
       "issue": "#267"
     },
     {
       "instanceId": "717118a7-80be-49a2-bbc6-05c123ffa958",
       "path": "records/notes/design-capture-metamodel-v1-1-0.json",
-      "reason": "Tier-0 design capture, graduated 2026-08-25 to `com.semanticops.spec/design-note` 045 (records/design-notes/045-inheritance-floor-and-documentation-only-rule.json, instance 6e7cb1a4) via `srs note graduate`, linked by a `derived-from` relation from the design note to this Note. The self-expiring premise in the prior reason (\"becomes reachable when the #273 RFC lands\") has resolved by graduation, not by the Note itself becoming reachable \u2014 Tier-0 Notes carry no `typeNamespace`/`typeName` and so never satisfy a type-query surface; `note graduate` preserves the Note (stamped `graduatedAt`, not deleted) as the permanent historical record of the pre-formalisation capture, same as every other entry in `records/notes/`.",
+      "reason": "Tier-0 design capture, graduated 2026-08-25 to `com.semanticops.spec/design-note` 045 (records/design-notes/045-inheritance-floor-and-documentation-only-rule.json, instance 6e7cb1a4) via `srs note graduate`, linked by a `derived-from` relation from the design note to this Note. The self-expiring premise in the prior reason (\"becomes reachable when the #273 RFC lands\") has resolved by graduation, not by the Note itself becoming reachable — Tier-0 Notes carry no `typeNamespace`/`typeName` and so never satisfy a type-query surface; `note graduate` preserves the Note (stamped `graduatedAt`, not deleted) as the permanent historical record of the pre-formalisation capture, same as every other entry in `records/notes/`.",
       "disposition": "permanent",
       "issue": "#273"
     },
     {
       "instanceId": "0a537413-558a-4c4f-9c26-a8cf9a20447e",
       "path": "records/notes/design-capture-rag-companion-seam.json",
-      "reason": "Tier-0 design capture (2026-07-31, recreated from #291): RAG stays out of core; the seam a companion retrieval standard consumes from SRS. Rung 0 of the capture ladder \u2014 scope guidance for triaging future proposals, not a specification section. It becomes reachable by graduating to a design-note record when the companion standard is chartered; its long-term home is the #274 prose-generation decision and the purpose charter.",
+      "reason": "Tier-0 design capture (2026-07-31, recreated from #291): RAG stays out of core; the seam a companion retrieval standard consumes from SRS. Rung 0 of the capture ladder — scope guidance for triaging future proposals, not a specification section. It becomes reachable by graduating to a design-note record when the companion standard is chartered; its long-term home is the #274 prose-generation decision and the purpose charter.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "d28e2f8e-eff5-4aca-870c-151d0804d80d",
       "path": "records/notes/field-evidence-okf-vault-verdict.json",
-      "reason": "Tier-0 field evidence (2026-07-31, recreated from #291): an operated untyped Obsidian vault converging on SRS structure and drifting anyway. Evidence gathered to support design argument, not a design decision and not normative \u2014 the same category as the other Tier-0 source notes. Its long-term home is the #274 prose-generation decision, not a spec section.",
+      "reason": "Tier-0 field evidence (2026-07-31, recreated from #291): an operated untyped Obsidian vault converging on SRS structure and drifting anyway. Evidence gathered to support design argument, not a design decision and not normative — the same category as the other Tier-0 source notes. Its long-term home is the #274 prose-generation decision, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
@@ -564,366 +564,16 @@
     {
       "instanceId": "7e8d9753-044d-4374-9aa2-0939a0d85cfd",
       "path": "records/notes/taste-made-portable-why-tension-statements-invert-and-what-defends-them-7e8d9753.json",
-      "reason": "Rung-0 background capture (the charter's tension-form rationale \u2014 why tension statements invert in application and what defends them). Deliberately unpublished: background meaning, not spec content; the Decision Compass (#461) links it as background reading. Self-expiring: graduates via derived-from into the matrix records' rationale when srs#273 self-hosts the charter \u2014 this exclusion retires then.",
+      "reason": "Rung-0 background capture (the charter's tension-form rationale — why tension statements invert in application and what defends them). Deliberately unpublished: background meaning, not spec content; the Decision Compass (#461) links it as background reading. Self-expiring: graduates via derived-from into the matrix records' rationale when srs#273 self-hosts the charter — this exclusion retires then.",
       "disposition": "pending",
       "issue": "#631"
     },
     {
       "instanceId": "ac55018f-d7a6-4519-bf23-ce25c292be88",
       "path": "records/notes/design-jurisprudence-the-neighbourhood-role-of-the-map-ac55018f.json",
-      "reason": "Rung-0 background capture (design jurisprudence: the neighbourhood role of the map \u2014 the decision-coherence research synthesis). Deliberately unpublished background meaning; linked from the Decision Compass (#461) as background reading. Self-expiring in parts: graduates via derived-from into the #273/#272 charter-self-hosting design, Epic 13's framing, and the first charter review cycle.",
+      "reason": "Rung-0 background capture (design jurisprudence: the neighbourhood role of the map — the decision-coherence research synthesis). Deliberately unpublished background meaning; linked from the Decision Compass (#461) as background reading. Self-expiring in parts: graduates via derived-from into the #273/#272 charter-self-hosting design, Epic 13's framing, and the first charter review cycle.",
       "disposition": "pending",
       "issue": "#631"
-    },
-    {
-      "instanceId": "113d18d8-9b25-4f55-b997-19e1a75a042d",
-      "path": "records/tier-2/mechanism-113d18d8.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from, and unlike Projection (RFC-042 Change D's named root of the Presentation Part, re-parented directly in srs#693) Lifecycle has no RFC-named site of its own. Re-parenting it (and its `LifecycleTransition` (edge between state keys) leaf, among the other 6) is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "30a555c0-060a-42ef-8f05-6a0aa8d9efef",
-      "path": "records/tier-2/mechanism-30a555c0.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from, and unlike Projection (RFC-042 Change D's named root of the Presentation Part, re-parented directly in srs#693) Lifecycle has no RFC-named site of its own. Re-parenting it (and its `Lifecycle` container leaf, among the other 6) is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "71458b11-1533-455d-974c-352340157bc1",
-      "path": "records/tier-2/mechanism-71458b11.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from, and unlike Projection (RFC-042 Change D's named root of the Presentation Part, re-parented directly in srs#693) Lifecycle has no RFC-named site of its own. Re-parenting it (and its ext:lifecycle leaf, among the other 6) is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "7ec029e9-592b-4f72-8c9d-23a302725a82",
-      "path": "records/tier-2/mechanism-7ec029e9.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from, and unlike Projection (RFC-042 Change D's named root of the Presentation Part, re-parented directly in srs#693) Lifecycle has no RFC-named site of its own. Re-parenting it (and its Type lifecycle declaration (added by this extension) leaf, among the other 6) is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "c388f8ab-41e4-4669-851c-1c0eb4b6f0b4",
-      "path": "records/tier-2/mechanism-c388f8ab.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from, and unlike Projection (RFC-042 Change D's named root of the Presentation Part, re-parented directly in srs#693) Lifecycle has no RFC-named site of its own. Re-parenting it (and its Validation invariants (V7\u2013V9) leaf, among the other 6) is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "e265a135-9c11-478f-b390-1787f2faf83c",
-      "path": "records/tier-2/mechanism-e265a135.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from, and unlike Projection (RFC-042 Change D's named root of the Presentation Part, re-parented directly in srs#693) Lifecycle has no RFC-named site of its own. Re-parenting it (and its Record lifecycle state leaf, among the other 6) is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "f609a191-d87b-418e-9e48-f2730f454457",
-      "path": "records/tier-2/mechanism-f609a191.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from, and unlike Projection (RFC-042 Change D's named root of the Presentation Part, re-parented directly in srs#693) Lifecycle has no RFC-named site of its own. Re-parenting it (and its `LifecycleState` (VocabularyEntry specialisation) leaf, among the other 6) is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "02103785-d258-49bf-b809-eaba37351966",
-      "path": "records/tier-2/mechanism-02103785.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "0ae52aea-884a-4d60-b07e-d7a8ba3634bc",
-      "path": "records/tier-2/mechanism-0ae52aea.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "18b7d630-2595-4613-b28a-4f4ac3ac6326",
-      "path": "records/tier-2/mechanism-18b7d630.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "1a197c13-8ae9-4b68-80b3-d759f12160da",
-      "path": "records/tier-2/mechanism-1a197c13.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "23d4b612-b0c4-4083-afc4-7ba7a610266c",
-      "path": "records/tier-2/mechanism-23d4b612.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "249c1928-5cdd-46c1-af48-68fe00c24463",
-      "path": "records/tier-2/mechanism-249c1928.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "276576a4-0b84-4a66-bb33-f336b6979f98",
-      "path": "records/tier-2/mechanism-276576a4.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "3b65c3dd-fb5b-44e7-be46-c8bd2d33e94a",
-      "path": "records/tier-2/mechanism-3b65c3dd.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "4177d637-3077-4769-b551-72d40f83037f",
-      "path": "records/tier-2/mechanism-4177d637.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "80a322d7-e7f5-471a-b66f-da1e3ec7b124",
-      "path": "records/tier-2/mechanism-80a322d7.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "a7fea9f4-6da7-4b7c-9fd9-2b77310aea2c",
-      "path": "records/tier-2/mechanism-a7fea9f4.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "acddda1f-52ae-442e-bcd9-b59b34c97c32",
-      "path": "records/tier-2/mechanism-acddda1f.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "d87505e8-f071-47dd-bbaa-39645863cfeb",
-      "path": "records/tier-2/mechanism-d87505e8.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "eab21cca-af84-42b8-95ed-82f0225cd360",
-      "path": "records/tier-2/mechanism-eab21cca.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "eec1e40c-9aee-49b1-bc10-baac94b79a25",
-      "path": "records/tier-2/mechanism-eec1e40c.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "eef3af08-1766-4bc6-8d28-053f59e23e43",
-      "path": "records/tier-2/mechanism-eef3af08.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "efb87f23-16ac-4dda-95ac-71f2195a7d0d",
-      "path": "records/tier-2/mechanism-efb87f23.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "f6727489-d943-456e-bd50-e1110db2f6d5",
-      "path": "records/tier-2/mechanism-f6727489.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "f73cc1ed-2242-4757-9b72-ce4754fbd85c",
-      "path": "records/tier-2/mechanism-f73cc1ed.json",
-      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "63564240-4ef8-43bb-8622-56288ede33f5",
-      "path": "records/tier-2/mechanism-63564240.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "0014fa0f-9544-47c0-a827-7889e46c9f39",
-      "path": "records/tier-2/mechanism-0014fa0f.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "02e54c05-b2f8-42be-ba7e-3b86a0c0d9d3",
-      "path": "records/tier-2/mechanism-02e54c05.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "078c79a4-eb81-41a3-8ee0-8d22c8006917",
-      "path": "records/tier-2/mechanism-078c79a4.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "124d11e4-6e1f-4510-99c8-da8f8f43411c",
-      "path": "records/tier-2/mechanism-124d11e4.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "16667c90-7092-4588-a015-b301904a99b1",
-      "path": "records/tier-2/mechanism-16667c90.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "17f12134-69a0-4170-8ede-8bd7183f97a0",
-      "path": "records/tier-2/mechanism-17f12134.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "2cc1be6f-8597-4891-8bdb-0eaf1bd0579b",
-      "path": "records/tier-2/mechanism-2cc1be6f.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "3d8fa08c-6f3e-44bf-9e02-b8f046ff852d",
-      "path": "records/tier-2/mechanism-3d8fa08c.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "57ad7fef-5103-49b0-ac5d-c566c9f1bc67",
-      "path": "records/tier-2/mechanism-57ad7fef.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "6c75ed59-c353-4cb1-afe4-d825546ecd7a",
-      "path": "records/tier-2/mechanism-6c75ed59.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "6f93d128-63e7-4684-b1eb-b56a59a6009a",
-      "path": "records/tier-2/mechanism-6f93d128.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "86ec2de9-51f0-4f59-85d0-1384ae8d1955",
-      "path": "records/tier-2/mechanism-86ec2de9.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "9d1530f7-ef70-4c85-9235-8cf094dcbbb5",
-      "path": "records/tier-2/mechanism-9d1530f7.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "a1ab551b-d13d-416b-ab39-1f84b3e3ad9d",
-      "path": "records/tier-2/mechanism-a1ab551b.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "b77c2117-5d54-41cc-866c-75d175abdd75",
-      "path": "records/tier-2/mechanism-b77c2117.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "c0f0f2b7-d5c5-41d7-afe0-9eac7a5df89b",
-      "path": "records/tier-2/mechanism-c0f0f2b7.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "caaefa31-631c-43d4-9779-c878a39ba1ba",
-      "path": "records/tier-2/mechanism-caaefa31.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "da4a94f2-4d3c-4657-8260-704920d4cc11",
-      "path": "records/tier-2/mechanism-da4a94f2.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "eda20ed5-096b-4b47-b414-7b98e754bf71",
-      "path": "records/tier-2/mechanism-eda20ed5.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "f3511756-0341-4713-b483-17338797eade",
-      "path": "records/tier-2/mechanism-f3511756.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "f5dd52c5-d6bc-493a-bd45-c4f10e4da7e8",
-      "path": "records/tier-2/mechanism-f5dd52c5.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "f92f27a0-1248-4d8b-8e92-24d67ef522b1",
-      "path": "records/tier-2/mechanism-f92f27a0.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "ffb63d1d-730d-4f86-8d2f-0cfb82919ed3",
-      "path": "records/tier-2/mechanism-ffb63d1d.json",
-      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
-      "disposition": "pending",
-      "issue": "#690"
     }
   ]
 }

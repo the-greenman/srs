@@ -1,0 +1,14 @@
+{
+  "instanceId": "5103308f-847d-4c17-a3a4-7a9fd6cdded0",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "How graduation is recorded",
+    "content": "Graduation from a Note to a Record, or from one Record to a refined or split successor, is not itself a Relation type. It is recorded through the two Relation types the outcome calls for. Pure formalisation that keeps the same instance id needs no edge at all. Interpretation during formalisation that assigns a new instance id is recorded with `refines`, pointing back at what it formalises. A split into several Records, each with its own new instance id, is recorded with `derived-from` from each new Record back to the Note or Record it came from. Which edge applies follows what actually happened during formalisation, not a fixed rule attached to Graduation itself."
+  },
+  "createdAt": "2026-09-09T09:56:03.369574684+00:00",
+  "updatedAt": "2026-09-09T09:59:46.399415125+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
