@@ -1,0 +1,15 @@
+{
+  "instanceId": "fbed1bf0-15c9-49df-b450-c88ec21ad450",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "check-pr-classification.mjs supports \"|\" as a field separator, deliberately, alongside \"·\"",
+    "summary": "The classification-line parser accepts both 'Mode: X · Cell: Y · Door: Z' and 'Mode: X | Cell: Y | Door: Z' as the same three-field shape. It does NOT try to also parse the bullet-list shape ('- **Decision mode:** clear'), the no-colon shape ('Cell ♑ Repository'), or a line missing the Cell label entirely -- all four were found live in the last-20-PR corpus scan (see the sibling finding). Those are left failing.",
+    "rationale": "The issue's own acceptance test treats corpus failures as a finding, not something to chase: 'Prove the real corpus of recent PRs passes... report any that would have failed -- that list is a finding, not a blocker.' Supporting the pipe delimiter is principled (same three labeled fields, different separator character, and it covered a whole batch of real merged PRs written by one session in one sitting). Reaching further -- accepting a bullet list, or a line with no Cell label -- would mean guessing at structure the PR never actually stated, which is exactly the free-text-against-a-closed-vocabulary problem srs#716 was filed to close. If a future unit is tempted to loosen the grammar further to raise the corpus pass rate, re-read this before doing it: the pass rate is not the goal, a checkable claim is."
+  },
+  "createdAt": "2026-09-09T21:58:12.362216386+00:00",
+  "updatedAt": "2026-09-09T21:58:12.362222341+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
