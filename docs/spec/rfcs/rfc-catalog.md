@@ -916,7 +916,7 @@ schema:document-view-output.json
 
 **Author**: design dialogue draft (srs#267); Revision 5 executes rfc-decision-0750c62f
 
-**Affected Components**: Container membership semantics (direct/effective), the new optional Container.childContainerIds nesting edge in container.json, manifest.json#/$defs/Container and the SRSJ Container shape; containers_for_instance (I-66); RFC-012 containerId discovery (I-118, discovery.json/composition.json); RFC-011 containerScope (I-144, ext:views-l2); RFC-026 container-slice closure (ext:slices); new invariants I-146 to I-151 carrying [R1]-[R4], [R6], [R7], [R9]; the core Container subsection, Container concept and design-note 013.
+**Affected Components**: Container membership semantics (direct/effective), the new optional Container.childContainerIds nesting edge in container.json, manifest.json#/$defs/Container and the SRSJ Container shape; containers_for_instance (I-66); RFC-012 containerId discovery (I-118, discovery.json/composition.json); RFC-011 containerScope (I-144, ext:views-l2); RFC-026 container-slice closure (ext:slices); new invariants I-146 to I-151 carrying [R1]-[R4], [R6], [R7], [R9]; the core Container subsection (retired srs#705 — content lives in the Container mechanism leaf under the Container concept), Container concept and design-note 013.
 
 <!-- srs-integration:v1
 cell:containment
@@ -925,7 +925,6 @@ schema:manifest.json
 schema:srsj-envelope.json
 schema:discovery.json
 schema:composition.json
-subsection:container
 I-66
 I-118
 I-144

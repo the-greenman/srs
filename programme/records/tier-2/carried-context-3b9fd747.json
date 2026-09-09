@@ -1,0 +1,15 @@
+{
+  "instanceId": "3b9fd747-88a3-4e55-8caa-0d04c7a9613a",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "A relocated-content subsection stub is only ready to delete once its example children resolve via derived-from, not just once its own content is a residual pointer",
+    "summary": "srs#705 targeted the 22 subsection records whose content field reads 'Content relocated to mechanism leaves under the ... concept. See derived-from.' Only 4 of the 22 (ext:blueprint, Container, ext:recommended-relations, Foundational values and development phase) were actually safe to delete: every one of their `contains` children was matched by a `derived-from` edge pointing back to the stub. The other 18 each still carry one or more `com.semanticops.spec/example` records as bare `contains` children with no `derived-from` back-edge -- leftovers from an earlier, separate pass (e7f2993, 'lift fenced code into example records', #562 part 1) that lifted fenced code directly under the subsection BEFORE the RFC-042 un-baking moved the prose leaves out to their concepts. Deleting one of those 18 stubs today would orphan its examples: they have no other home, and check-spec-coherence's one-home/no-orphan-leaf rule would catch it.",
+    "rationale": "The issue text's own precondition ('whose leaves all carry derived-from -> stub') already says this, but it is easy to read 'leaves' as only the mechanism/design-note records the un-baking batches produced and miss that the interim example children count too -- their content field literally matches the same residual-pointer regex, so a naive filter (content matches /relocated/i) overselects by 18. The check that separates the 4 ready stubs from the 18 blocked ones: for each stub, list its outgoing `contains` targets and confirm every one of them also has an incoming `derived-from` edge to that same stub; any unaccounted target is an un-migrated example. The 18 blocked stubs are not this unit's to fix -- re-homing their examples under the right concept is exactly the still-open #580 Wave 3 item 'example extraction from the 101 buried code fences,' a larger, separate effort. Whoever dispatches the next batch of stub retirements should run this same accounting first rather than re-deriving it, and should expect most of the remaining 18 to still be blocked until that example work lands."
+  },
+  "createdAt": "2026-09-09T15:10:14.579988622+00:00",
+  "updatedAt": "2026-09-09T15:10:14.579995505+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

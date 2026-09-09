@@ -1,0 +1,23 @@
+{
+  "instanceId": "7aa2287e-9aaa-4ec3-9745-49f610c49ba7",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Retire the residual 'relocated' subsection stubs after un-baking (4 of 22 ready)",
+    "summary": "Filtered the 22 subsection records whose content is a residual 'Content relocated...' pointer down to the 4 whose contains-children are fully accounted for by derived-from back-edges (ext:blueprint, Container, ext:recommended-relations, Foundational values and development phase). For each: re-pointed the incoming contains-from-section edge and the two precedes neighbour edges (spliced across the gap), dropped the derived-from edges from their mechanism leaves (none of the 4 stubs had a derived-from/supersedes ancestor to re-target to), deleted the stub record, and let `srs record delete` cascade-clean Part and legacy section container membership (confirmed via `container members remove` + `part-container-membership.mjs --check`). Also fixed RFC-034's integration manifest, whose `subsection:container` token stopped resolving once the Container stub was deleted -- dropped the stale token, left its 15 other tokens (schema:*, I-146..I-151, ext:*) as sufficient evidence of the fold, and annotated the prose noting the retirement. The other 18 stubs remain: each still carries un-migrated `example` children (bare contains, no derived-from) from an earlier lift-fenced-code pass, and deleting them now would orphan those examples -- filed as carried_context (this unit's contains child) rather than worked around.",
+    "decision_mode": "complicated",
+    "door": "door-1",
+    "issue_ref": [
+      "srs#705",
+      "srs#562",
+      "srs#580"
+    ],
+    "body": "Dispatched from srs#580 gate:dispatched (coordinator routine, 2026-09-09 tick, comment 5603492684). Claimed 2026-09-09T14:38:01Z. Ground: fresh worktree off origin/master, unshallowed (was shallow, per carried-context-6c231a2a). Classify/Charter: mode complicated, cell Succession, door 1 -- executes RFC-042 Change B and rfc-decision-5f8204bc (deprecate -> remove), as the issue itself states; no new normative meaning. Route: proceeds (agent-workable). Work: found the issue's own precondition ('whose leaves all carry derived-from -> stub') is stricter than 'content is a residual pointer' -- see carried_context (this unit's contains child) for the full accounting that separated 4 ready stubs from 18 blocked ones. Hit a real CLI gap trying to record the drop reason on leaf `meta` (finding, this unit's contains child; filed srs-rust#1014) -- parked per the tool-gap rule, did not hand-edit around it. validate-all, srs repo validate (0 errors), part-container-membership.mjs --check, and publish-spec.mjs (pinned build) all green. Prove: no new check was added by this unit, so the Prove stage's guard-must-go-red requirement does not apply; check-spec-coherence's existing one-home/no-orphan-leaf rule is what would have caught a mis-scoped deletion, and the 18-vs-4 accounting above is what kept it from ever needing to fire."
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-09T15:10:37.307167373+00:00",
+  "updatedAt": "2026-09-09T15:29:19.441420553+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

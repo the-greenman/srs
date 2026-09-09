@@ -1,0 +1,20 @@
+{
+  "instanceId": "03f55fef-6438-4b8f-b1fd-82e0a4f3af61",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "record update silently drops the envelope meta field",
+    "summary": "docs/schema/2.0/record.json declares `meta` as a generic Tier-2 envelope field (\"Implementation-local key-value pairs... namespaced\"). `srs record update` (pinned build v0.1.0-build.360) accepts a whole-object payload carrying `meta` with ok:true and bumps updatedAt, but never persists it -- confirmed on disk and via a follow-up `record get`. Zero records in the entire spec corpus currently carry a `meta` key, including the four types RFC srs#433 (rfc-decision-6fc7e142/628cf6c4) named as the properties-to-meta migration's targets, suggesting this has never round-tripped through the CLI for any type.",
+    "evidence": [
+      "srs#705: needed to record, on each mechanism leaf whose derived-from edge to a retired subsection stub was dropped, why it was dropped (no derived-from/supersedes ancestor to re-target to) -- the unit's own acceptance criteria named `meta` as where that reason belongs",
+      "record get -> add meta -> record update -> record get round-trip on mechanism-02ca457f: ok:true both ways, updatedAt bumped, meta absent from both the API response and the on-disk JSON",
+      "grep -rl '\"meta\"' srs/records/ across the whole corpus: 0 hits"
+    ],
+    "body": "Parked per CLAUDE.md's tool-gap rule rather than hand-edited into the JSON file. Filed as srs-rust#1014. srs#705 dropped the affected derived-from edges anyway (required regardless, since a derived-from target must resolve and the stub was being deleted) but could not record the reason on the leaf; the reason is preserved here and in the srs#705 PR body instead. The next unit that needs `meta` to actually work should treat srs-rust#1014 as its starting evidence."
+  },
+  "createdAt": "2026-09-09T15:09:59.731008373+00:00",
+  "updatedAt": "2026-09-09T15:09:59.731014158+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
