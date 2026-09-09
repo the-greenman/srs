@@ -1,0 +1,23 @@
+{
+  "instanceId": "4e440d2b-2c9f-448a-b622-804b57719d3d",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Pin advance: SRS_RUST_CLI_TAG -> v0.1.0-build.360",
+    "summary": "Bumped SRS_RUST_CLI_TAG in .github/workflows/release-drift.yml from v0.1.0-build.357 to v0.1.0-build.360 (carrying srs-rust#1001 and #1005) and re-rendered with publish-spec.mjs. Render delta: none -- docs/spec/** byte-identical between the two builds. All named gates (validate-all.mjs, check-release-drift.mjs, check-spec-coherence.mjs, check-spec-language.mjs, tests/guards/run.mjs) pass by exit code; srs repo validate reports 0 errors, 12 warnings (unchanged baseline).",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs#706",
+      "srs#580",
+      "srs-rust#1004"
+    ],
+    "body": "Dispatched from the srs gate:pool queue via srs#580/#706 (2026-09-09 13:29Z claim). Independent of PR #704 per #706's own conditional text -- verified #704 was still open/unmerged at claim time. Cell: Repository. Fresh worktree from origin/master, unshallowed per carried-context-6c231a2a before trusting any git-history-reading check."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-09T13:59:34.785710029+00:00",
+  "updatedAt": "2026-09-09T13:59:54.890362245+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
