@@ -30,8 +30,8 @@ function runScript(script, ...args) {
   return { code: r.status, out: `${r.stdout ?? ""}${r.stderr ?? ""}` };
 }
 
-/** Run a check script against a fixture root; returns {code, out}. */
-const runCheck = (script, root) => runScript(script, root);
+/** Run a check script against a fixture root, plus any extra args; returns {code, out}. */
+const runCheck = (script, root, ...extraArgs) => runScript(script, root, ...extraArgs);
 
 function expect(label, { code, out }, { exit, contains = [] }) {
   const problems = [];
@@ -709,17 +709,43 @@ async function publicationReachabilityCases(root) {
   });
   await rm(join(repo, "records/inv.json"));
 
-  // `composition.json` admits four source kinds and this guard resolves one. The other three are
-  // refused by name rather than skipped: an unresolved section can only shrink the reachable set,
-  // so it surfaces as a false violation — with the wrong reason attached, which is how a guard
-  // quietly stops covering what it was written for.
-  const containerSubset = view(TITLE_FIELD);
-  containerSubset.sections[0].source = { type: "container-subset", containerId: "00000000-0000-4000-8000-000000000602" };
-  await writeJson(join(repo, "package/compositions/fixture-view.json"), containerSubset);
+  // `composition.json` admits two source kinds (`discovery-query`, `container-subset`, RFC-042
+  // Change G) and this guard resolves both. A third, unknown kind is refused by name rather than
+  // skipped: an unresolved section can only shrink the reachable set, so it surfaces as a false
+  // violation — with the wrong reason attached, which is how a guard quietly stops covering what
+  // it was written for.
+  const unknownKind = view(TITLE_FIELD);
+  unknownKind.sections[0].source = { type: "bogus-kind", containerId: "00000000-0000-4000-8000-000000000602" };
+  await writeJson(join(repo, "package/compositions/fixture-view.json"), unknownKind);
   expect("refuses a section source kind it cannot resolve", runCheck("check-publication-reachability.mjs", root), {
     exit: 1,
-    contains: ["container-subset", "this guard does not resolve"],
+    contains: ["bogus-kind", "this guard does not resolve"],
   });
+
+  // A container-subset section IS resolved: its root is the named Container's own anchor/root
+  // record, and reachability then descends `contains` from there like any other surface.
+  const containerId = "00000000-0000-4000-8000-000000000603";
+  const containerSubset = view(TITLE_FIELD);
+  containerSubset.sections[0].source = { type: "container-subset", containerId };
+  await writeJson(join(repo, "package/compositions/fixture-view.json"), containerSubset);
+  expect("a container-subset section with an unresolved containerId is refused", runCheck("check-publication-reachability.mjs", root), {
+    exit: 1,
+    contains: [containerId, "does not resolve to any containers"],
+  });
+  // Anchors on the existing `records/root.json` (ID(1)) rather than a fresh record — it is no
+  // longer matched by any discovery-query now that the section's source kind changed above, so
+  // reusing it here means "reachable" in this case can only be true via the container-subset
+  // resolution being added, not a discovery-query surface left over from an earlier case.
+  await writeJson(join(repo, "containers/fixture-container.json"), {
+    containerId,
+    anchorInstanceId: ID(1),
+    rootInstanceIds: [ID(1)],
+  });
+  expect("a container-subset section resolves via the named Container's anchor", runCheck("check-publication-reachability.mjs", root), {
+    exit: 0,
+    contains: ["✓ Every discovered record is reachable"],
+  });
+  await rm(join(repo, "containers/fixture-container.json"));
 
   // A discovery-query may also filter by lifecycle state or container, and the renderer applies
   // those. Ignoring them is fail-OPEN, not fail-closed: a section excluding `archived` records
@@ -2435,6 +2461,55 @@ async function programmeConformanceCases(root) {
   });
 }
 
+// ---- srs#693 — part-container-membership --check: a Part's declared membership matches its ------
+// ---- computed contains-subtree -------------------------------------------------------------------
+async function partContainerMembershipCases(root) {
+  console.log("srs#693 — part-container-membership --check: declared vs computed contains-subtree");
+
+  const P = "00000000-0000-4000-8000-0000000000f1"; // the Part concept (container anchor)
+  const C1 = "00000000-0000-4000-8000-0000000000f2"; // direct child
+  const C2 = "00000000-0000-4000-8000-0000000000f3"; // grandchild, reached via C1
+  const containerId = "00000000-0000-4000-8000-0000000000f4";
+  const concept = (id, title) => ({
+    instanceId: id, typeId: "2a000004-0000-4000-a000-000000000004", typeVersion: 1,
+    typeNamespace: "com.semanticops.spec", typeName: "concept",
+    fieldValues: { title },
+  });
+  const rel = (n, source, target) => ({
+    relationId: `00000000-0000-4000-8000-0000000000${n}`, relationType: "contains",
+    sourceInstanceId: source, targetInstanceId: target,
+  });
+  const containerFile = join(root, "srs/containers/part-p.json");
+
+  await writeJson(join(root, "srs/manifest.json"), { container: { memberInstanceIds: [P] } });
+  await writeJson(join(root, "srs/records/concepts/p.json"), concept(P, "Part P"));
+  await writeJson(join(root, "srs/records/concepts/c1.json"), concept(C1, "Child"));
+  await writeJson(join(root, "srs/records/concepts/c2.json"), concept(C2, "Grandchild"));
+  await writeJson(join(root, "srs/relations/r1.json"), rel("g1", P, C1));
+  await writeJson(join(root, "srs/relations/r2.json"), rel("g2", C1, C2));
+  await writeJson(containerFile, { containerId, anchorInstanceId: P, memberInstanceIds: [C1, C2] });
+
+  expect("accepts declared membership matching the computed contains-subtree", runCheck("part-container-membership.mjs", root, "--check"), {
+    exit: 0,
+    contains: ["match", "✓ all 1 Part containers match"],
+  });
+
+  // Perturb: drop the grandchild from declared membership — a real edit that predates a new edge
+  // deeper in the tree, exactly the drift class this guard exists to catch.
+  await writeJson(containerFile, { containerId, anchorInstanceId: P, memberInstanceIds: [C1] });
+  expect("rejects declared membership that has drifted from the computed subtree", runCheck("part-container-membership.mjs", root, "--check"), {
+    exit: 1,
+    contains: ["DRIFT", "1 Part container(s) drifted"],
+  });
+
+  // Restore — green again.
+  await writeJson(containerFile, { containerId, anchorInstanceId: P, memberInstanceIds: [C1, C2] });
+  expect("accepts membership once restored", runCheck("part-container-membership.mjs", root, "--check"), {
+    exit: 0,
+    contains: ["✓ all 1 Part containers match"],
+  });
+}
+
 const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
 try {
   await fieldNameCases(join(root, "field-name"));
@@ -2460,6 +2535,7 @@ try {
   await attributionCellCases(join(root, "attribution-cell"));
   await repositoryCellCases(join(root, "repository-cell"));
   await programmeConformanceCases(join(root, "programme-conformance"));
+  await partContainerMembershipCases(join(root, "part-container-membership"));
 } finally {
   await rm(root, { recursive: true, force: true });
 }

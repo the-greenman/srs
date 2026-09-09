@@ -1,42 +1,28 @@
 # Semantic Record System Specification
 
-## Specification
+## Reading this specification
 
-### Purpose and Scope
+### Reading this specification
 
-#### What this specification defines
+**Canonical Key**: part:reading-this-specification
 
-**Content**: The Semantic Record System (SRS) specification defines an interoperable standard for semantic field and type definitions, records, relations, and the mechanisms by which these artefacts are created, shared, versioned, and distributed across independent implementations.
+**Description**: The nine Parts read front to back: notation, RFC 2119 keywords, and the reading order the rest of the document assumes.
 
-This specification covers:
+#### Purpose and Scope
 
-- **Field** — atomic reusable semantic unit
-- **Type** — named composition of fields for a specific semantic object type
-- **Record** — instantiated type with field values; two semantic maturity tiers (Note, Record)
-- **Relation** — first-class typed link between records
-- **Container** — grouping boundary for record collections
-- **Distribution** — Package, Reference, Lineage, Provenance
-- **Extensions** — optional, independently adoptable capabilities declared by conforming implementations
-
-
-#### Foundational values and development phase
-
-**Content**: Content relocated to mechanism leaves under the Foundational tension concept (RFC-042 Change B, srs#562/#687). See derived-from.
-
-
-#### What this specification does not define
+##### What this specification does not define
 
 **Content**: - **Session** — live collaborative process model (future version)
 - **Registry protocol** — how registries communicate, authenticate, or federate; this specification defines data shapes only
 - **Universal semantic ontology** — domain-specific vocabularies are the responsibility of namespace authors
 
 
-#### Relationship to implementing systems
+##### Relationship to implementing systems
 
 **Content**: This specification is implementation-neutral. Implementations are expected to validate inputs against these schemas at their system boundaries. The specification does not constrain persistence technology, API design, UI rendering, or prompt assembly strategy.
 
 
-#### Extension conformance model
+##### Extension conformance model
 
 **Content**: Implementations declare conformance as:
 
@@ -86,7 +72,7 @@ Example declaration: `SRS Core + ext:lifecycle + ext:protocol + ext:views-l1 + e
 | Cross-system Relation interoperability | `ext:recommended-relations` |
 
 
-##### A core conformance declaration
+###### A core conformance declaration
 
 **Content**: The form an implementation fills in:
 
@@ -96,16 +82,31 @@ SRS Core [+ ext:<name> ...]
 
 
 
+##### What this specification defines
 
-### Namespace Format
+**Content**: The Semantic Record System (SRS) specification defines an interoperable standard for semantic field and type definitions, records, relations, and the mechanisms by which these artefacts are created, shared, versioned, and distributed across independent implementations.
 
-#### Convention
+This specification covers:
+
+- **Field** — atomic reusable semantic unit
+- **Type** — named composition of fields for a specific semantic object type
+- **Record** — instantiated type with field values; two semantic maturity tiers (Note, Record)
+- **Relation** — first-class typed link between records
+- **Container** — grouping boundary for record collections
+- **Distribution** — Package, Reference, Lineage, Provenance
+- **Extensions** — optional, independently adoptable capabilities declared by conforming implementations
+
+
+
+#### Namespace Format
+
+##### Convention
 
 **Content**: Namespaces are dot-separated identifiers using lowercase alphanumeric characters and hyphens.
 
 Example: Namespace grammar, with namespaces that satisfy it.
 
-##### Namespace grammar, with namespaces that satisfy it
+###### Namespace grammar, with namespaces that satisfy it
 
 **Content**: The grammar, then namespaces that satisfy it:
 
@@ -125,12 +126,12 @@ org.cooperative-name
 
 
 
-#### Reserved namespaces
+##### Reserved namespaces
 
 **Content**: `core` is reserved for definitions maintained by the SRS standard. Implementations must not allow user-created definitions in the `core` namespace.
 
 
-#### Reference format
+##### Reference format
 
 **Content**: A specific version of a definition is referenced using the canonical form:
 
@@ -138,7 +139,7 @@ Example: the canonical reference form, with references that satisfy it.
 
 The `/` and `@` characters are reserved separators. They must not appear within a namespace component or a name.
 
-##### The canonical reference form, with references that satisfy it
+###### The canonical reference form, with references that satisfy it
 
 **Content**: The form, then references that satisfy it:
 
@@ -155,7 +156,7 @@ com.acme.hr/headcount_impact@3
 
 
 
-#### Name convention
+##### Name convention
 
 **Content**: Field and Type names are programmatic keys in `snake_case`. Names are stable within a namespace and version lineage. A new name means a new definition.
 
@@ -163,11 +164,11 @@ com.acme.hr/headcount_impact@3
 
 
 
-### Schema Notation
+#### Schema Notation
 
 **Content**: Types are described using TypeScript-style notation. Optional fields are marked with `?`. All `UUID` values are RFC 4122 UUID strings. All `ISO8601` values are datetime strings with timezone offset. `integer` means a positive integer unless otherwise noted.
 
-#### Version semantics
+##### Version semantics
 
 **Content**: Version numbers are positive integers scoped to a definition's UUID lineage.
 
@@ -186,15 +187,24 @@ When in doubt: if a downstream consumer's AI extraction, validation, or governan
 
 
 
-### Foundation Group (Core)
+
+## Foundations
+
+### Foundations
+
+**Canonical Key**: part:foundations
+
+**Description**: The core entity model a repository is built from: Field, Type, Vocabulary and Term, record tiers, Relation, and Container. Every later Part presupposes these.
+
+#### Foundation Group (Core)
 
 **Content**: The Foundation group is required for all conforming implementations.
 
-#### Supporting types
+##### Supporting types
 
 **Content**: Content relocated to mechanism/design-note leaves under the Validation and AI guidance concept(s) (RFC-042 Change B, srs#562). See derived-from.
 
-##### The `ValidationRule` shape
+###### The `ValidationRule` shape
 
 **Content**: `ValidationRule`, in pseudo-IDL:
 
@@ -207,7 +217,7 @@ When in doubt: if a downstream consumer's AI extraction, validation, or governan
 ```
 
 
-##### The `AiGuidanceExample` shape
+###### The `AiGuidanceExample` shape
 
 **Content**: `AiGuidanceExample`, in pseudo-IDL:
 
@@ -220,7 +230,7 @@ When in doubt: if a downstream consumer's AI extraction, validation, or governan
 ```
 
 
-##### The `AiGuidance` shape
+###### The `AiGuidance` shape
 
 **Content**: `AiGuidance`, in pseudo-IDL:
 
@@ -235,11 +245,11 @@ When in doubt: if a downstream consumer's AI extraction, validation, or governan
 
 
 
-#### Field
+##### Field
 
 **Content**: Content relocated to mechanism/design-note leaves under the Field, Field type, and Vocabulary concept(s) (RFC-042 Change B, srs#562). See derived-from.
 
-##### The `FieldType` shape
+###### The `FieldType` shape
 
 **Content**: `FieldType`, in pseudo-IDL:
 
@@ -278,7 +288,7 @@ FieldType {
 ```
 
 
-##### The two value sources a closed string Field may declare
+###### The two value sources a closed string Field may declare
 
 **Content**: The two declarations, exactly one of which a closed string Field carries:
 
@@ -290,7 +300,7 @@ vocabularyRef?: UUID       // LINEAGE (rfc-decision-c8704763) — bind to a name
 
 
 
-#### Generated reference: `Field`
+##### Generated reference: `Field`
 
 **Referenced Type Id**: 4c000001-0000-4000-a000-000000000001
 
@@ -337,11 +347,11 @@ field {
 ```
 
 
-#### Type
+##### Type
 
 **Content**: Content relocated to mechanism leaves under the Type concept (RFC-042 Change B, srs#562). See derived-from.
 
-##### The two lifecycle declaration forms on a Type
+###### The two lifecycle declaration forms on a Type
 
 **Content**: The inline form and the referenced form:
 
@@ -356,7 +366,7 @@ lifecycleRef?: UUID        // LINEAGE reference (rfc-decision-c8704763) — reso
 
 
 
-#### Generated reference: `Type`
+##### Generated reference: `Type`
 
 **Referenced Type Id**: 4c000002-0000-4000-a000-000000000002
 
@@ -437,7 +447,7 @@ field-assignment {
 ```
 
 
-#### Record tiers
+##### Record tiers
 
 **Content**: Content relocated to mechanism/design-note leaves under the Semantic maturity tier, Note, Source reference, Field values, and Record concept(s) (RFC-042 Change B, srs#562). See derived-from.
 
@@ -468,7 +478,7 @@ Implementations may automate graduation suggestions by matching section or field
 | `inspired-by` | *(no canonical edge)* | — | — |
 
 
-##### The `FieldValue` union
+###### The `FieldValue` union
 
 **Content**: `FieldValue`, in pseudo-IDL:
 
@@ -481,7 +491,7 @@ type FieldValue = string | number | boolean
 
 
 
-#### Generated reference: `NoteSection`
+##### Generated reference: `NoteSection`
 
 **Referenced Type Id**: 4c000015-0000-4000-a000-000000000015
 
@@ -512,7 +522,7 @@ note-section {
 ```
 
 
-#### Generated reference: `Note`
+##### Generated reference: `Note`
 
 **Referenced Type Id**: 4c000016-0000-4000-a000-000000000016
 
@@ -547,7 +557,7 @@ note {
 ```
 
 
-#### Generated reference: `SourceReference`
+##### Generated reference: `SourceReference`
 
 **Referenced Type Id**: 4c000014-0000-4000-a000-000000000014
 
@@ -582,7 +592,7 @@ source-reference {
 ```
 
 
-#### Generated reference: `Record`
+##### Generated reference: `Record`
 
 **Referenced Type Id**: 4c000017-0000-4000-a000-000000000017
 
@@ -639,7 +649,7 @@ record {
 | Producing a more detailed version from a rough original | New Record + `refines` |
 
 
-#### Relation
+##### Relation
 
 **Content**: A first-class typed link between instances. Relations allow implementations to construct semantic graphs for navigation, analysis, projection, and reasoning.
 
@@ -689,7 +699,7 @@ Custom types not covered by these should use `namespace/name` format (e.g. `com.
 
 
 
-#### Generated reference: `Relation`
+##### Generated reference: `Relation`
 
 **Referenced Type Id**: 4c000018-0000-4000-a000-000000000018
 
@@ -724,12 +734,12 @@ relation {
 ```
 
 
-#### Container
+##### Container
 
 **Content**: Content relocated to mechanism leaves under the Container concept (RFC-042 Change B, srs#562). See derived-from.
 
 
-#### Generated reference: `Container`
+##### Generated reference: `Container`
 
 **Referenced Type Id**: 4c000019-0000-4000-a000-000000000019
 
@@ -774,11 +784,11 @@ container {
 ```
 
 
-#### Vocabulary and Term
+##### Vocabulary and Term
 
 **Content**: Content relocated to mechanism/design-note leaves under the Vocabulary and Relation type definition concept(s) (RFC-042 Change B, srs#562). See derived-from.
 
-##### The `VocabularyEntry` substrate contract
+###### The `VocabularyEntry` substrate contract
 
 **Content**: `VocabularyEntry`, in pseudo-IDL:
 
@@ -802,7 +812,7 @@ container {
 
 
 
-#### Generated reference: `Vocabulary`
+##### Generated reference: `Vocabulary`
 
 **Referenced Type Id**: 4c00001e-0000-4000-a000-00000000001e
 
@@ -847,7 +857,7 @@ vocabulary {
 ```
 
 
-#### Generated reference: `Term`
+##### Generated reference: `Term`
 
 **Referenced Type Id**: 4c00001c-0000-4000-a000-00000000001c
 
@@ -892,7 +902,7 @@ term {
 ```
 
 
-#### Generated reference: `Lifecycle`
+##### Generated reference: `Lifecycle`
 
 **Referenced Type Id**: 4c00001f-0000-4000-a000-00000000001f
 
@@ -937,7 +947,7 @@ lifecycle {
 ```
 
 
-#### Generated reference: `RelationTypeDefinition`
+##### Generated reference: `RelationTypeDefinition`
 
 **Referenced Type Id**: 4c000023-0000-4000-a000-000000000023
 
@@ -989,11 +999,573 @@ relation-type-definition {
 
 
 
-### Distribution Group (Core)
+#### Type
+
+**Canonical Key**: type:com.semanticops.srs/type
+
+**Description**: A named, versioned, UUID-identified composition of Fields describing one kind of semantic object. A Type declares which Fields participate, in what order, and which are required — and nothing more about them, because Field semantics are the Field's. Its effective field list is its own declared assignments, plus inherited ones when it specialises another Type. A Type is a definition, not an instance: what conforms to it is a Record.
+
+**Notes**: Extensions hang optional facets off the Type without changing that: a lifecycle declaration, cross-field rules, a base Type to specialise, an identity field.
+
+##### Why "Type" not "Module"
+
+**Content**: 
+"Module" in v1 was accurate but implied a software analogy that didn't communicate the concept well to non-technical practitioners. "Module" suggests a composable software unit. "Type" says what it actually is: a type definition for a semantic object. A Decision is a Type. A Task is a Type. A Risk is a Type.
+
+The rename also makes the Record/Type relationship legible by analogy: a Record is an instance of a Type, just as a value is an instance of a type in any typed system.
+
+
+##### Field.name uniqueness within a Type's effective field set
+
+**Number**: I-131
+
+**Constraint**: Within a Type's effective field set — its own `fields`, plus fields contributed through `extendsTypeId` — every referenced `Field.name` MUST be distinct. An implementation MUST reject a Type that violates this at definition time, not at instance time. (RFC-039 [R4])
+
+
+##### Field assignment
+
+**Canonical Key**: record:concepts/field-assignment
+
+**Description**: The entry by which a Type admits one Field: a reference to the Field by id, its declared composition order within the Type, whether it is required before a Record can be logged, and an optional display label. It is the exact boundary between what belongs to the Field and what belongs to the Type — the assignment may say where the Field sits and whether it must be filled, and may never say what it means. `displayLabel` is strictly rendering: needing a materially different label means needing a different Field.
+
+**Notes**: `order` is structure, not presentation. It feeds canonical serialisation and supplies the render default; a View may override it for display.
+
+###### FieldAssignment.displayLabel and FieldAssignment.displayHint are for…
+
+**Number**: 1
+
+**Constraint**: `FieldAssignment.displayLabel` and `FieldAssignment.displayHint` are for rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or validation. Extended by RFC-036 [CR-036-20]: they must also not affect a Record's Relations or its Discovery Text Projection (`ext:discovery`). Two repositories differing only in these values must produce identical validation results and identical Discovery output.
+
+
+
+##### `FieldAssignment`
+
+**Content**: A named, versioned composition of Fields for a specific semantic object type.
+
+See the generated reference immediately below for `Type`'s current property table (including the extension-owner column — RFC-031 OQ1), optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger) — this prose no longer hand-duplicates the property list, including the extension-owned facets it could previously only gesture at as comments.
+
+
+##### FieldAssignment
+
+**Content**: A Field reference within a Type. Declares this field's composition order and requiredness within the Type, without redefining field semantics.
+
+See the `FieldAssignment` appendix table in the generated reference below for the current property list.
+
+`displayLabel` is strictly for rendering. If a materially different label or meaning is needed, a distinct Field with its own lineage is required.
+
+Cardinality is a property of the referenced Field (`fieldType.cardinality`, RFC-032 [R4]); the former assignment-level `repeatable`/`minItems`/`maxItems` trio is removed (RFC-039 [R7], I-134).
+
+The Type's effective field list is `fields[]` unless `ext:type-inheritance` is declared and the Type extends another Type. In that case, the effective field list also includes inherited fields as defined by `ext:type-inheritance`.
+
+**AI guidance composition order** (recommended):
+
+1. Type framing (`Type.aiGuidance.extraction`) — establishes the semantic object type
+2. View framing (`View.aiGuidance.extraction`, if `ext:views-l1` is in use) — workflow-specific context
+3. Field extraction guidance (`Field.aiGuidance.extraction`)
+4. Negative guidance (`Field.aiGuidance.negativeGuidance`)
+5. Examples (`Field.aiGuidance.examples`)
+
+This is a recommended default, not a required invariant. Implementations that compose differently will produce different AI behaviour from the same definitions.
+
+**On instance migration when a Type version changes:**
+A Record binds to a specific `typeVersion` at creation time. Existing Records do not automatically migrate when a new Type version is published. Conformance is measured against the version the Record was instantiated under. When a Record is migrated and exchanged, it should carry the version it now conforms to, and the original Record should be preserved and linked via a `supersedes` Relation.
+
+
+##### `lifecycleRef` — referencing shared lifecycle definitions
+
+**Content**: When `ext:lifecycle` is in use, a Type declares a lifecycle in exactly one of two mutually exclusive forms (V7):
+
+Example: the two lifecycle declaration forms on a Type.
+
+Declaring both is a validation error. An inline lifecycle cannot extend; use `lifecycleRef` when the same state machine is needed across multiple Types.
+
+
+
+#### Type specialisation
+
+**Canonical Key**: record:concepts/type-specialisation
+
+**Description**: Single inheritance between Types: a specialising Type names one base Type, gains its effective field list, and adds its own. The governing constraint is substitutability — a system that knows the base Type but not the specialisation must still be able to read the inherited fields and should preserve the unknown ones instead of discarding them. A specialisation may therefore tighten an inherited optional field to required, but never relax a required one, and may never alter Field semantics.
+
+**Notes**: Inheritance chains must be acyclic (Invariant 39). Only some properties cascade up the ancestor chain — the effective identity field does; the explicit field order does not.
+
+##### Type.extendsTypeId, when present, must reference a valid Type.id.
+
+**Number**: 39
+
+**Constraint**: `Type.extendsTypeId`, when present, must reference a valid `Type.id`. Inheritance chains must be acyclic; a Type may not directly or transitively extend itself.
+
+
+##### specializing Type must not declare a fieldId in its own fields[] that…
+
+**Number**: 40
+
+**Constraint**: A specializing Type must not declare a `fieldId` in its own `fields[]` that duplicates any `fieldId` inherited from its base Type or any ancestor Type.
+
+
+##### When Type.fieldOrder is present, it must contain exactly the set of…
+
+**Number**: 41
+
+**Constraint**: When `Type.fieldOrder` is present, it must contain exactly the set of field UUIDs in the Type's effective field list. No UUID may appear more than once, and no UUID from the effective field list may be absent.
+
+
+##### Every fieldId in Type.fieldAssignmentOverrides[] must reference a…
+
+**Number**: 42
+
+**Constraint**: Every `fieldId` in `Type.fieldAssignmentOverrides[]` must reference a field inherited from the base Type or an ancestor Type. Overrides must not reference fields declared in the specializing Type's own `fields[]`, must not alter Field semantics, and must not relax an inherited required field from `true` to `false`.
+
+
+##### When ext:type-inheritance is declared, Package.packageDependencies must…
+
+**Number**: 43
+
+**Constraint**: When `ext:type-inheritance` is declared, `Package.packageDependencies` must include a `Reference` for every Type in the transitive closure of base Types for any Type in `Package.types[]`. If `mode === "bundled"`, all such base Types must be present in `types[]`.
+
+
+##### Why Type inheritance is conservative
+
+**Content**: 
+`ext:type-inheritance` adds one formal mechanism: a Type may specialize one base Type and still be processable as that base Type. This solves the common case where a domain-specific Type needs to add fields to a shared Type without duplicating the whole definition.
+
+The extension is intentionally narrow. It supports inherited fields, added fields, explicit ordering, and presentation/workflow overrides for inherited fields. It does not let a specializing Type change Field semantics or relax base requirements. That keeps the central promise intact: a system that understands the base Type can still process the base portion of a specialized Record.
+
+`Type.fieldOrder` is a Type-level composition ordering declaration over the full effective field list, including inherited fields. `View.fieldViews[].order` is the sole View-level presentation and export ordering mechanism; it orders both FieldView and RecordPropertyView rows. Validators should apply the `fieldAssignmentOverrides` inherited-field restriction only to `fieldAssignmentOverrides`, not to `Type.fieldOrder`.
+
+---
+
+
+##### validationRules are not inherited; a derived Type's own validationRules are the complete set
+
+**Number**: I-97
+
+**Constraint**: `validationRules` are not inherited. A Type's `validationRules` array is the complete and exclusive set of cross-field rules evaluated for Records of that Type. When `ext:type-inheritance` is in use and Type B extends Type A, Type A's `validationRules` MUST NOT be evaluated for Records of Type B unless Type B's own `validationRules` explicitly restates them. (RFC-019 R11.)
+
+
+##### The inheritance floor and the documentation-only rule
+
+**Content**: Metamodel v1.1.0 (RFC-040 Change A / Change C) models extension-contributed Type facets as separate metamodel Types extending the core via `ext:type-inheritance`, and gives `FieldAssignment` a per-context `description`. The owner's 2026-07-31 decision on srs#273 accepted both, each with a stated cost that this note exists to make a conscious acceptance rather than something a fresh implementer discovers by accident.
+
+**The inheritance floor.** Owner decision, 2026-07-31 (srs#273):
+
+> (a) makes the metamodel package depend on `ext:type-inheritance`, so any independent third-party implementation that wants to consume the metamodel *as records* must implement inheritance merging. That raises the floor for a from-scratch sovereign reader. Accepted — inheritance is core to the extensibility promise regardless — but it must be a conscious acceptance written into the design note, not an accident discovered later by an implementer.
+
+**The documentation-only rule.** Owner decision, 2026-07-31 (srs#273), on `FieldAssignment.description`:
+
+> The slot explains what a Field means *in this context*; it never changes what the Field means. "Field semantics are immutable — they cannot be overridden when used inside a Type" is one of the strongest anti-lock-in invariants in SRS: it is what makes cross-community Field reuse trustworthy. This is the first slot that could be abused to erode it. The RFC/design note must state: on conflict, the Field's own semantics and `aiGuidance` win, and a contextual description that contradicts them is a data error, not an override.
+
+**Three-layer forward-compatibility policy.** Ruled on srs#237, 2026-08-20, consolidating srs-rust#778 (engine) and the srs#273 Decision 1 extension mechanism into one normative statement per definition-layer entity:
+
+| Layer | Policy | Escape hatch |
+|---|---|---|
+| Definition (Field, Type, View) | reject-unknown | none — extend by inheritance |
+| Substrate (VocabularyEntry, Term, RelationTypeDefinition) | reject-unknown | `properties` bag |
+| Instance (Note, Record) | tolerate | `meta` bag |
+
+The stated reason for the asymmetry: an instance's `meta` cannot change what the record *means*; an unknown property on a **definition** can silently change what every downstream record means. Definitions are the trust boundary.
+
+**Forward framing: cell linkage as a retrieval signal, not an ontology.** The owner-shared decision-coherence research synthesis (2026-08-23, srs#273 comment; Tier-0 note "Design Jurisprudence: the neighbourhood role of the map") repositions what a location in the Pattern Grid buys: not an answer, but a neighbourhood of prior judgements a new decision must reckon with. Cell linkage is **one retrieval signal among several** — alongside explicit links, semantic similarity, shared concerns, and scope — never the ontology of truth. The minimal relation set stays deliberately small: `consistent_with`, `distinguishes`, `conflicts_with`, `supersedes` around decisions, plus `supports` / `challenges` between decisions and principles; `generalises` is inferred from a pattern of decisions, never itself asserted. No decision ontology beyond this set is sketched here. Retrieval favours precision over completeness — the minimum useful neighbourhood, not everything potentially relevant, or the retrieval mechanism recreates the context-bloat failure it exists to avoid. Today's actual significance gate — which decisions are worth capturing at all — is the owner-ruling bottleneck, named explicitly rather than left implicit: the charter's decision records are curated by what the owner chooses to rule on, and that curation is what keeps the record from drowning in undifferentiated capture.
+
+
+##### `identityFieldId`
+
+**Content**: **Required for**: Type libraries that need formal specialization while preserving base-Type processability.
+
+Defines single inheritance for Types. A specializing Type inherits the fields and semantics of a base Type, may add fields, and remains processable as the base Type by systems that know the base Type but not the specialization.
+
+When `ext:type-inheritance` is in use, `Type` gains:
+
+Example: the properties `ext:type-inheritance` adds to a Type.
+
+
+##### identityFieldId
+
+**Content**: Names one field, from the Type's effective field set, as the record's identity/display field — the field a conformant implementation SHOULD use to resolve a Record's display label (e.g. in list, tree, discovery, and container views), in preference to any implementation-specific heuristic (Rule [N+36]).
+
+`identityFieldId` MUST reference a `fieldId` present in the Type's effective field set (Rule [N+33]).
+
+**Inheritance is cascading, unlike `fieldOrder`.** The *effective* `identityFieldId` of a Type is its own `identityFieldId`, if declared; otherwise, the effective `identityFieldId` of its base Type, resolved transitively up the ancestor chain; otherwise absent (Rule [N+32], [N+34]). A Type overrides an inherited effective `identityFieldId` by declaring its own, which need not match the base Type's and MAY point at a field the Type itself adds. This differs from `fieldOrder`, which is read only from the Type being resolved and does not search the ancestor chain when absent — `identityFieldId`'s inheritance rule is specific to this property, not a reuse of `fieldOrder`'s behavior.
+
+`identityFieldId` scopes to Tier 2 Records only; it has no defined meaning for Tier 0 (Note) instances, which carry no Type binding (Rule [N+35]).
+
+**Interaction with `DocumentSection.titleFieldId` (`ext:views-l2`).** For any `DocumentSection` that does not declare `titleFieldId` — whether that section's field content renders via the Default Rendering Baseline or a dispatched L1 View — implementations SHOULD render the per-record heading using the value of the field named by the record's Type's effective `identityFieldId`, if present, in place of omitting the heading. `titleFieldId`, when declared, MUST continue to take precedence for that section's per-record heading (Rule [N+37]; see `ext:views-l2` § Heading Hierarchy).
+
+
+##### `FieldAssignmentOverride`
+
+**Content**: Overrides presentation or workflow constraints for an inherited Field in a specializing Type. It does not change the Field's semantics.
+
+Example: the `FieldAssignmentOverride` shape.
+
+`displayLabel` and `displayHint` are presentation-only. `required` may tighten an inherited optional field (`false` to `true`) for the specializing Type. It must not relax an inherited required field (`true` to `false`), because a Record instantiated against the specializing Type must remain valid when processed as the base Type.
+
+The effective field list for a specializing Type is the inherited effective field list of its base Type plus the specializing Type's own `fields[]`. A specializing Type must not duplicate an inherited `fieldId` in its own `fields[]`.
+
+Example:
+
+Example: a governance decision Type specialising a core decision Type.
+
+A system that knows `core/decision` but not `org.example/governance_decision` can still read the inherited decision fields. The specializing fields are unknown extension content to that system and should be preserved rather than discarded.
+
+
+
+#### Stable identity
+
+**Content**: An SRS entity carries a UUID minted once, at creation, that does not change afterward. A copy, an export, an import, or a rename for display MUST NOT change an entity's UUID. Identity is declared on the entity itself, never derived from a file path, a directory position, or a storage history.
+
+A UUID conflict between two entities is a fatal error. A loader MUST NOT resolve it by precedence, and MUST NOT pick one entity as the winner over the other: doing so would discard whichever identity claim lost.
+
+Changing what an entity is at its root means minting a new UUID. A materially different entity does not reuse an old UUID: every existing reference to that UUID already points at the entity it used to be.
+
+
+
+## Instances
+
+### Instances
+
+**Canonical Key**: part:instances
+
+**Description**: The instance layer: Notes and Records as the two record tiers, and how a Record instantiates a Type through typed field values.
+
+#### Instance
+
+**Content**: SRS separates two id spaces. A definition, such as a Field or a Type, is identified by a UUID together with namespace, name, and version: the same UUID names a lineage across versions, and version selects one point in it. An instance, such as a Note or a Record, is identified by its UUID alone, carries no version, and belongs to no lineage: it is a single piece of captured content.
+
+A Relation connects two instance UUIDs, never a definition UUID. A Container scopes a set of instances, never definitions. A Container's own id is a third kind of id: it MUST NOT appear as a Relation's source or target.
+
+Confusing a definition's UUID with an instance's UUID is a recurring correction in this specification. Reading a `typeId` as an instance id, or an `instanceId` as a definition id, produces a reference that resolves to the wrong kind of thing.
+
+
+
+## Structure
+
+### Structure
+
+**Canonical Key**: part:structure
+
+**Description**: How instances connect and order themselves: the Relation model, the contains tree, and the precedes chain that gives a repository its semantic sequence.
+
+#### Relation type definition
+
+**Canonical Key**: record:concepts/relation-type-definition
+
+**Description**: What an edge's type string means, installed as its own entity: the key as stored on an edge, a required label and description, a structural category, which end is source and which is target, the key of its display-only inverse, and optional constraints such as irreflexivity. Relation types form a single flat, repository-global set with no per-Type scoping, and a relation whose type does not resolve in it is a validation error.
+
+**Notes**: It is a vocabulary-substrate specialisation that tightens label and description from optional to required. The canonical seven ship as installed definitions in the core package; custom types use `namespace/name` form and supply their own.
+
+##### Relation taxonomy usage
+
+**Content**: 
+Use the canonical relation type strings installed in the core package (formerly `ext:recommended-relations`, retired by RFC-005) for common relationships. Reserve custom `namespace/name` format for domain-specific relations.
+
+**Composition example** (project planning):
+```
+Stage A  --contains-->  Task B
+Task B   --contains-->  Subtask C
+```
+
+**Derivation example** (Protocol output):
+```
+Decision Record  --derived-from-->  Options Analysis Note
+Options Analysis --derived-from-->  Brain Dump Note
+```
+
+**Governance example**:
+```
+Policy v2  --supersedes-->  Policy v1
+Amendment  --com.example.gov/amends-->  Policy v2   (custom namespace/name type)
+```
+
+**Evidence example**:
+```
+Workshop photo  --evidences-->  Stage 1 completion claim
+Transcript seg  --evidences-->  Decision rationale
+```
+
+Non-governance projects use the same Relation layer. `supersedes` is canonical; domain verbs like `delegates`, `ratifies`, and `amends` are custom types that require their own installed `namespace/name` RelationTypeDefinitions (governance packages typically ship them). They apply when the semantic object type calls for them — one profile of the layer, not its primary purpose.
+
+
+##### sourceRole vocabulary MUST be disjoint from installed RelationTypeDefinition keys
+
+**Number**: I-88
+
+**Constraint**: The `sourceRole` value set — the closed enum of the implemented schema revision, including values added by later accepted RFCs — MUST be disjoint under literal whole-key equality from the set of installed `RelationTypeDefinition` keys in the repository's effective package set. Relation-type creation MUST reject a definition whose key equals a `sourceRole` value; `repo validate` MUST report a pre-existing collision as `SOURCEROLE_RELATIONTYPE_COLLISION` (warning at rest). A namespaced key (e.g. `com.acme/evidence`) does not collide with a bare `sourceRole` value.
+
+**Rationale**: The Relation edge vocabulary and the SourceReference provenance vocabulary are unrelated type systems that historically collided (`derived-from` appeared identically in both). Disjointness makes every vocabulary string unambiguous about which mechanism it belongs to, and guards future additions on either side (e.g. RFC-017's `attaches`).
+
+
+##### ext:recommended-relations
+
+**Content**: **Retired as of RFC-005.** The canonical SRS relation vocabulary (`contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`) is now provided as installed `RelationTypeDefinition` records in the `com.semanticops.srs` package. See §5 (Package).
+
+Implementations that previously declared `ext:recommended-relations` may remove it. The canonical definitions are unconditionally available to any repository using the SRS package.
+
+The statement that "`RelationTypeDefinition` is optional metadata" is superseded. As of RFC-005, every `Relation.relationType` string must resolve to an installed `RelationTypeDefinition` in the effective package set before a Relation is accepted. A missing or conflicting definition is a validation error. See §9-1 (Core conformance requirements).
+
+
+##### `RelationTypeDefinition` as a VocabularyEntry specialisation (RFC-006)
+
+**Content**: `RelationTypeDefinition` satisfies the `VocabularyEntry` substrate contract. As of RFC-006, its key-role field is renamed from `relationType` to `key`. Instance-side reference fields (`Relation.relationType`) are unchanged.
+
+It gains `meta?: Record<string, unknown>` under the one forward-compatibility policy: unknown top-level fields are rejected; arbitrary entry metadata goes in `meta`.
+
+It **requires** both `label` and `description` (unchanged from RFC-005). The substrate making these optional in the general contract does not relax this obligation.
+
+The V1 mandatory resolution requirement (every `Relation.relationType` must resolve to an installed `RelationTypeDefinition`) is a named instance of the general closed-vocabulary resolution rule. See §9 (Conformance) and the Foundation Vocabulary and Term subsection.
+
+
+##### `RelationTypeDefinition`
+
+**Content**: A substrate specialisation that gives semantic meaning and validation rules to a class of relations. `key` is the string stored in `Relation.relationType`; this unifies the key-role field across all three substrate specialisations (RFC-006). `label` and `description` are tightened to required.
+
+See the generated reference below for `RelationTypeDefinition`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#541, the #274 ratified ledger extended to this entity) — this prose no longer hand-duplicates the property list.
+
+Relation type definitions live in `package.relationTypes[]` (distributable bundle) or `package/relation-types/` (repository layout). They are resolved repo-globally — all installed relation type definitions form a single flat namespace. Key uniqueness (V5) applies across this flat set.
+
+
+
+#### Container
+
+**Canonical Key**: type:com.semanticops.srs/container
+
+**Description**: A grouping boundary over a collection of instances, answering the scoping question the Relation graph cannot: which instances belong together, what counts as this project. It is not a semantic object, having no Fields and holding no semantic state, and its claim is different in kind from a `contains` Relation: an edge says one instance is part of another; a Container says these instances form a unit for boundary purposes. Membership is declared: the union of its roots and explicit members, closed over declared child Containers, and never derived from a Relation (RFC-034).
+
+**Notes**: A Container may name one member as its identity or purpose record, and one member whose Type is the Container's typing anchor. Its own id lives in a different space from instance ids and must never appear on a Relation. Nested scopes are declared through `childContainerIds`; `contains` remains the part-of tree where meaning lives and must still be maintained (rfc-decision-0750c62f).
+
+##### Container.containerId is not an instance ID. It must not appear in…
+
+**Number**: 20
+
+**Constraint**: `Container.containerId` is not an instance ID. It must not appear in `Container.rootInstanceIds`, `Container.memberInstanceIds`, `Relation.sourceInstanceId`, or `Relation.targetInstanceId`.
+
+
+##### Container.rootInstanceIds and Container.memberInstanceIds, when…
+
+**Number**: 21
+
+**Constraint**: `Container.rootInstanceIds` and `Container.memberInstanceIds`, when present, must reference valid SRS instance IDs (`Note.instanceId` or `Record.instanceId`).
+
+
+##### Why Containers and Relations are complementary
+
+**Content**: 
+A Relation graph answers "what is semantically connected to what?" but not "what should be exported or queried together?" These are different questions. A project may contain hundreds of Records connected by many Relations. The question "which Records are in scope for this export?" is a scoping question, not a semantic one.
+
+Container provides the boundary. "These Records collectively form a unit for boundary purposes" is a scope claim. "Stage A contains Task B" is a semantic claim. A Container can hold Records that have no `contains` Relation between them — they are grouped for operational reasons, not because one is semantically inside the other.
+
+*Corrected 2026-09-06 (RFC-034, rfc-decision-0750c62f).* This note originally closed by saying that relationship-first implementations derive Container membership by traversing `contains` Relations from root instances, that container-first implementations use explicit `memberInstanceIds`, and that both strategies are valid. That last claim is withdrawn: membership is declared (`rootInstanceIds`, `memberInstanceIds`, nested through `childContainerIds`) and a Relation never defines it. The complementarity this note argues for is unchanged — and sharpened: `contains` is the part-of tree where meaning lives and must still be maintained; a Container is a bookmark over that tree, never a replacement for it.
+
+
+##### containerType should equal resolved root Type name when rootInstanceIds is present
+
+**Number**: I-64
+
+**Constraint**: When a Container has one or more rootInstanceIds and also carries containerType, implementations SHOULD emit a diagnostic if containerType does not equal the resolved root Type name field (the local name within its namespace, not namespace/name). The root Record Type is authoritative; a mismatch does NOT make the Container invalid. Containers with no rootInstanceIds may carry any containerType value without triggering this rule.
+
+
+##### All conforming implementations must provide containers_for_instance
+
+**Number**: I-66
+
+**Constraint**: All conforming SRS implementations MUST implement the containers_for_instance operation. Given an instanceId, it returns every Container C for which the instance is in effective(C): the recursive, duplicate-free closure over C's declared rootInstanceIds, memberInstanceIds and childContainerIds (RFC-034 Changes A and B, [R5]; I-146, I-147). Membership is declared: a contains Relation, or any other Relation, never contributes a member (I-148). The result set MUST be consistent with the current state of those Container fields. Amended by RFC-034 (2026-09-06, rfc-decision-0750c62f): the original statement's third branch, "or transitive contains-Relation traversal from rootInstanceIds", is superseded; the traversal is no longer a membership rule, and contains remains the part-of tree where meaning lives.
+
+
+##### identityInstanceId resolves to a member of its container
+
+**Number**: I-81
+
+**Constraint**: When present on a Container, identityInstanceId MUST equal an id contained in that Container's rootInstanceIds or memberInstanceIds. On the root container it names the repository's identity record. If it resolves to no such member, the repository is invalid. Reassigning identityInstanceId to a different member MUST NOT change the repositoryId, the container's containerId, or any instance id; the new target must already be a member before the pointer moves to it, so the repository is never transiently invalid.
+
+
+##### Section roots SHOULD root a container in the container set
+
+**Number**: I-82
+
+**Constraint**: When the repository's container set (RFC-038 [R1]) is non-empty, each non-identity section root of the root container (its navigation sections) SHOULD be the root of some Container in that set. An empty container set suppresses this diagnostic. A section root with no corresponding section container is a diagnostic, not an error, and a consumer MUST still render it as a navigation leaf rather than dropping it. `containerIndex` is retired (RFC-038 [R2]) and is no longer the membership authority for this check.
+
+
+##### Container.anchorInstanceId resolves to a member of its container, and is the declared typing anchor
+
+**Number**: I-145
+
+**Constraint**: When present on a Container, anchorInstanceId MUST equal an id contained in that Container's rootInstanceIds or memberInstanceIds. It names the record whose Type (typeId + typeVersion) is the Container's typing anchor for RFC-009 Composition.rootTypeRefs matching (I-63) and RFC-010 three-way-merge container-root conflict detection. If it resolves to no such member, the repository is invalid. When anchorInstanceId is absent (a repository authored before srs#446), an implementation MUST fall back to treating rootInstanceIds[0] (the first entry) as the typing anchor; this positional fallback is transitional and is withdrawn at the Continuity flip (rfc-decision-cce3c00e axis 2-8, the first full public release), after which anchorInstanceId is required wherever a typing anchor is needed. rootInstanceIds and memberInstanceIds otherwise carry no positional significance (RFC-013 [R5]).
+
+
+##### Directory-kind scopes via typed identity records
+
+**Content**: Graduated from the Tier-0 design-capture note `design-capture-directory-kind-scopes` alongside RFC-034's acceptance (2026-09-06), as that note asked. Nothing here is normative; it records a design position that builds on RFC-034's rootless-child mechanism.
+
+**The question (owner, 2026-07-31, on RFC-034).** Instead of imposing tree-ness on all Tier 0, can a *type* of root record make a Container a directory equivalent (exclusive, filesystem-like), applied selectively?
+
+**The answer: yes, via the Container's typed identity record.** Containers are deliberately not semantic objects: no Fields (design-note 013), a declared selection (rfc-decision-0750c62f). The RFC-013 `identityInstanceId` record is the Container's semantic carrier. Define a Type, for example `com.semanticops.core/directory`; a Container whose identity record instantiates it is directory-kind. Behaviour keys off the identity record's Type — structure, not string-matching (relation principle R5).
+
+**Exclusivity rules** (R10 enforcement, as structural-coherence diagnostics): a directory-kind Container appears in at most one directory-kind parent's `childContainerIds`; an instance appears in `direct()` of at most one directory-kind Container. Non-directory Containers (scopes, collections, overlays) remain overlapping and free. The tree is opt-in per scope, not global.
+
+**Tier-0 / OKF payoff.** Folder maps to directory-kind Container. A folder with no distinguished note gets a *minted* directory identity record carrying the folder's name, which answers RFC-034's rootless-child navigation-anchor question in the same move. Every note lives in exactly one directory; loose collections overlay freely. This is the enabler for the recorded vault-migration goal, gated on a solid spec.
+
+**The wider family.** Three independent needs converged on one expressiveness class in a single day, *declared structural constraints*: (1) acyclicity (sequence-category relations; `precedes` cycles currently degrade silently, srs-rust#557/#558), (2) exclusivity/cardinality (directory-kind Containers here; exclusive relation types are the RFC-005-deferred cardinality facet), (3) uniqueness-within-scope (cross-record field uniqueness). All three are definition-keyed (R5) and validation-enforced (R10). Recommendation: one structural-constraints RFC covering the family, with directory-kind landing as a thin instance of it, not a bespoke bolt-on.
+
+**The relation-side reading** of the owner's question, an exclusive root-record *relation* type, is real but distinct: post-RFC-034, Relations do not define membership, so an exclusive `contains`-like relation yields a semantic part-of tree, not a scope tree. Both are valid wants; they are different trees (the observation rfc-decision-0750c62f cites).
+
+
+##### Container direct membership is the union of its roots and explicit members
+
+**Number**: I-146
+
+**Constraint**: A Container's direct membership is exactly the duplicate-free, unordered union of its rootInstanceIds and memberInstanceIds. An omitted memberInstanceIds contributes no additional direct members and MUST NOT be read as opting into Relation traversal.
+
+**Rationale**: RFC-034 [R1] (Change A). Both arrays keep their authoring roles: roots anchor the scope, memberInstanceIds adds explicit members. The pre-RFC-034 rule that an omitted memberInstanceIds meant membership was derived by traversing contains from the roots is retired by rfc-decision-0750c62f.
+
+
+##### Container nesting is declared through childContainerIds and effective membership is its closure
+
+**Number**: I-147
+
+**Constraint**: A Container is an admitted child of another Container exactly when it is distinct and its containerId appears in the other Container's childContainerIds; membership-array overlap alone MUST NOT create admission. A conforming implementation MUST compute effective membership as the recursive closure over childContainerIds (effective(C) = direct(C) united with effective(child) for every declared child), MUST deduplicate instance ids, and MUST NOT infer an ordering from either membership array or from childContainerIds order.
+
+**Rationale**: RFC-034 [R2] and [R3] (Change B). Nesting is an authoring decision and is written as one; a Container rooted at an instance that appears in another Container's membership acquires no relationship to it unless named there. childContainerIds holds containerIds, never instance ids, so I-20 is unaffected. Ordering stays with precedes and Composition (RFC-015).
+
+
+##### Relations never define Container membership
+
+**Number**: I-148
+
+**Constraint**: A Relation of any type, including contains, MUST NOT cause an instance to appear in a Container's direct or effective membership.
+
+**Rationale**: RFC-034 [R4] (Change C), the consequence of rfc-decision-0750c62f: a Container is a declared selection on the expression plane and a Relation is a semantic claim. contains does not retire; it remains the part-of tree that navigation depth, layering and any tree walk are built on, and it continues to be maintained. A Container is a bookmark over that tree.
+
+
+##### A query result is not Container membership
+
+**Number**: I-149
+
+**Constraint**: A Record-selection query (srs find, a Composition SectionSource, an SQL view, a JSONPath expression, a graph traversal) MUST NOT be treated as persisted Container membership unless an authoring operation writes its selected ids to the Container's explicit membership fields.
+
+**Rationale**: RFC-034 [R6] (Change E). Container is the declared selection and DiscoveryQuery the computed one; two selection constructs for two goals and no third (rfc-decision-0750c62f). Materialising a query result into memberInstanceIds creates a new explicit boundary; it does not make the query the boundary's live definition.
+
+
+##### childContainerIds entries resolve, are distinct, and form an acyclic graph
+
+**Number**: I-150
+
+**Constraint**: Every childContainerIds entry MUST reference an existing, distinct Container, and the childContainerIds graph MUST be acyclic. A missing target, self-reference, or cycle is a validation error. For any Container whose reachable child graph contains such an error, effective-membership evaluation MUST fail with a diagnostic and MUST NOT return a partial result. A rootless child is valid. When a child has roots, those roots SHOULD occur in the parent's direct membership; a violation produces a structural-coherence diagnostic but MUST NOT remove the declared edge from effective-membership evaluation.
+
+**Rationale**: RFC-034 [R7] (Change B). Because admission is a declared edge, effective(C) is computable from C and its declared descendants alone, which keeps an RFC-026 slice self-contained. A Container may have more than one parent provided the whole graph stays acyclic; only the tree-shaped subset maps onto a folder hierarchy.
+
+
+##### Container
+
+**Content**: A lightweight grouping boundary over a collection of instances. Containers answer scoping questions — which instances belong together, what constitutes "this project" — that the Relation graph alone cannot answer.
+
+Containers are not semantic objects with Fields. They do not own semantic state; Records do. A `contains` Relation asserts "A is part of B" (a semantic claim); a Container asserts "these instances form a unit for boundary purposes" (a scope claim). Both are needed; neither replaces the other.
+
+See the generated reference below for `Container`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+
+`Container.containerId` is not an instance ID and must not appear in `Relation.sourceInstanceId` or `targetInstanceId`. See Invariant 20.
+
+
+##### Membership and nesting (RFC-034)
+
+**Content**: A Container is a declared selection on the expression plane (rfc-decision-0750c62f). Its direct membership is the unordered set `direct(C) = rootInstanceIds ∪ memberInstanceIds`: roots anchor the scope, `memberInstanceIds` adds explicit members, and an omitted `memberInstanceIds` adds nothing (I-146).
+
+Nested scopes are declared through `childContainerIds`, an unordered set of `containerId`s and the one place a Container references another Container; nesting is never inferred from membership overlap. Effective membership is the closure `effective(C) = direct(C) ∪ ⋃ effective(child)` over the declared children (I-147). Every child id resolves to an existing, distinct Container, the child graph is acyclic, a child can be rootless, and a rooted child's roots normally sit in the parent's direct membership (I-150). A Container can have more than one parent; only the tree-shaped subset maps onto a folder hierarchy.
+
+Relations do not define membership (I-148). `contains` remains the part-of tree that navigation depth, layering and any tree walk are built on, and it is still maintained; a Container is a bookmark over that tree. This supersedes the pre-RFC-034 rule that omitted membership was derived by traversing `contains` from the roots.
+
+One definition serves every membership question: `containers_for_instance` (I-66), member listing and view resolution, RFC-012 `containerId` discovery (I-118), RFC-011 `containerScope` with `"explicit"` as `direct(C)` and `"subtree"` as `effective(C)` (I-144), and the RFC-026 slice closure (I-151). No membership array carries an order; ordering stays with `precedes` and Composition (RFC-015). A query is a separate, read-only selection and never changes membership by itself (I-149).
+
+
+
+#### Blueprint
+
+**Canonical Key**: record:concepts/blueprint
+
+**Description**: The definition of a whole document type: which Record Types it produces at the root, what Relations are expected between the resulting Records, and which Types must be present for it to count as complete. It is the artefact handed to an extraction pipeline, and it answers a different question from a view — a Blueprint says what this document *is* and what should be extracted, at definition time, from source material; a view says how records that already exist are assembled for reading.
+
+**Notes**: Its type pointers are version-exact, so the shape a Blueprint asks for cannot drift under it when a Type is reversioned.
+
+##### Why Blueprint is a new concept
+
+**Content**: 
+In v1, there was no way to specify what a document type *is* — what needs to be extracted from source material in order to build it. `DocumentTemplate` (now Document View) handled *assembly* of existing Records into readable output. But nothing owned the prior question: "Given a transcript of a governance meeting, what Types should I extract, how should they relate to each other, and what does 'complete' mean?"
+
+Blueprint fills that gap. A Blueprint is the artefact you hand to an extraction pipeline. It specifies root Types, expected Relations between extracted Records, and completeness criteria. The Extraction pipeline consults the Blueprint to know what to look for; the Document View consults existing Records to know what to render.
+
+The two are complementary: Blueprint → Records → Document View.
+
+
+##### Blueprint vs View — the extraction gap
+
+**Content**: 
+A View answers: given a Record that already exists, how do I render it for a specific audience?
+
+A Blueprint answers: given source material, what Records should I extract, and how do they relate?
+
+These are complementary but distinct. A Document View cannot serve as an extraction blueprint because it assumes Records already exist. A Blueprint cannot serve as a Document View because it does not specify how to render field values for an audience.
+
+An extraction pipeline uses Blueprint + Field `aiGuidance` + Protocol to produce Records. A rendering pipeline uses View + Document View to project those Records into readable form.
+
+
+##### Blueprint.rootTypes entries must be ExactTypeRef (typeVersion required)
+
+**Number**: I-78
+
+**Constraint**: Each entry in Blueprint.rootTypes MUST be an ExactTypeRef: both typeId (UUID) and typeVersion (integer >= 1) MUST be present. Implementations MUST resolve each entry against the Package (the union of all packages in scope per packageRef/packageRefs) at Blueprint load time; an entry that does not resolve MUST produce a diagnostic. An empty rootTypes array is valid and produces no diagnostics.
+
+
+##### `RelationSpec`
+
+**Content**: **Required for**: extraction pipelines, founding document workflows, any system that needs to specify what a document type IS before assembling it.
+
+
+##### RelationSpec
+
+**Content**: Declares an expected Relation between two Record types within a Blueprint.
+
+See the generated reference below for `RelationSpec`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list (and no longer risks drifting from the current `ExactTypeRef`-based schema, as the superseded prose here had).
+
+
+##### `Blueprint`
+
+**Content**: The definition of a complete document type — which Types it contains, what Relations exist between resulting Records, and what "complete" means. A Blueprint is the artefact handed to an extraction pipeline.
+
+See the generated reference below for `Blueprint`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+
+**Blueprint vs View:**
+
+| | Blueprint | View / Document View |
+|---|---|---|
+| Question it answers | What IS this document type? What should be extracted? | How are existing Records assembled into readable output? |
+| Operates at | Definition time | Projection time |
+| Input | Source material (transcripts, conversations) | Existing Records in a Container |
+| Output | Extraction instructions → Records | Rendered document |
+
+
+
+#### Semantic order
+
+**Content**: A `precedes` Relation states reading or execution order as a claim about meaning: this element comes before that one, and getting the order wrong is getting the claim wrong, not choosing a different layout. Specification sections in document order, and protocol stages in execution sequence, are both `precedes` chains: reversing either one changes what is true, not how it looks.
+
+`precedes` is one Relation among the canonical types, read by walking the chain from sibling to sibling.
+
+Order that reflects curation, display preference, or layout is presentation, not meaning, and belongs in the view layer. A Composition MAY sequence the same elements differently for rendering; that sequence is an arrangement, not a competing claim. Where the two disagree, the `precedes` chain is what the elements assert about each other. A `precedes` edge created to control how something displays is a misuse of the mechanism.
+
+
+
+## Distribution
+
+### Distribution
+
+**Canonical Key**: part:distribution
+
+**Description**: How definitions travel between repositories: Package, Reference, Lineage, and Provenance.
+
+#### Distribution Group (Core)
 
 **Content**: The Distribution group is required for all conforming implementations.
 
-#### Package
+##### Package
 
 **Content**: The distributable artefact. Contains Field, Type, View, and Relation type definitions with a complete dependency manifest.
 
@@ -1010,7 +1582,7 @@ Example: the `Package` shape.
 
 ---
 
-##### The `Package` shape
+###### The `Package` shape
 
 **Content**: `Package`, in pseudo-IDL:
 
@@ -1044,7 +1616,7 @@ Example: the `Package` shape.
 
 
 
-#### Reference
+##### Reference
 
 **Content**: A stable pointer to a specific definition version.
 
@@ -1054,7 +1626,7 @@ Canonical string form: `namespace/name@version`
 
 ---
 
-##### The `Reference` shape
+###### The `Reference` shape
 
 **Content**: `Reference`, in pseudo-IDL:
 
@@ -1070,7 +1642,7 @@ Canonical string form: `namespace/name@version`
 
 
 
-#### Lineage
+##### Lineage
 
 **Content**: Upstream and fork tracking for a specific definition version.
 
@@ -1085,7 +1657,7 @@ Both may be present during a transition from tracking to forking.
 
 ---
 
-##### The `Lineage` shape
+###### The `Lineage` shape
 
 **Content**: `Lineage`, in pseudo-IDL:
 
@@ -1100,7 +1672,7 @@ Both may be present during a transition from tracking to forking.
 
 
 
-#### Provenance
+##### Provenance
 
 **Content**: Publisher and package origin metadata.
 
@@ -1110,7 +1682,7 @@ Example: the `Provenance` shape.
 
 ---
 
-##### The `Provenance` shape
+###### The `Provenance` shape
 
 **Content**: `Provenance`, in pseudo-IDL:
 
@@ -1126,7 +1698,820 @@ Example: the `Provenance` shape.
 
 
 
-### Conversation Layer
+
+## Presentation
+
+### Presentation
+
+**Canonical Key**: part:presentation
+
+**Description**: How stored state becomes a document a person reads: projections, Views, and the Composition pipeline.
+
+#### Projection
+
+**Canonical Key**: record:concepts/projection
+
+**Description**: The principle that rendered output is derived from records and never the source of truth for them. Records hold the meaning; a document, a table, an export, a JSON serialisation are all views onto that meaning, produced on demand and discardable. A projection must keep a clear line back to canonical meaning and must never quietly become a second semantic source, which is what happens when someone edits the rendered artifact instead of the records.
+
+**Notes**: Its practical consequence throughout the specification: presentation concerns live in the view layer, never on the Type. A rendering label, a display order or a renderer choice may never affect validation, extraction, Relations or discovery output.
+
+##### Full projection surface
+
+**Content**: 
+Document-level projection is addressed by `ext:views-l2`. The broader projection surface — dashboards, timelines, AI context packages, real-time views, and composite renderings that are not document-shaped — remains a future concern. Projections are read-only views; they do not modify Record state.
+
+
+##### renderedPresentations default selection and compositionId resolution
+
+**Number**: I-128
+
+**Constraint**: When `manifest.renderedPresentations` is present and non-empty, a conformant viewer MUST select as the default presentation the first entry whose `isDefault` is `true`. When no entry carries `isDefault: true`, the first entry in the array is the default. The selected Composition governs the repository's presentation. When a `renderedPresentations` entry's `compositionId` does not resolve to a Composition in the active packages, implementations MUST skip that entry and MUST emit a diagnostic; if all entries fail to resolve, behaviour falls back to implementation-defined selection as if `renderedPresentations` were absent. When `compositionId` resolves to Compositions in more than one active package, implementations MUST report a validation error (ambiguous composition reference). When `renderedPresentations` is absent or empty, viewer behaviour falls back to implementation-defined selection (existing behaviour unchanged; no conformance obligation is added for the absent case). (RFC-015 Change C.)
+
+**Rationale**: `renderedPresentations` declares which Composition(s) constitute the repository's presentations so a conformant viewer opens the document the group intended, without requiring every viewer to guess. A multi-package `compositionId` collision is reported as an error (not resolved by implementation-defined precedence) because silently picking one package's Composition over another's would be a non-deterministic, non-portable choice.
+
+
+##### View
+
+**Canonical Key**: record:concepts/view
+
+**Description**: A named, versioned presentation over a set of Fields: which field rows appear, in what display order, under what labels, with what editor hints, and whether each is visible. It is field-centric, not Type-bound: any Record carrying the fields a View requires can be rendered through it — and it constrains presentation only. A View may not override, redefine or duplicate the semantics of any Field or Type it references.
+
+**Notes**: A row may also present a Record-level property such as lifecycle state or tags without pretending that property is a Field. Hiding a row affects rendered text only; the value stays in the Record and in any structured projection.
+
+###### Every fieldId in View.fieldViews[] must reference a valid Field.id
+
+**Number**: 12
+
+**Constraint**: Every `fieldId` in `View.fieldViews[]` must reference a valid `Field.id` in the effective package set. View compatibility is field-centric (based on required field presence), not Type-bound.
+
+
+###### FieldView.displayLabel, FieldView.displayHint, and…
+
+**Number**: 13
+
+**Constraint**: `FieldView.displayLabel`, `FieldView.displayHint`, and `FieldView.editorHintOverride` are for rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or validation. Extended by RFC-036 [CR-036-20] to cover `FieldView.compositeRenderer` and the `DocumentSection`/`Composition` composite renderer directives, and to add Relations and Discovery Text Projection (`ext:discovery`) to the list of things they must not affect. [CR-036-21] additionally constrains `editorHintOverride` to the value set of `Field.editorHint`.
+
+
+###### View must not override, redefine, or duplicate the semantic content…
+
+**Number**: 14
+
+**Constraint**: A `View` must not override, redefine, or duplicate the semantic content of any `Field` or `Type` it references. View-level `aiGuidance` is workflow framing; it does not redefine Field extraction semantics.
+
+
+###### Why `displayLabel` must not affect extraction
+
+**Content**: 
+`displayLabel` lets a View relabel a Field for a specific audience without altering the Field's meaning. "Strategic question" might be displayed as "The decision we're making" in a facilitated view aimed at non-specialist participants.
+
+If `displayLabel` could affect extraction, two Views of the same Record could produce different extracted values for the same Field — because the AI was given different labels. Field semantics must be stable across views. The label controls what the human sees; the Field's `aiGuidance` controls what the AI does.
+
+
+###### View inheritance and composition
+
+**Content**: 
+As View libraries mature, inheritance will become necessary. A lightweight ADR View and a governance ADR View share base configuration — field selection, ordering, `editorHint` overrides — while diverging on workflow framing and export layout.
+
+A future version may define:
+- `extendsViewId?: UUID` — single inheritance; child View inherits all `fieldViews` from parent and overrides selectively
+- `composesViews?: UUID[]` — mixin composition; multiple Views contribute non-overlapping configuration
+
+Current design: `View` is a leaf type. Use Lineage tracking to record inheritance relationships.
+
+
+###### ext:views-l1
+
+**Content**: **Required for**: rendering and export workflows.
+
+Defines Views — versioned presentations over a field set.
+
+
+###### `FieldView`
+
+**Content**: A field reference within a View. Controls presentation for this View without altering field semantics.
+
+Example: the `FieldView` shape.
+
+A Field hidden with `visible: false` remains in the Record and may appear in other Views. `visible` controls rendered text output only. A field with `visible: false` must still be included in any structured projection or export of this view. To exclude a field from both rendered output and structured projections, omit it from `fieldViews[]` entirely.
+
+
+###### `RecordPropertyView` (RFC-041)
+
+**Content**: A sibling row kind to `FieldView` in the same `View.fieldViews[]` list. It presents a top-level Record property without treating that property as a Field.
+
+Example: the `RecordPropertyView` shape.
+
+The `property` enum is closed and generated from `record.json`'s declared top-level properties after excluding identity/type-binding properties (`$schema`, `instanceId`, `typeId`, `typeVersion`, `typeNamespace`, `typeName`), carriers (`fieldValues`, `fieldMeta`), the open `meta` bag, and `sourceRefs` (deferred because no composite-object-array field-row form is defined). `required`, `editorHintOverride`, and `compositeRenderer` do not apply to this row kind.
+
+Rows of both kinds are interleaved by their shared, unique `order`. `View.fieldViews[].order` is the sole presentation and export ordering mechanism: `ExportConfig` cannot reorder rows. Labels resolve from `displayLabel`, then default to `Status`, `Tags`, `Created`, or `Updated`. `lifecycleState` resolves through the bound Lifecycle state's label when possible and otherwise renders the raw key. Tags use the RFC-037 multi-entry form; timestamps render as raw ISO-8601 strings. An absent or empty value omits the row without invalidating the Record or View.
+
+
+###### Conformance Rules (RFC-041)
+
+**Content**: **[R1]** A View's row list (`fieldViews[]`) admits two mutually exclusive row kinds discriminated by the presence of `fieldId` (`FieldView`) XOR `property` (`RecordPropertyView`); a row item carrying neither key, or both, MUST be rejected as invalid.
+
+**[R2]** `RecordPropertyView.property` MUST be a value in the closed, generated enum. An implementation encountering an unrecognized value MUST reject it as a validation diagnostic; it MUST NOT silently accept or ignore it.
+
+**[R3]** Implementations rendering `RecordPropertyView` rows MUST NOT special-case any property name outside the mechanism defined above. The per-property default-label table and value-resolution rule above are the full extent of per-property variation; no boolean flag and no property-specific schema property may be added to `DocumentSection`, `FieldView`, or `View` for any record-level property.
+
+**[R4]** A `RecordPropertyView` row whose named property is absent or empty on the Record being rendered MUST be omitted from render output; this MUST NOT be treated as a validation failure of either the Record or the View.
+
+**[R5]** The `RecordPropertyView.property` enum in `view.json` MUST be regenerated — never hand-edited — whenever `record.json`'s set of top-level properties, with the exclusions above, changes. `validate-all.mjs` MUST run the derivation's `--check` guard.
+
+**[R6]** `lifecycleState` row-value resolution MUST use the bound Lifecycle's `LifecycleState.label` when the Record's Type carries a `lifecycleRef` and the state key resolves against it; otherwise the raw state key renders verbatim. No other humanization applies.
+
+**[R7]** Every `order` value in a View's mixed `fieldViews[]` row list MUST be unique. A duplicate is a validation error. Implementations MUST render rows in ascending `order`, yielding one deterministic total presentation sequence across FieldView and RecordPropertyView rows.
+
+**[R8]** *(Revision 4.)* A `RecordPropertyView` row that is not omitted per [R4] MUST appear in the JSON projection (`document-view-output.json`) of any Composition that renders it, as a `ProjectedPropertyRow` (`{ property, label, value }`, Change D) on the record's `properties[]` array, in ascending `order`. `label` and `value` MUST be the *resolved* label and value — the same ones Change C renders into markup, not the raw `property` name alone. An implementation that renders a `RecordPropertyView` row in markup output MUST NOT omit its `ProjectedPropertyRow` from the JSON projection of the same render.
+
+
+###### JSON projection (RFC-041 Revision 4)
+
+**Content**: `document-view-output.json`'s `ProjectedRecord` carries an optional `properties[]` array, sibling to its existing `relations[]` (RFC-027) and `fields`/`orderedFieldKeys` (FieldView rows). Each entry is a `ProjectedPropertyRow { property, label, value }`: `property` is the same closed enum value `RecordPropertyView.property` names; `label` and `value` are the *resolved* label and value per Change C — never the raw property name alone. `properties[]` is present only when the rendering section's View declares at least one `RecordPropertyView` row and the record has at least one surviving row, in ascending `order`, the same single axis FieldView and RecordPropertyView rows already share. Owner ruling (2026-09-01, verbatim): "Projections should ideally contain a full machine readable form so that they can enable transformations." — a projection missing content the rendered form carries cannot support the transformations that principle names as the reason projections exist.
+
+
+###### `ExportConfig`
+
+**Content**: Configuration for rendering a Record through this View as an exportable document. One shared shape, attached at two points (srs#525): here on `View`, and on `Composition` (`ext:views-l2`) for document-level rendering. Neither attachment overrides the other — each governs its own render context. See `ext:views-l2`'s *L1/L2 ExportConfig* note for how the two coexist when a Composition section dispatches to a View.
+
+Example: the `ExportConfig` shape.
+
+
+###### `View`
+
+**Content**: A versioned presentation and export configuration over a field set. A View is compatible with any Record containing its required fields.
+
+Example: the `View` shape.
+
+**Note (2026-08-22, `rfc-decision-4f1e12e5` entry 5)**: the View-root `protection` enum (`none`/`read-only`/`fill-in`) previously specified here is removed under the dormancy rule (`rfc-decision-cce3c00e`) — zero use, and it was a hint without a contract: no enforcement semantics were defined anywhere. `FieldView.required` below is untouched — it is attested in production use and is a distinct form-vs-validity mechanism. Return trigger: a real authoring surface needing edit protection, which must design the missing enforcement half.
+
+Compatibility is field-centric:
+- A Record is renderable through a View when it contains all `FieldView` entries with `required: true`.
+- Fields with `visible: true` but not required are rendered when present and omitted when absent.
+- Omitted Fields in `fieldViews[]` are treated as `visible: false`.
+
+A View may not reference unknown Fields: every `fieldId` in `View.fieldViews[]` must reference a valid `Field.id` in the effective package set.
+
+`View.protection` applies only to interactions through that View. A Record may be editable through one View and read-only through another. For record-level settlement, use `ext:lifecycle` states such as `isFinal`.
+
+Facilitation steps have been removed from View. Use `ext:protocol` Protocol stages instead.
+
+
+###### Composite rendering — renderer dispatch (RFC-036)
+
+**Content**: `FieldView` gains an optional `compositeRenderer`, a `CompositeRendererBinding` that dispatches a
+composite-range Field (`fieldType.datatype: "ref"`, `mode: "inline"`) to a named composite renderer.
+Presentation lives in the View, not in the Type: RFC-032 evicted `compositeRenderer` from the type model,
+and RFC-015 established that an arrangement over records with many legitimate concurrent forms is
+view-owned.
+
+Example: the `CompositeRendererBinding` shape.
+
+
+###### Composite baseline rendering
+
+**Content**: A composite-range Field that resolves to no renderer — unbound per [CR-036-6], or fallen back per
+[CR-036-7] or [CR-036-9] — is rendered by the **composite baseline**: a heading when a label resolves
+(`FieldAssignment.displayLabel`, overridable by `FieldView.displayLabel`) at level `4 + d` shifted by
+`Composition.depthOffset`, where `d` is nesting depth; then one block per value in value order; within
+each block one field row per assignment on the composite's `rangeType`, ascending by
+`FieldAssignment.order` with `fieldId` code-point order as tie-break. A field with no value, or whose
+value renders to nothing, is omitted unconditionally. An assignment that is itself `ref`/`inline` expands
+into a nested baseline block at depth `d + 1` rather than a field row. Field-row labels resolve by
+`FieldAssignment.displayLabel` -> `Field.name` -> `fieldId`; templates resolve by
+`ElementTemplates.compositeFieldRowTemplates[Field.name]` -> `ElementTemplates.fieldRow` -> the
+implementation's existing top-level field-row form.
+
+
+###### The `table` renderer
+
+**Content**: Roles, with their owning Type and required `fieldType`:
+
+| Role | Owner | Required | `fieldType` |
+|---|---|---|---|
+| `rows` | table Type | yes | `{ datatype: "ref", mode: "inline", cardinality: "list", rangeType: <row Type> }` |
+| `cells` | row Type | yes | `{ datatype: "string", cardinality: "list" }` |
+| `columns` | table Type | no | `{ datatype: "string", cardinality: "list" }` |
+| `widths` | table Type | no | `{ datatype: "number", cardinality: "list", constraints: { minimum: 0, maximum: 1 } }` |
+| `subheading` | table Type | no | `{ datatype: "string", cardinality: "single" }` |
+| `label` | table Type | no | `{ datatype: "string", cardinality: "single" }` |
+
+The composite field's own `cardinality` governs how many tables it carries: `single` is one, `list` is a
+sequence. This replaces the `FieldGroup` + `compositeRenderer` mechanism of RFC-007, which is retired with
+`FieldGroup` at the #242 cutover.
+
+
+###### Conformance Rules (RFC-036)
+
+**Content**: **[CR-036-1]** A `renderer` identifier MUST match `^([a-z][a-z0-9-]*|[a-z0-9-]+(\.[a-z0-9-]+)+/[^/]+)$`. An identifier that does not match MUST be treated as unrecognised, and [CR-036-7] applies. Enforced at render and validation time, not by JSON Schema, so a malformed identifier degrades gracefully rather than failing the load of an entire View or Theme.
+
+**[CR-036-2]** *(Governance.)* Bare `renderer` identifiers are reserved for SRS-defined renderers and MUST only be introduced by a ratified RFC. Those defined to date are `table` and the sentinel `baseline`. Vendor renderers MUST use the `{reverse-domain}/{name}` form.
+
+**[CR-036-3]** A binding or directive MUST reference a Field whose `fieldType.datatype` is `"ref"` and whose `fieldType.mode` is `"inline"`. Otherwise, or when the `fieldId` does not resolve in the effective package set, implementations MUST ignore the binding, MUST render the field by whatever rendering its `fieldType` normally receives, and MUST emit a diagnostic.
+
+**[CR-036-4]** Composite rendering applies to Tier 2 Records only. A binding whose `fieldId` does not appear on the rendered instance's resolved Type MUST be ignored without a diagnostic — the normal case for a heterogeneous section.
+
+**[CR-036-5]** A binding MUST target a composite field assigned directly to the rendered Record's Type. Binding a composite nested inside another composite's `rangeType` is out of scope; a nested composite is rendered by the composite baseline. Implementations MUST NOT infer a binding for a nested composite from a binding on its parent.
+
+**[CR-036-6]** For a given rendered Record and composite-range field, implementations MUST resolve at most one binding, taking the first that applies: (1) `FieldView.compositeRenderer` on the `FieldView` for that field in the `ext:views-l1` View selected to render the Record — chosen by `DocumentSection.typeDispatch`, else `DocumentSection.renderViewId`; (2) the matching `DocumentSection.compositeRenderers` entry; (3) the matching `Composition.compositeRenderers` entry. When none applies the field is unbound. A resolved `renderer` of `"baseline"` means unbound and MUST NOT fall through to a broader site. A `FieldView` that exists but carries no `compositeRenderer` is not an override and MUST fall through. A field not visible in the selected View is not rendered and no binding applies. When an L1 View is rendered outside any Composition, only site (1) exists. Duplicate `fieldId` entries within one array are a validation diagnostic; the first in array order wins.
+
+**[CR-036-7]** When a resolved `renderer` is not recognised, the implementation MUST fall back to the composite baseline and MUST emit a diagnostic identifying the unrecognised value and the field. The fallback MUST NOT suppress the field's content.
+
+**[CR-036-8]** Role resolution proceeds per role: when `roles` declares that role, its value is the bound Field and MUST resolve to an assignment on the owning Type; otherwise the role binds to the assigned Field whose `Field.name` equals the role name, compared exactly and independently of namespace. Assignments inherited via `ext:type-inheritance` are in scope. On ambiguity, implementations MUST bind the lowest `FieldAssignment.order`, with `fieldId` code-point order as tie-break, and MUST emit a diagnostic. A `roles` entry naming an undefined role MUST be silently ignored.
+
+**[CR-036-9]** A role Field satisfies the renderer's contract when its `fieldType` declares every key the contract specifies, matching the specified value where the contract gives a literal one. `rangeType` is presence-matched — it MUST be present and MUST resolve, and its resolved Type is what dependent roles are looked up on. A `constraints` key required by a contract is advisory and its absence MUST NOT fail the contract test. Additional `fieldType` keys, and assigned Fields filling no role, MUST be ignored. When a required role does not resolve or does not satisfy the contract, implementations MUST fall back to the composite baseline with a diagnostic; when an optional role does not satisfy it, implementations MUST drop that role only, with a diagnostic.
+
+**[CR-036-21]** `FieldView.editorHintOverride`, when present, MUST take a value from the same set as `Field.editorHint` (`singleline`, `textarea`, `rich-text`, `date-picker`, `dropdown`, `multi-select`, `voice`) and supersedes it for Records rendered or edited through that View. A value outside that set MUST be ignored with a diagnostic and `Field.editorHint` MUST apply. Enforced at validation and render time rather than by JSON Schema.
+
+**[CR-036-22]** Every diagnostic required or recommended by a `[CR-036-n]` rule MUST carry that rule's identifier and MUST identify the instance, field, and where applicable the value or row index. [CR-036-13]'s constraint bound raises validation-pass diagnostics of severity `error`; every other `[CR-036-n]` diagnostic is a render-pass `warning`, except [CR-036-6]'s duplicate-`fieldId` case, which is additionally reported at validation time. No `[CR-036-n]` diagnostic of either pass causes a non-zero exit code.
+
+
+###### `SectionSource`
+
+**Content**: Defines how a section's instances are selected from a Container.
+
+Example: the `SectionSource` union.
+
+**Note (2026-08-22, `rfc-decision-4f1e12e5` entry 4)**: the `fixed-instances` and `relation-query` `SectionSource` variants previously specified here were removed under the dormancy rule (`rfc-decision-cce3c00e`) — zero corpus use across the 13 real sections in the attested corpus (2026-08-21 usage attestation).
+
+**Note (2026-09-03, srs#525, `rfc-decision-cce3c00e` + `rfc-decision-9ee14517`)**: `type-query` is retired and replaced by `discovery-query`, which consumes the one structured query mechanism (`DiscoveryQuery`, `ext:discovery`) instead of re-implementing its own divergent copy of the same filter axes. `discovery-query` and `container-subset` are the two live ways to source a section. Return trigger: a composition need neither live variant expresses.
+
+
+###### `DocumentSection`
+
+**Content**: One section in a Composition.
+
+Example: the `DocumentSection` shape.
+
+
+###### `CompositeRendererDirective` (RFC-036)
+
+**Content**: A `CompositeRendererBinding` (`ext:views-l1`) plus the composite-range Field it binds. Presentation only ([CR-036-20]).
+
+Example: the `CompositeRendererDirective` shape.
+
+
+###### `RelationsPresentation` (RFC-027)
+
+**Content**: Opt-in per-section display of each rendered member's Relations as a links block.
+
+Example: the `RelationsPresentation` shape.
+
+Rendering rules (normative statements [I-027-1]-[I-027-8] in RFC-027):
+
+- **Edge selection.** Edges display only when their own `status` is absent or `"active"` — the filter never reads the related record's `lifecycleState`. A lifecycle-superseded record's active edges display normally.
+- **Placement.** The block renders after the member's rendered content (fields and field groups for Tier 2; body content for Tier 0) and before nested subsection members. When no edge survives selection, the block is omitted entirely for that member, regardless of `emptyBehavior`.
+- **Rows.** One row per (entry, direction) with at least one edge: the resolved label followed by the related instances' display labels, comma-joined. Markdown normative form: `**<label>**: <display label>, <display label>`. In `html`, `adoc` and `text` the row uses the same label/value markup the implementation emits for a field row in that format — defined by *Normative Field-Row Form* below (RFC-037 [FR-037-15]), which supplies the referent this rule has always pointed at. A relation row omits `srs-fieldname-*` and carries `srs-relationtype-{relationTypeKey}` in its place [FR-037-12]. For any other format the relation row form remains implementation-defined. Related-instance display labels resolve by: the value of the instance's effective `identityFieldId` (RFC-020, declared or inherited per [N+34]) when it resolves to a non-empty string → the instance's value for the section's `titleFieldId` when a non-empty string → the `instanceId`. Tier 0/1 related instances always fall through to `instanceId`.
+- **Determinism.** Rows follow `include[]` order, forward before inverse per entry; within a row, instances order by display label then `instanceId`, both in Unicode code point order; a related instance repeated within one (entry, direction) renders once.
+- **JSON projection.** Members that project as `ProjectedRecord` carry `relations: ProjectedRelationRow[]` (`document-view-output.json`) preserving row order; members with no surviving edges omit the property. Tier 0/1 members are outside the JSON projection's `relations` property; their rendered-format blocks are unaffected.
+- **Sliced repositories.** Cross-boundary Relations moved to `slice.externalRelationRefs[]` (RFC-026 R6) do not render.
+- **Humanization** (for default labels): take the key's name segment (after the last `/` for namespaced keys), replace every `-` and `_` with a single space, uppercase the first character using Unicode default (locale-independent) case conversion. `superseded-by` → `Superseded by`.
+
+Link labels prefer the identity field over the section's `titleFieldId` — the reverse of the [N+37] heading precedence — because a related instance need not be a member of the rendering section. Rows emit plain display labels, not hyperlinks; anchor emission awaits a spec-level record-anchor convention.
+
+
+###### `NavigationLink`
+
+**Content**: An assembly-time cross-section link in a Composition. Navigation links are reading aids for the rendered document, not semantic assertions about Records. They do not appear in the Relation graph.
+
+Example: the `NavigationLink` shape.
+
+
+###### `ThemeReference`
+
+**Content**: A pointer to a Theme (ext:themes-l1). Follows the same `mode`-based reference pattern as `packageRef` in the manifest.
+
+Example: the `ThemeReference` shape.
+
+
+###### `ThemeVariant`
+
+**Content**: A named alternative theme selectable at render time instead of `Composition.themeRef`.
+
+Example: the `ThemeVariant` shape.
+
+Variant name uniqueness is enforced at package validation time.
+
+
+###### `Composition`
+
+**Content**: A versioned, Container-level projection. Defines how a Container's Records are assembled into a readable document.
+
+Example: the `Composition` shape.
+
+A `Composition` may reference one or more `View` records (via `DocumentSection.renderViewId`). A single field-centric View may render mixed Record Types when the Records contain the required fields. The Composition orchestrates; it does not replace L1 Views.
+
+`DocumentSection.renderViewId` references a `View.id` (from `ext:views-l1`). A `Composition.id` is not a valid value for `renderViewId` — Compositions are not nestable.
+
+Use `navigationLinks` when a rendered document should include "see also" or related-section links. Use `Relation` only when the relationship is a semantic assertion about Records.
+
+
+###### Heterogeneous Section Rendering
+
+**Content**: A `container-subset` section can mix Record Types — it draws all Container members, ordered by the `precedes` chain (Rule [N+12]). Two optional fields make such sections precise:
+
+- **`typeFilter`** (on the `container-subset` source) restricts the section to a subset of member Types by `namespace/name`, preserving the container-wide `precedes` order projected onto the survivors — filter-then-project (Rule [N+21]).
+- **`typeDispatch`** (on `DocumentSection`) selects a different L1 View per Record Type within the one section, so interleaved Types each render with their own View (Rules [N+14]–[N+18]).
+
+A record's **resolved type** for both fields is the canonical `namespace/name` of the Type its `typeId` resolves to — not the denormalized `typeNamespace`/`typeName` hints — compared version-independently (Rule [N+13]). These compose with the per-record heading behaviour of `titleFieldId` (Rule [N+1]) for heterogeneous sections, and leave intra-record group rendering inside a dispatched L1 View unaffected.
+
+
+###### Default Rendering Baseline
+
+**Content**: When `DocumentSection.renderViewId` is absent, implementations MUST render each instance using the following baseline. No L1 View influences this path.
+
+**Step 1 — Field ordering.** Order fields ascending by `FieldAssignment.order`. With `ext:type-inheritance`, use `fieldOrder` from the Type if declared; otherwise use `FieldAssignment.order`.
+
+**Step 2 — Resolve values.** A field is present if its `Field.name` key is present in `fieldValues` with a value that is not the empty string; a `cardinality: list` value is present when at least one entry survives Step 2 (RFC-039 [R5]/[R5a], canonical I-132 — structural presence and rendering presence remain distinct).
+
+**Step 3 — Labels.** Use `FieldAssignment.displayLabel`; fall back to `Field.name`.
+
+**Step 4 — Render.** Render only present fields. A field that Step 2 resolves as absent — including one whose `FieldValue.value` is an empty string — MUST NOT emit a row, and neither MUST a field whose value sequence has no surviving entries. Implementations MUST NOT emit a label with an empty value. The sole exception is `DocumentSection.emptyBehavior` `"show-placeholder"` with the field `required: true`, which MUST emit a row whose value position carries the literal placeholder `(empty)`. Multi-entry values render as a block list, never comma-joined. The emitted form of a field row, and the separation between consecutive rows, is normative per output format — see *Normative Field-Row Form* below (RFC-037).
+
+The baseline is a floor, not a ceiling. An L1 View via `renderViewId` always takes precedence.
+
+`emptyBehavior` in the L1 View path: when `renderViewId` is set, empty field handling is governed by `ExportConfig.omitEmptyFields` on the referenced L1 View. `DocumentSection.emptyBehavior` does not apply in the L1 View rendering path.
+
+
+###### Normative Field-Row Form (RFC-037)
+
+**Content**: The emitted form of a field row on the Default Rendering Baseline, and on RFC-036 Change C's
+composite baseline where that baseline emits an individual field row. These forms are the content
+`ElementTemplates.fieldRow` receives as `{{content}}`; a Theme may wrap the row and MUST NOT replace
+it ([T-3]), and when no `fieldRow` template resolves the forms below are emitted unwrapped. They are
+the terminal rung of RFC-036's row-template ladder (`compositeFieldRowTemplates` -> `fieldRow` ->
+baseline field-row form), closing RFC-036 Open Question 2.
+
+A composite is a Field whose `fieldType.datatype` is `"ref"` **and** whose `fieldType.mode` is
+`"inline"` — the pair [CR-036-3] requires; `inline` is a `mode` value, not a datatype. A composite is
+rendered by RFC-036 Change C, not by these rules; these rules govern the field rows *within* each
+composite block. A `ref` Field whose `mode` is `"reference"` is **not** a composite and renders as an
+ordinary field row under these rules, as [CR-036-3] directs for any Field that is not a `ref`+`inline`
+composite.
+
+**Value sequence.** A field renders as multi-entry when Step 2 finds it present through an ordered
+sequence. Both mechanisms are covered without preference: `fieldType.cardinality: "list"` (RFC-032
+[R4], values carried as a JSON array at the field's key) — the legacy `ext:repeatable-fields` path is removed (RFC-039 [R7]).
+(`FieldValue.entries`). *Sequence order* means array index order on the former, `entries` order on
+the latter. Cardinality — not element count — selects the form: a one-element sequence renders in
+block form, so a Type's rendered shape does not vary with instance data.
+
+**Scalar rows.** For a present single-valued field, exactly one row, beginning on its own line:
+
+| Format | Normative row form |
+|---|---|
+| `markdown` | `**<label>**: <value>` |
+| `adoc` | `*<label>*: <value>` |
+| `text` | `<label>: <value>` |
+| `html` | `<div class="srs-field srs-fieldname-{name}"><strong class="srs-field-label field-label">{label}</strong>: <span class="srs-field-value field-value">{value}</span></div>` |
+
+In the three text formats the separator is a literal colon and single space (U+003A U+0020). In
+`html`, the element names, nesting, order, literal colon and `srs-`-prefixed class names are
+normative; inter-element whitespace is not, following the precedent [CR-036-15] sets for pinned HTML
+output. Implementations SHOULD emit the single-line form so conformance fixtures have a canonical
+serialisation. **These classes belong to the baseline's output specification, not to
+`ext:themes-l1`:** implementations MUST emit them whether or not that extension is declared and
+whether or not a Theme resolves.
+
+**Multi-entry rows.** A multi-entry value MUST render as a block list and MUST NOT be comma-joined.
+The label occupies its own line (in `html`, its own element) and retains its trailing colon:
+
+| Format | Label line | Entry marker |
+|---|---|---|
+| `markdown` | `**<label>**:` | `- ` |
+| `adoc` | `*<label>*:` | `* ` |
+| `text` | `<label>:` | `- ` |
+| `html` | the `strong` element, inside the same `div` the scalar row uses | one `<li class="srs-field-value field-value">` per entry inside an unclassed `<ul>` |
+
+The full `html` multi-entry row is:
+
+Example: the html multi-entry field row.
+
+The enclosing `div` is the same one the scalar row uses: a multi-entry row is still a field row and
+must carry what [T-8] requires of one.
+
+In the text formats the list begins on the line immediately after the label line with no blank line
+between. An entry whose rendered value is empty is omitted from the list; a sequence with no
+surviving entries is absent and emits no row.
+
+**Row separation.** In `markdown`, `adoc` and `text`, implementations MUST emit a blank line between
+consecutive field rows, and MUST emit a blank line after a block list's final entry before any
+following row, heading or relations block. In `html` implementations MUST NOT insert a separator
+element between rows. The same separation applies between consecutive relation rows in a links block.
+This is structural, not cosmetic: without the blank line a following row is a CommonMark lazy
+continuation of the list's last item and is swallowed into it.
+
+**Continuation.** When a surviving entry's value spans several lines, every line after the first is
+indented two spaces in `markdown` and `text` — the width of the `- ` marker, and never more, since four
+spaces would make the continuation an indented code block. An entry whose value contains a blank line
+remains a single list item, its subsequent blocks attached at that same content column; no blank line
+terminates the item. In `adoc`, indentation does not attach a block to a list item: implementations
+MUST emit a `+` continuation line before each subsequent block, and indentation is not normative there. Continuation applies to entries only — a single-valued field's
+value is emitted verbatim, and any further lines sit at column zero, unindented and unaltered.
+
+**Empty and placeholder.** A field Step 2 resolves as absent emits no row. When
+`DocumentSection.emptyBehavior` is `"show-placeholder"` and the field is `required: true`,
+implementations MUST emit a row carrying the literal `(empty)` — this supersedes Step 4's former
+MAY. The placeholder row takes scalar form regardless of cardinality. In `html` the value element
+additionally carries `srs-empty-value`. The rule does not reach the L1 View path, where
+`ExportConfig.omitEmptyFields` governs.
+
+**Class identity.** `{name}` in `srs-fieldname-{name}` is `Field.name` normalised by the five-step
+rule ([T-8]), never `FieldAssignment.displayLabel` — a rendering-only label must not move a stylesheet
+hook. The class vocabulary and the five-step rule are normative for baseline output independently of
+whether `ext:themes-l1` is declared, so a non-declaring implementation is not required to read that
+extension in order to comply. A relation row has no `Field.name`: it omits `srs-fieldname-*` and
+carries `srs-relationtype-{relationTypeKey}` instead. The five-step rule has no replacement for `/`, so
+step 3 deletes it and `core/depends-on` normalises to `coredepends-on` — deterministic, and noted so no
+implementer treats it as a bug to fix unilaterally.
+
+**Content.** In `markdown`, `adoc` and `text` the rendered label and value are emitted verbatim and
+MUST NOT be escaped or altered, except for the continuation above — field values in this model
+routinely are markup. In `html`, label and value content MUST be escaped (`&`, `<`, `>`, `"`, `'`).
+The baseline performs no markup conversion, so a markdown-bearing value appears in `html` as literal
+source; converted output is a Theme or L1 View concern.
+
+**Labels.** Resolution stays exactly Step 3: `FieldAssignment.displayLabel`, falling back to raw
+`Field.name`, with no humanisation or case conversion.
+Tier 0 Notes emit no field rows.
+
+**Conformance boundary.** These forms bind any implementation emitting a `Composition` in
+`markdown`, `adoc`, `text` or `html` through this baseline. They do not bind native application UI
+that is not emitting a `Composition`; a client-side `Composition` renderer in a covered format is
+not exempt.
+
+
+###### L1/L2 ExportConfig — two attachment points, no precedence (srs#525)
+
+**Content**: `ExportConfig` (ext:views-l1) is one shared shape attached at two points: `View.exportConfig` and `Composition.exportConfig`. Each attachment governs its own render context; neither overrides the other, because they never describe the same concern:
+
+- **`Composition.exportConfig`** governs this Composition's document-level rendering: `format` (all section rendering, superseding nothing because a dispatched View's own `format` simply has no effect here), and the document `preamble` (rendered once, before all sections).
+- **A dispatched L1 View's `exportConfig`** (`DocumentSection.renderViewId`/`typeDispatch`), when set, continues to govern *that View's own render context* — rendering one record through it — independently of the Composition it's dispatched within: its `preamble` renders before that record's field values (not the document preamble), and its `omitEmptyFields` controls that record's absent-field rendering.
+
+There is no property either attachment "wins": `Composition.exportConfig.format` is the only format that applies in section rendering because it is the only one describing that concern; a dispatched View's `exportConfig.format` describes a different concern (that View's own standalone-rendering format, when it is rendered outside any Composition) that section rendering never consults.
+
+When a dispatched View's `exportConfig.preamble` renders inside a section, the variable `{{heading-3}}` is available, resolving to heading prefix at level `3 + depthOffset`. In standalone export context (that View rendered outside any Composition), `{{heading-3}}` MUST resolve to the empty string — implementations MUST NOT emit the literal token.
+
+
+###### Heading Hierarchy
+
+**Content**: For `format: "markdown"`, `"html"`, or `"adoc"`:
+
+| Element | Heading level | Condition |
+|---|---|---|
+| Document title | `1 + depthOffset` | When `preamble` is absent |
+| Section title | `2 + depthOffset` | When `DocumentSection.title` is set |
+| Per-record heading | `3 + depthOffset` | When `titleFieldId` is set on the section, or (RFC-020, Rule [N+37]) as a fallback when it is not — see below |
+| Field label | Bold/formatted text — not a heading; exact per-format form per *Normative Field-Row Form* (RFC-037) | Always |
+
+For `format: "text"` or implementation-defined values, heading level semantics do not apply.
+
+**`identityFieldId` fallback (RFC-020, Rule [N+37]).** For any `DocumentSection` that does not declare `titleFieldId` — whether that section's field content renders via the Default Rendering Baseline or a dispatched L1 View — implementations SHOULD emit the per-record heading using the value of the field named by the record's Type's effective `identityFieldId` (`ext:type-inheritance`), if present, in place of omitting the heading. `titleFieldId`, when declared, MUST continue to take precedence for that section's per-record heading.
+
+
+###### Preamble Template Variables
+
+**Content**: Standard variables in `Composition.exportConfig.preamble`:
+
+| Variable | Resolves to |
+|---|---|
+| `{{container-title}}` | Container title from manifest |
+| `{{container-id}}` | Container UUID |
+| `{{date}}` | Render date |
+| `{{heading-1}}` | Heading prefix at level `1 + depthOffset` (empty string in json mode) |
+| `{{heading-2}}` | Heading prefix at level `2 + depthOffset` (empty string in json mode) |
+
+In json mode all `{{heading-N}}` variables MUST resolve to `""`. Implementations MUST NOT emit the literal token.
+
+
+###### Theme Variant Selection (ext:themes-l1)
+
+**Content**: When `ext:themes-l1` is declared and a variant name is supplied at render invocation:
+
+1. Find `ThemeVariant` in `themeVariants` matching the requested name (case-sensitive).
+2. If found: resolve its `ThemeReference` and apply Rule [T-2] (targets check). If format matches, use that Theme. If format does not match, render **without a theme** — do NOT fall back to `themeRef`.
+3. If not found: fall back to `themeRef` (applying Rule [T-2]). If absent or format-incompatible, render without a theme.
+4. If no variant name is supplied: use `themeRef` (applying Rule [T-2]).
+
+
+
+##### Composition
+
+**Canonical Key**: record:concepts/composition
+
+**Description**: A container-level projection that assembles many instances into one readable document: an ordered set of sections, each selecting its members by a structured query or by container membership, each rendering them through a chosen presentation, with document-level export settings, heading depth, navigation links and an optional theme. It orchestrates; it does not replace the per-record presentation it dispatches to, and compositions do not nest inside one another.
+
+**Notes**: When a section declares no view, a normative default rendering baseline applies, so theme-less and view-less output is specified, not implementation-chosen.
+
+###### Any SectionSource.discovery-query MUST express its type filter via query.typeNamespace/query.typeName, never a combined key string
+
+**Number**: 32
+
+**Constraint**: Any `Composition` in `Package.compositions[]` that contains a `SectionSource` with `type === "discovery-query"` MUST express its type-selection through the embedded `DiscoveryQuery`'s independent `typeNamespace`/`typeName` string predicates, resolved against the effective package set. There is no combined `namespace/name` key field on `DiscoveryQuery` or `SectionSource` -- `typeKey` (the KEYED namespace/name string introduced by the semanticObjectType collapse, owner ruling on #383, srs#372/#481/#524, rfc-decision-c8704763) and `semanticObjectType` before it are both retired with no successor field; the srs#525 SectionSource -> DiscoveryQuery collapse (rfc-decision-cce3c00e, rfc-decision-9ee14517) replaced the single combined-key convention with DiscoveryQuery's two separate predicates, closing the door on reintroducing a combined-key form.
+
+
+###### Every NavigationLink.fromSectionId and NavigationLink.toSectionId…
+
+**Number**: 44
+
+**Constraint**: Every `NavigationLink.fromSectionId` and `NavigationLink.toSectionId` must reference a `sectionId` declared in the enclosing `Composition.sections[]`.
+
+
+###### Field transclusion in Document Views
+
+**Content**: 
+Pulling a specific Field value inline into a Document View is useful, but a syntax such as `{{field:{recordId}/{fieldId}}}` makes a reusable Document View depend on concrete instance IDs. That weakens portability and should wait for an addressing model that can express reusable selection rules rather than binding a definition to one Record.
+
+
+###### Conditional processing
+
+**Content**: 
+Audience, platform, and output filtering may eventually allow one source Container to produce different projections for different readers. This is deferred because SectionSource queries already cover common projection differences, while a general condition evaluation model would add substantial complexity.
+
+
+###### ExactTypeRef entries in Composition.rootTypeRefs must resolve in the Package
+
+**Number**: I-63
+
+**Constraint**: When Composition.rootTypeRefs is present and non-empty, each ExactTypeRef entry MUST resolve to a Type that exists in the Package (the union of all packages in scope per packageRef/packageRefs; matched by both typeId and typeVersion). An entry that does not resolve MUST produce a diagnostic and MUST NOT be used for Container matching.
+
+
+###### containerScope in SectionSource.discovery-query controls query boundary
+
+**Number**: I-144
+
+**Constraint**: When SectionSource.discovery-query carries containerScope, implementations MUST apply the following scoping rules: (a) When containerScope is absent or "explicit", the query is scoped to the containers listed in containerIds[] -- existing behaviour. An absent containerIds[] with explicit scope produces an empty result. (b) When containerScope is "repository", the query spans all containers in the repository; containerIds[] MUST be ignored. (c) When containerScope is "subtree", the query spans effective(C) for each container in containerIds[], the recursive closure over declared childContainerIds (RFC-034 [R8]; I-147); it follows declared child edges only and MUST NOT traverse contains Relations to discover child containers (amended by RFC-034, 2026-09-06: the former "reachable by contains relations" branch is superseded). "explicit" correspondingly evaluates direct(C), the container's own members without its nested subtree; when containerIds[] is absent or empty, the context container is used as the subtree root. An implementation that cannot determine the context container for a subtree query MUST treat it as "explicit" with an empty containerIds[] and SHOULD emit a diagnostic. Implementations MUST NOT produce a validation error when containerScope is absent; absent is equivalent to "explicit". containerScope is arrangement, not selection: it is layered on top of the section's DiscoveryQuery, not a DiscoveryQuery predicate itself (DiscoveryQuery.containerId is single-valued and takes one container's effective membership; containerScope's multi-container/subtree semantics have no DiscoveryQuery equivalent).
+
+**Rationale**: Three-value enum rather than a boolean because the subtree case has meaningfully different semantics from both explicit and repository. Backward compatibility is preserved by treating absent as explicit. Originally numbered 011-3 under RFC-011's rule-set-qualified proposal-stage numbering; relocated from package/records/ into the projection root and renumbered I-144 upon RFC-011 acceptance (srs#410, rfc-decision-628cf6c4). Unchanged in substance by the srs#525 SectionSource -> DiscoveryQuery collapse (RFC-011 Rev 2): the containing variant was renamed type-query -> discovery-query (typeKey replaced by query.typeNamespace/query.typeName), but containerScope itself stays a SectionSource-level arrangement directive, still governed by RFC-011.
+
+
+###### ordering.memberOrder application algorithm
+
+**Number**: I-126
+
+**Constraint**: When `DocumentSection.ordering.memberOrder` is present and the section's `source.type` is `container-subset`, implementations MUST apply it as the presentation sequence: (1) emit listed `instanceId`s that are current container members in the declared order; (2) skip listed `instanceId`s that are no longer container members — implementations MUST emit a diagnostic; this MUST NOT be treated as a validation failure; (3) append surviving container members not in `memberOrder`, ordered by topological sort over `precedes` edges with a `createdAt`-ascending tiebreak (the default container-subset ordering `ext:views-l2` already specifies); (4) when `ordering.direction` is `"desc"`, the entire output sequence produced by steps (1)–(3) MUST be reversed before emission. `memberOrder` MUST NOT be combined with `ordering.fieldId` on the same section — a section carrying both is invalid; implementations MUST report a validation error. `memberOrder` on a non-`container-subset` section MUST be ignored with a diagnostic and SHOULD be rejected at package-validation time. (RFC-015 Change B.)
+
+**Rationale**: A departed `memberOrder` entry (step 2) is a diagnostic, not an error, because stale UUID references accumulate naturally as records are removed from containers; treating them as errors would make `memberOrder` fragile in practice. `memberOrder` on a non-`container-subset` section, by contrast, is a schema-authoring mistake with no legitimate interpretation, warranting rejection rather than silent recovery.
+
+
+###### memberOrder combined with typeFilter
+
+**Number**: I-127
+
+**Constraint**: When both `typeFilter` and `memberOrder` are present on a `container-subset` section, `typeFilter` is applied first to obtain the filtered member set; `memberOrder` is then applied over that filtered set. `memberOrder` entries naming members excluded by `typeFilter` are silently skipped (no diagnostic). Unlisted filtered survivors are appended in the same topological-sort-by-`precedes` order used in Invariant I-126 step (3). The `direction` reversal of Invariant I-126 step (4) applies to the combined result after `typeFilter` and `memberOrder` are both applied. (RFC-015 Change B.)
+
+**Rationale**: Without a fixed application order, `typeFilter` and `memberOrder` could interact ambiguously (e.g. a listed member excluded by the type filter). Filter-then-order matches the filter-then-project pattern already used elsewhere for `typeFilter` and keeps the two concerns composable and independently reasoned about.
+
+
+###### Composition projections key fields by Field.name
+
+**Number**: I-138
+
+**Constraint**: A Composition projection MUST key `ProjectedRecord.fields` and `orderedFieldKeys` by `Field.name`, and MUST carry a composite value recursively under its own key. `ProjectedFieldGroup` and `ProjectedGroupEntry` are removed and have no successor construct. (RFC-039 [R11])
+
+
+
+##### Theme
+
+**Canonical Key**: record:concepts/theme
+
+**Description**: A visual presentation layer attached to a rendered document (stylesheets, typography, assets, cover pages and templates that wrap each structural level of output), declared for named output formats and applied only when the render is in one of them. A theme wraps finished content and may never replace, suppress or reorder it, so removing the theme changes how output looks and never what it says.
+
+**Notes**: The semantic CSS class vocabulary is part of the output specification and not of the theme extension: a conforming implementation emits it whether or not any theme resolves.
+
+###### ext:themes-l1
+
+**Content**: Visual presentation layer for `Composition`. Attaches brand identity, typography, stylesheets, cover pages, and element wrapping to a rendered document without altering its semantic structure. Depends on `ext:views-l2`. Implementations that do not declare this extension MUST ignore `Composition.themeRef` and `Composition.themeVariants` and MUST NOT error on their presence.
+
+
+###### `AssetDeclaration`
+
+**Content**: A named asset (image, font, stylesheet, or data file) referenced in templates via `{{asset:name}}`.
+
+Example: the `AssetDeclaration` shape.
+
+Assets are declared in `Theme.assets` as a named dictionary. Asset names MUST be unique within the Theme.
+
+
+###### `PageTemplates`
+
+**Content**: Page-level chrome for paginated output formats (`"pdf"`, `"docx"`). Ignored for non-paginated formats.
+
+Example: the `PageTemplates` shape.
+
+
+###### `ElementTemplates`
+
+**Content**: Templates that wrap auto-rendered content at each structural level. Each template receives finished content as `{{content}}` and wraps it — it does not re-render or reorder content.
+
+Example: the `ElementTemplates` shape.
+
+Override precedence: a specific override always takes precedence over the corresponding universal template. When neither is set, the element is rendered without wrapping.
+
+
+###### `StylesheetDeclaration`
+
+**Content**: Example: the `StylesheetDeclaration` shape.
+
+
+###### `TypographyHints`
+
+**Content**: Informative declarations. No normative rendering behaviour is derived from these values.
+
+Example: the `TypographyHints` shape.
+
+
+###### `Theme`
+
+**Content**: Example: the `Theme` shape.
+
+`Package` gains `themes?: Theme[]` when `ext:themes-l1` is declared. When `ThemeReference.mode === "bundled"`, the referenced `themeId` MUST appear in `Package.themes[]` (Rule [T-5]). `Reference.definitionType` and `ImportRecord.definitionType` gain `"theme"` as a portable value.
+
+
+###### CSS Class Injection
+
+**Content**: For `"html"` and `"pdf"` output, implementations MUST add semantic CSS classes to the rendered elements named in the table below. RFC-037 adds the field-row label and value elements, which are not wrappers.
+
+**Class name normalisation** (5-step rule applied to all identifier components):
+1. Convert to lowercase
+2. Replace underscores, spaces, and dots with hyphens
+3. Remove characters that are not alphanumeric or hyphens
+4. Collapse consecutive hyphens to a single hyphen
+5. Trim leading and trailing hyphens
+
+| Element | Classes always applied | Classes conditionally applied |
+|---|---|---|
+| Document wrapper | `srs-document` | — |
+| Section wrapper | `srs-section`, `srs-section-{sectionId}` | — |
+| Record wrapper | `srs-record`, `srs-type-{typeNamespace}-{typeName}` | `srs-field-{fieldName}-{normalisedValue}` for each `cssClassFields` entry with a matching non-empty Field eligible under [T-9] |
+| Field row | `srs-field`, `srs-fieldname-{fieldName}` where `{fieldName}` is `Field.name` | `srs-relationtype-{relationTypeKey}` in place of `srs-fieldname-*` on a relation row |
+| Field row label | `srs-field-label` (+ compatibility alias `field-label`) | — |
+| Field row value | `srs-field-value` (+ compatibility alias `field-value`) | `srs-empty-value` when the value is the `(empty)` placeholder |
+
+
+###### Template Variable Reference
+
+**Content**: Variables not applicable to a given template context MUST resolve to an empty string.
+
+| Variable | Available in | Resolves to |
+|---|---|---|
+| `{{container-title}}` | All | Container title from manifest |
+| `{{container-id}}` | All | Container UUID |
+| `{{date}}` | All | Render date (ISO 8601 date) |
+| `{{heading-1}}` | `coverPage` only | Heading prefix at level `1 + depthOffset`. MUST resolve to empty string in all element wrapper templates. |
+| `{{asset:name}}` | All | Resolved asset reference (URL, data URI, or path) |
+| `{{section-title}}` | `sectionWrapper`, `sectionWrapperOverrides` | Value of `DocumentSection.title` |
+| `{{section-id}}` | `sectionWrapper`, `sectionWrapperOverrides` | Value of `DocumentSection.sectionId` |
+| `{{record-heading}}` | `recordWrapper`, `recordWrapperOverrides` | `titleFieldId` field value, or empty string |
+| `{{type-namespace}}` | `recordWrapper`, `recordWrapperOverrides` | `Record.typeNamespace` |
+| `{{type-name}}` | `recordWrapper`, `recordWrapperOverrides` | `Record.typeName` |
+| `{{field-label}}` | `fieldRow` | Display label for the field |
+| `{{field-value}}` | `fieldRow` | Rendered value of the field |
+| `{{field-name}}` | `fieldRow` | `Field.name` |
+| `{{content}}` | All element templates | Auto-rendered content this template wraps |
+| `{{page-number}}` | `pageHeader`, `pageFooter` | Current page number (paginated formats only) |
+
+
+###### Conformance Rules
+
+**Content**: **[T-1]** Implementations that do not declare `ext:themes-l1` MUST ignore `Composition.themeRef` and MUST NOT error on its presence.
+
+**[T-1b]** `Theme.targets` MUST contain at least one entry. An absent or empty `targets` array is a validation error. Enforced at package validation time.
+
+**[T-2]** Implementations MUST apply a Theme only when `Composition.format` appears in `Theme.targets`. When the format does not match, the Theme MUST be ignored and structural output produced without it.
+
+**[T-3]** Element templates receive auto-rendered content via `{{content}}`. Implementations MUST render structural content first and pass it to the template; they MUST NOT suppress or reorder content through template evaluation.
+
+**[T-4]** Asset names within a single `Theme.assets` dictionary MUST be unique (case-sensitive).
+
+**[T-5]** When `ThemeReference.mode === "bundled"`, the referenced `themeId` MUST appear in `Package.themes[]`. A missing theme in a bundled package is a validation error.
+
+**[T-6]** Template variables not recognised by the implementation MUST be passed through as literal text. They MUST NOT cause a rendering error.
+
+**[T-6b]** `{{heading-1}}`, `{{heading-2}}`, and `{{heading-3}}` MUST resolve to the empty string in all element wrapper templates (`documentWrapper`, `sectionWrapper`, `sectionWrapperOverrides`, `recordWrapper`, `recordWrapperOverrides`, `fieldRow`, `pageHeader`, `pageFooter`). Structural headings are delivered inside `{{content}}` and MUST NOT be re-emitted. `{{heading-1}}` is available only in `PageTemplates.coverPage`.
+
+**[T-7]** When `recordWrapperOverrides` contains an entry whose `typeId` matches the current record's `typeId`, that template MUST be used instead of `recordWrapper`. When `sectionWrapperOverrides` contains an entry whose `sectionId` matches the current section's `sectionId`, that template MUST be used instead of `sectionWrapper`. Override arrays MUST NOT contain duplicate `typeId` or `sectionId` values. Enforced at package validation time.
+
+**[T-8]** For `"html"` and `"pdf"` output, implementations MUST apply the CSS classes in the injection table to each rendered element named in that table. Class name components MUST be normalised using the five-step rule. The `{fieldName}` component MUST be derived from `Field.name` and MUST NOT be derived from `FieldAssignment.displayLabel` (RFC-037 [FR-037-12]) — `{{field-name}}` in the template variable table already carries that meaning. The rule text now names elements rather than wrapper elements because the label and value rows added by RFC-037 are not wrappers.
+
+**[T-9]** A Field listed in `Theme.cssClassFields` generates a CSS class only when it is effective-single (`fieldType.cardinality` absent/`"single"` and, until #242 Phase B, effective `FieldAssignment.repeatable !== true`), `fieldType.datatype == "string"`, and `fieldType.format` is absent or one of `"plain"` or `"markdown"`. `valueDomain` may be open or closed. URI-, UUID-, and email-formatted strings, list/repeatable Fields, and every non-string or composite datatype are silently skipped. Absent or empty fields generate no class. This preserves scalar legacy `string`, `text`, and `select`; the scalar requirement intentionally closes the previously undefined array-to-one-CSS-class case. (RFC-032 Rev-7 erratum.)
+
+**[T-10]** When `DocumentSection.renderViewId` is set, `fieldRow` MUST be applied to each FieldView row that survives `ExportConfig.omitEmptyFields` filtering, in `View.fieldViews[].order`. `fieldRow` MUST NOT wrap RecordPropertyView rows or `ExportConfig.preamble` content.
+
+**[T-11]** Implementations that support `ext:themes-l1` MUST accept `"theme"` as a valid value for `Reference.definitionType` and (when `ext:import-tracking` is also declared) for `ImportRecord.definitionType`. A `definitionType: "theme"` value MUST NOT cause a validation error.
+
+**[T-Gx1]** When `FieldGroup.compositeRenderer` is set to a known value, implementations MUST NOT apply `groupFieldRowTemplates` to that group's entries. `groupFieldRowTemplates` MUST only be applied when the group is rendered by the per-field baseline (i.e. `compositeRenderer` is absent or falls back via `[FG-Cx1]`).
+
+**[T-Gx2]** Field names in `groupFieldRowTemplates` that do not appear in the rendered group MUST be silently ignored and MUST NOT cause an error.
+
+**[T-Gx3]** When a field row in a group entry is covered by a matching key in `groupFieldRowTemplates`, implementations MUST use that template instead of `fieldRow`. The `fieldRow` template MUST NOT be applied to field rows rendered via `groupFieldRowTemplates`.
+
+**[T-Cx1]** When `compositeRendererConfig["table"]` is absent or its `tableClass` property is absent, implementations MUST use `"srs-data-table"` as the default CSS class on the `<table>` element for HTML output.
+
+**[T-Cx2]** When `tableClass` in `compositeRendererConfig["table"]` is explicitly set to an empty string `""`, implementations MUST emit the `<table>` element with no `class` attribute.
+
+**[T-Cx3]** `wrapperTemplate` and `captionTemplate` in `compositeRendererConfig["table"]` apply to each entry rendered by `compositeRenderer: "table"`. They MUST NOT affect groups with other `compositeRenderer` values or groups without a `compositeRenderer`.
+
+**[T-Cx4]** When evaluating format-conditional defaults for `wrapperTemplate` and `captionTemplate`, implementations MUST use `Composition.format` as the authoritative active format signal. When `wrapperTemplate` is explicitly set in `compositeRendererConfig["table"]`, implementations MUST apply it regardless of output format.
+
+**[T-Cx5]** Unknown properties in a `compositeRendererConfig` sub-object for a known renderer name MUST be silently ignored and MUST NOT cause a rendering error.
+
+
+###### Composite rendering reconciliation (RFC-036)
+
+**Content**: `ElementTemplates` gains `compositeFieldRowTemplates?: { [fieldName: string]: string }` — the successor to
+`groupFieldRowTemplates`, re-scoped from `FieldGroup` entries to composite-range values rendered by the
+composite baseline. `groupFieldRowTemplates` is deprecated and retires with `FieldGroup` at the #242
+cutover.
+
+`compositeRendererConfig` is unchanged in shape and keying, and gains a schema for its `table` sub-object
+(`tableClass`, `wrapperTemplate`, `captionTemplate`), with `additionalProperties: true` retained at both
+levels so vendor renderer keys and unknown sub-properties stay valid.
+
+**[CR-036-16]** `compositeRendererConfig` is keyed by the same identifier space as a composite renderer identifier [CR-036-1]. Unknown properties within a known renderer's sub-object, and keys naming renderers the implementation does not know, MUST be silently ignored and MUST NOT cause a rendering or loading error. Config applies only to fields resolved to the corresponding renderer. `Composition.format` is the authoritative format signal for format-conditional defaults, and an explicitly set template applies regardless of output format. `{{subheading}}` resolves to the rendered subheading and `{{label}}` to the output of `captionTemplate`, both computed before wrapper substitution. `"baseline"` is a dispatch sentinel, not a renderer; a `compositeRendererConfig` key of `"baseline"` MUST be ignored. The `table` renderer reads:
+
+| Property | Effect | Default |
+|---|---|---|
+| `tableClass` | CSS class on `<table>` (HTML only) | `"srs-data-table"`; an explicit `""` suppresses the attribute |
+| `wrapperTemplate` | Wraps one rendered table value; tokens `{{subheading}}`, `{{label}}`, `{{table}}`, absent optional values resolving to `""` | HTML: `<figure class="srs-table">{{subheading}}{{label}}{{table}}</figure>`. Other formats: no wrapper |
+| `captionTemplate` | Renders the `label` role; token `{{field-value}}` | HTML: `<figcaption>{{field-value}}</figcaption>`. Markdown: `*{{field-value}}*`. Other formats: undecorated |
+
+The `subheading` role renders as a heading at the same level as the composite's own heading. **These
+defaults are the renderer's output specification, not configuration defaults: implementations MUST apply
+them whether or not `ext:themes-l1` is declared and whether or not a Theme resolves.** This matters
+because [CR-036-19] retires the `[T-Cx*]` rules that currently house half of them, and because RFC-002
+`[T-2]` requires structural output when a Theme is ignored on format mismatch.
+
+**[CR-036-17]** `compositeFieldRowTemplates` is keyed by `Field.name` and supplies the template for an individual field row within a composite rendered by the baseline, in place of `fieldRow`. Keys matching no rendered field MUST be silently ignored. Implementations MUST NOT apply it to a composite that resolved to a renderer under [CR-036-6]; a composite that falls back to the baseline under [CR-036-7] or [CR-036-9] is baseline-rendered and MUST have it applied.
+
+**[CR-036-18]** `groupFieldRowTemplates` is deprecated by `compositeFieldRowTemplates` and retires with `FieldGroup` at the #242 cutover. While both exist, implementations MUST apply `groupFieldRowTemplates` to `FieldGroup` entries and `compositeFieldRowTemplates` to composite entries. Migrating a `FieldGroup` to a composite therefore silently disables any `groupFieldRowTemplates` key naming one of its fields: a migration that converts a group MUST carry every such key over to `compositeFieldRowTemplates`, and implementations SHOULD emit a diagnostic when a `groupFieldRowTemplates` key matches no `FieldGroup` field in the effective package set.
+
+**[CR-036-19]** RFC-007's `[FG-Cx0]`–`[FG-Cx4]`, `[T-Gx1]`–`[T-Gx3]` and `[T-Cx1]`–`[T-Cx5]` remain in force for `FieldGroup` until `FieldGroup` is removed at the #242 cutover, at which point they are retired. A `FieldGroup` MUST NOT be the target of a composite renderer binding, and a composite-range field MUST NOT be dispatched by `FieldGroup.compositeRenderer`; the two mechanisms MUST NOT interact.
+
+
+###### Normative field-row rendering (RFC-037)
+
+**Content**: `ElementTemplates.fieldRow` is a wrapper: it receives finished content as `{{content}}` and does not
+re-render it ([T-3]). RFC-037 defines what that finished content is, so theme-less output — "the
+element is rendered without wrapping" — is defined rather than implementation-chosen. The per-format
+forms are normative in `ext:views-l2`, *Normative Field-Row Form*.
+
+The class injection table above gains the label and value elements. Both carry an `srs-`-prefixed
+name and an unprefixed compatibility alias; only the prefixed names form the forward contract.
+
+Two naming notes. The aliases `field-label` / `field-value` are spelled identically to the
+`{{field-label}}` / `{{field-value}}` template variables above; they are CSS class names, not
+template tokens, and the namespaces do not interact. And `srs-field-label` sits alongside the
+pre-existing generated family `srs-field-{fieldName}-{normalisedValue}` applied to record wrappers
+for `cssClassFields` entries — a Field named `label` with value `active` yields
+`srs-field-label-active`. The two families are distinguished by exact match, never by prefix.
+
+**[FR-037-12]** On a field row the identity class is `srs-fieldname-{fieldName}`, whose
+`{fieldName}` component MUST be derived from `Field.name` and MUST NOT be derived from
+`FieldAssignment.displayLabel`. On a relation row implementations MUST omit `srs-fieldname-*` and
+MUST emit `srs-relationtype-{relationTypeKey}` instead. Both are normalised by the five-step rule.
+
+**[FR-037-13]** Implementations MUST emit the field-row class vocabulary in baseline `html` output
+whether or not `ext:themes-l1` is declared and whether or not a Theme resolves. This broadens
+[T-8]'s scope, which is otherwise conditional on the extension, and matches the precedent
+[CR-036-16] sets for renderer output defaults.
+
+**[FR-037-14]** For `"html"` and `"pdf"` output, implementations MUST emit both the `srs-`-prefixed
+class names and their unprefixed aliases (`field-label`, `field-value`) until the #242 cutover, and
+MUST emit only the prefixed names thereafter. The aliases are deprecated on acceptance of RFC-037
+and retire at the same cutover that [CR-036-19] retires `FieldGroup` and the `[T-Gx*]`/`[T-Cx*]`
+rules, so the deprecation ends on a clock the project already keeps. A stylesheet claiming
+conformance MUST NOT depend on the unprefixed aliases. No `pdf` row form is yet defined, so for
+`pdf` this rule names the classes without naming the elements that carry them (RFC-037 Open
+Question 3).
+
+**[FR-037-19]** The row forms defined in `ext:views-l2` are the content `fieldRow` receives as
+`{{content}}`. A Theme MAY wrap the row and MUST NOT replace it, per [T-3]. When no `fieldRow`
+template resolves, implementations MUST emit those forms unwrapped. This is the terminal rung of the
+RFC-036 row-template ladder.
+
+
+
+
+#### Projection
+
+**Content**: Rendered output is derived from records and is never itself a source of truth for them. A document, a table, an export, or a serialised copy is a view produced from the records on demand: rendering it again produces the same result, because nothing in it originates the meaning it shows.
+
+A projection keeps a traceable line back to the records it renders. Editing the rendered artifact directly, instead of the records, creates a second copy of the meaning that the records no longer agree with, and the disagreement has no mechanical way to resolve.
+
+View, Composition, and Theme are the constructs a projection is built from: View selects the presentation, Composition assembles what gets rendered, and Theme supplies the templates the rendering fills in. Each rests on the same rule: render the output, never author it directly.
+
+
+
+## Extensions
+
+### Extensions
+
+**Canonical Key**: part:extensions
+
+**Description**: The independently adoptable capability modules a repository may declare, and how they interact with each other and with the core.
+
+#### Conversation Layer
 
 **Content**: > **Standalone repository note**: The conversation layer is optional infrastructure. An implementation declaring only `SRS 2.0 Core + ext:repository` does not require a TSS, ext:protocol, ext:addressability, AttentionState, or any live conversation store. Source documents stored in `source-documents/` are sufficient evidence storage for standalone use. This section describes the full-stack integration model; implementers building file-based or offline repositories may skip it entirely.
 
@@ -1153,17 +2538,17 @@ Transcript chunks referenced in `SourceReference` are source material — addres
 ---
 
 
-### Extensions
+#### Extensions
 
 **Content**: Extensions are optional, independently adoptable. Each extension section declares its identifier, dependencies, and the types it defines.
 
 ---
 
-#### ext:addressability
+##### ext:addressability
 
 **Content**: Content relocated to mechanism leaves under the Addressability concept (RFC-042 Change B, srs#562/#687). See derived-from.
 
-##### The `Address` union
+###### The `Address` union
 
 **Content**: `Address`, in pseudo-IDL:
 
@@ -1189,7 +2574,7 @@ type Address =
 ```
 
 
-##### The `AttentionState` shape
+###### The `AttentionState` shape
 
 **Content**: `AttentionState`, in pseudo-IDL:
 
@@ -1205,11 +2590,11 @@ type Address =
 
 
 
-#### ext:lifecycle
+##### ext:lifecycle
 
 **Content**: Content relocated to mechanism leaves under the Lifecycle concept (RFC-042 Change C, srs#562). See derived-from.
 
-##### The `LifecycleState` shape
+###### The `LifecycleState` shape
 
 **Content**: `LifecycleState`, in pseudo-IDL:
 
@@ -1234,7 +2619,7 @@ type Address =
 ```
 
 
-##### The `LifecycleTransition` shape
+###### The `LifecycleTransition` shape
 
 **Content**: `LifecycleTransition`, in pseudo-IDL:
 
@@ -1250,7 +2635,7 @@ type Address =
 ```
 
 
-##### The `Lifecycle` container shape
+###### The `Lifecycle` container shape
 
 **Content**: `Lifecycle`, in pseudo-IDL:
 
@@ -1276,7 +2661,7 @@ type Address =
 ```
 
 
-##### The two lifecycle declaration forms a Type may carry
+###### The two lifecycle declaration forms a Type may carry
 
 **Content**: The inline form and the referenced form:
 
@@ -1295,11 +2680,11 @@ lifecycleRef?: UUID        // LINEAGE reference (rfc-decision-c8704763) — reso
 
 
 
-#### ext:protocol
+##### ext:protocol
 
 **Content**: Content relocated to mechanism leaves under the Protocol concept (RFC-042 Change B, srs#562/#687). See derived-from.
 
-##### The `FieldRef` shape
+###### The `FieldRef` shape
 
 **Content**: `FieldRef`, in pseudo-IDL:
 
@@ -1311,7 +2696,7 @@ lifecycleRef?: UUID        // LINEAGE reference (rfc-decision-c8704763) — reso
 ```
 
 
-##### The `ProtocolStage` shape
+###### The `ProtocolStage` shape
 
 **Content**: `ProtocolStage`, in pseudo-IDL:
 
@@ -1336,7 +2721,7 @@ lifecycleRef?: UUID        // LINEAGE reference (rfc-decision-c8704763) — reso
 ```
 
 
-##### The `Protocol` shape
+###### The `Protocol` shape
 
 **Content**: `Protocol`, in pseudo-IDL:
 
@@ -1363,7 +2748,7 @@ lifecycleRef?: UUID        // LINEAGE reference (rfc-decision-c8704763) — reso
 ```
 
 
-##### A Protocol chain for a governance decision
+###### A Protocol chain for a governance decision
 
 **Content**: Three Protocols in sequence, from brain dump to Decision Record. Non-normative:
 
@@ -1395,7 +2780,7 @@ Context query for R-D / F-outcome:
 
 
 
-#### Generated reference: `FieldRef`
+##### Generated reference: `FieldRef`
 
 **Referenced Type Id**: 4c00003d-0000-4000-a000-00000000003d
 
@@ -1420,7 +2805,7 @@ field-ref {
 ```
 
 
-#### Generated reference: `ProtocolStage`
+##### Generated reference: `ProtocolStage`
 
 **Referenced Type Id**: 4c00003e-0000-4000-a000-00000000003e
 
@@ -1461,7 +2846,7 @@ protocol-stage {
 ```
 
 
-#### Generated reference: `Protocol`
+##### Generated reference: `Protocol`
 
 **Referenced Type Id**: 4c00003f-0000-4000-a000-00000000003f
 
@@ -1500,12 +2885,12 @@ protocol {
 ```
 
 
-#### ext:blueprint
+##### ext:blueprint
 
 **Content**: Content relocated to mechanism leaves under the Blueprint concept (RFC-042 Change B, srs#562). See derived-from.
 
 
-#### Generated reference: `RelationSpec`
+##### Generated reference: `RelationSpec`
 
 **Referenced Type Id**: 4c00001a-0000-4000-a000-00000000001a
 
@@ -1536,7 +2921,7 @@ relation-spec {
 ```
 
 
-#### Generated reference: `Blueprint`
+##### Generated reference: `Blueprint`
 
 **Referenced Type Id**: 4c00001b-0000-4000-a000-00000000001b
 
@@ -1577,11 +2962,11 @@ blueprint {
 ```
 
 
-#### ext:type-inheritance
+##### ext:type-inheritance
 
 **Content**: Content relocated to mechanism leaves under the Type specialisation concept (RFC-042 Change B, srs#562). See derived-from.
 
-##### The properties `ext:type-inheritance` adds to a Type
+###### The properties `ext:type-inheritance` adds to a Type
 
 **Content**: The properties this extension adds to `Type`, in pseudo-IDL:
 
@@ -1613,7 +2998,7 @@ blueprint {
 ```
 
 
-##### The `FieldAssignmentOverride` shape
+###### The `FieldAssignmentOverride` shape
 
 **Content**: `FieldAssignmentOverride`, in pseudo-IDL:
 
@@ -1627,7 +3012,7 @@ blueprint {
 ```
 
 
-##### A governance decision Type specialising a core decision Type
+###### A governance decision Type specialising a core decision Type
 
 **Content**: A specialising Type and the fields it adds to its base.
 
@@ -1642,11 +3027,11 @@ Type: org.example/governance_decision
 
 
 
-#### ext:views-l1
+##### ext:views-l1
 
 **Content**: Content relocated to mechanism leaves under the View concept (RFC-042 Change C, srs#562). See derived-from.
 
-##### The `FieldView` shape
+###### The `FieldView` shape
 
 **Content**: `FieldView`, in pseudo-IDL:
 
@@ -1665,7 +3050,7 @@ Type: org.example/governance_decision
 ```
 
 
-##### The `RecordPropertyView` shape
+###### The `RecordPropertyView` shape
 
 **Content**: `RecordPropertyView`, in pseudo-IDL:
 
@@ -1679,7 +3064,7 @@ Type: org.example/governance_decision
 ```
 
 
-##### The `ExportConfig` shape
+###### The `ExportConfig` shape
 
 **Content**: `ExportConfig`, in pseudo-IDL:
 
@@ -1696,7 +3081,7 @@ Type: org.example/governance_decision
 ```
 
 
-##### The `View` shape
+###### The `View` shape
 
 **Content**: `View`, in pseudo-IDL:
 
@@ -1729,7 +3114,7 @@ Type: org.example/governance_decision
 ```
 
 
-##### The `CompositeRendererBinding` shape
+###### The `CompositeRendererBinding` shape
 
 **Content**: `CompositeRendererBinding`, in pseudo-IDL:
 
@@ -1750,7 +3135,7 @@ CompositeRendererBinding {
 
 
 
-#### Generated reference: `View`
+##### Generated reference: `View`
 
 **Referenced Type Id**: 4c00003c-0000-4000-a000-00000000003c
 
@@ -1793,7 +3178,7 @@ view {
 ```
 
 
-#### Generated reference: `FieldView`
+##### Generated reference: `FieldView`
 
 **Referenced Type Id**: 4c00003a-0000-4000-a000-00000000003a
 
@@ -1830,7 +3215,7 @@ field-view {
 ```
 
 
-#### Generated reference: `RecordPropertyView`
+##### Generated reference: `RecordPropertyView`
 
 **Referenced Type Id**: 4c00003b-0000-4000-a000-00000000003b
 
@@ -1859,7 +3244,7 @@ record-property-view {
 ```
 
 
-#### Generated reference: `ExportConfig`
+##### Generated reference: `ExportConfig`
 
 **Referenced Type Id**: 4c000025-0000-4000-a000-000000000025
 
@@ -1886,11 +3271,11 @@ export-config {
 ```
 
 
-#### ext:views-l2
+##### ext:views-l2
 
 **Content**: Content relocated to mechanism leaves under the View concept (RFC-042 Change C, srs#562). See derived-from.
 
-##### The `SectionSource` union
+###### The `SectionSource` union
 
 **Content**: `SectionSource`, in pseudo-IDL:
 
@@ -1930,7 +3315,7 @@ type SectionSource =
 ```
 
 
-##### The `DocumentSection` shape
+###### The `DocumentSection` shape
 
 **Content**: `DocumentSection`, in pseudo-IDL:
 
@@ -1997,7 +3382,7 @@ type SectionSource =
 ```
 
 
-##### The `CompositeRendererDirective` shape
+###### The `CompositeRendererDirective` shape
 
 **Content**: `CompositeRendererDirective`, in pseudo-IDL:
 
@@ -2020,7 +3405,7 @@ type SectionSource =
 ```
 
 
-##### The `RelationsPresentation` shape
+###### The `RelationsPresentation` shape
 
 **Content**: `RelationsPresentation`, in pseudo-IDL:
 
@@ -2055,7 +3440,7 @@ type SectionSource =
 ```
 
 
-##### The `NavigationLink` shape
+###### The `NavigationLink` shape
 
 **Content**: `NavigationLink`, in pseudo-IDL:
 
@@ -2069,7 +3454,7 @@ type SectionSource =
 ```
 
 
-##### The `ThemeReference` shape
+###### The `ThemeReference` shape
 
 **Content**: `ThemeReference`, in pseudo-IDL:
 
@@ -2083,7 +3468,7 @@ type SectionSource =
 ```
 
 
-##### The `ThemeVariant` shape
+###### The `ThemeVariant` shape
 
 **Content**: `ThemeVariant`, in pseudo-IDL:
 
@@ -2096,7 +3481,7 @@ type SectionSource =
 ```
 
 
-##### The `Composition` shape
+###### The `Composition` shape
 
 **Content**: `Composition`, in pseudo-IDL.
 
@@ -2169,7 +3554,7 @@ type SectionSource =
 ```
 
 
-##### The html multi-entry field row
+###### The html multi-entry field row
 
 **Content**: One `div`, one label, and one list item per entry:
 
@@ -2179,7 +3564,7 @@ type SectionSource =
 
 
 
-#### Generated reference: `Composition`
+##### Generated reference: `Composition`
 
 **Referenced Type Id**: 4c000037-0000-4000-a000-000000000037
 
@@ -2232,7 +3617,7 @@ composition {
 ```
 
 
-#### Generated reference: `DiscoveryQuery`
+##### Generated reference: `DiscoveryQuery`
 
 **Referenced Type Id**: 4c000024-0000-4000-a000-000000000024
 
@@ -2273,7 +3658,7 @@ discovery-query {
 ```
 
 
-#### Generated reference: `TextSegment`
+##### Generated reference: `TextSegment`
 
 **Referenced Type Id**: 4c000040-0000-4000-a000-000000000040
 
@@ -2300,7 +3685,7 @@ text-segment {
 ```
 
 
-#### Generated reference: `ExpectedSegments`
+##### Generated reference: `ExpectedSegments`
 
 **Referenced Type Id**: 4c000041-0000-4000-a000-000000000041
 
@@ -2327,7 +3712,7 @@ expected-segments {
 ```
 
 
-#### Generated reference: `ConformanceScenario`
+##### Generated reference: `ConformanceScenario`
 
 **Referenced Type Id**: 4c000042-0000-4000-a000-000000000042
 
@@ -2360,7 +3745,7 @@ conformance-scenario {
 ```
 
 
-#### Generated reference: `Theme`
+##### Generated reference: `Theme`
 
 **Referenced Type Id**: 4c00004a-0000-4000-a000-00000000004a
 
@@ -2411,7 +3796,7 @@ theme {
 ```
 
 
-#### Generated reference: `SrsjEnvelope`
+##### Generated reference: `SrsjEnvelope`
 
 **Referenced Type Id**: 4c00004b-0000-4000-a000-00000000004b
 
@@ -2438,11 +3823,11 @@ srsj-envelope {
 ```
 
 
-#### ext:cross-field-validation
+##### ext:cross-field-validation
 
 **Content**: Content relocated to mechanism leaves under the Validation concept (RFC-042 Change B, srs#562). See derived-from.
 
-##### The `CrossFieldRule` shape
+###### The `CrossFieldRule` shape
 
 **Content**: `CrossFieldRule`, in pseudo-IDL:
 
@@ -2467,12 +3852,12 @@ srsj-envelope {
 
 
 
-#### ext:recommended-relations
+##### ext:recommended-relations
 
 **Content**: Content relocated to mechanism leaves under the Relation type definition concept (RFC-042 Change B, srs#562). See derived-from.
 
 
-#### ext:import-tracking
+##### ext:import-tracking
 
 **Content**: **Required for**: implementations that receive packages from upstream publishers and need to track update and conflict state.
 
@@ -2526,7 +3911,7 @@ When both `local-ahead` and `diverged` conditions hold simultaneously, implement
 
 The `"upstream-ahead"` state (a newer version exists upstream) requires `ext:registry` and is out of scope for local divergence detection.
 
-##### The `ImportMode` values
+###### The `ImportMode` values
 
 **Content**: `ImportMode`, in pseudo-IDL:
 
@@ -2535,7 +3920,7 @@ The `"upstream-ahead"` state (a newer version exists upstream) requires `ext:reg
 ```
 
 
-##### The `ImportRecord` shape
+###### The `ImportRecord` shape
 
 **Content**: `ImportRecord`, in pseudo-IDL:
 
@@ -2567,7 +3952,7 @@ The `"upstream-ahead"` state (a newer version exists upstream) requires `ext:reg
 ```
 
 
-##### The `ImportSummary` shape
+###### The `ImportSummary` shape
 
 **Content**: `ImportSummary`, in pseudo-IDL:
 
@@ -2584,7 +3969,7 @@ The `"upstream-ahead"` state (a newer version exists upstream) requires `ext:reg
 ```
 
 
-##### The `UpstreamPackage` shape
+###### The `UpstreamPackage` shape
 
 **Content**: `UpstreamPackage`, in pseudo-IDL:
 
@@ -2600,7 +3985,7 @@ The `"upstream-ahead"` state (a newer version exists upstream) requires `ext:reg
 
 
 
-#### Generated reference: `SourceDocumentMeta`
+##### Generated reference: `SourceDocumentMeta`
 
 **Referenced Type Id**: 4c000022-0000-4000-a000-000000000022
 
@@ -2647,7 +4032,7 @@ source-document-meta {
 ```
 
 
-#### ext:registry
+##### ext:registry
 
 **Content**: **Required for**: multi-publisher ecosystems; discoverable definition catalogs.
 
@@ -2667,7 +4052,7 @@ Multiple Registries may coexist. A consumer may index multiple catalogs. The spe
 
 ---
 
-##### The `RegistryEntry` shape
+###### The `RegistryEntry` shape
 
 **Content**: `RegistryEntry`, in pseudo-IDL:
 
@@ -2693,7 +4078,7 @@ Multiple Registries may coexist. A consumer may index multiple catalogs. The spe
 ```
 
 
-##### The `Registry` shape
+###### The `Registry` shape
 
 **Content**: `Registry`, in pseudo-IDL:
 
@@ -2711,7 +4096,7 @@ Multiple Registries may coexist. A consumer may index multiple catalogs. The spe
 
 
 
-#### ext:federation
+##### ext:federation
 
 **Content**: **Status: Dormant** (removed under `rfc-decision-4f1e12e5`, 2026-08-22). The 2026-08-21 usage attestation found zero registries, zero events, and zero cross-repository relations anywhere in the corpus — the mechanism was speculative, never exercised in production. It is removed under the dormancy rule (`rfc-decision-cce3c00e`).
 
@@ -2722,7 +4107,7 @@ Multiple Registries may coexist. A consumer may index multiple catalogs. The spe
 Cell: ♓ Portability.
 
 
-#### ext:repository
+##### ext:repository
 
 **Content**: **Required for**: any implementation that stores SRS content as files, produces sharable SRS archives, or supports interoperable export and import.
 
@@ -2954,7 +4339,7 @@ An importer must not mix strategies within a single copy operation.
 
 ---
 
-##### The repository root layout
+###### The repository root layout
 
 **Content**: The directories a conforming repository has at its root:
 
@@ -2970,7 +4355,7 @@ An importer must not mix strategies within a single copy operation.
 ```
 
 
-##### The `RepositoryManifest` shape
+###### The `RepositoryManifest` shape
 
 **Content**: `RepositoryManifest`, in pseudo-IDL:
 
@@ -3013,7 +4398,7 @@ An importer must not mix strategies within a single copy operation.
 ```
 
 
-##### The `PackageRef` shape
+###### The `PackageRef` shape
 
 **Content**: `PackageRef`, in pseudo-IDL:
 
@@ -3032,7 +4417,7 @@ An importer must not mix strategies within a single copy operation.
 ```
 
 
-##### The `InstanceIndexEntry` shape
+###### The `InstanceIndexEntry` shape
 
 **Content**: `InstanceIndexEntry`, in pseudo-IDL:
 
@@ -3054,7 +4439,7 @@ An importer must not mix strategies within a single copy operation.
 ```
 
 
-##### The `SourceDocumentIndexEntry` shape
+###### The `SourceDocumentIndexEntry` shape
 
 **Content**: `SourceDocumentIndexEntry`, in pseudo-IDL:
 
@@ -3071,7 +4456,7 @@ An importer must not mix strategies within a single copy operation.
 ```
 
 
-##### The `RelationsChecksumEntry` shape
+###### The `RelationsChecksumEntry` shape
 
 **Content**: `RelationsChecksumEntry`, in pseudo-IDL:
 
@@ -3083,7 +4468,7 @@ An importer must not mix strategies within a single copy operation.
 ```
 
 
-##### The `SourceAnchor` shape
+###### The `SourceAnchor` shape
 
 **Content**: `SourceAnchor`, in pseudo-IDL:
 
@@ -3096,7 +4481,7 @@ An importer must not mix strategies within a single copy operation.
 ```
 
 
-##### The `SourceDocument` shape
+###### The `SourceDocument` shape
 
 **Content**: `SourceDocument`, in pseudo-IDL:
 
@@ -3134,7 +4519,7 @@ An importer must not mix strategies within a single copy operation.
 ```
 
 
-##### A source document and its sidecar
+###### A source document and its sidecar
 
 **Content**: The content file and its metadata sidecar, sharing one filename stem:
 
@@ -3146,7 +4531,7 @@ source-documents/
 
 
 
-#### ext:json-store
+##### ext:json-store
 
 **Content**: **Required for**: any implementation that stores an SRS repository as a single portable JSON file.
 
@@ -3215,7 +4600,7 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 
 ---
 
-##### The top-level shape of a `.srsj` file
+###### The top-level shape of a `.srsj` file
 
 **Content**: The top-level keys of a JSON Store file:
 
@@ -3234,11 +4619,11 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 
 
 
-#### ext:themes-l1
+##### ext:themes-l1
 
 **Content**: Content relocated to mechanism leaves under the Theme concept (RFC-042 Change C, srs#562). See derived-from.
 
-##### The `AssetDeclaration` shape
+###### The `AssetDeclaration` shape
 
 **Content**: `AssetDeclaration`, in pseudo-IDL:
 
@@ -3255,7 +4640,7 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 ```
 
 
-##### The `PageTemplates` shape
+###### The `PageTemplates` shape
 
 **Content**: `PageTemplates`, in pseudo-IDL:
 
@@ -3274,7 +4659,7 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 ```
 
 
-##### The `ElementTemplates` shape
+###### The `ElementTemplates` shape
 
 **Content**: `ElementTemplates`, in pseudo-IDL:
 
@@ -3350,7 +4735,7 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 ```
 
 
-##### The `StylesheetDeclaration` shape
+###### The `StylesheetDeclaration` shape
 
 **Content**: `StylesheetDeclaration`, in pseudo-IDL:
 
@@ -3364,7 +4749,7 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 ```
 
 
-##### The `TypographyHints` shape
+###### The `TypographyHints` shape
 
 **Content**: `TypographyHints`, in pseudo-IDL:
 
@@ -3379,7 +4764,7 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 ```
 
 
-##### The `Theme` shape
+###### The `Theme` shape
 
 **Content**: `Theme`, in pseudo-IDL:
 
@@ -3421,7 +4806,7 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 
 
 
-#### ext:changelog
+##### ext:changelog
 
 **Content**: **Status: Dormant** (removed under `rfc-decision-2a1e1590`, 2026-08-21). The 2026-08-21 usage attestation found zero `changelog/changelog.json` files anywhere in the corpus — the mechanism was speculative, never exercised in production. It is removed under the dormancy rule (`rfc-decision-cce3c00e`) alongside the per-field Revision sidecar mechanism it paired with, removed by the same ruling.
 
@@ -3430,11 +4815,11 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 **Return trigger**: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface. When a real consumer's requirements are known, the mechanism is redesigned against them rather than reinstated as specified here.
 
 
-#### ext:slices
+##### ext:slices
 
 **Content**: Content relocated to mechanism leaves under the Travelling form concept (RFC-042 Change B, srs#562/#687). See derived-from.
 
-##### The `slice` manifest property
+###### The `slice` manifest property
 
 **Content**: The property `ext:slices` adds to `RepositoryManifest`:
 
@@ -3456,7 +4841,7 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 
 
 
-#### Generated reference: `Manifest`
+##### Generated reference: `Manifest`
 
 **Referenced Type Id**: 4c00002e-0000-4000-a000-00000000002e
 
@@ -3511,7 +4896,7 @@ manifest {
 ```
 
 
-#### Discovery
+##### Discovery
 
 **Extension ID**: ext:discovery
 
@@ -3592,12 +4977,156 @@ An implementation that declares `ext:discovery` MUST pass all fixture scenarios 
 
 
 
-### Key Invariants
+#### Extension Interactions
+
+**Content**: Cross-extension interactions are behavioural requirements that apply only when an implementation declares both named extensions.
+
+##### ext:protocol × ext:addressability
+
+**Content**: **Trigger**: an implementation declares both `ext:protocol` and `ext:addressability`.
+
+**Required behaviour**: Protocol stage advancement updates `AttentionState`. When a Protocol run advances from one stage to another, the active `AttentionState` must reflect the new stage before any conversation material is tagged.
+
+Specifically:
+
+- `AttentionState.protocolRunId` references the active Protocol run
+- `AttentionState.stageId` reflects the current stage
+- `AttentionState.fieldId`, when a specific field is the current focus within a stage, is set accordingly
+
+Conversation chunks produced while `AttentionState.stageId` is set are associated with that stage. This makes stage-level Context Queries (`{runId}/{stageId}`) return the correct material.
+
+---
+
+
+##### ext:lifecycle × ext:addressability
+
+**Content**: **Trigger**: an implementation declares both `ext:lifecycle` and `ext:addressability`.
+
+**Status: Dormant** (removed under `rfc-decision-2a1e1590`, 2026-08-21). This coupling's required behaviour, and both of its invariants (formerly `[LC-AX1]` and `[LC-AX2]`), required a lifecycle state transition to produce a `Revision` snapshot per field value, tagged with `provenance.lifecycleTransition`. Every clause of this coupling was revision-dependent; with the per-field `Revision` mechanism removed (zero corpus use, incompletely specified — see `rfc-decision-2a1e1590`, also removed under the same ruling), no requirement survives the cut. `ext:lifecycle` and `ext:addressability` impose no cross-cutting obligation on each other while this stays dormant; each extension's own invariants are unaffected.
+
+**Return trigger**: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface. When a real consumer's requirements are known, the coupling is redesigned against them rather than reinstated as specified here.
+
+---
+
+
+
+
+## Conformance
+
+### Conformance
+
+**Canonical Key**: part:conformance
+
+**Description**: What an implementation must satisfy to claim SRS conformance, core and per-extension, and how that claim is declared and checked.
+
+#### Key Invariants
 
 Conforming implementations must uphold the following invariants.
+#### Type
+
+**I-131.** Within a Type's effective field set — its own `fields`, plus fields contributed through `extendsTypeId` — every referenced `Field.name` MUST be distinct. An implementation MUST reject a Type that violates this at definition time, not at instance time. (RFC-039 [R4])
+
 #### Field assignment
 
 **1.** `FieldAssignment.displayLabel` and `FieldAssignment.displayHint` are for rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or validation. Extended by RFC-036 [CR-036-20]: they must also not affect a Record's Relations or its Discovery Text Projection (`ext:discovery`). Two repositories differing only in these values must produce identical validation results and identical Discovery output.
+
+#### Type specialisation
+
+**39.** `Type.extendsTypeId`, when present, must reference a valid `Type.id`. Inheritance chains must be acyclic; a Type may not directly or transitively extend itself.
+
+**40.** A specializing Type must not declare a `fieldId` in its own `fields[]` that duplicates any `fieldId` inherited from its base Type or any ancestor Type.
+
+**41.** When `Type.fieldOrder` is present, it must contain exactly the set of field UUIDs in the Type's effective field list. No UUID may appear more than once, and no UUID from the effective field list may be absent.
+
+**42.** Every `fieldId` in `Type.fieldAssignmentOverrides[]` must reference a field inherited from the base Type or an ancestor Type. Overrides must not reference fields declared in the specializing Type's own `fields[]`, must not alter Field semantics, and must not relax an inherited required field from `true` to `false`.
+
+**43.** When `ext:type-inheritance` is declared, `Package.packageDependencies` must include a `Reference` for every Type in the transitive closure of base Types for any Type in `Package.types[]`. If `mode === "bundled"`, all such base Types must be present in `types[]`.
+
+**I-97.** `validationRules` are not inherited. A Type's `validationRules` array is the complete and exclusive set of cross-field rules evaluated for Records of that Type. When `ext:type-inheritance` is in use and Type B extends Type A, Type A's `validationRules` MUST NOT be evaluated for Records of Type B unless Type B's own `validationRules` explicitly restates them. (RFC-019 R11.)
+
+#### Relation type definition
+
+**I-88.** The `sourceRole` value set — the closed enum of the implemented schema revision, including values added by later accepted RFCs — MUST be disjoint under literal whole-key equality from the set of installed `RelationTypeDefinition` keys in the repository's effective package set. Relation-type creation MUST reject a definition whose key equals a `sourceRole` value; `repo validate` MUST report a pre-existing collision as `SOURCEROLE_RELATIONTYPE_COLLISION` (warning at rest). A namespaced key (e.g. `com.acme/evidence`) does not collide with a bare `sourceRole` value.
+
+#### Blueprint
+
+**I-78.** Each entry in Blueprint.rootTypes MUST be an ExactTypeRef: both typeId (UUID) and typeVersion (integer >= 1) MUST be present. Implementations MUST resolve each entry against the Package (the union of all packages in scope per packageRef/packageRefs) at Blueprint load time; an entry that does not resolve MUST produce a diagnostic. An empty rootTypes array is valid and produces no diagnostics.
+
+#### Container
+
+**20.** `Container.containerId` is not an instance ID. It must not appear in `Container.rootInstanceIds`, `Container.memberInstanceIds`, `Relation.sourceInstanceId`, or `Relation.targetInstanceId`.
+
+**21.** `Container.rootInstanceIds` and `Container.memberInstanceIds`, when present, must reference valid SRS instance IDs (`Note.instanceId` or `Record.instanceId`).
+
+**I-64.** When a Container has one or more rootInstanceIds and also carries containerType, implementations SHOULD emit a diagnostic if containerType does not equal the resolved root Type name field (the local name within its namespace, not namespace/name). The root Record Type is authoritative; a mismatch does NOT make the Container invalid. Containers with no rootInstanceIds may carry any containerType value without triggering this rule.
+
+**I-66.** All conforming SRS implementations MUST implement the containers_for_instance operation. Given an instanceId, it returns every Container C for which the instance is in effective(C): the recursive, duplicate-free closure over C's declared rootInstanceIds, memberInstanceIds and childContainerIds (RFC-034 Changes A and B, [R5]; I-146, I-147). Membership is declared: a contains Relation, or any other Relation, never contributes a member (I-148). The result set MUST be consistent with the current state of those Container fields. Amended by RFC-034 (2026-09-06, rfc-decision-0750c62f): the original statement's third branch, "or transitive contains-Relation traversal from rootInstanceIds", is superseded; the traversal is no longer a membership rule, and contains remains the part-of tree where meaning lives.
+
+**I-81.** When present on a Container, identityInstanceId MUST equal an id contained in that Container's rootInstanceIds or memberInstanceIds. On the root container it names the repository's identity record. If it resolves to no such member, the repository is invalid. Reassigning identityInstanceId to a different member MUST NOT change the repositoryId, the container's containerId, or any instance id; the new target must already be a member before the pointer moves to it, so the repository is never transiently invalid.
+
+**I-82.** When the repository's container set (RFC-038 [R1]) is non-empty, each non-identity section root of the root container (its navigation sections) SHOULD be the root of some Container in that set. An empty container set suppresses this diagnostic. A section root with no corresponding section container is a diagnostic, not an error, and a consumer MUST still render it as a navigation leaf rather than dropping it. `containerIndex` is retired (RFC-038 [R2]) and is no longer the membership authority for this check.
+
+**I-145.** When present on a Container, anchorInstanceId MUST equal an id contained in that Container's rootInstanceIds or memberInstanceIds. It names the record whose Type (typeId + typeVersion) is the Container's typing anchor for RFC-009 Composition.rootTypeRefs matching (I-63) and RFC-010 three-way-merge container-root conflict detection. If it resolves to no such member, the repository is invalid. When anchorInstanceId is absent (a repository authored before srs#446), an implementation MUST fall back to treating rootInstanceIds[0] (the first entry) as the typing anchor; this positional fallback is transitional and is withdrawn at the Continuity flip (rfc-decision-cce3c00e axis 2-8, the first full public release), after which anchorInstanceId is required wherever a typing anchor is needed. rootInstanceIds and memberInstanceIds otherwise carry no positional significance (RFC-013 [R5]).
+
+**I-146.** A Container's direct membership is exactly the duplicate-free, unordered union of its rootInstanceIds and memberInstanceIds. An omitted memberInstanceIds contributes no additional direct members and MUST NOT be read as opting into Relation traversal.
+
+**I-147.** A Container is an admitted child of another Container exactly when it is distinct and its containerId appears in the other Container's childContainerIds; membership-array overlap alone MUST NOT create admission. A conforming implementation MUST compute effective membership as the recursive closure over childContainerIds (effective(C) = direct(C) united with effective(child) for every declared child), MUST deduplicate instance ids, and MUST NOT infer an ordering from either membership array or from childContainerIds order.
+
+**I-148.** A Relation of any type, including contains, MUST NOT cause an instance to appear in a Container's direct or effective membership.
+
+**I-149.** A Record-selection query (srs find, a Composition SectionSource, an SQL view, a JSONPath expression, a graph traversal) MUST NOT be treated as persisted Container membership unless an authoring operation writes its selected ids to the Container's explicit membership fields.
+
+**I-150.** Every childContainerIds entry MUST reference an existing, distinct Container, and the childContainerIds graph MUST be acyclic. A missing target, self-reference, or cycle is a validation error. For any Container whose reachable child graph contains such an error, effective-membership evaluation MUST fail with a diagnostic and MUST NOT return a partial result. A rootless child is valid. When a child has roots, those roots SHOULD occur in the parent's direct membership; a violation produces a structural-coherence diagnostic but MUST NOT remove the declared edge from effective-membership evaluation.
+
+#### Projection
+
+**I-128.** When `manifest.renderedPresentations` is present and non-empty, a conformant viewer MUST select as the default presentation the first entry whose `isDefault` is `true`. When no entry carries `isDefault: true`, the first entry in the array is the default. The selected Composition governs the repository's presentation. When a `renderedPresentations` entry's `compositionId` does not resolve to a Composition in the active packages, implementations MUST skip that entry and MUST emit a diagnostic; if all entries fail to resolve, behaviour falls back to implementation-defined selection as if `renderedPresentations` were absent. When `compositionId` resolves to Compositions in more than one active package, implementations MUST report a validation error (ambiguous composition reference). When `renderedPresentations` is absent or empty, viewer behaviour falls back to implementation-defined selection (existing behaviour unchanged; no conformance obligation is added for the absent case). (RFC-015 Change C.)
+
+#### View
+
+**12.** Every `fieldId` in `View.fieldViews[]` must reference a valid `Field.id` in the effective package set. View compatibility is field-centric (based on required field presence), not Type-bound.
+
+**13.** `FieldView.displayLabel`, `FieldView.displayHint`, and `FieldView.editorHintOverride` are for rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or validation. Extended by RFC-036 [CR-036-20] to cover `FieldView.compositeRenderer` and the `DocumentSection`/`Composition` composite renderer directives, and to add Relations and Discovery Text Projection (`ext:discovery`) to the list of things they must not affect. [CR-036-21] additionally constrains `editorHintOverride` to the value set of `Field.editorHint`.
+
+**14.** A `View` must not override, redefine, or duplicate the semantic content of any `Field` or `Type` it references. View-level `aiGuidance` is workflow framing; it does not redefine Field extraction semantics.
+
+#### Composition
+
+**32.** Any `Composition` in `Package.compositions[]` that contains a `SectionSource` with `type === "discovery-query"` MUST express its type-selection through the embedded `DiscoveryQuery`'s independent `typeNamespace`/`typeName` string predicates, resolved against the effective package set. There is no combined `namespace/name` key field on `DiscoveryQuery` or `SectionSource` -- `typeKey` (the KEYED namespace/name string introduced by the semanticObjectType collapse, owner ruling on #383, srs#372/#481/#524, rfc-decision-c8704763) and `semanticObjectType` before it are both retired with no successor field; the srs#525 SectionSource -> DiscoveryQuery collapse (rfc-decision-cce3c00e, rfc-decision-9ee14517) replaced the single combined-key convention with DiscoveryQuery's two separate predicates, closing the door on reintroducing a combined-key form.
+
+**44.** Every `NavigationLink.fromSectionId` and `NavigationLink.toSectionId` must reference a `sectionId` declared in the enclosing `Composition.sections[]`.
+
+**I-63.** When Composition.rootTypeRefs is present and non-empty, each ExactTypeRef entry MUST resolve to a Type that exists in the Package (the union of all packages in scope per packageRef/packageRefs; matched by both typeId and typeVersion). An entry that does not resolve MUST produce a diagnostic and MUST NOT be used for Container matching.
+
+**I-126.** When `DocumentSection.ordering.memberOrder` is present and the section's `source.type` is `container-subset`, implementations MUST apply it as the presentation sequence: (1) emit listed `instanceId`s that are current container members in the declared order; (2) skip listed `instanceId`s that are no longer container members — implementations MUST emit a diagnostic; this MUST NOT be treated as a validation failure; (3) append surviving container members not in `memberOrder`, ordered by topological sort over `precedes` edges with a `createdAt`-ascending tiebreak (the default container-subset ordering `ext:views-l2` already specifies); (4) when `ordering.direction` is `"desc"`, the entire output sequence produced by steps (1)–(3) MUST be reversed before emission. `memberOrder` MUST NOT be combined with `ordering.fieldId` on the same section — a section carrying both is invalid; implementations MUST report a validation error. `memberOrder` on a non-`container-subset` section MUST be ignored with a diagnostic and SHOULD be rejected at package-validation time. (RFC-015 Change B.)
+
+**I-127.** When both `typeFilter` and `memberOrder` are present on a `container-subset` section, `typeFilter` is applied first to obtain the filtered member set; `memberOrder` is then applied over that filtered set. `memberOrder` entries naming members excluded by `typeFilter` are silently skipped (no diagnostic). Unlisted filtered survivors are appended in the same topological-sort-by-`precedes` order used in Invariant I-126 step (3). The `direction` reversal of Invariant I-126 step (4) applies to the combined result after `typeFilter` and `memberOrder` are both applied. (RFC-015 Change B.)
+
+**I-138.** A Composition projection MUST key `ProjectedRecord.fields` and `orderedFieldKeys` by `Field.name`, and MUST carry a composite value recursively under its own key. `ProjectedFieldGroup` and `ProjectedGroupEntry` are removed and have no successor construct. (RFC-039 [R11])
+
+**I-144.** When SectionSource.discovery-query carries containerScope, implementations MUST apply the following scoping rules: (a) When containerScope is absent or "explicit", the query is scoped to the containers listed in containerIds[] -- existing behaviour. An absent containerIds[] with explicit scope produces an empty result. (b) When containerScope is "repository", the query spans all containers in the repository; containerIds[] MUST be ignored. (c) When containerScope is "subtree", the query spans effective(C) for each container in containerIds[], the recursive closure over declared childContainerIds (RFC-034 [R8]; I-147); it follows declared child edges only and MUST NOT traverse contains Relations to discover child containers (amended by RFC-034, 2026-09-06: the former "reachable by contains relations" branch is superseded). "explicit" correspondingly evaluates direct(C), the container's own members without its nested subtree; when containerIds[] is absent or empty, the context container is used as the subtree root. An implementation that cannot determine the context container for a subtree query MUST treat it as "explicit" with an empty containerIds[] and SHOULD emit a diagnostic. Implementations MUST NOT produce a validation error when containerScope is absent; absent is equivalent to "explicit". containerScope is arrangement, not selection: it is layered on top of the section's DiscoveryQuery, not a DiscoveryQuery predicate itself (DiscoveryQuery.containerId is single-valued and takes one container's effective membership; containerScope's multi-container/subtree semantics have no DiscoveryQuery equivalent).
+
+#### Validation
+
+**10.** All `fieldId` values in any `CrossFieldRule` within `Type.validationRules[]` must appear in the Type's effective field list. Cross-field rules cannot reference Fields outside the Type.
+
+**11.** A `conditional-required` rule must supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. A `field-ordering` rule must supply `predicateFieldId`, `targetFieldId`, and `effect`. A `mutual-exclusion` rule must supply `fieldIds` with at least two entries.
+
+**I-89.** An SRS implementation that does not declare support for `ext:cross-field-validation` MUST treat `validationRules` as an unrecognized property and MUST ignore it. Conformance rules R1–R11 bind only implementations that declare support for `ext:cross-field-validation`. (RFC-019 R0.)
+
+**I-90.** A conforming implementation that declares support for `ext:cross-field-validation` MUST evaluate each `CrossFieldRule` in `validationRules` against every Record of the Type at record-write time (create and update). Evaluation order within the array is implementation-defined; all rules MUST be evaluated regardless of earlier failures (fail-all, not fail-first). (RFC-019 R2.)
+
+**I-91.** A `CrossFieldRule` with `type: "conditional-required"` fires when the field identified by `predicateFieldId` is non-empty and its stored value is equal to `predicateValue` (case-sensitive string equality). When the rule fires, the field identified by `targetFieldId` MUST be non-empty in the Record. A violation MUST be reported as a validation error. (RFC-019 R3.)
+
+**I-92.** A `CrossFieldRule` with `type: "field-ordering"` fires when both `predicateFieldId` and `targetFieldId` are non-empty. It applies only to fields whose `fieldType.datatype` is `"date"`, `"date-time"`, `"number"`, or `"integer"`. When `effect` is `"must-precede"`, the predicate field value MUST be strictly less than the target field value (ISO 8601 lexicographic order for dates; numeric order for numbers). When `effect` is `"must-follow"`, the predicate field value MUST be strictly greater than the target field value. A violation MUST be reported as a validation error. If either field is non-empty but the other is absent or empty, the rule MUST NOT fire. A `field-ordering` rule whose `predicateFieldId` or `targetFieldId` resolves to a field with any other `fieldType.datatype` MUST be reported as a Type-level validation error. (RFC-019 R4.)
+
+**I-93.** A `CrossFieldRule` with `type: "mutual-exclusion"` MUST report a validation error if more than one field in `fieldIds` is non-empty in the Record. If zero or one field is non-empty, the rule passes. (RFC-019 R5.)
+
+**I-94.** A `CrossFieldRule` with `type: "conditional-required"` MUST supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. The field identified by `predicateFieldId` MUST be effective-single (`fieldType.cardinality` absent/`"single"` and, until #242 Phase B, effective `FieldAssignment.repeatable !== true`) and its `fieldType.datatype` MUST be one of `{"string", "date", "date-time"}`. String `format` and `valueDomain` do not restrict eligibility. A rule that omits a required property, selects a list/repeatable field, or resolves to any other datatype MUST be reported as a Type-level validation error. Admission of `date-time` is intentional; the scalar requirement intentionally closes the legacy repeatable-date equality hole. (RFC-019 R6; RFC-032 Rev-7 erratum; normative extension of I-11.)
+
+**I-95.** A `CrossFieldRule` with a `type` value not in `["conditional-required", "field-ordering", "mutual-exclusion"]` MUST be reported as a Type-level validation error. Implementations MUST NOT silently ignore unknown rule types. (RFC-019 R9.)
+
+**I-96.** A `CrossFieldRule` that contains a property belonging to a different rule type MUST be reported as a Type-level validation error. Specifically: a `conditional-required` or `field-ordering` rule MUST NOT supply `fieldIds`; a `mutual-exclusion` rule MUST NOT supply `predicateFieldId`, `predicateValue`, `targetFieldId`, or `effect`. (RFC-019 R10.)
 
 #### Field
 
@@ -3647,36 +5176,6 @@ Conforming implementations must uphold the following invariants.
 
 **54.** When an importer encounters an incoming object whose identity key matches an existing local object but whose content or checksum differs, it must surface the conflict explicitly. An importer that silently overwrites or silently discards in this case is not conformant.
 
-#### Validation
-
-**10.** All `fieldId` values in any `CrossFieldRule` within `Type.validationRules[]` must appear in the Type's effective field list. Cross-field rules cannot reference Fields outside the Type.
-
-**11.** A `conditional-required` rule must supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. A `field-ordering` rule must supply `predicateFieldId`, `targetFieldId`, and `effect`. A `mutual-exclusion` rule must supply `fieldIds` with at least two entries.
-
-**I-89.** An SRS implementation that does not declare support for `ext:cross-field-validation` MUST treat `validationRules` as an unrecognized property and MUST ignore it. Conformance rules R1–R11 bind only implementations that declare support for `ext:cross-field-validation`. (RFC-019 R0.)
-
-**I-90.** A conforming implementation that declares support for `ext:cross-field-validation` MUST evaluate each `CrossFieldRule` in `validationRules` against every Record of the Type at record-write time (create and update). Evaluation order within the array is implementation-defined; all rules MUST be evaluated regardless of earlier failures (fail-all, not fail-first). (RFC-019 R2.)
-
-**I-91.** A `CrossFieldRule` with `type: "conditional-required"` fires when the field identified by `predicateFieldId` is non-empty and its stored value is equal to `predicateValue` (case-sensitive string equality). When the rule fires, the field identified by `targetFieldId` MUST be non-empty in the Record. A violation MUST be reported as a validation error. (RFC-019 R3.)
-
-**I-92.** A `CrossFieldRule` with `type: "field-ordering"` fires when both `predicateFieldId` and `targetFieldId` are non-empty. It applies only to fields whose `fieldType.datatype` is `"date"`, `"date-time"`, `"number"`, or `"integer"`. When `effect` is `"must-precede"`, the predicate field value MUST be strictly less than the target field value (ISO 8601 lexicographic order for dates; numeric order for numbers). When `effect` is `"must-follow"`, the predicate field value MUST be strictly greater than the target field value. A violation MUST be reported as a validation error. If either field is non-empty but the other is absent or empty, the rule MUST NOT fire. A `field-ordering` rule whose `predicateFieldId` or `targetFieldId` resolves to a field with any other `fieldType.datatype` MUST be reported as a Type-level validation error. (RFC-019 R4.)
-
-**I-93.** A `CrossFieldRule` with `type: "mutual-exclusion"` MUST report a validation error if more than one field in `fieldIds` is non-empty in the Record. If zero or one field is non-empty, the rule passes. (RFC-019 R5.)
-
-**I-94.** A `CrossFieldRule` with `type: "conditional-required"` MUST supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. The field identified by `predicateFieldId` MUST be effective-single (`fieldType.cardinality` absent/`"single"` and, until #242 Phase B, effective `FieldAssignment.repeatable !== true`) and its `fieldType.datatype` MUST be one of `{"string", "date", "date-time"}`. String `format` and `valueDomain` do not restrict eligibility. A rule that omits a required property, selects a list/repeatable field, or resolves to any other datatype MUST be reported as a Type-level validation error. Admission of `date-time` is intentional; the scalar requirement intentionally closes the legacy repeatable-date equality hole. (RFC-019 R6; RFC-032 Rev-7 erratum; normative extension of I-11.)
-
-**I-95.** A `CrossFieldRule` with a `type` value not in `["conditional-required", "field-ordering", "mutual-exclusion"]` MUST be reported as a Type-level validation error. Implementations MUST NOT silently ignore unknown rule types. (RFC-019 R9.)
-
-**I-96.** A `CrossFieldRule` that contains a property belonging to a different rule type MUST be reported as a Type-level validation error. Specifically: a `conditional-required` or `field-ordering` rule MUST NOT supply `fieldIds`; a `mutual-exclusion` rule MUST NOT supply `predicateFieldId`, `predicateValue`, `targetFieldId`, or `effect`. (RFC-019 R10.)
-
-#### View
-
-**12.** Every `fieldId` in `View.fieldViews[]` must reference a valid `Field.id` in the effective package set. View compatibility is field-centric (based on required field presence), not Type-bound.
-
-**13.** `FieldView.displayLabel`, `FieldView.displayHint`, and `FieldView.editorHintOverride` are for rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or validation. Extended by RFC-036 [CR-036-20] to cover `FieldView.compositeRenderer` and the `DocumentSection`/`Composition` composite renderer directives, and to add Relations and Discovery Text Projection (`ext:discovery`) to the list of things they must not affect. [CR-036-21] additionally constrains `editorHintOverride` to the value set of `Field.editorHint`.
-
-**14.** A `View` must not override, redefine, or duplicate the semantic content of any `Field` or `Type` it references. View-level `aiGuidance` is workflow framing; it does not redefine Field extraction semantics.
-
 #### Relation
 
 **16.** In a `Relation`, `sourceInstanceId` is the asserting instance and `targetInstanceId` is the related instance. The Relation reads: "source [relationType] target." This convention must not be reversed.
@@ -3686,32 +5185,6 @@ Conforming implementations must uphold the following invariants.
 #### Note
 
 **18.** `NoteSection.name` values must be unique within a `Note`.
-
-#### Container
-
-**20.** `Container.containerId` is not an instance ID. It must not appear in `Container.rootInstanceIds`, `Container.memberInstanceIds`, `Relation.sourceInstanceId`, or `Relation.targetInstanceId`.
-
-**21.** `Container.rootInstanceIds` and `Container.memberInstanceIds`, when present, must reference valid SRS instance IDs (`Note.instanceId` or `Record.instanceId`).
-
-**I-64.** When a Container has one or more rootInstanceIds and also carries containerType, implementations SHOULD emit a diagnostic if containerType does not equal the resolved root Type name field (the local name within its namespace, not namespace/name). The root Record Type is authoritative; a mismatch does NOT make the Container invalid. Containers with no rootInstanceIds may carry any containerType value without triggering this rule.
-
-**I-66.** All conforming SRS implementations MUST implement the containers_for_instance operation. Given an instanceId, it returns every Container C for which the instance is in effective(C): the recursive, duplicate-free closure over C's declared rootInstanceIds, memberInstanceIds and childContainerIds (RFC-034 Changes A and B, [R5]; I-146, I-147). Membership is declared: a contains Relation, or any other Relation, never contributes a member (I-148). The result set MUST be consistent with the current state of those Container fields. Amended by RFC-034 (2026-09-06, rfc-decision-0750c62f): the original statement's third branch, "or transitive contains-Relation traversal from rootInstanceIds", is superseded; the traversal is no longer a membership rule, and contains remains the part-of tree where meaning lives.
-
-**I-81.** When present on a Container, identityInstanceId MUST equal an id contained in that Container's rootInstanceIds or memberInstanceIds. On the root container it names the repository's identity record. If it resolves to no such member, the repository is invalid. Reassigning identityInstanceId to a different member MUST NOT change the repositoryId, the container's containerId, or any instance id; the new target must already be a member before the pointer moves to it, so the repository is never transiently invalid.
-
-**I-82.** When the repository's container set (RFC-038 [R1]) is non-empty, each non-identity section root of the root container (its navigation sections) SHOULD be the root of some Container in that set. An empty container set suppresses this diagnostic. A section root with no corresponding section container is a diagnostic, not an error, and a consumer MUST still render it as a navigation leaf rather than dropping it. `containerIndex` is retired (RFC-038 [R2]) and is no longer the membership authority for this check.
-
-**I-145.** When present on a Container, anchorInstanceId MUST equal an id contained in that Container's rootInstanceIds or memberInstanceIds. It names the record whose Type (typeId + typeVersion) is the Container's typing anchor for RFC-009 Composition.rootTypeRefs matching (I-63) and RFC-010 three-way-merge container-root conflict detection. If it resolves to no such member, the repository is invalid. When anchorInstanceId is absent (a repository authored before srs#446), an implementation MUST fall back to treating rootInstanceIds[0] (the first entry) as the typing anchor; this positional fallback is transitional and is withdrawn at the Continuity flip (rfc-decision-cce3c00e axis 2-8, the first full public release), after which anchorInstanceId is required wherever a typing anchor is needed. rootInstanceIds and memberInstanceIds otherwise carry no positional significance (RFC-013 [R5]).
-
-**I-146.** A Container's direct membership is exactly the duplicate-free, unordered union of its rootInstanceIds and memberInstanceIds. An omitted memberInstanceIds contributes no additional direct members and MUST NOT be read as opting into Relation traversal.
-
-**I-147.** A Container is an admitted child of another Container exactly when it is distinct and its containerId appears in the other Container's childContainerIds; membership-array overlap alone MUST NOT create admission. A conforming implementation MUST compute effective membership as the recursive closure over childContainerIds (effective(C) = direct(C) united with effective(child) for every declared child), MUST deduplicate instance ids, and MUST NOT infer an ordering from either membership array or from childContainerIds order.
-
-**I-148.** A Relation of any type, including contains, MUST NOT cause an instance to appear in a Container's direct or effective membership.
-
-**I-149.** A Record-selection query (srs find, a Composition SectionSource, an SQL view, a JSONPath expression, a graph traversal) MUST NOT be treated as persisted Container membership unless an authoring operation writes its selected ids to the Container's explicit membership fields.
-
-**I-150.** Every childContainerIds entry MUST reference an existing, distinct Container, and the childContainerIds graph MUST be acyclic. A missing target, self-reference, or cycle is a validation error. For any Container whose reachable child graph contains such an error, effective-membership evaluation MUST fail with a diagnostic and MUST NOT return a partial result. A rootless child is valid. When a child has roots, those roots SHOULD occur in the parent's direct membership; a violation produces a structural-coherence diagnostic but MUST NOT remove the declared edge from effective-membership evaluation.
 
 #### Record
 
@@ -3725,22 +5198,6 @@ Conforming implementations must uphold the following invariants.
 
 **31.** For every pair of stages A and B within a `Protocol` where B.dependsOn includes A.stageId, B.order must be greater than A.order. `order` is the declared composition order of the stages — structure, not presentation; it provides the render default. Execution sequence is determined by `dependsOn` resolution. The two must not contradict each other.
 
-#### Composition
-
-**32.** Any `Composition` in `Package.compositions[]` that contains a `SectionSource` with `type === "discovery-query"` MUST express its type-selection through the embedded `DiscoveryQuery`'s independent `typeNamespace`/`typeName` string predicates, resolved against the effective package set. There is no combined `namespace/name` key field on `DiscoveryQuery` or `SectionSource` -- `typeKey` (the KEYED namespace/name string introduced by the semanticObjectType collapse, owner ruling on #383, srs#372/#481/#524, rfc-decision-c8704763) and `semanticObjectType` before it are both retired with no successor field; the srs#525 SectionSource -> DiscoveryQuery collapse (rfc-decision-cce3c00e, rfc-decision-9ee14517) replaced the single combined-key convention with DiscoveryQuery's two separate predicates, closing the door on reintroducing a combined-key form.
-
-**44.** Every `NavigationLink.fromSectionId` and `NavigationLink.toSectionId` must reference a `sectionId` declared in the enclosing `Composition.sections[]`.
-
-**I-63.** When Composition.rootTypeRefs is present and non-empty, each ExactTypeRef entry MUST resolve to a Type that exists in the Package (the union of all packages in scope per packageRef/packageRefs; matched by both typeId and typeVersion). An entry that does not resolve MUST produce a diagnostic and MUST NOT be used for Container matching.
-
-**I-126.** When `DocumentSection.ordering.memberOrder` is present and the section's `source.type` is `container-subset`, implementations MUST apply it as the presentation sequence: (1) emit listed `instanceId`s that are current container members in the declared order; (2) skip listed `instanceId`s that are no longer container members — implementations MUST emit a diagnostic; this MUST NOT be treated as a validation failure; (3) append surviving container members not in `memberOrder`, ordered by topological sort over `precedes` edges with a `createdAt`-ascending tiebreak (the default container-subset ordering `ext:views-l2` already specifies); (4) when `ordering.direction` is `"desc"`, the entire output sequence produced by steps (1)–(3) MUST be reversed before emission. `memberOrder` MUST NOT be combined with `ordering.fieldId` on the same section — a section carrying both is invalid; implementations MUST report a validation error. `memberOrder` on a non-`container-subset` section MUST be ignored with a diagnostic and SHOULD be rejected at package-validation time. (RFC-015 Change B.)
-
-**I-127.** When both `typeFilter` and `memberOrder` are present on a `container-subset` section, `typeFilter` is applied first to obtain the filtered member set; `memberOrder` is then applied over that filtered set. `memberOrder` entries naming members excluded by `typeFilter` are silently skipped (no diagnostic). Unlisted filtered survivors are appended in the same topological-sort-by-`precedes` order used in Invariant I-126 step (3). The `direction` reversal of Invariant I-126 step (4) applies to the combined result after `typeFilter` and `memberOrder` are both applied. (RFC-015 Change B.)
-
-**I-138.** A Composition projection MUST key `ProjectedRecord.fields` and `orderedFieldKeys` by `Field.name`, and MUST carry a composite value recursively under its own key. `ProjectedFieldGroup` and `ProjectedGroupEntry` are removed and have no successor construct. (RFC-039 [R11])
-
-**I-144.** When SectionSource.discovery-query carries containerScope, implementations MUST apply the following scoping rules: (a) When containerScope is absent or "explicit", the query is scoped to the containers listed in containerIds[] -- existing behaviour. An absent containerIds[] with explicit scope produces an empty result. (b) When containerScope is "repository", the query spans all containers in the repository; containerIds[] MUST be ignored. (c) When containerScope is "subtree", the query spans effective(C) for each container in containerIds[], the recursive closure over declared childContainerIds (RFC-034 [R8]; I-147); it follows declared child edges only and MUST NOT traverse contains Relations to discover child containers (amended by RFC-034, 2026-09-06: the former "reachable by contains relations" branch is superseded). "explicit" correspondingly evaluates direct(C), the container's own members without its nested subtree; when containerIds[] is absent or empty, the context container is used as the subtree root. An implementation that cannot determine the context container for a subtree query MUST treat it as "explicit" with an empty containerIds[] and SHOULD emit a diagnostic. Implementations MUST NOT produce a validation error when containerScope is absent; absent is equivalent to "explicit". containerScope is arrangement, not selection: it is layered on top of the section's DiscoveryQuery, not a DiscoveryQuery predicate itself (DiscoveryQuery.containerId is single-valued and takes one container's effective membership; containerScope's multi-container/subtree semantics have no DiscoveryQuery equivalent).
-
 #### Addressability
 
 **34.** `AttentionState.containerId` must reference a valid `Container.containerId`. Other Address components (`recordId`, `fieldId`, `protocolRunId`, `stageId`) are optional and may be absent when focus has not yet narrowed.
@@ -3750,20 +5207,6 @@ Conforming implementations must uphold the following invariants.
 **38.** `Field.fieldType.format`, when present, is only meaningful when `fieldType.datatype` is `"string"`. Implementations must ignore `format` on fields with any other `datatype`.
 
 **I-139.** `cardinality: "list"` array-wraps uniformly, for every `datatype` including `map` and `dependent`, matching `projectField`'s unconditional wrap. The single-value rule states the `single` case; the wrap composes on top of it. (RFC-039 [R16])
-
-#### Type specialisation
-
-**39.** `Type.extendsTypeId`, when present, must reference a valid `Type.id`. Inheritance chains must be acyclic; a Type may not directly or transitively extend itself.
-
-**40.** A specializing Type must not declare a `fieldId` in its own `fields[]` that duplicates any `fieldId` inherited from its base Type or any ancestor Type.
-
-**41.** When `Type.fieldOrder` is present, it must contain exactly the set of field UUIDs in the Type's effective field list. No UUID may appear more than once, and no UUID from the effective field list may be absent.
-
-**42.** Every `fieldId` in `Type.fieldAssignmentOverrides[]` must reference a field inherited from the base Type or an ancestor Type. Overrides must not reference fields declared in the specializing Type's own `fields[]`, must not alter Field semantics, and must not relax an inherited required field from `true` to `false`.
-
-**43.** When `ext:type-inheritance` is declared, `Package.packageDependencies` must include a `Reference` for every Type in the transitive closure of base Types for any Type in `Package.types[]`. If `mode === "bundled"`, all such base Types must be present in `types[]`.
-
-**I-97.** `validationRules` are not inherited. A Type's `validationRules` array is the complete and exclusive set of cross-field rules evaluated for Records of that Type. When `ext:type-inheritance` is in use and Type B extends Type A, Type A's `validationRules` MUST NOT be evaluated for Records of Type B unless Type B's own `validationRules` explicitly restates them. (RFC-019 R11.)
 
 #### Repository
 
@@ -3823,10 +5266,6 @@ Conforming implementations must uphold the following invariants.
 
 **I-65.** When a Vocabulary in the repository package declares Term entries for a given tag key, Container tags bearing that key MUST resolve against those Terms per RFC-006 vocabulary resolution rules. Free-string tags are valid when no Vocabulary entry governs the key.
 
-#### Blueprint
-
-**I-78.** Each entry in Blueprint.rootTypes MUST be an ExactTypeRef: both typeId (UUID) and typeVersion (integer >= 1) MUST be present. Implementations MUST resolve each entry against the Package (the union of all packages in scope per packageRef/packageRefs) at Blueprint load time; an entry that does not resolve MUST produce a diagnostic. An empty rootTypes array is valid and produces no diagnostics.
-
 #### Lineage and provenance
 
 **I-84.** When `manifest.upstreamPackage` is set, there MUST exist at least one entry in `manifest.packageRefs` (or `manifest.packageRef`) whose `packageId` matches `manifest.upstreamPackage.packageId`. A manifest where no `PackageRef` entry's `packageId` matches `upstreamPackage.packageId` MUST be reported as a validation error. Manifest-only validators MAY skip this check when no `PackageRef` entry carries `packageId` (i.e., all local-mode entries predate RFC-014 and omit the field), and SHOULD report the repository state as indeterminate rather than emitting a validation error in that case.
@@ -3836,10 +5275,6 @@ Conforming implementations must uphold the following invariants.
 **I-85.** A conforming SRS implementation MUST make all `com.semanticops.core/*` types and fields resolvable in every repository without any `packageRef` or `packageRefs` declaration in the manifest. The core base package's definitions are treated as logically present in the RFC-014 R6 package union for all repositories. An implementation that fails to resolve `com.semanticops.core/*` types and fields in a structurally valid repository is non-conformant with RFC-029.
 
 **I-86.** A repository MUST NOT declare any Type or Field under the `com.semanticops.core` namespace in a local or external package. An implementation MUST reject the repository load with a conflict error if any such declaration is encountered during package loading. This reservation covers only the `com.semanticops.core` namespace; other `com.semanticops.*` sub-namespaces are governed by their own RFC or by general package conflict rules and are not affected by this invariant.
-
-#### Relation type definition
-
-**I-88.** The `sourceRole` value set — the closed enum of the implemented schema revision, including values added by later accepted RFCs — MUST be disjoint under literal whole-key equality from the set of installed `RelationTypeDefinition` keys in the repository's effective package set. Relation-type creation MUST reject a definition whose key equals a `sourceRole` value; `repo validate` MUST report a pre-existing collision as `SOURCEROLE_RELATIONTYPE_COLLISION` (warning at rest). A namespaced key (e.g. `com.acme/evidence`) does not collide with a bare `sourceRole` value.
 
 #### Discovery
 
@@ -3877,10 +5312,6 @@ Conforming implementations must uphold the following invariants.
 
 **I-125.** `precedes` relations MUST be used only to express sequences where a different order would be semantically wrong (e.g. spec sections in document order, protocol stages in execution sequence). Implementations MUST NOT create `precedes` relations between instances whose ordering is presentational (layout, curation, display preference). A `precedes` relation between two container members MUST be interpreted as a semantic claim about their sequence, not as a rendering hint. (RFC-015 Change A.)
 
-#### Projection
-
-**I-128.** When `manifest.renderedPresentations` is present and non-empty, a conformant viewer MUST select as the default presentation the first entry whose `isDefault` is `true`. When no entry carries `isDefault: true`, the first entry in the array is the default. The selected Composition governs the repository's presentation. When a `renderedPresentations` entry's `compositionId` does not resolve to a Composition in the active packages, implementations MUST skip that entry and MUST emit a diagnostic; if all entries fail to resolve, behaviour falls back to implementation-defined selection as if `renderedPresentations` were absent. When `compositionId` resolves to Compositions in more than one active package, implementations MUST report a validation error (ambiguous composition reference). When `renderedPresentations` is absent or empty, viewer behaviour falls back to implementation-defined selection (existing behaviour unchanged; no conformance obligation is added for the absent case). (RFC-015 Change C.)
-
 #### Field values
 
 **I-129.** A Tier-2 `Record`'s `fieldValues` MUST be a JSON object. Each key MUST equal the `Field.name` of a Field in the effective field set of the Record's `typeId`@`typeVersion`. Unknown keys MUST be rejected; the projected schema asserts `additionalProperties: false`. (RFC-039 [R1])
@@ -3899,10 +5330,6 @@ Conforming implementations must uphold the following invariants.
 
 **I-141.** Instance `fieldValues` keys MUST be serialised in `FieldAssignment.order`, and nested composite objects likewise, so that a re-run of a transform is byte-idempotent and diffs are stable. This is the instance-side counterpart of the schema-key ordering in `projection-rules.md`; it supersedes the write-order signal of rfc-012:139. (RFC-039 [R18])
 
-#### Type
-
-**I-131.** Within a Type's effective field set — its own `fields`, plus fields contributed through `extendsTypeId` — every referenced `Field.name` MUST be distinct. An implementation MUST reject a Type that violates this at definition time, not at instance time. (RFC-039 [R4])
-
 #### Composite value
 
 **I-136.** A `mode: "reference"` value MUST resolve to an instance present in the repository's authoritative instance set, and that instance MUST be of the Field's declared `rangeType` at the declared `typeVersion`. A dangling or type-mismatched target MUST be reported as an error naming the referring record, the key, and the target id. (RFC-039 [R14], amended by RFC-038 [R25] — the reference target is the tree-enumerated instance set, not a manifest `instanceIndex`, which is retired per RFC-038 [R2]; discharges RFC-032 OQ4, RFC-033:302, RFC-035:592)
@@ -3911,46 +5338,13 @@ Conforming implementations must uphold the following invariants.
 
 **I-137.** A Type version referenced by any instance in the repository MUST NOT be deleted. Name-keying makes the Record-to-Field edge Type-mediated: `fieldId` is recovered from `typeId` + `typeVersion` + key, so deleting the pinned Type version renders every instance of it unreadable. This rule governs versions with live referents only. (RFC-039 [R19])
 
-### Extension Interactions
-
-**Content**: Cross-extension interactions are behavioural requirements that apply only when an implementation declares both named extensions.
-
-#### ext:protocol × ext:addressability
-
-**Content**: **Trigger**: an implementation declares both `ext:protocol` and `ext:addressability`.
-
-**Required behaviour**: Protocol stage advancement updates `AttentionState`. When a Protocol run advances from one stage to another, the active `AttentionState` must reflect the new stage before any conversation material is tagged.
-
-Specifically:
-
-- `AttentionState.protocolRunId` references the active Protocol run
-- `AttentionState.stageId` reflects the current stage
-- `AttentionState.fieldId`, when a specific field is the current focus within a stage, is set accordingly
-
-Conversation chunks produced while `AttentionState.stageId` is set are associated with that stage. This makes stage-level Context Queries (`{runId}/{stageId}`) return the correct material.
-
----
-
-
-#### ext:lifecycle × ext:addressability
-
-**Content**: **Trigger**: an implementation declares both `ext:lifecycle` and `ext:addressability`.
-
-**Status: Dormant** (removed under `rfc-decision-2a1e1590`, 2026-08-21). This coupling's required behaviour, and both of its invariants (formerly `[LC-AX1]` and `[LC-AX2]`), required a lifecycle state transition to produce a `Revision` snapshot per field value, tagged with `provenance.lifecycleTransition`. Every clause of this coupling was revision-dependent; with the per-field `Revision` mechanism removed (zero corpus use, incompletely specified — see `rfc-decision-2a1e1590`, also removed under the same ruling), no requirement survives the cut. `ext:lifecycle` and `ext:addressability` impose no cross-cutting obligation on each other while this stays dormant; each extension's own invariants are unaffected.
-
-**Return trigger**: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface. When a real consumer's requirements are known, the coupling is redesigned against them rather than reinstated as specified here.
-
----
-
-
-
-### Conformance
+#### Conformance
 
 **Content**: An implementation declares conformance using the following form:
 
 Example: the conformance declaration form.
 
-#### Core conformance requirements
+##### Core conformance requirements
 
 **Content**: A core-conformant implementation must:
 - Accept and validate `Field`, `Type`, `Record` (Tier 2), `Relation`, and `Container` inputs against this specification
@@ -3969,7 +5363,7 @@ Example: the conformance declaration form.
 Support for `Note` (Tier 0) is optional at core conformance level.
 
 
-#### Extension conformance requirements
+##### Extension conformance requirements
 
 **Content**: An implementation declaring a given extension must:
 - Accept and validate all types defined by that extension
@@ -3979,7 +5373,7 @@ Support for `Note` (Tier 0) is optional at core conformance level.
 `ext:recommended-relations` is retired as of RFC-005. It no longer owns any normative semantics. Implementations must not treat it as a capability gate — the canonical relation vocabulary is now mandatory core behaviour provided by the `com.semanticops.srs` package.
 
 
-#### ext:repository conformance requirements
+##### ext:repository conformance requirements
 
 **Content**: An implementation declaring `ext:repository` must:
 - Produce repositories with a `.srs` marker and `manifest.json` at root, with content in the prescribed folder layout
@@ -3993,7 +5387,7 @@ Support for `Note` (Tier 0) is optional at core conformance level.
 An implementation that can produce archives but not consume them (or vice versa) must declare this limitation explicitly. Partial repository support is not conformant.
 
 
-#### ext:repository (self-contained) profile
+##### ext:repository (self-contained) profile
 
 **Content**: A named stricter profile for standalone, offline-operable repositories:
 
@@ -4008,7 +5402,7 @@ An implementation declaring this profile must satisfy all `ext:repository` confo
 
 This profile is appropriate for: standalone tools, file-based backups, air-gapped or offline deployments, inter-organisational exchange, and any context where zero-dependency portability is required.
 
-##### The self-contained profile declaration
+###### The self-contained profile declaration
 
 **Content**: The conformance string a self-contained repository declares:
 
@@ -4018,14 +5412,14 @@ SRS 2.0 Core + ext:repository (self-contained)
 
 
 
-#### Interoperability note
+##### Interoperability note
 
 **Content**: Two implementations at the same conformance level will produce compatible definitions for exchange. An implementation receiving a Package that includes types or fields from an extension it does not support should surface the unknown content, preserve it where possible, and pass it through rather than silently discard it.
 
 Two implementations both declaring `ext:repository` must be able to exchange archives without data loss. An archive produced by one conforming implementation must be consumable by any other conforming implementation at the same SRS version.
 
 
-#### The conformance declaration form
+##### The conformance declaration form
 
 **Content**: The declaration form, then a filled declaration:
 
@@ -4040,9 +5434,85 @@ SRS 2.0 Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability 
 
 
 
-## Mechanisms (concept-tree leaves, RFC-042)
+#### Validation
 
-### ext:cross-field-validation
+**Canonical Key**: record:concepts/validation
+
+**Description**: Checking data against the contracts its own definitions declare, and reporting what fails as severity-tagged diagnostics, never as a crash. Contracts come from several places: a Field's own value constraints, cross-field rules that only make sense over two or more Fields together, vocabulary resolution, reference resolution, and the specification's invariants. Diagnostics are reported, not thrown — a command that ran successfully and a repository that is valid are two different questions, and conflating them hides the second.
+
+**Notes**: Cross-field rules are the Type's own complete and exclusive set: they are never inherited by value from a base Type (Invariant I-97).
+
+##### All fieldId values in any CrossFieldRule within…
+
+**Number**: 10
+
+**Constraint**: All `fieldId` values in any `CrossFieldRule` within `Type.validationRules[]` must appear in the Type's effective field list. Cross-field rules cannot reference Fields outside the Type.
+
+
+##### conditional-required rule must supply predicateFieldId,…
+
+**Number**: 11
+
+**Constraint**: A `conditional-required` rule must supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. A `field-ordering` rule must supply `predicateFieldId`, `targetFieldId`, and `effect`. A `mutual-exclusion` rule must supply `fieldIds` with at least two entries.
+
+
+##### ext:cross-field-validation is opt-in; implementations not declaring it MUST ignore validationRules
+
+**Number**: I-89
+
+**Constraint**: An SRS implementation that does not declare support for `ext:cross-field-validation` MUST treat `validationRules` as an unrecognized property and MUST ignore it. Conformance rules R1–R11 bind only implementations that declare support for `ext:cross-field-validation`. (RFC-019 R0.)
+
+
+##### All CrossFieldRules in validationRules MUST be evaluated regardless of earlier failures (fail-all)
+
+**Number**: I-90
+
+**Constraint**: A conforming implementation that declares support for `ext:cross-field-validation` MUST evaluate each `CrossFieldRule` in `validationRules` against every Record of the Type at record-write time (create and update). Evaluation order within the array is implementation-defined; all rules MUST be evaluated regardless of earlier failures (fail-all, not fail-first). (RFC-019 R2.)
+
+
+##### conditional-required rule fires on string equality; target field MUST be non-empty when rule fires
+
+**Number**: I-91
+
+**Constraint**: A `CrossFieldRule` with `type: "conditional-required"` fires when the field identified by `predicateFieldId` is non-empty and its stored value is equal to `predicateValue` (case-sensitive string equality). When the rule fires, the field identified by `targetFieldId` MUST be non-empty in the Record. A violation MUST be reported as a validation error. (RFC-019 R3.)
+
+
+##### field-ordering rule applies only to date/number fields; non-date/non-number reference is a Type-level error
+
+**Number**: I-92
+
+**Constraint**: A `CrossFieldRule` with `type: "field-ordering"` fires when both `predicateFieldId` and `targetFieldId` are non-empty. It applies only to fields whose `fieldType.datatype` is `"date"`, `"date-time"`, `"number"`, or `"integer"`. When `effect` is `"must-precede"`, the predicate field value MUST be strictly less than the target field value (ISO 8601 lexicographic order for dates; numeric order for numbers). When `effect` is `"must-follow"`, the predicate field value MUST be strictly greater than the target field value. A violation MUST be reported as a validation error. If either field is non-empty but the other is absent or empty, the rule MUST NOT fire. A `field-ordering` rule whose `predicateFieldId` or `targetFieldId` resolves to a field with any other `fieldType.datatype` MUST be reported as a Type-level validation error. (RFC-019 R4.)
+
+
+##### mutual-exclusion rule MUST report error if more than one listed field is non-empty
+
+**Number**: I-93
+
+**Constraint**: A `CrossFieldRule` with `type: "mutual-exclusion"` MUST report a validation error if more than one field in `fieldIds` is non-empty in the Record. If zero or one field is non-empty, the rule passes. (RFC-019 R5.)
+
+
+##### conditional-required predicateFieldId MUST resolve to an effective-single string/date/date-time Field
+
+**Number**: I-94
+
+**Constraint**: A `CrossFieldRule` with `type: "conditional-required"` MUST supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. The field identified by `predicateFieldId` MUST be effective-single (`fieldType.cardinality` absent/`"single"` and, until #242 Phase B, effective `FieldAssignment.repeatable !== true`) and its `fieldType.datatype` MUST be one of `{"string", "date", "date-time"}`. String `format` and `valueDomain` do not restrict eligibility. A rule that omits a required property, selects a list/repeatable field, or resolves to any other datatype MUST be reported as a Type-level validation error. Admission of `date-time` is intentional; the scalar requirement intentionally closes the legacy repeatable-date equality hole. (RFC-019 R6; RFC-032 Rev-7 erratum; normative extension of I-11.)
+
+
+##### CrossFieldRule with unrecognized type value MUST be reported as a Type-level error; unknown types MUST NOT be silently ignored
+
+**Number**: I-95
+
+**Constraint**: A `CrossFieldRule` with a `type` value not in `["conditional-required", "field-ordering", "mutual-exclusion"]` MUST be reported as a Type-level validation error. Implementations MUST NOT silently ignore unknown rule types. (RFC-019 R9.)
+
+
+##### CrossFieldRule property present for wrong rule type MUST be reported as a Type-level error
+
+**Number**: I-96
+
+**Constraint**: A `CrossFieldRule` that contains a property belonging to a different rule type MUST be reported as a Type-level validation error. Specifically: a `conditional-required` or `field-ordering` rule MUST NOT supply `fieldIds`; a `mutual-exclusion` rule MUST NOT supply `predicateFieldId`, `predicateValue`, `targetFieldId`, or `effect`. (RFC-019 R10.)
+
+
+##### ext:cross-field-validation
 
 **Content**: > **Formalised by**: RFC-019 (srs#139). The `CrossFieldRule` shape and `validationRules` property are formally specified by RFC-019; refer to it for normative conformance rules (R0–R11).
 
@@ -4051,7 +5521,7 @@ SRS 2.0 Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability 
 `ValidationRule` handles single-field constraints. `CrossFieldRule` handles constraints that require evaluating more than one Field together.
 
 
-### `CrossFieldRule`
+##### `CrossFieldRule`
 
 **Content**: Example: the `CrossFieldRule` shape.
 
@@ -4064,1326 +5534,26 @@ SRS 2.0 Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability 
 When `ext:cross-field-validation` is in use, `Type` gains `validationRules?: CrossFieldRule[]`.
 
 
-### ext:recommended-relations
-
-**Content**: **Retired as of RFC-005.** The canonical SRS relation vocabulary (`contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`) is now provided as installed `RelationTypeDefinition` records in the `com.semanticops.srs` package. See §5 (Package).
-
-Implementations that previously declared `ext:recommended-relations` may remove it. The canonical definitions are unconditionally available to any repository using the SRS package.
-
-The statement that "`RelationTypeDefinition` is optional metadata" is superseded. As of RFC-005, every `Relation.relationType` string must resolve to an installed `RelationTypeDefinition` in the effective package set before a Relation is accepted. A missing or conflicting definition is a validation error. See §9-1 (Core conformance requirements).
-
-
-### `RelationTypeDefinition` as a VocabularyEntry specialisation (RFC-006)
-
-**Content**: `RelationTypeDefinition` satisfies the `VocabularyEntry` substrate contract. As of RFC-006, its key-role field is renamed from `relationType` to `key`. Instance-side reference fields (`Relation.relationType`) are unchanged.
-
-It gains `meta?: Record<string, unknown>` under the one forward-compatibility policy: unknown top-level fields are rejected; arbitrary entry metadata goes in `meta`.
-
-It **requires** both `label` and `description` (unchanged from RFC-005). The substrate making these optional in the general contract does not relax this obligation.
-
-The V1 mandatory resolution requirement (every `Relation.relationType` must resolve to an installed `RelationTypeDefinition`) is a named instance of the general closed-vocabulary resolution rule. See §9 (Conformance) and the Foundation Vocabulary and Term subsection.
-
-
-### Container
-
-**Content**: A lightweight grouping boundary over a collection of instances. Containers answer scoping questions — which instances belong together, what constitutes "this project" — that the Relation graph alone cannot answer.
-
-Containers are not semantic objects with Fields. They do not own semantic state; Records do. A `contains` Relation asserts "A is part of B" (a semantic claim); a Container asserts "these instances form a unit for boundary purposes" (a scope claim). Both are needed; neither replaces the other.
-
-See the generated reference below for `Container`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-`Container.containerId` is not an instance ID and must not appear in `Relation.sourceInstanceId` or `targetInstanceId`. See Invariant 20.
-
-
-### Membership and nesting (RFC-034)
-
-**Content**: A Container is a declared selection on the expression plane (rfc-decision-0750c62f). Its direct membership is the unordered set `direct(C) = rootInstanceIds ∪ memberInstanceIds`: roots anchor the scope, `memberInstanceIds` adds explicit members, and an omitted `memberInstanceIds` adds nothing (I-146).
-
-Nested scopes are declared through `childContainerIds`, an unordered set of `containerId`s and the one place a Container references another Container; nesting is never inferred from membership overlap. Effective membership is the closure `effective(C) = direct(C) ∪ ⋃ effective(child)` over the declared children (I-147). Every child id resolves to an existing, distinct Container, the child graph is acyclic, a child can be rootless, and a rooted child's roots normally sit in the parent's direct membership (I-150). A Container can have more than one parent; only the tree-shaped subset maps onto a folder hierarchy.
-
-Relations do not define membership (I-148). `contains` remains the part-of tree that navigation depth, layering and any tree walk are built on, and it is still maintained; a Container is a bookmark over that tree. This supersedes the pre-RFC-034 rule that omitted membership was derived by traversing `contains` from the roots.
-
-One definition serves every membership question: `containers_for_instance` (I-66), member listing and view resolution, RFC-012 `containerId` discovery (I-118), RFC-011 `containerScope` with `"explicit"` as `direct(C)` and `"subtree"` as `effective(C)` (I-144), and the RFC-026 slice closure (I-151). No membership array carries an order; ordering stays with `precedes` and Composition (RFC-015). A query is a separate, read-only selection and never changes membership by itself (I-149).
-
-
-### `identityFieldId`
-
-**Content**: **Required for**: Type libraries that need formal specialization while preserving base-Type processability.
-
-Defines single inheritance for Types. A specializing Type inherits the fields and semantics of a base Type, may add fields, and remains processable as the base Type by systems that know the base Type but not the specialization.
-
-When `ext:type-inheritance` is in use, `Type` gains:
-
-Example: the properties `ext:type-inheritance` adds to a Type.
-
-
-### identityFieldId
-
-**Content**: Names one field, from the Type's effective field set, as the record's identity/display field — the field a conformant implementation SHOULD use to resolve a Record's display label (e.g. in list, tree, discovery, and container views), in preference to any implementation-specific heuristic (Rule [N+36]).
-
-`identityFieldId` MUST reference a `fieldId` present in the Type's effective field set (Rule [N+33]).
-
-**Inheritance is cascading, unlike `fieldOrder`.** The *effective* `identityFieldId` of a Type is its own `identityFieldId`, if declared; otherwise, the effective `identityFieldId` of its base Type, resolved transitively up the ancestor chain; otherwise absent (Rule [N+32], [N+34]). A Type overrides an inherited effective `identityFieldId` by declaring its own, which need not match the base Type's and MAY point at a field the Type itself adds. This differs from `fieldOrder`, which is read only from the Type being resolved and does not search the ancestor chain when absent — `identityFieldId`'s inheritance rule is specific to this property, not a reuse of `fieldOrder`'s behavior.
-
-`identityFieldId` scopes to Tier 2 Records only; it has no defined meaning for Tier 0 (Note) instances, which carry no Type binding (Rule [N+35]).
-
-**Interaction with `DocumentSection.titleFieldId` (`ext:views-l2`).** For any `DocumentSection` that does not declare `titleFieldId` — whether that section's field content renders via the Default Rendering Baseline or a dispatched L1 View — implementations SHOULD render the per-record heading using the value of the field named by the record's Type's effective `identityFieldId`, if present, in place of omitting the heading. `titleFieldId`, when declared, MUST continue to take precedence for that section's per-record heading (Rule [N+37]; see `ext:views-l2` § Heading Hierarchy).
-
-
-### `FieldAssignmentOverride`
-
-**Content**: Overrides presentation or workflow constraints for an inherited Field in a specializing Type. It does not change the Field's semantics.
-
-Example: the `FieldAssignmentOverride` shape.
-
-`displayLabel` and `displayHint` are presentation-only. `required` may tighten an inherited optional field (`false` to `true`) for the specializing Type. It must not relax an inherited required field (`true` to `false`), because a Record instantiated against the specializing Type must remain valid when processed as the base Type.
-
-The effective field list for a specializing Type is the inherited effective field list of its base Type plus the specializing Type's own `fields[]`. A specializing Type must not duplicate an inherited `fieldId` in its own `fields[]`.
-
-Example:
-
-Example: a governance decision Type specialising a core decision Type.
-
-A system that knows `core/decision` but not `org.example/governance_decision` can still read the inherited decision fields. The specializing fields are unknown extension content to that system and should be preserved rather than discarded.
-
-
-### `RelationSpec`
-
-**Content**: **Required for**: extraction pipelines, founding document workflows, any system that needs to specify what a document type IS before assembling it.
-
-
-### RelationSpec
-
-**Content**: Declares an expected Relation between two Record types within a Blueprint.
-
-See the generated reference below for `RelationSpec`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list (and no longer risks drifting from the current `ExactTypeRef`-based schema, as the superseded prose here had).
-
-
-### `Blueprint`
-
-**Content**: The definition of a complete document type — which Types it contains, what Relations exist between resulting Records, and what "complete" means. A Blueprint is the artefact handed to an extraction pipeline.
-
-See the generated reference below for `Blueprint`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-**Blueprint vs View:**
-
-| | Blueprint | View / Document View |
-|---|---|---|
-| Question it answers | What IS this document type? What should be extracted? | How are existing Records assembled into readable output? |
-| Operates at | Definition time | Projection time |
-| Input | Source material (transcripts, conversations) | Existing Records in a Container |
-| Output | Extraction instructions → Records | Rendered document |
-
-
-### `FieldAssignment`
-
-**Content**: A named, versioned composition of Fields for a specific semantic object type.
-
-See the generated reference immediately below for `Type`'s current property table (including the extension-owner column — RFC-031 OQ1), optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger) — this prose no longer hand-duplicates the property list, including the extension-owned facets it could previously only gesture at as comments.
-
-
-### FieldAssignment
-
-**Content**: A Field reference within a Type. Declares this field's composition order and requiredness within the Type, without redefining field semantics.
-
-See the `FieldAssignment` appendix table in the generated reference below for the current property list.
-
-`displayLabel` is strictly for rendering. If a materially different label or meaning is needed, a distinct Field with its own lineage is required.
-
-Cardinality is a property of the referenced Field (`fieldType.cardinality`, RFC-032 [R4]); the former assignment-level `repeatable`/`minItems`/`maxItems` trio is removed (RFC-039 [R7], I-134).
-
-The Type's effective field list is `fields[]` unless `ext:type-inheritance` is declared and the Type extends another Type. In that case, the effective field list also includes inherited fields as defined by `ext:type-inheritance`.
-
-**AI guidance composition order** (recommended):
-
-1. Type framing (`Type.aiGuidance.extraction`) — establishes the semantic object type
-2. View framing (`View.aiGuidance.extraction`, if `ext:views-l1` is in use) — workflow-specific context
-3. Field extraction guidance (`Field.aiGuidance.extraction`)
-4. Negative guidance (`Field.aiGuidance.negativeGuidance`)
-5. Examples (`Field.aiGuidance.examples`)
-
-This is a recommended default, not a required invariant. Implementations that compose differently will produce different AI behaviour from the same definitions.
-
-**On instance migration when a Type version changes:**
-A Record binds to a specific `typeVersion` at creation time. Existing Records do not automatically migrate when a new Type version is published. Conformance is measured against the version the Record was instantiated under. When a Record is migrated and exchanged, it should carry the version it now conforms to, and the original Record should be preserved and linked via a `supersedes` Relation.
-
-
-### `lifecycleRef` — referencing shared lifecycle definitions
-
-**Content**: When `ext:lifecycle` is in use, a Type declares a lifecycle in exactly one of two mutually exclusive forms (V7):
-
-Example: the two lifecycle declaration forms on a Type.
-
-Declaring both is a validation error. An inline lifecycle cannot extend; use `lifecycleRef` when the same state machine is needed across multiple Types.
-
-
-### Stable identity
-
-**Content**: An SRS entity carries a UUID minted once, at creation, that does not change afterward. A copy, an export, an import, or a rename for display MUST NOT change an entity's UUID. Identity is declared on the entity itself, never derived from a file path, a directory position, or a storage history.
-
-A UUID conflict between two entities is a fatal error. A loader MUST NOT resolve it by precedence, and MUST NOT pick one entity as the winner over the other: doing so would discard whichever identity claim lost.
-
-Changing what an entity is at its root means minting a new UUID. A materially different entity does not reuse an old UUID: every existing reference to that UUID already points at the entity it used to be.
-
-
-### Instance
-
-**Content**: SRS separates two id spaces. A definition, such as a Field or a Type, is identified by a UUID together with namespace, name, and version: the same UUID names a lineage across versions, and version selects one point in it. An instance, such as a Note or a Record, is identified by its UUID alone, carries no version, and belongs to no lineage: it is a single piece of captured content.
-
-A Relation connects two instance UUIDs, never a definition UUID. A Container scopes a set of instances, never definitions. A Container's own id is a third kind of id: it MUST NOT appear as a Relation's source or target.
-
-Confusing a definition's UUID with an instance's UUID is a recurring correction in this specification. Reading a `typeId` as an instance id, or an `instanceId` as a definition id, produces a reference that resolves to the wrong kind of thing.
-
-
-### Semantic order
-
-**Content**: A `precedes` Relation states reading or execution order as a claim about meaning: this element comes before that one, and getting the order wrong is getting the claim wrong, not choosing a different layout. Specification sections in document order, and protocol stages in execution sequence, are both `precedes` chains: reversing either one changes what is true, not how it looks.
-
-`precedes` is one Relation among the canonical types, read by walking the chain from sibling to sibling.
-
-Order that reflects curation, display preference, or layout is presentation, not meaning, and belongs in the view layer. A Composition MAY sequence the same elements differently for rendering; that sequence is an arrangement, not a competing claim. Where the two disagree, the `precedes` chain is what the elements assert about each other. A `precedes` edge created to control how something displays is a misuse of the mechanism.
-
-
-### Projection
-
-**Content**: Rendered output is derived from records and is never itself a source of truth for them. A document, a table, an export, or a serialised copy is a view produced from the records on demand: rendering it again produces the same result, because nothing in it originates the meaning it shows.
-
-A projection keeps a traceable line back to the records it renders. Editing the rendered artifact directly, instead of the records, creates a second copy of the meaning that the records no longer agree with, and the disagreement has no mechanical way to resolve.
-
-View, Composition, and Theme are the constructs a projection is built from: View selects the presentation, Composition assembles what gets rendered, and Theme supplies the templates the rendering fills in. Each rests on the same rule: render the output, never author it directly.
-
-
-### ext:lifecycle
-
-**Content**: **Required for**: governance tools, decision logs, any implementation where records progress through defined states.
-
-`ext:lifecycle` is fully integrated with the vocabulary substrate (RFC-006). `Lifecycle` is an installable, referenceable container — a `VocabularyEntry` specialisation whose container holds states and transitions. `LifecycleState` satisfies the `VocabularyEntry` substrate contract with `key` (was `name`) as its key-role field.
-
-
-### `LifecycleState` (VocabularyEntry specialisation)
-
-**Content**: Example: the `LifecycleState` shape.
-
-
-### `LifecycleTransition` (edge between state keys)
-
-**Content**: Example: the `LifecycleTransition` shape.
-
-`LifecycleTransition` is an edge, not a `VocabularyEntry` (no `key`), but carries `id` so it is addressable. It follows the same forward-compatibility policy as substrate entries: unknown top-level fields rejected; arbitrary metadata in `meta`.
-
-
-### `Lifecycle` container
-
-**Content**: An installable, referenceable state machine — a closed vocabulary of states plus transitions.
-
-Example: the `Lifecycle` container shape.
-
-The distributable `Package` holds inline definitions: `lifecycles?: Lifecycle[]`. The repository `package/package.json` holds relative paths: `"lifecycles": ["lifecycles/foo.json", ...]`.
-
-
-### Type lifecycle declaration (added by this extension)
-
-**Content**: `Type` gains a lifecycle, declared in exactly one of two mutually exclusive forms (V7):
-
-Example: the two lifecycle declaration forms a Type may carry.
-
-Declaring both is a validation error (V7). An inline lifecycle's effective state set is exactly its own `states`/`transitions`; V5 and V9 apply identically.
-
-
-### Record lifecycle state
-
-**Content**: `Record.lifecycleState` must resolve to a state `key` in the Type's effective state set under V1.
-
-
-### Validation invariants (V7–V9)
-
-**Content**: **V7 — Lifecycle exclusivity.** A Type declares exactly one of `lifecycle` or `lifecycleRef`.
-
-**V8 — Lifecycle reference resolution.** A `lifecycleRef` must resolve to an installed `Lifecycle` in the effective package set.
-
-**V9 — Lifecycle integrity.** Over the effective state set (V5):
-- Exactly one state MUST have `isInitial: true`; `initialState` MUST reference that state's `key`.
-- The initial state MUST have effective `status: active`. A lifecycle whose initial state is deprecated, tombstone, or retired is invalid.
-- Every `transition.from`/`transition.to` must reference a state `key` in the effective state set.
-- A state with `isFinal: true` MUST NOT appear as the `from` of any transition.
-- Transition `id`s must be unique within the effective transition set.
-- `Record.lifecycleState` resolves under V1.
-
-
-### ext:views-l1
-
-**Content**: **Required for**: rendering and export workflows.
-
-Defines Views — versioned presentations over a field set.
-
-
-### `FieldView`
-
-**Content**: A field reference within a View. Controls presentation for this View without altering field semantics.
-
-Example: the `FieldView` shape.
-
-A Field hidden with `visible: false` remains in the Record and may appear in other Views. `visible` controls rendered text output only. A field with `visible: false` must still be included in any structured projection or export of this view. To exclude a field from both rendered output and structured projections, omit it from `fieldViews[]` entirely.
-
-
-### `RecordPropertyView` (RFC-041)
-
-**Content**: A sibling row kind to `FieldView` in the same `View.fieldViews[]` list. It presents a top-level Record property without treating that property as a Field.
-
-Example: the `RecordPropertyView` shape.
-
-The `property` enum is closed and generated from `record.json`'s declared top-level properties after excluding identity/type-binding properties (`$schema`, `instanceId`, `typeId`, `typeVersion`, `typeNamespace`, `typeName`), carriers (`fieldValues`, `fieldMeta`), the open `meta` bag, and `sourceRefs` (deferred because no composite-object-array field-row form is defined). `required`, `editorHintOverride`, and `compositeRenderer` do not apply to this row kind.
-
-Rows of both kinds are interleaved by their shared, unique `order`. `View.fieldViews[].order` is the sole presentation and export ordering mechanism: `ExportConfig` cannot reorder rows. Labels resolve from `displayLabel`, then default to `Status`, `Tags`, `Created`, or `Updated`. `lifecycleState` resolves through the bound Lifecycle state's label when possible and otherwise renders the raw key. Tags use the RFC-037 multi-entry form; timestamps render as raw ISO-8601 strings. An absent or empty value omits the row without invalidating the Record or View.
-
-
-### Conformance Rules (RFC-041)
-
-**Content**: **[R1]** A View's row list (`fieldViews[]`) admits two mutually exclusive row kinds discriminated by the presence of `fieldId` (`FieldView`) XOR `property` (`RecordPropertyView`); a row item carrying neither key, or both, MUST be rejected as invalid.
-
-**[R2]** `RecordPropertyView.property` MUST be a value in the closed, generated enum. An implementation encountering an unrecognized value MUST reject it as a validation diagnostic; it MUST NOT silently accept or ignore it.
-
-**[R3]** Implementations rendering `RecordPropertyView` rows MUST NOT special-case any property name outside the mechanism defined above. The per-property default-label table and value-resolution rule above are the full extent of per-property variation; no boolean flag and no property-specific schema property may be added to `DocumentSection`, `FieldView`, or `View` for any record-level property.
-
-**[R4]** A `RecordPropertyView` row whose named property is absent or empty on the Record being rendered MUST be omitted from render output; this MUST NOT be treated as a validation failure of either the Record or the View.
-
-**[R5]** The `RecordPropertyView.property` enum in `view.json` MUST be regenerated — never hand-edited — whenever `record.json`'s set of top-level properties, with the exclusions above, changes. `validate-all.mjs` MUST run the derivation's `--check` guard.
-
-**[R6]** `lifecycleState` row-value resolution MUST use the bound Lifecycle's `LifecycleState.label` when the Record's Type carries a `lifecycleRef` and the state key resolves against it; otherwise the raw state key renders verbatim. No other humanization applies.
-
-**[R7]** Every `order` value in a View's mixed `fieldViews[]` row list MUST be unique. A duplicate is a validation error. Implementations MUST render rows in ascending `order`, yielding one deterministic total presentation sequence across FieldView and RecordPropertyView rows.
-
-**[R8]** *(Revision 4.)* A `RecordPropertyView` row that is not omitted per [R4] MUST appear in the JSON projection (`document-view-output.json`) of any Composition that renders it, as a `ProjectedPropertyRow` (`{ property, label, value }`, Change D) on the record's `properties[]` array, in ascending `order`. `label` and `value` MUST be the *resolved* label and value — the same ones Change C renders into markup, not the raw `property` name alone. An implementation that renders a `RecordPropertyView` row in markup output MUST NOT omit its `ProjectedPropertyRow` from the JSON projection of the same render.
-
-
-### JSON projection (RFC-041 Revision 4)
-
-**Content**: `document-view-output.json`'s `ProjectedRecord` carries an optional `properties[]` array, sibling to its existing `relations[]` (RFC-027) and `fields`/`orderedFieldKeys` (FieldView rows). Each entry is a `ProjectedPropertyRow { property, label, value }`: `property` is the same closed enum value `RecordPropertyView.property` names; `label` and `value` are the *resolved* label and value per Change C — never the raw property name alone. `properties[]` is present only when the rendering section's View declares at least one `RecordPropertyView` row and the record has at least one surviving row, in ascending `order`, the same single axis FieldView and RecordPropertyView rows already share. Owner ruling (2026-09-01, verbatim): "Projections should ideally contain a full machine readable form so that they can enable transformations." — a projection missing content the rendered form carries cannot support the transformations that principle names as the reason projections exist.
-
-
-### `ExportConfig`
-
-**Content**: Configuration for rendering a Record through this View as an exportable document. One shared shape, attached at two points (srs#525): here on `View`, and on `Composition` (`ext:views-l2`) for document-level rendering. Neither attachment overrides the other — each governs its own render context. See `ext:views-l2`'s *L1/L2 ExportConfig* note for how the two coexist when a Composition section dispatches to a View.
-
-Example: the `ExportConfig` shape.
-
-
-### `View`
-
-**Content**: A versioned presentation and export configuration over a field set. A View is compatible with any Record containing its required fields.
-
-Example: the `View` shape.
-
-**Note (2026-08-22, `rfc-decision-4f1e12e5` entry 5)**: the View-root `protection` enum (`none`/`read-only`/`fill-in`) previously specified here is removed under the dormancy rule (`rfc-decision-cce3c00e`) — zero use, and it was a hint without a contract: no enforcement semantics were defined anywhere. `FieldView.required` below is untouched — it is attested in production use and is a distinct form-vs-validity mechanism. Return trigger: a real authoring surface needing edit protection, which must design the missing enforcement half.
-
-Compatibility is field-centric:
-- A Record is renderable through a View when it contains all `FieldView` entries with `required: true`.
-- Fields with `visible: true` but not required are rendered when present and omitted when absent.
-- Omitted Fields in `fieldViews[]` are treated as `visible: false`.
-
-A View may not reference unknown Fields: every `fieldId` in `View.fieldViews[]` must reference a valid `Field.id` in the effective package set.
-
-`View.protection` applies only to interactions through that View. A Record may be editable through one View and read-only through another. For record-level settlement, use `ext:lifecycle` states such as `isFinal`.
-
-Facilitation steps have been removed from View. Use `ext:protocol` Protocol stages instead.
-
-
-### Composite rendering — renderer dispatch (RFC-036)
-
-**Content**: `FieldView` gains an optional `compositeRenderer`, a `CompositeRendererBinding` that dispatches a
-composite-range Field (`fieldType.datatype: "ref"`, `mode: "inline"`) to a named composite renderer.
-Presentation lives in the View, not in the Type: RFC-032 evicted `compositeRenderer` from the type model,
-and RFC-015 established that an arrangement over records with many legitimate concurrent forms is
-view-owned.
-
-Example: the `CompositeRendererBinding` shape.
-
-
-### Composite baseline rendering
-
-**Content**: A composite-range Field that resolves to no renderer — unbound per [CR-036-6], or fallen back per
-[CR-036-7] or [CR-036-9] — is rendered by the **composite baseline**: a heading when a label resolves
-(`FieldAssignment.displayLabel`, overridable by `FieldView.displayLabel`) at level `4 + d` shifted by
-`Composition.depthOffset`, where `d` is nesting depth; then one block per value in value order; within
-each block one field row per assignment on the composite's `rangeType`, ascending by
-`FieldAssignment.order` with `fieldId` code-point order as tie-break. A field with no value, or whose
-value renders to nothing, is omitted unconditionally. An assignment that is itself `ref`/`inline` expands
-into a nested baseline block at depth `d + 1` rather than a field row. Field-row labels resolve by
-`FieldAssignment.displayLabel` -> `Field.name` -> `fieldId`; templates resolve by
-`ElementTemplates.compositeFieldRowTemplates[Field.name]` -> `ElementTemplates.fieldRow` -> the
-implementation's existing top-level field-row form.
-
-
-### The `table` renderer
-
-**Content**: Roles, with their owning Type and required `fieldType`:
-
-| Role | Owner | Required | `fieldType` |
-|---|---|---|---|
-| `rows` | table Type | yes | `{ datatype: "ref", mode: "inline", cardinality: "list", rangeType: <row Type> }` |
-| `cells` | row Type | yes | `{ datatype: "string", cardinality: "list" }` |
-| `columns` | table Type | no | `{ datatype: "string", cardinality: "list" }` |
-| `widths` | table Type | no | `{ datatype: "number", cardinality: "list", constraints: { minimum: 0, maximum: 1 } }` |
-| `subheading` | table Type | no | `{ datatype: "string", cardinality: "single" }` |
-| `label` | table Type | no | `{ datatype: "string", cardinality: "single" }` |
-
-The composite field's own `cardinality` governs how many tables it carries: `single` is one, `list` is a
-sequence. This replaces the `FieldGroup` + `compositeRenderer` mechanism of RFC-007, which is retired with
-`FieldGroup` at the #242 cutover.
-
-
-### Conformance Rules (RFC-036)
-
-**Content**: **[CR-036-1]** A `renderer` identifier MUST match `^([a-z][a-z0-9-]*|[a-z0-9-]+(\.[a-z0-9-]+)+/[^/]+)$`. An identifier that does not match MUST be treated as unrecognised, and [CR-036-7] applies. Enforced at render and validation time, not by JSON Schema, so a malformed identifier degrades gracefully rather than failing the load of an entire View or Theme.
-
-**[CR-036-2]** *(Governance.)* Bare `renderer` identifiers are reserved for SRS-defined renderers and MUST only be introduced by a ratified RFC. Those defined to date are `table` and the sentinel `baseline`. Vendor renderers MUST use the `{reverse-domain}/{name}` form.
-
-**[CR-036-3]** A binding or directive MUST reference a Field whose `fieldType.datatype` is `"ref"` and whose `fieldType.mode` is `"inline"`. Otherwise, or when the `fieldId` does not resolve in the effective package set, implementations MUST ignore the binding, MUST render the field by whatever rendering its `fieldType` normally receives, and MUST emit a diagnostic.
-
-**[CR-036-4]** Composite rendering applies to Tier 2 Records only. A binding whose `fieldId` does not appear on the rendered instance's resolved Type MUST be ignored without a diagnostic — the normal case for a heterogeneous section.
-
-**[CR-036-5]** A binding MUST target a composite field assigned directly to the rendered Record's Type. Binding a composite nested inside another composite's `rangeType` is out of scope; a nested composite is rendered by the composite baseline. Implementations MUST NOT infer a binding for a nested composite from a binding on its parent.
-
-**[CR-036-6]** For a given rendered Record and composite-range field, implementations MUST resolve at most one binding, taking the first that applies: (1) `FieldView.compositeRenderer` on the `FieldView` for that field in the `ext:views-l1` View selected to render the Record — chosen by `DocumentSection.typeDispatch`, else `DocumentSection.renderViewId`; (2) the matching `DocumentSection.compositeRenderers` entry; (3) the matching `Composition.compositeRenderers` entry. When none applies the field is unbound. A resolved `renderer` of `"baseline"` means unbound and MUST NOT fall through to a broader site. A `FieldView` that exists but carries no `compositeRenderer` is not an override and MUST fall through. A field not visible in the selected View is not rendered and no binding applies. When an L1 View is rendered outside any Composition, only site (1) exists. Duplicate `fieldId` entries within one array are a validation diagnostic; the first in array order wins.
-
-**[CR-036-7]** When a resolved `renderer` is not recognised, the implementation MUST fall back to the composite baseline and MUST emit a diagnostic identifying the unrecognised value and the field. The fallback MUST NOT suppress the field's content.
-
-**[CR-036-8]** Role resolution proceeds per role: when `roles` declares that role, its value is the bound Field and MUST resolve to an assignment on the owning Type; otherwise the role binds to the assigned Field whose `Field.name` equals the role name, compared exactly and independently of namespace. Assignments inherited via `ext:type-inheritance` are in scope. On ambiguity, implementations MUST bind the lowest `FieldAssignment.order`, with `fieldId` code-point order as tie-break, and MUST emit a diagnostic. A `roles` entry naming an undefined role MUST be silently ignored.
-
-**[CR-036-9]** A role Field satisfies the renderer's contract when its `fieldType` declares every key the contract specifies, matching the specified value where the contract gives a literal one. `rangeType` is presence-matched — it MUST be present and MUST resolve, and its resolved Type is what dependent roles are looked up on. A `constraints` key required by a contract is advisory and its absence MUST NOT fail the contract test. Additional `fieldType` keys, and assigned Fields filling no role, MUST be ignored. When a required role does not resolve or does not satisfy the contract, implementations MUST fall back to the composite baseline with a diagnostic; when an optional role does not satisfy it, implementations MUST drop that role only, with a diagnostic.
-
-**[CR-036-21]** `FieldView.editorHintOverride`, when present, MUST take a value from the same set as `Field.editorHint` (`singleline`, `textarea`, `rich-text`, `date-picker`, `dropdown`, `multi-select`, `voice`) and supersedes it for Records rendered or edited through that View. A value outside that set MUST be ignored with a diagnostic and `Field.editorHint` MUST apply. Enforced at validation and render time rather than by JSON Schema.
-
-**[CR-036-22]** Every diagnostic required or recommended by a `[CR-036-n]` rule MUST carry that rule's identifier and MUST identify the instance, field, and where applicable the value or row index. [CR-036-13]'s constraint bound raises validation-pass diagnostics of severity `error`; every other `[CR-036-n]` diagnostic is a render-pass `warning`, except [CR-036-6]'s duplicate-`fieldId` case, which is additionally reported at validation time. No `[CR-036-n]` diagnostic of either pass causes a non-zero exit code.
-
-
-### `SectionSource`
-
-**Content**: Defines how a section's instances are selected from a Container.
-
-Example: the `SectionSource` union.
-
-**Note (2026-08-22, `rfc-decision-4f1e12e5` entry 4)**: the `fixed-instances` and `relation-query` `SectionSource` variants previously specified here were removed under the dormancy rule (`rfc-decision-cce3c00e`) — zero corpus use across the 13 real sections in the attested corpus (2026-08-21 usage attestation).
-
-**Note (2026-09-03, srs#525, `rfc-decision-cce3c00e` + `rfc-decision-9ee14517`)**: `type-query` is retired and replaced by `discovery-query`, which consumes the one structured query mechanism (`DiscoveryQuery`, `ext:discovery`) instead of re-implementing its own divergent copy of the same filter axes. `discovery-query` and `container-subset` are the two live ways to source a section. Return trigger: a composition need neither live variant expresses.
-
-
-### `DocumentSection`
-
-**Content**: One section in a Composition.
-
-Example: the `DocumentSection` shape.
-
-
-### `CompositeRendererDirective` (RFC-036)
-
-**Content**: A `CompositeRendererBinding` (`ext:views-l1`) plus the composite-range Field it binds. Presentation only ([CR-036-20]).
-
-Example: the `CompositeRendererDirective` shape.
-
-
-### `RelationsPresentation` (RFC-027)
-
-**Content**: Opt-in per-section display of each rendered member's Relations as a links block.
-
-Example: the `RelationsPresentation` shape.
-
-Rendering rules (normative statements [I-027-1]-[I-027-8] in RFC-027):
-
-- **Edge selection.** Edges display only when their own `status` is absent or `"active"` — the filter never reads the related record's `lifecycleState`. A lifecycle-superseded record's active edges display normally.
-- **Placement.** The block renders after the member's rendered content (fields and field groups for Tier 2; body content for Tier 0) and before nested subsection members. When no edge survives selection, the block is omitted entirely for that member, regardless of `emptyBehavior`.
-- **Rows.** One row per (entry, direction) with at least one edge: the resolved label followed by the related instances' display labels, comma-joined. Markdown normative form: `**<label>**: <display label>, <display label>`. In `html`, `adoc` and `text` the row uses the same label/value markup the implementation emits for a field row in that format — defined by *Normative Field-Row Form* below (RFC-037 [FR-037-15]), which supplies the referent this rule has always pointed at. A relation row omits `srs-fieldname-*` and carries `srs-relationtype-{relationTypeKey}` in its place [FR-037-12]. For any other format the relation row form remains implementation-defined. Related-instance display labels resolve by: the value of the instance's effective `identityFieldId` (RFC-020, declared or inherited per [N+34]) when it resolves to a non-empty string → the instance's value for the section's `titleFieldId` when a non-empty string → the `instanceId`. Tier 0/1 related instances always fall through to `instanceId`.
-- **Determinism.** Rows follow `include[]` order, forward before inverse per entry; within a row, instances order by display label then `instanceId`, both in Unicode code point order; a related instance repeated within one (entry, direction) renders once.
-- **JSON projection.** Members that project as `ProjectedRecord` carry `relations: ProjectedRelationRow[]` (`document-view-output.json`) preserving row order; members with no surviving edges omit the property. Tier 0/1 members are outside the JSON projection's `relations` property; their rendered-format blocks are unaffected.
-- **Sliced repositories.** Cross-boundary Relations moved to `slice.externalRelationRefs[]` (RFC-026 R6) do not render.
-- **Humanization** (for default labels): take the key's name segment (after the last `/` for namespaced keys), replace every `-` and `_` with a single space, uppercase the first character using Unicode default (locale-independent) case conversion. `superseded-by` → `Superseded by`.
-
-Link labels prefer the identity field over the section's `titleFieldId` — the reverse of the [N+37] heading precedence — because a related instance need not be a member of the rendering section. Rows emit plain display labels, not hyperlinks; anchor emission awaits a spec-level record-anchor convention.
-
-
-### `NavigationLink`
-
-**Content**: An assembly-time cross-section link in a Composition. Navigation links are reading aids for the rendered document, not semantic assertions about Records. They do not appear in the Relation graph.
-
-Example: the `NavigationLink` shape.
-
-
-### `ThemeReference`
-
-**Content**: A pointer to a Theme (ext:themes-l1). Follows the same `mode`-based reference pattern as `packageRef` in the manifest.
-
-Example: the `ThemeReference` shape.
-
-
-### `ThemeVariant`
-
-**Content**: A named alternative theme selectable at render time instead of `Composition.themeRef`.
-
-Example: the `ThemeVariant` shape.
-
-Variant name uniqueness is enforced at package validation time.
-
-
-### `Composition`
-
-**Content**: A versioned, Container-level projection. Defines how a Container's Records are assembled into a readable document.
-
-Example: the `Composition` shape.
-
-A `Composition` may reference one or more `View` records (via `DocumentSection.renderViewId`). A single field-centric View may render mixed Record Types when the Records contain the required fields. The Composition orchestrates; it does not replace L1 Views.
-
-`DocumentSection.renderViewId` references a `View.id` (from `ext:views-l1`). A `Composition.id` is not a valid value for `renderViewId` — Compositions are not nestable.
-
-Use `navigationLinks` when a rendered document should include "see also" or related-section links. Use `Relation` only when the relationship is a semantic assertion about Records.
-
-
-### Heterogeneous Section Rendering
-
-**Content**: A `container-subset` section can mix Record Types — it draws all Container members, ordered by the `precedes` chain (Rule [N+12]). Two optional fields make such sections precise:
-
-- **`typeFilter`** (on the `container-subset` source) restricts the section to a subset of member Types by `namespace/name`, preserving the container-wide `precedes` order projected onto the survivors — filter-then-project (Rule [N+21]).
-- **`typeDispatch`** (on `DocumentSection`) selects a different L1 View per Record Type within the one section, so interleaved Types each render with their own View (Rules [N+14]–[N+18]).
-
-A record's **resolved type** for both fields is the canonical `namespace/name` of the Type its `typeId` resolves to — not the denormalized `typeNamespace`/`typeName` hints — compared version-independently (Rule [N+13]). These compose with the per-record heading behaviour of `titleFieldId` (Rule [N+1]) for heterogeneous sections, and leave intra-record group rendering inside a dispatched L1 View unaffected.
-
-
-### Default Rendering Baseline
-
-**Content**: When `DocumentSection.renderViewId` is absent, implementations MUST render each instance using the following baseline. No L1 View influences this path.
-
-**Step 1 — Field ordering.** Order fields ascending by `FieldAssignment.order`. With `ext:type-inheritance`, use `fieldOrder` from the Type if declared; otherwise use `FieldAssignment.order`.
-
-**Step 2 — Resolve values.** A field is present if its `Field.name` key is present in `fieldValues` with a value that is not the empty string; a `cardinality: list` value is present when at least one entry survives Step 2 (RFC-039 [R5]/[R5a], canonical I-132 — structural presence and rendering presence remain distinct).
-
-**Step 3 — Labels.** Use `FieldAssignment.displayLabel`; fall back to `Field.name`.
-
-**Step 4 — Render.** Render only present fields. A field that Step 2 resolves as absent — including one whose `FieldValue.value` is an empty string — MUST NOT emit a row, and neither MUST a field whose value sequence has no surviving entries. Implementations MUST NOT emit a label with an empty value. The sole exception is `DocumentSection.emptyBehavior` `"show-placeholder"` with the field `required: true`, which MUST emit a row whose value position carries the literal placeholder `(empty)`. Multi-entry values render as a block list, never comma-joined. The emitted form of a field row, and the separation between consecutive rows, is normative per output format — see *Normative Field-Row Form* below (RFC-037).
-
-The baseline is a floor, not a ceiling. An L1 View via `renderViewId` always takes precedence.
-
-`emptyBehavior` in the L1 View path: when `renderViewId` is set, empty field handling is governed by `ExportConfig.omitEmptyFields` on the referenced L1 View. `DocumentSection.emptyBehavior` does not apply in the L1 View rendering path.
-
-
-### Normative Field-Row Form (RFC-037)
-
-**Content**: The emitted form of a field row on the Default Rendering Baseline, and on RFC-036 Change C's
-composite baseline where that baseline emits an individual field row. These forms are the content
-`ElementTemplates.fieldRow` receives as `{{content}}`; a Theme may wrap the row and MUST NOT replace
-it ([T-3]), and when no `fieldRow` template resolves the forms below are emitted unwrapped. They are
-the terminal rung of RFC-036's row-template ladder (`compositeFieldRowTemplates` -> `fieldRow` ->
-baseline field-row form), closing RFC-036 Open Question 2.
-
-A composite is a Field whose `fieldType.datatype` is `"ref"` **and** whose `fieldType.mode` is
-`"inline"` — the pair [CR-036-3] requires; `inline` is a `mode` value, not a datatype. A composite is
-rendered by RFC-036 Change C, not by these rules; these rules govern the field rows *within* each
-composite block. A `ref` Field whose `mode` is `"reference"` is **not** a composite and renders as an
-ordinary field row under these rules, as [CR-036-3] directs for any Field that is not a `ref`+`inline`
-composite.
-
-**Value sequence.** A field renders as multi-entry when Step 2 finds it present through an ordered
-sequence. Both mechanisms are covered without preference: `fieldType.cardinality: "list"` (RFC-032
-[R4], values carried as a JSON array at the field's key) — the legacy `ext:repeatable-fields` path is removed (RFC-039 [R7]).
-(`FieldValue.entries`). *Sequence order* means array index order on the former, `entries` order on
-the latter. Cardinality — not element count — selects the form: a one-element sequence renders in
-block form, so a Type's rendered shape does not vary with instance data.
-
-**Scalar rows.** For a present single-valued field, exactly one row, beginning on its own line:
-
-| Format | Normative row form |
-|---|---|
-| `markdown` | `**<label>**: <value>` |
-| `adoc` | `*<label>*: <value>` |
-| `text` | `<label>: <value>` |
-| `html` | `<div class="srs-field srs-fieldname-{name}"><strong class="srs-field-label field-label">{label}</strong>: <span class="srs-field-value field-value">{value}</span></div>` |
-
-In the three text formats the separator is a literal colon and single space (U+003A U+0020). In
-`html`, the element names, nesting, order, literal colon and `srs-`-prefixed class names are
-normative; inter-element whitespace is not, following the precedent [CR-036-15] sets for pinned HTML
-output. Implementations SHOULD emit the single-line form so conformance fixtures have a canonical
-serialisation. **These classes belong to the baseline's output specification, not to
-`ext:themes-l1`:** implementations MUST emit them whether or not that extension is declared and
-whether or not a Theme resolves.
-
-**Multi-entry rows.** A multi-entry value MUST render as a block list and MUST NOT be comma-joined.
-The label occupies its own line (in `html`, its own element) and retains its trailing colon:
-
-| Format | Label line | Entry marker |
-|---|---|---|
-| `markdown` | `**<label>**:` | `- ` |
-| `adoc` | `*<label>*:` | `* ` |
-| `text` | `<label>:` | `- ` |
-| `html` | the `strong` element, inside the same `div` the scalar row uses | one `<li class="srs-field-value field-value">` per entry inside an unclassed `<ul>` |
-
-The full `html` multi-entry row is:
-
-Example: the html multi-entry field row.
-
-The enclosing `div` is the same one the scalar row uses: a multi-entry row is still a field row and
-must carry what [T-8] requires of one.
-
-In the text formats the list begins on the line immediately after the label line with no blank line
-between. An entry whose rendered value is empty is omitted from the list; a sequence with no
-surviving entries is absent and emits no row.
-
-**Row separation.** In `markdown`, `adoc` and `text`, implementations MUST emit a blank line between
-consecutive field rows, and MUST emit a blank line after a block list's final entry before any
-following row, heading or relations block. In `html` implementations MUST NOT insert a separator
-element between rows. The same separation applies between consecutive relation rows in a links block.
-This is structural, not cosmetic: without the blank line a following row is a CommonMark lazy
-continuation of the list's last item and is swallowed into it.
-
-**Continuation.** When a surviving entry's value spans several lines, every line after the first is
-indented two spaces in `markdown` and `text` — the width of the `- ` marker, and never more, since four
-spaces would make the continuation an indented code block. An entry whose value contains a blank line
-remains a single list item, its subsequent blocks attached at that same content column; no blank line
-terminates the item. In `adoc`, indentation does not attach a block to a list item: implementations
-MUST emit a `+` continuation line before each subsequent block, and indentation is not normative there. Continuation applies to entries only — a single-valued field's
-value is emitted verbatim, and any further lines sit at column zero, unindented and unaltered.
-
-**Empty and placeholder.** A field Step 2 resolves as absent emits no row. When
-`DocumentSection.emptyBehavior` is `"show-placeholder"` and the field is `required: true`,
-implementations MUST emit a row carrying the literal `(empty)` — this supersedes Step 4's former
-MAY. The placeholder row takes scalar form regardless of cardinality. In `html` the value element
-additionally carries `srs-empty-value`. The rule does not reach the L1 View path, where
-`ExportConfig.omitEmptyFields` governs.
-
-**Class identity.** `{name}` in `srs-fieldname-{name}` is `Field.name` normalised by the five-step
-rule ([T-8]), never `FieldAssignment.displayLabel` — a rendering-only label must not move a stylesheet
-hook. The class vocabulary and the five-step rule are normative for baseline output independently of
-whether `ext:themes-l1` is declared, so a non-declaring implementation is not required to read that
-extension in order to comply. A relation row has no `Field.name`: it omits `srs-fieldname-*` and
-carries `srs-relationtype-{relationTypeKey}` instead. The five-step rule has no replacement for `/`, so
-step 3 deletes it and `core/depends-on` normalises to `coredepends-on` — deterministic, and noted so no
-implementer treats it as a bug to fix unilaterally.
-
-**Content.** In `markdown`, `adoc` and `text` the rendered label and value are emitted verbatim and
-MUST NOT be escaped or altered, except for the continuation above — field values in this model
-routinely are markup. In `html`, label and value content MUST be escaped (`&`, `<`, `>`, `"`, `'`).
-The baseline performs no markup conversion, so a markdown-bearing value appears in `html` as literal
-source; converted output is a Theme or L1 View concern.
-
-**Labels.** Resolution stays exactly Step 3: `FieldAssignment.displayLabel`, falling back to raw
-`Field.name`, with no humanisation or case conversion.
-Tier 0 Notes emit no field rows.
-
-**Conformance boundary.** These forms bind any implementation emitting a `Composition` in
-`markdown`, `adoc`, `text` or `html` through this baseline. They do not bind native application UI
-that is not emitting a `Composition`; a client-side `Composition` renderer in a covered format is
-not exempt.
-
-
-### L1/L2 ExportConfig — two attachment points, no precedence (srs#525)
-
-**Content**: `ExportConfig` (ext:views-l1) is one shared shape attached at two points: `View.exportConfig` and `Composition.exportConfig`. Each attachment governs its own render context; neither overrides the other, because they never describe the same concern:
-
-- **`Composition.exportConfig`** governs this Composition's document-level rendering: `format` (all section rendering, superseding nothing because a dispatched View's own `format` simply has no effect here), and the document `preamble` (rendered once, before all sections).
-- **A dispatched L1 View's `exportConfig`** (`DocumentSection.renderViewId`/`typeDispatch`), when set, continues to govern *that View's own render context* — rendering one record through it — independently of the Composition it's dispatched within: its `preamble` renders before that record's field values (not the document preamble), and its `omitEmptyFields` controls that record's absent-field rendering.
-
-There is no property either attachment "wins": `Composition.exportConfig.format` is the only format that applies in section rendering because it is the only one describing that concern; a dispatched View's `exportConfig.format` describes a different concern (that View's own standalone-rendering format, when it is rendered outside any Composition) that section rendering never consults.
-
-When a dispatched View's `exportConfig.preamble` renders inside a section, the variable `{{heading-3}}` is available, resolving to heading prefix at level `3 + depthOffset`. In standalone export context (that View rendered outside any Composition), `{{heading-3}}` MUST resolve to the empty string — implementations MUST NOT emit the literal token.
-
-
-### Heading Hierarchy
-
-**Content**: For `format: "markdown"`, `"html"`, or `"adoc"`:
-
-| Element | Heading level | Condition |
-|---|---|---|
-| Document title | `1 + depthOffset` | When `preamble` is absent |
-| Section title | `2 + depthOffset` | When `DocumentSection.title` is set |
-| Per-record heading | `3 + depthOffset` | When `titleFieldId` is set on the section, or (RFC-020, Rule [N+37]) as a fallback when it is not — see below |
-| Field label | Bold/formatted text — not a heading; exact per-format form per *Normative Field-Row Form* (RFC-037) | Always |
-
-For `format: "text"` or implementation-defined values, heading level semantics do not apply.
-
-**`identityFieldId` fallback (RFC-020, Rule [N+37]).** For any `DocumentSection` that does not declare `titleFieldId` — whether that section's field content renders via the Default Rendering Baseline or a dispatched L1 View — implementations SHOULD emit the per-record heading using the value of the field named by the record's Type's effective `identityFieldId` (`ext:type-inheritance`), if present, in place of omitting the heading. `titleFieldId`, when declared, MUST continue to take precedence for that section's per-record heading.
-
-
-### Preamble Template Variables
-
-**Content**: Standard variables in `Composition.exportConfig.preamble`:
-
-| Variable | Resolves to |
-|---|---|
-| `{{container-title}}` | Container title from manifest |
-| `{{container-id}}` | Container UUID |
-| `{{date}}` | Render date |
-| `{{heading-1}}` | Heading prefix at level `1 + depthOffset` (empty string in json mode) |
-| `{{heading-2}}` | Heading prefix at level `2 + depthOffset` (empty string in json mode) |
-
-In json mode all `{{heading-N}}` variables MUST resolve to `""`. Implementations MUST NOT emit the literal token.
-
-
-### Theme Variant Selection (ext:themes-l1)
-
-**Content**: When `ext:themes-l1` is declared and a variant name is supplied at render invocation:
-
-1. Find `ThemeVariant` in `themeVariants` matching the requested name (case-sensitive).
-2. If found: resolve its `ThemeReference` and apply Rule [T-2] (targets check). If format matches, use that Theme. If format does not match, render **without a theme** — do NOT fall back to `themeRef`.
-3. If not found: fall back to `themeRef` (applying Rule [T-2]). If absent or format-incompatible, render without a theme.
-4. If no variant name is supplied: use `themeRef` (applying Rule [T-2]).
-
-
-### ext:themes-l1
-
-**Content**: Visual presentation layer for `Composition`. Attaches brand identity, typography, stylesheets, cover pages, and element wrapping to a rendered document without altering its semantic structure. Depends on `ext:views-l2`. Implementations that do not declare this extension MUST ignore `Composition.themeRef` and `Composition.themeVariants` and MUST NOT error on their presence.
-
-
-### `AssetDeclaration`
-
-**Content**: A named asset (image, font, stylesheet, or data file) referenced in templates via `{{asset:name}}`.
-
-Example: the `AssetDeclaration` shape.
-
-Assets are declared in `Theme.assets` as a named dictionary. Asset names MUST be unique within the Theme.
-
-
-### `PageTemplates`
-
-**Content**: Page-level chrome for paginated output formats (`"pdf"`, `"docx"`). Ignored for non-paginated formats.
-
-Example: the `PageTemplates` shape.
-
-
-### `ElementTemplates`
-
-**Content**: Templates that wrap auto-rendered content at each structural level. Each template receives finished content as `{{content}}` and wraps it — it does not re-render or reorder content.
-
-Example: the `ElementTemplates` shape.
-
-Override precedence: a specific override always takes precedence over the corresponding universal template. When neither is set, the element is rendered without wrapping.
-
-
-### `StylesheetDeclaration`
-
-**Content**: Example: the `StylesheetDeclaration` shape.
-
-
-### `TypographyHints`
-
-**Content**: Informative declarations. No normative rendering behaviour is derived from these values.
-
-Example: the `TypographyHints` shape.
-
-
-### `Theme`
-
-**Content**: Example: the `Theme` shape.
-
-`Package` gains `themes?: Theme[]` when `ext:themes-l1` is declared. When `ThemeReference.mode === "bundled"`, the referenced `themeId` MUST appear in `Package.themes[]` (Rule [T-5]). `Reference.definitionType` and `ImportRecord.definitionType` gain `"theme"` as a portable value.
-
-
-### CSS Class Injection
-
-**Content**: For `"html"` and `"pdf"` output, implementations MUST add semantic CSS classes to the rendered elements named in the table below. RFC-037 adds the field-row label and value elements, which are not wrappers.
-
-**Class name normalisation** (5-step rule applied to all identifier components):
-1. Convert to lowercase
-2. Replace underscores, spaces, and dots with hyphens
-3. Remove characters that are not alphanumeric or hyphens
-4. Collapse consecutive hyphens to a single hyphen
-5. Trim leading and trailing hyphens
-
-| Element | Classes always applied | Classes conditionally applied |
-|---|---|---|
-| Document wrapper | `srs-document` | — |
-| Section wrapper | `srs-section`, `srs-section-{sectionId}` | — |
-| Record wrapper | `srs-record`, `srs-type-{typeNamespace}-{typeName}` | `srs-field-{fieldName}-{normalisedValue}` for each `cssClassFields` entry with a matching non-empty Field eligible under [T-9] |
-| Field row | `srs-field`, `srs-fieldname-{fieldName}` where `{fieldName}` is `Field.name` | `srs-relationtype-{relationTypeKey}` in place of `srs-fieldname-*` on a relation row |
-| Field row label | `srs-field-label` (+ compatibility alias `field-label`) | — |
-| Field row value | `srs-field-value` (+ compatibility alias `field-value`) | `srs-empty-value` when the value is the `(empty)` placeholder |
-
-
-### Template Variable Reference
-
-**Content**: Variables not applicable to a given template context MUST resolve to an empty string.
-
-| Variable | Available in | Resolves to |
-|---|---|---|
-| `{{container-title}}` | All | Container title from manifest |
-| `{{container-id}}` | All | Container UUID |
-| `{{date}}` | All | Render date (ISO 8601 date) |
-| `{{heading-1}}` | `coverPage` only | Heading prefix at level `1 + depthOffset`. MUST resolve to empty string in all element wrapper templates. |
-| `{{asset:name}}` | All | Resolved asset reference (URL, data URI, or path) |
-| `{{section-title}}` | `sectionWrapper`, `sectionWrapperOverrides` | Value of `DocumentSection.title` |
-| `{{section-id}}` | `sectionWrapper`, `sectionWrapperOverrides` | Value of `DocumentSection.sectionId` |
-| `{{record-heading}}` | `recordWrapper`, `recordWrapperOverrides` | `titleFieldId` field value, or empty string |
-| `{{type-namespace}}` | `recordWrapper`, `recordWrapperOverrides` | `Record.typeNamespace` |
-| `{{type-name}}` | `recordWrapper`, `recordWrapperOverrides` | `Record.typeName` |
-| `{{field-label}}` | `fieldRow` | Display label for the field |
-| `{{field-value}}` | `fieldRow` | Rendered value of the field |
-| `{{field-name}}` | `fieldRow` | `Field.name` |
-| `{{content}}` | All element templates | Auto-rendered content this template wraps |
-| `{{page-number}}` | `pageHeader`, `pageFooter` | Current page number (paginated formats only) |
-
-
-### Conformance Rules
-
-**Content**: **[T-1]** Implementations that do not declare `ext:themes-l1` MUST ignore `Composition.themeRef` and MUST NOT error on its presence.
-
-**[T-1b]** `Theme.targets` MUST contain at least one entry. An absent or empty `targets` array is a validation error. Enforced at package validation time.
-
-**[T-2]** Implementations MUST apply a Theme only when `Composition.format` appears in `Theme.targets`. When the format does not match, the Theme MUST be ignored and structural output produced without it.
-
-**[T-3]** Element templates receive auto-rendered content via `{{content}}`. Implementations MUST render structural content first and pass it to the template; they MUST NOT suppress or reorder content through template evaluation.
-
-**[T-4]** Asset names within a single `Theme.assets` dictionary MUST be unique (case-sensitive).
-
-**[T-5]** When `ThemeReference.mode === "bundled"`, the referenced `themeId` MUST appear in `Package.themes[]`. A missing theme in a bundled package is a validation error.
-
-**[T-6]** Template variables not recognised by the implementation MUST be passed through as literal text. They MUST NOT cause a rendering error.
-
-**[T-6b]** `{{heading-1}}`, `{{heading-2}}`, and `{{heading-3}}` MUST resolve to the empty string in all element wrapper templates (`documentWrapper`, `sectionWrapper`, `sectionWrapperOverrides`, `recordWrapper`, `recordWrapperOverrides`, `fieldRow`, `pageHeader`, `pageFooter`). Structural headings are delivered inside `{{content}}` and MUST NOT be re-emitted. `{{heading-1}}` is available only in `PageTemplates.coverPage`.
-
-**[T-7]** When `recordWrapperOverrides` contains an entry whose `typeId` matches the current record's `typeId`, that template MUST be used instead of `recordWrapper`. When `sectionWrapperOverrides` contains an entry whose `sectionId` matches the current section's `sectionId`, that template MUST be used instead of `sectionWrapper`. Override arrays MUST NOT contain duplicate `typeId` or `sectionId` values. Enforced at package validation time.
-
-**[T-8]** For `"html"` and `"pdf"` output, implementations MUST apply the CSS classes in the injection table to each rendered element named in that table. Class name components MUST be normalised using the five-step rule. The `{fieldName}` component MUST be derived from `Field.name` and MUST NOT be derived from `FieldAssignment.displayLabel` (RFC-037 [FR-037-12]) — `{{field-name}}` in the template variable table already carries that meaning. The rule text now names elements rather than wrapper elements because the label and value rows added by RFC-037 are not wrappers.
-
-**[T-9]** A Field listed in `Theme.cssClassFields` generates a CSS class only when it is effective-single (`fieldType.cardinality` absent/`"single"` and, until #242 Phase B, effective `FieldAssignment.repeatable !== true`), `fieldType.datatype == "string"`, and `fieldType.format` is absent or one of `"plain"` or `"markdown"`. `valueDomain` may be open or closed. URI-, UUID-, and email-formatted strings, list/repeatable Fields, and every non-string or composite datatype are silently skipped. Absent or empty fields generate no class. This preserves scalar legacy `string`, `text`, and `select`; the scalar requirement intentionally closes the previously undefined array-to-one-CSS-class case. (RFC-032 Rev-7 erratum.)
-
-**[T-10]** When `DocumentSection.renderViewId` is set, `fieldRow` MUST be applied to each FieldView row that survives `ExportConfig.omitEmptyFields` filtering, in `View.fieldViews[].order`. `fieldRow` MUST NOT wrap RecordPropertyView rows or `ExportConfig.preamble` content.
-
-**[T-11]** Implementations that support `ext:themes-l1` MUST accept `"theme"` as a valid value for `Reference.definitionType` and (when `ext:import-tracking` is also declared) for `ImportRecord.definitionType`. A `definitionType: "theme"` value MUST NOT cause a validation error.
-
-**[T-Gx1]** When `FieldGroup.compositeRenderer` is set to a known value, implementations MUST NOT apply `groupFieldRowTemplates` to that group's entries. `groupFieldRowTemplates` MUST only be applied when the group is rendered by the per-field baseline (i.e. `compositeRenderer` is absent or falls back via `[FG-Cx1]`).
-
-**[T-Gx2]** Field names in `groupFieldRowTemplates` that do not appear in the rendered group MUST be silently ignored and MUST NOT cause an error.
-
-**[T-Gx3]** When a field row in a group entry is covered by a matching key in `groupFieldRowTemplates`, implementations MUST use that template instead of `fieldRow`. The `fieldRow` template MUST NOT be applied to field rows rendered via `groupFieldRowTemplates`.
-
-**[T-Cx1]** When `compositeRendererConfig["table"]` is absent or its `tableClass` property is absent, implementations MUST use `"srs-data-table"` as the default CSS class on the `<table>` element for HTML output.
-
-**[T-Cx2]** When `tableClass` in `compositeRendererConfig["table"]` is explicitly set to an empty string `""`, implementations MUST emit the `<table>` element with no `class` attribute.
-
-**[T-Cx3]** `wrapperTemplate` and `captionTemplate` in `compositeRendererConfig["table"]` apply to each entry rendered by `compositeRenderer: "table"`. They MUST NOT affect groups with other `compositeRenderer` values or groups without a `compositeRenderer`.
-
-**[T-Cx4]** When evaluating format-conditional defaults for `wrapperTemplate` and `captionTemplate`, implementations MUST use `Composition.format` as the authoritative active format signal. When `wrapperTemplate` is explicitly set in `compositeRendererConfig["table"]`, implementations MUST apply it regardless of output format.
-
-**[T-Cx5]** Unknown properties in a `compositeRendererConfig` sub-object for a known renderer name MUST be silently ignored and MUST NOT cause a rendering error.
-
-
-### Composite rendering reconciliation (RFC-036)
-
-**Content**: `ElementTemplates` gains `compositeFieldRowTemplates?: { [fieldName: string]: string }` — the successor to
-`groupFieldRowTemplates`, re-scoped from `FieldGroup` entries to composite-range values rendered by the
-composite baseline. `groupFieldRowTemplates` is deprecated and retires with `FieldGroup` at the #242
-cutover.
-
-`compositeRendererConfig` is unchanged in shape and keying, and gains a schema for its `table` sub-object
-(`tableClass`, `wrapperTemplate`, `captionTemplate`), with `additionalProperties: true` retained at both
-levels so vendor renderer keys and unknown sub-properties stay valid.
-
-**[CR-036-16]** `compositeRendererConfig` is keyed by the same identifier space as a composite renderer identifier [CR-036-1]. Unknown properties within a known renderer's sub-object, and keys naming renderers the implementation does not know, MUST be silently ignored and MUST NOT cause a rendering or loading error. Config applies only to fields resolved to the corresponding renderer. `Composition.format` is the authoritative format signal for format-conditional defaults, and an explicitly set template applies regardless of output format. `{{subheading}}` resolves to the rendered subheading and `{{label}}` to the output of `captionTemplate`, both computed before wrapper substitution. `"baseline"` is a dispatch sentinel, not a renderer; a `compositeRendererConfig` key of `"baseline"` MUST be ignored. The `table` renderer reads:
-
-| Property | Effect | Default |
-|---|---|---|
-| `tableClass` | CSS class on `<table>` (HTML only) | `"srs-data-table"`; an explicit `""` suppresses the attribute |
-| `wrapperTemplate` | Wraps one rendered table value; tokens `{{subheading}}`, `{{label}}`, `{{table}}`, absent optional values resolving to `""` | HTML: `<figure class="srs-table">{{subheading}}{{label}}{{table}}</figure>`. Other formats: no wrapper |
-| `captionTemplate` | Renders the `label` role; token `{{field-value}}` | HTML: `<figcaption>{{field-value}}</figcaption>`. Markdown: `*{{field-value}}*`. Other formats: undecorated |
-
-The `subheading` role renders as a heading at the same level as the composite's own heading. **These
-defaults are the renderer's output specification, not configuration defaults: implementations MUST apply
-them whether or not `ext:themes-l1` is declared and whether or not a Theme resolves.** This matters
-because [CR-036-19] retires the `[T-Cx*]` rules that currently house half of them, and because RFC-002
-`[T-2]` requires structural output when a Theme is ignored on format mismatch.
-
-**[CR-036-17]** `compositeFieldRowTemplates` is keyed by `Field.name` and supplies the template for an individual field row within a composite rendered by the baseline, in place of `fieldRow`. Keys matching no rendered field MUST be silently ignored. Implementations MUST NOT apply it to a composite that resolved to a renderer under [CR-036-6]; a composite that falls back to the baseline under [CR-036-7] or [CR-036-9] is baseline-rendered and MUST have it applied.
-
-**[CR-036-18]** `groupFieldRowTemplates` is deprecated by `compositeFieldRowTemplates` and retires with `FieldGroup` at the #242 cutover. While both exist, implementations MUST apply `groupFieldRowTemplates` to `FieldGroup` entries and `compositeFieldRowTemplates` to composite entries. Migrating a `FieldGroup` to a composite therefore silently disables any `groupFieldRowTemplates` key naming one of its fields: a migration that converts a group MUST carry every such key over to `compositeFieldRowTemplates`, and implementations SHOULD emit a diagnostic when a `groupFieldRowTemplates` key matches no `FieldGroup` field in the effective package set.
-
-**[CR-036-19]** RFC-007's `[FG-Cx0]`–`[FG-Cx4]`, `[T-Gx1]`–`[T-Gx3]` and `[T-Cx1]`–`[T-Cx5]` remain in force for `FieldGroup` until `FieldGroup` is removed at the #242 cutover, at which point they are retired. A `FieldGroup` MUST NOT be the target of a composite renderer binding, and a composite-range field MUST NOT be dispatched by `FieldGroup.compositeRenderer`; the two mechanisms MUST NOT interact.
-
-
-### Normative field-row rendering (RFC-037)
-
-**Content**: `ElementTemplates.fieldRow` is a wrapper: it receives finished content as `{{content}}` and does not
-re-render it ([T-3]). RFC-037 defines what that finished content is, so theme-less output — "the
-element is rendered without wrapping" — is defined rather than implementation-chosen. The per-format
-forms are normative in `ext:views-l2`, *Normative Field-Row Form*.
-
-The class injection table above gains the label and value elements. Both carry an `srs-`-prefixed
-name and an unprefixed compatibility alias; only the prefixed names form the forward contract.
-
-Two naming notes. The aliases `field-label` / `field-value` are spelled identically to the
-`{{field-label}}` / `{{field-value}}` template variables above; they are CSS class names, not
-template tokens, and the namespaces do not interact. And `srs-field-label` sits alongside the
-pre-existing generated family `srs-field-{fieldName}-{normalisedValue}` applied to record wrappers
-for `cssClassFields` entries — a Field named `label` with value `active` yields
-`srs-field-label-active`. The two families are distinguished by exact match, never by prefix.
-
-**[FR-037-12]** On a field row the identity class is `srs-fieldname-{fieldName}`, whose
-`{fieldName}` component MUST be derived from `Field.name` and MUST NOT be derived from
-`FieldAssignment.displayLabel`. On a relation row implementations MUST omit `srs-fieldname-*` and
-MUST emit `srs-relationtype-{relationTypeKey}` instead. Both are normalised by the five-step rule.
-
-**[FR-037-13]** Implementations MUST emit the field-row class vocabulary in baseline `html` output
-whether or not `ext:themes-l1` is declared and whether or not a Theme resolves. This broadens
-[T-8]'s scope, which is otherwise conditional on the extension, and matches the precedent
-[CR-036-16] sets for renderer output defaults.
-
-**[FR-037-14]** For `"html"` and `"pdf"` output, implementations MUST emit both the `srs-`-prefixed
-class names and their unprefixed aliases (`field-label`, `field-value`) until the #242 cutover, and
-MUST emit only the prefixed names thereafter. The aliases are deprecated on acceptance of RFC-037
-and retire at the same cutover that [CR-036-19] retires `FieldGroup` and the `[T-Gx*]`/`[T-Cx*]`
-rules, so the deprecation ends on a clock the project already keeps. A stylesheet claiming
-conformance MUST NOT depend on the unprefixed aliases. No `pdf` row form is yet defined, so for
-`pdf` this rule names the classes without naming the elements that carry them (RFC-037 Open
-Question 3).
-
-**[FR-037-19]** The row forms defined in `ext:views-l2` are the content `fieldRow` receives as
-`{{content}}`. A Theme MAY wrap the row and MUST NOT replace it, per [T-3]. When no `fieldRow`
-template resolves, implementations MUST emit those forms unwrapped. This is the terminal rung of the
-RFC-036 row-template ladder.
-
-
-### Field
-
-**Content**: The atomic reusable semantic unit. Fields are defined once and composed into Types. A Field's `aiGuidance` and `fieldType` — including every constraint the latter carries — belong to the Field, not to any Type that includes it.
-
-See the generated reference immediately below for `Field`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger) — this prose no longer hand-duplicates the property list.
-
-
-### `FieldType` — the value semantics
-
-**Content**: `fieldType` carries everything about what a Field's value *is*. It decomposes value semantics into orthogonal facets — **datatype × cardinality × value-domain × format × constraints** — so each axis varies independently, and adds three composite datatypes (`ref`, `dependent`, `map`) that let a Field's range be another Type.
-
-Example: the `FieldType` shape.
-
-**`datatype` semantics:**
-
-| Value | Meaning |
-|---|---|
-| `"string"` | Text of any length. Length, pattern, format, and value domain are separate facets, not distinct datatypes |
-| `"number"` | Numeric value, fractional permitted |
-| `"integer"` | Whole number |
-| `"boolean"` | True/false |
-| `"date"` | ISO 8601 calendar date |
-| `"date-time"` | ISO 8601 date + time |
-| `"ref"` | The range is another Type — nested object(s) when `mode` is `"inline"`, target instance id(s) when `"reference"` |
-| `"dependent"` | The value conforms to the type descriptor named by `dependsOn` |
-| `"map"` | Open string-keyed collection whose values conform to `valueRange` |
-
-Cardinality is declared **only** here. A Field holding many values is `cardinality: "list"`; a Type that includes it must not restate or override that — Field semantics belong to the Field (Invariant 2).
-
-A `reference`-mode value is a target instance id, and MUST NOT be interpreted as or require a `Relation`. Use `reference` for definitional composition, where the target's identity is part of the definition; model an assertion *between* instances — one needing provenance, lifecycle, or confidence — as a `Relation` instead.
-
-
-### `vocabularyRef` — binding closed string fields to shared vocabularies
-
-**Content**: When `fieldType.valueDomain` is `"closed"`, a Field declares exactly one value source:
-
-Example: the two value sources a closed string Field may declare.
-
-`allowedValues` is formally sugar for an anonymous inline closed vocabulary: the value set is fixed by the Field definition, so changing it means a new Field version. `vocabularyRef` is a **configurable** data range — the value set is managed as package configuration and evolves without reversioning the Field — and is used when the set is shared, extensible, or needs Term identity. A `vocabularyRef` MUST resolve to a `Vocabulary` with `mode: closed`. Declaring both, or neither when `valueDomain` is `"closed"`, is a validation error.
-
-
-### Record tiers
-
-**Content**: SRS supports two semantic maturity tiers. Tier numbering keeps the historical gap at 1: Tier 1 (`Typed Record`) was removed as an unexercised construct — zero instances in any corpus, ever — under the dormancy rule (rfc-decision-53635966); renumbering the surviving tiers would be churn without meaning. Implementations are not required to support both; they may begin at Tier 2.
-
-| Tier | Type | Structure | Semantics |
-|---|---|---|---|
-| **0** | `Note` | Named sections + free text | None |
-| **2** | `Record` | Fields bound to a `Type` definition | Full |
-
-Graduation path: Note → Record, linked by a `derived-from` Relation from the Record back to the Note (`note graduate`).
-
-
-### `NoteSection`
-
-**Content**: A named text section within a Note.
-
-See the generated reference below for `NoteSection`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-
-### `Note`
-
-**Content**: A lightweight instance with no Type binding.
-
-See the generated reference below for `Note`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-`tags` are free-form labels that allow Notes to be grouped and discovered by topic. A tag is a key that *may* resolve to a `Term` in an open `Vocabulary`, giving it a label, aliases, roles, and lineage — without changing the fact that the instance stores only the string (V2). Undefined tags in an open vocabulary are valid and unenriched. Use tags for navigation and filtering; use Relations for semantic claims.
-
-
-### `SourceReference`
-
-**Content**: A pointer from a field value or instance back to source material.
-
-See the generated reference below for `SourceReference`'s current property table (modelled once and shared across `Record`, `Note`, and `Relation`), optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-`"transcript-chunk"` and `"transcript-segment"` are intended for implementations that have a stable conversation or time-stream layer with durable chunk or segment identifiers. A standalone repository that stores transcript exports, chat dumps, email threads, or similar source material directly under `source-documents/` should generally cite those files using `sourceType: "repository-document"` (see `ext:repository`) rather than inventing pseudo-chunk IDs.
-
-
-### Field values (RFC-039)
-
-**Content**: `FieldValue` — the value stored at one `fieldValues` key — is the recursive union:
-
-Example: the `FieldValue` union.
-
-There is no wrapper construct: the pre-RFC-039 `FieldValue`/`FieldValueEntry` pair
-objects, `groupValues`, and `FieldGroup` carriers are removed (I-134).
-
-
-### `Record`
-
-**Content**: An instantiated Type with field values.
-
-See the generated reference below for `Record`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-`typeNamespace` and `typeName` are denormalised convenience fields. If they conflict with the resolved Type, the `typeId`/`typeVersion` identity takes precedence and the Record is considered invalid until corrected.
-
-**On instance revision:**
-- **In-place edits** (`updatedAt` advances, `fieldValues` mutate): for minor corrections that do not alter semantic meaning.
-- **Semantic updates**: produce a new Record linked to the prior by a `supersedes` or `refines` Relation. The prior Record remains valid.
-- **Immutable records + Relation graph**: all Records append-only; a new Record for every change. A valid implementation strategy that naturally preserves history.
-
-**Semantic meaning must not be silently rewritten.** When a change would alter what a Record means — not merely correct a transcription or formatting error — implementations must produce a successor Record linked to the prior by `supersedes` or `refines`. The prior Record remains valid. What constitutes a semantic change is determined by the Type's intended use; when in doubt, prefer a successor.
-
-
-### `ValidationRule`
+##### `ValidationRule`
 
 **Content**: A constraint applied to a field value.
 
 Example: the `ValidationRule` shape.
 
 
-### `AiGuidanceExample`
 
-**Content**: A single example for AI guidance.
 
-Example: the `AiGuidanceExample` shape.
+## Governance
 
-`output` is required. An example without `input` demonstrates expected output form without requiring a specific source.
+### Governance
 
+**Canonical Key**: part:governance
 
-### `AiGuidance`
+**Description**: The specification's own governing rules: its foundational values, its process for continuity and evolution, and the balance between shared coherence and local autonomy.
 
-**Content**: Structured AI guidance for a Field or Type.
+#### Foundational values and development phase
 
-Example: the `AiGuidance` shape.
+**Content**: Content relocated to mechanism leaves under the Foundational tension concept (RFC-042 Change B, srs#562/#687). See derived-from.
 
-The minimum valid `AiGuidance` is `{ purpose: "..." }`.
-
-
-### Vocabulary and Term
-
-**Content**: SRS defines four controlled vocabularies — sets of strings that appear in instance data and must mean something stable. They share a common substrate: a `VocabularyEntry` contract satisfied by `Term`, `LifecycleState`, and `RelationTypeDefinition`.
-
-
-### `VocabularyEntry` (substrate contract)
-
-**Content**: `VocabularyEntry` is a contract, not a serialised type. Every conforming entry carries:
-
-Example: the `VocabularyEntry` substrate contract.
-
-**Absent `status` MUST be treated as `active`.** This is normative: all resolution rules (V1, V6, V9, V10) treat absent identically to `"active"`.
-
-**Entries are keyed, not named.** Entries carry `key`, not `name`, and are addressed within their container. They are not independently `Reference`-able. Containers (`Vocabulary`, `Lifecycle`) have `name` and are the `Reference` targets.
-
-**Required-field tightening.** `label` and `description` are optional so an emergent `Term` is valid before prose is written. A specialisation MAY tighten an optional substrate field to required; it MUST NOT relax a required one. `RelationTypeDefinition` requires both `label` and `description` (unchanged from RFC-005).
-
-**One forward-compatibility policy.** Unknown top-level fields are rejected; arbitrary entry metadata goes in `meta`.
-
-
-### `Vocabulary`
-
-**Content**: A named, versioned set of `Term` entries.
-
-See the generated reference below for `Vocabulary`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-
-### `Term`
-
-**Content**: The generalisation of `TagDefinition`. A defined option within a `Vocabulary`.
-
-See the generated reference below for `Term`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-
-### `RelationTypeDefinition`
-
-**Content**: A substrate specialisation that gives semantic meaning and validation rules to a class of relations. `key` is the string stored in `Relation.relationType`; this unifies the key-role field across all three substrate specialisations (RFC-006). `label` and `description` are tightened to required.
-
-See the generated reference below for `RelationTypeDefinition`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#541, the #274 ratified ledger extended to this entity) — this prose no longer hand-duplicates the property list.
-
-Relation type definitions live in `package.relationTypes[]` (distributable bundle) or `package/relation-types/` (repository layout). They are resolved repo-globally — all installed relation type definitions form a single flat namespace. Key uniqueness (V5) applies across this flat set.
-
-
-### The four vocabularies
-
-**Content**: | Vocabulary | Binding scope | Container | Mode |
-|---|---|---|---|
-| Tags | ambient (whole repo) | `Vocabulary` (typically local, open) | `open` |
-| Relation types | repo-global (any edge) | `package.relationTypes[]` (flat global set) | closed-extensible |
-| Lifecycle states | type-bound, shareable | `Lifecycle` (inline or referenced) | `closed` |
-| Field values | field-bound | `Vocabulary` via `vocabularyRef` or inline `allowedValues` | `closed` (V3) |
-
-
-### Package integration
-
-**Content**: Vocabularies are Foundation-group definition types installed in packages alongside fields, types, and relationTypes:
-- the distributable `Package` holds inline definitions: `vocabularies?: Vocabulary[]`
-- the repository `package/package.json` holds relative paths: `"vocabularies": ["vocabularies/foo.json", ...]`
-
-
-### Emergent vocabularies (open vocabularies)
-
-**Content**: For an open vocabulary, the authoritative set of values is `DISTINCT(tag keys across instances)` — not the `terms[]`. The `Vocabulary` is a curation overlay that may lag usage or be empty.
-
-A conforming implementation MUST be able to compute the live tag set and classify each key as: **used-and-defined**, **used-but-undefined**, or **defined-but-unused**.
-
-**Emergence lifecycle** (mirrors tier graduation):
-1. Free string — exists, undefined, valid.
-2. Curate → `Term` — non-destructive; instance carries the same string.
-3. Alias-merge — a surviving Term absorbs another: absorbed key+aliases move to the survivor, absorbed entry removed (its `id` recorded in `meta.mergedFrom` and redirected); zero instance rewrites.
-4. Optional normalize — opt-in operation that rewrites instance strings to the canonical key.
-5. Optional close — promote `mode: open → closed` (V10).
-
-
-### Resolution invariants
-
-**Content**: **V1 — Closed-vocabulary resolution.** Any value in a closed vocabulary must resolve to exactly one entry (matched by `key` or `alias`) in the effective entry set with `status` in {`active`, `deprecated`, `tombstone`} for reads and `active` for new writes.
-
-Applies to: `Relation.relationType`, `select`/`multiselect` field values, `Record.lifecycleState`.
-
-**V2 — Open-vocabulary resolution.** A value in an open vocabulary need not resolve; if it matches a `Term`, enrichment applies. When a value matches more than one entry (a warned V5 collision), resolution is deterministic: key match outranks alias match; ties broken by lexicographically smallest `id`.
-
-Applies to: `Note.tags`, `NoteSection.tags`.
-
-**V3 — Field binding exclusivity and closedness.** A `select`/`multiselect` Field must declare exactly one of `allowedValues` or `vocabularyRef`. A `vocabularyRef` on a `select`/`multiselect` Field MUST resolve to a `Vocabulary` with `mode: closed`.
-
-**V4 — Vocabulary reference resolution.** A `vocabularyRef` must resolve to an installed `Vocabulary` in the effective package set.
-
-**V5 — Effective entry set.** The effective entry set of a `Vocabulary` or `Lifecycle` is constructed as:
-1. Include entries with effective `status` in {`active`, `deprecated`, `tombstone`}. Exclude `retired` entirely (before uniqueness, before V1).
-2. Add transitively the entries of any extended container. The `extends*Version` must match the resolved upstream version; a mismatch is a hard validation error (not silent degradation).
-3. Check uniqueness: duplicate `id`s are an error. In closed vocabularies, the union of all `key`s and `aliases` must be globally unique (key/key, key/alias, alias/alias collisions are errors). In open vocabularies, collisions are warnings (resolved by V2 tie-break).
-
-Inline `Type.lifecycle` cannot extend; its effective set is its own `states`/`transitions`. V5 and V9 apply to inline lifecycles identically to referenced ones.
-
-Excluding `retired` before uniqueness frees a retired key for reuse by a new entry. `tombstone` remains in the effective set and keeps occupying its key. When retiring a key that will be reused, implementations MUST surface stale references to the retiring key for operator resolution before reuse.
-
-**V6 — Closed value status.** A value resolving to `deprecated` or `tombstone` follows RFC-005 E1 write semantics (resolves; new writes rejected). `retired` entries do not resolve under V1 — values referencing them are invalid as if absent.
-
-**V10 — Open→closed promotion.** Version-bumping change with a mandatory pre-flight classifying in-use keys as:
-- *will-be-invalid*: used-but-undefined, or resolving only to a `retired` entry (reads do NOT survive).
-- *read-only-after-close*: resolves to `deprecated` or `tombstone` (reads survive; new writes rejected).
-- *used-and-active*: fine.
-
-A grace window is declared in `Vocabulary.promotionWindow.until`. Until that bound, violations are warnings; after it, V1 applies unconditionally. Absent `promotionWindow` means the promotion takes effect immediately. There is no unbounded window.
-
-
-### ext:protocol
-
-**Content**: **Required for**: facilitation tools, structured deliberation, any implementation that guides users through epistemic stages.
-
-Replaces `TemplateFacilitationStep` from v1. Protocol is epistemically richer: stages have explicit dependencies, completion criteria, and may produce intermediate Records.
-
-
-### `FieldRef`
-
-**Content**: A reference to a Field within a Type.
-
-Example: the `FieldRef` shape.
-
-
-### `ProtocolStage`
-
-**Content**: A named stage in a Protocol. Stages have epistemic dependencies (`dependsOn`) — not just ordering. A stage may only proceed when its dependencies are sufficient.
-
-Example: the `ProtocolStage` shape.
-
-**`order` vs `dependsOn`:** `order` is the declared composition order of the stages — structure, not presentation (RFC-015's layering table now states this explicitly as its own row: composition order is structure; display order is presentation; sequence is assertion). It provides the render default for how stages are shown in a UI or facilitation guide; a View may override for display. Execution sequence is determined by `dependsOn` resolution: a stage runs when all its declared dependencies are satisfied, regardless of its `order` value. Authors must ensure `order` is consistent with the partial order implied by `dependsOn` (i.e. a stage's `order` value should be greater than the `order` of any stage it depends on). See Invariant 31.
-
-
-### `Protocol`
-
-**Content**: An epistemically ordered process for building quality Records through structured conversation or facilitation. A Protocol is a package definition (declared in `package.json`'s `protocols` array, stored under the package's `protocols/` subtree) — not an instance Record.
-
-Example: the `Protocol` shape.
-
-**Property names are unprefixed** (`id`, not `protocolId`; `stages`, not `protocolStages`; and so on) — the same convention every other package-declared definition entity uses (Type, Field, Vocabulary, Lifecycle, RelationTypeDefinition, Theme, Blueprint all reuse the shared `id`/`namespace`/`name`/`version`/`description`/`createdAt` fields unprefixed). An earlier owed-schema pass (`docs/schema/2.0/protocol.json`, #297/#378) had shipped a `protocol`-prefixed shape matching the implementation of the day; a decision record ruled the unprefixed shape canonical (srs#379) and the schema now matches this prose. The implementation-side rename (the Rust `Protocol`/`ProtocolStage` structs, the CLI, and one still-vendored example corpus) is a tracked follow-up, staged like any other rename (rfc-decision-628cf6c4) — this prose and the schema describe the ruled target shape, not necessarily every artifact's current byte-for-byte content.
-
-**The Protocol spectrum:**
-
-```
-Loose                                                    Tight
-─────────────────────────────────────────────────────────────
-Brain Dump → Decomposition → Options Analysis → Decision
-```
-
-Loose Protocols produce open material. Tight Protocols converge on a specific Record type. The output of a loose Protocol is the input context for something tighter.
-
-**Generic Protocols** (reusable across domains):
-- Brain Dump — externalise all thinking without constraint
-- Decomposition — identify major components from raw material
-- Review — what is established, what is still open
-- Prioritisation — which components to resolve first
-
-**Domain-specific Protocols** (target a specific Record type):
-- Decision — context → criteria → options → evaluation → decision
-- Proposal — problem → solution shape → constraints → proposal
-
-**Protocol chaining and provenance**: The output of one Protocol is the input context for the next. This derivation chain is traceable through `derived-from` Relations, making the quality and history of the final Record auditable.
-
-**Non-normative example — Protocol chain for a governance decision:**
-
-Example: a Protocol chain for a governance decision.
-
-The final Decision Record is auditable because every Protocol stage left addressable artefacts. The quality of the outcome is traceable to the conversation that produced it.
-
-Views (`ext:views-l1`) no longer contain facilitation logic. A View is a presentation concern; a Protocol is an epistemic one.
-
-
-### ext:slices
-
-**Content**: **Required for**: implementations that export a subset of a repository as a standalone, independently openable `.srs` archive (a *slice*).
-
-A container slice carries the records reachable from a container's membership, their type and field definitions, intra-slice relations, and referenced source documents. It is a valid `.srs` archive in the RFC-017 format — any SRS tool can open, validate, and render it.
-
-
-### Scope
-
-**Content**: `ext:slices` defines **container-membership closure only**. A *package export* — distributing a package's Type/Field definitions as a `package-bundle.json` — is a different artifact class (RFC-003) and is not a slice. Record-level closure (an arbitrary set of records) is deferred to a future RFC.
-
-
-### Manifest extensions (`ext:slices`)
-
-**Content**: When `ext:slices` is declared in a slice archive's `manifest.declaredExtensions`, `RepositoryManifest` gains one optional property:
-
-Example: the `slice` manifest property.
-
-| Field | Type | Required | Description |
-|---|---|---|---|
-| `origin.repositoryId` | `string (uuid)` | yes | `repositoryId` of the source repository this slice was exported from. |
-| `spec.type` | `string` | yes | Closure rule. Currently only `"container"` is defined. |
-| `spec.id` | `string (uuid)` | yes | The `containerId` that scoped the slice — present in the source `containerIndex`. |
-| `exportedAt` | `string (date-time)` | yes | ISO-8601 timestamp of when the slice was produced. |
-| `externalRelationRefs` | `array` | no | Relations cut at export because exactly one endpoint fell outside the closure. Provenance only — not a validation error. |
-
-The slice archive's `manifest.repositoryId` MUST be a **new UUID** distinct from `slice.origin.repositoryId`; the archive is a standalone artifact.
-
-
-### Container-membership closure
-
-**Content**: The closure root is the container identified by `spec.id`. The slice includes (I-151, RFC-034 [R9]): (1) `manifest.container` set to the closure-root container; (2) the root container's effective membership, meaning its `rootInstanceIds` and `memberInstanceIds` recursively through the containers declared in `childContainerIds`; (3) all type and field definitions referenced by included instances (directly or via Type FieldAssignments), copied into the slice's `package/` directory; (4) all relations with both endpoints inside the included set; (5) all `sourceDocumentIndex` entries and content files referenced by included instances; (6) the closure-root container and every container reachable from it through `childContainerIds`, with those declared child edges preserved. An unrelated container is not included on the strength of its roots or members happening to be subsets of the included set; that pre-RFC-034 subset rule is replaced.
-
-
-### Dangling-edge policy
-
-**Content**: Cross-boundary relations MUST NOT appear in the slice's relations collection. They MUST be recorded in `slice.externalRelationRefs[]` with `relationId`, `sourceInstanceId`, `targetInstanceId`, and `relationType`. A non-empty list is provenance data, not a validation error. The `relationType` value in `externalRelationRefs` entries is NOT subject to RFC-005 definition-lookup in the slice archive.
-
-
-### Validation relaxations
-
-**Content**: An RFC-026-aware validator MUST NOT treat the following as errors when a `slice` block is present: `externalRelationRefs` UUIDs absent from `instanceIndex`; absence of unreferenced type/field definitions; an incomplete `containerIndex`; tombstoned source document entries with absent content files. Dangling edges in the relations collection, unresolvable `typeId`/`fieldId` references, and instance schema validation errors remain errors regardless of slice status.
-
-
-### ext:addressability
-
-**Content**: **Required for**: any implementation with live facilitation or multi-session extraction.
-
-Defines a universal addressing scheme and the mechanisms that connect conversation material to document elements.
-
-
-### `Address`
-
-**Content**: A stable, resolvable identifier for any element across document space, process space, and conversation space.
-
-Example: the `Address` union.
-
-Every element that can be referred to has an Address. A transcript chunk and a document-space field are co-addressable because assertions about one referencing the other require both to be resolvable.
-
-
-### `AttentionState`
-
-**Content**: The current focus of an active Protocol run — a live cursor across the address space. `AttentionState` and `Address` are structurally related but serve distinct roles: an `Address` is a stable, resolvable identifier for a specific element; `AttentionState` is the mutable cursor that records *where focus currently is* during an active session. An `AttentionState` value at a point in time resolves to a document-space `Address`, but it is stored separately because it changes continuously as the Protocol advances.
-
-Conversation material is tagged with the active `AttentionState` as it is produced. This makes context assembly efficient: "all chunks produced while focus was on this Field" is a queryable address predicate.
-
-Example: the `AttentionState` shape.
-
-`AttentionState` is set live by the session or Protocol runner. `SourceReference` is set retrospectively at extraction or editorial review time. Both are needed; they answer different questions.
-
-
-### Context Query (behavioural requirement)
-
-**Content**: A conforming `ext:addressability` implementation must be able to assemble relevant material given an address and a purpose. This is a behavioural requirement, not a data shape.
-
-**Required query patterns:**
-
-| Pattern | Address | Returns |
-|---|---|---|
-| Field context | `{recordId}/{fieldId}` | Current value, chunks tagged to this Field, Field `aiGuidance` |
-| Record context | `{recordId}` | All field values, chunks tagged to this Record, Relations, Protocol run history |
-| Stage context | `{runId}/{stageId}` | All chunks produced during this stage, Fields active in this stage |
-
-**Recommended assembly order for AI assistance:**
-
-1. Type and Field `aiGuidance` — what this field captures, how to extract it
-2. Current value — what has already been established
-3. Chunks tagged to this Field via AttentionState — most focused context
-4. Chunks tagged to the parent Record — broader session context
-5. Related Records via Relations — structural context
-
-**Note (2026-08-21, `rfc-decision-2a1e1590`)**: the per-field `Revision` snapshot mechanism (addressable field-value history, `revisionId`, revision chains, revision-trace queries) previously specified here is removed under the dormancy rule — zero corpus use, and it was incompletely specified (a PascalCase wire-format leak in its agent tag, and a coupling that named a pre-RFC-006 field). `Address`, `AttentionState`, and the Context Query requirement above are untouched by that removal. Return trigger: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface.
-
-
-### Foundational values and development phase
-
-**Content**: SRS exists to preserve **semantic sovereignty through portable data**. Meaning must remain under its owners' control and able to move between tools, implementations, representations, repositories, and time without captivity or silent semantic loss. Portability without identity, relations, provenance, and interpretable semantics is not sovereignty. A design that improves convenience while making semantic data captive violates the purpose of SRS.
-
-Six foundational tensions govern decisions in the SRS standard layer. Their poles are complementary necessities, not good and bad alternatives. Each statement names the default pole and the boundary at which the other pole governs.
-
-
-### Semantic Integrity and Practical Expression
-
-**Content**: The standard defaults to **Semantic Integrity**: preserve exact meaning, identity, authority, relations, and provenance. It moves toward Practical Expression when established meaning remains recoverable and a bounded presentation, authoring, diagnostic, or review need would otherwise make correct information unusable. A projection must retain a clear line to canonical meaning and must never silently become a substitute semantic source.
-
-
-### Continuity and Evolution
-
-**Content**: The temporal preference is explicitly phase-bound. **Before the first full public release**, the standard is in formation and defaults to **evidence-led Evolution**. The project must make the changes needed to correct contradictions, close semantic gaps, and establish a coherent foundation before users depend on it. Those changes must be grounded in practical implementation, corpus, migration, authoring, or user experience; speculative elegance alone is insufficient. Stable identity, deterministic migration, parity evidence, diagnostics, atomic cutover, and recovery remain required safeguards.
-
-**At the first full public release, the temporal default reverses to Continuity.** This transition is precommitted. From that point, the standard protects compatibility, identity, and established expectations by default. A breaking change requires an explicit version boundary, migration and compatibility analysis, recovery evidence, and ratification. Continuity must not preserve a demonstrated semantic contradiction indefinitely, but the burden of proof moves to the proposed change.
-
-
-### Shared Coherence and Local Autonomy
-
-**Content**: The standard defaults to **Shared Coherence** for interchange, semantic interpretation, identity, validation, authority, and conformance. It moves toward Local Autonomy when a concern is genuinely presentation-owned, extension-owned, repository-local, or implementation-private. Local variation must remain behind an explicit boundary and must not produce incompatible interpretations of shared data.
-
-
-### Office and Testimony
-
-**Content**: The standard defaults to **Office**: the procedural record, declared authority, and validated artifact govern over personal or automated testimony. Testimony may fill a gap, but it must not contradict authority; it becomes office only through an explicit verification mechanism that produces an authoritative artifact. Until then, who or what asserted a claim may inform trust and diagnosis, but never changes the claim's validity or precedence. This is axis 4–10, ruled in `rfc-decision-cce3c00e` and `rfc-decision-16b20c56`.
-
-
-### Reliability and Renewal
-
-**Content**: The standard defaults to **Reliability**: standing contracts continue to hold. Renewal is legitimate only as explicit supersession at a declared boundary, expressed through the retirement mechanism of the layer concerned; it must not arrive as an overwrite, an expired exception, or silent drift. This is axis 5–11, ruled in `rfc-decision-cce3c00e` and `rfc-decision-5f8204bc`.
-
-
-### Portability and Possession
-
-**Content**: The standard defaults to **Portability**: the travelling form is the test of a capability. Anything the standard allows a repository to hold must be expressible in the corresponding package, archive, or slice form. A capability may remain in place only behind axis 3–9's explicit local boundary; otherwise, a capability that exists only in place is captivity. This is axis 6–12, ruled in `rfc-decision-cce3c00e` and `rfc-decision-8948e43f`.
-
-
-### Conflict resolution: identity and information
-
-**Content**: The Earth and Air columns deliberately fail differently. An **identity conflict is fatal**: identity is declared, never inferred or selected by precedence. An **informational conflict resolves by declared authority**: the authoritative statement wins and the losing hint is surfaced visibly. Treating an identity clash as a resolvable hint corrupts meaning; hard-failing an informational mismatch when an authority is declared mistakes diagnosis for identity. This distinction is ruled in `rfc-decision-cce3c00e`, RFC-038 [R12], and Invariant 28.
-
-
-### Schemas closed, engines tolerant
-
-**Content**: Instance-facing emitted JSON Schemas state the production contract and are closed except for the sanctioned `meta` carrier; definition-facing schemas are fully closed because definitions are the trust boundary. Engines nevertheless detect and load unknown instance-layer content so that encountering unfamiliar meaning does not destroy it. On write, an engine preserves unknown content or refuses loudly when preservation is impossible; it must never discard that content silently. Schema invalidity and loadability therefore answer different questions: the diagnostic names content outside the production contract, while tolerant carriage protects it from loss. This is the three-verb DETECT / LOAD / WRITE contract ruled in `rfc-decision-2e0cd70a`.
-
-
-### Evidence, exceptions, and amendment
-
-**Content**: The charter is answerable to observed outcomes. Repeated, attested conflict between a charter expectation and practice creates a finding against the charter, not an accusation that the decisions failed to obey it. Likewise, two waivers or distinguishings of the same clause for the same reason aggregate into a finding against that clause; exceptions are evidence about the rule and must not make the doctrine self-sealing. This empirical override was adopted in the axis-integration review on srs#435.
-
-During the single-owner phase, amendment jurisdiction rests with the owner; amendments are recorded through an explicit ruling or successor, never a silent edit.
-
-These values govern the SRS standard layer. Rust, web, and other implementation layers may adopt different preference profiles for their own concerns, but those profiles cannot weaken the standard's semantic integrity, portability, or shared conformance boundaries.
 
 

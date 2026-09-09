@@ -4,5 +4,8 @@
   "anchorInstanceId": "785e457a-98b1-4ee4-925f-514f1433d63a",
   "rootInstanceIds": [
     "785e457a-98b1-4ee4-925f-514f1433d63a"
+  ],
+  "memberInstanceIds": [
+    "fc31337a-1c61-4e86-9c0f-09f0e0ce56bf"
   ]
 }

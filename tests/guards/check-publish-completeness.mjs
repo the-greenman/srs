@@ -25,7 +25,9 @@ export async function testPublishCompletenessGuard(entries, rawContentsById, exe
     // document and a guard regression could be specific to one of them.
     for (const target of targets) {
       const real = await readFile(target.output, "utf8");
-      const sabotaged = real.replace(/\n### Extension Interactions\n[\s\S]*?\n(?=### Conformance)/, "\n");
+      // srs#693 (RFC-042 Change G): container-subset sourcing nests every section under its Part,
+      // so neither heading's depth is fixed at H3 any more — match either heading at any depth.
+      const sabotaged = real.replace(/\n#{1,6} Extension Interactions\n[\s\S]*?\n(?=#{1,6} Conformance)/, "\n");
       if (sabotaged === real) {
         throw new Error(
           `sabotage fixture made no change to ${target.output} — "### Extension Interactions" or ` +

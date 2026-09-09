@@ -574,6 +574,356 @@
       "reason": "Rung-0 background capture (design jurisprudence: the neighbourhood role of the map \u2014 the decision-coherence research synthesis). Deliberately unpublished background meaning; linked from the Decision Compass (#461) as background reading. Self-expiring in parts: graduates via derived-from into the #273/#272 charter-self-hosting design, Epic 13's framing, and the first charter review cycle.",
       "disposition": "pending",
       "issue": "#631"
+    },
+    {
+      "instanceId": "113d18d8-9b25-4f55-b997-19e1a75a042d",
+      "path": "records/tier-2/mechanism-113d18d8.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from, and unlike Projection (RFC-042 Change D's named root of the Presentation Part, re-parented directly in srs#693) Lifecycle has no RFC-named site of its own. Re-parenting it (and its `LifecycleTransition` (edge between state keys) leaf, among the other 6) is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "30a555c0-060a-42ef-8f05-6a0aa8d9efef",
+      "path": "records/tier-2/mechanism-30a555c0.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from, and unlike Projection (RFC-042 Change D's named root of the Presentation Part, re-parented directly in srs#693) Lifecycle has no RFC-named site of its own. Re-parenting it (and its `Lifecycle` container leaf, among the other 6) is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "71458b11-1533-455d-974c-352340157bc1",
+      "path": "records/tier-2/mechanism-71458b11.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from, and unlike Projection (RFC-042 Change D's named root of the Presentation Part, re-parented directly in srs#693) Lifecycle has no RFC-named site of its own. Re-parenting it (and its ext:lifecycle leaf, among the other 6) is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "7ec029e9-592b-4f72-8c9d-23a302725a82",
+      "path": "records/tier-2/mechanism-7ec029e9.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from, and unlike Projection (RFC-042 Change D's named root of the Presentation Part, re-parented directly in srs#693) Lifecycle has no RFC-named site of its own. Re-parenting it (and its Type lifecycle declaration (added by this extension) leaf, among the other 6) is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "c388f8ab-41e4-4669-851c-1c0eb4b6f0b4",
+      "path": "records/tier-2/mechanism-c388f8ab.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from, and unlike Projection (RFC-042 Change D's named root of the Presentation Part, re-parented directly in srs#693) Lifecycle has no RFC-named site of its own. Re-parenting it (and its Validation invariants (V7\u2013V9) leaf, among the other 6) is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "e265a135-9c11-478f-b390-1787f2faf83c",
+      "path": "records/tier-2/mechanism-e265a135.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from, and unlike Projection (RFC-042 Change D's named root of the Presentation Part, re-parented directly in srs#693) Lifecycle has no RFC-named site of its own. Re-parenting it (and its Record lifecycle state leaf, among the other 6) is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "f609a191-d87b-418e-9e48-f2730f454457",
+      "path": "records/tier-2/mechanism-f609a191.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from, and unlike Projection (RFC-042 Change D's named root of the Presentation Part, re-parented directly in srs#693) Lifecycle has no RFC-named site of its own. Re-parenting it (and its `LifecycleState` (VocabularyEntry specialisation) leaf, among the other 6) is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "02103785-d258-49bf-b809-eaba37351966",
+      "path": "records/tier-2/mechanism-02103785.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "0ae52aea-884a-4d60-b07e-d7a8ba3634bc",
+      "path": "records/tier-2/mechanism-0ae52aea.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "18b7d630-2595-4613-b28a-4f4ac3ac6326",
+      "path": "records/tier-2/mechanism-18b7d630.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "1a197c13-8ae9-4b68-80b3-d759f12160da",
+      "path": "records/tier-2/mechanism-1a197c13.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "23d4b612-b0c4-4083-afc4-7ba7a610266c",
+      "path": "records/tier-2/mechanism-23d4b612.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "249c1928-5cdd-46c1-af48-68fe00c24463",
+      "path": "records/tier-2/mechanism-249c1928.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "276576a4-0b84-4a66-bb33-f336b6979f98",
+      "path": "records/tier-2/mechanism-276576a4.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "3b65c3dd-fb5b-44e7-be46-c8bd2d33e94a",
+      "path": "records/tier-2/mechanism-3b65c3dd.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "4177d637-3077-4769-b551-72d40f83037f",
+      "path": "records/tier-2/mechanism-4177d637.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "80a322d7-e7f5-471a-b66f-da1e3ec7b124",
+      "path": "records/tier-2/mechanism-80a322d7.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "a7fea9f4-6da7-4b7c-9fd9-2b77310aea2c",
+      "path": "records/tier-2/mechanism-a7fea9f4.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "acddda1f-52ae-442e-bcd9-b59b34c97c32",
+      "path": "records/tier-2/mechanism-acddda1f.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "d87505e8-f071-47dd-bbaa-39645863cfeb",
+      "path": "records/tier-2/mechanism-d87505e8.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "eab21cca-af84-42b8-95ed-82f0225cd360",
+      "path": "records/tier-2/mechanism-eab21cca.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "eec1e40c-9aee-49b1-bc10-baac94b79a25",
+      "path": "records/tier-2/mechanism-eec1e40c.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "eef3af08-1766-4bc6-8d28-053f59e23e43",
+      "path": "records/tier-2/mechanism-eef3af08.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "efb87f23-16ac-4dda-95ac-71f2195a7d0d",
+      "path": "records/tier-2/mechanism-efb87f23.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "f6727489-d943-456e-bd50-e1110db2f6d5",
+      "path": "records/tier-2/mechanism-f6727489.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "f73cc1ed-2242-4757-9b72-ce4754fbd85c",
+      "path": "records/tier-2/mechanism-f73cc1ed.json",
+      "reason": "Discovered but unreachable via any declared presentation: its concept ancestor Lifecycle has no contains edge into any of the nine Part containers RFC-042 Change G (srs#693) sources compositions from. Re-parenting it is srs#690 (\"the remaining concepts, still un-re-parented\", RFC-042 Change D) \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "63564240-4ef8-43bb-8622-56288ede33f5",
+      "path": "records/tier-2/mechanism-63564240.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "0014fa0f-9544-47c0-a827-7889e46c9f39",
+      "path": "records/tier-2/mechanism-0014fa0f.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "02e54c05-b2f8-42be-ba7e-3b86a0c0d9d3",
+      "path": "records/tier-2/mechanism-02e54c05.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "078c79a4-eb81-41a3-8ee0-8d22c8006917",
+      "path": "records/tier-2/mechanism-078c79a4.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "124d11e4-6e1f-4510-99c8-da8f8f43411c",
+      "path": "records/tier-2/mechanism-124d11e4.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "16667c90-7092-4588-a015-b301904a99b1",
+      "path": "records/tier-2/mechanism-16667c90.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "17f12134-69a0-4170-8ede-8bd7183f97a0",
+      "path": "records/tier-2/mechanism-17f12134.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "2cc1be6f-8597-4891-8bdb-0eaf1bd0579b",
+      "path": "records/tier-2/mechanism-2cc1be6f.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "3d8fa08c-6f3e-44bf-9e02-b8f046ff852d",
+      "path": "records/tier-2/mechanism-3d8fa08c.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "57ad7fef-5103-49b0-ac5d-c566c9f1bc67",
+      "path": "records/tier-2/mechanism-57ad7fef.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "6c75ed59-c353-4cb1-afe4-d825546ecd7a",
+      "path": "records/tier-2/mechanism-6c75ed59.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "6f93d128-63e7-4684-b1eb-b56a59a6009a",
+      "path": "records/tier-2/mechanism-6f93d128.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "86ec2de9-51f0-4f59-85d0-1384ae8d1955",
+      "path": "records/tier-2/mechanism-86ec2de9.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "9d1530f7-ef70-4c85-9235-8cf094dcbbb5",
+      "path": "records/tier-2/mechanism-9d1530f7.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "a1ab551b-d13d-416b-ab39-1f84b3e3ad9d",
+      "path": "records/tier-2/mechanism-a1ab551b.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "b77c2117-5d54-41cc-866c-75d175abdd75",
+      "path": "records/tier-2/mechanism-b77c2117.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "c0f0f2b7-d5c5-41d7-afe0-9eac7a5df89b",
+      "path": "records/tier-2/mechanism-c0f0f2b7.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "caaefa31-631c-43d4-9779-c878a39ba1ba",
+      "path": "records/tier-2/mechanism-caaefa31.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "da4a94f2-4d3c-4657-8260-704920d4cc11",
+      "path": "records/tier-2/mechanism-da4a94f2.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "eda20ed5-096b-4b47-b414-7b98e754bf71",
+      "path": "records/tier-2/mechanism-eda20ed5.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "f3511756-0341-4713-b483-17338797eade",
+      "path": "records/tier-2/mechanism-f3511756.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "f5dd52c5-d6bc-493a-bd45-c4f10e4da7e8",
+      "path": "records/tier-2/mechanism-f5dd52c5.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "f92f27a0-1248-4d8b-8e92-24d67ef522b1",
+      "path": "records/tier-2/mechanism-f92f27a0.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
+    },
+    {
+      "instanceId": "ffb63d1d-730d-4f86-8d2f-0cfb82919ed3",
+      "path": "records/tier-2/mechanism-ffb63d1d.json",
+      "reason": "Batch D mechanism: concept ancestor (travelling form / specification material) has no contains edges into any Part container. Re-parenting is srs#690 \u2014 owner-gated, out of scope for srs#693.",
+      "disposition": "pending",
+      "issue": "#690"
     }
   ]
 }
