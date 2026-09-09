@@ -21,6 +21,7 @@ export const CELL_TAG_PREFIX = "cell:";
 export const CELL_RULE_EFFECTIVE_DATE = "2026-08-23";
 
 let cached;
+let cachedGlyphMap;
 
 /** The twelve legal cell slugs, as a Set. Cached after the first read. */
 export async function loadCellSlugs(dataPath = DATA_PATH) {
@@ -31,6 +32,27 @@ export async function loadCellSlugs(dataPath = DATA_PATH) {
   }
   cached = new Set(doc.cells);
   return cached;
+}
+
+/**
+ * Map from zodiac glyph (e.g. "♒") to cell slug (e.g. "conformance"), built positionally from the
+ * same `cells`/`glyphs` arrays loadCellSlugs() reads — added for srs#716 so a PR classification
+ * line's glyph resolves against the one source of truth rather than a second hardcoded copy.
+ * Cached after the first read.
+ */
+export async function loadCellGlyphMap(dataPath = DATA_PATH) {
+  if (cachedGlyphMap) return cachedGlyphMap;
+  const doc = JSON.parse(await readFile(dataPath, "utf8"));
+  if (!Array.isArray(doc.glyphs) || doc.glyphs.length === 0) {
+    throw new Error(`${dataPath} declares no glyphs — the vocabulary is empty`);
+  }
+  if (doc.glyphs.length !== doc.cells.length) {
+    throw new Error(
+      `${dataPath}: "glyphs" has ${doc.glyphs.length} entries but "cells" has ${doc.cells.length} — they must be positionally aligned`,
+    );
+  }
+  cachedGlyphMap = new Map(doc.glyphs.map((glyph, i) => [glyph, doc.cells[i]]));
+  return cachedGlyphMap;
 }
 
 /** True when `tag` is a well-formed `cell:<slug>` tag naming a slug in the vocabulary. */
