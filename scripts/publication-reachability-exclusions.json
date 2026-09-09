@@ -688,6 +688,13 @@
       "issue": "#285"
     },
     {
+      "instanceId": "dd8920f0-458f-5b72-ad58-93229c777b87",
+      "path": "records/sections/01-purpose-and-scope.json",
+      "reason": "Retired by succession into the new com.semanticops.spec/concept \"Purpose and Scope\" (7348210d-9ad9-4678-866f-3220b3b3ef97), which carries a derived-from edge back to this record and inherited its Part-contains position, precedes-chain position, and all four contains children (RFC-042 Change B, srs#710). Kept as a catalogued record rather than deleted because the derived-from relation needs a live target and no identity-preserving retype tool exists yet (srs#178, OPEN).",
+      "disposition": "permanent",
+      "issue": "#710"
+    },
+    {
       "instanceId": "ea30e14e-e860-5320-8424-e3287ff53287",
       "path": "records/rfc-proposed-artifacts/rfc-004-artifact-field-deprecated.json",
       "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
