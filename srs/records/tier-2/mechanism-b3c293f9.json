@@ -1,0 +1,14 @@
+{
+  "instanceId": "b3c293f9-e64e-4417-99b4-574efa810922",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Notational conventions",
+    "content": "Types are described using TypeScript-style notation. Optional fields are marked with `?`. All `UUID` values are RFC 4122 UUID strings. All `ISO8601` values are datetime strings with timezone offset. `integer` means a positive integer unless otherwise noted.\n\nThe keywords MUST, MUST NOT, SHOULD, and MAY in this specification are to be interpreted as described in RFC 2119.\n\nNamespaces are dot-separated identifiers using lowercase alphanumeric characters and hyphens. `core` is reserved for definitions maintained by the SRS standard; implementations MUST NOT allow user-created definitions in the `core` namespace.\n\nExample: Namespace grammar, with namespaces that satisfy it.\n\nField and Type names are programmatic keys in `snake_case`. Names are stable within a namespace and version lineage; a new name means a new definition.\n\nA specific version of a definition is referenced using the canonical form:\n\nExample: the canonical reference form, with references that satisfy it.\n\nThe `/` and `@` characters are reserved separators. They MUST NOT appear within a namespace component or a name.\n\nVersion numbers are positive integers scoped to a definition's UUID lineage.\n\n| Change | Version action |\n|---|---|\n| Documentation, typo, formatting only | Optional bump |\n| `description`, `instructions`, or `aiGuidance.purpose` reworded without semantic change | Minor bump recommended |\n| `aiGuidance.extraction` or `aiGuidance.purpose` changed in meaning | Version bump required |\n| `fieldType` changed (datatype, cardinality, value domain, format, or constraints) | Version bump required |\n| `name` changed | New definition required (new UUID) |\n| `namespace` changed | New definition required (new UUID) |\n\nWhen in doubt: if a downstream consumer's AI extraction, validation, or governance logic would behave differently, a version bump is required."
+  },
+  "createdAt": "2026-09-09T15:29:06.242736706+00:00",
+  "updatedAt": "2026-09-09T15:29:06.242743743+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

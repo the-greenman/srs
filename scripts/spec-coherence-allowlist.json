@@ -1,4 +1,17 @@
 {
   "$comment": "Known violations of scripts/check-spec-coherence.mjs (srs#560), each citing the live issue that removes it. Entry shape: {check, id | pair:[sourceId,targetId], issue, note}. The check fails on any violation NOT listed here and on any entry that no longer matches a violation \u2014 shrinking this file IS the migration (#562 un-bakes headings, #563 wires the tree, #564 makes invariants leaves). Growing it needs an issue. `note` is for the human reader only; the key is check + id/pair.",
-  "entries": []
+  "entries": [
+    {
+      "check": "no-orphan-leaf",
+      "id": "5bc9b930-462d-535d-91c5-bd9e2b17c91c",
+      "issue": "#691",
+      "note": "Namespace Format: retired by succession into the merged \"Notational conventions\" mechanism (b3c293f9), which carries a derived-from edge to it. Kept as a catalogued record (not deleted) because no identity-preserving retype tool exists yet (srs#178, OPEN) and the derived-from relation needs a live target. Excluded from publication reachability for the same reason (scripts/publication-reachability-exclusions.json)."
+    },
+    {
+      "check": "no-orphan-leaf",
+      "id": "63065301-6afc-5ae6-8d62-59cae1a3154c",
+      "issue": "#691",
+      "note": "Schema Notation: retired by succession into the merged \"Notational conventions\" mechanism (b3c293f9), which carries a derived-from edge to it. Kept as a catalogued record (not deleted) because no identity-preserving retype tool exists yet (srs#178, OPEN) and the derived-from relation needs a live target. Excluded from publication reachability for the same reason (scripts/publication-reachability-exclusions.json)."
+    }
+  ]
 }

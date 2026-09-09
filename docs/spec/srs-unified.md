@@ -98,15 +98,38 @@ This specification covers:
 
 
 
-#### Namespace Format
+#### Notational conventions
 
-##### Convention
+**Content**: Types are described using TypeScript-style notation. Optional fields are marked with `?`. All `UUID` values are RFC 4122 UUID strings. All `ISO8601` values are datetime strings with timezone offset. `integer` means a positive integer unless otherwise noted.
 
-**Content**: Namespaces are dot-separated identifiers using lowercase alphanumeric characters and hyphens.
+The keywords MUST, MUST NOT, SHOULD, and MAY in this specification are to be interpreted as described in RFC 2119.
+
+Namespaces are dot-separated identifiers using lowercase alphanumeric characters and hyphens. `core` is reserved for definitions maintained by the SRS standard; implementations MUST NOT allow user-created definitions in the `core` namespace.
 
 Example: Namespace grammar, with namespaces that satisfy it.
 
-###### Namespace grammar, with namespaces that satisfy it
+Field and Type names are programmatic keys in `snake_case`. Names are stable within a namespace and version lineage; a new name means a new definition.
+
+A specific version of a definition is referenced using the canonical form:
+
+Example: the canonical reference form, with references that satisfy it.
+
+The `/` and `@` characters are reserved separators. They MUST NOT appear within a namespace component or a name.
+
+Version numbers are positive integers scoped to a definition's UUID lineage.
+
+| Change | Version action |
+|---|---|
+| Documentation, typo, formatting only | Optional bump |
+| `description`, `instructions`, or `aiGuidance.purpose` reworded without semantic change | Minor bump recommended |
+| `aiGuidance.extraction` or `aiGuidance.purpose` changed in meaning | Version bump required |
+| `fieldType` changed (datatype, cardinality, value domain, format, or constraints) | Version bump required |
+| `name` changed | New definition required (new UUID) |
+| `namespace` changed | New definition required (new UUID) |
+
+When in doubt: if a downstream consumer's AI extraction, validation, or governance logic would behave differently, a version bump is required.
+
+##### Namespace grammar, with namespaces that satisfy it
 
 **Content**: The grammar, then namespaces that satisfy it:
 
@@ -125,21 +148,7 @@ org.cooperative-name
 ```
 
 
-
-##### Reserved namespaces
-
-**Content**: `core` is reserved for definitions maintained by the SRS standard. Implementations must not allow user-created definitions in the `core` namespace.
-
-
-##### Reference format
-
-**Content**: A specific version of a definition is referenced using the canonical form:
-
-Example: the canonical reference form, with references that satisfy it.
-
-The `/` and `@` characters are reserved separators. They must not appear within a namespace component or a name.
-
-###### The canonical reference form, with references that satisfy it
+##### The canonical reference form, with references that satisfy it
 
 **Content**: The form, then references that satisfy it:
 
@@ -153,37 +162,6 @@ core/decision_statement@2
 community.adr/review_rationale@1
 com.acme.hr/headcount_impact@3
 ```
-
-
-
-##### Name convention
-
-**Content**: Field and Type names are programmatic keys in `snake_case`. Names are stable within a namespace and version lineage. A new name means a new definition.
-
----
-
-
-
-#### Schema Notation
-
-**Content**: Types are described using TypeScript-style notation. Optional fields are marked with `?`. All `UUID` values are RFC 4122 UUID strings. All `ISO8601` values are datetime strings with timezone offset. `integer` means a positive integer unless otherwise noted.
-
-##### Version semantics
-
-**Content**: Version numbers are positive integers scoped to a definition's UUID lineage.
-
-| Change | Version action |
-|---|---|
-| Documentation, typo, formatting only | Optional bump |
-| `description`, `instructions`, or `aiGuidance.purpose` reworded without semantic change | Minor bump recommended |
-| `aiGuidance.extraction` or `aiGuidance.purpose` changed in meaning | Version bump required |
-| `fieldType` changed — datatype, cardinality, value domain, format, or constraints | Version bump required |
-| `name` changed | New definition required (new UUID) |
-| `namespace` changed | New definition required (new UUID) |
-
-When in doubt: if a downstream consumer's AI extraction, validation, or governance logic would behave differently, a version bump is required.
-
----
 
 
 

@@ -1,0 +1,23 @@
+{
+  "instanceId": "404d78f5-1097-4e9a-afd0-8a80d79a8c7e",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Merge Namespace Format + Schema Notation into one Reading-this-specification key",
+    "summary": "Authored one com.semanticops.spec/mechanism leaf (\"Notational conventions\", b3c293f9) under the Reading this specification Part, merging the prose of the Namespace Format and Schema Notation section records (and their five subsections) plus a new RFC 2119 keyword-interpretation statement the Part description already promised but nothing carried. Retired the two source sections and five subsections by succession: derived-from relations from the new mechanism to the two top-level sections, contains edges to the Part cut, publication-reachability-exclusions.json and spec-coherence-allowlist.json entries added (7 and 2 records respectively, citing #691) since no identity-preserving retype tool exists yet (srs#178, OPEN) and a live relation target is required. Re-parented the two example leaves (Namespace grammar; canonical reference form) from the retiring subsections to the new mechanism. Part container membership re-synced via `srs container members add/remove` (16 -> 10 declared members). Heading diff: 9 old headings collapse to 3 (Notational conventions + its 2 examples); every other heading in the corpus is byte-identical before/after.",
+    "decision_mode": "complicated",
+    "door": "2",
+    "issue_ref": [
+      "srs#691",
+      "srs#580",
+      "srs#563"
+    ],
+    "body": "Dispatched via srs#580 gate:dispatched -> gate:working (comment 5604219372, claimed 2026-09-09). Executes the owner ruling on #563 (comment 5586495347, item 3: YES) under RFC-042's succession guidance (derived-from edge to the retired record where an identity-preserving retype tool is unavailable). Fresh worktree from origin/master (9f68693). Gates: srs repo validate 0 errors/12 warnings (unchanged baseline); check-spec-coherence.mjs green (2 allowlisted no-orphan-leaf violations, citing #691); check-publication-reachability.mjs green (7 new permanent exclusions, citing #691); check-spec-language.mjs OK (271-word merged content, em-dash and RFC-2119-casing fixes applied for mechanism normative-site status); validate-all.mjs and check-release-drift.mjs both exit 0 via publish-spec.mjs with the pinned build.360 CLI. Mode: complicated, Cell: Reference, Door: 2 (new normative-adjacent prose), gate:owner-merge -- ends in the owner review the issue itself requires; this unit stops at the PR."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-09T15:47:49.179306016+00:00",
+  "updatedAt": "2026-09-09T15:48:29.061645034+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
