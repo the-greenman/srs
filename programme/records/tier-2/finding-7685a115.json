@@ -1,0 +1,18 @@
+{
+  "instanceId": "7685a115-a2e4-4a79-bb6f-8a546f2d2ba6",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "A third forward reference beyond the two srs#690 named: Travelling form -> Foundational tension",
+    "summary": "Placing Foundational tension and Semantic sovereignty in Governance (their natural home, matching the sibling Foundational values and development phase concept already there) conflicts with an existing depends-on edge from Travelling form (a child of Repository, which belongs in Distribution) to Foundational tension: Governance is the last Part in root-container order, so nothing outside Governance may depend on something inside it. srs#690's body names only two forward references to fix (Semantic order -> Projection, Graduation -> Relation); this third one was found only by running check-spec-coherence.mjs after placing all 25 concepts. Resolved the same way as the first named case: dropped the depends-on edge (Travelling form's own text keeps the mention as a contrast, no content change), rather than inventing a third remedy.",
+    "evidence": [
+      "check-spec-coherence.mjs reported '\"Travelling form\" is introduced before \"Foundational tension\" but depends on it' once Foundational tension/Semantic sovereignty were parented under Governance",
+      "Deleting the edge is verified: check-spec-coherence.mjs exits 0 afterward with part-order non-vacuous (0 edges pointing forward) and re-adding the edge as a deliberate test reproduces the red no-forward-reference/part-order output"
+    ]
+  },
+  "createdAt": "2026-09-09T10:14:24.037064888+00:00",
+  "updatedAt": "2026-09-09T10:14:24.037072266+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

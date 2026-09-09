@@ -1,0 +1,15 @@
+{
+  "instanceId": "ca97216a-0957-4293-8611-0ff918b0fa0d",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "srs#658 (stale versioning-cell-allowlist entry) currently keeps validate-all.mjs and check-release-drift.mjs red on every PR",
+    "summary": "scripts/versioning-cell-allowlist.json's one entry (srs/package/metamodel/fields/value_range.json) no longer matches an observed violation, which check-versioning-cell.mjs treats as a hard failure ('shrinking this file IS the fix'). check-release-drift.mjs runs validate-all.mjs as its own first step, so this single stale entry fails both required gates identically, for any PR, regardless of what that PR actually changes. Confirmed pre-existing: reproduces identically on a clean origin/master checkout (commit bc18336) with none of srs#690's changes applied.",
+    "rationale": "srs#690's PR will show validate-all and check-release-drift red for this reason alone; every check specific to this unit (check-spec-coherence, check-publication-reachability, check-spec-language, srs repo validate, the heading-set diff) is clean. Fixing srs#658 is a separate Door (its own allowlist entry names the real root cause: gen-metamodel-package.mjs's fieldFile() hardcodes version:1 with no per-field override) and was left untouched here as out of scope. The next unit that opens a PR against this branch point will hit the same red gates until srs#658 lands or the entry is otherwise resolved — worth fixing before, or alongside, whichever unit next needs a clean validate-all run."
+  },
+  "createdAt": "2026-09-09T10:15:02.860499641+00:00",
+  "updatedAt": "2026-09-09T10:15:02.860505429+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
