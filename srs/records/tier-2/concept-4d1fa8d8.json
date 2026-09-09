@@ -1,0 +1,15 @@
+{
+  "instanceId": "4d1fa8d8-0048-4b32-ae0d-f4bccbc9e959",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/extension-interactions",
+    "title": "Extension Interactions",
+    "description": "Cross-extension interactions are behavioural requirements that apply only when an implementation declares both named extensions."
+  },
+  "createdAt": "2026-09-09T21:22:34.056000985+00:00",
+  "updatedAt": "2026-09-09T21:22:34.056007279+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

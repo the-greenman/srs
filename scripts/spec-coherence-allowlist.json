@@ -15,6 +15,12 @@
     },
     {
       "check": "no-orphan-leaf",
+      "id": "a1fc7f7c-dcba-5f4b-b9fd-04f91b2762b3",
+      "issue": "#710",
+      "note": "Extension Interactions: retired by succession into the new concept \"Extension Interactions\" (4d1fa8d8), which carries a derived-from edge to it and took over its Part-contains position (RFC-042 Change B). Kept as a catalogued record (not deleted) because no identity-preserving retype tool exists yet (srs#178, OPEN) and the derived-from relation needs a live target. Excluded from publication reachability for the same reason (scripts/publication-reachability-exclusions.json)."
+    },
+    {
+      "check": "no-orphan-leaf",
       "id": "5bc9b930-462d-535d-91c5-bd9e2b17c91c",
       "issue": "#691",
       "note": "Namespace Format: retired by succession into the merged \"Notational conventions\" mechanism (b3c293f9), which carries a derived-from edge to it. Kept as a catalogued record (not deleted) because no identity-preserving retype tool exists yet (srs#178, OPEN) and the derived-from relation needs a live target. Excluded from publication reachability for the same reason (scripts/publication-reachability-exclusions.json)."
