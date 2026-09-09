@@ -58,6 +58,15 @@
 
 ### Conformance
 
+**Definition**: An implementation declares conformance using the following form:
+
+Example: the conformance declaration form.
+
+**Key**: record:concepts/conformance-declaration
+
+
+### Conformance
+
 **Definition**: What an implementation must satisfy to claim SRS conformance, core and per-extension, and how that claim is declared and checked.
 
 **Key**: part:conformance
@@ -79,6 +88,33 @@
 **Notes**: A Container may name one member as its identity or purpose record, and one member whose Type is the Container's typing anchor. Its own id lives in a different space from instance ids and must never appear on a Relation. Nested scopes are declared through `childContainerIds`; `contains` remains the part-of tree where meaning lives and must still be maintained (rfc-decision-0750c62f).
 
 **Key**: type:com.semanticops.srs/container
+
+
+### Conversation Layer
+
+**Definition**: > **Standalone repository note**: An implementation declaring only `SRS 2.0 Core + ext:repository` does not require a TSS, ext:protocol, ext:addressability, AttentionState, or any live store for raw multimodal material; source documents stored in `source-documents/` are sufficient evidence storage for standalone use. This note describes the full-stack integration model, and implementers building file-based or offline repositories may skip it entirely.
+
+This is a permanent architectural boundary distinct from SRS. It captures raw multimodal source material; SRS captures negotiated semantic state. They reference each other bidirectionally via `SourceReference` (document → conversation) and `AttentionState` tags (conversation → document, via `ext:addressability`).
+
+```
+Conversation layer  →  raw multimodal source material (speech, threads, annotations)
+                        elements tagged with Address at production time
+Protocol layer      →  sequences turns between parties; advances AttentionState
+SRS layer          →  captures negotiated semantic state; Records carry SourceReferences
+Presentation layer  →  renders SRS state via Views
+```
+
+Three conversation types are in scope:
+
+| Type | Structure | Anchoring |
+|---|---|---|
+| Meeting transcript | Linear, time-ordered chunks | Tagged with AttentionState at production time |
+| Threaded conversation | Tree of replies | Thread root anchored to a document element Address |
+| Web UI annotations | Attached to content | Anchored to a Field or Record Address |
+
+Transcript chunks referenced in `SourceReference` are source material — addressable evidence. They do not become Notes or Records automatically. A transcript chunk referenced in `sourceRefs` is evidence supporting a field value; it is not itself a Note unless someone deliberately models it as one.
+
+**Key**: record:concepts/conversation-layer
 
 
 ### Conversation boundary
@@ -106,6 +142,13 @@
 **Key**: part:distribution
 
 
+### Distribution Group (Core)
+
+**Definition**: The Distribution group is required for all conforming implementations.
+
+**Key**: record:concepts/distribution-group-core
+
+
 ### Extension
 
 **Definition**: An independently adoptable capability module, identified by an `ext:` name, declaring what it adds, what it depends on, and which invariants it owns. Extensions are how the specification grows without forcing every implementation to grow with it: no extension is required for core conformance, and an implementation adopts only what it needs. An implementation that does not declare one must ignore its properties instead of erroring on them, so data using an extension still loads where the extension is unknown.
@@ -113,6 +156,13 @@
 **Notes**: Some extensions declare hard dependencies on others. A pair may also be formally independent yet functionally co-dependent for a given use, and cross-extension behavioural requirements apply only where both are declared.
 
 **Key**: record:concepts/extension
+
+
+### Extension Interactions
+
+**Definition**: Declaring two named extensions together activates behavioural requirements that apply only when both are present in the same implementation.
+
+**Key**: record:concepts/extension-interactions
 
 
 ### Extensions
@@ -299,6 +349,11 @@
 **Notes**: A Protocol is a package definition, not an instance. It is an epistemic concern, deliberately separated from presentation: the logic that guides a session was removed from views and lives here.
 
 **Key**: record:concepts/protocol
+
+
+### Purpose and Scope
+
+**Key**: record:concepts/purpose-and-scope
 
 
 ### Reading this specification
