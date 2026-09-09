@@ -1,0 +1,15 @@
+{
+  "instanceId": "8888b7de-bba1-41a2-bd55-42dfbf3355c4",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/distribution-group-core",
+    "title": "Distribution Group (Core)",
+    "description": "The Distribution group is required for all conforming implementations."
+  },
+  "createdAt": "2026-09-09T21:20:00.803184737+00:00",
+  "updatedAt": "2026-09-09T21:20:00.803190919+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

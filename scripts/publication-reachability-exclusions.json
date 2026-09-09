@@ -282,6 +282,13 @@
       "issue": "#285"
     },
     {
+      "instanceId": "5b507597-f824-576b-b577-fd8141f1eaf1",
+      "path": "records/sections/05-distribution-group-core.json",
+      "reason": "Retired by succession into the new com.semanticops.spec/concept \"Distribution Group (Core)\" (8888b7de-bba1-41a2-bd55-42dfbf3355c4), which carries a derived-from edge back to this record and inherited its Part-contains position, precedes-chain position, and all four contains children (RFC-042 Change B, srs#710). Kept as a catalogued record rather than deleted because the derived-from relation needs a live target and no identity-preserving retype tool exists yet (srs#178, OPEN).",
+      "disposition": "permanent",
+      "issue": "#710"
+    },
+    {
       "instanceId": "5bc9b930-462d-535d-91c5-bd9e2b17c91c",
       "path": "records/sections/02-namespace-format.json",
       "reason": "Retired by succession into the merged mechanism leaf \"Notational conventions\" (b3c293f9-e64e-4417-99b4-574efa810922) under the Reading this specification Part: owner ruling on #563 (comment 5586495347) item 3 to merge Namespace Format and Schema Notation into one key, executed by #691. The new leaf carries a derived-from edge to this record; content is preserved there (heading/sentence diff in the PR). Kept as a catalogued record rather than deleted because the derived-from relation needs a live target and no identity-preserving retype tool exists yet (srs#178, OPEN).",
@@ -336,6 +343,13 @@
       "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
+    },
+    {
+      "instanceId": "6cb78382-35a5-5acc-a26c-774a2c288e23",
+      "path": "records/sections/06-conversation-layer.json",
+      "reason": "Retired by succession into the new com.semanticops.spec/concept \"Conversation Layer\" (c34c0dd8-ce40-4dd9-82a4-2c5ccab8c26f), which carries a derived-from edge back to this record and inherited its Part-contains position and precedes-chain position (RFC-042 Change B, srs#710). Kept as a catalogued record rather than deleted because the derived-from relation needs a live target and no identity-preserving retype tool exists yet (srs#178, OPEN).",
+      "disposition": "permanent",
+      "issue": "#710"
     },
     {
       "instanceId": "717118a7-80be-49a2-bbc6-05c123ffa958",
@@ -476,6 +490,13 @@
       "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
+    },
+    {
+      "instanceId": "a1fc7f7c-dcba-5f4b-b9fd-04f91b2762b3",
+      "path": "records/sections/08-5-extension-interactions.json",
+      "reason": "Retired by succession into the new com.semanticops.spec/concept \"Extension Interactions\" (4d1fa8d8-0048-4b32-ae0d-f4bccbc9e959), which carries a derived-from edge back to this record and inherited its Part-contains position, precedes-chain position, and both contains children (RFC-042 Change B, srs#710). Kept as a catalogued record rather than deleted because the derived-from relation needs a live target and no identity-preserving retype tool exists yet (srs#178, OPEN).",
+      "disposition": "permanent",
+      "issue": "#710"
     },
     {
       "instanceId": "a3f7c9e1-2b4d-4f8a-9c1e-5d7b3a2f6e0c",
@@ -665,6 +686,20 @@
       "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains` (edge asserted by #409 — RFC-017's stub record had no relations at all before this fix), but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into it (render_service.rs) and `rfc-catalog.md` contains none of it. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
+    },
+    {
+      "instanceId": "dd8920f0-458f-5b72-ad58-93229c777b87",
+      "path": "records/sections/01-purpose-and-scope.json",
+      "reason": "Retired by succession into the new com.semanticops.spec/concept \"Purpose and Scope\" (7348210d-9ad9-4678-866f-3220b3b3ef97), which carries a derived-from edge back to this record and inherited its Part-contains position, precedes-chain position, and all four contains children (RFC-042 Change B, srs#710). Kept as a catalogued record rather than deleted because the derived-from relation needs a live target and no identity-preserving retype tool exists yet (srs#178, OPEN).",
+      "disposition": "permanent",
+      "issue": "#710"
+    },
+    {
+      "instanceId": "e538ea64-f93f-5c51-ade0-6cd358605e8c",
+      "path": "records/sections/09-conformance.json",
+      "reason": "Retired by succession into the new com.semanticops.spec/concept \"Conformance\" (06a60bf4-87ef-435b-a440-a94f0e1e393d, canonical_key record:concepts/conformance-declaration — distinct key from the pre-existing record:concepts/conformance concept a5c04203, which already covers what a conformance claim is; this successor covers the section's own narrower content, the declaration form), which carries a derived-from edge back to this record and inherited its Part-contains position, precedes-chain position, and all six contains children (RFC-042 Change B, srs#710). Kept as a catalogued record rather than deleted because the derived-from relation needs a live target and no identity-preserving retype tool exists yet (srs#178, OPEN).",
+      "disposition": "permanent",
+      "issue": "#710"
     },
     {
       "instanceId": "ea30e14e-e860-5320-8424-e3287ff53287",

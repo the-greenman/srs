@@ -10,6 +10,8 @@
 
 #### Purpose and Scope
 
+**Canonical Key**: record:concepts/purpose-and-scope
+
 ##### What this specification defines
 
 **Content**: The Semantic Record System (SRS) specification defines an interoperable standard for semantic field and type definitions, records, relations, and the mechanisms by which these artefacts are created, shared, versioned, and distributed across independent implementations.
@@ -2824,143 +2826,6 @@ Order that reflects curation, display preference, or layout is presentation, not
 
 **Description**: How definitions travel between repositories: Package, Reference, Lineage, and Provenance.
 
-#### Distribution Group (Core)
-
-**Content**: The Distribution group is required for all conforming implementations.
-
-##### Package
-
-**Content**: The distributable artefact. Contains Field, Type, View, and Relation type definitions with a complete dependency manifest.
-
-Example: the `Package` shape.
-
-**`mode` semantics:**
-
-| Mode | Meaning |
-|---|---|
-| `"bundled"` | All Field records referenced by any Type, all Type records referenced by any Type or View, and all View records referenced by any Composition are included in their respective arrays. Self-contained. |
-| `"standalone"` | Dependencies are expected pre-installed in the consumer's registry. `packageDependencies` is the required manifest. |
-
-`packageDependencies` is required in both modes. Consumers use it to validate completeness without parsing content internals.
-
----
-
-###### The `Package` shape
-
-**Content**: `Package`, in pseudo-IDL:
-
-```typescript
-{
-  schemaVersion: string      // SRS spec version, e.g. "2.0"
-  packageId: UUID
-  packageName: string
-  packageVersion: string     // semver, e.g. "1.2.0"
-  publishedAt: ISO8601
-  publisher?: string
-  description?: string
-  homepage?: string
-
-  // Content (at least one of fields or types must be non-empty)
-  fields: Field[]
-  types: Type[]
-  views?: View[]             // ext:views-l1; omit if not in use
-  compositions?: Composition[]  // ext:views-l2; omit if not in use
-  blueprints?: Blueprint[]   // core; omit if not in use
-  protocols?: Protocol[]     // ext:protocol; omit if not in use
-  relationTypes?: RelationTypeDefinition[]  // relation type definitions
-  vocabularies?: Vocabulary[]               // RFC-006: named vocabulary definitions
-  lifecycles?: Lifecycle[]                  // RFC-006 ext:lifecycle: referenceable lifecycle definitions
-
-  mode: "bundled" | "standalone"
-
-  packageDependencies: Reference[]
-}
-```
-
-
-
-##### Reference
-
-**Content**: A stable pointer to a specific definition version.
-
-Example: the `Reference` shape.
-
-Canonical string form: `namespace/name@version`
-
----
-
-###### The `Reference` shape
-
-**Content**: `Reference`, in pseudo-IDL:
-
-```typescript
-{
-  id: UUID
-  namespace: string
-  name: string
-  version: integer   // min: 1
-  definitionType?: "field" | "type" | "view" | "blueprint" | "protocol"
-}
-```
-
-
-
-##### Lineage
-
-**Content**: Upstream and fork tracking for a specific definition version.
-
-Example: the `Lineage` shape.
-
-| Field pair | Meaning |
-|---|---|
-| `sourceDefinition*` | Tracked copy; consumer expects upstream updates |
-| `forkedFrom*` | Deliberately diverged; no upstream tracking |
-
-Both may be present during a transition from tracking to forking.
-
----
-
-###### The `Lineage` shape
-
-**Content**: `Lineage`, in pseudo-IDL:
-
-```typescript
-{
-  sourceDefinitionId?: UUID     // UUID of the upstream definition
-  sourceVersion?: integer       // upstream version at derivation time
-  forkedFromDefinitionId?: UUID // UUID of the definition deliberately forked from
-  forkedFromVersion?: integer   // version at the fork point
-}
-```
-
-
-
-##### Provenance
-
-**Content**: Publisher and package origin metadata.
-
-Example: the `Provenance` shape.
-
-`packageVersion` is distinct from `Field.version`. A package at `1.3.0` may contain `decision_statement@3` and `context@2`.
-
----
-
-###### The `Provenance` shape
-
-**Content**: `Provenance`, in pseudo-IDL:
-
-```typescript
-{
-  publisher?: string        // namespace or org of the original author
-  sourcePackage?: string    // package name that bundled this definition
-  packageVersion?: string   // semver of the source package
-  importedAt?: ISO8601
-}
-```
-
-
-
-
 #### Package
 
 **Canonical Key**: record:concepts/package
@@ -3521,6 +3386,145 @@ To create an independent copy of a repository — not a sync — the importer mu
 2. **Mint new inner IDs with lineage**: the copy mints fresh UUIDs and adds `derived-from` Relations from each new instance to the source `instanceId`. Appropriate when the copy will evolve independently.
 
 An importer must not mix strategies within a single copy operation.
+
+
+
+#### Distribution Group (Core)
+
+**Canonical Key**: record:concepts/distribution-group-core
+
+**Description**: The Distribution group is required for all conforming implementations.
+
+##### Package
+
+**Content**: The distributable artefact. Contains Field, Type, View, and Relation type definitions with a complete dependency manifest.
+
+Example: the `Package` shape.
+
+**`mode` semantics:**
+
+| Mode | Meaning |
+|---|---|
+| `"bundled"` | All Field records referenced by any Type, all Type records referenced by any Type or View, and all View records referenced by any Composition are included in their respective arrays. Self-contained. |
+| `"standalone"` | Dependencies are expected pre-installed in the consumer's registry. `packageDependencies` is the required manifest. |
+
+`packageDependencies` is required in both modes. Consumers use it to validate completeness without parsing content internals.
+
+---
+
+###### The `Package` shape
+
+**Content**: `Package`, in pseudo-IDL:
+
+```typescript
+{
+  schemaVersion: string      // SRS spec version, e.g. "2.0"
+  packageId: UUID
+  packageName: string
+  packageVersion: string     // semver, e.g. "1.2.0"
+  publishedAt: ISO8601
+  publisher?: string
+  description?: string
+  homepage?: string
+
+  // Content (at least one of fields or types must be non-empty)
+  fields: Field[]
+  types: Type[]
+  views?: View[]             // ext:views-l1; omit if not in use
+  compositions?: Composition[]  // ext:views-l2; omit if not in use
+  blueprints?: Blueprint[]   // core; omit if not in use
+  protocols?: Protocol[]     // ext:protocol; omit if not in use
+  relationTypes?: RelationTypeDefinition[]  // relation type definitions
+  vocabularies?: Vocabulary[]               // RFC-006: named vocabulary definitions
+  lifecycles?: Lifecycle[]                  // RFC-006 ext:lifecycle: referenceable lifecycle definitions
+
+  mode: "bundled" | "standalone"
+
+  packageDependencies: Reference[]
+}
+```
+
+
+
+##### Reference
+
+**Content**: A stable pointer to a specific definition version.
+
+Example: the `Reference` shape.
+
+Canonical string form: `namespace/name@version`
+
+---
+
+###### The `Reference` shape
+
+**Content**: `Reference`, in pseudo-IDL:
+
+```typescript
+{
+  id: UUID
+  namespace: string
+  name: string
+  version: integer   // min: 1
+  definitionType?: "field" | "type" | "view" | "blueprint" | "protocol"
+}
+```
+
+
+
+##### Lineage
+
+**Content**: Upstream and fork tracking for a specific definition version.
+
+Example: the `Lineage` shape.
+
+| Field pair | Meaning |
+|---|---|
+| `sourceDefinition*` | Tracked copy; consumer expects upstream updates |
+| `forkedFrom*` | Deliberately diverged; no upstream tracking |
+
+Both may be present during a transition from tracking to forking.
+
+---
+
+###### The `Lineage` shape
+
+**Content**: `Lineage`, in pseudo-IDL:
+
+```typescript
+{
+  sourceDefinitionId?: UUID     // UUID of the upstream definition
+  sourceVersion?: integer       // upstream version at derivation time
+  forkedFromDefinitionId?: UUID // UUID of the definition deliberately forked from
+  forkedFromVersion?: integer   // version at the fork point
+}
+```
+
+
+
+##### Provenance
+
+**Content**: Publisher and package origin metadata.
+
+Example: the `Provenance` shape.
+
+`packageVersion` is distinct from `Field.version`. A package at `1.3.0` may contain `decision_statement@3` and `context@2`.
+
+---
+
+###### The `Provenance` shape
+
+**Content**: `Provenance`, in pseudo-IDL:
+
+```typescript
+{
+  publisher?: string        // namespace or org of the original author
+  sourcePackage?: string    // package name that bundled this definition
+  packageVersion?: string   // semver of the source package
+  importedAt?: ISO8601
+}
+```
+
 
 
 
@@ -4373,16 +4377,39 @@ View, Composition, and Theme are the constructs a projection is built from: View
 
 **Description**: The independently adoptable capability modules a repository may declare, and how they interact with each other and with the core.
 
+#### Conversation boundary
+
+**Canonical Key**: record:concepts/conversation-boundary
+
+**Description**: The permanent architectural line between raw multimodal source material (speech, threads, annotations) and the negotiated semantic state SRS captures. The two layers reference each other in both directions but never merge: material on the conversation side is addressable evidence, and it does not become an instance automatically. A transcript chunk cited as evidence for a field value is not a Note unless someone deliberately models it as one.
+
+**Notes**: The conversation layer is optional infrastructure. A repository declaring only the core plus the file-based repository format needs none of it, and source documents stored in the repository are sufficient evidence storage.
+
+##### Why the conversation layer is a permanent boundary
+
+**Content**: 
+SCDS captures negotiated semantic state. Transcripts capture raw material — speech, threads, annotations — from which semantic state is extracted or constructed. These are different things, and conflating them would harm both.
+
+If SCDS tried to be a transcript standard, it would need to model speaker identity, timing, overlapping speech, and audio quality — none of which are semantic concerns. If the transcript standard tried to be a semantic state standard, it would need to version field definitions, track lineage, and manage inter-Record Relations — none of which are evidence concerns.
+
+The boundary makes both layers better at what they do. The connection between them — `SourceReference` and `AttentionState` — is the bidirectional bridge. Each layer references the other; neither absorbs the other.
+
+---
+
+
+
 #### Conversation Layer
 
-**Content**: > **Standalone repository note**: The conversation layer is optional infrastructure. An implementation declaring only `SRS 2.0 Core + ext:repository` does not require a TSS, ext:protocol, ext:addressability, AttentionState, or any live conversation store. Source documents stored in `source-documents/` are sufficient evidence storage for standalone use. This section describes the full-stack integration model; implementers building file-based or offline repositories may skip it entirely.
+**Canonical Key**: record:concepts/conversation-layer
 
-The conversation layer is a permanent architectural boundary distinct from SRS. It captures raw multimodal source material; SRS captures negotiated semantic state. They reference each other bidirectionally via `SourceReference` (document → conversation) and `AttentionState` tags (conversation → document, via `ext:addressability`).
+**Description**: > **Standalone repository note**: An implementation declaring only `SRS 2.0 Core + ext:repository` does not require a TSS, ext:protocol, ext:addressability, AttentionState, or any live store for raw multimodal material; source documents stored in `source-documents/` are sufficient evidence storage for standalone use. This note describes the full-stack integration model, and implementers building file-based or offline repositories may skip it entirely.
+
+This is a permanent architectural boundary distinct from SRS. It captures raw multimodal source material; SRS captures negotiated semantic state. They reference each other bidirectionally via `SourceReference` (document → conversation) and `AttentionState` tags (conversation → document, via `ext:addressability`).
 
 ```
 Conversation layer  →  raw multimodal source material (speech, threads, annotations)
                         elements tagged with Address at production time
-Protocol layer      →  structures the facilitation process; advances AttentionState
+Protocol layer      →  sequences turns between parties; advances AttentionState
 SRS layer          →  captures negotiated semantic state; Records carry SourceReferences
 Presentation layer  →  renders SRS state via Views
 ```
@@ -4396,8 +4423,6 @@ Three conversation types are in scope:
 | Web UI annotations | Attached to content | Anchored to a Field or Record Address |
 
 Transcript chunks referenced in `SourceReference` are source material — addressable evidence. They do not become Notes or Records automatically. A transcript chunk referenced in `sourceRefs` is evidence supporting a field value; it is not itself a Note unless someone deliberately models it as one.
-
----
 
 
 #### Extensions
@@ -6472,7 +6497,9 @@ An implementation that declares `ext:discovery` MUST pass all fixture scenarios 
 
 #### Extension Interactions
 
-**Content**: Cross-extension interactions are behavioural requirements that apply only when an implementation declares both named extensions.
+**Canonical Key**: record:concepts/extension-interactions
+
+**Description**: Declaring two named extensions together activates behavioural requirements that apply only when both are present in the same implementation.
 
 ##### ext:protocol × ext:addressability
 
@@ -6498,27 +6525,6 @@ Conversation chunks produced while `AttentionState.stageId` is set are associate
 **Status: Dormant** (removed under `rfc-decision-2a1e1590`, 2026-08-21). This coupling's required behaviour, and both of its invariants (formerly `[LC-AX1]` and `[LC-AX2]`), required a lifecycle state transition to produce a `Revision` snapshot per field value, tagged with `provenance.lifecycleTransition`. Every clause of this coupling was revision-dependent; with the per-field `Revision` mechanism removed (zero corpus use, incompletely specified — see `rfc-decision-2a1e1590`, also removed under the same ruling), no requirement survives the cut. `ext:lifecycle` and `ext:addressability` impose no cross-cutting obligation on each other while this stays dormant; each extension's own invariants are unaffected.
 
 **Return trigger**: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface. When a real consumer's requirements are known, the coupling is redesigned against them rather than reinstated as specified here.
-
----
-
-
-
-#### Conversation boundary
-
-**Canonical Key**: record:concepts/conversation-boundary
-
-**Description**: The permanent architectural line between raw multimodal source material (speech, threads, annotations) and the negotiated semantic state SRS captures. The two layers reference each other in both directions but never merge: material on the conversation side is addressable evidence, and it does not become an instance automatically. A transcript chunk cited as evidence for a field value is not a Note unless someone deliberately models it as one.
-
-**Notes**: The conversation layer is optional infrastructure. A repository declaring only the core plus the file-based repository format needs none of it, and source documents stored in the repository are sufficient evidence storage.
-
-##### Why the conversation layer is a permanent boundary
-
-**Content**: 
-SCDS captures negotiated semantic state. Transcripts capture raw material — speech, threads, annotations — from which semantic state is extracted or constructed. These are different things, and conflating them would harm both.
-
-If SCDS tried to be a transcript standard, it would need to model speaker identity, timing, overlapping speech, and audio quality — none of which are semantic concerns. If the transcript standard tried to be a semantic state standard, it would need to version field definitions, track lineage, and manage inter-Record Relations — none of which are evidence concerns.
-
-The boundary makes both layers better at what they do. The connection between them — `SourceReference` and `AttentionState` — is the bidirectional bridge. Each layer references the other; neither absorbs the other.
 
 ---
 
@@ -6852,102 +6858,6 @@ Conforming implementations must uphold the following invariants.
 
 **I-96.** A `CrossFieldRule` that contains a property belonging to a different rule type MUST be reported as a Type-level validation error. Specifically: a `conditional-required` or `field-ordering` rule MUST NOT supply `fieldIds`; a `mutual-exclusion` rule MUST NOT supply `predicateFieldId`, `predicateValue`, `targetFieldId`, or `effect`. (RFC-019 R10.)
 
-#### Conformance
-
-**Content**: An implementation declares conformance using the following form:
-
-Example: the conformance declaration form.
-
-##### Core conformance requirements
-
-**Content**: A core-conformant implementation must:
-- Accept and validate `Field`, `Type`, `Record` (Tier 2), `Relation`, and `Container` inputs against this specification
-- Enforce Invariants 1–3, 7–9, 16–18, 20–21, 28, 38
-- Support the Foundation and Distribution groups in full
-- Implement the namespace format and reference format correctly
-- Not accept `relationType` strings that include `/` except in `namespace/name` format
-- **Closed-vocabulary resolution (V1):** Resolve every value participating in a closed vocabulary to exactly one installed entry in the effective entry set before accepting a write. Non-resolving values are validation errors. This rule applies to:
-  - `Relation.relationType` — resolved against the repo-global `RelationTypeDefinition` set (RFC-005 E1 is a named instance of V1)
-  - `select`/`multiselect` field values — resolved against the Field's effective closed `Vocabulary`
-  - `Record.lifecycleState` — resolved against the Type's effective lifecycle state set
-- Enforce the effective entry set construction (V5): retire entries excluded before uniqueness; `extends*Version` mismatches are hard errors.
-- Enforce inline and referenced lifecycle integrity (V9).
-- Enforce `select`/`multiselect` field binding exclusivity and closedness (V3).
-
-Support for `Note` (Tier 0) is optional at core conformance level.
-
-
-##### Extension conformance requirements
-
-**Content**: An implementation declaring a given extension must:
-- Accept and validate all types defined by that extension
-- Enforce all invariants assigned to that extension
-- Respect the declared dependency chain (e.g., `ext:views-l2` requires `ext:views-l1` to also be declared)
-
-`ext:recommended-relations` is retired as of RFC-005. It no longer owns any normative semantics. Implementations must not treat it as a capability gate — the canonical relation vocabulary is now mandatory core behaviour provided by the `com.semanticops.srs` package.
-
-
-##### ext:repository conformance requirements
-
-**Content**: An implementation declaring `ext:repository` must:
-- Produce repositories with a `.srs` marker and `manifest.json` at root, with content in the prescribed folder layout
-- Maintain no `instanceIndex` in the manifest — it is retired (RFC-038 [R2]); membership is the instance set enumerated from the tree (RFC-038 [R1])
-- Produce archives that satisfy all self-containment requirements (Invariants 49 and 51)
-- Consume archives by parsing the manifest first and resolving all instances via the repository's authoritative instance set, enumerated from the tree (RFC-038 [R1]), before processing content
-- Resolve `SourceReference` entries with `sourceType: "repository-document"` via the sidecar in `sourceDocumentsPath`
-- Enforce Invariants 45–55
-- Require no TSS, Protocol, Addressability infrastructure, or external registry when `PackageRef.mode === "local"`. The repository is fully operable with only its own files.
-
-An implementation that can produce archives but not consume them (or vice versa) must declare this limitation explicitly. Partial repository support is not conformant.
-
-
-##### ext:repository (self-contained) profile
-
-**Content**: A named stricter profile for standalone, offline-operable repositories:
-
-Example: the self-contained profile declaration.
-
-An implementation declaring this profile must satisfy all `ext:repository` conformance requirements and additionally:
-
-- `packageRef` must be present with `mode: "local"`. Absent or external package references are not permitted.
-- The local package must be `mode: "bundled"` (Invariant 50 is always in effect).
-- No external registry, TSS, Protocol stack, Addressability infrastructure, AttentionState, or live conversation store is required or assumed. The repository directory (or archive) is the complete and sufficient deployment unit.
-- An archive produced under this profile must be openable and fully processable by a consumer with no prior installation, no network access, and no running services.
-
-This profile is appropriate for: standalone tools, file-based backups, air-gapped or offline deployments, inter-organisational exchange, and any context where zero-dependency portability is required.
-
-###### The self-contained profile declaration
-
-**Content**: The conformance string a self-contained repository declares:
-
-```
-SRS 2.0 Core + ext:repository (self-contained)
-```
-
-
-
-##### Interoperability note
-
-**Content**: Two implementations at the same conformance level will produce compatible definitions for exchange. An implementation receiving a Package that includes types or fields from an extension it does not support should surface the unknown content, preserve it where possible, and pass it through rather than silently discard it.
-
-Two implementations both declaring `ext:repository` must be able to exchange archives without data loss. An archive produced by one conforming implementation must be consumable by any other conforming implementation at the same SRS version.
-
-
-##### The conformance declaration form
-
-**Content**: The declaration form, then a filled declaration:
-
-```
-SRS <version> Core [+ ext:<name> ...]
-```
-
-Example:
-```
-SRS 2.0 Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability + ext:recommended-relations
-```
-
-
-
 #### Validation
 
 **Canonical Key**: record:concepts/validation
@@ -7116,6 +7026,104 @@ The following capabilities are planned but out of scope for this version.
 **Description**: A numbered normative statement that must hold of conforming data and conforming implementations, assigned to core or to the extension that owns it. Invariants are where the specification's obligations are stated once and cited from everywhere else, so a rule has one home instead of several drifting restatements. An invariant is the statement; checking it is validation, and the two are deliberately distinct.
 
 **Examples**: Invariant 16 fixes relation direction; Invariant 20 keeps container ids out of the instance id space; Invariant 2 forbids a Type restating a Field's semantics.
+
+
+
+#### Conformance
+
+**Canonical Key**: record:concepts/conformance-declaration
+
+**Description**: An implementation declares conformance using the following form:
+
+Example: the conformance declaration form.
+
+##### Core conformance requirements
+
+**Content**: A core-conformant implementation must:
+- Accept and validate `Field`, `Type`, `Record` (Tier 2), `Relation`, and `Container` inputs against this specification
+- Enforce Invariants 1–3, 7–9, 16–18, 20–21, 28, 38
+- Support the Foundation and Distribution groups in full
+- Implement the namespace format and reference format correctly
+- Not accept `relationType` strings that include `/` except in `namespace/name` format
+- **Closed-vocabulary resolution (V1):** Resolve every value participating in a closed vocabulary to exactly one installed entry in the effective entry set before accepting a write. Non-resolving values are validation errors. This rule applies to:
+  - `Relation.relationType` — resolved against the repo-global `RelationTypeDefinition` set (RFC-005 E1 is a named instance of V1)
+  - `select`/`multiselect` field values — resolved against the Field's effective closed `Vocabulary`
+  - `Record.lifecycleState` — resolved against the Type's effective lifecycle state set
+- Enforce the effective entry set construction (V5): retire entries excluded before uniqueness; `extends*Version` mismatches are hard errors.
+- Enforce inline and referenced lifecycle integrity (V9).
+- Enforce `select`/`multiselect` field binding exclusivity and closedness (V3).
+
+Support for `Note` (Tier 0) is optional at core conformance level.
+
+
+##### Extension conformance requirements
+
+**Content**: An implementation declaring a given extension must:
+- Accept and validate all types defined by that extension
+- Enforce all invariants assigned to that extension
+- Respect the declared dependency chain (e.g., `ext:views-l2` requires `ext:views-l1` to also be declared)
+
+`ext:recommended-relations` is retired as of RFC-005. It no longer owns any normative semantics. Implementations must not treat it as a capability gate — the canonical relation vocabulary is now mandatory core behaviour provided by the `com.semanticops.srs` package.
+
+
+##### ext:repository conformance requirements
+
+**Content**: An implementation declaring `ext:repository` must:
+- Produce repositories with a `.srs` marker and `manifest.json` at root, with content in the prescribed folder layout
+- Maintain no `instanceIndex` in the manifest — it is retired (RFC-038 [R2]); membership is the instance set enumerated from the tree (RFC-038 [R1])
+- Produce archives that satisfy all self-containment requirements (Invariants 49 and 51)
+- Consume archives by parsing the manifest first and resolving all instances via the repository's authoritative instance set, enumerated from the tree (RFC-038 [R1]), before processing content
+- Resolve `SourceReference` entries with `sourceType: "repository-document"` via the sidecar in `sourceDocumentsPath`
+- Enforce Invariants 45–55
+- Require no TSS, Protocol, Addressability infrastructure, or external registry when `PackageRef.mode === "local"`. The repository is fully operable with only its own files.
+
+An implementation that can produce archives but not consume them (or vice versa) must declare this limitation explicitly. Partial repository support is not conformant.
+
+
+##### ext:repository (self-contained) profile
+
+**Content**: A named stricter profile for standalone, offline-operable repositories:
+
+Example: the self-contained profile declaration.
+
+An implementation declaring this profile must satisfy all `ext:repository` conformance requirements and additionally:
+
+- `packageRef` must be present with `mode: "local"`. Absent or external package references are not permitted.
+- The local package must be `mode: "bundled"` (Invariant 50 is always in effect).
+- No external registry, TSS, Protocol stack, Addressability infrastructure, AttentionState, or live conversation store is required or assumed. The repository directory (or archive) is the complete and sufficient deployment unit.
+- An archive produced under this profile must be openable and fully processable by a consumer with no prior installation, no network access, and no running services.
+
+This profile is appropriate for: standalone tools, file-based backups, air-gapped or offline deployments, inter-organisational exchange, and any context where zero-dependency portability is required.
+
+###### The self-contained profile declaration
+
+**Content**: The conformance string a self-contained repository declares:
+
+```
+SRS 2.0 Core + ext:repository (self-contained)
+```
+
+
+
+##### Interoperability note
+
+**Content**: Two implementations at the same conformance level will produce compatible definitions for exchange. An implementation receiving a Package that includes types or fields from an extension it does not support should surface the unknown content, preserve it where possible, and pass it through rather than silently discard it.
+
+Two implementations both declaring `ext:repository` must be able to exchange archives without data loss. An archive produced by one conforming implementation must be consumable by any other conforming implementation at the same SRS version.
+
+
+##### The conformance declaration form
+
+**Content**: The declaration form, then a filled declaration:
+
+```
+SRS <version> Core [+ ext:<name> ...]
+```
+
+Example:
+```
+SRS 2.0 Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability + ext:recommended-relations
+```
 
 
 
