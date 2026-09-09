@@ -10,6 +10,21 @@
 
 #### Purpose and Scope
 
+##### What this specification defines
+
+**Content**: The Semantic Record System (SRS) specification defines an interoperable standard for semantic field and type definitions, records, relations, and the mechanisms by which these artefacts are created, shared, versioned, and distributed across independent implementations.
+
+This specification covers:
+
+- **Field** — atomic reusable semantic unit
+- **Type** — named composition of fields for a specific semantic object type
+- **Record** — instantiated type with field values; two semantic maturity tiers (Note, Record)
+- **Relation** — first-class typed link between records
+- **Container** — grouping boundary for record collections
+- **Distribution** — Package, Reference, Lineage, Provenance
+- **Extensions** — optional, independently adoptable capabilities declared by conforming implementations
+
+
 ##### What this specification does not define
 
 **Content**: - **Session** — live collaborative process model (future version)
@@ -80,21 +95,6 @@ Example declaration: `SRS Core + ext:lifecycle + ext:protocol + ext:views-l1 + e
 SRS Core [+ ext:<name> ...]
 ```
 
-
-
-##### What this specification defines
-
-**Content**: The Semantic Record System (SRS) specification defines an interoperable standard for semantic field and type definitions, records, relations, and the mechanisms by which these artefacts are created, shared, versioned, and distributed across independent implementations.
-
-This specification covers:
-
-- **Field** — atomic reusable semantic unit
-- **Type** — named composition of fields for a specific semantic object type
-- **Record** — instantiated type with field values; two semantic maturity tiers (Note, Record)
-- **Relation** — first-class typed link between records
-- **Container** — grouping boundary for record collections
-- **Distribution** — Package, Reference, Lineage, Provenance
-- **Extensions** — optional, independently adoptable capabilities declared by conforming implementations
 
 
 
@@ -732,11 +732,6 @@ relation {
   sourceRefs?: ref → `source-reference` (inline)[] // References to source material this instance was derived from or attaches to (RFC-017/RFC-023).
 }
 ```
-
-
-##### Container
-
-**Content**: Content relocated to mechanism leaves under the Container concept (RFC-042 Change B, srs#562). See derived-from.
 
 
 ##### Generated reference: `Container`
@@ -4753,11 +4748,6 @@ protocol {
 ```
 
 
-##### ext:blueprint
-
-**Content**: Content relocated to mechanism leaves under the Blueprint concept (RFC-042 Change B, srs#562). See derived-from.
-
-
 ##### Generated reference: `RelationSpec`
 
 **Referenced Type Id**: 4c00001a-0000-4000-a000-00000000001a
@@ -5718,11 +5708,6 @@ srsj-envelope {
 }
 ```
 
-
-
-##### ext:recommended-relations
-
-**Content**: Content relocated to mechanism leaves under the Relation type definition concept (RFC-042 Change B, srs#562). See derived-from.
 
 
 ##### ext:import-tracking
@@ -7143,11 +7128,6 @@ The following capabilities are planned but out of scope for this version.
 **Canonical Key**: part:governance
 
 **Description**: The specification's own governing rules: its foundational values, its process for continuity and evolution, and the balance between shared coherence and local autonomy.
-
-#### Foundational values and development phase
-
-**Content**: Content relocated to mechanism leaves under the Foundational tension concept (RFC-042 Change B, srs#562/#687). See derived-from.
-
 
 #### Semantic sovereignty
 
