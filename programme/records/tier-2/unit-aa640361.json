@@ -1,0 +1,18 @@
+{
+  "instanceId": "aa640361-a042-4917-83ba-ab8074895c7c",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Concept-level regrouping into the Parts (srs#690, RFC-042 Change D)",
+    "summary": "Parented the 25 remaining root concept records into their Parts (Foundations, Instances, Structure, Distribution, Extensions, Conformance, Governance), re-parented all 20 Key Invariants subsections onto the concepts they constrain, split the Semantic order and Graduation forward references per the recorded rulings, sequenced Vocabulary against Field per the FieldType ordering ask, and synced all 9 Part containers declared membership to their computed contains-subtrees. check-spec-coherence check 4 (part-order) is now non-vacuous and clean.",
+    "issue_ref": [
+      "srs#690"
+    ]
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-09T10:14:15.265312605+00:00",
+  "updatedAt": "2026-09-09T10:14:15.265319382+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

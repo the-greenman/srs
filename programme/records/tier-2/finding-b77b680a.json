@@ -1,0 +1,19 @@
+{
+  "instanceId": "b77b680a-acae-4757-9726-fa6135dbcf70",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "Key Invariants's 20 subsections were already vestigial before srs#690 started",
+    "summary": "srs#690 describes dissolving Key Invariants by moving its (it says 19, actually 20) subsections under the concepts they constrain. All 20 turned out to already be empty: content field blank, zero contains children. The actual invariant text they used to hold had already migrated to flat records under records/invariants/, each carrying its own contains parent onto a concept, and RFC-042 [R9]'s generator (scripts/render-invariants.mjs) already produces the '#### Key Invariants' generated index by walking those records directly, grouped by that parent, independent of these subsections entirely. Re-parenting the 20 empty shells therefore changed no rendered content by itself but does complete the literal instruction and gets Key Invariants down to zero contains children.",
+    "evidence": [
+      "scripts/render-invariants.mjs's own inline comment already documents RFC-042 [R9]: an invariant's group is its contains parent, not applies_to or Key Invariants membership",
+      "Census of all 20 subsections under Key Invariants (df42f888-4d95-5a51-963e-60d10c36533c) before this unit: fieldValues.content is empty and zero contains children, for every one",
+      "grep for each of the 20 subsections' exact titles against docs/spec/srs-spec.md before this unit's render found none of them rendered as headings"
+    ]
+  },
+  "createdAt": "2026-09-09T10:14:44.144865193+00:00",
+  "updatedAt": "2026-09-09T10:14:44.144871451+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

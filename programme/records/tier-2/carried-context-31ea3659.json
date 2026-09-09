@@ -1,0 +1,15 @@
+{
+  "instanceId": "31ea3659-bc32-4672-a9ce-572a0bf07128",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "Key Invariants cannot be fully retired (RFC-042 Change B) without redesigning its heading-anchor injection",
+    "summary": "scripts/lib/invariant-region.mjs's injectKeyInvariants locates a literal 'Key Invariants' heading (any depth) in the already-rendered composition output and splices the generated per-concept invariant index in right after it. That heading comes from the Key Invariants record's own title rendering normally, so the record still needs to exist and still render for the injection to work. srs#690 only asked to move its (now-empty) subsections out; it did not ask to redesign the injection mechanism, so the record stays as the anchor. Deleting or retyping it without first changing injectKeyInvariants (or replacing the whole mechanism, e.g. anchoring on a generated marker instead of an authored heading) would silently break the invariant index on both srs-spec.md and srs-unified.md.",
+    "rationale": "Whoever eventually takes RFC-042 Change B's 'no section/subsection record exists' literally for Key Invariants needs to touch scripts/lib/invariant-region.mjs (and REQUIRES_KEY_INVARIANTS_VIEW_IDS in scripts/render-invariants.mjs) in the same change, not just delete or retype the record. Applies to any future unit scoped to finishing section/subsection retirement."
+  },
+  "createdAt": "2026-09-09T10:15:02.688031925+00:00",
+  "updatedAt": "2026-09-09T10:15:02.688038449+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
