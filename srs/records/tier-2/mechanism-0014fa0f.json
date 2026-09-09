@@ -1,0 +1,14 @@
+{
+  "instanceId": "0014fa0f-9544-47c0-a827-7889e46c9f39",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Manifest extensions (`ext:slices`)",
+    "content": "When `ext:slices` is declared in a slice archive's `manifest.declaredExtensions`, `RepositoryManifest` gains one optional property:\n\nExample: the `slice` manifest property.\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| `origin.repositoryId` | `string (uuid)` | yes | `repositoryId` of the source repository this slice was exported from. |\n| `spec.type` | `string` | yes | Closure rule. Currently only `\"container\"` is defined. |\n| `spec.id` | `string (uuid)` | yes | The `containerId` that scoped the slice — present in the source `containerIndex`. |\n| `exportedAt` | `string (date-time)` | yes | ISO-8601 timestamp of when the slice was produced. |\n| `externalRelationRefs` | `array` | no | Relations cut at export because exactly one endpoint fell outside the closure. Provenance only — not a validation error. |\n\nThe slice archive's `manifest.repositoryId` MUST be a **new UUID** distinct from `slice.origin.repositoryId`; the archive is a standalone artifact."
+  },
+  "createdAt": "2026-09-08T20:23:55.189000893+00:00",
+  "updatedAt": "2026-09-08T20:23:55.189011854+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

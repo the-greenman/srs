@@ -1,0 +1,15 @@
+{
+  "instanceId": "4b82b2fa-ab8d-41ef-ae55-8c10cd68a9d7",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "Un-baking a heading: a missing same-named concept is a description-match search, not a mint-one default",
+    "summary": "When un-baking a subsection's headings into leaves, the leaves' contains-parent is an EXISTING concept, found by matching the subsection's TOPIC, not necessarily its exact title. Two failure-prone cases, both resolved by reading concept descriptions rather than name-matching: (1) the subsection's title has no same-named concept, but an existing concept's description is verbatim the same subject under a different name (e.g. 'Foundational values and development phase' subsection vs. the already-minted 'Foundational tension' concept, whose description names the identical six tensions the subsection's headings elaborate) -- confirm by content overlap before wiring, not by assuming a gap. (2) no concept names the subsection's specific topic at all (e.g. 'ext:slices' -- no 'Slice' or 'Slices' concept exists), but a broader, already-established concept's own description already names that specific case as one of its instances (e.g. 'Travelling form': 'a zip archive ... a single-file JSON store, or a slice carrying one container's closure') -- parent there rather than minting a new concept, since minting is outside the un-baking-only scope (Change B/F) and belongs to whatever unit does concept minting (srs#561 and its kind).",
+    "rationale": "Un-baking batches (#684-#687) assumed a matching concept already exists for every retiring subsection ('parented under the existing concept each explains' -- batches A and B both had 1:1 title matches for all four of their records, so this assumption was never tested against a miss). Batch D hit both miss modes in one unit. Treating a title miss as proof no concept exists risks either (a) wrongly minting a duplicate concept for a topic the corpus already covers under a different name -- creating exactly the kind of single-source-of-truth break the programme (#580 Wave 2) is separately hunting for -- or (b) stalling the batch waiting on an owner ruling that was never actually needed. The check that resolves both without guessing: read the CANDIDATE concept's own description field for the subsection's actual subject matter, not just its title string. Only mint a new concept when no existing one's description covers the topic even at a broader grain -- that case did not occur in batch D and needs its own ruling if it comes up (Door 2, since it is new normative meaning, not execution of the existing RFC-042 split)."
+  },
+  "createdAt": "2026-09-08T20:59:06.900697110+00:00",
+  "updatedAt": "2026-09-08T20:59:06.900705548+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

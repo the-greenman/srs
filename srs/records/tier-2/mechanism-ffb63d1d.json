@@ -1,0 +1,14 @@
+{
+  "instanceId": "ffb63d1d-730d-4f86-8d2f-0cfb82919ed3",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`Address`",
+    "content": "A stable, resolvable identifier for any element across document space, process space, and conversation space.\n\nExample: the `Address` union.\n\nEvery element that can be referred to has an Address. A transcript chunk and a document-space field are co-addressable because assertions about one referencing the other require both to be resolvable."
+  },
+  "createdAt": "2026-09-08T20:24:14.864726410+00:00",
+  "updatedAt": "2026-09-08T20:24:14.864733851+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

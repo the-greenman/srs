@@ -1,0 +1,14 @@
+{
+  "instanceId": "6f93d128-63e7-4684-b1eb-b56a59a6009a",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Context Query (behavioural requirement)",
+    "content": "A conforming `ext:addressability` implementation must be able to assemble relevant material given an address and a purpose. This is a behavioural requirement, not a data shape.\n\n**Required query patterns:**\n\n| Pattern | Address | Returns |\n|---|---|---|\n| Field context | `{recordId}/{fieldId}` | Current value, chunks tagged to this Field, Field `aiGuidance` |\n| Record context | `{recordId}` | All field values, chunks tagged to this Record, Relations, Protocol run history |\n| Stage context | `{runId}/{stageId}` | All chunks produced during this stage, Fields active in this stage |\n\n**Recommended assembly order for AI assistance:**\n\n1. Type and Field `aiGuidance` — what this field captures, how to extract it\n2. Current value — what has already been established\n3. Chunks tagged to this Field via AttentionState — most focused context\n4. Chunks tagged to the parent Record — broader session context\n5. Related Records via Relations — structural context\n\n**Note (2026-08-21, `rfc-decision-2a1e1590`)**: the per-field `Revision` snapshot mechanism (addressable field-value history, `revisionId`, revision chains, revision-trace queries) previously specified here is removed under the dormancy rule — zero corpus use, and it was incompletely specified (a PascalCase wire-format leak in its agent tag, and a coupling that named a pre-RFC-006 field). `Address`, `AttentionState`, and the Context Query requirement above are untouched by that removal. Return trigger: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface."
+  },
+  "createdAt": "2026-09-08T20:24:22.394262768+00:00",
+  "updatedAt": "2026-09-08T20:24:22.394270120+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

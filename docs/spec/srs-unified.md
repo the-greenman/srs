@@ -202,29 +202,7 @@ When in doubt: if a downstream consumer's AI extraction, validation, or governan
 
 ##### Supporting types
 
-**Content**: #### `ValidationRule`
-
-A constraint applied to a field value.
-
-Example: the `ValidationRule` shape.
-
-#### `AiGuidanceExample`
-
-A single example for AI guidance.
-
-Example: the `AiGuidanceExample` shape.
-
-`output` is required. An example without `input` demonstrates expected output form without requiring a specific source.
-
-#### `AiGuidance`
-
-Structured AI guidance for a Field or Type.
-
-Example: the `AiGuidance` shape.
-
-The minimum valid `AiGuidance` is `{ purpose: "..." }`.
-
----
+**Content**: Content relocated to mechanism/design-note leaves under the Validation and AI guidance concept(s) (RFC-042 Change B, srs#562). See derived-from.
 
 ###### The `ValidationRule` shape
 
@@ -269,60 +247,7 @@ The minimum valid `AiGuidance` is `{ purpose: "..." }`.
 
 ##### Field
 
-**Content**: The atomic reusable semantic unit. Fields are defined once and composed into Types. A Field's `aiGuidance` and `fieldType` — including every constraint the latter carries — belong to the Field, not to any Type that includes it.
-
-See the generated reference immediately below for `Field`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger) — this prose no longer hand-duplicates the property list.
-
-#### `FieldType` — the value semantics
-
-`fieldType` carries everything about what a Field's value *is*. It decomposes value semantics into orthogonal facets — **datatype × cardinality × value-domain × format × constraints** — so each axis varies independently, and adds three composite datatypes (`ref`, `dependent`, `map`) that let a Field's range be another Type.
-
-Example: the `FieldType` shape.
-
-**`datatype` semantics:**
-
-| Value | Meaning |
-|---|---|
-| `"string"` | Text of any length. Length, pattern, format, and value domain are separate facets, not distinct datatypes |
-| `"number"` | Numeric value, fractional permitted |
-| `"integer"` | Whole number |
-| `"boolean"` | True/false |
-| `"date"` | ISO 8601 calendar date |
-| `"date-time"` | ISO 8601 date + time |
-| `"ref"` | The range is another Type — nested object(s) when `mode` is `"inline"`, target instance id(s) when `"reference"` |
-| `"dependent"` | The value conforms to the type descriptor named by `dependsOn` |
-| `"map"` | Open string-keyed collection whose values conform to `valueRange` |
-
-Cardinality is declared **only** here. A Field holding many values is `cardinality: "list"`; a Type that includes it must not restate or override that — Field semantics belong to the Field (Invariant 2).
-
-A `reference`-mode value is a target instance id, and MUST NOT be interpreted as or require a `Relation`. Use `reference` for definitional composition, where the target's identity is part of the definition; model an assertion *between* instances — one needing provenance, lifecycle, or confidence — as a `Relation` instead.
-
-#### `vocabularyRef` — binding closed string fields to shared vocabularies
-
-When `fieldType.valueDomain` is `"closed"`, a Field declares exactly one value source:
-
-Example: the two value sources a closed string Field may declare.
-
-`allowedValues` is formally sugar for an anonymous inline closed vocabulary: the value set is fixed by the Field definition, so changing it means a new Field version. `vocabularyRef` is a **configurable** data range — the value set is managed as package configuration and evolves without reversioning the Field — and is used when the set is shared, extensible, or needs Term identity. A `vocabularyRef` MUST resolve to a `Vocabulary` with `mode: closed`. Declaring both, or neither when `valueDomain` is `"closed"`, is a validation error.
-
-#### Historical: the pre-RFC-032 `valueType` model
-
-Before RFC-032, value semantics were a single closed enum, `valueType`, with the satellite properties `allowedValues`, `contentFormat`, `validationRules`, and a standalone `repeatable` cardinality. That enum conflated four axes at once, which is why every axis needing independent expression had to be bolted on separately. It is **removed**, not deprecated — a Field definition carrying `valueType` does not conform to this specification. Packages authored against the old model map across as:
-
-| Legacy `valueType` | Equivalent `fieldType` |
-|---|---|
-| `"string"` | `{ datatype: "string" }` (plus `format: "markdown"` if `contentFormat` was `"markdown"`) |
-| `"text"` | `{ datatype: "string", format: "plain" \| "markdown" }` |
-| `"number"` | `{ datatype: "number" }` |
-| `"boolean"` | `{ datatype: "boolean" }` |
-| `"date"` | `{ datatype: "date" }` |
-| `"url"` | `{ datatype: "string", format: "uri" }` |
-| `"select"` | `{ datatype: "string", valueDomain: "closed" }` + `allowedValues` or `vocabularyRef` |
-| `"multiselect"` | `{ datatype: "string", cardinality: "list", valueDomain: "closed" }` + `allowedValues` or `vocabularyRef` |
-
-`validationRules` entries become `fieldType.constraints` facets; an `enum` rule becomes `valueDomain: "closed"` with `allowedValues`. A `required` rule was never a Field-level concern and moves to the `FieldAssignment` that includes the Field.
-
----
+**Content**: Content relocated to mechanism/design-note leaves under the Field, Field type, and Vocabulary concept(s) (RFC-042 Change B, srs#562). See derived-from.
 
 ###### The `FieldType` shape
 
@@ -524,63 +449,7 @@ field-assignment {
 
 ##### Record tiers
 
-**Content**: SRS supports two semantic maturity tiers. Tier numbering keeps the historical gap at 1: Tier 1 (`Typed Record`) was removed as an unexercised construct — zero instances in any corpus, ever — under the dormancy rule (rfc-decision-53635966); renumbering the surviving tiers would be churn without meaning. Implementations are not required to support both; they may begin at Tier 2.
-
-| Tier | Type | Structure | Semantics |
-|---|---|---|---|
-| **0** | `Note` | Named sections + free text | None |
-| **2** | `Record` | Fields bound to a `Type` definition | Full |
-
-Graduation path: Note → Record, linked by a `derived-from` Relation from the Record back to the Note (`note graduate`).
-
-#### `NoteSection`
-
-A named text section within a Note.
-
-See the generated reference below for `NoteSection`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-#### `Note`
-
-A lightweight instance with no Type binding.
-
-See the generated reference below for `Note`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-`tags` are free-form labels that allow Notes to be grouped and discovered by topic. A tag is a key that *may* resolve to a `Term` in an open `Vocabulary`, giving it a label, aliases, roles, and lineage — without changing the fact that the instance stores only the string (V2). Undefined tags in an open vocabulary are valid and unenriched. Use tags for navigation and filtering; use Relations for semantic claims.
-
-#### `SourceReference`
-
-A pointer from a field value or instance back to source material.
-
-See the generated reference below for `SourceReference`'s current property table (modelled once and shared across `Record`, `Note`, and `Relation`), optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-`"transcript-chunk"` and `"transcript-segment"` are intended for implementations that have a stable conversation or time-stream layer with durable chunk or segment identifiers. A standalone repository that stores transcript exports, chat dumps, email threads, or similar source material directly under `source-documents/` should generally cite those files using `sourceType: "repository-document"` (see `ext:repository`) rather than inventing pseudo-chunk IDs.
-
-#### Field values (RFC-039)
-
-`FieldValue` — the value stored at one `fieldValues` key — is the recursive union:
-
-Example: the `FieldValue` union.
-
-There is no wrapper construct: the pre-RFC-039 `FieldValue`/`FieldValueEntry` pair
-objects, `groupValues`, and `FieldGroup` carriers are removed (I-134).
-
-
-#### `Record`
-
-An instantiated Type with field values.
-
-See the generated reference below for `Record`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-`typeNamespace` and `typeName` are denormalised convenience fields. If they conflict with the resolved Type, the `typeId`/`typeVersion` identity takes precedence and the Record is considered invalid until corrected.
-
-**On instance revision:**
-- **In-place edits** (`updatedAt` advances, `fieldValues` mutate): for minor corrections that do not alter semantic meaning.
-- **Semantic updates**: produce a new Record linked to the prior by a `supersedes` or `refines` Relation. The prior Record remains valid.
-- **Immutable records + Relation graph**: all Records append-only; a new Record for every change. A valid implementation strategy that naturally preserves history.
-
-**Semantic meaning must not be silently rewritten.** When a change would alter what a Record means — not merely correct a transcription or formatting error — implementations must produce a successor Record linked to the prior by `supersedes` or `refines`. The prior Record remains valid. What constitutes a semantic change is determined by the Type's intended use; when in doubt, prefer a successor.
-
----
+**Content**: Content relocated to mechanism/design-note leaves under the Semantic maturity tier, Note, Source reference, Field values, and Record concept(s) (RFC-042 Change B, srs#562). See derived-from.
 
 **Intro**: Graduation is the act of replacing a lower-tier instance with a higher-tier equivalent as its structure stabilises.
 
@@ -917,101 +786,7 @@ container {
 
 ##### Vocabulary and Term
 
-**Content**: SRS defines four controlled vocabularies — sets of strings that appear in instance data and must mean something stable. They share a common substrate: a `VocabularyEntry` contract satisfied by `Term`, `LifecycleState`, and `RelationTypeDefinition`.
-
-### `VocabularyEntry` (substrate contract)
-
-`VocabularyEntry` is a contract, not a serialised type. Every conforming entry carries:
-
-Example: the `VocabularyEntry` substrate contract.
-
-**Absent `status` MUST be treated as `active`.** This is normative: all resolution rules (V1, V6, V9, V10) treat absent identically to `"active"`.
-
-**Entries are keyed, not named.** Entries carry `key`, not `name`, and are addressed within their container. They are not independently `Reference`-able. Containers (`Vocabulary`, `Lifecycle`) have `name` and are the `Reference` targets.
-
-**Required-field tightening.** `label` and `description` are optional so an emergent `Term` is valid before prose is written. A specialisation MAY tighten an optional substrate field to required; it MUST NOT relax a required one. `RelationTypeDefinition` requires both `label` and `description` (unchanged from RFC-005).
-
-**One forward-compatibility policy.** Unknown top-level fields are rejected; arbitrary entry metadata goes in `meta`.
-
-### `Vocabulary`
-
-A named, versioned set of `Term` entries.
-
-See the generated reference below for `Vocabulary`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-### `Term`
-
-The generalisation of `TagDefinition`. A defined option within a `Vocabulary`.
-
-See the generated reference below for `Term`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-### `RelationTypeDefinition`
-
-A substrate specialisation that gives semantic meaning and validation rules to a class of relations. `key` is the string stored in `Relation.relationType`; this unifies the key-role field across all three substrate specialisations (RFC-006). `label` and `description` are tightened to required.
-
-See the generated reference below for `RelationTypeDefinition`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#541, the #274 ratified ledger extended to this entity) — this prose no longer hand-duplicates the property list.
-
-Relation type definitions live in `package.relationTypes[]` (distributable bundle) or `package/relation-types/` (repository layout). They are resolved repo-globally — all installed relation type definitions form a single flat namespace. Key uniqueness (V5) applies across this flat set.
-
-### The four vocabularies
-
-| Vocabulary | Binding scope | Container | Mode |
-|---|---|---|---|
-| Tags | ambient (whole repo) | `Vocabulary` (typically local, open) | `open` |
-| Relation types | repo-global (any edge) | `package.relationTypes[]` (flat global set) | closed-extensible |
-| Lifecycle states | type-bound, shareable | `Lifecycle` (inline or referenced) | `closed` |
-| Field values | field-bound | `Vocabulary` via `vocabularyRef` or inline `allowedValues` | `closed` (V3) |
-
-### Package integration
-
-Vocabularies are Foundation-group definition types installed in packages alongside fields, types, and relationTypes:
-- the distributable `Package` holds inline definitions: `vocabularies?: Vocabulary[]`
-- the repository `package/package.json` holds relative paths: `"vocabularies": ["vocabularies/foo.json", ...]`
-
-### Emergent vocabularies (open vocabularies)
-
-For an open vocabulary, the authoritative set of values is `DISTINCT(tag keys across instances)` — not the `terms[]`. The `Vocabulary` is a curation overlay that may lag usage or be empty.
-
-A conforming implementation MUST be able to compute the live tag set and classify each key as: **used-and-defined**, **used-but-undefined**, or **defined-but-unused**.
-
-**Emergence lifecycle** (mirrors tier graduation):
-1. Free string — exists, undefined, valid.
-2. Curate → `Term` — non-destructive; instance carries the same string.
-3. Alias-merge — a surviving Term absorbs another: absorbed key+aliases move to the survivor, absorbed entry removed (its `id` recorded in `meta.mergedFrom` and redirected); zero instance rewrites.
-4. Optional normalize — opt-in operation that rewrites instance strings to the canonical key.
-5. Optional close — promote `mode: open → closed` (V10).
-
-### Resolution invariants
-
-**V1 — Closed-vocabulary resolution.** Any value in a closed vocabulary must resolve to exactly one entry (matched by `key` or `alias`) in the effective entry set with `status` in {`active`, `deprecated`, `tombstone`} for reads and `active` for new writes.
-
-Applies to: `Relation.relationType`, `select`/`multiselect` field values, `Record.lifecycleState`.
-
-**V2 — Open-vocabulary resolution.** A value in an open vocabulary need not resolve; if it matches a `Term`, enrichment applies. When a value matches more than one entry (a warned V5 collision), resolution is deterministic: key match outranks alias match; ties broken by lexicographically smallest `id`.
-
-Applies to: `Note.tags`, `NoteSection.tags`.
-
-**V3 — Field binding exclusivity and closedness.** A `select`/`multiselect` Field must declare exactly one of `allowedValues` or `vocabularyRef`. A `vocabularyRef` on a `select`/`multiselect` Field MUST resolve to a `Vocabulary` with `mode: closed`.
-
-**V4 — Vocabulary reference resolution.** A `vocabularyRef` must resolve to an installed `Vocabulary` in the effective package set.
-
-**V5 — Effective entry set.** The effective entry set of a `Vocabulary` or `Lifecycle` is constructed as:
-1. Include entries with effective `status` in {`active`, `deprecated`, `tombstone`}. Exclude `retired` entirely (before uniqueness, before V1).
-2. Add transitively the entries of any extended container. The `extends*Version` must match the resolved upstream version; a mismatch is a hard validation error (not silent degradation).
-3. Check uniqueness: duplicate `id`s are an error. In closed vocabularies, the union of all `key`s and `aliases` must be globally unique (key/key, key/alias, alias/alias collisions are errors). In open vocabularies, collisions are warnings (resolved by V2 tie-break).
-
-Inline `Type.lifecycle` cannot extend; its effective set is its own `states`/`transitions`. V5 and V9 apply to inline lifecycles identically to referenced ones.
-
-Excluding `retired` before uniqueness frees a retired key for reuse by a new entry. `tombstone` remains in the effective set and keeps occupying its key. When retiring a key that will be reused, implementations MUST surface stale references to the retiring key for operator resolution before reuse.
-
-**V6 — Closed value status.** A value resolving to `deprecated` or `tombstone` follows RFC-005 E1 write semantics (resolves; new writes rejected). `retired` entries do not resolve under V1 — values referencing them are invalid as if absent.
-
-**V10 — Open→closed promotion.** Version-bumping change with a mandatory pre-flight classifying in-use keys as:
-- *will-be-invalid*: used-but-undefined, or resolving only to a `retired` entry (reads do NOT survive).
-- *read-only-after-close*: resolves to `deprecated` or `tombstone` (reads survive; new writes rejected).
-- *used-and-active*: fine.
-
-A grace window is declared in `Vocabulary.promotionWindow.until`. Until that bound, violations are warnings; after it, V1 applies unconditionally. Absent `promotionWindow` means the promotion takes effect immediately. There is no unbounded window.
+**Content**: Content relocated to mechanism/design-note leaves under the Vocabulary and Relation type definition concept(s) (RFC-042 Change B, srs#562). See derived-from.
 
 ###### The `VocabularyEntry` substrate contract
 
@@ -1538,6 +1313,15 @@ It gains `meta?: Record<string, unknown>` under the one forward-compatibility po
 It **requires** both `label` and `description` (unchanged from RFC-005). The substrate making these optional in the general contract does not relax this obligation.
 
 The V1 mandatory resolution requirement (every `Relation.relationType` must resolve to an installed `RelationTypeDefinition`) is a named instance of the general closed-vocabulary resolution rule. See §9 (Conformance) and the Foundation Vocabulary and Term subsection.
+
+
+##### `RelationTypeDefinition`
+
+**Content**: A substrate specialisation that gives semantic meaning and validation rules to a class of relations. `key` is the string stored in `Relation.relationType`; this unifies the key-role field across all three substrate specialisations (RFC-006). `label` and `description` are tightened to required.
+
+See the generated reference below for `RelationTypeDefinition`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#541, the #274 ratified ledger extended to this entity) — this prose no longer hand-duplicates the property list.
+
+Relation type definitions live in `package.relationTypes[]` (distributable bundle) or `package/relation-types/` (repository layout). They are resolved repo-globally — all installed relation type definitions form a single flat namespace. Key uniqueness (V5) applies across this flat set.
 
 
 
@@ -2762,51 +2546,7 @@ Transcript chunks referenced in `SourceReference` are source material — addres
 
 ##### ext:addressability
 
-**Content**: **Required for**: any implementation with live facilitation or multi-session extraction.
-
-Defines a universal addressing scheme and the mechanisms that connect conversation material to document elements.
-
-#### `Address`
-
-A stable, resolvable identifier for any element across document space, process space, and conversation space.
-
-Example: the `Address` union.
-
-Every element that can be referred to has an Address. A transcript chunk and a document-space field are co-addressable because assertions about one referencing the other require both to be resolvable.
-
-#### `AttentionState`
-
-The current focus of an active Protocol run — a live cursor across the address space. `AttentionState` and `Address` are structurally related but serve distinct roles: an `Address` is a stable, resolvable identifier for a specific element; `AttentionState` is the mutable cursor that records *where focus currently is* during an active session. An `AttentionState` value at a point in time resolves to a document-space `Address`, but it is stored separately because it changes continuously as the Protocol advances.
-
-Conversation material is tagged with the active `AttentionState` as it is produced. This makes context assembly efficient: "all chunks produced while focus was on this Field" is a queryable address predicate.
-
-Example: the `AttentionState` shape.
-
-`AttentionState` is set live by the session or Protocol runner. `SourceReference` is set retrospectively at extraction or editorial review time. Both are needed; they answer different questions.
-
-#### Context Query (behavioural requirement)
-
-A conforming `ext:addressability` implementation must be able to assemble relevant material given an address and a purpose. This is a behavioural requirement, not a data shape.
-
-**Required query patterns:**
-
-| Pattern | Address | Returns |
-|---|---|---|
-| Field context | `{recordId}/{fieldId}` | Current value, chunks tagged to this Field, Field `aiGuidance` |
-| Record context | `{recordId}` | All field values, chunks tagged to this Record, Relations, Protocol run history |
-| Stage context | `{runId}/{stageId}` | All chunks produced during this stage, Fields active in this stage |
-
-**Recommended assembly order for AI assistance:**
-
-1. Type and Field `aiGuidance` — what this field captures, how to extract it
-2. Current value — what has already been established
-3. Chunks tagged to this Field via AttentionState — most focused context
-4. Chunks tagged to the parent Record — broader session context
-5. Related Records via Relations — structural context
-
----
-
-**Note (2026-08-21, `rfc-decision-2a1e1590`)**: the per-field `Revision` snapshot mechanism (addressable field-value history, `revisionId`, revision chains, revision-trace queries) previously specified here is removed under the dormancy rule — zero corpus use, and it was incompletely specified (a PascalCase wire-format leak in its agent tag, and a coupling that named a pre-RFC-006 field). `Address`, `AttentionState`, and the Context Query requirement above are untouched by that removal. Return trigger: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface.
+**Content**: Content relocated to mechanism leaves under the Addressability concept (RFC-042 Change B, srs#562/#687). See derived-from.
 
 ###### The `Address` union
 
@@ -2942,63 +2682,7 @@ lifecycleRef?: UUID        // LINEAGE reference (rfc-decision-c8704763) — reso
 
 ##### ext:protocol
 
-**Content**: **Required for**: facilitation tools, structured deliberation, any implementation that guides users through epistemic stages.
-
-Replaces `TemplateFacilitationStep` from v1. Protocol is epistemically richer: stages have explicit dependencies, completion criteria, and may produce intermediate Records.
-
-#### `FieldRef`
-
-A reference to a Field within a Type.
-
-Example: the `FieldRef` shape.
-
-#### `ProtocolStage`
-
-A named stage in a Protocol. Stages have epistemic dependencies (`dependsOn`) — not just ordering. A stage may only proceed when its dependencies are sufficient.
-
-Example: the `ProtocolStage` shape.
-
-**`order` vs `dependsOn`:** `order` is the declared composition order of the stages — structure, not presentation (RFC-015's layering table now states this explicitly as its own row: composition order is structure; display order is presentation; sequence is assertion). It provides the render default for how stages are shown in a UI or facilitation guide; a View may override for display. Execution sequence is determined by `dependsOn` resolution: a stage runs when all its declared dependencies are satisfied, regardless of its `order` value. Authors must ensure `order` is consistent with the partial order implied by `dependsOn` (i.e. a stage's `order` value should be greater than the `order` of any stage it depends on). See Invariant 31.
-
-#### `Protocol`
-
-An epistemically ordered process for building quality Records through structured conversation or facilitation. A Protocol is a package definition (declared in `package.json`'s `protocols` array, stored under the package's `protocols/` subtree) — not an instance Record.
-
-Example: the `Protocol` shape.
-
-**Property names are unprefixed** (`id`, not `protocolId`; `stages`, not `protocolStages`; and so on) — the same convention every other package-declared definition entity uses (Type, Field, Vocabulary, Lifecycle, RelationTypeDefinition, Theme, Blueprint all reuse the shared `id`/`namespace`/`name`/`version`/`description`/`createdAt` fields unprefixed). An earlier owed-schema pass (`docs/schema/2.0/protocol.json`, #297/#378) had shipped a `protocol`-prefixed shape matching the implementation of the day; a decision record ruled the unprefixed shape canonical (srs#379) and the schema now matches this prose. The implementation-side rename (the Rust `Protocol`/`ProtocolStage` structs, the CLI, and one still-vendored example corpus) is a tracked follow-up, staged like any other rename (rfc-decision-628cf6c4) — this prose and the schema describe the ruled target shape, not necessarily every artifact's current byte-for-byte content.
-
-**The Protocol spectrum:**
-
-```
-Loose                                                    Tight
-─────────────────────────────────────────────────────────────
-Brain Dump → Decomposition → Options Analysis → Decision
-```
-
-Loose Protocols produce open material. Tight Protocols converge on a specific Record type. The output of a loose Protocol is the input context for something tighter.
-
-**Generic Protocols** (reusable across domains):
-- Brain Dump — externalise all thinking without constraint
-- Decomposition — identify major components from raw material
-- Review — what is established, what is still open
-- Prioritisation — which components to resolve first
-
-**Domain-specific Protocols** (target a specific Record type):
-- Decision — context → criteria → options → evaluation → decision
-- Proposal — problem → solution shape → constraints → proposal
-
-**Protocol chaining and provenance**: The output of one Protocol is the input context for the next. This derivation chain is traceable through `derived-from` Relations, making the quality and history of the final Record auditable.
-
-**Non-normative example — Protocol chain for a governance decision:**
-
-Example: a Protocol chain for a governance decision.
-
-The final Decision Record is auditable because every Protocol stage left addressable artefacts. The quality of the outcome is traceable to the conversation that produced it.
-
-Views (`ext:views-l1`) no longer contain facilitation logic. A View is a presentation concern; a Protocol is an epistemic one.
-
----
+**Content**: Content relocated to mechanism leaves under the Protocol concept (RFC-042 Change B, srs#562/#687). See derived-from.
 
 ###### The `FieldRef` shape
 
@@ -5133,43 +4817,7 @@ A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `
 
 ##### ext:slices
 
-**Content**: **Required for**: implementations that export a subset of a repository as a standalone, independently openable `.srs` archive (a *slice*).
-
-A container slice carries the records reachable from a container's membership, their type and field definitions, intra-slice relations, and referenced source documents. It is a valid `.srs` archive in the RFC-017 format — any SRS tool can open, validate, and render it.
-
-#### Scope
-
-`ext:slices` defines **container-membership closure only**. A *package export* — distributing a package's Type/Field definitions as a `package-bundle.json` — is a different artifact class (RFC-003) and is not a slice. Record-level closure (an arbitrary set of records) is deferred to a future RFC.
-
-#### Manifest extensions (`ext:slices`)
-
-When `ext:slices` is declared in a slice archive's `manifest.declaredExtensions`, `RepositoryManifest` gains one optional property:
-
-Example: the `slice` manifest property.
-
-| Field | Type | Required | Description |
-|---|---|---|---|
-| `origin.repositoryId` | `string (uuid)` | yes | `repositoryId` of the source repository this slice was exported from. |
-| `spec.type` | `string` | yes | Closure rule. Currently only `"container"` is defined. |
-| `spec.id` | `string (uuid)` | yes | The `containerId` that scoped the slice — present in the source `containerIndex`. |
-| `exportedAt` | `string (date-time)` | yes | ISO-8601 timestamp of when the slice was produced. |
-| `externalRelationRefs` | `array` | no | Relations cut at export because exactly one endpoint fell outside the closure. Provenance only — not a validation error. |
-
-The slice archive's `manifest.repositoryId` MUST be a **new UUID** distinct from `slice.origin.repositoryId`; the archive is a standalone artifact.
-
-#### Container-membership closure
-
-The closure root is the container identified by `spec.id`. The slice includes (I-151, RFC-034 [R9]): (1) `manifest.container` set to the closure-root container; (2) the root container's effective membership, meaning its `rootInstanceIds` and `memberInstanceIds` recursively through the containers declared in `childContainerIds`; (3) all type and field definitions referenced by included instances (directly or via Type FieldAssignments), copied into the slice's `package/` directory; (4) all relations with both endpoints inside the included set; (5) all `sourceDocumentIndex` entries and content files referenced by included instances; (6) the closure-root container and every container reachable from it through `childContainerIds`, with those declared child edges preserved. An unrelated container is not included on the strength of its roots or members happening to be subsets of the included set; that pre-RFC-034 subset rule is replaced.
-
-#### Dangling-edge policy
-
-Cross-boundary relations MUST NOT appear in the slice's relations collection. They MUST be recorded in `slice.externalRelationRefs[]` with `relationId`, `sourceInstanceId`, `targetInstanceId`, and `relationType`. A non-empty list is provenance data, not a validation error. The `relationType` value in `externalRelationRefs` entries is NOT subject to RFC-005 definition-lookup in the slice archive.
-
-#### Validation relaxations
-
-An RFC-026-aware validator MUST NOT treat the following as errors when a `slice` block is present: `externalRelationRefs` UUIDs absent from `instanceIndex`; absence of unreferenced type/field definitions; an incomplete `containerIndex`; tombstoned source document entries with absent content files. Dangling edges in the relations collection, unresolvable `typeId`/`fieldId` references, and instance schema validation errors remain errors regardless of slice status.
-
----
+**Content**: Content relocated to mechanism leaves under the Travelling form concept (RFC-042 Change B, srs#562/#687). See derived-from.
 
 ###### The `slice` manifest property
 
@@ -5886,6 +5534,13 @@ SRS 2.0 Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability 
 When `ext:cross-field-validation` is in use, `Type` gains `validationRules?: CrossFieldRule[]`.
 
 
+##### `ValidationRule`
+
+**Content**: A constraint applied to a field value.
+
+Example: the `ValidationRule` shape.
+
+
 
 
 ## Governance
@@ -5898,51 +5553,7 @@ When `ext:cross-field-validation` is in use, `Type` gains `validationRules?: Cro
 
 #### Foundational values and development phase
 
-**Content**: SRS exists to preserve **semantic sovereignty through portable data**. Meaning must remain under its owners' control and able to move between tools, implementations, representations, repositories, and time without captivity or silent semantic loss. Portability without identity, relations, provenance, and interpretable semantics is not sovereignty. A design that improves convenience while making semantic data captive violates the purpose of SRS.
-
-Six foundational tensions govern decisions in the SRS standard layer. Their poles are complementary necessities, not good and bad alternatives. Each statement names the default pole and the boundary at which the other pole governs.
-
-#### Semantic Integrity and Practical Expression
-
-The standard defaults to **Semantic Integrity**: preserve exact meaning, identity, authority, relations, and provenance. It moves toward Practical Expression when established meaning remains recoverable and a bounded presentation, authoring, diagnostic, or review need would otherwise make correct information unusable. A projection must retain a clear line to canonical meaning and must never silently become a substitute semantic source.
-
-#### Continuity and Evolution
-
-The temporal preference is explicitly phase-bound. **Before the first full public release**, the standard is in formation and defaults to **evidence-led Evolution**. The project must make the changes needed to correct contradictions, close semantic gaps, and establish a coherent foundation before users depend on it. Those changes must be grounded in practical implementation, corpus, migration, authoring, or user experience; speculative elegance alone is insufficient. Stable identity, deterministic migration, parity evidence, diagnostics, atomic cutover, and recovery remain required safeguards.
-
-**At the first full public release, the temporal default reverses to Continuity.** This transition is precommitted. From that point, the standard protects compatibility, identity, and established expectations by default. A breaking change requires an explicit version boundary, migration and compatibility analysis, recovery evidence, and ratification. Continuity must not preserve a demonstrated semantic contradiction indefinitely, but the burden of proof moves to the proposed change.
-
-#### Shared Coherence and Local Autonomy
-
-The standard defaults to **Shared Coherence** for interchange, semantic interpretation, identity, validation, authority, and conformance. It moves toward Local Autonomy when a concern is genuinely presentation-owned, extension-owned, repository-local, or implementation-private. Local variation must remain behind an explicit boundary and must not produce incompatible interpretations of shared data.
-
-#### Office and Testimony
-
-The standard defaults to **Office**: the procedural record, declared authority, and validated artifact govern over personal or automated testimony. Testimony may fill a gap, but it must not contradict authority; it becomes office only through an explicit verification mechanism that produces an authoritative artifact. Until then, who or what asserted a claim may inform trust and diagnosis, but never changes the claim's validity or precedence. This is axis 4–10, ruled in `rfc-decision-cce3c00e` and `rfc-decision-16b20c56`.
-
-#### Reliability and Renewal
-
-The standard defaults to **Reliability**: standing contracts continue to hold. Renewal is legitimate only as explicit supersession at a declared boundary, expressed through the retirement mechanism of the layer concerned; it must not arrive as an overwrite, an expired exception, or silent drift. This is axis 5–11, ruled in `rfc-decision-cce3c00e` and `rfc-decision-5f8204bc`.
-
-#### Portability and Possession
-
-The standard defaults to **Portability**: the travelling form is the test of a capability. Anything the standard allows a repository to hold must be expressible in the corresponding package, archive, or slice form. A capability may remain in place only behind axis 3–9's explicit local boundary; otherwise, a capability that exists only in place is captivity. This is axis 6–12, ruled in `rfc-decision-cce3c00e` and `rfc-decision-8948e43f`.
-
-#### Conflict resolution: identity and information
-
-The Earth and Air columns deliberately fail differently. An **identity conflict is fatal**: identity is declared, never inferred or selected by precedence. An **informational conflict resolves by declared authority**: the authoritative statement wins and the losing hint is surfaced visibly. Treating an identity clash as a resolvable hint corrupts meaning; hard-failing an informational mismatch when an authority is declared mistakes diagnosis for identity. This distinction is ruled in `rfc-decision-cce3c00e`, RFC-038 [R12], and Invariant 28.
-
-#### Schemas closed, engines tolerant
-
-Instance-facing emitted JSON Schemas state the production contract and are closed except for the sanctioned `meta` carrier; definition-facing schemas are fully closed because definitions are the trust boundary. Engines nevertheless detect and load unknown instance-layer content so that encountering unfamiliar meaning does not destroy it. On write, an engine preserves unknown content or refuses loudly when preservation is impossible; it must never discard that content silently. Schema invalidity and loadability therefore answer different questions: the diagnostic names content outside the production contract, while tolerant carriage protects it from loss. This is the three-verb DETECT / LOAD / WRITE contract ruled in `rfc-decision-2e0cd70a`.
-
-#### Evidence, exceptions, and amendment
-
-The charter is answerable to observed outcomes. Repeated, attested conflict between a charter expectation and practice creates a finding against the charter, not an accusation that the decisions failed to obey it. Likewise, two waivers or distinguishings of the same clause for the same reason aggregate into a finding against that clause; exceptions are evidence about the rule and must not make the doctrine self-sealing. This empirical override was adopted in the axis-integration review on srs#435.
-
-During the single-owner phase, amendment jurisdiction rests with the owner; amendments are recorded through an explicit ruling or successor, never a silent edit.
-
-These values govern the SRS standard layer. Rust, web, and other implementation layers may adopt different preference profiles for their own concerns, but those profiles cannot weaken the standard's semantic integrity, portability, or shared conformance boundaries.
+**Content**: Content relocated to mechanism leaves under the Foundational tension concept (RFC-042 Change B, srs#562/#687). See derived-from.
 
 
 
