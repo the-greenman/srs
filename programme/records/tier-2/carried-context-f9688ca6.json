@@ -1,0 +1,15 @@
+{
+  "instanceId": "f9688ca6-787a-4f9e-88ce-78c8bb0b478b",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "When retiring a section/subsection record by edge-count, split the unit at roughly 10-15 contains children -- larger records risk a silently dropped precedes/contains edge in one session",
+    "summary": "srs#710's dispatch offered 10 section records to retire in one unit. Five with 0-6 contains children each retyped cleanly (create successor concept, derived-from new->old, move every contains/precedes edge, resync Part membership, add the two allowlist/exclusion entries) with each step validated individually. The remaining two, Extensions (35 contains children) and Foundation Group (Core) (19 children), were deferred rather than attempted in the same session: moving that many edges by hand-driven CLI relation-create calls, one at a time, with no bulk-move verb, is exactly the shape of task where one edge gets missed and the corresponding check either doesn't fire (because the check is instance-scoped, not corpus-scoped) or fires days later on an unrelated PR.",
+    "rationale": "No CLI verb exists yet for 'move all contains/precedes edges from record A to record B' (srs#178's identity-preserving retype would remove the need entirely) -- until it does, this pattern applies to any future unit retiring a section/subsection record: measure contains-child count first (srs record list / relation list, not the issue body's possibly-stale number), and split the batch so no single session moves edges for a record with more than roughly 10-15 children. Would go stale the moment a bulk relation-retarget or identity-preserving retype verb ships (srs#178 or an equivalent), at which point edge-count stops being the risk driver and this carried_context should be superseded rather than silently ignored."
+  },
+  "createdAt": "2026-09-09T21:32:39.066913893+00:00",
+  "updatedAt": "2026-09-09T21:32:39.066920738+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

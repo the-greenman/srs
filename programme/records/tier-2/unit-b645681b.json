@@ -1,0 +1,22 @@
+{
+  "instanceId": "b645681b-a4b8-4cae-a048-0b1edab4cda9",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Retire 5 of 10 remaining section-type records to concept (RFC-042 Change B, srs#710 subset)",
+    "summary": "Retyped 5 com.semanticops.spec/section records (Distribution Group (Core), Conversation Layer, Extension Interactions, Purpose and Scope, Conformance) to concept: create successor concept + derived-from new->old, move every contains/precedes edge from old to new so tree position and sibling order are preserved exactly, resync the owning Part's declared container membership, add one publication-reachability-exclusions.json + one spec-coherence-allowlist.json (no-orphan-leaf) entry per retired record (7 total, each proven red-without/green-with before landing). srs repo validate stayed at 0 errors / 12 warnings (unchanged baseline) after every step.",
+    "decision_mode": "complicated",
+    "door": "door-1",
+    "issue_ref": [
+      "srs#710",
+      "srs#580"
+    ],
+    "body": "Dispatched from srs gate:pool via srs#580 (re-dispatch after a 3h stall reset on the previous claim). Landed as PR srs#721 (Refs #710, not Closes -- this is a coherent subset of a 75-record unit, per the dispatch's own 'land a coherent SUBSET' guidance). Mode complicated, Cell Containment, Door 1 (executes Accepted RFC-042 Change B, rfc-decision-5f8204bc), gate:auto-merge armed (SQUASH). Key Invariants deliberately excluded (needs invariant-region.mjs redesigned first, per carried-context-31ea3659). Namespace Format / Schema Notation deliberately left untouched: already fully retired by succession via srs#691/#713, minting a second successor would be a redundant duplicate. Extensions (35 contains children) and Foundation Group (Core) (19 children) deferred to a follow-up unit -- their edge-count is 3-9x anything landed here, raising the risk of a missed edge or broken precedes-chain within one session. Remaining for srs#710: those 2 section records, all 65 subsection records, and the final type-delete PR once both counts hit zero. validate-all.mjs's only failure throughout was the pre-existing, unrelated srs#658 (versioning-cell-allowlist stale entry) -- confirmed identical to baseline, not fixed here, now independently reproduced by 4 sessions in one day."
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-09T21:32:27.366070091+00:00",
+  "updatedAt": "2026-09-09T21:32:27.366076182+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
