@@ -8,15 +8,15 @@
     "title": "RFC-020: Type-Level Identity Field (identityFieldId)",
     "rfc_number": "020",
     "author": "the-greenman",
-    "affected_components": "`identityFieldId` on `Type` (`type.json`); inheritance + views-l2 fallback prose (`ext:type-inheritance`, `ext:views-l2`).\n\n<!-- srs-integration:v1\nschema:type.json\next:type-inheritance\next:views-l2\n-->",
+    "affected_components": "`identityFieldId` on `Type` (`type.json`); inheritance + views-l2 fallback prose (`ext:type-inheritance`, `ext:views-l2`). Revision 7 (srs#728): widens Rule [N+37]'s fallback trigger on `titleFieldId` (`composition.json`); investigated but left as tracked debt: `identityFieldId`'s missing `type.json` schema description, blocked on srs-rust#868 (see Revision history row 7).\n\n<!-- srs-integration:v1\nschema:type.json\nschema:composition.json\next:type-inheritance\next:views-l2\ncell:identity\n-->",
     "proposal_artifact_path": "rfcs/rfc-020-type-level-identity-field.md",
-    "content": "Adds an optional, inheritable, overridable `identityFieldId` to `Type`, naming one field of the effective field set as the record's identity/display field, giving clients a schema-driven display-label source. Full text: rfcs/rfc-020-type-level-identity-field.md."
+    "content": "Adds an optional, inheritable, overridable `identityFieldId` to `Type`, naming one field of the effective field set as the record's identity/display field, giving clients a schema-driven display-label source. Revision 7 (srs#728) widens the `titleFieldId`-absent per-record-heading fallback (Rule [N+37]) to also cover the case where the section's `titleFieldId` is declared but absent from the record's Type's effective field set. Full text: rfcs/rfc-020-type-level-identity-field.md."
   },
   "lifecycleState": "accepted",
   "tags": [
     "topic:rfc"
   ],
   "createdAt": "2026-07-21T17:31:55.366423608+00:00",
-  "updatedAt": "2026-08-28T13:58:14.062343452+00:00",
+  "updatedAt": "2026-09-10T09:51:09.465899656+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
