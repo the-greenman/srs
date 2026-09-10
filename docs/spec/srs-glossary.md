@@ -92,7 +92,8 @@ Example: the conformance declaration form.
 
 ### Conversation Layer
 
-**Definition**: > **Standalone repository note**: An implementation declaring only `SRS 2.0 Core + ext:repository` does not require a TSS, ext:protocol, ext:addressability, AttentionState, or any live store for raw multimodal material; source documents stored in `source-documents/` are sufficient evidence storage for standalone use. This note describes the full-stack integration model, and implementers building file-based or offline repositories may skip it entirely.
+**Definition**:
+> **Standalone repository note**: An implementation declaring only `SRS 2.0 Core + ext:repository` does not require a TSS, ext:protocol, ext:addressability, AttentionState, or any live store for raw multimodal material; source documents stored in `source-documents/` are sufficient evidence storage for standalone use. This note describes the full-stack integration model, and implementers building file-based or offline repositories may skip it entirely.
 
 This is a permanent architectural boundary distinct from SRS. It captures raw multimodal source material; SRS captures negotiated semantic state. They reference each other bidirectionally via `SourceReference` (document → conversation) and `AttentionState` tags (conversation → document, via `ext:addressability`).
 

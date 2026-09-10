@@ -1,0 +1,20 @@
+{
+  "instanceId": "c5e6e992-e87d-43e4-a8db-0b3e42f63f29",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "A concept made reachable by a flat discovery-query can still hide unreachable descendants if it has no contains parent into a Part",
+    "summary": "PR #704 created three orphan concept records (JSON Store, Import tracking, Registry) with no contains parent of their own. Each was already individually reachable via the spec-glossary's flat concept discovery-query (non-descending), which masked the fact that their contains children (15 mechanism records total) were unreachable -- the exclusions file correctly flagged the 15 children, but nothing flagged the 3 parent concepts themselves as suspect, because they read as published.",
+    "evidence": [
+      "check-publication-reachability.mjs's own header comment already documents the general shape of this bug class (a concept reachable via a non-descending surface while its contains descendants sit below a different, descending surface that never got wired up) -- this is a live instance of exactly that shape, not a new defect in the checker.",
+      "Tracing srs#709's 15 excluded mechanism-type records via the full contains relation dump found only 3 distinct parent instanceIds (d6e9ffdd, 714cb3f8, d755fb20), each a dead end: no relation anywhere in the corpus names it as a target of a contains edge.",
+      "None of the 3 orphan concepts appeared in scripts/publication-reachability-exclusions.json themselves -- only their mechanism children did -- confirming the concepts read as reachable (via the glossary) even while genuinely un-parented in the tree.",
+      "The fix in each case was a single missing contains edge from an existing, already-Part-reachable node (a sibling concept or the Part itself) to the orphan concept; no new Part-level concept was needed once the right existing sibling was identified by reading its own description (e.g. Travelling form's description already names a single-file JSON store as one of the forms it covers)."
+    ]
+  },
+  "createdAt": "2026-09-09T20:57:12.584395551+00:00",
+  "updatedAt": "2026-09-09T20:57:12.584400254+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
