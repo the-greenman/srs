@@ -1,0 +1,15 @@
+{
+  "instanceId": "06a60bf4-87ef-435b-a440-a94f0e1e393d",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/conformance-declaration",
+    "title": "Conformance",
+    "description": "An implementation declares conformance using the following form:\n\nExample: the conformance declaration form."
+  },
+  "createdAt": "2026-09-09T21:24:13.438535667+00:00",
+  "updatedAt": "2026-09-09T21:24:13.438541237+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

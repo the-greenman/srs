@@ -1,0 +1,15 @@
+{
+  "instanceId": "7348210d-9ad9-4678-866f-3220b3b3ef97",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/purpose-and-scope",
+    "title": "Purpose and Scope",
+    "description": ""
+  },
+  "createdAt": "2026-09-09T21:23:17.827259672+00:00",
+  "updatedAt": "2026-09-09T21:23:17.827265846+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

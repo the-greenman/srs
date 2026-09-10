@@ -1,0 +1,23 @@
+{
+  "instanceId": "e4b43e3e-c555-43c3-91e4-72680434d23f",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Retire Foundation Group (Core) section-type record to concept (RFC-042 Change B, srs#710 subset)",
+    "summary": "Retyped com.semanticops.spec/section record \"Foundation Group (Core)\" (19 contains children, the smaller of the two sections PR #721 deferred for edge-count) to a com.semanticops.spec/concept: created the successor concept, asserted derived-from new->old, moved the Part-contains edge, the precedes edge, and all 19 contains-child edges from old to new, resynced the Foundations Part container membership, and added one publication-reachability-exclusions.json + one spec-coherence-allowlist.json (no-orphan-leaf) entry, each proven red-without/green-with. validate-all.mjs: 0 errors, 12 warnings (unchanged baseline).",
+    "decision_mode": "complicated",
+    "door": "door-1",
+    "issue_ref": [
+      "srs#710",
+      "srs#580",
+      "srs#721"
+    ],
+    "body": "Dispatched from srs gate:dispatched (issue #710) via srs#580 queue, re-pulled at coordinator discretion after PR #721 (comment 5609510877/5611190504). Continues the coherent-subset pattern PR #721 established: this unit retypes the smaller of the two remaining `section` records that #721 deferred for edge-count (Foundation Group (Core), 19 contains children; Extensions, 35 children, remains deferred to a follow-up unit). Mode complicated, Cell Containment, Door 1 (executes Accepted RFC-042 Change B, rfc-decision-5f8204bc), gate:auto-merge.\n\nNew concept e4837800-1803-4b0b-9a9f-08ff3e5cb95a (canonical_key record:concepts/foundation-group-core) carries the old section's title and content verbatim. Old record 74746626-1a15-5430-931e-90a147961265 kept as a catalogued, unreachable record (not deleted) per the established pattern — the derived-from relation needs a live target and no identity-preserving retype tool exists yet (srs#178, OPEN).\n\nRemaining for srs#710 after this unit: Extensions (1 section record, 35 contains children), all 65 subsection records, and the final `srs type delete` PR once both counts hit zero — that deletion also needs to resolve the tension carried-context-0bf0c680 already flags: the successor pattern never deletes retired records (kept as derived-from targets), so `srs record list --type section`/`subsection` returning zero may require either a future bulk-purge verb or a deliberate decision to break the derived-from back-reference at that final step. Not this unit's to resolve — flagging it forward.\n\nvalidate-all.mjs passed clean on this branch (0 errors, all checks including the previously-flagged versioning-cell check green — the srs#658 stale-allowlist-entry failure reported by four sessions on 2026-09-09 did not reproduce here)."
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-10T01:51:53.153944281+00:00",
+  "updatedAt": "2026-09-10T01:52:07.023142317+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

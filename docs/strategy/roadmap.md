@@ -429,6 +429,11 @@ The standard-level contracts that make the release boundaries and practice paths
   - Required by: future work
   - Sources: [rfc-decision-c8704763.json](../../srs/records/tier-2/rfc-decision-c8704763.json)
   - Not included: Alias resolution for KEYED references; A second resolution path alongside the declared reference strengths
+- **Structured discovery: what the query is** — A large SRS repository selects records through a portable, deterministic Discovery Contract — implementable identically by every conforming implementation — plus an explicit, declared extension point for implementation-specific selection paths (a vector/similarity query being the named example) that a portable repository never depends on silently. The #525 retirement removed an unplanned query surface, not the need for a planned one.
+  - Stability: Deliberately deferred
+  - Required by: future work
+  - Sources: [#726](https://github.com/the-greenman/srs/issues/726), [#688](https://github.com/the-greenman/srs/issues/688), [#525](https://github.com/the-greenman/srs/issues/525), [discovery.json](../schema/2.0/discovery.json), [rfc-011-documentview-query-extensions.md](../../rfcs/rfc-011-documentview-query-extensions.md), [rfc-012-discovery-contract-text-projection.md](../../rfcs/rfc-012-discovery-contract-text-projection.md)
+  - Not included: A general graph query language; SQL or a SQL-shaped query surface; Any mechanism that makes a portable repository depend on one implementation's vector/similarity path
 
 ## Release contract readiness
 
@@ -460,6 +465,7 @@ Each row is a public SRS promise required by a boundary or practice stage. Readi
 | SectionSource fixed-instances and relation-query variants | future | not assessed | not assessed | not assessed |
 | View.protection (view-root edit-protection enum) | future | not assessed | not assessed | not assessed |
 | KEYED reference alias resolution | future | not assessed | not assessed | not assessed |
+| Structured discovery: what the query is | future | not assessed | not assessed | not assessed |
 
 ## Extension register
 

@@ -1,5 +1,5 @@
 {
-  "version": 11,
+  "version": 12,
   "title": "SRS strategic map",
   "purpose": "A map of the capabilities and release boundaries needed for semantic sovereignty and practical human–AI collaboration.",
   "bootstrapStatus": "This map is a curated logical SRS projection: stable strategic entities, explicit semantic links, and separate assessments. It will later materialize as SRS Records, Relations, Containers and DocumentViews after the post-#256 model settles.",
@@ -1682,6 +1682,50 @@
         "A second resolution path alongside the declared reference strengths"
       ],
       "returnTrigger": "returns via the roadmap only with practice-sharing evidence."
+    },
+    {
+      "id": "structured-discovery",
+      "instanceId": "fb7d0353-8f80-402a-8239-efd8f12dedf6",
+      "kind": "strategy-contract",
+      "name": "Structured discovery: what the query is",
+      "stability": "deferred",
+      "cell": "Conformance",
+      "promise": "A large SRS repository selects records through a portable, deterministic Discovery Contract — implementable identically by every conforming implementation — plus an explicit, declared extension point for implementation-specific selection paths (a vector/similarity query being the named example) that a portable repository never depends on silently. The #525 retirement removed an unplanned query surface, not the need for a planned one.",
+      "capabilities": [
+        "Work With Meaning",
+        "Present Facets"
+      ],
+      "sources": [
+        {
+          "type": "issue",
+          "ref": "srs#726"
+        },
+        {
+          "type": "issue",
+          "ref": "srs#688"
+        },
+        {
+          "type": "issue",
+          "ref": "srs#525"
+        },
+        {
+          "type": "repo-path",
+          "ref": "docs/schema/2.0/discovery.json"
+        },
+        {
+          "type": "repo-path",
+          "ref": "rfcs/rfc-011-documentview-query-extensions.md"
+        },
+        {
+          "type": "repo-path",
+          "ref": "rfcs/rfc-012-discovery-contract-text-projection.md"
+        }
+      ],
+      "notIncluded": [
+        "A general graph query language",
+        "SQL or a SQL-shaped query surface",
+        "Any mechanism that makes a portable repository depend on one implementation's vector/similarity path"
+      ]
     }
   ],
   "assessments": [
@@ -2592,6 +2636,11 @@
       "type": "depends-on",
       "from": "federation-redesign",
       "to": "integrity-and-federation"
+    },
+    {
+      "type": "depends-on",
+      "from": "structured-discovery",
+      "to": "definitions-and-structure"
     },
     {
       "type": "contains",
