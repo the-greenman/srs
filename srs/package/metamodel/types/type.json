@@ -61,7 +61,8 @@
       "fieldId": "4b000058-0000-4000-a000-000000000058",
       "order": 10,
       "required": false,
-      "displayLabel": "Identity Field Id"
+      "displayLabel": "Identity Field Id",
+      "description": "Names one fieldId from this Type's effective field set (own fields plus, under ext:type-inheritance, inherited fields) as the record's identity/display field; MUST reference a fieldId present in that set (Rule [N+33]), and cascades to subtypes that declare no identityFieldId of their own, resolved transitively up the ancestor chain (Rule [N+34]). Renderers use it as the record's per-record heading whenever the DocumentSection names no titleFieldId, or names one absent from this record's Type's effective field set (Rule [N+37])."
     },
     {
       "fieldId": "4b000006-0000-4000-a000-000000000006",
