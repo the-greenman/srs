@@ -1,0 +1,15 @@
+{
+  "instanceId": "5326f63c-be31-4d48-a534-0cff9b99231d",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "gen-metamodel-package.mjs: un-park a FieldAssignment.description one field at a time via the `emit` flag",
+    "summary": "scripts/gen-metamodel-package.mjs's `a()` helper now takes a 5th arg, `emit` (default false/undefined). Setting it true on a given FieldAssignment's `a(...)` call is what makes typeFile() actually write that assignment's already-authored `desc` text to `fa.description` in the generated metamodel package; leaving it false keeps the text parked (authored but unwritten), which is still the default for every FieldAssignment except type.identity_field_id.",
+    "rationale": "The whole class was parked in one block because an old pinned binary (build.284-.294) rejected additionalProperties:false FieldAssignment.description entries at the CATALOG-LOAD level (srs-rust#868) -- not a content problem, a structural one, and it broke every FieldAssignment.description in the corpus at once, not just the new one. srs#734 found the CURRENT pin (build.365) no longer rejects at least one such case (type.identity_field_id), but did not re-test the other ~30 parked `desc` strings, and flipping the whole gate on unverified would risk silently reintroducing srs-rust#868's failure mode for whichever entry the current binary still rejects, if any do. The `emit` flag lets each one be un-parked independently, each carrying its own empirical proof (srs type update + srs repo validate against the current pin, per the-greenman/srs#734's finding c8f83e92-93bb-44e8-a3b9-3a420256a5eb) rather than one blanket flip staking the whole corpus on a single untested assumption. Reopen this only once every parked `desc` has been verified this way, or srs-rust#868 is confirmed closed upstream for the class as a whole -- at that point the flag mechanism itself can be retired back to unconditional `if (asg.desc)`."
+  },
+  "createdAt": "2026-09-10T20:27:25.820642493+00:00",
+  "updatedAt": "2026-09-10T20:27:25.820653520+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

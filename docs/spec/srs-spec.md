@@ -1159,7 +1159,7 @@ lifecycleRef?: UUID        // LINEAGE reference (rfc-decision-c8704763) — reso
 | `extendsTypeVersion` | integer | no | minimum: 1 | ext:type-inheritance | ext:type-inheritance — the version of the base Type being extended. |
 | `fieldOrder` | ref → `field` (id)[] | no | — | ext:type-inheritance | ext:type-inheritance — explicit declared composition order for the merged (base + own) effective field list, overriding per-field FieldAssignment.order at the Type level. |
 | `fieldAssignmentOverrides` | ref → `field-assignment-override` (inline)[] | no | — | ext:type-inheritance | ext:type-inheritance — per-field overrides applied to inherited FieldAssignments. |
-| `identityFieldId` | ref → `field` (id) | no | — | core | RFC-020 — names one fieldId from this Type's effective field set as the record's identity/display field. |
+| `identityFieldId` | ref → `field` (id) | no | — | core | Names one fieldId from this Type's effective field set (own fields plus, under ext:type-inheritance, inherited fields) as the record's identity/display field; MUST reference a fieldId present in that set (Rule [N+33]), and cascades to subtypes that declare no identityFieldId of their own, resolved transitively up the ancestor chain (Rule [N+34]). Renderers use it as the record's per-record heading whenever the DocumentSection names no titleFieldId, or names one absent from this record's Type's effective field set (Rule [N+37]). |
 | `validationRules` | ref → `cross-field-rule` (inline)[] | no | — | ext:cross-field-validation | ext:cross-field-validation — cross-field validation rules applied to Records of this Type. Per I-97, this array is each Type's own complete and exclusive set; it is not inherited by value. |
 | `lineage` | ref → `lineage` (inline) | no | — | core | Fork/copy history of this definition. |
 | `provenance` | ref → `provenance` (inline) | no | — | core | Import provenance of this definition. |
@@ -1197,7 +1197,7 @@ type {
   extendsTypeVersion?: integer // ext:type-inheritance — the version of the base Type being extended.
   fieldOrder?: ref → `field` (id)[] // ext:type-inheritance — explicit declared composition order for the merged (base + own) effective field list, overriding per-field FieldAssignment.order at the Type level.
   fieldAssignmentOverrides?: ref → `field-assignment-override` (inline)[] // ext:type-inheritance — per-field overrides applied to inherited FieldAssignments.
-  identityFieldId?: ref → `field` (id) // RFC-020 — names one fieldId from this Type's effective field set as the record's identity/display field.
+  identityFieldId?: ref → `field` (id) // Names one fieldId from this Type's effective field set (own fields plus, under ext:type-inheritance, inherited fields) as the record's identity/display field; MUST reference a fieldId present in that set (Rule [N+33]), and cascades to subtypes that declare no identityFieldId of their own, resolved transitively up the ancestor chain (Rule [N+34]). Renderers use it as the record's per-record heading whenever the DocumentSection names no titleFieldId, or names one absent from this record's Type's effective field set (Rule [N+37]).
   validationRules?: ref → `cross-field-rule` (inline)[] // ext:cross-field-validation — cross-field validation rules applied to Records of this Type. Per I-97, this array is each Type's own complete and exclusive set; it is not inherited by value.
   lineage?: ref → `lineage` (inline) // Fork/copy history of this definition.
   provenance?: ref → `provenance` (inline) // Import provenance of this definition.

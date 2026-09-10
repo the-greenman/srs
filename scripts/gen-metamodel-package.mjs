@@ -530,7 +530,14 @@ for (const [n, name] of FIELD_SPECS) fieldIdByName[name] = fieldUuid(n);
 // seed used to say — not new prose invented at that point. This is NOT currently exercised by the
 // byte-closure gate: the CURRENT committed seed carries no per-property descriptions (this text is
 // write-only until un-parked); no test asserts these strings until then.
-const a = (name, required, label, desc) => ({ name, required, label, desc });
+// `emit` (5th arg, default false): write `desc` to the FieldAssignment's `description` for THIS
+// assignment only. Default false because the additionalProperties:false gate above still applies
+// to the class as a whole (most `desc` strings here remain unverified against the current pin);
+// `identity_field_id` on `type` is flipped on below because srs#734 empirically re-tested it
+// against the pinned build (v0.1.0-build.365) on 2026-09-10 and found `srs repo validate` loads
+// clean with that one FieldAssignment's `description` populated — srs-rust#868 no longer blocks
+// this specific case. Flipping the remaining `desc` strings on is unverified, out-of-scope work.
+const a = (name, required, label, desc, emit) => ({ name, required, label, desc, emit });
 const TYPE_SPECS = {
   field: {
     description: 'An atomic, reusable field definition. Fields are the shared vocabulary of SRS — defined once, referenced across many Types.',
@@ -557,7 +564,7 @@ const TYPE_SPECS = {
       a('ai_guidance', false, 'AI Guidance', 'Guidance for AI agents determining whether source material matches this Type.'),
       a('fields', true, undefined, 'Ordered list of fields that make up this Type.'), a('tags', false),
       a('lineage', false), a('provenance', false),
-      a('identity_field_id', false, 'Identity Field Id', "RFC-020 — names one fieldId from this Type's effective field set (own fields plus, under ext:type-inheritance, inherited fields) as the record's identity/display field. MUST reference a fieldId present in the effective field set (Rule [N+33]). Under ext:type-inheritance, a Type that declares no identityFieldId of its own inherits the effective identityFieldId of its base Type, resolved transitively up the ancestor chain (Rule [N+34]) — this cascading inheritance is specific to identityFieldId and is not shared with fieldOrder, which is single-level only."),
+      a('identity_field_id', false, 'Identity Field Id', "Names one fieldId from this Type's effective field set (own fields plus, under ext:type-inheritance, inherited fields) as the record's identity/display field; MUST reference a fieldId present in that set (Rule [N+33]), and cascades to subtypes that declare no identityFieldId of their own, resolved transitively up the ancestor chain (Rule [N+34]). Renderers use it as the record's per-record heading whenever the DocumentSection names no titleFieldId, or names one absent from this record's Type's effective field set (Rule [N+37]).", true),
       a('created_at', true),
     ],
   },
@@ -1283,16 +1290,17 @@ function typeFile(name, spec) {
       const fa = { fieldId: fieldIdByName[asg.name], order: i, required: asg.required };
       if (asg.label) fa.displayLabel = asg.label;
       // RFC-040 Unit 3 (srs#479): `asg.desc` text is authored (matching the frozen seed's exact
-      // per-property annotation strings) but deliberately NOT written to `fa.description` yet. Every
-      // metamodel Type record's `fields[]` validates against `type.json#/$defs/FieldAssignment` in
-      // the PINNED srs-rust binary's own EMBEDDED schema copy (build.284, and no later release up to
-      // build.294 either) — which predates Change C and has `additionalProperties:false` there, so
-      // populating `description` on ANY FieldAssignment entry makes `srs repo validate --repo srs`
-      // fail to LOAD the catalog at all (16+ fatal diagnostics, not one). This is the exact class
-      // srs-rust#868 already parked a schema-touching srs-side change for (packageDependencies): land
-      // the mechanism, park the corpus data until the srs-rust mirror-sync ships a compatible release.
-      // Flip this back on (`if (asg.desc) fa.description = asg.desc;`) once that follow-up lands and
-      // the pin advances — the text is already here, byte-matched against the seed, ready to go.
+      // per-property annotation strings) but writing it to `fa.description` is opt-in per assignment
+      // (`asg.emit`), not blanket. Every metamodel Type record's `fields[]` validates against
+      // `type.json#/$defs/FieldAssignment` in the PINNED srs-rust binary's own EMBEDDED schema copy;
+      // builds up to build.294 had `additionalProperties:false` there (predating Change C), so
+      // populating `description` on ANY FieldAssignment entry made `srs repo validate --repo srs`
+      // fail to LOAD the catalog at all (16+ fatal diagnostics, not one) — the class srs-rust#868 was
+      // filed for. `type`'s `identity_field_id` assignment was re-tested against the pin current as
+      // of 2026-09-10 (v0.1.0-build.365) and loads clean (srs#734), so it alone carries `emit: true`.
+      // The remaining `desc` strings stay parked — untested against the current pin — until each is
+      // verified the same way or srs-rust#868 is confirmed closed for the class as a whole.
+      if (asg.desc && asg.emit) fa.description = asg.desc;
       return fa;
     }),
     id: typeIdByName[name],

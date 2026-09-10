@@ -1,0 +1,20 @@
+{
+  "instanceId": "c8f83e92-93bb-44e8-a3b9-3a420256a5eb",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "srs-rust#868's FieldAssignment.description block is stale for identity_field_id as of build.365",
+    "summary": "RFC-020 Rev 7 (srs#728) claimed populating any FieldAssignment.description trips additionalProperties:false in the pinned binary's embedded schema (srs-rust#868), citing builds .284-.294 as the tested range. Round-tripping the type metamodel Type's identity_field_id FieldAssignment through srs type update + srs repo validate --repo srs against the currently pinned build v0.1.0-build.365 loads clean: 0 errors, the same 12 pre-existing warnings as baseline. The blocker no longer holds for this build, at least for this one FieldAssignment.",
+    "evidence": [
+      "srs type update 4c000002-0000-4000-a000-000000000002 --repo srs (type's identity_field_id FieldAssignment gains description) succeeds",
+      "srs repo validate --repo srs --pretty after that update: {\"checked\": 719, \"errors\": 0, \"warnings\": 12} -- identical warning count to the pre-edit baseline",
+      "gen-metamodel-package.mjs --check confirms the regenerated package is deterministic with the new `emit`-flagged description present"
+    ],
+    "body": "Not re-tested: whether the additionalProperties:false gate is fixed for FieldAssignment.description as a class (every other parked `desc` string in gen-metamodel-package.mjs, most of which are untouched by this finding), or only appears fixed because this one property happens not to collide with something else the older embedded schema rejected. The next unit that wants to un-park another `desc` string should re-run this same empirical test (srs type update + srs repo validate) before flipping its `emit` flag, rather than assuming the whole class is now safe. If a batch of these is un-parked at once, that is also the point to check whether srs-rust#868 itself should be closed upstream."
+  },
+  "createdAt": "2026-09-10T20:27:14.507542494+00:00",
+  "updatedAt": "2026-09-10T20:27:14.507553593+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
