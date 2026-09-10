@@ -2,13 +2,6 @@
   "$comment": "Records that are deliberately reachable from no declared presentation (#285). Read by scripts/check-publication-reachability.mjs. Every entry names the instance, why it is invisible, its disposition, and the issue that tracks it. `disposition: \"permanent\"` means the invisibility is a ruled, settled outcome — `issue` cites the (possibly closed) issue whose ruling made it so, and the entry never expires by issue state; it still expires if the instance stops existing or becomes reachable (checked below regardless of disposition). `disposition: \"pending\"` means real follow-up work remains — `issue` MUST cite a currently-open issue, and the entry should be resolved (removed, or reclassified permanent with the ruling that settled it) once that issue closes. An entry for an instance that no longer exists, or one that has since become reachable, is an error either way — a stale exclusion is how a suppression list becomes a permanent blind spot.",
   "exclusions": [
     {
-      "instanceId": "027b1fa3-5ed9-4717-94fd-76b7e446a6db",
-      "path": "records/tier-2/mechanism-027b1fa3.json",
-      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
       "instanceId": "04ff8b51-c105-434d-8032-fe0269571efc",
       "path": "records/notes/design-brief-core-relation-set.json",
       "reason": "Tier-0 design capture (2026-07-31, recreated from #291): the mechanism-backed criterion for the core relation set and the proposed 4+3 core/recommended split. Rung 0 of the capture ladder — a working note whose four decision asks are still open with the owner, not ratified guidance. Publishing it would present an unratified criterion as though it were settled. It becomes reachable by graduating to a `com.semanticops.spec/design-note` record when srs#171 ratifies the criterion.",
@@ -30,25 +23,11 @@
       "issue": "#285"
     },
     {
-      "instanceId": "093fade3-4a31-41dc-a51f-bb265a9cad73",
-      "path": "records/tier-2/mechanism-093fade3.json",
-      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
       "instanceId": "09b57270-d763-4a7c-b6fa-182e03365aab",
       "path": "records/notes/ai-native-srs-repositories.json",
       "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
-    },
-    {
-      "instanceId": "0a0265d0-e168-475d-bc10-3c9bfa2ba908",
-      "path": "records/tier-2/mechanism-0a0265d0.json",
-      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
-      "disposition": "pending",
-      "issue": "#690"
     },
     {
       "instanceId": "0a537413-558a-4c4f-9c26-a8cf9a20447e",
@@ -63,13 +42,6 @@
       "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
-    },
-    {
-      "instanceId": "0b3e1575-27f6-4b32-821f-dd1c76a4e089",
-      "path": "records/tier-2/mechanism-0b3e1575.json",
-      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
-      "disposition": "pending",
-      "issue": "#690"
     },
     {
       "instanceId": "0ee9f736-c16b-5358-87d3-1c1ae7448b8d",
@@ -121,13 +93,6 @@
       "issue": "#285"
     },
     {
-      "instanceId": "228e3bdd-d8c1-416b-ac66-76778113d167",
-      "path": "records/tier-2/mechanism-228e3bdd.json",
-      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
       "instanceId": "279877f5-dd9d-569c-94d6-358ad177a6fb",
       "path": "records/extensions/ext-import-tracking.json",
       "reason": "Reconciled per srs#407 (srs#285 D2): the drifted duplicate prose was merged into the published subsection `records/subsections/07-12-ext-import-tracking.json`, and this record's `content` was reduced to a retirement stub. It stays unreachable — and stays as a record rather than being deleted — because `scripts/check-rfc-integration.mjs` resolves `ext:import-tracking` RFC-integration manifest tokens only against live `com.semanticops.spec/extension` records with no subsection fallback; deleting the file would break that resolution for every RFC declaring `ext:import-tracking`.",
@@ -170,13 +135,6 @@
       "issue": "#274"
     },
     {
-      "instanceId": "35f111ea-2cfa-447b-9775-5b064b1126d9",
-      "path": "records/tier-2/mechanism-35f111ea.json",
-      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
       "instanceId": "3718815c-d505-40c1-a754-b0ab29e90b8f",
       "path": "records/notes/rfc-005-relation-type-cardinality-decision.json",
       "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
@@ -205,13 +163,6 @@
       "issue": "#285"
     },
     {
-      "instanceId": "44f70a2d-05c2-4372-9eec-482034e1d937",
-      "path": "records/tier-2/mechanism-44f70a2d.json",
-      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
       "instanceId": "476e9067-bba3-5e82-89da-5c7218b8824e",
       "path": "records/rfc-proposed-artifacts/rfc-004-artifact-field-nullable.json",
       "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
@@ -231,13 +182,6 @@
       "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
-    },
-    {
-      "instanceId": "4dd74249-94ca-402e-8405-664f13cc713f",
-      "path": "records/tier-2/mechanism-4dd74249.json",
-      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
-      "disposition": "pending",
-      "issue": "#690"
     },
     {
       "instanceId": "4ed1593f-38ff-528c-846c-e961f0b55173",
@@ -266,13 +210,6 @@
       "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
-    },
-    {
-      "instanceId": "56554e2c-bc17-4561-beeb-de2091426630",
-      "path": "records/tier-2/mechanism-56554e2c.json",
-      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
-      "disposition": "pending",
-      "issue": "#690"
     },
     {
       "instanceId": "58054458-353c-4383-bf4b-b63901a75454",
@@ -478,13 +415,6 @@
       "issue": "#285"
     },
     {
-      "instanceId": "9a04732c-a581-45e8-9ec3-a3a420d4d39c",
-      "path": "records/tier-2/mechanism-9a04732c.json",
-      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
       "instanceId": "9aaa1a21-7227-4628-8292-3725fe3e8131",
       "path": "records/tier-2/rfc-change-9aaa1a21.json",
       "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains` (edge asserted by #409 — RFC-017's stub record had no relations at all before this fix), but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into it (render_service.rs) and `rfc-catalog.md` contains none of it. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
@@ -555,20 +485,6 @@
       "issue": "#691"
     },
     {
-      "instanceId": "b9d11414-3056-4d95-8457-772131eadac0",
-      "path": "records/tier-2/mechanism-b9d11414.json",
-      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
-      "instanceId": "baeb09bb-400e-4be6-a14b-64d89258c179",
-      "path": "records/tier-2/mechanism-baeb09bb.json",
-      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
       "instanceId": "be9b259a-0697-5f8b-8a75-8c0c9f00d297",
       "path": "records/rfc-changes/rfc-004-change-g.json",
       "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
@@ -625,25 +541,11 @@
       "issue": "#407"
     },
     {
-      "instanceId": "c6699224-6edf-4663-b94e-33d9461a1f73",
-      "path": "records/tier-2/mechanism-c6699224.json",
-      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
-      "disposition": "pending",
-      "issue": "#690"
-    },
-    {
       "instanceId": "c7a59785-cbc5-5375-8180-0ddfe92d9abe",
       "path": "records/rfc-proposed-artifacts/rfc-004-artifact-readme.json",
       "reason": "RFC working artifact: the structured decomposition of an RFC proposal (change / proposed artifact / revision). It hangs off its RFC record by `contains`, but both RFC DocumentView sections declare no `titleFieldId`, so the renderer does not descend into them (render_service.rs) and `rfc-catalog.md` contains none of them. The reader-facing text of an RFC is its `rfcs/rfc-NNN-*.md` proposal artifact; these records serve check-rfc-integration.mjs and the decision log. Kept deliberately unpublished — disposition on #285 (executed by #409): the RFC's `rfcs/rfc-NNN-*.md` proposal is the reader-facing form, and this record exists to feed `check-rfc-integration.mjs` and the decision log. Two distinct goals, not two mechanisms for one; publishing it would roughly double the RFC catalog with structured restatements of prose already there.",
       "disposition": "permanent",
       "issue": "#285"
-    },
-    {
-      "instanceId": "cd486126-b476-49c8-ab67-143c6c504dee",
-      "path": "records/tier-2/mechanism-cd486126.json",
-      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
-      "disposition": "pending",
-      "issue": "#690"
     },
     {
       "instanceId": "cdd08a86-4fb8-47a0-bcfd-1fd7b9449af9",
@@ -763,13 +665,6 @@
       "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
-    },
-    {
-      "instanceId": "fe7bc7bd-0a5b-4a06-a2b3-6519789a671f",
-      "path": "records/tier-2/mechanism-fe7bc7bd.json",
-      "reason": "Batch C mechanism: ancestor concept has no Part-reachable parent",
-      "disposition": "pending",
-      "issue": "#690"
     },
     {
       "instanceId": "ff2ef2e8-e078-4985-a7ef-32a949d81b53",

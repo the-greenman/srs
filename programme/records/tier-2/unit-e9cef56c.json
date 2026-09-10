@@ -1,0 +1,23 @@
+{
+  "instanceId": "e9cef56c-ef0c-4c5c-9752-f91895305bf7",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Retire the 15 residual publication-reachability exclusions citing closed #690",
+    "summary": "PR #704's concept-level regrouping left three concepts (JSON Store, Import tracking, Registry) reachable via the glossary's flat concept discovery-query but with no contains parent into a Part, so their 15 mechanism children stayed unreachable. Parented each concept under its closest Distribution-Part sibling by subject match (JSON Store under Travelling form, Import tracking under Lineage and provenance, Registry directly under Distribution), resynced Distribution's declared container membership, and removed the 15 now-stale exclusion entries.",
+    "decision_mode": "clear",
+    "door": "1",
+    "issue_ref": [
+      "srs#709",
+      "srs#580",
+      "srs#690"
+    ],
+    "body": "Dispatched from srs gate:pool via #580 (dispatch comment 5608146331, re-dispatched after the prior claim stalled). Ground: fetched origin/master, confirmed the working tree was already at tip; read #709 and its full comment history, including the cell-token self-correction (Presentation -> Conformance). Classify: mode clear, cell Conformance, door 1 (executes Accepted RFC-042 Change D) -- matches the dispatch, no reason to override. Charter: consulted rfc-decision-cce3c00e (Conformance's one-way-over-many preference) when choosing to nest JSON Store/Import tracking under existing semantic siblings rather than adding them as new Distribution-Part-level concepts alongside Travelling form/Lineage-and-provenance, which would have duplicated a goal an existing concept already owns. Route: proceeds. Work: traced each of the 15 excluded mechanisms via the full contains relation dump to find their contains parent -- exactly 3 orphan concept records (d6e9ffdd JSON Store, 714cb3f8 Import tracking, d755fb20 Registry), each a dead end with no parent of its own. Read each concept's description and its existing sibling concepts under Distribution (Repository, Package, Lineage-and-provenance) to find the semantically correct home: Travelling form's own description already names a single-file JSON store as one of the forms it covers, so JSON Store nests there; Lineage-and-provenance's description (upstream tracking, divergence detection, publishing provenance) is exactly what Import tracking's ImportRecord/UpstreamPackage mechanisms embody, so it nests there; Registry had no matching existing sibling, so it went directly under Distribution. Added 3 contains relations via srs relation create, then 18 srs container members add calls (3 concepts + 15 mechanisms) to resync Distribution's declared membership -- part-container-membership.mjs --check went from 1 Part drifted to 0. Prove: moved the 3 new relation files aside (exclusions already removed) and re-ran check-publication-reachability.mjs, confirming it goes red with exactly the 15 expected violations; restored the relations and confirmed green. Land: PR https://github.com/the-greenman/srs/pull/720, gate:auto-merge armed. validate-all.mjs still fails on the pre-existing, unrelated srs#658 (versioning-cell-allowlist stale entry) -- confirmed against a clean origin/master checkout with none of this unit's changes, and independently confirmed by two other worker sessions the same day; documented in the PR body as not this unit's to fix. docs/spec/** could not be re-rendered for the same reason: publish-spec.mjs gates its render on validate-all.mjs passing first."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-09T20:56:41.005200878+00:00",
+  "updatedAt": "2026-09-09T20:56:41.005205364+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

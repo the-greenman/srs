@@ -22,7 +22,8 @@
 
 **Project Phase**: formation
 
-**Alternatives Considered**: - Continue making technical decisions without a constitutional frame.
+**Alternatives Considered**:
+- Continue making technical decisions without a constitutional frame.
 - Preserve the current model immediately, including pre-release contradictions and gaps.
 - Make Evolution the permanent default after public release.
 - Apply one undifferentiated preference profile to the standard and every implementation layer.
@@ -55,7 +56,8 @@
 - semantic-integrity
 - shared-coherence
 
-**Alternatives Considered**: - Backfill every atomic research card, including mechanical derivations.
+**Alternatives Considered**:
+- Backfill every atomic research card, including mechanical derivations.
 - Treat tactical or operational work as sufficient reason to record a decision.
 - Record only RFC lifecycle outcomes, without reusable rationale or exceptions.
 - Leave the decision-log boundary implicit.
@@ -92,7 +94,8 @@
 
 **Project Phase**: formation
 
-**Alternatives Considered**: - Keep valueType and add composite as a ninth enum value.
+**Alternatives Considered**:
+- Keep valueType and add composite as a ninth enum value.
 - Keep separate contentFormat, allowed-values, validation-rule, and repeatable mechanisms.
 
 **Accepted Costs**: All Field definitions required a breaking, scripted definition-layer migration and existing readers temporarily could not load them.
@@ -122,7 +125,8 @@
 
 **Project Phase**: formation
 
-**Alternatives Considered**: - Treat input widgets and composite renderers as semantic type facets.
+**Alternatives Considered**:
+- Treat input widgets and composite renderers as semantic type facets.
 
 **Accepted Costs**: Presentation behavior needs a separate view-layer contract and cannot be recovered from Field meaning alone.
 
@@ -152,7 +156,8 @@
 
 **Project Phase**: formation
 
-**Alternatives Considered**: - Keep RFC-004 schema-definition/schema-member as a second source language.
+**Alternatives Considered**:
+- Keep RFC-004 schema-definition/schema-member as a second source language.
 - Define the metamodel only through hand-authored JSON Schema.
 
 **Accepted Costs**: The system must bootstrap a language expressed in itself and maintain closure evidence for a recursive package.
@@ -182,7 +187,8 @@
 
 **Project Phase**: formation
 
-**Alternatives Considered**: - Describe generation as lossless despite known semantic gaps.
+**Alternatives Considered**:
+- Describe generation as lossless despite known semantic gaps.
 - Silently omit constructs that a target cannot represent.
 
 **Accepted Costs**: Each emitter maintains an explicit feature matrix, lossy-shape contract, and tests rather than claiming simple universal equivalence.
@@ -212,7 +218,8 @@
 
 **Project Phase**: formation
 
-**Alternatives Considered**: - Let each target define an independent semantic interpretation.
+**Alternatives Considered**:
+- Let each target define an independent semantic interpretation.
 
 **Accepted Costs**: All emitters depend on a shared interpretation layer whose changes affect every target.
 
@@ -242,7 +249,8 @@
 
 **Project Phase**: formation
 
-**Alternatives Considered**: - Keep compositeRenderer on FieldGroup or the replacement Type.
+**Alternatives Considered**:
+- Keep compositeRenderer on FieldGroup or the replacement Type.
 - Put renderer selection on each instance.
 - Allow only a repository-wide renderer choice.
 
@@ -274,7 +282,8 @@
 
 **Project Phase**: formation
 
-**Alternatives Considered**: - Continue comparing hand-authored pseudo-IDL to generated schemas.
+**Alternatives Considered**:
+- Continue comparing hand-authored pseudo-IDL to generated schemas.
 - Generate human prose from JSON Schema and make the schema canonical.
 - Embed raw JSON Schema as the main contributor-facing reference.
 
@@ -306,7 +315,8 @@
 
 **Project Phase**: formation
 
-**Alternatives Considered**: - Keep the UUID-keyed FieldValue array.
+**Alternatives Considered**:
+- Keep the UUID-keyed FieldValue array.
 - Key the object by field UUID.
 - Transform authored names to lowerCamelCase.
 - Add a separate fieldId map to each Type.
@@ -339,7 +349,8 @@
 
 **Project Phase**: formation
 
-**Alternatives Considered**: - Keep manifest indexes authoritative.
+**Alternatives Considered**:
+- Keep manifest indexes authoritative.
 - Let each implementation choose between index and tree authority.
 
 **Accepted Costs**: Implementations must replace index-driven enumeration and accept a coordinated breaking storage migration.
@@ -370,7 +381,8 @@
 
 **Project Phase**: formation
 
-**Alternatives Considered**: - Ship the carrier change before the repository-authority change.
+**Alternatives Considered**:
+- Ship the carrier change before the repository-authority change.
 - Support an intermediate generation between the two contracts.
 - Defer one known first-party population to a later release.
 
@@ -402,7 +414,8 @@
 
 **Project Phase**: formation
 
-**Alternatives Considered**: - Keep the core metamodel smaller and merge a hand-maintained remainder/*.json overlay into generated schemas.
+**Alternatives Considered**:
+- Keep the core metamodel smaller and merge a hand-maintained remainder/*.json overlay into generated schemas.
 
 **Accepted Costs**: The metamodel and emitters must become expressive enough to carry the full live definition layer, increasing modelling and projection work.
 
@@ -432,7 +445,8 @@
 
 **Project Phase**: formation
 
-**Alternatives Considered**: - Always download the latest CLI release.
+**Alternatives Considered**:
+- Always download the latest CLI release.
 - Accept that a required check can change behavior without a commit to this repository.
 
 **Accepted Costs**: The project must review and maintain a cross-repository version pin, and new CLI behavior is not adopted automatically.
@@ -468,7 +482,8 @@ Deferring the Field does not defer the discipline. Minting is the irreversible a
 
 **Project Phase**: formation
 
-**Alternatives Considered**: - **Mint `section-purpose` with `required: true` now.** Cheapest it will ever be — one author, no dependents, formation phase. Rejected because it fixes an unconverged semantic permanently and adds a fifth overlapping definition to a space that already contains a duplicate.
+**Alternatives Considered**:
+- **Mint `section-purpose` with `required: true` now.** Cheapest it will ever be — one author, no dependents, formation phase. Rejected because it fixes an unconverged semantic permanently and adds a fifth overlapping definition to a space that already contains a duplicate.
 - **Mint with `required: false`.** Rejected: an optional defence against scope creep is no defence, and it still fixes the semantic.
 - **Mint scoped to the 10 section records, absent on the 65 subsections.** A cheaper probe that would generate the missing authoring evidence at the granularity where scope creep actually occurs. Rejected for this cycle on the same immutability ground — the probe can be run in prose without minting anything — but retained as the leading candidate at the revisit.
 - **Decline permanently.** Rejected: the charter's reasoning is sound and untested, not refuted, and permanent decline would foreclose it precisely when reversal becomes expensive.
@@ -503,7 +518,8 @@ Deferring the Field does not defer the discipline. Minting is the irreversible a
 
 **Project Phase**: formation
 
-**Alternatives Considered**: - Keep DocumentView: rejected — the View/DocumentView collision is unresolvable in prose and already confused RFC-015's own key naming.
+**Alternatives Considered**:
+- Keep DocumentView: rejected — the View/DocumentView collision is unresolvable in prose and already confused RFC-015's own key naming.
 - Arrangement, Edition, Outline, Assembly: rejected — weaker semantic fit; none name the composing act.
 - Rename in vocabulary only, keep the entity name in schemas: rejected — a permanent prose/model split is the drift class this project retires.
 
@@ -534,7 +550,8 @@ Deferring the Field does not defer the discipline. Minting is the irreversible a
 
 **Project Phase**: formation
 
-**Alternatives Considered**: - Strictly closed everywhere (emit `additionalProperties: false` universally, reject on load): rejected — overturns the ruled instance-layer tolerance, breaks carriage of foreign extension content, and sacrifices the extensibility the meta bag exists to sanction.
+**Alternatives Considered**:
+- Strictly closed everywhere (emit `additionalProperties: false` universally, reject on load): rejected — overturns the ruled instance-layer tolerance, breaks carriage of foreign extension content, and sacrifices the extensibility the meta bag exists to sanction.
 - Open everywhere (sanction arbitrary top-level unknowns, full writer passthrough): rejected — the record's shape stops being knowable and the write contract stops being schema-checkable; reopens one layer down the silent-drift surface the definition-layer ruling closed.
 - Refuse-only on write (no preservation obligation): rejected as the default — loud refusal remains the sanctioned fallback, but preservation is the ideal; a standard whose writers routinely refuse foreign content does not carry meaning.
 
@@ -565,7 +582,8 @@ Deferring the Field does not defer the discipline. Minting is the irreversible a
 
 **Project Phase**: formation
 
-**Alternatives Considered**: - Define the consistent rule now: rejected by the owner's own conditional — the rule is not simple (three-layer resolution including a defaults-less Protocol layer; timing, required, inheritance, and sovereignty semantics; no corpus evidence to design against).
+**Alternatives Considered**:
+- Define the consistent rule now: rejected by the owner's own conditional — the rule is not simple (three-layer resolution including a defaults-less Protocol layer; timing, required, inheritance, and sovereignty semantics; no corpus evidence to design against).
 - Keep `FieldAssignment.defaultValue` per #274's ledger while removing the Field-level site: rejected — a half-specified single-site fragment contradicts the one-mechanism rule and pre-empts the future design's own choice of carrier.
 - Remove without recording intent: rejected — the intent (defaults essential, layered override, one mechanism) is the part that must not be lost; this record and the roadmap entry carry it.
 
@@ -597,7 +615,8 @@ Deferring the Field does not defer the discipline. Minting is the irreversible a
 
 **Project Phase**: formation
 
-**Alternatives Considered**: - Keep both names with a stated normative distinction (substrate `properties` = definitional extension surface; instance `meta` = tolerated annotation): rejected by the ruling — the layered policies already carry the distinction; a second NAME adds nothing the policy table does not, and costs a permanent explanation.
+**Alternatives Considered**:
+- Keep both names with a stated normative distinction (substrate `properties` = definitional extension surface; instance `meta` = tolerated annotation): rejected by the ruling — the layered policies already carry the distinction; a second NAME adds nothing the policy table does not, and costs a permanent explanation.
 - Fold the rename into the #273 train: rejected — #273 is definition-layer; the substrate rename is its own bounded breaking change with its own migration.
 
 **Accepted Costs**: A standalone breaking substrate change post-train: `vocabulary.json`-family schemas, the Rust engine's substrate structs, any substrate data carrying `properties` keys (a deterministic key-rename migration), and the full schema-mirror one-landing choreography. Emitted-schema and validator surfaces that special-case the bag name touch once. The decision record "Carry meaning you do not recognise" (2e0cd70a) reads naturally after this: `meta` is THE sanctioned carrier at every layer that has one.
