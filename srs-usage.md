@@ -1774,6 +1774,12 @@ $ srs container roots remove --repo <path> <containerId> dddddddd-dddd-4ddd-8ddd
 
 Note that `srs container create` and `srs container update` take the membership list wholesale and are checked less strictly — they reject a blank id but still accept a well-formed id that resolves to nothing. Run `srs repo validate` after either.
 
+### Shared-ownership containers must use members add/remove, never update (srs#732)
+
+The wholesale-replace behaviour noted just above is safe for a container with a single writer. It is not safe when more than one writer contributes members to the same Container — several stages of a migration script, two agents, a script plus a human. A writer that calls `container update` with only the ids **it** knows about silently deletes every member contributed by the others, because `update` replaces the field rather than merging into it. `srs repo validate` stays green afterward — a container that has lost members is still structurally valid, so nothing signals the loss.
+
+**Rule:** if a Container has more than one writer, each writer MUST use `srs container members add` / `srs container members remove` (or `roots add` / `roots remove`) for the subset it owns, and MUST NOT call `container update` for `memberInstanceIds`. Reserve `update` for a single-owner container, or for a writer that has just read the full current membership and is deliberately replacing it. The same hazard applies to `rootInstanceIds` and `childContainerIds` — any field on a shared container that `update` replaces wholesale carries it.
+
 ### Presentational vs semantic ordering (RFC-015 [N+28]–[N+29])
 Do not create `precedes` relations to achieve a presentational goal. `precedes` is the SRS relation for semantic sequence — the kind of ordering where a different arrangement would be semantically *wrong* (e.g. Step 1 must precede Step 2). For purely presentational ordering (newest-first decisions, manual curation, display preference), use `ordering.memberOrder` on a `container-subset` DocumentView section:
 
