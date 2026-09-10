@@ -1,0 +1,24 @@
+{
+  "instanceId": "a3b15c96-5833-45cb-8430-bbb22dd4cee8",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "type.json: identityFieldId description delivered; srs-rust#868 re-tested stale",
+    "summary": "Added Type.identityFieldId's promised description (RFC-020 Rev 1) to docs/schema/2.0/type.json and the metamodel record, via a new per-assignment `emit` opt-in flag in gen-metamodel-package.mjs rather than flipping the whole parked FieldAssignment.description gate. RFC-020 Rev 7 (srs#728) had marked this class blocked by srs-rust#868 (additionalProperties:false on FieldAssignment in the pinned binary's embedded schema); empirically re-tested against the currently pinned build (v0.1.0-build.365) and it round-trips clean.",
+    "decision_mode": "clear",
+    "door": "door-1",
+    "issue_ref": [
+      "srs#734",
+      "srs#728",
+      "srs-rust#868",
+      "srs#580"
+    ],
+    "body": "Dispatched from the srs gate:dispatched queue via srs#580 tick 2026-09-10 ~19:20Z. Executes what accepted RFC-020 already specifies (schema-changes table row, unfulfilled since Revision 1); Door 1, no new normative meaning. Ground: read #734's body + owner addendum (comment 5620756432) instructing the metamodel record be fixed too, via CLI not by hand. Charter: RFC-020's own Rev 7 history row (added the same day) claimed this was blocked by srs-rust#868 for builds .284-.294; re-tested against the current pin (.365) by round-tripping the type Type's identity_field_id FieldAssignment through `srs type update` + `srs repo validate --repo srs` -- loads clean, 0 errors, 12 pre-existing warnings, unchanged. Work: added a narrow, opt-in `emit` flag per FieldAssignment in gen-metamodel-package.mjs (default false) rather than flipping the whole parked-description gate wholesale, flipped it on only for this one verified case, regenerated the metamodel package + generated-type-reference table + RFC-035 goldens + docs/spec/**, hand-edited the frozen type.json seed to match byte-for-byte (key order: description before title, matching schema-emitter.mjs's emitBody order). Also fixed 3 newly-surfaced spec-language violations (em-dash-cap digest shift, 2x keyword-register on MUST) in the one changed generated-type-reference paragraph, citing the existing corpus-wide srs#563 debt bucket rather than inventing a new one; left 32 unrelated pre-existing stale allowlist entries untouched. Both gates green by real exit code (not `| tail`), plus check-idl-schema-conformance.mjs, check-schema-regenerate-drift.mjs, tests/rfc-035/run.mjs. Filed srs-vscode#114 for the schema mirror. PR: https://github.com/the-greenman/srs/pull/740 (auto-merge armed, gate:auto-merge)."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-10T20:26:39.022392969+00:00",
+  "updatedAt": "2026-09-10T20:27:04.021697156+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

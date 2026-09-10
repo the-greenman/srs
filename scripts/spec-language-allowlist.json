@@ -1507,11 +1507,6 @@
       "rule": "word-budget",
       "matched": "403 words (limit 400)"
     },
-    "srs/records/tier-2/generated-type-reference-4d411f1b.json#content#em-dash-cap#2dbdecb7": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "8 em-dashes in one paragraph (cap 1): ```typescript type { id: string // Globally unique, \u2026"
-    },
     "srs/records/tier-2/generated-type-reference-4d411f1b.json#content#em-dash-cap#38662c0b": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
@@ -1536,11 +1531,6 @@
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
       "matched": "2 em-dashes in one paragraph (cap 1): | `fieldAssignmentOverrides` | ref \u2192 `field-assignme\u2026"
-    },
-    "srs/records/tier-2/generated-type-reference-4d411f1b.json#content#em-dash-cap#e3526cf5": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `identityFieldId` | ref \u2192 `field` (id) | no | \u2014 | \u2026"
     },
     "srs/records/tier-2/generated-type-reference-4d411f1b.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
@@ -3016,6 +3006,21 @@
       "issue": "the-greenman/srs#563",
       "rule": "lowercase-2119",
       "matched": "must"
+    },
+    "srs/records/tier-2/generated-type-reference-4d411f1b.json#content#em-dash-cap#4271ceda": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "7 em-dashes in one paragraph (cap 1): ```typescript type { id: string // Globally unique, \u2026"
+    },
+    "srs/records/tier-2/generated-type-reference-4d411f1b.json#content#keyword-register#b6ed90f1": {
+      "issue": "the-greenman/srs#563",
+      "rule": "keyword-register",
+      "matched": "MUST"
+    },
+    "srs/records/tier-2/generated-type-reference-4d411f1b.json#content#keyword-register#c45beb00": {
+      "issue": "the-greenman/srs#563",
+      "rule": "keyword-register",
+      "matched": "MUST"
     }
   }
 }
