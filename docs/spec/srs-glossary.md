@@ -172,6 +172,13 @@ Transcript chunks referenced in `SourceReference` are source material — addres
 **Key**: part:extensions
 
 
+### Extensions
+
+**Definition**: Extensions are optional, independently adoptable capability modules. Each declares its identifier, dependencies, and the types it defines.
+
+**Key**: record:concepts/extensions-overview
+
+
 ### Field
 
 **Definition**: The atomic reusable semantic unit: one named, versioned, UUID-identified piece of meaning, defined once and composed into any number of Types. A Field owns its own semantics completely — its value contract and its AI guidance belong to the Field and may not be redefined, overridden or duplicated by a Type that includes it. If a context needs different meaning, that is a different Field with its own identity and lineage, not a local override.

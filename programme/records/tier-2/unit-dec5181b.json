@@ -1,0 +1,24 @@
+{
+  "instanceId": "dec5181b-4e09-4cf5-9ba9-59ef4d4fbfb1",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Retire Extensions section-type record to concept (RFC-042 Change B, srs#710 subset)",
+    "summary": "Retyped com.semanticops.spec/section record \"Extensions\" (34 contains children, the last of the two sections PR #721 deferred for edge-count) to a com.semanticops.spec/concept: created the successor concept (canonical_key record:concepts/extensions-overview, distinct from the pre-existing Part concept part:extensions), moved the Part-contains edge, both precedes edges, and all 34 contains-child edges from old to new, resynced the Extensions Part container membership, and added one publication-reachability-exclusions.json + one spec-coherence-allowlist.json (no-orphan-leaf) entry, each proven red-without/green-with. validate-all.mjs and check-release-drift.mjs: both exit 0. Heading-set diff vs origin/master: 597 headings before and after, identical as a set.",
+    "decision_mode": "complicated",
+    "door": "door-1",
+    "issue_ref": [
+      "srs#710",
+      "srs#580",
+      "srs#721",
+      "srs#724"
+    ],
+    "body": "Dispatched from srs gate:dispatched (issue #710) via srs#580 queue, claimed 2026-09-10T02:38:07Z. Continues the coherent-subset pattern PR #721/#724 established: this unit retypes the last remaining `section` record that #721 deferred for edge-count (Extensions, 34 contains children). All ten original `section` records are now either retyped-by-succession (this unit's Extensions, plus #721's five and #724's Foundation Group (Core)), retired by an unrelated merge (#691's Namespace Format / Schema Notation), or deliberately kept as-is (Key Invariants, per carried-context-31ea3659 — its heading anchors `injectKeyInvariants` and cannot retire without redesigning that mechanism first, out of this unit's scope).\n\nNew concept 580cfe0e-b23e-4215-a3c4-22cbd0526810 (canonical_key record:concepts/extensions-overview) carries the old section's title and content (lightly reworded into the concept schema's title/description split). Distinguished by canonical_key from the pre-existing Part concept \"Extensions\" (159ae3c2, canonical_key part:extensions) — same disambiguation pattern #721 used for \"Conformance\" (record:concepts/conformance-declaration vs record:concepts/conformance) — since the two serve different roles: the Part concept anchors the whole Extensions Part, the new concept carries the retired section's own narrower content and its 34 contains children (the per-extension mechanism/subsection stubs). Verified the section's brief content was NOT a duplicate of the general `record:concepts/extension` concept (785654d0) before choosing retype over dissolve — that concept sits elsewhere in the tree (child of 42cf3443) and defines the abstract construct, whereas the retiring section is the Part-level container for the concrete per-extension leaves, so retype-with-new-concept (not dissolve) is the correct application of RFC-042 Change B's two options here.\n\nOld record 4244a790-72ff-5e1c-9b60-d4b58b90f92c kept as a catalogued, unreachable record (not deleted) per the established pattern — the derived-from relation needs a live target and no identity-preserving retype tool exists yet (srs#178, OPEN).\n\nRemaining for srs#710 after this unit: all 65 subsection records, and the final `srs type delete` PR once both section and subsection record counts hit zero — that deletion also needs to resolve the tension carried-context-0bf0c680 already flags: the successor pattern never deletes retired records (kept as derived-from targets), so `srs record list --type section`/`subsection` returning zero may require either a future bulk-purge verb or a deliberate decision to break the derived-from back-reference at that final step. Not this unit's to resolve — flagging it forward, same as #724 did.\n\nvalidate-all.mjs and check-release-drift.mjs both passed clean on this branch (exit 0), including check-versioning-cell.mjs — the srs#658 stale-allowlist-entry failure multiple sessions reported on 2026-09-09 did not reproduce here (may have been resolved separately, or is intermittent; not investigated further as out of this unit's scope)."
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-10T02:59:32.570312584+00:00",
+  "updatedAt": "2026-09-10T02:59:32.570318502+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
