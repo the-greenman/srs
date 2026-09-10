@@ -1,0 +1,22 @@
+{
+  "instanceId": "98fd7c1f-b894-4425-90f6-7a97b012c71d",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "record update silently drops the top-level meta object",
+    "summary": "On the pinned CLI (v0.1.0-build.365), `srs record update` accepts a top-level `meta` key in its input JSON, returns `\"ok\": true`, but does not persist it — the record is unchanged apart from `updatedAt`. No diagnostic or warning is emitted.",
+    "evidence": [
+      "srs record get --repo srs 8888b7de-bba1-41a2-bd55-42dfbf3355c4 (concept successor 'Distribution Group (Core)') showed no `meta` key before the test.",
+      "echo '{\"fieldValues\":{...unchanged...},\"meta\":{\"derivedFrom\":\"5b507597-f824-576b-b577-fd8141f1eaf1\"}}' | srs record update --repo srs 8888b7de-... returned {\"ok\": true, \"payload\": {\"record\": {... no \"meta\" key ...}}}.",
+      "A follow-up srs record get on the same instanceId immediately after still showed no `meta` key — only `updatedAt` had changed.",
+      "Reproduced identically for all 7 records attempted in this session's unit (881e7ac6-2d04-461c-8aa2-3757e25df18b): Extensions, Distribution Group (Core), Conversation Layer, Foundation Group (Core), Extension Interactions, Purpose and Scope, Conformance.",
+      "docs/schema/2.0/record.json:80 declares `meta` as a valid top-level record property (\"Implementation-local key-value pairs\"), so the input was schema-legal; the gap is specifically in the write path, not the schema."
+    ],
+    "body": "## Why this matters now\n\nrfc-decision-1e7c0c8e (2026-09-10, ratified via PR #733) rules that a Type-elimination retirement records provenance by setting the successor's `meta.derivedFrom` to the original instanceId *before* the retired instance is deleted through the CLI — because `record delete`'s relation cascade silently removes the `derived-from` edge that was the only other trace of that provenance. With `meta` writes silently no-op'ing, that precondition cannot currently be met: a worker following the ruling's own steps in order (update, then delete) ends up with neither the `meta` field nor the relation, and no error told them so.\n\nThis is exactly the scenario rfc-decision-1e7c0c8e's own `review_trigger` names: \"a governed corpus cannot capture provenance on the successor before the retiring instance is deleted... the target Type has no field able to carry meta.derivedFrom.\" The precise mechanism differs slightly from what that clause anticipated — `meta` is a record-level property the Type schema never constrains, so there is no missing *field*, but the *write path* for that property doesn't work regardless of Type. The practical effect is the same: no governed corpus on this build can satisfy the ruling's precondition today.\n\n## Scope not yet tested\n\nOnly `record update` on an existing `com.semanticops.spec/concept` record was tested. Whether `record create` accepts and persists `meta` at creation time, and whether the gap is uniform across Types, is unconfirmed — worth checking before assuming the only fix is to `record update` after creation.\n\n## Recommendation\n\nFile an srs-rust issue (this session's GitHub scope is `the-greenman/srs` only, so it could not be filed from here) describing the reproduction above, in the same family as srs-rust#1025/#1028 that this same ruling already produced. Until it lands and the pin advances, srs#710's remaining retirements (61 subsections, 3 deferred sections) are blocked from following the ruled mechanism without risking the same near-miss this unit hit and reverted."
+  },
+  "createdAt": "2026-09-10T14:46:38.652761213+00:00",
+  "updatedAt": "2026-09-10T14:46:38.652776773+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

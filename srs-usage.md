@@ -189,6 +189,17 @@ plain string), `x-srs-description` (the field's own `description`, when non-empt
 show help text without colliding with `title` (the display label) or `description` (already
 occupied by string `aiGuidance`).
 
+A closed-domain select field emits `enum` from whichever of the two mutually exclusive sources
+it declares (RFC-032 [R3]): literal `allowedValues`, or a `vocabularyRef` resolved against the
+package's Vocabularies. For a `vocabularyRef` field, `enum` is the *active* Term keys only —
+deprecated, tombstone, and retired terms are excluded, since those must not be picked for a new
+write even though reads still resolve them — and each active term's `label`/`description` rides
+along under `x-srs-vocabulary-terms` (plus `x-srs-vocabulary-id` naming the resolved Vocabulary),
+so an agent reading the schema before authoring a record sees what each key means, not just the
+bare key (srs-rust#1002). When a `vocabularyRef` field's reference does not resolve, or resolves
+to a Vocabulary with no active terms, `enum` is omitted (never emitted empty) and a diagnostic
+names why — `payload.diagnostics`, not a command failure.
+
 ### Protocol Discovery
 
 Protocols are package definitions — JSON files under `package/protocols/`, registered in `package.json → protocols[]`, parallel to blueprints. They are not instance Records and do not appear in `srs record list` output. The `protocol list` entries use **short field names** (`namespace`, `name`, `version`); the full Protocol JSON returned by `get`, `export`, `import`, and `update` uses **prefixed field names** (`protocolNamespace`, `protocolName`, `protocolVersion`). Do not confuse the two shapes when piping commands.
@@ -1597,7 +1608,7 @@ The URI scheme is implementation tooling (srs-rust ADR-037), built from existing
 | `srs://<repositoryId>/record/{instanceId}` | One record, any tier (JSON; exposed as a resource template) |
 | `srs://<repositoryId>/container/<containerId>` | Container resolve-view: authored columns + ordered members (JSON — same as `container resolve-view`). Each member carries `sectionContainerId`, same key and meaning as the navigation row above |
 | `srs://<repositoryId>/composition/<compositionId>` | Rendered composition (markdown — same as `render composition`). Renamed from `view`/`documentView` (srs-rust#910, `rfc-decision-92d2da05`) — no alias is kept, per the standing zero-backwards-compatibility rule |
-| `srs://<repositoryId>/type/{typeId}` | Type authoring schema (JSON — same as `type schema`): properties are keyed by `Field.name` (RFC-039) and carry `x-srs-ai-guidance`, `x-srs-description`, `x-srs-instructions`; enumerated per type and available as a template |
+| `srs://<repositoryId>/type/{typeId}` | Type authoring schema (JSON — same as `type schema`): properties are keyed by `Field.name` (RFC-039) and carry `x-srs-ai-guidance`, `x-srs-description`, `x-srs-instructions`; a `vocabularyRef`-backed select field also carries `x-srs-vocabulary-terms` (key/label/description of each active term, srs-rust#1002); enumerated per type and available as a template |
 | `srs://<repositoryId>/protocol` | Every installed Protocol definition: id, `namespace/name@version`, `targetType`, `stageCount` (JSON — same as `srs protocol list`) |
 | `srs://<repositoryId>/protocol/{protocolId}` | One Protocol definition plus its stages sorted by `order` — the `dependsOn` walk an agent follows (JSON — same as `srs protocol get` + `srs protocol stages` combined); enumerated per installed protocol and available as a template |
 
@@ -1773,6 +1784,12 @@ $ srs container roots remove --repo <path> <containerId> dddddddd-dddd-4ddd-8ddd
 ```
 
 Note that `srs container create` and `srs container update` take the membership list wholesale and are checked less strictly — they reject a blank id but still accept a well-formed id that resolves to nothing. Run `srs repo validate` after either.
+
+### Shared-ownership containers must use members add/remove, never update (srs#732)
+
+The wholesale-replace behaviour noted just above is safe for a container with a single writer. It is not safe when more than one writer contributes members to the same Container — several stages of a migration script, two agents, a script plus a human. A writer that calls `container update` with only the ids **it** knows about silently deletes every member contributed by the others, because `update` replaces the field rather than merging into it. `srs repo validate` stays green afterward — a container that has lost members is still structurally valid, so nothing signals the loss.
+
+**Rule:** if a Container has more than one writer, each writer MUST use `srs container members add` / `srs container members remove` (or `roots add` / `roots remove`) for the subset it owns, and MUST NOT call `container update` for `memberInstanceIds`. Reserve `update` for a single-owner container, or for a writer that has just read the full current membership and is deliberately replacing it. The same hazard applies to `rootInstanceIds` and `childContainerIds` — any field on a shared container that `update` replaces wholesale carries it.
 
 ### Presentational vs semantic ordering (RFC-015 [N+28]–[N+29])
 Do not create `precedes` relations to achieve a presentational goal. `precedes` is the SRS relation for semantic sequence — the kind of ordering where a different arrangement would be semantically *wrong* (e.g. Step 1 must precede Step 2). For purely presentational ordering (newest-first decisions, manual curation, display preference), use `ordering.memberOrder` on a `container-subset` DocumentView section:
