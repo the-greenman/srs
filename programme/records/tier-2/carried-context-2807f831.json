@@ -1,0 +1,15 @@
+{
+  "instanceId": "2807f831-ff05-4454-8925-e0890c27848f",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "Heading-field carriage discriminator: effective_fields, never value_str().is_none()",
+    "summary": "In render_service.rs's titleFieldId/identityFieldId heading resolution (RFC-020 [N+37]), 'this record's Type doesn't carry the declared titleFieldId' and 'the record left the field's value empty' are indistinguishable by looking at the record's own field value alone — both read as absent. The only correct discriminator is Package::effective_fields(record_type): carried-but-empty must omit the heading with no fallback; not-carried must fall back to identityFieldId. Any future change to this resolution ladder (or a similar carried-value-vs-declared-field problem elsewhere in the renderer) must check field carriage, not value presence.",
+    "rationale": "Getting this wrong either loses the empty-value-omission guarantee (silently promoting an unrelated identityFieldId value into a heading whenever an author leaves a title blank) or reintroduces srs-rust#1011's original bug (never falling back for a genuinely absent field). The fix's own test suite locks both directions: heading_omitted_when_type_has_title_field_but_record_value_empty must never regress into a fallback, and title_field_id_omitted_silently_for_record_lacking_field must never regress into a silent omission. Reopen only if RFC-020's [N+37]/[N+1] rules themselves change (Door 2/3, not a local refactor)."
+  },
+  "createdAt": "2026-09-10T20:51:47.897269467+00:00",
+  "updatedAt": "2026-09-10T20:51:47.897279045+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
