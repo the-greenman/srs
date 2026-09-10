@@ -176,9 +176,796 @@ com.acme.hr/headcount_impact@3
 
 **Description**: The core entity model a repository is built from: Field, Type, Vocabulary and Term, record tiers, Relation, and Container. Every later Part presupposes these.
 
+#### Stable identity
+
+**Canonical Key**: record:concepts/stable-identity
+
+**Description**: The rule that every SRS entity carries a UUID that is minted once and never changes — not when the entity is copied, exported, imported, renamed for display, or moved between repositories. Identity is declared, never inferred from a filename, a path, a storage history or a display label, and never selected by precedence: an identity conflict is fatal, never resolvable. Changing what an entity is at root means minting a new UUID, not reusing the old one.
+
+**Notes**: Definition identity (Field.id, Type.id, packageId) and instance identity (instanceId, relationId, documentId, containerId) are distinct id spaces that obey the same rule.
+
+**Examples**: `repositoryId` survives export and copy; an importer that mints a new repository for every archive it receives, instead of keying on `repositoryId`, is non-conformant (Invariant 53).
+
+##### Field.id is stable across versions.
+
+**Number**: 9
+
+**Constraint**: `Field.id` is stable across versions. A new `id` means a new definition, not a new version of an existing one.
+
+
+##### When an importer encounters an incoming object whose identity key…
+
+**Number**: 54
+
+**Constraint**: When an importer encounters an incoming object whose identity key matches an existing local object but whose content or checksum differs, it must surface the conflict explicitly. An importer that silently overwrites or silently discards in this case is not conformant.
+
+
+
+#### Namespace
+
+**Canonical Key**: record:concepts/namespace
+
+**Description**: A dot-separated, lowercase identifier that groups definitions under an authority and keeps names from colliding between independent publishers. Components match `[a-z0-9][a-z0-9-]*`. `core` is reserved for definitions maintained by the SRS standard, and `com.semanticops.core` is reserved such that no repository may declare a Type or Field under it. Namespace authorship is where domain vocabulary responsibility sits — the specification deliberately defines no universal ontology.
+
+**Examples**: `core`, `community.adr`, `com.acme.hr`, `org.cooperative-name`
+
+##### μDemocracy Mapping
+
+**Intro**: How the SCDS v2 vocabulary maps to the μDemocracy application layer. Reproduced from the v1→v2 conceptual remapping document for reference.
+
+| SCDS concept | μDemocracy application |
+| --- | --- |
+| Field | Semantic atom in a governance record |
+| Type | Decision, Proposal, Action, Role, Value, Principle, ... |
+| Record | A captured governance artefact with provenance |
+| Blueprint | Founding Document type; Decision Log type |
+| Protocol | Democracy protocol: Brain Dump, Decomposition, Decision, Proposal, ... |
+| Container | A group's governance workspace; a founding process scope |
+| Relation | `supersedes`, `derived-from`, `ratifies`, `depends-on`, ... |
+| View | Facilitator view; summary view; export for ratification |
+| Document View | Assembled founding document; full decision log |
+| Address | Stable identifier for any governance element — Field, Record, stage, chunk |
+| Attention State | Current focus of an active facilitated session |
+| Revision | Auditable history of how a governance field arrived at its current value |
+| Conversation layer | Session transcript; threaded discussion; facilitator annotations |
+
+
+
+##### com.semanticops.core/* types and fields MUST resolve in every conforming repository without any package declaration
+
+**Number**: I-85
+
+**Constraint**: A conforming SRS implementation MUST make all `com.semanticops.core/*` types and fields resolvable in every repository without any `packageRef` or `packageRefs` declaration in the manifest. The core base package's definitions are treated as logically present in the RFC-014 R6 package union for all repositories. An implementation that fails to resolve `com.semanticops.core/*` types and fields in a structurally valid repository is non-conformant with RFC-029.
+
+**Rationale**: Without this invariant an implementation could claim RFC-029 conformance while failing to expose core types to type resolution, making the always-available guarantee unverifiable. The invariant makes the expectation explicit and testable: a conformance suite can check whether `com.semanticops.core/purpose` resolves in any repository regardless of its package declarations.
+
+
+##### No Type or Field with namespace com.semanticops.core MAY be declared in any repository package
+
+**Number**: I-86
+
+**Constraint**: A repository MUST NOT declare any Type or Field under the `com.semanticops.core` namespace in a local or external package. An implementation MUST reject the repository load with a conflict error if any such declaration is encountered during package loading. This reservation covers only the `com.semanticops.core` namespace; other `com.semanticops.*` sub-namespaces are governed by their own RFC or by general package conflict rules and are not affected by this invariant.
+
+**Rationale**: The core base package's definitions are exclusively controlled by the SRS implementation, guaranteeing universal availability and consistency. Allowing repositories to declare their own `com.semanticops.core` types would create shadowing, version conflicts, and divergence between implementations. The hard conflict error (not a warning) makes this an unambiguous implementation constraint.
+
+
+
+#### Version lineage
+
+**Canonical Key**: record:concepts/version-lineage
+
+**Description**: A positive integer scoped to one UUID's history, expressing how a definition has evolved while remaining the same definition. Version increments within the lineage; changing the `namespace` or the `name` is not a version bump but a new definition with a new UUID. A bump is required whenever a downstream consumer's extraction, validation or governance behaviour would differ — notably any change to `fieldType` or to the meaning of `aiGuidance`. Reworded prose alone needs no bump.
+
+**Notes**: Package versions are semver strings and are a different axis: a package at 1.3.0 may carry `decision_statement@3` and `context@2`.
+
+##### A referenced Type version is not deletable
+
+**Number**: I-137
+
+**Constraint**: A Type version referenced by any instance in the repository MUST NOT be deleted. Name-keying makes the Record-to-Field edge Type-mediated: `fieldId` is recovered from `typeId` + `typeVersion` + key, so deleting the pinned Type version renders every instance of it unreadable. This rule governs versions with live referents only. (RFC-039 [R19])
+
+
+
+#### Canonical reference
+
+**Canonical Key**: record:concepts/canonical-reference
+
+**Description**: How one definition points at another. The human-facing canonical string form is `namespace/name@version`, with `/` and `@` reserved as separators that may not appear inside a component or a name. The stored machine form is UUID-anchored: a bare UUID for a lineage reference, or an ExactTypeRef pairing `typeId` with an explicit `typeVersion` where the pointer must be version-exact. The string form is for display and is never what gets stored, so a rename never breaks a stored pointer.
+
+**Examples**: `core/decision_statement@2`; `{ typeId: <uuid>, typeVersion: 3 }`
+
+##### `semanticObjectType` as a federation risk
+
+**Content**: 
+`semanticObjectType` on `Type` and in `SectionSource.type-query` is a free-form string. The spec recommends `namespace/name` format for portable Document Views (Invariant 32) and treats bare strings as a single-system convention. This is the minimum rule needed to ship v2.
+
+The risk: two systems can use the same bare string (`"decision"`, `"task"`) and mean different semantic Types. When graph traversal or document assembly crosses system boundaries, type-query portability becomes undefined wherever bare strings appear. This is where federation bugs will appear first.
+
+The current design is deliberately light. Possible futures in order of increasing strictness:
+- **Informative only** — `semanticObjectType` becomes advisory metadata with no query semantics; implementations must use explicit TypeRefs for cross-system queries
+- **Typed vocabulary** — `semanticObjectType` becomes a typed reference to a Type definition (a `TypeRef` rather than a bare string), giving it the same identity guarantees as a Field or Type reference
+
+The second option would require changing the type from `string` to `TypeRef | string` and a version bump. For now: prefer `namespace/name` format in any Type or SectionSource that will cross system boundaries, and treat bare strings as a scope boundary. Implementations should document which `semanticObjectType` values they recognise and what Types they map to.
+
+
+
+#### AI guidance
+
+**Canonical Key**: record:concepts/ai-guidance
+
+**Description**: Structured instruction carried on a definition telling a language model what the definition captures and how to populate it: a required `purpose`, and optional `extraction`, `negativeGuidance`, and worked `examples`. It travels with the definition instead of living in an application's prompt, which is what makes a package usable by a tool that has never seen it before. Guidance belongs to the entity that owns the meaning: a Field's guidance is the Field's, and a Type's guidance supplies session framing only — it never redefines a Field's extraction semantics.
+
+**Notes**: Composition order is a recommended default, not an invariant: Type framing, View framing, Field extraction, negative guidance, examples.
+
+##### Field's aiGuidance belongs to the Field.
+
+**Number**: 3
+
+**Constraint**: A `Field`'s `aiGuidance` belongs to the Field. Type-level `aiGuidance` provides session framing only.
+
+
+##### AI guidance composition order
+
+**Content**: 
+When assembling an AI prompt from multiple `aiGuidance` blocks:
+
+1. **Type framing** — establishes what semantic object type is being worked on
+2. **View framing** (if using `ext:views-l1`) — workflow-specific context for this View
+3. **Field extraction guidance** — specific instruction for populating each Field
+4. **Negative guidance** — constraints applied after the extraction instruction
+5. **Examples** — few-shot demonstrations last, as final grounding
+
+This ordering ensures broad context (what kind of object this is) precedes narrow directives (how to populate this specific Field). Template framing narrows the Type context — it does not replace it.
+
+This is a recommended default. Implementations that compose differently will produce different AI behaviour from the same definitions.
+
+
+##### `AiGuidanceExample`
+
+**Content**: A single example for AI guidance.
+
+Example: the `AiGuidanceExample` shape.
+
+`output` is required. An example without `input` demonstrates expected output form without requiring a specific source.
+
+
+##### `AiGuidance`
+
+**Content**: Structured AI guidance for a Field or Type.
+
+Example: the `AiGuidance` shape.
+
+The minimum valid `AiGuidance` is `{ purpose: "..." }`.
+
+
+
+#### Type
+
+**Canonical Key**: type:com.semanticops.srs/type
+
+**Description**: A named, versioned, UUID-identified composition of Fields describing one kind of semantic object. A Type declares which Fields participate, in what order, and which are required — and nothing more about them, because Field semantics are the Field's. Its effective field list is its own declared assignments, plus inherited ones when it specialises another Type. A Type is a definition, not an instance: what conforms to it is a Record.
+
+**Notes**: Extensions hang optional facets off the Type without changing that: a lifecycle declaration, cross-field rules, a base Type to specialise, an identity field.
+
+##### Why "Type" not "Module"
+
+**Content**: 
+"Module" in v1 was accurate but implied a software analogy that didn't communicate the concept well to non-technical practitioners. "Module" suggests a composable software unit. "Type" says what it actually is: a type definition for a semantic object. A Decision is a Type. A Task is a Type. A Risk is a Type.
+
+The rename also makes the Record/Type relationship legible by analogy: a Record is an instance of a Type, just as a value is an instance of a type in any typed system.
+
+
+##### Field.name uniqueness within a Type's effective field set
+
+**Number**: I-131
+
+**Constraint**: Within a Type's effective field set — its own `fields`, plus fields contributed through `extendsTypeId` — every referenced `Field.name` MUST be distinct. An implementation MUST reject a Type that violates this at definition time, not at instance time. (RFC-039 [R4])
+
+
+##### Field assignment
+
+**Canonical Key**: record:concepts/field-assignment
+
+**Description**: The entry by which a Type admits one Field: a reference to the Field by id, its declared composition order within the Type, whether it is required before a Record can be logged, and an optional display label. It is the exact boundary between what belongs to the Field and what belongs to the Type — the assignment may say where the Field sits and whether it must be filled, and may never say what it means. `displayLabel` is strictly rendering: needing a materially different label means needing a different Field.
+
+**Notes**: `order` is structure, not presentation. It feeds canonical serialisation and supplies the render default; a View may override it for display.
+
+###### FieldAssignment.displayLabel and FieldAssignment.displayHint are for…
+
+**Number**: 1
+
+**Constraint**: `FieldAssignment.displayLabel` and `FieldAssignment.displayHint` are for rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or validation. Extended by RFC-036 [CR-036-20]: they must also not affect a Record's Relations or its Discovery Text Projection (`ext:discovery`). Two repositories differing only in these values must produce identical validation results and identical Discovery output.
+
+
+
+##### `FieldAssignment`
+
+**Content**: A named, versioned composition of Fields for a specific semantic object type.
+
+See the generated reference immediately below for `Type`'s current property table (including the extension-owner column — RFC-031 OQ1), optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger) — this prose no longer hand-duplicates the property list, including the extension-owned facets it could previously only gesture at as comments.
+
+
+##### FieldAssignment
+
+**Content**: A Field reference within a Type. Declares this field's composition order and requiredness within the Type, without redefining field semantics.
+
+See the `FieldAssignment` appendix table in the generated reference below for the current property list.
+
+`displayLabel` is strictly for rendering. If a materially different label or meaning is needed, a distinct Field with its own lineage is required.
+
+Cardinality is a property of the referenced Field (`fieldType.cardinality`, RFC-032 [R4]); the former assignment-level `repeatable`/`minItems`/`maxItems` trio is removed (RFC-039 [R7], I-134).
+
+The Type's effective field list is `fields[]` unless `ext:type-inheritance` is declared and the Type extends another Type. In that case, the effective field list also includes inherited fields as defined by `ext:type-inheritance`.
+
+**AI guidance composition order** (recommended):
+
+1. Type framing (`Type.aiGuidance.extraction`) — establishes the semantic object type
+2. View framing (`View.aiGuidance.extraction`, if `ext:views-l1` is in use) — workflow-specific context
+3. Field extraction guidance (`Field.aiGuidance.extraction`)
+4. Negative guidance (`Field.aiGuidance.negativeGuidance`)
+5. Examples (`Field.aiGuidance.examples`)
+
+This is a recommended default, not a required invariant. Implementations that compose differently will produce different AI behaviour from the same definitions.
+
+**On instance migration when a Type version changes:**
+A Record binds to a specific `typeVersion` at creation time. Existing Records do not automatically migrate when a new Type version is published. Conformance is measured against the version the Record was instantiated under. When a Record is migrated and exchanged, it should carry the version it now conforms to, and the original Record should be preserved and linked via a `supersedes` Relation.
+
+
+##### `lifecycleRef` — referencing shared lifecycle definitions
+
+**Content**: When `ext:lifecycle` is in use, a Type declares a lifecycle in exactly one of two mutually exclusive forms (V7):
+
+Example: the two lifecycle declaration forms on a Type.
+
+Declaring both is a validation error. An inline lifecycle cannot extend; use `lifecycleRef` when the same state machine is needed across multiple Types.
+
+
+
+#### Type specialisation
+
+**Canonical Key**: record:concepts/type-specialisation
+
+**Description**: Single inheritance between Types: a specialising Type names one base Type, gains its effective field list, and adds its own. The governing constraint is substitutability — a system that knows the base Type but not the specialisation must still be able to read the inherited fields and should preserve the unknown ones instead of discarding them. A specialisation may therefore tighten an inherited optional field to required, but never relax a required one, and may never alter Field semantics.
+
+**Notes**: Inheritance chains must be acyclic (Invariant 39). Only some properties cascade up the ancestor chain — the effective identity field does; the explicit field order does not.
+
+##### Type inheritance (ext:type-inheritance)
+
+
+##### Type.extendsTypeId, when present, must reference a valid Type.id.
+
+**Number**: 39
+
+**Constraint**: `Type.extendsTypeId`, when present, must reference a valid `Type.id`. Inheritance chains must be acyclic; a Type may not directly or transitively extend itself.
+
+
+##### specializing Type must not declare a fieldId in its own fields[] that…
+
+**Number**: 40
+
+**Constraint**: A specializing Type must not declare a `fieldId` in its own `fields[]` that duplicates any `fieldId` inherited from its base Type or any ancestor Type.
+
+
+##### When Type.fieldOrder is present, it must contain exactly the set of…
+
+**Number**: 41
+
+**Constraint**: When `Type.fieldOrder` is present, it must contain exactly the set of field UUIDs in the Type's effective field list. No UUID may appear more than once, and no UUID from the effective field list may be absent.
+
+
+##### Every fieldId in Type.fieldAssignmentOverrides[] must reference a…
+
+**Number**: 42
+
+**Constraint**: Every `fieldId` in `Type.fieldAssignmentOverrides[]` must reference a field inherited from the base Type or an ancestor Type. Overrides must not reference fields declared in the specializing Type's own `fields[]`, must not alter Field semantics, and must not relax an inherited required field from `true` to `false`.
+
+
+##### When ext:type-inheritance is declared, Package.packageDependencies must…
+
+**Number**: 43
+
+**Constraint**: When `ext:type-inheritance` is declared, `Package.packageDependencies` must include a `Reference` for every Type in the transitive closure of base Types for any Type in `Package.types[]`. If `mode === "bundled"`, all such base Types must be present in `types[]`.
+
+
+##### Why Type inheritance is conservative
+
+**Content**: 
+`ext:type-inheritance` adds one formal mechanism: a Type may specialize one base Type and still be processable as that base Type. This solves the common case where a domain-specific Type needs to add fields to a shared Type without duplicating the whole definition.
+
+The extension is intentionally narrow. It supports inherited fields, added fields, explicit ordering, and presentation/workflow overrides for inherited fields. It does not let a specializing Type change Field semantics or relax base requirements. That keeps the central promise intact: a system that understands the base Type can still process the base portion of a specialized Record.
+
+`Type.fieldOrder` is a Type-level composition ordering declaration over the full effective field list, including inherited fields. `View.fieldViews[].order` is the sole View-level presentation and export ordering mechanism; it orders both FieldView and RecordPropertyView rows. Validators should apply the `fieldAssignmentOverrides` inherited-field restriction only to `fieldAssignmentOverrides`, not to `Type.fieldOrder`.
+
+---
+
+
+##### validationRules are not inherited; a derived Type's own validationRules are the complete set
+
+**Number**: I-97
+
+**Constraint**: `validationRules` are not inherited. A Type's `validationRules` array is the complete and exclusive set of cross-field rules evaluated for Records of that Type. When `ext:type-inheritance` is in use and Type B extends Type A, Type A's `validationRules` MUST NOT be evaluated for Records of Type B unless Type B's own `validationRules` explicitly restates them. (RFC-019 R11.)
+
+
+##### The inheritance floor and the documentation-only rule
+
+**Content**: Metamodel v1.1.0 (RFC-040 Change A / Change C) models extension-contributed Type facets as separate metamodel Types extending the core via `ext:type-inheritance`, and gives `FieldAssignment` a per-context `description`. The owner's 2026-07-31 decision on srs#273 accepted both, each with a stated cost that this note exists to make a conscious acceptance rather than something a fresh implementer discovers by accident.
+
+**The inheritance floor.** Owner decision, 2026-07-31 (srs#273):
+
+> (a) makes the metamodel package depend on `ext:type-inheritance`, so any independent third-party implementation that wants to consume the metamodel *as records* must implement inheritance merging. That raises the floor for a from-scratch sovereign reader. Accepted — inheritance is core to the extensibility promise regardless — but it must be a conscious acceptance written into the design note, not an accident discovered later by an implementer.
+
+**The documentation-only rule.** Owner decision, 2026-07-31 (srs#273), on `FieldAssignment.description`:
+
+> The slot explains what a Field means *in this context*; it never changes what the Field means. "Field semantics are immutable — they cannot be overridden when used inside a Type" is one of the strongest anti-lock-in invariants in SRS: it is what makes cross-community Field reuse trustworthy. This is the first slot that could be abused to erode it. The RFC/design note must state: on conflict, the Field's own semantics and `aiGuidance` win, and a contextual description that contradicts them is a data error, not an override.
+
+**Three-layer forward-compatibility policy.** Ruled on srs#237, 2026-08-20, consolidating srs-rust#778 (engine) and the srs#273 Decision 1 extension mechanism into one normative statement per definition-layer entity:
+
+| Layer | Policy | Escape hatch |
+|---|---|---|
+| Definition (Field, Type, View) | reject-unknown | none — extend by inheritance |
+| Substrate (VocabularyEntry, Term, RelationTypeDefinition) | reject-unknown | `properties` bag |
+| Instance (Note, Record) | tolerate | `meta` bag |
+
+The stated reason for the asymmetry: an instance's `meta` cannot change what the record *means*; an unknown property on a **definition** can silently change what every downstream record means. Definitions are the trust boundary.
+
+**Forward framing: cell linkage as a retrieval signal, not an ontology.** The owner-shared decision-coherence research synthesis (2026-08-23, srs#273 comment; Tier-0 note "Design Jurisprudence: the neighbourhood role of the map") repositions what a location in the Pattern Grid buys: not an answer, but a neighbourhood of prior judgements a new decision must reckon with. Cell linkage is **one retrieval signal among several** — alongside explicit links, semantic similarity, shared concerns, and scope — never the ontology of truth. The minimal relation set stays deliberately small: `consistent_with`, `distinguishes`, `conflicts_with`, `supersedes` around decisions, plus `supports` / `challenges` between decisions and principles; `generalises` is inferred from a pattern of decisions, never itself asserted. No decision ontology beyond this set is sketched here. Retrieval favours precision over completeness — the minimum useful neighbourhood, not everything potentially relevant, or the retrieval mechanism recreates the context-bloat failure it exists to avoid. Today's actual significance gate — which decisions are worth capturing at all — is the owner-ruling bottleneck, named explicitly rather than left implicit: the charter's decision records are curated by what the owner chooses to rule on, and that curation is what keeps the record from drowning in undifferentiated capture.
+
+
+##### `identityFieldId`
+
+**Content**: **Required for**: Type libraries that need formal specialization while preserving base-Type processability.
+
+Defines single inheritance for Types. A specializing Type inherits the fields and semantics of a base Type, may add fields, and remains processable as the base Type by systems that know the base Type but not the specialization.
+
+When `ext:type-inheritance` is in use, `Type` gains:
+
+Example: the properties `ext:type-inheritance` adds to a Type.
+
+
+##### identityFieldId
+
+**Content**: Names one field, from the Type's effective field set, as the record's identity/display field — the field a conformant implementation SHOULD use to resolve a Record's display label (e.g. in list, tree, discovery, and container views), in preference to any implementation-specific heuristic (Rule [N+36]).
+
+`identityFieldId` MUST reference a `fieldId` present in the Type's effective field set (Rule [N+33]).
+
+**Inheritance is cascading, unlike `fieldOrder`.** The *effective* `identityFieldId` of a Type is its own `identityFieldId`, if declared; otherwise, the effective `identityFieldId` of its base Type, resolved transitively up the ancestor chain; otherwise absent (Rule [N+32], [N+34]). A Type overrides an inherited effective `identityFieldId` by declaring its own, which need not match the base Type's and MAY point at a field the Type itself adds. This differs from `fieldOrder`, which is read only from the Type being resolved and does not search the ancestor chain when absent — `identityFieldId`'s inheritance rule is specific to this property, not a reuse of `fieldOrder`'s behavior.
+
+`identityFieldId` scopes to Tier 2 Records only; it has no defined meaning for Tier 0 (Note) instances, which carry no Type binding (Rule [N+35]).
+
+**Interaction with `DocumentSection.titleFieldId` (`ext:views-l2`).** For any `DocumentSection` that does not declare `titleFieldId` — whether that section's field content renders via the Default Rendering Baseline or a dispatched L1 View — implementations SHOULD render the per-record heading using the value of the field named by the record's Type's effective `identityFieldId`, if present, in place of omitting the heading. `titleFieldId`, when declared, MUST continue to take precedence for that section's per-record heading (Rule [N+37]; see `ext:views-l2` § Heading Hierarchy).
+
+
+##### `FieldAssignmentOverride`
+
+**Content**: Overrides presentation or workflow constraints for an inherited Field in a specializing Type. It does not change the Field's semantics.
+
+Example: the `FieldAssignmentOverride` shape.
+
+`displayLabel` and `displayHint` are presentation-only. `required` may tighten an inherited optional field (`false` to `true`) for the specializing Type. It must not relax an inherited required field (`true` to `false`), because a Record instantiated against the specializing Type must remain valid when processed as the base Type.
+
+The effective field list for a specializing Type is the inherited effective field list of its base Type plus the specializing Type's own `fields[]`. A specializing Type must not duplicate an inherited `fieldId` in its own `fields[]`.
+
+Example:
+
+Example: a governance decision Type specialising a core decision Type.
+
+A system that knows `core/decision` but not `org.example/governance_decision` can still read the inherited decision fields. The specializing fields are unknown extension content to that system and should be preserved rather than discarded.
+
+
+
+#### Vocabulary
+
+**Canonical Key**: record:concepts/vocabulary
+
+**Description**: A controlled set of strings that appear in instance data and must mean something stable. Every entry, whatever specialisation it is, carries the same substrate contract: a stable id, a version, a namespace, the `key` that is the string actually stored, optional label, description and aliases, and a status of active, deprecated, tombstone or retired, where absent means active. A vocabulary is `open`, meaning unlisted values are valid and unenriched, or `closed`, meaning every value must resolve to exactly one entry.
+
+**Notes**: An open vocabulary's authoritative value set is the distinct keys actually in use, not the curated entry list — the curation is an overlay that may lag or be empty. Curating a string into a Term rewrites no instance.
+
+##### Why tags exist: from clustering to definitions
+
+**Content**: Content relocated to design-note leaves under the Vocabulary concept (RFC-042 Change B/F, srs#562). See derived-from.
+
+
+##### Container tags must resolve against Vocabulary Terms when a Vocabulary governs the key
+
+**Number**: I-65
+
+**Constraint**: When a Vocabulary in the repository package declares Term entries for a given tag key, Container tags bearing that key MUST resolve against those Terms per RFC-006 vocabulary resolution rules. Free-string tags are valid when no Vocabulary entry governs the key.
+
+
+##### Why tags exist: from clustering to definitions
+
+**Content**: Tags emerged from a concrete problem in note-taking: when building up a body of notes, there was no lightweight way to say "these notes are related" or "this note belongs to this topic cluster" without creating a formal Relation or binding to a Type.
+
+Raw string tags on Notes filled that gap. A tag is not a claim about structure — it is a claim about topic membership. Notes about the same problem domain, design thread, or concern can share a tag, and that shared tag is enough to surface them together.
+
+
+##### Evolution to definitions
+
+**Content**: As tag vocabularies grew, the tags themselves needed properties. Two problems appeared:
+
+1. **Disambiguation**: the same string could mean different things in different contexts. A label is not enough — description and aliases matter.
+2. **Roles**: some tags were structural signals rather than topic labels. The `foundation` tag marks notes that should always be included in an AI context handoff. That is a semantic role, not just a category.
+
+This led to `TagDefinition` — an addressable Tier 3 record that gives a tag a stable identity, description, roles, and aliases. A tag does not *require* a definition to be used; definitions are additive enrichment. But when a tag carries structural meaning (like `foundation`), its definition is what makes that meaning machine-readable.
+
+
+##### Design principle
+
+**Content**: Tags are a peer to Field and Type in the SRS data model — not an extension, not an afterthought. They are defined natively in the core implementation with dedicated service functions, not modelled as user-defined package types. This is because the operations that depend on tags (especially foundation note selection for AI context) are universal across all SRS repositories, not specific to any one repo's package.
+
+
+##### `vocabularyRef` — binding closed string fields to shared vocabularies
+
+**Content**: When `fieldType.valueDomain` is `"closed"`, a Field declares exactly one value source:
+
+Example: the two value sources a closed string Field may declare.
+
+`allowedValues` is formally sugar for an anonymous inline closed vocabulary: the value set is fixed by the Field definition, so changing it means a new Field version. `vocabularyRef` is a **configurable** data range — the value set is managed as package configuration and evolves without reversioning the Field — and is used when the set is shared, extensible, or needs Term identity. A `vocabularyRef` MUST resolve to a `Vocabulary` with `mode: closed`. Declaring both, or neither when `valueDomain` is `"closed"`, is a validation error.
+
+
+##### Vocabulary and Term
+
+**Content**: SRS defines four controlled vocabularies — sets of strings that appear in instance data and must mean something stable. They share a common substrate: a `VocabularyEntry` contract satisfied by `Term`, `LifecycleState`, and `RelationTypeDefinition`.
+
+
+##### `VocabularyEntry` (substrate contract)
+
+**Content**: `VocabularyEntry` is a contract, not a serialised type. Every conforming entry carries:
+
+Example: the `VocabularyEntry` substrate contract.
+
+**Absent `status` MUST be treated as `active`.** This is normative: all resolution rules (V1, V6, V9, V10) treat absent identically to `"active"`.
+
+**Entries are keyed, not named.** Entries carry `key`, not `name`, and are addressed within their container. They are not independently `Reference`-able. Containers (`Vocabulary`, `Lifecycle`) have `name` and are the `Reference` targets.
+
+**Required-field tightening.** `label` and `description` are optional so an emergent `Term` is valid before prose is written. A specialisation MAY tighten an optional substrate field to required; it MUST NOT relax a required one. `RelationTypeDefinition` requires both `label` and `description` (unchanged from RFC-005).
+
+**One forward-compatibility policy.** Unknown top-level fields are rejected; arbitrary entry metadata goes in `meta`.
+
+
+##### `Vocabulary`
+
+**Content**: A named, versioned set of `Term` entries.
+
+See the generated reference below for `Vocabulary`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+
+
+##### `Term`
+
+**Content**: The generalisation of `TagDefinition`. A defined option within a `Vocabulary`.
+
+See the generated reference below for `Term`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+
+
+##### The four vocabularies
+
+**Content**: | Vocabulary | Binding scope | Container | Mode |
+|---|---|---|---|
+| Tags | ambient (whole repo) | `Vocabulary` (typically local, open) | `open` |
+| Relation types | repo-global (any edge) | `package.relationTypes[]` (flat global set) | closed-extensible |
+| Lifecycle states | type-bound, shareable | `Lifecycle` (inline or referenced) | `closed` |
+| Field values | field-bound | `Vocabulary` via `vocabularyRef` or inline `allowedValues` | `closed` (V3) |
+
+
+##### Package integration
+
+**Content**: Vocabularies are Foundation-group definition types installed in packages alongside fields, types, and relationTypes:
+- the distributable `Package` holds inline definitions: `vocabularies?: Vocabulary[]`
+- the repository `package/package.json` holds relative paths: `"vocabularies": ["vocabularies/foo.json", ...]`
+
+
+##### Emergent vocabularies (open vocabularies)
+
+**Content**: For an open vocabulary, the authoritative set of values is `DISTINCT(tag keys across instances)` — not the `terms[]`. The `Vocabulary` is a curation overlay that may lag usage or be empty.
+
+A conforming implementation MUST be able to compute the live tag set and classify each key as: **used-and-defined**, **used-but-undefined**, or **defined-but-unused**.
+
+**Emergence lifecycle** (mirrors tier graduation):
+1. Free string — exists, undefined, valid.
+2. Curate → `Term` — non-destructive; instance carries the same string.
+3. Alias-merge — a surviving Term absorbs another: absorbed key+aliases move to the survivor, absorbed entry removed (its `id` recorded in `meta.mergedFrom` and redirected); zero instance rewrites.
+4. Optional normalize — opt-in operation that rewrites instance strings to the canonical key.
+5. Optional close — promote `mode: open → closed` (V10).
+
+
+##### Resolution invariants
+
+**Content**: **V1 — Closed-vocabulary resolution.** Any value in a closed vocabulary must resolve to exactly one entry (matched by `key` or `alias`) in the effective entry set with `status` in {`active`, `deprecated`, `tombstone`} for reads and `active` for new writes.
+
+Applies to: `Relation.relationType`, `select`/`multiselect` field values, `Record.lifecycleState`.
+
+**V2 — Open-vocabulary resolution.** A value in an open vocabulary need not resolve; if it matches a `Term`, enrichment applies. When a value matches more than one entry (a warned V5 collision), resolution is deterministic: key match outranks alias match; ties broken by lexicographically smallest `id`.
+
+Applies to: `Note.tags`, `NoteSection.tags`.
+
+**V3 — Field binding exclusivity and closedness.** A `select`/`multiselect` Field must declare exactly one of `allowedValues` or `vocabularyRef`. A `vocabularyRef` on a `select`/`multiselect` Field MUST resolve to a `Vocabulary` with `mode: closed`.
+
+**V4 — Vocabulary reference resolution.** A `vocabularyRef` must resolve to an installed `Vocabulary` in the effective package set.
+
+**V5 — Effective entry set.** The effective entry set of a `Vocabulary` or `Lifecycle` is constructed as:
+1. Include entries with effective `status` in {`active`, `deprecated`, `tombstone`}. Exclude `retired` entirely (before uniqueness, before V1).
+2. Add transitively the entries of any extended container. The `extends*Version` must match the resolved upstream version; a mismatch is a hard validation error (not silent degradation).
+3. Check uniqueness: duplicate `id`s are an error. In closed vocabularies, the union of all `key`s and `aliases` must be globally unique (key/key, key/alias, alias/alias collisions are errors). In open vocabularies, collisions are warnings (resolved by V2 tie-break).
+
+Inline `Type.lifecycle` cannot extend; its effective set is its own `states`/`transitions`. V5 and V9 apply to inline lifecycles identically to referenced ones.
+
+Excluding `retired` before uniqueness frees a retired key for reuse by a new entry. `tombstone` remains in the effective set and keeps occupying its key. When retiring a key that will be reused, implementations MUST surface stale references to the retiring key for operator resolution before reuse.
+
+**V6 — Closed value status.** A value resolving to `deprecated` or `tombstone` follows RFC-005 E1 write semantics (resolves; new writes rejected). `retired` entries do not resolve under V1 — values referencing them are invalid as if absent.
+
+**V10 — Open→closed promotion.** Version-bumping change with a mandatory pre-flight classifying in-use keys as:
+- *will-be-invalid*: used-but-undefined, or resolving only to a `retired` entry (reads do NOT survive).
+- *read-only-after-close*: resolves to `deprecated` or `tombstone` (reads survive; new writes rejected).
+- *used-and-active*: fine.
+
+A grace window is declared in `Vocabulary.promotionWindow.until`. Until that bound, violations are warnings; after it, V1 applies unconditionally. Absent `promotionWindow` means the promotion takes effect immediately. There is no unbounded window.
+
+
+
+#### Field
+
+**Canonical Key**: type:com.semanticops.srs/field
+
+**Description**: The atomic reusable semantic unit: one named, versioned, UUID-identified piece of meaning, defined once and composed into any number of Types. A Field owns its own semantics completely — its value contract and its AI guidance belong to the Field and may not be redefined, overridden or duplicated by a Type that includes it. If a context needs different meaning, that is a different Field with its own identity and lineage, not a local override.
+
+**Notes**: Invariants 1-3 and 9 carry the Field's non-negotiables: rendering labels change nothing, Types may not restate Field semantics, and a new id means a new definition and not a new version.
+
+##### Field semantics — content format
+
+
+##### Field semantics
+
+
+##### Type must not redefine, override, or duplicate the semantic content…
+
+**Number**: 2
+
+**Constraint**: A `Type` must not redefine, override, or duplicate the semantic content of any `Field` it includes. If different semantics are needed for a Field in a specific Type context, a distinct `Field` with its own identity and lineage must be created.
+
+
+##### Why Field and Type are separate
+
+**Content**: 
+A form system where each template defines its own fields produces semantic silos: the "decision statement" in the Technology template and the "decision statement" in the Budget template are unrelated strings. They cannot be searched together, compared, or composed.
+
+In SCDS, a Field is defined once. Any number of Types may include it. When two Types share a Field, any AI extraction logic, validation rules, or downstream analysis written for that Field applies consistently across both. The Field's identity is stable across all the contexts it appears in.
+
+This is a stronger constraint than it appears. It means a Type cannot secretly redefine what a Field means for its own purposes — it can only configure presentation. If a Type genuinely needs different semantics, it must use a different Field.
+
+
+##### Field domains
+
+**Content**: 
+Named sets of Fields that travel together may become useful as Type libraries grow. For v2, ordinary shared base Types plus `ext:type-inheritance` cover the immediate reuse need with less machinery. Field domains are deferred until there is stronger evidence that reusable field sets need their own identity, versioning, and package dependency rules independent of Types.
+
+
+##### Field type
+
+**Canonical Key**: type:com.semanticops.srs/field-type
+
+**Description**: The complete statement of what a Field's value is, decomposed into orthogonal facets that vary independently: datatype, cardinality, value domain, string format, and value constraints. Because the facets are separate, a constraint on one never forces a choice on another — a closed list of markdown strings is expressible without inventing a datatype for it. Cardinality is declared here and nowhere else. Three composite datatypes let a value's range be another Type (`ref`), be governed by a sibling field (`dependent`), or be an open string-keyed collection (`map`).
+
+**Notes**: It replaced the pre-RFC-032 `valueType` enum, which conflated four axes into one closed list and forced every independently-varying axis to be bolted on beside it. `valueType` is removed, not deprecated.
+
+###### Field.fieldType.format, when present, is only meaningful when datatype…
+
+**Number**: 38
+
+**Constraint**: `Field.fieldType.format`, when present, is only meaningful when `fieldType.datatype` is `"string"`. Implementations must ignore `format` on fields with any other `datatype`.
+
+
+###### Why `valueType` and `editorHint` are separate
+
+**Content**: 
+A Field with `valueType: "text"` might be edited via textarea in a web form, captured via voice in a mobile app, or extracted directly from a transcript with no editing UI. The semantic type is stable; the editing surface is a rendering decision.
+
+AI extraction logic, validation rules, and export formatting depend only on `valueType`. `editorHint` is a default that implementations and Views may override. Conflating the two would mean that changing the preferred editor for a field could inadvertently break AI extraction rules.
+
+
+###### Choosing between repeatable fields, field groups, and separate Records
+
+
+###### List cardinality array-wraps uniformly
+
+**Number**: I-139
+
+**Constraint**: `cardinality: "list"` array-wraps uniformly, for every `datatype` including `map` and `dependent`, matching `projectField`'s unconditional wrap. The single-value rule states the `single` case; the wrap composes on top of it. (RFC-039 [R16])
+
+
+###### Composite value
+
+**Canonical Key**: record:concepts/composite-value
+
+**Description**: A Field whose range is another Type, not a scalar, declared as `datatype: "ref"` with a `rangeType`. In `inline` mode the value is a nested object shaped by that Type — structure expressed through the type system instead of a serialised blob in a text field. In `reference` mode the value is the id of a target instance, and it is definitional composition, not an assertion: it must never be interpreted as, or required to be accompanied by, a Relation.
+
+**Notes**: The test for which to use: model an assertion *between* instances (one needing provenance, lifecycle or confidence) as a Relation; use `reference` where the target's identity is part of the definition itself.
+
+####### Reference-mode values resolve in the instance set
+
+**Number**: I-136
+
+**Constraint**: A `mode: "reference"` value MUST resolve to an instance present in the repository's authoritative instance set, and that instance MUST be of the Field's declared `rangeType` at the declared `typeVersion`. A dangling or type-mismatched target MUST be reported as an error naming the referring record, the key, and the target id. (RFC-039 [R14], amended by RFC-038 [R25] — the reference target is the tree-enumerated instance set, not a manifest `instanceIndex`, which is retired per RFC-038 [R2]; discharges RFC-032 OQ4, RFC-033:302, RFC-035:592)
+
+
+
+###### `FieldType` — the value semantics
+
+**Content**: `fieldType` carries everything about what a Field's value *is*. It decomposes value semantics into orthogonal facets — **datatype × cardinality × value-domain × format × constraints** — so each axis varies independently, and adds three composite datatypes (`ref`, `dependent`, `map`) that let a Field's range be another Type.
+
+Example: the `FieldType` shape.
+
+**`datatype` semantics:**
+
+| Value | Meaning |
+|---|---|
+| `"string"` | Text of any length. Length, pattern, format, and value domain are separate facets, not distinct datatypes |
+| `"number"` | Numeric value, fractional permitted |
+| `"integer"` | Whole number |
+| `"boolean"` | True/false |
+| `"date"` | ISO 8601 calendar date |
+| `"date-time"` | ISO 8601 date + time |
+| `"ref"` | The range is another Type — nested object(s) when `mode` is `"inline"`, target instance id(s) when `"reference"` |
+| `"dependent"` | The value conforms to the type descriptor named by `dependsOn` |
+| `"map"` | Open string-keyed collection whose values conform to `valueRange` |
+
+Cardinality is declared **only** here. A Field holding many values is `cardinality: "list"`; a Type that includes it must not restate or override that — Field semantics belong to the Field (Invariant 2).
+
+A `reference`-mode value is a target instance id, and MUST NOT be interpreted as or require a `Relation`. Use `reference` for definitional composition, where the target's identity is part of the definition; model an assertion *between* instances — one needing provenance, lifecycle, or confidence — as a `Relation` instead.
+
+
+
+##### Field
+
+**Content**: The atomic reusable semantic unit. Fields are defined once and composed into Types. A Field's `aiGuidance` and `fieldType` — including every constraint the latter carries — belong to the Field, not to any Type that includes it.
+
+See the generated reference immediately below for `Field`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger) — this prose no longer hand-duplicates the property list.
+
+
+##### Historical: the pre-RFC-032 `valueType` model
+
+**Content**: Before RFC-032, value semantics were a single closed enum, `valueType`, with the satellite properties `allowedValues`, `contentFormat`, `validationRules`, and a standalone `repeatable` cardinality. That enum conflated four axes at once, which is why every axis needing independent expression had to be bolted on separately. It is **removed**, not deprecated — a Field definition carrying `valueType` does not conform to this specification. Packages authored against the old model map across as:
+
+| Legacy `valueType` | Equivalent `fieldType` |
+|---|---|
+| `"string"` | `{ datatype: "string" }` (plus `format: "markdown"` if `contentFormat` was `"markdown"`) |
+| `"text"` | `{ datatype: "string", format: "plain" \| "markdown" }` |
+| `"number"` | `{ datatype: "number" }` |
+| `"boolean"` | `{ datatype: "boolean" }` |
+| `"date"` | `{ datatype: "date" }` |
+| `"url"` | `{ datatype: "string", format: "uri" }` |
+| `"select"` | `{ datatype: "string", valueDomain: "closed" }` + `allowedValues` or `vocabularyRef` |
+| `"multiselect"` | `{ datatype: "string", cardinality: "list", valueDomain: "closed" }` + `allowedValues` or `vocabularyRef` |
+
+`validationRules` entries become `fieldType.constraints` facets; an `enum` rule becomes `valueDomain: "closed"` with `allowedValues`. A `required` rule was never a Field-level concern and moves to the `FieldAssignment` that includes the Field.
+
+
+
+#### Lifecycle
+
+**Canonical Key**: record:concepts/lifecycle
+
+**Description**: A named state machine (a closed vocabulary of states plus the transitions between them and exactly one initial state) that a Type may declare inline or reference as an installed, shareable definition. It governs where a Record stands in a process: draft, active, archived, or whatever the domain needs. Lifecycle state is changed only by an explicit transition act; asserting a Relation never moves it.
+
+**Notes**: A state may declare that resting in it requires a satisfying Relation, enforced hard (the transition is rejected) or advisory (the transition proceeds and the unsatisfied state surfaces as an at-rest warning).
+
+##### Lifecycle (ext:lifecycle)
+
+
+##### Type.lifecycle.initialState must reference a key that appears in…
+
+**Number**: 4
+
+**Constraint**: `Type.lifecycle.initialState` must reference a `key` that appears in `lifecycle.states[]` and where `isInitial === true`.
+
+
+##### Every from and to value in lifecycle.transitions[] must reference a…
+
+**Number**: 5
+
+**Constraint**: Every `from` and `to` value in `lifecycle.transitions[]` must reference a `key` that appears in `lifecycle.states[]`.
+
+
+##### Record.lifecycleState, when present, must reference a key in the…
+
+**Number**: 6
+
+**Constraint**: `Record.lifecycleState`, when present, must reference a `key` in the associated `Type.lifecycle.states[]`.
+
+
+##### A Record MUST NOT occupy a lifecycle state declaring requiresRelation without a satisfying Relation
+
+**Number**: I-98
+
+**Constraint**: A Record MUST NOT rest in a lifecycle state that declares `requiresRelation` unless at least one Relation satisfies the obligation: its type equals one of the declared `relationType`(s) and the Record is the relation's target when `direction` is `incoming` (or omitted) or its source when `direction` is `outgoing`. When the state declares `enforcement: "hard"` (the default), an implementation MUST reject a lifecycle transition into it unless the operation, on completion, satisfies this occupancy requirement — either because a satisfying Relation already exists, or because the operation's fulfillment establishes one. The rejection MUST be machine-readable, identifying the target state key, the required relation type(s), and the direction. When the state declares `enforcement: "advisory"`, the transition MUST be permitted regardless of the obligation and the unsatisfied state surfaced only as an at-rest warning, never a rejection. (RFC-022 R1–R3, R2a.)
+
+
+##### Transition fulfillment is all-or-nothing
+
+**Number**: I-99
+
+**Constraint**: A fulfillment supplied with a lifecycle transition MUST be applied as one all-or-nothing operation: `newRecord` creates a successor of the Record's Type in the effective lifecycle's initial state, asserts one Relation of the selected type oriented per `direction`, and transitions the Record; `existingInstanceId` asserts the Relation to the referenced instance (which MUST exist and MUST NOT be the Record itself) and transitions. If any step fails, no step's effect may remain observable. A file-backed implementation MAY realize this by write ordering in which the state change is committed last, provided every committed prefix is a valid repository under I-98. When the state declares an any-of `relationType` array, `fulfillment.relationType` MUST be one of the declared types, defaulting to the first; a `fulfillment` supplied for a target state that declares no `requiresRelation` MUST be rejected. (RFC-022 R4–R8.)
+
+
+##### requiresRelation is projected structurally and validated as a warning at rest
+
+**Number**: I-100
+
+**Constraint**: Allowed-transitions projections MUST include the target state's `requiresRelation` declaration on each transition option whose target state declares one, so clients route successor-flow presentation from structure rather than state-name matching. Repository validation MUST emit a warning-severity diagnostic for every Record at rest that violates I-98, and MUST NOT treat such a violation as a hard validation error. Transitions whose target state declares no `requiresRelation` MUST behave exactly as before RFC-022. (RFC-022 R8–R10.)
+
+
+##### ext:lifecycle
+
+**Content**: **Required for**: governance tools, decision logs, any implementation where records progress through defined states.
+
+`ext:lifecycle` is fully integrated with the vocabulary substrate (RFC-006). `Lifecycle` is an installable, referenceable container — a `VocabularyEntry` specialisation whose container holds states and transitions. `LifecycleState` satisfies the `VocabularyEntry` substrate contract with `key` (was `name`) as its key-role field.
+
+
+##### `LifecycleState` (VocabularyEntry specialisation)
+
+**Content**: Example: the `LifecycleState` shape.
+
+
+##### `LifecycleTransition` (edge between state keys)
+
+**Content**: Example: the `LifecycleTransition` shape.
+
+`LifecycleTransition` is an edge, not a `VocabularyEntry` (no `key`), but carries `id` so it is addressable. It follows the same forward-compatibility policy as substrate entries: unknown top-level fields rejected; arbitrary metadata in `meta`.
+
+
+##### `Lifecycle` container
+
+**Content**: An installable, referenceable state machine — a closed vocabulary of states plus transitions.
+
+Example: the `Lifecycle` container shape.
+
+The distributable `Package` holds inline definitions: `lifecycles?: Lifecycle[]`. The repository `package/package.json` holds relative paths: `"lifecycles": ["lifecycles/foo.json", ...]`.
+
+
+##### Type lifecycle declaration (added by this extension)
+
+**Content**: `Type` gains a lifecycle, declared in exactly one of two mutually exclusive forms (V7):
+
+Example: the two lifecycle declaration forms a Type may carry.
+
+Declaring both is a validation error (V7). An inline lifecycle's effective state set is exactly its own `states`/`transitions`; V5 and V9 apply identically.
+
+
+##### Record lifecycle state
+
+**Content**: `Record.lifecycleState` must resolve to a state `key` in the Type's effective state set under V1.
+
+
+##### Validation invariants (V7–V9)
+
+**Content**: **V7 — Lifecycle exclusivity.** A Type declares exactly one of `lifecycle` or `lifecycleRef`.
+
+**V8 — Lifecycle reference resolution.** A `lifecycleRef` must resolve to an installed `Lifecycle` in the effective package set.
+
+**V9 — Lifecycle integrity.** Over the effective state set (V5):
+- Exactly one state MUST have `isInitial: true`; `initialState` MUST reference that state's `key`.
+- The initial state MUST have effective `status: active`. A lifecycle whose initial state is deprecated, tombstone, or retired is invalid.
+- Every `transition.from`/`transition.to` must reference a state `key` in the effective state set.
+- A state with `isFinal: true` MUST NOT appear as the `from` of any transition.
+- Transition `id`s must be unique within the effective transition set.
+- `Record.lifecycleState` resolves under V1.
+
+
+
+#### Stable identity
+
+**Content**: An SRS entity carries a UUID minted once, at creation, that does not change afterward. A copy, an export, an import, or a rename for display MUST NOT change an entity's UUID. Identity is declared on the entity itself, never derived from a file path, a directory position, or a storage history.
+
+A UUID conflict between two entities is a fatal error. A loader MUST NOT resolve it by precedence, and MUST NOT pick one entity as the winner over the other: doing so would discard whichever identity claim lost.
+
+Changing what an entity is at its root means minting a new UUID. A materially different entity does not reuse an old UUID: every existing reference to that UUID already points at the entity it used to be.
+
+
 #### Foundation Group (Core)
 
-**Content**: The Foundation group is required for all conforming implementations.
+**Canonical Key**: record:concepts/foundation-group-core
+
+**Description**: The Foundation group is required for all conforming implementations.
 
 ##### Supporting types
 
@@ -972,791 +1759,6 @@ relation-type-definition {
 }
 ```
 
-
-
-#### Stable identity
-
-**Canonical Key**: record:concepts/stable-identity
-
-**Description**: The rule that every SRS entity carries a UUID that is minted once and never changes — not when the entity is copied, exported, imported, renamed for display, or moved between repositories. Identity is declared, never inferred from a filename, a path, a storage history or a display label, and never selected by precedence: an identity conflict is fatal, never resolvable. Changing what an entity is at root means minting a new UUID, not reusing the old one.
-
-**Notes**: Definition identity (Field.id, Type.id, packageId) and instance identity (instanceId, relationId, documentId, containerId) are distinct id spaces that obey the same rule.
-
-**Examples**: `repositoryId` survives export and copy; an importer that mints a new repository for every archive it receives, instead of keying on `repositoryId`, is non-conformant (Invariant 53).
-
-##### Field.id is stable across versions.
-
-**Number**: 9
-
-**Constraint**: `Field.id` is stable across versions. A new `id` means a new definition, not a new version of an existing one.
-
-
-##### When an importer encounters an incoming object whose identity key…
-
-**Number**: 54
-
-**Constraint**: When an importer encounters an incoming object whose identity key matches an existing local object but whose content or checksum differs, it must surface the conflict explicitly. An importer that silently overwrites or silently discards in this case is not conformant.
-
-
-
-#### Namespace
-
-**Canonical Key**: record:concepts/namespace
-
-**Description**: A dot-separated, lowercase identifier that groups definitions under an authority and keeps names from colliding between independent publishers. Components match `[a-z0-9][a-z0-9-]*`. `core` is reserved for definitions maintained by the SRS standard, and `com.semanticops.core` is reserved such that no repository may declare a Type or Field under it. Namespace authorship is where domain vocabulary responsibility sits — the specification deliberately defines no universal ontology.
-
-**Examples**: `core`, `community.adr`, `com.acme.hr`, `org.cooperative-name`
-
-##### μDemocracy Mapping
-
-**Intro**: How the SCDS v2 vocabulary maps to the μDemocracy application layer. Reproduced from the v1→v2 conceptual remapping document for reference.
-
-| SCDS concept | μDemocracy application |
-| --- | --- |
-| Field | Semantic atom in a governance record |
-| Type | Decision, Proposal, Action, Role, Value, Principle, ... |
-| Record | A captured governance artefact with provenance |
-| Blueprint | Founding Document type; Decision Log type |
-| Protocol | Democracy protocol: Brain Dump, Decomposition, Decision, Proposal, ... |
-| Container | A group's governance workspace; a founding process scope |
-| Relation | `supersedes`, `derived-from`, `ratifies`, `depends-on`, ... |
-| View | Facilitator view; summary view; export for ratification |
-| Document View | Assembled founding document; full decision log |
-| Address | Stable identifier for any governance element — Field, Record, stage, chunk |
-| Attention State | Current focus of an active facilitated session |
-| Revision | Auditable history of how a governance field arrived at its current value |
-| Conversation layer | Session transcript; threaded discussion; facilitator annotations |
-
-
-
-##### com.semanticops.core/* types and fields MUST resolve in every conforming repository without any package declaration
-
-**Number**: I-85
-
-**Constraint**: A conforming SRS implementation MUST make all `com.semanticops.core/*` types and fields resolvable in every repository without any `packageRef` or `packageRefs` declaration in the manifest. The core base package's definitions are treated as logically present in the RFC-014 R6 package union for all repositories. An implementation that fails to resolve `com.semanticops.core/*` types and fields in a structurally valid repository is non-conformant with RFC-029.
-
-**Rationale**: Without this invariant an implementation could claim RFC-029 conformance while failing to expose core types to type resolution, making the always-available guarantee unverifiable. The invariant makes the expectation explicit and testable: a conformance suite can check whether `com.semanticops.core/purpose` resolves in any repository regardless of its package declarations.
-
-
-##### No Type or Field with namespace com.semanticops.core MAY be declared in any repository package
-
-**Number**: I-86
-
-**Constraint**: A repository MUST NOT declare any Type or Field under the `com.semanticops.core` namespace in a local or external package. An implementation MUST reject the repository load with a conflict error if any such declaration is encountered during package loading. This reservation covers only the `com.semanticops.core` namespace; other `com.semanticops.*` sub-namespaces are governed by their own RFC or by general package conflict rules and are not affected by this invariant.
-
-**Rationale**: The core base package's definitions are exclusively controlled by the SRS implementation, guaranteeing universal availability and consistency. Allowing repositories to declare their own `com.semanticops.core` types would create shadowing, version conflicts, and divergence between implementations. The hard conflict error (not a warning) makes this an unambiguous implementation constraint.
-
-
-
-#### Version lineage
-
-**Canonical Key**: record:concepts/version-lineage
-
-**Description**: A positive integer scoped to one UUID's history, expressing how a definition has evolved while remaining the same definition. Version increments within the lineage; changing the `namespace` or the `name` is not a version bump but a new definition with a new UUID. A bump is required whenever a downstream consumer's extraction, validation or governance behaviour would differ — notably any change to `fieldType` or to the meaning of `aiGuidance`. Reworded prose alone needs no bump.
-
-**Notes**: Package versions are semver strings and are a different axis: a package at 1.3.0 may carry `decision_statement@3` and `context@2`.
-
-##### A referenced Type version is not deletable
-
-**Number**: I-137
-
-**Constraint**: A Type version referenced by any instance in the repository MUST NOT be deleted. Name-keying makes the Record-to-Field edge Type-mediated: `fieldId` is recovered from `typeId` + `typeVersion` + key, so deleting the pinned Type version renders every instance of it unreadable. This rule governs versions with live referents only. (RFC-039 [R19])
-
-
-
-#### Canonical reference
-
-**Canonical Key**: record:concepts/canonical-reference
-
-**Description**: How one definition points at another. The human-facing canonical string form is `namespace/name@version`, with `/` and `@` reserved as separators that may not appear inside a component or a name. The stored machine form is UUID-anchored: a bare UUID for a lineage reference, or an ExactTypeRef pairing `typeId` with an explicit `typeVersion` where the pointer must be version-exact. The string form is for display and is never what gets stored, so a rename never breaks a stored pointer.
-
-**Examples**: `core/decision_statement@2`; `{ typeId: <uuid>, typeVersion: 3 }`
-
-##### `semanticObjectType` as a federation risk
-
-**Content**: 
-`semanticObjectType` on `Type` and in `SectionSource.type-query` is a free-form string. The spec recommends `namespace/name` format for portable Document Views (Invariant 32) and treats bare strings as a single-system convention. This is the minimum rule needed to ship v2.
-
-The risk: two systems can use the same bare string (`"decision"`, `"task"`) and mean different semantic Types. When graph traversal or document assembly crosses system boundaries, type-query portability becomes undefined wherever bare strings appear. This is where federation bugs will appear first.
-
-The current design is deliberately light. Possible futures in order of increasing strictness:
-- **Informative only** — `semanticObjectType` becomes advisory metadata with no query semantics; implementations must use explicit TypeRefs for cross-system queries
-- **Typed vocabulary** — `semanticObjectType` becomes a typed reference to a Type definition (a `TypeRef` rather than a bare string), giving it the same identity guarantees as a Field or Type reference
-
-The second option would require changing the type from `string` to `TypeRef | string` and a version bump. For now: prefer `namespace/name` format in any Type or SectionSource that will cross system boundaries, and treat bare strings as a scope boundary. Implementations should document which `semanticObjectType` values they recognise and what Types they map to.
-
-
-
-#### AI guidance
-
-**Canonical Key**: record:concepts/ai-guidance
-
-**Description**: Structured instruction carried on a definition telling a language model what the definition captures and how to populate it: a required `purpose`, and optional `extraction`, `negativeGuidance`, and worked `examples`. It travels with the definition instead of living in an application's prompt, which is what makes a package usable by a tool that has never seen it before. Guidance belongs to the entity that owns the meaning: a Field's guidance is the Field's, and a Type's guidance supplies session framing only — it never redefines a Field's extraction semantics.
-
-**Notes**: Composition order is a recommended default, not an invariant: Type framing, View framing, Field extraction, negative guidance, examples.
-
-##### Field's aiGuidance belongs to the Field.
-
-**Number**: 3
-
-**Constraint**: A `Field`'s `aiGuidance` belongs to the Field. Type-level `aiGuidance` provides session framing only.
-
-
-##### AI guidance composition order
-
-**Content**: 
-When assembling an AI prompt from multiple `aiGuidance` blocks:
-
-1. **Type framing** — establishes what semantic object type is being worked on
-2. **View framing** (if using `ext:views-l1`) — workflow-specific context for this View
-3. **Field extraction guidance** — specific instruction for populating each Field
-4. **Negative guidance** — constraints applied after the extraction instruction
-5. **Examples** — few-shot demonstrations last, as final grounding
-
-This ordering ensures broad context (what kind of object this is) precedes narrow directives (how to populate this specific Field). Template framing narrows the Type context — it does not replace it.
-
-This is a recommended default. Implementations that compose differently will produce different AI behaviour from the same definitions.
-
-
-##### `AiGuidanceExample`
-
-**Content**: A single example for AI guidance.
-
-Example: the `AiGuidanceExample` shape.
-
-`output` is required. An example without `input` demonstrates expected output form without requiring a specific source.
-
-
-##### `AiGuidance`
-
-**Content**: Structured AI guidance for a Field or Type.
-
-Example: the `AiGuidance` shape.
-
-The minimum valid `AiGuidance` is `{ purpose: "..." }`.
-
-
-
-#### Type
-
-**Canonical Key**: type:com.semanticops.srs/type
-
-**Description**: A named, versioned, UUID-identified composition of Fields describing one kind of semantic object. A Type declares which Fields participate, in what order, and which are required — and nothing more about them, because Field semantics are the Field's. Its effective field list is its own declared assignments, plus inherited ones when it specialises another Type. A Type is a definition, not an instance: what conforms to it is a Record.
-
-**Notes**: Extensions hang optional facets off the Type without changing that: a lifecycle declaration, cross-field rules, a base Type to specialise, an identity field.
-
-##### Why "Type" not "Module"
-
-**Content**: 
-"Module" in v1 was accurate but implied a software analogy that didn't communicate the concept well to non-technical practitioners. "Module" suggests a composable software unit. "Type" says what it actually is: a type definition for a semantic object. A Decision is a Type. A Task is a Type. A Risk is a Type.
-
-The rename also makes the Record/Type relationship legible by analogy: a Record is an instance of a Type, just as a value is an instance of a type in any typed system.
-
-
-##### Field.name uniqueness within a Type's effective field set
-
-**Number**: I-131
-
-**Constraint**: Within a Type's effective field set — its own `fields`, plus fields contributed through `extendsTypeId` — every referenced `Field.name` MUST be distinct. An implementation MUST reject a Type that violates this at definition time, not at instance time. (RFC-039 [R4])
-
-
-##### Field assignment
-
-**Canonical Key**: record:concepts/field-assignment
-
-**Description**: The entry by which a Type admits one Field: a reference to the Field by id, its declared composition order within the Type, whether it is required before a Record can be logged, and an optional display label. It is the exact boundary between what belongs to the Field and what belongs to the Type — the assignment may say where the Field sits and whether it must be filled, and may never say what it means. `displayLabel` is strictly rendering: needing a materially different label means needing a different Field.
-
-**Notes**: `order` is structure, not presentation. It feeds canonical serialisation and supplies the render default; a View may override it for display.
-
-###### FieldAssignment.displayLabel and FieldAssignment.displayHint are for…
-
-**Number**: 1
-
-**Constraint**: `FieldAssignment.displayLabel` and `FieldAssignment.displayHint` are for rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or validation. Extended by RFC-036 [CR-036-20]: they must also not affect a Record's Relations or its Discovery Text Projection (`ext:discovery`). Two repositories differing only in these values must produce identical validation results and identical Discovery output.
-
-
-
-##### `FieldAssignment`
-
-**Content**: A named, versioned composition of Fields for a specific semantic object type.
-
-See the generated reference immediately below for `Type`'s current property table (including the extension-owner column — RFC-031 OQ1), optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger) — this prose no longer hand-duplicates the property list, including the extension-owned facets it could previously only gesture at as comments.
-
-
-##### FieldAssignment
-
-**Content**: A Field reference within a Type. Declares this field's composition order and requiredness within the Type, without redefining field semantics.
-
-See the `FieldAssignment` appendix table in the generated reference below for the current property list.
-
-`displayLabel` is strictly for rendering. If a materially different label or meaning is needed, a distinct Field with its own lineage is required.
-
-Cardinality is a property of the referenced Field (`fieldType.cardinality`, RFC-032 [R4]); the former assignment-level `repeatable`/`minItems`/`maxItems` trio is removed (RFC-039 [R7], I-134).
-
-The Type's effective field list is `fields[]` unless `ext:type-inheritance` is declared and the Type extends another Type. In that case, the effective field list also includes inherited fields as defined by `ext:type-inheritance`.
-
-**AI guidance composition order** (recommended):
-
-1. Type framing (`Type.aiGuidance.extraction`) — establishes the semantic object type
-2. View framing (`View.aiGuidance.extraction`, if `ext:views-l1` is in use) — workflow-specific context
-3. Field extraction guidance (`Field.aiGuidance.extraction`)
-4. Negative guidance (`Field.aiGuidance.negativeGuidance`)
-5. Examples (`Field.aiGuidance.examples`)
-
-This is a recommended default, not a required invariant. Implementations that compose differently will produce different AI behaviour from the same definitions.
-
-**On instance migration when a Type version changes:**
-A Record binds to a specific `typeVersion` at creation time. Existing Records do not automatically migrate when a new Type version is published. Conformance is measured against the version the Record was instantiated under. When a Record is migrated and exchanged, it should carry the version it now conforms to, and the original Record should be preserved and linked via a `supersedes` Relation.
-
-
-##### `lifecycleRef` — referencing shared lifecycle definitions
-
-**Content**: When `ext:lifecycle` is in use, a Type declares a lifecycle in exactly one of two mutually exclusive forms (V7):
-
-Example: the two lifecycle declaration forms on a Type.
-
-Declaring both is a validation error. An inline lifecycle cannot extend; use `lifecycleRef` when the same state machine is needed across multiple Types.
-
-
-
-#### Type specialisation
-
-**Canonical Key**: record:concepts/type-specialisation
-
-**Description**: Single inheritance between Types: a specialising Type names one base Type, gains its effective field list, and adds its own. The governing constraint is substitutability — a system that knows the base Type but not the specialisation must still be able to read the inherited fields and should preserve the unknown ones instead of discarding them. A specialisation may therefore tighten an inherited optional field to required, but never relax a required one, and may never alter Field semantics.
-
-**Notes**: Inheritance chains must be acyclic (Invariant 39). Only some properties cascade up the ancestor chain — the effective identity field does; the explicit field order does not.
-
-##### Type inheritance (ext:type-inheritance)
-
-
-##### Type.extendsTypeId, when present, must reference a valid Type.id.
-
-**Number**: 39
-
-**Constraint**: `Type.extendsTypeId`, when present, must reference a valid `Type.id`. Inheritance chains must be acyclic; a Type may not directly or transitively extend itself.
-
-
-##### specializing Type must not declare a fieldId in its own fields[] that…
-
-**Number**: 40
-
-**Constraint**: A specializing Type must not declare a `fieldId` in its own `fields[]` that duplicates any `fieldId` inherited from its base Type or any ancestor Type.
-
-
-##### When Type.fieldOrder is present, it must contain exactly the set of…
-
-**Number**: 41
-
-**Constraint**: When `Type.fieldOrder` is present, it must contain exactly the set of field UUIDs in the Type's effective field list. No UUID may appear more than once, and no UUID from the effective field list may be absent.
-
-
-##### Every fieldId in Type.fieldAssignmentOverrides[] must reference a…
-
-**Number**: 42
-
-**Constraint**: Every `fieldId` in `Type.fieldAssignmentOverrides[]` must reference a field inherited from the base Type or an ancestor Type. Overrides must not reference fields declared in the specializing Type's own `fields[]`, must not alter Field semantics, and must not relax an inherited required field from `true` to `false`.
-
-
-##### When ext:type-inheritance is declared, Package.packageDependencies must…
-
-**Number**: 43
-
-**Constraint**: When `ext:type-inheritance` is declared, `Package.packageDependencies` must include a `Reference` for every Type in the transitive closure of base Types for any Type in `Package.types[]`. If `mode === "bundled"`, all such base Types must be present in `types[]`.
-
-
-##### Why Type inheritance is conservative
-
-**Content**: 
-`ext:type-inheritance` adds one formal mechanism: a Type may specialize one base Type and still be processable as that base Type. This solves the common case where a domain-specific Type needs to add fields to a shared Type without duplicating the whole definition.
-
-The extension is intentionally narrow. It supports inherited fields, added fields, explicit ordering, and presentation/workflow overrides for inherited fields. It does not let a specializing Type change Field semantics or relax base requirements. That keeps the central promise intact: a system that understands the base Type can still process the base portion of a specialized Record.
-
-`Type.fieldOrder` is a Type-level composition ordering declaration over the full effective field list, including inherited fields. `View.fieldViews[].order` is the sole View-level presentation and export ordering mechanism; it orders both FieldView and RecordPropertyView rows. Validators should apply the `fieldAssignmentOverrides` inherited-field restriction only to `fieldAssignmentOverrides`, not to `Type.fieldOrder`.
-
----
-
-
-##### validationRules are not inherited; a derived Type's own validationRules are the complete set
-
-**Number**: I-97
-
-**Constraint**: `validationRules` are not inherited. A Type's `validationRules` array is the complete and exclusive set of cross-field rules evaluated for Records of that Type. When `ext:type-inheritance` is in use and Type B extends Type A, Type A's `validationRules` MUST NOT be evaluated for Records of Type B unless Type B's own `validationRules` explicitly restates them. (RFC-019 R11.)
-
-
-##### The inheritance floor and the documentation-only rule
-
-**Content**: Metamodel v1.1.0 (RFC-040 Change A / Change C) models extension-contributed Type facets as separate metamodel Types extending the core via `ext:type-inheritance`, and gives `FieldAssignment` a per-context `description`. The owner's 2026-07-31 decision on srs#273 accepted both, each with a stated cost that this note exists to make a conscious acceptance rather than something a fresh implementer discovers by accident.
-
-**The inheritance floor.** Owner decision, 2026-07-31 (srs#273):
-
-> (a) makes the metamodel package depend on `ext:type-inheritance`, so any independent third-party implementation that wants to consume the metamodel *as records* must implement inheritance merging. That raises the floor for a from-scratch sovereign reader. Accepted — inheritance is core to the extensibility promise regardless — but it must be a conscious acceptance written into the design note, not an accident discovered later by an implementer.
-
-**The documentation-only rule.** Owner decision, 2026-07-31 (srs#273), on `FieldAssignment.description`:
-
-> The slot explains what a Field means *in this context*; it never changes what the Field means. "Field semantics are immutable — they cannot be overridden when used inside a Type" is one of the strongest anti-lock-in invariants in SRS: it is what makes cross-community Field reuse trustworthy. This is the first slot that could be abused to erode it. The RFC/design note must state: on conflict, the Field's own semantics and `aiGuidance` win, and a contextual description that contradicts them is a data error, not an override.
-
-**Three-layer forward-compatibility policy.** Ruled on srs#237, 2026-08-20, consolidating srs-rust#778 (engine) and the srs#273 Decision 1 extension mechanism into one normative statement per definition-layer entity:
-
-| Layer | Policy | Escape hatch |
-|---|---|---|
-| Definition (Field, Type, View) | reject-unknown | none — extend by inheritance |
-| Substrate (VocabularyEntry, Term, RelationTypeDefinition) | reject-unknown | `properties` bag |
-| Instance (Note, Record) | tolerate | `meta` bag |
-
-The stated reason for the asymmetry: an instance's `meta` cannot change what the record *means*; an unknown property on a **definition** can silently change what every downstream record means. Definitions are the trust boundary.
-
-**Forward framing: cell linkage as a retrieval signal, not an ontology.** The owner-shared decision-coherence research synthesis (2026-08-23, srs#273 comment; Tier-0 note "Design Jurisprudence: the neighbourhood role of the map") repositions what a location in the Pattern Grid buys: not an answer, but a neighbourhood of prior judgements a new decision must reckon with. Cell linkage is **one retrieval signal among several** — alongside explicit links, semantic similarity, shared concerns, and scope — never the ontology of truth. The minimal relation set stays deliberately small: `consistent_with`, `distinguishes`, `conflicts_with`, `supersedes` around decisions, plus `supports` / `challenges` between decisions and principles; `generalises` is inferred from a pattern of decisions, never itself asserted. No decision ontology beyond this set is sketched here. Retrieval favours precision over completeness — the minimum useful neighbourhood, not everything potentially relevant, or the retrieval mechanism recreates the context-bloat failure it exists to avoid. Today's actual significance gate — which decisions are worth capturing at all — is the owner-ruling bottleneck, named explicitly rather than left implicit: the charter's decision records are curated by what the owner chooses to rule on, and that curation is what keeps the record from drowning in undifferentiated capture.
-
-
-##### `identityFieldId`
-
-**Content**: **Required for**: Type libraries that need formal specialization while preserving base-Type processability.
-
-Defines single inheritance for Types. A specializing Type inherits the fields and semantics of a base Type, may add fields, and remains processable as the base Type by systems that know the base Type but not the specialization.
-
-When `ext:type-inheritance` is in use, `Type` gains:
-
-Example: the properties `ext:type-inheritance` adds to a Type.
-
-
-##### identityFieldId
-
-**Content**: Names one field, from the Type's effective field set, as the record's identity/display field — the field a conformant implementation SHOULD use to resolve a Record's display label (e.g. in list, tree, discovery, and container views), in preference to any implementation-specific heuristic (Rule [N+36]).
-
-`identityFieldId` MUST reference a `fieldId` present in the Type's effective field set (Rule [N+33]).
-
-**Inheritance is cascading, unlike `fieldOrder`.** The *effective* `identityFieldId` of a Type is its own `identityFieldId`, if declared; otherwise, the effective `identityFieldId` of its base Type, resolved transitively up the ancestor chain; otherwise absent (Rule [N+32], [N+34]). A Type overrides an inherited effective `identityFieldId` by declaring its own, which need not match the base Type's and MAY point at a field the Type itself adds. This differs from `fieldOrder`, which is read only from the Type being resolved and does not search the ancestor chain when absent — `identityFieldId`'s inheritance rule is specific to this property, not a reuse of `fieldOrder`'s behavior.
-
-`identityFieldId` scopes to Tier 2 Records only; it has no defined meaning for Tier 0 (Note) instances, which carry no Type binding (Rule [N+35]).
-
-**Interaction with `DocumentSection.titleFieldId` (`ext:views-l2`).** For any `DocumentSection` that does not declare `titleFieldId` — whether that section's field content renders via the Default Rendering Baseline or a dispatched L1 View — implementations SHOULD render the per-record heading using the value of the field named by the record's Type's effective `identityFieldId`, if present, in place of omitting the heading. `titleFieldId`, when declared, MUST continue to take precedence for that section's per-record heading (Rule [N+37]; see `ext:views-l2` § Heading Hierarchy).
-
-
-##### `FieldAssignmentOverride`
-
-**Content**: Overrides presentation or workflow constraints for an inherited Field in a specializing Type. It does not change the Field's semantics.
-
-Example: the `FieldAssignmentOverride` shape.
-
-`displayLabel` and `displayHint` are presentation-only. `required` may tighten an inherited optional field (`false` to `true`) for the specializing Type. It must not relax an inherited required field (`true` to `false`), because a Record instantiated against the specializing Type must remain valid when processed as the base Type.
-
-The effective field list for a specializing Type is the inherited effective field list of its base Type plus the specializing Type's own `fields[]`. A specializing Type must not duplicate an inherited `fieldId` in its own `fields[]`.
-
-Example:
-
-Example: a governance decision Type specialising a core decision Type.
-
-A system that knows `core/decision` but not `org.example/governance_decision` can still read the inherited decision fields. The specializing fields are unknown extension content to that system and should be preserved rather than discarded.
-
-
-
-#### Vocabulary
-
-**Canonical Key**: record:concepts/vocabulary
-
-**Description**: A controlled set of strings that appear in instance data and must mean something stable. Every entry, whatever specialisation it is, carries the same substrate contract: a stable id, a version, a namespace, the `key` that is the string actually stored, optional label, description and aliases, and a status of active, deprecated, tombstone or retired, where absent means active. A vocabulary is `open`, meaning unlisted values are valid and unenriched, or `closed`, meaning every value must resolve to exactly one entry.
-
-**Notes**: An open vocabulary's authoritative value set is the distinct keys actually in use, not the curated entry list — the curation is an overlay that may lag or be empty. Curating a string into a Term rewrites no instance.
-
-##### Why tags exist: from clustering to definitions
-
-**Content**: Content relocated to design-note leaves under the Vocabulary concept (RFC-042 Change B/F, srs#562). See derived-from.
-
-
-##### Container tags must resolve against Vocabulary Terms when a Vocabulary governs the key
-
-**Number**: I-65
-
-**Constraint**: When a Vocabulary in the repository package declares Term entries for a given tag key, Container tags bearing that key MUST resolve against those Terms per RFC-006 vocabulary resolution rules. Free-string tags are valid when no Vocabulary entry governs the key.
-
-
-##### Why tags exist: from clustering to definitions
-
-**Content**: Tags emerged from a concrete problem in note-taking: when building up a body of notes, there was no lightweight way to say "these notes are related" or "this note belongs to this topic cluster" without creating a formal Relation or binding to a Type.
-
-Raw string tags on Notes filled that gap. A tag is not a claim about structure — it is a claim about topic membership. Notes about the same problem domain, design thread, or concern can share a tag, and that shared tag is enough to surface them together.
-
-
-##### Evolution to definitions
-
-**Content**: As tag vocabularies grew, the tags themselves needed properties. Two problems appeared:
-
-1. **Disambiguation**: the same string could mean different things in different contexts. A label is not enough — description and aliases matter.
-2. **Roles**: some tags were structural signals rather than topic labels. The `foundation` tag marks notes that should always be included in an AI context handoff. That is a semantic role, not just a category.
-
-This led to `TagDefinition` — an addressable Tier 3 record that gives a tag a stable identity, description, roles, and aliases. A tag does not *require* a definition to be used; definitions are additive enrichment. But when a tag carries structural meaning (like `foundation`), its definition is what makes that meaning machine-readable.
-
-
-##### Design principle
-
-**Content**: Tags are a peer to Field and Type in the SRS data model — not an extension, not an afterthought. They are defined natively in the core implementation with dedicated service functions, not modelled as user-defined package types. This is because the operations that depend on tags (especially foundation note selection for AI context) are universal across all SRS repositories, not specific to any one repo's package.
-
-
-##### `vocabularyRef` — binding closed string fields to shared vocabularies
-
-**Content**: When `fieldType.valueDomain` is `"closed"`, a Field declares exactly one value source:
-
-Example: the two value sources a closed string Field may declare.
-
-`allowedValues` is formally sugar for an anonymous inline closed vocabulary: the value set is fixed by the Field definition, so changing it means a new Field version. `vocabularyRef` is a **configurable** data range — the value set is managed as package configuration and evolves without reversioning the Field — and is used when the set is shared, extensible, or needs Term identity. A `vocabularyRef` MUST resolve to a `Vocabulary` with `mode: closed`. Declaring both, or neither when `valueDomain` is `"closed"`, is a validation error.
-
-
-##### Vocabulary and Term
-
-**Content**: SRS defines four controlled vocabularies — sets of strings that appear in instance data and must mean something stable. They share a common substrate: a `VocabularyEntry` contract satisfied by `Term`, `LifecycleState`, and `RelationTypeDefinition`.
-
-
-##### `VocabularyEntry` (substrate contract)
-
-**Content**: `VocabularyEntry` is a contract, not a serialised type. Every conforming entry carries:
-
-Example: the `VocabularyEntry` substrate contract.
-
-**Absent `status` MUST be treated as `active`.** This is normative: all resolution rules (V1, V6, V9, V10) treat absent identically to `"active"`.
-
-**Entries are keyed, not named.** Entries carry `key`, not `name`, and are addressed within their container. They are not independently `Reference`-able. Containers (`Vocabulary`, `Lifecycle`) have `name` and are the `Reference` targets.
-
-**Required-field tightening.** `label` and `description` are optional so an emergent `Term` is valid before prose is written. A specialisation MAY tighten an optional substrate field to required; it MUST NOT relax a required one. `RelationTypeDefinition` requires both `label` and `description` (unchanged from RFC-005).
-
-**One forward-compatibility policy.** Unknown top-level fields are rejected; arbitrary entry metadata goes in `meta`.
-
-
-##### `Vocabulary`
-
-**Content**: A named, versioned set of `Term` entries.
-
-See the generated reference below for `Vocabulary`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-
-##### `Term`
-
-**Content**: The generalisation of `TagDefinition`. A defined option within a `Vocabulary`.
-
-See the generated reference below for `Term`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-
-##### The four vocabularies
-
-**Content**: | Vocabulary | Binding scope | Container | Mode |
-|---|---|---|---|
-| Tags | ambient (whole repo) | `Vocabulary` (typically local, open) | `open` |
-| Relation types | repo-global (any edge) | `package.relationTypes[]` (flat global set) | closed-extensible |
-| Lifecycle states | type-bound, shareable | `Lifecycle` (inline or referenced) | `closed` |
-| Field values | field-bound | `Vocabulary` via `vocabularyRef` or inline `allowedValues` | `closed` (V3) |
-
-
-##### Package integration
-
-**Content**: Vocabularies are Foundation-group definition types installed in packages alongside fields, types, and relationTypes:
-- the distributable `Package` holds inline definitions: `vocabularies?: Vocabulary[]`
-- the repository `package/package.json` holds relative paths: `"vocabularies": ["vocabularies/foo.json", ...]`
-
-
-##### Emergent vocabularies (open vocabularies)
-
-**Content**: For an open vocabulary, the authoritative set of values is `DISTINCT(tag keys across instances)` — not the `terms[]`. The `Vocabulary` is a curation overlay that may lag usage or be empty.
-
-A conforming implementation MUST be able to compute the live tag set and classify each key as: **used-and-defined**, **used-but-undefined**, or **defined-but-unused**.
-
-**Emergence lifecycle** (mirrors tier graduation):
-1. Free string — exists, undefined, valid.
-2. Curate → `Term` — non-destructive; instance carries the same string.
-3. Alias-merge — a surviving Term absorbs another: absorbed key+aliases move to the survivor, absorbed entry removed (its `id` recorded in `meta.mergedFrom` and redirected); zero instance rewrites.
-4. Optional normalize — opt-in operation that rewrites instance strings to the canonical key.
-5. Optional close — promote `mode: open → closed` (V10).
-
-
-##### Resolution invariants
-
-**Content**: **V1 — Closed-vocabulary resolution.** Any value in a closed vocabulary must resolve to exactly one entry (matched by `key` or `alias`) in the effective entry set with `status` in {`active`, `deprecated`, `tombstone`} for reads and `active` for new writes.
-
-Applies to: `Relation.relationType`, `select`/`multiselect` field values, `Record.lifecycleState`.
-
-**V2 — Open-vocabulary resolution.** A value in an open vocabulary need not resolve; if it matches a `Term`, enrichment applies. When a value matches more than one entry (a warned V5 collision), resolution is deterministic: key match outranks alias match; ties broken by lexicographically smallest `id`.
-
-Applies to: `Note.tags`, `NoteSection.tags`.
-
-**V3 — Field binding exclusivity and closedness.** A `select`/`multiselect` Field must declare exactly one of `allowedValues` or `vocabularyRef`. A `vocabularyRef` on a `select`/`multiselect` Field MUST resolve to a `Vocabulary` with `mode: closed`.
-
-**V4 — Vocabulary reference resolution.** A `vocabularyRef` must resolve to an installed `Vocabulary` in the effective package set.
-
-**V5 — Effective entry set.** The effective entry set of a `Vocabulary` or `Lifecycle` is constructed as:
-1. Include entries with effective `status` in {`active`, `deprecated`, `tombstone`}. Exclude `retired` entirely (before uniqueness, before V1).
-2. Add transitively the entries of any extended container. The `extends*Version` must match the resolved upstream version; a mismatch is a hard validation error (not silent degradation).
-3. Check uniqueness: duplicate `id`s are an error. In closed vocabularies, the union of all `key`s and `aliases` must be globally unique (key/key, key/alias, alias/alias collisions are errors). In open vocabularies, collisions are warnings (resolved by V2 tie-break).
-
-Inline `Type.lifecycle` cannot extend; its effective set is its own `states`/`transitions`. V5 and V9 apply to inline lifecycles identically to referenced ones.
-
-Excluding `retired` before uniqueness frees a retired key for reuse by a new entry. `tombstone` remains in the effective set and keeps occupying its key. When retiring a key that will be reused, implementations MUST surface stale references to the retiring key for operator resolution before reuse.
-
-**V6 — Closed value status.** A value resolving to `deprecated` or `tombstone` follows RFC-005 E1 write semantics (resolves; new writes rejected). `retired` entries do not resolve under V1 — values referencing them are invalid as if absent.
-
-**V10 — Open→closed promotion.** Version-bumping change with a mandatory pre-flight classifying in-use keys as:
-- *will-be-invalid*: used-but-undefined, or resolving only to a `retired` entry (reads do NOT survive).
-- *read-only-after-close*: resolves to `deprecated` or `tombstone` (reads survive; new writes rejected).
-- *used-and-active*: fine.
-
-A grace window is declared in `Vocabulary.promotionWindow.until`. Until that bound, violations are warnings; after it, V1 applies unconditionally. Absent `promotionWindow` means the promotion takes effect immediately. There is no unbounded window.
-
-
-
-#### Field
-
-**Canonical Key**: type:com.semanticops.srs/field
-
-**Description**: The atomic reusable semantic unit: one named, versioned, UUID-identified piece of meaning, defined once and composed into any number of Types. A Field owns its own semantics completely — its value contract and its AI guidance belong to the Field and may not be redefined, overridden or duplicated by a Type that includes it. If a context needs different meaning, that is a different Field with its own identity and lineage, not a local override.
-
-**Notes**: Invariants 1-3 and 9 carry the Field's non-negotiables: rendering labels change nothing, Types may not restate Field semantics, and a new id means a new definition and not a new version.
-
-##### Field semantics — content format
-
-
-##### Field semantics
-
-
-##### Type must not redefine, override, or duplicate the semantic content…
-
-**Number**: 2
-
-**Constraint**: A `Type` must not redefine, override, or duplicate the semantic content of any `Field` it includes. If different semantics are needed for a Field in a specific Type context, a distinct `Field` with its own identity and lineage must be created.
-
-
-##### Why Field and Type are separate
-
-**Content**: 
-A form system where each template defines its own fields produces semantic silos: the "decision statement" in the Technology template and the "decision statement" in the Budget template are unrelated strings. They cannot be searched together, compared, or composed.
-
-In SCDS, a Field is defined once. Any number of Types may include it. When two Types share a Field, any AI extraction logic, validation rules, or downstream analysis written for that Field applies consistently across both. The Field's identity is stable across all the contexts it appears in.
-
-This is a stronger constraint than it appears. It means a Type cannot secretly redefine what a Field means for its own purposes — it can only configure presentation. If a Type genuinely needs different semantics, it must use a different Field.
-
-
-##### Field domains
-
-**Content**: 
-Named sets of Fields that travel together may become useful as Type libraries grow. For v2, ordinary shared base Types plus `ext:type-inheritance` cover the immediate reuse need with less machinery. Field domains are deferred until there is stronger evidence that reusable field sets need their own identity, versioning, and package dependency rules independent of Types.
-
-
-##### Field type
-
-**Canonical Key**: type:com.semanticops.srs/field-type
-
-**Description**: The complete statement of what a Field's value is, decomposed into orthogonal facets that vary independently: datatype, cardinality, value domain, string format, and value constraints. Because the facets are separate, a constraint on one never forces a choice on another — a closed list of markdown strings is expressible without inventing a datatype for it. Cardinality is declared here and nowhere else. Three composite datatypes let a value's range be another Type (`ref`), be governed by a sibling field (`dependent`), or be an open string-keyed collection (`map`).
-
-**Notes**: It replaced the pre-RFC-032 `valueType` enum, which conflated four axes into one closed list and forced every independently-varying axis to be bolted on beside it. `valueType` is removed, not deprecated.
-
-###### Field.fieldType.format, when present, is only meaningful when datatype…
-
-**Number**: 38
-
-**Constraint**: `Field.fieldType.format`, when present, is only meaningful when `fieldType.datatype` is `"string"`. Implementations must ignore `format` on fields with any other `datatype`.
-
-
-###### Why `valueType` and `editorHint` are separate
-
-**Content**: 
-A Field with `valueType: "text"` might be edited via textarea in a web form, captured via voice in a mobile app, or extracted directly from a transcript with no editing UI. The semantic type is stable; the editing surface is a rendering decision.
-
-AI extraction logic, validation rules, and export formatting depend only on `valueType`. `editorHint` is a default that implementations and Views may override. Conflating the two would mean that changing the preferred editor for a field could inadvertently break AI extraction rules.
-
-
-###### Choosing between repeatable fields, field groups, and separate Records
-
-
-###### List cardinality array-wraps uniformly
-
-**Number**: I-139
-
-**Constraint**: `cardinality: "list"` array-wraps uniformly, for every `datatype` including `map` and `dependent`, matching `projectField`'s unconditional wrap. The single-value rule states the `single` case; the wrap composes on top of it. (RFC-039 [R16])
-
-
-###### Composite value
-
-**Canonical Key**: record:concepts/composite-value
-
-**Description**: A Field whose range is another Type, not a scalar, declared as `datatype: "ref"` with a `rangeType`. In `inline` mode the value is a nested object shaped by that Type — structure expressed through the type system instead of a serialised blob in a text field. In `reference` mode the value is the id of a target instance, and it is definitional composition, not an assertion: it must never be interpreted as, or required to be accompanied by, a Relation.
-
-**Notes**: The test for which to use: model an assertion *between* instances (one needing provenance, lifecycle or confidence) as a Relation; use `reference` where the target's identity is part of the definition itself.
-
-####### Reference-mode values resolve in the instance set
-
-**Number**: I-136
-
-**Constraint**: A `mode: "reference"` value MUST resolve to an instance present in the repository's authoritative instance set, and that instance MUST be of the Field's declared `rangeType` at the declared `typeVersion`. A dangling or type-mismatched target MUST be reported as an error naming the referring record, the key, and the target id. (RFC-039 [R14], amended by RFC-038 [R25] — the reference target is the tree-enumerated instance set, not a manifest `instanceIndex`, which is retired per RFC-038 [R2]; discharges RFC-032 OQ4, RFC-033:302, RFC-035:592)
-
-
-
-###### `FieldType` — the value semantics
-
-**Content**: `fieldType` carries everything about what a Field's value *is*. It decomposes value semantics into orthogonal facets — **datatype × cardinality × value-domain × format × constraints** — so each axis varies independently, and adds three composite datatypes (`ref`, `dependent`, `map`) that let a Field's range be another Type.
-
-Example: the `FieldType` shape.
-
-**`datatype` semantics:**
-
-| Value | Meaning |
-|---|---|
-| `"string"` | Text of any length. Length, pattern, format, and value domain are separate facets, not distinct datatypes |
-| `"number"` | Numeric value, fractional permitted |
-| `"integer"` | Whole number |
-| `"boolean"` | True/false |
-| `"date"` | ISO 8601 calendar date |
-| `"date-time"` | ISO 8601 date + time |
-| `"ref"` | The range is another Type — nested object(s) when `mode` is `"inline"`, target instance id(s) when `"reference"` |
-| `"dependent"` | The value conforms to the type descriptor named by `dependsOn` |
-| `"map"` | Open string-keyed collection whose values conform to `valueRange` |
-
-Cardinality is declared **only** here. A Field holding many values is `cardinality: "list"`; a Type that includes it must not restate or override that — Field semantics belong to the Field (Invariant 2).
-
-A `reference`-mode value is a target instance id, and MUST NOT be interpreted as or require a `Relation`. Use `reference` for definitional composition, where the target's identity is part of the definition; model an assertion *between* instances — one needing provenance, lifecycle, or confidence — as a `Relation` instead.
-
-
-
-##### Field
-
-**Content**: The atomic reusable semantic unit. Fields are defined once and composed into Types. A Field's `aiGuidance` and `fieldType` — including every constraint the latter carries — belong to the Field, not to any Type that includes it.
-
-See the generated reference immediately below for `Field`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger) — this prose no longer hand-duplicates the property list.
-
-
-##### Historical: the pre-RFC-032 `valueType` model
-
-**Content**: Before RFC-032, value semantics were a single closed enum, `valueType`, with the satellite properties `allowedValues`, `contentFormat`, `validationRules`, and a standalone `repeatable` cardinality. That enum conflated four axes at once, which is why every axis needing independent expression had to be bolted on separately. It is **removed**, not deprecated — a Field definition carrying `valueType` does not conform to this specification. Packages authored against the old model map across as:
-
-| Legacy `valueType` | Equivalent `fieldType` |
-|---|---|
-| `"string"` | `{ datatype: "string" }` (plus `format: "markdown"` if `contentFormat` was `"markdown"`) |
-| `"text"` | `{ datatype: "string", format: "plain" \| "markdown" }` |
-| `"number"` | `{ datatype: "number" }` |
-| `"boolean"` | `{ datatype: "boolean" }` |
-| `"date"` | `{ datatype: "date" }` |
-| `"url"` | `{ datatype: "string", format: "uri" }` |
-| `"select"` | `{ datatype: "string", valueDomain: "closed" }` + `allowedValues` or `vocabularyRef` |
-| `"multiselect"` | `{ datatype: "string", cardinality: "list", valueDomain: "closed" }` + `allowedValues` or `vocabularyRef` |
-
-`validationRules` entries become `fieldType.constraints` facets; an `enum` rule becomes `valueDomain: "closed"` with `allowedValues`. A `required` rule was never a Field-level concern and moves to the `FieldAssignment` that includes the Field.
-
-
-
-#### Lifecycle
-
-**Canonical Key**: record:concepts/lifecycle
-
-**Description**: A named state machine (a closed vocabulary of states plus the transitions between them and exactly one initial state) that a Type may declare inline or reference as an installed, shareable definition. It governs where a Record stands in a process: draft, active, archived, or whatever the domain needs. Lifecycle state is changed only by an explicit transition act; asserting a Relation never moves it.
-
-**Notes**: A state may declare that resting in it requires a satisfying Relation, enforced hard (the transition is rejected) or advisory (the transition proceeds and the unsatisfied state surfaces as an at-rest warning).
-
-##### Lifecycle (ext:lifecycle)
-
-
-##### Type.lifecycle.initialState must reference a key that appears in…
-
-**Number**: 4
-
-**Constraint**: `Type.lifecycle.initialState` must reference a `key` that appears in `lifecycle.states[]` and where `isInitial === true`.
-
-
-##### Every from and to value in lifecycle.transitions[] must reference a…
-
-**Number**: 5
-
-**Constraint**: Every `from` and `to` value in `lifecycle.transitions[]` must reference a `key` that appears in `lifecycle.states[]`.
-
-
-##### Record.lifecycleState, when present, must reference a key in the…
-
-**Number**: 6
-
-**Constraint**: `Record.lifecycleState`, when present, must reference a `key` in the associated `Type.lifecycle.states[]`.
-
-
-##### A Record MUST NOT occupy a lifecycle state declaring requiresRelation without a satisfying Relation
-
-**Number**: I-98
-
-**Constraint**: A Record MUST NOT rest in a lifecycle state that declares `requiresRelation` unless at least one Relation satisfies the obligation: its type equals one of the declared `relationType`(s) and the Record is the relation's target when `direction` is `incoming` (or omitted) or its source when `direction` is `outgoing`. When the state declares `enforcement: "hard"` (the default), an implementation MUST reject a lifecycle transition into it unless the operation, on completion, satisfies this occupancy requirement — either because a satisfying Relation already exists, or because the operation's fulfillment establishes one. The rejection MUST be machine-readable, identifying the target state key, the required relation type(s), and the direction. When the state declares `enforcement: "advisory"`, the transition MUST be permitted regardless of the obligation and the unsatisfied state surfaced only as an at-rest warning, never a rejection. (RFC-022 R1–R3, R2a.)
-
-
-##### Transition fulfillment is all-or-nothing
-
-**Number**: I-99
-
-**Constraint**: A fulfillment supplied with a lifecycle transition MUST be applied as one all-or-nothing operation: `newRecord` creates a successor of the Record's Type in the effective lifecycle's initial state, asserts one Relation of the selected type oriented per `direction`, and transitions the Record; `existingInstanceId` asserts the Relation to the referenced instance (which MUST exist and MUST NOT be the Record itself) and transitions. If any step fails, no step's effect may remain observable. A file-backed implementation MAY realize this by write ordering in which the state change is committed last, provided every committed prefix is a valid repository under I-98. When the state declares an any-of `relationType` array, `fulfillment.relationType` MUST be one of the declared types, defaulting to the first; a `fulfillment` supplied for a target state that declares no `requiresRelation` MUST be rejected. (RFC-022 R4–R8.)
-
-
-##### requiresRelation is projected structurally and validated as a warning at rest
-
-**Number**: I-100
-
-**Constraint**: Allowed-transitions projections MUST include the target state's `requiresRelation` declaration on each transition option whose target state declares one, so clients route successor-flow presentation from structure rather than state-name matching. Repository validation MUST emit a warning-severity diagnostic for every Record at rest that violates I-98, and MUST NOT treat such a violation as a hard validation error. Transitions whose target state declares no `requiresRelation` MUST behave exactly as before RFC-022. (RFC-022 R8–R10.)
-
-
-##### ext:lifecycle
-
-**Content**: **Required for**: governance tools, decision logs, any implementation where records progress through defined states.
-
-`ext:lifecycle` is fully integrated with the vocabulary substrate (RFC-006). `Lifecycle` is an installable, referenceable container — a `VocabularyEntry` specialisation whose container holds states and transitions. `LifecycleState` satisfies the `VocabularyEntry` substrate contract with `key` (was `name`) as its key-role field.
-
-
-##### `LifecycleState` (VocabularyEntry specialisation)
-
-**Content**: Example: the `LifecycleState` shape.
-
-
-##### `LifecycleTransition` (edge between state keys)
-
-**Content**: Example: the `LifecycleTransition` shape.
-
-`LifecycleTransition` is an edge, not a `VocabularyEntry` (no `key`), but carries `id` so it is addressable. It follows the same forward-compatibility policy as substrate entries: unknown top-level fields rejected; arbitrary metadata in `meta`.
-
-
-##### `Lifecycle` container
-
-**Content**: An installable, referenceable state machine — a closed vocabulary of states plus transitions.
-
-Example: the `Lifecycle` container shape.
-
-The distributable `Package` holds inline definitions: `lifecycles?: Lifecycle[]`. The repository `package/package.json` holds relative paths: `"lifecycles": ["lifecycles/foo.json", ...]`.
-
-
-##### Type lifecycle declaration (added by this extension)
-
-**Content**: `Type` gains a lifecycle, declared in exactly one of two mutually exclusive forms (V7):
-
-Example: the two lifecycle declaration forms a Type may carry.
-
-Declaring both is a validation error (V7). An inline lifecycle's effective state set is exactly its own `states`/`transitions`; V5 and V9 apply identically.
-
-
-##### Record lifecycle state
-
-**Content**: `Record.lifecycleState` must resolve to a state `key` in the Type's effective state set under V1.
-
-
-##### Validation invariants (V7–V9)
-
-**Content**: **V7 — Lifecycle exclusivity.** A Type declares exactly one of `lifecycle` or `lifecycleRef`.
-
-**V8 — Lifecycle reference resolution.** A `lifecycleRef` must resolve to an installed `Lifecycle` in the effective package set.
-
-**V9 — Lifecycle integrity.** Over the effective state set (V5):
-- Exactly one state MUST have `isInitial: true`; `initialState` MUST reference that state's `key`.
-- The initial state MUST have effective `status: active`. A lifecycle whose initial state is deprecated, tombstone, or retired is invalid.
-- Every `transition.from`/`transition.to` must reference a state `key` in the effective state set.
-- A state with `isFinal: true` MUST NOT appear as the `from` of any transition.
-- Transition `id`s must be unique within the effective transition set.
-- `Record.lifecycleState` resolves under V1.
-
-
-
-#### Stable identity
-
-**Content**: An SRS entity carries a UUID minted once, at creation, that does not change afterward. A copy, an export, an import, or a rename for display MUST NOT change an entity's UUID. Identity is declared on the entity itself, never derived from a file path, a directory position, or a storage history.
-
-A UUID conflict between two entities is a fatal error. A loader MUST NOT resolve it by precedence, and MUST NOT pick one entity as the winner over the other: doing so would discard whichever identity claim lost.
-
-Changing what an entity is at its root means minting a new UUID. A materially different entity does not reuse an old UUID: every existing reference to that UUID already points at the entity it used to be.
 
 
 
