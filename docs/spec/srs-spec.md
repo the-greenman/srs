@@ -4429,9 +4429,9 @@ Transcript chunks referenced in `SourceReference` are source material — addres
 
 #### Extensions
 
-**Content**: Extensions are optional, independently adoptable. Each extension section declares its identifier, dependencies, and the types it defines.
+**Canonical Key**: record:concepts/extensions-overview
 
----
+**Description**: Extensions are optional, independently adoptable capability modules. Each declares its identifier, dependencies, and the types it defines.
 
 ##### ext:addressability
 

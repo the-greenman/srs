@@ -1,0 +1,15 @@
+{
+  "instanceId": "580cfe0e-b23e-4215-a3c4-22cbd0526810",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/extensions-overview",
+    "title": "Extensions",
+    "description": "Extensions are optional, independently adoptable capability modules. Each declares its identifier, dependencies, and the types it defines."
+  },
+  "createdAt": "2026-09-10T02:45:26.894466847+00:00",
+  "updatedAt": "2026-09-10T02:45:26.894473423+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -39,6 +39,12 @@
     },
     {
       "check": "no-orphan-leaf",
+      "id": "4244a790-72ff-5e1c-9b60-d4b58b90f92c",
+      "issue": "#710",
+      "note": "Extensions (section): retired by succession into the new concept \"Extensions\" (580cfe0e, canonical_key record:concepts/extensions-overview — distinct from the pre-existing Part concept \"Extensions\" canonical_key part:extensions, 159ae3c2), which carries a derived-from edge to it and took over its Part-contains position, precedes-chain position, and all thirty-four contains children (RFC-042 Change B). Kept as a catalogued record (not deleted) because no identity-preserving retype tool exists yet (srs#178, OPEN) and the derived-from relation needs a live target. Excluded from publication reachability for the same reason (scripts/publication-reachability-exclusions.json)."
+    },
+    {
+      "check": "no-orphan-leaf",
       "id": "5bc9b930-462d-535d-91c5-bd9e2b17c91c",
       "issue": "#691",
       "note": "Namespace Format: retired by succession into the merged \"Notational conventions\" mechanism (b3c293f9), which carries a derived-from edge to it. Kept as a catalogued record (not deleted) because no identity-preserving retype tool exists yet (srs#178, OPEN) and the derived-from relation needs a live target. Excluded from publication reachability for the same reason (scripts/publication-reachability-exclusions.json)."
