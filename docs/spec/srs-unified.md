@@ -524,15 +524,15 @@ Example: the properties `ext:type-inheritance` adds to a Type.
 
 ##### identityFieldId
 
-**Content**: Names one field, from the Type's effective field set, as the record's identity/display field — the field a conformant implementation SHOULD use to resolve a Record's display label (e.g. in list, tree, discovery, and container views), in preference to any implementation-specific heuristic (Rule [N+36]).
+**Content**: Names one field, from the Type's effective field set, as the record's identity/display field: the field a conformant implementation SHOULD use to resolve a Record's display label (e.g. in list, tree, discovery, and container views), in preference to any implementation-specific heuristic (Rule [N+36]).
 
 `identityFieldId` MUST reference a `fieldId` present in the Type's effective field set (Rule [N+33]).
 
-**Inheritance is cascading, unlike `fieldOrder`.** The *effective* `identityFieldId` of a Type is its own `identityFieldId`, if declared; otherwise, the effective `identityFieldId` of its base Type, resolved transitively up the ancestor chain; otherwise absent (Rule [N+32], [N+34]). A Type overrides an inherited effective `identityFieldId` by declaring its own, which need not match the base Type's and MAY point at a field the Type itself adds. This differs from `fieldOrder`, which is read only from the Type being resolved and does not search the ancestor chain when absent — `identityFieldId`'s inheritance rule is specific to this property, not a reuse of `fieldOrder`'s behavior.
+**Inheritance is cascading, unlike `fieldOrder`.** The *effective* `identityFieldId` of a Type is its own `identityFieldId`, if declared; otherwise, the effective `identityFieldId` of its base Type, resolved transitively up the ancestor chain; otherwise absent (Rule [N+32], [N+34]). A Type overrides an inherited effective `identityFieldId` by declaring its own, which need not match the base Type's and MAY point at a field the Type itself adds. This differs from `fieldOrder`, which is read only from the Type being resolved and does not search the ancestor chain when absent: `identityFieldId`'s inheritance rule is specific to this property, not a reuse of `fieldOrder`'s behavior.
 
 `identityFieldId` scopes to Tier 2 Records only; it has no defined meaning for Tier 0 (Note) instances, which carry no Type binding (Rule [N+35]).
 
-**Interaction with `DocumentSection.titleFieldId` (`ext:views-l2`).** For any `DocumentSection` that does not declare `titleFieldId` — whether that section's field content renders via the Default Rendering Baseline or a dispatched L1 View — implementations SHOULD render the per-record heading using the value of the field named by the record's Type's effective `identityFieldId`, if present, in place of omitting the heading. `titleFieldId`, when declared, MUST continue to take precedence for that section's per-record heading (Rule [N+37]; see `ext:views-l2` § Heading Hierarchy).
+**Interaction with `DocumentSection.titleFieldId` (`ext:views-l2`).** For any `DocumentSection`/record pairing where the section's `titleFieldId` is absent, or is declared but does not resolve within the record's Type's effective field set, whether that section's field content renders via the Default Rendering Baseline or a dispatched L1 View, implementations SHOULD render the per-record heading using the value of the field named by the record's Type's effective `identityFieldId`, if present, in place of omitting the heading. `titleFieldId`, when it resolves within the record's Type's effective field set, MUST continue to take precedence for that section's per-record heading (Rule [N+37], amended RFC-020 Rev 7, srs#728; see `ext:views-l2` § Heading Hierarchy). This is distinct from a `titleFieldId` that resolves to a field present in the effective field set but fails the eligibility test: that case still omits the heading with no identity fallback (unchanged, srs-rust PR #341).
 
 
 ##### `FieldAssignmentOverride`
@@ -4029,12 +4029,12 @@ When a dispatched View's `exportConfig.preamble` renders inside a section, the v
 |---|---|---|
 | Document title | `1 + depthOffset` | When `preamble` is absent |
 | Section title | `2 + depthOffset` | When `DocumentSection.title` is set |
-| Per-record heading | `3 + depthOffset` | When `titleFieldId` is set on the section, or (RFC-020, Rule [N+37]) as a fallback when it is not — see below |
-| Field label | Bold/formatted text — not a heading; exact per-format form per *Normative Field-Row Form* (RFC-037) | Always |
+| Per-record heading | `3 + depthOffset` | When `titleFieldId` is set on the section and present in the record's Type's effective field set, or (RFC-020, Rule [N+37]) as a fallback in either absence, see below |
+| Field label | Bold/formatted text, not a heading; exact per-format form per *Normative Field-Row Form* (RFC-037) | Always |
 
 For `format: "text"` or implementation-defined values, heading level semantics do not apply.
 
-**`identityFieldId` fallback (RFC-020, Rule [N+37]).** For any `DocumentSection` that does not declare `titleFieldId` — whether that section's field content renders via the Default Rendering Baseline or a dispatched L1 View — implementations SHOULD emit the per-record heading using the value of the field named by the record's Type's effective `identityFieldId` (`ext:type-inheritance`), if present, in place of omitting the heading. `titleFieldId`, when declared, MUST continue to take precedence for that section's per-record heading.
+**`identityFieldId` fallback (RFC-020, Rule [N+37], amended Rev 7, srs#728).** For any `DocumentSection`/record pairing where the section's `titleFieldId` is absent, or is declared but does not resolve within the record's Type's effective field set (own `fields[]` plus, under `ext:type-inheritance`, inherited fields), whether that section's field content renders via the Default Rendering Baseline or a dispatched L1 View, implementations SHOULD emit the per-record heading using the value of the field named by the record's Type's effective `identityFieldId` (`ext:type-inheritance`), if present, in place of omitting the heading. `titleFieldId`, when it resolves within the record's Type's effective field set, MUST continue to take precedence for that section's per-record heading. This fallback is distinct from a `titleFieldId` that resolves to a field present in the effective field set but fails the eligibility test above (cardinality/datatype/domain/format): an ineligible authored `titleFieldId` still omits the heading with no identity fallback (unchanged, srs-rust PR #341).
 
 
 ###### Preamble Template Variables

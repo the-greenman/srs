@@ -444,17 +444,19 @@ I-97
 
 **Author**: the-greenman
 
-**Affected Components**: `identityFieldId` on `Type` (`type.json`); inheritance + views-l2 fallback prose (`ext:type-inheritance`, `ext:views-l2`).
+**Affected Components**: `identityFieldId` on `Type` (`type.json`); inheritance + views-l2 fallback prose (`ext:type-inheritance`, `ext:views-l2`). Revision 7 (srs#728): widens Rule [N+37]'s fallback trigger on `titleFieldId` (`composition.json`); investigated but left as tracked debt: `identityFieldId`'s missing `type.json` schema description, blocked on srs-rust#868 (see Revision history row 7).
 
 <!-- srs-integration:v1
 schema:type.json
+schema:composition.json
 ext:type-inheritance
 ext:views-l2
+cell:identity
 -->
 
 **Proposal Artifact Path**: rfcs/rfc-020-type-level-identity-field.md
 
-**Content**: Adds an optional, inheritable, overridable `identityFieldId` to `Type`, naming one field of the effective field set as the record's identity/display field, giving clients a schema-driven display-label source. Full text: rfcs/rfc-020-type-level-identity-field.md.
+**Content**: Adds an optional, inheritable, overridable `identityFieldId` to `Type`, naming one field of the effective field set as the record's identity/display field, giving clients a schema-driven display-label source. Revision 7 (srs#728) widens the `titleFieldId`-absent per-record-heading fallback (Rule [N+37]) to also cover the case where the section's `titleFieldId` is declared but absent from the record's Type's effective field set. Full text: rfcs/rfc-020-type-level-identity-field.md.
 
 
 **Title**: RFC-022: Relational lifecycle states — requiresRelation + transition fulfillment
