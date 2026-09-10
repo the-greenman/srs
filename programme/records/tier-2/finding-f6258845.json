@@ -1,0 +1,20 @@
+{
+  "instanceId": "f6258845-769c-435d-aedc-419fd8c51d8f",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "Two independently-filed dogfooding bugs (srs-rust#1011, #1012) shared one root function and one root cause shape",
+    "summary": "srs-rust#1011 (titleFieldId carriage) and srs-rust#1012 (recordWrapper double heading) were filed separately from the same muDemocracy dogfooding session (muDemocracy.org#155 unit 1.5) but both live entirely inside render_record_at_level/resolve_heading_field_id in render_service.rs, and both had the same shape: a value was decided (whether to emit a heading; which field to use) before all the relevant context (the theme's active recordWrapper; the record's Type's effective field set) had been resolved. Folding both into one PR cost no extra surface area — the fix for #1012 is a 6-line reordering in the same function #1011 already had to touch.",
+    "evidence": [
+      "Both issues cite the same discovery: muDemocracy.org 'feat/musrs-phase1', build.360, found via dogfooding unit 1.5, filed 2026-09-09T13:56:41Z and 13:56:44Z (3 seconds apart).",
+      "render_service.rs render_record_at_level computed `record_wrapper` (srs-rust#1012's fix input) AFTER already having pushed the default heading into `out` (srs-rust#1011's fix input) — one function, two independently-discovered bugs, one ordering fix for both.",
+      "PR https://github.com/the-greenman/srs-rust/pull/1036 closes both with a single, non-overlapping diff to the same function."
+    ],
+    "body": "Worth checking future dogfooding-sourced issue batches for this pattern before filing them as fully independent units: issues found in the same session against the same render path are worth a quick co-location check (same function/file) before dispatch, since fixing them together is often strictly cheaper than two separate units and two separate PRs touching the same lines."
+  },
+  "createdAt": "2026-09-10T20:51:57.722568134+00:00",
+  "updatedAt": "2026-09-10T20:51:57.722580484+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
