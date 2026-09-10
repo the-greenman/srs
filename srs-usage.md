@@ -189,6 +189,17 @@ plain string), `x-srs-description` (the field's own `description`, when non-empt
 show help text without colliding with `title` (the display label) or `description` (already
 occupied by string `aiGuidance`).
 
+A closed-domain select field emits `enum` from whichever of the two mutually exclusive sources
+it declares (RFC-032 [R3]): literal `allowedValues`, or a `vocabularyRef` resolved against the
+package's Vocabularies. For a `vocabularyRef` field, `enum` is the *active* Term keys only —
+deprecated, tombstone, and retired terms are excluded, since those must not be picked for a new
+write even though reads still resolve them — and each active term's `label`/`description` rides
+along under `x-srs-vocabulary-terms` (plus `x-srs-vocabulary-id` naming the resolved Vocabulary),
+so an agent reading the schema before authoring a record sees what each key means, not just the
+bare key (srs-rust#1002). When a `vocabularyRef` field's reference does not resolve, or resolves
+to a Vocabulary with no active terms, `enum` is omitted (never emitted empty) and a diagnostic
+names why — `payload.diagnostics`, not a command failure.
+
 ### Protocol Discovery
 
 Protocols are package definitions — JSON files under `package/protocols/`, registered in `package.json → protocols[]`, parallel to blueprints. They are not instance Records and do not appear in `srs record list` output. The `protocol list` entries use **short field names** (`namespace`, `name`, `version`); the full Protocol JSON returned by `get`, `export`, `import`, and `update` uses **prefixed field names** (`protocolNamespace`, `protocolName`, `protocolVersion`). Do not confuse the two shapes when piping commands.
@@ -1597,7 +1608,7 @@ The URI scheme is implementation tooling (srs-rust ADR-037), built from existing
 | `srs://<repositoryId>/record/{instanceId}` | One record, any tier (JSON; exposed as a resource template) |
 | `srs://<repositoryId>/container/<containerId>` | Container resolve-view: authored columns + ordered members (JSON — same as `container resolve-view`). Each member carries `sectionContainerId`, same key and meaning as the navigation row above |
 | `srs://<repositoryId>/composition/<compositionId>` | Rendered composition (markdown — same as `render composition`). Renamed from `view`/`documentView` (srs-rust#910, `rfc-decision-92d2da05`) — no alias is kept, per the standing zero-backwards-compatibility rule |
-| `srs://<repositoryId>/type/{typeId}` | Type authoring schema (JSON — same as `type schema`): properties are keyed by `Field.name` (RFC-039) and carry `x-srs-ai-guidance`, `x-srs-description`, `x-srs-instructions`; enumerated per type and available as a template |
+| `srs://<repositoryId>/type/{typeId}` | Type authoring schema (JSON — same as `type schema`): properties are keyed by `Field.name` (RFC-039) and carry `x-srs-ai-guidance`, `x-srs-description`, `x-srs-instructions`; a `vocabularyRef`-backed select field also carries `x-srs-vocabulary-terms` (key/label/description of each active term, srs-rust#1002); enumerated per type and available as a template |
 | `srs://<repositoryId>/protocol` | Every installed Protocol definition: id, `namespace/name@version`, `targetType`, `stageCount` (JSON — same as `srs protocol list`) |
 | `srs://<repositoryId>/protocol/{protocolId}` | One Protocol definition plus its stages sorted by `order` — the `dependsOn` walk an agent follows (JSON — same as `srs protocol get` + `srs protocol stages` combined); enumerated per installed protocol and available as a template |
 
