@@ -1,0 +1,15 @@
+{
+  "instanceId": "e4837800-1803-4b0b-9a9f-08ff3e5cb95a",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/foundation-group-core",
+    "title": "Foundation Group (Core)",
+    "description": "The Foundation group is required for all conforming implementations."
+  },
+  "createdAt": "2026-09-10T01:42:15.259811786+00:00",
+  "updatedAt": "2026-09-10T01:42:15.259817995+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

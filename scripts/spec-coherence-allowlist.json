@@ -33,6 +33,12 @@
     },
     {
       "check": "no-orphan-leaf",
+      "id": "74746626-1a15-5430-931e-90a147961265",
+      "issue": "#710",
+      "note": "Foundation Group (Core): retired by succession into the new concept \"Foundation Group (Core)\" (e4837800), which carries a derived-from edge to it and took over its Part-contains position and all nineteen contains children (RFC-042 Change B). Kept as a catalogued record (not deleted) because no identity-preserving retype tool exists yet (srs#178, OPEN) and the derived-from relation needs a live target. Excluded from publication reachability for the same reason (scripts/publication-reachability-exclusions.json)."
+    },
+    {
+      "check": "no-orphan-leaf",
       "id": "5bc9b930-462d-535d-91c5-bd9e2b17c91c",
       "issue": "#691",
       "note": "Namespace Format: retired by succession into the merged \"Notational conventions\" mechanism (b3c293f9), which carries a derived-from edge to it. Kept as a catalogued record (not deleted) because no identity-preserving retype tool exists yet (srs#178, OPEN) and the derived-from relation needs a live target. Excluded from publication reachability for the same reason (scripts/publication-reachability-exclusions.json)."

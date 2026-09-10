@@ -208,6 +208,13 @@ Transcript chunks referenced in `SourceReference` are source material — addres
 **Key**: record:concepts/field-values
 
 
+### Foundation Group (Core)
+
+**Definition**: The Foundation group is required for all conforming implementations.
+
+**Key**: record:concepts/foundation-group-core
+
+
 ### Foundational tension
 
 **Definition**: A named opposition between two complementary necessities, resolved not by choosing a winner but by declaring which pole is the default and stating the boundary at which the other governs. Six such tensions govern decisions in the SRS standard layer: Semantic Integrity vs Practical Expression, Continuity vs Evolution, Shared Coherence vs Local Autonomy, Office vs Testimony, Reliability vs Renewal, and Portability vs Possession. A tension is phase-bound where the specification says so — the temporal default is Evolution before the first full public release and reverses to Continuity at it.
