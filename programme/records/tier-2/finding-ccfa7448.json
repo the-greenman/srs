@@ -1,0 +1,20 @@
+{
+  "instanceId": "ccfa7448-df80-4e4a-b73a-b7aed31157a1",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "meta still drops silently on three WASM/transition record-create paths",
+    "summary": "srs-rust#1031 fixed meta round-tripping for the three input structs the issue named (CreateRecordInput, UpdateRecordInput, CreateRecordSuccessorInput), reachable from CLI record create/update/successor, MCP, and the WASM update_record/create_record_successor bindings. Three sibling write paths share the identical root cause but were deliberately left untouched because the issue did not name them.",
+    "evidence": [
+      "crates/srs-bindings/src/lib.rs create_record (WASM) and create_record_in_container (WASM) deserialize into a separate CreateRecordBindingInput{field_values, field_meta, tags} shadow struct that never reaches CreateRecordInput at all, so adding extra to CreateRecordInput did not fix these two.",
+      "crates/srs-repository/src/record_store.rs FulfillmentNewRecord{field_values, type_version} (used by transition_record_lifecycle's fulfillment.newRecord path) has no field_meta or extra field either; its create_record_at_dir call passes field_meta: None and gets an empty extra with no way for the caller to set either.",
+      "record_store::CreateRecordInContainerInput (also WASM-only, no CLI caller found by grep) mirrors CreateRecordInput's pre-fix shape one field short and was left as-is."
+    ],
+    "body": "Not fixed in PR https://github.com/the-greenman/srs-rust/pull/1034 on purpose: the issue's audit list named record create, record update, note create/update, and record successor specifically, and note create/update turned out to already be correct (Note carries a named meta field). Widening the PR to also rewire the WASM-only create_record/create_record_in_container bindings and the lifecycle-transition fulfillment.newRecord path would have doubled the diff for call sites nobody reported a defect against. If a caller needs meta on record create through the WASM binding (not create_record_in_context, which CLI uses and which IS fixed) or through a fulfillment-triggered successor, file a follow-up issue naming these three call sites rather than rediscovering them by re-reading record_store.rs and lib.rs from scratch."
+  },
+  "createdAt": "2026-09-10T16:15:27.421185682+00:00",
+  "updatedAt": "2026-09-10T16:15:27.421193715+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
