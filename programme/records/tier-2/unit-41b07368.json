@@ -1,0 +1,22 @@
+{
+  "instanceId": "41b07368-857c-4fa4-8ee9-dccf3f0b1d33",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "record update/create/successor drop meta silently",
+    "summary": "UpdateRecordInput/CreateRecordInput/CreateRecordSuccessorInput had no extra/flatten catch-all, so a caller-sent top-level meta object was silently ignored by serde on deserialize — record update returned ok: true with nothing persisted and no diagnostic. Fixed by adding a flatten extra field to all three input structs, round-tripping onto Record.extra; update_record now merges input.extra key-by-key over the stored value instead of unconditionally keeping the old one.",
+    "decision_mode": "clear",
+    "door": "door-1",
+    "issue_ref": [
+      "srs-rust#1031",
+      "srs#710"
+    ],
+    "body": "PR https://github.com/the-greenman/srs-rust/pull/1034. Found by the srs#710 worker mid-run while executing the retirement ruling rfc-decision-1e7c0c8e (comment https://github.com/the-greenman/srs/issues/710#issuecomment-5620757240); filed as srs-rust#1031 by the programme coordinator. Root cause: Record.extra is a #[serde(flatten)] BTreeMap catch-all for envelope extras (meta, sourceRefs, ...), but none of the three CLI/MCP/WASM-facing input structs for record create/update/successor carried a matching flatten field — serde silently drops unknown top-level keys by default, no deny_unknown_fields, no diagnostic. update_record additionally always set extra: record.extra unconditionally, so even a caller that somehow got a value into input would have lost it on update. Fix: each input struct gains #[serde(flatten)] extra: BTreeMap<String, Value>; create paths apply it as a follow-up store.save_record after create_record_at_dir (whose positional signature, used by ~70 pre-existing call sites, was left untouched); update_record merges it key-by-key over the stored extra (preserve-if-absent per key, matching the fieldMeta/tags convention). CLI stdin and the WASM bindings deserialize these structs directly from JSON so they inherit the fix for free; the MCP shadow structs gained a typed meta: Option<Value> field wired into the same extra bag, consistent with the existing RelationCreateToolInput/Note precedent for exposing meta on the MCP surface. Notes were already correct (Note has a named meta field and note update is whole-object) — verified, left untouched. Four new tests reproduce the exact ok:true/nothing-persisted symptom and prove the fix; the guard was proven red by temporarily reverting update_records merge and re-running (failed with left: None, right: Some(meta value), exactly the reported symptom) before restoring it green."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-10T16:14:33.113848221+00:00",
+  "updatedAt": "2026-09-10T16:15:03.608925967+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
