@@ -7,7 +7,7 @@ enforces bidirectional presence: every id below must resolve to srs/records/tier
 Adding a charter-class ruling: add its id here AND write the section that cites it, in the same
 change — the guard fails on either half done alone.
 cce3c00e 9ee14517 7caca3a1 8f5aca2c b9d7096e 0750c62f 4431046e 0118e938 e99a9437
-c8704763 2a1e1590 53635966 628cf6c4 16b20c56 5f8204bc 8948e43f
+c8704763 2a1e1590 53635966 628cf6c4 16b20c56 5f8204bc 8948e43f 1e7c0c8e
 -->
 
 The charter's ambient surface — one hop from every session start, for the rule the charter itself
@@ -54,7 +54,7 @@ Default pole, plus the boundary clause that names when the other pole governs in
 | 2–8 Identity↔Assertion | Evolution over Continuity | Phase-bound: precommitted to flip to Continuity at the first full public release | `rfc-decision-cce3c00e`, `rfc-decision-2a1e1590`, `rfc-decision-53635966` |
 | 3–9 Description↔Governance | Shared Coherence over Local Autonomy | — | `rfc-decision-cce3c00e`, `rfc-decision-628cf6c4` |
 | 4–10 Attribution↔Repository | Office over Testimony (mythic register: Athena over Aphrodite) | Testimony fills gaps, never contradicts authority, and is promoted into office only by verification | `rfc-decision-cce3c00e`, `rfc-decision-16b20c56` |
-| 5–11 Succession↔Conformance | Reliability over Renewal | Standing contracts hold; renewal only as explicit supersession at a declared boundary | `rfc-decision-cce3c00e`, `rfc-decision-5f8204bc` |
+| 5–11 Succession↔Conformance | Reliability over Renewal | Standing contracts hold; renewal only as explicit supersession at a declared boundary | `rfc-decision-cce3c00e`, `rfc-decision-5f8204bc`, `rfc-decision-1e7c0c8e` |
 | 6–12 Containment↔Portability | Portability over Possession | A capability that exists only in place is captivity; the exception delegates to axis 3–9's explicit-local boundary | `rfc-decision-cce3c00e`, `rfc-decision-8948e43f` |
 
 ## Twelve cell preferences
