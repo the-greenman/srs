@@ -28,7 +28,7 @@ test("two-track roadmap has complete ratified contracts", () => {
   assert.deepEqual(new Set(boundaryAssessments.map((check) => check.state)), new Set(["proven", "partial", "planned", "prototype"]));
   assert.equal(roadmap.knownEpicRefs.length, 16);
   assert.equal(roadmap.epics.length, 16);
-  assert.equal(roadmap.standardContracts.filter((contract) => !roadmap.links.some((link) => link.type === "contains" && link.to === contract.id)).length, 12);
+  assert.equal(roadmap.standardContracts.filter((contract) => !roadmap.links.some((link) => link.type === "contains" && link.to === contract.id)).length, 13);
   assert.ok(roadmap.assessments.every((assessment) => assessment.assessedAt && assessment.reviewBy && assessment.evidence.every((item) => item.type && item.ref)));
   assert.equal(roadmap.standardContracts.find((contract) => contract.id === "addressability").instanceId, "a10d49a3-06ae-5690-ad9b-81edd6886b6d");
 });
@@ -98,7 +98,7 @@ test("shared roadmap index resolves cross-pipeline evidence without UI-specific 
   assert.ok(index.checksByStage.get("D3").some((check) => check.id === "f1-musrs-document-corpus"));
   assert.ok(index.modesByStage.get("D3").some((mode) => mode.id === "blueprint-authoring"));
   assert.equal(index.checksByBoundary.get("F2").length, 3);
-  assert.equal(index.contractChildrenById.get(null).length, 12);
+  assert.equal(index.contractChildrenById.get(null).length, 13);
   assert.equal(capabilityArchitecture(index)[0].node.id, "semantic-kernel");
 });
 
