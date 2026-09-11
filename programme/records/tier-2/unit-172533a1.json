@@ -1,0 +1,22 @@
+{
+  "instanceId": "172533a1-38ab-4acc-be53-5159bac75766",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Retire 6 more subsection records via succession (RFC-042 Change B, srs#710)",
+    "summary": "Finalized ext:slices, ext:addressability, Type, ext:cross-field-validation, ext:registry, ext:json-store under rfc-decision-1e7c0c8e: 8 orphaned example leaves (fenced-code-block extractions still parented only under the retiring subsection, never reparented and lacking derived-from/meta.derivedFrom) reparented to their siblings' shared concept, meta.derivedFrom set on all 32 successors, then record delete --cascade on all 6 subsections. Container membership drift fixed via srs container members add/remove, not a hand-edit.",
+    "decision_mode": "complicated",
+    "door": "door-1",
+    "issue_ref": [
+      "srs#710",
+      "srs#580"
+    ],
+    "body": "Claimed 2026-09-11T01:38:31Z from srs#710's gate:dispatched via srs#580's queue. Ground re-measured current state rather than trusting the issue's counts: 3 section records remained (Namespace Format, Schema Notation, Key Invariants) and 61 subsection records. Of the 18 subsections whose content was already relocated to mechanism successors (from earlier batches #562/#687/#686), picked the 6 with an unambiguous single shared concept parent and only 1-2 orphaned example leaves each, to keep the PR reviewable (matching the coherent-subset pattern PR #721/#724/#725/#744 established).\n\nKey finding: none of the 18 already-migrated subsections' example-leaf successors had been reparented to a concept — each was still solely `contains`-parented by the retiring subsection itself, a leftover from the original split (batches #561-564) that predates this issue's ruling. Verified per-leaf (not assumed) by checking every leaf's full inbound relations for a second, non-subsection `contains` parent; found zero such cases among the 61 leftover children scanned. Confirmed the correct target concept for each by content/title match against sibling mechanisms already properly parented (e.g. 'The `slice` manifest property' example content matches the Travelling form concept's topic).\n\nFix: relation create contains (concept -> leaf), relation create derived-from (leaf -> old subsection), record update meta.derivedFrom on every successor of the 6 chosen subsections (32 total, including the ones already properly parented -- none had meta.derivedFrom yet since the ruling postdates their creation), then record delete --cascade per subsection.\n\nscripts/part-container-membership.mjs has NO --write mode despite the issue's step 5 text -- it is read-only (print or --check). Fixed resulting Part-container drift (8 leaves moved from Extensions to Distribution/Structure/Conformance, matching their new concept parents) via srs container members add/remove, never a hand-edit to containers/*.json, per CLAUDE.md's CLI-only rule.\n\nBoth gates verified green by direct exit code (not a piped tail, which silently discards node's real exit status): validate-all.mjs and check-release-drift.mjs on pinned v0.1.0-build.372. Also ran the pinned-cli tier checks (idl-schema-conformance, gallery-conformance, programme-conformance, governance-seed-drift, governance-seed-drift-guard-bite) -- all pass. Heading-set diff vs origin/master: 598->591, zero content lost (6 subsection headings retired; 8 example headings persist under new parents, 5 shallower, 1 unchanged, 1 one level deeper matching JSON Store's pre-existing nesting pattern).\n\nRemaining for srs#710: Namespace Format/Schema Notation (2 sections, un-reparented children, #691's original target), Key Invariants (no successor, carried-context-31ea3659), 55 more subsection records (this same orphaned-leaf pattern likely recurs and should be checked for on every one before its deletion), and the final srs type delete PR once both counts hit zero.\n\nPR: https://github.com/the-greenman/srs/pull/745, gate:auto-merge armed (SQUASH). Stopping per the merge-rights contract."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-11T02:26:18.379501356+00:00",
+  "updatedAt": "2026-09-11T02:26:18.379509665+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

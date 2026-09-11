@@ -1,0 +1,15 @@
+{
+  "instanceId": "87e8e448-826a-419b-9c34-34f814cb5a67",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "Before finalizing any remaining subsection under srs#710, check its OUTBOUND contains edges, not just its inbound derived-from edges",
+    "summary": "A subsection's `derived-from`-linked successors are not necessarily its only children still needing reparenting: check the subsection's own outbound `contains` list too, since example leaves split out of fenced code blocks were parented there directly and never given a derived-from edge. 53 such orphaned leaves remain (across 12 more already-migrated subsections) after srs#745 fixed the first 8; an unknown further number await in the 43 not-yet-split subsections.",
+    "rationale": "The original split (batches #561-564) treated mechanism-type successors (prose) and example-type successors (code blocks) asymmetrically: mechanisms got both a derived-from edge to the old subsection AND a contains edge to the new concept; examples got only a contains edge, and it pointed at the OLD subsection rather than the new concept. Nobody flagged this at the time because validate-all's checks don't require an example leaf's parent to be a concept specifically, and `record delete --cascade` (srs-rust#1028) reports every relation it removes but does not distinguish 'this orphans a live leaf' from 'this is correctly cleaning up'. The fix used in srs#745 was to identify the correct target concept by content/title match against sibling mechanisms that WERE already properly parented, then add both the missing contains and the missing derived-from edge before deleting the subsection. This would change if a future `record delete` gains an orphan-detection mode, or if the CLI gains an identity-preserving retype (srs#178) that would sidestep the whole successor-creation pattern -- until either lands, the per-leaf inbound-relation check stays necessary."
+  },
+  "createdAt": "2026-09-11T02:26:48.081936705+00:00",
+  "updatedAt": "2026-09-11T02:26:48.081944831+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
