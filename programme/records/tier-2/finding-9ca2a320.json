@@ -1,0 +1,27 @@
+{
+  "instanceId": "9ca2a320-406f-4b19-bd96-4bab26ef237d",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "An ext:*-titled subsection can be the ONLY resolver for its RFC-integration ext: token, with no dedicated extension shadow record backing it up",
+    "summary": "check-rfc-integration.mjs resolves an `ext:<name>` manifest token against either a `com.semanticops.spec/extension` record's extension_id field, OR, as a fallback, any subsection record whose title starts with `ext:` (the 'retired extension shadow's subsection twin' rule). Ten of the current ext:* subsections already have a dedicated extension shadow record as a safety net; ext:type-inheritance did not. Deleting it under srs#710 broke RFC-020 and RFC-040's ext:type-inheritance token with no warning until validate-all was actually run.",
+    "evidence": [
+      "srs/records/extensions/ contains exactly 10 com.semanticops.spec/extension shadow records (ext:slices, ext:import-tracking, ext:changelog, ext:views-l2, ext:discovery, ext:themes-l1, ext:cross-field-validation, ext:views-l1, ext:recommended-relations, ext:lifecycle) as of this unit's start.",
+      "The 50 subsection records remaining at this unit's start included 4 pure ext:*-titled ones with no matching extension shadow record: ext:type-inheritance, ext:protocol, ext:repository, ext:federation.",
+      "Deleting subsection 37e2f653 (ext:type-inheritance) via record delete --cascade, then running node scripts/validate-all.mjs with its real exit code captured (not piped through tail), produced: 'RFC-020: manifest token \"ext:type-inheritance\" does not resolve to any canonical record/schema' and the same for RFC-040 -- both cite ext:type-inheritance inside an actual <!-- srs-integration:v1 --> block.",
+      "Creating srs/records/extensions/extension-58707681.json (extension_id: ext:type-inheritance, retirement-stub content pointing at the Type specialisation concept) and excluding it in scripts/publication-reachability-exclusions.json made validate-all pass again.",
+      "Grepped srs/records/tier-2/rfc-*.json for a real srs-integration manifest citation of ext:protocol, ext:repository, or ext:federation: zero hits inside an actual manifest block (only unrelated decision-record prose mentions ext:protocol). So those three are a latent version of the same gap, not an active break, as of this unit."
+    ],
+    "body": "The asymmetry: when batches #561-564 originally split a subsection's prose into mechanism/example leaves, an extension shadow record was created separately and independently for MOST ext:* extensions (by earlier work resolving srs#285/#407/#411), as a deliberate safety net so check-rfc-integration.mjs's ext: token resolution would survive the eventual subsection deletion. ext:type-inheritance never got that treatment -- nothing in the corpus or its own migration batch created a shadow for it, so its token resolution silently depended on the subsection record surviving, which srs#710 explicitly plans to delete.\n\nThis is invisible until the subsection is actually deleted and validate-all is run for real: repo validate stays green (extension_id resolution isn't a repo-validate concern), and nothing else signals the gap in advance. The only reliable detection is exactly what this unit did after the fact -- delete, then run the real gate, read the failure, fix, re-verify -- or, better, checking in advance: before deleting any ext:*-titled subsection, confirm a matching com.semanticops.spec/extension shadow record already exists (grep records/extensions/ for the extension_id), and if not, check whether any RFC's srs-integration manifest actually cites that ext:<name> token before assuming it's safe to skip creating one.\n\nRelated but distinct from carried-context-87e8e448/c4e43a58 (orphaned example leaves, stale section:/subsection: RFC tokens): this is specifically about the ext: token kind's OWN resolution path having a hidden, per-extension single point of failure."
+  },
+  "tags": [
+    "check-rfc-integration",
+    "ext-token",
+    "srs710"
+  ],
+  "createdAt": "2026-09-11T06:47:41.157386751+00:00",
+  "updatedAt": "2026-09-11T06:47:41.157394167+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
