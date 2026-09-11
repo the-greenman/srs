@@ -10,6 +10,9 @@
     "description": "Extensions are optional, independently adoptable capability modules. Each declares its identifier, dependencies, and the types it defines."
   },
   "createdAt": "2026-09-10T02:45:26.894466847+00:00",
-  "updatedAt": "2026-09-10T02:45:26.894473423+00:00",
-  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+  "updatedAt": "2026-09-11T00:13:52.671113053+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "meta": {
+    "derivedFrom": "4244a790-72ff-5e1c-9b60-d4b58b90f92c"
+  }
 }
