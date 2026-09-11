@@ -73,7 +73,7 @@ env:
   # trip instead of hardcoding title<-name and description<-"". This is the
   # gate srs#553 was waiting on — it unblocks retiring
   # build-governance-seed.mjs's filesystem-flatten fallback.)
-  SRS_RUST_CLI_TAG: v0.1.0-build.372
+  SRS_RUST_CLI_TAG: v0.1.0-build.376
 
 jobs:
   check-release-drift:
