@@ -1,0 +1,21 @@
+{
+  "instanceId": "90954676-9fd7-4ee2-a994-315f91279dfc",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Lineage",
+    "content": "Upstream and fork tracking for a specific definition version.\n\nExample: the `Lineage` shape.\n\nBoth may be present during a transition from tracking to forking."
+  },
+  "tags": [
+    "construct:provenance",
+    "topic:distribution"
+  ],
+  "createdAt": "2026-09-11T07:48:04.229977782+00:00",
+  "updatedAt": "2026-09-11T07:51:59.783308529+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "meta": {
+    "derivedFrom": "f7ffc0ea-89bb-548b-876b-d320c40c8c6a"
+  }
+}

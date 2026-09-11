@@ -1,0 +1,30 @@
+{
+  "instanceId": "b1c3b588-7b95-4d36-8d35-8a0c994e1417",
+  "typeId": "2a000013-0000-4000-a000-000000000013",
+  "typeVersion": 3,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "table",
+  "fieldValues": {
+    "columns": [
+      "Field pair",
+      "Meaning"
+    ],
+    "rows": [
+      {
+        "cells": [
+          "`sourceDefinition*`",
+          "Tracked copy; consumer expects upstream updates"
+        ]
+      },
+      {
+        "cells": [
+          "`forkedFrom*`",
+          "Deliberately diverged; no upstream tracking"
+        ]
+      }
+    ]
+  },
+  "createdAt": "2026-09-11T07:48:09.705745020+00:00",
+  "updatedAt": "2026-09-11T07:48:09.705750771+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
