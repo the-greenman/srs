@@ -277,9 +277,9 @@
     {
       "instanceId": "7e8d9753-044d-4374-9aa2-0939a0d85cfd",
       "path": "records/notes/taste-made-portable-why-tension-statements-invert-and-what-defends-them-7e8d9753.json",
-      "reason": "Rung-0 background capture (the charter's tension-form rationale — why tension statements invert in application and what defends them). Deliberately unpublished: background meaning, not spec content; the Decision Compass (#461) links it as background reading. Self-expiring: graduates via derived-from into the matrix records' rationale when srs#273 self-hosts the charter — this exclusion retires then.",
+      "reason": "Rung-0 background capture (the charter's tension-form rationale — why tension statements invert in application and what defends them). Deliberately unpublished: background meaning, not spec content; the Decision Compass (#461) links it as background reading. Corrected by srs#631: the prior self-expiring premise ('graduates when srs#273 self-hosts the charter') cited the wrong issue (#273 was the Metamodel v1.1.0 task) and a destination the source-of-truth map (srs#639) rules does not exist — Pattern Grid cells live in `scripts/lib/pattern-grid-cells.json` config, not a 'matrix' of typed records. This note still graduates via derived-from, but into whichever future design-note or `rfc-decision-*` record canonically captures the charter's foundational rationale — none exists yet.",
       "disposition": "pending",
-      "issue": "#631"
+      "issue": "#580"
     },
     {
       "instanceId": "7f46a5b2-7c5c-4c2c-9d79-6ef5a4a7c201",
@@ -396,9 +396,9 @@
     {
       "instanceId": "ac55018f-d7a6-4519-bf23-ce25c292be88",
       "path": "records/notes/design-jurisprudence-the-neighbourhood-role-of-the-map-ac55018f.json",
-      "reason": "Rung-0 background capture (design jurisprudence: the neighbourhood role of the map — the decision-coherence research synthesis). Deliberately unpublished background meaning; linked from the Decision Compass (#461) as background reading. Self-expiring in parts: graduates via derived-from into the #273/#272 charter-self-hosting design, Epic 13's framing, and the first charter review cycle.",
+      "reason": "Rung-0 background capture (design jurisprudence: the neighbourhood role of the map — the decision-coherence research synthesis). Deliberately unpublished background meaning; linked from the Decision Compass (#461) as background reading. Partly graduated by srs#631: the minimal-relation-set framing, the significance-gate warning, and the neighbourhood-role repositioning are now asserted via a `derived-from` relation into DN-045 (`records/design-notes/045-inheritance-floor-and-documentation-only-rule.json`), correcting the prior stale citation of '#273/#272 charter-self-hosting' (#273 was the Metamodel v1.1.0 task, not this graduation). Still pending: the SRS-for-Specs thesis, which graduates into Epic 13's framing when that epic activates.",
       "disposition": "pending",
-      "issue": "#631"
+      "issue": "#580"
     },
     {
       "instanceId": "addba041-752f-4365-a70d-7ff65feee761",
