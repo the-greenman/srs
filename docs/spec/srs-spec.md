@@ -321,6 +321,33 @@ This ordering ensures broad context (what kind of object this is) precedes narro
 This is a recommended default. Implementations that compose differently will produce different AI behaviour from the same definitions.
 
 
+##### The `AiGuidanceExample` shape
+
+**Content**: `AiGuidanceExample`, in pseudo-IDL:
+
+```typescript
+{
+  description?: string  // labels this example
+  input?: string        // sample source text; omit for output-only examples
+  output: string        // the ideal value the AI should produce
+}
+```
+
+
+##### The `AiGuidance` shape
+
+**Content**: `AiGuidance`, in pseudo-IDL:
+
+```typescript
+{
+  purpose: string            // what this field/type captures (1-2 sentences)
+  extraction?: string        // LLM instruction for how to extract or populate
+  negativeGuidance?: string  // what the LLM must NOT include or do
+  examples?: AiGuidanceExample[]
+}
+```
+
+
 ##### `AiGuidanceExample`
 
 **Content**: A single example for AI guidance.
@@ -526,6 +553,66 @@ The stated reason for the asymmetry: an instance's `meta` cannot change what the
 **Forward framing: cell linkage as a retrieval signal, not an ontology.** The owner-shared decision-coherence research synthesis (2026-08-23, srs#273 comment; Tier-0 note "Design Jurisprudence: the neighbourhood role of the map") repositions what a location in the Pattern Grid buys: not an answer, but a neighbourhood of prior judgements a new decision must reckon with. Cell linkage is **one retrieval signal among several** — alongside explicit links, semantic similarity, shared concerns, and scope — never the ontology of truth. The minimal relation set stays deliberately small: `consistent_with`, `distinguishes`, `conflicts_with`, `supersedes` around decisions, plus `supports` / `challenges` between decisions and principles; `generalises` is inferred from a pattern of decisions, never itself asserted. No decision ontology beyond this set is sketched here. Retrieval favours precision over completeness — the minimum useful neighbourhood, not everything potentially relevant, or the retrieval mechanism recreates the context-bloat failure it exists to avoid. Today's actual significance gate — which decisions are worth capturing at all — is the owner-ruling bottleneck, named explicitly rather than left implicit: the charter's decision records are curated by what the owner chooses to rule on, and that curation is what keeps the record from drowning in undifferentiated capture.
 
 
+##### The properties `ext:type-inheritance` adds to a Type
+
+**Content**: The properties this extension adds to `Type`, in pseudo-IDL:
+
+```typescript
+{
+  extendsTypeId?: UUID
+  // UUID of the base Type this Type specializes.
+  // When present, the effective field list consists of inherited fields
+  // followed by this Type's own fields[], unless fieldOrder is present.
+
+  extendsTypeVersion?: integer
+  // Version of the base Type targeted by this specialization.
+
+  fieldOrder?: UUID[]
+  // Optional explicit ordering of all fields in the effective field list:
+  // inherited fields plus this Type's own fields[].
+  // This is an ordering declaration only; it does not re-declare field
+  // assignments or change Field semantics.
+
+  fieldAssignmentOverrides?: FieldAssignmentOverride[]
+  // Presentation and workflow overrides for inherited fields only.
+
+  identityFieldId?: UUID
+  // RFC-020 — names one fieldId from this Type's effective field set
+  // (own fields plus inherited fields) as the record's identity/display
+  // field. Cascades across the ancestor chain independently of
+  // fieldOrder (see `identityFieldId` below).
+}
+```
+
+
+##### The `FieldAssignmentOverride` shape
+
+**Content**: `FieldAssignmentOverride`, in pseudo-IDL:
+
+```typescript
+{
+  fieldId: UUID
+  displayLabel?: string
+  displayHint?: string
+  required?: boolean
+}
+```
+
+
+##### A governance decision Type specialising a core decision Type
+
+**Content**: A specialising Type and the fields it adds to its base.
+
+```text
+Type: core/decision
+  fields: decision_statement, context, rationale, options_considered
+
+Type: org.example/governance_decision
+  extendsTypeId: core/decision
+  adds: ratification_method, quorum_threshold, voting_record
+```
+
+
 ##### `identityFieldId`
 
 **Content**: **Required for**: Type libraries that need formal specialization while preserving base-Type processability.
@@ -586,6 +673,40 @@ A system that knows `core/decision` but not `org.example/governance_decision` ca
 **Number**: I-65
 
 **Constraint**: When a Vocabulary in the repository package declares Term entries for a given tag key, Container tags bearing that key MUST resolve against those Terms per RFC-006 vocabulary resolution rules. Free-string tags are valid when no Vocabulary entry governs the key.
+
+
+##### The two value sources a closed string Field may declare
+
+**Content**: The two declarations, exactly one of which a closed string Field carries:
+
+```typescript
+allowedValues?: string[]   // inline anonymous closed vocabulary (sugar; retained for simple cases)
+vocabularyRef?: UUID       // LINEAGE (rfc-decision-c8704763) — bind to a named, installed
+                           // Vocabulary by bare UUID; the effective package set resolves it
+```
+
+
+##### The `VocabularyEntry` substrate contract
+
+**Content**: `VocabularyEntry`, in pseudo-IDL:
+
+```typescript
+{
+  id: UUID                  // stable identity
+  version: integer          // min: 1
+  namespace: string
+  key: string               // the string in instance data — unified across all specialisations
+  label?: string            // optional in substrate; specialisations MAY tighten to required
+  description?: string      // optional in substrate; specialisations MAY tighten to required
+  aliases?: string[]        // alternate keys resolving to this entry
+  status?: "active" | "deprecated" | "tombstone" | "retired"   // absent = active (normative)
+  meta?: Record<string, unknown>   // arbitrary metadata; unknown top-level fields rejected
+  lineage?: Lineage
+  provenance?: Provenance
+  createdAt: ISO8601
+  updatedAt?: ISO8601
+}
+```
 
 
 ##### Why tags exist: from clustering to definitions
@@ -805,6 +926,45 @@ AI extraction logic, validation rules, and export formatting depend only on `val
 
 
 
+###### The `FieldType` shape
+
+**Content**: `FieldType`, in pseudo-IDL:
+
+```typescript
+FieldType {
+  datatype: "string" | "number" | "integer" | "boolean" | "date" | "date-time" | "ref" | "dependent" | "map"
+
+  // Cardinality — the sole cardinality mechanism
+  cardinality?: "single" | "list"   // default: "single"
+  minItems?: integer                // cardinality "list" only; 0 ≤ minItems ≤ maxItems
+  maxItems?: integer                // cardinality "list" only
+
+  // Value domain — datatype "string" only
+  valueDomain?: "open" | "closed"   // default: "open"
+  allowedValues?: string[]          // valueDomain "closed"; mutually exclusive with vocabularyRef
+  vocabularyRef?: UUID               // valueDomain "closed"; LINEAGE (rfc-decision-c8704763) — bare
+                                     // UUID of an installed Vocabulary, migrated from the former
+                                     // namespace/name@version pattern string
+
+  // Semantic string format — datatype "string" only
+  format?: "plain" | "markdown" | "uri" | "uuid" | "email"
+
+  // Value constraints — minLength/maxLength/pattern (string); minimum/maximum (number/integer)
+  constraints?: object
+
+  // Composite range — datatype "ref" only
+  rangeType?: ExactTypeRef          // REQUIRED when datatype is "ref"; the Type this field's range is
+  mode?: "inline" | "reference"     // default: "inline"; fixed per Field
+
+  // Dependent typing — datatype "dependent" only
+  dependsOn?: string                // REQUIRED; "self", or a sibling field name whose type the value conforms to
+
+  // Open string-keyed collection — datatype "map" only
+  valueRange?: "string" | "number" | "integer" | "boolean" | "date" | "date-time" | "open"  // REQUIRED
+}
+```
+
+
 ###### `FieldType` — the value semantics
 
 **Content**: `fieldType` carries everything about what a Field's value *is*. It decomposes value semantics into orthogonal facets — **datatype × cardinality × value-domain × format × constraints** — so each axis varies independently, and adds three composite datatypes (`ref`, `dependent`, `map`) that let a Field's range be another Type.
@@ -983,106 +1143,6 @@ Changing what an entity is at its root means minting a new UUID. A materially di
 
 **Description**: The Foundation group is required for all conforming implementations.
 
-##### Supporting types
-
-**Content**: Content relocated to mechanism/design-note leaves under the Validation and AI guidance concept(s) (RFC-042 Change B, srs#562). See derived-from.
-
-###### The `ValidationRule` shape
-
-**Content**: `ValidationRule`, in pseudo-IDL:
-
-```typescript
-{
-  type: "required" | "minLength" | "maxLength" | "pattern" | "enum"
-  value?: string | number | string[]  // required for minLength, maxLength, pattern, enum
-  message?: string
-}
-```
-
-
-###### The `AiGuidanceExample` shape
-
-**Content**: `AiGuidanceExample`, in pseudo-IDL:
-
-```typescript
-{
-  description?: string  // labels this example
-  input?: string        // sample source text; omit for output-only examples
-  output: string        // the ideal value the AI should produce
-}
-```
-
-
-###### The `AiGuidance` shape
-
-**Content**: `AiGuidance`, in pseudo-IDL:
-
-```typescript
-{
-  purpose: string            // what this field/type captures (1-2 sentences)
-  extraction?: string        // LLM instruction for how to extract or populate
-  negativeGuidance?: string  // what the LLM must NOT include or do
-  examples?: AiGuidanceExample[]
-}
-```
-
-
-
-##### Field
-
-**Content**: Content relocated to mechanism/design-note leaves under the Field, Field type, and Vocabulary concept(s) (RFC-042 Change B, srs#562). See derived-from.
-
-###### The `FieldType` shape
-
-**Content**: `FieldType`, in pseudo-IDL:
-
-```typescript
-FieldType {
-  datatype: "string" | "number" | "integer" | "boolean" | "date" | "date-time" | "ref" | "dependent" | "map"
-
-  // Cardinality — the sole cardinality mechanism
-  cardinality?: "single" | "list"   // default: "single"
-  minItems?: integer                // cardinality "list" only; 0 ≤ minItems ≤ maxItems
-  maxItems?: integer                // cardinality "list" only
-
-  // Value domain — datatype "string" only
-  valueDomain?: "open" | "closed"   // default: "open"
-  allowedValues?: string[]          // valueDomain "closed"; mutually exclusive with vocabularyRef
-  vocabularyRef?: UUID               // valueDomain "closed"; LINEAGE (rfc-decision-c8704763) — bare
-                                     // UUID of an installed Vocabulary, migrated from the former
-                                     // namespace/name@version pattern string
-
-  // Semantic string format — datatype "string" only
-  format?: "plain" | "markdown" | "uri" | "uuid" | "email"
-
-  // Value constraints — minLength/maxLength/pattern (string); minimum/maximum (number/integer)
-  constraints?: object
-
-  // Composite range — datatype "ref" only
-  rangeType?: ExactTypeRef          // REQUIRED when datatype is "ref"; the Type this field's range is
-  mode?: "inline" | "reference"     // default: "inline"; fixed per Field
-
-  // Dependent typing — datatype "dependent" only
-  dependsOn?: string                // REQUIRED; "self", or a sibling field name whose type the value conforms to
-
-  // Open string-keyed collection — datatype "map" only
-  valueRange?: "string" | "number" | "integer" | "boolean" | "date" | "date-time" | "open"  // REQUIRED
-}
-```
-
-
-###### The two value sources a closed string Field may declare
-
-**Content**: The two declarations, exactly one of which a closed string Field carries:
-
-```typescript
-allowedValues?: string[]   // inline anonymous closed vocabulary (sugar; retained for simple cases)
-vocabularyRef?: UUID       // LINEAGE (rfc-decision-c8704763) — bind to a named, installed
-                           // Vocabulary by bare UUID; the effective package set resolves it
-```
-
-
-
 ##### Generated reference: `Field`
 
 **Referenced Type Id**: 4c000001-0000-4000-a000-000000000001
@@ -1209,50 +1269,6 @@ field-assignment {
   description?: string // Human-readable description of this entity.
 }
 ```
-
-
-##### Record tiers
-
-**Content**: Content relocated to mechanism/design-note leaves under the Semantic maturity tier, Note, Source reference, Field values, and Record concept(s) (RFC-042 Change B, srs#562). See derived-from.
-
-**Intro**: Graduation is the act of replacing a lower-tier instance with a higher-tier equivalent as its structure stabilises.
-
-**Identity continuity:**
-
-**Outro**: **Graduation is not always one-to-one.** A single meeting Note may graduate into one Decision Record, three Task Records, and two Risk Records. Each resulting Record receives its own `instanceId` and links to the original via `derived-from`. The original Note is preserved as the semantic root of the derived graph.
-
-Implementations may automate graduation suggestions by matching section or field names against `Field.name` values in available Type definitions.
-
-| Scenario | `instanceId` | Relation |
-| --- | --- | --- |
-| Pure formalisation (section names map directly to field names, content unchanged) | Keep | None required |
-| Content interpreted or restructured during formalisation | New | `refines` from new to old |
-| One Note splits into multiple Records | New IDs for all | `derived-from` from each new Record to the original |
-
-
-**Intro**: **SourceReference → Relation graduation mapping (RFC-023):** when source material referenced by a `sourceRole` provenance pointer is promoted to an instance, the pointer converts to the listed Relation edge. The *referencing instance* carried the sourceRef; the *promoted instance* is created from the source material.
-
-**Outro**: Conversion semantics (RFC-023 R6): the originating role is recorded in `meta["com.semanticops.srs/sourceRole"]` (required for `quoted-from` — it is the only carrier of the quotation distinction); `confidence` carries over; `note` maps to Relation `notes`; the converted SourceReference is removed in the same operation. Relation-borne sourceRefs never convert (a Relation cannot be an edge endpoint) and are retained. `inspired-by` is retained, or a custom `namespace/name` relation type may be used — removal applies if an edge is created. See RFC-023.
-
-| sourceRole | Relation edge | sourceInstanceId | targetInstanceId |
-| --- | --- | --- | --- |
-| `extracted-from` | `derived-from` | the referencing instance | the promoted instance |
-| `evidence` | `evidences` | the promoted instance | the referencing instance (direction flips) |
-| `quoted-from` | `derived-from` | the referencing instance | the promoted instance |
-| `inspired-by` | *(no canonical edge)* | — | — |
-
-
-###### The `FieldValue` union
-
-**Content**: `FieldValue`, in pseudo-IDL:
-
-```typescript
-type FieldValue = string | number | boolean
-                | FieldValue[]                       // cardinality: list
-                | { [key: string]: string | unknown } // datatype: map
-                | { [fieldName: string]: FieldValue } // inline composite: a fieldValues object for the rangeType
-```
-
 
 
 ##### Generated reference: `NoteSection`
@@ -1541,34 +1557,6 @@ container {
   updatedAt?: date-time // ISO-8601 timestamp of the most recent update.
 }
 ```
-
-
-##### Vocabulary and Term
-
-**Content**: Content relocated to mechanism/design-note leaves under the Vocabulary and Relation type definition concept(s) (RFC-042 Change B, srs#562). See derived-from.
-
-###### The `VocabularyEntry` substrate contract
-
-**Content**: `VocabularyEntry`, in pseudo-IDL:
-
-```typescript
-{
-  id: UUID                  // stable identity
-  version: integer          // min: 1
-  namespace: string
-  key: string               // the string in instance data — unified across all specialisations
-  label?: string            // optional in substrate; specialisations MAY tighten to required
-  description?: string      // optional in substrate; specialisations MAY tighten to required
-  aliases?: string[]        // alternate keys resolving to this entry
-  status?: "active" | "deprecated" | "tombstone" | "retired"   // absent = active (normative)
-  meta?: Record<string, unknown>   // arbitrary metadata; unknown top-level fields rejected
-  lineage?: Lineage
-  provenance?: Provenance
-  createdAt: ISO8601
-  updatedAt?: ISO8601
-}
-```
-
 
 
 ##### Generated reference: `Vocabulary`
@@ -1892,6 +1880,18 @@ See the generated reference below for `Note`'s current property table, optional 
 **Constraint**: A Tier-2 `Record`'s `fieldValues` MUST be a JSON object. Each key MUST equal the `Field.name` of a Field in the effective field set of the Record's `typeId`@`typeVersion`. Unknown keys MUST be rejected; the projected schema asserts `additionalProperties: false`. (RFC-039 [R1])
 
 
+####### The `FieldValue` union
+
+**Content**: `FieldValue`, in pseudo-IDL:
+
+```typescript
+type FieldValue = string | number | boolean
+                | FieldValue[]                       // cardinality: list
+                | { [key: string]: string | unknown } // datatype: map
+                | { [fieldName: string]: FieldValue } // inline composite: a fieldValues object for the rangeType
+```
+
+
 ####### Field values (RFC-039)
 
 **Content**: `FieldValue` — the value stored at one `fieldValues` key — is the recursive union:
@@ -1928,6 +1928,21 @@ See the generated reference below for `Record`'s current property table, optiona
 **Description**: How far a captured instance has been formalised, expressed as a tier and not as a yes-or-no. Tier 0 is a Note: named text sections, no type binding, no field semantics. Tier 2 is a Record: fields bound to a Type, fully semantic. The point of the tier model is that half-formed material is first-class — meaning may be captured before its shape is known and formalised later, instead of being lost because no template fitted it yet. An implementation may support only Tier 2.
 
 **Notes**: The gap at Tier 1 is deliberate. `TypedRecord` was removed as an unexercised construct and the surviving tiers were not renumbered, so existing references stay valid.
+
+**Intro**: Graduation is the act of replacing a lower-tier instance with a higher-tier equivalent as its structure stabilises.
+
+**Identity continuity:**
+
+**Outro**: **Graduation is not always one-to-one.** A single meeting Note may graduate into one Decision Record, three Task Records, and two Risk Records. Each resulting Record receives its own `instanceId` and links to the original via `derived-from`. The original Note is preserved as the semantic root of the derived graph.
+
+Implementations may automate graduation suggestions by matching section or field names against `Field.name` values in available Type definitions.
+
+| Scenario | `instanceId` | Relation |
+| --- | --- | --- |
+| Pure formalisation (section names map directly to field names, content unchanged) | Keep | None required |
+| Content interpreted or restructured during formalisation | New | `refines` from new to old |
+| One Note splits into multiple Records | New IDs for all | `derived-from` from each new Record to the original |
+
 
 ##### Why Record tiers exist (Note → Typed Record → Record)
 
@@ -2103,6 +2118,18 @@ Relation type definitions live in `package.relationTypes[]` (distributable bundl
 **Number**: 48
 
 **Constraint**: A `SourceReference` with `sourceType: "repository-document"` must have a `sourceId` matching a `SourceDocument.documentId` whose sidecar is present in `sourceDocumentsPath`. A reference whose `documentId` cannot be resolved within the repository is invalid.
+
+
+**Intro**: **SourceReference → Relation graduation mapping (RFC-023):** when source material referenced by a `sourceRole` provenance pointer is promoted to an instance, the pointer converts to the listed Relation edge. The *referencing instance* carried the sourceRef; the *promoted instance* is created from the source material.
+
+**Outro**: Conversion semantics (RFC-023 R6): the originating role is recorded in `meta["com.semanticops.srs/sourceRole"]` (required for `quoted-from` — it is the only carrier of the quotation distinction); `confidence` carries over; `note` maps to Relation `notes`; the converted SourceReference is removed in the same operation. Relation-borne sourceRefs never convert (a Relation cannot be an edge endpoint) and are retained. `inspired-by` is retained, or a custom `namespace/name` relation type may be used — removal applies if an edge is created. See RFC-023.
+
+| sourceRole | Relation edge | sourceInstanceId | targetInstanceId |
+| --- | --- | --- | --- |
+| `extracted-from` | `derived-from` | the referencing instance | the promoted instance |
+| `evidence` | `evidences` | the promoted instance | the referencing instance (direction flips) |
+| `quoted-from` | `derived-from` | the referencing instance | the promoted instance |
+| `inspired-by` | *(no canonical edge)* | — | — |
 
 
 ##### attaches SourceReference acceptance
@@ -4849,438 +4876,6 @@ source-document-meta {
 ```
 
 
-##### ext:lifecycle
-
-**Content**: Content relocated to mechanism leaves under the Lifecycle concept (RFC-042 Change C, srs#562). See derived-from.
-
-###### The `LifecycleState` shape
-
-**Content**: `LifecycleState`, in pseudo-IDL:
-
-```typescript
-{
-  id: UUID                  // stable identity
-  version: integer
-  namespace: string
-  key: string               // was name; the string stored in Record.lifecycleState
-  label?: string
-  description?: string
-  aliases?: string[]
-  isInitial?: boolean       // valid starting state for new Records
-  isFinal?: boolean         // no outgoing transitions permitted (V9)
-  status?: "active" | "deprecated" | "tombstone" | "retired"   // absent = active
-  meta?: Record<string, unknown>
-  lineage?: Lineage
-  provenance?: Provenance
-  createdAt: ISO8601
-  updatedAt?: ISO8601
-}
-```
-
-
-###### The `LifecycleTransition` shape
-
-**Content**: `LifecycleTransition`, in pseudo-IDL:
-
-```typescript
-{
-  id: UUID                  // stable identity for lossless future migration
-  name: string              // e.g. "promote", "approve", "supersede"
-  from: string              // a LifecycleState.key in the effective state set
-  to: string                // a LifecycleState.key in the effective state set
-  description?: string
-  meta?: Record<string, unknown>
-}
-```
-
-
-###### The `Lifecycle` container shape
-
-**Content**: `Lifecycle`, in pseudo-IDL:
-
-```typescript
-{
-  id: UUID
-  namespace: string
-  name: string
-  version: integer          // min: 1
-
-  states: LifecycleState[]
-  transitions: LifecycleTransition[]
-  initialState: string      // the key of the single isInitial state
-
-  extendsLifecycleId?: UUID
-  extendsLifecycleVersion?: integer   // required when extendsLifecycleId is present
-
-  description?: string
-  createdAt: ISO8601
-  lineage?: Lineage
-  provenance?: Provenance
-}
-```
-
-
-###### The two lifecycle declaration forms a Type may carry
-
-**Content**: The inline form and the referenced form:
-
-```typescript
-// Inline (simple cases; cannot extend):
-lifecycle?: {
-  states: LifecycleState[]
-  transitions: LifecycleTransition[]
-  initialState: string
-}
-
-// Referenced (shared, installable):
-lifecycleRef?: UUID        // LINEAGE reference (rfc-decision-c8704763) — resolves to an
-                            // installed Lifecycle in the effective package set (V8)
-```
-
-
-
-##### ext:protocol
-
-**Content**: Content relocated to mechanism leaves under the Protocol concept (RFC-042 Change B, srs#562/#687). See derived-from.
-
-###### The `FieldRef` shape
-
-**Content**: `FieldRef`, in pseudo-IDL:
-
-```typescript
-{
-  fieldId: UUID
-  typeId?: UUID    // which Type this Field appears in
-}
-```
-
-
-###### The `ProtocolStage` shape
-
-**Content**: `ProtocolStage`, in pseudo-IDL:
-
-```typescript
-{
-  stageId: string       // stable key within this Protocol
-  name: string          // short, human-readable stage name (e.g. "Background", "Key requirements")
-  order: integer        // min: 0; declared composition order of the stages — see note below
-  purpose?: string      // what understanding this stage builds
-  question?: string     // the core question this stage answers
-  dependsOn: string[]   // stageId values; epistemic dependencies, not just ordering
-  completionCriteria?: string  // how to know this stage is sufficient to proceed
-  contributesTo?: FieldRef[]   // which Record Fields this stage feeds
-  outputType?: UUID            // LINEAGE reference (rfc-decision-c8704763) to the Type this stage
-                                // produces its own intermediate Record as; the effective
-                                // package set resolves it. typeVersion is dropped — version-
-                                // optional hybrids are forbidden.
-  aiGuidance?: AiGuidance       // the closed, structured guidance object used everywhere else in
-                                // the model (purpose/extraction/negativeGuidance/examples) — not a
-                                // plain string (rfc-decision, srs#379: structured over serialised).
-}
-```
-
-
-###### The `Protocol` shape
-
-**Content**: `Protocol`, in pseudo-IDL:
-
-```typescript
-{
-  id: UUID
-  namespace: string
-  name: string
-  version: integer   // min: 1
-
-  description?: string
-
-  targetType: UUID | ""
-  // The Record type this Protocol produces — a LINEAGE reference (bare UUID;
-  // rfc-decision-c8704763), never the canonical namespace/name@version form (that is
-  // DISPLAY-only and is never stored). Empty string for loose / exploratory Protocols
-  // (Brain Dump, Decomposition) whose output is input context for a tighter Protocol.
-
-  stages: ProtocolStage[]
-
-  tags?: string[]
-  createdAt: ISO8601
-}
-```
-
-
-###### A Protocol chain for a governance decision
-
-**Content**: Three Protocols in sequence, from brain dump to Decision Record. Non-normative:
-
-```
-Brain Dump Protocol (loose, no targetType)
-  → AttentionState: { containerId: C1 }
-  → Produces: Note N1 (unstructured brainstorm)
-
-Decomposition Protocol (loose, targetType: Component)
-  → AttentionState: { containerId: C1, recordId: N1 }
-  → Produces: Notes N2, N3, N4  [derived-from N1]
-
-Decision Protocol (tight, targetType: Decision)
-  → AttentionState: { containerId: C1, protocolRunId: R1, stageId: "criteria" }
-  → Stage "criteria" produces: Options Analysis Record R-OA  [derived-from N2, N3]
-  → Stage "decision" produces: Decision Record R-D           [derived-from R-OA]
-
-Conversation chunks produced during Decision stage:
-  chunk-42: { AttentionState: { containerId: C1, recordId: R-OA, fieldId: F-criteria, ... } }
-  chunk-43: { AttentionState: { containerId: C1, recordId: R-D, fieldId: F-outcome, ... } }
-
-Context query for R-D / F-outcome:
-  → Field aiGuidance from Decision Type + outcome Field
-  → Current value for F-outcome
-  → Chunks tagged with { recordId: R-D, fieldId: F-outcome } — chunk-43
-  → Chunks tagged with { recordId: R-D } — broader session context
-  → Related Records via Relations — R-OA via derived-from
-```
-
-
-
-##### Generated reference: `FieldRef`
-
-**Referenced Type Id**: 4c00003d-0000-4000-a000-00000000003d
-
-**Presentation Profile**: property-table-and-pseudo-idl
-
-**Content**: Generated from the resolved effective `field-ref` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
-
-| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
-|---|---|---|---|---|---|
-| `fieldId` | ref → `field` (id) | yes | — | core | References a Field by its stable id (reference mode closes the metacircular loop). |
-| `typeId` | string | no | format: uuid | core | Stable UUID of the referenced Type. |
-
-Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/protocol.json#/$defs/FieldRef>
-
-#### Compact pseudo-IDL
-
-```typescript
-field-ref {
-  fieldId: ref → `field` (id) // References a Field by its stable id (reference mode closes the metacircular loop).
-  typeId?: string // Stable UUID of the referenced Type.
-}
-```
-
-
-##### Generated reference: `ProtocolStage`
-
-**Referenced Type Id**: 4c00003e-0000-4000-a000-00000000003e
-
-**Presentation Profile**: property-table-and-pseudo-idl
-
-**Content**: Generated from the resolved effective `protocol-stage` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
-
-| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
-|---|---|---|---|---|---|
-| `stageId` | string | yes | — | core | Stable key within this Protocol. Referenced by other stages' dependsOn (Invariant 29). |
-| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
-| `order` | integer | yes | minimum: 0 | core | The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015). |
-| `purpose` | string | no | — | core | What this field/type captures (1-2 sentences). |
-| `question` | string | no | — | core | The core question this stage answers. |
-| `dependsOn` | string[] | no | — | core | stageId values within the enclosing Protocol — epistemic dependencies, not just ordering. A stage may not depend on itself (Invariant 29). |
-| `completionCriteria` | string | no | — | core | How to know this stage is sufficient to proceed. |
-| `contributesTo` | ref → `field-ref` (inline)[] | no | — | core | The Record Fields this stage feeds (Invariant 30). |
-| `outputType` | string | no | format: uuid | core | Present when this stage produces its own intermediate Record. A LINEAGE reference (bare UUID; rfc-decision-c8704763) to the Type this stage produces its own intermediate Record as — the effective package set resolves it. typeVersion is dropped (version-optional hybrids are forbidden). |
-| `aiGuidance` | ref → `ai-guidance` (inline) | no | — | core | Inline LLM guidance for extracting/populating this field or type. |
-
-Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/protocol.json#/$defs/ProtocolStage>
-
-#### Compact pseudo-IDL
-
-```typescript
-protocol-stage {
-  stageId: string // Stable key within this Protocol. Referenced by other stages' dependsOn (Invariant 29).
-  name: string // Machine-readable name within the namespace; snake_case.
-  order: integer // The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015).
-  purpose?: string // What this field/type captures (1-2 sentences).
-  question?: string // The core question this stage answers.
-  dependsOn?: string[] // stageId values within the enclosing Protocol — epistemic dependencies, not just ordering. A stage may not depend on itself (Invariant 29).
-  completionCriteria?: string // How to know this stage is sufficient to proceed.
-  contributesTo?: ref → `field-ref` (inline)[] // The Record Fields this stage feeds (Invariant 30).
-  outputType?: string // Present when this stage produces its own intermediate Record. A LINEAGE reference (bare UUID; rfc-decision-c8704763) to the Type this stage produces its own intermediate Record as — the effective package set resolves it. typeVersion is dropped (version-optional hybrids are forbidden).
-  aiGuidance?: ref → `ai-guidance` (inline) // Inline LLM guidance for extracting/populating this field or type.
-}
-```
-
-
-##### Generated reference: `Protocol`
-
-**Referenced Type Id**: 4c00003f-0000-4000-a000-00000000003f
-
-**Presentation Profile**: property-table-and-pseudo-idl
-
-**Content**: Generated from the resolved effective `protocol` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
-
-| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
-|---|---|---|---|---|---|
-| `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
-| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
-| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
-| `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
-| `description` | string | no | — | core | Human-readable description of this entity. |
-| `targetType` | string | yes | format: uuid | core | The Record type this Protocol converges on — a LINEAGE reference (bare UUID; rfc-decision-c8704763), never the canonical namespace/name@version form (DISPLAY-only, never stored). Empty string for loose, exploratory Protocols whose output is input context for a tighter Protocol. |
-| `stages` | ref → `protocol-stage` (inline)[] | yes | — | core | The stages, in declaration order. Execution sequence is determined by dependsOn resolution, not array position; order is the declared composition order (Invariant 31). |
-| `tags` | string[] | no | — | core | Free-form classification tags. |
-| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
-
-Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/protocol.json>
-
-#### Compact pseudo-IDL
-
-```typescript
-protocol {
-  id: string // Globally unique, stable UUID identity of this entity.
-  namespace: string // Reverse-DNS logical grouping.
-  name: string // Machine-readable name within the namespace; snake_case.
-  version: integer // Positive integer version within the UUID lineage.
-  description?: string // Human-readable description of this entity.
-  targetType: string // The Record type this Protocol converges on — a LINEAGE reference (bare UUID; rfc-decision-c8704763), never the canonical namespace/name@version form (DISPLAY-only, never stored). Empty string for loose, exploratory Protocols whose output is input context for a tighter Protocol.
-  stages: ref → `protocol-stage` (inline)[] // The stages, in declaration order. Execution sequence is determined by dependsOn resolution, not array position; order is the declared composition order (Invariant 31).
-  tags?: string[] // Free-form classification tags.
-  createdAt: date-time // ISO-8601 creation timestamp.
-}
-```
-
-
-##### Generated reference: `RelationSpec`
-
-**Referenced Type Id**: 4c00001a-0000-4000-a000-00000000001a
-
-**Presentation Profile**: property-table-and-pseudo-idl
-
-**Content**: Generated from the resolved effective `relation-spec` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
-
-| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
-|---|---|---|---|---|---|
-| `relationType` | string | yes | — | core | The Relation type name: a canonical vocabulary entry (contains, depends-on, supersedes, refines, derived-from, evidences, precedes) or a custom namespace/name form. Shared by Relation.relationType and RelationSpec.relationType (srs#526: same meaning, different Types — reuse over duplication). |
-| `sourceType` | ref → `exact-type-ref` (inline) | yes | — | core | ext:blueprint — the Record Type on the source end of a RelationSpec. |
-| `targetType` | ref → `exact-type-ref` (inline) | yes | — | core | ext:blueprint — the Record Type on the target end of a RelationSpec. |
-| `cardinality` | string | no | enum: "one-to-one" \| "one-to-many" \| "many-to-one" \| "many-to-many" | core | ext:blueprint — expected multiplicity constraint for a RelationSpec. |
-| `required` | boolean | no | — | core | Whether this field must be populated before a Record can be logged. |
-
-Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/blueprint.json#/$defs/RelationSpec>
-
-#### Compact pseudo-IDL
-
-```typescript
-relation-spec {
-  relationType: string // The Relation type name: a canonical vocabulary entry (contains, depends-on, supersedes, refines, derived-from, evidences, precedes) or a custom namespace/name form. Shared by Relation.relationType and RelationSpec.relationType (srs#526: same meaning, different Types — reuse over duplication).
-  sourceType: ref → `exact-type-ref` (inline) // ext:blueprint — the Record Type on the source end of a RelationSpec.
-  targetType: ref → `exact-type-ref` (inline) // ext:blueprint — the Record Type on the target end of a RelationSpec.
-  cardinality?: string // ext:blueprint — expected multiplicity constraint for a RelationSpec.
-  required?: boolean // Whether this field must be populated before a Record can be logged.
-}
-```
-
-
-##### Generated reference: `Blueprint`
-
-**Referenced Type Id**: 4c00001b-0000-4000-a000-00000000001b
-
-**Presentation Profile**: property-table-and-pseudo-idl
-
-**Content**: Generated from the resolved effective `blueprint` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
-
-| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
-|---|---|---|---|---|---|
-| `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
-| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
-| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
-| `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
-| `description` | string | yes | — | core | Human-readable description of this entity. |
-| `rootTypes` | ref → `exact-type-ref` (inline)[] | yes | — | core | ext:blueprint — the Record Type(s) this Blueprint produces as root Records. |
-| `structure` | ref → `relation-spec` (inline)[] | no | — | core | ext:blueprint — expected Relation structure between extracted Records. |
-| `requiredTypes` | ref → `exact-type-ref` (inline)[] | no | — | core | ext:blueprint — TypeIds that must be present for this Blueprint to be considered complete. |
-| `tags` | string[] | no | — | core | Free-form classification tags. |
-| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
-
-Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/blueprint.json>
-
-#### Compact pseudo-IDL
-
-```typescript
-blueprint {
-  id: string // Globally unique, stable UUID identity of this entity.
-  namespace: string // Reverse-DNS logical grouping.
-  name: string // Machine-readable name within the namespace; snake_case.
-  version: integer // Positive integer version within the UUID lineage.
-  description: string // Human-readable description of this entity.
-  rootTypes: ref → `exact-type-ref` (inline)[] // ext:blueprint — the Record Type(s) this Blueprint produces as root Records.
-  structure?: ref → `relation-spec` (inline)[] // ext:blueprint — expected Relation structure between extracted Records.
-  requiredTypes?: ref → `exact-type-ref` (inline)[] // ext:blueprint — TypeIds that must be present for this Blueprint to be considered complete.
-  tags?: string[] // Free-form classification tags.
-  createdAt: date-time // ISO-8601 creation timestamp.
-}
-```
-
-
-##### ext:type-inheritance
-
-**Content**: Content relocated to mechanism leaves under the Type specialisation concept (RFC-042 Change B, srs#562). See derived-from.
-
-###### The properties `ext:type-inheritance` adds to a Type
-
-**Content**: The properties this extension adds to `Type`, in pseudo-IDL:
-
-```typescript
-{
-  extendsTypeId?: UUID
-  // UUID of the base Type this Type specializes.
-  // When present, the effective field list consists of inherited fields
-  // followed by this Type's own fields[], unless fieldOrder is present.
-
-  extendsTypeVersion?: integer
-  // Version of the base Type targeted by this specialization.
-
-  fieldOrder?: UUID[]
-  // Optional explicit ordering of all fields in the effective field list:
-  // inherited fields plus this Type's own fields[].
-  // This is an ordering declaration only; it does not re-declare field
-  // assignments or change Field semantics.
-
-  fieldAssignmentOverrides?: FieldAssignmentOverride[]
-  // Presentation and workflow overrides for inherited fields only.
-
-  identityFieldId?: UUID
-  // RFC-020 — names one fieldId from this Type's effective field set
-  // (own fields plus inherited fields) as the record's identity/display
-  // field. Cascades across the ancestor chain independently of
-  // fieldOrder (see `identityFieldId` below).
-}
-```
-
-
-###### The `FieldAssignmentOverride` shape
-
-**Content**: `FieldAssignmentOverride`, in pseudo-IDL:
-
-```typescript
-{
-  fieldId: UUID
-  displayLabel?: string
-  displayHint?: string
-  required?: boolean
-}
-```
-
-
-###### A governance decision Type specialising a core decision Type
-
-**Content**: A specialising Type and the fields it adds to its base.
-
-```text
-Type: core/decision
-  fields: decision_statement, context, rationale, options_considered
-
-Type: org.example/governance_decision
-  extendsTypeId: core/decision
-  adds: ratification_method, quorum_threshold, voting_record
-```
-
-
-
 ##### ext:views-l1
 
 **Content**: Content relocated to mechanism leaves under the View concept (RFC-042 Change C, srs#562). See derived-from.
@@ -6073,6 +5668,373 @@ srsj-envelope {
   srsj: string // The .srsj archive's version-gate string ([R24]).
   manifest: ref → `manifest` (inline) // The archived repository's Manifest (validates against manifest.json).
   data: map<string, open> // Flat map keyed by the file's relative path within the repository tree to that file's parsed JSON content. Distinct from the `meta` extension bag — this is the archive's actual file payload, not open metadata.
+}
+```
+
+
+##### ext:lifecycle
+
+**Content**: Content relocated to mechanism leaves under the Lifecycle concept (RFC-042 Change C, srs#562). See derived-from.
+
+###### The `LifecycleState` shape
+
+**Content**: `LifecycleState`, in pseudo-IDL:
+
+```typescript
+{
+  id: UUID                  // stable identity
+  version: integer
+  namespace: string
+  key: string               // was name; the string stored in Record.lifecycleState
+  label?: string
+  description?: string
+  aliases?: string[]
+  isInitial?: boolean       // valid starting state for new Records
+  isFinal?: boolean         // no outgoing transitions permitted (V9)
+  status?: "active" | "deprecated" | "tombstone" | "retired"   // absent = active
+  meta?: Record<string, unknown>
+  lineage?: Lineage
+  provenance?: Provenance
+  createdAt: ISO8601
+  updatedAt?: ISO8601
+}
+```
+
+
+###### The `LifecycleTransition` shape
+
+**Content**: `LifecycleTransition`, in pseudo-IDL:
+
+```typescript
+{
+  id: UUID                  // stable identity for lossless future migration
+  name: string              // e.g. "promote", "approve", "supersede"
+  from: string              // a LifecycleState.key in the effective state set
+  to: string                // a LifecycleState.key in the effective state set
+  description?: string
+  meta?: Record<string, unknown>
+}
+```
+
+
+###### The `Lifecycle` container shape
+
+**Content**: `Lifecycle`, in pseudo-IDL:
+
+```typescript
+{
+  id: UUID
+  namespace: string
+  name: string
+  version: integer          // min: 1
+
+  states: LifecycleState[]
+  transitions: LifecycleTransition[]
+  initialState: string      // the key of the single isInitial state
+
+  extendsLifecycleId?: UUID
+  extendsLifecycleVersion?: integer   // required when extendsLifecycleId is present
+
+  description?: string
+  createdAt: ISO8601
+  lineage?: Lineage
+  provenance?: Provenance
+}
+```
+
+
+###### The two lifecycle declaration forms a Type may carry
+
+**Content**: The inline form and the referenced form:
+
+```typescript
+// Inline (simple cases; cannot extend):
+lifecycle?: {
+  states: LifecycleState[]
+  transitions: LifecycleTransition[]
+  initialState: string
+}
+
+// Referenced (shared, installable):
+lifecycleRef?: UUID        // LINEAGE reference (rfc-decision-c8704763) — resolves to an
+                            // installed Lifecycle in the effective package set (V8)
+```
+
+
+
+##### ext:protocol
+
+**Content**: Content relocated to mechanism leaves under the Protocol concept (RFC-042 Change B, srs#562/#687). See derived-from.
+
+###### The `FieldRef` shape
+
+**Content**: `FieldRef`, in pseudo-IDL:
+
+```typescript
+{
+  fieldId: UUID
+  typeId?: UUID    // which Type this Field appears in
+}
+```
+
+
+###### The `ProtocolStage` shape
+
+**Content**: `ProtocolStage`, in pseudo-IDL:
+
+```typescript
+{
+  stageId: string       // stable key within this Protocol
+  name: string          // short, human-readable stage name (e.g. "Background", "Key requirements")
+  order: integer        // min: 0; declared composition order of the stages — see note below
+  purpose?: string      // what understanding this stage builds
+  question?: string     // the core question this stage answers
+  dependsOn: string[]   // stageId values; epistemic dependencies, not just ordering
+  completionCriteria?: string  // how to know this stage is sufficient to proceed
+  contributesTo?: FieldRef[]   // which Record Fields this stage feeds
+  outputType?: UUID            // LINEAGE reference (rfc-decision-c8704763) to the Type this stage
+                                // produces its own intermediate Record as; the effective
+                                // package set resolves it. typeVersion is dropped — version-
+                                // optional hybrids are forbidden.
+  aiGuidance?: AiGuidance       // the closed, structured guidance object used everywhere else in
+                                // the model (purpose/extraction/negativeGuidance/examples) — not a
+                                // plain string (rfc-decision, srs#379: structured over serialised).
+}
+```
+
+
+###### The `Protocol` shape
+
+**Content**: `Protocol`, in pseudo-IDL:
+
+```typescript
+{
+  id: UUID
+  namespace: string
+  name: string
+  version: integer   // min: 1
+
+  description?: string
+
+  targetType: UUID | ""
+  // The Record type this Protocol produces — a LINEAGE reference (bare UUID;
+  // rfc-decision-c8704763), never the canonical namespace/name@version form (that is
+  // DISPLAY-only and is never stored). Empty string for loose / exploratory Protocols
+  // (Brain Dump, Decomposition) whose output is input context for a tighter Protocol.
+
+  stages: ProtocolStage[]
+
+  tags?: string[]
+  createdAt: ISO8601
+}
+```
+
+
+###### A Protocol chain for a governance decision
+
+**Content**: Three Protocols in sequence, from brain dump to Decision Record. Non-normative:
+
+```
+Brain Dump Protocol (loose, no targetType)
+  → AttentionState: { containerId: C1 }
+  → Produces: Note N1 (unstructured brainstorm)
+
+Decomposition Protocol (loose, targetType: Component)
+  → AttentionState: { containerId: C1, recordId: N1 }
+  → Produces: Notes N2, N3, N4  [derived-from N1]
+
+Decision Protocol (tight, targetType: Decision)
+  → AttentionState: { containerId: C1, protocolRunId: R1, stageId: "criteria" }
+  → Stage "criteria" produces: Options Analysis Record R-OA  [derived-from N2, N3]
+  → Stage "decision" produces: Decision Record R-D           [derived-from R-OA]
+
+Conversation chunks produced during Decision stage:
+  chunk-42: { AttentionState: { containerId: C1, recordId: R-OA, fieldId: F-criteria, ... } }
+  chunk-43: { AttentionState: { containerId: C1, recordId: R-D, fieldId: F-outcome, ... } }
+
+Context query for R-D / F-outcome:
+  → Field aiGuidance from Decision Type + outcome Field
+  → Current value for F-outcome
+  → Chunks tagged with { recordId: R-D, fieldId: F-outcome } — chunk-43
+  → Chunks tagged with { recordId: R-D } — broader session context
+  → Related Records via Relations — R-OA via derived-from
+```
+
+
+
+##### Generated reference: `FieldRef`
+
+**Referenced Type Id**: 4c00003d-0000-4000-a000-00000000003d
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `field-ref` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `fieldId` | ref → `field` (id) | yes | — | core | References a Field by its stable id (reference mode closes the metacircular loop). |
+| `typeId` | string | no | format: uuid | core | Stable UUID of the referenced Type. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/protocol.json#/$defs/FieldRef>
+
+#### Compact pseudo-IDL
+
+```typescript
+field-ref {
+  fieldId: ref → `field` (id) // References a Field by its stable id (reference mode closes the metacircular loop).
+  typeId?: string // Stable UUID of the referenced Type.
+}
+```
+
+
+##### Generated reference: `ProtocolStage`
+
+**Referenced Type Id**: 4c00003e-0000-4000-a000-00000000003e
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `protocol-stage` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `stageId` | string | yes | — | core | Stable key within this Protocol. Referenced by other stages' dependsOn (Invariant 29). |
+| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
+| `order` | integer | yes | minimum: 0 | core | The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015). |
+| `purpose` | string | no | — | core | What this field/type captures (1-2 sentences). |
+| `question` | string | no | — | core | The core question this stage answers. |
+| `dependsOn` | string[] | no | — | core | stageId values within the enclosing Protocol — epistemic dependencies, not just ordering. A stage may not depend on itself (Invariant 29). |
+| `completionCriteria` | string | no | — | core | How to know this stage is sufficient to proceed. |
+| `contributesTo` | ref → `field-ref` (inline)[] | no | — | core | The Record Fields this stage feeds (Invariant 30). |
+| `outputType` | string | no | format: uuid | core | Present when this stage produces its own intermediate Record. A LINEAGE reference (bare UUID; rfc-decision-c8704763) to the Type this stage produces its own intermediate Record as — the effective package set resolves it. typeVersion is dropped (version-optional hybrids are forbidden). |
+| `aiGuidance` | ref → `ai-guidance` (inline) | no | — | core | Inline LLM guidance for extracting/populating this field or type. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/protocol.json#/$defs/ProtocolStage>
+
+#### Compact pseudo-IDL
+
+```typescript
+protocol-stage {
+  stageId: string // Stable key within this Protocol. Referenced by other stages' dependsOn (Invariant 29).
+  name: string // Machine-readable name within the namespace; snake_case.
+  order: integer // The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015).
+  purpose?: string // What this field/type captures (1-2 sentences).
+  question?: string // The core question this stage answers.
+  dependsOn?: string[] // stageId values within the enclosing Protocol — epistemic dependencies, not just ordering. A stage may not depend on itself (Invariant 29).
+  completionCriteria?: string // How to know this stage is sufficient to proceed.
+  contributesTo?: ref → `field-ref` (inline)[] // The Record Fields this stage feeds (Invariant 30).
+  outputType?: string // Present when this stage produces its own intermediate Record. A LINEAGE reference (bare UUID; rfc-decision-c8704763) to the Type this stage produces its own intermediate Record as — the effective package set resolves it. typeVersion is dropped (version-optional hybrids are forbidden).
+  aiGuidance?: ref → `ai-guidance` (inline) // Inline LLM guidance for extracting/populating this field or type.
+}
+```
+
+
+##### Generated reference: `Protocol`
+
+**Referenced Type Id**: 4c00003f-0000-4000-a000-00000000003f
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `protocol` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
+| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
+| `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
+| `description` | string | no | — | core | Human-readable description of this entity. |
+| `targetType` | string | yes | format: uuid | core | The Record type this Protocol converges on — a LINEAGE reference (bare UUID; rfc-decision-c8704763), never the canonical namespace/name@version form (DISPLAY-only, never stored). Empty string for loose, exploratory Protocols whose output is input context for a tighter Protocol. |
+| `stages` | ref → `protocol-stage` (inline)[] | yes | — | core | The stages, in declaration order. Execution sequence is determined by dependsOn resolution, not array position; order is the declared composition order (Invariant 31). |
+| `tags` | string[] | no | — | core | Free-form classification tags. |
+| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/protocol.json>
+
+#### Compact pseudo-IDL
+
+```typescript
+protocol {
+  id: string // Globally unique, stable UUID identity of this entity.
+  namespace: string // Reverse-DNS logical grouping.
+  name: string // Machine-readable name within the namespace; snake_case.
+  version: integer // Positive integer version within the UUID lineage.
+  description?: string // Human-readable description of this entity.
+  targetType: string // The Record type this Protocol converges on — a LINEAGE reference (bare UUID; rfc-decision-c8704763), never the canonical namespace/name@version form (DISPLAY-only, never stored). Empty string for loose, exploratory Protocols whose output is input context for a tighter Protocol.
+  stages: ref → `protocol-stage` (inline)[] // The stages, in declaration order. Execution sequence is determined by dependsOn resolution, not array position; order is the declared composition order (Invariant 31).
+  tags?: string[] // Free-form classification tags.
+  createdAt: date-time // ISO-8601 creation timestamp.
+}
+```
+
+
+##### Generated reference: `RelationSpec`
+
+**Referenced Type Id**: 4c00001a-0000-4000-a000-00000000001a
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `relation-spec` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `relationType` | string | yes | — | core | The Relation type name: a canonical vocabulary entry (contains, depends-on, supersedes, refines, derived-from, evidences, precedes) or a custom namespace/name form. Shared by Relation.relationType and RelationSpec.relationType (srs#526: same meaning, different Types — reuse over duplication). |
+| `sourceType` | ref → `exact-type-ref` (inline) | yes | — | core | ext:blueprint — the Record Type on the source end of a RelationSpec. |
+| `targetType` | ref → `exact-type-ref` (inline) | yes | — | core | ext:blueprint — the Record Type on the target end of a RelationSpec. |
+| `cardinality` | string | no | enum: "one-to-one" \| "one-to-many" \| "many-to-one" \| "many-to-many" | core | ext:blueprint — expected multiplicity constraint for a RelationSpec. |
+| `required` | boolean | no | — | core | Whether this field must be populated before a Record can be logged. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/blueprint.json#/$defs/RelationSpec>
+
+#### Compact pseudo-IDL
+
+```typescript
+relation-spec {
+  relationType: string // The Relation type name: a canonical vocabulary entry (contains, depends-on, supersedes, refines, derived-from, evidences, precedes) or a custom namespace/name form. Shared by Relation.relationType and RelationSpec.relationType (srs#526: same meaning, different Types — reuse over duplication).
+  sourceType: ref → `exact-type-ref` (inline) // ext:blueprint — the Record Type on the source end of a RelationSpec.
+  targetType: ref → `exact-type-ref` (inline) // ext:blueprint — the Record Type on the target end of a RelationSpec.
+  cardinality?: string // ext:blueprint — expected multiplicity constraint for a RelationSpec.
+  required?: boolean // Whether this field must be populated before a Record can be logged.
+}
+```
+
+
+##### Generated reference: `Blueprint`
+
+**Referenced Type Id**: 4c00001b-0000-4000-a000-00000000001b
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `blueprint` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
+| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
+| `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
+| `description` | string | yes | — | core | Human-readable description of this entity. |
+| `rootTypes` | ref → `exact-type-ref` (inline)[] | yes | — | core | ext:blueprint — the Record Type(s) this Blueprint produces as root Records. |
+| `structure` | ref → `relation-spec` (inline)[] | no | — | core | ext:blueprint — expected Relation structure between extracted Records. |
+| `requiredTypes` | ref → `exact-type-ref` (inline)[] | no | — | core | ext:blueprint — TypeIds that must be present for this Blueprint to be considered complete. |
+| `tags` | string[] | no | — | core | Free-form classification tags. |
+| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/blueprint.json>
+
+#### Compact pseudo-IDL
+
+```typescript
+blueprint {
+  id: string // Globally unique, stable UUID identity of this entity.
+  namespace: string // Reverse-DNS logical grouping.
+  name: string // Machine-readable name within the namespace; snake_case.
+  version: integer // Positive integer version within the UUID lineage.
+  description: string // Human-readable description of this entity.
+  rootTypes: ref → `exact-type-ref` (inline)[] // ext:blueprint — the Record Type(s) this Blueprint produces as root Records.
+  structure?: ref → `relation-spec` (inline)[] // ext:blueprint — expected Relation structure between extracted Records.
+  requiredTypes?: ref → `exact-type-ref` (inline)[] // ext:blueprint — TypeIds that must be present for this Blueprint to be considered complete.
+  tags?: string[] // Free-form classification tags.
+  createdAt: date-time // ISO-8601 creation timestamp.
 }
 ```
 
@@ -7058,6 +7020,19 @@ Conforming implementations must uphold the following invariants.
 **Number**: I-96
 
 **Constraint**: A `CrossFieldRule` that contains a property belonging to a different rule type MUST be reported as a Type-level validation error. Specifically: a `conditional-required` or `field-ordering` rule MUST NOT supply `fieldIds`; a `mutual-exclusion` rule MUST NOT supply `predicateFieldId`, `predicateValue`, `targetFieldId`, or `effect`. (RFC-019 R10.)
+
+
+##### The `ValidationRule` shape
+
+**Content**: `ValidationRule`, in pseudo-IDL:
+
+```typescript
+{
+  type: "required" | "minLength" | "maxLength" | "pattern" | "enum"
+  value?: string | number | string[]  // required for minLength, maxLength, pattern, enum
+  message?: string
+}
+```
 
 
 ##### The `CrossFieldRule` shape

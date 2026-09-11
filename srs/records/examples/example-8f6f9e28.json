@@ -10,5 +10,8 @@
   },
   "createdAt": "2026-09-06T17:00:40.532122604+00:00",
   "updatedAt": "2026-09-06T17:05:11.768320589+00:00",
-  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "meta": {
+    "derivedFrom": "d1f518cc-0e25-5045-ae3d-9d68443c8150"
+  }
 }
