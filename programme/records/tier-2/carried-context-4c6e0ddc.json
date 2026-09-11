@@ -1,0 +1,15 @@
+{
+  "instanceId": "4c6e0ddc-7d06-4b03-a027-dc97c601b7dd",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "Before deleting an ext:*-titled subsection under srs#710, confirm it has a com.semanticops.spec/extension shadow record, or check whether it needs one",
+    "summary": "grep records/extensions/*.json for the extension_id matching the subsection's title before running record delete --cascade on any subsection whose title starts with ext:. Ten of the current ext:* extensions already have a shadow record; ext:protocol, ext:repository, and ext:federation do not, matching the gap that broke RFC-020/RFC-040 when ext:type-inheritance (also unshadowed) was deleted under this issue. If a shadow is missing, grep srs/records/tier-2/rfc-*.json for a real citation inside an <!-- srs-integration:v1 --> block naming that ext:<name> token before deleting; if one exists, create the shadow record first (mirror srs/records/extensions/extension-58707681.json's retirement-stub pattern), and add it to scripts/publication-reachability-exclusions.json.",
+    "rationale": "check-rfc-integration.mjs resolves an ext:<name> manifest token against a com.semanticops.spec/extension record's extension_id OR, as a fallback, any subsection record whose title starts with ext: (the retired-extension-shadow's-subsection-twin rule). When a subsection is the ONLY resolver for its own ext: token, deleting it removes that token's last resolution path with no advance warning -- repo validate stays green, and only a real validate-all run surfaces the break, after the fact. This would change if check-rfc-integration.mjs's extension-shadow-required-before-delete became a pre-flight check of its own rather than something a worker has to think to run, or if the ext: fallback onto subsection titles were retired entirely in favour of requiring every extension to have a dedicated shadow record from the start (which would also close this gap, but is a normative change outside this unit's Door 1 scope)."
+  },
+  "createdAt": "2026-09-11T06:47:52.128899893+00:00",
+  "updatedAt": "2026-09-11T06:47:52.128906037+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
