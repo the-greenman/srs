@@ -90,6 +90,11 @@ const F_EXT_ID = "extension_id";
 const TYPEDEF_TYPE = "2a000005-0000-4000-a000-000000000005";
 const SECTION_TYPE = "2a000002-0000-4000-a000-000000000002";
 const SUBSECTION_TYPE = "2a000003-0000-4000-a000-000000000003";
+// RFC-042 Change B retires section/subsection in favor of the concept-tree leaf Types — a
+// manifest token that named a subsection by title before its retirement must still resolve once
+// that content has succeeded into a concept or mechanism (srs#710).
+const CONCEPT_TYPE = "2a000004-0000-4000-a000-000000000004";
+const MECHANISM_TYPE = "6655e3fb-6f4c-450e-a9c2-b2f5711fef92";
 const F_TITLE = "title";
 
 const LEGAL_STATUSES = new Set([
@@ -238,6 +243,8 @@ async function buildResolvers() {
   const typeKeys = new Set(); // `${namespace}/${name}`
   const sectionSlugs = new Set();
   const subsectionSlugs = new Set();
+  const conceptSlugs = new Set();
+  const mechanismSlugs = new Set();
   const indexedPaths = new Set();
   const rfcRecords = []; // { path, record } for every RFC-typed record, wherever it lives
   const allRecords = []; // { path, record } for every instance, any type (srs#519 banner scan)
@@ -277,6 +284,16 @@ async function buildResolvers() {
         if (t && /^ext:/i.test(t)) extensionIds.add(t.trim());
         break;
       }
+      case CONCEPT_TYPE: {
+        const t = fieldValue(record, F_TITLE);
+        if (t) conceptSlugs.add(slugify(t));
+        break;
+      }
+      case MECHANISM_TYPE: {
+        const t = fieldValue(record, F_TITLE);
+        if (t) mechanismSlugs.add(slugify(t));
+        break;
+      }
       default:
         break;
     }
@@ -310,7 +327,7 @@ async function buildResolvers() {
   const cellSlugs = await loadCellSlugs();
   const decisionModes = await loadDecisionModes();
 
-  return { invariantNumbers, extensionIds, typeKeys, sectionSlugs, subsectionSlugs, schemaFiles, indexedPaths, rfcRecords, allRecords, cellSlugs, decisionModes };
+  return { invariantNumbers, extensionIds, typeKeys, sectionSlugs, subsectionSlugs, conceptSlugs, mechanismSlugs, schemaFiles, indexedPaths, rfcRecords, allRecords, cellSlugs, decisionModes };
 }
 
 // Recursively find every package.json under a directory.
@@ -343,6 +360,8 @@ function resolveToken(token, r) {
   if ((m = /^type:(.+)$/i.exec(token))) return r.typeKeys.has(m[1].trim());
   if ((m = /^section:(.+)$/i.exec(token))) return r.sectionSlugs.has(slugify(m[1].trim()));
   if ((m = /^subsection:(.+)$/i.exec(token))) return r.subsectionSlugs.has(slugify(m[1].trim()));
+  if ((m = /^concept:(.+)$/i.exec(token))) return r.conceptSlugs.has(slugify(m[1].trim()));
+  if ((m = /^mechanism:(.+)$/i.exec(token))) return r.mechanismSlugs.has(slugify(m[1].trim()));
   if ((m = /^cell:(.+)$/i.exec(token))) return r.cellSlugs.has(m[1].trim().toLowerCase());
   return null; // unrecognized token kind
 }
@@ -464,7 +483,7 @@ async function main() {
       for (const token of tokens) {
         const resolved = resolveToken(token, resolvers);
         if (resolved === null) {
-          fail(`${label}: unrecognized manifest token "${token}" (expected I-<n> | ext:<name> | schema:<file>.json | type:<ns>/<name> | section:<slug> | subsection:<slug> | cell:<slug>)`);
+          fail(`${label}: unrecognized manifest token "${token}" (expected I-<n> | ext:<name> | schema:<file>.json | type:<ns>/<name> | section:<slug> | subsection:<slug> | concept:<slug> | mechanism:<slug> | cell:<slug>)`);
         } else if (resolved === false) {
           fail(`${label}: manifest token "${token}" does not resolve to any canonical record/schema — the change is not folded into the spec`);
         }
