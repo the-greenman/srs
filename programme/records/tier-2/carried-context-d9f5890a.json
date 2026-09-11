@@ -1,0 +1,15 @@
+{
+  "instanceId": "d9f5890a-9bee-42f2-9291-63f1006f4318",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "No client-agnostic zero-other-tools MCP isolation exists yet",
+    "summary": "Neither the Agent tool nor mcp__Claude_Code_Remote__create_session lets a worker session hand a fresh child session a bespoke, literally-MCP-only tool surface; the only working approximation found is a claude CLI subprocess with --mcp-config/--strict-mcp-config plus a hand-maintained --allowedTools/--disallowedTools list.",
+    "rationale": "srs#711 needed 'a fresh agent session with... the only tool available is the srs-spec MCP server' (RFC-042 Change H's own Setup). create_session inherits the environment's normal Claude Code tool surface with no way to pass a custom MCP config or trim built-ins; the in-process Agent tool shares the parent session's tools and cannot be scoped to one MCP server either. The workaround that did work: spawn `claude -p` as a subprocess (not a Task/Agent subagent) in an empty, CLAUDE.md-free directory, with `--mcp-config <file> --strict-mcp-config` naming only the target MCP server, and `--allowedTools`/`--disallowedTools` denying every built-in by name except `ToolSearch` and the MCP resource-reader tools (`--tools \"\"` was tried first and rejected -- it also strips the harness's own deferred resource-reader tools, which are needed to read MCP *resources* at all, as opposed to MCP *tools*). This is a real, working recipe (captured in scripts/zero-context-agent-test.md's appendix) but not a clean one: Read/Write and the task/skill built-ins are denied by permission rather than physically absent, so a report of 'ran with only the MCP server available' from this recipe should always carry that caveat. Whoever next needs true single-tool MCP isolation (another zero-context test, or a security-relevant one where permission-based denial isn't good enough) should treat this as an open gap in the runner tooling, not as solved -- the fix would be a client mode that accepts a full MCP-only tool manifest before the first turn, which does not exist in the Claude Code Remote or Agent-tool surfaces as of this run (2026-09-11)."
+  },
+  "createdAt": "2026-09-11T20:10:13.843061238+00:00",
+  "updatedAt": "2026-09-11T20:10:13.843071332+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
