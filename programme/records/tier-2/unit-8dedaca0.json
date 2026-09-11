@@ -1,0 +1,22 @@
+{
+  "instanceId": "8dedaca0-3393-4d29-ab26-1be1bef3a231",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "RFC-032 [R3] amendment — widen valueDomain to string-or-integer",
+    "summary": "Amended RFC-032 to Revision 8: [R3] widened from datatype==string to datatype==string-or-integer for valueDomain, matching the implementation (srs#534) and the spec repo's own com.semanticops.srs/tier field, which only conforms under the widened reading. Updated the .md, the canonical rfc-6ecaf104 stub record's content/affected_components, the value_domain Field's generated description (via gen-metamodel-package.mjs, regenerated), and docs/schema/2.0/projection-rules.md's mapping table. No schema JSON change (field.json was never schema-restricted to string here). srs-rust untouched. validate-all first ran red on a pre-existing em-dash-cap violation the edit's changed paragraph digest exposed (the paragraph already had 2 em-dashes on master, grandfathered under an old digest); fixed by recasting one em-dash as a sentence break, then green. check-release-drift also green.",
+    "decision_mode": "clear",
+    "door": "door-3",
+    "issue_ref": [
+      "srs#729",
+      "srs#580"
+    ],
+    "body": "Dispatched from the srs gate:dispatched queue via srs#729 (dispatch comment 5640740450, pooled from srs#580 top-up 5639954352). Classification: Mode clear, Cell Individual x Air (Description), Door 3 (amends Accepted RFC-032's own conformance-rule surface). Charter check found no existing rfc-decision-* ruling on this exact question (RFC-032 [R3] scope, the tier field, or srs#534) — nothing to relitigate. PR: https://github.com/the-greenman/srs/pull/770 (gate:owner-merge — never auto-merged; the agent stops at the PR per the merge-rights contract)."
+  },
+  "lifecycleState": "proposed",
+  "createdAt": "2026-09-11T22:11:12.339016247+00:00",
+  "updatedAt": "2026-09-11T22:11:12.339026172+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
