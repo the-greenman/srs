@@ -65,10 +65,11 @@ export function isInInvariantProjectionRoot(path) {
 
 /**
  * The two rendered presentations whose output MUST contain the `### Key Invariants` heading —
- * they render the full specification via a discovery-query over `com.semanticops.spec/section`, which
- * includes the Key Invariants section, so its absence from their output is a regression rather
- * than an expected omission (unlike the rationale/RFC-catalog/RFC-decision-log presentations,
- * which never render that section).
+ * they render the full specification and always carry the Conformance Part's "Validation" concept,
+ * `invariant-region.mjs`'s anchor for the now-generated Key Invariants heading (srs#710, RFC-042
+ * Change B — no `com.semanticops.spec/section` record backs it any longer), so its absence from
+ * their output is a regression rather than an expected omission (unlike the
+ * rationale/RFC-catalog/RFC-decision-log presentations, which never render that section).
  *
  * This is orthogonal to `manifest.renderedPresentations` (#411 / RFC-015): that field is
  * authoritative for *what is rendered* (viewId, output path, format). This set is a Node-pipeline

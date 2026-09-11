@@ -83,7 +83,10 @@ function normalizeMarkdownForComparison(text) {
 }
 
 async function applyInvariantInjection(entries, injectedContent) {
-  for (const entry of entries) {
+  // srs#710 (RFC-042 Change B): injectKeyInvariants anchors on the "Validation" heading, which other
+  // compositions (e.g. the glossary) also render — only the two requiresKeyInvariants views may be
+  // spliced, matching publish-spec.mjs's injectInvariants().
+  for (const entry of entries.filter((e) => e.requiresKeyInvariants)) {
     const content = await readFile(entry.output, "utf8");
     const newContent = injectKeyInvariants(content, injectedContent);
     if (newContent === null) continue;

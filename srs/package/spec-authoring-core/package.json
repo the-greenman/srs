@@ -3,7 +3,7 @@
   "id": "4a000001-0000-4000-a000-000000000001",
   "namespace": "com.semanticops.spec",
   "name": "spec-authoring-core",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "title": "Spec Authoring Core",
   "description": "The shared vocabulary for authoring any specification as an SRS repository. Provides types and fields for sections, subsections, extensions, invariants, conformance profiles, type definitions, requirements, examples, and concepts. Used by SRS, TSS, and any other specification authored in the SRS ecosystem.",
   "status": "draft",
@@ -43,7 +43,6 @@
   ],
   "types": [
     "types/specification.json",
-    "types/section.json",
     "types/concept.json",
     "types/type-definition.json",
     "types/invariant.json",

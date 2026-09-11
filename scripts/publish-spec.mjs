@@ -75,14 +75,15 @@ async function writeRustChecksums() {
 
 async function injectInvariants() {
   const injectedContent = await renderInvariants(REPO_ROOT);
-  for (const entry of VIEW_EXPORTS) {
+  // srs#710 (RFC-042 Change B): injectKeyInvariants now anchors on the "Validation" heading rather
+  // than a heading unique to the (now-retired) Key Invariants record, so it must only run against
+  // the two views that actually carry the projection — other compositions (e.g. the glossary) also
+  // render a "Validation" entry and would otherwise get a spurious Key Invariants block spliced in.
+  for (const entry of VIEW_EXPORTS.filter((e) => e.requiresKeyInvariants)) {
     const content = await readFile(entry.output, "utf8");
     const newContent = injectKeyInvariants(content, injectedContent);
     if (newContent === null) {
-      if (entry.requiresKeyInvariants) {
-        throw new Error(`${entry.output} is marked requiresKeyInvariants but has no ### Key Invariants heading`);
-      }
-      continue;
+      throw new Error(`${entry.output} is marked requiresKeyInvariants but has no Validation heading to anchor on`);
     }
     await writeFile(entry.output, newContent, "utf8");
   }
