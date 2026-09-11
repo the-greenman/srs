@@ -1,0 +1,15 @@
+{
+  "instanceId": "7668a275-3913-4d5e-8787-9989604c95a8",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "Deleting a section/subsection husk mid-chain requires re-splicing precedes, not just removing it",
+    "summary": "record delete --cascade removes both inbound and outbound relations for the deleted record in one step (confirmed empirically in srs#710/PR #755), including outbound `precedes` edges to whatever record followed it. If the deleted husk sat between two live records in a `precedes` ordering chain, deleting it leaves those two records disconnected rather than automatically joined — the chain gap is silent unless checked for.",
+    "rationale": "Before this PR, every retired subsection either sat at the tail of its local precedes chain or had its neighbours already handled by an earlier PR's own splice, so the gap this creates was never exercised. srs#710/PR #755 hit it directly: deleting the single-node 'Distribution' husk broke a 3-node chain into two 1-node islands, and deleting three consecutive husks ('Distribution — Views L2', '— Blueprint', '— Protocol') broke a 5-node chain into two disconnected halves. Fixed by creating one new `precedes` relation per gap, directly from the record that used to precede the deleted span to the record that used to follow it (predecessor's old target -> successor, skipping everything deleted in between). Before deleting any remaining section/subsection record under #710: list its relations and note any `precedes` edge where it is the source (`this -> successor`, something follows it) and any where it is the target (`predecessor -> this`, something precedes it). If both exist, after the cascade delete removes both, create a new `precedes` relation `predecessor -> successor` directly to keep the chain continuous — for several husks in a row from the same chain, splice across the whole span in one relation. If the record is a chain terminal (only one of predecessor/successor exists), no splice is needed. validate-all did not catch the resulting gap in this case (no invariant requires precedes to form one unbroken chain across removed nodes), so this is not caught by the gates — it has to be checked manually. This differs from `carried-context-a2429c55` (provenance goes in `meta.derivedFrom`, not a `derived-from` relation): that one is about a *new* record's edge into the *old* one surviving cascade; this one is about the *old* record's own ordering edges among its live siblings."
+  },
+  "createdAt": "2026-09-11T10:12:05.040050732+00:00",
+  "updatedAt": "2026-09-11T10:12:05.040062984+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

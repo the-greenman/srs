@@ -1,0 +1,22 @@
+{
+  "instanceId": "7c735ace-1939-4d5c-b82b-e3cb7bc11e4f",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Retire 5 empty Distribution husk subsections (RFC-042 Change B, srs#710)",
+    "summary": "Deleted Distribution, Distribution — Blueprint, Distribution — Views, Distribution — Protocol, and Distribution — Views L2 under rfc-decision-1e7c0c8e: all 5 had empty content and zero children, each already covered by an existing concept (Repository, Blueprint, View, Protocol) from an earlier batch. Two required re-splicing the precedes chain they broke.",
+    "decision_mode": "complicated",
+    "door": "door-1",
+    "issue_ref": [
+      "srs#710",
+      "srs#580"
+    ],
+    "body": "Claimed 2026-09-11T09:39:08Z from srs#710's gate:dispatched via srs#580's queue. Ground re-measured current state: 1 section (Key Invariants) and 36 subsections remained, matching the last dispatch's own count exactly (no drift).\n\nGrouped the 5 'Distribution'-titled subsections (Distribution, Distribution — Blueprint (ext:blueprint), Distribution — Views (ext:views-l1), Distribution — Protocol (ext:protocol), Distribution — Views L2 (ext:views-l2)) as a coherent batch after inspecting each: all 5 had fieldValues.content === \"\" and zero outgoing contains edges. Checked each one's sole contains parent and confirmed it is an existing com.semanticops.spec/concept record (Repository, Blueprint, View x2, Protocol) that already covers the topic — the same empty-husk pattern PR #752 established for Notes/Records/Containers/Relations, so no successor was needed, just deletion after the manifest-citation check.\n\nGrepped srs/records/tier-2/rfc-*.json for section:/subsection: tokens matching any of the 5 titles per carried-context-c4e43a58 — zero hits, so no RFC manifest updates were needed this time.\n\nNew finding: two of the five sat mid-chain in precedes ordering rather than at a chain terminal. record delete --cascade removed both inbound AND outbound relations for each deleted record in one step (confirmed via the cascade response listing every relation removed), which is efficient but leaves a gap in the precedes ordering between the deleted record's former neighbours — nothing re-splices it automatically, and validate-all does not check for continuity across removed precedes nodes. Manually created two new precedes relations to close the gaps: 078b205b -> fee1b9fe (after deleting the single 'Distribution' husk from between them) and d95bae97 -> 31bc8a13 (after deleting three husks in a row: Views L2, Blueprint, Protocol). Filed as carried-context-<see contains> for the next unit.\n\nContainer membership (srs/containers/*.json) was updated automatically by the CLI as part of the cascade delete this time — no manual srs container members add/remove step was needed, unlike PR #749's cross-Part reparenting case. part-container-membership.mjs --check: zero drift both before and after.\n\nBoth gates verified green by direct exit code on a fresh unshallowed worktree with the pinned CLI (v0.1.0-build.376): validate-all.mjs (via its own run and via publish-spec.mjs's internal re-run), check-release-drift.mjs (via publish-spec.mjs, which reported 'release artifacts are in sync' after a stale-render failure before the render), and check-rfc-integration.mjs directly (38 RFC records, OK). publish-spec.mjs re-rendered docs/spec/**: exactly 5 headings removed (matching the 5 deleted subsections), 0 added, 0 content lost — confirmed by diff.\n\nRunning tally under rfc-decision-1e7c0c8e: #744 (7 sections) · #745 (6 subsections) · #747 (2 sections) · #749 (5 subsections) · #752 (9 subsections) · this unit/PR #755 (5 subsections) = 34/75 retired. Remaining for srs#710: Key Invariants (no successor yet, blocked on an invariant-region.mjs redesign, carried-context-31ea3659) and 31 more subsection records, then the final srs type delete PR once both counts hit zero.\n\nPR: https://github.com/the-greenman/srs/pull/755, gate:auto-merge armed (SQUASH). Stopping per the merge-rights contract."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-11T10:12:40.691223919+00:00",
+  "updatedAt": "2026-09-11T10:13:13.872215192+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
