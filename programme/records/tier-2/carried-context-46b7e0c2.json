@@ -1,0 +1,15 @@
+{
+  "instanceId": "46b7e0c2-a484-4745-8ad2-eca0488e74ae",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "srs-vscode's payload-schema sync script needs the exact release-asset name: srs-cli-payload-schemas.tar.gz",
+    "summary": "srs-rust#1048/PR #1052 published crates/srs-cli/schemas/payload/ as a release asset named srs-cli-payload-schemas.tar.gz (+ .sha256), attached to every srs-rust release. The consumer-side follow-up -- giving srs-vscode's sync script a release-asset mode, the way sync-schemas-from-spec.sh already prefers the srs repo's schemas-2.0.tar.gz -- was left out of scope for #1048 and has to match this exact name.",
+    "rationale": "srs-rust#1048's issue body only said \"publish ... as a release asset\"; it did not name the asset, so PR #1052 picked srs-cli-payload-schemas.tar.gz by analogy with the existing srs-bindings-web.tar.gz / srs-x86_64-unknown-linux-gnu.tar.gz naming in the same release.yml job, not from any existing convention the srs-vscode side already assumed. A future unit wiring srs-vscode#119's (PR #120's) sync script onto the release asset -- or writing srs-rust#874-style ancestor-checked --local opt-in for it -- must use this exact filename (stable URL /releases/latest/download/srs-cli-payload-schemas.tar.gz) rather than guessing a name from the schemas-2.0.tar.gz precedent or re-deriving it from release.yml. If that PR instead needs a different name for its own reasons, the name has to change on the srs-rust side too, in the same landing window -- an unnamed convention is exactly what stale-local-sibling class bugs (srs-rust#874) come from when the two sides drift silently."
+  },
+  "createdAt": "2026-09-11T21:18:55.874926615+00:00",
+  "updatedAt": "2026-09-11T21:18:55.874938519+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

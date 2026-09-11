@@ -1,0 +1,22 @@
+{
+  "instanceId": "5e7e1af7-1bbb-411e-8944-bd12335b47b1",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Publish CLI payload golden schemas as a release asset",
+    "summary": "crates/srs-cli/schemas/payload/ had no release-asset source, so the srs-vscode payload-schema mirror (srs-vscode#119 / PR #120) depended on a co-located srs-rust checkout at the right commit -- the stale-local-sibling trap srs-rust#874/#911 hardened the schemas/2.0/ mirror against. release.yml now packages the payload schemas as srs-cli-payload-schemas.tar.gz (+ .sha256), attached alongside the existing srs-x86_64-unknown-linux-gnu.tar.gz and srs-bindings-web.tar.gz assets.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs-rust#1048",
+      "srs-rust#1052"
+    ],
+    "body": "Dispatched from the srs-rust gate:pool queue via the pool top-up on srs#580 (comment 5639954352, 2026-09-11 20:00Z): clear / ♓ Portability / non-normative door / auto-merge. Claimed 2026-09-11T~21:1xZ (issue comment 5640700289), swapping gate:dispatched -> gate:working.\n\nFix in srs-rust PR #1052: a new `package_payload_schemas` step in the `release` job of `.github/workflows/release.yml`, modelled directly on the existing `package_wasm` step in the same job -- `tar -czf` the whole `crates/srs-cli/schemas/payload/` directory, `sha256sum` it, and add both to the `gh release create` asset list and the release-notes body. Verified locally: `cargo build --workspace` green, `cargo test --test payload_contracts` 112/112 passed, a local `tar` dry-run over the schema directory produced the expected 161 files + one directory entry, and the edited workflow re-parses cleanly with `yaml.safe_load`. No new check or guard was added (this unit is a CI asset-publish step, not a validator), so the Prove stage does not apply -- there is nothing to make fail red.\n\nPR #1052 opened with `gate:auto-merge`, auto-merge armed (SQUASH), and mode/cell/door stated in the PR body per the Land stage."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-11T21:18:38.592682117+00:00",
+  "updatedAt": "2026-09-11T21:18:46.732816239+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
