@@ -1,0 +1,15 @@
+{
+  "instanceId": "16fc75aa-092e-4179-a45c-95e419161643",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "RFC-026 [R5]/[R6]/[R13] still read against retired containerIndex/instanceIndex -- Door 3, not folded",
+    "summary": "RFC-038's own stub record claims to amend RFC-026 [R5]/[R6]/[R13], but rfcs/rfc-026-ext-slices-subset-export.md's own rule text for all three still reads verbatim against containerIndex/instanceIndex, with no amendment annotation and no invariant record restating them against the tree-authoritative store (unlike RFC-013 [R6]->I-82, RFC-013 [R9] self-annotated inline, and RFC-017 [R2]/[R12]->I-102/I-112, which are folded). Filed as srs#766.",
+    "rationale": "Fixing this means bumping RFC-026's own Revision and editing its rule text, or adding an inline amendment annotation the way RFC-013 [R9] got -- that is Door 3 (amending an Accepted RFC's own normative surface), which a Door-1 unit declaring RFC-038's manifest must not do inline. Do not fold RFC-026's amendment as a side effect of a future RFC-038-adjacent unit; it needs its own RFC-revision PR citing srs#766. check-rfc-integration.mjs does not currently catch this -- RFC-026's own manifest (ext:slices, schema:manifest.json) is already non-empty and every token it declares resolves, so the gate stays green until srs#766 is worked."
+  },
+  "createdAt": "2026-09-11T21:39:11.650146555+00:00",
+  "updatedAt": "2026-09-11T21:39:11.650154175+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
