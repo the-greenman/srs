@@ -1,0 +1,21 @@
+{
+  "instanceId": "1bb2b20e-66d5-4e89-b047-7b2e67d037e7",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "srs-rust#1041 (ADR-045 caller list + FileStore meta roundtrip test) is already resolved on master, unclosed",
+    "summary": "srs-rust#1041 asked for two hardening fixes: document ADR-045's two undocumented load_container_for_repair read callers (manifest_service::unset_manifest_root_container, doctor_service::instance_id_referenced), and add a FileStore-backed roundtrip test for the meta-persistence fix landed in #1034. Both are already done and merged into master via PR #1042 (commit 0f388af, merged 2026-09-11T08:46:10Z) -- the coordinator dispatched it again at 22:16Z the same day because the PR body used 'Refs #1041' instead of 'Closes #1041', so the merge never auto-closed the issue and it stayed visible in gate:pool/gate:dispatched.",
+    "evidence": [
+      "docs/adr/045-membership-removal-is-a-repair-operation.md Consequences section already names both callers (verified by direct read on this session's fresh origin/master checkout, HEAD 54f9cb4)",
+      "CLAUDE.md's mirrored caller-list summary line already matches",
+      "crates/srs-repository/tests/record_meta_persistence.rs exists on master and its single test (file_store_update_record_persists_meta_round_trip) passes: `cargo test -p srs-repository --test record_meta_persistence` -> 1 passed; 0 failed",
+      "git log -- CLAUDE.md and the ADR file both show 0f388af as the tip-touching commit, titled '...(#1041)', merged via PR #1042 which used 'Refs #1041' rather than 'Closes #1041' (pull_request_read on PR #1042: merged:true, merged_at 2026-09-11T08:46:10Z, body ends 'Refs #1041')"
+    ],
+    "body": "Same failure shape as finding ff40c690 (srs#427): a PR that fixes an issue but references it with 'Refs' instead of 'Closes' leaves the issue open and eligible for re-dispatch, wasting a future worker's claim on work that is already done. The fix for the coordinator/dispatch side is process, not code: prefer 'Closes #N' over 'Refs #N' whenever the PR's own change is the issue's complete fix (CLAUDE.md's Branch & PR hygiene section already states this rule for merged-branch tracking; the gap here is that the same rule protects against exactly this false-open state, and dispatch does not currently check gate:pool candidates against already-merged fixes before pulling one)."
+  },
+  "createdAt": "2026-09-11T23:16:53.067537780+00:00",
+  "updatedAt": "2026-09-11T23:16:53.067549227+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
