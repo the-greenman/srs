@@ -16,8 +16,8 @@
     ],
     "body": "PR: https://github.com/the-greenman/srs/pull/768. Proved the guard: with the allowlist entry removed and the manifest reverted, check-rfc-integration.mjs fails with 'no integration manifest'; reapplying the manifest returns it to green. Both validate-all.mjs and check-release-drift.mjs pass by exit code on the final diff."
   },
-  "lifecycleState": "in_review",
+  "lifecycleState": "landed",
   "createdAt": "2026-09-11T21:38:45.922462991+00:00",
-  "updatedAt": "2026-09-11T21:38:55.950908899+00:00",
+  "updatedAt": "2026-09-11T22:34:58.276464896+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
