@@ -2400,9 +2400,6 @@ One definition serves every membership question: `containers_for_instance` (I-66
 
 **Notes**: Its type pointers are version-exact, so the shape a Blueprint asks for cannot drift under it when a Type is reversioned.
 
-##### Distribution — Blueprint (ext:blueprint)
-
-
 ##### Why Blueprint is a new concept
 
 **Content**: 
@@ -2541,9 +2538,6 @@ The `dependsOn` field on `ProtocolStage` makes this explicit. A stage that depen
 
 **Content**: 
 A live collaborative process model with real-time facilitation, AI assistance, and collaborative editing. A Session produces or enriches Records but does not own them. Session-level Protocol management (tracking active stage, managing participant attention) is a natural successor to `ext:protocol` and `ext:addressability`. Deferred pending implementation experience.
-
-
-##### Distribution — Protocol (ext:protocol)
 
 
 ##### ext:protocol
@@ -3043,9 +3037,6 @@ The `"upstream-ahead"` state (a newer version exists upstream) requires `ext:reg
 **Notes**: A repository is operable with no running service, no registry and no network. That is the point of the format, not an incidental property of it.
 
 ##### Repository (ext:repository)
-
-
-##### Distribution
 
 
 ##### conforming repository must have a .srs marker directory and a…
@@ -3873,9 +3864,6 @@ Document-level projection is addressed by `ext:views-l2`. The broader projection
 ###### Views (ext:views-l1)
 
 
-###### Distribution — Views (ext:views-l1)
-
-
 ###### Views L2 (ext:views-l2)
 
 
@@ -3918,9 +3906,6 @@ A future version may define:
 - `composesViews?: UUID[]` — mixin composition; multiple Views contribute non-overlapping configuration
 
 Current design: `View` is a leaf type. Use Lineage tracking to record inheritance relationships.
-
-
-###### Distribution — Views L2 (ext:views-l2)
 
 
 ###### ext:views-l1
