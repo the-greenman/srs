@@ -2,9 +2,6 @@
   "containerId": "f3261b8f-6c10-400a-892c-cc17df33960e",
   "title": "Foundation Group (Core)",
   "containerType": "section",
-  "rootInstanceIds": [
-    "74746626-1a15-5430-931e-90a147961265"
-  ],
   "memberInstanceIds": [
     "32edcb34-791f-5bfe-a3a0-d8a2cbea4ea7",
     "656e5bbb-c29a-5020-9984-121191a4cf68",
