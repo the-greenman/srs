@@ -1,0 +1,15 @@
+{
+  "instanceId": "cbe42ca3-e828-403e-8eb3-c1abe1322b4a",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "Editing any part of a grandfathered spec-language paragraph invalidates its em-dash-cap allowlist entry, even with no new em-dash added",
+    "summary": "check-spec-language.mjs's em-dash-cap allowlist keys each grandfathered violation by an 8-hex digest of the whole offending paragraph's normalized text (scripts/spec-language-allowlist.json). srs#729 appended new sentences to rfc-6ecaf104.json's content field, which already had 2 pre-existing em-dashes in one paragraph (no blank lines in the field at all, so the whole field is one paragraph) grandfathered under digest 6dbfbb65. Appending text changed the paragraph's normalized text and therefore its digest, so validate-all reported it as a brand-new, unallowlisted violation -- even though no em-dash was added and the original 2-em-dash paragraph had been silently red-eligible since before the allowlist was seeded.",
+    "rationale": "Any future unit editing a prose field (content, rationale, summary, body, notes, intro, outro, description -- the registry's proseFields list) that already has an entry in scripts/spec-language-allowlist.json should expect the entry to stop matching the moment the field's text changes at all, not only when a new em-dash is added. Two honest responses: (a) fix the underlying violation while already touching the paragraph (recast one em-dash as a sentence break/colon/comma -- what srs#729 did), or (b) if fixing is out of scope for the unit, re-seed the allowlist entry under the new digest with the SAME issue reference the old entry carried (never a fresh one, since the underlying debt is unchanged). Do not assume a field already in the allowlist is safe to edit freely -- the digest is a paragraph fingerprint, not a field-level grandfather."
+  },
+  "createdAt": "2026-09-11T22:11:41.349369305+00:00",
+  "updatedAt": "2026-09-11T22:11:41.349378489+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

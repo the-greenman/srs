@@ -1,0 +1,20 @@
+{
+  "instanceId": "4404d896-fd13-4fc1-a3e4-dbcdb7c6efd1",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "A dispatch-suggested manifest token list can cite a schema that was already retired",
+    "summary": "Issue #633's own dispatch text listed schema:relations-collection.json as an expected manifest token for RFC-038, but that file was deleted three weeks earlier by srs#527 (retiring the dead relations-collection shape once RFC-038's own one-file-per-relation model superseded it). Verifying the suggested token list against the current docs/schema/2.0/ directory -- rather than the tracking issue's prose -- caught this before it produced an unresolvable token and a red check-rfc-integration.mjs run.",
+    "evidence": [
+      "docs/schema/2.0/relations-collection.json does not exist in the current tree",
+      "commit a96ac29 'fix(spec): retire relations-collection.json (srs#527)' deleted it and repointed RFC-017/RFC-023's manifests off it",
+      "issue #633's body still names schema:relations-collection.json among the tokens RFC-038's manifest should declare"
+    ],
+    "body": "A tracking issue's suggested token/artifact list is a plan, not a spec -- it is written once and the corpus keeps moving. Any unit that executes an older issue's suggested manifest must re-derive the token list against the current repository state (git history + current schema directory), not copy the issue text verbatim."
+  },
+  "createdAt": "2026-09-11T21:39:11.511219620+00:00",
+  "updatedAt": "2026-09-11T21:39:11.511230245+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
