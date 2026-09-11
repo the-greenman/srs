@@ -1,0 +1,21 @@
+{
+  "instanceId": "40ccd0d7-f0f1-42b0-a2c8-d96ed1ccf479",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "A self-expiring note's graduation trigger can cite a landing target that never materialises",
+    "summary": "Two Rung-0 notes' graduation_trigger sections named srs#273 as the vehicle for 'the grid's cells, axes and preferences becoming Tier-2 data when the charter self-hosts'. #273 was actually the unrelated Metamodel v1.1.0 task, and separately the source-of-truth map (srs#639, landed after the notes were written) has since ruled Pattern Grid cell slugs live in scripts/lib/pattern-grid-cells.json config, not typed records at all - so the originally-envisioned destination will not exist in that form.",
+    "evidence": [
+      "records/notes/taste-made-portable-...-7e8d9753.json graduation_trigger cited '#273's charter self-hosting lands the matrix as typed records'",
+      "records/notes/design-jurisprudence-...-ac55018f.json graduation_trigger cited '#273/#272 charter-self-hosting design'",
+      "docs/charter/decision-compass.md#the-source-of-truth-map (landed via srs#639): 'Pattern Grid cell slugs | scripts/lib/pattern-grid-cells.json' - config, not srs/records/**",
+      "srs#631's own body flagged the #273 mismatch but did not check whether the underlying premise (grid becomes typed records) still held at all"
+    ],
+    "body": "A self-expiring exclusion or graduation trigger names both an issue AND an implicit destination shape. Checking only the issue number (open/closed, right topic) is not enough - the destination itself can be superseded by a later, unrelated ruling (here, the source-of-truth map settling where Pattern Grid data lives) without any of the citing notes being touched. When auditing a 'self-expiring' reason, verify the destination still exists as described, not just that the cited issue is live. Fixed on srs#631 / PR the-greenman/srs#764: both notes' graduation_trigger text corrected, one partial graduation completed (a derived-from relation into DN-045 that the prose already implied but never asserted), and the reachability-exclusion issue fields re-pointed from the closing #631 to the still-open #580."
+  },
+  "createdAt": "2026-09-11T20:58:04.639459975+00:00",
+  "updatedAt": "2026-09-11T20:58:04.639471782+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
