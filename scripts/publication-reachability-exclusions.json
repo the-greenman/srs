@@ -562,6 +562,13 @@
       "issue": "#285"
     },
     {
+      "instanceId": "58707681-37e7-4c94-9837-ddef5ea50e07",
+      "path": "records/extensions/extension-58707681.json",
+      "reason": "Unpublished shadow of the retired `ext:type-inheritance` subsection (srs#710, RFC-042 Change B): the subsection had no dedicated `com.semanticops.spec/extension` shadow record like its ten siblings, so deleting it broke `scripts/check-rfc-integration.mjs`'s `ext:type-inheritance` token resolution for RFC-020 and RFC-040. Created to close that gap, following the exact pattern already ratified for ext:lifecycle/ext:import-tracking/etc (#285, #407): its `content` field is a retirement stub pointing at the successor concept/mechanisms, it carries no independent content, and it is kept as a record rather than deleted purely so the RFC-integration token continues to resolve.",
+      "disposition": "permanent",
+      "issue": "#710"
+    },
+    {
       "instanceId": "fa1d2160-0117-47c3-9c86-12a811911e3e",
       "path": "records/notes/why-tags-exist-from-clustering-to-definitions.json",
       "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",

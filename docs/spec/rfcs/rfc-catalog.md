@@ -601,9 +601,9 @@ I-87
 **Affected Components**: §04-2-4-2 Field subsection (the former com.semanticops.spec/field type-definition record was a duplicate of it and is retired — #275); Notational conventions mechanism (formerly §03-1 Version semantics subsection); §04-7 Vocabulary and Term subsection (invariant V3); docs/schema/2.0/package-bundle.json (embedded Field shape)
 
 <!-- srs-integration:v1
-subsection:field
+mechanism:field
 mechanism:notational-conventions
-subsection:vocabulary-and-term
+mechanism:vocabulary-and-term
 schema:package-bundle.json
 -->
 
