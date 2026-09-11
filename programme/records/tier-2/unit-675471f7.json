@@ -15,8 +15,8 @@
     ],
     "body": "PR https://github.com/the-greenman/srs-rust/pull/1051. Prove stage: reverted the CLI fix, reran the new relation_create_accepts_canonical_schema_pointer test, confirmed it failed red with the exact reported error, then restored the fix. Gates green: cargo build/test/clippy -D warnings (SRS_SPEC_DIR pointed at a fresh origin/master clone for the parity tests), payload_contracts. gate:auto-merge armed (SQUASH); issue relabelled gate:working -> gate:in-review."
   },
-  "lifecycleState": "in_review",
+  "lifecycleState": "landed",
   "createdAt": "2026-09-11T21:08:18.882485939+00:00",
-  "updatedAt": "2026-09-11T21:08:37.620622739+00:00",
+  "updatedAt": "2026-09-11T21:41:23.990170672+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
