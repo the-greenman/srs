@@ -1,0 +1,15 @@
+{
+  "instanceId": "cb6a6b65-e49f-4741-b907-809dedeed046",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "RFC-042 Change B's section/subsection retirement is fully complete",
+    "summary": "As of srs#710/PR #761, zero com.semanticops.spec/section and zero /subsection records remain in the srs spec repo, and both Type definitions are deleted. Any future unit or check that still branches on their possible presence is now testing a permanently empty, not merely low, count.",
+    "rationale": "The migration ran across 12 PRs (#744, #745, #747, #749, #752, #755, #756, #758, #759, #760, #761) under rfc-decision-1e7c0c8e (records) and rfc-decision-5f8204bc (Type definitions, deprecate-then-remove). It is now closed, not merely quiescent: no record can ever again be typed section or subsection in this repository, since the Type definitions that would let `record create --type` produce one no longer exist. This differs from a 'currently zero but could recur' state -- there is no path back to a nonzero count short of re-authoring the retired Type definitions, which would itself require a new RFC-042-amending decision.\n\nTwo pieces of dead-but-harmless residue were deliberately left in place, matching precedent each time: `check-spec-coherence.mjs`'s LEAF_TYPES set still lists the strings \"section\" and \"subsection\" (fixture-only, independent of the real Type registry -- #760 reasoned this first for subsection, #761 confirmed the same reasoning applies to section), and the `section-sequence`/`subsection-sequence` relation types remain defined with zero live relations. Neither blocks anything; cleaning them up is optional future tidying, not a correctness requirement.\n\nPractical implication for anyone starting Wave 2's meaning-placement sweep or Wave 4's RFC-034/concept-tree rulings (srs#580): treat 'no section/subsection record or Type exists in srs/srs' as a firm, permanent invariant of the current data model rather than a migration-in-progress fact that needs re-checking. A carried_context that says 'check the current count before assuming' would be the wrong framing now -- the count is not merely low, the mechanism that could raise it is gone."
+  },
+  "createdAt": "2026-09-11T18:37:35.663503212+00:00",
+  "updatedAt": "2026-09-11T18:37:35.663521563+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
