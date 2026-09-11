@@ -1,0 +1,15 @@
+{
+  "instanceId": "a2429c55-36c7-4777-93fe-4fdff253a38c",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "Provenance to a soon-to-be-deleted section/subsection record goes in meta.derivedFrom, never in a derived-from relation",
+    "summary": "When creating a successor for a section/subsection record you are about to `record delete --cascade`, do not rely on a `derived-from` relation from the new successor to the old record to survive the delete -- it does not. `--cascade` removes every relation where the deleted record is the target, including one you just created pointing at it for provenance. Set `meta.derivedFrom: \"<old-instance-id>\"` on the successor's own record (via `record update`, after `record create`) instead; that field is untouched by the cascade because it lives on a different record entirely.",
+    "rationale": "Confirmed empirically in srs#710/PR #752: created `relation create derived-from` from a new mechanism to the old subsection it replaced, then ran `record delete --cascade` on the old subsection -- the delete response's own `cascadedRelations` list included that exact relation, meaning it was silently removed in the same operation that was supposed to be recorded by it. `meta.derivedFrom` (already the pattern PRs #745/#747/#749 used, just not documented as *why* it has to be a field rather than a relation) is the only mechanism that actually persists, because it is stored on the surviving record, not on an edge whose target disappears. This would change if `record delete --cascade` grew an option to preserve inbound relations by retargeting them at nothing (unlikely, since a relation with no valid target is meaningless) or if the CLI gained an identity-preserving retype (srs-rust#178) that made successor creation -- and therefore this whole provenance question -- unnecessary."
+  },
+  "createdAt": "2026-09-11T08:18:05.734097948+00:00",
+  "updatedAt": "2026-09-11T08:18:05.734106932+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
