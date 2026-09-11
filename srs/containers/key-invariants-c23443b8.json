@@ -4,18 +4,5 @@
   "containerType": "section",
   "rootInstanceIds": [
     "df42f888-4d95-5a51-963e-60d10c36533c"
-  ],
-  "memberInstanceIds": [
-    "812a7f7f-cb3e-5927-bc10-a097ffe28178",
-    "078b205b-a636-5f5c-b120-f84a7bcd5463",
-    "fee1b9fe-314d-5bb8-9318-35d4f03fff0b",
-    "6a3ae7a9-bb3e-5dc3-9d4e-8a2cea41fb77",
-    "b8fa7bbe-4ce5-5081-81bb-0e65bbff94b7",
-    "90db4d42-c1c3-5d59-80e8-654e549eac71",
-    "d95bae97-3af2-5e03-b290-4d9f19323b0b",
-    "31bc8a13-bcef-5c71-826d-2fd5528ce021",
-    "cd8fdb47-61c6-51e5-8b9a-31f7745b1b42",
-    "38d8c953-8133-51c7-aa5f-05ef5d7bf44f",
-    "8c665338-6466-5721-83d8-42caefcd6506"
   ]
 }
