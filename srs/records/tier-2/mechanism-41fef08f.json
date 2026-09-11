@@ -1,0 +1,21 @@
+{
+  "instanceId": "41fef08f-c1c5-4ffa-9cf0-6b3c7a59c5c2",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Reference",
+    "content": "A stable pointer to a specific definition version.\n\nExample: the `Reference` shape.\n\nCanonical string form: `namespace/name@version`"
+  },
+  "tags": [
+    "construct:reference",
+    "topic:distribution"
+  ],
+  "createdAt": "2026-09-11T07:48:03.141646220+00:00",
+  "updatedAt": "2026-09-11T07:51:43.573970062+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "meta": {
+    "derivedFrom": "8ccf7519-68ac-532e-b32b-89c5007d4cf6"
+  }
+}
