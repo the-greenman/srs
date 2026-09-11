@@ -1,0 +1,21 @@
+{
+  "instanceId": "8feafd62-38fd-49df-8b3d-b76f80c2bd5a",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "check-rfc-integration.mjs's manifest-token resolver had no concept:/mechanism: kind, so a subsection retirement could silently break an unrelated RFC's provenance citation",
+    "summary": "The RFC integration manifest token grammar only recognized section:<slug>/subsection:<slug>, indexed solely from live com.semanticops.spec/section and /subsection records. Deleting a subsection whose content had moved into a concept or mechanism (the RFC-042 Change B destination Types) broke any RFC's manifest token that still cited it by its old slug, with no path to re-point the token at its actual new home.",
+    "evidence": [
+      "srs#710 batch (PR #747, 2026-09-11): deleting the 'Version semantics' subsection (8e3fb02c) broke RFC-030's `subsection:version-semantics` token — check-rfc-integration.mjs failed with 'manifest token \"subsection:version-semantics\" does not resolve to any canonical record/schema' even though the content was verbatim preserved in the mechanism b3c293f9 ('Notational conventions')",
+      "scripts/check-rfc-integration.mjs (pre-fix): resolveToken() had cases for I-<n>, ext:, schema:, type:, section:, subsection:, cell: — no concept: or mechanism:",
+      "buildResolvers()'s switch(record.typeId) only populated sectionSlugs/subsectionSlugs from SECTION_TYPE/SUBSECTION_TYPE records — CONCEPT_TYPE (2a000004-...-000004) and MECHANISM_TYPE (6655e3fb-...) were not indexed at all before this fix",
+      "50 subsection records remain under srs#710 as of this finding; any of them could be cited by an RFC's manifest token the same way RFC-030 cited Version semantics"
+    ],
+    "body": "## Fix applied\n\nAdded `CONCEPT_TYPE`/`MECHANISM_TYPE` constants, `conceptSlugs`/`mechanismSlugs` index sets populated the same way `sectionSlugs`/`subsectionSlugs` already were, and `concept:<slug>`/`mechanism:<slug>` cases in `resolveToken()` mirroring `section:`/`subsection:` exactly (same `slugify()`, same Set.has lookup). Documented the two new token kinds in `CLAUDE.md`'s integration-manifest section. Updated RFC-030's own manifest token from `subsection:version-semantics` to `mechanism:notational-conventions`.\n\nProved the fix is a real resolver, not an accidental pass-through: temporarily pointed RFC-030's token at `mechanism:does-not-exist-anywhere`, re-ran the checker, confirmed it failed with the expected message naming that exact token, then reverted to the correct value and confirmed green.\n\n## Why this wasn't caught earlier\n\nEarlier batches (#561-564, #744, #745) either didn't retire a subsection any RFC cited by title, or (per #744/#745's own reports) the retiring subsection's content moved into a *concept* the checker still couldn't resolve either — this class of failure needed a subsection with a live RFC citation to actually retire before it would surface. It's plausible other, not-yet-retired subsections are cited the same way and will hit this exact failure again unless the next worker checks proactively (see the companion carried_context record).\n\n## Generalization\n\nThis is a durable capability, not a one-off patch for RFC-030: any future RFC (or Wave-2 finding) that needs to cite a concept or mechanism directly in its integration manifest can now do so with `concept:<slug>`/`mechanism:<slug>`, independent of whether that citation arose from a section/subsection retirement."
+  },
+  "createdAt": "2026-09-11T04:34:25.702657351+00:00",
+  "updatedAt": "2026-09-11T04:34:25.702666290+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
