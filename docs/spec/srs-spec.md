@@ -1058,6 +1058,91 @@ See the generated reference immediately below for `Field`'s current property tab
 **Constraint**: Allowed-transitions projections MUST include the target state's `requiresRelation` declaration on each transition option whose target state declares one, so clients route successor-flow presentation from structure rather than state-name matching. Repository validation MUST emit a warning-severity diagnostic for every Record at rest that violates I-98, and MUST NOT treat such a violation as a hard validation error. Transitions whose target state declares no `requiresRelation` MUST behave exactly as before RFC-022. (RFC-022 R8–R10.)
 
 
+##### The `LifecycleState` shape
+
+**Content**: `LifecycleState`, in pseudo-IDL:
+
+```typescript
+{
+  id: UUID                  // stable identity
+  version: integer
+  namespace: string
+  key: string               // was name; the string stored in Record.lifecycleState
+  label?: string
+  description?: string
+  aliases?: string[]
+  isInitial?: boolean       // valid starting state for new Records
+  isFinal?: boolean         // no outgoing transitions permitted (V9)
+  status?: "active" | "deprecated" | "tombstone" | "retired"   // absent = active
+  meta?: Record<string, unknown>
+  lineage?: Lineage
+  provenance?: Provenance
+  createdAt: ISO8601
+  updatedAt?: ISO8601
+}
+```
+
+
+##### The `LifecycleTransition` shape
+
+**Content**: `LifecycleTransition`, in pseudo-IDL:
+
+```typescript
+{
+  id: UUID                  // stable identity for lossless future migration
+  name: string              // e.g. "promote", "approve", "supersede"
+  from: string              // a LifecycleState.key in the effective state set
+  to: string                // a LifecycleState.key in the effective state set
+  description?: string
+  meta?: Record<string, unknown>
+}
+```
+
+
+##### The `Lifecycle` container shape
+
+**Content**: `Lifecycle`, in pseudo-IDL:
+
+```typescript
+{
+  id: UUID
+  namespace: string
+  name: string
+  version: integer          // min: 1
+
+  states: LifecycleState[]
+  transitions: LifecycleTransition[]
+  initialState: string      // the key of the single isInitial state
+
+  extendsLifecycleId?: UUID
+  extendsLifecycleVersion?: integer   // required when extendsLifecycleId is present
+
+  description?: string
+  createdAt: ISO8601
+  lineage?: Lineage
+  provenance?: Provenance
+}
+```
+
+
+##### The two lifecycle declaration forms a Type may carry
+
+**Content**: The inline form and the referenced form:
+
+```typescript
+// Inline (simple cases; cannot extend):
+lifecycle?: {
+  states: LifecycleState[]
+  transitions: LifecycleTransition[]
+  initialState: string
+}
+
+// Referenced (shared, installable):
+lifecycleRef?: UUID        // LINEAGE reference (rfc-decision-c8704763) — resolves to an
+                            // installed Lifecycle in the effective package set (V8)
+```
+
+
 ##### ext:lifecycle
 
 **Content**: **Required for**: governance tools, decision logs, any implementation where records progress through defined states.
@@ -2525,6 +2610,101 @@ The `dependsOn` field on `ProtocolStage` makes this explicit. A stage that depen
 A live collaborative process model with real-time facilitation, AI assistance, and collaborative editing. A Session produces or enriches Records but does not own them. Session-level Protocol management (tracking active stage, managing participant attention) is a natural successor to `ext:protocol` and `ext:addressability`. Deferred pending implementation experience.
 
 
+##### The `FieldRef` shape
+
+**Content**: `FieldRef`, in pseudo-IDL:
+
+```typescript
+{
+  fieldId: UUID
+  typeId?: UUID    // which Type this Field appears in
+}
+```
+
+
+##### The `ProtocolStage` shape
+
+**Content**: `ProtocolStage`, in pseudo-IDL:
+
+```typescript
+{
+  stageId: string       // stable key within this Protocol
+  name: string          // short, human-readable stage name (e.g. "Background", "Key requirements")
+  order: integer        // min: 0; declared composition order of the stages — see note below
+  purpose?: string      // what understanding this stage builds
+  question?: string     // the core question this stage answers
+  dependsOn: string[]   // stageId values; epistemic dependencies, not just ordering
+  completionCriteria?: string  // how to know this stage is sufficient to proceed
+  contributesTo?: FieldRef[]   // which Record Fields this stage feeds
+  outputType?: UUID            // LINEAGE reference (rfc-decision-c8704763) to the Type this stage
+                                // produces its own intermediate Record as; the effective
+                                // package set resolves it. typeVersion is dropped — version-
+                                // optional hybrids are forbidden.
+  aiGuidance?: AiGuidance       // the closed, structured guidance object used everywhere else in
+                                // the model (purpose/extraction/negativeGuidance/examples) — not a
+                                // plain string (rfc-decision, srs#379: structured over serialised).
+}
+```
+
+
+##### The `Protocol` shape
+
+**Content**: `Protocol`, in pseudo-IDL:
+
+```typescript
+{
+  id: UUID
+  namespace: string
+  name: string
+  version: integer   // min: 1
+
+  description?: string
+
+  targetType: UUID | ""
+  // The Record type this Protocol produces — a LINEAGE reference (bare UUID;
+  // rfc-decision-c8704763), never the canonical namespace/name@version form (that is
+  // DISPLAY-only and is never stored). Empty string for loose / exploratory Protocols
+  // (Brain Dump, Decomposition) whose output is input context for a tighter Protocol.
+
+  stages: ProtocolStage[]
+
+  tags?: string[]
+  createdAt: ISO8601
+}
+```
+
+
+##### A Protocol chain for a governance decision
+
+**Content**: Three Protocols in sequence, from brain dump to Decision Record. Non-normative:
+
+```
+Brain Dump Protocol (loose, no targetType)
+  → AttentionState: { containerId: C1 }
+  → Produces: Note N1 (unstructured brainstorm)
+
+Decomposition Protocol (loose, targetType: Component)
+  → AttentionState: { containerId: C1, recordId: N1 }
+  → Produces: Notes N2, N3, N4  [derived-from N1]
+
+Decision Protocol (tight, targetType: Decision)
+  → AttentionState: { containerId: C1, protocolRunId: R1, stageId: "criteria" }
+  → Stage "criteria" produces: Options Analysis Record R-OA  [derived-from N2, N3]
+  → Stage "decision" produces: Decision Record R-D           [derived-from R-OA]
+
+Conversation chunks produced during Decision stage:
+  chunk-42: { AttentionState: { containerId: C1, recordId: R-OA, fieldId: F-criteria, ... } }
+  chunk-43: { AttentionState: { containerId: C1, recordId: R-D, fieldId: F-outcome, ... } }
+
+Context query for R-D / F-outcome:
+  → Field aiGuidance from Decision Type + outcome Field
+  → Current value for F-outcome
+  → Chunks tagged with { recordId: R-D, fieldId: F-outcome } — chunk-43
+  → Chunks tagged with { recordId: R-D } — broader session context
+  → Related Records via Relations — R-OA via derived-from
+```
+
+
 ##### ext:protocol
 
 **Content**: **Required for**: facilitation tools, structured deliberation, any implementation that guides users through epistemic stages.
@@ -2952,6 +3132,79 @@ Order that reflects curation, display preference, or layout is presentation, not
 
 **Description**: How a consumer that receives packages from an upstream publisher records what it imported, whether local content has diverged from the upstream source, and whether the upstream has moved ahead. Divergence and update conflicts are detected and surfaced instead of silently overwritten or silently missed.
 
+###### The `ImportMode` values
+
+**Content**: `ImportMode`, in pseudo-IDL:
+
+```typescript
+"upstream-tracked" | "local-copy" | "local-fork"
+```
+
+
+###### The `ImportRecord` shape
+
+**Content**: `ImportRecord`, in pseudo-IDL:
+
+```typescript
+{
+  definitionId: UUID
+  definitionType: "field" | "type" | "view" | "blueprint" | "protocol" | "relation-type"
+  namespace: string
+  name: string
+  version: integer
+
+  mode: ImportMode
+  importedAt: ISO8601
+
+  sourcePackageId: UUID
+  sourcePackageName: string
+  sourcePackageVersion: string
+
+  latestKnownUpstreamVersion?: integer
+  updateAvailable?: boolean
+  updateCheckedAt?: ISO8601
+
+  conflictState?: "clean" | "local-ahead" | "upstream-ahead" | "diverged"
+  conflictDetectedAt?: ISO8601
+
+  localVersion?: integer
+  localEditedAt?: ISO8601
+}
+```
+
+
+###### The `ImportSummary` shape
+
+**Content**: `ImportSummary`, in pseudo-IDL:
+
+```typescript
+{
+  generatedAt: ISO8601
+  fields: ImportRecord[]
+  types: ImportRecord[]
+  views: ImportRecord[]
+  blueprints: ImportRecord[]
+  protocols: ImportRecord[]
+  relationTypes: ImportRecord[]
+}
+```
+
+
+###### The `UpstreamPackage` shape
+
+**Content**: `UpstreamPackage`, in pseudo-IDL:
+
+```typescript
+{
+  packageId:   UUID      // Stable UUID of the upstream Package. Never changes across upgrades.
+  namespace:   string    // Reverse-DNS namespace, e.g. "com.mudemocracy.governance"
+  name:        string    // Package name, e.g. "governance"
+  version:     string    // Semver of the upstream version at last install/upgrade
+  installedAt: ISO8601   // Timestamp of the last install or upgrade event
+}
+```
+
+
 ###### `ImportMode`
 
 **Content**: Example: the `ImportMode` values.
@@ -3348,6 +3601,197 @@ The slice archive's `manifest.repositoryId` MUST be a **new UUID** distinct from
 
 **Content**: An RFC-026-aware validator MUST NOT treat the following as errors when a `slice` block is present: `externalRelationRefs` UUIDs absent from `instanceIndex`; absence of unreferenced type/field definitions; an incomplete `containerIndex`; tombstoned source document entries with absent content files. Dangling edges in the relations collection, unresolvable `typeId`/`fieldId` references, and instance schema validation errors remain errors regardless of slice status.
 
+
+
+##### The repository root layout
+
+**Content**: The directories a conforming repository has at its root:
+
+```
+<repository-root>/
+  .srs/                          ← required marker directory
+  manifest.json                  ← required: root manifest and instance index
+  source-documents/              ← raw source material with sidecar metadata
+  notes/                         ← Tier 0 Note instances
+  records/                       ← Tier 2 Record instances
+  relations/                     ← Relation records
+  package/                       ← local Package, field, type, and view definitions
+```
+
+
+##### The `RepositoryManifest` shape
+
+**Content**: `RepositoryManifest`, in pseudo-IDL:
+
+```typescript
+{
+  formatVersion: string      // SRS repository format version, e.g. "1.0"
+  srsVersion: string         // SRS spec version, e.g. "2.0"
+  conformance: string        // full conformance declaration string
+
+  repositoryId: UUID         // stable identifier; does not change on export or copy
+  title: string              // human-readable name for this repository
+
+  container: Container       // inline Container — canonical; authoritative over
+                             // any separate container.json in the root
+
+  packageRef?: PackageRef    // reference to local or external package definitions
+
+  instanceIndex: InstanceIndexEntry[]
+  // Authoritative list of all SRS instances in this repository.
+  // An instance not in the index is not a member, even if its file is present.
+
+  relationsPath?: string | string[]
+  // Relative path(s) to relation file(s). Default: "relations/relations.json"
+
+  sourceDocumentsPath?: string
+  // Relative path to source documents folder. Default: "source-documents/"
+
+  sourceDocumentIndex?: SourceDocumentIndexEntry[]
+  // Optional explicit index of source documents. When present, implementations
+  // may use this for discovery instead of scanning for *.meta.json files.
+  // When absent, discovery is by sidecar scan. See Invariant 52.
+
+  relationsChecksums?: RelationsChecksumEntry[]
+  // Optional checksums for each relations file declared in relationsPath.
+  // Enables fast no-op detection for relation collections during re-import.
+
+  createdAt: ISO8601
+  updatedAt?: ISO8601
+}
+```
+
+
+##### The `PackageRef` shape
+
+**Content**: `PackageRef`, in pseudo-IDL:
+
+```typescript
+{
+  mode: "local" | "remote"  // renamed from "external" (rfc-decision-c8704763)
+
+  // local: definitions live in the repository under package/
+  path?: string           // relative path to package.json; default: "package/package.json"
+
+  // remote: definitions are expected pre-installed in the consumer's registry
+  packageId?: UUID
+  packageName?: string
+  packageVersion?: string
+}
+```
+
+
+##### The `InstanceIndexEntry` shape
+
+**Content**: `InstanceIndexEntry`, in pseudo-IDL:
+
+```typescript
+{
+  instanceId: UUID
+  tier: 0 | 2             // 0: Note, 2: Record (1 is a retired gap — Tier 1/TypedRecord, rfc-decision-53635966)
+  path: string            // relative path from repository root
+                          // e.g. "records/decisions/decision-mounting-system.json"
+
+  typeId?: UUID           // Tier 2 only: the Type this Record instantiates
+  typeName?: string       // denormalised convenience; not authoritative
+  title?: string          // denormalised for display; not authoritative
+
+  checksum?: string       // digest of the instance file: "<algorithm>:<hex>"
+                          // e.g. "sha256:4b2c...". Enables fast no-op detection
+                          // during re-import without reading file content.
+}
+```
+
+
+##### The `SourceDocumentIndexEntry` shape
+
+**Content**: `SourceDocumentIndexEntry`, in pseudo-IDL:
+
+```typescript
+{
+  documentId: UUID          // matches SourceDocument.documentId in the sidecar
+  sidecarPath: string       // relative path from sourceDocumentsPath to the .meta.json sidecar
+  contentPath: string       // relative path from sourceDocumentsPath to the content file
+  title?: string            // denormalised for display; not authoritative
+
+  sidecarChecksum?: string  // digest of the .meta.json sidecar: "<algorithm>:<hex>"
+  contentChecksum?: string  // digest of the content file: "<algorithm>:<hex>"
+}
+```
+
+
+##### The `RelationsChecksumEntry` shape
+
+**Content**: `RelationsChecksumEntry`, in pseudo-IDL:
+
+```typescript
+{
+  path: string       // matches an entry in relationsPath
+  checksum: string   // digest of the relations file: "<algorithm>:<hex>"
+}
+```
+
+
+##### The `SourceAnchor` shape
+
+**Content**: `SourceAnchor`, in pseudo-IDL:
+
+```typescript
+{
+  kind: "line-range" | "char-range" | "timestamp-range" | "message-id" | "json-pointer" | "custom"
+  value: string
+  note?: string
+}
+```
+
+
+##### The `SourceDocument` shape
+
+**Content**: `SourceDocument`, in pseudo-IDL:
+
+```typescript
+{
+  documentId: UUID
+
+  title?: string
+  description?: string
+
+  contentType: string        // MIME type, e.g. "text/plain", "audio/mp4", "application/pdf"
+  encoding?: string          // e.g. "utf-8"; meaningful for text content types
+  language?: string          // BCP 47 language tag, e.g. "en-GB"
+  date?: string              // ISO 8601 date; when the source material itself was produced or recorded
+
+  contentPath: string        // filename of the content file, relative to source-documents/
+
+  processingNote?: string
+  // Free-form note about how this document was produced or processed.
+  // e.g. "auto-transcribed via speech-to-text; transcript not reviewed"
+
+  excerpt?: {
+    sourceDocumentId: UUID         // repository-local parent source document, when this file is an excerpt
+    anchor?: SourceAnchor          // where the excerpt came from in the parent source, if known
+    capturedAt?: ISO8601           // when the excerpt was extracted
+    capturedBy?: string            // who or what extracted it
+    sourceChecksumAtCapture?: string
+    // optional checksum of the parent source content as it existed when the excerpt was captured
+  }
+
+  createdAt: ISO8601
+  importedAt?: ISO8601
+  meta?: Record<string, unknown>
+}
+```
+
+
+##### A source document and its sidecar
+
+**Content**: The content file and its metadata sidecar, sharing one filename stem:
+
+```
+source-documents/
+  <stem>.<ext>               ← the content file (text, audio, PDF, etc.)
+  <stem>.meta.json           ← SourceDocument metadata record (sidecar)
+```
 
 
 ##### ext:repository
@@ -3878,6 +4322,397 @@ A future version may define:
 Current design: `View` is a leaf type. Use Lineage tracking to record inheritance relationships.
 
 
+###### The `FieldView` shape
+
+**Content**: `FieldView`, in pseudo-IDL:
+
+```typescript
+{
+  fieldId: UUID       // must reference a valid Field.id in the effective package set
+  order: integer      // min: 0; display order within this View
+  required?: boolean  // View-level workflow constraint; does not alter Field contract
+  visible?: boolean   // default: true
+
+  // Presentation overrides — View scope only
+  displayLabel?: string
+  displayHint?: string
+  editorHintOverride?: string
+}
+```
+
+
+###### The `RecordPropertyView` shape
+
+**Content**: `RecordPropertyView`, in pseudo-IDL:
+
+```typescript
+{
+  property: "lifecycleState" | "tags" | "createdAt" | "updatedAt"
+  order: integer      // min: 0; shared display-order axis with FieldView
+  displayLabel?: string
+  visible?: boolean   // default: true
+}
+```
+
+
+###### The `ExportConfig` shape
+
+**Content**: `ExportConfig`, in pseudo-IDL:
+
+```typescript
+{
+  format?: string        // target format hint, e.g. "markdown", "adoc", "json"
+  preamble?: string
+  // Template string rendered before field values.
+  // Variable substitution uses {{variable-name}} syntax.
+  // Standard variables: {{instance-id}}, {{date}}, {{status}}, {{namespace}}, {{name}}
+
+  omitEmptyFields?: boolean  // default: false
+}
+```
+
+
+###### The `View` shape
+
+**Content**: `View`, in pseudo-IDL:
+
+```typescript
+{
+  id: UUID
+  namespace: string
+  name: string
+  version: integer   // min: 1
+
+  description: string    // when to use this View; what workflow or audience it serves
+
+  aiGuidance?: AiGuidance
+  // purpose: the workflow context this View serves
+  // extraction: session-level framing injected before field extraction
+
+  fieldViews: (FieldView | RecordPropertyView)[]
+
+  compatibleTypes?: string[]
+  // Optional Type-key (namespace/name) hints this View was designed for.
+  // Informative only. Compatibility is determined by field presence.
+
+  exportConfig?: ExportConfig
+
+  tags?: string[]
+  createdAt: ISO8601
+  lineage?: Lineage
+  provenance?: Provenance
+}
+```
+
+
+###### The `CompositeRendererBinding` shape
+
+**Content**: `CompositeRendererBinding`, in pseudo-IDL:
+
+```typescript
+CompositeRendererBinding {
+  renderer: string
+  // Bare lower-kebab identifiers are SRS-reserved and introduced only by a ratified RFC:
+  //   "table"     — the SRS-defined composite renderer
+  //   "baseline"  — sentinel meaning explicitly no renderer; cancels a broader declaration site
+  // Vendor identifiers use "{reverse-domain}/{name}" with at least two reverse-domain labels.
+  // Grammar: ^([a-z][a-z0-9-]*|[a-z0-9-]+(\.[a-z0-9-]+)+/[^/]+)$ — enforced at render and
+  // validation time, not by JSON Schema, so a malformed value degrades per [CR-036-7].
+
+  roles?: { [roleName: string]: UUID }
+  // Explicit, UUID-anchored role -> Field.id binding, overriding the by-name defaults.
+}
+```
+
+
+###### The `SectionSource` union
+
+**Content**: `SectionSource`, in pseudo-IDL:
+
+```typescript
+type SectionSource =
+  | {
+      type: "discovery-query"
+      query: DiscoveryQuery   // ext:discovery (RFC-012)
+      // The selection predicate. typeNamespace + typeName together replace the retired
+      // typeKey (namespace/name) axis; lifecycleState/lifecycleStates/excludeLifecycleStates
+      // replace the SectionSource-local copies of the same axes (formerly RFC-011 Changes
+      // A/B, now governed by RFC-012 Rev 12: I-142/I-143). See the ext:discovery extension's
+      // `DiscoveryQuery` shape for the full predicate set.
+      containerIds?: UUID[]
+      containerScope?: "explicit" | "repository" | "subtree"
+      // RFC-011 [N+27] / I-144, arrangement, not selection: which containers bound the
+      // candidate set, layered on top of query rather than folded into it (DiscoveryQuery's
+      // own containerId predicate is single-valued and takes one container's effective
+      // membership; it cannot express this). One scoping vocabulary (RFC-034 [R8]).
+      // Default: "explicit" (direct(C) of each listed container: its own members, no
+      // nested subtree). "repository": all containers; containerIds[] ignored. "subtree":
+      // effective(C) — the closure over declared childContainerIds; follows child edges
+      // only, never contains Relations. Absent is equivalent to "explicit".
+    }
+  | {
+      type: "container-subset"
+      containerId: UUID
+      containerType?: string
+      typeFilter?: string[]   // RFC-008. namespace/name keys, version-independent.
+      // When present and non-empty, restricts members to the listed Types. Ordering is
+      // the container-wide precedes order (below) projected onto the survivors. Absent or
+      // empty = all members. Exclusive to container-subset.
+      // Default ordering: when DocumentSection.ordering is absent, members are ordered
+      // by the precedes relation chain among them; createdAt ascending is the tiebreak
+      // for members not connected by any precedes relation.
+    }
+```
+
+
+###### The `DocumentSection` shape
+
+**Content**: `DocumentSection`, in pseudo-IDL:
+
+```typescript
+{
+  sectionId: string
+  title?: string
+  description?: string
+  order: integer   // min: 0
+
+  source: SectionSource
+
+  renderViewId?: UUID    // View (ext:views-l1) used to render each instance in this section
+  // When absent, implementations MUST use the default rendering baseline (see below).
+  // When typeDispatch matches the record's resolved type, it takes precedence over renderViewId.
+
+  typeDispatch?: { [typeKey: string]: UUID }   // RFC-008
+  // Maps a record's resolved type (namespace/name, version-independent) to the
+  // ext:views-l1 View used to render records of that Type within this section. Consulted
+  // before renderViewId; unmatched Types fall back to renderViewId then the default
+  // baseline. Lets one heterogeneous section render each Type with its own L1 View.
+  // typeDispatch never changes member order (order follows the source).
+
+  titleFieldId?: UUID
+  // The fieldId whose value provides the per-record heading within this section.
+  // Constraints (RFC-032 Rev-7 [N+1]):
+  //   - The referenced field must be effective-single.
+  //   - datatype string; valueDomain absent/open; format absent/plain/markdown.
+  //   - When a record's type does not carry this field, the per-record heading is
+  //     omitted silently — this is not a render failure. This enables heterogeneous
+  //     sections (e.g. container-subset) where some record types carry the heading
+  //     field and others do not.
+  // When absent, no per-record heading is emitted.
+  // Enforced at render time; implementations SHOULD also enforce at package validation time
+  // when the section source is statically determinable.
+
+  ordering?: {
+    fieldId?: UUID
+    direction?: "asc" | "desc"  // default: "asc"
+    memberOrder?: UUID[]
+    // RFC-015 Change B. View-owned explicit presentation sequence, container-subset
+    // sections only. Lists member instanceIds in presentation order; members not
+    // listed are appended in [N+12] order (precedes topological sort, createdAt
+    // tiebreak). MUST NOT be combined with fieldId — a section carrying both is
+    // invalid (Rule [N+29]).
+  }
+
+  required?: boolean
+  emptyBehavior?: "hide" | "show-placeholder"
+
+  relationsPresentation?: RelationsPresentation   // RFC-027
+  // When present, render a deterministic per-member links block (the member's
+  // Relations of the declared types) after each member this section renders — all
+  // SectionSource variants, all member tiers. Independent of emptyBehavior.
+  // See RelationsPresentation below. Rules [I-027-1]-[I-027-8] (RFC-027).
+
+  compositeRenderers?: CompositeRendererDirective[]   // RFC-036
+  // Composite renderer dispatch for records rendered by this section. The primary
+  // ext:views-l2 declaration site, following RFC-027's placement of relationsPresentation.
+  // Resolved after FieldView.compositeRenderer and before Composition.compositeRenderers
+  // ([CR-036-6]). More than one entry for the same fieldId is a validation diagnostic; the
+  // first in array order wins.
+}
+```
+
+
+###### The `CompositeRendererDirective` shape
+
+**Content**: `CompositeRendererDirective`, in pseudo-IDL:
+
+```typescript
+{
+  fieldId: UUID
+  // The composite-range Field this directive binds. MUST resolve to a Field whose
+  // fieldType.datatype is "ref" and mode is "inline" ([CR-036-3]); a fieldId absent from
+  // a rendered instance's Type is ignored without a diagnostic ([CR-036-4]).
+
+  renderer: string
+  // Composite renderer identifier, as `CompositeRendererBinding.renderer` (`ext:views-l1`).
+  // "baseline" is the reserved sentinel meaning explicitly no renderer, used to cancel a
+  // broader declaration site. Grammar enforced at render and validation time ([CR-036-1]).
+
+  roles?: { [roleName: string]: UUID }
+  // Explicit, UUID-anchored role -> Field.id binding, overriding the by-name defaults of
+  // [CR-036-8].
+}
+```
+
+
+###### The `RelationsPresentation` shape
+
+**Content**: `RelationsPresentation`, in pseudo-IDL:
+
+```typescript
+{
+  include: RelationPresentationEntry[]
+  // min 1; display order. Duplicate relationType entries are a repository-validation
+  // diagnostic; a renderer encountering them renders each independently.
+  label?: string
+  // Reserved for a future grouped/headed presentation. No rendering behaviour is
+  // defined; implementations MUST ignore it when rendering.
+}
+
+// RelationPresentationEntry
+{
+  relationType: string
+  // Bare canonical key (e.g. "supersedes") or namespace/name for custom types.
+  // Expected to resolve to an installed RelationTypeDefinition (RFC-005); checked at
+  // repository validation time. At render time a non-resolving, retired-only, or
+  // conflict-ambiguous entry is skipped with a diagnostic; entries resolving to
+  // active/deprecated/tombstone definitions display (rendering is a historical read).
+  // None of these conditions may abort the render.
+  directions?: "forward" | "inverse" | "both"   // default: "forward"
+  // Display-only: inverse Relations are never stored or synthesised (Invariant 16).
+  forwardLabel?: string
+  // Override for edges where the member is the source. Default ladder: installed
+  // definition label, then humanized relation type key.
+  inverseLabel?: string
+  // Override for edges where the member is the target. Default ladder: humanized
+  // declared inverseType query label (RFC-005), then forward label + " (incoming)".
+}
+```
+
+
+###### The `NavigationLink` shape
+
+**Content**: `NavigationLink`, in pseudo-IDL:
+
+```typescript
+{
+  fromSectionId: string
+  toSectionId: string
+  label?: string
+  bidirectional?: boolean  // default: false
+}
+```
+
+
+###### The `ThemeReference` shape
+
+**Content**: `ThemeReference`, in pseudo-IDL:
+
+```typescript
+{
+  mode: "local" | "remote" | "bundled"
+  path?: string     // required when mode === "local"
+  url?: string      // required when mode === "remote"
+  themeId?: UUID    // references Theme.id in Package.themes[]; required when mode === "bundled"
+}
+```
+
+
+###### The `ThemeVariant` shape
+
+**Content**: `ThemeVariant`, in pseudo-IDL:
+
+```typescript
+{
+  name: string           // case-sensitive; MUST be unique within Composition.themeVariants
+  description?: string
+  themeRef: ThemeReference
+}
+```
+
+
+###### The `Composition` shape
+
+**Content**: `Composition`, in pseudo-IDL.
+
+```typescript
+{
+  id: UUID
+  namespace: string
+  name: string
+  version: integer   // min: 1
+
+  description: string    // what kind of document this produces; intended audience
+
+  containerType?: string  // when set, intended for Containers of this type
+
+  sections: DocumentSection[]
+
+  navigationLinks?: NavigationLink[]
+
+  exportConfig?: ExportConfig   // ext:views-l1 -- the shape View.exportConfig also uses
+  // format?: string
+  //   Portable values: "markdown", "adoc", "html", "text", "json". Implementations MAY
+  //   support additional values; non-portable values MUST NOT cause a validation error.
+  //   When absent, output format is implementation-defined. Governs this Composition's own
+  //   document-level rendering (all section rendering, the document title). A dispatched L1
+  //   View's own exportConfig.format has no effect here -- a different render context, not
+  //   an override (srs#525: one shape, two attachment points, no precedence between them).
+  //   When format is "json", implementations MUST produce a structured JSON projection
+  //   conforming to the document-view-output.json schema instead of rendered markup. In
+  //   json mode: theme application, heading injection, and depthOffset do not apply;
+  //   {{heading-N}} variables in preamble templates MUST be substituted as empty strings;
+  //   containerId is resolved from the first container-subset SectionSource, or null when
+  //   none is present.
+  // preamble?: string
+  //   Template string rendered before all sections. Standard variables: {{container-title}},
+  //   {{date}}, {{container-id}}, {{heading-1}}, {{heading-2}}. When absent and format is
+  //   "markdown", "html", or "adoc", implementations MUST render a document title heading at
+  //   level 1 + depthOffset containing container-title.
+  // omitEmptyFields?: boolean
+  //   Available on this shape for consistency with View.exportConfig; no normative rule at
+  //   Composition level currently reads it (empty-section display is DocumentSection.
+  //   emptyBehavior; empty-field display in the Default Rendering Baseline follows the
+  //   Normative Field-Row Form rules below).
+
+  depthOffset?: integer   // min: 0; default: 0
+  // Shifts all auto-rendered heading levels by this amount.
+  // At depthOffset 0: document title H1, sections H2, records H3.
+  // At depthOffset 1: H2, H3, H4 respectively.
+  // Implementations SHOULD emit a warning diagnostic when depthOffset > 4.
+
+  themeRef?: ThemeReference
+  // Default Theme (ext:themes-l1). Applied when no variant is selected at render time.
+  // When ext:themes-l1 is not declared, implementations MUST ignore this field
+  // and MUST NOT error on its presence.
+
+  themeVariants?: ThemeVariant[]
+  // Named alternative themes selectable at render invocation.
+  // When ext:themes-l1 is not declared, implementations MUST ignore this field.
+
+  compositeRenderers?: CompositeRendererDirective[]   // RFC-036
+  // Document-wide default composite renderer dispatch, applied to any section that
+  // declares no matching DocumentSection.compositeRenderers entry. Lowest-precedence
+  // declaration site ([CR-036-6]); a section or FieldView cancels it with renderer: "baseline".
+
+  aiGuidance?: AiGuidance
+  tags?: string[]
+  createdAt: ISO8601
+  lineage?: Lineage
+  provenance?: Provenance
+}
+```
+
+
+###### The html multi-entry field row
+
+**Content**: One `div`, one label, and one list item per entry:
+
+```html
+<div class="srs-field srs-fieldname-{name}"><strong class="srs-field-label field-label">{label}</strong>:<ul><li class="srs-field-value field-value">{entry}</li></ul></div>
+```
+
+
 ###### ext:views-l1
 
 **Content**: **Required for**: rendering and export workflows.
@@ -4399,6 +5234,188 @@ Audience, platform, and output filtering may eventually allow one source Contain
 
 **Notes**: The semantic CSS class vocabulary is part of the output specification and not of the theme extension: a conforming implementation emits it whether or not any theme resolves.
 
+###### The `AssetDeclaration` shape
+
+**Content**: `AssetDeclaration`, in pseudo-IDL:
+
+```typescript
+{
+  type: "image" | "font" | "stylesheet" | "data"
+  mode: "local" | "remote" | "inline"
+
+  path?: string      // required when mode === "local"
+  url?: string       // required when mode === "remote"
+  data?: string      // base64 for binary; raw text for stylesheet/data; required when mode === "inline"
+  mimeType?: string  // e.g. "image/png", "font/woff2", "text/css"
+}
+```
+
+
+###### The `PageTemplates` shape
+
+**Content**: `PageTemplates`, in pseudo-IDL:
+
+```typescript
+{
+  coverPage?: string
+  // Available variables: all Composition preamble variables + {{asset:*}}
+  // {{heading-1}} is available here only (resolves via Composition.depthOffset).
+
+  pageHeader?: string
+  // Available: {{page-number}}, {{asset:*}}
+
+  pageFooter?: string
+  // Available: {{page-number}}, {{asset:*}}
+}
+```
+
+
+###### The `ElementTemplates` shape
+
+**Content**: `ElementTemplates`, in pseudo-IDL:
+
+```typescript
+{
+  documentWrapper?: string
+  // Wraps the entire rendered document body.
+  // Available: {{content}}, {{container-title}}, {{date}}, {{asset:*}}
+
+  sectionWrapper?: string
+  // Wraps each section (heading + records).
+  // Available: {{content}}, {{section-title}}, {{section-id}}, {{asset:*}}
+
+  sectionWrapperOverrides?: Array<{
+    sectionId: string   // matches DocumentSection.sectionId; case-sensitive
+    template: string    // same variables as sectionWrapper
+  }>
+  // Per-section override. Takes precedence over sectionWrapper when sectionId matches.
+  // sectionId values MUST be unique within the array (enforced at package validation time).
+
+  recordWrapper?: string
+  // Wraps each record (heading + field rows).
+  // Available: {{content}}, {{record-heading}}, {{type-namespace}}, {{type-name}}, {{asset:*}}
+  // {{record-heading}} is the titleFieldId value for this record, or empty string.
+
+  recordWrapperOverrides?: Array<{
+    typeId: UUID      // matches Record.typeId
+    template: string  // same variables as recordWrapper
+  }>
+  // Per-type override. Takes precedence over recordWrapper when typeId matches.
+  // typeId values MUST be unique within the array (enforced at package validation time).
+
+  fieldRow?: string
+  // Wraps each field label + value pair.
+  // Available: {{field-label}}, {{field-value}}, {{field-name}}, {{content}}
+  // When renderViewId is set, applies after ExportConfig.omitEmptyFields filtering.
+  // Field rows follow their position in View.fieldViews[].order. Does NOT wrap ExportConfig.preamble content.
+
+  groupFieldRowTemplates?: { [fieldName: string]: string }
+  // RFC-007 [T-Gx1]–[T-Gx3]: per-field-name templates for individual field rows in group entries.
+  // Key: Field.name (e.g. "item-term"). Value: template supporting {{field-value}}, {{field-label}}.
+  // When a key matches, that template MUST be used instead of fieldRow for that field row [T-Gx3].
+  // Applied only when compositeRenderer is absent or unrecognised (per-field baseline) [T-Gx1].
+  // Unknown field names in this map MUST be silently ignored [T-Gx2].
+
+  compositeRendererConfig?: { [rendererName: string]: object }
+  // RFC-007 [T-Cx1]–[T-Cx5]: per-renderer config, keyed by the same identifier space as
+  // FieldGroup.compositeRenderer. Unknown properties in a known renderer sub-object MUST be
+  // silently ignored [T-Cx5].
+  //
+  // The "table" renderer reads compositeRendererConfig["table"]:
+  //   {
+  //     tableClass?: string
+  //     // CSS class on <table> (HTML only). Default: "srs-data-table" [T-Cx1].
+  //     // Set to "" to suppress the class attribute [T-Cx2].
+  //
+  //     wrapperTemplate?: string
+  //     // Wraps the full rendered entry. Tokens: {{subheading}}, {{label}}, {{table}}.
+  //     // Absent optional field tokens ({{subheading}}, {{label}}) MUST resolve to "".
+  //     // Default (HTML): <figure class="srs-table">{{subheading}}{{label}}{{table}}</figure>
+  //     // Default (other formats): no wrapper applied.
+  //     // When explicitly set, applies regardless of output format [T-Cx4].
+  //
+  //     captionTemplate?: string
+  //     // Template for the label field. Token: {{field-value}}.
+  //     // Default (HTML): <figcaption>{{field-value}}</figcaption>
+  //     // Default (markdown): *{{field-value}}*
+  //     // Default (other formats): {{field-value}} with no decoration.
+  //   }
+  // Scoped to the Theme instance; applies to all composite renderer groups in the pass
+  // that resolves this Theme. [T-Cx3] — applies ONLY to compositeRenderer: "table" groups.
+}
+```
+
+
+###### The `StylesheetDeclaration` shape
+
+**Content**: `StylesheetDeclaration`, in pseudo-IDL:
+
+```typescript
+{
+  mode: "inline" | "local" | "remote"
+  content?: string   // inline CSS; required when mode === "inline"
+  path?: string      // required when mode === "local"
+  url?: string       // required when mode === "remote"
+}
+```
+
+
+###### The `TypographyHints` shape
+
+**Content**: `TypographyHints`, in pseudo-IDL:
+
+```typescript
+{
+  baseFont?: string
+  headingFont?: string
+  monoFont?: string
+  baseFontSize?: string  // e.g. "16px", "1rem", "11pt"
+  lineHeight?: string    // e.g. "1.5", "24px"
+}
+```
+
+
+###### The `Theme` shape
+
+**Content**: `Theme`, in pseudo-IDL:
+
+```typescript
+{
+  id: UUID
+  namespace: string
+  name: string
+  version: integer   // min: 1
+
+  description: string
+  // What this theme is for; intended output format and audience.
+
+  targets: string[]   // required; min 1 entry
+  // Output formats this theme is designed for (e.g. "html", "markdown", "adoc").
+  // Implementations apply this theme only when Composition.format appears in this list.
+  // An empty targets array is a validation error (Rule [T-1b]).
+
+  assets?: { [assetName: string]: AssetDeclaration }
+  // Named asset declarations. Names MUST be unique within the Theme.
+
+  cssClassFields?: UUID[]
+  // fieldIds whose values are injected as CSS classes on record wrapper elements.
+  // For each listed fieldId, if the record has an effective-single Field eligible
+  // under [T-9], the class srs-field-{fieldName}-{normalisedValue} is added.
+  // Only applies to "html" and "pdf" output. Other Fields are silently skipped.
+
+  pageTemplates?: PageTemplates
+  elementTemplates?: ElementTemplates
+  stylesheet?: StylesheetDeclaration
+  typography?: TypographyHints
+
+  tags?: string[]
+  createdAt: ISO8601
+  lineage?: Lineage
+  provenance?: Provenance
+}
+```
+
+
 ###### ext:themes-l1
 
 **Content**: Visual presentation layer for `Composition`. Attaches brand identity, typography, stylesheets, cover pages, and element wrapping to a rendered document without altering its semantic structure. Depends on `ext:views-l2`. Implementations that do not declare this extension MUST ignore `Composition.themeRef` and `Composition.themeVariants` and MUST NOT error on their presence.
@@ -4686,82 +5703,104 @@ Transcript chunks referenced in `SourceReference` are source material — addres
 
 **Description**: Extensions are optional, independently adoptable capability modules. Each declares its identifier, dependencies, and the types it defines.
 
-##### ext:import-tracking
+##### ext:federation
 
-**Content**: Content relocated to mechanism leaves under the Import tracking concept (RFC-042 Change B/C/F, srs#562/#686). See derived-from.
+**Content**: **Status: Dormant** (removed under `rfc-decision-4f1e12e5`, 2026-08-22). The 2026-08-21 usage attestation found zero registries, zero events, and zero cross-repository relations anywhere in the corpus — the mechanism was speculative, never exercised in production. It is removed under the dormancy rule (`rfc-decision-cce3c00e`).
 
-###### The `ImportMode` values
+**Removed surface** (historical): `RepositoryRegistry`/`RepositoryRegistryEntry` and `FederationEvent`/`FederationEventsFile` (the `federation-registry.json`/`federation-events.json` schemas); the `sourceRepositoryId`/`targetRepositoryId` qualifier fields on `Relation`; `manifest.federationPath`/`federationEventsPath`.
 
-**Content**: `ImportMode`, in pseudo-IDL:
+**Return trigger** (verbatim from `rfc-decision-4f1e12e5`): COMMITTED, not evidence-gated - federation is core to SRS (owner, 2026-08-22); this removal is a deliberate reset of a design that predates real practice, not a judgment on the capability. The redesign returns as a planned roadmap phase, grounded in the sharing forms that actually emerged (bundles, slices, git-hosted repositories) and the axis 4-10 verification path; the owner schedules it. The travel mandate covers artifact-form portability meanwhile.
 
-```typescript
-"upstream-tracked" | "local-copy" | "local-fork"
-```
+Cell: ♓ Portability.
 
 
-###### The `ImportRecord` shape
+##### Discovery
 
-**Content**: `ImportRecord`, in pseudo-IDL:
+**Extension ID**: ext:discovery
 
-```typescript
-{
-  definitionId: UUID
-  definitionType: "field" | "type" | "view" | "blueprint" | "protocol" | "relation-type"
-  namespace: string
-  name: string
-  version: integer
+**Depends On**: ext:lifecycle
 
-  mode: ImportMode
-  importedAt: ISO8601
+**Content**: **Required for**: any implementation that supports querying and filtering instances across a repository — CLI, web UI, search engine, or API.
 
-  sourcePackageId: UUID
-  sourcePackageName: string
-  sourcePackageVersion: string
+Defines the **Discovery Contract**: a portable, implementation-agnostic specification of how SRS repositories are queried. Covers structured filter axes, the Text Projection algorithm, normalization rules, and the consistency rule separating exact-match structured filters from the content-match recall floor.
 
-  latestKnownUpstreamVersion?: integer
-  updateAvailable?: boolean
-  updateCheckedAt?: ISO8601
-
-  conflictState?: "clean" | "local-ahead" | "upstream-ahead" | "diverged"
-  conflictDetectedAt?: ISO8601
-
-  localVersion?: integer
-  localEditedAt?: ISO8601
-}
-```
-
-
-###### The `ImportSummary` shape
-
-**Content**: `ImportSummary`, in pseudo-IDL:
+#### `DiscoveryQuery`
 
 ```typescript
 {
-  generatedAt: ISO8601
-  fields: ImportRecord[]
-  types: ImportRecord[]
-  views: ImportRecord[]
-  blueprints: ImportRecord[]
-  protocols: ImportRecord[]
-  relationTypes: ImportRecord[]
+  typeId?:         UUID      // exact match on Record.typeId
+  typeNamespace?:  string    // exact match on Record.typeNamespace
+  typeName?:       string    // exact match on Record.typeName
+  containerId?:    UUID      // instance is a member of this container (RFC-009 I-66)
+  tag?:            string[]  // AND semantics: all tags must be present
+  lifecycleState?: string    // exact match on Record.lifecycleState (ext:lifecycle)
+  lifecycleStates?: string[] // OR semantics: matches ANY listed lifecycleState (ext:lifecycle) [RFC-012 Rev 12, srs#525]
+  excludeLifecycleStates?: string[] // excludes instances whose lifecycleState matches any listed value, applied after lifecycleState/lifecycleStates (ext:lifecycle) [RFC-012 Rev 7]
+  tier?:           0 | 2     // instance tier (Note=0, Record=2; Tier 1/TypedRecord removed, rfc-decision-53635966 — the numbering gap is retained deliberately)
+  contentMatch?:   string    // free-text recall-floor predicate
 }
 ```
 
+An instance matches a `DiscoveryQuery` if and only if it satisfies all predicates whose values are specified. Unspecified predicates are wildcards.
 
-###### The `UpstreamPackage` shape
-
-**Content**: `UpstreamPackage`, in pseudo-IDL:
+#### `TextSegment`
 
 ```typescript
 {
-  packageId:   UUID      // Stable UUID of the upstream Package. Never changes across upgrades.
-  namespace:   string    // Reverse-DNS namespace, e.g. "com.mudemocracy.governance"
-  name:        string    // Package name, e.g. "governance"
-  version:     string    // Semver of the upstream version at last install/upgrade
-  installedAt: ISO8601   // Timestamp of the last install or upgrade event
+  fieldId:   string  // UUID for package-resolved fields; sentinel string for special segments
+  fieldName: string  // field name or sentinel
+  text:      string  // raw stored value (normalization applied at match time)
 }
 ```
 
+Sentinels: `"note-title"`, `"note-section"`, `"tag"`, `"label"`.
+
+#### Searchable Field classification (RFC-032 Rev 7)
+
+For Tier 2, a Field is searchable only when `fieldType.datatype == "string"` and `fieldType.format` is absent or one of `"plain"`, `"markdown"`, or `"uri"`. `valueDomain` and cardinality do not restrict searchability. `format: "uuid"`, `format: "email"`, and datatypes `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, and `map` are non-searchable. Inline-composite recursion is not defined.
+
+#### Text Projection algorithm
+
+**Tier 2 (Record):** for each `fieldValue` in `fieldValues` array order — resolve the Field and apply the RFC-032 Rev-7 searchability predicate. If eligible and non-empty, emit one `TextSegment` for a single-cardinality value or one per array element for list cardinality, in order. After all field values, emit one segment per tag. Optionally emit `displayLabel` segments after tags.
+
+**Tier 0 (Note):** if `title` is non-empty, emit a leading `note-title` segment. For each `section[]` in order, emit a `note-section` segment if `content` is non-empty. After sections, emit tag segments.
+
+#### Normalization (applied at match time, not at segment construction time)
+
+1. Apply Unicode NFC.
+2. Fold to lowercase (Unicode simple case folding).
+3. Do not strip punctuation, diacritics, or whitespace.
+
+#### Consistency rule
+
+Structured filter axes (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `lifecycleStates`, `excludeLifecycleStates`, `tier`) are **exact-match predicates**: two conforming implementations with identical data MUST return identical result sets.
+
+Content matching (`contentMatch`) is a **recall-floor rule**: implementations MUST include every instance whose Text Projection contains a segment whose normalized text contains the normalized query as a substring. Additional results and alternative ranking are explicitly permitted.
+
+When both structured filters and `contentMatch` are specified, an instance MUST satisfy both the exact-match structured predicates AND the content recall-floor predicate.
+
+#### Conformance fixture
+
+A self-contained fixture repository with expected result sets lives at:
+
+```
+srs/conformance/discovery/
+  fixture-repo/   # valid SRS repository with 8 Tier-2 Records, 1 Tier-0, 2 Containers
+  scenarios.json  # named query scenarios with expectedInstanceIds and exactMatch flags
+```
+
+An implementation that declares `ext:discovery` MUST pass all fixture scenarios (exactMatch:true scenarios exactly; exactMatch:false scenarios as a superset). A scenario MAY additionally carry an `expectedSegments` expectation — `{ instanceId, fieldName, segments: string[] }` — naming the exact ordered `TextSegment` sequence one field of one instance must project; when present, the implementation's segment COUNT and ORDER for that field MUST match `segments` exactly (RFC-012 R11; srs#483 closes the gap left by `expectedInstanceIds` alone, which cannot express I-120's "one segment per array element in order" rule).
+
+---
+
+
+##### ext:changelog
+
+**Content**: **Status: Dormant** (removed under `rfc-decision-2a1e1590`, 2026-08-21). The 2026-08-21 usage attestation found zero `changelog/changelog.json` files anywhere in the corpus — the mechanism was speculative, never exercised in production. It is removed under the dormancy rule (`rfc-decision-cce3c00e`) alongside the per-field Revision sidecar mechanism it paired with, removed by the same ruling.
+
+**Removed surface** (historical — introduced by RFC-018, srs#141): the `ChangelogCollection`/`ChangelogEntry` schema (`changelog.json`); the `srs changelog list` CLI command. `manifest.changelogPath` is deprecated, not deleted, so existing declarations remain readable.
+
+**Return trigger**: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface. When a real consumer's requirements are known, the mechanism is redesigned against them rather than reinstated as specified here.
 
 
 ##### Generated reference: `SourceDocumentMeta`
@@ -4811,112 +5850,59 @@ source-document-meta {
 ```
 
 
-##### ext:views-l1
+##### Generated reference: `Manifest`
 
-**Content**: Content relocated to mechanism leaves under the View concept (RFC-042 Change C, srs#562). See derived-from.
+**Referenced Type Id**: 4c00002e-0000-4000-a000-00000000002e
 
-###### The `FieldView` shape
+**Presentation Profile**: property-table-and-pseudo-idl
 
-**Content**: `FieldView`, in pseudo-IDL:
+**Content**: Generated from the resolved effective `manifest` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
 
-```typescript
-{
-  fieldId: UUID       // must reference a valid Field.id in the effective package set
-  order: integer      // min: 0; display order within this View
-  required?: boolean  // View-level workflow constraint; does not alter Field contract
-  visible?: boolean   // default: true
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `srsVersion` | string | yes | — | core | SRS spec version this repository conforms to, e.g. '2.0' or '2.0-draft'. |
+| `dataModelRevision` | integer | no | minimum: 0 | core | RFC-033/#265 — monotonic integer generation stamp for operational data-model migrations. Absent means revision 0. |
+| `repositoryId` | string | yes | format: uuid | core | Stable UUID for this repository (or, on a Slice, the source repository it was exported from). Never changes on copy or export. |
+| `namespace` | string | no | — | core | Reverse-DNS logical grouping. |
+| `title` | string | yes | — | core | Human-readable title. |
+| `description` | string | no | — | core | Human-readable description of this entity. |
+| `declaredExtensions` | string[] | no | — | core | SRS extensions this repository conforms to, e.g. ['ext:lifecycle', 'ext:views-l1']. |
+| `container` | ref → `container` (inline) | yes | — | core | Embedded Container record — canonical source of truth for this repository's identity. |
+| `packageRef` | ref → `package-ref` (inline) | no | — | core | Reference to the SRS Package that supplies field and type definitions (single package). |
+| `packageRefs` | ref → `package-ref` (inline)[] | no | — | core | References to one or more SRS Packages (RFC-014 Change C, multi-package/multi-version repositories). |
+| `upstreamPackage` | ref → `upstream-package` (inline) | no | — | core | RFC-014 (ext:import-tracking) — top-level normative provenance stamp for a repository initialised from an upstream Package. |
+| `sourceDocumentsPath` | string | no | — | core | Relative path from manifest.json to the source-documents/ directory. |
+| `aiGuidance` | ref → `repository-ai-guidance` (inline) | no | — | core | Comprehension guidance for AI agents reading this repository (Manifest.aiGuidance — a distinct, narrower shape from the generic AiGuidance value object). |
+| `renderedPresentations` | ref → `rendered-presentation` (inline)[] | no | — | core | RFC-015 [N+31] — declared presentations for this repository. |
+| `slice` | ref → `slice` (inline) | no | — | core | ext:slices (RFC-026) — present when this archive is a partial export (slice) of a source repository. |
+| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
+| `updatedAt` | date-time | no | — | core | ISO-8601 timestamp of the most recent update. |
 
-  // Presentation overrides — View scope only
-  displayLabel?: string
-  displayHint?: string
-  editorHintOverride?: string
-}
-```
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/manifest.json>
 
-
-###### The `RecordPropertyView` shape
-
-**Content**: `RecordPropertyView`, in pseudo-IDL:
-
-```typescript
-{
-  property: "lifecycleState" | "tags" | "createdAt" | "updatedAt"
-  order: integer      // min: 0; shared display-order axis with FieldView
-  displayLabel?: string
-  visible?: boolean   // default: true
-}
-```
-
-
-###### The `ExportConfig` shape
-
-**Content**: `ExportConfig`, in pseudo-IDL:
+#### Compact pseudo-IDL
 
 ```typescript
-{
-  format?: string        // target format hint, e.g. "markdown", "adoc", "json"
-  preamble?: string
-  // Template string rendered before field values.
-  // Variable substitution uses {{variable-name}} syntax.
-  // Standard variables: {{instance-id}}, {{date}}, {{status}}, {{namespace}}, {{name}}
-
-  omitEmptyFields?: boolean  // default: false
+manifest {
+  srsVersion: string // SRS spec version this repository conforms to, e.g. '2.0' or '2.0-draft'.
+  dataModelRevision?: integer // RFC-033/#265 — monotonic integer generation stamp for operational data-model migrations. Absent means revision 0.
+  repositoryId: string // Stable UUID for this repository (or, on a Slice, the source repository it was exported from). Never changes on copy or export.
+  namespace?: string // Reverse-DNS logical grouping.
+  title: string // Human-readable title.
+  description?: string // Human-readable description of this entity.
+  declaredExtensions?: string[] // SRS extensions this repository conforms to, e.g. ['ext:lifecycle', 'ext:views-l1'].
+  container: ref → `container` (inline) // Embedded Container record — canonical source of truth for this repository's identity.
+  packageRef?: ref → `package-ref` (inline) // Reference to the SRS Package that supplies field and type definitions (single package).
+  packageRefs?: ref → `package-ref` (inline)[] // References to one or more SRS Packages (RFC-014 Change C, multi-package/multi-version repositories).
+  upstreamPackage?: ref → `upstream-package` (inline) // RFC-014 (ext:import-tracking) — top-level normative provenance stamp for a repository initialised from an upstream Package.
+  sourceDocumentsPath?: string // Relative path from manifest.json to the source-documents/ directory.
+  aiGuidance?: ref → `repository-ai-guidance` (inline) // Comprehension guidance for AI agents reading this repository (Manifest.aiGuidance — a distinct, narrower shape from the generic AiGuidance value object).
+  renderedPresentations?: ref → `rendered-presentation` (inline)[] // RFC-015 [N+31] — declared presentations for this repository.
+  slice?: ref → `slice` (inline) // ext:slices (RFC-026) — present when this archive is a partial export (slice) of a source repository.
+  createdAt: date-time // ISO-8601 creation timestamp.
+  updatedAt?: date-time // ISO-8601 timestamp of the most recent update.
 }
 ```
-
-
-###### The `View` shape
-
-**Content**: `View`, in pseudo-IDL:
-
-```typescript
-{
-  id: UUID
-  namespace: string
-  name: string
-  version: integer   // min: 1
-
-  description: string    // when to use this View; what workflow or audience it serves
-
-  aiGuidance?: AiGuidance
-  // purpose: the workflow context this View serves
-  // extraction: session-level framing injected before field extraction
-
-  fieldViews: (FieldView | RecordPropertyView)[]
-
-  compatibleTypes?: string[]
-  // Optional Type-key (namespace/name) hints this View was designed for.
-  // Informative only. Compatibility is determined by field presence.
-
-  exportConfig?: ExportConfig
-
-  tags?: string[]
-  createdAt: ISO8601
-  lineage?: Lineage
-  provenance?: Provenance
-}
-```
-
-
-###### The `CompositeRendererBinding` shape
-
-**Content**: `CompositeRendererBinding`, in pseudo-IDL:
-
-```typescript
-CompositeRendererBinding {
-  renderer: string
-  // Bare lower-kebab identifiers are SRS-reserved and introduced only by a ratified RFC:
-  //   "table"     — the SRS-defined composite renderer
-  //   "baseline"  — sentinel meaning explicitly no renderer; cancels a broader declaration site
-  // Vendor identifiers use "{reverse-domain}/{name}" with at least two reverse-domain labels.
-  // Grammar: ^([a-z][a-z0-9-]*|[a-z0-9-]+(\.[a-z0-9-]+)+/[^/]+)$ — enforced at render and
-  // validation time, not by JSON Schema, so a malformed value degrades per [CR-036-7].
-
-  roles?: { [roleName: string]: UUID }
-  // Explicit, UUID-anchored role -> Field.id binding, overriding the by-name defaults.
-}
-```
-
 
 
 ##### Generated reference: `View`
@@ -5053,299 +6039,6 @@ export-config {
   omitEmptyFields?: boolean // Default: false. When true, fields with no value are omitted from output.
 }
 ```
-
-
-##### ext:views-l2
-
-**Content**: Content relocated to mechanism leaves under the View concept (RFC-042 Change C, srs#562). See derived-from.
-
-###### The `SectionSource` union
-
-**Content**: `SectionSource`, in pseudo-IDL:
-
-```typescript
-type SectionSource =
-  | {
-      type: "discovery-query"
-      query: DiscoveryQuery   // ext:discovery (RFC-012)
-      // The selection predicate. typeNamespace + typeName together replace the retired
-      // typeKey (namespace/name) axis; lifecycleState/lifecycleStates/excludeLifecycleStates
-      // replace the SectionSource-local copies of the same axes (formerly RFC-011 Changes
-      // A/B, now governed by RFC-012 Rev 12: I-142/I-143). See the ext:discovery extension's
-      // `DiscoveryQuery` shape for the full predicate set.
-      containerIds?: UUID[]
-      containerScope?: "explicit" | "repository" | "subtree"
-      // RFC-011 [N+27] / I-144, arrangement, not selection: which containers bound the
-      // candidate set, layered on top of query rather than folded into it (DiscoveryQuery's
-      // own containerId predicate is single-valued and takes one container's effective
-      // membership; it cannot express this). One scoping vocabulary (RFC-034 [R8]).
-      // Default: "explicit" (direct(C) of each listed container: its own members, no
-      // nested subtree). "repository": all containers; containerIds[] ignored. "subtree":
-      // effective(C) — the closure over declared childContainerIds; follows child edges
-      // only, never contains Relations. Absent is equivalent to "explicit".
-    }
-  | {
-      type: "container-subset"
-      containerId: UUID
-      containerType?: string
-      typeFilter?: string[]   // RFC-008. namespace/name keys, version-independent.
-      // When present and non-empty, restricts members to the listed Types. Ordering is
-      // the container-wide precedes order (below) projected onto the survivors. Absent or
-      // empty = all members. Exclusive to container-subset.
-      // Default ordering: when DocumentSection.ordering is absent, members are ordered
-      // by the precedes relation chain among them; createdAt ascending is the tiebreak
-      // for members not connected by any precedes relation.
-    }
-```
-
-
-###### The `DocumentSection` shape
-
-**Content**: `DocumentSection`, in pseudo-IDL:
-
-```typescript
-{
-  sectionId: string
-  title?: string
-  description?: string
-  order: integer   // min: 0
-
-  source: SectionSource
-
-  renderViewId?: UUID    // View (ext:views-l1) used to render each instance in this section
-  // When absent, implementations MUST use the default rendering baseline (see below).
-  // When typeDispatch matches the record's resolved type, it takes precedence over renderViewId.
-
-  typeDispatch?: { [typeKey: string]: UUID }   // RFC-008
-  // Maps a record's resolved type (namespace/name, version-independent) to the
-  // ext:views-l1 View used to render records of that Type within this section. Consulted
-  // before renderViewId; unmatched Types fall back to renderViewId then the default
-  // baseline. Lets one heterogeneous section render each Type with its own L1 View.
-  // typeDispatch never changes member order (order follows the source).
-
-  titleFieldId?: UUID
-  // The fieldId whose value provides the per-record heading within this section.
-  // Constraints (RFC-032 Rev-7 [N+1]):
-  //   - The referenced field must be effective-single.
-  //   - datatype string; valueDomain absent/open; format absent/plain/markdown.
-  //   - When a record's type does not carry this field, the per-record heading is
-  //     omitted silently — this is not a render failure. This enables heterogeneous
-  //     sections (e.g. container-subset) where some record types carry the heading
-  //     field and others do not.
-  // When absent, no per-record heading is emitted.
-  // Enforced at render time; implementations SHOULD also enforce at package validation time
-  // when the section source is statically determinable.
-
-  ordering?: {
-    fieldId?: UUID
-    direction?: "asc" | "desc"  // default: "asc"
-    memberOrder?: UUID[]
-    // RFC-015 Change B. View-owned explicit presentation sequence, container-subset
-    // sections only. Lists member instanceIds in presentation order; members not
-    // listed are appended in [N+12] order (precedes topological sort, createdAt
-    // tiebreak). MUST NOT be combined with fieldId — a section carrying both is
-    // invalid (Rule [N+29]).
-  }
-
-  required?: boolean
-  emptyBehavior?: "hide" | "show-placeholder"
-
-  relationsPresentation?: RelationsPresentation   // RFC-027
-  // When present, render a deterministic per-member links block (the member's
-  // Relations of the declared types) after each member this section renders — all
-  // SectionSource variants, all member tiers. Independent of emptyBehavior.
-  // See RelationsPresentation below. Rules [I-027-1]-[I-027-8] (RFC-027).
-
-  compositeRenderers?: CompositeRendererDirective[]   // RFC-036
-  // Composite renderer dispatch for records rendered by this section. The primary
-  // ext:views-l2 declaration site, following RFC-027's placement of relationsPresentation.
-  // Resolved after FieldView.compositeRenderer and before Composition.compositeRenderers
-  // ([CR-036-6]). More than one entry for the same fieldId is a validation diagnostic; the
-  // first in array order wins.
-}
-```
-
-
-###### The `CompositeRendererDirective` shape
-
-**Content**: `CompositeRendererDirective`, in pseudo-IDL:
-
-```typescript
-{
-  fieldId: UUID
-  // The composite-range Field this directive binds. MUST resolve to a Field whose
-  // fieldType.datatype is "ref" and mode is "inline" ([CR-036-3]); a fieldId absent from
-  // a rendered instance's Type is ignored without a diagnostic ([CR-036-4]).
-
-  renderer: string
-  // Composite renderer identifier, as `CompositeRendererBinding.renderer` (`ext:views-l1`).
-  // "baseline" is the reserved sentinel meaning explicitly no renderer, used to cancel a
-  // broader declaration site. Grammar enforced at render and validation time ([CR-036-1]).
-
-  roles?: { [roleName: string]: UUID }
-  // Explicit, UUID-anchored role -> Field.id binding, overriding the by-name defaults of
-  // [CR-036-8].
-}
-```
-
-
-###### The `RelationsPresentation` shape
-
-**Content**: `RelationsPresentation`, in pseudo-IDL:
-
-```typescript
-{
-  include: RelationPresentationEntry[]
-  // min 1; display order. Duplicate relationType entries are a repository-validation
-  // diagnostic; a renderer encountering them renders each independently.
-  label?: string
-  // Reserved for a future grouped/headed presentation. No rendering behaviour is
-  // defined; implementations MUST ignore it when rendering.
-}
-
-// RelationPresentationEntry
-{
-  relationType: string
-  // Bare canonical key (e.g. "supersedes") or namespace/name for custom types.
-  // Expected to resolve to an installed RelationTypeDefinition (RFC-005); checked at
-  // repository validation time. At render time a non-resolving, retired-only, or
-  // conflict-ambiguous entry is skipped with a diagnostic; entries resolving to
-  // active/deprecated/tombstone definitions display (rendering is a historical read).
-  // None of these conditions may abort the render.
-  directions?: "forward" | "inverse" | "both"   // default: "forward"
-  // Display-only: inverse Relations are never stored or synthesised (Invariant 16).
-  forwardLabel?: string
-  // Override for edges where the member is the source. Default ladder: installed
-  // definition label, then humanized relation type key.
-  inverseLabel?: string
-  // Override for edges where the member is the target. Default ladder: humanized
-  // declared inverseType query label (RFC-005), then forward label + " (incoming)".
-}
-```
-
-
-###### The `NavigationLink` shape
-
-**Content**: `NavigationLink`, in pseudo-IDL:
-
-```typescript
-{
-  fromSectionId: string
-  toSectionId: string
-  label?: string
-  bidirectional?: boolean  // default: false
-}
-```
-
-
-###### The `ThemeReference` shape
-
-**Content**: `ThemeReference`, in pseudo-IDL:
-
-```typescript
-{
-  mode: "local" | "remote" | "bundled"
-  path?: string     // required when mode === "local"
-  url?: string      // required when mode === "remote"
-  themeId?: UUID    // references Theme.id in Package.themes[]; required when mode === "bundled"
-}
-```
-
-
-###### The `ThemeVariant` shape
-
-**Content**: `ThemeVariant`, in pseudo-IDL:
-
-```typescript
-{
-  name: string           // case-sensitive; MUST be unique within Composition.themeVariants
-  description?: string
-  themeRef: ThemeReference
-}
-```
-
-
-###### The `Composition` shape
-
-**Content**: `Composition`, in pseudo-IDL.
-
-```typescript
-{
-  id: UUID
-  namespace: string
-  name: string
-  version: integer   // min: 1
-
-  description: string    // what kind of document this produces; intended audience
-
-  containerType?: string  // when set, intended for Containers of this type
-
-  sections: DocumentSection[]
-
-  navigationLinks?: NavigationLink[]
-
-  exportConfig?: ExportConfig   // ext:views-l1 -- the shape View.exportConfig also uses
-  // format?: string
-  //   Portable values: "markdown", "adoc", "html", "text", "json". Implementations MAY
-  //   support additional values; non-portable values MUST NOT cause a validation error.
-  //   When absent, output format is implementation-defined. Governs this Composition's own
-  //   document-level rendering (all section rendering, the document title). A dispatched L1
-  //   View's own exportConfig.format has no effect here -- a different render context, not
-  //   an override (srs#525: one shape, two attachment points, no precedence between them).
-  //   When format is "json", implementations MUST produce a structured JSON projection
-  //   conforming to the document-view-output.json schema instead of rendered markup. In
-  //   json mode: theme application, heading injection, and depthOffset do not apply;
-  //   {{heading-N}} variables in preamble templates MUST be substituted as empty strings;
-  //   containerId is resolved from the first container-subset SectionSource, or null when
-  //   none is present.
-  // preamble?: string
-  //   Template string rendered before all sections. Standard variables: {{container-title}},
-  //   {{date}}, {{container-id}}, {{heading-1}}, {{heading-2}}. When absent and format is
-  //   "markdown", "html", or "adoc", implementations MUST render a document title heading at
-  //   level 1 + depthOffset containing container-title.
-  // omitEmptyFields?: boolean
-  //   Available on this shape for consistency with View.exportConfig; no normative rule at
-  //   Composition level currently reads it (empty-section display is DocumentSection.
-  //   emptyBehavior; empty-field display in the Default Rendering Baseline follows the
-  //   Normative Field-Row Form rules below).
-
-  depthOffset?: integer   // min: 0; default: 0
-  // Shifts all auto-rendered heading levels by this amount.
-  // At depthOffset 0: document title H1, sections H2, records H3.
-  // At depthOffset 1: H2, H3, H4 respectively.
-  // Implementations SHOULD emit a warning diagnostic when depthOffset > 4.
-
-  themeRef?: ThemeReference
-  // Default Theme (ext:themes-l1). Applied when no variant is selected at render time.
-  // When ext:themes-l1 is not declared, implementations MUST ignore this field
-  // and MUST NOT error on its presence.
-
-  themeVariants?: ThemeVariant[]
-  // Named alternative themes selectable at render invocation.
-  // When ext:themes-l1 is not declared, implementations MUST ignore this field.
-
-  compositeRenderers?: CompositeRendererDirective[]   // RFC-036
-  // Document-wide default composite renderer dispatch, applied to any section that
-  // declares no matching DocumentSection.compositeRenderers entry. Lowest-precedence
-  // declaration site ([CR-036-6]); a section or FieldView cancels it with renderer: "baseline".
-
-  aiGuidance?: AiGuidance
-  tags?: string[]
-  createdAt: ISO8601
-  lineage?: Lineage
-  provenance?: Provenance
-}
-```
-
-
-###### The html multi-entry field row
-
-**Content**: One `div`, one label, and one list item per entry:
-
-```html
-<div class="srs-field srs-fieldname-{name}"><strong class="srs-field-label field-label">{label}</strong>:<ul><li class="srs-field-value field-value">{entry}</li></ul></div>
-```
-
 
 
 ##### Generated reference: `Composition`
@@ -5607,196 +6300,6 @@ srsj-envelope {
 ```
 
 
-##### ext:lifecycle
-
-**Content**: Content relocated to mechanism leaves under the Lifecycle concept (RFC-042 Change C, srs#562). See derived-from.
-
-###### The `LifecycleState` shape
-
-**Content**: `LifecycleState`, in pseudo-IDL:
-
-```typescript
-{
-  id: UUID                  // stable identity
-  version: integer
-  namespace: string
-  key: string               // was name; the string stored in Record.lifecycleState
-  label?: string
-  description?: string
-  aliases?: string[]
-  isInitial?: boolean       // valid starting state for new Records
-  isFinal?: boolean         // no outgoing transitions permitted (V9)
-  status?: "active" | "deprecated" | "tombstone" | "retired"   // absent = active
-  meta?: Record<string, unknown>
-  lineage?: Lineage
-  provenance?: Provenance
-  createdAt: ISO8601
-  updatedAt?: ISO8601
-}
-```
-
-
-###### The `LifecycleTransition` shape
-
-**Content**: `LifecycleTransition`, in pseudo-IDL:
-
-```typescript
-{
-  id: UUID                  // stable identity for lossless future migration
-  name: string              // e.g. "promote", "approve", "supersede"
-  from: string              // a LifecycleState.key in the effective state set
-  to: string                // a LifecycleState.key in the effective state set
-  description?: string
-  meta?: Record<string, unknown>
-}
-```
-
-
-###### The `Lifecycle` container shape
-
-**Content**: `Lifecycle`, in pseudo-IDL:
-
-```typescript
-{
-  id: UUID
-  namespace: string
-  name: string
-  version: integer          // min: 1
-
-  states: LifecycleState[]
-  transitions: LifecycleTransition[]
-  initialState: string      // the key of the single isInitial state
-
-  extendsLifecycleId?: UUID
-  extendsLifecycleVersion?: integer   // required when extendsLifecycleId is present
-
-  description?: string
-  createdAt: ISO8601
-  lineage?: Lineage
-  provenance?: Provenance
-}
-```
-
-
-###### The two lifecycle declaration forms a Type may carry
-
-**Content**: The inline form and the referenced form:
-
-```typescript
-// Inline (simple cases; cannot extend):
-lifecycle?: {
-  states: LifecycleState[]
-  transitions: LifecycleTransition[]
-  initialState: string
-}
-
-// Referenced (shared, installable):
-lifecycleRef?: UUID        // LINEAGE reference (rfc-decision-c8704763) — resolves to an
-                            // installed Lifecycle in the effective package set (V8)
-```
-
-
-
-##### ext:protocol
-
-**Content**: Content relocated to mechanism leaves under the Protocol concept (RFC-042 Change B, srs#562/#687). See derived-from.
-
-###### The `FieldRef` shape
-
-**Content**: `FieldRef`, in pseudo-IDL:
-
-```typescript
-{
-  fieldId: UUID
-  typeId?: UUID    // which Type this Field appears in
-}
-```
-
-
-###### The `ProtocolStage` shape
-
-**Content**: `ProtocolStage`, in pseudo-IDL:
-
-```typescript
-{
-  stageId: string       // stable key within this Protocol
-  name: string          // short, human-readable stage name (e.g. "Background", "Key requirements")
-  order: integer        // min: 0; declared composition order of the stages — see note below
-  purpose?: string      // what understanding this stage builds
-  question?: string     // the core question this stage answers
-  dependsOn: string[]   // stageId values; epistemic dependencies, not just ordering
-  completionCriteria?: string  // how to know this stage is sufficient to proceed
-  contributesTo?: FieldRef[]   // which Record Fields this stage feeds
-  outputType?: UUID            // LINEAGE reference (rfc-decision-c8704763) to the Type this stage
-                                // produces its own intermediate Record as; the effective
-                                // package set resolves it. typeVersion is dropped — version-
-                                // optional hybrids are forbidden.
-  aiGuidance?: AiGuidance       // the closed, structured guidance object used everywhere else in
-                                // the model (purpose/extraction/negativeGuidance/examples) — not a
-                                // plain string (rfc-decision, srs#379: structured over serialised).
-}
-```
-
-
-###### The `Protocol` shape
-
-**Content**: `Protocol`, in pseudo-IDL:
-
-```typescript
-{
-  id: UUID
-  namespace: string
-  name: string
-  version: integer   // min: 1
-
-  description?: string
-
-  targetType: UUID | ""
-  // The Record type this Protocol produces — a LINEAGE reference (bare UUID;
-  // rfc-decision-c8704763), never the canonical namespace/name@version form (that is
-  // DISPLAY-only and is never stored). Empty string for loose / exploratory Protocols
-  // (Brain Dump, Decomposition) whose output is input context for a tighter Protocol.
-
-  stages: ProtocolStage[]
-
-  tags?: string[]
-  createdAt: ISO8601
-}
-```
-
-
-###### A Protocol chain for a governance decision
-
-**Content**: Three Protocols in sequence, from brain dump to Decision Record. Non-normative:
-
-```
-Brain Dump Protocol (loose, no targetType)
-  → AttentionState: { containerId: C1 }
-  → Produces: Note N1 (unstructured brainstorm)
-
-Decomposition Protocol (loose, targetType: Component)
-  → AttentionState: { containerId: C1, recordId: N1 }
-  → Produces: Notes N2, N3, N4  [derived-from N1]
-
-Decision Protocol (tight, targetType: Decision)
-  → AttentionState: { containerId: C1, protocolRunId: R1, stageId: "criteria" }
-  → Stage "criteria" produces: Options Analysis Record R-OA  [derived-from N2, N3]
-  → Stage "decision" produces: Decision Record R-D           [derived-from R-OA]
-
-Conversation chunks produced during Decision stage:
-  chunk-42: { AttentionState: { containerId: C1, recordId: R-OA, fieldId: F-criteria, ... } }
-  chunk-43: { AttentionState: { containerId: C1, recordId: R-D, fieldId: F-outcome, ... } }
-
-Context query for R-D / F-outcome:
-  → Field aiGuidance from Decision Type + outcome Field
-  → Current value for F-outcome
-  → Chunks tagged with { recordId: R-D, fieldId: F-outcome } — chunk-43
-  → Chunks tagged with { recordId: R-D } — broader session context
-  → Related Records via Relations — R-OA via derived-from
-```
-
-
-
 ##### Generated reference: `FieldRef`
 
 **Referenced Type Id**: 4c00003d-0000-4000-a000-00000000003d
@@ -5970,544 +6473,6 @@ blueprint {
   requiredTypes?: ref → `exact-type-ref` (inline)[] // ext:blueprint — TypeIds that must be present for this Blueprint to be considered complete.
   tags?: string[] // Free-form classification tags.
   createdAt: date-time // ISO-8601 creation timestamp.
-}
-```
-
-
-##### ext:federation
-
-**Content**: **Status: Dormant** (removed under `rfc-decision-4f1e12e5`, 2026-08-22). The 2026-08-21 usage attestation found zero registries, zero events, and zero cross-repository relations anywhere in the corpus — the mechanism was speculative, never exercised in production. It is removed under the dormancy rule (`rfc-decision-cce3c00e`).
-
-**Removed surface** (historical): `RepositoryRegistry`/`RepositoryRegistryEntry` and `FederationEvent`/`FederationEventsFile` (the `federation-registry.json`/`federation-events.json` schemas); the `sourceRepositoryId`/`targetRepositoryId` qualifier fields on `Relation`; `manifest.federationPath`/`federationEventsPath`.
-
-**Return trigger** (verbatim from `rfc-decision-4f1e12e5`): COMMITTED, not evidence-gated - federation is core to SRS (owner, 2026-08-22); this removal is a deliberate reset of a design that predates real practice, not a judgment on the capability. The redesign returns as a planned roadmap phase, grounded in the sharing forms that actually emerged (bundles, slices, git-hosted repositories) and the axis 4-10 verification path; the owner schedules it. The travel mandate covers artifact-form portability meanwhile.
-
-Cell: ♓ Portability.
-
-
-##### ext:repository
-
-**Content**: Content relocated to mechanism leaves under the Repository concept (RFC-042 Change B/C/F, srs#562/#686). See derived-from.
-
-###### The repository root layout
-
-**Content**: The directories a conforming repository has at its root:
-
-```
-<repository-root>/
-  .srs/                          ← required marker directory
-  manifest.json                  ← required: root manifest and instance index
-  source-documents/              ← raw source material with sidecar metadata
-  notes/                         ← Tier 0 Note instances
-  records/                       ← Tier 2 Record instances
-  relations/                     ← Relation records
-  package/                       ← local Package, field, type, and view definitions
-```
-
-
-###### The `RepositoryManifest` shape
-
-**Content**: `RepositoryManifest`, in pseudo-IDL:
-
-```typescript
-{
-  formatVersion: string      // SRS repository format version, e.g. "1.0"
-  srsVersion: string         // SRS spec version, e.g. "2.0"
-  conformance: string        // full conformance declaration string
-
-  repositoryId: UUID         // stable identifier; does not change on export or copy
-  title: string              // human-readable name for this repository
-
-  container: Container       // inline Container — canonical; authoritative over
-                             // any separate container.json in the root
-
-  packageRef?: PackageRef    // reference to local or external package definitions
-
-  instanceIndex: InstanceIndexEntry[]
-  // Authoritative list of all SRS instances in this repository.
-  // An instance not in the index is not a member, even if its file is present.
-
-  relationsPath?: string | string[]
-  // Relative path(s) to relation file(s). Default: "relations/relations.json"
-
-  sourceDocumentsPath?: string
-  // Relative path to source documents folder. Default: "source-documents/"
-
-  sourceDocumentIndex?: SourceDocumentIndexEntry[]
-  // Optional explicit index of source documents. When present, implementations
-  // may use this for discovery instead of scanning for *.meta.json files.
-  // When absent, discovery is by sidecar scan. See Invariant 52.
-
-  relationsChecksums?: RelationsChecksumEntry[]
-  // Optional checksums for each relations file declared in relationsPath.
-  // Enables fast no-op detection for relation collections during re-import.
-
-  createdAt: ISO8601
-  updatedAt?: ISO8601
-}
-```
-
-
-###### The `PackageRef` shape
-
-**Content**: `PackageRef`, in pseudo-IDL:
-
-```typescript
-{
-  mode: "local" | "remote"  // renamed from "external" (rfc-decision-c8704763)
-
-  // local: definitions live in the repository under package/
-  path?: string           // relative path to package.json; default: "package/package.json"
-
-  // remote: definitions are expected pre-installed in the consumer's registry
-  packageId?: UUID
-  packageName?: string
-  packageVersion?: string
-}
-```
-
-
-###### The `InstanceIndexEntry` shape
-
-**Content**: `InstanceIndexEntry`, in pseudo-IDL:
-
-```typescript
-{
-  instanceId: UUID
-  tier: 0 | 2             // 0: Note, 2: Record (1 is a retired gap — Tier 1/TypedRecord, rfc-decision-53635966)
-  path: string            // relative path from repository root
-                          // e.g. "records/decisions/decision-mounting-system.json"
-
-  typeId?: UUID           // Tier 2 only: the Type this Record instantiates
-  typeName?: string       // denormalised convenience; not authoritative
-  title?: string          // denormalised for display; not authoritative
-
-  checksum?: string       // digest of the instance file: "<algorithm>:<hex>"
-                          // e.g. "sha256:4b2c...". Enables fast no-op detection
-                          // during re-import without reading file content.
-}
-```
-
-
-###### The `SourceDocumentIndexEntry` shape
-
-**Content**: `SourceDocumentIndexEntry`, in pseudo-IDL:
-
-```typescript
-{
-  documentId: UUID          // matches SourceDocument.documentId in the sidecar
-  sidecarPath: string       // relative path from sourceDocumentsPath to the .meta.json sidecar
-  contentPath: string       // relative path from sourceDocumentsPath to the content file
-  title?: string            // denormalised for display; not authoritative
-
-  sidecarChecksum?: string  // digest of the .meta.json sidecar: "<algorithm>:<hex>"
-  contentChecksum?: string  // digest of the content file: "<algorithm>:<hex>"
-}
-```
-
-
-###### The `RelationsChecksumEntry` shape
-
-**Content**: `RelationsChecksumEntry`, in pseudo-IDL:
-
-```typescript
-{
-  path: string       // matches an entry in relationsPath
-  checksum: string   // digest of the relations file: "<algorithm>:<hex>"
-}
-```
-
-
-###### The `SourceAnchor` shape
-
-**Content**: `SourceAnchor`, in pseudo-IDL:
-
-```typescript
-{
-  kind: "line-range" | "char-range" | "timestamp-range" | "message-id" | "json-pointer" | "custom"
-  value: string
-  note?: string
-}
-```
-
-
-###### The `SourceDocument` shape
-
-**Content**: `SourceDocument`, in pseudo-IDL:
-
-```typescript
-{
-  documentId: UUID
-
-  title?: string
-  description?: string
-
-  contentType: string        // MIME type, e.g. "text/plain", "audio/mp4", "application/pdf"
-  encoding?: string          // e.g. "utf-8"; meaningful for text content types
-  language?: string          // BCP 47 language tag, e.g. "en-GB"
-  date?: string              // ISO 8601 date; when the source material itself was produced or recorded
-
-  contentPath: string        // filename of the content file, relative to source-documents/
-
-  processingNote?: string
-  // Free-form note about how this document was produced or processed.
-  // e.g. "auto-transcribed via speech-to-text; transcript not reviewed"
-
-  excerpt?: {
-    sourceDocumentId: UUID         // repository-local parent source document, when this file is an excerpt
-    anchor?: SourceAnchor          // where the excerpt came from in the parent source, if known
-    capturedAt?: ISO8601           // when the excerpt was extracted
-    capturedBy?: string            // who or what extracted it
-    sourceChecksumAtCapture?: string
-    // optional checksum of the parent source content as it existed when the excerpt was captured
-  }
-
-  createdAt: ISO8601
-  importedAt?: ISO8601
-  meta?: Record<string, unknown>
-}
-```
-
-
-###### A source document and its sidecar
-
-**Content**: The content file and its metadata sidecar, sharing one filename stem:
-
-```
-source-documents/
-  <stem>.<ext>               ← the content file (text, audio, PDF, etc.)
-  <stem>.meta.json           ← SourceDocument metadata record (sidecar)
-```
-
-
-
-##### Discovery
-
-**Extension ID**: ext:discovery
-
-**Depends On**: ext:lifecycle
-
-**Content**: **Required for**: any implementation that supports querying and filtering instances across a repository — CLI, web UI, search engine, or API.
-
-Defines the **Discovery Contract**: a portable, implementation-agnostic specification of how SRS repositories are queried. Covers structured filter axes, the Text Projection algorithm, normalization rules, and the consistency rule separating exact-match structured filters from the content-match recall floor.
-
-#### `DiscoveryQuery`
-
-```typescript
-{
-  typeId?:         UUID      // exact match on Record.typeId
-  typeNamespace?:  string    // exact match on Record.typeNamespace
-  typeName?:       string    // exact match on Record.typeName
-  containerId?:    UUID      // instance is a member of this container (RFC-009 I-66)
-  tag?:            string[]  // AND semantics: all tags must be present
-  lifecycleState?: string    // exact match on Record.lifecycleState (ext:lifecycle)
-  lifecycleStates?: string[] // OR semantics: matches ANY listed lifecycleState (ext:lifecycle) [RFC-012 Rev 12, srs#525]
-  excludeLifecycleStates?: string[] // excludes instances whose lifecycleState matches any listed value, applied after lifecycleState/lifecycleStates (ext:lifecycle) [RFC-012 Rev 7]
-  tier?:           0 | 2     // instance tier (Note=0, Record=2; Tier 1/TypedRecord removed, rfc-decision-53635966 — the numbering gap is retained deliberately)
-  contentMatch?:   string    // free-text recall-floor predicate
-}
-```
-
-An instance matches a `DiscoveryQuery` if and only if it satisfies all predicates whose values are specified. Unspecified predicates are wildcards.
-
-#### `TextSegment`
-
-```typescript
-{
-  fieldId:   string  // UUID for package-resolved fields; sentinel string for special segments
-  fieldName: string  // field name or sentinel
-  text:      string  // raw stored value (normalization applied at match time)
-}
-```
-
-Sentinels: `"note-title"`, `"note-section"`, `"tag"`, `"label"`.
-
-#### Searchable Field classification (RFC-032 Rev 7)
-
-For Tier 2, a Field is searchable only when `fieldType.datatype == "string"` and `fieldType.format` is absent or one of `"plain"`, `"markdown"`, or `"uri"`. `valueDomain` and cardinality do not restrict searchability. `format: "uuid"`, `format: "email"`, and datatypes `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, and `map` are non-searchable. Inline-composite recursion is not defined.
-
-#### Text Projection algorithm
-
-**Tier 2 (Record):** for each `fieldValue` in `fieldValues` array order — resolve the Field and apply the RFC-032 Rev-7 searchability predicate. If eligible and non-empty, emit one `TextSegment` for a single-cardinality value or one per array element for list cardinality, in order. After all field values, emit one segment per tag. Optionally emit `displayLabel` segments after tags.
-
-**Tier 0 (Note):** if `title` is non-empty, emit a leading `note-title` segment. For each `section[]` in order, emit a `note-section` segment if `content` is non-empty. After sections, emit tag segments.
-
-#### Normalization (applied at match time, not at segment construction time)
-
-1. Apply Unicode NFC.
-2. Fold to lowercase (Unicode simple case folding).
-3. Do not strip punctuation, diacritics, or whitespace.
-
-#### Consistency rule
-
-Structured filter axes (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `lifecycleStates`, `excludeLifecycleStates`, `tier`) are **exact-match predicates**: two conforming implementations with identical data MUST return identical result sets.
-
-Content matching (`contentMatch`) is a **recall-floor rule**: implementations MUST include every instance whose Text Projection contains a segment whose normalized text contains the normalized query as a substring. Additional results and alternative ranking are explicitly permitted.
-
-When both structured filters and `contentMatch` are specified, an instance MUST satisfy both the exact-match structured predicates AND the content recall-floor predicate.
-
-#### Conformance fixture
-
-A self-contained fixture repository with expected result sets lives at:
-
-```
-srs/conformance/discovery/
-  fixture-repo/   # valid SRS repository with 8 Tier-2 Records, 1 Tier-0, 2 Containers
-  scenarios.json  # named query scenarios with expectedInstanceIds and exactMatch flags
-```
-
-An implementation that declares `ext:discovery` MUST pass all fixture scenarios (exactMatch:true scenarios exactly; exactMatch:false scenarios as a superset). A scenario MAY additionally carry an `expectedSegments` expectation — `{ instanceId, fieldName, segments: string[] }` — naming the exact ordered `TextSegment` sequence one field of one instance must project; when present, the implementation's segment COUNT and ORDER for that field MUST match `segments` exactly (RFC-012 R11; srs#483 closes the gap left by `expectedInstanceIds` alone, which cannot express I-120's "one segment per array element in order" rule).
-
----
-
-
-##### ext:themes-l1
-
-**Content**: Content relocated to mechanism leaves under the Theme concept (RFC-042 Change C, srs#562). See derived-from.
-
-###### The `AssetDeclaration` shape
-
-**Content**: `AssetDeclaration`, in pseudo-IDL:
-
-```typescript
-{
-  type: "image" | "font" | "stylesheet" | "data"
-  mode: "local" | "remote" | "inline"
-
-  path?: string      // required when mode === "local"
-  url?: string       // required when mode === "remote"
-  data?: string      // base64 for binary; raw text for stylesheet/data; required when mode === "inline"
-  mimeType?: string  // e.g. "image/png", "font/woff2", "text/css"
-}
-```
-
-
-###### The `PageTemplates` shape
-
-**Content**: `PageTemplates`, in pseudo-IDL:
-
-```typescript
-{
-  coverPage?: string
-  // Available variables: all Composition preamble variables + {{asset:*}}
-  // {{heading-1}} is available here only (resolves via Composition.depthOffset).
-
-  pageHeader?: string
-  // Available: {{page-number}}, {{asset:*}}
-
-  pageFooter?: string
-  // Available: {{page-number}}, {{asset:*}}
-}
-```
-
-
-###### The `ElementTemplates` shape
-
-**Content**: `ElementTemplates`, in pseudo-IDL:
-
-```typescript
-{
-  documentWrapper?: string
-  // Wraps the entire rendered document body.
-  // Available: {{content}}, {{container-title}}, {{date}}, {{asset:*}}
-
-  sectionWrapper?: string
-  // Wraps each section (heading + records).
-  // Available: {{content}}, {{section-title}}, {{section-id}}, {{asset:*}}
-
-  sectionWrapperOverrides?: Array<{
-    sectionId: string   // matches DocumentSection.sectionId; case-sensitive
-    template: string    // same variables as sectionWrapper
-  }>
-  // Per-section override. Takes precedence over sectionWrapper when sectionId matches.
-  // sectionId values MUST be unique within the array (enforced at package validation time).
-
-  recordWrapper?: string
-  // Wraps each record (heading + field rows).
-  // Available: {{content}}, {{record-heading}}, {{type-namespace}}, {{type-name}}, {{asset:*}}
-  // {{record-heading}} is the titleFieldId value for this record, or empty string.
-
-  recordWrapperOverrides?: Array<{
-    typeId: UUID      // matches Record.typeId
-    template: string  // same variables as recordWrapper
-  }>
-  // Per-type override. Takes precedence over recordWrapper when typeId matches.
-  // typeId values MUST be unique within the array (enforced at package validation time).
-
-  fieldRow?: string
-  // Wraps each field label + value pair.
-  // Available: {{field-label}}, {{field-value}}, {{field-name}}, {{content}}
-  // When renderViewId is set, applies after ExportConfig.omitEmptyFields filtering.
-  // Field rows follow their position in View.fieldViews[].order. Does NOT wrap ExportConfig.preamble content.
-
-  groupFieldRowTemplates?: { [fieldName: string]: string }
-  // RFC-007 [T-Gx1]–[T-Gx3]: per-field-name templates for individual field rows in group entries.
-  // Key: Field.name (e.g. "item-term"). Value: template supporting {{field-value}}, {{field-label}}.
-  // When a key matches, that template MUST be used instead of fieldRow for that field row [T-Gx3].
-  // Applied only when compositeRenderer is absent or unrecognised (per-field baseline) [T-Gx1].
-  // Unknown field names in this map MUST be silently ignored [T-Gx2].
-
-  compositeRendererConfig?: { [rendererName: string]: object }
-  // RFC-007 [T-Cx1]–[T-Cx5]: per-renderer config, keyed by the same identifier space as
-  // FieldGroup.compositeRenderer. Unknown properties in a known renderer sub-object MUST be
-  // silently ignored [T-Cx5].
-  //
-  // The "table" renderer reads compositeRendererConfig["table"]:
-  //   {
-  //     tableClass?: string
-  //     // CSS class on <table> (HTML only). Default: "srs-data-table" [T-Cx1].
-  //     // Set to "" to suppress the class attribute [T-Cx2].
-  //
-  //     wrapperTemplate?: string
-  //     // Wraps the full rendered entry. Tokens: {{subheading}}, {{label}}, {{table}}.
-  //     // Absent optional field tokens ({{subheading}}, {{label}}) MUST resolve to "".
-  //     // Default (HTML): <figure class="srs-table">{{subheading}}{{label}}{{table}}</figure>
-  //     // Default (other formats): no wrapper applied.
-  //     // When explicitly set, applies regardless of output format [T-Cx4].
-  //
-  //     captionTemplate?: string
-  //     // Template for the label field. Token: {{field-value}}.
-  //     // Default (HTML): <figcaption>{{field-value}}</figcaption>
-  //     // Default (markdown): *{{field-value}}*
-  //     // Default (other formats): {{field-value}} with no decoration.
-  //   }
-  // Scoped to the Theme instance; applies to all composite renderer groups in the pass
-  // that resolves this Theme. [T-Cx3] — applies ONLY to compositeRenderer: "table" groups.
-}
-```
-
-
-###### The `StylesheetDeclaration` shape
-
-**Content**: `StylesheetDeclaration`, in pseudo-IDL:
-
-```typescript
-{
-  mode: "inline" | "local" | "remote"
-  content?: string   // inline CSS; required when mode === "inline"
-  path?: string      // required when mode === "local"
-  url?: string       // required when mode === "remote"
-}
-```
-
-
-###### The `TypographyHints` shape
-
-**Content**: `TypographyHints`, in pseudo-IDL:
-
-```typescript
-{
-  baseFont?: string
-  headingFont?: string
-  monoFont?: string
-  baseFontSize?: string  // e.g. "16px", "1rem", "11pt"
-  lineHeight?: string    // e.g. "1.5", "24px"
-}
-```
-
-
-###### The `Theme` shape
-
-**Content**: `Theme`, in pseudo-IDL:
-
-```typescript
-{
-  id: UUID
-  namespace: string
-  name: string
-  version: integer   // min: 1
-
-  description: string
-  // What this theme is for; intended output format and audience.
-
-  targets: string[]   // required; min 1 entry
-  // Output formats this theme is designed for (e.g. "html", "markdown", "adoc").
-  // Implementations apply this theme only when Composition.format appears in this list.
-  // An empty targets array is a validation error (Rule [T-1b]).
-
-  assets?: { [assetName: string]: AssetDeclaration }
-  // Named asset declarations. Names MUST be unique within the Theme.
-
-  cssClassFields?: UUID[]
-  // fieldIds whose values are injected as CSS classes on record wrapper elements.
-  // For each listed fieldId, if the record has an effective-single Field eligible
-  // under [T-9], the class srs-field-{fieldName}-{normalisedValue} is added.
-  // Only applies to "html" and "pdf" output. Other Fields are silently skipped.
-
-  pageTemplates?: PageTemplates
-  elementTemplates?: ElementTemplates
-  stylesheet?: StylesheetDeclaration
-  typography?: TypographyHints
-
-  tags?: string[]
-  createdAt: ISO8601
-  lineage?: Lineage
-  provenance?: Provenance
-}
-```
-
-
-
-##### ext:changelog
-
-**Content**: **Status: Dormant** (removed under `rfc-decision-2a1e1590`, 2026-08-21). The 2026-08-21 usage attestation found zero `changelog/changelog.json` files anywhere in the corpus — the mechanism was speculative, never exercised in production. It is removed under the dormancy rule (`rfc-decision-cce3c00e`) alongside the per-field Revision sidecar mechanism it paired with, removed by the same ruling.
-
-**Removed surface** (historical — introduced by RFC-018, srs#141): the `ChangelogCollection`/`ChangelogEntry` schema (`changelog.json`); the `srs changelog list` CLI command. `manifest.changelogPath` is deprecated, not deleted, so existing declarations remain readable.
-
-**Return trigger**: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface. When a real consumer's requirements are known, the mechanism is redesigned against them rather than reinstated as specified here.
-
-
-##### Generated reference: `Manifest`
-
-**Referenced Type Id**: 4c00002e-0000-4000-a000-00000000002e
-
-**Presentation Profile**: property-table-and-pseudo-idl
-
-**Content**: Generated from the resolved effective `manifest` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
-
-| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
-|---|---|---|---|---|---|
-| `srsVersion` | string | yes | — | core | SRS spec version this repository conforms to, e.g. '2.0' or '2.0-draft'. |
-| `dataModelRevision` | integer | no | minimum: 0 | core | RFC-033/#265 — monotonic integer generation stamp for operational data-model migrations. Absent means revision 0. |
-| `repositoryId` | string | yes | format: uuid | core | Stable UUID for this repository (or, on a Slice, the source repository it was exported from). Never changes on copy or export. |
-| `namespace` | string | no | — | core | Reverse-DNS logical grouping. |
-| `title` | string | yes | — | core | Human-readable title. |
-| `description` | string | no | — | core | Human-readable description of this entity. |
-| `declaredExtensions` | string[] | no | — | core | SRS extensions this repository conforms to, e.g. ['ext:lifecycle', 'ext:views-l1']. |
-| `container` | ref → `container` (inline) | yes | — | core | Embedded Container record — canonical source of truth for this repository's identity. |
-| `packageRef` | ref → `package-ref` (inline) | no | — | core | Reference to the SRS Package that supplies field and type definitions (single package). |
-| `packageRefs` | ref → `package-ref` (inline)[] | no | — | core | References to one or more SRS Packages (RFC-014 Change C, multi-package/multi-version repositories). |
-| `upstreamPackage` | ref → `upstream-package` (inline) | no | — | core | RFC-014 (ext:import-tracking) — top-level normative provenance stamp for a repository initialised from an upstream Package. |
-| `sourceDocumentsPath` | string | no | — | core | Relative path from manifest.json to the source-documents/ directory. |
-| `aiGuidance` | ref → `repository-ai-guidance` (inline) | no | — | core | Comprehension guidance for AI agents reading this repository (Manifest.aiGuidance — a distinct, narrower shape from the generic AiGuidance value object). |
-| `renderedPresentations` | ref → `rendered-presentation` (inline)[] | no | — | core | RFC-015 [N+31] — declared presentations for this repository. |
-| `slice` | ref → `slice` (inline) | no | — | core | ext:slices (RFC-026) — present when this archive is a partial export (slice) of a source repository. |
-| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
-| `updatedAt` | date-time | no | — | core | ISO-8601 timestamp of the most recent update. |
-
-Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/manifest.json>
-
-#### Compact pseudo-IDL
-
-```typescript
-manifest {
-  srsVersion: string // SRS spec version this repository conforms to, e.g. '2.0' or '2.0-draft'.
-  dataModelRevision?: integer // RFC-033/#265 — monotonic integer generation stamp for operational data-model migrations. Absent means revision 0.
-  repositoryId: string // Stable UUID for this repository (or, on a Slice, the source repository it was exported from). Never changes on copy or export.
-  namespace?: string // Reverse-DNS logical grouping.
-  title: string // Human-readable title.
-  description?: string // Human-readable description of this entity.
-  declaredExtensions?: string[] // SRS extensions this repository conforms to, e.g. ['ext:lifecycle', 'ext:views-l1'].
-  container: ref → `container` (inline) // Embedded Container record — canonical source of truth for this repository's identity.
-  packageRef?: ref → `package-ref` (inline) // Reference to the SRS Package that supplies field and type definitions (single package).
-  packageRefs?: ref → `package-ref` (inline)[] // References to one or more SRS Packages (RFC-014 Change C, multi-package/multi-version repositories).
-  upstreamPackage?: ref → `upstream-package` (inline) // RFC-014 (ext:import-tracking) — top-level normative provenance stamp for a repository initialised from an upstream Package.
-  sourceDocumentsPath?: string // Relative path from manifest.json to the source-documents/ directory.
-  aiGuidance?: ref → `repository-ai-guidance` (inline) // Comprehension guidance for AI agents reading this repository (Manifest.aiGuidance — a distinct, narrower shape from the generic AiGuidance value object).
-  renderedPresentations?: ref → `rendered-presentation` (inline)[] // RFC-015 [N+31] — declared presentations for this repository.
-  slice?: ref → `slice` (inline) // ext:slices (RFC-026) — present when this archive is a partial export (slice) of a source repository.
-  createdAt: date-time // ISO-8601 creation timestamp.
-  updatedAt?: date-time // ISO-8601 timestamp of the most recent update.
 }
 ```
 

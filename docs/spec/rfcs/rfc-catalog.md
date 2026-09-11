@@ -558,7 +558,7 @@ schema:manifest.json
 ext:views-l2
 schema:composition.json
 schema:document-view-output.json
-subsection:ext-views-l2
+mechanism:relationspresentation-rfc-027
 -->
 
 **Proposal Artifact Path**: rfcs/rfc-027-document-view-relations-presentation.md
