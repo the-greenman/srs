@@ -379,6 +379,20 @@ The rename also makes the Record/Type relationship legible by analogy: a Record 
 
 
 
+##### The two lifecycle declaration forms on a Type
+
+**Content**: The inline form and the referenced form:
+
+```typescript
+// Inline — simple cases; effective set is own states/transitions only:
+lifecycle?: { states: LifecycleState[]; transitions: LifecycleTransition[]; initialState: string }
+
+// Referenced — shared, installable Lifecycle:
+lifecycleRef?: UUID        // LINEAGE reference (rfc-decision-c8704763) — resolves to an
+                            // installed Lifecycle in the effective package set (V8)
+```
+
+
 ##### `FieldAssignment`
 
 **Content**: A named, versioned composition of Fields for a specific semantic object type.
@@ -1114,25 +1128,6 @@ field {
   createdAt: date-time // ISO-8601 creation timestamp.
 }
 ```
-
-
-##### Type
-
-**Content**: Content relocated to mechanism leaves under the Type concept (RFC-042 Change B, srs#562). See derived-from.
-
-###### The two lifecycle declaration forms on a Type
-
-**Content**: The inline form and the referenced form:
-
-```typescript
-// Inline — simple cases; effective set is own states/transitions only:
-lifecycle?: { states: LifecycleState[]; transitions: LifecycleTransition[]; initialState: string }
-
-// Referenced — shared, installable Lifecycle:
-lifecycleRef?: UUID        // LINEAGE reference (rfc-decision-c8704763) — resolves to an
-                            // installed Lifecycle in the effective package set (V8)
-```
-
 
 
 ##### Generated reference: `Type`
@@ -2664,6 +2659,47 @@ Web UI comments and annotations attached to specific text within a Field value r
 ---
 
 
+##### The `Address` union
+
+**Content**: `Address`, in pseudo-IDL:
+
+```typescript
+type Address =
+  | {
+      space: "document"
+      containerId: UUID
+      recordId?: UUID
+      fieldId?: UUID
+    }
+  | {
+      space: "process"
+      runId: UUID          // Protocol run ID; requires ext:protocol
+      stageId?: string
+    }
+  | {
+      space: "conversation"
+      sessionId: UUID
+      chunkId?: UUID
+      annotationId?: UUID
+    }
+```
+
+
+##### The `AttentionState` shape
+
+**Content**: `AttentionState`, in pseudo-IDL:
+
+```typescript
+{
+  containerId: UUID
+  recordId?: UUID
+  fieldId?: UUID
+  protocolRunId?: UUID
+  stageId?: string
+}
+```
+
+
 ##### ext:addressability
 
 **Content**: **Required for**: any implementation with live facilitation or multi-session extraction.
@@ -3163,6 +3199,27 @@ A standard envelope for exchanging a Container together with its full Record set
 **Rationale**: RFC-034 [R9] (Change D.3), replacing RFC-026 Change C items 2 and 6. RFC-026's definition, relation, source-document and external-edge closure rules then apply to that member-instance set.
 
 
+###### The `slice` manifest property
+
+**Content**: The property `ext:slices` adds to `RepositoryManifest`:
+
+```json
+"slice": {
+  "origin": { "repositoryId": "<source-uuid>" },
+  "spec": { "type": "container", "id": "<containerId-uuid>" },
+  "exportedAt": "<ISO-8601>",
+  "externalRelationRefs": [
+    {
+      "relationId": "<uuid>",
+      "sourceInstanceId": "<uuid>",
+      "targetInstanceId": "<uuid>",
+      "relationType": "depends-on"
+    }
+  ]
+}
+```
+
+
 ###### JSON Store
 
 **Canonical Key**: record:concepts/json-store
@@ -3170,6 +3227,24 @@ A standard envelope for exchanging a Container together with its full Record set
 **Description**: A single-file, self-contained JSON serialization of a complete SRS repository (`.srsj`), carrying identical semantic content to the filesystem repository layout defined by `ext:repository`. A conforming implementation must be able to convert between the two losslessly.
 
 **Notes**: Preferred over the filesystem layout when portability matters more than per-file inspection: emailing a repository, committing a snapshot as one artifact, or embedding a test fixture.
+
+####### The top-level shape of a `.srsj` file
+
+**Content**: The top-level keys of a JSON Store file:
+
+```json
+{
+  "srsj": "1",
+  "manifest": { ... },
+  "data": {
+    "package/package.json": { ... },
+    "package/fields/<id>.json": { ... },
+    "records/<type>/<slug>.json": { ... },
+    "relations/relations.json": { ... }
+  }
+}
+```
+
 
 ####### ext:json-store
 
@@ -3545,6 +3620,49 @@ An importer must not mix strategies within a single copy operation.
 **Canonical Key**: record:concepts/registry
 
 **Description**: A published, discoverable catalog of Field, Type and other definitions that a multi-publisher ecosystem can index. A Registry states no opinion on registry authority, authentication or federation between competing catalogs; a consumer may index more than one.
+
+##### The `RegistryEntry` shape
+
+**Content**: `RegistryEntry`, in pseudo-IDL:
+
+```typescript
+{
+  packageId: UUID
+  packageName: string
+  packageVersion: string
+  publisher: string
+  description?: string
+  publishedAt: ISO8601
+  homepage?: string
+  tags?: string[]
+  fieldCount: integer       // min: 0
+  typeCount: integer        // min: 0
+  viewCount?: integer
+  schemaCount?: integer
+  protocolCount?: integer
+  relationTypeCount?: integer
+  downloadUrl?: string
+  checksum?: string         // SHA-256 hex digest for integrity verification
+}
+```
+
+
+##### The `Registry` shape
+
+**Content**: `Registry`, in pseudo-IDL:
+
+```typescript
+{
+  schemaVersion: string
+  registryId: UUID
+  registryName: string
+  catalogVersion: string    // registry's own version (semver)
+  updatedAt: ISO8601
+  homepage?: string
+  entries: RegistryEntry[]
+}
+```
+
 
 ##### `RegistryEntry`
 
@@ -4606,50 +4724,129 @@ Transcript chunks referenced in `SourceReference` are source material — addres
 
 **Description**: Extensions are optional, independently adoptable capability modules. Each declares its identifier, dependencies, and the types it defines.
 
-##### ext:addressability
+##### ext:import-tracking
 
-**Content**: Content relocated to mechanism leaves under the Addressability concept (RFC-042 Change B, srs#562/#687). See derived-from.
+**Content**: Content relocated to mechanism leaves under the Import tracking concept (RFC-042 Change B/C/F, srs#562/#686). See derived-from.
 
-###### The `Address` union
+###### The `ImportMode` values
 
-**Content**: `Address`, in pseudo-IDL:
+**Content**: `ImportMode`, in pseudo-IDL:
 
 ```typescript
-type Address =
-  | {
-      space: "document"
-      containerId: UUID
-      recordId?: UUID
-      fieldId?: UUID
-    }
-  | {
-      space: "process"
-      runId: UUID          // Protocol run ID; requires ext:protocol
-      stageId?: string
-    }
-  | {
-      space: "conversation"
-      sessionId: UUID
-      chunkId?: UUID
-      annotationId?: UUID
-    }
+"upstream-tracked" | "local-copy" | "local-fork"
 ```
 
 
-###### The `AttentionState` shape
+###### The `ImportRecord` shape
 
-**Content**: `AttentionState`, in pseudo-IDL:
+**Content**: `ImportRecord`, in pseudo-IDL:
 
 ```typescript
 {
-  containerId: UUID
-  recordId?: UUID
-  fieldId?: UUID
-  protocolRunId?: UUID
-  stageId?: string
+  definitionId: UUID
+  definitionType: "field" | "type" | "view" | "blueprint" | "protocol" | "relation-type"
+  namespace: string
+  name: string
+  version: integer
+
+  mode: ImportMode
+  importedAt: ISO8601
+
+  sourcePackageId: UUID
+  sourcePackageName: string
+  sourcePackageVersion: string
+
+  latestKnownUpstreamVersion?: integer
+  updateAvailable?: boolean
+  updateCheckedAt?: ISO8601
+
+  conflictState?: "clean" | "local-ahead" | "upstream-ahead" | "diverged"
+  conflictDetectedAt?: ISO8601
+
+  localVersion?: integer
+  localEditedAt?: ISO8601
 }
 ```
 
+
+###### The `ImportSummary` shape
+
+**Content**: `ImportSummary`, in pseudo-IDL:
+
+```typescript
+{
+  generatedAt: ISO8601
+  fields: ImportRecord[]
+  types: ImportRecord[]
+  views: ImportRecord[]
+  blueprints: ImportRecord[]
+  protocols: ImportRecord[]
+  relationTypes: ImportRecord[]
+}
+```
+
+
+###### The `UpstreamPackage` shape
+
+**Content**: `UpstreamPackage`, in pseudo-IDL:
+
+```typescript
+{
+  packageId:   UUID      // Stable UUID of the upstream Package. Never changes across upgrades.
+  namespace:   string    // Reverse-DNS namespace, e.g. "com.mudemocracy.governance"
+  name:        string    // Package name, e.g. "governance"
+  version:     string    // Semver of the upstream version at last install/upgrade
+  installedAt: ISO8601   // Timestamp of the last install or upgrade event
+}
+```
+
+
+
+##### Generated reference: `SourceDocumentMeta`
+
+**Referenced Type Id**: 4c000022-0000-4000-a000-000000000022
+
+**Presentation Profile**: property-table-and-pseudo-idl
+
+**Content**: Generated from the resolved effective `source-document-meta` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
+
+| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
+|---|---|---|---|---|---|
+| `documentId` | string | yes | format: uuid | core | ext:repository — stable identifier for a source document, used as SourceReference.sourceId when sourceType is repository-document. |
+| `contentPath` | string | yes | — | core | Relative path from source-documents/ to the document file (RFC-017). |
+| `contentType` | string | yes | — | core | MIME type of the source document content. |
+| `encoding` | string | no | — | core | Character encoding of the content file, e.g. utf-8. |
+| `language` | string | no | — | core | BCP 47 language tag, e.g. en-GB. |
+| `title` | string | no | — | core | Human-readable title. |
+| `description` | string | no | — | core | Human-readable description of this entity. |
+| `processingNote` | string | no | — | core | Caveats about quality or completeness of the source material. |
+| `excerpt` | ref → `source-excerpt` (inline) | no | — | core | ext:repository — repository-local excerpt provenance (RFC-017). |
+| `date` | date | no | — | core | Date the source document was produced or recorded. |
+| `tags` | string[] | no | — | core | Free-form classification tags. |
+| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
+| `importedAt` | date-time | no | — | core | ISO-8601 timestamp at which this definition was imported. |
+
+Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/source-document-meta.json>
+
+#### Compact pseudo-IDL
+
+```typescript
+source-document-meta {
+  documentId: string // ext:repository — stable identifier for a source document, used as SourceReference.sourceId when sourceType is repository-document.
+  contentPath: string // Relative path from source-documents/ to the document file (RFC-017).
+  contentType: string // MIME type of the source document content.
+  encoding?: string // Character encoding of the content file, e.g. utf-8.
+  language?: string // BCP 47 language tag, e.g. en-GB.
+  title?: string // Human-readable title.
+  description?: string // Human-readable description of this entity.
+  processingNote?: string // Caveats about quality or completeness of the source material.
+  excerpt?: ref → `source-excerpt` (inline) // ext:repository — repository-local excerpt provenance (RFC-017).
+  date?: date // Date the source document was produced or recorded.
+  tags?: string[] // Free-form classification tags.
+  createdAt: date-time // ISO-8601 creation timestamp.
+  importedAt?: date-time // ISO-8601 timestamp at which this definition was imported.
+}
+```
 
 
 ##### ext:lifecycle
@@ -5880,208 +6077,6 @@ srsj-envelope {
 ```
 
 
-##### ext:cross-field-validation
-
-**Content**: Content relocated to mechanism leaves under the Validation concept (RFC-042 Change B, srs#562). See derived-from.
-
-###### The `CrossFieldRule` shape
-
-**Content**: `CrossFieldRule`, in pseudo-IDL:
-
-```typescript
-{
-  type: "conditional-required" | "field-ordering" | "mutual-exclusion"
-  message?: string
-
-  // conditional-required: targetFieldId becomes required when predicateFieldId equals predicateValue
-  predicateFieldId?: UUID
-  predicateValue?: string
-  targetFieldId?: UUID
-
-  // field-ordering: targetFieldId must precede or follow predicateFieldId
-  // Applies only to fields with datatype "date", "date-time", "number", or "integer".
-  effect?: "must-precede" | "must-follow"
-
-  // mutual-exclusion: at most one of the listed fields may have a non-empty value
-  fieldIds?: UUID[]   // min: 2
-}
-```
-
-
-
-##### ext:import-tracking
-
-**Content**: Content relocated to mechanism leaves under the Import tracking concept (RFC-042 Change B/C/F, srs#562/#686). See derived-from.
-
-###### The `ImportMode` values
-
-**Content**: `ImportMode`, in pseudo-IDL:
-
-```typescript
-"upstream-tracked" | "local-copy" | "local-fork"
-```
-
-
-###### The `ImportRecord` shape
-
-**Content**: `ImportRecord`, in pseudo-IDL:
-
-```typescript
-{
-  definitionId: UUID
-  definitionType: "field" | "type" | "view" | "blueprint" | "protocol" | "relation-type"
-  namespace: string
-  name: string
-  version: integer
-
-  mode: ImportMode
-  importedAt: ISO8601
-
-  sourcePackageId: UUID
-  sourcePackageName: string
-  sourcePackageVersion: string
-
-  latestKnownUpstreamVersion?: integer
-  updateAvailable?: boolean
-  updateCheckedAt?: ISO8601
-
-  conflictState?: "clean" | "local-ahead" | "upstream-ahead" | "diverged"
-  conflictDetectedAt?: ISO8601
-
-  localVersion?: integer
-  localEditedAt?: ISO8601
-}
-```
-
-
-###### The `ImportSummary` shape
-
-**Content**: `ImportSummary`, in pseudo-IDL:
-
-```typescript
-{
-  generatedAt: ISO8601
-  fields: ImportRecord[]
-  types: ImportRecord[]
-  views: ImportRecord[]
-  blueprints: ImportRecord[]
-  protocols: ImportRecord[]
-  relationTypes: ImportRecord[]
-}
-```
-
-
-###### The `UpstreamPackage` shape
-
-**Content**: `UpstreamPackage`, in pseudo-IDL:
-
-```typescript
-{
-  packageId:   UUID      // Stable UUID of the upstream Package. Never changes across upgrades.
-  namespace:   string    // Reverse-DNS namespace, e.g. "com.mudemocracy.governance"
-  name:        string    // Package name, e.g. "governance"
-  version:     string    // Semver of the upstream version at last install/upgrade
-  installedAt: ISO8601   // Timestamp of the last install or upgrade event
-}
-```
-
-
-
-##### Generated reference: `SourceDocumentMeta`
-
-**Referenced Type Id**: 4c000022-0000-4000-a000-000000000022
-
-**Presentation Profile**: property-table-and-pseudo-idl
-
-**Content**: Generated from the resolved effective `source-document-meta` Type — regenerate with `node scripts/gen-type-reference-tables.mjs` (RFC-040 Change J, #274 ratified ledger). Do not hand-edit.
-
-| Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
-|---|---|---|---|---|---|
-| `documentId` | string | yes | format: uuid | core | ext:repository — stable identifier for a source document, used as SourceReference.sourceId when sourceType is repository-document. |
-| `contentPath` | string | yes | — | core | Relative path from source-documents/ to the document file (RFC-017). |
-| `contentType` | string | yes | — | core | MIME type of the source document content. |
-| `encoding` | string | no | — | core | Character encoding of the content file, e.g. utf-8. |
-| `language` | string | no | — | core | BCP 47 language tag, e.g. en-GB. |
-| `title` | string | no | — | core | Human-readable title. |
-| `description` | string | no | — | core | Human-readable description of this entity. |
-| `processingNote` | string | no | — | core | Caveats about quality or completeness of the source material. |
-| `excerpt` | ref → `source-excerpt` (inline) | no | — | core | ext:repository — repository-local excerpt provenance (RFC-017). |
-| `date` | date | no | — | core | Date the source document was produced or recorded. |
-| `tags` | string[] | no | — | core | Free-form classification tags. |
-| `createdAt` | date-time | yes | — | core | ISO-8601 creation timestamp. |
-| `importedAt` | date-time | no | — | core | ISO-8601 timestamp at which this definition was imported. |
-
-Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/source-document-meta.json>
-
-#### Compact pseudo-IDL
-
-```typescript
-source-document-meta {
-  documentId: string // ext:repository — stable identifier for a source document, used as SourceReference.sourceId when sourceType is repository-document.
-  contentPath: string // Relative path from source-documents/ to the document file (RFC-017).
-  contentType: string // MIME type of the source document content.
-  encoding?: string // Character encoding of the content file, e.g. utf-8.
-  language?: string // BCP 47 language tag, e.g. en-GB.
-  title?: string // Human-readable title.
-  description?: string // Human-readable description of this entity.
-  processingNote?: string // Caveats about quality or completeness of the source material.
-  excerpt?: ref → `source-excerpt` (inline) // ext:repository — repository-local excerpt provenance (RFC-017).
-  date?: date // Date the source document was produced or recorded.
-  tags?: string[] // Free-form classification tags.
-  createdAt: date-time // ISO-8601 creation timestamp.
-  importedAt?: date-time // ISO-8601 timestamp at which this definition was imported.
-}
-```
-
-
-##### ext:registry
-
-**Content**: Content relocated to mechanism leaves under the Registry concept (RFC-042 Change B/C/F, srs#562/#686). See derived-from.
-
-###### The `RegistryEntry` shape
-
-**Content**: `RegistryEntry`, in pseudo-IDL:
-
-```typescript
-{
-  packageId: UUID
-  packageName: string
-  packageVersion: string
-  publisher: string
-  description?: string
-  publishedAt: ISO8601
-  homepage?: string
-  tags?: string[]
-  fieldCount: integer       // min: 0
-  typeCount: integer        // min: 0
-  viewCount?: integer
-  schemaCount?: integer
-  protocolCount?: integer
-  relationTypeCount?: integer
-  downloadUrl?: string
-  checksum?: string         // SHA-256 hex digest for integrity verification
-}
-```
-
-
-###### The `Registry` shape
-
-**Content**: `Registry`, in pseudo-IDL:
-
-```typescript
-{
-  schemaVersion: string
-  registryId: UUID
-  registryName: string
-  catalogVersion: string    // registry's own version (semver)
-  updatedAt: ISO8601
-  homepage?: string
-  entries: RegistryEntry[]
-}
-```
-
-
-
 ##### ext:federation
 
 **Content**: **Status: Dormant** (removed under `rfc-decision-4f1e12e5`, 2026-08-22). The 2026-08-21 usage attestation found zero registries, zero events, and zero cross-repository relations anywhere in the corpus — the mechanism was speculative, never exercised in production. It is removed under the dormancy rule (`rfc-decision-cce3c00e`).
@@ -6289,27 +6284,84 @@ source-documents/
 
 
 
-##### ext:json-store
+##### Discovery
 
-**Content**: Content relocated to mechanism leaves under the JSON Store concept (RFC-042 Change B/C/F, srs#562/#686). See derived-from.
+**Extension ID**: ext:discovery
 
-###### The top-level shape of a `.srsj` file
+**Depends On**: ext:lifecycle
 
-**Content**: The top-level keys of a JSON Store file:
+**Content**: **Required for**: any implementation that supports querying and filtering instances across a repository — CLI, web UI, search engine, or API.
 
-```json
+Defines the **Discovery Contract**: a portable, implementation-agnostic specification of how SRS repositories are queried. Covers structured filter axes, the Text Projection algorithm, normalization rules, and the consistency rule separating exact-match structured filters from the content-match recall floor.
+
+#### `DiscoveryQuery`
+
+```typescript
 {
-  "srsj": "1",
-  "manifest": { ... },
-  "data": {
-    "package/package.json": { ... },
-    "package/fields/<id>.json": { ... },
-    "records/<type>/<slug>.json": { ... },
-    "relations/relations.json": { ... }
-  }
+  typeId?:         UUID      // exact match on Record.typeId
+  typeNamespace?:  string    // exact match on Record.typeNamespace
+  typeName?:       string    // exact match on Record.typeName
+  containerId?:    UUID      // instance is a member of this container (RFC-009 I-66)
+  tag?:            string[]  // AND semantics: all tags must be present
+  lifecycleState?: string    // exact match on Record.lifecycleState (ext:lifecycle)
+  lifecycleStates?: string[] // OR semantics: matches ANY listed lifecycleState (ext:lifecycle) [RFC-012 Rev 12, srs#525]
+  excludeLifecycleStates?: string[] // excludes instances whose lifecycleState matches any listed value, applied after lifecycleState/lifecycleStates (ext:lifecycle) [RFC-012 Rev 7]
+  tier?:           0 | 2     // instance tier (Note=0, Record=2; Tier 1/TypedRecord removed, rfc-decision-53635966 — the numbering gap is retained deliberately)
+  contentMatch?:   string    // free-text recall-floor predicate
 }
 ```
 
+An instance matches a `DiscoveryQuery` if and only if it satisfies all predicates whose values are specified. Unspecified predicates are wildcards.
+
+#### `TextSegment`
+
+```typescript
+{
+  fieldId:   string  // UUID for package-resolved fields; sentinel string for special segments
+  fieldName: string  // field name or sentinel
+  text:      string  // raw stored value (normalization applied at match time)
+}
+```
+
+Sentinels: `"note-title"`, `"note-section"`, `"tag"`, `"label"`.
+
+#### Searchable Field classification (RFC-032 Rev 7)
+
+For Tier 2, a Field is searchable only when `fieldType.datatype == "string"` and `fieldType.format` is absent or one of `"plain"`, `"markdown"`, or `"uri"`. `valueDomain` and cardinality do not restrict searchability. `format: "uuid"`, `format: "email"`, and datatypes `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, and `map` are non-searchable. Inline-composite recursion is not defined.
+
+#### Text Projection algorithm
+
+**Tier 2 (Record):** for each `fieldValue` in `fieldValues` array order — resolve the Field and apply the RFC-032 Rev-7 searchability predicate. If eligible and non-empty, emit one `TextSegment` for a single-cardinality value or one per array element for list cardinality, in order. After all field values, emit one segment per tag. Optionally emit `displayLabel` segments after tags.
+
+**Tier 0 (Note):** if `title` is non-empty, emit a leading `note-title` segment. For each `section[]` in order, emit a `note-section` segment if `content` is non-empty. After sections, emit tag segments.
+
+#### Normalization (applied at match time, not at segment construction time)
+
+1. Apply Unicode NFC.
+2. Fold to lowercase (Unicode simple case folding).
+3. Do not strip punctuation, diacritics, or whitespace.
+
+#### Consistency rule
+
+Structured filter axes (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `lifecycleStates`, `excludeLifecycleStates`, `tier`) are **exact-match predicates**: two conforming implementations with identical data MUST return identical result sets.
+
+Content matching (`contentMatch`) is a **recall-floor rule**: implementations MUST include every instance whose Text Projection contains a segment whose normalized text contains the normalized query as a substring. Additional results and alternative ranking are explicitly permitted.
+
+When both structured filters and `contentMatch` are specified, an instance MUST satisfy both the exact-match structured predicates AND the content recall-floor predicate.
+
+#### Conformance fixture
+
+A self-contained fixture repository with expected result sets lives at:
+
+```
+srs/conformance/discovery/
+  fixture-repo/   # valid SRS repository with 8 Tier-2 Records, 1 Tier-0, 2 Containers
+  scenarios.json  # named query scenarios with expectedInstanceIds and exactMatch flags
+```
+
+An implementation that declares `ext:discovery` MUST pass all fixture scenarios (exactMatch:true scenarios exactly; exactMatch:false scenarios as a superset). A scenario MAY additionally carry an `expectedSegments` expectation — `{ instanceId, fieldName, segments: string[] }` — naming the exact ordered `TextSegment` sequence one field of one instance must project; when present, the implementation's segment COUNT and ORDER for that field MUST match `segments` exactly (RFC-012 R11; srs#483 closes the gap left by `expectedInstanceIds` alone, which cannot express I-120's "one segment per array element in order" rule).
+
+---
 
 
 ##### ext:themes-l1
@@ -6508,32 +6560,6 @@ source-documents/
 **Return trigger**: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface. When a real consumer's requirements are known, the mechanism is redesigned against them rather than reinstated as specified here.
 
 
-##### ext:slices
-
-**Content**: Content relocated to mechanism leaves under the Travelling form concept (RFC-042 Change B, srs#562/#687). See derived-from.
-
-###### The `slice` manifest property
-
-**Content**: The property `ext:slices` adds to `RepositoryManifest`:
-
-```json
-"slice": {
-  "origin": { "repositoryId": "<source-uuid>" },
-  "spec": { "type": "container", "id": "<containerId-uuid>" },
-  "exportedAt": "<ISO-8601>",
-  "externalRelationRefs": [
-    {
-      "relationId": "<uuid>",
-      "sourceInstanceId": "<uuid>",
-      "targetInstanceId": "<uuid>",
-      "relationType": "depends-on"
-    }
-  ]
-}
-```
-
-
-
 ##### Generated reference: `Manifest`
 
 **Referenced Type Id**: 4c00002e-0000-4000-a000-00000000002e
@@ -6587,86 +6613,6 @@ manifest {
   updatedAt?: date-time // ISO-8601 timestamp of the most recent update.
 }
 ```
-
-
-##### Discovery
-
-**Extension ID**: ext:discovery
-
-**Depends On**: ext:lifecycle
-
-**Content**: **Required for**: any implementation that supports querying and filtering instances across a repository — CLI, web UI, search engine, or API.
-
-Defines the **Discovery Contract**: a portable, implementation-agnostic specification of how SRS repositories are queried. Covers structured filter axes, the Text Projection algorithm, normalization rules, and the consistency rule separating exact-match structured filters from the content-match recall floor.
-
-#### `DiscoveryQuery`
-
-```typescript
-{
-  typeId?:         UUID      // exact match on Record.typeId
-  typeNamespace?:  string    // exact match on Record.typeNamespace
-  typeName?:       string    // exact match on Record.typeName
-  containerId?:    UUID      // instance is a member of this container (RFC-009 I-66)
-  tag?:            string[]  // AND semantics: all tags must be present
-  lifecycleState?: string    // exact match on Record.lifecycleState (ext:lifecycle)
-  lifecycleStates?: string[] // OR semantics: matches ANY listed lifecycleState (ext:lifecycle) [RFC-012 Rev 12, srs#525]
-  excludeLifecycleStates?: string[] // excludes instances whose lifecycleState matches any listed value, applied after lifecycleState/lifecycleStates (ext:lifecycle) [RFC-012 Rev 7]
-  tier?:           0 | 2     // instance tier (Note=0, Record=2; Tier 1/TypedRecord removed, rfc-decision-53635966 — the numbering gap is retained deliberately)
-  contentMatch?:   string    // free-text recall-floor predicate
-}
-```
-
-An instance matches a `DiscoveryQuery` if and only if it satisfies all predicates whose values are specified. Unspecified predicates are wildcards.
-
-#### `TextSegment`
-
-```typescript
-{
-  fieldId:   string  // UUID for package-resolved fields; sentinel string for special segments
-  fieldName: string  // field name or sentinel
-  text:      string  // raw stored value (normalization applied at match time)
-}
-```
-
-Sentinels: `"note-title"`, `"note-section"`, `"tag"`, `"label"`.
-
-#### Searchable Field classification (RFC-032 Rev 7)
-
-For Tier 2, a Field is searchable only when `fieldType.datatype == "string"` and `fieldType.format` is absent or one of `"plain"`, `"markdown"`, or `"uri"`. `valueDomain` and cardinality do not restrict searchability. `format: "uuid"`, `format: "email"`, and datatypes `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, and `map` are non-searchable. Inline-composite recursion is not defined.
-
-#### Text Projection algorithm
-
-**Tier 2 (Record):** for each `fieldValue` in `fieldValues` array order — resolve the Field and apply the RFC-032 Rev-7 searchability predicate. If eligible and non-empty, emit one `TextSegment` for a single-cardinality value or one per array element for list cardinality, in order. After all field values, emit one segment per tag. Optionally emit `displayLabel` segments after tags.
-
-**Tier 0 (Note):** if `title` is non-empty, emit a leading `note-title` segment. For each `section[]` in order, emit a `note-section` segment if `content` is non-empty. After sections, emit tag segments.
-
-#### Normalization (applied at match time, not at segment construction time)
-
-1. Apply Unicode NFC.
-2. Fold to lowercase (Unicode simple case folding).
-3. Do not strip punctuation, diacritics, or whitespace.
-
-#### Consistency rule
-
-Structured filter axes (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `lifecycleStates`, `excludeLifecycleStates`, `tier`) are **exact-match predicates**: two conforming implementations with identical data MUST return identical result sets.
-
-Content matching (`contentMatch`) is a **recall-floor rule**: implementations MUST include every instance whose Text Projection contains a segment whose normalized text contains the normalized query as a substring. Additional results and alternative ranking are explicitly permitted.
-
-When both structured filters and `contentMatch` are specified, an instance MUST satisfy both the exact-match structured predicates AND the content recall-floor predicate.
-
-#### Conformance fixture
-
-A self-contained fixture repository with expected result sets lives at:
-
-```
-srs/conformance/discovery/
-  fixture-repo/   # valid SRS repository with 8 Tier-2 Records, 1 Tier-0, 2 Containers
-  scenarios.json  # named query scenarios with expectedInstanceIds and exactMatch flags
-```
-
-An implementation that declares `ext:discovery` MUST pass all fixture scenarios (exactMatch:true scenarios exactly; exactMatch:false scenarios as a superset). A scenario MAY additionally carry an `expectedSegments` expectation — `{ instanceId, fieldName, segments: string[] }` — naming the exact ordered `TextSegment` sequence one field of one instance must project; when present, the implementation's segment COUNT and ORDER for that field MUST match `segments` exactly (RFC-012 R11; srs#483 closes the gap left by `expectedInstanceIds` alone, which cannot express I-120's "one segment per array element in order" rule).
-
----
 
 
 
@@ -7112,6 +7058,30 @@ Conforming implementations must uphold the following invariants.
 **Number**: I-96
 
 **Constraint**: A `CrossFieldRule` that contains a property belonging to a different rule type MUST be reported as a Type-level validation error. Specifically: a `conditional-required` or `field-ordering` rule MUST NOT supply `fieldIds`; a `mutual-exclusion` rule MUST NOT supply `predicateFieldId`, `predicateValue`, `targetFieldId`, or `effect`. (RFC-019 R10.)
+
+
+##### The `CrossFieldRule` shape
+
+**Content**: `CrossFieldRule`, in pseudo-IDL:
+
+```typescript
+{
+  type: "conditional-required" | "field-ordering" | "mutual-exclusion"
+  message?: string
+
+  // conditional-required: targetFieldId becomes required when predicateFieldId equals predicateValue
+  predicateFieldId?: UUID
+  predicateValue?: string
+  targetFieldId?: UUID
+
+  // field-ordering: targetFieldId must precede or follow predicateFieldId
+  // Applies only to fields with datatype "date", "date-time", "number", or "integer".
+  effect?: "must-precede" | "must-follow"
+
+  // mutual-exclusion: at most one of the listed fields may have a non-empty value
+  fieldIds?: UUID[]   // min: 2
+}
+```
 
 
 ##### ext:cross-field-validation

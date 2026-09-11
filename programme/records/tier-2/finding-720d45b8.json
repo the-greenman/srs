@@ -1,0 +1,22 @@
+{
+  "instanceId": "720d45b8-1a07-42ea-a90a-eafc3cd42eb2",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "Successor 'example' leaves from the section/subsection split can be left parented only under the record being retired, with no derived-from edge at all",
+    "summary": "Across all 18 subsections whose prose was already relocated to mechanism successors (batches #561-564/#687/#686), the fenced-code-block 'example' leaves extracted from that prose were attached via `contains` directly to the subsection being retired and never reparented to the subsection's replacement concept, and carry no `derived-from` relation to the subsection at all (unlike sibling mechanism leaves, which do). Deleting the subsection via `record delete --cascade` without first reparenting these leaves would silently orphan them.",
+    "evidence": [
+      "Scanned all 61 subsection records still typed `com.semanticops.spec/subsection` on origin/master (c3c5b02): 18 have fieldValues.content replaced with a 'Content relocated to... See derived-from' stub.",
+      "Across those 18, found 61 total inbound `contains` relations sourced from the subsection itself, targeting 61 distinct records -- zero of which also carry a second, non-subsection `contains` parent (checked every one's full inbound relation list).",
+      "Cross-referenced against the 121 records that DO carry a `derived-from` edge to one of these 18 subsections: zero overlap with the 61 orphaned children -- confirming the orphans are a structurally distinct, unrelated-by-provenance set of leaves, not double-counted successors.",
+      "Example: subsection 136187cc (ext:slices) has 6 mechanism successors (each derived-from + properly contains-parented under concept 23f7a465 'Travelling form') plus 1 example leaf (3d8bd905, 'The `slice` manifest property') that had only the subsection's own `contains` edge and no derived-from edge at all -- confirmed by content match that it belongs under the same concept.",
+      "This PR (the-greenman/srs#745) fixed 8 of the 61 (across 6 subsections); 53 remain across the other 12 already-migrated subsections, plus an unknown number likely to appear in the 43 not-yet-migrated subsections once they are split."
+    ],
+    "body": "The pattern: when a subsection's prose was split (batches #561-564), any fenced code block became its own `example` record via `contains` from the SUBSECTION being retired, while the surrounding prose became `mechanism` records with a proper `derived-from` edge to the subsection AND a proper `contains` edge to the subsection's replacement concept. The example leaves got only the first half of that treatment.\n\nWhy this matters for the remaining `srs#710` work: `record delete --cascade` will happily delete the subsection and silently remove that `contains` edge along with everything else in `cascadedRelations` -- there is no error, no warning, nothing that would catch an unreparented leaf being orphaned. The only way to catch it is to check BEFORE deleting: for every successor (found either via `derived-from` OR via the subsection's own outbound `contains`), confirm it has a second, non-subsection `contains` parent.\n\nRecommendation for the next unit continuing srs#710: before choosing which subsections to finalize, run the same check this unit ran (scan every remaining subsection's outbound `contains` edges, not just its inbound `derived-from` edges) and budget time to reparent any orphaned leaves found, using the target concept indicated by content/title match against already-properly-parented siblings."
+  },
+  "createdAt": "2026-09-11T02:26:36.597407417+00:00",
+  "updatedAt": "2026-09-11T02:26:36.597413528+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
