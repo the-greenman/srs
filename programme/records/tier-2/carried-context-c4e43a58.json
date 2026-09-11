@@ -1,0 +1,15 @@
+{
+  "instanceId": "c4e43a58-d3d8-4eaa-aa4e-1745a3225ab7",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "Before deleting any remaining section/subsection record under srs#710, grep RFC manifests for a token citing its title slug",
+    "summary": "A subsection or section being retired may be cited by an unrelated RFC's srs-integration manifest as `section:<slug>`/`subsection:<slug>`. Deleting the record without checking breaks that RFC's provenance token, caught by check-rfc-integration.mjs only after the fact (it did in srs#710/PR #747, for RFC-030 and 'Version semantics'). concept:/mechanism: token kinds now exist (added in PR #747) so the fix is just re-pointing the token, but it's cheaper to catch before deleting than to diagnose from a validate-all failure afterward.",
+    "rationale": "grep -rn \"section:<slugified-title>\\|subsection:<slugified-title>\" srs/records/tier-2/rfc-*.json before running record delete --cascade on any section/subsection. If a hit is found, identify the record's actual successor (concept or mechanism, usually discoverable via its derived-from relation or meta.derivedFrom field, or by content match if neither exists yet), and update the citing RFC's manifest token from section:/subsection: to concept:/mechanism: pointing at the successor's title slug, in the same PR that deletes the original — mirroring how PR #747 handled RFC-030. This would change if check-rfc-integration.mjs grows a repository-wide pre-delete lint of its own (filed as a possible follow-up, not yet an issue) that surfaces this automatically instead of relying on the worker to grep first."
+  },
+  "createdAt": "2026-09-11T04:34:36.711188452+00:00",
+  "updatedAt": "2026-09-11T04:34:36.711194228+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
