@@ -471,9 +471,6 @@ Declaring both is a validation error. An inline lifecycle cannot extend; use `li
 
 **Notes**: Inheritance chains must be acyclic (Invariant 39). Only some properties cascade up the ancestor chain — the effective identity field does; the explicit field order does not.
 
-##### Type inheritance (ext:type-inheritance)
-
-
 ##### Type.extendsTypeId, when present, must reference a valid Type.id.
 
 **Number**: 39
@@ -848,12 +845,6 @@ A grace window is declared in `Vocabulary.promotionWindow.until`. Until that bou
 
 **Notes**: Invariants 1-3 and 9 carry the Field's non-negotiables: rendering labels change nothing, Types may not restate Field semantics, and a new id means a new definition and not a new version.
 
-##### Field semantics — content format
-
-
-##### Field semantics
-
-
 ##### Type must not redefine, override, or duplicate the semantic content…
 
 **Number**: 2
@@ -1024,9 +1015,6 @@ See the generated reference immediately below for `Field`'s current property tab
 **Description**: A named state machine (a closed vocabulary of states plus the transitions between them and exactly one initial state) that a Type may declare inline or reference as an installed, shareable definition. It governs where a Record stands in a process: draft, active, archived, or whatever the domain needs. Lifecycle state is changed only by an explicit transition act; asserting a Relation never moves it.
 
 **Notes**: A state may declare that resting in it requires a satisfying Relation, enforced hard (the transition is rejected) or advisory (the transition proceeds and the unsatisfied state surfaces as an at-rest warning).
-
-##### Lifecycle (ext:lifecycle)
-
 
 ##### Type.lifecycle.initialState must reference a key that appears in…
 
@@ -2466,9 +2454,6 @@ See the generated reference below for `Blueprint`'s current property table, opti
 
 **Notes**: A Protocol is a package definition, not an instance. It is an epistemic concern, deliberately separated from presentation: the logic that guides a session was removed from views and lives here.
 
-##### Protocol (ext:protocol)
-
-
 ##### Every stageId in ProtocolStage.dependsOn[] must reference a stageId…
 
 **Number**: 29
@@ -2610,9 +2595,6 @@ Views (`ext:views-l1`) no longer contain facilitation logic. A View is a present
 **Description**: A single addressing scheme spanning document space, process space and conversation space, so that anything that can be referred to can be resolved — and so that a transcript fragment and a field on a record are co-addressable, which is what makes an assertion linking them possible. Alongside the stable address sits the live cursor: the current focus of an active process run, which moves continuously and is stamped onto conversation material as it is produced. Because it is stamped at production time, asking for everything said while attention was on this field becomes a query, not a search.
 
 **Notes**: A stable address and a live cursor are structurally similar and must not be merged: one identifies an element, the other records where focus currently is. Likewise a cursor is set live and a source reference is set retrospectively.
-
-##### Addressability (ext:addressability)
-
 
 ##### AttentionState.containerId must reference a valid…
 
@@ -3035,9 +3017,6 @@ The `"upstream-ahead"` state (a newer version exists upstream) requires `ext:reg
 **Description**: A directory that holds SRS content as files: a marker directory identifying the root, a manifest declaring the repository's stable id, its packages, its required root container and its declared extensions, and reserved folders for instances, relations, source documents and local definitions. Membership is authoritative from the tree itself — a file present under a reserved root is a member, and there is no manifest index to disagree with it. Identity lives inside the SRS data, never in filenames or storage history.
 
 **Notes**: A repository is operable with no running service, no registry and no network. That is the point of the format, not an incidental property of it.
-
-##### Repository (ext:repository)
-
 
 ##### conforming repository must have a .srs marker directory and a…
 
@@ -3857,15 +3836,6 @@ Document-level projection is addressed by `ext:views-l2`. The broader projection
 **Description**: A named, versioned presentation over a set of Fields: which field rows appear, in what display order, under what labels, with what editor hints, and whether each is visible. It is field-centric, not Type-bound: any Record carrying the fields a View requires can be rendered through it — and it constrains presentation only. A View may not override, redefine or duplicate the semantics of any Field or Type it references.
 
 **Notes**: A row may also present a Record-level property such as lifecycle state or tags without pretending that property is a Field. Hiding a row affects rendered text only; the value stays in the Record and in any structured projection.
-
-###### Views L2 navigation (ext:views-l2)
-
-
-###### Views (ext:views-l1)
-
-
-###### Views L2 (ext:views-l2)
-
 
 ###### Every fieldId in View.fieldViews[] must reference a valid Field.id
 
@@ -6926,9 +6896,6 @@ Conforming implementations must uphold the following invariants.
 **Number**: 11
 
 **Constraint**: A `conditional-required` rule must supply `predicateFieldId`, `predicateValue`, and `targetFieldId`. A `field-ordering` rule must supply `predicateFieldId`, `targetFieldId`, and `effect`. A `mutual-exclusion` rule must supply `fieldIds` with at least two entries.
-
-
-##### Cross-field validation (ext:cross-field-validation)
 
 
 ##### ext:cross-field-validation is opt-in; implementations not declaring it MUST ignore validationRules
