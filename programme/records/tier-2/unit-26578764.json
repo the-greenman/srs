@@ -1,0 +1,24 @@
+{
+  "instanceId": "26578764-851d-4be1-b7c0-fe91ea22d6a8",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Zero-context-agent acceptance test (RFC-042 Change H)",
+    "summary": "Executes RFC-042 Change H: a repeatable protocol (scripts/zero-context-agent-test.md) plus one recorded run of it, scoring whether an agent with no prior SRS context can work out the repository's concepts, prerequisite order, RFC lifecycle state and safe next actions from the srs-spec MCP server alone.",
+    "decision_mode": "complicated",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs#711",
+      "srs#556",
+      "srs#580",
+      "srs-rust#949"
+    ],
+    "body": "## What this unit did\n\n1. Wrote `scripts/zero-context-agent-test.md` -- the repeatable protocol: setup (fresh session, Haiku, srs-spec MCP server only, one verbatim prompt), a 5-item pass/fail rubric derived from RFC-042 [R1]-[R13], a hallucination check over every cited identifier, and the scoring/recording procedure.\n2. Ran the protocol once. The closest achievable isolation in this worker session: a separate `claude` CLI subprocess in an empty working directory (no CLAUDE.md, no repository files mounted), model `claude-haiku-4-5-20251001`, `--mcp-config`/`--strict-mcp-config` pointed only at `srs mcp serve --repo srs/srs` (the pinned CLI build), and `--allowedTools`/`--disallowedTools` denying every built-in except `ToolSearch` and the MCP resource-reader tools plus the read-only `mcp__srs-spec__*` tools. This is not a literal zero-tool MCP client (no way to construct one was available in this session -- a tool/process gap, not a CLI verb gap, so nothing was hand-edited around it: the run proceeded with the gap disclosed rather than the isolation being silently overstated), but it is a real, non-trivial restriction the transcript shows the agent operating inside of, including two turns spent on `ToolSearch` before it could even call the resource-reader tools.\n3. Committed the transcript as a typed `finding` record (`bbe9faf9-8c54-41fe-825a-1df8533608e9` in this repository) via `record_create` over the CLI -- not a hand-written JSON file.\n\n## Result: FAIL, 2/5 + hallucination\n\n| Rubric item | Verdict |\n|---|---|\n| 1. Names the Parts in order | PASS |\n| 2. Walks >=2 Parts via /tree | FAIL -- zero /tree calls in the transcript |\n| 3. States a real depends-on edge + forward-reference-free path | FAIL -- prerequisite claims asserted with no supporting relation read |\n| 4. Reads RFC lifecycleState from records | PASS -- verified byte-accurate against the live repository |\n| 5. Proposes actions with correct preconditions | PASS (vacuously -- no write was proposed) |\n| Hallucination check | FAIL -- one fabricated composition instanceId cited as a 'safe next action' |\n\nPer the acceptance criteria, a FAIL scorecard is a complete, acceptable outcome -- this is exactly the finding this test exists to produce, not a failed test run. Full rubric evidence and the complete transcript are in the linked finding record.\n\n## What the FAIL says about the MCP surface\n\nThe agent read `agent-index` and `find` accurately (lifecycle state, section order) but never discovered or used `/tree` -- despite it being described as a primary zero-context entry point -- and instead answered the 'concepts and their prerequisite order' part of the prompt by asserting a plausible-sounding structure with no relation lookup behind it, then fabricated an id for one of its three proposed next actions rather than looking one up. This is evidence, not yet diagnosed to a root cause; srs#580 Wave 4 names this test as acceptance for the RFC-042 migration, not as a mechanism-design exercise, so root-causing why the agent skipped /tree (weak signal in agent-index? no incentive in the prompt to enumerate resources first? a Haiku-specific shortfall?) is follow-up work, not part of this unit.\n\ngate:auto-merge (mode complicated, door non-normative -- Wave 3/4 tooling and a repository finding, no normative meaning changed)."
+  },
+  "lifecycleState": "ready",
+  "createdAt": "2026-09-11T19:59:19.125774607+00:00",
+  "updatedAt": "2026-09-11T19:59:47.844799649+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
