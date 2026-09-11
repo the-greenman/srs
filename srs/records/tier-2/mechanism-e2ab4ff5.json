@@ -1,0 +1,21 @@
+{
+  "instanceId": "e2ab4ff5-494e-4e5e-a11c-6648edff72cb",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Extension conformance model",
+    "content": "Implementations declare conformance as:\n\nExample: a core conformance declaration.\n\n**Core** requires the Foundation group and Distribution group in full. No extension is required for core conformance. Extensions are independently adoptable; some declare dependencies on other extensions.\n\nTable: the extension identifier and dependency reference.\n\n`ext:protocol` and `ext:addressability` are formally independent but are a functional co-dependency: a Protocol without `AttentionState` produces no live conversation tagging; `AttentionState` without Protocol stages has no stage context to capture. Implementations supporting live conversation tagging should declare both.\n\n**Blueprint is a core package definition**, not a declarable extension. `Blueprint` is included in `Package.blueprints[]` when needed; no `ext:blueprint` declaration is required or defined.\n\nExample declaration: `SRS Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability`"
+  },
+  "tags": [
+    "concern:extensibility",
+    "topic:meta"
+  ],
+  "createdAt": "2026-09-11T15:26:35.217531755+00:00",
+  "updatedAt": "2026-09-11T15:32:09.046310623+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "meta": {
+    "derivedFrom": "9a358922-04fb-5730-807c-592da5269f9f"
+  }
+}

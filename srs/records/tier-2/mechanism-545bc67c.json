@@ -1,0 +1,21 @@
+{
+  "instanceId": "545bc67c-e6d8-4cfc-b6ed-8988e824acd8",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Extension conformance requirements",
+    "content": "An implementation declaring a given extension MUST:\n- Accept and validate all types defined by that extension\n- Enforce all invariants assigned to that extension\n- Respect the declared dependency chain (e.g., `ext:views-l2` requires `ext:views-l1` to also be declared)\n\n`ext:recommended-relations` is retired as of RFC-005. It no longer owns any normative semantics. Implementations MUST NOT treat it as a capability gate: the canonical relation vocabulary is now mandatory core behaviour provided by the `com.semanticops.srs` package."
+  },
+  "tags": [
+    "concern:extensibility",
+    "topic:conformance"
+  ],
+  "createdAt": "2026-09-11T15:26:35.076254774+00:00",
+  "updatedAt": "2026-09-11T15:32:06.542064266+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "meta": {
+    "derivedFrom": "95bef379-2358-5848-abb1-ff72cb07a25e"
+  }
+}

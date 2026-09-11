@@ -1,5 +1,5 @@
 {
-  "$comment": "Grandfathered spec-language violations (srs#569), seeded from the corpus as it stood when scripts/check-spec-language.mjs landed. Each key is `<record path>#<field>#<rule id>[#<site digest>]` \u2014 a SITE, not a file: for em-dash-cap the digest identifies one offending paragraph, so a compliant paragraph in the same field is not covered and a new violation elsewhere in it is still caught. Every entry cites the issue that retires it. Shrinking this file IS the migration (#563 empties it for Parts I-IV); nothing may be added here without an issue reference. Re-seed with `node scripts/check-spec-language.mjs --seed` after a batch of fixes.",
+  "$comment": "Grandfathered spec-language violations (srs#569), seeded from the corpus as it stood when scripts/check-spec-language.mjs landed. Each key is `<record path>#<field>#<rule id>[#<site digest>]` — a SITE, not a file: for em-dash-cap the digest identifies one offending paragraph, so a compliant paragraph in the same field is not covered and a new violation elsewhere in it is still caught. Every entry cites the issue that retires it. Shrinking this file IS the migration (#563 empties it for Parts I-IV); nothing may be added here without an issue reference. Re-seed with `node scripts/check-spec-language.mjs --seed` after a batch of fixes.",
   "version": 1,
   "grandfathered": {
     "srs/records/design-notes/001-core-thesis.json#content#vague-actor#f6429856": {
@@ -45,7 +45,7 @@
     "srs/records/design-notes/009-why-revision-is-addressable.json#content#em-dash-cap#02cb5287": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): - **Context assembly**: when generating the next dra\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): - **Context assembly**: when generating the next dra…"
     },
     "srs/records/design-notes/009-why-revision-is-addressable.json#content#minimisers#b2c66dfd": {
       "issue": "the-greenman/srs#563",
@@ -65,17 +65,17 @@
     "srs/records/design-notes/014-why-the-conversation-layer-is-a-permanent-boundary.json#content#em-dash-cap#24a3561e": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): The boundary makes both layers better at what they d\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): The boundary makes both layers better at what they d…"
     },
     "srs/records/design-notes/014-why-the-conversation-layer-is-a-permanent-boundary.json#content#em-dash-cap#4de99398": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): SCDS captures negotiated semantic state. Transcripts\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): SCDS captures negotiated semantic state. Transcripts…"
     },
     "srs/records/design-notes/014-why-the-conversation-layer-is-a-permanent-boundary.json#content#em-dash-cap#64caa3a7": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): If SCDS tried to be a transcript standard, it would \u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): If SCDS tried to be a transcript standard, it would …"
     },
     "srs/records/design-notes/022-graceful-degradation.json#content#soft-hedges#d1ffaf02": {
       "issue": "the-greenman/srs#563",
@@ -85,7 +85,7 @@
     "srs/records/design-notes/025-addressability-as-a-prerequisite-for-live-facilitation.json#content#em-dash-cap#bc131ad9": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): Any implementation that facilitates live sessions \u2014 \u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): Any implementation that facilitates live sessions — …"
     },
     "srs/records/design-notes/025-addressability-as-a-prerequisite-for-live-facilitation.json#content#facilitate#b3030643": {
       "issue": "the-greenman/srs#563",
@@ -115,12 +115,12 @@
     "srs/records/design-notes/032-full-projection-surface.json#content#em-dash-cap#960fcd11": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): Document-level projection is addressed by `ext:views\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): Document-level projection is addressed by `ext:views…"
     },
     "srs/records/design-notes/036-view-inheritance-and-composition.json#content#em-dash-cap#6f7afac9": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): As View libraries mature, inheritance will become ne\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): As View libraries mature, inheritance will become ne…"
     },
     "srs/records/design-notes/038-field-transclusion-in-document-views.json#content#soft-hedges#d1ffaf02": {
       "issue": "the-greenman/srs#563",
@@ -130,32 +130,32 @@
     "srs/records/design-notes/044-relation-design-principles.json#content#em-dash-cap#17a43903": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "3 em-dashes in one paragraph (cap 1): **R11 \u2014 What a record *is* changes by re-instantiati\u2026"
+      "matched": "3 em-dashes in one paragraph (cap 1): **R11 — What a record *is* changes by re-instantiati…"
     },
     "srs/records/design-notes/044-relation-design-principles.json#content#em-dash-cap#2c698a7f": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "3 em-dashes in one paragraph (cap 1): **R8 \u2014 Containers scope; relations mean.** Container\u2026"
+      "matched": "3 em-dashes in one paragraph (cap 1): **R8 — Containers scope; relations mean.** Container…"
     },
     "srs/records/design-notes/044-relation-design-principles.json#content#em-dash-cap#3b78e59f": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): **R7 \u2014 Edges and provenance pointers are different v\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): **R7 — Edges and provenance pointers are different v…"
     },
     "srs/records/design-notes/044-relation-design-principles.json#content#em-dash-cap#8d1a75d2": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "4 em-dashes in one paragraph (cap 1): **R4 \u2014 Relations are claims; asserting one never mut\u2026"
+      "matched": "4 em-dashes in one paragraph (cap 1): **R4 — Relations are claims; asserting one never mut…"
     },
     "srs/records/design-notes/044-relation-design-principles.json#content#em-dash-cap#a22af476": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): **R2 \u2014 Direction is a slot convention; meaning lives\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): **R2 — Direction is a slot convention; meaning lives…"
     },
     "srs/records/design-notes/044-relation-design-principles.json#content#em-dash-cap#d8dedf6a": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "3 em-dashes in one paragraph (cap 1): **R9 \u2014 Relation writes go through one validated path\u2026"
+      "matched": "3 em-dashes in one paragraph (cap 1): **R9 — Relation writes go through one validated path…"
     },
     "srs/records/design-notes/044-relation-design-principles.json#content#keyword-register#9175f0c7": {
       "issue": "the-greenman/srs#563",
@@ -180,12 +180,12 @@
     "srs/records/design-notes/045-inheritance-floor-and-documentation-only-rule.json#content#em-dash-cap#2395480a": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): > (a) makes the metamodel package depend on `ext:typ\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): > (a) makes the metamodel package depend on `ext:typ…"
     },
     "srs/records/design-notes/045-inheritance-floor-and-documentation-only-rule.json#content#em-dash-cap#d2a87014": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "5 em-dashes in one paragraph (cap 1): **Forward framing: cell linkage as a retrieval signa\u2026"
+      "matched": "5 em-dashes in one paragraph (cap 1): **Forward framing: cell linkage as a retrieval signa…"
     },
     "srs/records/design-notes/045-inheritance-floor-and-documentation-only-rule.json#content#soft-hedges#d1ffaf02": {
       "issue": "the-greenman/srs#563",
@@ -235,7 +235,7 @@
     "srs/records/examples/example-246c831c.json#content#em-dash-cap#218a2336": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "3 em-dashes in one paragraph (cap 1): ```typescript { stageId: string // stable key within\u2026"
+      "matched": "3 em-dashes in one paragraph (cap 1): ```typescript { stageId: string // stable key within…"
     },
     "srs/records/examples/example-246c831c.json#content#minimisers#b2c66dfd": {
       "issue": "the-greenman/srs#563",
@@ -255,7 +255,7 @@
     "srs/records/examples/example-582f68ee.json#content#em-dash-cap#6f15bae5": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): // Referenced \u2014 shared, installable Lifecycle: lifec\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): // Referenced — shared, installable Lifecycle: lifec…"
     },
     "srs/records/examples/example-64bb1177.json#content#keyword-register#dbab1376": {
       "issue": "the-greenman/srs#563",
@@ -265,7 +265,7 @@
     "srs/records/examples/example-7d906c4b.json#content#em-dash-cap#f7f95ba0": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "3 em-dashes in one paragraph (cap 1): ```typescript CompositeRendererBinding { renderer: s\u2026"
+      "matched": "3 em-dashes in one paragraph (cap 1): ```typescript CompositeRendererBinding { renderer: s…"
     },
     "srs/records/examples/example-8203d91f.json#content#enable#80c8b1a6": {
       "issue": "the-greenman/srs#563",
@@ -280,7 +280,7 @@
     "srs/records/examples/example-9addbd4c.json#content#em-dash-cap#ea54a918": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): // Value domain \u2014 datatype \"string\" only valueDomain\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): // Value domain — datatype \"string\" only valueDomain…"
     },
     "srs/records/examples/example-9addbd4c.json#content#keyword-register#59e8c2a2": {
       "issue": "the-greenman/srs#563",
@@ -395,52 +395,52 @@
     "srs/records/examples/example-f1c28b65.json#content#em-dash-cap#0bda0b25": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "3 em-dashes in one paragraph (cap 1): Context query for R-D / F-outcome: \u2192 Field aiGuidanc\u2026"
+      "matched": "3 em-dashes in one paragraph (cap 1): Context query for R-D / F-outcome: → Field aiGuidanc…"
     },
     "srs/records/extensions/ext-cross-field-validation.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "**Retired as an independent content copy (srs#285 / srs#407).** The current, normative tex\u2026"
+      "matched": "**Retired as an independent content copy (srs#285 / srs#407).** The current, normative tex…"
     },
     "srs/records/extensions/ext-import-tracking.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "**Retired as an independent content copy (srs#285 / srs#407).** The current, normative tex\u2026"
+      "matched": "**Retired as an independent content copy (srs#285 / srs#407).** The current, normative tex…"
     },
     "srs/records/extensions/ext-themes-l1.json#content#em-dash-cap#5c95e153": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): **Retired as an independent content copy (srs#285 / \u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): **Retired as an independent content copy (srs#285 / …"
     },
     "srs/records/extensions/ext-themes-l1.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "**Retired as an independent content copy (srs#285 / srs#411).** The current, normative tex\u2026"
+      "matched": "**Retired as an independent content copy (srs#285 / srs#411).** The current, normative tex…"
     },
     "srs/records/extensions/ext-views-l1.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "**Retired as an independent content copy (srs#285 / srs#407).** The current, normative tex\u2026"
+      "matched": "**Retired as an independent content copy (srs#285 / srs#407).** The current, normative tex…"
     },
     "srs/records/extensions/ext-views-l2.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "**Retired as an independent content copy (srs#285 / srs#407).** The current, normative tex\u2026"
+      "matched": "**Retired as an independent content copy (srs#285 / srs#407).** The current, normative tex…"
     },
     "srs/records/extensions/extension-212379f4.json#content#em-dash-cap#7d890a39": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): **Retired as an independent content copy (srs#285 / \u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): **Retired as an independent content copy (srs#285 / …"
     },
     "srs/records/extensions/extension-86102577.json#content#em-dash-cap#adcf2a3a": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "3 em-dashes in one paragraph (cap 1): **Retired as an independent content copy (srs#285 / \u2026"
+      "matched": "3 em-dashes in one paragraph (cap 1): **Retired as an independent content copy (srs#285 / …"
     },
     "srs/records/extensions/extension-996e81fe.json#content#em-dash-cap#1b1e438d": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): An implementation that declares `ext:discovery` MUST\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): An implementation that declares `ext:discovery` MUST…"
     },
     "srs/records/extensions/extension-996e81fe.json#content#keyword-register#05b63e8e": {
       "issue": "the-greenman/srs#563",
@@ -495,7 +495,7 @@
     "srs/records/invariants/invariant-002.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "A `Type` must not redefine, override, or duplicate the semantic content of any `Field` it \u2026"
+      "matched": "A `Type` must not redefine, override, or duplicate the semantic content of any `Field` it …"
     },
     "srs/records/invariants/invariant-002.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -515,7 +515,7 @@
     "srs/records/invariants/invariant-004.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "`Type.lifecycle.initialState` must reference a `key` that appears in `lifecycle.states[]` \u2026"
+      "matched": "`Type.lifecycle.initialState` must reference a `key` that appears in `lifecycle.states[]` …"
     },
     "srs/records/invariants/invariant-004.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -525,7 +525,7 @@
     "srs/records/invariants/invariant-005.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Every `from` and `to` value in `lifecycle.transitions[]` must reference a `key` that appea\u2026"
+      "matched": "Every `from` and `to` value in `lifecycle.transitions[]` must reference a `key` that appea…"
     },
     "srs/records/invariants/invariant-005.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -535,7 +535,7 @@
     "srs/records/invariants/invariant-006.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "`Record.lifecycleState`, when present, must reference a `key` in the associated `Type.life\u2026"
+      "matched": "`Record.lifecycleState`, when present, must reference a `key` in the associated `Type.life…"
     },
     "srs/records/invariants/invariant-006.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -545,7 +545,7 @@
     "srs/records/invariants/invariant-007.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Every `fieldId` referenced in any `FieldAssignment` within a `Package.types[]` must appear\u2026"
+      "matched": "Every `fieldId` referenced in any `FieldAssignment` within a `Package.types[]` must appear…"
     },
     "srs/records/invariants/invariant-007.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -555,7 +555,7 @@
     "srs/records/invariants/invariant-008.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "If `Package.mode === \"bundled\"`: every `Reference` in `packageDependencies` must have a ma\u2026"
+      "matched": "If `Package.mode === \"bundled\"`: every `Reference` in `packageDependencies` must have a ma…"
     },
     "srs/records/invariants/invariant-008.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -570,7 +570,7 @@
     "srs/records/invariants/invariant-010.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "All `fieldId` values in any `CrossFieldRule` within `Type.validationRules[]` must appear i\u2026"
+      "matched": "All `fieldId` values in any `CrossFieldRule` within `Type.validationRules[]` must appear i…"
     },
     "srs/records/invariants/invariant-010.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -580,7 +580,7 @@
     "srs/records/invariants/invariant-011.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "A `conditional-required` rule must supply `predicateFieldId`, `predicateValue`, and `targe\u2026"
+      "matched": "A `conditional-required` rule must supply `predicateFieldId`, `predicateValue`, and `targe…"
     },
     "srs/records/invariants/invariant-011.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -590,7 +590,7 @@
     "srs/records/invariants/invariant-012.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Every `fieldId` in `View.fieldViews[]` must reference a valid `Field.id` in the effective \u2026"
+      "matched": "Every `fieldId` in `View.fieldViews[]` must reference a valid `Field.id` in the effective …"
     },
     "srs/records/invariants/invariant-012.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -600,7 +600,7 @@
     "srs/records/invariants/invariant-013.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "`FieldView.displayLabel`, `FieldView.displayHint`, and `FieldView.editorHintOverride` are \u2026"
+      "matched": "`FieldView.displayLabel`, `FieldView.displayHint`, and `FieldView.editorHintOverride` are …"
     },
     "srs/records/invariants/invariant-013.json#normative_statement#lowercase-2119#df0465d9": {
       "issue": "the-greenman/srs#563",
@@ -610,7 +610,7 @@
     "srs/records/invariants/invariant-014.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "A `View` must not override, redefine, or duplicate the semantic content of any `Field` or \u2026"
+      "matched": "A `View` must not override, redefine, or duplicate the semantic content of any `Field` or …"
     },
     "srs/records/invariants/invariant-014.json#normative_statement#lowercase-2119#df0465d9": {
       "issue": "the-greenman/srs#563",
@@ -620,7 +620,7 @@
     "srs/records/invariants/invariant-015.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Every `typeId` referenced by any `View` in `Package.views[]` must appear in `Package.packa\u2026"
+      "matched": "Every `typeId` referenced by any `View` in `Package.views[]` must appear in `Package.packa…"
     },
     "srs/records/invariants/invariant-015.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -630,7 +630,7 @@
     "srs/records/invariants/invariant-016.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "In a `Relation`, `sourceInstanceId` is the asserting instance and `targetInstanceId` is th\u2026"
+      "matched": "In a `Relation`, `sourceInstanceId` is the asserting instance and `targetInstanceId` is th…"
     },
     "srs/records/invariants/invariant-016.json#normative_statement#lowercase-2119#df0465d9": {
       "issue": "the-greenman/srs#563",
@@ -640,7 +640,7 @@
     "srs/records/invariants/invariant-017.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "`Relation` is reserved for assertions that carry semantic consequence beyond simple mentio\u2026"
+      "matched": "`Relation` is reserved for assertions that carry semantic consequence beyond simple mentio…"
     },
     "srs/records/invariants/invariant-017.json#normative_statement#lowercase-2119#df0465d9": {
       "issue": "the-greenman/srs#563",
@@ -665,7 +665,7 @@
     "srs/records/invariants/invariant-021.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "`Container.rootInstanceIds` and `Container.memberInstanceIds`, when present, must referenc\u2026"
+      "matched": "`Container.rootInstanceIds` and `Container.memberInstanceIds`, when present, must referenc…"
     },
     "srs/records/invariants/invariant-021.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -680,7 +680,7 @@
     "srs/records/invariants/invariant-029.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Every `stageId` in `ProtocolStage.dependsOn[]` must reference a `stageId` declared in the \u2026"
+      "matched": "Every `stageId` in `ProtocolStage.dependsOn[]` must reference a `stageId` declared in the …"
     },
     "srs/records/invariants/invariant-029.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -690,7 +690,7 @@
     "srs/records/invariants/invariant-030.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Every `fieldId` in `ProtocolStage.contributesTo[]` must reference a `fieldId` that appears\u2026"
+      "matched": "Every `fieldId` in `ProtocolStage.contributesTo[]` must reference a `fieldId` that appears…"
     },
     "srs/records/invariants/invariant-030.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -705,12 +705,12 @@
     "srs/records/invariants/invariant-031.json#normative_statement#em-dash-cap#94b4ecd0": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): For every pair of stages A and B within a `Protocol`\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): For every pair of stages A and B within a `Protocol`…"
     },
     "srs/records/invariants/invariant-031.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "For every pair of stages A and B within a `Protocol` where B.dependsOn includes A.stageId,\u2026"
+      "matched": "For every pair of stages A and B within a `Protocol` where B.dependsOn includes A.stageId,…"
     },
     "srs/records/invariants/invariant-031.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -735,7 +735,7 @@
     "srs/records/invariants/invariant-035.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Every `DocumentSection.renderViewId` in any `Composition` within `Package.compositions[]` \u2026"
+      "matched": "Every `DocumentSection.renderViewId` in any `Composition` within `Package.compositions[]` …"
     },
     "srs/records/invariants/invariant-035.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -745,7 +745,7 @@
     "srs/records/invariants/invariant-036.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Every `TypeRef.typeId` referenced in any `Blueprint.rootTypes[]`, `Blueprint.requiredTypes\u2026"
+      "matched": "Every `TypeRef.typeId` referenced in any `Blueprint.rootTypes[]`, `Blueprint.requiredTypes…"
     },
     "srs/records/invariants/invariant-036.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -760,7 +760,7 @@
     "srs/records/invariants/invariant-038.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "`Field.fieldType.format`, when present, is only meaningful when `fieldType.datatype` is `\"\u2026"
+      "matched": "`Field.fieldType.format`, when present, is only meaningful when `fieldType.datatype` is `\"…"
     },
     "srs/records/invariants/invariant-038.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -780,7 +780,7 @@
     "srs/records/invariants/invariant-040.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "A specializing Type must not declare a `fieldId` in its own `fields[]` that duplicates any\u2026"
+      "matched": "A specializing Type must not declare a `fieldId` in its own `fields[]` that duplicates any…"
     },
     "srs/records/invariants/invariant-040.json#normative_statement#lowercase-2119#df0465d9": {
       "issue": "the-greenman/srs#563",
@@ -790,7 +790,7 @@
     "srs/records/invariants/invariant-041.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "When `Type.fieldOrder` is present, it must contain exactly the set of field UUIDs in the T\u2026"
+      "matched": "When `Type.fieldOrder` is present, it must contain exactly the set of field UUIDs in the T…"
     },
     "srs/records/invariants/invariant-041.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -800,7 +800,7 @@
     "srs/records/invariants/invariant-042.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Every `fieldId` in `Type.fieldAssignmentOverrides[]` must reference a field inherited from\u2026"
+      "matched": "Every `fieldId` in `Type.fieldAssignmentOverrides[]` must reference a field inherited from…"
     },
     "srs/records/invariants/invariant-042.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -815,7 +815,7 @@
     "srs/records/invariants/invariant-043.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "When `ext:type-inheritance` is declared, `Package.packageDependencies` must include a `Ref\u2026"
+      "matched": "When `ext:type-inheritance` is declared, `Package.packageDependencies` must include a `Ref…"
     },
     "srs/records/invariants/invariant-043.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -825,7 +825,7 @@
     "srs/records/invariants/invariant-044.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Every `NavigationLink.fromSectionId` and `NavigationLink.toSectionId` must reference a `se\u2026"
+      "matched": "Every `NavigationLink.fromSectionId` and `NavigationLink.toSectionId` must reference a `se…"
     },
     "srs/records/invariants/invariant-044.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -835,7 +835,7 @@
     "srs/records/invariants/invariant-045.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "A conforming repository must have a `.srs` marker directory and a `manifest.json` at its r\u2026"
+      "matched": "A conforming repository must have a `.srs` marker directory and a `manifest.json` at its r…"
     },
     "srs/records/invariants/invariant-045.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -845,7 +845,7 @@
     "srs/records/invariants/invariant-046.json#normative_statement#em-dash-cap#67bc3f48": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): Every instance file discovered under a reserved inst\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): Every instance file discovered under a reserved inst…"
     },
     "srs/records/invariants/invariant-047.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
@@ -860,7 +860,7 @@
     "srs/records/invariants/invariant-048.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "A `SourceReference` with `sourceType: \"repository-document\"` must have a `sourceId` matchi\u2026"
+      "matched": "A `SourceReference` with `sourceType: \"repository-document\"` must have a `sourceId` matchi…"
     },
     "srs/records/invariants/invariant-048.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -870,12 +870,12 @@
     "srs/records/invariants/invariant-049.json#normative_statement#em-dash-cap#1461c0ef": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): An archive must include every instance discovered by\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): An archive must include every instance discovered by…"
     },
     "srs/records/invariants/invariant-049.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "An archive must include every instance discovered by enumerating the repository's authorit\u2026"
+      "matched": "An archive must include every instance discovered by enumerating the repository's authorit…"
     },
     "srs/records/invariants/invariant-049.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -885,7 +885,7 @@
     "srs/records/invariants/invariant-050.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "When `PackageRef.mode === \"local\"`, the package at the declared path must be `mode: \"bundl\u2026"
+      "matched": "When `PackageRef.mode === \"local\"`, the package at the declared path must be `mode: \"bundl…"
     },
     "srs/records/invariants/invariant-050.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -895,7 +895,7 @@
     "srs/records/invariants/invariant-051.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "An archive that includes a `Relation` containing a `SourceReference` with `sourceType: \"re\u2026"
+      "matched": "An archive that includes a `Relation` containing a `SourceReference` with `sourceType: \"re…"
     },
     "srs/records/invariants/invariant-051.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -910,7 +910,7 @@
     "srs/records/invariants/invariant-052.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Every `SourceDocument` sidecar present under `sourceDocumentsPath` must have a `contentPat\u2026"
+      "matched": "Every `SourceDocument` sidecar present under `sourceDocumentsPath` must have a `contentPat…"
     },
     "srs/records/invariants/invariant-052.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -925,7 +925,7 @@
     "srs/records/invariants/invariant-053.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "A conforming importer must use `repositoryId` as the key to determine whether an incoming \u2026"
+      "matched": "A conforming importer must use `repositoryId` as the key to determine whether an incoming …"
     },
     "srs/records/invariants/invariant-053.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -935,7 +935,7 @@
     "srs/records/invariants/invariant-054.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "When an importer encounters an incoming object whose identity key matches an existing loca\u2026"
+      "matched": "When an importer encounters an incoming object whose identity key matches an existing loca…"
     },
     "srs/records/invariants/invariant-054.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -945,7 +945,7 @@
     "srs/records/invariants/invariant-055.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "A checksum value in `InstanceIndexEntry.checksum`, `SourceDocumentIndexEntry.sidecarChecks\u2026"
+      "matched": "A checksum value in `InstanceIndexEntry.checksum`, `SourceDocumentIndexEntry.sidecarChecks…"
     },
     "srs/records/invariants/invariant-055.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -955,7 +955,7 @@
     "srs/records/invariants/invariant-080.json#normative_statement#em-dash-cap#61005f1a": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): Every id in the root container's rootInstanceIds and\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): Every id in the root container's rootInstanceIds and…"
     },
     "srs/records/invariants/invariant-081.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -980,7 +980,7 @@
     "srs/records/invariants/invariant-084.json#rationale#em-dash-cap#f8c32003": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): Without this invariant a manifest could declare an `\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): Without this invariant a manifest could declare an `…"
     },
     "srs/records/invariants/invariant-084.json#rationale#soft-hedges#d1ffaf02": {
       "issue": "the-greenman/srs#563",
@@ -990,7 +990,7 @@
     "srs/records/invariants/invariant-087.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "`manifest.container.identityInstanceId`, when present, MUST reference a Tier-2 Record of t\u2026"
+      "matched": "`manifest.container.identityInstanceId`, when present, MUST reference a Tier-2 Record of t…"
     },
     "srs/records/invariants/invariant-087.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -1005,7 +1005,7 @@
     "srs/records/invariants/invariant-088.json#normative_statement#em-dash-cap#160ab3cd": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): The `sourceRole` value set \u2014 the closed enum of the \u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): The `sourceRole` value set — the closed enum of the …"
     },
     "srs/records/invariants/invariant-092.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -1015,17 +1015,17 @@
     "srs/records/invariants/invariant-098.json#normative_statement#em-dash-cap#82f30892": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): A Record MUST NOT rest in a lifecycle state that dec\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): A Record MUST NOT rest in a lifecycle state that dec…"
     },
     "srs/records/invariants/invariant-099.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "A fulfillment supplied with a lifecycle transition MUST be applied as one all-or-nothing o\u2026"
+      "matched": "A fulfillment supplied with a lifecycle transition MUST be applied as one all-or-nothing o…"
     },
     "srs/records/invariants/invariant-0e6f7aea.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "`cardinality: \"list\"` array-wraps uniformly, for every `datatype` including `map` and `dep\u2026"
+      "matched": "`cardinality: \"list\"` array-wraps uniformly, for every `datatype` including `map` and `dep…"
     },
     "srs/records/invariants/invariant-100.json#normative_statement#soft-hedges#d1ffaf02": {
       "issue": "the-greenman/srs#563",
@@ -1040,7 +1040,7 @@
     "srs/records/invariants/invariant-20bd523e.json#normative_statement#em-dash-cap#d8f1d37b": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): When `DocumentSection.ordering.memberOrder` is prese\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): When `DocumentSection.ordering.memberOrder` is prese…"
     },
     "srs/records/invariants/invariant-20bd523e.json#rationale#soft-hedges#d1ffaf02": {
       "issue": "the-greenman/srs#563",
@@ -1050,7 +1050,7 @@
     "srs/records/invariants/invariant-2b94ca42.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "`fieldMeta`, when present, MUST be an object whose keys are a subset of the sibling `field\u2026"
+      "matched": "`fieldMeta`, when present, MUST be an object whose keys are a subset of the sibling `field…"
     },
     "srs/records/invariants/invariant-5e89a360.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
@@ -1065,7 +1065,7 @@
     "srs/records/invariants/invariant-7110cc58.json#normative_statement#em-dash-cap#b8c0caef": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): A `tag` predicate with multiple values MUST use AND \u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): A `tag` predicate with multiple values MUST use AND …"
     },
     "srs/records/invariants/invariant-7110cc58.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -1075,42 +1075,42 @@
     "srs/records/invariants/invariant-8b166381.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "A source-document sidecar entry (RFC-038 [R25], amending RFC-017 [R12]; the entry no longe\u2026"
+      "matched": "A source-document sidecar entry (RFC-038 [R25], amending RFC-017 [R12]; the entry no longe…"
     },
     "srs/records/invariants/invariant-93320c14.json#normative_statement#em-dash-cap#bd2d5d39": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): The Text Projection MUST include `tags` array entrie\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): The Text Projection MUST include `tags` array entrie…"
     },
     "srs/records/invariants/invariant-99354119.json#normative_statement#em-dash-cap#0d8d9066": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): Within a Type's effective field set \u2014 its own `field\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): Within a Type's effective field set — its own `field…"
     },
     "srs/records/invariants/invariant-bbed89d6.json#normative_statement#em-dash-cap#7f9ae990": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): A `FieldAssignment` with `required: true` means its \u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): A `FieldAssignment` with `required: true` means its …"
     },
     "srs/records/invariants/invariant-bca2cd6f.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "A Type's projected JSON Schema describes the `fieldValues` object, not the whole Record do\u2026"
+      "matched": "A Type's projected JSON Schema describes the `fieldValues` object, not the whole Record do…"
     },
     "srs/records/invariants/invariant-e0c51df4.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "At most one `attachment_policy` record of the `com.semanticops.base/repo_settings` type MA\u2026"
+      "matched": "At most one `attachment_policy` record of the `com.semanticops.base/repo_settings` type MA…"
     },
     "srs/records/invariants/invariant-e2788042.json#normative_statement#em-dash-cap#f0fbbcc1": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): An implementation that declares `ext:discovery` MUST\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): An implementation that declares `ext:discovery` MUST…"
     },
     "srs/records/invariants/invariant-ed385e02.json#normative_statement#em-dash-cap#168083c7": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): An implementation that declares `ext:discovery` MUST\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): An implementation that declares `ext:discovery` MUST…"
     },
     "srs/records/invariants/invariant-f287f47c.json#rationale#enable#80c8b1a6": {
       "issue": "the-greenman/srs#563",
@@ -1120,7 +1120,7 @@
     "srs/records/invariants/invariant-fc982bf7.json#normative_statement#em-dash-cap#1cb6dec3": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): A `mode: \"reference\"` value MUST resolve to an insta\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): A `mode: \"reference\"` value MUST resolve to an insta…"
     },
     "srs/records/rfc-changes/rfc-004-change-g.json#rationale#soft-hedges#d1ffaf02": {
       "issue": "the-greenman/srs#563",
@@ -1150,7 +1150,7 @@
     "srs/records/rfcs/rfc-014-import-tracking-package-binding.json#content#em-dash-cap#c9613490": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "3 em-dashes in one paragraph (cap 1): **Problems addressed:** (1) `meta.upstreamPackage` i\u2026"
+      "matched": "3 em-dashes in one paragraph (cap 1): **Problems addressed:** (1) `meta.upstreamPackage` i…"
     },
     "srs/records/rfcs/rfc-014-import-tracking-package-binding.json#content#keyword-register#83a91419": {
       "issue": "the-greenman/srs#563",
@@ -1170,7 +1170,7 @@
     "srs/records/rfcs/rfc-016-invariant-record-projection.json#content#em-dash-cap#37c3fb6b": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): **Problems addressed:** (1) Invariant records I-63\u2013I\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): **Problems addressed:** (1) Invariant records I-63–I…"
     },
     "srs/records/rfcs/rfc-016-invariant-record-projection.json#content#soft-hedges#d1ffaf02": {
       "issue": "the-greenman/srs#563",
@@ -1180,7 +1180,7 @@
     "srs/records/rfcs/rfc-036-composite-rendering.json#content#em-dash-cap#4db767b0": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): Restores the rendering-dispatch capability that RFC-\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): Restores the rendering-dispatch capability that RFC-…"
     },
     "srs/records/rfcs/rfc-036-composite-rendering.json#content#soft-hedges#d1ffaf02": {
       "issue": "the-greenman/srs#563",
@@ -1190,7 +1190,7 @@
     "srs/records/rfcs/rfc-037-normative-field-row-rendering-baseline.json#content#em-dash-cap#a14ddede": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): Label and value content is verbatim in the text form\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): Label and value content is verbatim in the text form…"
     },
     "srs/records/rfcs/rfc-037-normative-field-row-rendering-baseline.json#content#keyword-register#5ff18bfd": {
       "issue": "the-greenman/srs#563",
@@ -1205,7 +1205,7 @@
     "srs/records/rfcs/rfc-2918c557.json#content#em-dash-cap#9968722a": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): **Problems addressed:** (1) No way to determine what\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): **Problems addressed:** (1) No way to determine what…"
     },
     "srs/records/rfcs/rfc-2918c557.json#content#keyword-register#20dc9461": {
       "issue": "the-greenman/srs#563",
@@ -1225,132 +1225,22 @@
     "srs/records/rfcs/rfc-804a3c7b.json#content#em-dash-cap#bfc86560": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): Adds two backward-compatible optional fields under `\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): Adds two backward-compatible optional fields under `…"
     },
     "srs/records/rfcs/rfc-efda4896.json#content#em-dash-cap#f92a3651": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "3 em-dashes in one paragraph (cap 1): Defines `ext:slices` \u2014 a normative extension for con\u2026"
-    },
-    "srs/records/sections/06-conversation-layer.json#content#facilitate#639acbef": {
-      "issue": "the-greenman/srs#563",
-      "rule": "facilitate",
-      "matched": "facilitation"
-    },
-    "srs/records/sections/06-conversation-layer.json#content#heading-restatement": {
-      "issue": "the-greenman/srs#563",
-      "rule": "heading-restatement",
-      "matched": "> **Standalone repository note**: The conversation layer is optional infrastructure."
-    },
-    "srs/records/sections/08-5-extension-interactions.json#content#heading-restatement": {
-      "issue": "the-greenman/srs#563",
-      "rule": "heading-restatement",
-      "matched": "Cross-extension interactions are behavioural requirements that apply only when an implemen\u2026"
-    },
-    "srs/records/subsections/01-4-extension-conformance-model.json#content#facilitate#639acbef": {
-      "issue": "the-greenman/srs#563",
-      "rule": "facilitate",
-      "matched": "facilitation"
-    },
-    "srs/records/subsections/01-5-foundational-values-and-development-phase.json#content#word-budget": {
-      "issue": "the-greenman/srs#563",
-      "rule": "word-budget",
-      "matched": "887 words (limit 400)"
-    },
-    "srs/records/subsections/07-1-ext-addressability.json#content#facilitate#639acbef": {
-      "issue": "the-greenman/srs#563",
-      "rule": "facilitate",
-      "matched": "facilitation"
-    },
-    "srs/records/subsections/07-1-ext-addressability.json#content#word-budget": {
-      "issue": "the-greenman/srs#563",
-      "rule": "word-budget",
-      "matched": "460 words (limit 400)"
-    },
-    "srs/records/subsections/07-18-ext-changelog.json#content#soft-hedges#d1ffaf02": {
-      "issue": "the-greenman/srs#563",
-      "rule": "soft-hedges",
-      "matched": "rather"
-    },
-    "srs/records/subsections/07-19-ext-slices.json#content#em-dash-cap#5ac96ec3": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): `ext:slices` defines **container-membership closure \u2026"
-    },
-    "srs/records/subsections/07-19-ext-slices.json#content#keyword-register#00859116": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-19-ext-slices.json#content#keyword-register#17a28b33": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-19-ext-slices.json#content#keyword-register#52ed1628": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-19-ext-slices.json#content#keyword-register#c6c3045c": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
-    "srs/records/subsections/07-19-ext-slices.json#content#word-budget": {
-      "issue": "the-greenman/srs#563",
-      "rule": "word-budget",
-      "matched": "498 words (limit 400)"
-    },
-    "srs/records/subsections/07-3-ext-protocol.json#content#em-dash-cap#d4dd1136": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): **Property names are unprefixed** (`id`, not `protoc\u2026"
-    },
-    "srs/records/subsections/07-3-ext-protocol.json#content#facilitate#639acbef": {
-      "issue": "the-greenman/srs#563",
-      "rule": "facilitate",
-      "matched": "facilitation"
-    },
-    "srs/records/subsections/07-3-ext-protocol.json#content#minimisers#b2c66dfd": {
-      "issue": "the-greenman/srs#563",
-      "rule": "minimisers",
-      "matched": "just"
-    },
-    "srs/records/subsections/07-3-ext-protocol.json#content#word-budget": {
-      "issue": "the-greenman/srs#563",
-      "rule": "word-budget",
-      "matched": "557 words (limit 400)"
-    },
-    "srs/records/subsections/08-5-2-ext-protocol-ext-addressability.json#content#heading-restatement": {
-      "issue": "the-greenman/srs#563",
-      "rule": "heading-restatement",
-      "matched": "**Trigger**: an implementation declares both `ext:protocol` and `ext:addressability`."
-    },
-    "srs/records/subsections/08-5-3-ext-lifecycle-ext-addressability.json#content#heading-restatement": {
-      "issue": "the-greenman/srs#563",
-      "rule": "heading-restatement",
-      "matched": "**Trigger**: an implementation declares both `ext:lifecycle` and `ext:addressability`."
-    },
-    "srs/records/subsections/08-5-3-ext-lifecycle-ext-addressability.json#content#soft-hedges#d1ffaf02": {
-      "issue": "the-greenman/srs#563",
-      "rule": "soft-hedges",
-      "matched": "rather"
-    },
-    "srs/records/subsections/09-6-interoperability-note.json#content#soft-hedges#d1ffaf02": {
-      "issue": "the-greenman/srs#563",
-      "rule": "soft-hedges",
-      "matched": "rather"
+      "matched": "3 em-dashes in one paragraph (cap 1): Defines `ext:slices` — a normative extension for con…"
     },
     "srs/records/tables/t001-edit-in-place-vs-new-record.json#outro#em-dash-cap#62238af2": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "4 em-dashes in one paragraph (cap 1): Cross-check: if a `supersedes` Relation would feel m\u2026"
+      "matched": "4 em-dashes in one paragraph (cap 1): Cross-check: if a `supersedes` Relation would feel m…"
     },
     "srs/records/tables/t009-sourceref-graduation-mapping.json#outro#em-dash-cap#30a5f7fc": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): Conversion semantics (RFC-023 R6): the originating r\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): Conversion semantics (RFC-023 R6): the originating r…"
     },
     "srs/records/tier-2/design-note-d9688199.json#content#minimisers#b2c66dfd": {
       "issue": "the-greenman/srs#563",
@@ -1365,27 +1255,27 @@
     "srs/records/tier-2/generated-type-reference-005ba0ad.json#content#em-dash-cap#3ba8a646": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `lifecycleStates` | string[] | no | \u2014 | core | ext\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `lifecycleStates` | string[] | no | — | core | ext…"
     },
     "srs/records/tier-2/generated-type-reference-005ba0ad.json#content#em-dash-cap#49578fc3": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "6 em-dashes in one paragraph (cap 1): ```typescript discovery-query { typeId?: string // S\u2026"
+      "matched": "6 em-dashes in one paragraph (cap 1): ```typescript discovery-query { typeId?: string // S…"
     },
     "srs/records/tier-2/generated-type-reference-005ba0ad.json#content#em-dash-cap#4e190c08": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `contentMatch` | string | no | \u2014 | core | ext:disc\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `contentMatch` | string | no | — | core | ext:disc…"
     },
     "srs/records/tier-2/generated-type-reference-005ba0ad.json#content#em-dash-cap#7be4b765": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `excludeLifecycleStates` | string[] | no | \u2014 | cor\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `excludeLifecycleStates` | string[] | no | — | cor…"
     },
     "srs/records/tier-2/generated-type-reference-005ba0ad.json#content#em-dash-cap#e8c05fa2": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `lifecycleState` | string | no | \u2014 | core | ext:li\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `lifecycleState` | string | no | — | core | ext:li…"
     },
     "srs/records/tier-2/generated-type-reference-005ba0ad.json#content#word-budget": {
       "issue": "the-greenman/srs#563",
@@ -1395,17 +1285,17 @@
     "srs/records/tier-2/generated-type-reference-07c8a806.json#content#em-dash-cap#41572d13": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): ```typescript record { instanceId: string // Stable \u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): ```typescript record { instanceId: string // Stable …"
     },
     "srs/records/tier-2/generated-type-reference-07c8a806.json#content#em-dash-cap#e8c05fa2": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `lifecycleState` | string | no | \u2014 | core | ext:li\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `lifecycleState` | string | no | — | core | ext:li…"
     },
     "srs/records/tier-2/generated-type-reference-07c8a806.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Generated from the resolved effective `record` Type \u2014 regenerate with `node scripts/gen-ty\u2026"
+      "matched": "Generated from the resolved effective `record` Type — regenerate with `node scripts/gen-ty…"
     },
     "srs/records/tier-2/generated-type-reference-07c8a806.json#content#word-budget": {
       "issue": "the-greenman/srs#563",
@@ -1415,27 +1305,27 @@
     "srs/records/tier-2/generated-type-reference-12df7f22.json#content#em-dash-cap#17a09f19": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "3 em-dashes in one paragraph (cap 1): ```typescript blueprint { id: string // Globally uni\u2026"
+      "matched": "3 em-dashes in one paragraph (cap 1): ```typescript blueprint { id: string // Globally uni…"
     },
     "srs/records/tier-2/generated-type-reference-12df7f22.json#content#em-dash-cap#57573411": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `structure` | ref \u2192 `relation-spec` (inline)[] | n\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `structure` | ref → `relation-spec` (inline)[] | n…"
     },
     "srs/records/tier-2/generated-type-reference-12df7f22.json#content#em-dash-cap#8975d2e9": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `requiredTypes` | ref \u2192 `exact-type-ref` (inline)[\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `requiredTypes` | ref → `exact-type-ref` (inline)[…"
     },
     "srs/records/tier-2/generated-type-reference-12df7f22.json#content#em-dash-cap#b38c54ff": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `rootTypes` | ref \u2192 `exact-type-ref` (inline)[] | \u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `rootTypes` | ref → `exact-type-ref` (inline)[] | …"
     },
     "srs/records/tier-2/generated-type-reference-12df7f22.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Generated from the resolved effective `blueprint` Type \u2014 regenerate with `node scripts/gen\u2026"
+      "matched": "Generated from the resolved effective `blueprint` Type — regenerate with `node scripts/gen…"
     },
     "srs/records/tier-2/generated-type-reference-1af209f4.json#content#keyword-register#78428eb1": {
       "issue": "the-greenman/srs#563",
@@ -1450,7 +1340,7 @@
     "srs/records/tier-2/generated-type-reference-2d633fa8.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Generated from the resolved effective `term` Type \u2014 regenerate with `node scripts/gen-type\u2026"
+      "matched": "Generated from the resolved effective `term` Type — regenerate with `node scripts/gen-type…"
     },
     "srs/records/tier-2/generated-type-reference-2d633fa8.json#content#word-budget": {
       "issue": "the-greenman/srs#563",
@@ -1460,37 +1350,37 @@
     "srs/records/tier-2/generated-type-reference-3bffe9cf.json#content#em-dash-cap#22fa40fe": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `slice` | ref \u2192 `slice` (inline) | no | \u2014 | core |\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `slice` | ref → `slice` (inline) | no | — | core |…"
     },
     "srs/records/tier-2/generated-type-reference-3bffe9cf.json#content#em-dash-cap#4bd7e6ee": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `upstreamPackage` | ref \u2192 `upstream-package` (inli\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `upstreamPackage` | ref → `upstream-package` (inli…"
     },
     "srs/records/tier-2/generated-type-reference-3bffe9cf.json#content#em-dash-cap#5bf1e7f6": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "6 em-dashes in one paragraph (cap 1): ```typescript manifest { srsVersion: string // SRS s\u2026"
+      "matched": "6 em-dashes in one paragraph (cap 1): ```typescript manifest { srsVersion: string // SRS s…"
     },
     "srs/records/tier-2/generated-type-reference-3bffe9cf.json#content#em-dash-cap#bdee9f80": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `renderedPresentations` | ref \u2192 `rendered-presenta\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `renderedPresentations` | ref → `rendered-presenta…"
     },
     "srs/records/tier-2/generated-type-reference-3bffe9cf.json#content#em-dash-cap#e2ca938e": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `container` | ref \u2192 `container` (inline) | yes | \u2014\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `container` | ref → `container` (inline) | yes | —…"
     },
     "srs/records/tier-2/generated-type-reference-3bffe9cf.json#content#em-dash-cap#eae8c2f6": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `aiGuidance` | ref \u2192 `repository-ai-guidance` (inl\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `aiGuidance` | ref → `repository-ai-guidance` (inl…"
     },
     "srs/records/tier-2/generated-type-reference-3bffe9cf.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Generated from the resolved effective `manifest` Type \u2014 regenerate with `node scripts/gen-\u2026"
+      "matched": "Generated from the resolved effective `manifest` Type — regenerate with `node scripts/gen-…"
     },
     "srs/records/tier-2/generated-type-reference-3bffe9cf.json#content#word-budget": {
       "issue": "the-greenman/srs#563",
@@ -1500,7 +1390,7 @@
     "srs/records/tier-2/generated-type-reference-428efcdf.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Generated from the resolved effective `lifecycle` Type \u2014 regenerate with `node scripts/gen\u2026"
+      "matched": "Generated from the resolved effective `lifecycle` Type — regenerate with `node scripts/gen…"
     },
     "srs/records/tier-2/generated-type-reference-428efcdf.json#content#word-budget": {
       "issue": "the-greenman/srs#563",
@@ -1510,47 +1400,62 @@
     "srs/records/tier-2/generated-type-reference-4d411f1b.json#content#em-dash-cap#38662c0b": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `validationRules` | ref \u2192 `cross-field-rule` (inli\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `validationRules` | ref → `cross-field-rule` (inli…"
+    },
+    "srs/records/tier-2/generated-type-reference-4d411f1b.json#content#em-dash-cap#4271ceda": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "7 em-dashes in one paragraph (cap 1): ```typescript type { id: string // Globally unique, …"
     },
     "srs/records/tier-2/generated-type-reference-4d411f1b.json#content#em-dash-cap#5afe11cc": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `lifecycle` | ref \u2192 `type-lifecycle` (inline) | no\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `lifecycle` | ref → `type-lifecycle` (inline) | no…"
     },
     "srs/records/tier-2/generated-type-reference-4d411f1b.json#content#em-dash-cap#7081d256": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `fieldOrder` | ref \u2192 `field` (id)[] | no | \u2014 | ext\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `fieldOrder` | ref → `field` (id)[] | no | — | ext…"
     },
     "srs/records/tier-2/generated-type-reference-4d411f1b.json#content#em-dash-cap#d5028952": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `extendsTypeId` | ref \u2192 `type` (id) | no | \u2014 | ext\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `extendsTypeId` | ref → `type` (id) | no | — | ext…"
     },
     "srs/records/tier-2/generated-type-reference-4d411f1b.json#content#em-dash-cap#d5ff0344": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `fieldAssignmentOverrides` | ref \u2192 `field-assignme\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `fieldAssignmentOverrides` | ref → `field-assignme…"
     },
     "srs/records/tier-2/generated-type-reference-4d411f1b.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Generated from the resolved effective `type` Type \u2014 regenerate with `node scripts/gen-type\u2026"
+      "matched": "Generated from the resolved effective `type` Type — regenerate with `node scripts/gen-type…"
+    },
+    "srs/records/tier-2/generated-type-reference-4d411f1b.json#content#keyword-register#b6ed90f1": {
+      "issue": "the-greenman/srs#563",
+      "rule": "keyword-register",
+      "matched": "MUST"
+    },
+    "srs/records/tier-2/generated-type-reference-4d411f1b.json#content#keyword-register#c45beb00": {
+      "issue": "the-greenman/srs#563",
+      "rule": "keyword-register",
+      "matched": "MUST"
     },
     "srs/records/tier-2/generated-type-reference-4d411f1b.json#content#word-budget": {
       "issue": "the-greenman/srs#563",
       "rule": "word-budget",
-      "matched": "1020 words (limit 400)"
+      "matched": "1142 words (limit 400)"
     },
     "srs/records/tier-2/generated-type-reference-599dc25d.json#content#em-dash-cap#774bdce9": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `dependsOn` | string[] | no | \u2014 | core | stageId v\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `dependsOn` | string[] | no | — | core | stageId v…"
     },
     "srs/records/tier-2/generated-type-reference-599dc25d.json#content#em-dash-cap#9ae0cd13": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "3 em-dashes in one paragraph (cap 1): ```typescript protocol-stage { stageId: string // St\u2026"
+      "matched": "3 em-dashes in one paragraph (cap 1): ```typescript protocol-stage { stageId: string // St…"
     },
     "srs/records/tier-2/generated-type-reference-599dc25d.json#content#minimisers#b2c66dfd": {
       "issue": "the-greenman/srs#563",
@@ -1565,22 +1470,22 @@
     "srs/records/tier-2/generated-type-reference-78fecb62.json#content#em-dash-cap#009b5b0c": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): ```typescript composition { id: string // Globally u\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): ```typescript composition { id: string // Globally u…"
     },
     "srs/records/tier-2/generated-type-reference-78fecb62.json#content#em-dash-cap#78497af8": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `compositeRenderers` | ref \u2192 `composite-renderer-d\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `compositeRenderers` | ref → `composite-renderer-d…"
     },
     "srs/records/tier-2/generated-type-reference-78fecb62.json#content#em-dash-cap#b069fcba": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `rootTypeRefs` | ref \u2192 `exact-type-ref` (inline)[]\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `rootTypeRefs` | ref → `exact-type-ref` (inline)[]…"
     },
     "srs/records/tier-2/generated-type-reference-78fecb62.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Generated from the resolved effective `composition` Type \u2014 regenerate with `node scripts/g\u2026"
+      "matched": "Generated from the resolved effective `composition` Type — regenerate with `node scripts/g…"
     },
     "srs/records/tier-2/generated-type-reference-78fecb62.json#content#word-budget": {
       "issue": "the-greenman/srs#563",
@@ -1590,12 +1495,12 @@
     "srs/records/tier-2/generated-type-reference-86652277.json#content#em-dash-cap#084ed5e2": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `excerpt` | ref \u2192 `source-excerpt` (inline) | no |\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `excerpt` | ref → `source-excerpt` (inline) | no |…"
     },
     "srs/records/tier-2/generated-type-reference-86652277.json#content#em-dash-cap#7eb89493": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): ```typescript source-document-meta { documentId: str\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): ```typescript source-document-meta { documentId: str…"
     },
     "srs/records/tier-2/generated-type-reference-86652277.json#content#word-budget": {
       "issue": "the-greenman/srs#563",
@@ -1605,12 +1510,12 @@
     "srs/records/tier-2/generated-type-reference-a5194299.json#content#em-dash-cap#d57633f1": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `promotionWindow` | ref \u2192 `promotion-window` (inli\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `promotionWindow` | ref → `promotion-window` (inli…"
     },
     "srs/records/tier-2/generated-type-reference-a5194299.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Generated from the resolved effective `vocabulary` Type \u2014 regenerate with `node scripts/ge\u2026"
+      "matched": "Generated from the resolved effective `vocabulary` Type — regenerate with `node scripts/ge…"
     },
     "srs/records/tier-2/generated-type-reference-a5194299.json#content#keyword-register#0d840d95": {
       "issue": "the-greenman/srs#563",
@@ -1630,12 +1535,12 @@
     "srs/records/tier-2/generated-type-reference-b328e1f2.json#content#em-dash-cap#5a25282a": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `compositeRenderer` | ref \u2192 `composite-renderer-bi\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `compositeRenderer` | ref → `composite-renderer-bi…"
     },
     "srs/records/tier-2/generated-type-reference-b328e1f2.json#content#em-dash-cap#a5f51485": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): ```typescript field-view { fieldId: ref \u2192 `field` (i\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): ```typescript field-view { fieldId: ref → `field` (i…"
     },
     "srs/records/tier-2/generated-type-reference-b328e1f2.json#content#word-budget": {
       "issue": "the-greenman/srs#563",
@@ -1665,72 +1570,72 @@
     "srs/records/tier-2/generated-type-reference-bed3f92c.json#content#em-dash-cap#f55b8b03": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `data` | map<string, open> | yes | \u2014 | core | Flat\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `data` | map<string, open> | yes | — | core | Flat…"
     },
     "srs/records/tier-2/generated-type-reference-cb971023.json#content#em-dash-cap#1260e8c8": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `relationType` | string | yes | \u2014 | core | The Rel\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `relationType` | string | yes | — | core | The Rel…"
     },
     "srs/records/tier-2/generated-type-reference-cb971023.json#content#em-dash-cap#bafb32f6": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `sourceType` | ref \u2192 `exact-type-ref` (inline) | y\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `sourceType` | ref → `exact-type-ref` (inline) | y…"
     },
     "srs/records/tier-2/generated-type-reference-cb971023.json#content#em-dash-cap#f64a92ae": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `targetType` | ref \u2192 `exact-type-ref` (inline) | y\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `targetType` | ref → `exact-type-ref` (inline) | y…"
     },
     "srs/records/tier-2/generated-type-reference-cb971023.json#content#em-dash-cap#fc947e53": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "4 em-dashes in one paragraph (cap 1): ```typescript relation-spec { relationType: string /\u2026"
+      "matched": "4 em-dashes in one paragraph (cap 1): ```typescript relation-spec { relationType: string /…"
     },
     "srs/records/tier-2/generated-type-reference-d03a6f95.json#content#em-dash-cap#81d48a09": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): ```typescript container { containerId: string // Sta\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): ```typescript container { containerId: string // Sta…"
     },
     "srs/records/tier-2/generated-type-reference-d03a6f95.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Generated from the resolved effective `container` Type \u2014 regenerate with `node scripts/gen\u2026"
+      "matched": "Generated from the resolved effective `container` Type — regenerate with `node scripts/gen…"
     },
     "srs/records/tier-2/generated-type-reference-d6670c40.json#content#em-dash-cap#0088ab9c": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "5 em-dashes in one paragraph (cap 1): ```typescript theme { id: string // Globally unique,\u2026"
+      "matched": "5 em-dashes in one paragraph (cap 1): ```typescript theme { id: string // Globally unique,…"
     },
     "srs/records/tier-2/generated-type-reference-d6670c40.json#content#em-dash-cap#02acc57d": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `pageTemplates` | ref \u2192 `page-templates` (inline) \u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `pageTemplates` | ref → `page-templates` (inline) …"
     },
     "srs/records/tier-2/generated-type-reference-d6670c40.json#content#em-dash-cap#2c65b724": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `stylesheet` | ref \u2192 `stylesheet-declaration` (inl\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `stylesheet` | ref → `stylesheet-declaration` (inl…"
     },
     "srs/records/tier-2/generated-type-reference-d6670c40.json#content#em-dash-cap#7dcfdd05": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `assets` | map<string, ref> | no | \u2014 | core | ext:\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `assets` | map<string, ref> | no | — | core | ext:…"
     },
     "srs/records/tier-2/generated-type-reference-d6670c40.json#content#em-dash-cap#e9b565a8": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `elementTemplates` | ref \u2192 `element-templates` (in\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `elementTemplates` | ref → `element-templates` (in…"
     },
     "srs/records/tier-2/generated-type-reference-d6670c40.json#content#em-dash-cap#ed5d876d": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `typography` | ref \u2192 `typography-hints` (inline) |\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `typography` | ref → `typography-hints` (inline) |…"
     },
     "srs/records/tier-2/generated-type-reference-d6670c40.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Generated from the resolved effective `theme` Type \u2014 regenerate with `node scripts/gen-typ\u2026"
+      "matched": "Generated from the resolved effective `theme` Type — regenerate with `node scripts/gen-typ…"
     },
     "srs/records/tier-2/generated-type-reference-d6670c40.json#content#keyword-register#22dc4375": {
       "issue": "the-greenman/srs#563",
@@ -1750,12 +1655,12 @@
     "srs/records/tier-2/generated-type-reference-d73ab294.json#content#em-dash-cap#c53b773f": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `aiGuidance` | ref \u2192 `view-ai-guidance` (inline) |\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `aiGuidance` | ref → `view-ai-guidance` (inline) |…"
     },
     "srs/records/tier-2/generated-type-reference-d73ab294.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Generated from the resolved effective `view` Type \u2014 regenerate with `node scripts/gen-type\u2026"
+      "matched": "Generated from the resolved effective `view` Type — regenerate with `node scripts/gen-type…"
     },
     "srs/records/tier-2/generated-type-reference-d73ab294.json#content#word-budget": {
       "issue": "the-greenman/srs#563",
@@ -1765,7 +1670,7 @@
     "srs/records/tier-2/generated-type-reference-d9dd6beb.json#content#em-dash-cap#515e9b1f": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `inverseType` | string | no | \u2014 | core | Key of th\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `inverseType` | string | no | — | core | Key of th…"
     },
     "srs/records/tier-2/generated-type-reference-d9dd6beb.json#content#word-budget": {
       "issue": "the-greenman/srs#563",
@@ -1775,17 +1680,17 @@
     "srs/records/tier-2/generated-type-reference-e0ab6b5b.json#content#em-dash-cap#1260e8c8": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `relationType` | string | yes | \u2014 | core | The Rel\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): | `relationType` | string | yes | — | core | The Rel…"
     },
     "srs/records/tier-2/generated-type-reference-e0ab6b5b.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Generated from the resolved effective `relation` Type \u2014 regenerate with `node scripts/gen-\u2026"
+      "matched": "Generated from the resolved effective `relation` Type — regenerate with `node scripts/gen-…"
     },
     "srs/records/tier-2/generated-type-reference-e4d27410.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Generated from the resolved effective `field` Type \u2014 regenerate with `node scripts/gen-typ\u2026"
+      "matched": "Generated from the resolved effective `field` Type — regenerate with `node scripts/gen-typ…"
     },
     "srs/records/tier-2/generated-type-reference-e4d27410.json#content#praise-adjectives#7baa68f2": {
       "issue": "the-greenman/srs#563",
@@ -1800,22 +1705,32 @@
     "srs/records/tier-2/generated-type-reference-fb31a682.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Generated from the resolved effective `protocol` Type \u2014 regenerate with `node scripts/gen-\u2026"
+      "matched": "Generated from the resolved effective `protocol` Type — regenerate with `node scripts/gen-…"
     },
     "srs/records/tier-2/generated-type-reference-fef34bae.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Generated from the resolved effective `note` Type \u2014 regenerate with `node scripts/gen-type\u2026"
+      "matched": "Generated from the resolved effective `note` Type — regenerate with `node scripts/gen-type…"
+    },
+    "srs/records/tier-2/mechanism-0014fa0f.json#content#em-dash-cap#70171440": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): | `spec.id` | `string (uuid)` | yes | The `container…"
+    },
+    "srs/records/tier-2/mechanism-0014fa0f.json#content#em-dash-cap#7b5e698e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): | `externalRelationRefs` | `array` | no | Relations …"
     },
     "srs/records/tier-2/mechanism-02103785.json#content#em-dash-cap#757c6a0b": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference below for `Note`'s curre\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference below for `Note`'s curre…"
     },
     "srs/records/tier-2/mechanism-02103785.json#content#em-dash-cap#c3a2c5cd": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): `tags` are free-form labels that allow Notes to be g\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): `tags` are free-form labels that allow Notes to be g…"
     },
     "srs/records/tier-2/mechanism-02103785.json#content#wordy-the-fact-that#2e44b20e": {
       "issue": "the-greenman/srs#563",
@@ -1825,7 +1740,7 @@
     "srs/records/tier-2/mechanism-027b1fa3.json#content#em-dash-cap#2de21856": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): The `.srsj` extension is conventional; an implementa\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): The `.srsj` extension is conventional; an implementa…"
     },
     "srs/records/tier-2/mechanism-027b1fa3.json#content#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -1840,17 +1755,22 @@
     "srs/records/tier-2/mechanism-02ca457f.json#content#em-dash-cap#d22dbfeb": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference below for `RelationSpec`\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference below for `RelationSpec`…"
+    },
+    "srs/records/tier-2/mechanism-02e54c05.json#content#lowercase-2119#df0465d9": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must not"
     },
     "srs/records/tier-2/mechanism-0ae52aea.json#content#em-dash-cap#35cb2945": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference below for `Record`'s cur\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference below for `Record`'s cur…"
     },
     "srs/records/tier-2/mechanism-0ae52aea.json#content#em-dash-cap#ba763abe": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): **Semantic meaning must not be silently rewritten.**\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): **Semantic meaning must not be silently rewritten.**…"
     },
     "srs/records/tier-2/mechanism-0ae52aea.json#content#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -1870,7 +1790,7 @@
     "srs/records/tier-2/mechanism-0d79f11c.json#content#em-dash-cap#0f04785d": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **[T-8]** For `\"html\"` and `\"pdf\"` output, implement\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): **[T-8]** For `\"html\"` and `\"pdf\"` output, implement…"
     },
     "srs/records/tier-2/mechanism-0d79f11c.json#content#soft-hedges#d1ffaf02": {
       "issue": "the-greenman/srs#563",
@@ -1885,42 +1805,77 @@
     "srs/records/tier-2/mechanism-0d8ef0a1.json#content#em-dash-cap#36d6d4e4": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference below for `Blueprint`'s \u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference below for `Blueprint`'s …"
     },
     "srs/records/tier-2/mechanism-0d8ef0a1.json#content#em-dash-cap#f73afa80": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): The definition of a complete document type \u2014 which T\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): The definition of a complete document type — which T…"
     },
     "srs/records/tier-2/mechanism-1182c712.json#content#lowercase-2119#df0465d9": {
       "issue": "the-greenman/srs#563",
       "rule": "lowercase-2119",
       "matched": "must not"
     },
+    "srs/records/tier-2/mechanism-124d11e4.json#content#em-dash-cap#4f3c3278": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): A container slice carries the records reachable from…"
+    },
     "srs/records/tier-2/mechanism-14edeb69.json#content#em-dash-cap#3296c8ed": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): A record's **resolved type** for both fields is the \u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): A record's **resolved type** for both fields is the …"
     },
     "srs/records/tier-2/mechanism-14edeb69.json#content#em-dash-cap#a1fe4cc4": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): - **`typeFilter`** (on the `container-subset` source\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): - **`typeFilter`** (on the `container-subset` source…"
     },
     "srs/records/tier-2/mechanism-14edeb69.json#content#em-dash-cap#fbab0348": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): A `container-subset` section can mix Record Types \u2014 \u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): A `container-subset` section can mix Record Types — …"
+    },
+    "srs/records/tier-2/mechanism-16667c90.json#content#lowercase-2119#df0465d9": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must not"
     },
     "srs/records/tier-2/mechanism-173f5b74.json#content#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
       "rule": "lowercase-2119",
       "matched": "must"
     },
+    "srs/records/tier-2/mechanism-17f12134.json#content#em-dash-cap#d55fbf0f": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): **`order` vs `dependsOn`:** `order` is the declared …"
+    },
+    "srs/records/tier-2/mechanism-17f12134.json#content#em-dash-cap#e4efeb9d": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): A named stage in a Protocol. Stages have epistemic d…"
+    },
+    "srs/records/tier-2/mechanism-17f12134.json#content#facilitate#639acbef": {
+      "issue": "the-greenman/srs#563",
+      "rule": "facilitate",
+      "matched": "facilitation"
+    },
+    "srs/records/tier-2/mechanism-17f12134.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-17f12134.json#content#minimisers#b2c66dfd": {
+      "issue": "the-greenman/srs#563",
+      "rule": "minimisers",
+      "matched": "just"
+    },
     "srs/records/tier-2/mechanism-18b7d630.json#content#em-dash-cap#f76ee998": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference below for `SourceReferen\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference below for `SourceReferen…"
     },
     "srs/records/tier-2/mechanism-18b7d630.json#content#hedges#8ed42f97": {
       "issue": "the-greenman/srs#563",
@@ -1940,7 +1895,7 @@
     "srs/records/tier-2/mechanism-1c810dc2.json#content#em-dash-cap#50df7096": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): A composite-range Field that resolves to no renderer\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): A composite-range Field that resolves to no renderer…"
     },
     "srs/records/tier-2/mechanism-1c810dc2.json#content#soft-hedges#d1ffaf02": {
       "issue": "the-greenman/srs#563",
@@ -1950,22 +1905,22 @@
     "srs/records/tier-2/mechanism-249c1928.json#content#em-dash-cap#4cd3eaad": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): The atomic reusable semantic unit. Fields are define\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): The atomic reusable semantic unit. Fields are define…"
     },
     "srs/records/tier-2/mechanism-249c1928.json#content#em-dash-cap#ae7a2c93": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference immediately below for `F\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference immediately below for `F…"
     },
     "srs/records/tier-2/mechanism-276576a4.json#content#em-dash-cap#c844b4fb": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference below for `Vocabulary`'s\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference below for `Vocabulary`'s…"
     },
     "srs/records/tier-2/mechanism-27788615.json#content#em-dash-cap#a01d34f6": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **Relations collection format**: The relations file \u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): **Relations collection format**: The relations file …"
     },
     "srs/records/tier-2/mechanism-27788615.json#content#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -1980,32 +1935,37 @@
     "srs/records/tier-2/mechanism-2793efa7.json#content#em-dash-cap#179cbad7": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **[R8]** *(Revision 4.)* A `RecordPropertyView` row \u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): **[R8]** *(Revision 4.)* A `RecordPropertyView` row …"
     },
     "srs/records/tier-2/mechanism-2793efa7.json#content#em-dash-cap#e46a306d": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): **[R5]** The `RecordPropertyView.property` enum in `\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): **[R5]** The `RecordPropertyView.property` enum in `…"
+    },
+    "srs/records/tier-2/mechanism-2cc1be6f.json#content#em-dash-cap#5ac96ec3": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "2 em-dashes in one paragraph (cap 0): `ext:slices` defines **container-membership closure …"
     },
     "srs/records/tier-2/mechanism-30a555c0.json#content#em-dash-cap#9014db09": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): An installable, referenceable state machine \u2014 a clos\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): An installable, referenceable state machine — a clos…"
     },
     "srs/records/tier-2/mechanism-3b65c3dd.json#content#em-dash-cap#fa1ebc9c": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): SRS supports two semantic maturity tiers. Tier numbe\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): SRS supports two semantic maturity tiers. Tier numbe…"
     },
     "srs/records/tier-2/mechanism-3f889a7c.json#content#em-dash-cap#45cdd6fb": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): 1. Type framing (`Type.aiGuidance.extraction`) \u2014 est\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): 1. Type framing (`Type.aiGuidance.extraction`) — est…"
     },
     "srs/records/tier-2/mechanism-3f889a7c.json#content#em-dash-cap#91403302": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): 2. View framing (`View.aiGuidance.extraction`, if `e\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): 2. View framing (`View.aiGuidance.extraction`, if `e…"
     },
     "srs/records/tier-2/mechanism-3f889a7c.json#content#future-tense#e41c758d": {
       "issue": "the-greenman/srs#563",
@@ -2015,7 +1975,7 @@
     "srs/records/tier-2/mechanism-4177d637.json#content#em-dash-cap#4296d6df": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): SRS defines four controlled vocabularies \u2014 sets of s\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): SRS defines four controlled vocabularies — sets of s…"
     },
     "srs/records/tier-2/mechanism-4177d637.json#content#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -2025,32 +1985,32 @@
     "srs/records/tier-2/mechanism-44f70a2d.json#content#em-dash-cap#9cbc2a5a": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): When a repository is initialised from a published SR\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): When a repository is initialised from a published SR…"
     },
     "srs/records/tier-2/mechanism-468742b2.json#content#em-dash-cap#17d0a5cc": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): | Document wrapper | `srs-document` | \u2014 |"
+      "matched": "1 em-dashes in one paragraph (cap 0): | Document wrapper | `srs-document` | — |"
     },
     "srs/records/tier-2/mechanism-468742b2.json#content#em-dash-cap#5a2feca9": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): | Field row label | `srs-field-label` (+ compatibili\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): | Field row label | `srs-field-label` (+ compatibili…"
     },
     "srs/records/tier-2/mechanism-468742b2.json#content#em-dash-cap#d1124438": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): | Section wrapper | `srs-section`, `srs-section-{sec\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): | Section wrapper | `srs-section`, `srs-section-{sec…"
     },
     "srs/records/tier-2/mechanism-4b4ef7db.json#content#em-dash-cap#17372b35": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): A lightweight grouping boundary over a collection of\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): A lightweight grouping boundary over a collection of…"
     },
     "srs/records/tier-2/mechanism-4b4ef7db.json#content#em-dash-cap#9ee814b6": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference below for `Container`'s \u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference below for `Container`'s …"
     },
     "srs/records/tier-2/mechanism-4b4ef7db.json#content#lowercase-2119#df0465d9": {
       "issue": "the-greenman/srs#563",
@@ -2065,37 +2025,67 @@
     "srs/records/tier-2/mechanism-511d4a2b.json#content#em-dash-cap#2a3b4e9b": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): See the generated reference immediately below for `T\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): See the generated reference immediately below for `T…"
     },
     "srs/records/tier-2/mechanism-56554e2c.json#content#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
       "rule": "lowercase-2119",
       "matched": "must"
     },
+    "srs/records/tier-2/mechanism-63564240.json#content#facilitate#639acbef": {
+      "issue": "the-greenman/srs#563",
+      "rule": "facilitate",
+      "matched": "facilitation"
+    },
     "srs/records/tier-2/mechanism-65537791.json#content#em-dash-cap#f09faabf": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): Templates that wrap auto-rendered content at each st\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): Templates that wrap auto-rendered content at each st…"
     },
-    "srs/records/tier-2/mechanism-6e22219b.json#content#em-dash-cap#5a39c5f8": {
+    "srs/records/tier-2/mechanism-6c75ed59.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-6f93d128.json#content#em-dash-cap#3ce0a498": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): Names one field, from the Type's effective field set\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): 5. Related Records via Relations — structural contex…"
     },
-    "srs/records/tier-2/mechanism-6e22219b.json#content#em-dash-cap#acf59c5f": {
+    "srs/records/tier-2/mechanism-6f93d128.json#content#em-dash-cap#5b36eff5": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): **Interaction with `DocumentSection.titleFieldId` (`\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): **Note (2026-08-21, `rfc-decision-2a1e1590`)**: the …"
     },
-    "srs/records/tier-2/mechanism-6e22219b.json#content#em-dash-cap#d8cc3cc1": {
+    "srs/records/tier-2/mechanism-6f93d128.json#content#em-dash-cap#77152cb0": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **Inheritance is cascading, unlike `fieldOrder`.** T\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): 4. Chunks tagged to the parent Record — broader sess…"
+    },
+    "srs/records/tier-2/mechanism-6f93d128.json#content#em-dash-cap#944a3cd4": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): 2. Current value — what has already been established"
+    },
+    "srs/records/tier-2/mechanism-6f93d128.json#content#em-dash-cap#96ee77bf": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): 3. Chunks tagged to this Field via AttentionState — …"
+    },
+    "srs/records/tier-2/mechanism-6f93d128.json#content#em-dash-cap#bab4875c": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): 1. Type and Field `aiGuidance` — what this field cap…"
+    },
+    "srs/records/tier-2/mechanism-6f93d128.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
     },
     "srs/records/tier-2/mechanism-7041b3fb.json#content#em-dash-cap#aca0089c": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): Defines the **SRS Live Repository Format**: a normat\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): Defines the **SRS Live Repository Format**: a normat…"
     },
     "srs/records/tier-2/mechanism-7041b3fb.json#content#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -2105,7 +2095,7 @@
     "srs/records/tier-2/mechanism-71458b11.json#content#em-dash-cap#cbe59dbe": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): `ext:lifecycle` is fully integrated with the vocabul\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): `ext:lifecycle` is fully integrated with the vocabul…"
     },
     "srs/records/tier-2/mechanism-72cb6238.json#content#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -2125,17 +2115,17 @@
     "srs/records/tier-2/mechanism-7b7a7bab.json#content#em-dash-cap#1d08674e": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **[CR-036-9]** A role Field satisfies the renderer's\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): **[CR-036-9]** A role Field satisfies the renderer's…"
     },
     "srs/records/tier-2/mechanism-7b7a7bab.json#content#em-dash-cap#2c7c4b21": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **[CR-036-4]** Composite rendering applies to Tier 2\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): **[CR-036-4]** Composite rendering applies to Tier 2…"
     },
     "srs/records/tier-2/mechanism-7b7a7bab.json#content#em-dash-cap#5eb4eeea": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **[CR-036-6]** For a given rendered Record and compo\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): **[CR-036-6]** For a given rendered Record and compo…"
     },
     "srs/records/tier-2/mechanism-7b7a7bab.json#content#hedges#f885b8a1": {
       "issue": "the-greenman/srs#563",
@@ -2170,37 +2160,47 @@
     "srs/records/tier-2/mechanism-80a322d7.json#content#em-dash-cap#0c5e91d3": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): 3. Alias-merge \u2014 a surviving Term absorbs another: a\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): 3. Alias-merge — a surviving Term absorbs another: a…"
     },
     "srs/records/tier-2/mechanism-80a322d7.json#content#em-dash-cap#0cc1b58d": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): 5. Optional close \u2014 promote `mode: open \u2192 closed` (V\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): 5. Optional close — promote `mode: open → closed` (V…"
     },
     "srs/records/tier-2/mechanism-80a322d7.json#content#em-dash-cap#4374431d": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): For an open vocabulary, the authoritative set of val\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): For an open vocabulary, the authoritative set of val…"
     },
     "srs/records/tier-2/mechanism-80a322d7.json#content#em-dash-cap#68dcb358": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): 2. Curate \u2192 `Term` \u2014 non-destructive; instance carri\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): 2. Curate → `Term` — non-destructive; instance carri…"
     },
     "srs/records/tier-2/mechanism-80a322d7.json#content#em-dash-cap#7216d5d8": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): 4. Optional normalize \u2014 opt-in operation that rewrit\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): 4. Optional normalize — opt-in operation that rewrit…"
     },
     "srs/records/tier-2/mechanism-80a322d7.json#content#em-dash-cap#c39c1586": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): 1. Free string \u2014 exists, undefined, valid."
+      "matched": "1 em-dashes in one paragraph (cap 0): 1. Free string — exists, undefined, valid."
     },
     "srs/records/tier-2/mechanism-8115a03e.json#content#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
       "rule": "lowercase-2119",
       "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-86ec2de9.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-86ec2de9.json#content#lowercase-2119#df0465d9": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must not"
     },
     "srs/records/tier-2/mechanism-8948c35e.json#content#hedges#f885b8a1": {
       "issue": "the-greenman/srs#563",
@@ -2215,52 +2215,57 @@
     "srs/records/tier-2/mechanism-9a04732c.json#content#em-dash-cap#1ebd81b0": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): - `records/<subfolder>/<filename>.json` \u2014 Tier 2 Rec\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): - `records/<subfolder>/<filename>.json` — Tier 2 Rec…"
     },
     "srs/records/tier-2/mechanism-9a04732c.json#content#em-dash-cap#1f294f27": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): - `notes/<filename>.json` \u2014 Tier 0 Note instances"
+      "matched": "1 em-dashes in one paragraph (cap 0): - `notes/<filename>.json` — Tier 0 Note instances"
     },
     "srs/records/tier-2/mechanism-9a04732c.json#content#em-dash-cap#28fac2f2": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): - `package/package.json` \u2014 package index"
+      "matched": "1 em-dashes in one paragraph (cap 0): - `package/package.json` — package index"
     },
     "srs/records/tier-2/mechanism-9a04732c.json#content#em-dash-cap#3e4c1250": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): - `package/views/<filename>.json` \u2014 view definitions"
+      "matched": "1 em-dashes in one paragraph (cap 0): - `package/views/<filename>.json` — view definitions"
     },
     "srs/records/tier-2/mechanism-9a04732c.json#content#em-dash-cap#5b9a3880": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): - `package/fields/<filename>.json` \u2014 field definitio\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): - `package/fields/<filename>.json` — field definitio…"
     },
     "srs/records/tier-2/mechanism-9a04732c.json#content#em-dash-cap#b1cc1155": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): - `package/types/<filename>.json` \u2014 type definitions"
+      "matched": "1 em-dashes in one paragraph (cap 0): - `package/types/<filename>.json` — type definitions"
     },
     "srs/records/tier-2/mechanism-9a04732c.json#content#em-dash-cap#b7a5d870": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): - `relations/<filename>.json` \u2014 relation collections"
+      "matched": "1 em-dashes in one paragraph (cap 0): - `relations/<filename>.json` — relation collections"
     },
     "srs/records/tier-2/mechanism-9a04732c.json#content#em-dash-cap#d9de02c2": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): There is no `instanceIndex` in `manifest`; it is ret\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): There is no `instanceIndex` in `manifest`; it is ret…"
     },
     "srs/records/tier-2/mechanism-9a04732c.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "Keys in `data` follow the same relative-path conventions as `ext:repository`: - `package/p\u2026"
+      "matched": "Keys in `data` follow the same relative-path conventions as `ext:repository`: - `package/p…"
+    },
+    "srs/records/tier-2/mechanism-9d1530f7.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
     },
     "srs/records/tier-2/mechanism-9d31a4b7.json#content#em-dash-cap#3e9affc2": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): `ElementTemplates` gains `compositeFieldRowTemplates\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): `ElementTemplates` gains `compositeFieldRowTemplates…"
     },
     "srs/records/tier-2/mechanism-9d31a4b7.json#content#word-budget": {
       "issue": "the-greenman/srs#563",
@@ -2272,25 +2277,75 @@
       "rule": "lowercase-2119",
       "matched": "must"
     },
+    "srs/records/tier-2/mechanism-a1ab551b.json#content#em-dash-cap#0971a6ff": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): - Brain Dump — externalise all thinking without cons…"
+    },
+    "srs/records/tier-2/mechanism-a1ab551b.json#content#em-dash-cap#0b7dfe7b": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): - Decision — context → criteria → options → evaluati…"
+    },
+    "srs/records/tier-2/mechanism-a1ab551b.json#content#em-dash-cap#6449d5a7": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): - Review — what is established, what is still open"
+    },
+    "srs/records/tier-2/mechanism-a1ab551b.json#content#em-dash-cap#8366d7ec": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): **Non-normative example — Protocol chain for a gover…"
+    },
+    "srs/records/tier-2/mechanism-a1ab551b.json#content#em-dash-cap#92885bfc": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): An epistemically ordered process for building qualit…"
+    },
+    "srs/records/tier-2/mechanism-a1ab551b.json#content#em-dash-cap#a26cc893": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): - Prioritisation — which components to resolve first"
+    },
+    "srs/records/tier-2/mechanism-a1ab551b.json#content#em-dash-cap#d4dd1136": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "2 em-dashes in one paragraph (cap 0): **Property names are unprefixed** (`id`, not `protoc…"
+    },
+    "srs/records/tier-2/mechanism-a1ab551b.json#content#em-dash-cap#e1a3be35": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): - Decomposition — identify major components from raw…"
+    },
+    "srs/records/tier-2/mechanism-a1ab551b.json#content#em-dash-cap#e8870201": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): - Proposal — problem → solution shape → constraints …"
+    },
+    "srs/records/tier-2/mechanism-a1ab551b.json#content#facilitate#639acbef": {
+      "issue": "the-greenman/srs#563",
+      "rule": "facilitate",
+      "matched": "facilitation"
+    },
     "srs/records/tier-2/mechanism-a7fea9f4.json#content#em-dash-cap#5245b9c3": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): A `reference`-mode value is a target instance id, an\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): A `reference`-mode value is a target instance id, an…"
     },
     "srs/records/tier-2/mechanism-a7fea9f4.json#content#em-dash-cap#d265d711": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): Cardinality is declared **only** here. A Field holdi\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): Cardinality is declared **only** here. A Field holdi…"
     },
     "srs/records/tier-2/mechanism-a7fea9f4.json#content#em-dash-cap#dfcd0b41": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): `fieldType` carries everything about what a Field's \u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): `fieldType` carries everything about what a Field's …"
     },
     "srs/records/tier-2/mechanism-a7fea9f4.json#content#em-dash-cap#e29a7da7": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): | `\"ref\"` | The range is another Type \u2014 nested objec\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): | `\"ref\"` | The range is another Type — nested objec…"
     },
     "srs/records/tier-2/mechanism-a7fea9f4.json#content#lowercase-2119#df0465d9": {
       "issue": "the-greenman/srs#563",
@@ -2300,7 +2355,7 @@
     "srs/records/tier-2/mechanism-b380994a.json#content#em-dash-cap#bf29da49": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): A raw source document stored within the repository. \u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): A raw source document stored within the repository. …"
     },
     "srs/records/tier-2/mechanism-b380994a.json#content#minimisers#b2c66dfd": {
       "issue": "the-greenman/srs#563",
@@ -2310,32 +2365,42 @@
     "srs/records/tier-2/mechanism-b4bfa826.json#content#em-dash-cap#a06edbb9": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **Step 3 \u2014 Labels.** Use `FieldAssignment.displayLab\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): **Step 3 — Labels.** Use `FieldAssignment.displayLab…"
     },
     "srs/records/tier-2/mechanism-b4bfa826.json#content#em-dash-cap#a1dad740": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **Step 1 \u2014 Field ordering.** Order fields ascending \u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): **Step 1 — Field ordering.** Order fields ascending …"
     },
     "srs/records/tier-2/mechanism-b4bfa826.json#content#em-dash-cap#addbe1c3": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "4 em-dashes in one paragraph (cap 0): **Step 4 \u2014 Render.** Render only present fields. A f\u2026"
+      "matched": "4 em-dashes in one paragraph (cap 0): **Step 4 — Render.** Render only present fields. A f…"
     },
     "srs/records/tier-2/mechanism-b4bfa826.json#content#em-dash-cap#c2ff50cd": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): **Step 2 \u2014 Resolve values.** A field is present if i\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): **Step 2 — Resolve values.** A field is present if i…"
     },
     "srs/records/tier-2/mechanism-b5dc649d.json#content#em-dash-cap#d57afe98": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): Configuration for rendering a Record through this Vi\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): Configuration for rendering a Record through this Vi…"
+    },
+    "srs/records/tier-2/mechanism-b77c2117.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
+    "srs/records/tier-2/mechanism-b77c2117.json#content#lowercase-2119#df0465d9": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must not"
     },
     "srs/records/tier-2/mechanism-b958d855.json#content#em-dash-cap#e82ab309": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): **Note (2026-08-22, `rfc-decision-4f1e12e5` entry 5)\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): **Note (2026-08-22, `rfc-decision-4f1e12e5` entry 5)…"
     },
     "srs/records/tier-2/mechanism-b958d855.json#content#facilitate#639acbef": {
       "issue": "the-greenman/srs#563",
@@ -2362,15 +2427,20 @@
       "rule": "lowercase-2119",
       "matched": "must"
     },
+    "srs/records/tier-2/mechanism-c0f0f2b7.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
+    },
     "srs/records/tier-2/mechanism-c18b43ce.json#content#em-dash-cap#542e5fa3": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): - **A dispatched L1 View's `exportConfig`** (`Docume\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): - **A dispatched L1 View's `exportConfig`** (`Docume…"
     },
     "srs/records/tier-2/mechanism-c18b43ce.json#content#em-dash-cap#ab22f93e": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): When a dispatched View's `exportConfig.preamble` ren\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): When a dispatched View's `exportConfig.preamble` ren…"
     },
     "srs/records/tier-2/mechanism-c18b43ce.json#content#minimisers#0ec8b3a4": {
       "issue": "the-greenman/srs#563",
@@ -2380,17 +2450,17 @@
     "srs/records/tier-2/mechanism-c388f8ab.json#content#em-dash-cap#3662a895": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **V7 \u2014 Lifecycle exclusivity.** A Type declares exac\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): **V7 — Lifecycle exclusivity.** A Type declares exac…"
     },
     "srs/records/tier-2/mechanism-c388f8ab.json#content#em-dash-cap#4d020790": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **V8 \u2014 Lifecycle reference resolution.** A `lifecycl\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): **V8 — Lifecycle reference resolution.** A `lifecycl…"
     },
     "srs/records/tier-2/mechanism-c388f8ab.json#content#em-dash-cap#92b3eab2": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **V9 \u2014 Lifecycle integrity.** Over the effective sta\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): **V9 — Lifecycle integrity.** Over the effective sta…"
     },
     "srs/records/tier-2/mechanism-c388f8ab.json#content#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -2400,22 +2470,27 @@
     "srs/records/tier-2/mechanism-c896784a.json#content#em-dash-cap#45411fb1": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): Defines Views \u2014 versioned presentations over a field\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): Defines Views — versioned presentations over a field…"
+    },
+    "srs/records/tier-2/mechanism-caaefa31.json#content#em-dash-cap#e86bedb3": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "1 em-dashes in one paragraph (cap 0): The current focus of an active Protocol run — a live…"
     },
     "srs/records/tier-2/mechanism-d12bf6b6.json#content#em-dash-cap#4c7fa82d": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **Note (2026-08-22, `rfc-decision-4f1e12e5` entry 4)\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): **Note (2026-08-22, `rfc-decision-4f1e12e5` entry 4)…"
     },
     "srs/records/tier-2/mechanism-d1750acd.json#content#em-dash-cap#6c425ff7": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference below for `RelationTypeD\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference below for `RelationTypeD…"
     },
     "srs/records/tier-2/mechanism-d1750acd.json#content#em-dash-cap#cadc4872": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): Relation type definitions live in `package.relationT\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): Relation type definitions live in `package.relationT…"
     },
     "srs/records/tier-2/mechanism-d3c04f50.json#content#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -2435,12 +2510,12 @@
     "srs/records/tier-2/mechanism-d453219f.json#content#em-dash-cap#e319e49f": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): The `.srs` marker is a directory that identifies the\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): The `.srs` marker is a directory that identifies the…"
     },
     "srs/records/tier-2/mechanism-d453219f.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "A conforming repository has the following root structure: Example: the repository root lay\u2026"
+      "matched": "A conforming repository has the following root structure: Example: the repository root lay…"
     },
     "srs/records/tier-2/mechanism-d453219f.json#content#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -2450,22 +2525,27 @@
     "srs/records/tier-2/mechanism-d54d1e5b.json#content#em-dash-cap#f03eeb2f": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): `DocumentSection.renderViewId` references a `View.id\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): `DocumentSection.renderViewId` references a `View.id…"
     },
     "srs/records/tier-2/mechanism-d87505e8.json#content#em-dash-cap#7d701149": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): `allowedValues` is formally sugar for an anonymous i\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): `allowedValues` is formally sugar for an anonymous i…"
+    },
+    "srs/records/tier-2/mechanism-da4a94f2.json#content#facilitate#639acbef": {
+      "issue": "the-greenman/srs#563",
+      "rule": "facilitate",
+      "matched": "facilitation"
     },
     "srs/records/tier-2/mechanism-dd3632ff.json#content#em-dash-cap#4513dea2": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): `repositoryId` is the sync key for a repository. If \u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): `repositoryId` is the sync key for a repository. If …"
     },
     "srs/records/tier-2/mechanism-dd3632ff.json#content#em-dash-cap#c7a789b8": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): To create an independent copy of a repository \u2014 not \u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): To create an independent copy of a repository — not …"
     },
     "srs/records/tier-2/mechanism-dd3632ff.json#content#future-tense#3543779e": {
       "issue": "the-greenman/srs#563",
@@ -2485,7 +2565,7 @@
     "srs/records/tier-2/mechanism-de34a05e.json#content#em-dash-cap#15371e45": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): `document-view-output.json`'s `ProjectedRecord` carr\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): `document-view-output.json`'s `ProjectedRecord` carr…"
     },
     "srs/records/tier-2/mechanism-de34a05e.json#content#enable#e97166b5": {
       "issue": "the-greenman/srs#563",
@@ -2500,32 +2580,32 @@
     "srs/records/tier-2/mechanism-e01a3121.json#content#em-dash-cap#0cc31198": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **Empty and placeholder.** A field Step 2 resolves a\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): **Empty and placeholder.** A field Step 2 resolves a…"
     },
     "srs/records/tier-2/mechanism-e01a3121.json#content#em-dash-cap#2e25381a": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "3 em-dashes in one paragraph (cap 0): **Value sequence.** A field renders as multi-entry w\u2026"
+      "matched": "3 em-dashes in one paragraph (cap 0): **Value sequence.** A field renders as multi-entry w…"
     },
     "srs/records/tier-2/mechanism-e01a3121.json#content#em-dash-cap#3786d9f0": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): A composite is a Field whose `fieldType.datatype` is\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): A composite is a Field whose `fieldType.datatype` is…"
     },
     "srs/records/tier-2/mechanism-e01a3121.json#content#em-dash-cap#65e06087": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): **Class identity.** `{name}` in `srs-fieldname-{name\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): **Class identity.** `{name}` in `srs-fieldname-{name…"
     },
     "srs/records/tier-2/mechanism-e01a3121.json#content#em-dash-cap#87da3fe7": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **Content.** In `markdown`, `adoc` and `text` the re\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): **Content.** In `markdown`, `adoc` and `text` the re…"
     },
     "srs/records/tier-2/mechanism-e01a3121.json#content#em-dash-cap#cbe61ba3": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): **Continuation.** When a surviving entry's value spa\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): **Continuation.** When a surviving entry's value spa…"
     },
     "srs/records/tier-2/mechanism-e01a3121.json#content#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -2540,7 +2620,7 @@
     "srs/records/tier-2/mechanism-e01a3121.json#content#word-budget": {
       "issue": "the-greenman/srs#563",
       "rule": "word-budget",
-      "matched": "1091 words (limit 400)"
+      "matched": "1293 words (limit 400)"
     },
     "srs/records/tier-2/mechanism-e01a3121.json#content#wordy-in-order-to#4c57a6e7": {
       "issue": "the-greenman/srs#563",
@@ -2550,7 +2630,7 @@
     "srs/records/tier-2/mechanism-e20d19af.json#content#em-dash-cap#5a7c8825": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): 2. If found: resolve its `ThemeReference` and apply \u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): 2. If found: resolve its `ThemeReference` and apply …"
     },
     "srs/records/tier-2/mechanism-e265a135.json#content#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -2560,17 +2640,17 @@
     "srs/records/tier-2/mechanism-e29b2203.json#content#em-dash-cap#23c5ec82": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): - **Rows.** One row per (entry, direction) with at l\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): - **Rows.** One row per (entry, direction) with at l…"
     },
     "srs/records/tier-2/mechanism-e29b2203.json#content#em-dash-cap#971fd7e2": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): Link labels prefer the identity field over the secti\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): Link labels prefer the identity field over the secti…"
     },
     "srs/records/tier-2/mechanism-e29b2203.json#content#em-dash-cap#d9c74b4b": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): - **Edge selection.** Edges display only when their \u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): - **Edge selection.** Edges display only when their …"
     },
     "srs/records/tier-2/mechanism-e29b2203.json#content#hedges#f885b8a1": {
       "issue": "the-greenman/srs#563",
@@ -2585,42 +2665,42 @@
     "srs/records/tier-2/mechanism-eab21cca.json#content#em-dash-cap#235b53a7": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference below for `NoteSection`'\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference below for `NoteSection`'…"
     },
     "srs/records/tier-2/mechanism-eec1e40c.json#content#em-dash-cap#073890b6": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): **V6 \u2014 Closed value status.** A value resolving to `\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): **V6 — Closed value status.** A value resolving to `…"
     },
     "srs/records/tier-2/mechanism-eec1e40c.json#content#em-dash-cap#bd2c1f82": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **V4 \u2014 Vocabulary reference resolution.** A `vocabul\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): **V4 — Vocabulary reference resolution.** A `vocabul…"
     },
     "srs/records/tier-2/mechanism-eec1e40c.json#content#em-dash-cap#df8cd792": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **V5 \u2014 Effective entry set.** The effective entry se\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): **V5 — Effective entry set.** The effective entry se…"
     },
     "srs/records/tier-2/mechanism-eec1e40c.json#content#em-dash-cap#e92d00cd": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **V10 \u2014 Open\u2192closed promotion.** Version-bumping cha\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): **V10 — Open→closed promotion.** Version-bumping cha…"
     },
     "srs/records/tier-2/mechanism-eec1e40c.json#content#em-dash-cap#eb4f05d1": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **V3 \u2014 Field binding exclusivity and closedness.** A\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): **V3 — Field binding exclusivity and closedness.** A…"
     },
     "srs/records/tier-2/mechanism-eec1e40c.json#content#em-dash-cap#f1a7063b": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **V1 \u2014 Closed-vocabulary resolution.** Any value in \u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): **V1 — Closed-vocabulary resolution.** Any value in …"
     },
     "srs/records/tier-2/mechanism-eec1e40c.json#content#em-dash-cap#f7a64c53": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **V2 \u2014 Open-vocabulary resolution.** A value in an o\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): **V2 — Open-vocabulary resolution.** A value in an o…"
     },
     "srs/records/tier-2/mechanism-eec1e40c.json#content#future-tense#403e078e": {
       "issue": "the-greenman/srs#563",
@@ -2640,42 +2720,42 @@
     "srs/records/tier-2/mechanism-efb87f23.json#content#em-dash-cap#7507dfba": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): `FieldValue` \u2014 the value stored at one `fieldValues`\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): `FieldValue` — the value stored at one `fieldValues`…"
+    },
+    "srs/records/tier-2/mechanism-f5dd52c5.json#content#heading-restatement": {
+      "issue": "the-greenman/srs#563",
+      "rule": "heading-restatement",
+      "matched": "The standard defaults to **Office**: the procedural record, declared authority, and valida…"
+    },
+    "srs/records/tier-2/mechanism-f5dd52c5.json#content#lowercase-2119#df0465d9": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must not"
     },
     "srs/records/tier-2/mechanism-f73cc1ed.json#content#em-dash-cap#475bf205": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference below for `Term`'s curre\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): See the generated reference below for `Term`'s curre…"
+    },
+    "srs/records/tier-2/mechanism-f92f27a0.json#content#lowercase-2119#4137b01e": {
+      "issue": "the-greenman/srs#563",
+      "rule": "lowercase-2119",
+      "matched": "must"
     },
     "srs/records/tier-2/mechanism-fa52d598.json#content#em-dash-cap#7d33eb38": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): Two naming notes. The aliases `field-label` / `field\u2026"
+      "matched": "1 em-dashes in one paragraph (cap 0): Two naming notes. The aliases `field-label` / `field…"
     },
     "srs/records/tier-2/mechanism-fa52d598.json#content#em-dash-cap#ca00763d": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): `ElementTemplates.fieldRow` is a wrapper: it receive\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 0): `ElementTemplates.fieldRow` is a wrapper: it receive…"
     },
     "srs/records/tier-2/mechanism-fa52d598.json#content#soft-hedges#d1ffaf02": {
       "issue": "the-greenman/srs#563",
       "rule": "soft-hedges",
       "matched": "rather"
-    },
-    "srs/records/tier-2/mechanism-fe5a4dbf.json#content#em-dash-cap#3dd6a33f": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): | Per-record heading | `3 + depthOffset` | When `tit\u2026"
-    },
-    "srs/records/tier-2/mechanism-fe5a4dbf.json#content#em-dash-cap#5b45f5e9": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): | Field label | Bold/formatted text \u2014 not a heading;\u2026"
-    },
-    "srs/records/tier-2/mechanism-fe5a4dbf.json#content#em-dash-cap#cc238f95": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): **`identityFieldId` fallback (RFC-020, Rule [N+37]).\u2026"
     },
     "srs/records/tier-2/mechanism-fe7bc7bd.json#content#minimisers#0ec8b3a4": {
       "issue": "the-greenman/srs#563",
@@ -2685,7 +2765,7 @@
     "srs/records/tier-2/rfc-4071ab22.json#content#em-dash-cap#1f128cb2": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): Evidence drove the design corrections. Keying discov\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): Evidence drove the design corrections. Keying discov…"
     },
     "srs/records/tier-2/rfc-4071ab22.json#content#soft-hedges#d1ffaf02": {
       "issue": "the-greenman/srs#563",
@@ -2705,7 +2785,7 @@
     "srs/records/tier-2/rfc-69b59f00.json#content#em-dash-cap#164f7747": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): The migration is specified in both layers and is wri\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): The migration is specified in both layers and is wri…"
     },
     "srs/records/tier-2/rfc-69b59f00.json#content#soft-hedges#d1ffaf02": {
       "issue": "the-greenman/srs#563",
@@ -2715,7 +2795,7 @@
     "srs/records/tier-2/rfc-6ecaf104.json#content#em-dash-cap#6dbfbb65": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): To self-host its meta-model (epic #256), SRS must de\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): To self-host its meta-model (epic #256), SRS must de…"
     },
     "srs/records/tier-2/rfc-change-819fea19.json#rationale#enable#8811208d": {
       "issue": "the-greenman/srs#563",
@@ -2730,297 +2810,12 @@
     "srs/records/tier-2/rfc-change-ff2ef2e8.json#rationale#em-dash-cap#8d91b378": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): Making attachment policy part of the core package wo\u2026"
+      "matched": "2 em-dashes in one paragraph (cap 1): Making attachment policy part of the core package wo…"
     },
     "srs/records/tier-2/rfc-ffe44c91.json#content#enable#80c8b1a6": {
       "issue": "the-greenman/srs#563",
       "rule": "enable",
       "matched": "Enables"
-    },
-    "srs/records/subsections/07-12-ext-import-tracking.json#content#keyword-register#097dbef8": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MAY"
-    },
-    "srs/records/subsections/07-12-ext-import-tracking.json#content#keyword-register#813a255c": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/subsections/07-12-ext-import-tracking.json#content#minimisers#0ec8b3a4": {
-      "issue": "the-greenman/srs#563",
-      "rule": "minimisers",
-      "matched": "simply"
-    },
-    "srs/records/subsections/07-15-ext-repository.json#content#em-dash-cap#aca0089c": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): Defines the **SRS Live Repository Format**: a normat\u2026"
-    },
-    "srs/records/subsections/07-15-ext-repository.json#content#em-dash-cap#bf29da49": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): A raw source document stored within the repository. \u2026"
-    },
-    "srs/records/subsections/07-15-ext-repository.json#content#em-dash-cap#c7a789b8": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): To create an independent copy of a repository \u2014 not \u2026"
-    },
-    "srs/records/subsections/07-15-ext-repository.json#content#em-dash-cap#e319e49f": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): The `.srs` marker is a directory that identifies the\u2026"
-    },
-    "srs/records/subsections/07-15-ext-repository.json#content#keyword-register#7191e727": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "SHOULD"
-    },
-    "srs/records/subsections/07-15-ext-repository.json#content#minimisers#b2c66dfd": {
-      "issue": "the-greenman/srs#563",
-      "rule": "minimisers",
-      "matched": "just"
-    },
-    "srs/records/subsections/07-15-ext-repository.json#content#soft-hedges#d1ffaf02": {
-      "issue": "the-greenman/srs#563",
-      "rule": "soft-hedges",
-      "matched": "rather"
-    },
-    "srs/records/subsections/07-15-ext-repository.json#content#this-ensures#b39bbc0e": {
-      "issue": "the-greenman/srs#563",
-      "rule": "this-ensures",
-      "matched": "This ensures"
-    },
-    "srs/records/subsections/07-15-ext-repository.json#content#word-budget": {
-      "issue": "the-greenman/srs#563",
-      "rule": "word-budget",
-      "matched": "2119 words (limit 400)"
-    },
-    "srs/records/subsections/07-16-ext-json-store.json#content#word-budget": {
-      "issue": "the-greenman/srs#563",
-      "rule": "word-budget",
-      "matched": "656 words (limit 400)"
-    },
-    "srs/records/tier-2/mechanism-0014fa0f.json#content#em-dash-cap#70171440": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): | `spec.id` | `string (uuid)` | yes | The `container\u2026"
-    },
-    "srs/records/tier-2/mechanism-0014fa0f.json#content#em-dash-cap#7b5e698e": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): | `externalRelationRefs` | `array` | no | Relations \u2026"
-    },
-    "srs/records/tier-2/mechanism-02e54c05.json#content#lowercase-2119#df0465d9": {
-      "issue": "the-greenman/srs#563",
-      "rule": "lowercase-2119",
-      "matched": "must not"
-    },
-    "srs/records/tier-2/mechanism-124d11e4.json#content#em-dash-cap#4f3c3278": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): A container slice carries the records reachable from\u2026"
-    },
-    "srs/records/tier-2/mechanism-16667c90.json#content#lowercase-2119#df0465d9": {
-      "issue": "the-greenman/srs#563",
-      "rule": "lowercase-2119",
-      "matched": "must not"
-    },
-    "srs/records/tier-2/mechanism-17f12134.json#content#em-dash-cap#d55fbf0f": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **`order` vs `dependsOn`:** `order` is the declared \u2026"
-    },
-    "srs/records/tier-2/mechanism-17f12134.json#content#em-dash-cap#e4efeb9d": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): A named stage in a Protocol. Stages have epistemic d\u2026"
-    },
-    "srs/records/tier-2/mechanism-17f12134.json#content#facilitate#639acbef": {
-      "issue": "the-greenman/srs#563",
-      "rule": "facilitate",
-      "matched": "facilitation"
-    },
-    "srs/records/tier-2/mechanism-17f12134.json#content#lowercase-2119#4137b01e": {
-      "issue": "the-greenman/srs#563",
-      "rule": "lowercase-2119",
-      "matched": "must"
-    },
-    "srs/records/tier-2/mechanism-17f12134.json#content#minimisers#b2c66dfd": {
-      "issue": "the-greenman/srs#563",
-      "rule": "minimisers",
-      "matched": "just"
-    },
-    "srs/records/tier-2/mechanism-2cc1be6f.json#content#em-dash-cap#5ac96ec3": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): `ext:slices` defines **container-membership closure \u2026"
-    },
-    "srs/records/tier-2/mechanism-63564240.json#content#facilitate#639acbef": {
-      "issue": "the-greenman/srs#563",
-      "rule": "facilitate",
-      "matched": "facilitation"
-    },
-    "srs/records/tier-2/mechanism-6c75ed59.json#content#lowercase-2119#4137b01e": {
-      "issue": "the-greenman/srs#563",
-      "rule": "lowercase-2119",
-      "matched": "must"
-    },
-    "srs/records/tier-2/mechanism-6f93d128.json#content#em-dash-cap#3ce0a498": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): 5. Related Records via Relations \u2014 structural contex\u2026"
-    },
-    "srs/records/tier-2/mechanism-6f93d128.json#content#em-dash-cap#5b36eff5": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **Note (2026-08-21, `rfc-decision-2a1e1590`)**: the \u2026"
-    },
-    "srs/records/tier-2/mechanism-6f93d128.json#content#em-dash-cap#77152cb0": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): 4. Chunks tagged to the parent Record \u2014 broader sess\u2026"
-    },
-    "srs/records/tier-2/mechanism-6f93d128.json#content#em-dash-cap#944a3cd4": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): 2. Current value \u2014 what has already been established"
-    },
-    "srs/records/tier-2/mechanism-6f93d128.json#content#em-dash-cap#96ee77bf": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): 3. Chunks tagged to this Field via AttentionState \u2014 \u2026"
-    },
-    "srs/records/tier-2/mechanism-6f93d128.json#content#em-dash-cap#bab4875c": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): 1. Type and Field `aiGuidance` \u2014 what this field cap\u2026"
-    },
-    "srs/records/tier-2/mechanism-6f93d128.json#content#lowercase-2119#4137b01e": {
-      "issue": "the-greenman/srs#563",
-      "rule": "lowercase-2119",
-      "matched": "must"
-    },
-    "srs/records/tier-2/mechanism-86ec2de9.json#content#lowercase-2119#4137b01e": {
-      "issue": "the-greenman/srs#563",
-      "rule": "lowercase-2119",
-      "matched": "must"
-    },
-    "srs/records/tier-2/mechanism-86ec2de9.json#content#lowercase-2119#df0465d9": {
-      "issue": "the-greenman/srs#563",
-      "rule": "lowercase-2119",
-      "matched": "must not"
-    },
-    "srs/records/tier-2/mechanism-9d1530f7.json#content#lowercase-2119#4137b01e": {
-      "issue": "the-greenman/srs#563",
-      "rule": "lowercase-2119",
-      "matched": "must"
-    },
-    "srs/records/tier-2/mechanism-a1ab551b.json#content#em-dash-cap#0971a6ff": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): - Brain Dump \u2014 externalise all thinking without cons\u2026"
-    },
-    "srs/records/tier-2/mechanism-a1ab551b.json#content#em-dash-cap#0b7dfe7b": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): - Decision \u2014 context \u2192 criteria \u2192 options \u2192 evaluati\u2026"
-    },
-    "srs/records/tier-2/mechanism-a1ab551b.json#content#em-dash-cap#6449d5a7": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): - Review \u2014 what is established, what is still open"
-    },
-    "srs/records/tier-2/mechanism-a1ab551b.json#content#em-dash-cap#8366d7ec": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): **Non-normative example \u2014 Protocol chain for a gover\u2026"
-    },
-    "srs/records/tier-2/mechanism-a1ab551b.json#content#em-dash-cap#92885bfc": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): An epistemically ordered process for building qualit\u2026"
-    },
-    "srs/records/tier-2/mechanism-a1ab551b.json#content#em-dash-cap#a26cc893": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): - Prioritisation \u2014 which components to resolve first"
-    },
-    "srs/records/tier-2/mechanism-a1ab551b.json#content#em-dash-cap#d4dd1136": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): **Property names are unprefixed** (`id`, not `protoc\u2026"
-    },
-    "srs/records/tier-2/mechanism-a1ab551b.json#content#em-dash-cap#e1a3be35": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): - Decomposition \u2014 identify major components from raw\u2026"
-    },
-    "srs/records/tier-2/mechanism-a1ab551b.json#content#em-dash-cap#e8870201": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): - Proposal \u2014 problem \u2192 solution shape \u2192 constraints \u2026"
-    },
-    "srs/records/tier-2/mechanism-a1ab551b.json#content#facilitate#639acbef": {
-      "issue": "the-greenman/srs#563",
-      "rule": "facilitate",
-      "matched": "facilitation"
-    },
-    "srs/records/tier-2/mechanism-b77c2117.json#content#lowercase-2119#4137b01e": {
-      "issue": "the-greenman/srs#563",
-      "rule": "lowercase-2119",
-      "matched": "must"
-    },
-    "srs/records/tier-2/mechanism-b77c2117.json#content#lowercase-2119#df0465d9": {
-      "issue": "the-greenman/srs#563",
-      "rule": "lowercase-2119",
-      "matched": "must not"
-    },
-    "srs/records/tier-2/mechanism-c0f0f2b7.json#content#lowercase-2119#4137b01e": {
-      "issue": "the-greenman/srs#563",
-      "rule": "lowercase-2119",
-      "matched": "must"
-    },
-    "srs/records/tier-2/mechanism-caaefa31.json#content#em-dash-cap#e86bedb3": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): The current focus of an active Protocol run \u2014 a live\u2026"
-    },
-    "srs/records/tier-2/mechanism-da4a94f2.json#content#facilitate#639acbef": {
-      "issue": "the-greenman/srs#563",
-      "rule": "facilitate",
-      "matched": "facilitation"
-    },
-    "srs/records/tier-2/mechanism-f5dd52c5.json#content#heading-restatement": {
-      "issue": "the-greenman/srs#563",
-      "rule": "heading-restatement",
-      "matched": "The standard defaults to **Office**: the procedural record, declared authority, and valida\u2026"
-    },
-    "srs/records/tier-2/mechanism-f5dd52c5.json#content#lowercase-2119#df0465d9": {
-      "issue": "the-greenman/srs#563",
-      "rule": "lowercase-2119",
-      "matched": "must not"
-    },
-    "srs/records/tier-2/mechanism-f92f27a0.json#content#lowercase-2119#4137b01e": {
-      "issue": "the-greenman/srs#563",
-      "rule": "lowercase-2119",
-      "matched": "must"
-    },
-    "srs/records/tier-2/generated-type-reference-4d411f1b.json#content#em-dash-cap#4271ceda": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "7 em-dashes in one paragraph (cap 1): ```typescript type { id: string // Globally unique, \u2026"
-    },
-    "srs/records/tier-2/generated-type-reference-4d411f1b.json#content#keyword-register#b6ed90f1": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
-    },
-    "srs/records/tier-2/generated-type-reference-4d411f1b.json#content#keyword-register#c45beb00": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST"
     }
   }
 }

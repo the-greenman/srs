@@ -1,0 +1,20 @@
+{
+  "instanceId": "20d82230-2bb4-4080-a02d-2945eaa12337",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "What this specification does not define",
+    "content": "- Session: live collaborative process model (future version)\n- Registry protocol: how registries communicate, authenticate, or federate; this specification defines data shapes only\n- Universal semantic ontology: domain-specific vocabularies are the responsibility of namespace authors"
+  },
+  "tags": [
+    "topic:meta"
+  ],
+  "createdAt": "2026-09-11T15:26:34.682174206+00:00",
+  "updatedAt": "2026-09-11T15:33:03.871129429+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "meta": {
+    "derivedFrom": "7bf07a79-5f0d-5a22-b0b4-4c45e2dd76df"
+  }
+}

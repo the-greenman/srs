@@ -12,64 +12,6 @@
 
 **Canonical Key**: record:concepts/purpose-and-scope
 
-##### What this specification defines
-
-**Content**: The Semantic Record System (SRS) specification defines an interoperable standard for semantic field and type definitions, records, relations, and the mechanisms by which these artefacts are created, shared, versioned, and distributed across independent implementations.
-
-This specification covers:
-
-- **Field** — atomic reusable semantic unit
-- **Type** — named composition of fields for a specific semantic object type
-- **Record** — instantiated type with field values; two semantic maturity tiers (Note, Record)
-- **Relation** — first-class typed link between records
-- **Container** — grouping boundary for record collections
-- **Distribution** — Package, Reference, Lineage, Provenance
-- **Extensions** — optional, independently adoptable capabilities declared by conforming implementations
-
-
-##### What this specification does not define
-
-**Content**:
-- **Session** — live collaborative process model (future version)
-- **Registry protocol** — how registries communicate, authenticate, or federate; this specification defines data shapes only
-- **Universal semantic ontology** — domain-specific vocabularies are the responsibility of namespace authors
-
-
-##### Relationship to implementing systems
-
-**Content**: This specification is implementation-neutral. Implementations are expected to validate inputs against these schemas at their system boundaries. The specification does not constrain persistence technology, API design, UI rendering, or prompt assembly strategy.
-
-
-##### Extension conformance model
-
-**Content**: Implementations declare conformance as:
-
-Example: a core conformance declaration.
-
-**Core** requires the Foundation group and Distribution group in full. No extension is required for core conformance. Extensions are independently adoptable; some declare dependencies on other extensions.
-
-| Extension | Identifier | Depends on | Notes |
-|---|---|---|---|
-| Addressability | `ext:addressability` | — | For live facilitation, declare together with `ext:protocol` |
-| Lifecycle | `ext:lifecycle` | — | |
-| Protocol | `ext:protocol` | `ext:lifecycle` (recommended) | For live facilitation, declare together with `ext:addressability` |
-| Type Inheritance | `ext:type-inheritance` | — | |
-| Views L1 | `ext:views-l1` | — | |
-| Views L2 | `ext:views-l2` | `ext:views-l1` | |
-| Cross-Field Validation | `ext:cross-field-validation` | — | |
-| Recommended Relations | `ext:recommended-relations` | — | |
-| Import Tracking | `ext:import-tracking` | — | |
-| Registry | `ext:registry` | — | |
-| Repository | `ext:repository` | — | File-based live repository and archive (export/import) format |
-
-`ext:protocol` and `ext:addressability` are formally independent but are a functional co-dependency for live facilitation: a Protocol without `AttentionState` produces no live conversation tagging; `AttentionState` without Protocol stages has no stage context to capture. Implementations supporting live facilitation should declare both.
-
-**Blueprint is a core package definition**, not a declarable extension. `Blueprint` is included in `Package.blueprints[]` when needed; no `ext:blueprint` declaration is required or defined.
-
-Example declaration: `SRS Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability`
-
----
-
 **Intro**: Start with the question: what does your implementation need to do?
 
 | Need | Extensions |
@@ -90,7 +32,7 @@ Example declaration: `SRS Core + ext:lifecycle + ext:protocol + ext:views-l1 + e
 | Cross-system Relation interoperability | `ext:recommended-relations` |
 
 
-###### A core conformance declaration
+##### A core conformance declaration
 
 **Content**: The form an implementation fills in:
 
@@ -98,6 +40,65 @@ Example declaration: `SRS Core + ext:lifecycle + ext:protocol + ext:views-l1 + e
 SRS Core [+ ext:<name> ...]
 ```
 
+
+##### What this specification defines
+
+**Content**: The Semantic Record System (SRS) specification defines an interoperable standard for semantic field and type definitions, records, relations, and the mechanisms by which these artefacts are created, shared, versioned, and distributed across independent implementations.
+
+This specification covers:
+
+- Field: atomic reusable semantic unit
+- Type: named composition of fields for a specific semantic object type
+- Record: instantiated type with field values; two semantic maturity tiers (Note, Record)
+- Relation: first-class typed link between records
+- Container: grouping boundary for record collections
+- Distribution: Package, Reference, Lineage, Provenance
+- Extensions: optional, independently adoptable capabilities declared by conforming implementations
+
+
+##### What this specification does not define
+
+**Content**:
+- Session: live collaborative process model (future version)
+- Registry protocol: how registries communicate, authenticate, or federate; this specification defines data shapes only
+- Universal semantic ontology: domain-specific vocabularies are the responsibility of namespace authors
+
+
+##### Relationship to implementing systems
+
+**Content**: This specification is implementation-neutral. Implementations are expected to validate inputs against these schemas at their system boundaries. The specification does not constrain persistence technology, API design, UI rendering, or prompt assembly strategy.
+
+
+##### Extension conformance model
+
+**Content**: Implementations declare conformance as:
+
+Example: a core conformance declaration.
+
+**Core** requires the Foundation group and Distribution group in full. No extension is required for core conformance. Extensions are independently adoptable; some declare dependencies on other extensions.
+
+Table: the extension identifier and dependency reference.
+
+`ext:protocol` and `ext:addressability` are formally independent but are a functional co-dependency: a Protocol without `AttentionState` produces no live conversation tagging; `AttentionState` without Protocol stages has no stage context to capture. Implementations supporting live conversation tagging should declare both.
+
+**Blueprint is a core package definition**, not a declarable extension. `Blueprint` is included in `Package.blueprints[]` when needed; no `ext:blueprint` declaration is required or defined.
+
+Example declaration: `SRS Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability`
+
+
+| Extension | Identifier | Depends on | Notes |
+| --- | --- | --- | --- |
+| Addressability | `ext:addressability` | — | For live facilitation, declare together with `ext:protocol` |
+| Lifecycle | `ext:lifecycle` | — |  |
+| Protocol | `ext:protocol` | `ext:lifecycle` (recommended) | For live facilitation, declare together with `ext:addressability` |
+| Type Inheritance | `ext:type-inheritance` | — |  |
+| Views L1 | `ext:views-l1` | — |  |
+| Views L2 | `ext:views-l2` | `ext:views-l1` |  |
+| Cross-Field Validation | `ext:cross-field-validation` | — |  |
+| Recommended Relations | `ext:recommended-relations` | — |  |
+| Import Tracking | `ext:import-tracking` | — |  |
+| Registry | `ext:registry` | — |  |
+| Repository | `ext:repository` | — | File-based live repository and archive (export/import) format |
 
 
 
@@ -5703,17 +5704,6 @@ Transcript chunks referenced in `SourceReference` are source material — addres
 
 **Description**: Extensions are optional, independently adoptable capability modules. Each declares its identifier, dependencies, and the types it defines.
 
-##### ext:federation
-
-**Content**: **Status: Dormant** (removed under `rfc-decision-4f1e12e5`, 2026-08-22). The 2026-08-21 usage attestation found zero registries, zero events, and zero cross-repository relations anywhere in the corpus — the mechanism was speculative, never exercised in production. It is removed under the dormancy rule (`rfc-decision-cce3c00e`).
-
-**Removed surface** (historical): `RepositoryRegistry`/`RepositoryRegistryEntry` and `FederationEvent`/`FederationEventsFile` (the `federation-registry.json`/`federation-events.json` schemas); the `sourceRepositoryId`/`targetRepositoryId` qualifier fields on `Relation`; `manifest.federationPath`/`federationEventsPath`.
-
-**Return trigger** (verbatim from `rfc-decision-4f1e12e5`): COMMITTED, not evidence-gated - federation is core to SRS (owner, 2026-08-22); this removal is a deliberate reset of a design that predates real practice, not a judgment on the capability. The redesign returns as a planned roadmap phase, grounded in the sharing forms that actually emerged (bundles, slices, git-hosted repositories) and the axis 4-10 verification path; the owner schedules it. The travel mandate covers artifact-form portability meanwhile.
-
-Cell: ♓ Portability.
-
-
 ##### Discovery
 
 **Extension ID**: ext:discovery
@@ -5792,15 +5782,6 @@ srs/conformance/discovery/
 An implementation that declares `ext:discovery` MUST pass all fixture scenarios (exactMatch:true scenarios exactly; exactMatch:false scenarios as a superset). A scenario MAY additionally carry an `expectedSegments` expectation — `{ instanceId, fieldName, segments: string[] }` — naming the exact ordered `TextSegment` sequence one field of one instance must project; when present, the implementation's segment COUNT and ORDER for that field MUST match `segments` exactly (RFC-012 R11; srs#483 closes the gap left by `expectedInstanceIds` alone, which cannot express I-120's "one segment per array element in order" rule).
 
 ---
-
-
-##### ext:changelog
-
-**Content**: **Status: Dormant** (removed under `rfc-decision-2a1e1590`, 2026-08-21). The 2026-08-21 usage attestation found zero `changelog/changelog.json` files anywhere in the corpus — the mechanism was speculative, never exercised in production. It is removed under the dormancy rule (`rfc-decision-cce3c00e`) alongside the per-field Revision sidecar mechanism it paired with, removed by the same ruling.
-
-**Removed surface** (historical — introduced by RFC-018, srs#141): the `ChangelogCollection`/`ChangelogEntry` schema (`changelog.json`); the `srs changelog list` CLI command. `manifest.changelogPath` is deprecated, not deleted, so existing declarations remain readable.
-
-**Return trigger**: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface. When a real consumer's requirements are known, the mechanism is redesigned against them rather than reinstated as specified here.
 
 
 ##### Generated reference: `SourceDocumentMeta`
@@ -6477,6 +6458,26 @@ blueprint {
 ```
 
 
+##### ext:changelog
+
+**Content**: **Status: Dormant** (removed under `rfc-decision-2a1e1590`, 2026-08-21). The 2026-08-21 usage attestation found zero `changelog/changelog.json` files anywhere in the corpus: the mechanism was speculative, never exercised in production. It is removed under the dormancy rule (`rfc-decision-cce3c00e`) alongside the per-field Revision sidecar mechanism it paired with, removed by the same ruling.
+
+**Removed surface** (historical, introduced by RFC-018, srs#141): the `ChangelogCollection`/`ChangelogEntry` schema (`changelog.json`); the `srs changelog list` CLI command. `manifest.changelogPath` is deprecated, not deleted, so existing declarations remain readable.
+
+**Return trigger**: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface. When a real consumer's requirements are known, the mechanism is redesigned against them, not reinstated as specified here.
+
+
+##### ext:federation
+
+**Content**: **Status: Dormant** (removed under `rfc-decision-4f1e12e5`, 2026-08-22). The 2026-08-21 usage attestation found zero registries, zero events, and zero cross-repository relations anywhere in the corpus: the mechanism was speculative, never exercised in production. It is removed under the dormancy rule (`rfc-decision-cce3c00e`).
+
+**Removed surface** (historical): `RepositoryRegistry`/`RepositoryRegistryEntry` and `FederationEvent`/`FederationEventsFile` (the `federation-registry.json`/`federation-events.json` schemas); the `sourceRepositoryId`/`targetRepositoryId` qualifier fields on `Relation`; `manifest.federationPath`/`federationEventsPath`.
+
+**Return trigger** (verbatim from `rfc-decision-4f1e12e5`): COMMITTED, not evidence-gated - federation is core to SRS (owner, 2026-08-22); this removal is a deliberate reset of a design that predates real practice, not a judgment on the capability. The redesign returns as a planned roadmap phase, grounded in the sharing forms that actually emerged (bundles, slices, git-hosted repositories) and the axis 4-10 verification path; the owner schedules it. The travel mandate covers artifact-form portability meanwhile.
+
+Cell: ♓ Portability.
+
+
 
 #### Extension Interactions
 
@@ -6486,9 +6487,7 @@ blueprint {
 
 ##### ext:protocol × ext:addressability
 
-**Content**: **Trigger**: an implementation declares both `ext:protocol` and `ext:addressability`.
-
-**Required behaviour**: Protocol stage advancement updates `AttentionState`. When a Protocol run advances from one stage to another, the active `AttentionState` must reflect the new stage before any conversation material is tagged.
+**Content**: Protocol stage advancement updates `AttentionState`. This governs an implementation declaring both `ext:protocol` and `ext:addressability`: when a Protocol run advances from one stage to another, the active `AttentionState` MUST reflect the new stage before any conversation material is tagged.
 
 Specifically:
 
@@ -6498,18 +6497,12 @@ Specifically:
 
 Conversation chunks produced while `AttentionState.stageId` is set are associated with that stage. This makes stage-level Context Queries (`{runId}/{stageId}`) return the correct material.
 
----
-
 
 ##### ext:lifecycle × ext:addressability
 
-**Content**: **Trigger**: an implementation declares both `ext:lifecycle` and `ext:addressability`.
+**Content**: **Status: Dormant** (removed under `rfc-decision-2a1e1590`, 2026-08-21). This coupling governs an implementation declaring both `ext:lifecycle` and `ext:addressability`: its required behaviour, and both of its invariants (formerly `[LC-AX1]` and `[LC-AX2]`), required a lifecycle state transition to produce a `Revision` snapshot per field value, tagged with `provenance.lifecycleTransition`. Every clause of this coupling was revision-dependent; with the per-field `Revision` mechanism removed (zero corpus use, incompletely specified: see `rfc-decision-2a1e1590`, also removed under the same ruling), no requirement survives the cut. `ext:lifecycle` and `ext:addressability` impose no cross-cutting obligation on each other while this stays dormant; each extension's own invariants are unaffected.
 
-**Status: Dormant** (removed under `rfc-decision-2a1e1590`, 2026-08-21). This coupling's required behaviour, and both of its invariants (formerly `[LC-AX1]` and `[LC-AX2]`), required a lifecycle state transition to produce a `Revision` snapshot per field value, tagged with `provenance.lifecycleTransition`. Every clause of this coupling was revision-dependent; with the per-field `Revision` mechanism removed (zero corpus use, incompletely specified — see `rfc-decision-2a1e1590`, also removed under the same ruling), no requirement survives the cut. `ext:lifecycle` and `ext:addressability` impose no cross-cutting obligation on each other while this stays dormant; each extension's own invariants are unaffected.
-
-**Return trigger**: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface. When a real consumer's requirements are known, the coupling is redesigned against them rather than reinstated as specified here.
-
----
+**Return trigger**: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface. When a real consumer's requirements are known, the coupling is redesigned against them, not reinstated as specified here.
 
 
 
@@ -7055,81 +7048,6 @@ The following capabilities are planned but out of scope for this version.
 
 Example: the conformance declaration form.
 
-##### Core conformance requirements
-
-**Content**: A core-conformant implementation must:
-- Accept and validate `Field`, `Type`, `Record` (Tier 2), `Relation`, and `Container` inputs against this specification
-- Enforce Invariants 1–3, 7–9, 16–18, 20–21, 28, 38
-- Support the Foundation and Distribution groups in full
-- Implement the namespace format and reference format correctly
-- Not accept `relationType` strings that include `/` except in `namespace/name` format
-- **Closed-vocabulary resolution (V1):** Resolve every value participating in a closed vocabulary to exactly one installed entry in the effective entry set before accepting a write. Non-resolving values are validation errors. This rule applies to:
-  - `Relation.relationType` — resolved against the repo-global `RelationTypeDefinition` set (RFC-005 E1 is a named instance of V1)
-  - `select`/`multiselect` field values — resolved against the Field's effective closed `Vocabulary`
-  - `Record.lifecycleState` — resolved against the Type's effective lifecycle state set
-- Enforce the effective entry set construction (V5): retire entries excluded before uniqueness; `extends*Version` mismatches are hard errors.
-- Enforce inline and referenced lifecycle integrity (V9).
-- Enforce `select`/`multiselect` field binding exclusivity and closedness (V3).
-
-Support for `Note` (Tier 0) is optional at core conformance level.
-
-
-##### Extension conformance requirements
-
-**Content**: An implementation declaring a given extension must:
-- Accept and validate all types defined by that extension
-- Enforce all invariants assigned to that extension
-- Respect the declared dependency chain (e.g., `ext:views-l2` requires `ext:views-l1` to also be declared)
-
-`ext:recommended-relations` is retired as of RFC-005. It no longer owns any normative semantics. Implementations must not treat it as a capability gate — the canonical relation vocabulary is now mandatory core behaviour provided by the `com.semanticops.srs` package.
-
-
-##### ext:repository conformance requirements
-
-**Content**: An implementation declaring `ext:repository` must:
-- Produce repositories with a `.srs` marker and `manifest.json` at root, with content in the prescribed folder layout
-- Maintain no `instanceIndex` in the manifest — it is retired (RFC-038 [R2]); membership is the instance set enumerated from the tree (RFC-038 [R1])
-- Produce archives that satisfy all self-containment requirements (Invariants 49 and 51)
-- Consume archives by parsing the manifest first and resolving all instances via the repository's authoritative instance set, enumerated from the tree (RFC-038 [R1]), before processing content
-- Resolve `SourceReference` entries with `sourceType: "repository-document"` via the sidecar in `sourceDocumentsPath`
-- Enforce Invariants 45–55
-- Require no TSS, Protocol, Addressability infrastructure, or external registry when `PackageRef.mode === "local"`. The repository is fully operable with only its own files.
-
-An implementation that can produce archives but not consume them (or vice versa) must declare this limitation explicitly. Partial repository support is not conformant.
-
-
-##### ext:repository (self-contained) profile
-
-**Content**: A named stricter profile for standalone, offline-operable repositories:
-
-Example: the self-contained profile declaration.
-
-An implementation declaring this profile must satisfy all `ext:repository` conformance requirements and additionally:
-
-- `packageRef` must be present with `mode: "local"`. Absent or external package references are not permitted.
-- The local package must be `mode: "bundled"` (Invariant 50 is always in effect).
-- No external registry, TSS, Protocol stack, Addressability infrastructure, AttentionState, or live conversation store is required or assumed. The repository directory (or archive) is the complete and sufficient deployment unit.
-- An archive produced under this profile must be openable and fully processable by a consumer with no prior installation, no network access, and no running services.
-
-This profile is appropriate for: standalone tools, file-based backups, air-gapped or offline deployments, inter-organisational exchange, and any context where zero-dependency portability is required.
-
-###### The self-contained profile declaration
-
-**Content**: The conformance string a self-contained repository declares:
-
-```
-SRS 2.0 Core + ext:repository (self-contained)
-```
-
-
-
-##### Interoperability note
-
-**Content**: Two implementations at the same conformance level will produce compatible definitions for exchange. An implementation receiving a Package that includes types or fields from an extension it does not support should surface the unknown content, preserve it where possible, and pass it through rather than silently discard it.
-
-Two implementations both declaring `ext:repository` must be able to exchange archives without data loss. An archive produced by one conforming implementation must be consumable by any other conforming implementation at the same SRS version.
-
-
 ##### The conformance declaration form
 
 **Content**: The declaration form, then a filled declaration:
@@ -7142,6 +7060,81 @@ Example:
 ```
 SRS 2.0 Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability + ext:recommended-relations
 ```
+
+
+##### The self-contained profile declaration
+
+**Content**: The conformance string a self-contained repository declares:
+
+```
+SRS 2.0 Core + ext:repository (self-contained)
+```
+
+
+##### Core conformance requirements
+
+**Content**: A core-conformant implementation MUST:
+- Accept and validate `Field`, `Type`, `Record` (Tier 2), `Relation`, and `Container` inputs against this specification
+- Enforce Invariants 1–3, 7–9, 16–18, 20–21, 28, 38
+- Support the Foundation and Distribution groups in full
+- Implement the namespace format and reference format correctly
+- Not accept `relationType` strings that include `/` except in `namespace/name` format
+- **Closed-vocabulary resolution (V1):** Resolve every value participating in a closed vocabulary to exactly one installed entry in the effective entry set before accepting a write. Non-resolving values are validation errors. This rule applies to:
+  - `Relation.relationType`: resolved against the repo-global `RelationTypeDefinition` set (RFC-005 E1 is a named instance of V1)
+  - `select`/`multiselect` field values: resolved against the Field's effective closed `Vocabulary`
+  - `Record.lifecycleState`: resolved against the Type's effective lifecycle state set
+- Enforce the effective entry set construction (V5): retire entries excluded before uniqueness; `extends*Version` mismatches are hard errors.
+- Enforce inline and referenced lifecycle integrity (V9).
+- Enforce `select`/`multiselect` field binding exclusivity and closedness (V3).
+
+Support for `Note` (Tier 0) is optional at core conformance level.
+
+
+##### Extension conformance requirements
+
+**Content**: An implementation declaring a given extension MUST:
+- Accept and validate all types defined by that extension
+- Enforce all invariants assigned to that extension
+- Respect the declared dependency chain (e.g., `ext:views-l2` requires `ext:views-l1` to also be declared)
+
+`ext:recommended-relations` is retired as of RFC-005. It no longer owns any normative semantics. Implementations MUST NOT treat it as a capability gate: the canonical relation vocabulary is now mandatory core behaviour provided by the `com.semanticops.srs` package.
+
+
+##### ext:repository conformance requirements
+
+**Content**: An implementation declaring `ext:repository` MUST:
+- Produce repositories with a `.srs` marker and `manifest.json` at root, with content in the prescribed folder layout
+- Maintain no `instanceIndex` in the manifest: it is retired (RFC-038 [R2]); membership is the instance set enumerated from the tree (RFC-038 [R1])
+- Produce archives that satisfy all self-containment requirements (Invariants 49 and 51)
+- Consume archives by parsing the manifest first and resolving all instances via the repository's authoritative instance set, enumerated from the tree (RFC-038 [R1]), before processing content
+- Resolve `SourceReference` entries with `sourceType: "repository-document"` via the sidecar in `sourceDocumentsPath`
+- Enforce Invariants 45–55
+- Require no TSS, Protocol, Addressability infrastructure, or external registry when `PackageRef.mode === "local"`. The repository is fully operable with only its own files.
+
+An implementation that can produce archives but not consume them (or vice versa) MUST declare this limitation explicitly. Partial repository support is not conformant.
+
+
+##### ext:repository (self-contained) profile
+
+**Content**: A named stricter profile for standalone, offline-operable repositories:
+
+Example: the self-contained profile declaration.
+
+An implementation declaring this profile MUST satisfy all `ext:repository` conformance requirements and additionally:
+
+- `packageRef` MUST be present with `mode: "local"`. Absent or external package references are not permitted.
+- The local package MUST be `mode: "bundled"` (Invariant 50 is always in effect).
+- No external registry, TSS, Protocol stack, Addressability infrastructure, AttentionState, or live conversation store is required or assumed. The repository directory (or archive) is the complete and sufficient deployment unit.
+- An archive produced under this profile MUST be openable and fully processable by a consumer with no prior installation, no network access, and no running services.
+
+This profile is appropriate for: standalone tools, file-based backups, air-gapped or offline deployments, inter-organisational exchange, and any context where zero-dependency portability is required.
+
+
+##### Interoperability note
+
+**Content**: Two implementations at the same conformance level produce compatible definitions for exchange. An implementation receiving a Package that includes types or fields from an extension it does not support should surface the unknown content, preserve it where possible, and pass it through instead of silently discarding it.
+
+Two implementations both declaring `ext:repository` MUST be able to exchange archives without data loss. An archive produced by one conforming implementation MUST be consumable by any other conforming implementation at the same SRS version.
 
 
 

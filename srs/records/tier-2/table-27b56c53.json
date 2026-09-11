@@ -1,0 +1,111 @@
+{
+  "instanceId": "27b56c53-21d9-4cfa-86c5-a6c5427d940f",
+  "typeId": "2a000013-0000-4000-a000-000000000013",
+  "typeVersion": 3,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "table",
+  "fieldValues": {
+    "columns": [
+      "Extension",
+      "Identifier",
+      "Depends on",
+      "Notes"
+    ],
+    "rows": [
+      {
+        "cells": [
+          "Addressability",
+          "`ext:addressability`",
+          "—",
+          "For live facilitation, declare together with `ext:protocol`"
+        ]
+      },
+      {
+        "cells": [
+          "Lifecycle",
+          "`ext:lifecycle`",
+          "—",
+          ""
+        ]
+      },
+      {
+        "cells": [
+          "Protocol",
+          "`ext:protocol`",
+          "`ext:lifecycle` (recommended)",
+          "For live facilitation, declare together with `ext:addressability`"
+        ]
+      },
+      {
+        "cells": [
+          "Type Inheritance",
+          "`ext:type-inheritance`",
+          "—",
+          ""
+        ]
+      },
+      {
+        "cells": [
+          "Views L1",
+          "`ext:views-l1`",
+          "—",
+          ""
+        ]
+      },
+      {
+        "cells": [
+          "Views L2",
+          "`ext:views-l2`",
+          "`ext:views-l1`",
+          ""
+        ]
+      },
+      {
+        "cells": [
+          "Cross-Field Validation",
+          "`ext:cross-field-validation`",
+          "—",
+          ""
+        ]
+      },
+      {
+        "cells": [
+          "Recommended Relations",
+          "`ext:recommended-relations`",
+          "—",
+          ""
+        ]
+      },
+      {
+        "cells": [
+          "Import Tracking",
+          "`ext:import-tracking`",
+          "—",
+          ""
+        ]
+      },
+      {
+        "cells": [
+          "Registry",
+          "`ext:registry`",
+          "—",
+          ""
+        ]
+      },
+      {
+        "cells": [
+          "Repository",
+          "`ext:repository`",
+          "—",
+          "File-based live repository and archive (export/import) format"
+        ]
+      }
+    ]
+  },
+  "createdAt": "2026-09-11T15:26:38.773673404+00:00",
+  "updatedAt": "2026-09-11T15:26:39.063012424+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "meta": {
+    "derivedFrom": "9a358922-04fb-5730-807c-592da5269f9f"
+  }
+}

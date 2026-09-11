@@ -1,0 +1,21 @@
+{
+  "instanceId": "dc3a26ed-3008-4960-90b5-99ec2d6d0af4",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Interoperability note",
+    "content": "Two implementations at the same conformance level produce compatible definitions for exchange. An implementation receiving a Package that includes types or fields from an extension it does not support should surface the unknown content, preserve it where possible, and pass it through instead of silently discarding it.\n\nTwo implementations both declaring `ext:repository` MUST be able to exchange archives without data loss. An archive produced by one conforming implementation MUST be consumable by any other conforming implementation at the same SRS version."
+  },
+  "tags": [
+    "construct:record",
+    "topic:conformance"
+  ],
+  "createdAt": "2026-09-11T15:26:35.363489264+00:00",
+  "updatedAt": "2026-09-11T15:32:08.405315060+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "meta": {
+    "derivedFrom": "a61d30ea-1d2b-5784-8589-9db7996f7122"
+  }
+}

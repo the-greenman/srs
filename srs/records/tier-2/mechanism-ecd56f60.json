@@ -1,0 +1,23 @@
+{
+  "instanceId": "ecd56f60-cc9a-4f9b-b031-730af00acddd",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "ext:lifecycle × ext:addressability",
+    "content": "**Status: Dormant** (removed under `rfc-decision-2a1e1590`, 2026-08-21). This coupling governs an implementation declaring both `ext:lifecycle` and `ext:addressability`: its required behaviour, and both of its invariants (formerly `[LC-AX1]` and `[LC-AX2]`), required a lifecycle state transition to produce a `Revision` snapshot per field value, tagged with `provenance.lifecycleTransition`. Every clause of this coupling was revision-dependent; with the per-field `Revision` mechanism removed (zero corpus use, incompletely specified: see `rfc-decision-2a1e1590`, also removed under the same ruling), no requirement survives the cut. `ext:lifecycle` and `ext:addressability` impose no cross-cutting obligation on each other while this stays dormant; each extension's own invariants are unaffected.\n\n**Return trigger**: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface. When a real consumer's requirements are known, the coupling is redesigned against them, not reinstated as specified here."
+  },
+  "tags": [
+    "concern:extensibility",
+    "construct:lifecycle",
+    "construct:address",
+    "topic:extensions"
+  ],
+  "createdAt": "2026-09-11T15:26:35.636879339+00:00",
+  "updatedAt": "2026-09-11T15:33:05.251865657+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "meta": {
+    "derivedFrom": "b3c4d5e6-f7a8-4b9c-ad1e-2f3a4b5c6d7e"
+  }
+}
