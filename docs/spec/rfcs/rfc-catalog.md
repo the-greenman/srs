@@ -826,6 +826,45 @@ Amends standing rules and migration obligations across four Accepted RFCs: RFC-0
 
 Accepted in Revision 9. The #297 ecosystem cutover (closed 2026-08-14) implemented the schema cutover, dataModelRevision bump and migration flip; it did not leave RFC-038 with a declared srs-integration manifest. The remaining fold is tracked live by #633: declaring the manifest tokens across the schemas and records this RFC governs or amended. RFC-038 is grandfathered against #633 in `rfcs/integration-allowlist.json`; remove that entry when #633 folds this contract into canonical records, schemas, implementations, and migrated artifacts.
 
+<!-- srs-integration:v1
+schema:manifest.json
+schema:relation.json
+schema:relation-type.json
+schema:protocol.json
+schema:srsj-envelope.json
+I-46
+I-49
+I-50
+I-80
+I-82
+I-102
+I-112
+I-118
+I-136
+mechanism:conformance-requirements
+mechanism:conflict-resolution-identity-and-information
+mechanism:file-format
+mechanism:path-conventions-in-data
+mechanism:ext-repository-conformance-requirements
+tooling-only
+# Cross-RFC amendments: resolveToken recognizes only I-<n> / ext: / schema: / type: /
+# section: / subsection: / concept: / mechanism: / cell: -- there is no "amends:" or "rfc:"
+# token kind for "RFC-038 amends RFC-N [Rn]". Each amendment named above is accounted for
+# through the tokens above, or noted here where it is not yet folded:
+# - RFC-039 [R14] -> I-136, restated against the authoritative instance set.
+# - RFC-039 [R13] is migration-only per RFC-039's own text ("govern the one-off migration
+#   ... neither group needs a carrier record") -- that migration already ran at #242/Phase B.
+# - RFC-013 [R6] -> I-82, restated against the container set.
+# - RFC-013 [R9] is self-annotated in its own .md ("Amended by RFC-038 [R25] ... further
+#   amended by srs#446") -- the no-precedence-resolution clause it invokes is folded via
+#   mechanism:conflict-resolution-identity-and-information.
+# - RFC-017 [R2]/[R12] -> I-102 and I-112, restated against the sidecar scan rather than the
+#   retired sourceDocumentIndex.
+# - RFC-026 [R5]/[R6]/[R13] are NOT folded: RFC-026's own rule text still reads against
+#   containerIndex/instanceIndex verbatim, with no amendment annotation and no invariant
+#   restating it against the tree-authoritative store. Filed as #766.
+-->
+
 **Proposal Artifact Path**: rfcs/rfc-038-tree-authoritative-storage.md
 
 **Content**: A conforming SRS repository answers "what is in this repository?" twice, and the two answers are governed by ratified rules that contradict each other. `docs/schema/2.0/manifest.json` calls the manifest "the authoritative index" and requires `instanceIndex`; the `RepositoryManifest` prose says "an instance not in the index is not a member, even if its file is present". RFC-012 [R6], RFC-013 [R2], I-80 and I-118 say the opposite. Implementations have quietly picked one.
