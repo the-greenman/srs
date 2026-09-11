@@ -1,12 +1,14 @@
 // srs#396 guard — post-publish completeness.
 //
 // Every heading the renderer emits for a view must survive into the committed export, with one
-// deliberate exception: the subsections RFC-016 (Change B) authorises `renderInvariants()` to
+// deliberate exception: the subsections RFC-016 (Change B) authorised `renderInvariants()` to
 // replace wholesale — the direct `contains` members of the section titled "Key Invariants". Their
-// hand-authored prose is superseded by the projected invariant list by design (Phase 2 cleanup of
-// that prose is tracked separately, srs#117); everything else that disappears between render and
-// publish is a real loss, which is exactly what this bug did to "Extension Interactions" and its
-// subsections.
+// hand-authored prose was superseded by the projected invariant list by design. That section record
+// is itself now retired (srs#710, RFC-042 Change B, `rfc-decision-5f8204bc`): `invariant-region.mjs`
+// generates the "Key Invariants" heading rather than finding one, so there is no more raw-rendered
+// heading for `renderInvariants()` to swallow and nothing left to exempt — see
+// `keyInvariantsExemptTitleCounts` below. Everything else that disappears between render and publish
+// is a real loss, which is exactly what this bug did to "Extension Interactions" and its subsections.
 //
 // Two independence properties matter for this to be a real guard rather than a check that agrees
 // with itself:
@@ -50,7 +52,13 @@ export async function keyInvariantsExemptTitleCounts(repoRoot) {
     }
   }
   if (!keyInvariantsId) {
-    throw new Error(`no records/**/*.json record has typeName "section" and title ${JSON.stringify(KEY_INVARIANTS_TITLE)}`);
+    // srs#710 (RFC-042 Change B): the section-typed "Key Invariants" record this exemption set used
+    // to be rooted at is retired, and the `section` Type it was an instance of no longer exists —
+    // no record can ever again produce this root. There is therefore no `contains` subtree left to
+    // walk and nothing to exempt: an empty set is the correct, permanent answer, not a guard failure.
+    // It was already empty in practice before the record was deleted — the last of its own
+    // subsection children had already been retyped or moved out by earlier srs#710 units.
+    return new Map();
   }
 
   // The full `contains` subtree, not just direct children — `render_service.rs` descends
