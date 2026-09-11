@@ -1,0 +1,15 @@
+{
+  "instanceId": "398e117c-348a-4a31-a044-2ed78f0c94f8",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "Relation's $schema-carrier fix is intentionally lighter than the Field/Type/View normalization pattern",
+    "summary": "Field, Type, View, Theme, Blueprint, Lifecycle, Vocabulary and RelationType each accept the canonical $schema-bearing carrier via a dedicated `*Json` shadow struct (e.g. field_json.rs's `schema: Option<String>` renamed `$schema`) plus a `create_*_normalized(store, raw: serde_json::Value, ...)` repository service that defaults mechanical boilerplate, converts to the domain type, then schema-validates the normalized value. srs-rust#1021 (relation create rejecting a canonical Relation carrying $schema) deliberately did NOT follow that pattern for Relation. Instead it added one small `relation_service::parse_relation_input(value)` that strips/validates a top-level $schema (matching store::RELATION_OBJECT_SCHEMA_URL) before deserializing straight into the existing `Relation` struct, unchanged.",
+    "rationale": "Relation has no mechanical-defaulting or legacy-shape-upgrade needs the way Field/Type do (no revision upgrade, no manufactured aiGuidance, no id/createdAt stamping requirement beyond what create_relation already does) - a `RelationJson` shadow would be pure ceremony. More importantly, `Relation` derives PartialEq and is constructed as a plain struct literal in ~50 places across the workspace (tests mostly); adding a `schema` field directly to `Relation` itself (the seemingly obvious mirror of `RelationsCollection`'s existing `#[serde(rename = \"$schema\")] schema: Option<String>`) would force every one of those literals to list the new field, and would also leak `$schema` into `schema_validate_relation`'s `serde_json::to_value(relation)` call - which validates against RELATIONS_COLLECTION_SCHEMA_ID's embedded Relation def, an `additionalProperties: false` schema with NO `$schema` property - reintroducing the exact same class of bug this fix closes. A future unit that notices this asymmetry and is tempted to \"unify\" Relation onto the *Json/normalized pattern for consistency should know: (1) the schema_validate_relation gate still validates against the legacy relations-collection.json embedded def rather than the canonical standalone relation.json (a separate, larger, already-flagged pre-existing TODO - relation_service.rs:266-269, called out as out-of-scope by both srs-rust#1022's plan and this unit) - fix that gate first, or the two problems compound; (2) any RelationJson shadow must keep its own `$schema` field out of the value handed to `create_relation`'s validation and storage paths, exactly as this fix's `parse_relation_input` already does by discarding it outright rather than carrying it on `Relation`."
+  },
+  "createdAt": "2026-09-11T21:08:53.797487327+00:00",
+  "updatedAt": "2026-09-11T21:08:53.797492775+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
