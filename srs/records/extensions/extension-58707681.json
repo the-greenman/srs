@@ -1,0 +1,21 @@
+{
+  "instanceId": "58707681-37e7-4c94-9837-ddef5ea50e07",
+  "typeId": "2a000008-0000-4000-a000-000000000008",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "extension",
+  "fieldValues": {
+    "extension_id": "ext:type-inheritance",
+    "title": "Type Inheritance",
+    "extension_depends": "",
+    "content": "Folded into the concept tree (srs#710, RFC-042 Change B). The normative text for `ext:type-inheritance` now lives in the \"Type specialisation\" concept and its `identityFieldId` / `FieldAssignmentOverride` mechanisms (`com.semanticops.spec/concept` / `mechanism`), succeeding the retired `ext:type-inheritance` subsection (`meta.derivedFrom` on each successor records the provenance). This record is kept only so `ext:type-inheritance` continues to resolve as an RFC-integration token (`scripts/check-rfc-integration.mjs`); it is not rendered by any document view and carries no independent content of its own. Do not edit this field to add prose — edit the successor mechanisms instead."
+  },
+  "tags": [
+    "concern:extensibility",
+    "construct:type",
+    "topic:extensions"
+  ],
+  "createdAt": "2026-09-11T06:05:14.699392912+00:00",
+  "updatedAt": "2026-09-11T06:05:14.699400190+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
