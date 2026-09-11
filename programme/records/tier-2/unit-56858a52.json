@@ -1,0 +1,23 @@
+{
+  "instanceId": "56858a52-75f8-4479-86c1-5fe464c283a4",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Graduate two charter-background notes' rationale, correct stale #273 citations",
+    "summary": "Adds the missing derived-from relation from DN-045 to the 'Design Jurisprudence' note (already named in its prose but never asserted as a relation); corrects both notes' graduation_trigger text and the reachability-exclusion reasons, which cited #273 as the charter-self-hosting graduation vehicle - a mismatch, since #273 was the Metamodel v1.1.0 task, and the source-of-truth map (srs#639) has since ruled the Pattern Grid's cells live in JSON config, not a 'matrix' of typed records.",
+    "decision_mode": "clear",
+    "door": "door-1",
+    "issue_ref": [
+      "srs#631",
+      "srs#590",
+      "srs#580"
+    ],
+    "body": "PR https://github.com/the-greenman/srs/pull/764. Neither note's original graduation target exists: 'Taste Made Portable' (7e8d9753) stays pending, re-pointed from the closing #631 to #580 (Wave 2). 'Design Jurisprudence' (ac55018f) partially graduates now via a new derived-from relation to DN-045, which already carries the graduated content in its 'Forward framing' paragraph; its remaining SRS-for-Specs/Epic-13 thread stays pending under #580. Gates: srs repo validate 0 errors, validate-all.mjs and check-release-drift.mjs both green."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-11T20:57:50.449012181+00:00",
+  "updatedAt": "2026-09-11T20:57:50.449023689+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

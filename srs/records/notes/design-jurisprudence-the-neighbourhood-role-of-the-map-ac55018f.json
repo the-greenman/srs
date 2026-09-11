@@ -34,9 +34,9 @@
     },
     {
       "name": "graduation_trigger",
-      "content": "Rung 0 by the capture ladder: background meaning synthesizing an external research pass with the charter arc. GRADUATION, in parts: the minimal relation set and significance-gate design graduate via derived-from into the #273/#272 charter-self-hosting design and DN-045 when those land; the SRS-for-Specs thesis graduates into Epic 13's framing when that epic activates; the neighbourhood-role repositioning graduates into the charter's own records at the first charter review cycle. Until then, linked from the Decision Compass as background reading beside 'Taste Made Portable' and 'Fundamental Tensions'."
+      "content": "Rung 0 by the capture ladder: background meaning synthesizing an external research pass with the charter arc. GRADUATION, in parts — revised 2026-09-11 (srs#631): the minimal-relation-set framing, the significance-gate warning, and the neighbourhood-role repositioning have graduated via `derived-from` into DN-045 (`records/design-notes/045-inheritance-floor-and-documentation-only-rule.json`, its 'Forward framing' paragraph, which names this note directly) — the relation is now asserted, not just textual. The prior citation of '#273/#272 charter-self-hosting' as the graduation vehicle was a mismatch (#273 was the Metamodel v1.1.0 task, not this graduation) and is corrected here. Still open: the SRS-for-Specs thesis (`relevance_to_srs_for_specs_and_mudemocracy`), which graduates into Epic 13's framing when that epic activates (muDemocracy.org#126 under Epic 13 / srs#124) — tracked at srs#580 until Epic 13 activates. Until then this note stays linked from the Decision Compass as background reading beside 'Taste Made Portable' and 'Fundamental Tensions'."
     }
   ],
-  "$schema": "https://srs.semanticops.com/schema/2.0/note.json",
-  "createdAt": "2026-08-23T13:30:00Z"
+  "createdAt": "2026-08-23T13:30:00Z",
+  "$schema": "https://srs.semanticops.com/schema/2.0/note.json"
 }

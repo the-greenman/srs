@@ -1,7 +1,12 @@
 {
-  "$schema": "https://srs.semanticops.com/schema/2.0/note.json",
-  "createdAt": "2026-08-23T09:10:00Z",
   "instanceId": "7e8d9753-044d-4374-9aa2-0939a0d85cfd",
+  "title": "Taste Made Portable: why tension statements invert, and what defends them",
+  "tags": [
+    "fundamental-tensions",
+    "charter",
+    "topic:meta",
+    "foundations"
+  ],
   "sections": [
     {
       "name": "capture_context",
@@ -29,18 +34,13 @@
     },
     {
       "name": "graduation_trigger",
-      "content": "Rung 0 by the repo's capture ladder: this is background meaning — not a ratified decision (no alternatives-with-costs) and not structure (the grid's cells, axes and preferences will be Tier-2 data when the charter self-hosts). GRADUATION: when srs#273's charter self-hosting lands the matrix as typed records, this note graduates via derived-from into the rationale that accompanies them (a design note or the matrix records' evidence base). Until then it stays here, linked from the Decision Compass (#461) as background reading."
+      "content": "Rung 0 by the repo's capture ladder: this is background meaning — not a ratified decision (no alternatives-with-costs) and not structure. Revised 2026-09-11 (srs#631): the original premise here ('the grid's cells, axes and preferences will be Tier-2 data when the charter self-hosts', citing #273) does not hold — the source-of-truth map (srs#639, landed) rules that Pattern Grid cell slugs live in `scripts/lib/pattern-grid-cells.json` (config), and decisions live as `rfc-decision-*` records; there is no separate 'matrix as typed records' destination. #273 was the Metamodel v1.1.0 task, not this graduation, so the citation was already a mismatch before #435 closed over it. GRADUATION now depends on a future canonical capture of the charter's foundational tension-form rationale — a design note or `rfc-decision-*` record this note would inform via `derived-from` — with no such record yet in existence. Tracked under srs#580 (Wave 2: the meaning-placement sweep and compass-amendment-as-successor-decision work) until a narrower issue exists. Until then it stays here, linked from the Decision Compass (#461) as background reading."
     },
     {
       "name": "research_verdict_2026_08_23",
       "content": "The precedents research (decision-layering-precedents, 2026-08-23) tested this note's thesis adversarially across constitutional law, standards bodies, safety-critical operations, TRIZ, organizational systems, and ethics frameworks. VERDICT: the thesis survives in a narrower, stronger form.\n\nNARROWED: boundary clauses are NOT the necessary cure. Durable systems survive on bare preferences (the HTML Priority of Constituencies, RFC 1958, Ross's duties, Ostrom's principles) when they have some OTHER cheap, legitimate way to record contextual exception, disagreement, uncertainty, or learning at the point of application: precedent and distinguishing, waivers with compensating controls, graded recommendation strength, dissent, local rule-making, or an explicit rule that empirical feedback outranks doctrine. The stronger formulation: PRINCIPLE SYSTEMS INVERT WHEN THE INSTITUTION HAS NO CHEAP, LEGITIMATE WAY TO RECORD EXCEPTION, DISAGREEMENT, UNCERTAINTY, OR LEARNING AT THE POINT OF APPLICATION. Boundary clauses are one such mechanism among several, and where a strong case tradition exists, a case record plus exception machinery can beat them.\n\nCONFIRMED STRONGLY: the presence claim (systems stay influential only when embedded in the control surface of work — courts, waiver processes, line-stop, review tooling) and the substrate claim (every apparent bare-principle survivor turns out to have substrate — social, procedural, or legal, not necessarily technical; the requirement is that application leaves institutional memory that can affect the future rule).\n\nNEW PATHOLOGY NAMED, beyond this note's reflexive-risk section — AUTOMATED RITUALIZATION (Bridgewater the type specimen, Cynefin's 'zombie enforcement' the general form): premature classification (forcing open cases into known cells because a citation must be produced), metric substitution, interpretive centralization (whoever controls prompts and ontology becomes the constitutional court), chilling effects (only machine-legible objections travel), and self-sealing doctrine (contrary evidence explained as non-compliance). The charter's defenses must include a formal path for findings AGAINST the charter, and the useful distinction that principles come in kinds — reasons, defaults, tests, rules — of which only the latter two need explicit exception machinery at the clause level.\n\nThe research's adoption shortlist (distinguishing, waivers, dissent records, force/confidence grading, decision-mode classification, the empirical override, amendment jurisdiction, graduated guard vocabulary) is dispositioned on srs#435."
     }
   ],
-  "tags": [
-    "fundamental-tensions",
-    "charter",
-    "topic:meta",
-    "foundations"
-  ],
-  "title": "Taste Made Portable: why tension statements invert, and what defends them"
+  "createdAt": "2026-08-23T09:10:00Z",
+  "$schema": "https://srs.semanticops.com/schema/2.0/note.json"
 }
