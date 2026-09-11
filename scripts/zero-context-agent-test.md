@@ -103,3 +103,46 @@ regardless of the 5-item score.
 - Record the five item verdicts, the hallucination verdict, and the run's model/date alongside it.
 - A FAIL scorecard is a complete, acceptable outcome. It is data about the MCP surface's current
   expressiveness, not a failed test run.
+
+## Appendix: running this from a shell, when no client can be configured with only one MCP server
+
+A local Claude Code CLI (or any MCP client you can hand a bespoke config to) can follow Setup
+directly. Where only a shell is available and no client's tool surface can be trimmed to literally
+nothing but the MCP server, the `claude` CLI itself can approximate it as a subprocess — this is
+how the first run of this protocol (srs#711) was executed:
+
+```bash
+cat > mcp-config.json <<'JSON'
+{ "mcpServers": { "srs-spec": { "command": "<pinned srs binary>",
+  "args": ["mcp", "serve", "--repo", "<path-to-srs/srs>"] } } }
+JSON
+
+claude -p "<the verbatim prompt above>" \
+  --model claude-haiku-4-5-20251001 \
+  --output-format stream-json --verbose \
+  --permission-mode dontAsk --permission-prompts none \
+  --setting-sources "" \
+  --mcp-config mcp-config.json --strict-mcp-config \
+  --allowedTools "ListMcpResourcesTool ReadMcpResourceTool ReadMcpResourceDirTool ToolSearch mcp__srs-spec__find mcp__srs-spec__type_schema mcp__srs-spec__repo_validate mcp__srs-spec__record_allowed_transitions" \
+  --disallowedTools "Read Write WebFetch WebSearch Skill mcp__srs-spec__record_create mcp__srs-spec__record_update mcp__srs-spec__relation_create mcp__srs-spec__note_create mcp__srs-spec__record_transition mcp__srs-spec__record_successor mcp__srs-spec__note_graduate mcp__srs-spec__container_member_add mcp__srs-spec__container_member_remove mcp__srs-spec__protocol_run_abandon mcp__srs-spec__protocol_run_advance mcp__srs-spec__protocol_run_complete mcp__srs-spec__protocol_run_create mcp__srs-spec__protocol_run_get mcp__srs-spec__protocol_run_list" \
+  > transcript.jsonl
+```
+
+Run this from an empty working directory (no `CLAUDE.md` in it or any parent) rather than `--bare`
+— `--bare` requires `ANTHROPIC_API_KEY`/`apiKeyHelper` auth, which a proxy-authenticated cloud
+worker does not have.
+
+**Two gotchas this surfaced:**
+
+- `--tools ""` (disable all built-in tools) also removes the harness's own deferred resource-reader
+  tools (`ListMcpResourcesTool`, `ReadMcpResourceTool`) and `ToolSearch` needed to load them — it is
+  not a clean way to restrict the session to "MCP tools only". Use `--allowedTools`/
+  `--disallowedTools` by name instead, as above, and keep `ToolSearch` allowed.
+- MCP resources are not automatically callable the moment a server is mounted: the agent must first
+  `ToolSearch` for `ReadMcpResourceTool`/`ListMcpResourcesTool` (they arrive as deferred tools), then
+  call `ListMcpResourcesTool` to discover the real `srs://<repositoryId>/...` URIs — guessing a
+  URI (e.g. `srs://default/agent-index`) fails. Both cost transcript turns; a rubric run's turn
+  count is not directly comparable across clients that expose resources differently.
+- This is not a literal zero-other-tools client — `Read`/`Write` and the harness's task/skill
+  tools are present but denied by permission, not physically absent. Note this as a caveat on any
+  run executed this way rather than reporting it as a clean Setup-section isolation.
