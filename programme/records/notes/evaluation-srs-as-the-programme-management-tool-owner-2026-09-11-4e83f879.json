@@ -1,0 +1,32 @@
+{
+  "instanceId": "4e83f879-796b-4a42-9dc4-c6ac0971916b",
+  "title": "Evaluation: SRS as the programme-management tool (owner, 2026-09-11)",
+  "tags": [
+    "evaluation",
+    "closing"
+  ],
+  "sections": [
+    {
+      "name": "context",
+      "label": "Context",
+      "content": "Recorded on the owner's instruction on 2026-09-11, at the point the programme repository becomes a historical artefact. This note is its closing evaluation. The sample is one programme, one owner, one week of autonomous execution (2026-09-05 to 2026-09-11); the conclusions are modest and mixed."
+    },
+    {
+      "name": "where_it_worked",
+      "label": "Where the records did work markdown would not have",
+      "content": "- Carried-context as a first-class record bound to its unit. A worker leaves a trap for the next worker; the coordinator's dispatch brief quotes every carried-context record that binds a unit. Across more than thirty worker sessions this is why the srs#710 retirement batches got cleaner instead of repeating each other's mistakes. In markdown this would be a paragraph in a long issue thread and the quoting would depend on someone scrolling.\n- Findings as durable, addressable artifacts. Sixty-four findings under version control, linked to their units, several of which became engine issues (srs-rust#1025, #1031, #1039; srs#701). Issue comments live outside the repository and its history; these travel with it.\n- The dogfood return from building it. Bootstrapping and walking the programme repository found four tool gaps by itself: repo create leaving the marker directory empty (srs-rust#959), Protocol with no MCP surface (#955), no verb to declare a presentation (#961), protocol runs over MCP (#977)."
+    },
+    {
+      "name": "where_ceremony",
+      "label": "Where it was ceremony",
+      "content": "- Two state systems. The coordinator and workers run on gate:* labels; the unit records carry their own lifecycle, and the record state is the less-read copy. This is the duplication the charter forbids, in the programme's own tooling.\n- Process-as-record had no force. The land stage rule in the Protocol record was ignored three times out of three until a CI guard existed (srs#716). Being a record made it discoverable, not binding; enforcement came from checks.json, as it does everywhere else.\n- Harvest overhead. Every unit produced its own harvest PR with a full CI run, drawing on the same rate-limited quota that cost the coordinator ticks.\n- No runs recorded. The programme-unit-walk Protocol was walked as guidance and never executed as a run, so a unit's position in its walk is inferred from labels, not read from a record."
+    },
+    {
+      "name": "verdict",
+      "label": "Verdict",
+      "content": "As a ledger, SRS beat markdown: lessons and findings persisted and were consumed. As a state machine it lost to labels and added a second truth. As a process definition it was no stronger than prose. Net positive, smaller than the design implied.\n\nWhat to change before judging further: collapse the two states (record as source with labels projected from it, or drop unit lifecycle and keep findings and carried-context); harvest inside the landing PR rather than a separate one; record protocol runs now that srs-rust#983 makes it possible, since that is the one thing only SRS can do here; and run srs#711, the zero-context-agent test, which is the actual claim under evaluation. Until it runs, the benefit of meaning-in-records for programme management is asserted, not shown."
+    }
+  ],
+  "createdAt": "2026-09-11T00:00:00Z",
+  "$schema": "https://srs.semanticops.com/schema/2.0/note.json"
+}
