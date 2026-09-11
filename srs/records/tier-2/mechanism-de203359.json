@@ -1,0 +1,23 @@
+{
+  "instanceId": "de203359-01b0-4baf-814d-9c836ea67b9d",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "ext:protocol × ext:addressability",
+    "content": "Protocol stage advancement updates `AttentionState`. This governs an implementation declaring both `ext:protocol` and `ext:addressability`: when a Protocol run advances from one stage to another, the active `AttentionState` MUST reflect the new stage before any conversation material is tagged.\n\nSpecifically:\n\n- `AttentionState.protocolRunId` references the active Protocol run\n- `AttentionState.stageId` reflects the current stage\n- `AttentionState.fieldId`, when a specific field is the current focus within a stage, is set accordingly\n\nConversation chunks produced while `AttentionState.stageId` is set are associated with that stage. This makes stage-level Context Queries (`{runId}/{stageId}`) return the correct material."
+  },
+  "tags": [
+    "concern:extensibility",
+    "construct:address",
+    "construct:protocol",
+    "topic:extensions"
+  ],
+  "createdAt": "2026-09-11T15:26:34.247010063+00:00",
+  "updatedAt": "2026-09-11T15:33:04.949996881+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "meta": {
+    "derivedFrom": "1ff855f5-b20f-52c7-bc1d-c7e6311743a6"
+  }
+}

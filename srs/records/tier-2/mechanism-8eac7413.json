@@ -1,0 +1,22 @@
+{
+  "instanceId": "8eac7413-78e8-4bc2-9134-90bcb500c651",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "ext:federation",
+    "content": "**Status: Dormant** (removed under `rfc-decision-4f1e12e5`, 2026-08-22). The 2026-08-21 usage attestation found zero registries, zero events, and zero cross-repository relations anywhere in the corpus: the mechanism was speculative, never exercised in production. It is removed under the dormancy rule (`rfc-decision-cce3c00e`).\n\n**Removed surface** (historical): `RepositoryRegistry`/`RepositoryRegistryEntry` and `FederationEvent`/`FederationEventsFile` (the `federation-registry.json`/`federation-events.json` schemas); the `sourceRepositoryId`/`targetRepositoryId` qualifier fields on `Relation`; `manifest.federationPath`/`federationEventsPath`.\n\n**Return trigger** (verbatim from `rfc-decision-4f1e12e5`): COMMITTED, not evidence-gated - federation is core to SRS (owner, 2026-08-22); this removal is a deliberate reset of a design that predates real practice, not a judgment on the capability. The redesign returns as a planned roadmap phase, grounded in the sharing forms that actually emerged (bundles, slices, git-hosted repositories) and the axis 4-10 verification path; the owner schedules it. The travel mandate covers artifact-form portability meanwhile.\n\nCell: ♓ Portability."
+  },
+  "tags": [
+    "concern:extensibility",
+    "concern:federation",
+    "topic:extensions"
+  ],
+  "createdAt": "2026-09-11T15:26:35.911341886+00:00",
+  "updatedAt": "2026-09-11T15:32:07.508138407+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "meta": {
+    "derivedFrom": "dd0ed2ae-ada5-570c-8882-2ac89ca49c0f"
+  }
+}

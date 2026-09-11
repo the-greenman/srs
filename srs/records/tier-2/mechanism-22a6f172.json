@@ -1,0 +1,20 @@
+{
+  "instanceId": "22a6f172-02a8-4fa0-98ab-310b5c8d89e8",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "What this specification defines",
+    "content": "The Semantic Record System (SRS) specification defines an interoperable standard for semantic field and type definitions, records, relations, and the mechanisms by which these artefacts are created, shared, versioned, and distributed across independent implementations.\n\nThis specification covers:\n\n- Field: atomic reusable semantic unit\n- Type: named composition of fields for a specific semantic object type\n- Record: instantiated type with field values; two semantic maturity tiers (Note, Record)\n- Relation: first-class typed link between records\n- Container: grouping boundary for record collections\n- Distribution: Package, Reference, Lineage, Provenance\n- Extensions: optional, independently adoptable capabilities declared by conforming implementations"
+  },
+  "tags": [
+    "topic:meta"
+  ],
+  "createdAt": "2026-09-11T15:26:34.805985356+00:00",
+  "updatedAt": "2026-09-11T15:33:04.646109973+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "meta": {
+    "derivedFrom": "859c6150-4a5c-5229-934b-14223a072bdb"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "instanceId": "12f87fe2-bbf7-479c-974c-cd9e9caef482",
+  "typeId": "fa687772-2129-4508-b63a-671e3e668a33",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "carried_context",
+  "fieldValues": {
+    "title": "Retyping a section/subsection into mechanism moves its prose into check-spec-language.mjs's stricter normative scope",
+    "summary": "scripts/spec-language-registry.json's normativeSites.types includes com.semanticops.spec/mechanism, so the instant a subsection's content field is carried into a new mechanism record with no textual change, it is checked against a materially stricter bar than the subsection Type was ever held to: the em-dash cap per paragraph drops from 1 to 0, RFC 2119 keywords must be uppercase (lowercase-2119) rather than merely being permitted (subsections ban them outright via keyword-register; mechanisms are exempt from that ban but are held to the case rule instead), and the normative-scope patterns (hedges, future-tense, reader-address) start applying to the whole content field, not just a normative_statement field mechanism does not even have.",
+    "rationale": "Discovered while retiring srs#710's final 13 subsection records (PR #759): all 13 new mechanism successors failed check-spec-language.mjs on first run with 39 violations, none of which existed on the source subsections (subsections are outside normativeSites.types, so none of this applied to them). None of the seven existing carried_context records bound to srs#710 mention this -- every prior batch's successors were, by luck or by care, already written clean of these patterns, so this gap was never exercised until a batch (this one) copied older, unedited subsection prose forward verbatim. Fixed all 39 in place rather than grandfathering: reworded em-dashes to colons or restructured the sentence, uppercased genuine MUST/MUST NOT, removed hedge words and future tense, and named the concrete mechanism in place of vaguer verbs like \"facilitate\". Two records needed a second pass because the first fix for one rule (em-dash-cap) mechanically triggered another (heading-restatement, bold-lead-in-uniformity) -- these check-spec-language.mjs rules are not independent of each other once several fire on the same short paragraph, and a fix for one can create the shape another rule bans. Applies to any future srs#710-style batch, and more broadly to any unit that retypes a section/subsection (or any other Type outside normativeSites.types) into mechanism or invariant: budget time to clean the prose to the mechanism bar in the same PR, do not assume copying the content field forward unchanged is a safe no-op, and expect that fixing one flagged pattern in a short paragraph can surface a second. Would go stale if normativeSites.types ever drops mechanism, or if check-spec-language.mjs's rules are decoupled so fixing one no longer risks triggering another."
+  },
+  "createdAt": "2026-09-11T15:52:30.401233222+00:00",
+  "updatedAt": "2026-09-11T15:52:30.401252516+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
