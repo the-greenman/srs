@@ -1433,7 +1433,7 @@ record {
 
 **Content**: A first-class typed link between instances. Relations allow implementations to construct semantic graphs for navigation, analysis, projection, and reasoning.
 
-See the generated reference below for `Relation`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+See the generated reference below for `Relation`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer). This prose no longer hand-duplicates the property list.
 
 Relations span tiers. A Note may be the target of `derived-from` Relations from the Records it graduated into.
 
@@ -1444,8 +1444,6 @@ Relations span tiers. A Note may be the target of `derived-from` Relations from 
 Custom types not covered by these should use `namespace/name` format (e.g. `com.acme.hr/transferred-to`) to prevent collision. Extended relation type metadata is defined in `ext:recommended-relations`.
 
 **Relations do not change lifecycle state.** A `supersedes` Relation does not mutate the prior Record's `lifecycleState`. Lifecycle state changes are explicit acts by an implementation's transition mechanism.
-
----
 
 **Intro**: **Directionality convention:**
 `sourceInstanceId` is the asserting instance; `targetInstanceId` is the related instance. The Relation reads: "source [relationType] target."
@@ -1771,9 +1769,6 @@ relation-type-definition {
 
 **Notes**: Section names must be unique within a Note (Invariant 18). Tags on a Note are keys that may, but need not, resolve to a Term in an open vocabulary.
 
-###### Notes
-
-
 ###### NoteSection.name values must be unique within a Note.
 
 **Number**: 18
@@ -1805,9 +1800,6 @@ See the generated reference below for `Note`'s current property table, optional 
 **Description**: A Tier 2 instance: a stable instance id bound to an exact Type version, carrying values for that Type's fields. The binding is by `typeId` and `typeVersion`, and it is authoritative — the denormalised `typeNamespace` and `typeName` are convenience hints, and a Record whose hints disagree with the resolved Type is invalid until corrected. Conformance is measured against the version the Record was instantiated under; publishing a new Type version does not migrate existing Records.
 
 **Notes**: A Record may also carry lifecycle state, tags, source references and timestamps. Those are envelope members, governed by the Record schema and not by the Type's projected field schema.
-
-###### Records
-
 
 ###### Record.typeId and Record.typeVersion are the authoritative Type…
 
@@ -2173,9 +2165,6 @@ See the generated reference below for `SourceReference`'s current property table
 
 **Examples**: The canonical seven: `contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`.
 
-##### Relations
-
-
 ##### In a Relation, sourceInstanceId is the asserting instance and…
 
 **Number**: 16
@@ -2240,9 +2229,6 @@ The invariant does not assign agency or authority to the `source` slot — those
 **Description**: A grouping boundary over a collection of instances, answering the scoping question the Relation graph cannot: which instances belong together, what counts as this project. It is not a semantic object, having no Fields and holding no semantic state, and its claim is different in kind from a `contains` Relation: an edge says one instance is part of another; a Container says these instances form a unit for boundary purposes. Membership is declared: the union of its roots and explicit members, closed over declared child Containers, and never derived from a Relation (RFC-034).
 
 **Notes**: A Container may name one member as its identity or purpose record, and one member whose Type is the Container's typing anchor. Its own id lives in a different space from instance ids and must never appear on a Relation. Nested scopes are declared through `childContainerIds`; `contains` remains the part-of tree where meaning lives and must still be maintained (rfc-decision-0750c62f).
-
-##### Containers
-
 
 ##### Container.containerId is not an instance ID. It must not appear in…
 
@@ -3720,16 +3706,7 @@ Multiple Registries may coexist. A consumer may index multiple catalogs. The spe
 
 Example: the `Package` shape.
 
-**`mode` semantics:**
-
-| Mode | Meaning |
-|---|---|
-| `"bundled"` | All Field records referenced by any Type, all Type records referenced by any Type or View, and all View records referenced by any Composition are included in their respective arrays. Self-contained. |
-| `"standalone"` | Dependencies are expected pre-installed in the consumer's registry. `packageDependencies` is the required manifest. |
-
 `packageDependencies` is required in both modes. Consumers use it to validate completeness without parsing content internals.
-
----
 
 ###### The `Package` shape
 
@@ -3764,6 +3741,14 @@ Example: the `Package` shape.
 ```
 
 
+**Intro**: **`mode` semantics:**
+
+| Mode | Meaning |
+| --- | --- |
+| `"bundled"` | All Field records referenced by any Type, all Type records referenced by any Type or View, and all View records referenced by any Composition are included in their respective arrays. Self-contained. |
+| `"standalone"` | Dependencies are expected pre-installed in the consumer's registry. `packageDependencies` is the required manifest. |
+
+
 
 ##### Reference
 
@@ -3772,8 +3757,6 @@ Example: the `Package` shape.
 Example: the `Reference` shape.
 
 Canonical string form: `namespace/name@version`
-
----
 
 ###### The `Reference` shape
 
@@ -3797,14 +3780,7 @@ Canonical string form: `namespace/name@version`
 
 Example: the `Lineage` shape.
 
-| Field pair | Meaning |
-|---|---|
-| `sourceDefinition*` | Tracked copy; consumer expects upstream updates |
-| `forkedFrom*` | Deliberately diverged; no upstream tracking |
-
 Both may be present during a transition from tracking to forking.
-
----
 
 ###### The `Lineage` shape
 
@@ -3820,6 +3796,12 @@ Both may be present during a transition from tracking to forking.
 ```
 
 
+| Field pair | Meaning |
+| --- | --- |
+| `sourceDefinition*` | Tracked copy; consumer expects upstream updates |
+| `forkedFrom*` | Deliberately diverged; no upstream tracking |
+
+
 
 ##### Provenance
 
@@ -3828,8 +3810,6 @@ Both may be present during a transition from tracking to forking.
 Example: the `Provenance` shape.
 
 `packageVersion` is distinct from `Field.version`. A package at `1.3.0` may contain `decision_statement@3` and `context@2`.
-
----
 
 ###### The `Provenance` shape
 

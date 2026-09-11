@@ -1,0 +1,21 @@
+{
+  "instanceId": "8f09637c-4459-459e-a27a-3d43e15ff033",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Provenance",
+    "content": "Publisher and package origin metadata.\n\nExample: the `Provenance` shape.\n\n`packageVersion` is distinct from `Field.version`. A package at `1.3.0` may contain `decision_statement@3` and `context@2`."
+  },
+  "tags": [
+    "construct:provenance",
+    "topic:distribution"
+  ],
+  "createdAt": "2026-09-11T07:47:55.007714618+00:00",
+  "updatedAt": "2026-09-11T07:51:35.290019169+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "meta": {
+    "derivedFrom": "60dc0cbb-6c52-559b-9014-2fe0c41bacd1"
+  }
+}

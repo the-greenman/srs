@@ -1,0 +1,31 @@
+{
+  "instanceId": "e6e67001-6941-43f9-b4a8-94d83cfcd827",
+  "typeId": "2a000013-0000-4000-a000-000000000013",
+  "typeVersion": 3,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "table",
+  "fieldValues": {
+    "intro": "**`mode` semantics:**",
+    "columns": [
+      "Mode",
+      "Meaning"
+    ],
+    "rows": [
+      {
+        "cells": [
+          "`\"bundled\"`",
+          "All Field records referenced by any Type, all Type records referenced by any Type or View, and all View records referenced by any Composition are included in their respective arrays. Self-contained."
+        ]
+      },
+      {
+        "cells": [
+          "`\"standalone\"`",
+          "Dependencies are expected pre-installed in the consumer's registry. `packageDependencies` is the required manifest."
+        ]
+      }
+    ]
+  },
+  "createdAt": "2026-09-11T07:48:09.551962184+00:00",
+  "updatedAt": "2026-09-11T07:48:09.551969013+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

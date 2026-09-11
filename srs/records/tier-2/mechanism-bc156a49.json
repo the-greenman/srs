@@ -1,0 +1,21 @@
+{
+  "instanceId": "bc156a49-4d21-462b-8cfe-4ce42604fc89",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Package",
+    "content": "The distributable artefact. Contains Field, Type, View, and Relation type definitions with a complete dependency manifest.\n\nExample: the `Package` shape.\n\n`packageDependencies` is required in both modes. Consumers use it to validate completeness without parsing content internals."
+  },
+  "tags": [
+    "construct:package",
+    "topic:distribution"
+  ],
+  "createdAt": "2026-09-11T07:48:03.432143285+00:00",
+  "updatedAt": "2026-09-11T07:51:51.652189534+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "meta": {
+    "derivedFrom": "9a4a70af-dbce-55e3-abee-175d2491f656"
+  }
+}

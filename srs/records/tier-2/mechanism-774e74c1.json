@@ -1,0 +1,21 @@
+{
+  "instanceId": "774e74c1-80f2-4303-b2e9-67f41d0c6875",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Relation",
+    "content": "A first-class typed link between instances. Relations allow implementations to construct semantic graphs for navigation, analysis, projection, and reasoning.\n\nSee the generated reference below for `Relation`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer). This prose no longer hand-duplicates the property list.\n\nRelations span tiers. A Note may be the target of `derived-from` Relations from the Records it graduated into.\n\n**Canonical relation types** (use these exact strings for cross-system interoperability):\n\n`contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`\n\nCustom types not covered by these should use `namespace/name` format (e.g. `com.acme.hr/transferred-to`) to prevent collision. Extended relation type metadata is defined in `ext:recommended-relations`.\n\n**Relations do not change lifecycle state.** A `supersedes` Relation does not mutate the prior Record's `lifecycleState`. Lifecycle state changes are explicit acts by an implementation's transition mechanism."
+  },
+  "tags": [
+    "construct:relation",
+    "topic:foundation"
+  ],
+  "createdAt": "2026-09-11T07:48:04.370893619+00:00",
+  "updatedAt": "2026-09-11T07:56:08.405094036+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "meta": {
+    "derivedFrom": "e9bb323b-dc48-5e6f-bb2a-3bd729ac70a6"
+  }
+}
