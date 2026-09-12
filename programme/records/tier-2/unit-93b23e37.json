@@ -1,0 +1,21 @@
+{
+  "instanceId": "93b23e37-0ea7-4408-957a-409860d2a13a",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "CLI create commands do not hang on synchronous Node stdin (unreproducible)",
+    "summary": "srs-rust#1020 reported that `srs field create` (and other create commands) hang indefinitely when JSON is piped via Node's spawnSync/execFileSync, timing out at 5s with empty stdout/stderr, while file-redirected stdin (`< field.json`) completes immediately. The dispatch note directed reproducing first with spawnSync before touching stdin handling, and closing with evidence instead if it did not reproduce.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs-rust#1020"
+    ],
+    "body": "Reproduction attempted against both a fresh release build of origin/master (738baa6) and the pinned CLI release (v0.1.0-build.376), using both spawnSync and execFileSync with the exact reported invocation shape (input: JSON string, encoding: utf8, timeout: 5000). All runs completed in ~125-155ms with ok:true and no hang, across 20 consecutive spawnSync iterations. crates/srs-cli/src/input.rs (the shared stdin reader all create/update handlers route through) has been unchanged since 2026-09-05, predating the issue's 2026-09-09 filing, so no intervening fix explains the discrepancy — the hang was never reproducible against code the repository has shipped since #511. The stdin path is a plain blocking `std::io::stdin().read_to_string`, which has no reason to behave differently for a piped Node child than for shell redirection; the most likely explanation is an artifact of the reporter's specific Node/OS environment (e.g. a stdin pipe left open by a caller that never closed its write end) rather than a defect in the CLI. Closed as could not reproduce (issue closed, evidence posted) rather than changing stdin handling, per the dispatch note's explicit contingency. If this recurs, the next report should capture: exact Node version, OS, and whether the child process's stdin write end is explicitly `.end()`-ed or closed before the timeout fires — none of the reported repro steps mentioned closing the input stream, which is the one variable this session could not rule out."
+  },
+  "lifecycleState": "abandoned",
+  "createdAt": "2026-09-11T23:47:49.299778298+00:00",
+  "updatedAt": "2026-09-11T23:48:08.189291244+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
