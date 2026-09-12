@@ -1,0 +1,23 @@
+{
+  "instanceId": "be0bda24-c131-4787-9c18-6bd8ffd6bc4b",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "vocabulary create gains --package boundary support",
+    "summary": "vocabulary create was the only definition-create command still hardcoded to the primary package boundary; field/type/lifecycle/relation-type already accepted --package. This unit threads PackageSelector through create_vocabulary_normalized/create_vocabulary, reusing the shared validate_package_selector seam, and adds cross-store roundtrip + undeclared-boundary tests.",
+    "decision_mode": "clear",
+    "door": "non-normative",
+    "issue_ref": [
+      "srs-rust#1043",
+      "srs-rust#1055",
+      "srs#580"
+    ],
+    "body": "Dispatched from srs#580's gate:pool top-up (comment 5641587345), classified clear/Door 1/auto-merge on the premise that vocabulary, lifecycle and relation-type create all lacked --package.\n\n**Scope correction found during Ground/Classify:** verified via `--help` and code inspection (package_types.rs, lifecycle_service.rs, package_service.rs) that `lifecycle create` and `relation-type create` were already fully wired end-to-end with `--package` — only `vocabulary create` was actually missing it. The issue's premise was stale (the flag had already been added to the other two in a prior pass that never updated this issue). Scoped the fix to the real gap rather than mirroring the stale premise; noted as a scope-correction comment on srs-rust#1043 before implementing.\n\nImplementation mirrors `create_lifecycle`/`create_relation_type` exactly: `PackageSelector` threaded through `create_vocabulary_normalized` -> `create_vocabulary`, `validate_package_selector` called first, boundary existence checked via `store.load_package_boundary(&selector)`, write path and `ensure_vocabularies_dir` routed through `boundary_path`, registration via `store.add_definition_to_boundary(&selector, ...)`. No new selector type, no payload/schema change (VocabularyCreatePayload doesn't carry the selector, matching precedent).\n\nTests added: two cross-store roundtrip tests (MemoryStore + FileStore) for sub-package placement, one undeclared-boundary error test at the repository layer, and two CLI integration tests mirroring field's `field_create_in_sub_package` / `field_create_with_undeclared_package_flag_errors`.\n\nProve stage: deliberately reverted the boundary routing (hardcoded back to primary package) and reran — the two sub-package placement tests went red with the expected messages, confirming the guards catch the regression. Reverted; green again.\n\nGates: `cargo build --workspace`, `cargo test --workspace` (74/74 result groups, 0 failures, including `rfc_035_parity` against a fresh `origin/master` SRS_SPEC_DIR clone rather than the local sibling which sat on a feature branch), `cargo clippy --workspace --all-targets -- -D warnings`, `cargo fmt --check` — all exit 0.\n\nPR #1055 opened with mode/cell/door stated, `gate:auto-merge` label applied, auto-merge armed. Issue #1043 relabeled gate:working -> gate:in-review."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-12T01:16:41.616397626+00:00",
+  "updatedAt": "2026-09-12T01:17:03.995543037+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

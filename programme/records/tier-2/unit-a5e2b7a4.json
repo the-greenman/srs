@@ -1,0 +1,22 @@
+{
+  "instanceId": "a5e2b7a4-0377-4e50-9fd1-22bb920474e1",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "resolve_root_container docstring: embed/file-backed root coexistence is R12-fatal, not richest-source",
+    "summary": "resolve_root_container's docstring described a containers/*.json file sharing the root embed's id as the richest source to prefer. That state cannot be produced by any current write path (save_container_at folds a same-id write back into the embed) and, if produced anyway (hand-edited or pre-RFC-038 legacy repo), is fatal at catalog build under SRS038-R12-DUPLICATE-ID -- the Ok(container) match arm is unreachable for the embed's own id under any state that is not already fatal. Corrected the docstring and added a negative test proving the coexistence state surfaces as a propagated CatalogLoad error.",
+    "decision_mode": "clear",
+    "door": "door-1",
+    "issue_ref": [
+      "srs-rust#988",
+      "srs#580"
+    ],
+    "body": "Dispatched from srs#580's gate:dispatched queue (coordinator tick 2026-09-12T~00:20Z, classification row: clear / Repository / Door 1 / auto-merge). Claimed on srs-rust#988 (gate:dispatched -> gate:working). PR https://github.com/the-greenman/srs-rust/pull/1056 -- doc-only correction plus one new negative test in container_service.rs; no behaviour change, no schema change. Proof stage: temporarily removed \"container\" from catalog::detect_duplicates's checked sets to confirm the new test goes red (it returned Ok(Some(container)) from the file-backed copy -- exactly the old docstring's wrongly-described \"richest source\" behaviour) before reverting and confirming green on unmodified logic. Gates green: cargo build --workspace, cargo test --workspace (0 failures, SRS_SPEC_DIR pointed at a fresh origin/master clone of srs per the stale-sibling guidance), cargo clippy --workspace --all-targets -D warnings. Auto-merge armed (gate:auto-merge on the PR), not hand-merged."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-12T01:34:08.212523453+00:00",
+  "updatedAt": "2026-09-12T01:34:43.877977818+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
