@@ -114,9 +114,12 @@ Rendered by `projectField` (RFC-032 Change G), reused unchanged:
 - `datatype` scalar (`string`/`number`/`integer`/`boolean`/`date`/`date-time`) → JSON `type` (+ `format` for
   date/date-time), per the portable scalar table.
 - `format` (`plain`/`markdown`/`uri`/`uuid`/`email`) → `format` / `contentMediaType` (markdown).
-- `valueDomain: "closed"` with inline `allowedValues` → `{ type: "string", enum: [...] }`. A `vocabularyRef`
-  (configurable range) → `enum` of the vocabulary's effective Term keys **at generation time** (approximated;
-  resolution is the #260 core service's job — the v1 reference emitter handles inline `allowedValues` only).
+- `valueDomain: "closed"` with inline `allowedValues`, `datatype: "string"` → `{ type: "string", enum: [...] }`.
+  `datatype: "integer"` (RFC-032 [R3], widened by srs#534; see "Emitter capabilities" below) → a bare
+  `{ enum: [...] }` with no `type` keyword. A `vocabularyRef` (configurable range, `string` only —
+  Vocabularies are string Terms per RFC-006) → `enum` of the vocabulary's effective Term keys **at
+  generation time** (approximated; resolution is the #260 core service's job — the v1 reference emitter
+  handles inline `allowedValues` only).
 - `cardinality: "list"` → `{ type: "array", items: <node> }` (+ `minItems`/`maxItems`).
 - `constraints` (`minLength`/`maxLength`/`pattern`/`minimum`/`maximum`) → the same JSON Schema keywords.
 - `datatype: "ref"`, `mode: "inline"` → `{ $ref: "#/$defs/<defKey>" }` (authoritative).
