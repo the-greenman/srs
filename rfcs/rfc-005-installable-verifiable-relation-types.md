@@ -4,10 +4,30 @@
 
 ---
 
-**Status**: Draft (Revision 14)
+**Status**: Accepted (Revision 15)
 **Affects**: Distribution Group (Core), `Relation`, `RelationTypeDefinition`, `Package`, `ext:recommended-relations`
 **Author**: Codex draft
 **Date**: 2026-05-29
+
+---
+
+## Charter alignment
+
+**Cell(s):** cell:reference
+**Decision mode:** complicated
+
+**Governing cell preference:** Reference — "declared strength over convenient reach": this RFC's entire point is retiring `Relation.relationType` from an unchecked free string (convenient reach) to a value that must resolve against an installed, versioned `RelationTypeDefinition` in the effective package set (declared strength); aligned.
+**Axis preference:** 1–7 Versioning↔Reference — default pole, Semantic Integrity over Practical Expression. No non-default pole taken; no boundary clause invoked.
+
+**Decisions consulted:** rfc-decision-cce3c00e, rfc-decision-c8704763, rfc-decision-7caca3a1.
+**Contradictions found:** None. The programme's "concept tree is the spine" ruling (owner, 2026-09-05, srs#580) commits to zero new relation types and zero new fields for the concept-tree spine specifically; this RFC adds no relation type and no field to that spine — it formalizes the seven canonical types already in use as installed, versioned definitions. Different territory, no tension.
+
+**One-way-per-goal:** No existing mechanism enforced relation-type resolution before this RFC — closing that gap is the RFC's own subject. The canonical spec's "Core conformance requirements" mechanism (closed-vocabulary resolution, V1) already names "RFC-005 E1 is a named instance of V1" as its relation-type case, and the sibling "Relation" and "ext:recommended-relations" mechanisms already narrate this RFC's retirement/replacement text by name. This unit adds no second mechanism; it makes the RFC those mechanisms already cite visible to the integration gate (srs#288).
+
+**Layer test:**
+- Which layer owns this? MEANING plane — `RelationTypeDefinition` is a Type-adjacent closed-vocabulary declaration (RFC-006's VocabularyEntry substrate), the same stack position as Field/Type identity — not a presentation or operational concern.
+- Consume or clone downward? Consume — `RelationTypeDefinition` resolution rides the existing Package / effective-package-set machinery (`dependencyRefs`, `ext:import-tracking`); it introduces no parallel installation path.
+- Does the layer below stand alone without this? Yes — `Relation` storage (`sourceInstanceId`/`relationType`/`targetInstanceId`) is unchanged; a repository using only canonical types is unaffected whether or not this stub record exists.
 
 ---
 
@@ -29,6 +49,7 @@
 | 12 | 2026-05-29 | Fix retired/tombstone contradiction: introduce tombstone status (resolves for historical reads, rejects writes) distinct from retired (does not resolve); forced removal fallback uses tombstone not retired; shape comment updated to MUST |
 | 13 | 2026-05-29 | Add tombstone to schema summary status enum; correct Rev 10 history entry to include tombstone |
 | 14 | 2026-05-31 | Remove `requireSameSemanticObjectType: true` from `supersedes` — cross-type supersession is valid (governance records superseding base-type records); add target version declaration (2.0 amendment); add spec record amendments table |
+| 15 | 2026-09-11 | Status advanced to Accepted — every normative change in this RFC was already folded into the canonical spec (`relation-type.json`, `package-manifest.json`, `package-bundle.json`, the Core/Extension conformance requirements mechanisms, I-88, the `Relation` and `ext:recommended-relations` mechanisms all cite it by name) but it had no `com.semanticops.spec/rfc` stub record and so was invisible to `check-rfc-integration.mjs` (srs#288). Fix the "Canonical Relation Type Definitions" JSON blocks below: RFC-006 renamed the definition key field from `relationType` to `key` before this RFC's definitions were ever installed, and the installed files at `srs/package/core/relation-types/*.json` have always used `key` — only this document's example JSON had drifted. Add the `## Charter alignment` section (srs#463) and create the RFC's stub record with a full `srs-integration:v1` manifest. |
 
 ---
 
@@ -245,7 +266,7 @@ The following are the normative definitions to be installed at `srs/srs/package/
   "$schema": "https://srs.semanticops.com/schema/2.0/relation-type.json",
   "id": "3a1b2c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
   "version": 1,
-  "relationType": "contains",
+  "key": "contains",
   "namespace": "com.semanticops.srs",
   "label": "Contains",
   "description": "Source instance contains or is composed of target instance. Defines structural membership or composition boundaries.",
@@ -263,7 +284,7 @@ The following are the normative definitions to be installed at `srs/srs/package/
   "$schema": "https://srs.semanticops.com/schema/2.0/relation-type.json",
   "id": "7f8e9d0c-1b2a-4f3e-9d8c-7b6a5f4e3d2c",
   "version": 1,
-  "relationType": "depends-on",
+  "key": "depends-on",
   "namespace": "com.semanticops.srs",
   "label": "Depends on",
   "description": "Source instance requires target instance to be complete, valid, or usable. Target is a prerequisite.",
@@ -280,7 +301,7 @@ The following are the normative definitions to be installed at `srs/srs/package/
   "$schema": "https://srs.semanticops.com/schema/2.0/relation-type.json",
   "id": "c2d3e4f5-a6b7-4c8d-9e0f-1a2b3c4d5e6f",
   "version": 1,
-  "relationType": "supersedes",
+  "key": "supersedes",
   "namespace": "com.semanticops.srs",
   "label": "Supersedes",
   "description": "Source instance replaces or invalidates target instance. Source is newer; target is the older instance being superseded.",
@@ -298,7 +319,7 @@ The following are the normative definitions to be installed at `srs/srs/package/
   "$schema": "https://srs.semanticops.com/schema/2.0/relation-type.json",
   "id": "e5f6a7b8-c9d0-4e1f-8a2b-3c4d5e6f7a8b",
   "version": 1,
-  "relationType": "refines",
+  "key": "refines",
   "namespace": "com.semanticops.srs",
   "label": "Refines",
   "description": "Source instance is a more specific, detailed, or precise version of target instance. Does not replace or invalidate target.",
@@ -315,7 +336,7 @@ The following are the normative definitions to be installed at `srs/srs/package/
   "$schema": "https://srs.semanticops.com/schema/2.0/relation-type.json",
   "id": "b1c2d3e4-f5a6-4b7c-8d9e-0f1a2b3c4d5e",
   "version": 1,
-  "relationType": "derived-from",
+  "key": "derived-from",
   "namespace": "com.semanticops.srs",
   "label": "Derived from",
   "description": "Source instance was produced from or substantially informed by target instance. Provenance and derivation chain.",
@@ -333,7 +354,7 @@ The following are the normative definitions to be installed at `srs/srs/package/
   "$schema": "https://srs.semanticops.com/schema/2.0/relation-type.json",
   "id": "d4e5f6a7-b8c9-4d0e-9f1a-2b3c4d5e6f7a",
   "version": 1,
-  "relationType": "evidences",
+  "key": "evidences",
   "namespace": "com.semanticops.srs",
   "label": "Evidences",
   "description": "Source instance is evidence for, supports, or substantiates the claim or content of target instance.",
@@ -350,7 +371,7 @@ The following are the normative definitions to be installed at `srs/srs/package/
   "$schema": "https://srs.semanticops.com/schema/2.0/relation-type.json",
   "id": "f7a8b9c0-d1e2-4f3a-8b4c-5d6e7f8a9b0c",
   "version": 1,
-  "relationType": "precedes",
+  "key": "precedes",
   "namespace": "com.semanticops.srs",
   "label": "Precedes",
   "description": "Source instance comes before target instance in a defined sequence or ordering.",

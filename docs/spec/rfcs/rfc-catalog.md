@@ -1008,3 +1008,30 @@ tooling-only
 **Content**: Establishes the concept tree as the spine the specification's structure is read from, replacing section and subsection as authored structure. The tree is Record and Relation instances joined by contains, precedes and depends-on. A leaf's Type states its role (concept, mechanism, example, invariant, requirement, design-note); its contains parent states its place in the tree; depends-on states its prerequisites. Containers, compositions, navigation and rendering depth consume this tree by traversal, and none of it re-implements the walk. Accepted by the owner 2026-09-07 (srs#558) as Revision 3. Charter Check: cell:containment, cell:reference, decision_mode complicated. Canonical folding is Wave 3 (srs#559, #562, #563, #564), landing additively; this stub is grandfathered pending that completion.
 
 
+**Title**: RFC-005: Core Relation Type Definitions
+
+**RFC Number**: 005
+
+**Status**: Accepted
+
+**Author**: Codex draft
+
+**Affected Components**: Distribution Group (Core), `Relation`, `RelationTypeDefinition`, `Package`, `ext:recommended-relations`. Makes `RelationTypeDefinition` a required Package component; every `Relation.relationType` must resolve to an installed definition in the effective package set (E1); ships the seven canonical relation types as installed `com.semanticops.srs` package content; retires `ext:recommended-relations` to a compatibility label with no normative semantics.
+
+<!-- srs-integration:v1
+cell:reference
+schema:relation-type.json
+schema:package-manifest.json
+schema:package-bundle.json
+mechanism:relation
+mechanism:ext-recommended-relations
+mechanism:core-conformance-requirements
+mechanism:extension-conformance-requirements
+I-88
+-->
+
+**Proposal Artifact Path**: rfcs/rfc-005-installable-verifiable-relation-types.md
+
+**Content**: Makes `RelationTypeDefinition` a required Package component and definition lookup mandatory: every `Relation.relationType` string must resolve to exactly one installed `RelationTypeDefinition` in the effective package set before a Relation is accepted. Ships the seven canonical SRS relation types (`contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`) as installed, versioned definitions in the core `com.semanticops.srs` package, retiring the prior documented naming convention. Retires `ext:recommended-relations` to a compatibility label only. Full text: rfcs/rfc-005-installable-verifiable-relation-types.md.
+
+

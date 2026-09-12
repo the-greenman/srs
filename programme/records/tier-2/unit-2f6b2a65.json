@@ -1,0 +1,21 @@
+{
+  "instanceId": "2f6b2a65-9c2c-4f5c-81f0-06828f1f754e",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "RFC-005 gets an rfc record and its stale key field is fixed",
+    "summary": "RFC-005's normative changes were fully folded into the canonical spec years ago (relation-type.json, package-manifest.json, package-bundle.json, the Core/Extension conformance requirements mechanisms, and I-88 all cite it by name) but it carried no com.semanticops.spec/rfc stub record, so it was invisible to check-rfc-integration.mjs. Created the stub record with a full srs-integration:v1 manifest, transitioned it draft -> proposed -> accepted, fixed the seven relationType-keyed example JSON blocks in the RFC's own .md (RFC-006 renamed the field to key before RFC-005's definitions were ever installed; the shipped files always used key), and added the required Charter alignment section.",
+    "decision_mode": "complicated",
+    "door": "door-3",
+    "issue_ref": [
+      "srs#288"
+    ],
+    "body": "PR https://github.com/the-greenman/srs/pull/773 (gate:owner-merge — the Draft->Accepted status flip is the owner's act). Both gates green by exit code: validate-all.mjs and check-release-drift.mjs (the latter was red before re-rendering docs/spec/rfcs/rfc-catalog.md with the pinned CLI to pick up the new record). Proved the new check surface by stripping the manifest, confirming check-rfc-integration.mjs went red with the expected three diagnostics, then restoring it and confirming green."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-11T23:20:36.479317742+00:00",
+  "updatedAt": "2026-09-11T23:21:04.735859426+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
