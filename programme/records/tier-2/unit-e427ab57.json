@@ -13,10 +13,10 @@
       "srs#766",
       "srs#580"
     ],
-    "body": "PR: https://github.com/the-greenman/srs/pull/778. Door 3 (amends RFC-026's own conformance-rule surface) -- per the autonomy contract this carries gate:owner-merge and was never armed for auto-merge. Both validate-all.mjs and check-release-drift.mjs pass by exit code on the final diff; real red was hit and fixed along the way (no-orphan-leaf on the two new invariants before they had a contains parent, a heading-restatement and em-dash-cap spec-language violation on first-draft prose, a Distribution Part-membership count drift before registering the invariants, and the RFC-042 [R9] concept-vs-mechanism parent violation)."
+    "body": "PR: https://github.com/the-greenman/srs/pull/778 (merged by the owner, 2026-09-12). Door 3 (amends RFC-026's own conformance-rule surface) -- per the autonomy contract this carried gate:owner-merge and was never armed for auto-merge by the worker; the owner armed it themselves after merging master into the branch. Both validate-all.mjs and check-release-drift.mjs pass by exit code on the final diff; real red was hit and fixed along the way (no-orphan-leaf on the two new invariants before they had a contains parent, a heading-restatement and em-dash-cap spec-language violation on first-draft prose, a Distribution Part-membership count drift before registering the invariants, the RFC-042 [R9] concept-vs-mechanism parent violation, and a CI-only pr-classification failure -- the PR body's prose-style Mode/Cell/Door headers didn't satisfy check-pr-classification.mjs's required single-line 'Mode: ... Cell: ... Door: ...' statement; fixed by adding that exact line, which the workflow's edited-event trigger re-checked without a new commit)."
   },
-  "lifecycleState": "in_review",
+  "lifecycleState": "landed",
   "createdAt": "2026-09-12T03:35:04.550008429+00:00",
-  "updatedAt": "2026-09-12T03:35:04.550012908+00:00",
+  "updatedAt": "2026-09-12T13:06:23.113492021+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
