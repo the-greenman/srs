@@ -1,0 +1,19 @@
+{
+  "instanceId": "55f7d097-0882-44b3-8851-2d8bb1c3ec6a",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "docs/schema/2.0/manifest.json and srsj-envelope.json cite RFC-026 R15, which RFC-026 does not define",
+    "summary": "SliceExternalRef.relationType's description in both schema files reads '...NOT subject to RFC-005 definition-lookup in the slice archive (RFC-026 R15).' RFC-026's own .md defines conformance rules only up to [R14] (the relationType/RFC-005 rule IS [R14], word-for-word the same claim) -- there is no [R15] anywhere in rfcs/rfc-026-ext-slices-subset-export.md. Left uncorrected while folding srs#766, since it is a separate, unrelated off-by-one and not part of that issue's containerIndex/instanceIndex scope.",
+    "evidence": [
+      "docs/schema/2.0/manifest.json:~391 and docs/schema/2.0/srsj-envelope.json:~416 both say '(RFC-026 R15)'",
+      "rfcs/rfc-026-ext-slices-subset-export.md's Conformance Rules section ends at [R14], which states the identical relationType/RFC-005 claim the schema attributes to R15"
+    ],
+    "body": "Likely a stale citation from an intermediate draft revision where this rule was numbered R15 before a renumbering left the schema comment unbumped. Fix is Door 3 (or a trivial citation correction, arguably Door 1 since it corrects a citation number rather than a normative rule) -- either way it needs its own issue rather than being folded into srs#766, whose scope is the containerIndex/instanceIndex retirement."
+  },
+  "createdAt": "2026-09-12T03:35:37.830414843+00:00",
+  "updatedAt": "2026-09-12T03:35:37.830420163+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
