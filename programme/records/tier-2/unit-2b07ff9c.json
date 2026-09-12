@@ -6,14 +6,18 @@
   "typeName": "unit",
   "fieldValues": {
     "title": "Extensions regrouped, governance last",
-    "summary": "The extension chapters are regrouped by what they add rather than by the order they were adopted, and the governance material moves to the end where a reader needs it. Stub unit, shaped once the earlier rebuild units have settled the structure.",
+    "summary": "Ground found the invariants-dissolution, governance-finalisation and allowlist-emptying scope items already complete (srs#564 and subsequent units). Remaining scope narrowed to: extension_depends (free text) retires in favor of a depends-on edge; two new Fields state what an extension adds and what not adopting it costs; a hand-authored duplicate declaration table retires in favor of a generated index. Drafted as RFC-042 Revision 4 (not a standalone RFC), stopped at PR per dispatch scope.",
+    "decision_mode": "complicated",
+    "door": "3",
     "issue_ref": [
       "srs#565",
-      "srs#556"
+      "srs#556",
+      "srs#782",
+      "srs#783"
     ]
   },
-  "lifecycleState": "proposed",
+  "lifecycleState": "in_review",
   "createdAt": "2026-09-05T22:08:29.099357124+00:00",
-  "updatedAt": "2026-09-05T22:08:29.099360605+00:00",
+  "updatedAt": "2026-09-12T17:43:52.293939188+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
