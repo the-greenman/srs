@@ -1590,3 +1590,35 @@ This exception does not relax the honesty requirement: record delete's relation 
 **Review Trigger**: Review when a governed corpus cannot capture provenance on the successor before the retiring instance is deleted - for example, the target Type has no field able to carry meta.derivedFrom, or the corpus's history is not addressable (a shallow clone, or a redistributed bundle shipped without git history). The deletion exception this record states assumes both are available; a corpus where neither holds is not covered by it until that capability exists.
 
 
+**Title**: Versioning cell's Field-immutability rule does not reach the generated metamodel package
+
+**Status**: Accepted
+
+**Decision Date**: 2026-09-12
+
+**Decision Rationale**: check-versioning-cell.mjs (srs#649) found one genuine violation on the corpus's full history: srs/package/metamodel/fields/value_range.json gained "ref" in fieldType.allowedValues (srs#534, commit 72c5d2b7) with no version increase (srs#658). Root cause: scripts/gen-metamodel-package.mjs's fieldFile() hardcodes version: 1 for every Field it emits from the FIELD_SPECS table, so there is currently no way to express a per-field version bump without a structural change to the generator. srs#658 posed two options and left the ruling open; this record makes it.
+
+**Decision**: The metamodel package (srs/package/metamodel/**) is out of scope for the versioning cell's Field-immutability rule (rfc-decision-2a1e1590; 04-2-4-2-field#r2). It is a frozen, hand-verified bootstrap fixed point, regenerated wholesale by scripts/gen-metamodel-package.mjs from its FIELD_SPECS table and proven against the frozen seed (docs/schema/2.0/{field,type}.json) by the RFC-033 and RFC-035 closure tests; nothing resolves a metamodel Field by namespace/name@version, so the version number on a generated Field carries no lineage for any consumer to protect. check-versioning-cell.mjs excludes srs/package/metamodel/** from its walk by name, the same exclusion shape it already applies to rfcs/rfc-004/.
+
+**Scope**: Narrows check-versioning-cell.mjs's walk (srs#649) by excluding the generated metamodel package by name. Does not touch scripts/gen-metamodel-package.mjs, the FIELD_SPECS table, or the RFC-033/RFC-035 closure tests, and does not alter the versioning cell's rule for any authored (non-generated) Field definition. srs/package/metamodel/fields/value_range.json's version stays 1; the versioning-cell allowlist's pending entry for it (srs#658) is removed as no longer applicable rather than promoted to permanent.
+
+**Governing Values**:
+- semantic-integrity
+- practical-expression
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Add an optional per-field version override to FIELD_SPECS (default 1, explicit bump for entries like value_range), bump value_range to version 2, and re-verify the frozen-seed pipeline. Rejected for now: it touches the closure-tested generation pipeline to make a number honest that no consumer reads, since nothing resolves a metamodel Field by version. If something later does resolve a metamodel Field by version, this ruling's premise fails and the per-field override becomes the right fix (see review_trigger).
+
+**Accepted Costs**: Generated metamodel Field JSON files can carry a version number that never increments even when their value domain changes. A reader who assumes every persisted Field participates in the versioning cell's immutable-domain lineage would be misled by this one generated package, unless the exclusion's reason is visible where the check is defined — which this ruling requires.
+
+**Evidence**:
+- srs#658 (issue body, options 1 and 2, and the owner's dispatch comment choosing option 2)
+- srs#534 commit 72c5d2b7 — value_range.json's allowedValues gained "ref" with no version bump
+- scripts/gen-metamodel-package.mjs's fieldFile() hardcodes version: 1 for every generated Field
+- scripts/rfc-033-closure-test.mjs and scripts/rfc-035-closure-test.mjs prove the generated package against the frozen seed
+- rfc-decision-2a1e1590 (the versioning cell's Fire-column immutability rule this decision narrows the reach of)
+
+**Review Trigger**: Revisit if anything begins resolving a metamodel Field by namespace/name@version — the premise this ruling rests on — or if scripts/gen-metamodel-package.mjs later gains a per-field version override (srs#658's option 1), which would make this exclusion unnecessary rather than wrong.
+
+
