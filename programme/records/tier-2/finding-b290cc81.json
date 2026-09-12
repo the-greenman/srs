@@ -1,0 +1,20 @@
+{
+  "instanceId": "b290cc81-f69a-4893-80f7-07e35bebb582",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "RFC-038 [R25] amendment folds show two different depths of touch on the amended RFC's own .md",
+    "summary": "Comparing how RFC-038 [R25]'s cross-RFC amendment was folded for RFC-013 vs RFC-017 vs (now) RFC-026: RFC-017's fold created invariants I-102/I-112 and touched nothing else -- RFC-017's own .md still reads verbatim against sourceDocumentIndex/instanceIndex in ~8 places (Change A prose, R2, R12, Rationale, Alternatives) with zero revision bump and zero inline annotation. RFC-013's fold DID bump the Revision (6->7) and DID inline-annotate [R9], but left [R6] (also named by RFC-038 [R25] as amended) completely untouched in its own .md, plus left stale copies of I-80/I-82's text inline in RFC-013's own invariants table. srs#766's fold for RFC-026 went further than either precedent: bumped the Revision, annotated every affected rule/prose location in the .md, AND corrected the canonical mechanism records that actually render into the spec (which is what RFC-013/017's mechanism-less eras didn't have to worry about -- the concept-tree mechanism records postdate them).",
+    "evidence": [
+      "rfcs/rfc-017-*.md lines ~29,89,96,100,166,168,180,200,231,277 all still read sourceDocumentIndex/instanceIndex verbatim; Revision history stops at 6 (an unrelated erratum), no RFC-038 mention anywhere",
+      "rfcs/rfc-013-required-root-container.md line 147 ([R6] itself, named by RFC-038 [R25] as amended) is unannotated and still says 'containerIndex'; lines 166/168 (I-80/I-82 table copies) are also unannotated and stale",
+      "CLAUDE.md's Door 3 rule (as currently written) requires bumping the Revision, adding a history row, and keeping the .md and the canonical records saying the same thing, in the same PR -- RFC-017's fold does not meet this bar as currently documented, though it presumably predates the rule's current phrasing"
+    ],
+    "body": "Not something to go back and fix retroactively on RFC-013/RFC-017 as a side effect of this unit -- that would be its own scoped Door 3 unit(s) if the owner wants the older folds brought up to the current bar. Recording this so the next agent doing a similar cross-RFC-amendment fold does not treat RFC-017's (lighter) precedent as authoritative over CLAUDE.md's actual current text, and so the inconsistency itself is visible rather than silently perpetuated."
+  },
+  "createdAt": "2026-09-12T03:35:52.710991949+00:00",
+  "updatedAt": "2026-09-12T03:35:52.710998496+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,22 @@
+{
+  "instanceId": "e427ab57-c49d-4002-9053-151b19ca4bc1",
+  "typeId": "91474c82-739a-4730-b25c-caf4ccfea7c3",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "unit",
+  "fieldValues": {
+    "title": "Fold RFC-038 [R25]'s amendment of RFC-026 [R5]/[R6]/[R13]",
+    "summary": "RFC-038's own stub record claimed RFC-026 [R5]/[R6]/[R13] amended (containerIndex/instanceIndex -> the tree-authoritative container/instance set), but RFC-026's own rule text and the canonical mechanism records that render into the spec still read against the retired properties verbatim, with no restating invariant -- filed as srs#766. Bumped RFC-026 to Revision 7 and annotated [R5]/[R6]/[R13] plus the affected Change B/C/E prose per the RFC-013 [R9] precedent (vocabulary only, no conformance change). Added invariants I-152 (closure boundary resolves against the container set) and I-153 (relation-endpoint tests resolve against the instance set), homed under the 'Travelling form' concept (RFC-042 [R9] requires an invariant's contains-parent to be a concept, not a mechanism -- hit and fixed this while doing the work). Also corrected the same stale vocabulary in the canonical mechanism records that actually render into docs/spec/srs-spec.md (Manifest extensions, Validation relaxations, Container-membership closure) -- the more important fix, since those are canonical spec content per CLAUDE.md, not just RFC prose. Registered the two new invariants in the Distribution Part's container membership, and updated both RFC-026's and RFC-038's own stub records' srs-integration manifests to cross-reference them and mark the fold complete.",
+    "decision_mode": "clear",
+    "door": "door-3",
+    "issue_ref": [
+      "srs#766",
+      "srs#580"
+    ],
+    "body": "PR: https://github.com/the-greenman/srs/pull/778. Door 3 (amends RFC-026's own conformance-rule surface) -- per the autonomy contract this carries gate:owner-merge and was never armed for auto-merge. Both validate-all.mjs and check-release-drift.mjs pass by exit code on the final diff; real red was hit and fixed along the way (no-orphan-leaf on the two new invariants before they had a contains parent, a heading-restatement and em-dash-cap spec-language violation on first-draft prose, a Distribution Part-membership count drift before registering the invariants, and the RFC-042 [R9] concept-vs-mechanism parent violation)."
+  },
+  "lifecycleState": "in_review",
+  "createdAt": "2026-09-12T03:35:04.550008429+00:00",
+  "updatedAt": "2026-09-12T03:35:04.550012908+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

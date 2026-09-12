@@ -2,7 +2,7 @@
 
 # RFC-026: ext:slices — Container Slices (Subset Repository Export)
 
-**Status**: Accepted (Revision 6)
+**Status**: Accepted (Revision 7)
 **Affects**: `ext:repository` (new optional `slice` manifest block); `docs/schema/2.0/manifest.json` (add `slice` property and `$defs.Slice`, `$defs.SliceSpec`, `$defs.SliceExternalRef`)
 **Author**: the-greenman (from issue the-greenman/srs#194)
 **Date**: 2026-07-20
@@ -14,6 +14,7 @@
 
 | Rev | Date | Summary |
 |---|---|---|
+| 7 | 2026-09-12 | **Amended by RFC-038 [R25]** (tree-authoritative storage, srs#766). RFC-038 [R2] retires `manifest.containerIndex`/`instanceIndex`/`sourceDocumentIndex`; RFC-038's own stub record claimed this RFC's [R5]/[R6]/[R13] as folded against the tree-authoritative store, but the rule text and the surrounding closure prose still read verbatim against the retired properties, with no restating invariant — filed as srs#766. **[R5](a)** (`spec.id` boundary test) and **Change C steps 2 and 6** (member/sub-container traversal and the slice archive's own sub-container output) now resolve against the repository's tree-authoritative **container set**, not `containerIndex`; restated as invariant **I-152**. **[R6]** (relation-endpoint test) and **[R13]** (validator relaxations, Change E items 1/3/4) now resolve against the tree-authoritative **instance set** (and, for the container-completeness clause, the container set); restated as invariant **I-153**. Change C step 5 and Change E item 4 (source-document inclusion and tombstone relaxation) resolve against the source-document sidecar scan per RFC-038 [R25]'s existing RFC-017 [R2]/[R12] amendment (I-102, I-112) — no new invariant needed, the mechanism is already general. The Change B `spec.id` field description and the Schema changes section's embedded `SliceSpec` copy are corrected to match `docs/schema/2.0/manifest.json`'s already-current text (RFC-038's #297 cutover). No conformance behavior changes: every relaxation and boundary test means what it always meant against the authoritative store; only the retired-property vocabulary is corrected. |
 | 6 | 2026-07-21 | Accepted; spec records authored in `srs/srs` — `ext:slices` extension record (`212379f4`), RFC-026 stub record (`efda4896`). |
 | 5 | 2026-07-21 | **Remove package-boundary closure entirely; a package export is not a repository slice.** RFC-026 now defines container-membership closure only. Package export (distributing a package's *definitions* as a `package-bundle.json`) is a different artifact class, homed in RFC-003 (Subset package export). Changes: drop Change C (package closure) and renumber (container closure → C, dangling-edge policy → D, validation semantics → E); narrow `SliceSpec.type` to `["container"]`; remove the package conformance rule and the package branch of the `manifest.container` rule; update abstract, motivation, rationale, alternatives, and open questions. Supersedes the never-published Rev 4 (package-definitions-only-as-slice), which mis-modelled a package bundle as a records-free `.srs` repository. |
 | 3 | 2026-07-20 | Fix new blocking issue from round 2 review: Change C item 5 sub-container rule — mixed-membership sub-containers MUST be excluded entirely (mirrors Change D item 6 rule). |
@@ -79,7 +80,7 @@ Add an optional `slice` property to `manifest.json`. When present, it marks the 
 |---|---|---|---|
 | `origin.repositoryId` | `string (uuid)` | yes | The `repositoryId` of the source repository from which this slice was produced. |
 | `spec.type` | `string` | yes | Closure rule applied. Currently the only defined value is `"container"` (container-membership closure). |
-| `spec.id` | `string (uuid)` | yes | The boundary identifier: a `containerId` present in the source repository's `containerIndex`. |
+| `spec.id` | `string (uuid)` | yes | The boundary identifier: a `containerId` present in the source repository's container set (tree-authoritative enumeration, RFC-038 [R1]; amended by RFC-038 [R25] — the manifest's `containerIndex` is retired, RFC-038 [R2]; I-152). |
 | `exportedAt` | `string (date-time)` | yes | ISO-8601 timestamp of when the slice was produced. |
 
 The slice archive's own `manifest.repositoryId` MUST be a **new UUID**, distinct from `slice.origin.repositoryId`. A slice archive is a standalone repository — its `repositoryId` identifies the archive artifact, not the source repository.
@@ -88,7 +89,7 @@ The slice archive's own `manifest.repositoryId` MUST be a **new UUID**, distinct
 
 A container slice exports a container and all elements reachable from it through defined closure rules.
 
-`slice.spec.id` for a container slice MUST equal a `containerId` present in the source repository's `containerIndex`.
+`slice.spec.id` for a container slice MUST equal a `containerId` present in the source repository's container set *(amended by RFC-038 [R25] — resolves against the container set, not `containerIndex`, which is retired per RFC-038 [R2]; I-152)*.
 
 **Normative closure for a `spec.type: "container"` slice:**
 
@@ -96,15 +97,15 @@ The closure root is the container identified by `spec.id`. The following items M
 
 1. **`manifest.container`** — the closure root container identified by `slice.spec.id` MUST be set as the slice archive's `manifest.container`. This makes it the repository root container for the purposes of RFC-013. Its `containerId` is preserved from the source.
 
-2. **Member instances** — all instances appearing in the root container's `memberInstanceIds` and `rootInstanceIds` MUST be included. For each Container in the source repository's `containerIndex` whose `rootInstanceIds` are a subset of the already-included instance set, that sub-container's `memberInstanceIds` MUST also be included. Repeat until no new instances are added. (This is membership traversal through the `memberInstanceIds`/`rootInstanceIds` fields of Container objects — `containerId` MUST NOT appear as a `Relation.sourceInstanceId` or `Relation.targetInstanceId` and therefore cannot be a Relation endpoint.)
+2. **Member instances** *(amended by RFC-038 [R25] — traversal resolves against the container set, not `containerIndex`, which is retired per RFC-038 [R2]; I-152)* — all instances appearing in the root container's `memberInstanceIds` and `rootInstanceIds` MUST be included. For each Container in the source repository's container set whose `rootInstanceIds` are a subset of the already-included instance set, that sub-container's `memberInstanceIds` MUST also be included. Repeat until no new instances are added. (This is membership traversal through the `memberInstanceIds`/`rootInstanceIds` fields of Container objects — `containerId` MUST NOT appear as a `Relation.sourceInstanceId` or `Relation.targetInstanceId` and therefore cannot be a Relation endpoint.)
 
 3. **Type and field definitions** — the field and type definitions instantiated by the included instances MUST be copied into the slice archive's `package/` directory as a self-contained definition set, even if sourced from multiple packages in the source repository. A definition MUST be included if at least one included instance references it by `typeId` or `fieldId`. Additionally, all Field definitions declared in an included Type's `fields[]` FieldAssignments MUST be included when that Type is included, regardless of whether individual instances carry values for those optional fields.
 
 4. **Relations among included instances** — all relations whose both `sourceInstanceId` and `targetInstanceId` are in the included instance set MUST be included. Relations that span the closure boundary (one endpoint inside, one outside) MUST be excluded from the relations collection and recorded in `slice.externalRelationRefs[]` per Change D.
 
-5. **Source documents** — all `sourceDocumentIndex` entries referenced by included instances (via `sourceRefs[]` with `sourceType: "repository-document"`) MUST be included. Their `contentPath` files MUST be included unless the entry is in the tombstone state (content absent per RFC-017 R12), in which case the index entry MUST be included and the absent content file MUST be omitted.
+5. **Source documents** *(amended by RFC-038 [R25] — resolves against the source-document sidecar scan, not a manifest `sourceDocumentIndex`, which is retired per RFC-038 [R2]; this is RFC-017 [R2]/[R12]'s own amendment, I-102/I-112, applied here)* — all source-document sidecar entries referenced by included instances (via `sourceRefs[]` with `sourceType: "repository-document"`) MUST be included. Their `contentPath` files MUST be included unless the entry is in the tombstone state (content absent per RFC-017 [R12]), in which case the sidecar entry MUST be included and the absent content file MUST be omitted.
 
-6. **Sub-containers** — any Container in the source repository's `containerIndex` whose `rootInstanceIds` and `memberInstanceIds` are all within the included instance set MUST be included in the slice archive's `containerIndex`. The slice archive's `containerIndex` MUST NOT include any Container whose members extend beyond the included instance set.
+6. **Sub-containers** *(amended by RFC-038 [R25] — resolves against the container set, not `containerIndex`, which is retired per RFC-038 [R2]; I-152)* — any Container in the source repository's container set whose `rootInstanceIds` and `memberInstanceIds` are all within the included instance set MUST be included in the slice archive's container set. The slice archive's container set MUST NOT include any Container whose members extend beyond the included instance set.
 
 **What is excluded:**
 
@@ -150,17 +151,17 @@ This approach follows the ext:federation graceful-degradation contract: cross-bo
 
 An RFC-026-aware validator MUST apply the following relaxations when the manifest being validated contains a `slice` block:
 
-1. **`externalRelationRefs` UUIDs** — instance UUIDs appearing in `slice.externalRelationRefs` that are absent from the slice's `instanceIndex` MUST NOT produce a validation error. An implementation MAY surface an informational (non-blocking) diagnostic noting the count of external references.
+1. **`externalRelationRefs` UUIDs** *(amended by RFC-038 [R25] — resolves against the instance set, not `instanceIndex`, which is retired per RFC-038 [R2]; I-153)* — instance UUIDs appearing in `slice.externalRelationRefs` that are absent from the slice's instance set MUST NOT produce a validation error. An implementation MAY surface an informational (non-blocking) diagnostic noting the count of external references.
 
 2. **Incomplete package definitions** — for a container slice, the `package/` directory contains only the definitions referenced by included instances. The absence of definitions not referenced by any included instance MUST NOT produce a validation error.
 
-3. **Incomplete container hierarchy** — a container slice need not include the source repository's full `containerIndex`. A `containerIndex` that covers only the exported sub-hierarchy MUST NOT produce a validation error.
+3. **Incomplete container hierarchy** *(amended by RFC-038 [R25] — resolves against the container set, not `containerIndex`, which is retired per RFC-038 [R2]; I-152)* — a container slice need not include the source repository's full container set. A container set that covers only the exported sub-hierarchy MUST NOT produce a validation error.
 
-4. **Tombstone source documents** — a `sourceDocumentIndex` entry whose `contentPath` file is absent (tombstone state, RFC-017 R12) MUST NOT produce a validation error.
+4. **Tombstone source documents** *(amended by RFC-038 [R25] — resolves against the source-document sidecar scan, not a manifest `sourceDocumentIndex`, which is retired per RFC-038 [R2]; RFC-017 [R2]/[R12]'s own amendment, I-112, applied here)* — a source-document sidecar entry whose `contentPath` file is absent (tombstone state, RFC-017 [R12]) MUST NOT produce a validation error.
 
 The following remain errors regardless of slice status:
 
-- Any relation in the slice's relations collection whose `sourceInstanceId` or `targetInstanceId` is not in `instanceIndex`. (Dangling edges must go into `externalRelationRefs`, not the relations collection.)
+- Any relation in the slice's relations collection whose `sourceInstanceId` or `targetInstanceId` is not in the slice's instance set *(amended by RFC-038 [R25] — not `instanceIndex`, which is retired per RFC-038 [R2]; I-153)*. (Dangling edges must go into `externalRelationRefs`, not the relations collection.)
 - Any `typeId` referenced by an included instance that does not resolve to a definition in the slice archive's `package/` directory.
 - Any `fieldId` referenced by an included instance (directly or via a Type's FieldAssignment) that does not resolve to a definition in the slice archive's `package/` directory.
 - Any schema validation error on any included instance file.
@@ -177,9 +178,9 @@ The following remain errors regardless of slice status:
 >
 > **[R4]** A slice archive MUST declare `"ext:slices"` in `manifest.declaredExtensions`. The source repository need not declare this extension.
 >
-> **[R5]** For a container slice (`spec.type: "container"`): the included instances, relations, type/field definitions, source documents, sub-containers, and `manifest.container` MUST conform to the normative closure defined in Change C. Specifically: (a) `spec.id` MUST be a `containerId` in the source `containerIndex`; (b) `manifest.container` MUST be the closure root container identified by `spec.id`; (c) member traversal MUST follow the `memberInstanceIds`/`rootInstanceIds` fields on Container objects, not `Relation` edges from `containerId` values.
+> **[R5]** *(Amended by RFC-038 [R25] — (a)'s test and Change C's traversal resolve against the container set, not `containerIndex`, which is retired per RFC-038 [R2]; folded as invariant I-152.)* For a container slice (`spec.type: "container"`): the included instances, relations, type/field definitions, source documents, sub-containers, and `manifest.container` MUST conform to the normative closure defined in Change C. Specifically: (a) `spec.id` MUST be a `containerId` present in the source repository's container set; (b) `manifest.container` MUST be the closure root container identified by `spec.id`; (c) member traversal MUST follow the `memberInstanceIds`/`rootInstanceIds` fields on Container objects, not `Relation` edges from `containerId` values.
 >
-> **[R6]** A conformant slice producer MUST NOT include in the slice archive's relations collection any relation with a `targetInstanceId` or `sourceInstanceId` that is not present in the slice archive's `instanceIndex`. Such cross-boundary relations MUST be recorded in `slice.externalRelationRefs[]` instead.
+> **[R6]** *(Amended by RFC-038 [R25] — the endpoint test resolves against the instance set, not `instanceIndex`, which is retired per RFC-038 [R2]; folded as invariant I-153.)* A conformant slice producer MUST NOT include in the slice archive's relations collection any relation with a `targetInstanceId` or `sourceInstanceId` that is not present in the slice archive's instance set. Such cross-boundary relations MUST be recorded in `slice.externalRelationRefs[]` instead.
 >
 > **[R7]** A conformant slice producer MUST populate `slice.externalRelationRefs[]` with every relation from the source repository that was excluded because exactly one endpoint fell outside the closure. This is a producer-side obligation: a consumer of the slice archive cannot verify completeness without access to the source repository. Relations where both endpoints fall outside the closure MUST NOT appear in `externalRelationRefs`.
 >
@@ -193,7 +194,7 @@ The following remain errors regardless of slice status:
 >
 > **[R12]** A slice archive MUST have a valid `manifest.container` as required by RFC-013, and RFC-013 applies in full — `manifest.container` MUST be the closure root container identified by `slice.spec.id`, and its `identityInstanceId` (when present) MUST name a member. A slice is a repository, so it carries a repository's identity record; there is no identity waiver.
 >
-> **[R13]** A conformant RFC-026-aware validator MUST apply the relaxations defined in Change E when the manifest being validated contains a `slice` block. Specifically: it MUST NOT treat `externalRelationRefs` UUIDs absent from `instanceIndex` as a validation error, MUST NOT require type/field definitions not referenced by included instances, and MUST NOT require a complete `containerIndex` or present `contentPath` files for tombstoned source documents.
+> **[R13]** *(Amended by RFC-038 [R25] — the `instanceIndex`/`containerIndex` tests resolve against the instance set and container set, both retired as manifest properties per RFC-038 [R2]; folded as invariant I-153 (instance set) and I-152 (container set).)* A conformant RFC-026-aware validator MUST apply the relaxations defined in Change E when the manifest being validated contains a `slice` block. Specifically: it MUST NOT treat `externalRelationRefs` UUIDs absent from the slice's instance set as a validation error, MUST NOT require type/field definitions not referenced by included instances, and MUST NOT require a complete container set or present `contentPath` files for tombstoned source documents.
 >
 > **[R14]** The `relationType` values in `slice.externalRelationRefs[]` entries are provenance copies and are NOT subject to RFC-005 definition-lookup requirements. A validator MUST NOT require these type strings to resolve to installed `RelationTypeDefinition` records in the slice archive's package directory.
 
@@ -268,7 +269,7 @@ No other files in `docs/schema/2.0/` require changes:
     "id": {
       "type": "string",
       "format": "uuid",
-      "description": "The boundary UUID: a containerId present in the source repository's containerIndex."
+      "description": "The boundary UUID: a containerId present in the source repository's container set (tree-authoritative enumeration, RFC-038 [R1]; the manifest's containerIndex is retired, RFC-038 [R2])."
     }
   }
 },

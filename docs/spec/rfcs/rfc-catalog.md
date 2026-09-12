@@ -534,14 +534,20 @@ tooling-only
 
 **Affected Components**: `ext:slices` extension; optional `slice` block in `manifest.json` (`Slice`, `SliceSpec`, `SliceExternalRef` $defs); container-membership closure rules R1–R14; validation relaxations for slice archives.
 
+Revision 7 (srs#766): [R5]/[R6]/[R13] and Change C/E's `containerIndex`/`instanceIndex`/`sourceDocumentIndex` references are amended by RFC-038 [R25] to resolve against the tree-authoritative container set and instance set. Restated as invariants I-152 (container set) and I-153 (instance set); the source-document clauses reuse RFC-017's own existing amendment (I-102/I-112). No conformance behavior changes — vocabulary only.
+
 <!-- srs-integration:v1
 ext:slices
 schema:manifest.json
+I-152
+I-153
 -->
 
 **Proposal Artifact Path**: rfcs/rfc-026-ext-slices-subset-export.md
 
 **Content**: Defines `ext:slices` — a normative extension for container-membership slice export as a valid `.srs` archive. A container slice carries the records reachable from a container's membership, their type/field definitions, intra-slice relations, and referenced source documents. Dangling cross-boundary relations are preserved in `slice.externalRelationRefs[]` (not silently dropped), following the `ext:federation` graceful-degradation precedent. Schema change: `docs/schema/2.0/manifest.json` gains an optional `slice` property with `$defs.Slice`, `$defs.SliceSpec` (type enum: `["container"]`), and `$defs.SliceExternalRef`. Package export — distributing a package's definitions as a `package-bundle.json` — is explicitly excluded from this RFC's scope (RFC-003). Full text: rfcs/rfc-026-ext-slices-subset-export.md.
+
+Revision 7 (srs#766) folds RFC-038 [R25]'s amendment of [R5]/[R6]/[R13] against the tree-authoritative container set and instance set, restated as invariants I-152 and I-153.
 
 
 **Title**: RFC-027: Per-record relation display in document views (relationsPresentation)
@@ -841,6 +847,8 @@ I-102
 I-112
 I-118
 I-136
+I-152
+I-153
 mechanism:conformance-requirements
 mechanism:conflict-resolution-identity-and-information
 mechanism:file-format
@@ -860,9 +868,10 @@ tooling-only
 #   mechanism:conflict-resolution-identity-and-information.
 # - RFC-017 [R2]/[R12] -> I-102 and I-112, restated against the sidecar scan rather than the
 #   retired sourceDocumentIndex.
-# - RFC-026 [R5]/[R6]/[R13] are NOT folded: RFC-026's own rule text still reads against
-#   containerIndex/instanceIndex verbatim, with no amendment annotation and no invariant
-#   restating it against the tree-authoritative store. Filed as #766.
+# - RFC-026 [R5]/[R6]/[R13] -> I-152 (container set) and I-153 (instance set), restated
+#   against the tree-authoritative store. RFC-026 Revision 7 (srs#766) also amends the
+#   .md's own rule/prose text, which previously read against containerIndex/instanceIndex
+#   verbatim with no amendment annotation.
 -->
 
 **Proposal Artifact Path**: rfcs/rfc-038-tree-authoritative-storage.md

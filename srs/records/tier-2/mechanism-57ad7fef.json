@@ -6,7 +6,7 @@
   "typeName": "mechanism",
   "fieldValues": {
     "title": "Validation relaxations",
-    "content": "An RFC-026-aware validator MUST NOT treat the following as errors when a `slice` block is present: `externalRelationRefs` UUIDs absent from `instanceIndex`; absence of unreferenced type/field definitions; an incomplete `containerIndex`; tombstoned source document entries with absent content files. Dangling edges in the relations collection, unresolvable `typeId`/`fieldId` references, and instance schema validation errors remain errors regardless of slice status."
+    "content": "An RFC-026-aware validator MUST NOT treat the following as errors when a `slice` block is present: `externalRelationRefs` UUIDs absent from the repository's tree-authoritative instance enumeration (RFC-038 [R1], not a manifest `instanceIndex`, retired per RFC-038 [R2]; I-153); absence of unreferenced type/field definitions; an incomplete container enumeration (not a manifest `containerIndex`, retired per RFC-038 [R2]; I-152); tombstoned source document entries with absent content files. Dangling edges in the relations collection, unresolvable `typeId`/`fieldId` references, and instance schema validation errors remain errors regardless of slice status."
   },
   "createdAt": "2026-09-08T20:24:05.514272627+00:00",
   "updatedAt": "2026-09-08T20:24:05.514279875+00:00",
