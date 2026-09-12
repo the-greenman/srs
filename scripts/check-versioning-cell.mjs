@@ -28,11 +28,13 @@
  * reason — see that workflow's own comment.
  *
  * Measured against the corpus's FULL history (this check is meaningless over a shallow clone — see
- * above): one genuine violation, `srs/package/metamodel/fields/value_range.json` (srs#534 added
- * "ref" to its allowedValues with no version bump; root cause is that the metamodel generator
- * hardcodes `version: 1` for every field it emits, so there is currently no way to bump just one).
- * Tracked, not fixed, in `scripts/versioning-cell-allowlist.json` (disposition "pending", srs#658).
- * Twelve more looked like violations before `hasCurrentShape` narrowed the check to the current
+ * above): one apparent violation, `srs/package/metamodel/fields/value_range.json` (srs#534 added
+ * "ref" to its allowedValues with no version bump; the metamodel generator hardcodes `version: 1`
+ * for every field it emits, so there was no way to bump just one). Ruled out of scope entirely
+ * rather than fixed or allowlisted (srs#658, rfc-decision-991c062f): the metamodel package is a
+ * frozen, hand-verified bootstrap fixed point nothing resolves by `namespace/name@version`, so this
+ * cell's immutability rule does not reach it — see the `EXCLUDED` exclusion below, not the
+ * allowlist. Twelve more looked like violations before `hasCurrentShape` narrowed the check to the current
  * data model — those were migration commits changing where the domain lives, not what it is (see
  * `hasCurrentShape`'s own comment). The allowlist follows the disposition-field shape from
  * `carried-context-61cee7c6` (`"permanent" | "pending"`, each entry citing a live issue), same as
@@ -56,7 +58,13 @@ const ALLOWLIST = join(ROOT, "scripts/versioning-cell-allowlist.json");
 
 // RFC-004's proposed package is a historical artifact, not a live package — same exclusion as
 // check-field-name-convention.mjs (#308).
-const EXCLUDED = ["rfcs/rfc-004"];
+//
+// The metamodel package is a frozen, hand-verified bootstrap fixed point (CLAUDE.md), regenerated
+// wholesale by scripts/gen-metamodel-package.mjs from its FIELD_SPECS table and proven against the
+// frozen seed by the RFC-033 and RFC-035 closure tests. Nothing resolves a metamodel Field by
+// namespace/name@version, so a generated Field's `version` carries no lineage this cell's
+// immutability rule is protecting — ruled out of scope by rfc-decision-991c062f (srs#658, option 2).
+const EXCLUDED = ["rfcs/rfc-004", "srs/package/metamodel"];
 
 function isExcluded(relPath) {
   return EXCLUDED.some((e) => relPath === e || relPath.startsWith(`${e}/`));

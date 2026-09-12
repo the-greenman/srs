@@ -1,0 +1,20 @@
+{
+  "instanceId": "c5ca8213-a11c-4d58-9d11-9555cd9af63e",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "A corpus-wide semantic-lineage rule does not automatically reach a generated, frozen bootstrap package",
+    "summary": "check-versioning-cell.mjs's one corpus violation lived entirely in srs/package/metamodel/, a package regenerated wholesale from a generator table and proven only against a frozen seed via closure tests. Nothing resolves a metamodel Field by namespace/name@version, so the versioning cell's immutability rule — about protecting a lineage consumers read — had no lineage to protect there. Ruled out of scope by name (rfc-decision-991c062f, srs#658) rather than fixed by adding generator machinery to make an unread number honest.",
+    "evidence": [
+      "scripts/gen-metamodel-package.mjs's fieldFile() hardcodes version: 1 for every Field it emits — by construction, not oversight",
+      "The package is proven against docs/schema/2.0/{field,type}.json by the RFC-033 and RFC-035 closure tests, not by any version-keyed lookup",
+      "check-versioning-cell.mjs already carried one precedent exclusion of this shape (rfcs/rfc-004's historical proposal package, matching check-field-name-convention.mjs's #308 exclusion) before this one was added"
+    ],
+    "body": "Generalizable for the next corpus-wide cell check that turns up a violation confined to a generated or frozen package: before adding an allowlist entry or extending the generator to make the violation go away, ask whether anything actually resolves the artifact by the key the rule protects (here, Field version). If nothing does, the rule's premise doesn't reach the package, and the correct fix is an EXCLUDED-list entry with a decision record citing the reasoning — not a permanent allowlist entry (which asserts the violation is real but tolerated) and not generator work to satisfy a reader that doesn't exist yet."
+  },
+  "createdAt": "2026-09-12T17:12:42.616236644+00:00",
+  "updatedAt": "2026-09-12T17:12:42.616245628+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -2303,6 +2303,28 @@ async function versioningCellCases(root) {
     runCheck("check-versioning-cell.mjs", malformedAllowlist),
     { exit: 1, contains: ['must be "permanent" or "pending"', "not a GitHub issue reference"] },
   );
+
+  // The metamodel exclusion (srs#658, rfc-decision-991c062f): the same shape of violation that
+  // fails under srs/package/fields/ above must pass silently under srs/package/metamodel/, with no
+  // allowlist entry needed — proving the exclusion actually narrows the walk rather than the cell's
+  // rule being toothless everywhere.
+  const excludedMetamodel = join(root, "excluded-metamodel");
+  await mkdir(excludedMetamodel, { recursive: true });
+  git(excludedMetamodel, "init", "-q");
+  const metamodelPath = join(excludedMetamodel, "srs/package/metamodel/fields/status.json");
+  for (const { version, allowedValues } of [
+    { version: 1, allowedValues: ["a", "b"] },
+    { version: 1, allowedValues: ["a", "b", "c"] }, // domain changed, version did not increase
+  ]) {
+    await writeJson(metamodelPath, fieldDoc(version, allowedValues));
+    git(excludedMetamodel, "add", "-A");
+    git(excludedMetamodel, "commit", "-q", "-m", `v${version}`);
+  }
+  expect(
+    "excludes srs/package/metamodel/** (srs#658)",
+    runCheck("check-versioning-cell.mjs", excludedMetamodel),
+    { exit: 0, contains: ["✓ versioning cell"] },
+  );
 }
 
 // ---- #651 — repository cell: no manifest.json carries the retired instanceIndex key --------------
