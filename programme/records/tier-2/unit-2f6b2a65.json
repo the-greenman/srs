@@ -14,8 +14,8 @@
     ],
     "body": "PR https://github.com/the-greenman/srs/pull/773 (gate:owner-merge — the Draft->Accepted status flip is the owner's act). Both gates green by exit code: validate-all.mjs and check-release-drift.mjs (the latter was red before re-rendering docs/spec/rfcs/rfc-catalog.md with the pinned CLI to pick up the new record). Proved the new check surface by stripping the manifest, confirming check-rfc-integration.mjs went red with the expected three diagnostics, then restoring it and confirming green."
   },
-  "lifecycleState": "in_review",
+  "lifecycleState": "landed",
   "createdAt": "2026-09-11T23:20:36.479317742+00:00",
-  "updatedAt": "2026-09-11T23:21:04.735859426+00:00",
+  "updatedAt": "2026-09-12T12:04:39.204247519+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
