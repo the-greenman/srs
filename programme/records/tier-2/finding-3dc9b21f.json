@@ -1,0 +1,20 @@
+{
+  "instanceId": "3dc9b21f-1983-42d2-80b0-8edfcce7e131",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "check-rfc-integration.mjs cannot see an RFC .md that has no rfc stub record at all",
+    "summary": "The integration gate only checks manifest-token consistency for RFCs that already have a com.semanticops.spec/rfc record (REQUIRES_INTEGRATION gates on the record's lifecycleState). An RFC whose .md exists in rfcs/ but was never given a stub record is invisible to the gate entirely — no failure, no warning. This is exactly how RFC-005 stayed Draft with fully-implemented, cited-by-name normative content for months (srs#288): every check ran green because there was no record for it to check. srs#288's own acceptance criteria named this same hardening gap as a follow-up rather than a blocking requirement, so it was not closed by that unit.",
+    "evidence": [
+      "srs#288: RFC-005 fully folded into relation-type.json, package-manifest.json, package-bundle.json, the Core/Extension conformance requirements mechanisms, and I-88 — all citing it by name — yet had zero com.semanticops.spec/rfc records and zero check-rfc-integration.mjs diagnostics before this unit created one",
+      "scripts/check-rfc-integration.mjs's per-RFC checks all iterate over existing rfc records (resolvers pulled from loadInstances); an .md with no record is simply never visited",
+      "rfcs/ contains one file per RFC number as the numbering registry (.claude/commands/rfc.md Stage 2a), so a cross-check (every rfc-NNN-*.md has exactly one rfc record with a matching rfc_number) is mechanically expressible without a new data model concept"
+    ],
+    "body": "Proposed hardening (not attempted here — out of scope for srs#288, which only needed RFC-005's own record): add a check to check-rfc-integration.mjs (or a sibling script wired into scripts/checks.json) that lists rfcs/rfc-*.md files, extracts each NNN, and fails if no com.semanticops.spec/rfc record's rfc_number matches. This closes the exact blind spot that let RFC-005 go unnoticed and would need a numbering-registry read plus a diagnostic, no new record type or field."
+  },
+  "createdAt": "2026-09-11T23:21:08.475285758+00:00",
+  "updatedAt": "2026-09-11T23:21:08.475295680+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

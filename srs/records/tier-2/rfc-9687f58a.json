@@ -1,0 +1,22 @@
+{
+  "instanceId": "9687f58a-1129-456a-889d-6128a41e9c2d",
+  "typeId": "6a000001-0000-4000-a000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc",
+  "fieldValues": {
+    "title": "RFC-005: Core Relation Type Definitions",
+    "rfc_number": "005",
+    "author": "Codex draft",
+    "affected_components": "Distribution Group (Core), `Relation`, `RelationTypeDefinition`, `Package`, `ext:recommended-relations`. Makes `RelationTypeDefinition` a required Package component; every `Relation.relationType` must resolve to an installed definition in the effective package set (E1); ships the seven canonical relation types as installed `com.semanticops.srs` package content; retires `ext:recommended-relations` to a compatibility label with no normative semantics.\n\n<!-- srs-integration:v1\ncell:reference\nschema:relation-type.json\nschema:package-manifest.json\nschema:package-bundle.json\nmechanism:relation\nmechanism:ext-recommended-relations\nmechanism:core-conformance-requirements\nmechanism:extension-conformance-requirements\nI-88\n-->",
+    "proposal_artifact_path": "rfcs/rfc-005-installable-verifiable-relation-types.md",
+    "content": "Makes `RelationTypeDefinition` a required Package component and definition lookup mandatory: every `Relation.relationType` string must resolve to exactly one installed `RelationTypeDefinition` in the effective package set before a Relation is accepted. Ships the seven canonical SRS relation types (`contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`) as installed, versioned definitions in the core `com.semanticops.srs` package, retiring the prior documented naming convention. Retires `ext:recommended-relations` to a compatibility label only. Full text: rfcs/rfc-005-installable-verifiable-relation-types.md."
+  },
+  "lifecycleState": "accepted",
+  "tags": [
+    "topic:rfc"
+  ],
+  "createdAt": "2026-09-11T22:46:11.927852194+00:00",
+  "updatedAt": "2026-09-11T22:53:47.658923570+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
