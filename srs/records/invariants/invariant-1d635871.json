@@ -1,0 +1,15 @@
+{
+  "instanceId": "1d635871-ca9f-43f4-adc4-ebc5a397fbbd",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "invariant",
+  "fieldValues": {
+    "invariant_number": "I-152",
+    "title": "Slice closure boundary resolves against the container set",
+    "normative_statement": "`slice.spec.id` MUST identify a `containerId` present in the repository's tree-authoritative container enumeration (RFC-038 [R1]), not a manifest `containerIndex`, which is retired (RFC-038 [R2]). A validator applying the RFC-026 Change E relaxations MUST NOT require that enumeration to be complete for a partial slice's included sub-containers, and MUST NOT treat that incompleteness as an error. (RFC-026 [R5](a), Change E item 3, amended by RFC-038 [R25].)"
+  },
+  "createdAt": "2026-09-12T02:43:37.020561620+00:00",
+  "updatedAt": "2026-09-12T02:43:37.020569543+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
