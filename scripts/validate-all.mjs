@@ -76,10 +76,8 @@ async function discoverPackages() {
   const roots = [
     { abs: join(REPO_ROOT, 'srs/package'), rel: 'package', label: 'srs/package/**' },
     { abs: join(REPO_ROOT, 'packages'), rel: '../packages', label: 'packages/**' },
-    // The spec-rework programme is its own SRS repository (srs#580), the same way the gallery and
-    // the discovery fixture are. Its package is walked here so `validate-package` covers it; the
-    // repository-level assertion needs the pinned binary and lives in check-programme-conformance.
-    { abs: join(REPO_ROOT, 'programme/package'), rel: '../programme/package', label: 'programme/package/**' },
+    // The spec-rework programme moved out to its own local repo (srs#786) and is no longer
+    // walked here; see srs-programme's own check-programme-conformance.mjs.
   ];
   const found = [];
   const emptyRoots = [];

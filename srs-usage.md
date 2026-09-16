@@ -1747,7 +1747,7 @@ A container that represents a navigation section names its anchor record in `roo
 
 If a record was added as a member and needs to become the section root instead, `srs container roots add` followed by `srs container members remove` moves it — `roots add` does not implicitly remove the same id from `memberInstanceIds`.
 
-The working shape lives in `programme/containers/` on master: each phase container's anchor record is its sole `rootInstanceIds` entry and does not also appear in `memberInstanceIds`. `srs repo navigation` renders all four sections in `precedes` order with zero diagnostics against that shape.
+The working shape lives in `containers/` in the `srs-programme` local repository (moved out of `srs` at #786): each phase container's anchor record is its sole `rootInstanceIds` entry and does not also appear in `memberInstanceIds`. `srs repo navigation` renders all four sections in `precedes` order with zero diagnostics against that shape.
 
 ### Blueprint.rootTypes must be ExactTypeRef[] (RFC-009 I-78, Change E)
 `Blueprint.rootTypes` uses the same `ExactTypeRef` shape as `DocumentView.rootTypeRefs` — **both** `typeId` (UUID) and `typeVersion` (integer ≥ 1) are **required**. Each entry MUST resolve against the Package at Blueprint load time; an unresolvable entry produces a diagnostic but does not invalidate the whole Blueprint.
