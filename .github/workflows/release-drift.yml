@@ -146,11 +146,9 @@ jobs:
           SRS_CLI_PATH: /tmp/srs-cli/srs
         run: node scripts/check-gallery-conformance.mjs
 
-      - name: Run programme repository conformance check (#580)
-        working-directory: srs
-        env:
-          SRS_CLI_PATH: /tmp/srs-cli/srs
-        run: node scripts/check-programme-conformance.mjs
+      # The programme repository conformance check moved with the programme repo itself
+      # (srs#786): srs-programme is a local-only repo, not present in CI, so its conformance
+      # is checked locally, not here.
 
       - name: Check governance seed drift (#550)
         working-directory: srs

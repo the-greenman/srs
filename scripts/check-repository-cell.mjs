@@ -11,7 +11,7 @@
  * tree, never read out of a manifest index. The smallest honest check, as the issue proposed it: a
  * mechanical parse asserting no `manifest.json` anywhere in the corpus carries that key.
  *
- * Whole-repo walk, not a fixed list of roots (srs/, programme/, docs/spec/examples/**,
+ * Whole-repo walk, not a fixed list of roots (srs/, docs/spec/examples/**,
  * conformance/**, packages/**) — same reasoning as check-versioning-cell.mjs and
  * check-field-name-convention.mjs: a fixed list silently excludes whatever tree grows a
  * manifest.json next. Every file literally named `manifest.json` is a candidate, whether it is a

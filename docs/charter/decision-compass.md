@@ -171,9 +171,9 @@ the bug. New meaning gets a row here in the change that creates it.
 | Agent process rules | each repo's `CLAUDE.md` | `AGENTS.md` is a pointer to it, never a restatement |
 | Agent rules for working with any SRS repository | `srs-usage.md` | agents in every repo; the tool-first rule in `CLAUDE.md` cites it |
 | The queue and the rulings not to relitigate | the-greenman/srs#580 | `CLAUDE.md`, `AGENTS.md`, every unit start |
-| Programme state — phases, units, findings | `programme/` records (its own SRS repository) | `check-programme-conformance`, via the pinned CLI |
-| Programme process — Protocol and Blueprint definitions | `programme/package/protocols/` and `programme/package/blueprints/` | `srs protocol stages` / `srs blueprint brief` over the pinned CLI; every unit's Work stage |
-| Carried context for the next unit | `programme/records/tier-2/carried-context-*.json` | dispatch briefs on the-greenman/srs#580; every unit's Ground stage |
+| Programme state — phases, units, findings | the `srs-programme` local repository (moved out at #786, no longer in `srs`) | `check-programme-conformance`, run locally against that repo |
+| Programme process — Protocol and Blueprint definitions | `srs-programme/package/protocols/` and `srs-programme/package/blueprints/` | `srs protocol stages` / `srs blueprint brief` over the pinned CLI, run locally |
+| Carried context for the next unit | posted as a structured block in the PR description or the #580 ledger comment; harvested into `srs-programme/records/tier-2/carried-context-*.json` in a local session | dispatch briefs on the-greenman/srs#580; every unit's Ground stage |
 
 ### Known anomalies
 
@@ -214,7 +214,7 @@ mode × door (kind: **rule**).
 - **Door 1** executes a recorded ruling, citing its `rfc-decision-*` id. No RFC.
 - **Door 2** introduces new normative meaning: an RFC, through the Charter Check.
 - **Door 3** amends an accepted RFC's own surface: an RFC revision, records and `.md` in one PR.
-- **Non-normative** (tooling, checks, docs, `programme/`) passes through no door.
+- **Non-normative** (tooling, checks, docs) passes through no door.
 - Mode clear/complicated **and** Door 1 or non-normative → the agent merges on green. Mode complex,
   or Door 2/3 → the owner merges. Chaotic → stop. Unresolved → treat as complex.
 - **External work** — a PR needing an action only the owner can take (a secret, a setting, an

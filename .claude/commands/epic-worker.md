@@ -12,7 +12,11 @@ hazard rather than harmless history (srs#451).
 
 - **Process rules** — this repo's `CLAUDE.md`, "Gates and choreography".
 - **The queue** — the programme queue issue, linked from `AGENTS.md`.
-- **The stages** — the programme Protocol record, walked by `/programme`.
+- **The stages** — the programme Protocol record, walked by `/programme`, now held in the
+  standalone `srs-programme` local repo (moved out of `srs` at #786). A cloud routine cannot
+  write to it; harvest content (unit lifecycle transition, findings, carried_context) is posted
+  as a structured block in the PR description or the #580 ledger comment, and a local session
+  harvests it into `srs-programme`.
 
 Routing a unit still works the way it always did: `/rfc`, `/author`, `/ship`,
 or direct implementation. That routing rule now lives in the programme
