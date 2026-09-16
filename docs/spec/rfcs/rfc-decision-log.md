@@ -1622,3 +1622,39 @@ This exception does not relax the honesty requirement: record delete's relation 
 **Review Trigger**: Revisit if anything begins resolving a metamodel Field by namespace/name@version — the premise this ruling rests on — or if scripts/gen-metamodel-package.mjs later gains a per-field version override (srs#658's option 1), which would make this exclusion unnecessary rather than wrong.
 
 
+**Title**: The .srs repository marker is a directory, and carries a README
+
+**Status**: Accepted
+
+**Decision Date**: 2026-09-16
+
+**Decision Rationale**: srs#313 (closed 2026-08-02) found the spec and the implementation disagreeing about the marker's kind: the spec's prose called `.srs` a file ("empty, or containing a format version on its first line"), while RFC-038 and every srs-rust code path (`detect.rs find_repo_root`, `FileStore::repository_exists` via `is_dir`, the `.srs/.gitkeep` emission in `tree_session.rs`/`archive.rs`/`srsj.rs`) had always treated it as a directory. The owner ruled directory, and commit 88323e2 folded that ruling into Invariant 45 and the `ext:repository` mechanism the same day — but no `rfc-decision-*` record was written, so the ruling has no home in the decision log srs/srs-usage.md and the compass point to. This record closes that gap retroactively; it changes no normative text (invariant-045 and mechanism-d453219f already say directory, and mechanism-d453219f already carries the README convention). On 2026-09-16 the owner separately committed to producing `.srs/README.md`, the "About SRS" orientation document, as the file that satisfies the marker's SHOULD-contain-a-regular-file convention (srs#340) — replacing an inert placeholder with a file that does real orientation work, without making its contents normative.
+
+**Decision**: (1) The `.srs` repository marker is a directory, not a file. A conforming repository's marker is `is_dir(".srs")`, matching Invariant 45, the `ext:repository` mechanism, and RFC-038 [R5]. This ratifies, retroactively, the ruling the owner made on srs#313 (2026-08-02) and that commit 88323e2 already folded into normative text.
+
+(2) The marker directory carries a README. `.srs/README.md`, an "About SRS" orientation document, is the regular file that satisfies the marker's SHOULD-contain-at-least-one-file convention (so it survives storage/archive round-trips that drop empty directories). This is a commitment to *produce* that file (srs#340's scope), not a change to its normative weight: `.srs/` contents remain implementation-private and outside conformance per RFC-038 [R5] — the repository walk skips `.srs/`, so nothing inside it can trip [R24] fatality, and the README carries no conformance rule, no schema element, and no semantic claim. An orientation document that drifted into asserting normative content would be invisible to `repo validate` and is exactly the failure srs#340 warns against; this decision does not authorize that drift.
+
+**Scope**: Governs the `.srs` marker's kind (directory) and the non-normative status of its contents, across every SRS repository (spec, srs-rust, srs-vscode, and any conforming corpus). Does not itself author `.srs/README.md` — that remains srs#340, owner-merge gated. Does not reopen RFC-038 [R5] or Invariant 45, both of which already state the position this record ratifies.
+
+**Governing Values**:
+- shared-coherence
+- semantic-integrity
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Migrate the implementation to a marker *file* instead — the alternative srs#313 itself named, and the git-friendlier one, since git does not track empty directories and a file marker would sidestep the SHOULD-contain-a-file convention entirely. Rejected: every implementation code path already treated the marker as a directory before the spec was ever consulted (RFC-038 [R5] predates this ruling), so a file migration would mean rewriting `srs-repository`'s detection, every archive/tree-session code path, and RFC-038 itself, purely to match a spec sentence that was the outlier, not the consensus. The corpus's disagreement was the spec being wrong, not the implementation. Doing nothing (leaving the disagreement unrecorded) was also live and is what actually happened for six weeks — rejected because it is the gap this record closes.
+
+**Accepted Costs**: A directory marker is invisible to git when empty, so a bare `.srs/` silently fails to round-trip through export/archive/clone paths that don't preserve empty directories — this is precisely why the SHOULD-contain-a-file convention exists and why srs#340 is being pursued, rather than treating the directory ruling as self-sufficient. Until srs#340 lands, repositories created without the README (or another placeholder such as the current `.srs/.gitkeep` emission) still carry that exposure; this record does not close it, only names the fix in progress.
+
+**Evidence**:
+- srs#313 (closed 2026-08-02) — "The .srs marker's kind is undecided—spec says file, RFC-038 and the implementation say directory, and the corpus has both"
+- commit 88323e2 — "fix(spec): fold .srs marker directory decision into canonical spec (#313)", amending Invariant 45 and the ext:repository mechanism, migrating docs/spec/examples/gallery-project-v2/.srs from file to directory
+- invariant-045 (e1000045-0000-4000-a000-000000000045) — "A conforming repository must have a `.srs` marker directory and a `manifest.json` at its root"
+- mechanism-d453219f (Repository layout) — marker SHOULD contain a regular file, by convention `.srs/README.md`, contents implementation-private with no normative weight
+- RFC-038 [R5] — codifies the directory reading; the repository walk skips `.srs/`, so [R24] fatality does not reach inside it
+- srs#340 (open, gate:owner-merge) — tracks authoring `.srs/README.md` itself, constrained to never become authoritative
+- srs-rust#691 (filed 2026-07-22) — "Spec/impl divergence: .srs marker is a file in the spec, a directory in the implementation"; this ruling's fold resolves it
+
+**Review Trigger**: Review if any future change makes `.srs/README.md` (or any file under `.srs/`) load-bearing for `repo validate`, navigation, or any other conformance check — that would cross the RFC-038 [R5] boundary this decision holds and would itself need a Door 2/3 change, not a README edit. Also review if srs#340's README draft is found asserting a conformance rule, schema element, or semantic claim in its own text.
+
+
