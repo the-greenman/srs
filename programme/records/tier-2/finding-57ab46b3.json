@@ -1,0 +1,20 @@
+{
+  "instanceId": "57ab46b3-09fb-4f91-bfba-72f720d6f329",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "two disjoint, disagreeing enumerations of \"the extensions\" coexist, one created during the very migration meant to stop this",
+    "summary": "srs/records/tier-2/table-27b56c53.json (a hand-authored com.semanticops.spec/table record, created 2026-09-11) and the com.semanticops.spec/extension record catalog (10 live + 1 dormant) are two independent lists of the specification's extensions. Only 7 names appear in both; the table names 4 extensions (ext:addressability, ext:protocol, ext:registry, ext:repository) with no extension record at all, and the extension catalog has 4 members (ext:slices, ext:discovery, ext:themes-l1, the dormant ext:changelog) the table omits. No check compares the two. Separately, com.semanticops.srs/extension-dependency, a relation type purpose-built for extension prerequisites, has sat status: deprecated since 2026-05-29 with zero corpus usage and zero explaining RFC or decision record.",
+    "evidence": [
+      "srs/records/tier-2/table-27b56c53.json fieldValues.rows: 11 rows (Addressability, Lifecycle, Protocol, Type Inheritance, Views L1, Views L2, Cross-Field Validation, Recommended Relations, Import Tracking, Registry, Repository)",
+      "srs record list --repo srs --type com.semanticops.spec/extension: 11 records (slices, import-tracking, type-inheritance, changelog, views-l2, discovery, themes-l1, cross-field-validation, views-l1, recommended-relations, lifecycle)",
+      "srs/package/spec-authoring-core/relation-types/extension-dependency.json: status: \"deprecated\", createdAt 2026-05-29 (same day as the extension Type); grep across rfcs/ and srs/records/ finds zero other references",
+      "RFC-042 Revision 4 (rfcs/rfc-042-concept-tree-spine.md, srs#782/#783) retires table-27b56c53 in favor of a generated index ([R18]) and leaves extension-dependency deprecated, not revived (Alt F), flagging its deletion as Open Question 6"
+    ]
+  },
+  "createdAt": "2026-09-12T17:44:42.637079682+00:00",
+  "updatedAt": "2026-09-12T17:44:42.637085767+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

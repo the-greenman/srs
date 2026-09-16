@@ -1,0 +1,19 @@
+{
+  "instanceId": "01e82343-a74f-4e5f-9e11-8e1e8ab224ab",
+  "typeId": "159cd6bd-813a-484e-b089-aa727df6772c",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.programme",
+  "typeName": "finding",
+  "fieldValues": {
+    "title": "extension records have been invisible to check-spec-coherence.mjs's checks 2/3/5 since it shipped",
+    "summary": "scripts/check-spec-coherence.mjs's LEAF_TYPES constant lists section, subsection, mechanism, invariant, example, design-note, table, generated-type-reference -- com.semanticops.spec/extension is absent. Every extension record has therefore been unreachable by check 2 (one-home), check 3 (no-orphan-leaf) and check 5 (no-baked-heading) since those checks landed (srs#560), independent of anything RFC-042 Revision 4 (srs#782/#783) otherwise changes. Found only because drafting that revision required reading the checker's source to scope a depends-on exception for extension.",
+    "evidence": [
+      "scripts/check-spec-coherence.mjs LEAF_TYPES = new Set([\"section\", \"subsection\", \"mechanism\", \"invariant\", \"example\", \"design-note\", \"table\", \"generated-type-reference\"]) -- no \"extension\" entry",
+      "node scripts/check-spec-coherence.mjs on origin/master (2026-09-12) reports one-home: 542 records with a contains parent -- this count cannot include extension records if LEAF_TYPES excludes the type, since the check only walks records of a LEAF_TYPES type or CONCEPT",
+      "RFC-042 Revision 4 (rfcs/rfc-042-concept-tree-spine.md, srs#782/#783) [R19] adds \"extension\" to LEAF_TYPES to close this gap"
+    ]
+  },
+  "createdAt": "2026-09-12T17:44:23.487047649+00:00",
+  "updatedAt": "2026-09-12T17:44:23.487053704+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
