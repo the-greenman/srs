@@ -58,7 +58,6 @@
     "spec-authoring-core/relation-types/section-sequence.json",
     "spec-authoring-core/relation-types/subsection-sequence.json",
     "spec-authoring-core/relation-types/design-note-sequence.json",
-    "spec-authoring-core/relation-types/extension-dependency.json",
     "spec-authoring-core/relation-types/explains.json"
   ],
   "status": "active",
