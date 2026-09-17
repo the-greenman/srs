@@ -1,0 +1,23 @@
+{
+  "instanceId": "89aa92bc-db70-48a5-bb3f-0a559f4487b9",
+  "typeId": "2a000008-0000-4000-a000-000000000008",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "extension",
+  "fieldValues": {
+    "extension_id": "ext:repository",
+    "title": "Repository",
+    "content": "",
+    "extension_status": "live",
+    "extension_adds": "The file-based repository format: a marker directory identifying the root, a manifest declaring the repository's stable id, its packages, its required root container and its declared extensions, and reserved folders for instances, relations, source documents and local definitions. Membership is authoritative from the tree itself — a file present under a reserved root is a member, with no manifest index to disagree with it — and the repository is operable with no running service, no registry and no network. The `.srsj` JSON Store is a single-file, lossless serialization of the same semantic content, for when portability matters more than per-file inspection.",
+    "extension_cost_of_non_adoption": "Without it, there is no standalone, directory-based repository format operable offline: no marker directory, no manifest declaring packages and root container, and no tree-authoritative membership rule. An implementation is left with the single-file `.srsj` JSON Store alone, or a bespoke storage mechanism of its own."
+  },
+  "tags": [
+    "concern:extensibility",
+    "construct:repository",
+    "topic:extensions"
+  ],
+  "createdAt": "2026-09-17T12:32:22.087241990+00:00",
+  "updatedAt": "2026-09-17T12:32:22.087250405+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

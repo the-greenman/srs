@@ -7,8 +7,10 @@
   "fieldValues": {
     "extension_id": "ext:slices",
     "title": "Slices",
-    "extension_depends": "",
-    "content": "**Retired as an independent content copy (srs#285 / srs#411).** The current, normative text for `ext:slices` is published in §7 as subsection `07-19-ext-slices` (`com.semanticops.spec/subsection`) — published by #414, byte-identical to this record's prior content. This record is kept only so `ext:slices` continues to resolve as an RFC-integration token (`scripts/check-rfc-integration.mjs`); it is not rendered by any document view and carries no independent content of its own. Do not edit this field to add prose — edit the published subsection instead."
+    "content": "",
+    "extension_status": "live",
+    "extension_adds": "Exporting a subset of a repository, scoped to a container's membership, as a standalone, independently openable `.srs` archive (a *slice*). A slice carries the records reachable from the container, their Type and Field definitions, intra-slice Relations, and referenced source documents — a valid RFC-017 `.srs` archive that any SRS tool can open, validate, and render on its own.",
+    "extension_cost_of_non_adoption": "Without it, an implementation cannot produce a standalone, independently openable subset of a repository scoped to a container; a consumer who needs only part of a repository must be given the whole repository, or a bespoke, non-conformant export."
   },
   "tags": [
     "concern:export",
@@ -16,6 +18,6 @@
     "topic:extensions"
   ],
   "createdAt": "2026-07-21T21:14:23.705189366+00:00",
-  "updatedAt": "2026-08-23T14:55:10.213101240+00:00",
+  "updatedAt": "2026-09-17T12:30:17.802548171+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

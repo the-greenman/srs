@@ -7,8 +7,10 @@
   "fieldValues": {
     "extension_id": "ext:themes-l1",
     "title": "Themes L1",
-    "extension_depends": "- ext:views-l2",
-    "content": "**Retired as an independent content copy (srs#285 / srs#411).** The current, normative text for `ext:themes-l1` is published in §7 as subsection `07-17-ext-themes-l1` (`com.semanticops.spec/subsection`) — published by #414, byte-identical to this record's prior content. This record is kept only so `ext:themes-l1` continues to resolve as an RFC-integration token (`scripts/check-rfc-integration.mjs`); it is not rendered by any document view and carries no independent content of its own. Do not edit this field to add prose — edit the published subsection instead."
+    "content": "",
+    "extension_status": "live",
+    "extension_adds": "A visual presentation layer for `Composition`: brand identity, typography, stylesheets, cover pages, and element wrapping attached to a rendered document without altering its semantic structure. Requires `ext:views-l2`, whose document-level assembly it visually layers atop.",
+    "extension_cost_of_non_adoption": "Without it, `Composition.themeRef` and `Composition.themeVariants` must be ignored rather than applied — an implementation renders a document's semantic structure with no brand identity, typography, stylesheet, cover page, or element-wrapping layer on top of it."
   },
   "tags": [
     "concern:extensibility",
@@ -17,6 +19,6 @@
     "topic:extensions"
   ],
   "createdAt": "2026-05-29T00:00:00Z",
-  "updatedAt": "2026-08-23T14:54:59.140631399+00:00",
+  "updatedAt": "2026-09-17T12:30:20.419591556+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

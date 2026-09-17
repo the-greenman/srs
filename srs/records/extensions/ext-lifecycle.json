@@ -7,8 +7,10 @@
   "fieldValues": {
     "extension_id": "ext:lifecycle",
     "title": "Lifecycle",
-    "extension_depends": "",
-    "content": "**Retired as an independent content copy (srs#285 / srs#407).** The current, normative text for `ext:lifecycle` is published in §7 as subsection `07-2-ext-lifecycle` (`com.semanticops.spec/subsection`). This record is kept only so `ext:lifecycle` continues to resolve as an RFC-integration token (`scripts/check-rfc-integration.mjs`); it is not rendered by any document view and carries no independent content of its own. Do not edit this field to add prose — edit the published subsection instead."
+    "content": "",
+    "extension_status": "live",
+    "extension_adds": "`Lifecycle`: an installable, referenceable container of `LifecycleState`s and `LifecycleTransition`s, fully integrated with the vocabulary substrate (RFC-006) as a `VocabularyEntry` specialisation. Required for governance tools, decision logs, and any implementation where records progress through defined states.",
+    "extension_cost_of_non_adoption": "Without it, a record has no defined-state progression to govern: no installable `Lifecycle` container, no `LifecycleState`/`LifecycleTransition` vocabulary, and no state machine for governance tooling or decision logs to drive off."
   },
   "tags": [
     "concern:extensibility",
@@ -16,7 +18,7 @@
     "topic:extensions"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-08-19T05:00:53.376051495+00:00",
+  "updatedAt": "2026-09-17T12:30:21.967398113+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

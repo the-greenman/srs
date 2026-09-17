@@ -1,0 +1,18 @@
+{
+  "id": "c02df73f-405e-439f-9166-95ec82ee1529",
+  "namespace": "com.semanticops.spec",
+  "name": "extension_cost_of_non_adoption",
+  "version": 1,
+  "description": "What an implementation forgoes by not declaring a live extension: the concrete cost of skipping it.",
+  "aiGuidance": {
+    "purpose": "The concrete cost of not adopting this extension, for a live extension.",
+    "extraction": "State plainly what an implementation gives up or must otherwise handle itself by not declaring the extension. Continuous prose, no headings. Restate what is already normative elsewhere in the specification; do not introduce a new claim here. Empty on a dormant record.",
+    "negativeGuidance": "Do not use this field to state new normative rules — it summarises what the extension's own normative surface already establishes."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "format": "markdown"
+  },
+  "editorHint": "textarea",
+  "createdAt": "2026-09-17T12:24:04.902179649+00:00"
+}

@@ -86,21 +86,6 @@ Table: the extension identifier and dependency reference.
 Example declaration: `SRS Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability`
 
 
-| Extension | Identifier | Depends on | Notes |
-| --- | --- | --- | --- |
-| Addressability | `ext:addressability` | — | For live facilitation, declare together with `ext:protocol` |
-| Lifecycle | `ext:lifecycle` | — |  |
-| Protocol | `ext:protocol` | `ext:lifecycle` (recommended) | For live facilitation, declare together with `ext:addressability` |
-| Type Inheritance | `ext:type-inheritance` | — |  |
-| Views L1 | `ext:views-l1` | — |  |
-| Views L2 | `ext:views-l2` | `ext:views-l1` |  |
-| Cross-Field Validation | `ext:cross-field-validation` | — |  |
-| Recommended Relations | `ext:recommended-relations` | — |  |
-| Import Tracking | `ext:import-tracking` | — |  |
-| Registry | `ext:registry` | — |  |
-| Repository | `ext:repository` | — | File-based live repository and archive (export/import) format |
-
-
 
 #### Notational conventions
 
@@ -5686,13 +5671,108 @@ Transcript chunks referenced in `SourceReference` are source material — addres
 
 **Description**: Extensions are optional, independently adoptable capability modules. Each declares its identifier, dependencies, and the types it defines.
 
+
+| Extension | Identifier | Depends on |
+|---|---|---|
+| Addressability | `ext:addressability` | — |
+| Cross-Field Validation | `ext:cross-field-validation` | — |
+| Discovery | `ext:discovery` | `ext:lifecycle` |
+| Import Tracking | `ext:import-tracking` | — |
+| Lifecycle | `ext:lifecycle` | — |
+| Protocol | `ext:protocol` | — |
+| Recommended Relations (compatibility label only) | `ext:recommended-relations` | — |
+| Registry | `ext:registry` | — |
+| Repository | `ext:repository` | — |
+| Slices | `ext:slices` | — |
+| Themes L1 | `ext:themes-l1` | `ext:views-l2` |
+| Type Inheritance | `ext:type-inheritance` | — |
+| Views L1 | `ext:views-l1` | — |
+| Views L2 | `ext:views-l2` | `ext:views-l1` |
+
+##### Import Tracking
+
+**Extension ID**: ext:import-tracking
+
+**Status**: live
+
+**Adds**: Recording, for a consumer that receives packages from an upstream publisher, what was imported, whether local content has diverged from the upstream source, and whether the upstream has moved ahead since. Divergence and update conflicts are detected and surfaced rather than silently overwritten or silently missed.
+
+**Cost of Non-Adoption**: Without it, a consumer that imports packages from an upstream publisher keeps no record of what it imported or from where, and cannot detect when local content has diverged from the upstream source or when the upstream has moved ahead — a divergence or update conflict is silently overwritten or silently missed instead of being surfaced.
+
+
+##### Cross-Field Validation
+
+**Extension ID**: ext:cross-field-validation
+
+**Status**: live
+
+**Adds**: `CrossFieldRule` and the `validationRules` property, for Type constraints that span more than one Field — `ValidationRule` alone only handles single-field constraints. Formally specified by RFC-019 (srs#139), which states the normative conformance rules (R0–R11).
+
+**Cost of Non-Adoption**: Without it, a Type can constrain each Field individually via `ValidationRule` but cannot express or enforce a constraint that depends on more than one Field's value together.
+
+
+##### Views L1
+
+**Extension ID**: ext:views-l1
+
+**Status**: live
+
+**Adds**: Views: named, versioned presentations over a Field set — which field rows appear, in what order, under what labels, with what editor hints, and whether each is visible — required for rendering and export workflows.
+
+**Cost of Non-Adoption**: Without it, a Record's Fields can be read directly but there is no named, versioned presentation layer governing which rows a rendering or export workflow shows, in what order, under what labels, or with what visibility.
+
+
+##### Views L2
+
+**Extension ID**: ext:views-l2
+
+**Status**: live
+
+**Adds**: Document-level projection: assembling multiple Records into a rendered document via a `Composition`, dispatching each section's field content to an L1 `View`, with its own `ExportConfig` attachment point for document-level rendering (distinct from the one on `View` itself) and ordering support including `DocumentSection.ordering.memberOrder`. Requires `ext:views-l1`, whose per-record field rendering it composes over.
+
+**Cost of Non-Adoption**: Without it, an implementation can render a single Record through an L1 `View` but cannot assemble multiple Records into a composed, multi-section document — there is no `Composition` to dispatch sections to Views, order members, or attach document-level `ExportConfig`.
+
+
+##### Themes L1
+
+**Extension ID**: ext:themes-l1
+
+**Status**: live
+
+**Adds**: A visual presentation layer for `Composition`: brand identity, typography, stylesheets, cover pages, and element wrapping attached to a rendered document without altering its semantic structure. Requires `ext:views-l2`, whose document-level assembly it visually layers atop.
+
+**Cost of Non-Adoption**: Without it, `Composition.themeRef` and `Composition.themeVariants` must be ignored rather than applied — an implementation renders a document's semantic structure with no brand identity, typography, stylesheet, cover page, or element-wrapping layer on top of it.
+
+
+##### Recommended Relations (compatibility label only)
+
+**Extension ID**: ext:recommended-relations
+
+**Status**: live
+
+**Adds**: Historically, a recommended (not required) set of seven canonical relation types for a repository to declare. Retired as of RFC-005: the canonical vocabulary (`contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`) is now provided unconditionally as installed `RelationTypeDefinition` records in the `com.semanticops.srs` package, so there is nothing left for declaring this extension to add.
+
+**Cost of Non-Adoption**: None. The canonical relation definitions are available to any repository using the SRS package regardless of whether this extension is declared; an implementation that previously declared `ext:recommended-relations` may remove it without loss.
+
+
+##### Lifecycle
+
+**Extension ID**: ext:lifecycle
+
+**Status**: live
+
+**Adds**: `Lifecycle`: an installable, referenceable container of `LifecycleState`s and `LifecycleTransition`s, fully integrated with the vocabulary substrate (RFC-006) as a `VocabularyEntry` specialisation. Required for governance tools, decision logs, and any implementation where records progress through defined states.
+
+**Cost of Non-Adoption**: Without it, a record has no defined-state progression to govern: no installable `Lifecycle` container, no `LifecycleState`/`LifecycleTransition` vocabulary, and no state machine for governance tooling or decision logs to drive off.
+
+
 ##### Discovery
 
 **Extension ID**: ext:discovery
 
-**Depends On**: ext:lifecycle
+**Status**: live
 
-**Content**: **Required for**: any implementation that supports querying and filtering instances across a repository — CLI, web UI, search engine, or API.
+**Adds**: **Required for**: any implementation that supports querying and filtering instances across a repository — CLI, web UI, search engine, or API.
 
 Defines the **Discovery Contract**: a portable, implementation-agnostic specification of how SRS repositories are queried. Covers structured filter axes, the Text Projection algorithm, normalization rules, and the consistency rule separating exact-match structured filters from the content-match recall floor.
 
@@ -5764,6 +5844,32 @@ srs/conformance/discovery/
 An implementation that declares `ext:discovery` MUST pass all fixture scenarios (exactMatch:true scenarios exactly; exactMatch:false scenarios as a superset). A scenario MAY additionally carry an `expectedSegments` expectation — `{ instanceId, fieldName, segments: string[] }` — naming the exact ordered `TextSegment` sequence one field of one instance must project; when present, the implementation's segment COUNT and ORDER for that field MUST match `segments` exactly (RFC-012 R11; srs#483 closes the gap left by `expectedInstanceIds` alone, which cannot express I-120's "one segment per array element in order" rule).
 
 ---
+
+**Cost of Non-Adoption**: Without it, an implementation may filter and search its own repository however it likes, but offers no portably interoperable Discovery Contract: two conforming implementations queried against identical data are not guaranteed to return identical structured-filter result sets, and there is no shared Text Projection, normalization, or consistency rule for content matching to build against.
+
+
+##### Changelog
+
+**Extension ID**: ext:changelog
+
+**Content**: **Status: Dormant** (removed under `rfc-decision-2a1e1590`, 2026-08-21). The 2026-08-21 usage attestation found zero `changelog/changelog.json` files anywhere in the corpus: the mechanism was speculative, never exercised in production. It is removed under the dormancy rule (`rfc-decision-cce3c00e`) alongside the per-field Revision sidecar mechanism it paired with, removed by the same ruling.
+
+**Removed surface** (historical, introduced by RFC-018, srs#141): the `ChangelogCollection`/`ChangelogEntry` schema (`changelog.json`); the `srs changelog list` CLI command. `manifest.changelogPath` is deprecated, not deleted, so existing declarations remain readable.
+
+**Return trigger**: a consumer needs transition history or field-level audit — anticipated first claimant is the muDemocracy Decision Log governance audit surface. When a real consumer's requirements are known, the mechanism is redesigned against them, not reinstated as specified here.
+
+**Status**: dormant
+
+
+##### Slices
+
+**Extension ID**: ext:slices
+
+**Status**: live
+
+**Adds**: Exporting a subset of a repository, scoped to a container's membership, as a standalone, independently openable `.srs` archive (a *slice*). A slice carries the records reachable from the container, their Type and Field definitions, intra-slice Relations, and referenced source documents — a valid RFC-017 `.srs` archive that any SRS tool can open, validate, and render on its own.
+
+**Cost of Non-Adoption**: Without it, an implementation cannot produce a standalone, independently openable subset of a repository scoped to a container; a consumer who needs only part of a repository must be given the whole repository, or a bespoke, non-conformant export.
 
 
 ##### Generated reference: `SourceDocumentMeta`
@@ -6440,6 +6546,17 @@ blueprint {
 ```
 
 
+##### Type Inheritance
+
+**Extension ID**: ext:type-inheritance
+
+**Status**: live
+
+**Adds**: Single inheritance between Types: a specialising Type names one base Type, gains its effective field list, and adds its own, under a substitutability constraint — a system that knows the base Type but not the specialisation can still read the inherited fields and should preserve the unknown ones rather than discard them. A specialisation may tighten an inherited optional field to required, but never relax a required one, and may never alter Field semantics.
+
+**Cost of Non-Adoption**: Without it, Types cannot specialise one another: each Type's field list is defined independently, with no inherited base, no substitutability guarantee for a system that knows only the base Type, and no way to tighten an inherited field without redefining the Type from scratch.
+
+
 ##### ext:changelog
 
 **Content**: **Status: Dormant** (removed under `rfc-decision-2a1e1590`, 2026-08-21): the 2026-08-21 usage attestation found zero `changelog/changelog.json` files in the corpus; the mechanism was speculative and never exercised.
@@ -6452,6 +6569,50 @@ blueprint {
 **Content**: **Status: Dormant** (removed under `rfc-decision-4f1e12e5`, 2026-08-22): the 2026-08-21 usage attestation found zero registries, events, or cross-repository relations in the corpus; the mechanism was speculative and never exercised.
 
 **Return trigger** (verbatim from `rfc-decision-4f1e12e5`): COMMITTED, not evidence-gated - federation is core to SRS; this removal is a deliberate reset of a design that predates real practice, not a judgment on the capability. The redesign returns as a planned roadmap phase, grounded in the sharing forms that actually emerged (bundles, slices, git-hosted repositories); the owner schedules it. Cell: ♓ Portability.
+
+
+##### Addressability
+
+**Extension ID**: ext:addressability
+
+**Status**: live
+
+**Adds**: A single addressing scheme spanning document space, process space and conversation space, so that anything that can be referred to can be resolved — including a transcript fragment and a field on a record, which is what makes an assertion linking them possible. Alongside the stable address sits the live cursor: the current focus of an active process run, stamped onto conversation material as it is produced, so that asking for everything said while attention was on a given field becomes a query, not a search. For live facilitation, declare together with `ext:protocol`.
+
+**Cost of Non-Adoption**: Without it, there is no single addressing scheme spanning document, process and conversation space: a transcript fragment and a field on a record are not co-addressable, so an assertion linking them cannot be made, and there is no live cursor stamped onto conversation material as it is produced — asking for everything said while attention was on a given field is not answerable as a query.
+
+
+##### Protocol
+
+**Extension ID**: ext:protocol
+
+**Status**: live
+
+**Adds**: An epistemically ordered process for building a good Record through structured conversation: named stages, each with the question it answers, the understanding it builds, how to tell it is sufficient, and which Record fields it feeds. Stages declare epistemic dependencies on other stages rather than a fixed ordering, so a stage may run once what it needs is established regardless of where it sits in the declared sequence. A Protocol is a package definition, not an instance, deliberately separated from presentation. For live facilitation, declare together with `ext:addressability` (recommended, not required).
+
+**Cost of Non-Adoption**: Without it, there is no epistemically ordered process guiding a conversation toward a Record: no named stages, no declared epistemic dependencies between them, and no way to tell when a stage's understanding is sufficient to feed the Record fields it targets.
+
+
+##### Registry
+
+**Extension ID**: ext:registry
+
+**Status**: live
+
+**Adds**: A published, discoverable catalog of Field, Type and other definitions that a multi-publisher ecosystem can index. It states no opinion on registry authority, authentication or federation between competing catalogs; a consumer may index more than one.
+
+**Cost of Non-Adoption**: Without it, Field, Type and other definitions have no published, discoverable catalog for a multi-publisher ecosystem to index; a consumer has no registry to look up an unfamiliar definition against.
+
+
+##### Repository
+
+**Extension ID**: ext:repository
+
+**Status**: live
+
+**Adds**: The file-based repository format: a marker directory identifying the root, a manifest declaring the repository's stable id, its packages, its required root container and its declared extensions, and reserved folders for instances, relations, source documents and local definitions. Membership is authoritative from the tree itself — a file present under a reserved root is a member, with no manifest index to disagree with it — and the repository is operable with no running service, no registry and no network. The `.srsj` JSON Store is a single-file, lossless serialization of the same semantic content, for when portability matters more than per-file inspection.
+
+**Cost of Non-Adoption**: Without it, there is no standalone, directory-based repository format operable offline: no marker directory, no manifest declaring packages and root container, and no tree-authoritative membership rule. An implementation is left with the single-file `.srsj` JSON Store alone, or a bespoke storage mechanism of its own.
 
 
 

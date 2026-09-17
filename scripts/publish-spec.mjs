@@ -4,9 +4,11 @@ import { copyFile, mkdir, readFile, readdir, rm, writeFile } from "fs/promises";
 import { dirname, join, resolve } from "path";
 import { spawn } from "child_process";
 import { renderInvariants } from "./render-invariants.mjs";
+import { renderExtensionIndex } from "./render-extension-index.mjs";
 import { logSrsCliProvenance, resolveSrsCli } from "./lib/pinned-srs.mjs";
 import { VIEW_EXPORTS as VIEW_EXPORT_SPECS } from "./lib/view-exports.mjs";
 import { injectKeyInvariants } from "./lib/invariant-region.mjs";
+import { injectExtensionIndex } from "./lib/extension-index-region.mjs";
 
 const ROOT = resolve(new URL("..", import.meta.url).pathname);
 const REPO_ROOT = join(ROOT, "srs");
@@ -89,6 +91,20 @@ async function injectInvariants() {
   }
 }
 
+async function injectExtensionIndexes() {
+  // RFC-042 Revision 4 [R18]: same shape as injectInvariants() above — only the two
+  // requiresExtensionIndex views carry the "Extensions" overview concept this splices against.
+  const injectedContent = await renderExtensionIndex(REPO_ROOT);
+  for (const entry of VIEW_EXPORTS.filter((e) => e.requiresExtensionIndex)) {
+    const content = await readFile(entry.output, "utf8");
+    const newContent = injectExtensionIndex(content, injectedContent);
+    if (newContent === null) {
+      throw new Error(`${entry.output} is marked requiresExtensionIndex but has no Extensions overview anchor to splice against`);
+    }
+    await writeFile(entry.output, newContent, "utf8");
+  }
+}
+
 async function renderDocumentViews() {
   for (const entry of VIEW_EXPORTS) {
     await mkdir(dirname(entry.output), { recursive: true });
@@ -112,6 +128,7 @@ async function main() {
   await run(SRS_CLI, ["--repo", REPO_ROOT, "repo", "validate"]);
   await renderDocumentViews();
   await injectInvariants();
+  await injectExtensionIndexes();
   await syncSchemas(RUST_SCHEMA_DST);
   await syncSchemas(VSCODE_SCHEMA_DST);
   await writeRustChecksums();
