@@ -67,15 +67,15 @@
       "rule": "em-dash-cap",
       "matched": "2 em-dashes in one paragraph (cap 1): The boundary makes both layers better at what they d…"
     },
-    "srs/records/design-notes/014-why-the-conversation-layer-is-a-permanent-boundary.json#content#em-dash-cap#4de99398": {
+    "srs/records/design-notes/014-why-the-conversation-layer-is-a-permanent-boundary.json#content#em-dash-cap#ad5b4988": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): SCDS captures negotiated semantic state. Transcripts…"
+      "matched": "2 em-dashes in one paragraph (cap 1): If SRS tried to be a transcript standard, it would n…"
     },
-    "srs/records/design-notes/014-why-the-conversation-layer-is-a-permanent-boundary.json#content#em-dash-cap#64caa3a7": {
+    "srs/records/design-notes/014-why-the-conversation-layer-is-a-permanent-boundary.json#content#em-dash-cap#b44959fe": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): If SCDS tried to be a transcript standard, it would …"
+      "matched": "2 em-dashes in one paragraph (cap 1): SRS captures negotiated semantic state. Transcripts …"
     },
     "srs/records/design-notes/022-graceful-degradation.json#content#soft-hedges#d1ffaf02": {
       "issue": "the-greenman/srs#563",
@@ -1712,11 +1712,6 @@
       "rule": "heading-restatement",
       "matched": "Generated from the resolved effective `note` Type — regenerate with `node scripts/gen-type…"
     },
-    "srs/records/tier-2/mechanism-0014fa0f.json#content#em-dash-cap#70171440": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): | `spec.id` | `string (uuid)` | yes | The `container…"
-    },
     "srs/records/tier-2/mechanism-0014fa0f.json#content#em-dash-cap#7b5e698e": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
@@ -2791,11 +2786,6 @@
       "issue": "the-greenman/srs#563",
       "rule": "soft-hedges",
       "matched": "rather"
-    },
-    "srs/records/tier-2/rfc-6ecaf104.json#content#em-dash-cap#6dbfbb65": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): To self-host its meta-model (epic #256), SRS must de…"
     },
     "srs/records/tier-2/rfc-change-819fea19.json#rationale#enable#8811208d": {
       "issue": "the-greenman/srs#563",

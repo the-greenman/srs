@@ -1,10 +1,13 @@
 {
-  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "createdAt": "2026-05-27T00:00:00Z",
+  "instanceId": "b1000000-0000-4000-a000-000000000005",
+  "typeId": "2a000013-0000-4000-a000-000000000013",
+  "typeVersion": 3,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "table",
   "fieldValues": {
-    "intro": "How the SCDS v2 vocabulary maps to the μDemocracy application layer. Reproduced from the v1→v2 conceptual remapping document for reference.",
+    "intro": "How the SRS v2 vocabulary maps to the μDemocracy application layer. Reproduced from the v1→v2 conceptual remapping document for reference.",
     "columns": [
-      "SCDS concept",
+      "SRS concept",
       "μDemocracy application"
     ],
     "rows": [
@@ -58,7 +61,7 @@
       },
       {
         "cells": [
-          "Document View",
+          "Composition",
           "Assembled founding document; full decision log"
         ]
       },
@@ -88,14 +91,12 @@
       }
     ]
   },
-  "typeVersion": 3,
-  "instanceId": "b1000000-0000-4000-a000-000000000005",
   "tags": [
     "construct:reference",
     "construct:vocabulary",
     "topic:extensions"
   ],
-  "typeId": "2a000013-0000-4000-a000-000000000013",
-  "typeName": "table",
-  "typeNamespace": "com.semanticops.spec"
+  "createdAt": "2026-05-27T00:00:00Z",
+  "updatedAt": "2026-09-17T12:52:38.455979083+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
