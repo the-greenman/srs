@@ -1,11 +1,22 @@
 {
-  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "createdAt": "2026-05-27T00:00:00Z",
-  "fieldValues": {
-    "title": "Field transclusion in Document Views",
-    "content": "\nPulling a specific Field value inline into a Document View is useful, but a syntax such as `{{field:{recordId}/{fieldId}}}` makes a reusable Document View depend on concrete instance IDs. That weakens portability and should wait for an addressing model that can express reusable selection rules rather than binding a definition to one Record."
-  },
   "instanceId": "f1000038-0000-4000-a000-000000000038",
+  "typeId": "2a000012-0000-4000-a000-000000000012",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "design-note",
+  "fieldValues": {
+    "title": "Field transclusion in Compositions",
+    "content": "\nPulling a specific Field value inline into a Composition is useful, but a syntax such as `{{field:{recordId}/{fieldId}}}` makes a reusable Composition depend on concrete instance IDs. That weakens portability and should wait for an addressing model that can express reusable selection rules rather than binding a definition to one Record."
+  },
+  "tags": [
+    "concern:rendering",
+    "construct:field",
+    "construct:view",
+    "topic:extensions"
+  ],
+  "createdAt": "2026-05-27T00:00:00Z",
+  "updatedAt": "2026-09-17T12:52:39.680251662+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {
       "note": "Imported from scds-rationale.md: \"Field transclusion in Document Views\"",
@@ -13,15 +24,5 @@
       "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
       "sourceType": "repository-document"
     }
-  ],
-  "tags": [
-    "concern:rendering",
-    "construct:field",
-    "construct:view",
-    "topic:extensions"
-  ],
-  "typeId": "2a000012-0000-4000-a000-000000000012",
-  "typeName": "design-note",
-  "typeNamespace": "com.semanticops.spec",
-  "typeVersion": 1
+  ]
 }

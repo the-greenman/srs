@@ -1,11 +1,22 @@
 {
-  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "createdAt": "2026-05-27T00:00:00Z",
+  "instanceId": "f1000026-0000-4000-a000-000000000026",
+  "typeId": "2a000012-0000-4000-a000-000000000012",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "design-note",
   "fieldValues": {
     "title": "Blueprint vs View — the extraction gap",
-    "content": "\nA View answers: given a Record that already exists, how do I render it for a specific audience?\n\nA Blueprint answers: given source material, what Records should I extract, and how do they relate?\n\nThese are complementary but distinct. A Document View cannot serve as an extraction blueprint because it assumes Records already exist. A Blueprint cannot serve as a Document View because it does not specify how to render field values for an audience.\n\nAn extraction pipeline uses Blueprint + Field `aiGuidance` + Protocol to produce Records. A rendering pipeline uses View + Document View to project those Records into readable form."
+    "content": "\nA View answers: given a Record that already exists, how do I render it for a specific audience?\n\nA Blueprint answers: given source material, what Records should I extract, and how do they relate?\n\nThese are complementary but distinct. A Composition cannot serve as an extraction blueprint because it assumes Records already exist. A Blueprint cannot serve as a Composition because it does not specify how to render field values for an audience.\n\nAn extraction pipeline uses Blueprint + Field `aiGuidance` + Protocol to produce Records. A rendering pipeline uses View + Composition to project those Records into readable form."
   },
-  "instanceId": "f1000026-0000-4000-a000-000000000026",
+  "tags": [
+    "concern:rendering",
+    "construct:blueprint",
+    "construct:view",
+    "topic:extensions"
+  ],
+  "createdAt": "2026-05-27T00:00:00Z",
+  "updatedAt": "2026-09-17T12:52:39.358073499+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {
       "note": "Imported from scds-rationale.md: \"Schema vs View — the extraction gap\" (renamed to Blueprint vs View)",
@@ -13,15 +24,5 @@
       "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
       "sourceType": "repository-document"
     }
-  ],
-  "tags": [
-    "concern:rendering",
-    "construct:blueprint",
-    "construct:view",
-    "topic:extensions"
-  ],
-  "typeId": "2a000012-0000-4000-a000-000000000012",
-  "typeName": "design-note",
-  "typeNamespace": "com.semanticops.spec",
-  "typeVersion": 1
+  ]
 }

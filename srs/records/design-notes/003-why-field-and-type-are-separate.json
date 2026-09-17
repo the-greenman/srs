@@ -1,11 +1,21 @@
 {
-  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "createdAt": "2026-05-27T00:00:00Z",
+  "instanceId": "f1000003-0000-4000-a000-000000000003",
+  "typeId": "2a000012-0000-4000-a000-000000000012",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "design-note",
   "fieldValues": {
     "title": "Why Field and Type are separate",
-    "content": "\nA form system where each template defines its own fields produces semantic silos: the \"decision statement\" in the Technology template and the \"decision statement\" in the Budget template are unrelated strings. They cannot be searched together, compared, or composed.\n\nIn SCDS, a Field is defined once. Any number of Types may include it. When two Types share a Field, any AI extraction logic, validation rules, or downstream analysis written for that Field applies consistently across both. The Field's identity is stable across all the contexts it appears in.\n\nThis is a stronger constraint than it appears. It means a Type cannot secretly redefine what a Field means for its own purposes — it can only configure presentation. If a Type genuinely needs different semantics, it must use a different Field."
+    "content": "\nA form system where each template defines its own fields produces semantic silos: the \"decision statement\" in the Technology template and the \"decision statement\" in the Budget template are unrelated strings. They cannot be searched together, compared, or composed.\n\nIn SRS, a Field is defined once. Any number of Types may include it. When two Types share a Field, any AI extraction logic, validation rules, or downstream analysis written for that Field applies consistently across both. The Field's identity is stable across all the contexts it appears in.\n\nThis is a stronger constraint than it appears. It means a Type cannot secretly redefine what a Field means for its own purposes — it can only configure presentation. If a Type genuinely needs different semantics, it must use a different Field."
   },
-  "instanceId": "f1000003-0000-4000-a000-000000000003",
+  "tags": [
+    "construct:field",
+    "construct:type",
+    "topic:foundation"
+  ],
+  "createdAt": "2026-05-27T00:00:00Z",
+  "updatedAt": "2026-09-17T12:52:36.869617667+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {
       "note": "Imported from scds-rationale.md: \"Why Field and Type are separate\"",
@@ -13,14 +23,5 @@
       "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
       "sourceType": "repository-document"
     }
-  ],
-  "tags": [
-    "construct:field",
-    "construct:type",
-    "topic:foundation"
-  ],
-  "typeId": "2a000012-0000-4000-a000-000000000012",
-  "typeName": "design-note",
-  "typeNamespace": "com.semanticops.spec",
-  "typeVersion": 1
+  ]
 }
