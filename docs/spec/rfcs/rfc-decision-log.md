@@ -1675,3 +1675,94 @@ Doing nothing (leaving parts (2)-(4) of the srs#313 ruling unrecorded, as they w
 **Review Trigger**: Review if any future normative edit to Invariant 45 or the ext:repository mechanism reintroduces a git/VCS-based justification for non-emptiness — the ruling's part (2) is explicit that the convention stands on its own terms, not as an accommodation to git. Also review if mechanism-d453219f's prose is ever read as committing the spec to `.srs/README.md` specifically rather than illustrating one candidate — if so, tighten it (Door 3) to state the convention without naming a file, matching this record's part (4). Finally, review when srs-rust#1066 lands: this record's part (4) should then be checked against the file it actually produces, to confirm the delegation held and no normative claim crept into `.srs/` content along the way.
 
 
+**Title**: A story is built at EXPRESSION from reusable parts: containers carry context membership and nesting, the Composition carries context order
+
+**Status**: Accepted
+
+**Decision Date**: 2026-09-17
+
+**Decision Rationale**: The owner's concern of 2026-09-16 (srs#787 comment 5696156601) is that a reader of the rendered spec cannot follow it linearly, and that the obvious repairs all pull toward duplication: because the relations are global claims, a record that belongs in two tellings appears to need two copies. That is the pressure this ruling removes. The parts are reused; only the arrangement is new.
+
+The pieces were already ruled and already in place. RFC-042 [R13] and the muDemocracy #73/#75 ordering-layering ruling put presentational order at EXPRESSION and named precedes as semantic order only. rfc-decision-0750c62f put the Container on the EXPRESSION plane as a declared selection. RFC-015 [N+29] defined memberOrder as the mechanism. What was missing was not a decision but an implementation and a statement that these three are the one way a story gets built; this record closes that gap and names them together.
+
+RFC-042 recorded the limit honestly: Compositions are flat, so an alternate hierarchy is not expressible today, and re-nesting was left as a Door 2 question. This is that Door 2 answer, and it answers it without a new construct: a nested container renders as a nested section, so the nesting that already exists in the selection layer becomes the nesting the reader sees.
+
+The measurement clause is the owner's, and it is a hedge against the one thing this ruling cannot know in advance: whether deep nesting over reused parts renders acceptably at the scale the spec will reach. Instrumenting the path on the way in is cheap; retrofitting it after a performance complaint is not.
+
+**Decision**: The contains, precedes and depends-on relations remain the single MEANING tree. They are claims about the records: what is part of what, what semantically or temporally follows what, and what must be understood first (RFC-042). Nothing in this ruling adds to them, weakens them, or makes them contextual.
+
+Any arrangement that differs from that tree is built at EXPRESSION. A narrative, an appendix, a reader's path, a tour for a newcomer: each is a telling of the same records, not a competing statement about them. Such a telling is assembled from reusable parts rather than from copies.
+
+Context membership and nesting are carried by Containers. A Container is a declared selection (rfc-decision-0750c62f), so the parts a telling draws on are named explicitly, and childContainerIds carries the nesting of one context inside another. One record may be a member of many containers at once; reuse across tellings is the normal case, not an exception, and it costs nothing on disk.
+
+Context order is carried by the Composition section's memberOrder (RFC-015 [N+29]), with the Rule [N+12] precedes order as the fallback when no memberOrder is declared. The renderer honours memberOrder for the listed members and renders a nested container as a nested section, so the telling's hierarchy comes from the declared selection rather than from the part-of tree.
+
+No relation type is added and no field is added to Relation. Context is never carried on an edge: an edge states what is true of the records, and a telling states how one reader is being walked through them.
+
+The nested-rendering path is engineered for measurement from the start. It reports nesting depth, fan-out per section, record reuse across sections, and render cost per section, so that nesting can be refined later on evidence rather than on intuition. Nesting may need optimisation; the instrumentation is what will say so.
+
+**Scope**: How an alternate arrangement of existing records is expressed and rendered: Container membership and childContainerIds, the Composition section's memberOrder, and the renderer's treatment of a nested container. Does not change contains, precedes or depends-on, their definitions, or their role as the MEANING tree. Does not change the Container or Relation schemas. Does not decide the content of any particular telling.
+
+**Governing Values**:
+- shared-coherence
+- semantic-integrity
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Context-scoped relations, in which an edge carries the context it holds in. Rejected: it puts a field on Relation, so every traversal in every consumer must learn a filter or silently read the wrong graph, and it breaks RFC-042's zero-new-fields property. It also makes a claim about records depend on which story is being told, which inverts the plane assignment this ruling rests on. Duplicating content per context, in which a record that belongs in two tellings is copied. Rejected: it corrodes the corpus on every reuse, because the copies drift and nothing says which is the original; the cost is paid forever and grows with every new telling.
+
+**Accepted Costs**: srs-rust must implement RFC-015 [N+29] (srs-rust#567, unconsumed since RFC-015 shipped) and nested-section rendering, including the instrumentation this ruling requires. RFC-042 needs a revision carrying the nested-rendering rule and lifting the flat-Composition limit it recorded. The spec's own compositions gain order data that must be maintained alongside the tree, which is a second thing an author can get wrong; the mitigation is that the fallback to the precedes order is always available and always correct as a default.
+
+**Evidence**:
+- srs#787 comment 5712896993 (the owner's ruling of 2026-09-17)
+- srs#787 comment 5696156601 (the owner's concern of 2026-09-16: global edges force duplication)
+- RFC-042 [R13] (presentational order at EXPRESSION; the flat-Composition limit as a Door 2 question)
+- RFC-015 [N+29] (memberOrder)
+- rfc-decision-0750c62f (a Container is a declared selection on the EXPRESSION plane)
+- muDemocracy #73/#75 (the ordering-layering ruling)
+- srs-rust#567 (renderedPresentations and [N+29] unconsumed)
+
+**Review Trigger**: Review if measurement of the nested-rendering path shows nesting depth, fan-out or reuse patterns the renderer cannot serve at the corpus's real scale. That would be evidence against the rendering rule, not against the plane assignment: the answer would be to change how a nested container renders, not to move order or membership back onto the MEANING tree.
+
+
+**Title**: Concepts describe themselves: bridging and introductory prose is the concept record's own prose
+
+**Status**: Accepted
+
+**Decision Date**: 2026-09-17
+
+**Decision Rationale**: The owner's ruling, verbatim: "Concepts should describe themselves in human readable ways."
+
+The prose in question is about the concept. It tells the reader what the concept is for and how it relates to its neighbours, which is exactly what the concept record exists to state. Keeping it with the concept keeps it at MEANING, where the spec-language checker reaches it and where a Container can select it into any telling that needs it (rfc-decision-8aed3412). Prose that is reused is prose that stays consistent.
+
+Presentation-only text on a Composition section fails both of those. It would sit at EXPRESSION, invisible to the language checks that exist precisely to keep the spec's prose disciplined, and it would be unreusable: a second telling of the same material would have to restate it, which is the duplication the companion ruling removes.
+
+A narrative leaf type fails differently. It would be a Type whose subject is prose about prose, sitting beside the concept it describes and answerable to nothing; RFC-042 Change A and Change B already fix that the leaf's Type is its role, and "introduces the thing next to me" is not a role distinct from being the thing.
+
+**Decision**: A concept record carries the human-readable prose that introduces it and bridges to what follows. That prose is part of the concept, not an accessory to it, and it renders at the concept's heading in every projection of the corpus.
+
+A Part's introduction is the Part concept's prose. There is no separate object holding the words that open a Part; the Part is a concept, and a concept describes itself.
+
+No narrative leaf type is added. No presentation-only text is added to a Composition section. Where a reader needs to be told what is coming or how what they have just read connects to what follows, the concept that owns the material says it.
+
+**Scope**: Where bridging and introductory prose lives in the com.semanticops.spec authoring package: the concept Type's own prose fields and their rendering at the concept's heading. Does not add, remove or change any Type. Does not change the leaf Types of RFC-042 Change B. Does not decide the wording of any particular concept's prose.
+
+**Governing Values**:
+- shared-coherence
+- semantic-integrity
+
+**Project Phase**: formation
+
+**Alternatives Considered**: A narrative leaf type, a Type whose records carry introductory and bridging prose as leaves under the concepts they bridge. Rejected: it is a type for prose-about-prose, it multiplies the records a reader and an author must keep in step, and it puts the introduction of a concept somewhere other than the concept. Presentation-only text on a Composition section, an authored string rendered before or between the section's members. Rejected: it is invisible to the spec-language checks, which only reach records, and it is unreusable across tellings, so every telling that needs the same bridge writes its own copy.
+
+**Accepted Costs**: Every concept gets written prose in the readability wave: 63 concepts, each needing an introduction that works for a linear reader, which is the bulk of the wave's authoring effort rather than a side task. The concept Type's prose field or fields may need their aiGuidance rewritten for the linear reader, because guidance written for a graph node produces text that reads as a definition fragment rather than as an introduction.
+
+**Evidence**:
+- srs#787 comment 5712896993 (the owner's ruling of 2026-09-17)
+- RFC-042 Change A (the concept is the exposition node) and Change B (the leaf's Type is its role)
+- docs/style/spec-language-guide.md
+- srs#787 (the readability wave)
+
+**Review Trigger**: Review if a reader test finds bridging needs that no concept owns: a transition whose subject is genuinely two concepts and neither, repeated often enough to be a pattern rather than an awkward pair. That would be evidence that the exposition has a node the tree does not, not that prose belongs at EXPRESSION.
+
+
