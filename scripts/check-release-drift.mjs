@@ -4,9 +4,11 @@ import { tmpdir } from "os";
 import { basename, join, resolve } from "path";
 import { spawn } from "child_process";
 import { renderInvariants } from "./render-invariants.mjs";
+import { renderExtensionIndex } from "./render-extension-index.mjs";
 import { logSrsCliProvenance, resolveSrsCli } from "./lib/pinned-srs.mjs";
 import { VIEW_EXPORTS as VIEW_EXPORT_SPECS } from "./lib/view-exports.mjs";
 import { injectKeyInvariants } from "./lib/invariant-region.mjs";
+import { injectExtensionIndex } from "./lib/extension-index-region.mjs";
 import { checkPublishCompleteness, keyInvariantsExemptTitleCounts } from "./lib/publish-completeness.mjs";
 import { testPublishCompletenessGuard } from "../tests/guards/check-publish-completeness.mjs";
 
@@ -94,6 +96,16 @@ async function applyInvariantInjection(entries, injectedContent) {
   }
 }
 
+async function applyExtensionIndexInjection(entries, injectedContent) {
+  // RFC-042 Revision 4 [R18]: same shape as applyInvariantInjection() above.
+  for (const entry of entries.filter((e) => e.requiresExtensionIndex)) {
+    const content = await readFile(entry.output, "utf8");
+    const newContent = injectExtensionIndex(content, injectedContent);
+    if (newContent === null) continue;
+    await writeFile(entry.output, newContent, "utf8");
+  }
+}
+
 async function renderFreshViews(tempDir) {
   const tempEntries = VIEW_EXPORTS.map((e) => ({ ...e, output: join(tempDir, basename(e.output)) }));
   for (const entry of tempEntries) {
@@ -111,8 +123,9 @@ async function renderFreshViews(tempDir) {
   return tempEntries;
 }
 
-async function checkRenderedDocsDrift(tempEntries, injectedContent) {
+async function checkRenderedDocsDrift(tempEntries, injectedContent, injectedExtensionIndex) {
   await applyInvariantInjection(tempEntries, injectedContent);
+  await applyExtensionIndexInjection(tempEntries, injectedExtensionIndex);
   for (let i = 0; i < VIEW_EXPORTS.length; i++) {
     await assertFileMatches(VIEW_EXPORTS[i].output, tempEntries[i].output, "rendered document");
   }
@@ -144,7 +157,8 @@ async function main() {
       rawContentsById[entry.id] = await readFile(entry.output, "utf8");
     }
     const injectedContent = await renderInvariants(REPO_ROOT);
-    await step("rendered docs", () => checkRenderedDocsDrift(tempEntries, injectedContent));
+    const injectedExtensionIndex = await renderExtensionIndex(REPO_ROOT);
+    await step("rendered docs", () => checkRenderedDocsDrift(tempEntries, injectedContent, injectedExtensionIndex));
 
     // Computed once: it's a full walk + parse of records/ and relations/, and the completeness
     // check and its self-test below both want the answer for the same repository state.

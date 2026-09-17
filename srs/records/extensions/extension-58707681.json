@@ -7,8 +7,10 @@
   "fieldValues": {
     "extension_id": "ext:type-inheritance",
     "title": "Type Inheritance",
-    "extension_depends": "",
-    "content": "Folded into the concept tree (srs#710, RFC-042 Change B). The normative text for `ext:type-inheritance` now lives in the \"Type specialisation\" concept and its `identityFieldId` / `FieldAssignmentOverride` mechanisms (`com.semanticops.spec/concept` / `mechanism`), succeeding the retired `ext:type-inheritance` subsection (`meta.derivedFrom` on each successor records the provenance). This record is kept only so `ext:type-inheritance` continues to resolve as an RFC-integration token (`scripts/check-rfc-integration.mjs`); it is not rendered by any document view and carries no independent content of its own. Do not edit this field to add prose — edit the successor mechanisms instead."
+    "content": "",
+    "extension_status": "live",
+    "extension_adds": "Single inheritance between Types: a specialising Type names one base Type, gains its effective field list, and adds its own, under a substitutability constraint — a system that knows the base Type but not the specialisation can still read the inherited fields and should preserve the unknown ones rather than discard them. A specialisation may tighten an inherited optional field to required, but never relax a required one, and may never alter Field semantics.",
+    "extension_cost_of_non_adoption": "Without it, Types cannot specialise one another: each Type's field list is defined independently, with no inherited base, no substitutability guarantee for a system that knows only the base Type, and no way to tighten an inherited field without redefining the Type from scratch."
   },
   "tags": [
     "concern:extensibility",
@@ -16,6 +18,6 @@
     "topic:extensions"
   ],
   "createdAt": "2026-09-11T06:05:14.699392912+00:00",
-  "updatedAt": "2026-09-11T06:05:14.699400190+00:00",
+  "updatedAt": "2026-09-17T12:30:18.746049717+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

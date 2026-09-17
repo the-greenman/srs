@@ -7,8 +7,10 @@
   "fieldValues": {
     "extension_id": "ext:recommended-relations",
     "title": "Recommended Relations (compatibility label only)",
-    "extension_depends": "",
-    "content": "**Retired as an independent content copy (srs#285 / srs#407).** The current, normative text for `ext:recommended-relations` is published in §7 as subsection `07-11-ext-recommended-relations` (`com.semanticops.spec/subsection`). This record is kept only so `ext:recommended-relations` continues to resolve as an RFC-integration token (`scripts/check-rfc-integration.mjs`); it is not rendered by any document view and carries no independent content of its own. Do not edit this field to add prose — edit the published subsection instead."
+    "content": "",
+    "extension_status": "live",
+    "extension_adds": "Historically, a recommended (not required) set of seven canonical relation types for a repository to declare. Retired as of RFC-005: the canonical vocabulary (`contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`) is now provided unconditionally as installed `RelationTypeDefinition` records in the `com.semanticops.srs` package, so there is nothing left for declaring this extension to add.",
+    "extension_cost_of_non_adoption": "None. The canonical relation definitions are available to any repository using the SRS package regardless of whether this extension is declared; an implementation that previously declared `ext:recommended-relations` may remove it without loss."
   },
   "tags": [
     "concern:extensibility",
@@ -16,7 +18,7 @@
     "topic:extensions"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-08-19T05:00:53.580923385+00:00",
+  "updatedAt": "2026-09-17T12:30:21.589321540+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

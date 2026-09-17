@@ -46,7 +46,10 @@
     "fields/lifecycle-extends-id.json",
     "fields/lifecycle-extends-version.json",
     "fields/vocabulary-ref.json",
-    "fields/lifecycle-ref.json"
+    "fields/lifecycle-ref.json",
+    "fields/extensionstatus-d686a018.json",
+    "fields/extensionadds-2b5e72cb.json",
+    "fields/extensioncostofnonadoption-c02df73f.json"
   ],
   "id": "f6e5d4c3-b2a1-4f8e-9d7c-6b5a4a3b2c1d",
   "lifecycles": [

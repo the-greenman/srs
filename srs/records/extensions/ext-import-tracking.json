@@ -7,8 +7,10 @@
   "fieldValues": {
     "extension_id": "ext:import-tracking",
     "title": "Import Tracking",
-    "extension_depends": "",
-    "content": "**Retired as an independent content copy (srs#285 / srs#407).** The current, normative text for `ext:import-tracking` is published in §7 as subsection `07-12-ext-import-tracking` (`com.semanticops.spec/subsection`). This record is kept only so `ext:import-tracking` continues to resolve as an RFC-integration token (`scripts/check-rfc-integration.mjs`); it is not rendered by any document view and carries no independent content of its own. Do not edit this field to add prose — edit the published subsection instead."
+    "content": "",
+    "extension_status": "live",
+    "extension_adds": "Recording, for a consumer that receives packages from an upstream publisher, what was imported, whether local content has diverged from the upstream source, and whether the upstream has moved ahead since. Divergence and update conflicts are detected and surfaced rather than silently overwritten or silently missed.",
+    "extension_cost_of_non_adoption": "Without it, a consumer that imports packages from an upstream publisher keeps no record of what it imported or from where, and cannot detect when local content has diverged from the upstream source or when the upstream has moved ahead — a divergence or update conflict is silently overwritten or silently missed instead of being surfaced."
   },
   "tags": [
     "concern:extensibility",
@@ -16,7 +18,7 @@
     "topic:extensions"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-08-19T05:00:53.778876553+00:00",
+  "updatedAt": "2026-09-17T12:30:18.199789136+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

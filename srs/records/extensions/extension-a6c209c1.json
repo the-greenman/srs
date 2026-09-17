@@ -1,0 +1,23 @@
+{
+  "instanceId": "a6c209c1-4005-446b-a30c-b7744cebd554",
+  "typeId": "2a000008-0000-4000-a000-000000000008",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "extension",
+  "fieldValues": {
+    "extension_id": "ext:registry",
+    "title": "Registry",
+    "content": "",
+    "extension_status": "live",
+    "extension_adds": "A published, discoverable catalog of Field, Type and other definitions that a multi-publisher ecosystem can index. It states no opinion on registry authority, authentication or federation between competing catalogs; a consumer may index more than one.",
+    "extension_cost_of_non_adoption": "Without it, Field, Type and other definitions have no published, discoverable catalog for a multi-publisher ecosystem to index; a consumer has no registry to look up an unfamiliar definition against."
+  },
+  "tags": [
+    "concern:extensibility",
+    "construct:registry",
+    "topic:extensions"
+  ],
+  "createdAt": "2026-09-17T12:32:21.921434257+00:00",
+  "updatedAt": "2026-09-17T12:32:21.921441809+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
