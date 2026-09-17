@@ -1733,10 +1733,11 @@ Container `tags` follow the same vocabulary resolution rules as Record tags (RFC
 ### `containers_for_instance` is a normative core operation (RFC-009 I-66)
 The reverse lookup `containers_for_instance(instanceId) → Container[]` is a **normative** SRS operation, not an implementation detail. A Container includes an instance if:
 1. the instance appears in `Container.rootInstanceIds`, or
-2. the instance appears in `Container.memberInstanceIds`, or
-3. a `contains` Relation exists from any of the Container's root instances to the queried instance (direct or transitive, per implementation policy).
+2. the instance appears in `Container.memberInstanceIds`.
 
-CLI: `srs container list --member <instanceId> --repo <path>`. The result is consistent with current `rootInstanceIds`, `memberInstanceIds`, and `contains` Relations in the repository.
+Membership is a declared selection only. The branch that once derived membership by traversing a `contains` Relation from the Container's root instances is retired — `rfc-decision-0750c62f` (RFC-034 Change C, adopted): a `contains` edge is a semantic composition claim, never membership evidence, and Invariant I-66's traversal branch is superseded. A `contains` edge may target any instance, Tier-0 Note or Tier-2 Record alike — nothing in the Relation model restricts its endpoints to typed Records.
+
+CLI: `srs container list --member <instanceId> --repo <path>`. The result is consistent with current `rootInstanceIds` and `memberInstanceIds` in the repository.
 
 ### Building a navigation section: the anchor is a root, not a member (I-82, srs-rust#460)
 
