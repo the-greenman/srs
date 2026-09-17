@@ -31,31 +31,51 @@ one adds an obligation, and changing an expectation changes what conformance mea
 > scoped explicitly and reconciled with I-115 — a no-false-positive obligation over probe tokens.
 > Raised on #317; the owner's call.
 
-## Two layers, migrated independently
+## Two layers, now both migrated
 
-This fixture sits at the intersection of two cutovers, and they resolved **differently**. Reading
-one for the other is the mistake this section exists to prevent.
+This fixture sits at the intersection of two cutovers. Historically they resolved **differently**;
+as of srs-rust#1024 (owner ruling, 2026-09-17) they do not.
 
 | Layer | State | Authority |
 |---|---|---|
 | **Data model** (RFC-032 `fieldType`, RFC-039 name-keyed carrier) | **Migrated.** `dataModelRevision: 2`; no Field carries the pre-RFC-032 `valueType`, no record carries the pre-RFC-039 pair-array. | #242 Phase B / #286 |
-| **Storage** (RFC-038 tree-authoritative) | **Deliberately not migrated.** No `.srs` marker; `manifest.json` keeps `instanceIndex` and `containerIndex`; relations stay in the `relations/relations.json` collection form. | RFC-038 Rev 7 resolved dispositions |
+| **Storage** (RFC-038 tree-authoritative) | **Migrated.** `manifest.json` carries no `instanceIndex`/`containerIndex`/`relationsPath`; the (always-empty) `relations/relations.json` collection file is removed; a root container is declared inline at `manifest.container` (RFC-013 I-79). | RFC-038 Revision 13, reversing Revision 7's disposition |
 
-RFC-038 Rev 7 kept this repository as test data rather than inventing repository identity for it,
-and named an `[R21]`-independent reader in `srs-rust`. The consequence is concrete and will look
-like a bug to anyone who has not read this far:
+RFC-038 Rev 7 (2026-08-01) originally kept this repository as test data rather than inventing
+repository identity for it, and named an `[R21]`-independent reader (`FileStore::with_rfc038_exemption`)
+in `srs-rust` so the fixture could keep the pre-RFC-038 shape while everything else migrated. The
+owner revisited that call on srs-rust#1024 (2026-09-17): keeping a normative conformance fixture on
+a retired storage shape indefinitely was judged a bigger cost than the migration, so this fixture now
+carries the same storage contract as every other first-party repository. RFC-038 Revision 13 records
+the reversal and its two accepted, warning-level gaps:
+
+- The root container's `identityInstanceId` (article-1, `00000001-…-000000000001`) resolves to
+  `com.example.discovery/article`, not `com.semanticops.core/purpose` (RFC-029 I-87). Manufacturing a
+  dedicated `purpose` record would pull a `com.semanticops.core` package reference into what is
+  otherwise a minimal, discovery-only package — judged out of scope for a storage-shape migration.
+  `repo validate` reports this as a **warning**, not an error, and does not block the release
+  corpus-conformance gate (which only fails on errors or an empty load).
+- Each of the other 8 members trips RFC-013 I-82 ("not the root of any container in the container
+  set") — expected for this intentionally flat fixture, which has zero `contains`/nesting to test and
+  zero non-root containers rooted on any of these 9 instances.
+
+`srs repo validate` is now this fixture's oracle for storage-shape conformance, same as any other
+repository:
 
 ```
 $ srs repo validate --repo conformance/discovery/fixture-repo
-manifest.json declares retired property 'instanceIndex' — removed by RFC-038 [R2];
-run the rfc038-storage migration
+{"ok": true, ..., "summary": {"checked": 9, "errors": 0, "warnings": 10}}
 ```
 
-**That diagnostic is correct and the fixture is not broken.** A conforming generation-2 reader is
-supposed to reject a repository holding retired manifest properties. The `srs` CLI is simply not
-this fixture's oracle. Its oracle is the runner below, which reads the tree directly.
+The 10 warnings are the two accepted gaps above (9 I-82 hits + 1 I-81 hit) plus the unrelated
+`dataModelRevision` compatibility-path notice every rev-2 repository gets from a rev-7-writing build.
+The scenario runner below is unaffected either way — it reads the tree directly and never depended
+on `srs repo validate` passing.
 
-Do not "fix" the fixture by migrating its storage. That reverses a ratified disposition.
+The pre-RFC-038 load path this fixture used to exercise (`with_rfc038_exemption` loading a real
+`instanceIndex`/`containerIndex` shape) is not lost: `migration_registry_service`'s
+`indexed_srsj_store` fixture and `migration_ladder.rs`'s `rev2_fixture` in `srs-rust` already cover it
+independently, with their own small synthetic fixtures, so no replacement fixture is carved out here.
 
 ## Running it
 
