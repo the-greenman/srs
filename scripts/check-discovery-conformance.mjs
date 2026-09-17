@@ -17,13 +17,17 @@
  * second time here would be a second implementation of the same goal (see repo convention: one
  * mechanism per goal) — the goal here is only "can segment count/order be asserted at all".
  *
- * Node pipeline only, no `srs` binary involved: fixture-repo is intentionally NOT readable by the
- * pinned CLI (RFC-038 Rev 7 exemption, see conformance/discovery/README.md), so this reads the
- * tree directly, the same way srs-rust's discovery_conformance test does.
+ * Node pipeline only, no `srs` binary involved: this reads the tree directly, the same way
+ * srs-rust's discovery_conformance test does — independent of whatever storage-shape rules the
+ * pinned CLI enforces.
+ *
+ * Instance lookup walks `records/` directly rather than a manifest index (RFC-038 [R1]:
+ * membership is tree-authoritative). The fixture was migrated off `manifest.instanceIndex` in
+ * RFC-038 Revision 13 (srs-rust#1024) — this script no longer has one to read.
  *
  * Wired into scripts/validate-all.mjs.
  */
-import { readFile } from "fs/promises";
+import { readdir, readFile } from "fs/promises";
 import { join, resolve } from "path";
 
 const ROOT = resolve(new URL("..", import.meta.url).pathname);
@@ -36,20 +40,41 @@ function projectSegments(value) {
   return [String(value)];
 }
 
-async function loadInstance(manifest, instanceId) {
-  const entry = manifest.instanceIndex.find((e) => e.instanceId === instanceId);
-  if (!entry) return null;
-  const record = JSON.parse(await readFile(join(FIXTURE_REPO, entry.path), "utf-8"));
-  return record;
+/** Depth-first walk of `records/` for the JSON file whose top-level `instanceId` matches. */
+async function findInstanceFile(dir, instanceId) {
+  let entries;
+  try {
+    entries = await readdir(dir, { withFileTypes: true });
+  } catch {
+    return null;
+  }
+  for (const e of entries) {
+    const abs = join(dir, e.name);
+    if (e.isDirectory()) {
+      const found = await findInstanceFile(abs, instanceId);
+      if (found) return found;
+      continue;
+    }
+    if (!e.name.endsWith(".json")) continue;
+    let doc;
+    try {
+      doc = JSON.parse(await readFile(abs, "utf-8"));
+    } catch {
+      continue;
+    }
+    if (doc?.instanceId === instanceId) return doc;
+  }
+  return null;
+}
+
+async function loadInstance(instanceId) {
+  return findInstanceFile(join(FIXTURE_REPO, "records"), instanceId);
 }
 
 async function main() {
   const scenarios = JSON.parse(
     await readFile(join(CONFORMANCE_DIR, "scenarios.json"), "utf-8"),
   ).scenarios;
-  const manifest = JSON.parse(
-    await readFile(join(FIXTURE_REPO, "manifest.json"), "utf-8"),
-  );
 
   const withExpectedSegments = scenarios.filter((s) => s.expectedSegments);
   if (withExpectedSegments.length === 0) {
@@ -60,9 +85,9 @@ async function main() {
   let allValid = true;
   for (const scenario of withExpectedSegments) {
     const { instanceId, fieldName, segments: expected } = scenario.expectedSegments;
-    const record = await loadInstance(manifest, instanceId);
+    const record = await loadInstance(instanceId);
     if (!record) {
-      console.log(`✗ ${scenario.name}: instance ${instanceId} not found in fixture-repo manifest`);
+      console.log(`✗ ${scenario.name}: instance ${instanceId} not found under fixture-repo/records`);
       allValid = false;
       continue;
     }

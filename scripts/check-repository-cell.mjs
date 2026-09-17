@@ -21,14 +21,14 @@
  * legitimately carry either, so one predicate covers both without needing to classify the file
  * first.
  *
- * One live corpus violation: `conformance/discovery/fixture-repo/manifest.json`. That fixture is
- * deliberately NOT migrated to RFC-038 tree-authoritative storage — RFC-038 Rev 7 kept it as frozen
- * pre-cutover test data for the `ext:discovery` conformance runner rather than inventing repository
- * identity for it (see `conformance/discovery/README.md`, "Two layers, migrated independently").
- * Allowlisted with `disposition: "permanent"`, same shape as
- * `scripts/publication-reachability-exclusions.json`: `{ path, reason, disposition, issue }`,
- * reused rather than inventing a bespoke shape (carried-context-61cee7c6) — this check has no git
- * history to diff, so `scripts/versioning-cell-allowlist.json`'s commit-range fields do not apply.
+ * No live corpus violations as of RFC-038 Revision 13 (srs-rust#1024): the one prior exception,
+ * `conformance/discovery/fixture-repo/manifest.json` (frozen at pre-RFC-038 storage per RFC-038
+ * Rev 7), was migrated to tree-authoritative storage and its allowlist entry removed — see
+ * `conformance/discovery/README.md`, "Two layers, now both migrated". The allowlist mechanism
+ * stays in place for the next one: `{ path, reason, disposition, issue }`, same shape as
+ * `scripts/publication-reachability-exclusions.json`, reused rather than inventing a bespoke shape
+ * (carried-context-61cee7c6) — this check has no git history to diff, so
+ * `scripts/versioning-cell-allowlist.json`'s commit-range fields do not apply.
  *
  *   node scripts/check-repository-cell.mjs [root]   # root defaults to the repo root
  */
