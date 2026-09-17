@@ -1,0 +1,23 @@
+{
+  "instanceId": "eba9014d-7af0-4bb5-b1ca-d8375a51d1d7",
+  "typeId": "2a000008-0000-4000-a000-000000000008",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "extension",
+  "fieldValues": {
+    "extension_id": "ext:protocol",
+    "title": "Protocol",
+    "content": "",
+    "extension_status": "live",
+    "extension_adds": "An epistemically ordered process for building a good Record through structured conversation: named stages, each with the question it answers, the understanding it builds, how to tell it is sufficient, and which Record fields it feeds. Stages declare epistemic dependencies on other stages rather than a fixed ordering, so a stage may run once what it needs is established regardless of where it sits in the declared sequence. A Protocol is a package definition, not an instance, deliberately separated from presentation. For live facilitation, declare together with `ext:addressability` (recommended, not required).",
+    "extension_cost_of_non_adoption": "Without it, there is no epistemically ordered process guiding a conversation toward a Record: no named stages, no declared epistemic dependencies between them, and no way to tell when a stage's understanding is sufficient to feed the Record fields it targets."
+  },
+  "tags": [
+    "concern:extensibility",
+    "construct:protocol",
+    "topic:extensions"
+  ],
+  "createdAt": "2026-09-17T12:32:21.759799550+00:00",
+  "updatedAt": "2026-09-17T12:32:21.759805583+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

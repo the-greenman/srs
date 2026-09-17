@@ -6,9 +6,9 @@
   "typeName": "mechanism",
   "fieldValues": {
     "title": "ext:recommended-relations",
-    "content": "**Retired as of RFC-005.** The canonical SRS relation vocabulary (`contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`) is now provided as installed `RelationTypeDefinition` records in the `com.semanticops.srs` package. See §5 (Package).\n\nImplementations that previously declared `ext:recommended-relations` may remove it. The canonical definitions are unconditionally available to any repository using the SRS package.\n\nThe statement that \"`RelationTypeDefinition` is optional metadata\" is superseded. As of RFC-005, every `Relation.relationType` string must resolve to an installed `RelationTypeDefinition` in the effective package set before a Relation is accepted. A missing or conflicting definition is a validation error. See §9-1 (Core conformance requirements)."
+    "content": "**Retired as of RFC-005.** The canonical SRS relation vocabulary (`contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`) is installed as `RelationTypeDefinition` records in the `com.semanticops.srs` package, and every `Relation.relationType` must resolve to one before the Relation is accepted. See the Conformance concept and Relation type definition."
   },
   "createdAt": "2026-09-07T19:59:44.318319788+00:00",
-  "updatedAt": "2026-09-07T19:59:44.318324667+00:00",
+  "updatedAt": "2026-09-17T13:00:47.864731985+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

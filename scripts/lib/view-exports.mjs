@@ -33,6 +33,7 @@ import { readFileSync } from "fs";
 import { dirname, join, relative, resolve } from "path";
 import { fileURLToPath } from "url";
 import { REQUIRES_KEY_INVARIANTS_VIEW_IDS } from "../render-invariants.mjs";
+import { REQUIRES_EXTENSION_INDEX_VIEW_IDS } from "../render-extension-index.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const REPO_ROOT = join(ROOT, "srs");
@@ -72,6 +73,7 @@ function loadRenderedPresentations() {
       id: entry.compositionId,
       output,
       ...(REQUIRES_KEY_INVARIANTS_VIEW_IDS.has(entry.compositionId) ? { requiresKeyInvariants: true } : {}),
+      ...(REQUIRES_EXTENSION_INDEX_VIEW_IDS.has(entry.compositionId) ? { requiresExtensionIndex: true } : {}),
     };
   });
 }

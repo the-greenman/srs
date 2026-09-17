@@ -3,11 +3,13 @@
  * check-spec-coherence.mjs — the spec reads in layers over the concept tree (srs#560, re-cut by the
  * #556 design ruling: tree = `contains`, order = `precedes`, prerequisites = `depends-on`).
  *
- * Five checks, read straight off canonical relations — no bespoke fields or relation types:
+ * Six checks, read straight off canonical relations — no bespoke fields or relation types:
  *
- *   1. no-forward-reference  A `depends-on` edge between concepts must point at something already
- *                            introduced: the target must not come later in the tree's linearised
- *                            order (parent before child; siblings ordered by the `precedes` chain).
+ *   1. no-forward-reference  A `depends-on` edge between concepts, or between the extensions RFC-042
+ *                            Revision 4 [R14] admits as a narrow exception, must point at something
+ *                            already introduced: the target must not come later in the tree's
+ *                            linearised order (parent before child; siblings ordered by the
+ *                            `precedes` chain).
  *                            Computed over the CONDENSATION of the `depends-on` graph (srs#608):
  *                            the graph is not a DAG — Type⇄FieldAssignment, Relation⇄RelationType-
  *                            Definition, Conformance⇄Extension are genuine 2-cycles whose members
@@ -17,8 +19,8 @@
  *                            reported as "unordered", never as violations — the tree is wired by #563.
  *   2. one-home              No record has two `contains` parents.
  *   3. no-orphan-leaf        Every spec content record (section, subsection, mechanism, invariant,
- *                            example, design-note, table, generated-type-reference) has a `contains`
- *                            parent or is a member of the root container (manifest.container).
+ *                            example, design-note, table, generated-type-reference, extension) has a
+ *                            `contains` parent or is a member of the root container (manifest.container).
  *   4. part-order            A Part is a non-identity member of the root container, ordered by the
  *                            `precedes` chain over those members. No `depends-on` edge may point from
  *                            an earlier Part's `contains`-subtree into a later one. Until #563 hangs
@@ -29,6 +31,14 @@
  *                            tree, not in the prose; root cause is the `content` field's aiGuidance
  *                            (#567). `generated-type-reference` is exempt: its content is a generator
  *                            projection (gen-type-reference-tables.mjs), fixed there or nowhere.
+ *   6. extension-shape       RFC-042 Revision 4 [R16]: every `extension` record carries a non-empty
+ *                            `extension_status` of `live` or `dormant`. A `live` record carries
+ *                            non-empty `extension_adds` and `extension_cost_of_non_adoption` and no
+ *                            value in the retiring `content` field. A `dormant` record carries
+ *                            neither `extension_adds` nor `extension_cost_of_non_adoption`, and states
+ *                            its dormancy in `content` per the existing Status/Removed surface/Return
+ *                            trigger convention. JSON Schema cannot express this conditional
+ *                            requirement (Schema changes, Revision 4) — this check is where it lives.
  *
  * Allowlist (scripts/spec-coherence-allowlist.json), same discipline as rfcs/integration-allowlist.json:
  * every entry names its check, the offending id (or `pair` of ids), and a live issue; a violation not
@@ -49,9 +59,10 @@ const ROOT = process.argv[2]
 const ALLOWLIST = join(ROOT, "scripts/spec-coherence-allowlist.json");
 
 const CONCEPT = "com.semanticops.spec/concept";
+const EXTENSION = "com.semanticops.spec/extension";
 const LEAF_TYPES = new Set([
   "section", "subsection", "mechanism", "invariant", "example", "design-note", "table",
-  "generated-type-reference",
+  "generated-type-reference", "extension",
 ]);
 const HEADING_EXEMPT = new Set(["generated-type-reference"]);
 
@@ -85,6 +96,11 @@ const rootMembers = new Set([...(rootContainer.memberInstanceIds ?? []), ...(roo
 
 const name = (id) => records.get(id)?.fieldValues?.title ?? records.get(id)?.path ?? id;
 const isConcept = (id) => records.get(id)?.type === CONCEPT;
+// RFC-042 Revision 4 [R14]: an extension may itself source (or be the target of) a depends-on edge —
+// the sole exception to [R4]'s "a leaf never carries a depends-on edge" — so check 1's tree-order
+// reasoning must admit extension endpoints alongside concept ones, not just concepts.
+const isExtension = (id) => records.get(id)?.type === EXTENSION;
+const isConceptOrExtension = (id) => isConcept(id) || isExtension(id);
 
 // ---- graph helpers --------------------------------------------------------------------------------
 const parents = new Map(); // child -> [parent...]
@@ -149,9 +165,12 @@ const summary = {};
 
 // 1. no-forward-reference
 {
-  const concepts = [...records.keys()].filter(isConcept);
+  // RFC-042 Revision 4 [R14]: extension-sourced depends-on edges (an extension depending on
+  // another extension or a concept) are admitted alongside the concept-only edges this check
+  // already covered — same tree-order reasoning, wider node set.
+  const concepts = [...records.keys()].filter(isConceptOrExtension);
   const dep = new Map();
-  const depEdges = edges("depends-on").filter((r) => isConcept(r.sourceInstanceId) && isConcept(r.targetInstanceId));
+  const depEdges = edges("depends-on").filter((r) => isConceptOrExtension(r.sourceInstanceId) && isConceptOrExtension(r.targetInstanceId));
   for (const r of depEdges) dep.set(r.sourceInstanceId, [...(dep.get(r.sourceInstanceId) ?? []), r.targetInstanceId]);
   const comp = tarjan(concepts, dep);
   const nComps = new Set(comp.values()).size;
@@ -251,19 +270,65 @@ const summary = {};
   let headings = 0, files = 0;
   for (const [id, rec] of records) {
     if (!LEAF_TYPES.has(rec.leaf) || HEADING_EXEMPT.has(rec.leaf)) continue;
-    let n = 0;
+    let recordTotal = 0;
     for (const [field, value] of Object.entries(rec.fieldValues)) {
       if (typeof value !== "string") continue;
+      // Reset per field (not per record): a record with more than one heading-eligible string
+      // field — extension now has three (content, extension_adds, extension_cost_of_non_adoption)
+      // — previously carried an earlier field's count into a later field's report message.
+      let n = 0;
       let fence = false;
       for (const line of value.split(/\r?\n/)) {
         if (/^\s*```/.test(line)) fence = !fence;
         else if (!fence && /^#{1,6} /.test(line)) n++;
       }
       if (n) report("no-baked-heading", id, `${rec.leaf} "${name(id)}" (${rec.path}) bakes ${n} markdown heading(s) into \`${field}\``);
+      recordTotal += n;
     }
-    if (n) { headings += n; files++; }
+    if (recordTotal) { headings += recordTotal; files++; }
   }
   summary["no-baked-heading"] = `${headings} baked headings in ${files} leaf records`;
+}
+
+// 6. extension-shape (RFC-042 Revision 4 [R16])
+{
+  let checked = 0, bad = 0;
+  for (const [id, rec] of records) {
+    if (rec.type !== EXTENSION) continue;
+    checked++;
+    const fv = rec.fieldValues;
+    const status = fv.extension_status;
+    const nonEmpty = (v) => typeof v === "string" && v.length > 0;
+    if (status !== "live" && status !== "dormant") {
+      bad++;
+      report("extension-shape", id, `extension "${name(id)}" (${rec.path}) has extension_status ${JSON.stringify(status)} — must be "live" or "dormant"`);
+      continue;
+    }
+    if (status === "live") {
+      if (!nonEmpty(fv.extension_adds)) {
+        bad++;
+        report("extension-shape", id, `live extension "${name(id)}" (${rec.path}) has no extension_adds`);
+      }
+      if (!nonEmpty(fv.extension_cost_of_non_adoption)) {
+        bad++;
+        report("extension-shape", id, `live extension "${name(id)}" (${rec.path}) has no extension_cost_of_non_adoption`);
+      }
+      if (nonEmpty(fv.content)) {
+        bad++;
+        report("extension-shape", id, `live extension "${name(id)}" (${rec.path}) still carries a value in the retiring content field`);
+      }
+    } else {
+      if (nonEmpty(fv.extension_adds) || nonEmpty(fv.extension_cost_of_non_adoption)) {
+        bad++;
+        report("extension-shape", id, `dormant extension "${name(id)}" (${rec.path}) carries extension_adds or extension_cost_of_non_adoption — dormant records carry neither`);
+      }
+      if (!nonEmpty(fv.content)) {
+        bad++;
+        report("extension-shape", id, `dormant extension "${name(id)}" (${rec.path}) has no content stating its dormancy (Status / Removed surface / Return trigger)`);
+      }
+    }
+  }
+  summary["extension-shape"] = `${checked} extension records, ${bad} violating [R16]'s live/dormant shape`;
 }
 
 // ---- allowlist reconciliation ---------------------------------------------------------------------

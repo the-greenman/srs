@@ -1,0 +1,23 @@
+{
+  "instanceId": "4b7178eb-9dcf-4614-bf57-cf2d4bf4c195",
+  "typeId": "2a000008-0000-4000-a000-000000000008",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "extension",
+  "fieldValues": {
+    "extension_id": "ext:addressability",
+    "title": "Addressability",
+    "content": "",
+    "extension_status": "live",
+    "extension_adds": "A single addressing scheme spanning document space, process space and conversation space, so that anything that can be referred to can be resolved — including a transcript fragment and a field on a record, which is what makes an assertion linking them possible. Alongside the stable address sits the live cursor: the current focus of an active process run, stamped onto conversation material as it is produced, so that asking for everything said while attention was on a given field becomes a query, not a search. For live facilitation, declare together with `ext:protocol`.",
+    "extension_cost_of_non_adoption": "Without it, there is no single addressing scheme spanning document, process and conversation space: a transcript fragment and a field on a record are not co-addressable, so an assertion linking them cannot be made, and there is no live cursor stamped onto conversation material as it is produced — asking for everything said while attention was on a given field is not answerable as a query."
+  },
+  "tags": [
+    "concern:extensibility",
+    "construct:addressability",
+    "topic:extensions"
+  ],
+  "createdAt": "2026-09-17T12:32:09.069899353+00:00",
+  "updatedAt": "2026-09-17T12:32:09.069911365+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

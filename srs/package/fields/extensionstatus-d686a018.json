@@ -1,0 +1,21 @@
+{
+  "id": "d686a018-97ed-4783-85fa-3929d1335516",
+  "namespace": "com.semanticops.spec",
+  "name": "extension_status",
+  "version": 1,
+  "description": "Whether this extension is currently recommended for adoption (`live`) or has been removed pending a return trigger (`dormant`).",
+  "aiGuidance": {
+    "purpose": "Whether this extension is currently recommended for adoption (`live`) or has been removed pending a return trigger (`dormant`).",
+    "extraction": "`live`: the extension is recommended for adoption where it fits; populate `extension_adds` and `extension_cost_of_non_adoption`, and clear `content`. `dormant`: the extension was removed after a usage attestation found no adopters; state the removal in `content` per the existing Status / Removed surface / Return trigger convention, and leave `extension_adds` and `extension_cost_of_non_adoption` empty."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "live",
+      "dormant"
+    ]
+  },
+  "editorHint": "dropdown",
+  "createdAt": "2026-09-17T12:23:51.895898542+00:00"
+}

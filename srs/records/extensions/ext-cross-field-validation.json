@@ -7,8 +7,10 @@
   "fieldValues": {
     "extension_id": "ext:cross-field-validation",
     "title": "Cross-Field Validation",
-    "extension_depends": "",
-    "content": "**Retired as an independent content copy (srs#285 / srs#407).** The current, normative text for `ext:cross-field-validation` is published in §7 as subsection `07-10-ext-cross-field-validation` (`com.semanticops.spec/subsection`). This record is kept only so `ext:cross-field-validation` continues to resolve as an RFC-integration token (`scripts/check-rfc-integration.mjs`); it is not rendered by any document view and carries no independent content of its own. Do not edit this field to add prose — edit the published subsection instead."
+    "content": "",
+    "extension_status": "live",
+    "extension_adds": "`CrossFieldRule` and the `validationRules` property, for Type constraints that span more than one Field — `ValidationRule` alone only handles single-field constraints. Formally specified by RFC-019 (srs#139), which states the normative conformance rules (R0–R11).",
+    "extension_cost_of_non_adoption": "Without it, a Type can constrain each Field individually via `ValidationRule` but cannot express or enforce a constraint that depends on more than one Field's value together."
   },
   "tags": [
     "concern:extensibility",
@@ -16,7 +18,7 @@
     "topic:extensions"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-08-19T05:00:53.981110550+00:00",
+  "updatedAt": "2026-09-17T12:30:20.817426909+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

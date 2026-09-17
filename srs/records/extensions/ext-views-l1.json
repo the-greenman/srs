@@ -7,8 +7,10 @@
   "fieldValues": {
     "extension_id": "ext:views-l1",
     "title": "Views L1",
-    "extension_depends": "",
-    "content": "**Retired as an independent content copy (srs#285 / srs#407).** The current, normative text for `ext:views-l1` is published in §7 as subsection `07-6-ext-views-l1` (`com.semanticops.spec/subsection`). This record is kept only so `ext:views-l1` continues to resolve as an RFC-integration token (`scripts/check-rfc-integration.mjs`); it is not rendered by any document view and carries no independent content of its own. Do not edit this field to add prose — edit the published subsection instead."
+    "content": "",
+    "extension_status": "live",
+    "extension_adds": "Views: named, versioned presentations over a Field set — which field rows appear, in what order, under what labels, with what editor hints, and whether each is visible — required for rendering and export workflows.",
+    "extension_cost_of_non_adoption": "Without it, a Record's Fields can be read directly but there is no named, versioned presentation layer governing which rows a rendering or export workflow shows, in what order, under what labels, or with what visibility."
   },
   "tags": [
     "concern:extensibility",
@@ -17,7 +19,7 @@
     "topic:extensions"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-08-19T05:00:52.972832778+00:00",
+  "updatedAt": "2026-09-17T12:30:21.187838471+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

@@ -1,0 +1,18 @@
+{
+  "id": "2b5e72cb-f8db-42c2-8f91-8fcebd2ff0ec",
+  "namespace": "com.semanticops.spec",
+  "name": "extension_adds",
+  "version": 1,
+  "description": "What a live extension adds: the capability it provides beyond core conformance.",
+  "aiGuidance": {
+    "purpose": "The capability this extension provides beyond core conformance, for a live extension.",
+    "extraction": "State the capability directly, in continuous prose, no headings. Restate what is already normative elsewhere in the specification for this extension; do not introduce a new claim here. Empty on a dormant record.",
+    "negativeGuidance": "Do not use this field to state new normative rules — it summarises what the extension's own normative surface already establishes."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "format": "markdown"
+  },
+  "editorHint": "textarea",
+  "createdAt": "2026-09-17T12:23:59.451121279+00:00"
+}

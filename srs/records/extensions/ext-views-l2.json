@@ -7,8 +7,10 @@
   "fieldValues": {
     "extension_id": "ext:views-l2",
     "title": "Views L2",
-    "extension_depends": "- ext:views-l1",
-    "content": "**Retired as an independent content copy (srs#285 / srs#407).** The current, normative text for `ext:views-l2` is published in §7 as subsection `07-7-ext-views-l2` (`com.semanticops.spec/subsection`). This record is kept only so `ext:views-l2` continues to resolve as an RFC-integration token (`scripts/check-rfc-integration.mjs`); it is not rendered by any document view and carries no independent content of its own. Do not edit this field to add prose — edit the published subsection instead."
+    "content": "",
+    "extension_status": "live",
+    "extension_adds": "Document-level projection: assembling multiple Records into a rendered document via a `Composition`, dispatching each section's field content to an L1 `View`, with its own `ExportConfig` attachment point for document-level rendering (distinct from the one on `View` itself) and ordering support including `DocumentSection.ordering.memberOrder`. Requires `ext:views-l1`, whose per-record field rendering it composes over.",
+    "extension_cost_of_non_adoption": "Without it, an implementation can render a single Record through an L1 `View` but cannot assemble multiple Records into a composed, multi-section document — there is no `Composition` to dispatch sections to Views, order members, or attach document-level `ExportConfig`."
   },
   "tags": [
     "concern:extensibility",
@@ -17,7 +19,7 @@
     "topic:extensions"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-08-19T05:00:53.175981096+00:00",
+  "updatedAt": "2026-09-17T12:30:19.582257973+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {
