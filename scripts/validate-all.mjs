@@ -76,8 +76,8 @@ async function discoverPackages() {
   const roots = [
     { abs: join(REPO_ROOT, 'srs/package'), rel: 'package', label: 'srs/package/**' },
     { abs: join(REPO_ROOT, 'packages'), rel: '../packages', label: 'packages/**' },
-    // The spec-rework programme moved out to its own local repo (srs#786) and is no longer
-    // walked here; see srs-programme's own check-programme-conformance.mjs.
+    // The spec-rework programme moved out to its own published repo, the-greenman/srs-programme
+    // (srs#786), and is no longer walked here; see that repo's own check-programme-conformance.mjs.
   ];
   const found = [];
   const emptyRoots = [];

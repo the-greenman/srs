@@ -103,7 +103,7 @@ docs/spec/srs-spec.md:1439 **Content**: | Vocabulary | Binding scope | Container
 docs/spec/srs-spec.md:4357 **Content**: > **Standalone repository note**: The conversation layer is optional…
 ```
 
-Line 30 is on the opening page of the specification. The fenced-code case was noticed and absorbed by a caption sentence prefixed to all 68 `example` records (`programme/records/tier-2/finding-153f4d63.json`); the list, table, and blockquote cases were never noticed, so nothing absorbed them. That asymmetry is the evidence that the caption convention was never a fix — it happened to catch one construct and missed the rest.
+Line 30 is on the opening page of the specification. The fenced-code case was noticed and absorbed by a caption sentence prefixed to all 68 `example` records (`srs-programme/records/tier-2/finding-153f4d63.json`); the list, table, and blockquote cases were never noticed, so nothing absorbed them. That asymmetry is the evidence that the caption convention was never a fix — it happened to catch one construct and missed the rest.
 
 **Why this and not a check on content.** `finding-153f4d63` already recorded the principle:
 
@@ -161,7 +161,7 @@ Where label and value share a line, the separator is a literal colon followed by
 
 "Beginning on its own line" rather than "on its own line": a scalar value may itself contain line breaks, which Change B2 requires to be emitted verbatim at column zero. The row starts a line; it does not necessarily occupy only one — and, as of Revision 4, does not necessarily start on the *same* line as its label.
 
-**Why the block-opening rule, not a constraint on content.** Recorded as a `finding` during the unit that first noticed the fenced-code case (`programme/records/tier-2/finding-153f4d63.json`):
+**Why the block-opening rule, not a constraint on content.** Recorded as a `finding` during the unit that first noticed the fenced-code case (`srs-programme/records/tier-2/finding-153f4d63.json`):
 
 > A rendering-layer quirk that constrains what a record may contain is a layer violation in the direction the charter cares about: presentation reaching back into semantics. The captions stand on their own merit, but the constraint should not stay load-bearing.
 
