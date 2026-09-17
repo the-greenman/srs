@@ -246,6 +246,15 @@
           "description": "The spec reads in layers over the concept tree, read off canonical relations only (tree = contains, order = precedes, prerequisites = depends-on): (1) no depends-on edge between concepts, or between the extensions RFC-042 Revision 4 [R14] admits as a narrow exception, points forward in the tree's linearised order, computed over the strongly-connected components of the depends-on graph so the three genuine 2-cycles (#608) are introduced together, never flagged; (2) no record has two contains parents; (3) every content leaf (section, subsection, mechanism, invariant, example, design-note, table, generated-type-reference, extension) has a contains parent or root-container membership; (4) no depends-on edge points from an earlier Part's subtree into a later one (vacuous until #563 hangs the concept tree under the Parts, and says so); (5) no hand-authored leaf bakes a markdown heading into a text field (root cause #567); (6) RFC-042 Revision 4 [R16]: every extension record's extension_status/extension_adds/extension_cost_of_non_adoption/content shape matches its live-or-dormant state, a conditional requirement JSON Schema cannot express. Known violations live in scripts/spec-coherence-allowlist.json, each citing a live issue; an unlisted violation fails, and so does an entry that no longer matches - shrinking the list is the migration (#562/#563/#564)."
     },
     {
+      "id": "spec-readability",
+      "script": "check-spec-readability.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "srs#795; srs#787 (Wave 5 — Read as a human)",
+      "description": "The linear reading order (RFC-042 Change A rule [N+12]: topological sort over precedes among each sibling set, createdAt then instanceId as tiebreak, so every sibling set gets a total order rather than the partial one check-spec-coherence.mjs's ancestor-comparison test leaves for 34 of 89 depends-on edges) drives two checks: (1) reading-order-forward-reference — every depends-on edge over the concept/extension node set (condensed over the depends-on graph's strongly-connected components, same #608 treatment as check-spec-coherence.mjs check 1) is classified forward, backward or within-one-component against the total order, turning every one of check-spec-coherence's unordered pairs into a concrete answer; (2) undefined-before-use — for every concept, the first prose mention of its title (word-boundary, case-insensitive) across every record's prose fields (scripts/spec-language-registry.json's proseFields), read in the same total order, is flagged when it precedes the concept's own position. Known violations live in scripts/spec-readability-allowlist.json, each citing #787; an unlisted violation fails, and so does a stale entry — shrinking the list is the Wave 5 per-Part rewrite units' job."
+    },
+    {
       "id": "attribution-cell",
       "script": "check-attribution-cell.mjs",
       "args": [],
