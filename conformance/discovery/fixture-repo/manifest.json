@@ -1,95 +1,20 @@
 {
-  "instanceIndex": [
-    {
-      "instanceId": "00000001-0000-4000-8000-000000000001",
-      "tier": 2,
-      "path": "records/articles/article-1.json",
-      "title": "SRS Discovery Contract",
-      "tags": [
-        "searchable",
-        "indexed"
-      ]
-    },
-    {
-      "instanceId": "00000001-0000-4000-8000-000000000002",
-      "tier": 2,
-      "path": "records/articles/article-2.json",
-      "title": "Text Projection Algorithm",
-      "tags": [
-        "searchable"
-      ]
-    },
-    {
-      "instanceId": "00000001-0000-4000-8000-000000000003",
-      "tier": 2,
-      "path": "records/articles/article-3.json",
-      "title": "Query Performance in SRS",
-      "tags": [
-        "indexed"
-      ]
-    },
-    {
-      "instanceId": "00000001-0000-4000-8000-000000000004",
-      "tier": 2,
-      "path": "records/articles/article-4.json",
-      "title": "Legacy Search Approach",
-      "tags": []
-    },
-    {
-      "instanceId": "00000001-0000-4000-8000-000000000005",
-      "tier": 2,
-      "path": "records/articles/article-5.json",
-      "title": "Metrics and Flags",
-      "tags": []
-    },
-    {
-      "instanceId": "00000002-0000-4000-8000-000000000001",
-      "tier": 2,
-      "path": "records/projects/project-1.json",
-      "title": "Searchable Index Project",
-      "tags": [
-        "searchable",
-        "indexed"
-      ]
-    },
-    {
-      "instanceId": "00000002-0000-4000-8000-000000000002",
-      "tier": 2,
-      "path": "records/projects/project-2.json",
-      "title": "Conformance Fixtures",
-      "tags": [
-        "searchable"
-      ]
-    },
-    {
-      "instanceId": "00000003-0000-4000-8000-000000000001",
-      "tier": 2,
-      "path": "records/metrics/metric-1.json",
-      "title": "Indexed Record Count",
-      "tags": []
-    },
-    {
-      "instanceId": "00000005-0000-4000-8000-000000000001",
-      "tier": 0,
-      "path": "records/notes/note-1.json",
-      "title": "Research Notes on Full-Text Search",
-      "tags": [
-        "searchable"
-      ]
-    }
-  ],
-  "containerIndex": [
-    {
-      "containerId": "0000c001-0000-4000-8000-000000000001",
-      "title": "Discovery Domain Articles",
-      "path": "containers/container-alpha.json"
-    },
-    {
-      "containerId": "0000c002-0000-4000-8000-000000000002",
-      "title": "Active Projects",
-      "path": "containers/container-beta.json"
-    }
-  ],
+  "container": {
+    "containerId": "0000c003-0000-4000-8000-000000000003",
+    "title": "Discovery Contract Conformance Fixture",
+    "identityInstanceId": "00000001-0000-4000-8000-000000000001",
+    "memberInstanceIds": [
+      "00000001-0000-4000-8000-000000000001",
+      "00000001-0000-4000-8000-000000000002",
+      "00000001-0000-4000-8000-000000000003",
+      "00000001-0000-4000-8000-000000000004",
+      "00000001-0000-4000-8000-000000000005",
+      "00000002-0000-4000-8000-000000000001",
+      "00000002-0000-4000-8000-000000000002",
+      "00000003-0000-4000-8000-000000000001",
+      "00000005-0000-4000-8000-000000000001"
+    ]
+  },
   "$schema": "https://srs.semanticops.com/schema/2.0/manifest.json",
   "createdAt": "2026-06-27T00:00:00Z",
   "dataModelRevision": 2,
@@ -97,13 +22,12 @@
     "ext:lifecycle",
     "ext:discovery"
   ],
-  "description": "Self-contained SRS repository used as the conformance fixture for ext:discovery (RFC-012). Contains 8 Tier 2 Records across 3 instantiated types — article, project and metric — drawn from a 4-type package whose fourth, byline, is the inline composite range of article.byline and carries no Records of its own. Between them the Fields span every RFC-032 fieldType classification I-120 rules on, searchable and excluded. Also 2 Tier 1 TypedRecords on the RFC-039 [R8] fieldType carrier, 1 Tier 0 Note, 2 Containers, and instances with tags and lifecycleState set. Storage stays pre-RFC-038 by the ratified Rev-7 disposition — see conformance/discovery/README.md.",
+  "description": "Self-contained SRS repository used as the conformance fixture for ext:discovery (RFC-012). Contains 8 Tier 2 Records across 3 instantiated types — article, project and metric — drawn from a 4-type package whose fourth, byline, is the inline composite range of article.byline and carries no Records of its own. Between them the Fields span every RFC-032 fieldType classification I-120 rules on, searchable and excluded. Also 1 Tier 0 Note, 2 Containers, and instances with tags and lifecycleState set. Migrated to RFC-038 tree-authoritative storage (Revision 13) — see conformance/discovery/README.md.",
   "namespace": "com.example.discovery",
   "packageRef": {
     "mode": "local",
     "path": "package"
   },
-  "relationsPath": "relations/relations.json",
   "repositoryId": "0000repo-0000-4000-8000-000000000001",
   "srsVersion": "2.0",
   "title": "Discovery Contract Conformance Fixture"
