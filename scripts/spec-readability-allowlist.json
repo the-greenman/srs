@@ -309,6 +309,12 @@
       "id": "dc970b1a-9e3e-4207-a031-c04b6632c3bc",
       "issue": "the-greenman/srs#787",
       "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "1f57e484-f870-4704-814d-f3f0614c3641",
+      "issue": "the-greenman/srs#802",
+      "note": "\"Foundations\" is named in Part 1's reading-order overview (part:reading-this-specification's description, X3 of the read-through srs#798/#787), which lists all nine Parts by name so the reader knows the shape of the document before reading it linearly. Naming a later Part in a front-matter table of contents is not a genuine forward reference — the mention carries no content from that Part, only its title and position in the sequence. Structural, not a fold candidate: this entry persists as long as Part 1 names the other eight Parts up front."
     }
   ]
 }

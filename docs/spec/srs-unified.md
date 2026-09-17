@@ -6,31 +6,23 @@
 
 **Canonical Key**: part:reading-this-specification
 
-**Description**: The nine Parts read front to back: notation, RFC 2119 keywords, and the reading order the rest of the document assumes.
+**Description**: This Part addresses two readers: implementers building a conforming SRS system, and the authors and agents who work inside an SRS repository day to day, including this one, since the specification is itself authored as SRS records. Two facts govern everything that follows. Records are the source of truth: a Field, a Type, a Record, and a Relation are what SRS actually is. Every document derived from them, this rendered specification included, is a projection — useful for reading linearly, never authoritative on its own, and never the place to resolve a disagreement with the records it was generated from.
+
+The nine Parts read front to back, each presupposing what came before it:
+
+- Reading this specification: notation, RFC 2119 keywords, and this reading order
+- Foundations: the core entity model a repository is built from — Field, Type, Vocabulary and Term, record tiers, Relation, Container
+- Instances: Notes and Records as the two record tiers, and how a Record instantiates a Type
+- Structure: how instances connect and order themselves — the Relation model, the contains tree, the precedes chain
+- Distribution: how definitions travel between repositories — Package, Reference, Lineage, Provenance
+- Presentation: how stored state becomes a document a person reads — projections, Views, Composition
+- Extensions: the independently adoptable capability modules a repository may declare
+- Conformance: what an implementation must satisfy to claim SRS conformance, and how that claim is declared and checked
+- Governance: the specification's own governing rules — foundational values, process, and the balance between shared coherence and local autonomy
 
 #### Purpose and Scope
 
 **Canonical Key**: record:concepts/purpose-and-scope
-
-**Intro**: Start with the question: what does your implementation need to do?
-
-| Need | Extensions |
-| --- | --- |
-| Define and exchange Field and Type definitions | Core only |
-| Track definition origin and imports | `ext:import-tracking` |
-| Publish a definition catalog | `ext:registry` |
-| Governance with lifecycle states | `ext:lifecycle` |
-| Present and export Records | `ext:views-l1` |
-| Assemble multi-Record documents | `ext:views-l2` |
-| Facilitate structured deliberation | `ext:protocol` |
-| Live facilitation with context assembly | `ext:addressability` |
-| Extraction from source material | Blueprint (`Package.blueprints[]`) |
-| Specialise Types while preserving base processability | `ext:type-inheritance` |
-| Lists of values within a Record | Core only — `fieldType` `cardinality: "list"` (RFC-039; `ext:repeatable-fields` retired) |
-| Structured repeatable context in a Record | Core only — composite-range Field (`datatype: "ref"`, `mode: "inline"`; RFC-039; `ext:field-groups` retired) |
-| Complex conditional validation | `ext:cross-field-validation` |
-| Cross-system Relation interoperability | `ext:recommended-relations` |
-
 
 ##### A core conformance declaration
 
@@ -84,6 +76,26 @@ Table: the extension identifier and dependency reference.
 **Blueprint is a core package definition**, not a declarable extension. `Blueprint` is included in `Package.blueprints[]` when needed; no `ext:blueprint` declaration is required or defined.
 
 Example declaration: `SRS Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability`
+
+
+**Intro**: Start with the question: what does your implementation need to do?
+
+| Need | Extensions |
+| --- | --- |
+| Define and exchange Field and Type definitions | Core only |
+| Track definition origin and imports | `ext:import-tracking` |
+| Publish a definition catalog | `ext:registry` |
+| Governance with lifecycle states | `ext:lifecycle` |
+| Present and export Records | `ext:views-l1` |
+| Assemble multi-Record documents | `ext:views-l2` |
+| Facilitate structured deliberation | `ext:protocol` |
+| Live facilitation with context assembly | `ext:addressability` |
+| Extraction from source material | Blueprint (`Package.blueprints[]`) |
+| Specialise Types while preserving base processability | `ext:type-inheritance` |
+| Lists of values within a Record | Core only — `fieldType` `cardinality: "list"` (RFC-039; `ext:repeatable-fields` retired) |
+| Structured repeatable context in a Record | Core only — composite-range Field (`datatype: "ref"`, `mode: "inline"`; RFC-039; `ext:field-groups` retired) |
+| Complex conditional validation | `ext:cross-field-validation` |
+| Cross-system Relation interoperability | `ext:recommended-relations` |
 
 
 
