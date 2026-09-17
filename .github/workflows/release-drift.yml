@@ -147,8 +147,8 @@ jobs:
         run: node scripts/check-gallery-conformance.mjs
 
       # The programme repository conformance check moved with the programme repo itself
-      # (srs#786): srs-programme is a local-only repo, not present in CI, so its conformance
-      # is checked locally, not here.
+      # (srs#786): the-greenman/srs-programme is a published repo with its own `validate`
+      # CI workflow (scripts/check-programme-conformance.mjs there), not checked here.
 
       - name: Check governance seed drift (#550)
         working-directory: srs
