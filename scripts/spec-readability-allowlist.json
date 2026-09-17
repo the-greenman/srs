@@ -1,0 +1,314 @@
+{
+  "$comment": "Known violations of scripts/check-spec-readability.mjs (srs#795, srs#787), each citing the live issue that removes it. Entry shape: {check, id | pair:[sourceId,targetId], issue, note}. The check fails on any violation NOT listed here and on any entry that no longer matches a violation — shrinking this file is the Wave 5 per-Part rewrite units burning down #787. Growing it needs an issue.",
+  "entries": [
+    {
+      "check": "reading-order-forward-reference",
+      "pair": [
+        "17faf6f1-9b73-4cc5-90bd-7735b933da08",
+        "07ee545a-dba3-4253-bcbb-19a58330f79c"
+      ],
+      "issue": "the-greenman/srs#787",
+      "note": "Genuine forward reference under the total reading order (RFC-042 Change A rule [N+12]) that check-spec-coherence.mjs check 1 reports only as unordered, since its ancestor-comparison test does not resolve sibling order the tree leaves partial. Fold candidate for the Wave 5 per-Part rewrite units."
+    },
+    {
+      "check": "reading-order-forward-reference",
+      "pair": [
+        "17fb1629-855c-481f-937a-3e1db05215d8",
+        "07ee545a-dba3-4253-bcbb-19a58330f79c"
+      ],
+      "issue": "the-greenman/srs#787",
+      "note": "Genuine forward reference under the total reading order (RFC-042 Change A rule [N+12]) that check-spec-coherence.mjs check 1 reports only as unordered, since its ancestor-comparison test does not resolve sibling order the tree leaves partial. Fold candidate for the Wave 5 per-Part rewrite units."
+    },
+    {
+      "check": "reading-order-forward-reference",
+      "pair": [
+        "89444ae5-3dc7-4ffd-ac60-3bc9559c9331",
+        "873099c5-093d-4684-8c36-46f813847c1a"
+      ],
+      "issue": "the-greenman/srs#787",
+      "note": "Genuine forward reference under the total reading order (RFC-042 Change A rule [N+12]) that check-spec-coherence.mjs check 1 reports only as unordered, since its ancestor-comparison test does not resolve sibling order the tree leaves partial. Fold candidate for the Wave 5 per-Part rewrite units."
+    },
+    {
+      "check": "reading-order-forward-reference",
+      "pair": [
+        "42ed953e-2b89-4bb9-a1b1-a8dcad0d24e5",
+        "873099c5-093d-4684-8c36-46f813847c1a"
+      ],
+      "issue": "the-greenman/srs#787",
+      "note": "Genuine forward reference under the total reading order (RFC-042 Change A rule [N+12]) that check-spec-coherence.mjs check 1 reports only as unordered, since its ancestor-comparison test does not resolve sibling order the tree leaves partial. Fold candidate for the Wave 5 per-Part rewrite units."
+    },
+    {
+      "check": "reading-order-forward-reference",
+      "pair": [
+        "9bccaa53-6d98-4ca9-967b-fb27ec6e72d5",
+        "873099c5-093d-4684-8c36-46f813847c1a"
+      ],
+      "issue": "the-greenman/srs#787",
+      "note": "Genuine forward reference under the total reading order (RFC-042 Change A rule [N+12]) that check-spec-coherence.mjs check 1 reports only as unordered, since its ancestor-comparison test does not resolve sibling order the tree leaves partial. Fold candidate for the Wave 5 per-Part rewrite units."
+    },
+    {
+      "check": "reading-order-forward-reference",
+      "pair": [
+        "12a4cf6e-f707-429a-8704-a253da88e4d8",
+        "1e23ee5d-0406-485d-a927-6c62dfee58f1"
+      ],
+      "issue": "the-greenman/srs#787",
+      "note": "Genuine forward reference under the total reading order (RFC-042 Change A rule [N+12]) that check-spec-coherence.mjs check 1 reports only as unordered, since its ancestor-comparison test does not resolve sibling order the tree leaves partial. Fold candidate for the Wave 5 per-Part rewrite units."
+    },
+    {
+      "check": "reading-order-forward-reference",
+      "pair": [
+        "67f2621d-82df-4b2f-bc4f-a21788b02aae",
+        "1e23ee5d-0406-485d-a927-6c62dfee58f1"
+      ],
+      "issue": "the-greenman/srs#787",
+      "note": "Genuine forward reference under the total reading order (RFC-042 Change A rule [N+12]) that check-spec-coherence.mjs check 1 reports only as unordered, since its ancestor-comparison test does not resolve sibling order the tree leaves partial. Fold candidate for the Wave 5 per-Part rewrite units."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "00667eda-1a83-4fdc-8ae3-7b5842873132",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "006a853f-7e58-4842-85e4-ad75d4b0fe5d",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "0814b52c-b5bd-491c-8b5c-d366e7a13233",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "1188b6bb-ceb1-494e-960a-cf7a00b8c3ed",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "12a4cf6e-f707-429a-8704-a253da88e4d8",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "17faf6f1-9b73-4cc5-90bd-7735b933da08",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "17fb1629-855c-481f-937a-3e1db05215d8",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "1e23ee5d-0406-485d-a927-6c62dfee58f1",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "2f5a157e-787a-4fd6-ab96-a711f524048d",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "32ea1bce-ac0d-4343-88e2-b70f0d6c3b8a",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "46a090b5-c772-4792-8c21-d97d6cee826f",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "48c91235-47e9-4079-8884-30e34d5b8fc2",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "706db1c3-08ee-42a6-9cd2-7fe4740f481d",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "785654d0-2016-4a14-89ba-fee4376f9a87",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "79692e5f-34e2-439c-80a4-42e020b3ca6b",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "7a7c02a5-af8a-4534-889f-abd75964b144",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "873099c5-093d-4684-8c36-46f813847c1a",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "87d1dbd2-5773-4828-85d3-1efb82d6ccdc",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "938f44fa-e4e5-4334-a260-4654c5661f7d",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "94c41365-f841-4b49-b2ac-3711a5403fe8",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "9a584293-d7a5-4182-bb98-0dcef5f1913a",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "9bccaa53-6d98-4ca9-967b-fb27ec6e72d5",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "a0cafa15-fec3-45c9-a6a8-99c9a7f88934",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "a5c04203-5960-4748-b3cf-1ae339277cad",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "af5c09d9-e86c-4a40-baa2-a45066466d54",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "be74ea8e-e2a9-4598-9f53-7f39ba8ff7f4",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "e1f255e4-8050-481f-ad49-a44f24bfca0f",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "f0a194f1-a58f-4bb6-a4ec-2a5360c84da1",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "ffe99460-9afe-4464-b62e-707559dc8ad1",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "050fa6cc-d27c-460d-a515-57cee73c9049",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "06a60bf4-87ef-435b-a440-a94f0e1e393d",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "159ae3c2-e323-40f5-87f9-44bd433aa07c",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "1ba1845b-1c54-468c-8da9-0b227ae0931f",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "42cf3443-12ac-49f2-950e-443950ae921f",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "580cfe0e-b23e-4215-a3c4-22cbd0526810",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "785e457a-98b1-4ee4-925f-514f1433d63a",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "7ce5fcea-0693-4d47-8b63-489c9967a8fa",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "c34c0dd8-ce40-4dd9-82a4-2c5ccab8c26f",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "d6e9ffdd-740b-4eeb-aeeb-aef2e23bdcbb",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "d755fb20-fb22-4dd3-8a26-f03cfd4942b7",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    },
+    {
+      "check": "undefined-before-use",
+      "id": "dc970b1a-9e3e-4207-a031-c04b6632c3bc",
+      "issue": "the-greenman/srs#787",
+      "note": "The concept title is mentioned in generic prose (an overview, a design note, another concept description) before the concept itself is introduced in the tree. Fold candidate for the Wave 5 per-Part rewrite units (memberOrder / prose pass), tracked as reading-order input by #787."
+    }
+  ]
+}
