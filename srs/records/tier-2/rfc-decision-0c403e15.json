@@ -1,0 +1,36 @@
+{
+  "instanceId": "0c403e15-aa5a-4e28-98a7-b5e5f2ccec38",
+  "typeId": "6a000004-0000-4000-a000-000000000004",
+  "typeVersion": 2,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc-decision",
+  "fieldValues": {
+    "title": "Concepts describe themselves: bridging and introductory prose is the concept record's own prose",
+    "decision_date": "2026-09-17",
+    "decision_rationale": "The owner's ruling, verbatim: \"Concepts should describe themselves in human readable ways.\"\n\nThe prose in question is about the concept. It tells the reader what the concept is for and how it relates to its neighbours, which is exactly what the concept record exists to state. Keeping it with the concept keeps it at MEANING, where the spec-language checker reaches it and where a Container can select it into any telling that needs it (rfc-decision-8aed3412). Prose that is reused is prose that stays consistent.\n\nPresentation-only text on a Composition section fails both of those. It would sit at EXPRESSION, invisible to the language checks that exist precisely to keep the spec's prose disciplined, and it would be unreusable: a second telling of the same material would have to restate it, which is the duplication the companion ruling removes.\n\nA narrative leaf type fails differently. It would be a Type whose subject is prose about prose, sitting beside the concept it describes and answerable to nothing; RFC-042 Change A and Change B already fix that the leaf's Type is its role, and \"introduces the thing next to me\" is not a role distinct from being the thing.",
+    "decision_statement": "A concept record carries the human-readable prose that introduces it and bridges to what follows. That prose is part of the concept, not an accessory to it, and it renders at the concept's heading in every projection of the corpus.\n\nA Part's introduction is the Part concept's prose. There is no separate object holding the words that open a Part; the Part is a concept, and a concept describes itself.\n\nNo narrative leaf type is added. No presentation-only text is added to a Composition section. Where a reader needs to be told what is coming or how what they have just read connects to what follows, the concept that owns the material says it.",
+    "decision_scope": "Where bridging and introductory prose lives in the com.semanticops.spec authoring package: the concept Type's own prose fields and their rendering at the concept's heading. Does not add, remove or change any Type. Does not change the leaf Types of RFC-042 Change B. Does not decide the wording of any particular concept's prose.",
+    "governing_values": [
+      "shared-coherence",
+      "semantic-integrity"
+    ],
+    "project_phase": "formation",
+    "alternatives_considered": "A narrative leaf type, a Type whose records carry introductory and bridging prose as leaves under the concepts they bridge. Rejected: it is a type for prose-about-prose, it multiplies the records a reader and an author must keep in step, and it puts the introduction of a concept somewhere other than the concept. Presentation-only text on a Composition section, an authored string rendered before or between the section's members. Rejected: it is invisible to the spec-language checks, which only reach records, and it is unreusable across tellings, so every telling that needs the same bridge writes its own copy.",
+    "accepted_costs": "Every concept gets written prose in the readability wave: 63 concepts, each needing an introduction that works for a linear reader, which is the bulk of the wave's authoring effort rather than a side task. The concept Type's prose field or fields may need their aiGuidance rewritten for the linear reader, because guidance written for a graph node produces text that reads as a definition fragment rather than as an introduction.",
+    "evidence_refs": [
+      "srs#787 comment 5712896993 (the owner's ruling of 2026-09-17)",
+      "RFC-042 Change A (the concept is the exposition node) and Change B (the leaf's Type is its role)",
+      "docs/style/spec-language-guide.md",
+      "srs#787 (the readability wave)"
+    ],
+    "review_trigger": "Review if a reader test finds bridging needs that no concept owns: a transition whose subject is genuinely two concepts and neither, repeated often enough to be a pattern rather than an awkward pair. That would be evidence that the exposition has a node the tree does not, not that prose belongs at EXPRESSION."
+  },
+  "lifecycleState": "accepted",
+  "tags": [
+    "topic:rfc",
+    "cell:description"
+  ],
+  "createdAt": "2026-09-17T10:34:55.423112782+00:00",
+  "updatedAt": "2026-09-17T10:35:03.057258548+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

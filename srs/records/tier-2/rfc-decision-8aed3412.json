@@ -1,0 +1,39 @@
+{
+  "instanceId": "8aed3412-75bd-4146-9dc9-fc0b94740182",
+  "typeId": "6a000004-0000-4000-a000-000000000004",
+  "typeVersion": 2,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc-decision",
+  "fieldValues": {
+    "title": "A story is built at EXPRESSION from reusable parts: containers carry context membership and nesting, the Composition carries context order",
+    "decision_date": "2026-09-17",
+    "decision_rationale": "The owner's concern of 2026-09-16 (srs#787 comment 5696156601) is that a reader of the rendered spec cannot follow it linearly, and that the obvious repairs all pull toward duplication: because the relations are global claims, a record that belongs in two tellings appears to need two copies. That is the pressure this ruling removes. The parts are reused; only the arrangement is new.\n\nThe pieces were already ruled and already in place. RFC-042 [R13] and the muDemocracy #73/#75 ordering-layering ruling put presentational order at EXPRESSION and named precedes as semantic order only. rfc-decision-0750c62f put the Container on the EXPRESSION plane as a declared selection. RFC-015 [N+29] defined memberOrder as the mechanism. What was missing was not a decision but an implementation and a statement that these three are the one way a story gets built; this record closes that gap and names them together.\n\nRFC-042 recorded the limit honestly: Compositions are flat, so an alternate hierarchy is not expressible today, and re-nesting was left as a Door 2 question. This is that Door 2 answer, and it answers it without a new construct: a nested container renders as a nested section, so the nesting that already exists in the selection layer becomes the nesting the reader sees.\n\nThe measurement clause is the owner's, and it is a hedge against the one thing this ruling cannot know in advance: whether deep nesting over reused parts renders acceptably at the scale the spec will reach. Instrumenting the path on the way in is cheap; retrofitting it after a performance complaint is not.",
+    "decision_statement": "The contains, precedes and depends-on relations remain the single MEANING tree. They are claims about the records: what is part of what, what semantically or temporally follows what, and what must be understood first (RFC-042). Nothing in this ruling adds to them, weakens them, or makes them contextual.\n\nAny arrangement that differs from that tree is built at EXPRESSION. A narrative, an appendix, a reader's path, a tour for a newcomer: each is a telling of the same records, not a competing statement about them. Such a telling is assembled from reusable parts rather than from copies.\n\nContext membership and nesting are carried by Containers. A Container is a declared selection (rfc-decision-0750c62f), so the parts a telling draws on are named explicitly, and childContainerIds carries the nesting of one context inside another. One record may be a member of many containers at once; reuse across tellings is the normal case, not an exception, and it costs nothing on disk.\n\nContext order is carried by the Composition section's memberOrder (RFC-015 [N+29]), with the Rule [N+12] precedes order as the fallback when no memberOrder is declared. The renderer honours memberOrder for the listed members and renders a nested container as a nested section, so the telling's hierarchy comes from the declared selection rather than from the part-of tree.\n\nNo relation type is added and no field is added to Relation. Context is never carried on an edge: an edge states what is true of the records, and a telling states how one reader is being walked through them.\n\nThe nested-rendering path is engineered for measurement from the start. It reports nesting depth, fan-out per section, record reuse across sections, and render cost per section, so that nesting can be refined later on evidence rather than on intuition. Nesting may need optimisation; the instrumentation is what will say so.",
+    "decision_scope": "How an alternate arrangement of existing records is expressed and rendered: Container membership and childContainerIds, the Composition section's memberOrder, and the renderer's treatment of a nested container. Does not change contains, precedes or depends-on, their definitions, or their role as the MEANING tree. Does not change the Container or Relation schemas. Does not decide the content of any particular telling.",
+    "governing_values": [
+      "shared-coherence",
+      "semantic-integrity"
+    ],
+    "project_phase": "formation",
+    "alternatives_considered": "Context-scoped relations, in which an edge carries the context it holds in. Rejected: it puts a field on Relation, so every traversal in every consumer must learn a filter or silently read the wrong graph, and it breaks RFC-042's zero-new-fields property. It also makes a claim about records depend on which story is being told, which inverts the plane assignment this ruling rests on. Duplicating content per context, in which a record that belongs in two tellings is copied. Rejected: it corrodes the corpus on every reuse, because the copies drift and nothing says which is the original; the cost is paid forever and grows with every new telling.",
+    "accepted_costs": "srs-rust must implement RFC-015 [N+29] (srs-rust#567, unconsumed since RFC-015 shipped) and nested-section rendering, including the instrumentation this ruling requires. RFC-042 needs a revision carrying the nested-rendering rule and lifting the flat-Composition limit it recorded. The spec's own compositions gain order data that must be maintained alongside the tree, which is a second thing an author can get wrong; the mitigation is that the fallback to the precedes order is always available and always correct as a default.",
+    "evidence_refs": [
+      "srs#787 comment 5712896993 (the owner's ruling of 2026-09-17)",
+      "srs#787 comment 5696156601 (the owner's concern of 2026-09-16: global edges force duplication)",
+      "RFC-042 [R13] (presentational order at EXPRESSION; the flat-Composition limit as a Door 2 question)",
+      "RFC-015 [N+29] (memberOrder)",
+      "rfc-decision-0750c62f (a Container is a declared selection on the EXPRESSION plane)",
+      "muDemocracy #73/#75 (the ordering-layering ruling)",
+      "srs-rust#567 (renderedPresentations and [N+29] unconsumed)"
+    ],
+    "review_trigger": "Review if measurement of the nested-rendering path shows nesting depth, fan-out or reuse patterns the renderer cannot serve at the corpus's real scale. That would be evidence against the rendering rule, not against the plane assignment: the answer would be to change how a nested container renders, not to move order or membership back onto the MEANING tree."
+  },
+  "lifecycleState": "accepted",
+  "tags": [
+    "topic:rfc",
+    "cell:containment"
+  ],
+  "createdAt": "2026-09-17T10:34:24.292270569+00:00",
+  "updatedAt": "2026-09-17T10:35:02.863284720+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
