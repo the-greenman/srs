@@ -1733,10 +1733,11 @@ Container `tags` follow the same vocabulary resolution rules as Record tags (RFC
 ### `containers_for_instance` is a normative core operation (RFC-009 I-66)
 The reverse lookup `containers_for_instance(instanceId) → Container[]` is a **normative** SRS operation, not an implementation detail. A Container includes an instance if:
 1. the instance appears in `Container.rootInstanceIds`, or
-2. the instance appears in `Container.memberInstanceIds`, or
-3. a `contains` Relation exists from any of the Container's root instances to the queried instance (direct or transitive, per implementation policy).
+2. the instance appears in `Container.memberInstanceIds`.
 
-CLI: `srs container list --member <instanceId> --repo <path>`. The result is consistent with current `rootInstanceIds`, `memberInstanceIds`, and `contains` Relations in the repository.
+Membership is a declared selection only. The branch that once derived membership by traversing a `contains` Relation from the Container's root instances is retired — `rfc-decision-0750c62f` (RFC-034 Change C, adopted): a `contains` edge is a semantic composition claim, never membership evidence, and Invariant I-66's traversal branch is superseded. A `contains` edge may target any instance, Tier-0 Note or Tier-2 Record alike — nothing in the Relation model restricts its endpoints to typed Records.
+
+CLI: `srs container list --member <instanceId> --repo <path>`. The result is consistent with current `rootInstanceIds` and `memberInstanceIds` in the repository.
 
 ### Building a navigation section: the anchor is a root, not a member (I-82, srs-rust#460)
 
@@ -1747,7 +1748,7 @@ A container that represents a navigation section names its anchor record in `roo
 
 If a record was added as a member and needs to become the section root instead, `srs container roots add` followed by `srs container members remove` moves it — `roots add` does not implicitly remove the same id from `memberInstanceIds`.
 
-The working shape lives in `containers/` in the `srs-programme` local repository (moved out of `srs` at #786): each phase container's anchor record is its sole `rootInstanceIds` entry and does not also appear in `memberInstanceIds`. `srs repo navigation` renders all four sections in `precedes` order with zero diagnostics against that shape.
+The working shape lives in `containers/` in the-greenman/srs-programme (moved out of `srs` at #786, published, not local): each phase container's anchor record is its sole `rootInstanceIds` entry and does not also appear in `memberInstanceIds`. `srs repo navigation` renders all five sections (phase 5 "Read as a human" added 2026-09-17) in `precedes` order with zero diagnostics against that shape.
 
 ### Blueprint.rootTypes must be ExactTypeRef[] (RFC-009 I-78, Change E)
 `Blueprint.rootTypes` uses the same `ExactTypeRef` shape as `DocumentView.rootTypeRefs` — **both** `typeId` (UUID) and `typeVersion` (integer ≥ 1) are **required**. Each entry MUST resolve against the Package at Blueprint load time; an unresolvable entry produces a diagnostic but does not invalidate the whole Blueprint.
