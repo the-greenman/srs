@@ -2090,6 +2090,104 @@ async function specCoherenceCases(root) {
   });
 }
 
+// ---- srs#795 — spec readability: the total reading order resolves what check-spec-coherence.mjs
+// leaves "unordered", plus undefined-before-use over prose ----------------------------------------
+async function specReadabilityCases(root) {
+  console.log("srs#795 — spec readability: total-order forward references and undefined-before-use");
+
+  const P = "00000000-0000-4000-8000-000000001a01"; // the one Part
+  const A = "00000000-0000-4000-8000-000000001a02"; // concept Alpha
+  const B = "00000000-0000-4000-8000-000000001a03"; // concept Beta
+  const L = "00000000-0000-4000-8000-000000001a04"; // a mechanism leaf, sibling of Alpha and Beta
+
+  const concept = (id, title, createdAt) => ({
+    instanceId: id, typeId: "2a000004-0000-4000-a000-000000000004", typeVersion: 1,
+    typeNamespace: "com.semanticops.spec", typeName: "concept",
+    fieldValues: { canonical_key: `record:concepts/${title.toLowerCase()}`, title, description: "fixture" },
+    createdAt,
+  });
+  const leaf = (id, title, content, createdAt) => ({
+    instanceId: id, typeId: "2a000005-0000-4000-a000-000000000005", typeVersion: 1,
+    typeNamespace: "com.semanticops.spec", typeName: "mechanism",
+    fieldValues: { title, content },
+    createdAt,
+  });
+  const rel = (n, relationType, source, target) => ({
+    relationId: `00000000-0000-4000-8000-0000000000${n}`, relationType,
+    sourceInstanceId: source, targetInstanceId: target, createdAt: "2026-09-06T00:00:00Z",
+  });
+  const relDir = join(root, "srs/relations");
+  const allowlist = join(root, "scripts/spec-readability-allowlist.json");
+  const leafPath = join(root, "srs/records/mechanisms/leaf.json");
+
+  // P is the sole root-container member (the Part); L, Alpha and Beta are its three direct `contains`
+  // children with no `precedes` edge between any pair — under check-spec-coherence.mjs's weaker
+  // ancestor-comparison test this sibling set would be "unordered", but Rule [N+12]'s createdAt
+  // tiebreak still gives it one definite order: Leaf, then Alpha, then Beta.
+  await writeJson(join(root, "srs/manifest.json"), { container: { containerId: "00000000-0000-4000-8000-0000000000f0", memberInstanceIds: [P] } });
+  await writeJson(join(root, "srs/records/concepts/p.json"), concept(P, "Part One", "2026-09-06T00:00:00Z"));
+  await writeJson(join(root, "srs/records/concepts/a.json"), concept(A, "Alpha", "2026-09-06T00:00:01Z"));
+  await writeJson(join(root, "srs/records/concepts/b.json"), concept(B, "Beta", "2026-09-06T00:00:02Z"));
+  await writeJson(leafPath, leaf(L, "Leaf", "Plain prose, no mentions.\n", "2026-09-06T00:00:00.500Z"));
+  await writeJson(join(relDir, "r1.json"), rel("d1", "contains", P, L));
+  await writeJson(join(relDir, "r2.json"), rel("d2", "contains", P, A));
+  await writeJson(join(relDir, "r3.json"), rel("d3", "contains", P, B));
+
+  // The violation: Alpha (reading position 2) is introduced before Beta (position 3) yet depends on
+  // it — check-spec-coherence.mjs's own check 1 would call this pair "unordered", not a violation.
+  await writeJson(join(relDir, "r4.json"), rel("d4", "depends-on", A, B));
+  expect("rejects a depends-on edge forward in the total reading order", runCheck("check-spec-readability.mjs", root), {
+    exit: 1,
+    contains: [
+      "[reading-order-forward-reference]",
+      '"Alpha" (reading position 2) is introduced before "Beta" (position 3) but depends on it',
+    ],
+  });
+
+  // Same pair, flipped: Beta depends on what came before it.
+  await writeJson(join(relDir, "r4.json"), rel("d4", "depends-on", B, A));
+  expect("accepts a depends-on edge backward in the total reading order", runCheck("check-spec-readability.mjs", root), {
+    exit: 0,
+    contains: ["0 forward, 1 backward", "✓ Spec readability"],
+  });
+  await rm(join(relDir, "r4.json"));
+
+  // An allowlisted forward reference passes — and a stale entry fails (shrink discipline), same
+  // reconciliation code check-spec-coherence.mjs's allowlist already proved.
+  await writeJson(join(relDir, "r4.json"), rel("d4", "depends-on", A, B));
+  await writeJson(allowlist, { entries: [{ check: "reading-order-forward-reference", pair: [A, B], issue: "the-greenman/srs#787" }] });
+  expect("holds an allowlisted forward reference citing an issue", runCheck("check-spec-readability.mjs", root), {
+    exit: 0,
+    contains: ["holding 1 of 1 violation(s)"],
+  });
+  await writeJson(join(relDir, "r4.json"), rel("d4", "depends-on", B, A));
+  expect("fails when an allowlist entry no longer matches a violation", runCheck("check-spec-readability.mjs", root), {
+    exit: 1,
+    contains: ["no longer matches a violation"],
+  });
+  await rm(allowlist);
+  await rm(join(relDir, "r4.json"));
+
+  // undefined-before-use: Leaf (position 1) mentions "Beta" before Beta is introduced (position 3).
+  await writeJson(leafPath, leaf(L, "Leaf", "This prose mentions Beta ahead of time.\n", "2026-09-06T00:00:00.500Z"));
+  expect("rejects a concept title mentioned in prose before its own introduction", runCheck("check-spec-readability.mjs", root), {
+    exit: 1,
+    contains: [
+      "[undefined-before-use]",
+      '"Beta" is first mentioned in "Leaf"',
+      "before its own introduction at position 3",
+    ],
+  });
+
+  // The same leaf mentioning the Part's own title instead: Part One sits at position 0, so no prose
+  // anywhere in the tree can ever precede it — never a violation regardless of where it is mentioned.
+  await writeJson(leafPath, leaf(L, "Leaf", "This prose mentions Part One in passing.\n", "2026-09-06T00:00:00.500Z"));
+  expect("does not flag a concept mentioned at or after its own position", runCheck("check-spec-readability.mjs", root), {
+    exit: 0,
+    contains: ["3 concept titles checked, 0 mentioned in prose before their own introduction", "✓ Spec readability"],
+  });
+}
+
 // ---- srs#650 — attribution cell: a fieldMeta key names a field that actually exists ----------
 async function attributionCellCases(root) {
   console.log("srs#650 — attribution cell: fieldMeta keys are a subset of fieldValues keys (I-133)");
@@ -2554,6 +2652,7 @@ try {
   await roadmapCellMirrorCases(join(root, "roadmap-cell-mirror"));
   await packageIdUniquenessCases(join(root, "package-id-uniqueness"));
   await specCoherenceCases(join(root, "spec-coherence"));
+  await specReadabilityCases(join(root, "spec-readability"));
   await versioningCellCases(join(root, "versioning-cell"));
   await attributionCellCases(join(root, "attribution-cell"));
   await repositoryCellCases(join(root, "repository-cell"));
