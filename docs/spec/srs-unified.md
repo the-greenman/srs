@@ -213,9 +213,9 @@ com.acme.hr/headcount_impact@3
 
 ##### μDemocracy Mapping
 
-**Intro**: How the SCDS v2 vocabulary maps to the μDemocracy application layer. Reproduced from the v1→v2 conceptual remapping document for reference.
+**Intro**: How the SRS v2 vocabulary maps to the μDemocracy application layer. Reproduced from the v1→v2 conceptual remapping document for reference.
 
-| SCDS concept | μDemocracy application |
+| SRS concept | μDemocracy application |
 | --- | --- |
 | Field | Semantic atom in a governance record |
 | Type | Decision, Proposal, Action, Role, Value, Principle, ... |
@@ -225,7 +225,7 @@ com.acme.hr/headcount_impact@3
 | Container | A group's governance workspace; a founding process scope |
 | Relation | `supersedes`, `derived-from`, `ratifies`, `depends-on`, ... |
 | View | Facilitator view; summary view; export for ratification |
-| Document View | Assembled founding document; full decision log |
+| Composition | Assembled founding document; full decision log |
 | Address | Stable identifier for any governance element — Field, Record, stage, chunk |
 | Attention State | Current focus of an active facilitated session |
 | Revision | Auditable history of how a governance field arrived at its current value |
@@ -279,7 +279,7 @@ com.acme.hr/headcount_impact@3
 ##### `semanticObjectType` as a federation risk
 
 **Content**: 
-`semanticObjectType` on `Type` and in `SectionSource.type-query` is a free-form string. The spec recommends `namespace/name` format for portable Document Views (Invariant 32) and treats bare strings as a single-system convention. This is the minimum rule needed to ship v2.
+`semanticObjectType` on `Type` and in `SectionSource.type-query` is a free-form string. The spec recommends `namespace/name` format for portable Compositions (Invariant 32) and treats bare strings as a single-system convention. This is the minimum rule needed to ship v2.
 
 The risk: two systems can use the same bare string (`"decision"`, `"task"`) and mean different semantic Types. When graph traversal or document assembly crosses system boundaries, type-query portability becomes undefined wherever bare strings appear. This is where federation bugs will appear first.
 
@@ -661,11 +661,6 @@ A system that knows `core/decision` but not `org.example/governance_decision` ca
 
 **Notes**: An open vocabulary's authoritative value set is the distinct keys actually in use, not the curated entry list — the curation is an overlay that may lag or be empty. Curating a string into a Term rewrites no instance.
 
-##### Why tags exist: from clustering to definitions
-
-**Content**: Content relocated to design-note leaves under the Vocabulary concept (RFC-042 Change B/F, srs#562). See derived-from.
-
-
 ##### Container tags must resolve against Vocabulary Terms when a Vocabulary governs the key
 
 **Number**: I-65
@@ -721,7 +716,7 @@ Raw string tags on Notes filled that gap. A tag is not a claim about structure �
 1. **Disambiguation**: the same string could mean different things in different contexts. A label is not enough — description and aliases matter.
 2. **Roles**: some tags were structural signals rather than topic labels. The `foundation` tag marks notes that should always be included in an AI context handoff. That is a semantic role, not just a category.
 
-This led to `TagDefinition` — an addressable Tier 3 record that gives a tag a stable identity, description, roles, and aliases. A tag does not *require* a definition to be used; definitions are additive enrichment. But when a tag carries structural meaning (like `foundation`), its definition is what makes that meaning machine-readable.
+This led to `TagDefinition`, giving a tag a stable identity, description, roles, and aliases — later generalised into `Term`, a defined option within a `Vocabulary`. A tag does not *require* a definition to be used; definitions are additive enrichment. But when a tag carries structural meaning (like `foundation`), its definition is what makes that meaning machine-readable.
 
 
 ##### Design principle
@@ -858,7 +853,7 @@ A grace window is declared in `Vocabulary.promotionWindow.until`. Until that bou
 **Content**: 
 A form system where each template defines its own fields produces semantic silos: the "decision statement" in the Technology template and the "decision statement" in the Budget template are unrelated strings. They cannot be searched together, compared, or composed.
 
-In SCDS, a Field is defined once. Any number of Types may include it. When two Types share a Field, any AI extraction logic, validation rules, or downstream analysis written for that Field applies consistently across both. The Field's identity is stable across all the contexts it appears in.
+In SRS, a Field is defined once. Any number of Types may include it. When two Types share a Field, any AI extraction logic, validation rules, or downstream analysis written for that Field applies consistently across both. The Field's identity is stable across all the contexts it appears in.
 
 This is a stronger constraint than it appears. It means a Type cannot secretly redefine what a Field means for its own purposes — it can only configure presentation. If a Type genuinely needs different semantics, it must use a different Field.
 
@@ -992,20 +987,7 @@ See the generated reference immediately below for `Field`'s current property tab
 
 ##### Historical: the pre-RFC-032 `valueType` model
 
-**Content**: Before RFC-032, value semantics were a single closed enum, `valueType`, with the satellite properties `allowedValues`, `contentFormat`, `validationRules`, and a standalone `repeatable` cardinality. That enum conflated four axes at once, which is why every axis needing independent expression had to be bolted on separately. It is **removed**, not deprecated — a Field definition carrying `valueType` does not conform to this specification. Packages authored against the old model map across as:
-
-| Legacy `valueType` | Equivalent `fieldType` |
-|---|---|
-| `"string"` | `{ datatype: "string" }` (plus `format: "markdown"` if `contentFormat` was `"markdown"`) |
-| `"text"` | `{ datatype: "string", format: "plain" \| "markdown" }` |
-| `"number"` | `{ datatype: "number" }` |
-| `"boolean"` | `{ datatype: "boolean" }` |
-| `"date"` | `{ datatype: "date" }` |
-| `"url"` | `{ datatype: "string", format: "uri" }` |
-| `"select"` | `{ datatype: "string", valueDomain: "closed" }` + `allowedValues` or `vocabularyRef` |
-| `"multiselect"` | `{ datatype: "string", cardinality: "list", valueDomain: "closed" }` + `allowedValues` or `vocabularyRef` |
-
-`validationRules` entries become `fieldType.constraints` facets; an `enum` rule becomes `valueDomain: "closed"` with `allowedValues`. A `required` rule was never a Field-level concern and moves to the `FieldAssignment` that includes the Field.
+**Content**: **Status: Removed** (RFC-032) — the pre-RFC-032 `valueType` enum, with its satellite properties `allowedValues`, `contentFormat`, `validationRules`, and a standalone `repeatable` cardinality, was replaced by the decomposed `fieldType` model (`datatype` × `cardinality` × value-domain × `format` × `constraints`). A Field definition carrying `valueType` does not conform to this specification.
 
 
 
@@ -2010,16 +1992,6 @@ Implementations may automate graduation suggestions by matching section or field
 | One Note splits into multiple Records | New IDs for all | `derived-from` from each new Record to the original |
 
 
-##### Why Record tiers exist (Note → Typed Record → Record)
-
-**Content**: 
-Not all content arrives with full semantic formalisation. A meeting note, a brainstorm document, a rough plan — these are valid starting points that should be preserved and referenceable, even before anyone has decided what Types to extract from them.
-
-The three tiers let a system capture content at whatever maturity level it has, and formalise later without losing provenance. The graduation path is one-way: Note → Typed Record → Record. It mirrors how understanding actually develops — rough first, then structured, then formally defined.
-
-The tier model also makes SCDS progressively adoptable. A team can start at Tier 0 and arrive at Tier 2 as their understanding of the semantic structure matures, without ever having to restart from scratch.
-
-
 ##### Why Record tiers exist (Note → Record)
 
 **Content**: Not all content arrives with full semantic formalisation. A meeting note, a brainstorm document, a rough plan — these are valid starting points that should be preserved and referenceable, even before anyone has decided what Types to extract from them.
@@ -2131,11 +2103,7 @@ Non-governance projects use the same Relation layer. `supersedes` is canonical; 
 
 ##### ext:recommended-relations
 
-**Content**: **Retired as of RFC-005.** The canonical SRS relation vocabulary (`contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`) is now provided as installed `RelationTypeDefinition` records in the `com.semanticops.srs` package. See §5 (Package).
-
-Implementations that previously declared `ext:recommended-relations` may remove it. The canonical definitions are unconditionally available to any repository using the SRS package.
-
-The statement that "`RelationTypeDefinition` is optional metadata" is superseded. As of RFC-005, every `Relation.relationType` string must resolve to an installed `RelationTypeDefinition` in the effective package set before a Relation is accepted. A missing or conflicting definition is a validation error. See §9-1 (Core conformance requirements).
+**Content**: **Retired as of RFC-005.** The canonical SRS relation vocabulary (`contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`) is installed as `RelationTypeDefinition` records in the `com.semanticops.srs` package, and every `Relation.relationType` must resolve to one before the Relation is accepted. See the Conformance concept and Relation type definition.
 
 
 ##### `RelationTypeDefinition` as a VocabularyEntry specialisation (RFC-006)
@@ -2146,7 +2114,7 @@ It gains `meta?: Record<string, unknown>` under the one forward-compatibility po
 
 It **requires** both `label` and `description` (unchanged from RFC-005). The substrate making these optional in the general contract does not relax this obligation.
 
-The V1 mandatory resolution requirement (every `Relation.relationType` must resolve to an installed `RelationTypeDefinition`) is a named instance of the general closed-vocabulary resolution rule. See §9 (Conformance) and the Foundation Vocabulary and Term subsection.
+The V1 mandatory resolution requirement (every `Relation.relationType` must resolve to an installed `RelationTypeDefinition`) is a named instance of the general closed-vocabulary resolution rule. See the Conformance concept, and the Vocabulary and Term concepts in Foundations.
 
 
 ##### `RelationTypeDefinition`
@@ -2477,11 +2445,11 @@ One definition serves every membership question: `containers_for_instance` (I-66
 ##### Why Blueprint is a new concept
 
 **Content**: 
-In v1, there was no way to specify what a document type *is* — what needs to be extracted from source material in order to build it. `DocumentTemplate` (now Document View) handled *assembly* of existing Records into readable output. But nothing owned the prior question: "Given a transcript of a governance meeting, what Types should I extract, how should they relate to each other, and what does 'complete' mean?"
+In v1, there was no way to specify what a document type *is* — what needs to be extracted from source material in order to build it. `DocumentTemplate` (now Composition) handled *assembly* of existing Records into readable output. But nothing owned the prior question: "Given a transcript of a governance meeting, what Types should I extract, how should they relate to each other, and what does 'complete' mean?"
 
-Blueprint fills that gap. A Blueprint is the artefact you hand to an extraction pipeline. It specifies root Types, expected Relations between extracted Records, and completeness criteria. The Extraction pipeline consults the Blueprint to know what to look for; the Document View consults existing Records to know what to render.
+Blueprint fills that gap. A Blueprint is the artefact you hand to an extraction pipeline. It specifies root Types, expected Relations between extracted Records, and completeness criteria. The Extraction pipeline consults the Blueprint to know what to look for; the Composition consults existing Records to know what to render.
 
-The two are complementary: Blueprint → Records → Document View.
+The two are complementary: Blueprint → Records → Composition.
 
 
 ##### Blueprint vs View — the extraction gap
@@ -2491,9 +2459,9 @@ A View answers: given a Record that already exists, how do I render it for a spe
 
 A Blueprint answers: given source material, what Records should I extract, and how do they relate?
 
-These are complementary but distinct. A Document View cannot serve as an extraction blueprint because it assumes Records already exist. A Blueprint cannot serve as a Document View because it does not specify how to render field values for an audience.
+These are complementary but distinct. A Composition cannot serve as an extraction blueprint because it assumes Records already exist. A Blueprint cannot serve as a Composition because it does not specify how to render field values for an audience.
 
-An extraction pipeline uses Blueprint + Field `aiGuidance` + Protocol to produce Records. A rendering pipeline uses View + Document View to project those Records into readable form.
+An extraction pipeline uses Blueprint + Field `aiGuidance` + Protocol to produce Records. A rendering pipeline uses View + Composition to project those Records into readable form.
 
 
 ##### Blueprint.rootTypes entries must be ExactTypeRef (typeVersion required)
@@ -2523,7 +2491,7 @@ See the generated reference below for `Blueprint`'s current property table, opti
 
 **Blueprint vs View:**
 
-| | Blueprint | View / Document View |
+| | Blueprint | View / Composition |
 |---|---|---|
 | Question it answers | What IS this document type? What should be extracted? | How are existing Records assembled into readable output? |
 | Operates at | Definition time | Projection time |
@@ -2789,7 +2757,7 @@ Views (`ext:views-l1`) no longer contain facilitation logic. A View is a present
 **Content**: 
 v1 noted "focus links" as a session-layer concern without defining a mechanism. The mechanism was absent.
 
-Without co-addressability, the transcript/SCDS separation is clean in principle but broken in practice. There is no way to say "this conversation happened while we were focused on this Field." Retrospective `SourceReference` links help, but they require someone to explicitly annotate which conversation produced which value. For real-time facilitation, that annotation needs to happen live.
+Without co-addressability, the transcript/SRS separation is clean in principle but broken in practice. There is no way to say "this conversation happened while we were focused on this Field." Retrospective `SourceReference` links help, but they require someone to explicitly annotate which conversation produced which value. For real-time facilitation, that annotation needs to happen live.
 
 `AttentionState` is the live cursor. Every transcript chunk produced while a Protocol stage is active carries the current `AttentionState` as a tag. Context assembly later queries by address: "all chunks where attention was on Field X in Record Y." The annotation is free because it was captured at production time.
 
@@ -5187,10 +5155,10 @@ In json mode all `{{heading-N}}` variables MUST resolve to `""`. Implementations
 **Constraint**: Every `NavigationLink.fromSectionId` and `NavigationLink.toSectionId` must reference a `sectionId` declared in the enclosing `Composition.sections[]`.
 
 
-###### Field transclusion in Document Views
+###### Field transclusion in Compositions
 
 **Content**: 
-Pulling a specific Field value inline into a Document View is useful, but a syntax such as `{{field:{recordId}/{fieldId}}}` makes a reusable Document View depend on concrete instance IDs. That weakens portability and should wait for an addressing model that can express reusable selection rules rather than binding a definition to one Record.
+Pulling a specific Field value inline into a Composition is useful, but a syntax such as `{{field:{recordId}/{fieldId}}}` makes a reusable Composition depend on concrete instance IDs. That weakens portability and should wait for an addressing model that can express reusable selection rules rather than binding a definition to one Record.
 
 
 ###### Conditional processing
@@ -5674,9 +5642,9 @@ View, Composition, and Theme are the constructs a projection is built from: View
 ##### Why the conversation layer is a permanent boundary
 
 **Content**: 
-SCDS captures negotiated semantic state. Transcripts capture raw material — speech, threads, annotations — from which semantic state is extracted or constructed. These are different things, and conflating them would harm both.
+SRS captures negotiated semantic state. Transcripts capture raw material — speech, threads, annotations — from which semantic state is extracted or constructed. These are different things, and conflating them would harm both.
 
-If SCDS tried to be a transcript standard, it would need to model speaker identity, timing, overlapping speech, and audio quality — none of which are semantic concerns. If the transcript standard tried to be a semantic state standard, it would need to version field definitions, track lineage, and manage inter-Record Relations — none of which are evidence concerns.
+If SRS tried to be a transcript standard, it would need to model speaker identity, timing, overlapping speech, and audio quality — none of which are semantic concerns. If the transcript standard tried to be a semantic state standard, it would need to version field definitions, track lineage, and manage inter-Record Relations — none of which are evidence concerns.
 
 The boundary makes both layers better at what they do. The connection between them — `SourceReference` and `AttentionState` — is the bidirectional bridge. Each layer references the other; neither absorbs the other.
 
@@ -6474,22 +6442,16 @@ blueprint {
 
 ##### ext:changelog
 
-**Content**: **Status: Dormant** (removed under `rfc-decision-2a1e1590`, 2026-08-21). The 2026-08-21 usage attestation found zero `changelog/changelog.json` files anywhere in the corpus: the mechanism was speculative, never exercised in production. It is removed under the dormancy rule (`rfc-decision-cce3c00e`) alongside the per-field Revision sidecar mechanism it paired with, removed by the same ruling.
-
-**Removed surface** (historical, introduced by RFC-018, srs#141): the `ChangelogCollection`/`ChangelogEntry` schema (`changelog.json`); the `srs changelog list` CLI command. `manifest.changelogPath` is deprecated, not deleted, so existing declarations remain readable.
+**Content**: **Status: Dormant** (removed under `rfc-decision-2a1e1590`, 2026-08-21): the 2026-08-21 usage attestation found zero `changelog/changelog.json` files in the corpus; the mechanism was speculative and never exercised.
 
 **Return trigger**: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface. When a real consumer's requirements are known, the mechanism is redesigned against them, not reinstated as specified here.
 
 
 ##### ext:federation
 
-**Content**: **Status: Dormant** (removed under `rfc-decision-4f1e12e5`, 2026-08-22). The 2026-08-21 usage attestation found zero registries, zero events, and zero cross-repository relations anywhere in the corpus: the mechanism was speculative, never exercised in production. It is removed under the dormancy rule (`rfc-decision-cce3c00e`).
+**Content**: **Status: Dormant** (removed under `rfc-decision-4f1e12e5`, 2026-08-22): the 2026-08-21 usage attestation found zero registries, events, or cross-repository relations in the corpus; the mechanism was speculative and never exercised.
 
-**Removed surface** (historical): `RepositoryRegistry`/`RepositoryRegistryEntry` and `FederationEvent`/`FederationEventsFile` (the `federation-registry.json`/`federation-events.json` schemas); the `sourceRepositoryId`/`targetRepositoryId` qualifier fields on `Relation`; `manifest.federationPath`/`federationEventsPath`.
-
-**Return trigger** (verbatim from `rfc-decision-4f1e12e5`): COMMITTED, not evidence-gated - federation is core to SRS (owner, 2026-08-22); this removal is a deliberate reset of a design that predates real practice, not a judgment on the capability. The redesign returns as a planned roadmap phase, grounded in the sharing forms that actually emerged (bundles, slices, git-hosted repositories) and the axis 4-10 verification path; the owner schedules it. The travel mandate covers artifact-form portability meanwhile.
-
-Cell: ♓ Portability.
+**Return trigger** (verbatim from `rfc-decision-4f1e12e5`): COMMITTED, not evidence-gated - federation is core to SRS; this removal is a deliberate reset of a design that predates real practice, not a judgment on the capability. The redesign returns as a planned roadmap phase, grounded in the sharing forms that actually emerged (bundles, slices, git-hosted repositories); the owner schedules it. Cell: ♓ Portability.
 
 
 
@@ -7009,7 +6971,7 @@ Example: the `ValidationRule` shape.
 ##### Graceful degradation
 
 **Content**: 
-In a federated ecosystem, implementations will often receive SCDS content that uses extensions they do not support. The useful default is: understand what you can, preserve what you cannot.
+In a federated ecosystem, implementations will often receive SRS content that uses extensions they do not support. The useful default is: understand what you can, preserve what you cannot.
 
 A conforming implementation should validate the core and extension content it recognises, surface unknown extension content clearly to users or downstream systems, and pass that unknown content through rather than silently discarding it. This is especially important for Records instantiated against a specializing Type: a system that knows only the base Type should still be able to read the inherited base fields correctly while preserving the specialization-specific fields.
 
@@ -7198,7 +7160,7 @@ Definitions evolve. Forks happen. Upstream changes must be traceable. A definiti
 A Record captures what a group understood, agreed, or committed to at a point in time. That understanding may be partial, contested, or later revised. The system preserves revision history and provenance precisely because the original state is worth keeping alongside its successors. Human prose and ambiguity are preserved, not collapsed.
 
 **6. Understanding is mutable; historical semantic state has permanent value.**
-SCDS assumes that understanding evolves. Records, Relations, and lifecycle states may be revised, superseded, refined, or contradicted without invalidating prior semantic state. A rough plan is a valid semantic object. A superseded decision is a valid semantic object. An abandoned hypothesis is a valid semantic object. Historical semantic state is not noise to be discarded — it is provenance, institutional memory, and the record of how understanding arrived at its current form.
+SRS assumes that understanding evolves. Records, Relations, and lifecycle states may be revised, superseded, refined, or contradicted without invalidating prior semantic state. A rough plan is a valid semantic object. A superseded decision is a valid semantic object. An abandoned hypothesis is a valid semantic object. Historical semantic state is not noise to be discarded — it is provenance, institutional memory, and the record of how understanding arrived at its current form.
 
 ---
 
