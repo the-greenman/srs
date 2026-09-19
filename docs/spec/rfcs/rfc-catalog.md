@@ -17,7 +17,7 @@ schema:view.json
 
 **Proposal Artifact Path**: rfcs/rfc-001.md
 
-**Content**: Defines the default (View-agnostic) rendering baseline, a normative heading hierarchy (`depthOffset`/`titleFieldId`), a portable `format` vocabulary, and reserves `themeRef`/`themeVariants` plus the `ThemeReference`/`ThemeVariant` types on `DocumentView` for RFC-002. Rev 10 (srs#525): the L1/L2 `format`/`preamble` split is no longer a precedence rule -- `Composition.exportConfig` (retiring Composition's own inline `format`/`preamble`) and a dispatched View's `exportConfig` each govern their own render context, with no attachment overriding the other. Full text: rfcs/rfc-001.md.
+**Content**: Defines the default (View-agnostic) rendering baseline, a normative heading hierarchy (`depthOffset`/`titleFieldId`), a portable `format` vocabulary, and reserves `themeRef`/`themeVariants` plus the `ThemeReference`/`ThemeVariant` types on `DocumentView` for RFC-002. Rev 10 (srs#525): the L1/L2 `format`/`preamble` split is no longer a precedence rule -- `Composition.exportConfig` (retiring Composition's own inline `format`/`preamble`) and a dispatched View's `exportConfig` each govern their own render context, with no attachment overriding the other. Full text: rfcs/rfc-001.md. Rev 11 (srs#827): Rule [N+38] — a per-record heading whose resolved text equals its enclosing section's title is not emitted, and the record's rows render under the section heading. Deterministic, unconditional, no schema change.
 
 
 **Title**: RFC-002: ext:themes-l1 — Visual Theming for Document Views
@@ -746,9 +746,13 @@ I-13
 
 **Affected Components**: The normative emitted form of a field row on the Default Rendering Baseline for `markdown`, `adoc`, `text` and `html`, scalar and multi-entry, together with the row-separation and block-list-termination rules without which a following row is swallowed as a CommonMark lazy continuation; cardinality-neutral entry ordering across `fieldType.cardinality: "list"` and the legacy `entries` path; composite-range fields (`datatype: "ref"` with `mode: "inline"`) carved out to RFC-036 Change C while reference-mode `ref` fields keep the ordinary row form per [CR-036-3]; Tier 1 and Tier 0 covered; empty-string and empty-sequence absence enforced as Step 2 already declares; the portable `(empty)` placeholder, promoting RFC-001 Step 4's MAY to a MUST; `[T-8]`'s rule text and injection table amended so `srs-fieldname-*` derives from `Field.name`, label/value classes join the contract with aliases sunset at the #242 cutover, and class emission no longer depends on `ext:themes-l1` being declared; relation rows given `srs-relationtype-*` in place of the field-identity class, making RFC-027's rule satisfiable and bounding its unbounded "other formats" clause; the terminal rung of RFC-036's row-template ladder, closing its Open Question 2.
 
+Revision 5 adds `FieldView.labelMode` (`inline` | `none`): the first mechanism by which a field row may omit its label, placed on the View because a Type is MEANING and label presence is a property of the document. `[T-3]`, `[T-6b]` and `[FR-037-19]` are untouched and `[FR-037-22]` states the closure: the View is the single home, and no Theme-side path exists.
+
 <!-- srs-integration:v1
 ext:views-l2
+ext:views-l1
 ext:themes-l1
+schema:view.json
 -->
 
 **Proposal Artifact Path**: rfcs/rfc-037-normative-field-row-rendering-baseline.md
@@ -766,6 +770,8 @@ Inter-element whitespace in the `html` form is not normative, following the prec
 No schema file changes. Implementation is srs-rust#782; correcting empty-string absence there is expected to remove 86 committed empty-value rows from `docs/spec/` on the next publication — a correction to the figure of 92 originally recorded on #294, which no measurement reproduces.
 
 Full proposal and design history: `rfcs/rfc-037-normative-field-row-rendering-baseline.md`.
+
+Revision 5 (srs#827, Door 3): `FieldView` gains an optional `labelMode`, `"inline"` (default) or `"none"` (the value alone, no label, no colon). Rules [FR-037-20] to [FR-037-22].
 
 
 **Title**: RFC-039: Name-keyed fieldValues — the recursive Record value carrier

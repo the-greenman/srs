@@ -28,26 +28,32 @@
       "required": false
     },
     {
-      "fieldId": "4b000036-0000-4000-a000-000000000036",
+      "fieldId": "4b000113-0000-4000-a000-000000000113",
       "order": 4,
+      "required": false,
+      "displayLabel": "Label Mode"
+    },
+    {
+      "fieldId": "4b000036-0000-4000-a000-000000000036",
+      "order": 5,
       "required": false,
       "displayLabel": "Display Label"
     },
     {
       "fieldId": "4b00004a-0000-4000-a000-00000000004a",
-      "order": 5,
+      "order": 6,
       "required": false,
       "displayLabel": "Display Hint"
     },
     {
       "fieldId": "4b0000de-0000-4000-a000-0000000000de",
-      "order": 6,
+      "order": 7,
       "required": false,
       "displayLabel": "Editor Hint Override"
     },
     {
       "fieldId": "4b0000df-0000-4000-a000-0000000000df",
-      "order": 7,
+      "order": 8,
       "required": false,
       "displayLabel": "Composite Renderer"
     }
