@@ -6,10 +6,10 @@
   "typeName": "mechanism",
   "fieldValues": {
     "title": "`Composition`",
-    "content": "A versioned, Container-level projection. Defines how a Container's Records are assembled into a readable document.\n\nExample: the `Composition` shape.\n\nA `Composition` may reference one or more `View` records (via `DocumentSection.renderViewId`). A single field-centric View may render mixed Record Types when the Records contain the required fields. The Composition orchestrates; it does not replace L1 Views.\n\n`DocumentSection.renderViewId` references a `View.id` (from `ext:views-l1`). A `Composition.id` is not a valid value for `renderViewId` — Compositions are not nestable.\n\nUse `navigationLinks` when a rendered document should include \"see also\" or related-section links. Use `Relation` only when the relationship is a semantic assertion about Records."
+    "content": "A versioned, Container-level projection. Defines how a Container's Records are assembled into a readable document.\n\nExample: the `Composition` shape.\n\nA `Composition` may reference one or more `View` records (via `DocumentSection.renderViewId`). A single field-centric View may render mixed Record Types when the Records contain the required fields. The Composition orchestrates; it does not replace L1 Views.\n\n`DocumentSection.renderViewId` references a `View.id` (from `ext:views-l1`). A `Composition.id` is not a valid value for `renderViewId` — Compositions are not nestable.\n\nUse `navigationLinks` when a rendered document should include \"see also\" or related-section links. Use `Relation` only when the relationship is a semantic assertion about Records.\n\n**Amended by RFC-042 Rev 5 (2026-09-19, srs#796).** Compositions remain non-nestable and the `sections` array stays flat. A nested section (RFC-042 [R21]) is neither a nested `DocumentSection` nor a nested Composition: it is a declared child container, rendered one heading level deeper by a `container-subset` section whose `containerScope` is `subtree`. The hierarchy is read from `childContainerIds`, never authored a second time in the Composition."
   },
   "createdAt": "2026-09-08T17:48:50.563647088+00:00",
-  "updatedAt": "2026-09-08T17:48:50.563652765+00:00",
+  "updatedAt": "2026-09-19T16:40:30.926473579+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "meta": {
     "derivedFrom": "c9c16dcc-324a-5ab7-b7a5-d53ce48426bf"

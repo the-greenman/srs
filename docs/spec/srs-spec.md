@@ -4850,6 +4850,8 @@ Example: the `SectionSource` union.
 
 **Note (2026-09-03, srs#525, `rfc-decision-cce3c00e` + `rfc-decision-9ee14517`)**: `type-query` is retired and replaced by `discovery-query`, which consumes the one structured query mechanism (`DiscoveryQuery`, `ext:discovery`) instead of re-implementing its own divergent copy of the same filter axes. `discovery-query` and `container-subset` are the two live ways to source a section. Return trigger: a composition need neither live variant expresses.
 
+**Note (2026-09-19, RFC-042 Rev 5, srs#796)**: `containerScope` is carried on both live variants. On `container-subset` it takes `explicit`, the default, which renders `direct(C)` alone, or `subtree`, which descends into `childContainerIds` and renders each declared child container as a nested section. `repository` is invalid on `container-subset`, whose source already names one container.
+
 
 ###### `DocumentSection`
 
@@ -4919,6 +4921,8 @@ A `Composition` may reference one or more `View` records (via `DocumentSection.r
 
 Use `navigationLinks` when a rendered document should include "see also" or related-section links. Use `Relation` only when the relationship is a semantic assertion about Records.
 
+**Amended by RFC-042 Rev 5 (2026-09-19, srs#796).** Compositions remain non-nestable and the `sections` array stays flat. A nested section (RFC-042 [R21]) is neither a nested `DocumentSection` nor a nested Composition: it is a declared child container, rendered one heading level deeper by a `container-subset` section whose `containerScope` is `subtree`. The hierarchy is read from `childContainerIds`, never authored a second time in the Composition.
+
 
 ###### Heterogeneous Section Rendering
 
@@ -4928,6 +4932,14 @@ Use `navigationLinks` when a rendered document should include "see also" or rela
 - **`typeDispatch`** (on `DocumentSection`) selects a different L1 View per Record Type within the one section, so interleaved Types each render with their own View (Rules [N+14]–[N+18]).
 
 A record's **resolved type** for both fields is the canonical `namespace/name` of the Type its `typeId` resolves to — not the denormalized `typeNamespace`/`typeName` hints — compared version-independently (Rule [N+13]). These compose with the per-record heading behaviour of `titleFieldId` (Rule [N+1]) for heterogeneous sections, and leave intra-record group rendering inside a dispatched L1 View unaffected.
+
+**Amended by RFC-042 Rev 5 (2026-09-19, srs#796).** A `container-subset` section renders the container's direct members (`rootInstanceIds` and `memberInstanceIds`, RFC-034's `direct(C)`) in one order: `ordering.memberOrder` where declared (Rule [N+29]), otherwise `ordering.fieldId` with its `direction`, otherwise the Rule [N+12] order.
+
+The section MAY declare `containerScope`. `explicit` is the default and renders those direct members alone. `subtree` additionally renders each container named in `childContainerIds` as a nested section, one heading level deeper, titled by that child container's title, holding its own direct members under the same order rule, recursively. `repository` is invalid on this source.
+
+A nested section's position comes from the parent's order, never from `childContainerIds` order (RFC-034 [R3]). A child container anchored on a direct member renders at that member's position, and the anchor record renders once, as the nested section's lead content. A child with no anchor renders after the positioned members, ordered by title with `containerId` as the tiebreak.
+
+A record that is a direct member of several containers rendered by one Composition renders at each place, once per place. A renderer MUST NOT de-duplicate it, and the repetition states nothing about the record: its `contains` parent and its `precedes` edges are unchanged.
 
 
 ###### Default Rendering Baseline
@@ -5102,6 +5114,10 @@ When a dispatched View's `exportConfig.preamble` renders inside a section, the v
 For `format: "text"` or implementation-defined values, heading level semantics do not apply.
 
 **`identityFieldId` fallback (RFC-020, Rule [N+37], amended Rev 7, srs#728).** For any `DocumentSection`/record pairing where the section's `titleFieldId` is absent, or is declared but does not resolve within the record's Type's effective field set (own `fields[]` plus, under `ext:type-inheritance`, inherited fields), whether that section's field content renders via the Default Rendering Baseline or a dispatched L1 View, implementations SHOULD emit the per-record heading using the value of the field named by the record's Type's effective `identityFieldId` (`ext:type-inheritance`), if present, in place of omitting the heading. `titleFieldId`, when it resolves within the record's Type's effective field set, MUST continue to take precedence for that section's per-record heading. This fallback is distinct from a `titleFieldId` that resolves to a field present in the effective field set but fails the eligibility test above (cardinality/datatype/domain/format): an ineligible authored `titleFieldId` still omits the heading with no identity fallback (unchanged, srs-rust PR #341).
+
+**Amended by RFC-042 Rev 5 (2026-09-19, srs#796).** A nested section (RFC-042 [R21]) at nesting depth `d` renders its title at `2 + depthOffset + d` and its per-record headings at `3 + depthOffset + d`. The `contains` recursion inside a record continues one level deeper per level from there.
+
+For `format` `"markdown"`, `"html"` and `"adoc"`, a computed heading level above 6 MUST be emitted at 6 and MUST produce a diagnostic. The render MUST NOT fail: a presentation arrangement never decides whether a repository is valid. Implementations SHOULD warn when a composition's projected maximum heading level exceeds 6, as they already warn for a `depthOffset` above 4.
 
 
 ###### Preamble Template Variables
