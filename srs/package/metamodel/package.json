@@ -271,7 +271,8 @@
     "fields/envelope_data.json",
     "fields/manifest.json",
     "fields/tier.json",
-    "fields/assets.json"
+    "fields/assets.json",
+    "fields/label_mode.json"
   ],
   "id": "4a000004-0000-4000-a000-000000000004",
   "name": "metamodel",

@@ -2,8 +2,8 @@
 
 # RFC-037: Normative field-row rendering baseline
 
-**Status**: Accepted (Revision 4)
-**Affects**: `ext:views-l2` (RFC-001 Change A, Default Rendering Baseline Step 4; Heading Hierarchy table; the RFC-027 Rows bullet), `ext:themes-l1` (RFC-002 Rule `[T-8]` and its class injection table, `ElementTemplates.fieldRow`), RFC-027 Change C rule 3, RFC-036 Change C (composite baseline boundary) and its Open Question 2
+**Status**: Accepted (Revision 5)
+**Affects**: `ext:views-l2` (RFC-001 Change A, Default Rendering Baseline Step 4; Heading Hierarchy table; the RFC-027 Rows bullet), `ext:themes-l1` (RFC-002 Rule `[T-8]` and its class injection table, `ElementTemplates.fieldRow`), RFC-027 Change C rule 3, RFC-036 Change C (composite baseline boundary) and its Open Question 2. *(Revision 5)* `ext:views-l1` (`FieldView`) and `docs/schema/2.0/view.json`, which gain the optional `labelMode` property; the `com.semanticops.srs/metamodel` package, which gains the Field the generator emits for it.
 **Implementation**: [the-greenman/srs-rust#782](https://github.com/the-greenman/srs-rust/issues/782)
 **Author**: the-greenman (design decisions of 2026-07-31 on #294); drafted by the epic-256 worker
 **Date**: 2026-07-31
@@ -18,6 +18,30 @@
 | 2 | 2026-07-31 | Spec-integrity and completeness review. Adds Change 0 (exact Step 4 replacement text) and a fold-in target table; adds row separation and block-list termination (`[FR-037-7]`), without which a block list swallows the following row; makes entry ordering cardinality-neutral; carves composite-range fields out to RFC-036 Change C; covers Tier 1 and Tier 0; resolves the relation-row class contradiction via `srs-relationtype-*`; makes class emission independent of `ext:themes-l1`; amends `[T-8]`'s rule text, not only its table; drops "or replace" (contradicted `[T-3]`); corrects the export-diff count to 86 and states the measurement; declares the MAY→MUST placeholder promotion; adds `adoc` `+` continuation. Value stringification for non-string datatypes recorded as out of scope (Open Question 2). |
 | 3 | 2026-07-31 | Accepted after two review rounds. Corrects the composite carve-out, which named `inline` as a `datatype` (it is a `mode`) and stranded reference-mode `ref` fields with no defined row form, contradicting `[CR-036-3]`; unifies continuation indentation on two spaces and folds the blank-line entry case into `[FR-037-8]`; gives the `html` multi-entry row its enclosing `div` so it can carry the classes `[T-8]` requires; defines Tier 1 array values and `TypedField.label`; extends row separation to relation rows; scopes `[FR-037-19]` to `[FR-037-1]`'s paths; makes the five-step normalisation rule normative independently of `ext:themes-l1`. Spec records authored in `srs/srs/`: `records/subsections/07-7-ext-views-l2.json` (Step 4 replacement, Rows bullet, Heading Hierarchy row, new *Normative Field-Row Form* subsection) and `records/extensions/ext-themes-l1.json` (`[T-8]` rule text and injection table, `[FR-037-12]`–`[FR-037-14]`, `[FR-037-19]`). |
 | 4 | 2026-09-09 | Owner ruling on the-greenman/srs#714, executing the disposition on srs-rust#973 after the post-#563 render review. Amends `[FR-037-3]`: a scalar value whose first line begins a block-level construct (fenced code, unordered list item, ordered list item, table row, ATX heading, blockquote, thematic break) MUST begin on the line following the label, instead of sharing the label's line; an inline value keeps the compact form unchanged. Measured on master: 21 of 366 multi-line field values render broken today (17 unordered list, 2 blockquote, 1 table, 1 ordered list; 0 fenced code, guarded only by an incidental caption convention on the 68 `example` records). Fixes the presentation layer per `finding-153f4d63` rather than constraining record content. Rejects a Theme-level fix (`compositeFieldRowTemplates`) as a second rendering path for one case, per the Conformance cell's "one way over many." Consequence: the caption sentence on the 68 `example` records is now an editorial choice, not a load-bearing workaround — removing captions is a separate, out-of-scope unit. No schema change; render is byte-unchanged in this revision (the pinned CLI does not yet implement it — srs-rust#973). Spec record updated: `srs/records/tier-2/mechanism-e01a3121.json` (*Normative Field-Row Form*, Scalar rows). |
+| 5 | 2026-09-19 | **Door 3 revision** (srs#827), executing the owner's ruling of 2026-09-19 on srs#794 (Option B, narrowed). Change K gives `FieldView` an optional `labelMode` (`inline` — the default, today's forms; `none` — the value alone, no label and no colon), the first mechanism in the specification by which a field row may omit its label. New rules [FR-037-20]–[FR-037-22]; [FR-037-1]–[FR-037-19] are unamended, including [FR-037-19] and [T-3]: a Theme still wraps what the baseline emits and gains no label-suppression path of its own. Additive schema change to `docs/schema/2.0/view.json` with **no** `dataModelRevision` bump, on RFC-034's `childContainerIds` precedent, and a metamodel Field emitted by `scripts/gen-metamodel-package.mjs`. The companion half of the same ruling is RFC-001 Revision 11, Rule [N+38] (duplicate per-record heading suppression), which lands in the same PR on RFC-001's own surface. Render is byte-unchanged in this PR: the pinned CLI (`v0.1.0-build.388`) implements neither rule, and this repository's Compositions declare no View carrying `labelMode` — the data half is srs#794, the implementation the-greenman/srs-rust#1089. Change L (owner ruling on Open Question 8, same date) widens `[FR-037-1]` from the Default Rendering Baseline alone to every `DocumentView` emitted in a covered format, bound View or not, and amends `[FR-037-19]`'s closing sentence accordingly: one row form on both paths, which is the Conformance cell's one-way-per-goal applied to the row itself rather than only to the label. A bound View's `ExportConfig` still selects and orders rows (`omitEmptyFields`, `fieldOrder`, `preamble`, `[T-10]` unchanged). Consequence stated: a renderer drawing bound-View rows in a shape of its own is non-conformant, where before it was undefined. Consumers checked — srs-rust emits both paths through one function, srs-web and muDemocracy.org through the WASM bindings over it, srs-vscode through the CLI over it — no known divergence. Open Question 8 closed. |
+
+---
+
+## Charter alignment (Revision 5 amendment, srs#827)
+
+**Cell(s):** cell:conformance, cell:portability
+
+**Decision mode:** complicated
+
+**Governing cell preference:** Conformance — *one way over many* (`rfc-decision-cce3c00e`). Aligned, and this is the reason `labelMode` is a single property in a single place. A field row's label is either emitted or it is not, and after this revision exactly one declaration decides which: `FieldView.labelMode`. No Theme path is opened ([T-3] is untouched, [FR-037-19] is amended only in its closing scope sentence, and [FR-037-22] states the closure explicitly), no sentinel value is given a second meaning, and no per-field-name template map is extended to reach top-level rows. Change L applies the same preference one level up, to the row rather than to its label: after it there is one row form and not two, because `[FR-037-1]` reaches every `DocumentView` in a covered format instead of only the unbound path. The consequence is deliberate and is stated in Change L: a renderer drawing a bound View's rows in a shape of its own becomes non-conformant, where it was previously undefined. Consumers were checked before widening — srs-rust emits both paths through a single function, srs-web and muDemocracy.org render through the WASM bindings over that core service, srs-vscode through the CLI over it — and no divergence exists to break. Portability — *preserve over recognize* (`rfc-decision-cce3c00e`, `rfc-decision-8948e43f`). Aligned. The Record keeps every field it had; nothing is dropped from the stored form to make a document read better, and a repository whose Views are all deleted renders exactly what it rendered before this revision.
+
+**Axis preference:** 5–11 Succession↔Conformance — default pole, **Reliability over Renewal**, with the boundary clause exercised as it is written: *"standing contracts hold; renewal only as explicit supersession at a declared boundary."* This is that declared boundary. [FR-037-3]–[FR-037-6] are not rewritten and not weakened; a `FieldView` with no `labelMode` renders byte-identically to today, because the default *is* today. The renewal is additive and is declared in a numbered revision of the RFC that owns the rule. 6–12 Containment↔Portability — default pole, Portability over Possession: `labelMode` travels in the View definition inside the package, so a repository's label-less rendering survives export, archive and re-import with no implementation-local configuration. No non-default pole is taken on either axis.
+
+**Decisions consulted:** `rfc-decision-0118e938` (a construct has one layer; a crossing is a stated goal, never an option) — this is the decision that puts `labelMode` on `FieldView` and not on `FieldAssignment`. A Type is MEANING: its `FieldAssignment` says that a Record carries this Field, at this order, required or not. Whether a *document* prints that field's label is an EXPRESSION question with no bearing on what the Record is. Putting it on `FieldAssignment` would be a layer crossing, and layer rule 4 admits a crossing only for "a specific, named goal that cannot be met within one layer." There is no such goal here: the View reaches the row already, through `visible`, `displayLabel` and `editorHintOverride`. `rfc-decision-0750c62f` (a Container is a declared selection on the EXPRESSION plane) — the plane assignment this revision follows for the View. `rfc-decision-8aed3412` (a story is built at EXPRESSION from reusable parts; the `contains`/`precedes`/`depends-on` tree is untouched by any telling of it) — a label-less row is a telling, not a claim about the record. `rfc-decision-0c403e15` (concepts describe themselves: a concept's introductory prose is the concept record's own prose, and "it renders at the concept's heading in every projection") — the governing decision for the companion Rule [N+38] in RFC-001 Revision 11: a concept whose prose renders at its own heading must not first render a second, identical heading. `rfc-decision-92d2da05` (Composition → Presentation → Projection) — the vocabulary used throughout. `rfc-decision-4431046e` (a correction is not a refinement) — this revision changes the position RFC-037 takes, so it is recorded as a numbered revision with the rule text amended in place and the revision marked at the point of change, not as a silent edit. `rfc-decision-7caca3a1` (decision modes). `rfc-decision-cce3c00e` (the grid, the cell and axis preferences).
+
+**Contradictions found:** None. The nearest adjacent ruling is [T-3]/[T-6b]/[FR-037-19] — a Theme wraps, never replaces or suppresses — and this revision does not touch it: the suppression happens *before* the row reaches `fieldRow`, in the View that composes the row, and [FR-037-22] makes that boundary a rule rather than an inference. Change L amends one sentence of [FR-037-19], its scope clause, and leaves the wrap-never-replace rule itself exactly as written; [T-10] is unchanged and still applies `fieldRow` on the L1 View path, now to a row whose form is defined. The owner separately raised whether the no-suppression rules should be revisited for progressive disclosure; that is filed apart from this revision and nothing here presumes its answer.
+
+**One-way-per-goal:** No second mechanism for an existing goal, and Change L removes a latent second answer: before this revision the row form was defined on one rendering path and undefined on the other, which is the shape that lets two implementations diverge without either being wrong. After it there is one row form on both paths. The candidate collision is `visible: false`, and the two serve different goals: `visible: false` removes the field from rendered output entirely (its value does not appear), `labelMode: "none"` keeps the value and drops only its label. Neither substitutes for the other and neither can be expressed through the other. The mechanisms this revision could have used instead — a `displayLabel: ""` sentinel, a Theme-side `fieldRow` suppression, a `FieldAssignment` placement, a Composition-level directive — are each rejected in *Alternatives Considered*, and each rejection is on one-way-per-goal or layer grounds rather than taste.
+
+**Layer test:**
+- **Which layer owns this?** EXPRESSION plane, presentation layer (`rfc-decision-92d2da05`'s Composition → Presentation → Projection chain). `labelMode` sits on `FieldView`, beside `visible`, `displayLabel` and `editorHintOverride` — the property family Invariant 13 already declares to be rendering-only — and it governs the emitted form of a row, which is exactly what the rest of this RFC governs.
+- **Consume or clone downward?** Consume. `labelMode` reads the row the baseline already resolves — RFC-001 Step 1's ordered field list, Step 2's presence test, Step 3's label — and selects between two forms of it. It re-implements no part of field resolution, presence, ordering or labelling, and it introduces no new Field, Type, Relation or record property.
+- **Does the layer below stand alone without this?** Yes, and verifiably: delete every View in a repository and the MEANING plane is untouched — the Records still carry every field value, `srs repo validate` still passes, and the Default Rendering Baseline still emits the labelled rows it emits today, because `inline` is the default and a Record that no View governs has no `labelMode` to read.
 
 ---
 
@@ -112,6 +136,26 @@ Line 30 is on the opening page of the specification. The fenced-code case was no
 A conformance check forbidding block-first content would make the violation permanent and enforced — the wrong layer would carry the fix. The layer with the defect is presentation, and `[FR-037-3]` is presentation's own normative statement, so that is what Revision 4 changes; record content is unconstrained either way. Change A's amendment below states the rule in terms of the value's own nature — whether its first line opens a block-level construct — never in terms of what a particular renderer finds difficult.
 
 **Consequence.** The caption sentence on the 68 `example` records becomes an editorial choice once Revision 4 and its implementation (srs-rust#973) land, rather than a workaround the renderer requires. Removing captions where they no longer earn their place is a separate, meaning-layer unit and is explicitly out of scope here.
+
+### Problem 8 — A field row cannot omit its label, and a record cannot decline a heading it already has (Revision 5)
+
+Both halves of this problem are visible on the first page of this repository's own projection. `docs/spec/srs-spec.md` opens:
+
+```
+## Reading this specification
+
+### Reading this specification
+
+**Canonical Key**: part:reading-this-specification
+
+**Description**: This Part addresses two readers: implementers building a conforming SRS system, and ...
+```
+
+Four lines, three of which are machinery. The section heading and the record heading are the same words at two depths, because the Composition section carries the Part's title and the Part concept record resolves the same title as its own heading. The Part's introductory prose — the thing a reader came for — is labelled **Description**, and a `canonical_key` row that exists for addressing sits above it labelled as prose.
+
+Nothing in the specification can fix either. `visible: false` would delete the description's value along with its label. `displayLabel` cannot be set to nothing: an empty string is a value, not an absence, and reading it as one would give a rendering-only field a second, invisible meaning. A Theme cannot drop the label, because [T-3] forbids suppressing content through template evaluation and [FR-037-19] restates it for `fieldRow`; nor can `recordWrapper` drop the heading, because [T-6b] delivers structural headings inside `{{content}}` and forbids a wrapper re-emitting them. `compositeFieldRowTemplates` is the one genuinely per-field-name template map and RFC-036 [CR-036-17] scopes it to composite-range values, which none of these fields are.
+
+The gap is therefore real rather than an authoring failure, and it is the gap this revision closes: **the specification has no way to render a field's value without its label, and no rule for a heading that repeats the heading above it.** The first is Change K below. The second is Rule [N+38], which belongs to RFC-001's Heading Hierarchy and lands there, in RFC-001 Revision 11, in the same pull request.
 
 ---
 
@@ -323,6 +367,73 @@ The forms defined above are the content that `ElementTemplates.fieldRow` receive
 
 When no `fieldRow` template resolves, implementations MUST emit these forms unwrapped. This is the terminal rung of RFC-036's row-template ladder (`compositeFieldRowTemplates` → `fieldRow` → baseline field-row form), closing RFC-036 Open Question 2.
 
+### Change K — `FieldView.labelMode` (Revision 5)
+
+`FieldView` gains one optional property:
+
+| Value | The row it produces |
+|---|---|
+| `"inline"` | The forms [FR-037-3]–[FR-037-6] already define: the resolved label, a colon, the value. This is the default, so an absent `labelMode` and an explicit `"inline"` are the same row. |
+| `"none"` | The value alone. No label, no colon, and no element or markup standing in for either. |
+
+`"none"` is a form of the row, not the absence of one. Everything else this RFC requires of a row still holds: a scalar value still begins on its own line, a multi-entry value is still a block list in sequence order, consecutive rows are still separated by a blank line, continuation is still two spaces, an entry that renders to nothing is still omitted, an absent field still emits nothing at all, and `html` still escapes and still carries `srs-field` and the identity class. What changes is one thing: the label position is empty and the punctuation that introduced it is gone.
+
+**Per format.** In `markdown`, `adoc` and `text`, a scalar row under `"none"` is the rendered value, emitted verbatim from column zero — which, for a prose value, is a paragraph. Revision 4's block-opening distinction stops mattering here and is not applied: there is no label line for a block-level construct to be glued to, so the value simply starts the row. A multi-entry row is the entry list with its label line removed, the first entry beginning the row. In `html`, the `div` and the value element are unchanged and the `strong` label element and the literal colon between them are not emitted.
+
+**What it does not do.** `labelMode` does not decide *whether* a field renders — `visible` does that, and the two are independent: `visible: false` removes the value, `labelMode: "none"` keeps the value and drops the label. It does not reach a record-level heading; that is Rule [N+38]'s territory in RFC-001. It does not reach a relation row, whose label comes from a `RelationTypeDefinition` and not from a `FieldView` ([FR-037-15] is unchanged). And it alters nothing below the presentation layer: the Record is byte-identical, its `fieldValues` are complete, and Discovery Text Projection, validation, AI guidance and extraction are all unaffected — the family Invariant 13 governs, which `labelMode` joins.
+
+**Where a `FieldView` governs.** A `FieldView` is consulted where a View is bound to the rendering — `DocumentSection.renderViewId`, including the per-Type binding `typeDispatch` resolves ([N+14]–[N+18]). On the Default Rendering Baseline with no View bound there is no `FieldView` at all, so `"inline"` applies and output is unchanged. Both paths are inside [FR-037-1], which Change L widens to cover them in this same revision, so `labelMode` has one defined effect wherever it appears rather than an effect on one path and a plain reading on the other.
+
+**Why the View and not the Type.** `FieldAssignment` is the obvious-looking alternative and it is the wrong layer. A `FieldAssignment` states that a Record of this Type carries this Field, at this order, required or not — MEANING. Whether a document prints that field's label is a property of the document, not of the record, and two Compositions over the same records may legitimately disagree about it. `rfc-decision-0118e938` admits a layer crossing only "for a specific, named goal that cannot be met within one layer," and there is no such goal: the View already reaches this row through `visible`, `displayLabel` and `editorHintOverride`, and `labelMode` joins them.
+
+#### Worked example
+
+A View over a `concept` record with two fields, `canonical_key` and `description`:
+
+- `canonical_key` — `visible: false`
+- `description` — `labelMode: "none"`
+
+Today, the baseline emits:
+
+```
+**Canonical Key**: part:reading-this-specification
+
+**Description**: This Part addresses two readers: implementers building a conforming SRS system, and ...
+```
+
+Under the View above it emits:
+
+```
+This Part addresses two readers: implementers building a conforming SRS system, and ...
+```
+
+The `canonical_key` row is gone because `visible: false` removed the field from rendering. The `description` row is present, carrying its whole value, with the label and colon gone because `labelMode` is `"none"`. Neither record changed; the `canonical_key` value is still in the Record and still in the JSON projection, as Invariant 13 and `FieldView.visible`'s own rule require.
+
+A second example, a multi-entry field under `"none"`:
+
+```
+- Reading this specification: notation, RFC 2119 keywords, and this reading order
+- Foundations: the core entity model a repository is built from
+```
+
+The block list, the markers and the sequence order are [FR-037-5]'s, unchanged. Only the label line above it is gone.
+
+---
+
+### Change L — `[FR-037-1]` covers the bound-View path (Revision 5)
+
+Before this revision `[FR-037-1]` bound only the Default Rendering Baseline, and `[FR-037-19]`'s closing sentence said so explicitly: on the L1 View path, `[T-10]` applied `fieldRow` to rows whose form this RFC never defined. That was the gap Revision 5's first draft recorded as Open Question 8 and declined to close. The owner closed it (srs#827, 2026-09-19): widen the rule now, in this revision, rather than leave one of the two rendering paths without a row form while adding a property that lives only on that path.
+
+`[FR-037-1]` now reads across both paths. RFC-037's forms are the normative row form whenever a `DocumentView` is emitted in `markdown`, `adoc`, `text` or `html`, whether or not a `DocumentSection.renderViewId` (or a `typeDispatch` binding) resolves a View for the section.
+
+**What the View still decides, unchanged.** RFC-001 Change C's L1/L2 `ExportConfig` boundary rule is untouched: a bound View's `omitEmptyFields` governs whether an absent field emits anything, its `fieldOrder` governs the sequence, and its `preamble` renders before the record's rows. `[T-10]` continues to apply `fieldRow` to each surviving row, and `[FR-037-11]`'s placeholder still does not reach the L1 path, where `omitEmptyFields` governs. The View selects and orders the rows; this RFC says what each one looks like. Nothing about selection, ordering or preamble moves.
+
+**Consequence, stated plainly.** A renderer that draws a bound View's rows in a shape of its own — a definition list, a two-column table, an undecorated `Label: value` — is non-conformant after this revision, where before it was merely undefined. That is the point: `[FR-037-19]` already required a Theme to receive a defined row, and an implementation could satisfy the letter of the specification while emitting a different row on the more commonly used of the two paths.
+
+**Consumers checked, no known divergence.** The reference implementation emits both paths through one function (`render_service.rs::format_field_row`, with an `l1_view_path` flag that reaches only `[FR-037-11]`'s placeholder carve-out, never the row form), so it is already conformant. `srs-web` and `muDemocracy.org` render through the WASM bindings over that same core service; `srs-vscode` renders through the CLI over it. No client re-implements the row form, and no divergence was found. `[FR-037-1]`'s existing carve-out is unchanged and still does the work it always did: a native client surface that is *not* emitting a `DocumentView` — an `srs-web` record card, an `srs-vscode` editor view — is outside this RFC entirely.
+
+---
+
 ### Change J — Heading Hierarchy table
 
 The `ext:views-l2` Heading Hierarchy table's Field label row is amended to point at the now-defined forms:
@@ -339,15 +450,20 @@ What Change 0 and Changes A–J apply to in the canonical spec:
 |---|---|
 | `srs/records/subsections/07-7-ext-views-l2.json` | Step 4 replaced (Change 0); Rows bullet bounded and pointed at the new forms (Change E); Heading Hierarchy Field label row amended (Change J); new *Normative Field-Row Form* subsection carrying Changes A–C, G–I |
 | `srs/records/extensions/ext-themes-l1.json` | `[T-8]` rule text and injection table amended (Change D); `[FR-037-13]`, `[FR-037-14]`, `[FR-037-19]` recorded |
-| `docs/schema/2.0/` | **No file changes** — see *Schema changes* |
+| `srs/records/tier-2/mechanism-e01a3121.json` (*Normative Field-Row Form (RFC-037)*) | **(Revision 5)** the `labelMode` row forms and `[FR-037-20]`–`[FR-037-22]`; the scope sentence and *Conformance boundary* widened to the bound-View path (Change L) |
+| `srs/records/tier-2/mechanism-fa52d598.json` (*Normative field-row rendering (RFC-037)*) | **(Revision 5)** `[FR-037-19]`'s closing scope sentence: the row form on the L1 View path is the same (Change L) |
+| `srs/records/tier-2/mechanism-bcf7d3d7.json` (*`FieldView`*) | **(Revision 5)** `labelMode`'s prose, beside `visible`'s |
+| `srs/records/examples/example-38299f84.json` (*The `FieldView` shape*) | **(Revision 5)** `labelMode` in the pseudo-IDL, which `check-idl-schema-conformance.mjs` holds to `view.json` |
+| `srs/records/invariants/invariant-013.json` | **(Revision 5)** `labelMode` joins the rendering-only property family |
+| `docs/schema/2.0/view.json` | **(Revision 5)** `FieldView.labelMode` — see *Schema changes* |
 
-Integration manifest: `ext:views-l2`, `ext:themes-l1`.
+Integration manifest: `ext:views-l2`, `ext:themes-l1`, `ext:views-l1`, `schema:view.json`.
 
 ---
 
 ## Conformance Rules
 
-> **[FR-037-1]** These rules apply to any implementation emitting a `DocumentView` in `markdown`, `adoc`, `text`, or `html` via the Default Rendering Baseline (RFC-001 Change A), or via RFC-036 Change C's composite baseline where it emits an individual field row. They MUST NOT be construed to bind rendering surfaces that do not emit a `DocumentView`. A client-side `DocumentView` renderer in a covered format is not exempt.
+> **[FR-037-1]** **(Amended Revision 5)** These rules apply to any implementation emitting a `DocumentView` in `markdown`, `adoc`, `text`, or `html`, whether or not a `DocumentSection.renderViewId` — including the per-Type binding `typeDispatch` resolves — binds an L1 View to the section, and to RFC-036 Change C's composite baseline where it emits an individual field row. A bound View's `ExportConfig` continues to govern *which* rows are emitted and in *what* order, unchanged: `omitEmptyFields`, `fieldOrder` and `preamble` apply exactly as RFC-001 Change C's L1/L2 boundary rule states, and `[T-10]` continues to apply `fieldRow` to each surviving row. This RFC defines what each surviving row looks like, on both paths. They MUST NOT be construed to bind rendering surfaces that do not emit a `DocumentView`. A client-side `DocumentView` renderer in a covered format is not exempt. *(Revision 5 widened this rule from the Default Rendering Baseline alone; before it, a bound View's rows had no normative form — see Change L and Open Question 8.)*
 >
 > **[FR-037-2]** A Field whose `fieldType.datatype` is `"ref"` **and** whose `fieldType.mode` is `"inline"` (the default when `mode` is absent) is a composite: it is rendered by RFC-036 Change C and is outside `[FR-037-3]`–`[FR-037-6]`, which govern the field rows *within* each composite block rather than the composite field itself. A `ref` Field whose `mode` is `"reference"` is **not** a composite and renders as an ordinary field row under these rules, per `[CR-036-3]`.
 >
@@ -383,13 +499,29 @@ Integration manifest: `ext:views-l2`, `ext:themes-l1`.
 >
 > **[FR-037-18]** Label resolution MUST remain `FieldAssignment.displayLabel` falling back to raw `Field.name`. Implementations MUST NOT humanise or case-convert the fallback. For a Tier 1 `TypedRecord` the row label is `TypedField.label` falling back to `TypedField.name`, while the identity class is always derived from `TypedField.name` — the same label/identity split `[FR-037-12]` pins for Tier 2. A `TypedField` whose `value` is an array is multi-entry and renders in block form per `[FR-037-5]` in array index order; any other value is single-valued. `[FR-037-11]` does not apply to Tier 1, which has no `required: true` to consult. Tier 0 Notes emit no field rows.
 >
-> **[FR-037-19]** On the paths `[FR-037-1]` covers, the forms defined by `[FR-037-3]`–`[FR-037-9]` are the content that `ElementTemplates.fieldRow` receives as `{{content}}`. A Theme MAY wrap the row through `fieldRow` and MUST NOT replace it, per `[T-3]`. When no `fieldRow` template resolves, implementations MUST emit these forms unwrapped. This satisfies the bottom rung of RFC-036's row-template ladder. `[T-10]` also applies `fieldRow` on the L1 View path; the row form there is outside this RFC.
+> **[FR-037-19]** On the paths `[FR-037-1]` covers, the forms defined by `[FR-037-3]`–`[FR-037-9]` are the content that `ElementTemplates.fieldRow` receives as `{{content}}`. A Theme MAY wrap the row through `fieldRow` and MUST NOT replace it, per `[T-3]`. When no `fieldRow` template resolves, implementations MUST emit these forms unwrapped. This satisfies the bottom rung of RFC-036's row-template ladder. `[T-10]` also applies `fieldRow` on the L1 View path, and **(Revision 5)** the row form there is the same — the forms `[FR-037-3]`–`[FR-037-9]` define, per the widened `[FR-037-1]`.
+>
+> **[FR-037-20]** **(Revision 5)** `FieldView.labelMode` is an optional string whose value MUST be `"inline"` or `"none"`; when absent, `"inline"` applies. Under `"inline"` implementations MUST emit the forms `[FR-037-3]`–`[FR-037-6]` define. Under `"none"`, implementations MUST emit the field's rendered value with no resolved label and no separating colon: in `markdown`, `adoc` and `text` a single-valued field's value MUST begin the row at column zero, without regard to whether its first line opens a block-level construct, and a multi-entry field MUST emit `[FR-037-5]`'s block list with the label line omitted and the first entry beginning the row; in `html` implementations MUST emit `[FR-037-4]`'s or `[FR-037-6]`'s structure without the `strong` label element and without the literal colon, leaving the enclosing `div`, its classes, and the value element unchanged. `[FR-037-7]`–`[FR-037-10]` and `[FR-037-12]`–`[FR-037-17]` apply to a `"none"` row exactly as they apply to an `"inline"` one. A `FieldView` governs a row only where a View is bound to the rendering; where none is, no `labelMode` resolves and `"inline"` applies. Both cases are inside `[FR-037-1]`.
+>
+> **[FR-037-21]** **(Revision 5)** `labelMode` is presentation only, in the sense Invariant 13 fixes for `FieldView.displayLabel`, `FieldView.displayHint` and `FieldView.editorHintOverride`. It MUST NOT affect validation, AI guidance, extraction, `fieldType` interpretation, Relations, or Discovery Text Projection (`ext:discovery`), and it MUST NOT change which fields are present in a Record or in any structured projection of it. It MUST NOT be used to remove a field from rendering: `FieldView.visible` is the sole mechanism for that, and a field whose row `labelMode` suppresses the label of is still a rendered field carrying its whole value.
+>
+> **[FR-037-22]** **(Revision 5)** `FieldView.labelMode` is the only mechanism by which a field row's label is omitted. `ext:themes-l1` MUST NOT be read as providing another: a Theme MUST NOT suppress a label that `labelMode` did not, and MUST NOT reintroduce one that it did — `ElementTemplates.fieldRow` continues to wrap, unchanged, whatever `[FR-037-20]` emits, per `[T-3]` and `[FR-037-19]`. `[T-6b]` is likewise unaffected: a record-level heading is not a field row and no `FieldView` reaches it.
 
 ---
 
 ## Schema changes
 
-**None.**
+| Schema file | Change | Effect on existing data |
+|---|---|---|
+| `docs/schema/2.0/view.json` | `FieldView` gains an optional `labelMode`, `"inline"` \| `"none"`. | None. Every existing `FieldView` validates unchanged and renders unchanged, because the absent case and `"inline"` are the same row. |
+
+**No `dataModelRevision` bump.** The stamp marks a data-model *generation* — a change that makes an older binary's reading of a corpus wrong. This one cannot: a `FieldView` written before Revision 5 means exactly what it meant before, and the new property is optional with a default that reproduces prior behaviour. RFC-034's `childContainerIds` is the precedent and the shape is identical — an optional property added to a closed schema definition, additive for every existing document, with no generation stamp. The `dataModelRevision` this revision ships against is therefore 7, unchanged.
+
+**The one asymmetry, stated as RFC-034 stated it.** `FieldView` is `additionalProperties: false`, so a *pre*-Revision-5 validator rejects a View that uses `labelMode`. That is forward incompatibility for newly authored Views, not a migration requirement for anything that exists: no repository is obliged to adopt `labelMode`, and none that declines it is affected.
+
+**Metamodel.** `view.json` is a hand-authored seed held to the metamodel by `rfc-541-closure-test.mjs` (the emitter's output must be a subset of the committed seed over the covered properties), so the property is added in two places that must agree: `docs/schema/2.0/view.json`, and the `field-view` Type in `scripts/gen-metamodel-package.mjs`, from which `srs/package/metamodel/**` is regenerated. The generator is the authoring surface; the package files are its output and are never hand-written. `srs/records/tier-2/generated-type-reference-b328e1f2.json` (*Generated reference: `FieldView`*) is likewise regenerated by `scripts/gen-type-reference-tables.mjs`, not edited.
+
+**Mirrors.** `srs-rust/crates/srs-schema/schemas/2.0/` and `srs-vscode/schemas/2.0/` are read-only mirrors and are not touched here; they refresh from the `schemas-2.0.tar.gz` release artifact after this PR merges, under their own drift checks.
 
 This RFC specifies the emitted form of rendered output. It introduces no new entity property, changes no existing entity shape, and adds no portable enum value. `docs/schema/2.0/document-view-output.json` governs the `json` projection only and is unaffected — the `json` format was already fully pinned, which is the asymmetry Problem 1 identifies.
 
@@ -419,6 +551,34 @@ grep -cE '^\*\*[^*]+\*\*: $' <file>
 **This corrects the figure of 92 given on #294.** That number came from a looser pattern that also matches authored markdown lead-ins such as `**New invariant (49)**:`; the looser pattern yields 96 in total, not 92, so the original table reproduced under neither measure. The figure to expect on re-render is **86**.
 
 **Those deletions are not part of this RFC's own diff.** They occur only when the reference implementation changes (srs-rust#782) and the exports are re-rendered through the corrected binary. `docs/spec/` is generated output; hand-editing it to match a rule no implementation yet enforces would put a false projection in the tree. The deletion is recorded here as an expected future export-diff event, owned jointly with srs-rust#782.
+
+**Revision 5 likewise produces no export diff.** Two independent reasons, either sufficient: the pinned CLI (`v0.1.0-build.388`) implements neither `[FR-037-20]` nor `[N+38]`, and this repository's Compositions bind no View that carries `labelMode` — authoring those Views is srs#794's remaining half, deliberately a separate unit. `docs/spec/**` changes in this pull request only where a record's own prose changed.
+
+**What it will look like when both land.** The opening of `docs/spec/srs-spec.md` today, verbatim:
+
+```
+# Semantic Record System Specification
+
+## Reading this specification
+
+### Reading this specification
+
+**Canonical Key**: part:reading-this-specification
+
+**Description**: This Part addresses two readers: implementers building a conforming SRS system, and the authors and agents who work inside an SRS repository day to day, including this one, since the specification is itself authored as SRS records. ...
+```
+
+And **projected** — not rendered, because nothing in this pull request produces it — once srs-rust implements `[FR-037-20]` and `[N+38]` and srs#794 gives the `concept` Type a View with `visible: false` on `canonical_key` and `labelMode: "none"` on `description`:
+
+```
+# Semantic Record System Specification
+
+## Reading this specification
+
+This Part addresses two readers: implementers building a conforming SRS system, and the authors and agents who work inside an SRS repository day to day, including this one, since the specification is itself authored as SRS records. ...
+```
+
+Three lines of machinery become none. The duplicated heading goes to `[N+38]`, which is unconditional and needs no authoring; the two field labels go to the View. The records are byte-identical in both projections, and `canonical_key` is still in the Record, still in the JSON projection, and still addressable — this is the Portability cell's *preserve over recognize* doing its job: the document reads better and the stored form loses nothing.
 
 **Revision 4 produces no export diff of its own, for the same reason.** The pinned CLI (`SRS_RUST_CLI_TAG`) still implements pre-Revision-4 `[FR-037-3]`, so `docs/spec/**` is unchanged by this PR. The 21 block-opening values Problem 7 measures become correct only once srs-rust#973 lands and the pin advances in a follow-up PR — the same two-step choreography `srs-rust#782` already established for Problem 5's 86 empty-value rows. Accepted-but-not-yet-implemented is the normal state here.
 
@@ -478,6 +638,30 @@ Under this alternative, `srs-rust#973`'s defect would be closed by having a Them
 
 Rejected on two grounds. First, it creates a **second rendering path for one case**: theme-less output (the `srs` repository declares no Theme and instantiates none) would still hit the undefined/broken form, so the fix would not close the gap for the baseline's own motivating fixture — the same reasoning Alt A was rejected on. Second, and more generally, the Conformance cell's governing preference is **one way over many** (`docs/charter/decision-compass.md`, `rfc-decision-cce3c00e`): a Theme-conditional workaround for a baseline defect is exactly the parallel-mechanism shape that preference exists to rule out. The baseline itself is what needs the fix, because the baseline is what actually renders.
 
+### Alt G — A `displayLabel: ""` sentinel (Revision 5)
+
+An empty `displayLabel` would mean "no label", requiring no new property at all.
+
+Rejected. It makes a rendering-only string carry a second, invisible meaning, so an author who sets `displayLabel` to the empty string by accident — trimming a value, clearing a field in an editor — silently changes the emitted form. It is also not expressible as an absence: `displayLabel` absent already means something else (fall back to `Field.name`, Step 3 and `[FR-037-18]`), so the sentinel would be a third state hiding inside a string. A property whose value set is `{inline, none}` says what it means, validates, and cannot be reached by accident.
+
+### Alt H — Suppress the label in the Theme, through `fieldRow` (Revision 5)
+
+The Theme already wraps every row; a `fieldRow` template that emitted only `{{field-value}}` would drop the label without any schema change.
+
+Rejected, and forbidden. `[T-3]` states that implementations "MUST NOT suppress or reorder content through template evaluation," and `[FR-037-19]` restates it for `fieldRow` specifically. Reading the Theme layer as capable of this would not be a small liberty — it would invert the one rule that makes theme-less output well-defined. Beyond the prohibition, `fieldRow` is a single global template string, not a per-field lookup, so it could not distinguish a prose field from a reference field even if it were permitted to; RFC-002 records that a conditional template language inside `fieldRow` was considered and rejected. This revision keeps `[T-3]` and `[FR-037-19]` exactly as they are and states the closure as `[FR-037-22]`.
+
+### Alt I — Put `labelMode` on `FieldAssignment` (Revision 5)
+
+The Type already carries `displayLabel` per assignment; `labelMode` could sit beside it and apply wherever the Type renders.
+
+Rejected on the layer test. A `FieldAssignment` is MEANING: it says a Record of this Type carries this Field, at this order, required or not. Whether a document prints that field's label is a property of the document. `rfc-decision-0118e938` permits a construct to carry another layer's data only "for a specific, named goal that cannot be met within one layer," and no such goal exists here — the View reaches this row already. The consequence of accepting it would be concrete rather than theoretical: two Compositions over the same records could no longer disagree about labelling, because the answer would have been fixed in the Type they share. (`FieldAssignment.displayLabel` is itself an older crossing of this kind, which is a reason not to widen it.)
+
+### Alt J — A Composition-level or `DocumentSection`-level directive (Revision 5)
+
+`DocumentSection` could carry a list of fields to render label-less, the way it carries `titleFieldId`.
+
+Rejected: it does not reach the thing it needs to reach, and it duplicates one that does. A section renders whichever Types its source yields, so a section-level list would have to name fields across unrelated Types, and `typeDispatch` already exists precisely so that each Type in a heterogeneous section renders through its own View. Per-field presentation is what a `FieldView` is; adding a second, coarser home for it is the parallel-mechanism shape the Conformance cell's *one way over many* rules out.
+
 ---
 
 ## Open Questions
@@ -499,3 +683,5 @@ Rejected on two grounds. First, it creates a **second rendering path for one cas
    - whether a value-less label line retains its trailing colon (Change B).
 
    Neither was escalated as a blocking owner decision: decisions 3, 4 and 9 settle the substance in each case, and what remains is composition of the form this RFC exists to write. Both are called out so the owner can overturn either at review.
+
+8. ~~**Should `[FR-037-1]` cover the L1 View path's row form outright?**~~ Resolved in Revision 5: `[FR-037-1]` widened; owner ruling srs#827, 2026-09-19. See Change L.

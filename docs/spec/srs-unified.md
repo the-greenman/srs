@@ -4272,7 +4272,7 @@ Document-level projection is addressed by `ext:views-l2`. The broader projection
 
 **Number**: 13
 
-**Constraint**: `FieldView.displayLabel`, `FieldView.displayHint`, and `FieldView.editorHintOverride` are for rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or validation. Extended by RFC-036 [CR-036-20] to cover `FieldView.compositeRenderer` and the `DocumentSection`/`Composition` composite renderer directives, and to add Relations and Discovery Text Projection (`ext:discovery`) to the list of things they must not affect. [CR-036-21] additionally constrains `editorHintOverride` to the value set of `Field.editorHint`.
+**Constraint**: `FieldView.displayLabel`, `FieldView.displayHint`, and `FieldView.editorHintOverride` are for rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or validation. Extended by RFC-036 [CR-036-20] to cover `FieldView.compositeRenderer` and the `DocumentSection`/`Composition` composite renderer directives, and to add Relations and Discovery Text Projection (`ext:discovery`) to the list of things they must not affect. [CR-036-21] additionally constrains `editorHintOverride` to the value set of `Field.editorHint`. Amended by RFC-037 Rev 5 to cover `FieldView.labelMode`, which selects whether a field row carries its label and must not affect anything in this list.
 
 
 ###### View must not override, redefine, or duplicate the semantic content…
@@ -4312,6 +4312,7 @@ Current design: `View` is a leaf type. Use Lineage tracking to record inheritanc
   order: integer      // min: 0; display order within this View
   required?: boolean  // View-level workflow constraint; does not alter Field contract
   visible?: boolean   // default: true
+  labelMode?: "inline" | "none"  // default: "inline"; "none" emits the value with no label (RFC-037 Rev 5)
 
   // Presentation overrides — View scope only
   displayLabel?: string
@@ -4708,6 +4709,8 @@ Example: the `FieldView` shape.
 
 A Field hidden with `visible: false` remains in the Record and may appear in other Views. `visible` controls rendered text output only. A field with `visible: false` must still be included in any structured projection or export of this view. To exclude a field from both rendered output and structured projections, omit it from `fieldViews[]` entirely.
 
+`labelMode` (amended by RFC-037 Rev 5) decides whether the field's row carries its label. `inline`, the default, is the labelled row the Default Rendering Baseline emits today. `none` emits the value alone, with no label and no separating colon. The two properties answer different questions and neither substitutes for the other: `visible: false` removes the field's value from rendered output, `labelMode: "none"` keeps the value and drops only its label. Both are rendering-only, under Invariant 13.
+
 
 ###### `RecordPropertyView` (RFC-041)
 
@@ -4961,7 +4964,7 @@ The baseline is a floor, not a ceiling. An L1 View via `renderViewId` always tak
 
 ###### Normative Field-Row Form (RFC-037)
 
-**Content**: The emitted form of a field row on the Default Rendering Baseline, and on RFC-036 Change C's
+**Content**: The emitted form of a field row in a rendered `Composition`, and on RFC-036 Change C's
 composite baseline where that baseline emits an individual field row. These forms are the content
 `ElementTemplates.fieldRow` receives as `{{content}}`; a Theme may wrap the row and MUST NOT replace
 it ([T-3]), and when no `fieldRow` template resolves the forms below are emitted unwrapped. They are
@@ -5082,10 +5085,48 @@ source; converted output is a Theme or L1 View concern.
 `Field.name`, with no humanisation or case conversion.
 Tier 0 Notes emit no field rows.
 
-**Conformance boundary.** These forms bind any implementation emitting a `Composition` in
-`markdown`, `adoc`, `text` or `html` through this baseline. They do not bind native application UI
-that is not emitting a `Composition`; a client-side `Composition` renderer in a covered format is
-not exempt.
+**Label mode (amended by RFC-037 Rev 5).** A bound View's `FieldView.labelMode` selects which of two
+forms a row takes. `inline`, the default, is every form above. `none` emits the field's rendered
+value alone, with no label and no separating colon: in `markdown`, `adoc` and `text` a single-valued
+value begins the row at column zero, whether or not its first line opens a block-level construct,
+and a multi-entry value keeps its block list with the label line omitted; in `html` the `strong`
+label element and the literal colon are not emitted, and the enclosing `div`, its classes and the
+value element are unchanged. Row separation, continuation, entry omission, absence, escaping and the
+class vocabulary apply to a `none` row exactly as to an `inline` one. A `FieldView` reaches a row
+only where a View is bound to the rendering; where none is, `inline` applies.
+
+`labelMode` is presentation only, in the sense Invariant 13 fixes for `displayLabel`, `displayHint`
+and `editorHintOverride`: it never affects validation, AI guidance, extraction, `fieldType`
+interpretation, Relations or Discovery Text Projection, and it never changes which fields are
+present in a Record or in a structured projection of it. It is not a way to remove a field from
+rendering. `FieldView.visible` is that, and a row whose label is suppressed still carries its whole
+value. `labelMode` is the only mechanism by which a field row's label is omitted: a Theme neither
+suppresses a label it did not suppress nor restores one it did, and `fieldRow` keeps wrapping,
+unchanged, what the baseline emits ([T-3]).
+
+**[FR-037-20]** `FieldView.labelMode` is an optional string whose value MUST be `"inline"` or
+`"none"`; when absent, `"inline"` applies. Under `"inline"` implementations MUST emit the forms above.
+Under `"none"`, on every path these rules cover, implementations MUST emit the field's rendered value
+with no resolved label and no separating colon, in the per-format forms described above. Row
+separation, continuation, entry omission, absence, escaping and the class vocabulary apply
+unchanged.
+
+**[FR-037-21]** `labelMode` is presentation only (Invariant 13). It MUST NOT affect validation, AI
+guidance, extraction, `fieldType` interpretation, Relations or Discovery Text Projection, and it MUST
+NOT change which fields are present in a Record or in any structured projection of it. It MUST NOT be
+used to remove a field from rendering; `FieldView.visible` is the sole mechanism for that.
+
+**[FR-037-22]** `FieldView.labelMode` is the only mechanism by which a field row's label is omitted.
+A Theme MUST NOT suppress a label that `labelMode` did not, and MUST NOT reintroduce one that it did;
+`ElementTemplates.fieldRow` continues to wrap, unchanged, what these rules emit ([T-3]).
+
+**Conformance boundary (amended by RFC-037 Rev 5).** These forms bind any implementation emitting a
+`Composition` in `markdown`, `adoc`, `text` or `html`, whether or not a section's `renderViewId` (or
+a `typeDispatch` binding) resolves a View for it. A bound View still decides which rows are emitted
+and in what order: its `omitEmptyFields`, `fieldOrder` and `preamble` apply unchanged, and [T-10]
+still applies `fieldRow` to each surviving row. The forms above say what each surviving row looks
+like, on both paths. They do not bind native application UI that is not emitting a `Composition`; a
+client-side `Composition` renderer in a covered format is not exempt.
 
 
 ###### L1/L2 ExportConfig — two attachment points, no precedence (srs#525)
@@ -5113,11 +5154,13 @@ When a dispatched View's `exportConfig.preamble` renders inside a section, the v
 
 For `format: "text"` or implementation-defined values, heading level semantics do not apply.
 
-**`identityFieldId` fallback (RFC-020, Rule [N+37], amended Rev 7, srs#728).** For any `DocumentSection`/record pairing where the section's `titleFieldId` is absent, or is declared but does not resolve within the record's Type's effective field set (own `fields[]` plus, under `ext:type-inheritance`, inherited fields), whether that section's field content renders via the Default Rendering Baseline or a dispatched L1 View, implementations SHOULD emit the per-record heading using the value of the field named by the record's Type's effective `identityFieldId` (`ext:type-inheritance`), if present, in place of omitting the heading. `titleFieldId`, when it resolves within the record's Type's effective field set, MUST continue to take precedence for that section's per-record heading. This fallback is distinct from a `titleFieldId` that resolves to a field present in the effective field set but fails the eligibility test above (cardinality/datatype/domain/format): an ineligible authored `titleFieldId` still omits the heading with no identity fallback (unchanged, srs-rust PR #341).
+**`identityFieldId` fallback (RFC-020, Rule [N+37], amended Rev 7, srs#728).** For any `DocumentSection`/record pairing where the section's `titleFieldId` is absent, or is declared but does not resolve within the record's Type's effective field set (own `fields[]` plus, under `ext:type-inheritance`, inherited fields), on either rendering path (Default Rendering Baseline or dispatched L1 View), implementations SHOULD emit the per-record heading from the record's Type's effective `identityFieldId` (`ext:type-inheritance`), if present, in place of omitting it. `titleFieldId`, when it resolves in that set, MUST continue to take precedence. An authored `titleFieldId` that resolves but fails the eligibility test above (cardinality/datatype/domain/format) is a distinct case: it still omits the heading, with no identity fallback (unchanged, srs-rust PR #341).
 
 **Amended by RFC-042 Rev 5 (2026-09-19, srs#796).** A nested section (RFC-042 [R21]) at nesting depth `d` renders its title at `2 + depthOffset + d` and its per-record headings at `3 + depthOffset + d`. The `contains` recursion inside a record continues one level deeper per level from there.
 
 For `format` `"markdown"`, `"html"` and `"adoc"`, a computed heading level above 6 MUST be emitted at 6 and MUST produce a diagnostic. The render MUST NOT fail: a presentation arrangement never decides whether a repository is valid. Implementations SHOULD warn when a composition's projected maximum heading level exceeds 6, as they already warn for a `depthOffset` above 4.
+
+**Duplicate-heading suppression (RFC-001 Rule [N+38], amended Rev 11, srs#827).** When the resolved per-record heading equals the enclosing `DocumentSection`'s title, implementations MUST NOT emit it; the rows render under the section heading, at their existing levels. Equality is exact after an outer-whitespace trim: no case folding, no collapsing, no substring match. A titleless section emits every heading. The rule is unconditional and suppresses the heading alone.
 
 
 ###### Preamble Template Variables
@@ -5621,7 +5664,7 @@ Question 3).
 **[FR-037-19]** The row forms defined in `ext:views-l2` are the content `fieldRow` receives as
 `{{content}}`. A Theme MAY wrap the row and MUST NOT replace it, per [T-3]. When no `fieldRow`
 template resolves, implementations MUST emit those forms unwrapped. This is the terminal rung of the
-RFC-036 row-template ladder.
+RFC-036 row-template ladder, and (Rev 5) what [T-10] wraps on a bound View.
 
 
 
@@ -6059,6 +6102,7 @@ view {
 | `order` | integer | yes | minimum: 0 | core | The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015). |
 | `required` | boolean | no | — | core | Whether this field must be populated before a Record can be logged. |
 | `visible` | boolean | no | — | core | Default: true. Whether a FieldView/RecordPropertyView row is shown. |
+| `labelMode` | string | no | enum: "inline" \| "none" | core | RFC-037 Revision 5. FieldView.labelMode, presentation only (Invariant 13). 'inline' (the default) carries the row's resolved label; 'none' emits the value alone, with no label and no separating colon. |
 | `displayLabel` | string | no | — | core | Context-specific label override for this field within this Type. |
 | `displayHint` | string | no | — | core | Rendering-only hint text override for a single inherited FieldAssignment (presentation; stays per 6523cf5e). |
 | `editorHintOverride` | string | no | — | core | Presentation only (RFC-036 [CR-036-20]/[CR-036-21]). Supersedes Field.editorHint for Records rendered/edited through this View. |
@@ -6074,6 +6118,7 @@ field-view {
   order: integer // The declared composition order of this field within the Type — structure, not presentation. Feeds canonical serialisation and provides the render default; a View may override for display (RFC-015).
   required?: boolean // Whether this field must be populated before a Record can be logged.
   visible?: boolean // Default: true. Whether a FieldView/RecordPropertyView row is shown.
+  labelMode?: string // RFC-037 Revision 5. FieldView.labelMode, presentation only (Invariant 13). 'inline' (the default) carries the row's resolved label; 'none' emits the value alone, with no label and no separating colon.
   displayLabel?: string // Context-specific label override for this field within this Type.
   displayHint?: string // Rendering-only hint text override for a single inherited FieldAssignment (presentation; stays per 6523cf5e).
   editorHintOverride?: string // Presentation only (RFC-036 [CR-036-20]/[CR-036-21]). Supersedes Field.editorHint for Records rendered/edited through this View.
@@ -6955,7 +7000,7 @@ Conforming implementations must uphold the following invariants.
 
 **12.** Every `fieldId` in `View.fieldViews[]` must reference a valid `Field.id` in the effective package set. View compatibility is field-centric (based on required field presence), not Type-bound.
 
-**13.** `FieldView.displayLabel`, `FieldView.displayHint`, and `FieldView.editorHintOverride` are for rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or validation. Extended by RFC-036 [CR-036-20] to cover `FieldView.compositeRenderer` and the `DocumentSection`/`Composition` composite renderer directives, and to add Relations and Discovery Text Projection (`ext:discovery`) to the list of things they must not affect. [CR-036-21] additionally constrains `editorHintOverride` to the value set of `Field.editorHint`.
+**13.** `FieldView.displayLabel`, `FieldView.displayHint`, and `FieldView.editorHintOverride` are for rendering only. They must not affect AI guidance, extraction logic, `fieldType` interpretation, or validation. Extended by RFC-036 [CR-036-20] to cover `FieldView.compositeRenderer` and the `DocumentSection`/`Composition` composite renderer directives, and to add Relations and Discovery Text Projection (`ext:discovery`) to the list of things they must not affect. [CR-036-21] additionally constrains `editorHintOverride` to the value set of `Field.editorHint`. Amended by RFC-037 Rev 5 to cover `FieldView.labelMode`, which selects whether a field row carries its label and must not affect anything in this list.
 
 **14.** A `View` must not override, redefine, or duplicate the semantic content of any `Field` or `Type` it references. View-level `aiGuidance` is workflow framing; it does not redefine Field extraction semantics.
 

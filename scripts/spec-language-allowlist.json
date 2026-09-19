@@ -1537,7 +1537,7 @@
       "rule": "em-dash-cap",
       "matched": "2 em-dashes in one paragraph (cap 1): | `compositeRenderer` | ref → `composite-renderer-bi…"
     },
-    "srs/records/tier-2/generated-type-reference-b328e1f2.json#content#em-dash-cap#a5f51485": {
+    "srs/records/tier-2/generated-type-reference-b328e1f2.json#content#em-dash-cap#305497c0": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
       "matched": "2 em-dashes in one paragraph (cap 1): ```typescript field-view { fieldId: ref → `field` (i…"
