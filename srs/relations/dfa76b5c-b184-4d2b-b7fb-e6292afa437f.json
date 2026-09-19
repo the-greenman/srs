@@ -1,0 +1,8 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/relation.json",
+  "relationId": "dfa76b5c-b184-4d2b-b7fb-e6292afa437f",
+  "relationType": "supersedes",
+  "sourceInstanceId": "c20fcff8-e774-4838-8b72-6956b636bc8b",
+  "targetInstanceId": "1e7c0c8e-6e85-4e95-9008-80894aeffddb",
+  "notes": "Successor decision: generalises rfc-decision-1e7c0c8e's generic-tool clause from rfc-decision-5f8204bc's instance clause alone into the standing level test (srs#812). Refinement of position under rfc-decision-4431046e, so a successor record, never an in-place edit; 1e7c0c8e's own dispositions stand."
+}

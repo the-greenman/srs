@@ -7,7 +7,7 @@ enforces bidirectional presence: every id below must resolve to srs/records/tier
 Adding a charter-class ruling: add its id here AND write the section that cites it, in the same
 change — the guard fails on either half done alone.
 cce3c00e 9ee14517 7caca3a1 8f5aca2c b9d7096e 0750c62f 4431046e 0118e938 e99a9437
-c8704763 2a1e1590 53635966 628cf6c4 16b20c56 5f8204bc 8948e43f 1e7c0c8e
+c8704763 2a1e1590 53635966 628cf6c4 16b20c56 5f8204bc 8948e43f 1e7c0c8e c20fcff8
 -->
 
 The charter's ambient surface — one hop from every session start, for the rule the charter itself
@@ -132,6 +132,35 @@ Asked of every proposal, alongside naming its cell and mode (kind: **test**):
 2. **Layer test** (`rfc-decision-9ee14517`) — which layer owns this? Does it consume or clone
    downward? Can the layer below it still stand alone? Look the owner up in
    [The source-of-truth map](#the-source-of-truth-map).
+
+## The level test
+
+`rfc-decision-c20fcff8` — the placement test, asked of every normative statement alongside the
+[cell check and the layer test](#two-review-tests) (kind: **test**). A normative statement belongs
+in the spec only if some repository can **declare** it through SRS machinery and some
+implementation can **check** it. If it can only be obeyed, it is an authoring or governance rule
+and lives at that level — `docs/style/spec-language-guide.md` for how this repository writes the
+spec, this page for how the standard governs itself.
+
+The test generalises `rfc-decision-1e7c0c8e`, which ruled it for one clause of one record: *"A
+generic tool defines what is possible, not what every corpus must do with it."* The principle was
+never clause-specific; only its application was.
+
+A rule that fails the test has **three** dispositions. It is **relocated** to the level that owns
+it, keeping its force over this repository and losing its false claim over every other; or
+**retired**, where a declarable construct already does its work; or **held**. Held means the rule
+stays in the spec unenforced because it is a mechanism we intend to build — and the change that
+holds it names the machinery that would carry it and the issue that owes it. **A held rule is a
+debt with a named payer, never an exemption**; if the machinery is declined it falls back to
+relocation or retirement. Without hold the test would read as a demolition order, which is not
+what is ruled.
+
+This is **not** the two-tier boundary `rfc-decision-43249f53` rejected as a drift seam. That
+refused two tiers *of one mechanism*, where authors drift across the line case by case. Here there
+is one mechanism — SRS's declarable, checkable machinery — and, in a different repository's scope,
+one document-authoring convention that no SRS implementation reads. A mechanism and a house style
+do not compete for the same job. The one place they could blur is a held rule, which is why a hold
+must name its machinery and its issue: the blur gets an end date instead of a habit.
 
 ## The source-of-truth map
 
