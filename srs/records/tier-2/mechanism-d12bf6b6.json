@@ -6,10 +6,10 @@
   "typeName": "mechanism",
   "fieldValues": {
     "title": "`SectionSource`",
-    "content": "Defines how a section's instances are selected from a Container.\n\nExample: the `SectionSource` union.\n\n**Note (2026-08-22, `rfc-decision-4f1e12e5` entry 4)**: the `fixed-instances` and `relation-query` `SectionSource` variants previously specified here were removed under the dormancy rule (`rfc-decision-cce3c00e`) — zero corpus use across the 13 real sections in the attested corpus (2026-08-21 usage attestation).\n\n**Note (2026-09-03, srs#525, `rfc-decision-cce3c00e` + `rfc-decision-9ee14517`)**: `type-query` is retired and replaced by `discovery-query`, which consumes the one structured query mechanism (`DiscoveryQuery`, `ext:discovery`) instead of re-implementing its own divergent copy of the same filter axes. `discovery-query` and `container-subset` are the two live ways to source a section. Return trigger: a composition need neither live variant expresses."
+    "content": "Defines how a section's instances are selected from a Container.\n\nExample: the `SectionSource` union.\n\n**Note (2026-08-22, `rfc-decision-4f1e12e5` entry 4)**: the `fixed-instances` and `relation-query` `SectionSource` variants previously specified here were removed under the dormancy rule (`rfc-decision-cce3c00e`) — zero corpus use across the 13 real sections in the attested corpus (2026-08-21 usage attestation).\n\n**Note (2026-09-03, srs#525, `rfc-decision-cce3c00e` + `rfc-decision-9ee14517`)**: `type-query` is retired and replaced by `discovery-query`, which consumes the one structured query mechanism (`DiscoveryQuery`, `ext:discovery`) instead of re-implementing its own divergent copy of the same filter axes. `discovery-query` and `container-subset` are the two live ways to source a section. Return trigger: a composition need neither live variant expresses.\n\n**Note (2026-09-19, RFC-042 Rev 5, srs#796)**: `containerScope` is carried on both live variants. On `container-subset` it takes `explicit`, the default, which renders `direct(C)` alone, or `subtree`, which descends into `childContainerIds` and renders each declared child container as a nested section. `repository` is invalid on `container-subset`, whose source already names one container."
   },
   "createdAt": "2026-09-08T17:48:49.518048504+00:00",
-  "updatedAt": "2026-09-08T17:48:49.518055204+00:00",
+  "updatedAt": "2026-09-19T16:40:30.807022584+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "meta": {
     "derivedFrom": "c9c16dcc-324a-5ab7-b7a5-d53ce48426bf"
