@@ -6,10 +6,10 @@
   "typeName": "mechanism",
   "fieldValues": {
     "title": "`FieldView`",
-    "content": "A field reference within a View. Controls presentation for this View without altering field semantics.\n\nExample: the `FieldView` shape.\n\nA Field hidden with `visible: false` remains in the Record and may appear in other Views. `visible` controls rendered text output only. A field with `visible: false` must still be included in any structured projection or export of this view. To exclude a field from both rendered output and structured projections, omit it from `fieldViews[]` entirely."
+    "content": "A field reference within a View. Controls presentation for this View without altering field semantics.\n\nExample: the `FieldView` shape.\n\nA Field hidden with `visible: false` remains in the Record and may appear in other Views. `visible` controls rendered text output only. A field with `visible: false` must still be included in any structured projection or export of this view. To exclude a field from both rendered output and structured projections, omit it from `fieldViews[]` entirely.\n\n`labelMode` (amended by RFC-037 Rev 5) decides whether the field's row carries its label. `inline`, the default, is the labelled row the Default Rendering Baseline emits today. `none` emits the value alone, with no label and no separating colon. The two properties answer different questions and neither substitutes for the other: `visible: false` removes the field's value from rendered output, `labelMode: \"none\"` keeps the value and drops only its label. Both are rendering-only, under Invariant 13."
   },
   "createdAt": "2026-09-08T17:48:42.707167652+00:00",
-  "updatedAt": "2026-09-08T17:48:42.707175263+00:00",
+  "updatedAt": "2026-09-19T16:40:20.178613228+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "meta": {
     "derivedFrom": "d3b0ec85-760f-50d2-be4a-9edea5685740"

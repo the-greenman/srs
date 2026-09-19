@@ -511,6 +511,7 @@ const FIELD_SPECS = [
   // retired, never recycled (see their notes above).
   [273, 'tier', closedInt([0, 2]), 'ext:discovery DiscoveryQuery.tier — instance tier filter. 0 = Note, 2 = Record. Tier 1 (TypedRecord) was removed (rfc-decision-53635966); the gap in numbering is retained deliberately for reference stability.'],
   [274, 'assets', mapRef('asset-declaration'), 'ext:themes-l1 Theme.assets — named asset declarations, keyed by name (unique within the Theme). Referenced in templates as {{asset:name}}.'],
+  [275, 'label_mode', closed(['inline', 'none']), "RFC-037 Revision 5. FieldView.labelMode, presentation only (Invariant 13). 'inline' (the default) carries the row's resolved label; 'none' emits the value alone, with no label and no separating colon."],
 ];
 const fieldIdByName = {};
 for (const [n, name] of FIELD_SPECS) fieldIdByName[name] = fieldUuid(n);
@@ -1125,6 +1126,7 @@ const TYPE_SPECS = {
     purpose: 'Describes a FieldView: which Field it presents, its order, and rendering overrides.',
     assignments: [
       a('field_id', true, 'Field'), a('order', true), a('required', false), a('visible', false),
+      a('label_mode', false, 'Label Mode'),
       a('display_label', false, 'Display Label'), a('display_hint', false, 'Display Hint'),
       a('editor_hint_override', false, 'Editor Hint Override'), a('composite_renderer', false, 'Composite Renderer'),
     ],
