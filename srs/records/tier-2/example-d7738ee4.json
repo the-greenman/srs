@@ -1,0 +1,14 @@
+{
+  "instanceId": "d7738ee4-64a7-4ee2-bf71-716ab62a5fa6",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The discovery conformance fixture layout",
+    "content": "```\nsrs/conformance/discovery/\n  fixture-repo/   # valid SRS repository with 8 Tier-2 Records, 1 Tier-0, 2 Containers\n  scenarios.json  # named query scenarios with expectedInstanceIds and exactMatch flags\n```"
+  },
+  "createdAt": "2026-09-21T20:51:01.276235911+00:00",
+  "updatedAt": "2026-09-21T20:51:01.276237061+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

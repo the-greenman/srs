@@ -1,0 +1,14 @@
+{
+  "instanceId": "3741c9f6-7b9e-41e2-9bdd-895fc556e7ab",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `TextSegment` shape",
+    "content": "```typescript\n{\n  fieldId:   string  // UUID for package-resolved fields; sentinel string for special segments\n  fieldName: string  // field name or sentinel\n  text:      string  // raw stored value (normalization applied at match time)\n}\n```\n\nSentinels: `\"note-title\"`, `\"note-section\"`, `\"tag\"`, `\"label\"`."
+  },
+  "createdAt": "2026-09-21T20:51:00.091396896+00:00",
+  "updatedAt": "2026-09-21T20:51:00.091398226+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
