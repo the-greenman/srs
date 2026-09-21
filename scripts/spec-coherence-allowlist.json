@@ -1,11 +1,4 @@
 {
   "$comment": "Known violations of scripts/check-spec-coherence.mjs (srs#560), each citing the live issue that removes it. Entry shape: {check, id | pair:[sourceId,targetId], issue, note}. The check fails on any violation NOT listed here and on any entry that no longer matches a violation \u2014 shrinking this file IS the migration (#562 un-bakes headings, #563 wires the tree, #564 makes invariants leaves). Growing it needs an issue. `note` is for the human reader only; the key is check + id/pair.",
-  "entries": [
-    {
-      "check": "no-baked-heading",
-      "id": "996e81fe-1c1f-4317-bd92-e9c8332905d8",
-      "issue": "#815",
-      "note": "ext:discovery's extension_adds carries the DiscoveryQuery/TextSegment shapes and the Text Projection algorithm as pre-existing hand-authored headings/code fences, moved verbatim from the retiring content field by srs#790 (RFC-042 Revision 4). Restructuring into example/table leaves is #815, not this unit."
-    }
-  ]
+  "entries": []
 }

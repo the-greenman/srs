@@ -1,0 +1,14 @@
+{
+  "instanceId": "64df2ae9-1687-4ec5-b572-d338f62ed977",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "The `DiscoveryQuery` shape",
+    "content": "```typescript\n{\n  typeId?:         UUID      // exact match on Record.typeId\n  typeNamespace?:  string    // exact match on Record.typeNamespace\n  typeName?:       string    // exact match on Record.typeName\n  containerId?:    UUID      // instance is a member of this container (RFC-009 I-66)\n  tag?:            string[]  // AND semantics: all tags must be present\n  lifecycleState?: string    // exact match on Record.lifecycleState (ext:lifecycle)\n  lifecycleStates?: string[] // OR semantics: matches ANY listed lifecycleState (ext:lifecycle) [RFC-012 Rev 12, srs#525]\n  excludeLifecycleStates?: string[] // excludes instances whose lifecycleState matches any listed value, applied after lifecycleState/lifecycleStates (ext:lifecycle) [RFC-012 Rev 7]\n  tier?:           0 | 2     // instance tier (Note=0, Record=2; Tier 1/TypedRecord removed, rfc-decision-53635966 — the numbering gap is retained deliberately)\n  contentMatch?:   string    // free-text recall-floor predicate\n}\n```"
+  },
+  "createdAt": "2026-09-21T20:50:58.620216540+00:00",
+  "updatedAt": "2026-09-21T20:50:58.620219449+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
