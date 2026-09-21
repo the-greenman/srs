@@ -1,0 +1,24 @@
+{
+  "id": "c20c6fff-f993-4573-b1bb-14f74593899f",
+  "namespace": "com.semanticops.spec",
+  "name": "invariant-leaf-view",
+  "version": 1,
+  "description": "Renders a com.semanticops.spec/invariant record as a document leaf: normative_statement (displayed as 'Constraint') is the record's primary content and reads directly under its heading with no label (labelMode: none, srs#794/#827). invariant_number and rationale keep their labels: the number is the citation identifier used elsewhere in the spec's own prose (e.g. '(Invariant 53)') and rationale is optional supplementary text that needs to stay distinguishable from the constraint it explains when both are present.",
+  "fieldViews": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "order": 0
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "order": 1,
+      "labelMode": "none"
+    },
+    {
+      "fieldId": "1a000004-0000-4000-a000-000000000004",
+      "order": 2
+    }
+  ],
+  "createdAt": "2026-09-21T00:00:00Z",
+  "$schema": "https://srs.semanticops.com/schema/2.0/view.json"
+}

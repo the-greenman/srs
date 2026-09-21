@@ -1,0 +1,29 @@
+{
+  "id": "989bc844-65a8-47f6-848d-1fe61f0666b2",
+  "namespace": "com.semanticops.spec",
+  "name": "concept-leaf-view",
+  "version": 1,
+  "description": "Renders a com.semanticops.spec/concept record as a document leaf: the description reads as the record's own prose immediately under its heading (labelMode: none, srs#794/#827), while notes and examples keep their labels since they are supplementary to the description rather than the record's primary content. canonical_key is hidden: it is an internal cross-reference key, not reading prose, and duplicating it under every heading added no value (srs#794 evidence: docs/spec/srs-spec.md before this View showed '**Canonical Key**: record:concepts/stable-identity' printed between the heading and the description on every concept record).",
+  "fieldViews": [
+    {
+      "fieldId": "1a000013-0000-4000-a000-000000000013",
+      "order": 0,
+      "visible": false
+    },
+    {
+      "fieldId": "1a000012-0000-4000-a000-000000000012",
+      "order": 1,
+      "labelMode": "none"
+    },
+    {
+      "fieldId": "1a000006-0000-4000-a000-000000000006",
+      "order": 2
+    },
+    {
+      "fieldId": "1a000005-0000-4000-a000-000000000005",
+      "order": 3
+    }
+  ],
+  "createdAt": "2026-09-21T00:00:00Z",
+  "$schema": "https://srs.semanticops.com/schema/2.0/view.json"
+}

@@ -11,8 +11,13 @@
 // rendered output are literally the text "Extensions" (the Part, the `part:extensions` concept, and
 // this overview concept), so a heading-text anchor would be ambiguous. The Description text is
 // unique in the corpus. The index is inserted immediately after it, before the first extension leaf.
+//
+// The "**Description**: " label prefix is optional (srs#794): concept-leaf-view renders a
+// concept's description with labelMode: "none", so the label no longer precedes the text on
+// spec-document-view/unified-document-view. Matching both forms keeps this anchor valid
+// regardless of which View (if any) a future composition change dispatches this record through.
 const ANCHOR_RE =
-  /^\*\*Description\*\*: Extensions are optional, independently adoptable capability modules\. Each declares its identifier, dependencies, and the types it defines\.\s*$/m;
+  /^(?:\*\*Description\*\*: )?Extensions are optional, independently adoptable capability modules\. Each declares its identifier, dependencies, and the types it defines\.\s*$/m;
 
 /**
  * Insert the generated extension index immediately after the "Extensions" overview concept's
