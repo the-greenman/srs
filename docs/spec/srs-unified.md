@@ -2,8 +2,6 @@
 
 ## Reading this specification
 
-### Reading this specification
-
 **Canonical Key**: part:reading-this-specification
 
 **Description**: This Part addresses two readers: implementers building a conforming SRS system, and the authors and agents who work inside an SRS repository day to day, including this one, since the specification is itself authored as SRS records. Two facts govern everything that follows. Records are the source of truth: a Field, a Type, a Record, and a Relation are what SRS actually is. Every document derived from them, this rendered specification included, is a projection — useful for reading linearly, never authoritative on its own, and never the place to resolve a disagreement with the records it was generated from.
@@ -168,8 +166,6 @@ com.acme.hr/headcount_impact@3
 
 
 ## Foundations
-
-### Foundations
 
 **Canonical Key**: part:foundations
 
@@ -902,7 +898,7 @@ AI extraction logic, validation rules, and export formatting depend only on `val
 
 **Notes**: The test for which to use: model an assertion *between* instances (one needing provenance, lifecycle or confidence) as a Relation; use `reference` where the target's identity is part of the definition itself.
 
-####### Reference-mode values resolve in the instance set
+###### Reference-mode values resolve in the instance set
 
 **Number**: I-136
 
@@ -1800,8 +1796,6 @@ relation-type-definition {
 
 ## Instances
 
-### Instances
-
 **Canonical Key**: part:instances
 
 **Description**: The instance layer: Notes and Records as the two record tiers, and how a Record instantiates a Type through typed field values.
@@ -1869,63 +1863,63 @@ See the generated reference below for `Note`'s current property table, optional 
 
 **Notes**: Structural presence and rendering presence are deliberately different questions: a key present with an empty string is structurally present but renders as absent.
 
-####### Instance generation is determined structurally
+###### Instance generation is determined structurally
 
 **Number**: I-135
 
 **Constraint**: A reader MUST determine instance generation structurally. For a Tier-2 `Record`: an array `fieldValues` is revision <= 1, an object `fieldValues` is revision >= 2. On encountering a generation it does not support, a reader MUST emit a diagnostic naming the file and the expected `dataModelRevision` and MUST NOT coerce, partially read, or silently skip the document. (RFC-039 [R9])
 
 
-####### fieldMeta keys are a subset of fieldValues keys
+###### fieldMeta keys are a subset of fieldValues keys
 
 **Number**: I-133
 
 **Constraint**: `fieldMeta`, when present, MUST be an object whose keys are a subset of the sibling `fieldValues` keys, and whose values are objects of `{source?, editedAt?, sourceRefs?}`. A `fieldMeta` key with no corresponding `fieldValues` key MUST be rejected. `fieldMeta` MUST NOT appear inside an inline-composite value. (RFC-039 [R6])
 
 
-####### Instance keys serialise in FieldAssignment.order
+###### Instance keys serialise in FieldAssignment.order
 
 **Number**: I-141
 
 **Constraint**: Instance `fieldValues` keys MUST be serialised in `FieldAssignment.order`, and nested composite objects likewise, so that a re-run of a transform is byte-idempotent and diffs are stable. This is the instance-side counterpart of the schema-key ordering in `projection-rules.md`; it supersedes the write-order signal of rfc-012:139. (RFC-039 [R18])
 
 
-####### Key absence is the sole representation of an unset field
+###### Key absence is the sole representation of an unset field
 
 **Number**: I-132
 
 **Constraint**: A `FieldAssignment` with `required: true` means its key MUST be present in `fieldValues`. Key absence is the sole representation of an unset field: a value of `null` MUST be rejected — writers MUST omit the key instead. Structural presence and rendering presence (RFC-001 Step 2, where an empty string resolves as absent) remain distinct and MUST NOT be conflated. (RFC-039 [R5]/[R5a])
 
 
-####### The projected schema describes the fieldValues object
+###### The projected schema describes the fieldValues object
 
 **Number**: I-140
 
 **Constraint**: A Type's projected JSON Schema describes the `fieldValues` object, not the whole Record document. `instanceId`, `typeId`, `tags`, `meta`, `sourceRefs`, and `fieldMeta` are envelope members governed by `record.json`, and are outside the projected schema's `additionalProperties: false`. (RFC-039 [R17])
 
 
-####### Instance keys are Field.name verbatim
+###### Instance keys are Field.name verbatim
 
 **Number**: I-130
 
 **Constraint**: A `fieldValues` key MUST be `Field.name` verbatim, with no case or separator transformation, at every nesting depth. The name projection MUST NOT be applied to instance keys under any circumstances, including for meta-model entities stored as Records. (RFC-039 [R2b])
 
 
-####### Removed carrier constructs are rejected at dataModelRevision >= 2
+###### Removed carrier constructs are rejected at dataModelRevision >= 2
 
 **Number**: I-134
 
 **Constraint**: `FieldValue`, `FieldValueEntry`, `FieldGroupValue`, `FieldGroupEntry`, `Type.fieldGroups`, and `FieldAssignment.{repeatable, minItems, maxItems}` are removed. An implementation MUST reject a document containing any of them at `dataModelRevision >= 2`. Definition files carry no document-local revision discriminator, so revision MUST be resolved from the enclosing repository or package manifest before this rule is applied to a definition. A manifest at `dataModelRevision >= 2` MUST NOT declare `ext:field-groups` or `ext:repeatable-fields`; a reader encountering such a declaration MUST report an error. (RFC-039 [R7]/[R15])
 
 
-####### Record fieldValues is a name-keyed object
+###### Record fieldValues is a name-keyed object
 
 **Number**: I-129
 
 **Constraint**: A Tier-2 `Record`'s `fieldValues` MUST be a JSON object. Each key MUST equal the `Field.name` of a Field in the effective field set of the Record's `typeId`@`typeVersion`. Unknown keys MUST be rejected; the projected schema asserts `additionalProperties: false`. (RFC-039 [R1])
 
 
-####### The `FieldValue` union
+###### The `FieldValue` union
 
 **Content**: `FieldValue`, in pseudo-IDL:
 
@@ -1937,7 +1931,7 @@ type FieldValue = string | number | boolean
 ```
 
 
-####### Field values (RFC-039)
+###### Field values (RFC-039)
 
 **Content**: `FieldValue` — the value stored at one `fieldValues` key — is the recursive union:
 
@@ -2042,8 +2036,6 @@ Confusing a definition's UUID with an instance's UUID is a recurring correction 
 
 
 ## Structure
-
-### Structure
 
 **Canonical Key**: part:structure
 
@@ -2995,8 +2987,6 @@ Order that reflects curation, display preference, or layout is presentation, not
 
 ## Distribution
 
-### Distribution
-
 **Canonical Key**: part:distribution
 
 **Description**: How definitions travel between repositories: Package, Reference, Lineage, and Provenance.
@@ -3430,7 +3420,7 @@ A standard envelope for exchanging a Container together with its full Record set
 
 **Notes**: Preferred over the filesystem layout when portability matters more than per-file inspection: emailing a repository, committing a snapshot as one artifact, or embedding a test fixture.
 
-####### The top-level shape of a `.srsj` file
+###### The top-level shape of a `.srsj` file
 
 **Content**: The top-level keys of a JSON Store file:
 
@@ -3448,7 +3438,7 @@ A standard envelope for exchanging a Container together with its full Record set
 ```
 
 
-####### ext:json-store
+###### ext:json-store
 
 **Content**: **Required for**: any implementation that stores an SRS repository as a single portable JSON file.
 
@@ -3457,14 +3447,14 @@ A standard envelope for exchanging a Container together with its full Record set
 Defines the **SRS JSON Store format** (`.srsj`): a single-file, self-contained serialization of a complete SRS repository. The JSON Store is an alternative to the filesystem layout defined by `ext:repository`. Both formats carry identical semantic content; an implementation must be able to convert between them losslessly.
 
 
-####### Purpose and trade-offs
+###### Purpose and trade-offs
 
 **Content**: The JSON Store is valuable when portability matters more than human readability of individual files: emailing a repository, committing a snapshot to version control as a single artifact, embedding a repository in a test fixture, or transferring between systems without ZIP tooling.
 
 The filesystem layout (`ext:repository`) is preferred when independent inspection of individual records, partial checkout, or per-file storage history is valuable.
 
 
-####### File format
+###### File format
 
 **Content**: A `.srsj` file is a pretty-printed UTF-8 JSON object with the following top-level structure:
 
@@ -3479,7 +3469,7 @@ Example: the top-level shape of a `.srsj` file.
 The `.srsj` extension is conventional; an implementation may accept any filename. The extension must not be used as an authoritative indicator of format — implementations must inspect the `srsj` field to confirm the format and version.
 
 
-####### Path conventions in `data`
+###### Path conventions in `data`
 
 **Content**: Keys in `data` follow the same relative-path conventions as `ext:repository`:
 
@@ -3494,7 +3484,7 @@ The `.srsj` extension is conventional; an implementation may accept any filename
 There is no `instanceIndex` in `manifest`; it is retired (RFC-038 [R2]). The authoritative list of members is the `data` object's own contents — the tree-authoritative store, enumerated the same way as a filesystem repository (RFC-038 [R1]).
 
 
-####### Conformance requirements
+###### Conformance requirements
 
 **Content**:
 1. A conforming producer must write every instance in the repository's authoritative instance set (RFC-038 [R1]) as an entry in `data` under its path.
@@ -3505,12 +3495,12 @@ There is no `instanceIndex` in `manifest`; it is retired (RFC-038 [R2]). The aut
 6. A conforming implementation must be able to round-trip a repository between the JSON Store format and the filesystem layout without data loss.
 
 
-####### Source documents
+###### Source documents
 
 **Content**: Binary source document content is not included in the JSON Store. An implementation converting from a filesystem repository to `.srsj` must omit source document content files and should surface the omission to the user. Source document sidecars (`.meta.json`) may be included in `data` if they are pure JSON; their content files must not be.
 
 
-####### Interoperability
+###### Interoperability
 
 **Content**: A `.srsj` file is semantically equivalent to the `.srs` ZIP archive defined by `ext:repository`, with the following differences:
 
@@ -4223,8 +4213,6 @@ Example: the `Provenance` shape.
 
 
 ## Presentation
-
-### Presentation
 
 **Canonical Key**: part:presentation
 
@@ -5681,8 +5669,6 @@ View, Composition, and Theme are the constructs a projection is built from: View
 
 ## Extensions
 
-### Extensions
-
 **Canonical Key**: part:extensions
 
 **Description**: The independently adoptable capability modules a repository may declare, and how they interact with each other and with the core.
@@ -5735,8 +5721,6 @@ Three conversation types are in scope:
 
 Transcript chunks referenced in `SourceReference` are source material — addressable evidence. They do not become Notes or Records automatically. A transcript chunk referenced in `sourceRefs` is evidence supporting a field value; it is not itself a Note unless someone deliberately models it as one.
 
-
-#### Extensions
 
 **Canonical Key**: record:concepts/extensions-overview
 
@@ -6707,8 +6691,6 @@ Conversation chunks produced while `AttentionState.stageId` is set are associate
 
 ## Conformance
 
-### Conformance
-
 **Canonical Key**: part:conformance
 
 **Description**: What an implementation must satisfy to claim SRS conformance, core and per-extension, and how that claim is declared and checked.
@@ -7207,8 +7189,6 @@ The following capabilities are planned but out of scope for this version.
 
 
 
-#### Conformance
-
 **Canonical Key**: record:concepts/conformance
 
 **Description**: What an implementation claims and what that claim obliges it to do, declared as the core plus the extensions it supports. Core conformance requires the Foundation and Distribution groups in full and enforcement of the core invariants; declaring an extension obliges accepting and validating its types, enforcing its invariants, and honouring its declared dependencies. The claim is what makes exchange predictable: two implementations at the same level produce definitions the other can consume.
@@ -7241,8 +7221,6 @@ The following capabilities are planned but out of scope for this version.
 **Examples**: Invariant 16 fixes relation direction; Invariant 20 keeps container ids out of the instance id space; Invariant 2 forbids a Type restating a Field's semantics.
 
 
-
-#### Conformance
 
 **Canonical Key**: record:concepts/conformance-declaration
 
@@ -7342,8 +7320,6 @@ Two implementations both declaring `ext:repository` MUST be able to exchange arc
 
 
 ## Governance
-
-### Governance
 
 **Canonical Key**: part:governance
 
