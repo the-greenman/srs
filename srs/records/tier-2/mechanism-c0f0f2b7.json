@@ -6,9 +6,9 @@
   "typeName": "mechanism",
   "fieldValues": {
     "title": "Portability and Possession",
-    "content": "The standard defaults to **Portability**: the travelling form is the test of a capability. Anything the standard allows a repository to hold must be expressible in the corresponding package, archive, or slice form. A capability may remain in place only behind axis 3–9's explicit local boundary; otherwise, a capability that exists only in place is captivity. This is axis 6–12, ruled in `rfc-decision-cce3c00e` and `rfc-decision-8948e43f`."
+    "content": "The standard defaults to **Portability**: the travelling form is the test of a capability. Anything the standard allows a repository to hold must be expressible in the corresponding package, archive, or slice form. A capability may remain in place only behind the Shared Coherence and Local Autonomy tension's explicit local boundary; otherwise, a capability that exists only in place is captivity. This tension is ruled in `rfc-decision-cce3c00e` and `rfc-decision-8948e43f`."
   },
   "createdAt": "2026-09-08T20:24:48.889992473+00:00",
-  "updatedAt": "2026-09-08T20:24:48.890001777+00:00",
+  "updatedAt": "2026-09-21T21:44:46.658365290+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

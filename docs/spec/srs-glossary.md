@@ -385,7 +385,7 @@ The nine Parts read front to back, each presupposing what came before it:
 - Presentation: how stored state becomes a document a person reads — projections, Views, Composition
 - Extensions: the independently adoptable capability modules a repository may declare
 - Conformance: what an implementation must satisfy to claim SRS conformance, and how that claim is declared and checked
-- Governance: the specification's own governing rules — foundational values, process, and the balance between shared coherence and local autonomy
+- Governance: the specification's own governing rules, built on keeping meaning under its owners' control and portable across tools, implementations, and time, plus the tensions that keep decisions coherent
 
 **Key**: part:reading-this-specification
 
