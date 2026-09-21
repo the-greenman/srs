@@ -4,30 +4,7 @@
 
 ### Core Thesis
 
-**Content**: 
-Traditional document systems treat documents as primarily text.
-
-This specification treats documents as **socially negotiated semantic state**. Text is one projection of that state.
-
-Six principles follow from this:
-
-**1. Semantic state is primary; documents are projections.**
-The same semantic state may be rendered as a board paper, a governance record, a dashboard, or an AI context package. None of these projections is the source of truth.
-
-**2. Fields are reusable semantic atoms.**
-A Field defines a reusable slot of meaning with stable identity. It is not a form field. It is not tied to any specific Type or View. Its AI guidance, validation rules, and value type belong to the Field, not to the Type that uses it.
-
-**3. Types are compositions, not owners of Field semantics.**
-A Type selects and orders Fields for a specific semantic object type. It may provide session-level AI framing. It must not override or redefine the meaning of any Field it includes.
-
-**4. Lineage and provenance are first-class.**
-Definitions evolve. Forks happen. Upstream changes must be traceable. A definition without lineage is a definition that cannot be trusted to evolve cleanly.
-
-**5. Records represent negotiated semantic state, not objective truth claims.**
-A Record captures what a group understood, agreed, or committed to at a point in time. That understanding may be partial, contested, or later revised. The system preserves revision history and provenance precisely because the original state is worth keeping alongside its successors. Human prose and ambiguity are preserved, not collapsed.
-
-**6. Understanding is mutable; historical semantic state has permanent value.**
-SRS assumes that understanding evolves. Records, Relations, and lifecycle states may be revised, superseded, refined, or contradicted without invalidating prior semantic state. A rough plan is a valid semantic object. A superseded decision is a valid semantic object. An abandoned hypothesis is a valid semantic object. Historical semantic state is not noise to be discarded — it is provenance, institutional memory, and the record of how understanding arrived at its current form.
+**Content**: This specification treats documents as **socially negotiated semantic state**: what a group understood, agreed to, or committed to, at a point in time. Text is one projection of that state, not the state itself — the claim Field, Type, Projection and Semantic succession each build on without restating.
 
 ---
 

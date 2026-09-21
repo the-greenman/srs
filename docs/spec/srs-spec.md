@@ -14,7 +14,7 @@ The nine Parts read front to back, each presupposing what came before it:
 - Presentation: how stored state becomes a document a person reads — projections, Views, Composition
 - Extensions: the independently adoptable capability modules a repository may declare
 - Conformance: what an implementation must satisfy to claim SRS conformance, and how that claim is declared and checked
-- Governance: the specification's own governing rules — foundational values, process, and the balance between shared coherence and local autonomy
+- Governance: the specification's own governing rules, built on keeping meaning under its owners' control and portable across tools, implementations, and time, plus the tensions that keep decisions coherent
 
 #### Purpose and Scope
 
@@ -7203,30 +7203,7 @@ The condition SRS exists to preserve: meaning stays under the control of the peo
 
 ##### Core Thesis
 
-**Content**: 
-Traditional document systems treat documents as primarily text.
-
-This specification treats documents as **socially negotiated semantic state**. Text is one projection of that state.
-
-Six principles follow from this:
-
-**1. Semantic state is primary; documents are projections.**
-The same semantic state may be rendered as a board paper, a governance record, a dashboard, or an AI context package. None of these projections is the source of truth.
-
-**2. Fields are reusable semantic atoms.**
-A Field defines a reusable slot of meaning with stable identity. It is not a form field. It is not tied to any specific Type or View. Its AI guidance, validation rules, and value type belong to the Field, not to the Type that uses it.
-
-**3. Types are compositions, not owners of Field semantics.**
-A Type selects and orders Fields for a specific semantic object type. It may provide session-level AI framing. It must not override or redefine the meaning of any Field it includes.
-
-**4. Lineage and provenance are first-class.**
-Definitions evolve. Forks happen. Upstream changes must be traceable. A definition without lineage is a definition that cannot be trusted to evolve cleanly.
-
-**5. Records represent negotiated semantic state, not objective truth claims.**
-A Record captures what a group understood, agreed, or committed to at a point in time. That understanding may be partial, contested, or later revised. The system preserves revision history and provenance precisely because the original state is worth keeping alongside its successors. Human prose and ambiguity are preserved, not collapsed.
-
-**6. Understanding is mutable; historical semantic state has permanent value.**
-SRS assumes that understanding evolves. Records, Relations, and lifecycle states may be revised, superseded, refined, or contradicted without invalidating prior semantic state. A rough plan is a valid semantic object. A superseded decision is a valid semantic object. An abandoned hypothesis is a valid semantic object. Historical semantic state is not noise to be discarded — it is provenance, institutional memory, and the record of how understanding arrived at its current form.
+**Content**: This specification treats documents as **socially negotiated semantic state**: what a group understood, agreed to, or committed to, at a point in time. Text is one projection of that state, not the state itself — the claim Field, Type, Projection and Semantic succession each build on without restating.
 
 ---
 
@@ -7239,8 +7216,6 @@ A named opposition between two complementary necessities, resolved not by choosi
 **Notes**: The tensions are the specification's own reading key: a rule that looks arbitrary usually reads as one pole of a declared tension holding at its boundary.
 
 ##### Foundational values and development phase
-
-SRS exists to preserve **semantic sovereignty through portable data**. Meaning must remain under its owners' control and able to move between tools, implementations, representations, repositories, and time without captivity or silent semantic loss. Portability without identity, relations, provenance, and interpretable semantics is not sovereignty. A design that improves convenience while making semantic data captive violates the purpose of SRS.
 
 Six foundational tensions govern decisions in the SRS standard layer. Their poles are complementary necessities, not good and bad alternatives. Each statement names the default pole and the boundary at which the other pole governs.
 
@@ -7264,17 +7239,17 @@ The standard defaults to **Shared Coherence** for interchange, semantic interpre
 
 ##### Office and Testimony
 
-The standard defaults to **Office**: the procedural record, declared authority, and validated artifact govern over personal or automated testimony. Testimony may fill a gap, but it must not contradict authority; it becomes office only through an explicit verification mechanism that produces an authoritative artifact. Until then, who or what asserted a claim may inform trust and diagnosis, but never changes the claim's validity or precedence. This is axis 4–10, ruled in `rfc-decision-cce3c00e` and `rfc-decision-16b20c56`.
+The standard defaults to **Office**: the procedural record, declared authority, and validated artifact govern over personal or automated testimony. Testimony may fill a gap, but it must not contradict authority; it becomes office only through an explicit verification mechanism that produces an authoritative artifact. Until then, who or what asserted a claim may inform trust and diagnosis, but never changes the claim's validity or precedence. This tension is ruled in `rfc-decision-cce3c00e` and `rfc-decision-16b20c56`.
 
 
 ##### Reliability and Renewal
 
-The standard defaults to **Reliability**: standing contracts continue to hold. Renewal is legitimate only as explicit supersession at a declared boundary, expressed through the retirement mechanism of the layer concerned; it must not arrive as an overwrite, an expired exception, or silent drift. This is axis 5–11, ruled in `rfc-decision-cce3c00e` and `rfc-decision-5f8204bc`.
+The standard defaults to **Reliability**: standing contracts continue to hold. Renewal is legitimate only as explicit supersession at a declared boundary, expressed through the retirement mechanism of the layer concerned; it must not arrive as an overwrite, an expired exception, or silent drift. This tension is ruled in `rfc-decision-cce3c00e` and `rfc-decision-5f8204bc`.
 
 
 ##### Portability and Possession
 
-The standard defaults to **Portability**: the travelling form is the test of a capability. Anything the standard allows a repository to hold must be expressible in the corresponding package, archive, or slice form. A capability may remain in place only behind axis 3–9's explicit local boundary; otherwise, a capability that exists only in place is captivity. This is axis 6–12, ruled in `rfc-decision-cce3c00e` and `rfc-decision-8948e43f`.
+The standard defaults to **Portability**: the travelling form is the test of a capability. Anything the standard allows a repository to hold must be expressible in the corresponding package, archive, or slice form. A capability may remain in place only behind the Shared Coherence and Local Autonomy tension's explicit local boundary; otherwise, a capability that exists only in place is captivity. This tension is ruled in `rfc-decision-cce3c00e` and `rfc-decision-8948e43f`.
 
 
 ##### Conflict resolution: identity and information
