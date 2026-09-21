@@ -73,7 +73,13 @@ env:
   # trip instead of hardcoding title<-name and description<-"". This is the
   # gate srs#553 was waiting on — it unblocks retiring
   # build-governance-seed.mjs's filesystem-flatten fallback.)
-  SRS_RUST_CLI_TAG: v0.1.0-build.388
+  # `v0.1.0-build.399` carries srs-rust#1091 (nested-section rendering) and
+  # #1092 (`FieldView.labelMode` + RFC-001 `[N+38]` duplicate-heading
+  # suppression — srs#831). Pinned to .399, not the latest .404: builds
+  # 400-404 carry unrelated changes (navigation membership srs-rust#1097,
+  # write-time schema validation srs-rust#1102) that this bump does not
+  # intend to pick up.
+  SRS_RUST_CLI_TAG: v0.1.0-build.399
 
 jobs:
   check-release-drift:
