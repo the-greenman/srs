@@ -246,6 +246,16 @@
           "description": "The spec reads in layers over the concept tree, read off canonical relations only (tree = contains, order = precedes, prerequisites = depends-on): (1) no depends-on edge between concepts, or between the extensions RFC-042 Revision 4 [R14] admits as a narrow exception, points forward in the tree's linearised order, computed over the strongly-connected components of the depends-on graph so the three genuine 2-cycles (#608) are introduced together, never flagged; (2) no record has two contains parents; (3) every content leaf (section, subsection, mechanism, invariant, example, design-note, table, generated-type-reference, extension) has a contains parent or root-container membership; (4) no depends-on edge points from an earlier Part's subtree into a later one (vacuous until #563 hangs the concept tree under the Parts, and says so); (5) no hand-authored leaf bakes a markdown heading into a text field (root cause #567); (6) RFC-042 Revision 4 [R16]: every extension record's extension_status/extension_adds/extension_cost_of_non_adoption/content shape matches its live-or-dormant state, a conditional requirement JSON Schema cannot express. Known violations live in scripts/spec-coherence-allowlist.json, each citing a live issue; an unlisted violation fails, and so does an entry that no longer matches - shrinking the list is the migration (#562/#563/#564)."
     },
     {
+      "id": "spec-rendered-order",
+      "script": "check-spec-rendered-order.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "srs#801 (X1); srs#787 ruling R1 (2026-09-17); docs/programme/read-through-2026-09-17.md section 3",
+      "afterId": "spec-coherence",
+      "description": "Unmet-at-reading-position count over the RENDERED order (docs/spec/srs-spec.md's actual heading order), distinct from check-spec-coherence.mjs check 1 and check-spec-readability.mjs, both of which compute their order from the tree (contains/precedes) rather than reading it back from the actual rendered file. Re-derives each concept/extension's position from its first matching heading in the rendered output, then classifies every depends-on edge over that node set (condensed over the depends-on graph's strongly-connected components, same #608 treatment) as met or unmet at that rendered position. Known violations live in scripts/spec-rendered-order-allowlist.json, each citing a live issue; an unlisted violation fails, and so does an entry that no longer matches — shrinking the list is the per-Part rewrite units' job."
+    },
+    {
       "id": "spec-readability",
       "script": "check-spec-readability.mjs",
       "args": [],
