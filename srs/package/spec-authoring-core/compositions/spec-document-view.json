@@ -14,7 +14,11 @@
         "containerId": "2ea344e1-f64e-4817-99f7-fe1b1e4046ce"
       },
       "typeDispatch": {
-        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c",
+        "com.semanticops.spec/concept": "989bc844-65a8-47f6-848d-1fe61f0666b2",
+        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
+        "com.semanticops.spec/example": "493ffbb5-3cf9-438d-bebf-ef02d5aeb478",
+        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
       "emptyBehavior": "hide"
@@ -28,7 +32,11 @@
         "containerId": "752dad23-8a6d-44e5-98c9-f081d2cc634e"
       },
       "typeDispatch": {
-        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c",
+        "com.semanticops.spec/concept": "989bc844-65a8-47f6-848d-1fe61f0666b2",
+        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
+        "com.semanticops.spec/example": "493ffbb5-3cf9-438d-bebf-ef02d5aeb478",
+        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
       "emptyBehavior": "hide"
@@ -42,7 +50,11 @@
         "containerId": "2da5d723-f09f-4acf-9b86-a99745193ee5"
       },
       "typeDispatch": {
-        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c",
+        "com.semanticops.spec/concept": "989bc844-65a8-47f6-848d-1fe61f0666b2",
+        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
+        "com.semanticops.spec/example": "493ffbb5-3cf9-438d-bebf-ef02d5aeb478",
+        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
       "emptyBehavior": "hide"
@@ -56,7 +68,11 @@
         "containerId": "96965ce5-ad64-45b1-8d74-eccc6773db5e"
       },
       "typeDispatch": {
-        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c",
+        "com.semanticops.spec/concept": "989bc844-65a8-47f6-848d-1fe61f0666b2",
+        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
+        "com.semanticops.spec/example": "493ffbb5-3cf9-438d-bebf-ef02d5aeb478",
+        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
       "emptyBehavior": "hide"
@@ -70,7 +86,11 @@
         "containerId": "97838af7-50f8-4da2-9d8f-d7dbf9296c80"
       },
       "typeDispatch": {
-        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c",
+        "com.semanticops.spec/concept": "989bc844-65a8-47f6-848d-1fe61f0666b2",
+        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
+        "com.semanticops.spec/example": "493ffbb5-3cf9-438d-bebf-ef02d5aeb478",
+        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
       "emptyBehavior": "hide"
@@ -84,7 +104,11 @@
         "containerId": "fdb7d202-f9a5-4c8f-a2a8-d6c79add89ce"
       },
       "typeDispatch": {
-        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c",
+        "com.semanticops.spec/concept": "989bc844-65a8-47f6-848d-1fe61f0666b2",
+        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
+        "com.semanticops.spec/example": "493ffbb5-3cf9-438d-bebf-ef02d5aeb478",
+        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
       "emptyBehavior": "hide"
@@ -98,7 +122,11 @@
         "containerId": "a7b772f2-0093-4ccc-8050-0f7831421eaf"
       },
       "typeDispatch": {
-        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c",
+        "com.semanticops.spec/concept": "989bc844-65a8-47f6-848d-1fe61f0666b2",
+        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
+        "com.semanticops.spec/example": "493ffbb5-3cf9-438d-bebf-ef02d5aeb478",
+        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
       "emptyBehavior": "hide"
@@ -112,7 +140,11 @@
         "containerId": "1dc2ab2d-7873-4179-8a40-d591e9c90bb0"
       },
       "typeDispatch": {
-        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c",
+        "com.semanticops.spec/concept": "989bc844-65a8-47f6-848d-1fe61f0666b2",
+        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
+        "com.semanticops.spec/example": "493ffbb5-3cf9-438d-bebf-ef02d5aeb478",
+        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
       "emptyBehavior": "hide"
@@ -126,7 +158,11 @@
         "containerId": "618920ec-c417-4f91-acce-c5ea79b743f2"
       },
       "typeDispatch": {
-        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c",
+        "com.semanticops.spec/concept": "989bc844-65a8-47f6-848d-1fe61f0666b2",
+        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
+        "com.semanticops.spec/example": "493ffbb5-3cf9-438d-bebf-ef02d5aeb478",
+        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
       "emptyBehavior": "hide"

@@ -1,0 +1,16 @@
+{
+  "id": "493ffbb5-3cf9-438d-bebf-ef02d5aeb478",
+  "namespace": "com.semanticops.spec",
+  "name": "example-leaf-view",
+  "version": 1,
+  "description": "Renders a com.semanticops.spec/example record as a document leaf: content is the record's sole field and reads as prose directly under its heading (labelMode: none, srs#794/#827), the same reasoning as mechanism-leaf-view.",
+  "fieldViews": [
+    {
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
+      "order": 0,
+      "labelMode": "none"
+    }
+  ],
+  "createdAt": "2026-09-21T00:00:00Z",
+  "$schema": "https://srs.semanticops.com/schema/2.0/view.json"
+}

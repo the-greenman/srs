@@ -1,0 +1,16 @@
+{
+  "id": "d82ad74f-0560-4e14-b1be-e442aa706964",
+  "namespace": "com.semanticops.spec",
+  "name": "mechanism-leaf-view",
+  "version": 1,
+  "description": "Renders a com.semanticops.spec/mechanism record as a document leaf: content is the record's sole field and reads as prose directly under its heading (labelMode: none, srs#794/#827), matching how mechanism records already render as a prose paragraph under a heading with no other fields to distinguish it from.",
+  "fieldViews": [
+    {
+      "fieldId": "1a000002-0000-4000-a000-000000000002",
+      "order": 0,
+      "labelMode": "none"
+    }
+  ],
+  "createdAt": "2026-09-21T00:00:00Z",
+  "$schema": "https://srs.semanticops.com/schema/2.0/view.json"
+}
