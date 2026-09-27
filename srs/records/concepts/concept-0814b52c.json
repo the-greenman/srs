@@ -8,9 +8,10 @@
     "canonical_key": "record:concepts/invariant",
     "title": "Invariant",
     "description": "A numbered normative statement that must hold of conforming data and conforming implementations, assigned to core or to the extension that owns it. Invariants are where the specification's obligations are stated once and cited from everywhere else, so a rule has one home instead of several drifting restatements. An invariant is the statement; checking it is validation, and the two are deliberately distinct.",
+    "notes": "See Validation for how a conforming implementation checks an invariant and reports the result as a diagnostic.",
     "examples": "Invariant 16 fixes relation direction; Invariant 20 keeps container ids out of the instance id space; Invariant 2 forbids a Type restating a Field's semantics."
   },
   "createdAt": "2026-09-05T23:42:08.786231969+00:00",
-  "updatedAt": "2026-09-05T23:45:45.289160716+00:00",
+  "updatedAt": "2026-09-27T22:07:19.085414318+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

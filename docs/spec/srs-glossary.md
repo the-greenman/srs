@@ -286,6 +286,8 @@ Transcript chunks referenced in `SourceReference` are source material — addres
 
 **Definition**: A numbered normative statement that must hold of conforming data and conforming implementations, assigned to core or to the extension that owns it. Invariants are where the specification's obligations are stated once and cited from everywhere else, so a rule has one home instead of several drifting restatements. An invariant is the statement; checking it is validation, and the two are deliberately distinct.
 
+**Notes**: See Validation for how a conforming implementation checks an invariant and reports the result as a diagnostic.
+
 **Examples**: Invariant 16 fixes relation direction; Invariant 20 keeps container ids out of the instance id space; Invariant 2 forbids a Type restating a Field's semantics.
 
 **Key**: record:concepts/invariant
@@ -551,7 +553,7 @@ The nine Parts read front to back, each presupposing what came before it:
 
 **Definition**: Checking data against the contracts its own definitions declare, and reporting what fails as severity-tagged diagnostics, never as a crash. Contracts come from several places: a Field's own value constraints, cross-field rules that only make sense over two or more Fields together, vocabulary resolution, reference resolution, and the specification's invariants. Diagnostics are reported, not thrown — a command that ran successfully and a repository that is valid are two different questions, and conflating them hides the second.
 
-**Notes**: Cross-field rules are the Type's own complete and exclusive set: they are never inherited by value from a base Type (Invariant I-97).
+**Notes**: An invariant states the rule; validation is the act of checking it, so an invariant that is never checked and a validation pass that consults no invariant are both incomplete on their own. Cross-field rules are the Type's own complete and exclusive set: they are never inherited by value from a base Type (Invariant I-97).
 
 **Key**: record:concepts/validation
 

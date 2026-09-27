@@ -6559,11 +6559,133 @@ Transcript chunks referenced in `SourceReference` are source material — addres
 
 What an implementation must satisfy to claim SRS conformance, core and per-extension, and how that claim is declared and checked.
 
+What an implementation claims and what that claim obliges it to do, declared as the core plus the extensions it supports. Core conformance requires the Foundation and Distribution groups in full and enforcement of the core invariants; declaring an extension obliges accepting and validating its types, enforcing its invariants, and honouring its declared dependencies. The claim is what makes exchange predictable: two implementations at the same level produce definitions the other can consume.
+
+**Notes**: Partial support is not conformance — an implementation that can produce archives but not consume them must say so explicitly. Receiving content from an unsupported extension calls for surfacing and preserving it, never silently discarding it.
+
+##### How to decide which extensions to implement
+
+**Content**: Match your need to a row in the table in Purpose and Scope: most needs map to one extension, and several map to Core alone. Declaring an extension binds an implementation to accepting and validating its types and enforcing its invariants (see Extension), so declaring more than a use case actually requires adds an ongoing obligation with no compensating benefit. An implementation that receives data using an extension it has not declared still has to preserve that data, per Extension's own graceful-degradation rule — declaring less does not mean discarding what arrives.
+
+Some extensions are formally independent yet functionally co-dependent: declaring one without the other, for a given use, leaves the capability incomplete. An extension's own concept states both its hard dependencies and any such co-dependency; check it before deciding.
+
+Declaring nothing beyond Core is a valid answer for a repository that only creates and exchanges Field and Type definitions. Add an extension when a real record needs what it obliges, not in anticipation of a need that has not arrived.
+
+
+##### ext:discovery conformance requires passing structured-filter fixture scenarios
+
+**Number**: I-123
+
+An implementation that declares `ext:discovery` MUST pass all structured-filter conformance scenarios (`exactMatch: true`) from the fixture at `srs/conformance/discovery/scenarios.json`, returning exactly the `expectedInstanceIds` set for each such scenario. When a scenario also carries an `expectedSegments` expectation, the implementation's Text Projection for the named field of the named instance MUST additionally match the expected segment sequence exactly in count and order — testing I-120's list-cardinality rule ("one segment per array element in order") that `expectedInstanceIds` alone cannot express. (RFC-012 R11; srs#483.)
+
+
+##### ext:discovery conformance requires passing content-match fixture scenarios
+
+**Number**: I-124
+
+An implementation that declares `ext:discovery` MUST pass all content-match conformance scenarios (`exactMatch: false`) from the fixture at `srs/conformance/discovery/scenarios.json` — its result set for each such scenario MUST be a superset of the scenario's `expectedInstanceIds`. (RFC-012 R12.)
+
+
+
+An implementation declares conformance using the following form:
+
+Example: the conformance declaration form.
+
+##### The conformance declaration form
+
+The declaration form, then a filled declaration:
+
+```
+SRS <version> Core [+ ext:<name> ...]
+```
+
+Example:
+```
+SRS 2.0 Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability + ext:recommended-relations
+```
+
+
+##### The self-contained profile declaration
+
+The conformance string a self-contained repository declares:
+
+```
+SRS 2.0 Core + ext:repository (self-contained)
+```
+
+
+##### Core conformance requirements
+
+A core-conformant implementation MUST:
+- Accept and validate `Field`, `Type`, `Record` (Tier 2), `Relation`, and `Container` inputs against this specification
+- Enforce Invariants 1–3, 7–9, 16–18, 20–21, 28, 38
+- Support the Foundation and Distribution groups in full
+- Implement the namespace format and reference format correctly
+- Not accept `relationType` strings that include `/` except in `namespace/name` format
+- **Closed-vocabulary resolution (V1):** Resolve every value participating in a closed vocabulary to exactly one installed entry in the effective entry set before accepting a write. Non-resolving values are validation errors. This rule applies to:
+  - `Relation.relationType`: resolved against the repo-global `RelationTypeDefinition` set (RFC-005 E1 is a named instance of V1)
+  - `select`/`multiselect` field values: resolved against the Field's effective closed `Vocabulary`
+  - `Record.lifecycleState`: resolved against the Type's effective lifecycle state set
+- Enforce the effective entry set construction (V5): retire entries excluded before uniqueness; `extends*Version` mismatches are hard errors.
+- Enforce inline and referenced lifecycle integrity (V9).
+- Enforce `select`/`multiselect` field binding exclusivity and closedness (V3).
+
+Support for `Note` (Tier 0) is optional at core conformance level.
+
+
+##### Extension conformance requirements
+
+An implementation declaring a given extension MUST:
+- Accept and validate all types defined by that extension
+- Enforce all invariants assigned to that extension
+- Respect the declared dependency chain (e.g., `ext:views-l2` requires `ext:views-l1` to also be declared)
+
+`ext:recommended-relations` is retired as of RFC-005. It no longer owns any normative semantics. Implementations MUST NOT treat it as a capability gate: the canonical relation vocabulary is now mandatory core behaviour provided by the `com.semanticops.srs` package.
+
+
+##### ext:repository conformance requirements
+
+An implementation declaring `ext:repository` MUST:
+- Produce repositories with a `.srs` marker and `manifest.json` at root, with content in the prescribed folder layout
+- Maintain no `instanceIndex` in the manifest: it is retired (RFC-038 [R2]); membership is the instance set enumerated from the tree (RFC-038 [R1])
+- Produce archives that satisfy all self-containment requirements (Invariants 49 and 51)
+- Consume archives by parsing the manifest first and resolving all instances via the repository's authoritative instance set, enumerated from the tree (RFC-038 [R1]), before processing content
+- Resolve `SourceReference` entries with `sourceType: "repository-document"` via the sidecar in `sourceDocumentsPath`
+- Enforce Invariants 45–55
+- Require no TSS, Protocol, Addressability infrastructure, or external registry when `PackageRef.mode === "local"`. The repository is fully operable with only its own files.
+
+An implementation that can produce archives but not consume them (or vice versa) MUST declare this limitation explicitly. Partial repository support is not conformant.
+
+
+##### ext:repository (self-contained) profile
+
+A named stricter profile for standalone, offline-operable repositories:
+
+Example: the self-contained profile declaration.
+
+An implementation declaring this profile MUST satisfy all `ext:repository` conformance requirements and additionally:
+
+- `packageRef` MUST be present with `mode: "local"`. Absent or external package references are not permitted.
+- The local package MUST be `mode: "bundled"` (Invariant 50 is always in effect).
+- No external registry, TSS, Protocol stack, Addressability infrastructure, AttentionState, or live conversation store is required or assumed. The repository directory (or archive) is the complete and sufficient deployment unit.
+- An archive produced under this profile MUST be openable and fully processable by a consumer with no prior installation, no network access, and no running services.
+
+This profile is appropriate for: standalone tools, file-based backups, air-gapped or offline deployments, inter-organisational exchange, and any context where zero-dependency portability is required.
+
+
+##### Interoperability note
+
+Two implementations at the same conformance level produce compatible definitions for exchange. An implementation receiving a Package that includes types or fields from an extension it does not support should surface the unknown content, preserve it where possible, and pass it through instead of silently discarding it.
+
+Two implementations both declaring `ext:repository` MUST be able to exchange archives without data loss. An archive produced by one conforming implementation MUST be consumable by any other conforming implementation at the same SRS version.
+
+
+
 #### Validation
 
 Checking data against the contracts its own definitions declare, and reporting what fails as severity-tagged diagnostics, never as a crash. Contracts come from several places: a Field's own value constraints, cross-field rules that only make sense over two or more Fields together, vocabulary resolution, reference resolution, and the specification's invariants. Diagnostics are reported, not thrown — a command that ran successfully and a repository that is valid are two different questions, and conflating them hides the second.
 
-**Notes**: Cross-field rules are the Type's own complete and exclusive set: they are never inherited by value from a base Type (Invariant I-97).
+**Notes**: An invariant states the rule; validation is the act of checking it, so an invariant that is never checked and a validation pass that consults no invariant are both incomplete on their own. Cross-field rules are the Type's own complete and exclusive set: they are never inherited by value from a base Type (Invariant I-97).
 
 ##### All fieldId values in any CrossFieldRule within…
 
@@ -6715,137 +6837,15 @@ In a federated ecosystem, implementations will often receive SRS content that us
 
 A conforming implementation should validate the core and extension content it recognises, surface unknown extension content clearly to users or downstream systems, and pass that unknown content through rather than silently discarding it. This is especially important for Records instantiated against a specializing Type: a system that knows only the base Type should still be able to read the inherited base fields correctly while preserving the specialization-specific fields.
 
----
 
 
-##### Future Extensions
-
-**Content**: 
-The following capabilities are planned but out of scope for this version.
-
-
-
-What an implementation claims and what that claim obliges it to do, declared as the core plus the extensions it supports. Core conformance requires the Foundation and Distribution groups in full and enforcement of the core invariants; declaring an extension obliges accepting and validating its types, enforcing its invariants, and honouring its declared dependencies. The claim is what makes exchange predictable: two implementations at the same level produce definitions the other can consume.
-
-**Notes**: Partial support is not conformance — an implementation that can produce archives but not consume them must say so explicitly. Receiving content from an unsupported extension calls for surfacing and preserving it, never silently discarding it.
-
-##### How to decide which extensions to implement
-
-
-##### ext:discovery conformance requires passing structured-filter fixture scenarios
-
-**Number**: I-123
-
-An implementation that declares `ext:discovery` MUST pass all structured-filter conformance scenarios (`exactMatch: true`) from the fixture at `srs/conformance/discovery/scenarios.json`, returning exactly the `expectedInstanceIds` set for each such scenario. When a scenario also carries an `expectedSegments` expectation, the implementation's Text Projection for the named field of the named instance MUST additionally match the expected segment sequence exactly in count and order — testing I-120's list-cardinality rule ("one segment per array element in order") that `expectedInstanceIds` alone cannot express. (RFC-012 R11; srs#483.)
-
-
-##### ext:discovery conformance requires passing content-match fixture scenarios
-
-**Number**: I-124
-
-An implementation that declares `ext:discovery` MUST pass all content-match conformance scenarios (`exactMatch: false`) from the fixture at `srs/conformance/discovery/scenarios.json` — its result set for each such scenario MUST be a superset of the scenario's `expectedInstanceIds`. (RFC-012 R12.)
-
-
-##### Invariant
+#### Invariant
 
 A numbered normative statement that must hold of conforming data and conforming implementations, assigned to core or to the extension that owns it. Invariants are where the specification's obligations are stated once and cited from everywhere else, so a rule has one home instead of several drifting restatements. An invariant is the statement; checking it is validation, and the two are deliberately distinct.
 
+**Notes**: See Validation for how a conforming implementation checks an invariant and reports the result as a diagnostic.
+
 **Examples**: Invariant 16 fixes relation direction; Invariant 20 keeps container ids out of the instance id space; Invariant 2 forbids a Type restating a Field's semantics.
-
-
-
-An implementation declares conformance using the following form:
-
-Example: the conformance declaration form.
-
-##### The conformance declaration form
-
-The declaration form, then a filled declaration:
-
-```
-SRS <version> Core [+ ext:<name> ...]
-```
-
-Example:
-```
-SRS 2.0 Core + ext:lifecycle + ext:protocol + ext:views-l1 + ext:addressability + ext:recommended-relations
-```
-
-
-##### The self-contained profile declaration
-
-The conformance string a self-contained repository declares:
-
-```
-SRS 2.0 Core + ext:repository (self-contained)
-```
-
-
-##### Core conformance requirements
-
-A core-conformant implementation MUST:
-- Accept and validate `Field`, `Type`, `Record` (Tier 2), `Relation`, and `Container` inputs against this specification
-- Enforce Invariants 1–3, 7–9, 16–18, 20–21, 28, 38
-- Support the Foundation and Distribution groups in full
-- Implement the namespace format and reference format correctly
-- Not accept `relationType` strings that include `/` except in `namespace/name` format
-- **Closed-vocabulary resolution (V1):** Resolve every value participating in a closed vocabulary to exactly one installed entry in the effective entry set before accepting a write. Non-resolving values are validation errors. This rule applies to:
-  - `Relation.relationType`: resolved against the repo-global `RelationTypeDefinition` set (RFC-005 E1 is a named instance of V1)
-  - `select`/`multiselect` field values: resolved against the Field's effective closed `Vocabulary`
-  - `Record.lifecycleState`: resolved against the Type's effective lifecycle state set
-- Enforce the effective entry set construction (V5): retire entries excluded before uniqueness; `extends*Version` mismatches are hard errors.
-- Enforce inline and referenced lifecycle integrity (V9).
-- Enforce `select`/`multiselect` field binding exclusivity and closedness (V3).
-
-Support for `Note` (Tier 0) is optional at core conformance level.
-
-
-##### Extension conformance requirements
-
-An implementation declaring a given extension MUST:
-- Accept and validate all types defined by that extension
-- Enforce all invariants assigned to that extension
-- Respect the declared dependency chain (e.g., `ext:views-l2` requires `ext:views-l1` to also be declared)
-
-`ext:recommended-relations` is retired as of RFC-005. It no longer owns any normative semantics. Implementations MUST NOT treat it as a capability gate: the canonical relation vocabulary is now mandatory core behaviour provided by the `com.semanticops.srs` package.
-
-
-##### ext:repository conformance requirements
-
-An implementation declaring `ext:repository` MUST:
-- Produce repositories with a `.srs` marker and `manifest.json` at root, with content in the prescribed folder layout
-- Maintain no `instanceIndex` in the manifest: it is retired (RFC-038 [R2]); membership is the instance set enumerated from the tree (RFC-038 [R1])
-- Produce archives that satisfy all self-containment requirements (Invariants 49 and 51)
-- Consume archives by parsing the manifest first and resolving all instances via the repository's authoritative instance set, enumerated from the tree (RFC-038 [R1]), before processing content
-- Resolve `SourceReference` entries with `sourceType: "repository-document"` via the sidecar in `sourceDocumentsPath`
-- Enforce Invariants 45–55
-- Require no TSS, Protocol, Addressability infrastructure, or external registry when `PackageRef.mode === "local"`. The repository is fully operable with only its own files.
-
-An implementation that can produce archives but not consume them (or vice versa) MUST declare this limitation explicitly. Partial repository support is not conformant.
-
-
-##### ext:repository (self-contained) profile
-
-A named stricter profile for standalone, offline-operable repositories:
-
-Example: the self-contained profile declaration.
-
-An implementation declaring this profile MUST satisfy all `ext:repository` conformance requirements and additionally:
-
-- `packageRef` MUST be present with `mode: "local"`. Absent or external package references are not permitted.
-- The local package MUST be `mode: "bundled"` (Invariant 50 is always in effect).
-- No external registry, TSS, Protocol stack, Addressability infrastructure, AttentionState, or live conversation store is required or assumed. The repository directory (or archive) is the complete and sufficient deployment unit.
-- An archive produced under this profile MUST be openable and fully processable by a consumer with no prior installation, no network access, and no running services.
-
-This profile is appropriate for: standalone tools, file-based backups, air-gapped or offline deployments, inter-organisational exchange, and any context where zero-dependency portability is required.
-
-
-##### Interoperability note
-
-Two implementations at the same conformance level produce compatible definitions for exchange. An implementation receiving a Package that includes types or fields from an extension it does not support should surface the unknown content, preserve it where possible, and pass it through instead of silently discarding it.
-
-Two implementations both declaring `ext:repository` MUST be able to exchange archives without data loss. An archive produced by one conforming implementation MUST be consumable by any other conforming implementation at the same SRS version.
-
 
 
 

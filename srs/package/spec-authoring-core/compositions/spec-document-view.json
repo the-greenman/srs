@@ -188,7 +188,16 @@
         "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
-      "emptyBehavior": "hide"
+      "emptyBehavior": "hide",
+      "ordering": {
+        "memberOrder": [
+          "a5c04203-5960-4748-b3cf-1ae339277cad",
+          "06a60bf4-87ef-435b-a440-a94f0e1e393d",
+          "9a584293-d7a5-4182-bb98-0dcef5f1913a",
+          "785654d0-2016-4a14-89ba-fee4376f9a87",
+          "0814b52c-b5bd-491c-8b5c-d366e7a13233"
+        ]
+      }
     },
     {
       "sectionId": "part-governance",

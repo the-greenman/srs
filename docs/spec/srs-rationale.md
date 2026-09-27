@@ -223,10 +223,14 @@ In a federated ecosystem, implementations will often receive SRS content that us
 
 A conforming implementation should validate the core and extension content it recognises, surface unknown extension content clearly to users or downstream systems, and pass that unknown content through rather than silently discarding it. This is especially important for Records instantiated against a specializing Type: a system that knows only the base Type should still be able to read the inherited base fields correctly while preserving the specialization-specific fields.
 
----
-
 
 ### How to decide which extensions to implement
+
+**Content**: Match your need to a row in the table in Purpose and Scope: most needs map to one extension, and several map to Core alone. Declaring an extension binds an implementation to accepting and validating its types and enforcing its invariants (see Extension), so declaring more than a use case actually requires adds an ongoing obligation with no compensating benefit. An implementation that receives data using an extension it has not declared still has to preserve that data, per Extension's own graceful-degradation rule — declaring less does not mean discarding what arrives.
+
+Some extensions are formally independent yet functionally co-dependent: declaring one without the other, for a given use, leaves the capability incomplete. An extension's own concept states both its hard dependencies and any such co-dependency; check it before deciding.
+
+Declaring nothing beyond Core is a valid answer for a repository that only creates and exchanges Field and Type definitions. Add an extension when a real record needs what it obliges, not in anticipation of a need that has not arrived.
 
 
 ### Addressability as a prerequisite for live facilitation
@@ -269,12 +273,6 @@ The extension is intentionally narrow. It supports inherited fields, added field
 `Type.fieldOrder` is a Type-level composition ordering declaration over the full effective field list, including inherited fields. `View.fieldViews[].order` is the sole View-level presentation and export ordering mechanism; it orders both FieldView and RecordPropertyView rows. Validators should apply the `fieldAssignmentOverrides` inherited-field restriction only to `fieldAssignmentOverrides`, not to `Type.fieldOrder`.
 
 ---
-
-
-### Future Extensions
-
-**Content**: 
-The following capabilities are planned but out of scope for this version.
 
 
 ### Session

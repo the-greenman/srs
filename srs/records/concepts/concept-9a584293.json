@@ -8,9 +8,9 @@
     "canonical_key": "record:concepts/validation",
     "title": "Validation",
     "description": "Checking data against the contracts its own definitions declare, and reporting what fails as severity-tagged diagnostics, never as a crash. Contracts come from several places: a Field's own value constraints, cross-field rules that only make sense over two or more Fields together, vocabulary resolution, reference resolution, and the specification's invariants. Diagnostics are reported, not thrown — a command that ran successfully and a repository that is valid are two different questions, and conflating them hides the second.",
-    "notes": "Cross-field rules are the Type's own complete and exclusive set: they are never inherited by value from a base Type (Invariant I-97)."
+    "notes": "An invariant states the rule; validation is the act of checking it, so an invariant that is never checked and a validation pass that consults no invariant are both incomplete on their own. Cross-field rules are the Type's own complete and exclusive set: they are never inherited by value from a base Type (Invariant I-97)."
   },
   "createdAt": "2026-09-05T23:42:08.597786855+00:00",
-  "updatedAt": "2026-09-05T23:45:42.967461878+00:00",
+  "updatedAt": "2026-09-27T22:07:19.160083342+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
