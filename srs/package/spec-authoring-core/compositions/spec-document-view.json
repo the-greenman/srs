@@ -39,7 +39,22 @@
         "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
-      "emptyBehavior": "hide"
+      "emptyBehavior": "hide",
+      "ordering": {
+        "memberOrder": [
+          "af14997a-09f1-4eb2-85a9-d0262024d5de",
+          "48c91235-47e9-4079-8884-30e34d5b8fc2",
+          "938f44fa-e4e5-4334-a260-4654c5661f7d",
+          "1188b6bb-ceb1-494e-960a-cf7a00b8c3ed",
+          "873099c5-093d-4684-8c36-46f813847c1a",
+          "89444ae5-3dc7-4ffd-ac60-3bc9559c9331",
+          "9bccaa53-6d98-4ca9-967b-fb27ec6e72d5",
+          "ef2e0f72-c03e-449c-99ba-ad517fd1360b",
+          "ffe99460-9afe-4464-b62e-707559dc8ad1",
+          "f0a194f1-a58f-4bb6-a4ec-2a5360c84da1",
+          "e4837800-1803-4b0b-9a9f-08ff3e5cb95a"
+        ]
+      }
     },
     {
       "sectionId": "part-instances",
@@ -57,7 +72,13 @@
         "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
-      "emptyBehavior": "hide"
+      "emptyBehavior": "hide",
+      "ordering": {
+        "memberOrder": [
+          "07ee545a-dba3-4253-bcbb-19a58330f79c",
+          "e1f255e4-8050-481f-ad49-a44f24bfca0f"
+        ]
+      }
     },
     {
       "sectionId": "part-structure",

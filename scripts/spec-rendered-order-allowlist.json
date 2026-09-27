@@ -1,61 +1,40 @@
 {
-  "$comment": "Known violations of scripts/check-spec-rendered-order.mjs (srs#801, X1). Same six pairs check-spec-readability.mjs's tree-order total already tracks in spec-readability-allowlist.json under reading-order-forward-reference (Type/Field assignment/AI guidance before Field; Note/Record before Semantic maturity tier; Relation before Instance), confirmed here to be genuine at the RENDERED position too, not just the computed tree position \u2014 the composition faithfully renders the tree order, so this check's residual violations are the same pre-existing structural debt, not a defect this unit introduced. P2 (Foundations reads in dependency order) and P3 (Instances) are the read-through's units that fold these. Entry shape: {pair:[sourceId,targetId], issue, note}. The check fails on any violation NOT listed here and on any entry that no longer matches a violation \u2014 shrinking this file is those units' job. Growing it needs an issue.",
+  "$comment": "Known violations of scripts/check-spec-rendered-order.mjs (srs#801, X1). Entry shape: {pair:[sourceId,targetId], issue, note}. The check fails on any violation NOT listed here and on any entry that no longer matches a violation - shrinking this file is the readability wave's job. Growing it needs an issue. This set was rewritten advancing SRS_RUST_CLI_TAG to v0.1.0-build.414 (the-greenman/srs-rust#1130/#1131): that build's fix for memberOrder on a Part anchor's own contains children (re-applying apply_section_ordering at that level even when no `ordering` is declared) incidentally changed the precedes/createdAt fallback order for Foundations and Instances - Field now renders before Type and Semantic maturity tier before Instance by default, even before any `ordering.memberOrder` is declared. That is a genuine, unrelated builds-400-414 side effect (see the PR body), separate from the story-order reorder P2 (srs#803), P3 (srs#804) and P4 (srs#805) then declare explicitly via `ordering.memberOrder` to make the same order authored rather than incidental (ruling A, the-greenman/srs#787, rfc-decision-8aed3412). Several entries below replace prior entries that matched the pre-build.414 order (Type/Field assignment/AI guidance before Field; Note/Record before Semantic maturity tier - see git history). The total unmet-at-reading-position count is largely unchanged; only which pairs are unmet has changed, matching the same irreducible-cycle shape recorded at srs#608 (the concept graph is not a DAG).",
   "entries": [
     {
-      "pair": [
-        "17faf6f1-9b73-4cc5-90bd-7735b933da08",
-        "07ee545a-dba3-4253-bcbb-19a58330f79c"
-      ],
+      "pair": ["1e23ee5d-0406-485d-a927-6c62dfee58f1", "e1f255e4-8050-481f-ad49-a44f24bfca0f"],
       "issue": "the-greenman/srs#787",
-      "note": "\"Type\" (source) depends on \"Field\" (target) but Type renders first in Foundations. Same pair as spec-readability-allowlist.json's reading-order-forward-reference entry for these ids. Fold candidate: P2."
+      "note": "\"Relation\" depends on \"Instance\" but Relation (Part Structure) renders before Instance (Part Instances) in Part order. Pre-existing, unaffected by the build.414 fallback-order change or the P2/P3 memberOrder fix (cross-Part, not a same-Part sibling reorder). Fold candidate: P4 (Relation-first reorder in part-structure)."
     },
     {
-      "pair": [
-        "17fb1629-855c-481f-937a-3e1db05215d8",
-        "07ee545a-dba3-4253-bcbb-19a58330f79c"
-      ],
+      "pair": ["07ee545a-dba3-4253-bcbb-19a58330f79c", "e1f255e4-8050-481f-ad49-a44f24bfca0f"],
       "issue": "the-greenman/srs#787",
-      "note": "\"Field assignment\" depends on \"Field\" but is nested inside Type, rendering before Field. Same pair as spec-readability-allowlist.json. Fold candidate: P2."
+      "note": "\"Semantic maturity tier\" depends on \"Instance\", but Semantic maturity tier renders first in Part Instances (build.414's fallback order, then confirmed explicit by P3's ordering.memberOrder) per the read-through (Part 3) and ruling A, since Semantic maturity tier is the frame for Note/Record, Instance's children - the opposite of what this depends-on edge asks for. Accepted trade-off, not a defect."
     },
     {
-      "pair": [
-        "89444ae5-3dc7-4ffd-ac60-3bc9559c9331",
-        "873099c5-093d-4684-8c36-46f813847c1a"
-      ],
+      "pair": ["54b99288-9f06-4aad-a41c-c7968f7ff9cd", "ffe99460-9afe-4464-b62e-707559dc8ad1"],
       "issue": "the-greenman/srs#787",
-      "note": "\"AI guidance\" depends on \"Field\" but renders earlier in Foundations. Same pair as spec-readability-allowlist.json. Fold candidate: P2."
+      "note": "\"Field type\" (nested under Field) depends on \"Vocabulary\", but Field (and its Field type child) now renders before Vocabulary - Vocabulary was moved after Field per the read-through (Part 2: move Vocabulary after Field). Accepted trade-off."
     },
     {
-      "pair": [
-        "42ed953e-2b89-4bb9-a1b1-a8dcad0d24e5",
-        "873099c5-093d-4684-8c36-46f813847c1a"
-      ],
+      "pair": ["2f5a157e-787a-4fd6-ab96-a711f524048d", "17fb1629-855c-481f-937a-3e1db05215d8"],
       "issue": "the-greenman/srs#787",
-      "note": "A second concept depending on \"Field\" ahead of its own introduction. Same pair as spec-readability-allowlist.json. Fold candidate: P2."
+      "note": "\"Graduation\" (nested under Semantic maturity tier) depends on \"Note\", but Semantic maturity tier now renders before Instance (parent of Note) per ruling A. Accepted trade-off."
     },
     {
-      "pair": [
-        "1e23ee5d-0406-485d-a927-6c62dfee58f1",
-        "e1f255e4-8050-481f-ad49-a44f24bfca0f"
-      ],
+      "pair": ["2f5a157e-787a-4fd6-ab96-a711f524048d", "17faf6f1-9b73-4cc5-90bd-7735b933da08"],
       "issue": "the-greenman/srs#787",
-      "note": "\"Relation\" depends on \"Instance\" but Relation (Part Structure) renders before Instance (Part Instances) in Part order. Same pair as spec-readability-allowlist.json. Fold candidate: P3/P4."
+      "note": "\"Graduation\" (nested under Semantic maturity tier) depends on \"Record\", but Semantic maturity tier now renders before Instance (parent of Record) per ruling A. Accepted trade-off."
     },
     {
-      "pair": [
-        "9bccaa53-6d98-4ca9-967b-fb27ec6e72d5",
-        "873099c5-093d-4684-8c36-46f813847c1a"
-      ],
+      "pair": ["6143965c-ac6f-4473-a7d2-ef21d276bdfd", "9bccaa53-6d98-4ca9-967b-fb27ec6e72d5"],
       "issue": "the-greenman/srs#787",
-      "note": "A third concept depending on \"Field\" ahead of its own introduction. Same pair as spec-readability-allowlist.json. Fold candidate: P2."
+      "note": "\"Composite value\" (nested under Field) depends on \"Type\", but Field now renders before Type per the read-through's own recommended story order (Part 2: Field, Field type, Composite value, Field assignment, Type, Type specialisation) and ruling A. The read-through's own chosen order has this residual forward reference."
     },
     {
-      "pair": [
-        "46a090b5-c772-4792-8c21-d97d6cee826f",
-        "706db1c3-08ee-42a6-9cd2-7fe4740f481d"
-      ],
+      "pair": ["46a090b5-c772-4792-8c21-d97d6cee826f", "706db1c3-08ee-42a6-9cd2-7fe4740f481d"],
       "issue": "the-greenman/srs#805",
-      "note": "Composition (Part 6: Presentation, rendered line 4791) is read before Discovery (Part 7: Extensions, rendered line 5450) but depends on it. Discovery moved from Part 4: Structure to Part 7: Extensions under ruling R2 (the-greenman/srs#787) as part of unit P4; the edge is now forward as a direct consequence of that move. Same pair as spec-coherence-allowlist.json and spec-readability-allowlist.json entries for these ids. Fold candidate for a later Wave 5 unit."
+      "note": "Composition (Part 6: Presentation) is read before Discovery (Part 7: Extensions) but depends on it. Discovery moved from Part 4: Structure to Part 7: Extensions under ruling R2 (the-greenman/srs#787) as part of unit P4; the edge is now forward as a direct consequence of that move. Same pair as spec-coherence-allowlist.json and spec-readability-allowlist.json entries for these ids. Fold candidate for a later Wave 5 unit."
     }
   ]
 }
