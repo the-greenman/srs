@@ -33,15 +33,35 @@
 const INJECTED_HEADING_TEXT = "Key Invariants (generated index)";
 const INJECTED_HEADING_LEVEL = "##";
 
+// srs#801 successor finding (idempotency defect): the region this function appends is bounded by
+// these two HTML-comment markers so a re-run can recognise and replace a PRIOR injection instead
+// of appending a second one after it. Two consecutive `publish-spec.mjs` runs over identical
+// records must produce byte-identical output — proven by tests/idempotency/run.mjs — and an
+// append-only strategy cannot satisfy that once the input already carries an injection (exactly
+// what happened here: the committed docs/spec/srs-spec.md on this branch had accumulated two
+// copies of this section before this fix landed). Comment markers, not a heading-text match, so a
+// future rename of INJECTED_HEADING_TEXT (like the "Key Invariants" -> "Key Invariants (generated
+// index)" rename that caused this defect) cannot silently break region recognition again.
+const REGION_START = "<!-- srs-generated:key-invariants-index:start -->";
+const REGION_END = "<!-- srs-generated:key-invariants-index:end -->";
+
 /**
- * Append the generated Key Invariants index heading and body to the very end of `content`.
- * Returns the new content. Kept returning `null` never in practice today, but callers still treat
- * a `null` return as "anchor not found" so a future revision can reintroduce that failure mode
- * without also having to change every call site.
+ * Replace the generated Key Invariants index region at the very end of `content` with a freshly
+ * rendered one, appending it if none exists yet. Returns the new content. Kept returning `null`
+ * never in practice today, but callers still treat a `null` return as "anchor not found" so a
+ * future revision can reintroduce that failure mode without also having to change every call site.
  */
 export function injectKeyInvariants(rawContent, injectedContent) {
   // Normalize before appending, same as check-release-drift.mjs's normalizeMarkdownForComparison —
   // an untranslated CRLF elsewhere in the file would make a byte-for-byte drift comparison flap.
   const content = rawContent.replace(/\r\n/g, "\n");
-  return `${content.trimEnd()}\n\n\n${INJECTED_HEADING_LEVEL} ${INJECTED_HEADING_TEXT}\n\n${injectedContent.trimEnd()}\n`;
+  // Strip any previously-injected region (and everything after it, since this section is always
+  // the very last thing in the document) before appending a fresh one.
+  const startIdx = content.indexOf(REGION_START);
+  const base = startIdx === -1 ? content : content.slice(0, startIdx);
+  return (
+    `${base.trimEnd()}\n\n\n${REGION_START}\n` +
+    `${INJECTED_HEADING_LEVEL} ${INJECTED_HEADING_TEXT}\n\n${injectedContent.trimEnd()}\n` +
+    `${REGION_END}\n`
+  );
 }
