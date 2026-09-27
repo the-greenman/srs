@@ -1,0 +1,14 @@
+{
+  "instanceId": "54db2d0e-28a8-46d9-ae8f-06c647728048",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Source documents",
+    "content": "A `SourceDocument` records one piece of raw material a Record refers to but does not itself carry: a `documentId`, a `contentPath`, and a `.meta.json` sidecar with its provenance (title, media type, checksum) and where in a Tier 2 Record's content it was used, via a `SourceAnchor`. It lives under `sourceDocumentsPath` (default `source-documents/`); the sidecar sits in the same directory as its content file, and `contentPath` may name a subdirectory beneath that root but never escape it.\n\nAn `attachment_policy` record, at most one per repository, bounds how many of these a single Record may reference and how large each may be; a repository that declares no policy uses the built-in defaults. `RepositoryManifest.sourceDocumentIndex` lists every one by path and checksum (`SourceDocumentIndexEntry`), the same map-versus-tree relationship instance files have: the tree on disk is authoritative, the index is a validated cross-check."
+  },
+  "createdAt": "2026-09-27T20:52:01.166227791+00:00",
+  "updatedAt": "2026-09-27T21:04:48.842318596+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

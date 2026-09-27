@@ -7,9 +7,9 @@
   "fieldValues": {
     "canonical_key": "part:distribution",
     "title": "Distribution",
-    "description": "How definitions travel between repositories: Package, Reference, Lineage, and Provenance."
+    "description": "How definitions and instances travel outside the tool that made them. A Package bundles Field, Type, Vocabulary and view definitions with a dependency manifest, self-contained or referencing what it depends on. A Repository lays a package and its instances out on disk, with its own layout, manifest, and shape for archives and single-file exchange. Blueprint and Protocol are package-layer definitions built on the entity model — what a whole document extracts to, and how a Record gets built through staged conversation. Where a definition came from, and who published it, is recorded separately, so a consumer can tell an update from a fork."
   },
   "createdAt": "2026-09-08T12:13:52.396375984+00:00",
-  "updatedAt": "2026-09-08T12:13:52.396379569+00:00",
+  "updatedAt": "2026-09-27T21:02:20.886306060+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
