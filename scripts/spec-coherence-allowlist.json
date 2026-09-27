@@ -1,4 +1,17 @@
 {
   "$comment": "Known violations of scripts/check-spec-coherence.mjs (srs#560), each citing the live issue that removes it. Entry shape: {check, id | pair:[sourceId,targetId], issue, note}. The check fails on any violation NOT listed here and on any entry that no longer matches a violation \u2014 shrinking this file IS the migration (#562 un-bakes headings, #563 wires the tree, #564 makes invariants leaves). Growing it needs an issue. `note` is for the human reader only; the key is check + id/pair.",
-  "entries": []
+  "entries": [
+    {
+      "check": "no-forward-reference",
+      "id": "46a090b5-c772-4792-8c21-d97d6cee826f->706db1c3-08ee-42a6-9cd2-7fe4740f481d",
+      "issue": "the-greenman/srs#805",
+      "note": "Composition (Part 6: Presentation) depends on Discovery. Discovery moved from Part 4: Structure to Part 7: Extensions under ruling R2 (the-greenman/srs#787, RFC-042 Change A) as part of unit P4 \u2014 Extensions is read after Presentation, so the edge is now forward. Pre-existing dependency, not introduced by the move; resolving it is an ordering/placement question for a later Wave 5 unit (P6 or a Part-order ruling), not this one."
+    },
+    {
+      "check": "part-order",
+      "id": "46a090b5-c772-4792-8c21-d97d6cee826f->706db1c3-08ee-42a6-9cd2-7fe4740f481d",
+      "issue": "the-greenman/srs#805",
+      "note": "Same edge as the no-forward-reference entry above: Composition (Part 6) now depends on Discovery (Part 7) after Discovery's R2 move to Extensions."
+    }
+  ]
 }
