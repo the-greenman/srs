@@ -152,9 +152,6 @@ This is a recommended default. Implementations that compose differently will pro
 ### Choosing between repeatable fields, field groups, and separate Records
 
 
-### Graduation: when and how
-
-
 ### Relation taxonomy usage
 
 **Content**: 
@@ -394,7 +391,7 @@ The two tiers let a system capture content at whatever maturity level it has, an
 
 The tier model also makes SRS progressively adoptable. A team can start at Tier 0 and arrive at Tier 2 as their understanding of the semantic structure matures, without ever having to restart from scratch.
 
-A middle Tier 1 (Typed Record — named fields, no Type binding) was tried and removed: the 2026-08-21 usage attestation found zero instances of it in any corpus, ever (rfc-decision-53635966). The predecessor design note captures the original three-tier rationale; this note supersedes it with the two-tier reality. Tier numbering (0, 2) keeps the gap deliberately, for reference stability.
+A middle Tier 1 (Typed Record — named fields, no Type binding) was tried and removed: the 2026-08-21 usage attestation found zero instances of it in any corpus, ever (rfc-decision-53635966). Tier numbering (0, 2) keeps the gap deliberately, for reference stability.
 
 
 ### Directory-kind scopes via typed identity records

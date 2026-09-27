@@ -1724,13 +1724,18 @@ relation-type-definition {
 
 ## Instances
 
-The instance layer: Notes and Records as the two record tiers, and how a Record instantiates a Type through typed field values.
+The instance layer: Notes and Records, formalised below as two tiers of semantic maturity, and how a Record instantiates a Type through typed field values.
 
 #### Instance
 
 A piece of captured content, as opposed to a definition that describes a shape. An instance carries its own stable `instanceId` in an id space distinct from the `id` + namespace/name/version lineage that identifies a definition, and it is the thing Relations connect and Containers scope. Confusing the two id spaces is the most common structural error: a Container's id is not an instance id and must never appear on either end of a Relation.
 
 **Notes**: The self-declared `instanceId` inside the file is the identity. It is not derived from the filename or the path, and there is no manifest index to cross-check it against.
+
+##### Relation and Container id constraints
+
+A Relation connects two instance UUIDs, never a definition UUID. A Container scopes a set of instances, never definitions. A Container's own id is a third kind of id: it MUST NOT appear as a Relation's source or target.
+
 
 ##### Note
 
@@ -1884,21 +1889,6 @@ How far a captured instance has been formalised, expressed as a tier and not as 
 
 **Notes**: The gap at Tier 1 is deliberate. `TypedRecord` was removed as an unexercised construct and the surviving tiers were not renumbered, so existing references stay valid.
 
-**Intro**: Graduation is the act of replacing a lower-tier instance with a higher-tier equivalent as its structure stabilises.
-
-**Identity continuity:**
-
-**Outro**: **Graduation is not always one-to-one.** A single meeting Note may graduate into one Decision Record, three Task Records, and two Risk Records. Each resulting Record receives its own `instanceId` and links to the original via `derived-from`. The original Note is preserved as the semantic root of the derived graph.
-
-Implementations may automate graduation suggestions by matching section or field names against `Field.name` values in available Type definitions.
-
-| Scenario | `instanceId` | Relation |
-| --- | --- | --- |
-| Pure formalisation (section names map directly to field names, content unchanged) | Keep | None required |
-| Content interpreted or restructured during formalisation | New | `refines` from new to old |
-| One Note splits into multiple Records | New IDs for all | `derived-from` from each new Record to the original |
-
-
 ##### Why Record tiers exist (Note → Record)
 
 **Content**: Not all content arrives with full semantic formalisation. A meeting note, a brainstorm document, a rough plan — these are valid starting points that should be preserved and referenceable, even before anyone has decided what Types to extract from them.
@@ -1907,7 +1897,7 @@ The two tiers let a system capture content at whatever maturity level it has, an
 
 The tier model also makes SRS progressively adoptable. A team can start at Tier 0 and arrive at Tier 2 as their understanding of the semantic structure matures, without ever having to restart from scratch.
 
-A middle Tier 1 (Typed Record — named fields, no Type binding) was tried and removed: the 2026-08-21 usage attestation found zero instances of it in any corpus, ever (rfc-decision-53635966). The predecessor design note captures the original three-tier rationale; this note supersedes it with the two-tier reality. Tier numbering (0, 2) keeps the gap deliberately, for reference stability.
+A middle Tier 1 (Typed Record — named fields, no Type binding) was tried and removed: the 2026-08-21 usage attestation found zero instances of it in any corpus, ever (rfc-decision-53635966). Tier numbering (0, 2) keeps the gap deliberately, for reference stability.
 
 
 ##### Graduation
@@ -1916,7 +1906,15 @@ Replacing a lower-tier instance with a higher-tier equivalent once its structure
 
 **Notes**: Which link, and whether the instance id survives, follows what actually happened: pure formalisation may keep the id and needs no link; interpretation during formalisation is a new id with `refines`; a split is new ids with `derived-from` from each new Record.
 
-###### Graduation: when and how
+**Intro**: **Identity continuity** across graduation follows what actually happened to the content, not a fixed rule:
+
+**Outro**: Implementations may automate graduation suggestions by matching section or field names against `Field.name` values in available Type definitions.
+
+| Scenario | `instanceId` | Relation |
+| --- | --- | --- |
+| Pure formalisation (section names map directly to field names, content unchanged) | Keep | None required |
+| Content interpreted or restructured during formalisation | New | `refines` from new to old |
+| One Note splits into multiple Records | New IDs for all | `derived-from` from each new Record to the original |
 
 
 ###### Graduation mapping record
@@ -1928,7 +1926,7 @@ A structured artefact recording how a Note was mapped to its Record successor �
 
 ##### Record tiers
 
-SRS supports two semantic maturity tiers. Tier numbering keeps the historical gap at 1: Tier 1 (`Typed Record`) was removed as an unexercised construct — zero instances in any corpus, ever — under the dormancy rule (rfc-decision-53635966); renumbering the surviving tiers would be churn without meaning. Implementations are not required to support both; they may begin at Tier 2.
+SRS supports two semantic maturity tiers, keeping the historical numbering gap at Tier 1 (see Semantic maturity tier). Implementations are not required to support both; they may begin at Tier 2.
 
 | Tier | Type | Structure | Semantics |
 |---|---|---|---|
@@ -1937,15 +1935,6 @@ SRS supports two semantic maturity tiers. Tier numbering keeps the historical ga
 
 Graduation path: Note → Record, linked by a `derived-from` Relation from the Record back to the Note (`note graduate`).
 
-
-
-#### Instance
-
-SRS separates two id spaces. A definition, such as a Field or a Type, is identified by a UUID together with namespace, name, and version: the same UUID names a lineage across versions, and version selects one point in it. An instance, such as a Note or a Record, is identified by its UUID alone, carries no version, and belongs to no lineage: it is a single piece of captured content.
-
-A Relation connects two instance UUIDs, never a definition UUID. A Container scopes a set of instances, never definitions. A Container's own id is a third kind of id: it MUST NOT appear as a Relation's source or target.
-
-Confusing a definition's UUID with an instance's UUID is a recurring correction in this specification. Reading a `typeId` as an instance id, or an `instanceId` as a definition id, produces a reference that resolves to the wrong kind of thing.
 
 
 

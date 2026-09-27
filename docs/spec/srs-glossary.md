@@ -273,7 +273,7 @@ Transcript chunks referenced in `SourceReference` are source material — addres
 
 ### Instances
 
-**Definition**: The instance layer: Notes and Records as the two record tiers, and how a Record instantiates a Type through typed field values.
+**Definition**: The instance layer: Notes and Records, formalised below as two tiers of semantic maturity, and how a Record instantiates a Type through typed field values.
 
 **Key**: part:instances
 
