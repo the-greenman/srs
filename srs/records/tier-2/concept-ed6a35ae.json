@@ -1,0 +1,16 @@
+{
+  "instanceId": "ed6a35ae-43fb-40e3-92e9-ee9e0b9f45ca",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/presentation-shapes-reference",
+    "title": "Presentation shapes (reference)",
+    "description": "Pseudo-IDL for the shapes View, Composition and Theme are built from. Each is reference material for the mechanism that names it (\"Example: the `X` shape\"), collected under this single heading instead of scattered through the main line.",
+    "notes": "Grouped by P6 (srs#807) under X1's reference-material treatment: these hand-authored shape blocks were previously scattered as flat siblings inside View and Theme, breaking the narrative with no connecting prose between them."
+  },
+  "createdAt": "2026-09-27T20:17:20.584146171+00:00",
+  "updatedAt": "2026-09-27T20:59:46.568246943+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
