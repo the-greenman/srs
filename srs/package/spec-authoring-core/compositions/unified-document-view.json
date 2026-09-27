@@ -160,7 +160,17 @@
         "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
-      "emptyBehavior": "hide"
+      "emptyBehavior": "hide",
+      "ordering": {
+        "memberOrder": [
+          "580cfe0e-b23e-4215-a3c4-22cbd0526810",
+          "4d1fa8d8-0048-4b32-ae0d-f4bccbc9e959",
+          "94c41365-f841-4b49-b2ac-3711a5403fe8",
+          "706db1c3-08ee-42a6-9cd2-7fe4740f481d",
+          "82e46ffb-f437-4659-8eec-dbcd6d8a52a9",
+          "c34c0dd8-ce40-4dd9-82a4-2c5ccab8c26f"
+        ]
+      }
     },
     {
       "sectionId": "part-conformance",

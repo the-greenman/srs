@@ -5299,296 +5299,7 @@ client-side `Composition` renderer in a covered format is not exempt.
 
 ## Extensions
 
-The independently adoptable capability modules a repository may declare, and how they interact with each other and with the core.
-
-#### Addressability
-
-A single addressing scheme spanning document space, process space and conversation space, so that anything that can be referred to can be resolved — and so that a transcript fragment and a field on a record are co-addressable, which is what makes an assertion linking them possible. Alongside the stable address sits the live cursor: the current focus of an active process run, which moves continuously and is stamped onto conversation material as it is produced. Because it is stamped at production time, asking for everything said while attention was on this field becomes a query, not a search.
-
-**Notes**: A stable address and a live cursor are structurally similar and must not be merged: one identifies an element, the other records where focus currently is. Likewise a cursor is set live and a source reference is set retrospectively.
-
-##### AttentionState.containerId must reference a valid…
-
-**Number**: 34
-
-`AttentionState.containerId` must reference a valid `Container.containerId`. Other Address components (`recordId`, `fieldId`, `protocolRunId`, `stageId`) are optional and may be absent when focus has not yet narrowed.
-
-
-##### Why Address and AttentionState are needed
-
-**Content**: 
-v1 noted "focus links" as a session-layer concern without defining a mechanism. The mechanism was absent.
-
-Without co-addressability, the transcript/SRS separation is clean in principle but broken in practice. There is no way to say "this conversation happened while we were focused on this Field." Retrospective `SourceReference` links help, but they require someone to explicitly annotate which conversation produced which value. For real-time facilitation, that annotation needs to happen live.
-
-`AttentionState` is the live cursor. Every transcript chunk produced while a Protocol stage is active carries the current `AttentionState` as a tag. Context assembly later queries by address: "all chunks where attention was on Field X in Record Y." The annotation is free because it was captured at production time.
-
-`Address` is the addressing scheme that makes co-addressability possible. A transcript chunk and a Field Revision are in the same address space — they can reference each other because both have resolvable addresses.
-
-**Multi-Container addressing**: A Record may belong to more than one Container simultaneously (a task may exist in both a project Container and a sprint Container). That Record therefore has multiple valid document-space Addresses — one per Container context. This is intentional: `containerId` in a document-space `Address` is not a uniqueness constraint, it is a *context specifier*. `AttentionState.containerId` records which Container was active during a live session, making the contextual anchor explicit. When a session-tagged transcript chunk is later queried, the Container in the `AttentionState` tells you not just *what Record* was being discussed but *in which context* it was being discussed.
-
-
-##### Why Revision is addressable
-
-**Content**: 
-In v1, field revision was an implementation concern. The spec described when to edit in-place versus create a new Record, but individual revisions were not addressable — you could not ask "what did this field say before the last Protocol run?" at the interoperability layer.
-
-This matters for:
-- **Governance challenge**: if a Record is challenged, you need to trace which conversation produced each field value and which version was in place when a downstream decision was made.
-- **Context assembly**: when generating the next draft, knowing what changed between revision 2 and revision 3 — and what conversation produced that change — is more useful than knowing only the current value.
-- **Audit**: a complete audit trail requires addressable history, not just current state.
-
-`Revision` is the addressable audit trail. It does not replace the edit-in-place vs. new-Record judgment for minor corrections. That remains an implementation concern. Revision is the interoperability layer for cases where history itself is a first-class concern.
-
-
-##### Addressability as a prerequisite for live facilitation
-
-**Content**: 
-`ext:addressability` is not just about naming things. It is the mechanism that makes the conversation layer useful. Without `AttentionState`, transcript chunks have no address-time connection to the Records they inform. Without `Revision`, the history of a field's value is an implementation detail not visible at the interoperability layer.
-
-Any implementation that facilitates live sessions — where conversation material is produced while people are working on specific Records and Fields — should implement `ext:addressability`. Without it, context assembly is purely retrospective, and the quality of AI assistance degrades accordingly.
-
-**Diff rendering:** implementations rendering Revision history for governance review should support a diff view that shows field-level removals alongside additions, not only the current value. The Revision chain already provides the data needed for three useful modes: final (current value only), all markup (current value plus prior content shown as removed and new content as added), and original (the value at a specified Revision). This is a rendering pattern, not a separate data shape.
-
-
-##### Sub-field addressing
-
-**Content**: 
-Web UI comments and annotations attached to specific text within a Field value require addressing below the Field level. `ext:addressability` currently addresses at Field granularity. Sub-field text selection addressing is architecturally possible (the Address space accommodates it) but is deferred as a separate extension.
-
----
-
-
-##### The `Address` union
-
-`Address`, in pseudo-IDL:
-
-```typescript
-type Address =
-  | {
-      space: "document"
-      containerId: UUID
-      recordId?: UUID
-      fieldId?: UUID
-    }
-  | {
-      space: "process"
-      runId: UUID          // Protocol run ID; requires ext:protocol
-      stageId?: string
-    }
-  | {
-      space: "conversation"
-      sessionId: UUID
-      chunkId?: UUID
-      annotationId?: UUID
-    }
-```
-
-
-##### The `AttentionState` shape
-
-`AttentionState`, in pseudo-IDL:
-
-```typescript
-{
-  containerId: UUID
-  recordId?: UUID
-  fieldId?: UUID
-  protocolRunId?: UUID
-  stageId?: string
-}
-```
-
-
-##### ext:addressability
-
-**Required for**: any implementation with live facilitation or multi-session extraction.
-
-Defines a universal addressing scheme and the mechanisms that connect conversation material to document elements.
-
-
-##### `Address`
-
-A stable, resolvable identifier for any element across document space, process space, and conversation space.
-
-Example: the `Address` union.
-
-Every element that can be referred to has an Address. A transcript chunk and a document-space field are co-addressable because assertions about one referencing the other require both to be resolvable.
-
-
-##### `AttentionState`
-
-The current focus of an active Protocol run — a live cursor across the address space. `AttentionState` and `Address` are structurally related but serve distinct roles: an `Address` is a stable, resolvable identifier for a specific element; `AttentionState` is the mutable cursor that records *where focus currently is* during an active session. An `AttentionState` value at a point in time resolves to a document-space `Address`, but it is stored separately because it changes continuously as the Protocol advances.
-
-Conversation material is tagged with the active `AttentionState` as it is produced. This makes context assembly efficient: "all chunks produced while focus was on this Field" is a queryable address predicate.
-
-Example: the `AttentionState` shape.
-
-`AttentionState` is set live by the session or Protocol runner. `SourceReference` is set retrospectively at extraction or editorial review time. Both are needed; they answer different questions.
-
-
-##### Context Query (behavioural requirement)
-
-A conforming `ext:addressability` implementation must be able to assemble relevant material given an address and a purpose. This is a behavioural requirement, not a data shape.
-
-**Required query patterns:**
-
-| Pattern | Address | Returns |
-|---|---|---|
-| Field context | `{recordId}/{fieldId}` | Current value, chunks tagged to this Field, Field `aiGuidance` |
-| Record context | `{recordId}` | All field values, chunks tagged to this Record, Relations, Protocol run history |
-| Stage context | `{runId}/{stageId}` | All chunks produced during this stage, Fields active in this stage |
-
-**Recommended assembly order for AI assistance:**
-
-1. Type and Field `aiGuidance` — what this field captures, how to extract it
-2. Current value — what has already been established
-3. Chunks tagged to this Field via AttentionState — most focused context
-4. Chunks tagged to the parent Record — broader session context
-5. Related Records via Relations — structural context
-
-**Note (2026-08-21, `rfc-decision-2a1e1590`)**: the per-field `Revision` snapshot mechanism (addressable field-value history, `revisionId`, revision chains, revision-trace queries) previously specified here is removed under the dormancy rule — zero corpus use, and it was incompletely specified (a PascalCase wire-format leak in its agent tag, and a coupling that named a pre-RFC-006 field). `Address`, `AttentionState`, and the Context Query requirement above are untouched by that removal. Return trigger: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface.
-
-
-
-#### Conversation boundary
-
-The permanent architectural line between raw multimodal source material (speech, threads, annotations) and the negotiated semantic state SRS captures. The two layers reference each other in both directions but never merge: material on the conversation side is addressable evidence, and it does not become an instance automatically. A transcript chunk cited as evidence for a field value is not a Note unless someone deliberately models it as one.
-
-**Notes**: The conversation layer is optional infrastructure. A repository declaring only the core plus the file-based repository format needs none of it, and source documents stored in the repository are sufficient evidence storage.
-
-##### Why the conversation layer is a permanent boundary
-
-**Content**: 
-SRS captures negotiated semantic state. Transcripts capture raw material — speech, threads, annotations — from which semantic state is extracted or constructed. These are different things, and conflating them would harm both.
-
-If SRS tried to be a transcript standard, it would need to model speaker identity, timing, overlapping speech, and audio quality — none of which are semantic concerns. If the transcript standard tried to be a semantic state standard, it would need to version field definitions, track lineage, and manage inter-Record Relations — none of which are evidence concerns.
-
-The boundary makes both layers better at what they do. The connection between them — `SourceReference` and `AttentionState` — is the bidirectional bridge. Each layer references the other; neither absorbs the other.
-
----
-
-
-
-#### Discovery
-
-A portable contract for asking a repository what it holds, split deliberately into two halves that behave differently. Structured filters, over type, container, tag, tier and lifecycle state, are exact-match predicates: two conforming implementations with the same data must return the same set. Free-text content matching is a recall floor: every instance whose projected text contains the normalised query must be returned, and returning more, or ranking differently, is explicitly permitted. This is what lets a naive substring matcher and a semantic search engine both conform.
-
-**Notes**: Matching runs over a deterministic text projection: an ordered sequence of segments derived from an instance by a stated rule about which fields are searchable, normalised at match time by Unicode NFC and case folding, with punctuation, diacritics and whitespace left intact.
-
-##### lifecycleStates in DiscoveryQuery is an inclusive multi-value lifecycle filter
-
-**Number**: I-142
-
-When DiscoveryQuery carries a non-empty lifecycleStates array, implementations MUST restrict the query result to instances whose lifecycleState matches any value in the array (OR semantics). An instance with no lifecycleState MUST be excluded when lifecycleStates is present and non-empty. When lifecycleStates is absent or empty, no filtering by this field is applied and all lifecycle states (including absent) are included. Implementations that do not declare ext:lifecycle MUST ignore lifecycleStates and MUST NOT produce a validation error on its presence.
-
-**Rationale**: Multi-value OR semantics mirrors typeFilter and enables queries that span multiple lifecycle stages (e.g. draft and active). The ext:lifecycle guard ensures that implementations without a lifecycle model are not broken by the field. Originally numbered 011-1 under RFC-011's rule-set-qualified proposal-stage numbering; relocated from package/records/ into the projection root and renumbered I-142 upon RFC-011 acceptance (srs#410, rfc-decision-628cf6c4). Retained at I-142 through the srs#525 SectionSource -> DiscoveryQuery collapse (rfc-decision-cce3c00e, rfc-decision-9ee14517): the predicate moved from SectionSource.type-query to DiscoveryQuery, now governed by RFC-012 Rev 12 (formerly RFC-011 Change A) -- identifier stability preferred over renumbering (identity over label).
-
-
-##### excludeLifecycleStates in DiscoveryQuery is an exclusion lifecycle filter applied after inclusion
-
-**Number**: I-143
-
-When DiscoveryQuery carries a non-empty excludeLifecycleStates array, implementations MUST exclude from the query result any instance whose lifecycleState matches any value in the array. When lifecycleStates and excludeLifecycleStates are both present and non-empty, inclusion filtering (I-142) MUST be applied first; exclusion filtering is then applied to the survivors. An instance with no lifecycleState is not excluded by excludeLifecycleStates (only instances with a matching non-null lifecycleState are excluded). When excludeLifecycleStates is absent or empty, no exclusion is applied. Implementations that do not declare ext:lifecycle MUST ignore excludeLifecycleStates and MUST NOT produce a validation error on its presence.
-
-**Rationale**: Exclusion is more forward-compatible than inclusion for the decision-log pattern: specifying excludeLifecycleStates: [superseded, abandoned] automatically includes any new lifecycle states added in future without Composition updates. Inclusion-first-then-exclusion semantics allow fine-grained control when both fields are present. Originally numbered 011-2 under RFC-011's rule-set-qualified proposal-stage numbering; relocated from package/records/ into the projection root and renumbered I-143 upon RFC-011 acceptance (srs#410, rfc-decision-628cf6c4). Retained at I-143 through the srs#525 SectionSource -> DiscoveryQuery collapse (rfc-decision-cce3c00e, rfc-decision-9ee14517): the predicate moved from SectionSource.type-query to DiscoveryQuery, now governed by RFC-012 Rev 12 (formerly RFC-011 Change B) -- identifier stability preferred over renumbering (identity over label).
-
-
-##### Structured filter predicates are exact-match
-
-**Number**: I-113
-
-An implementation that declares `ext:discovery` MUST include in its DiscoveryQuery result set every instance that satisfies all specified structured filter predicates (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `excludeLifecycleStates`, `tier`), and MUST NOT include any instance that fails any specified structured filter predicate. (RFC-012 R1.)
-
-
-##### Content-match is a guaranteed recall floor
-
-**Number**: I-114
-
-For a `contentMatch` predicate with normalized query string `q`, an implementation that declares `ext:discovery` MUST include every instance whose Text Projection contains at least one `TextSegment` whose normalized `text` contains `q` as a substring (case-folded NFC substring match). (RFC-012 R2.)
-
-
-##### Extra content-match results are permitted
-
-**Number**: I-115
-
-An implementation MAY include instances beyond the recall-floor set defined by I-114 (e.g. via stemming, phonetic matching, or semantic similarity). Returning extra results does not violate `ext:discovery` conformance. (RFC-012 R3.)
-
-
-##### Result ranking is implementation-defined
-
-**Number**: I-116
-
-An implementation MAY rank DiscoveryQuery results in any order. The recall-floor guarantee of I-114 applies to inclusion in the result set only, not to rank position. (RFC-012 R4.)
-
-
-##### Structured filters and content-match compose by conjunction
-
-**Number**: I-117
-
-When both structured filters and `contentMatch` are specified on a DiscoveryQuery, an instance MUST satisfy all structured filter predicates (exact-match, I-113) AND the content-match recall-floor predicate (I-114). The structured-filter constraints cannot be overridden or widened by content-match extra recall. (RFC-012 R5.)
-
-
-##### containerId filter uses effective container membership
-
-**Number**: I-118
-
-A `containerId` filter predicate MUST match exactly the instances in effective(C) for the named Container C: the recursive closure over the Container's declared `rootInstanceIds`, `memberInstanceIds` and `childContainerIds` (RFC-034 [R8]; I-147). Discovery scopes to the full effective (deep) closure; a `contains` Relation never contributes (I-148). The authoritative inputs are the Container objects and their declared child graph in the repository's authoritative store (RFC-038 [R1]). An implementation MAY maintain a derived catalog for performance but MUST treat the store as authoritative when they differ; there is no manifest `instanceIndex` to use as a cache, as it is retired (RFC-038 [R2]). (RFC-012 R6, as amended by RFC-034 Change D.2 on 2026-09-06: the former three-condition rule of rootInstanceIds, OR memberInstanceIds, OR reachable via transitive `contains` traversal is superseded; its traversal branch is removed.)
-
-
-##### Multi-tag filter uses AND semantics with vocabulary resolution
-
-**Number**: I-119
-
-A `tag` predicate with multiple values MUST use AND semantics — all specified tags must be present on the instance. Both query tags and stored instance tags are canonicalized via RFC-006 key-or-alias resolution when a Vocabulary is declared for the tag key; when no Vocabulary is declared, raw string comparison applies (case-sensitive). (RFC-012 R7.)
-
-
-##### Text Projection includes only Fields matching the RFC-032 searchability predicate
-
-**Number**: I-120
-
-For Tier 2, the Text Projection MUST include a Field only when `fieldType.datatype == "string"` and `fieldType.format` is absent or one of `"plain"`, `"markdown"`, or `"uri"`. `valueDomain` does not affect searchability. A single-cardinality Field emits one segment; a list-cardinality Field emits one segment per array element in order. Fields with `format: "uuid"` or `format: "email"`, or datatype `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, or `map`, MUST NOT contribute `TextSegment`s. (RFC-012 R8; RFC-032 Rev-7 erratum.)
-
-
-##### Text Projection includes tags; display labels are optional
-
-**Number**: I-121
-
-The Text Projection MUST include `tags` array entries as `TextSegment`s after field segments. An implementation MAY additionally include `FieldAssignment.displayLabel` values as segments after tags — this is not required, and two conforming implementations may differ on whether display-label segments are included. (RFC-012 R9.)
-
-
-##### Text normalization is NFC + case folding, no stripping
-
-**Number**: I-122
-
-Normalization of `TextSegment.text` MUST apply Unicode Normalization Form C (NFC) followed by Unicode simple case folding (locale-independent). Implementations MUST NOT strip punctuation, diacritics, or whitespace during this normalization step; additional stemming or tokenization is permitted for ranking purposes only, not as a substitute for the normalized canonical search string. (RFC-012 R10.)
-
-
-
-#### Conversation Layer
-
-> **Standalone repository note**: An implementation declaring only `SRS 2.0 Core + ext:repository` does not require a TSS, ext:protocol, ext:addressability, AttentionState, or any live store for raw multimodal material; source documents stored in `source-documents/` are sufficient evidence storage for standalone use. This note describes the full-stack integration model, and implementers building file-based or offline repositories may skip it entirely.
-
-This is a permanent architectural boundary distinct from SRS. It captures raw multimodal source material; SRS captures negotiated semantic state. They reference each other bidirectionally via `SourceReference` (document → conversation) and `AttentionState` tags (conversation → document, via `ext:addressability`).
-
-```
-Conversation layer  →  raw multimodal source material (speech, threads, annotations)
-                        elements tagged with Address at production time
-Protocol layer      →  sequences turns between parties; advances AttentionState
-SRS layer          →  captures negotiated semantic state; Records carry SourceReferences
-Presentation layer  →  renders SRS state via Views
-```
-
-Three conversation types are in scope:
-
-| Type | Structure | Anchoring |
-|---|---|---|
-| Meeting transcript | Linear, time-ordered chunks | Tagged with AttentionState at production time |
-| Threaded conversation | Tree of replies | Thread root anchored to a document element Address |
-| Web UI annotations | Attached to content | Anchored to a Field or Record Address |
-
-Transcript chunks referenced in `SourceReference` are source material — addressable evidence. They do not become Notes or Records automatically. A transcript chunk referenced in `sourceRefs` is evidence supporting a field value; it is not itself a Note unless someone deliberately models it as one.
-
+How a repository declares which independently adoptable capability modules it implements, and the behavioural requirements that activate only when two declared extensions are present together. Most extensions have a natural home and their capability is documented there, beside the concept they extend — ext:lifecycle beside Lifecycle, ext:views-l1 beside View, and so on. Addressability and Discovery are documented here in full because each is itself a whole capability with no single host concept elsewhere. This Part also documents the conversation/SRS boundary that several of these extensions build on.
 
 Extensions are optional, independently adoptable capability modules. Each declares its identifier, dependencies, and the types it defines.
 
@@ -5610,6 +5321,8 @@ Extensions are optional, independently adoptable capability modules. Each declar
 | Views L1 | `ext:views-l1` | — |
 | Views L2 | `ext:views-l2` | `ext:views-l1` |
 <!-- srs-generated:extension-index:end -->
+
+**Notes**: No extension is required for core conformance, and an implementation adopts only what it needs. The table below is the full list of live extensions and their dependencies; each extension's own capability is documented beside the concept it extends instead of here, unless it has no single host concept — Addressability and Discovery are the two exceptions, documented in full elsewhere in this Part.
 
 ##### Import Tracking
 
@@ -6529,6 +6242,8 @@ blueprint {
 
 Declaring two named extensions together activates behavioural requirements that apply only when both are present in the same implementation.
 
+**Notes**: These interactions are compositional constraints, not new extensions or new types: `ext:protocol` × `ext:addressability` and `ext:lifecycle` × `ext:addressability` (below) are the two currently defined. A pair may be formally independent yet functionally co-dependent for a given use; the requirement applies only where both are declared.
+
 ##### ext:protocol × ext:addressability
 
 Protocol stage advancement updates `AttentionState`. This governs an implementation declaring both `ext:protocol` and `ext:addressability`: when a Protocol run advances from one stage to another, the active `AttentionState` MUST reflect the new stage before any conversation material is tagged.
@@ -6548,6 +6263,295 @@ Conversation chunks produced while `AttentionState.stageId` is set are associate
 
 **Return trigger**: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface. When a real consumer's requirements are known, the coupling is redesigned against them, not reinstated as specified here.
 
+
+
+#### Addressability
+
+A single addressing scheme spanning document space, process space and conversation space, so that anything that can be referred to can be resolved — and so that a transcript fragment and a field on a record are co-addressable, which is what makes an assertion linking them possible. Alongside the stable address sits the live cursor: the current focus of an active process run, which moves continuously and is stamped onto conversation material as it is produced. Because it is stamped at production time, asking for everything said while attention was on this field becomes a query, not a search.
+
+**Notes**: A stable address and a live cursor are structurally similar and must not be merged: one identifies an element, the other records where focus currently is. Likewise a cursor is set live and a source reference is set retrospectively.
+
+##### AttentionState.containerId must reference a valid…
+
+**Number**: 34
+
+`AttentionState.containerId` must reference a valid `Container.containerId`. Other Address components (`recordId`, `fieldId`, `protocolRunId`, `stageId`) are optional and may be absent when focus has not yet narrowed.
+
+
+##### Why Address and AttentionState are needed
+
+**Content**: 
+v1 noted "focus links" as a session-layer concern without defining a mechanism. The mechanism was absent.
+
+Without co-addressability, the transcript/SRS separation is clean in principle but broken in practice. There is no way to say "this conversation happened while we were focused on this Field." Retrospective `SourceReference` links help, but they require someone to explicitly annotate which conversation produced which value. For real-time facilitation, that annotation needs to happen live.
+
+`AttentionState` is the live cursor. Every transcript chunk produced while a Protocol stage is active carries the current `AttentionState` as a tag. Context assembly later queries by address: "all chunks where attention was on Field X in Record Y." The annotation is free because it was captured at production time.
+
+`Address` is the addressing scheme that makes co-addressability possible. A transcript chunk and a Field Revision are in the same address space — they can reference each other because both have resolvable addresses.
+
+**Multi-Container addressing**: A Record may belong to more than one Container simultaneously (a task may exist in both a project Container and a sprint Container). That Record therefore has multiple valid document-space Addresses — one per Container context. This is intentional: `containerId` in a document-space `Address` is not a uniqueness constraint, it is a *context specifier*. `AttentionState.containerId` records which Container was active during a live session, making the contextual anchor explicit. When a session-tagged transcript chunk is later queried, the Container in the `AttentionState` tells you not just *what Record* was being discussed but *in which context* it was being discussed.
+
+
+##### Why Revision is addressable
+
+**Content**: 
+In v1, field revision was an implementation concern. The spec described when to edit in-place versus create a new Record, but individual revisions were not addressable — you could not ask "what did this field say before the last Protocol run?" at the interoperability layer.
+
+This matters for:
+- **Governance challenge**: if a Record is challenged, you need to trace which conversation produced each field value and which version was in place when a downstream decision was made.
+- **Context assembly**: when generating the next draft, knowing what changed between revision 2 and revision 3 — and what conversation produced that change — is more useful than knowing only the current value.
+- **Audit**: a complete audit trail requires addressable history, not just current state.
+
+`Revision` is the addressable audit trail. It does not replace the edit-in-place vs. new-Record judgment for minor corrections. That remains an implementation concern. Revision is the interoperability layer for cases where history itself is a first-class concern.
+
+
+##### Addressability as a prerequisite for live facilitation
+
+**Content**: 
+`ext:addressability` is not just about naming things. It is the mechanism that makes the conversation layer useful. Without `AttentionState`, transcript chunks have no address-time connection to the Records they inform. Without `Revision`, the history of a field's value is an implementation detail not visible at the interoperability layer.
+
+Any implementation that facilitates live sessions — where conversation material is produced while people are working on specific Records and Fields — should implement `ext:addressability`. Without it, context assembly is purely retrospective, and the quality of AI assistance degrades accordingly.
+
+**Diff rendering:** implementations rendering Revision history for governance review should support a diff view that shows field-level removals alongside additions, not only the current value. The Revision chain already provides the data needed for three useful modes: final (current value only), all markup (current value plus prior content shown as removed and new content as added), and original (the value at a specified Revision). This is a rendering pattern, not a separate data shape.
+
+
+##### Sub-field addressing
+
+**Content**: 
+Web UI comments and annotations attached to specific text within a Field value require addressing below the Field level. `ext:addressability` currently addresses at Field granularity. Sub-field text selection addressing is architecturally possible (the Address space accommodates it) but is deferred as a separate extension.
+
+---
+
+
+##### The `Address` union
+
+`Address`, in pseudo-IDL:
+
+```typescript
+type Address =
+  | {
+      space: "document"
+      containerId: UUID
+      recordId?: UUID
+      fieldId?: UUID
+    }
+  | {
+      space: "process"
+      runId: UUID          // Protocol run ID; requires ext:protocol
+      stageId?: string
+    }
+  | {
+      space: "conversation"
+      sessionId: UUID
+      chunkId?: UUID
+      annotationId?: UUID
+    }
+```
+
+
+##### The `AttentionState` shape
+
+`AttentionState`, in pseudo-IDL:
+
+```typescript
+{
+  containerId: UUID
+  recordId?: UUID
+  fieldId?: UUID
+  protocolRunId?: UUID
+  stageId?: string
+}
+```
+
+
+##### ext:addressability
+
+**Required for**: any implementation with live facilitation or multi-session extraction.
+
+Defines a universal addressing scheme and the mechanisms that connect conversation material to document elements.
+
+
+##### `Address`
+
+A stable, resolvable identifier for any element across document space, process space, and conversation space.
+
+Example: the `Address` union.
+
+Every element that can be referred to has an Address. A transcript chunk and a document-space field are co-addressable because assertions about one referencing the other require both to be resolvable.
+
+
+##### `AttentionState`
+
+The current focus of an active Protocol run — a live cursor across the address space. `AttentionState` and `Address` are structurally related but serve distinct roles: an `Address` is a stable, resolvable identifier for a specific element; `AttentionState` is the mutable cursor that records *where focus currently is* during an active session. An `AttentionState` value at a point in time resolves to a document-space `Address`, but it is stored separately because it changes continuously as the Protocol advances.
+
+Conversation material is tagged with the active `AttentionState` as it is produced. This makes context assembly efficient: "all chunks produced while focus was on this Field" is a queryable address predicate.
+
+Example: the `AttentionState` shape.
+
+`AttentionState` is set live by the session or Protocol runner. `SourceReference` is set retrospectively at extraction or editorial review time. Both are needed; they answer different questions.
+
+
+##### Context Query (behavioural requirement)
+
+A conforming `ext:addressability` implementation must be able to assemble relevant material given an address and a purpose. This is a behavioural requirement, not a data shape.
+
+**Required query patterns:**
+
+| Pattern | Address | Returns |
+|---|---|---|
+| Field context | `{recordId}/{fieldId}` | Current value, chunks tagged to this Field, Field `aiGuidance` |
+| Record context | `{recordId}` | All field values, chunks tagged to this Record, Relations, Protocol run history |
+| Stage context | `{runId}/{stageId}` | All chunks produced during this stage, Fields active in this stage |
+
+**Recommended assembly order for AI assistance:**
+
+1. Type and Field `aiGuidance` — what this field captures, how to extract it
+2. Current value — what has already been established
+3. Chunks tagged to this Field via AttentionState — most focused context
+4. Chunks tagged to the parent Record — broader session context
+5. Related Records via Relations — structural context
+
+**Note (2026-08-21, `rfc-decision-2a1e1590`)**: the per-field `Revision` snapshot mechanism (addressable field-value history, `revisionId`, revision chains, revision-trace queries) previously specified here is removed under the dormancy rule — zero corpus use, and it was incompletely specified (a PascalCase wire-format leak in its agent tag, and a coupling that named a pre-RFC-006 field). `Address`, `AttentionState`, and the Context Query requirement above are untouched by that removal. Return trigger: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface.
+
+
+
+#### Discovery
+
+A portable contract for asking a repository what it holds, split deliberately into two halves that behave differently. Structured filters, over type, container, tag, tier and lifecycle state, are exact-match predicates: two conforming implementations with the same data must return the same set. Free-text content matching is a recall floor: every instance whose projected text contains the normalised query must be returned, and returning more, or ranking differently, is explicitly permitted. This is what lets a naive substring matcher and a semantic search engine both conform.
+
+**Notes**: Matching runs over a deterministic text projection: an ordered sequence of segments derived from an instance by a stated rule about which fields are searchable, normalised at match time by Unicode NFC and case folding, with punctuation, diacritics and whitespace left intact.
+
+##### lifecycleStates in DiscoveryQuery is an inclusive multi-value lifecycle filter
+
+**Number**: I-142
+
+When DiscoveryQuery carries a non-empty lifecycleStates array, implementations MUST restrict the query result to instances whose lifecycleState matches any value in the array (OR semantics). An instance with no lifecycleState MUST be excluded when lifecycleStates is present and non-empty. When lifecycleStates is absent or empty, no filtering by this field is applied and all lifecycle states (including absent) are included. Implementations that do not declare ext:lifecycle MUST ignore lifecycleStates and MUST NOT produce a validation error on its presence.
+
+**Rationale**: Multi-value OR semantics mirrors typeFilter and enables queries that span multiple lifecycle stages (e.g. draft and active). The ext:lifecycle guard ensures that implementations without a lifecycle model are not broken by the field. Originally numbered 011-1 under RFC-011's rule-set-qualified proposal-stage numbering; relocated from package/records/ into the projection root and renumbered I-142 upon RFC-011 acceptance (srs#410, rfc-decision-628cf6c4). Retained at I-142 through the srs#525 SectionSource -> DiscoveryQuery collapse (rfc-decision-cce3c00e, rfc-decision-9ee14517): the predicate moved from SectionSource.type-query to DiscoveryQuery, now governed by RFC-012 Rev 12 (formerly RFC-011 Change A) -- identifier stability preferred over renumbering (identity over label).
+
+
+##### excludeLifecycleStates in DiscoveryQuery is an exclusion lifecycle filter applied after inclusion
+
+**Number**: I-143
+
+When DiscoveryQuery carries a non-empty excludeLifecycleStates array, implementations MUST exclude from the query result any instance whose lifecycleState matches any value in the array. When lifecycleStates and excludeLifecycleStates are both present and non-empty, inclusion filtering (I-142) MUST be applied first; exclusion filtering is then applied to the survivors. An instance with no lifecycleState is not excluded by excludeLifecycleStates (only instances with a matching non-null lifecycleState are excluded). When excludeLifecycleStates is absent or empty, no exclusion is applied. Implementations that do not declare ext:lifecycle MUST ignore excludeLifecycleStates and MUST NOT produce a validation error on its presence.
+
+**Rationale**: Exclusion is more forward-compatible than inclusion for the decision-log pattern: specifying excludeLifecycleStates: [superseded, abandoned] automatically includes any new lifecycle states added in future without Composition updates. Inclusion-first-then-exclusion semantics allow fine-grained control when both fields are present. Originally numbered 011-2 under RFC-011's rule-set-qualified proposal-stage numbering; relocated from package/records/ into the projection root and renumbered I-143 upon RFC-011 acceptance (srs#410, rfc-decision-628cf6c4). Retained at I-143 through the srs#525 SectionSource -> DiscoveryQuery collapse (rfc-decision-cce3c00e, rfc-decision-9ee14517): the predicate moved from SectionSource.type-query to DiscoveryQuery, now governed by RFC-012 Rev 12 (formerly RFC-011 Change B) -- identifier stability preferred over renumbering (identity over label).
+
+
+##### Structured filter predicates are exact-match
+
+**Number**: I-113
+
+An implementation that declares `ext:discovery` MUST include in its DiscoveryQuery result set every instance that satisfies all specified structured filter predicates (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `excludeLifecycleStates`, `tier`), and MUST NOT include any instance that fails any specified structured filter predicate. (RFC-012 R1.)
+
+
+##### Content-match is a guaranteed recall floor
+
+**Number**: I-114
+
+For a `contentMatch` predicate with normalized query string `q`, an implementation that declares `ext:discovery` MUST include every instance whose Text Projection contains at least one `TextSegment` whose normalized `text` contains `q` as a substring (case-folded NFC substring match). (RFC-012 R2.)
+
+
+##### Extra content-match results are permitted
+
+**Number**: I-115
+
+An implementation MAY include instances beyond the recall-floor set defined by I-114 (e.g. via stemming, phonetic matching, or semantic similarity). Returning extra results does not violate `ext:discovery` conformance. (RFC-012 R3.)
+
+
+##### Result ranking is implementation-defined
+
+**Number**: I-116
+
+An implementation MAY rank DiscoveryQuery results in any order. The recall-floor guarantee of I-114 applies to inclusion in the result set only, not to rank position. (RFC-012 R4.)
+
+
+##### Structured filters and content-match compose by conjunction
+
+**Number**: I-117
+
+When both structured filters and `contentMatch` are specified on a DiscoveryQuery, an instance MUST satisfy all structured filter predicates (exact-match, I-113) AND the content-match recall-floor predicate (I-114). The structured-filter constraints cannot be overridden or widened by content-match extra recall. (RFC-012 R5.)
+
+
+##### containerId filter uses effective container membership
+
+**Number**: I-118
+
+A `containerId` filter predicate MUST match exactly the instances in effective(C) for the named Container C: the recursive closure over the Container's declared `rootInstanceIds`, `memberInstanceIds` and `childContainerIds` (RFC-034 [R8]; I-147). Discovery scopes to the full effective (deep) closure; a `contains` Relation never contributes (I-148). The authoritative inputs are the Container objects and their declared child graph in the repository's authoritative store (RFC-038 [R1]). An implementation MAY maintain a derived catalog for performance but MUST treat the store as authoritative when they differ; there is no manifest `instanceIndex` to use as a cache, as it is retired (RFC-038 [R2]). (RFC-012 R6, as amended by RFC-034 Change D.2 on 2026-09-06: the former three-condition rule of rootInstanceIds, OR memberInstanceIds, OR reachable via transitive `contains` traversal is superseded; its traversal branch is removed.)
+
+
+##### Multi-tag filter uses AND semantics with vocabulary resolution
+
+**Number**: I-119
+
+A `tag` predicate with multiple values MUST use AND semantics — all specified tags must be present on the instance. Both query tags and stored instance tags are canonicalized via RFC-006 key-or-alias resolution when a Vocabulary is declared for the tag key; when no Vocabulary is declared, raw string comparison applies (case-sensitive). (RFC-012 R7.)
+
+
+##### Text Projection includes only Fields matching the RFC-032 searchability predicate
+
+**Number**: I-120
+
+For Tier 2, the Text Projection MUST include a Field only when `fieldType.datatype == "string"` and `fieldType.format` is absent or one of `"plain"`, `"markdown"`, or `"uri"`. `valueDomain` does not affect searchability. A single-cardinality Field emits one segment; a list-cardinality Field emits one segment per array element in order. Fields with `format: "uuid"` or `format: "email"`, or datatype `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, or `map`, MUST NOT contribute `TextSegment`s. (RFC-012 R8; RFC-032 Rev-7 erratum.)
+
+
+##### Text Projection includes tags; display labels are optional
+
+**Number**: I-121
+
+The Text Projection MUST include `tags` array entries as `TextSegment`s after field segments. An implementation MAY additionally include `FieldAssignment.displayLabel` values as segments after tags — this is not required, and two conforming implementations may differ on whether display-label segments are included. (RFC-012 R9.)
+
+
+##### Text normalization is NFC + case folding, no stripping
+
+**Number**: I-122
+
+Normalization of `TextSegment.text` MUST apply Unicode Normalization Form C (NFC) followed by Unicode simple case folding (locale-independent). Implementations MUST NOT strip punctuation, diacritics, or whitespace during this normalization step; additional stemming or tokenization is permitted for ranking purposes only, not as a substitute for the normalized canonical search string. (RFC-012 R10.)
+
+
+
+#### Conversation boundary
+
+The permanent architectural line between raw multimodal source material (speech, threads, annotations) and the negotiated semantic state SRS captures. The two layers reference each other in both directions but never merge: material on the conversation side is addressable evidence, and it does not become an instance automatically. A transcript chunk cited as evidence for a field value is not a Note unless someone deliberately models it as one.
+
+**Notes**: This is not itself an extension — it is the boundary that `ext:addressability` and `ext:protocol` are built to cross. It is documented in this Part, alongside the extensions that depend on it, instead of in Foundations. The conversation layer is optional infrastructure: a repository declaring only the core plus the file-based repository format needs none of it, and source documents stored under `source-documents/` are sufficient evidence storage on their own.
+
+##### Why the conversation layer is a permanent boundary
+
+**Content**: 
+SRS captures negotiated semantic state. Transcripts capture raw material — speech, threads, annotations — from which semantic state is extracted or constructed. These are different things, and conflating them would harm both.
+
+If SRS tried to be a transcript standard, it would need to model speaker identity, timing, overlapping speech, and audio quality — none of which are semantic concerns. If the transcript standard tried to be a semantic state standard, it would need to version field definitions, track lineage, and manage inter-Record Relations — none of which are evidence concerns.
+
+The boundary makes both layers better at what they do. The connection between them — `SourceReference` and `AttentionState` — is the bidirectional bridge. Each layer references the other; neither absorbs the other.
+
+---
+
+
+
+#### Conversation Layer
+
+> **Standalone repository note**: An implementation declaring only `SRS 2.0 Core + ext:repository` does not require a TSS, ext:protocol, ext:addressability, AttentionState, or any live store for raw multimodal material; source documents stored in `source-documents/` are sufficient evidence storage for standalone use. This note describes the full-stack integration model, and implementers building file-based or offline repositories may skip it entirely.
+
+This is the Conversation boundary concept's own line seen from the integration side: how the conversation layer, protocol layer, SRS layer and presentation layer connect via `SourceReference` and `AttentionState`.
+
+```
+Conversation layer  →  raw multimodal source material (speech, threads, annotations)
+                        elements tagged with Address at production time
+Protocol layer      →  sequences turns between parties; advances AttentionState
+SRS layer          →  captures negotiated semantic state; Records carry SourceReferences
+Presentation layer  →  renders SRS state via Views
+```
+
+Three conversation types are in scope:
+
+| Type | Structure | Anchoring |
+|---|---|---|
+| Meeting transcript | Linear, time-ordered chunks | Tagged with AttentionState at production time |
+| Threaded conversation | Tree of replies | Thread root anchored to a document element Address |
+| Web UI annotations | Attached to content | Anchored to a Field or Record Address |
+
+Transcript chunks referenced in `SourceReference` are source material — addressable evidence, not Notes or Records, per Conversation boundary's rule.
 
 
 
