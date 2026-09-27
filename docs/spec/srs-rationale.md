@@ -240,20 +240,6 @@ These are complementary but distinct. A Composition cannot serve as an extractio
 An extraction pipeline uses Blueprint + Field `aiGuidance` + Protocol to produce Records. A rendering pipeline uses View + Composition to project those Records into readable form.
 
 
-### `semanticObjectType` as a federation risk
-
-**Content**: 
-`semanticObjectType` on `Type` and in `SectionSource.type-query` is a free-form string. The spec recommends `namespace/name` format for portable Compositions (Invariant 32) and treats bare strings as a single-system convention. This is the minimum rule needed to ship v2.
-
-The risk: two systems can use the same bare string (`"decision"`, `"task"`) and mean different semantic Types. When graph traversal or document assembly crosses system boundaries, type-query portability becomes undefined wherever bare strings appear. This is where federation bugs will appear first.
-
-The current design is deliberately light. Possible futures in order of increasing strictness:
-- **Informative only** — `semanticObjectType` becomes advisory metadata with no query semantics; implementations must use explicit TypeRefs for cross-system queries
-- **Typed vocabulary** — `semanticObjectType` becomes a typed reference to a Type definition (a `TypeRef` rather than a bare string), giving it the same identity guarantees as a Field or Type reference
-
-The second option would require changing the type from `string` to `TypeRef | string` and a version bump. For now: prefer `namespace/name` format in any Type or SectionSource that will cross system boundaries, and treat bare strings as a scope boundary. Implementations should document which `semanticObjectType` values they recognise and what Types they map to.
-
-
 ### Protocol loose-to-tight spectrum
 
 **Content**: 
@@ -346,28 +332,6 @@ Audience, platform, and output filtering may eventually allow one source Contain
 Web UI comments and annotations attached to specific text within a Field value require addressing below the Field level. `ext:addressability` currently addresses at Field granularity. Sub-field text selection addressing is architecturally possible (the Address space accommodates it) but is deferred as a separate extension.
 
 ---
-
-
-### μDemocracy Mapping
-
-**Intro**: How the SRS v2 vocabulary maps to the μDemocracy application layer. Reproduced from the v1→v2 conceptual remapping document for reference.
-
-| SRS concept | μDemocracy application |
-| --- | --- |
-| Field | Semantic atom in a governance record |
-| Type | Decision, Proposal, Action, Role, Value, Principle, ... |
-| Record | A captured governance artefact with provenance |
-| Blueprint | Founding Document type; Decision Log type |
-| Protocol | Democracy protocol: Brain Dump, Decomposition, Decision, Proposal, ... |
-| Container | A group's governance workspace; a founding process scope |
-| Relation | `supersedes`, `derived-from`, `ratifies`, `depends-on`, ... |
-| View | Facilitator view; summary view; export for ratification |
-| Composition | Assembled founding document; full decision log |
-| Address | Stable identifier for any governance element — Field, Record, stage, chunk |
-| Attention State | Current focus of an active facilitated session |
-| Revision | Auditable history of how a governance field arrived at its current value |
-| Conversation layer | Session transcript; threaded discussion; facilitator annotations |
-
 
 
 ### Relation design principles (R1–R11)

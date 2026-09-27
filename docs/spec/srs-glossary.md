@@ -518,7 +518,7 @@ The nine Parts read front to back, each presupposing what came before it:
 
 ### Type
 
-**Definition**: A named, versioned, UUID-identified composition of Fields describing one kind of semantic object. A Type declares which Fields participate, in what order, and which are required — and nothing more about them, because Field semantics are the Field's. Its effective field list is its own declared assignments, plus inherited ones when it specialises another Type. A Type is a definition, not an instance: what conforms to it is a Record.
+**Definition**: A named, versioned, UUID-identified composition of Fields (the atomic unit introduced next in this Part) describing one kind of semantic object. A Type declares which Fields participate, in what order, and which are required — and nothing more about them, because Field semantics are the Field's. Its effective field list is its own declared assignments, plus inherited ones when it specialises another Type. A Type is a definition, not an instance: what conforms to it is a Record.
 
 **Notes**: Extensions hang optional facets off the Type without changing that: a lifecycle declaration, cross-field rules, a base Type to specialise, an identity field.
 

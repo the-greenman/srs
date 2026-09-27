@@ -172,6 +172,15 @@ The rule that every SRS entity carries a UUID that is minted once and never chan
 
 **Examples**: `repositoryId` survives export and copy; an importer that mints a new repository for every archive it receives, instead of keying on `repositoryId`, is non-conformant (Invariant 53).
 
+##### Stable identity
+
+An SRS entity carries a UUID minted once, at creation, that does not change afterward. A copy, an export, an import, or a rename for display MUST NOT change an entity's UUID. Identity is declared on the entity itself, never derived from a file path, a directory position, or a storage history.
+
+A UUID conflict between two entities is a fatal error. A loader MUST NOT resolve it by precedence, and MUST NOT pick one entity as the winner over the other: doing so would discard whichever identity claim lost.
+
+Changing what an entity is at its root means minting a new UUID. A materially different entity does not reuse an old UUID: every existing reference to that UUID already points at the entity it used to be.
+
+
 ##### Field.id is stable across versions.
 
 **Number**: 9
@@ -192,28 +201,6 @@ When an importer encounters an incoming object whose identity key matches an exi
 A dot-separated, lowercase identifier that groups definitions under an authority and keeps names from colliding between independent publishers. Components match `[a-z0-9][a-z0-9-]*`. `core` is reserved for definitions maintained by the SRS standard, and `com.semanticops.core` is reserved such that no repository may declare a Type or Field under it. Namespace authorship is where domain vocabulary responsibility sits — the specification deliberately defines no universal ontology.
 
 **Examples**: `core`, `community.adr`, `com.acme.hr`, `org.cooperative-name`
-
-##### μDemocracy Mapping
-
-**Intro**: How the SRS v2 vocabulary maps to the μDemocracy application layer. Reproduced from the v1→v2 conceptual remapping document for reference.
-
-| SRS concept | μDemocracy application |
-| --- | --- |
-| Field | Semantic atom in a governance record |
-| Type | Decision, Proposal, Action, Role, Value, Principle, ... |
-| Record | A captured governance artefact with provenance |
-| Blueprint | Founding Document type; Decision Log type |
-| Protocol | Democracy protocol: Brain Dump, Decomposition, Decision, Proposal, ... |
-| Container | A group's governance workspace; a founding process scope |
-| Relation | `supersedes`, `derived-from`, `ratifies`, `depends-on`, ... |
-| View | Facilitator view; summary view; export for ratification |
-| Composition | Assembled founding document; full decision log |
-| Address | Stable identifier for any governance element — Field, Record, stage, chunk |
-| Attention State | Current focus of an active facilitated session |
-| Revision | Auditable history of how a governance field arrived at its current value |
-| Conversation layer | Session transcript; threaded discussion; facilitator annotations |
-
-
 
 ##### com.semanticops.core/* types and fields MUST resolve in every conforming repository without any package declaration
 
@@ -253,20 +240,6 @@ A Type version referenced by any instance in the repository MUST NOT be deleted.
 How one definition points at another. The human-facing canonical string form is `namespace/name@version`, with `/` and `@` reserved as separators that may not appear inside a component or a name. The stored machine form is UUID-anchored: a bare UUID for a lineage reference, or an ExactTypeRef pairing `typeId` with an explicit `typeVersion` where the pointer must be version-exact. The string form is for display and is never what gets stored, so a rename never breaks a stored pointer.
 
 **Examples**: `core/decision_statement@2`; `{ typeId: <uuid>, typeVersion: 3 }`
-
-##### `semanticObjectType` as a federation risk
-
-**Content**: 
-`semanticObjectType` on `Type` and in `SectionSource.type-query` is a free-form string. The spec recommends `namespace/name` format for portable Compositions (Invariant 32) and treats bare strings as a single-system convention. This is the minimum rule needed to ship v2.
-
-The risk: two systems can use the same bare string (`"decision"`, `"task"`) and mean different semantic Types. When graph traversal or document assembly crosses system boundaries, type-query portability becomes undefined wherever bare strings appear. This is where federation bugs will appear first.
-
-The current design is deliberately light. Possible futures in order of increasing strictness:
-- **Informative only** — `semanticObjectType` becomes advisory metadata with no query semantics; implementations must use explicit TypeRefs for cross-system queries
-- **Typed vocabulary** — `semanticObjectType` becomes a typed reference to a Type definition (a `TypeRef` rather than a bare string), giving it the same identity guarantees as a Field or Type reference
-
-The second option would require changing the type from `string` to `TypeRef | string` and a version bump. For now: prefer `namespace/name` format in any Type or SectionSource that will cross system boundaries, and treat bare strings as a scope boundary. Implementations should document which `semanticObjectType` values they recognise and what Types they map to.
-
 
 
 #### AI guidance
@@ -346,7 +319,7 @@ The minimum valid `AiGuidance` is `{ purpose: "..." }`.
 
 #### Type
 
-A named, versioned, UUID-identified composition of Fields describing one kind of semantic object. A Type declares which Fields participate, in what order, and which are required — and nothing more about them, because Field semantics are the Field's. Its effective field list is its own declared assignments, plus inherited ones when it specialises another Type. A Type is a definition, not an instance: what conforms to it is a Record.
+A named, versioned, UUID-identified composition of Fields (the atomic unit introduced next in this Part) describing one kind of semantic object. A Type declares which Fields participate, in what order, and which are required — and nothing more about them, because Field semantics are the Field's. Its effective field list is its own declared assignments, plus inherited ones when it specialises another Type. A Type is a definition, not an instance: what conforms to it is a Record.
 
 **Notes**: Extensions hang optional facets off the Type without changing that: a lifecycle declaration, cross-field rules, a base Type to specialise, an identity field.
 
@@ -946,11 +919,6 @@ The atomic reusable semantic unit. Fields are defined once and composed into Typ
 See the generated reference immediately below for `Field`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger) — this prose no longer hand-duplicates the property list.
 
 
-##### Historical: the pre-RFC-032 `valueType` model
-
-**Content**: **Status: Removed** (RFC-032) — the pre-RFC-032 `valueType` enum, with its satellite properties `allowedValues`, `contentFormat`, `validationRules`, and a standalone `repeatable` cardinality, was replaced by the decomposed `fieldType` model (`datatype` × `cardinality` × value-domain × `format` × `constraints`). A Field definition carrying `valueType` does not conform to this specification.
-
-
 
 #### Lifecycle
 
@@ -1141,15 +1109,6 @@ Declaring both is a validation error (V7). An inline lifecycle's effective state
 - Transition `id`s must be unique within the effective transition set.
 - `Record.lifecycleState` resolves under V1.
 
-
-
-#### Stable identity
-
-An SRS entity carries a UUID minted once, at creation, that does not change afterward. A copy, an export, an import, or a rename for display MUST NOT change an entity's UUID. Identity is declared on the entity itself, never derived from a file path, a directory position, or a storage history.
-
-A UUID conflict between two entities is a fatal error. A loader MUST NOT resolve it by precedence, and MUST NOT pick one entity as the winner over the other: doing so would discard whichever identity claim lost.
-
-Changing what an entity is at its root means minting a new UUID. A materially different entity does not reuse an old UUID: every existing reference to that UUID already points at the entity it used to be.
 
 
 #### Foundation Group (Core)
@@ -1754,6 +1713,11 @@ relation-type-definition {
   meta?: map<string, open> // Open extension bag for state- or transition-specific metadata not otherwise modelled (rfc-decision-6fc7e142: the one escape-bag name, was `properties`).
 }
 ```
+
+
+##### Historical: the pre-RFC-032 `valueType` model
+
+**Content**: **Status: Removed** (RFC-032) — the pre-RFC-032 `valueType` enum, with its satellite properties `allowedValues`, `contentFormat`, `validationRules`, and a standalone `repeatable` cardinality, was replaced by the decomposed `fieldType` model (`datatype` × `cardinality` × value-domain × `format` × `constraints`). A Field definition carrying `valueType` does not conform to this specification.
 
 
 
