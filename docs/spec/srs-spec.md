@@ -1928,6 +1928,71 @@ See the generated reference below for `Record`'s current property table, optiona
 
 How instances connect and order themselves: the Relation model, the contains tree, and the precedes chain that gives a repository its semantic sequence.
 
+#### Relation
+
+A first-class, typed, independently identified assertion between two instances. It is always binary, a source and a target and never a set, and it always reads in one direction: source, relation type, target. Only the forward form is stored; the inverse is derived for display and never written. A Relation is a semantic claim carrying its own provenance, not a container, not ownership, and not a lifecycle act: asserting one never changes a state.
+
+**Notes**: Relations are reserved for assertions with semantic consequence. A lightweight prose mention or citation must not be modelled as one (Invariant 17). Relations span tiers, so a Note may be the target of edges from the Records it became.
+
+**Examples**: The canonical seven: `contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`.
+
+##### In a Relation, sourceInstanceId is the asserting instance and…
+
+**Number**: 16
+
+In a `Relation`, `sourceInstanceId` is the asserting instance and `targetInstanceId` is the related instance. The Relation reads: "source [relationType] target." This convention must not be reversed.
+
+
+##### Relation is reserved for assertions that carry semantic consequence…
+
+**Number**: 17
+
+`Relation` is reserved for assertions that carry semantic consequence beyond simple mention or citation. Lightweight prose references that do not assert structural, causal, or governance relationships must not be modelled as `Relation` records.
+
+
+##### Why the directionality invariant matters
+
+**Content**: 
+`sourceInstanceId` is the asserting instance; `targetInstanceId` is the related instance. "D-004 supersedes D-001" must always be represented as `source: D-004, target: D-001`.
+
+Without this invariant, graph traversal breaks across system boundaries. If System A stores `supersedes` with the newer Record as source and System B stores it with the older Record as source, a federated query for "all Records that supersede D-001" returns different results from each system. The invariant is the minimum agreement required for semantic interoperability on Relation graphs.
+
+The invariant does not assign agency or authority to the `source` slot — those are properties of the `relationType`. A `contains` Relation makes the source the container and the target the contained item. An `evidences` Relation makes the source the evidence and the target the claim it supports. Directionality is a slot convention; semantics come from the type.
+
+
+##### Relation design principles (R1–R11)
+
+**Content**: The Relation layer is governed by eleven ratified principles (relation-coherence epic, srs#171), written for both human authors and AI agents. They constrain how relations, their vocabulary, ordering, provenance pointers, containers, and identity transitions relate to one another. Each is normative and, per R10, has an enforcement point.
+
+**R1 — A Relation is a binary, directed, typed edge between two instance UUIDs.** There is no `members[]` or hyperedge form. A `Container.containerId` is never a relation endpoint (Invariant 20).
+
+**R2 — Direction is a slot convention; meaning lives in the type.** Every edge reads `source [relationType] target` (Invariant 16). The slots carry no agency or authority — those are properties of the `RelationTypeDefinition`. Only the canonical forward form is stored; inverse forms (`part-of`, `superseded-by`, `follows`, …) are derived, never asserted.
+
+**R3 — Relation types are installed definitions, not free strings.** Every `relationType` MUST resolve to a `RelationTypeDefinition` in the effective package set (conformance V1). A domain-specific relation is introduced by installing a `namespace/name` definition, never by writing an unresolved string.
+
+**R4 — Relations are claims; asserting one never mutates an endpoint.** No lifecycle change, no ownership, no cascade — a relation may target a record in any lifecycle state, including final. The only coupling runs the other way, and only for *definitional* relational states, whose meaning *is* a relationship (`state ⇒ relation`, never `relation ⇒ state`; e.g. `superseded` means "has a successor"). *Contextual* obligations — whose applicability depends on the kind of record — are not this coupling: they belong to the Type or lifecycle chosen (reached by retype, R11) or the ratifying process, never a conditional bolted onto a shared state.
+
+**R5 — Semantics come from structure, never from a type string.** No consumer infers meaning from a relation-type literal; behaviour keys off definition properties (`category`, `canonicalDirection`, constraint fields) or explicit structural markers. Presentation may render a type name, but no meaning is derived from matching it.
+
+**R6 — There is one semantic ordering mechanism.** Semantic sequence is the pairwise `precedes` chain, traversed in one place. Presentational ordering belongs to the view layer, not the relation graph; `precedes` MUST NOT be asserted for presentational goals.
+
+**R7 — Edges and provenance pointers are different vocabularies, and disjoint.** A Relation connects two instances; a `SourceReference` points from an instance (or edge) to source material via its own `sourceRole` vocabulary (RFC-023). The `sourceRole` value set MUST be disjoint from installed relation-type keys (Invariant I-88). When cited source material is promoted to an instance, its provenance pointer converts to a lineage edge per the RFC-023 graduation mapping — a case of R11.
+
+**R8 — Containers scope; relations mean.** Container membership is a declared selection: `Container.rootInstanceIds` plus `memberInstanceIds`, with nested scopes declared through `childContainerIds`, never derived by traversing `contains` (`rfc-decision-0750c62f`, RFC-034 Change C, adopted; the pre-RFC-034 traversal branch of Invariant I-66 is superseded). A `contains` edge is a separate semantic composition claim ("A is semantically inside B"), and neither substitutes for the other. Nothing in the Relation model restricts a `contains` edge's endpoints to typed Records: per R1, any instance UUID is a valid endpoint, so a `contains` edge may target a Tier-0 Note as freely as a Tier-2 Record.
+
+**R9 — Relation writes go through one validated path; compound operations compose it atomically.** Every relation write is validated (endpoint resolution, type resolution, irreflexivity, type constraints). Compound acts — successor creation, retype/promotion (R11), successor-spawning transitions — compose that path so that every intermediate state is a valid repository.
+
+**R10 — Every principle has an enforcement point.** Each principle is enforced by schema, a write-time check, an at-rest validation diagnostic, or a structured projection to clients. A principle stated in prose but enforced nowhere is a defect, to be enforced or removed.
+
+**R11 — What a record *is* changes by re-instantiation linked by a relation, never by in-place mutation.** Field values and lifecycle state mutate in place; a record's identity — its Type, its tier, its position in a supersession lineage — does not. When a record becomes something else (superseded, graduated across tiers, retyped to a specialist type, or a cited source becoming an instance), the original is preserved and a new instance is created, linked by a lineage relation; the relation graph is the authoritative record of what became what. Retype additionally rebinds the lifecycle: the new Type's state machine applies from its initial state, so a state reached under the prior Type does not survive the retype.
+
+
+##### How graduation is recorded
+
+Graduation from a Note to a Record, or from one Record to a refined or split successor, is not itself a Relation type. It is recorded through the two Relation types the outcome calls for. Pure formalisation that keeps the same instance id needs no edge at all. Interpretation during formalisation that assigns a new instance id is recorded with `refines`, pointing back at what it formalises. A split into several Records, each with its own new instance id, is recorded with `derived-from` from each new Record back to the Note or Record it came from. Which edge applies follows what actually happened during formalisation, not a fixed rule attached to Graduation itself.
+
+
+
 #### Relation type definition
 
 What an edge's type string means, installed as its own entity: the key as stored on an edge, a required label and description, a structural category, which end is source and which is target, the key of its display-only inverse, and optional constraints such as irreflexivity. Relation types form a single flat, repository-global set with no per-Type scoping, and a relation whose type does not resolve in it is a validation error.
@@ -2078,71 +2143,6 @@ A pointer from a field value or instance back to source material.
 See the generated reference below for `SourceReference`'s current property table (modelled once and shared across `Record`, `Note`, and `Relation`), optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
 
 `"transcript-chunk"` and `"transcript-segment"` are intended for implementations that have a stable conversation or time-stream layer with durable chunk or segment identifiers. A standalone repository that stores transcript exports, chat dumps, email threads, or similar source material directly under `source-documents/` should generally cite those files using `sourceType: "repository-document"` (see `ext:repository`) rather than inventing pseudo-chunk IDs.
-
-
-
-#### Relation
-
-A first-class, typed, independently identified assertion between two instances. It is always binary, a source and a target and never a set, and it always reads in one direction: source, relation type, target. Only the forward form is stored; the inverse is derived for display and never written. A Relation is a semantic claim carrying its own provenance, not a container, not ownership, and not a lifecycle act: asserting one never changes a state.
-
-**Notes**: Relations are reserved for assertions with semantic consequence. A lightweight prose mention or citation must not be modelled as one (Invariant 17). Relations span tiers, so a Note may be the target of edges from the Records it became.
-
-**Examples**: The canonical seven: `contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`.
-
-##### In a Relation, sourceInstanceId is the asserting instance and…
-
-**Number**: 16
-
-In a `Relation`, `sourceInstanceId` is the asserting instance and `targetInstanceId` is the related instance. The Relation reads: "source [relationType] target." This convention must not be reversed.
-
-
-##### Relation is reserved for assertions that carry semantic consequence…
-
-**Number**: 17
-
-`Relation` is reserved for assertions that carry semantic consequence beyond simple mention or citation. Lightweight prose references that do not assert structural, causal, or governance relationships must not be modelled as `Relation` records.
-
-
-##### Why the directionality invariant matters
-
-**Content**: 
-`sourceInstanceId` is the asserting instance; `targetInstanceId` is the related instance. "D-004 supersedes D-001" must always be represented as `source: D-004, target: D-001`.
-
-Without this invariant, graph traversal breaks across system boundaries. If System A stores `supersedes` with the newer Record as source and System B stores it with the older Record as source, a federated query for "all Records that supersede D-001" returns different results from each system. The invariant is the minimum agreement required for semantic interoperability on Relation graphs.
-
-The invariant does not assign agency or authority to the `source` slot — those are properties of the `relationType`. A `contains` Relation makes the source the container and the target the contained item. An `evidences` Relation makes the source the evidence and the target the claim it supports. Directionality is a slot convention; semantics come from the type.
-
-
-##### Relation design principles (R1–R11)
-
-**Content**: The Relation layer is governed by eleven ratified principles (relation-coherence epic, srs#171), written for both human authors and AI agents. They constrain how relations, their vocabulary, ordering, provenance pointers, containers, and identity transitions relate to one another. Each is normative and, per R10, has an enforcement point.
-
-**R1 — A Relation is a binary, directed, typed edge between two instance UUIDs.** There is no `members[]` or hyperedge form. A `Container.containerId` is never a relation endpoint (Invariant 20).
-
-**R2 — Direction is a slot convention; meaning lives in the type.** Every edge reads `source [relationType] target` (Invariant 16). The slots carry no agency or authority — those are properties of the `RelationTypeDefinition`. Only the canonical forward form is stored; inverse forms (`part-of`, `superseded-by`, `follows`, …) are derived, never asserted.
-
-**R3 — Relation types are installed definitions, not free strings.** Every `relationType` MUST resolve to a `RelationTypeDefinition` in the effective package set (conformance V1). A domain-specific relation is introduced by installing a `namespace/name` definition, never by writing an unresolved string.
-
-**R4 — Relations are claims; asserting one never mutates an endpoint.** No lifecycle change, no ownership, no cascade — a relation may target a record in any lifecycle state, including final. The only coupling runs the other way, and only for *definitional* relational states, whose meaning *is* a relationship (`state ⇒ relation`, never `relation ⇒ state`; e.g. `superseded` means "has a successor"). *Contextual* obligations — whose applicability depends on the kind of record — are not this coupling: they belong to the Type or lifecycle chosen (reached by retype, R11) or the ratifying process, never a conditional bolted onto a shared state.
-
-**R5 — Semantics come from structure, never from a type string.** No consumer infers meaning from a relation-type literal; behaviour keys off definition properties (`category`, `canonicalDirection`, constraint fields) or explicit structural markers. Presentation may render a type name, but no meaning is derived from matching it.
-
-**R6 — There is one semantic ordering mechanism.** Semantic sequence is the pairwise `precedes` chain, traversed in one place. Presentational ordering belongs to the view layer, not the relation graph; `precedes` MUST NOT be asserted for presentational goals.
-
-**R7 — Edges and provenance pointers are different vocabularies, and disjoint.** A Relation connects two instances; a `SourceReference` points from an instance (or edge) to source material via its own `sourceRole` vocabulary (RFC-023). The `sourceRole` value set MUST be disjoint from installed relation-type keys (Invariant I-88). When cited source material is promoted to an instance, its provenance pointer converts to a lineage edge per the RFC-023 graduation mapping — a case of R11.
-
-**R8 — Containers scope; relations mean.** Container membership is a declared selection: `Container.rootInstanceIds` plus `memberInstanceIds`, with nested scopes declared through `childContainerIds`, never derived by traversing `contains` (`rfc-decision-0750c62f`, RFC-034 Change C, adopted; the pre-RFC-034 traversal branch of Invariant I-66 is superseded). A `contains` edge is a separate semantic composition claim ("A is semantically inside B"), and neither substitutes for the other. Nothing in the Relation model restricts a `contains` edge's endpoints to typed Records: per R1, any instance UUID is a valid endpoint, so a `contains` edge may target a Tier-0 Note as freely as a Tier-2 Record.
-
-**R9 — Relation writes go through one validated path; compound operations compose it atomically.** Every relation write is validated (endpoint resolution, type resolution, irreflexivity, type constraints). Compound acts — successor creation, retype/promotion (R11), successor-spawning transitions — compose that path so that every intermediate state is a valid repository.
-
-**R10 — Every principle has an enforcement point.** Each principle is enforced by schema, a write-time check, an at-rest validation diagnostic, or a structured projection to clients. A principle stated in prose but enforced nowhere is a defect, to be enforced or removed.
-
-**R11 — What a record *is* changes by re-instantiation linked by a relation, never by in-place mutation.** Field values and lifecycle state mutate in place; a record's identity — its Type, its tier, its position in a supersession lineage — does not. When a record becomes something else (superseded, graduated across tiers, retyped to a specialist type, or a cited source becoming an instance), the original is preserved and a new instance is created, linked by a lineage relation; the relation graph is the authoritative record of what became what. Retype additionally rebinds the lifecycle: the new Type's state machine applies from its initial state, so a state reached under the prior Type does not survive the retype.
-
-
-##### How graduation is recorded
-
-Graduation from a Note to a Record, or from one Record to a refined or split successor, is not itself a Relation type. It is recorded through the two Relation types the outcome calls for. Pure formalisation that keeps the same instance id needs no edge at all. Interpretation during formalisation that assigns a new instance id is recorded with `refines`, pointing back at what it formalises. A split into several Records, each with its own new instance id, is recorded with `derived-from` from each new Record back to the Note or Record it came from. Which edge applies follows what actually happened during formalisation, not a fixed rule attached to Graduation itself.
 
 
 
