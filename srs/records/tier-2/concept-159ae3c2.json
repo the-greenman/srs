@@ -7,9 +7,9 @@
   "fieldValues": {
     "canonical_key": "part:extensions",
     "title": "Extensions",
-    "description": "The independently adoptable capability modules a repository may declare, and how they interact with each other and with the core."
+    "description": "How a repository declares which independently adoptable capability modules it implements, and the behavioural requirements that activate only when two declared extensions are present together. Most extensions have a natural home and their capability is documented there, beside the concept they extend — ext:lifecycle beside Lifecycle, ext:views-l1 beside View, and so on. Addressability and Discovery are documented here in full because each is itself a whole capability with no single host concept elsewhere. This Part also documents the conversation/SRS boundary that several of these extensions build on."
   },
   "createdAt": "2026-09-08T12:13:52.556370396+00:00",
-  "updatedAt": "2026-09-08T12:13:52.556373410+00:00",
+  "updatedAt": "2026-09-27T20:58:20.214995599+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

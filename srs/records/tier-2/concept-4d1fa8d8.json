@@ -7,10 +7,11 @@
   "fieldValues": {
     "canonical_key": "record:concepts/extension-interactions",
     "title": "Extension Interactions",
-    "description": "Declaring two named extensions together activates behavioural requirements that apply only when both are present in the same implementation."
+    "description": "Declaring two named extensions together activates behavioural requirements that apply only when both are present in the same implementation.",
+    "notes": "These interactions are compositional constraints, not new extensions or new types: `ext:protocol` × `ext:addressability` and `ext:lifecycle` × `ext:addressability` (below) are the two currently defined. A pair may be formally independent yet functionally co-dependent for a given use; the requirement applies only where both are declared."
   },
   "createdAt": "2026-09-09T21:22:34.056000985+00:00",
-  "updatedAt": "2026-09-09T21:22:34.056007279+00:00",
+  "updatedAt": "2026-09-27T20:58:52.962937052+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "meta": {
     "derivedFrom": "a1fc7f7c-dcba-5f4b-b9fd-04f91b2762b3"

@@ -7,10 +7,11 @@
   "fieldValues": {
     "canonical_key": "record:concepts/extensions-overview",
     "title": "Extensions",
-    "description": "Extensions are optional, independently adoptable capability modules. Each declares its identifier, dependencies, and the types it defines."
+    "description": "Extensions are optional, independently adoptable capability modules. Each declares its identifier, dependencies, and the types it defines.",
+    "notes": "No extension is required for core conformance, and an implementation adopts only what it needs. The table below is the full list of live extensions and their dependencies; each extension's own capability is documented beside the concept it extends instead of here, unless it has no single host concept — Addressability and Discovery are the two exceptions, documented in full elsewhere in this Part."
   },
   "createdAt": "2026-09-10T02:45:26.894466847+00:00",
-  "updatedAt": "2026-09-11T00:13:52.671113053+00:00",
+  "updatedAt": "2026-09-27T21:05:00.587281279+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "meta": {
     "derivedFrom": "4244a790-72ff-5e1c-9b60-d4b58b90f92c"

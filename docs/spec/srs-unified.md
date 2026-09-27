@@ -5299,7 +5299,7 @@ client-side `Composition` renderer in a covered format is not exempt.
 
 ## Extensions
 
-The independently adoptable capability modules a repository may declare, and how they interact with each other and with the core.
+How a repository declares which independently adoptable capability modules it implements, and the behavioural requirements that activate only when two declared extensions are present together. Most extensions have a natural home and their capability is documented there, beside the concept they extend — ext:lifecycle beside Lifecycle, ext:views-l1 beside View, and so on. Addressability and Discovery are documented here in full because each is itself a whole capability with no single host concept elsewhere. This Part also documents the conversation/SRS boundary that several of these extensions build on.
 
 #### Addressability
 
@@ -5455,7 +5455,7 @@ A conforming `ext:addressability` implementation must be able to assemble releva
 
 The permanent architectural line between raw multimodal source material (speech, threads, annotations) and the negotiated semantic state SRS captures. The two layers reference each other in both directions but never merge: material on the conversation side is addressable evidence, and it does not become an instance automatically. A transcript chunk cited as evidence for a field value is not a Note unless someone deliberately models it as one.
 
-**Notes**: The conversation layer is optional infrastructure. A repository declaring only the core plus the file-based repository format needs none of it, and source documents stored in the repository are sufficient evidence storage.
+**Notes**: This is not itself an extension — it is the boundary that `ext:addressability` and `ext:protocol` are built to cross. It is documented in this Part, alongside the extensions that depend on it, instead of in Foundations. The conversation layer is optional infrastructure: a repository declaring only the core plus the file-based repository format needs none of it, and source documents stored under `source-documents/` are sufficient evidence storage on their own.
 
 ##### Why the conversation layer is a permanent boundary
 
@@ -5569,7 +5569,7 @@ Normalization of `TextSegment.text` MUST apply Unicode Normalization Form C (NFC
 
 > **Standalone repository note**: An implementation declaring only `SRS 2.0 Core + ext:repository` does not require a TSS, ext:protocol, ext:addressability, AttentionState, or any live store for raw multimodal material; source documents stored in `source-documents/` are sufficient evidence storage for standalone use. This note describes the full-stack integration model, and implementers building file-based or offline repositories may skip it entirely.
 
-This is a permanent architectural boundary distinct from SRS. It captures raw multimodal source material; SRS captures negotiated semantic state. They reference each other bidirectionally via `SourceReference` (document → conversation) and `AttentionState` tags (conversation → document, via `ext:addressability`).
+This is the Conversation boundary concept's own line seen from the integration side: how the conversation layer, protocol layer, SRS layer and presentation layer connect via `SourceReference` and `AttentionState`.
 
 ```
 Conversation layer  →  raw multimodal source material (speech, threads, annotations)
@@ -5587,7 +5587,7 @@ Three conversation types are in scope:
 | Threaded conversation | Tree of replies | Thread root anchored to a document element Address |
 | Web UI annotations | Attached to content | Anchored to a Field or Record Address |
 
-Transcript chunks referenced in `SourceReference` are source material — addressable evidence. They do not become Notes or Records automatically. A transcript chunk referenced in `sourceRefs` is evidence supporting a field value; it is not itself a Note unless someone deliberately models it as one.
+Transcript chunks referenced in `SourceReference` are source material — addressable evidence, not Notes or Records, per Conversation boundary's rule.
 
 
 Extensions are optional, independently adoptable capability modules. Each declares its identifier, dependencies, and the types it defines.
@@ -5610,6 +5610,8 @@ Extensions are optional, independently adoptable capability modules. Each declar
 | Views L1 | `ext:views-l1` | — |
 | Views L2 | `ext:views-l2` | `ext:views-l1` |
 <!-- srs-generated:extension-index:end -->
+
+**Notes**: No extension is required for core conformance, and an implementation adopts only what it needs. The table below is the full list of live extensions and their dependencies; each extension's own capability is documented beside the concept it extends instead of here, unless it has no single host concept — Addressability and Discovery are the two exceptions, documented in full elsewhere in this Part.
 
 ##### Import Tracking
 
@@ -6528,6 +6530,8 @@ blueprint {
 #### Extension Interactions
 
 Declaring two named extensions together activates behavioural requirements that apply only when both are present in the same implementation.
+
+**Notes**: These interactions are compositional constraints, not new extensions or new types: `ext:protocol` × `ext:addressability` and `ext:lifecycle` × `ext:addressability` (below) are the two currently defined. A pair may be formally independent yet functionally co-dependent for a given use; the requirement applies only where both are declared.
 
 ##### ext:protocol × ext:addressability
 
