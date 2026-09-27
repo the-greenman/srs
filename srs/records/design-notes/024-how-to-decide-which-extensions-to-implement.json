@@ -1,11 +1,20 @@
 {
-  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "createdAt": "2026-05-27T00:00:00Z",
+  "instanceId": "f1000024-0000-4000-a000-000000000024",
+  "typeId": "2a000012-0000-4000-a000-000000000012",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "design-note",
   "fieldValues": {
     "title": "How to decide which extensions to implement",
-    "content": ""
+    "content": "Match your need to a row in the table in Purpose and Scope: most needs map to one extension, and several map to Core alone. Declaring an extension binds an implementation to accepting and validating its types and enforcing its invariants (see Extension), so declaring more than a use case actually requires adds an ongoing obligation with no compensating benefit. An implementation that receives data using an extension it has not declared still has to preserve that data, per Extension's own graceful-degradation rule — declaring less does not mean discarding what arrives.\n\nSome extensions are formally independent yet functionally co-dependent: declaring one without the other, for a given use, leaves the capability incomplete. An extension's own concept states both its hard dependencies and any such co-dependency; check it before deciding.\n\nDeclaring nothing beyond Core is a valid answer for a repository that only creates and exchanges Field and Type definitions. Add an extension when a real record needs what it obliges, not in anticipation of a need that has not arrived."
   },
-  "instanceId": "f1000024-0000-4000-a000-000000000024",
+  "tags": [
+    "concern:extensibility",
+    "topic:extensions"
+  ],
+  "createdAt": "2026-05-27T00:00:00Z",
+  "updatedAt": "2026-09-27T22:07:19.011608278+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {
       "note": "Imported from scds-rationale.md: \"How to decide which extensions to implement\"",
@@ -13,13 +22,5 @@
       "sourceId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
       "sourceType": "repository-document"
     }
-  ],
-  "tags": [
-    "concern:extensibility",
-    "topic:extensions"
-  ],
-  "typeId": "2a000012-0000-4000-a000-000000000012",
-  "typeName": "design-note",
-  "typeNamespace": "com.semanticops.spec",
-  "typeVersion": 1
+  ]
 }
