@@ -6,10 +6,10 @@
   "typeName": "mechanism",
   "fieldValues": {
     "title": "Record tiers",
-    "content": "SRS supports two semantic maturity tiers. Tier numbering keeps the historical gap at 1: Tier 1 (`Typed Record`) was removed as an unexercised construct — zero instances in any corpus, ever — under the dormancy rule (rfc-decision-53635966); renumbering the surviving tiers would be churn without meaning. Implementations are not required to support both; they may begin at Tier 2.\n\n| Tier | Type | Structure | Semantics |\n|---|---|---|---|\n| **0** | `Note` | Named sections + free text | None |\n| **2** | `Record` | Fields bound to a `Type` definition | Full |\n\nGraduation path: Note → Record, linked by a `derived-from` Relation from the Record back to the Note (`note graduate`)."
+    "content": "SRS supports two semantic maturity tiers, keeping the historical numbering gap at Tier 1 (see Semantic maturity tier). Implementations are not required to support both; they may begin at Tier 2.\n\n| Tier | Type | Structure | Semantics |\n|---|---|---|---|\n| **0** | `Note` | Named sections + free text | None |\n| **2** | `Record` | Fields bound to a `Type` definition | Full |\n\nGraduation path: Note → Record, linked by a `derived-from` Relation from the Record back to the Note (`note graduate`)."
   },
   "createdAt": "2026-09-08T18:44:59.920133056+00:00",
-  "updatedAt": "2026-09-08T18:44:59.920145410+00:00",
+  "updatedAt": "2026-09-27T18:23:54.032341610+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "meta": {
     "derivedFrom": "d1f518cc-0e25-5045-ae3d-9d68443c8150"
