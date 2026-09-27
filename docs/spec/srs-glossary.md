@@ -138,7 +138,7 @@ Transcript chunks referenced in `SourceReference` are source material — addres
 
 ### Distribution
 
-**Definition**: How definitions travel between repositories: Package, Reference, Lineage, and Provenance.
+**Definition**: How definitions and instances travel outside the tool that made them. A Package bundles Field, Type, Vocabulary and view definitions with a dependency manifest, self-contained or referencing what it depends on. A Repository lays a package and its instances out on disk, with its own layout, manifest, and shape for archives and single-file exchange. Blueprint and Protocol are package-layer definitions built on the entity model — what a whole document extracts to, and how a Record gets built through staged conversation. Where a definition came from, and who published it, is recorded separately, so a consumer can tell an update from a fork.
 
 **Key**: part:distribution
 
