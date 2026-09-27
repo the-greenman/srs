@@ -1,5 +1,5 @@
 {
-  "$comment": "Known violations of scripts/check-spec-readability.mjs (srs#795, srs#787), each citing the live issue that removes it. Entry shape: {check, id | pair:[sourceId,targetId], issue, note}. The check fails on any violation NOT listed here and on any entry that no longer matches a violation — shrinking this file is the Wave 5 per-Part rewrite units burning down #787. Growing it needs an issue.",
+  "$comment": "Known violations of scripts/check-spec-readability.mjs (srs#795, srs#787), each citing the live issue that removes it. Entry shape: {check, id | pair:[sourceId,targetId], issue, note}. The check fails on any violation NOT listed here and on any entry that no longer matches a violation \u2014 shrinking this file is the Wave 5 per-Part rewrite units burning down #787. Growing it needs an issue.",
   "entries": [
     {
       "check": "reading-order-forward-reference",
@@ -314,7 +314,16 @@
       "check": "undefined-before-use",
       "id": "1f57e484-f870-4704-814d-f3f0614c3641",
       "issue": "the-greenman/srs#802",
-      "note": "\"Foundations\" is named in Part 1's reading-order overview (part:reading-this-specification's description, X3 of the read-through srs#798/#787), which lists all nine Parts by name so the reader knows the shape of the document before reading it linearly. Naming a later Part in a front-matter table of contents is not a genuine forward reference — the mention carries no content from that Part, only its title and position in the sequence. Structural, not a fold candidate: this entry persists as long as Part 1 names the other eight Parts up front."
+      "note": "\"Foundations\" is named in Part 1's reading-order overview (part:reading-this-specification's description, X3 of the read-through srs#798/#787), which lists all nine Parts by name so the reader knows the shape of the document before reading it linearly. Naming a later Part in a front-matter table of contents is not a genuine forward reference \u2014 the mention carries no content from that Part, only its title and position in the sequence. Structural, not a fold candidate: this entry persists as long as Part 1 names the other eight Parts up front."
+    },
+    {
+      "check": "reading-order-forward-reference",
+      "pair": [
+        "46a090b5-c772-4792-8c21-d97d6cee826f",
+        "706db1c3-08ee-42a6-9cd2-7fe4740f481d"
+      ],
+      "issue": "the-greenman/srs#805",
+      "note": "Composition (Part 6: Presentation, reading position 369) is introduced before Discovery (Part 7: Extensions, position 414) but depends on it. Discovery moved from Part 4: Structure to Part 7: Extensions under ruling R2 (the-greenman/srs#787) as part of unit P4; the edge is now forward as a consequence of that move. Fold candidate for a later Wave 5 unit."
     }
   ]
 }

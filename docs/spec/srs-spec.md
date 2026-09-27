@@ -1387,20 +1387,6 @@ record {
 ```
 
 
-**Intro**: The underlying question: *Would a reasonable reader, encountering this Record a year later, recognise it as the same understanding they would have read before the change?*
-
-**Outro**: Cross-check: if a `supersedes` Relation would feel misleading — as if the group reversed itself when it only clarified — it is probably an edit. If a silent edit would feel misleading — as if the record was silently revised after the fact — it is probably a new Record.
-
-| Scenario | Guidance |
-| --- | --- |
-| Correcting how something is expressed (typo, phrasing) | Edit in-place |
-| Adding context that reinforces the existing understanding | Edit in-place |
-| Clarifying a detail that was ambiguous but understanding is unchanged | Edit in-place |
-| Adding information that changes what was actually committed to | New Record + `refines` or `supersedes` |
-| Reversing or materially replacing a prior commitment | New Record + `supersedes` |
-| Producing a more detailed version from a rough original | New Record + `refines` |
-
-
 ##### Relation
 
 A first-class typed link between instances. Relations allow implementations to construct semantic graphs for navigation, analysis, projection, and reasoning.
@@ -1991,7 +1977,7 @@ The `sourceRole` value set — the closed enum of the implemented schema revisio
 
 ##### ext:recommended-relations
 
-**Retired as of RFC-005.** The canonical SRS relation vocabulary (`contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`) is installed as `RelationTypeDefinition` records in the `com.semanticops.srs` package, and every `Relation.relationType` must resolve to one before the Relation is accepted. See the Conformance concept and Relation type definition.
+Retired as of RFC-005 (compatibility label only); the canonical relation vocabulary is the set of installed `RelationTypeDefinition` records (see Relation type definition).
 
 
 ##### `RelationTypeDefinition` as a VocabularyEntry specialisation (RFC-006)
@@ -2022,6 +2008,20 @@ The rule that meaning is never silently rewritten. Correcting how something is e
 **Notes**: Cross-check both ways: if a `supersedes` link would read as the group reversing itself when it only clarified, it was an edit; if a silent edit would read as the record being revised after the fact, it was a successor.
 
 ##### When to edit in-place vs create a new Record
+
+**Intro**: The underlying question: *Would a reasonable reader, encountering this Record a year later, recognise it as the same understanding they would have read before the change?*
+
+**Outro**: Cross-check: if a `supersedes` Relation would feel misleading — as if the group reversed itself when it only clarified — it is probably an edit. If a silent edit would feel misleading — as if the record was silently revised after the fact — it is probably a new Record.
+
+| Scenario | Guidance |
+| --- | --- |
+| Correcting how something is expressed (typo, phrasing) | Edit in-place |
+| Adding context that reinforces the existing understanding | Edit in-place |
+| Clarifying a detail that was ambiguous but understanding is unchanged | Edit in-place |
+| Adding information that changes what was actually committed to | New Record + `refines` or `supersedes` |
+| Reversing or materially replacing a prior commitment | New Record + `supersedes` |
+| Producing a more detailed version from a rough original | New Record + `refines` |
+
 
 
 
@@ -2302,6 +2302,15 @@ Sequence asserted as a claim about meaning, not as a layout preference, expresse
 
 **Notes**: There is one ordering primitive and one only. A view may impose its own presentation sequence over the same records without contradicting the semantic chain, because the two are answering different questions.
 
+##### Semantic order
+
+A `precedes` Relation states reading or execution order as a claim about meaning: this element comes before that one, and getting the order wrong is getting the claim wrong, not choosing a different layout. Specification sections in document order, and protocol stages in execution sequence, are both `precedes` chains: reversing either one changes what is true, not how it looks.
+
+`precedes` is one Relation among the canonical types, read by walking the chain from sibling to sibling.
+
+Order that reflects curation, display preference, or layout is presentation, not meaning, and belongs in the view layer. A Composition MAY sequence the same elements differently for rendering; that sequence is an arrangement, not a competing claim. Where the two disagree, the `precedes` chain is what the elements assert about each other. A `precedes` edge created to control how something displays is a misuse of the mechanism.
+
+
 ##### precedes relations are semantic-only, not presentational
 
 **Number**: I-125
@@ -2310,559 +2319,6 @@ Sequence asserted as a claim about meaning, not as a layout preference, expresse
 
 **Rationale**: RFC-013 established a normative boundary between semantic order (`precedes`) and presentational order. This invariant makes that boundary an obligation rather than a convention: without it, `precedes` could silently accrue presentational uses, making the semantic graph unreliable for any consumer that treats `precedes` as a claim about correctness of order (e.g. protocol execution sequencing).
 
-
-
-#### Blueprint
-
-The definition of a whole document type: which Record Types it produces at the root, what Relations are expected between the resulting Records, and which Types must be present for it to count as complete. It is the artefact handed to an extraction pipeline, and it answers a different question from a view — a Blueprint says what this document *is* and what should be extracted, at definition time, from source material; a view says how records that already exist are assembled for reading.
-
-**Notes**: Its type pointers are version-exact, so the shape a Blueprint asks for cannot drift under it when a Type is reversioned.
-
-##### Why Blueprint is a new concept
-
-**Content**: 
-In v1, there was no way to specify what a document type *is* — what needs to be extracted from source material in order to build it. `DocumentTemplate` (now Composition) handled *assembly* of existing Records into readable output. But nothing owned the prior question: "Given a transcript of a governance meeting, what Types should I extract, how should they relate to each other, and what does 'complete' mean?"
-
-Blueprint fills that gap. A Blueprint is the artefact you hand to an extraction pipeline. It specifies root Types, expected Relations between extracted Records, and completeness criteria. The Extraction pipeline consults the Blueprint to know what to look for; the Composition consults existing Records to know what to render.
-
-The two are complementary: Blueprint → Records → Composition.
-
-
-##### Blueprint vs View — the extraction gap
-
-**Content**: 
-A View answers: given a Record that already exists, how do I render it for a specific audience?
-
-A Blueprint answers: given source material, what Records should I extract, and how do they relate?
-
-These are complementary but distinct. A Composition cannot serve as an extraction blueprint because it assumes Records already exist. A Blueprint cannot serve as a Composition because it does not specify how to render field values for an audience.
-
-An extraction pipeline uses Blueprint + Field `aiGuidance` + Protocol to produce Records. A rendering pipeline uses View + Composition to project those Records into readable form.
-
-
-##### Blueprint.rootTypes entries must be ExactTypeRef (typeVersion required)
-
-**Number**: I-78
-
-Each entry in Blueprint.rootTypes MUST be an ExactTypeRef: both typeId (UUID) and typeVersion (integer >= 1) MUST be present. Implementations MUST resolve each entry against the Package (the union of all packages in scope per packageRef/packageRefs) at Blueprint load time; an entry that does not resolve MUST produce a diagnostic. An empty rootTypes array is valid and produces no diagnostics.
-
-
-##### `RelationSpec`
-
-**Required for**: extraction pipelines, founding document workflows, any system that needs to specify what a document type IS before assembling it.
-
-
-##### RelationSpec
-
-Declares an expected Relation between two Record types within a Blueprint.
-
-See the generated reference below for `RelationSpec`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list (and no longer risks drifting from the current `ExactTypeRef`-based schema, as the superseded prose here had).
-
-
-##### `Blueprint`
-
-The definition of a complete document type — which Types it contains, what Relations exist between resulting Records, and what "complete" means. A Blueprint is the artefact handed to an extraction pipeline.
-
-See the generated reference below for `Blueprint`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
-
-**Blueprint vs View:**
-
-| | Blueprint | View / Composition |
-|---|---|---|
-| Question it answers | What IS this document type? What should be extracted? | How are existing Records assembled into readable output? |
-| Operates at | Definition time | Projection time |
-| Input | Source material (transcripts, conversations) | Existing Records in a Container |
-| Output | Extraction instructions → Records | Rendered document |
-
-
-
-#### Protocol
-
-An epistemically ordered process for building a good Record through structured conversation: named stages, each with the question it answers, the understanding it builds, how to tell it is sufficient, and which Record fields it feeds. Stages declare epistemic dependencies on other stages, and not an ordering: a stage may run when what it needs is established, regardless of where it sits in the declared sequence. Protocols range from loose ones that produce open material to tight ones converging on a specific Record type, and the output of a loose one is the input context for a tighter one.
-
-**Notes**: A Protocol is a package definition, not an instance. It is an epistemic concern, deliberately separated from presentation: the logic that guides a session was removed from views and lives here.
-
-##### Every stageId in ProtocolStage.dependsOn[] must reference a stageId…
-
-**Number**: 29
-
-Every `stageId` in `ProtocolStage.dependsOn[]` must reference a `stageId` declared in the enclosing `Protocol.stages[]`. A stage may not declare a dependency on itself.
-
-
-##### Every fieldId in ProtocolStage.contributesTo[] must reference a…
-
-**Number**: 30
-
-Every `fieldId` in `ProtocolStage.contributesTo[]` must reference a `fieldId` that appears in the stage's own `outputType`'s effective field list (when `outputType` is declared), or in `Protocol.targetType`'s effective field list (when `outputType` is absent). A single stage must not contribute to both its own `outputType` and the enclosing `Protocol.targetType`. When neither `outputType` nor `Protocol.targetType` is declared, `contributesTo` must be empty.
-
-
-##### For every pair of stages A and B within a Protocol where B.dependsOn…
-
-**Number**: 31
-
-For every pair of stages A and B within a `Protocol` where B.dependsOn includes A.stageId, B.order must be greater than A.order. `order` is the declared composition order of the stages — structure, not presentation; it provides the render default. Execution sequence is determined by `dependsOn` resolution. The two must not contradict each other.
-
-
-##### Why Protocol replaces TemplateFacilitationStep
-
-**Content**: 
-`TemplateFacilitationStep` in v1 was field-ordering with AI guidance attached. It could specify which fields to present in which order, with optional framing. This was sufficient for a linear form-filling workflow.
-
-But the process of building a quality Record through group deliberation is not a form-filling workflow. It is an epistemically ordered process: you cannot meaningfully evaluate options before you have articulated criteria; you cannot propose a course of action before you have characterised the problem.
-
-Protocol stages have:
-- `dependsOn` — explicit epistemic dependencies, not just ordering. A stage may not proceed until its dependencies are sufficient.
-- `completionCriteria` — how to know a stage is adequate to proceed.
-- `outputType` — a stage may produce its own intermediate Record, not just fill fields in the final one.
-- `question` — the core epistemic question this stage answers.
-
-The distinction is between a View (which fields to show, in what order, for presentation purposes) and a Protocol (how to build understanding epistemically, stage by stage). These are separate concerns. Collapsing them into one construct produced a type that was adequate for neither.
-
-A Record is the *compressed output* of a Protocol run. The Protocol is the process that produced the understanding; the Record is what that understanding looks like expressed in the standard vocabulary.
-
-
-##### Protocol chaining and provenance traces
-
-**Content**: 
-Loose Protocols produce open material. Tight Protocols converge on a specific Record. The output of one Protocol is the input context for the next.
-
-Example chain for a governance decision:
-```
-Brain Dump Protocol → unstructured Notes
-Decomposition Protocol → component Notes (derived-from Brain Dump Notes)
-Options Analysis Protocol → Options Analysis Record (derived-from Decomposition Notes)
-Decision Protocol → Decision Record (derived-from Options Analysis Record)
-```
-
-When a Decision Record is challenged, you can traverse back through the full chain: Decision ← Options Analysis ← Decomposition ← Brain Dump ← transcript chunks. The quality of the final Record is auditable because every stage of the process left addressable artefacts.
-
-With `ext:addressability`, each stage's conversation chunks carry the `AttentionState` at the time they were produced. "What was being discussed when the options were evaluated?" is a queryable question.
-
-
-##### Protocol loose-to-tight spectrum
-
-**Content**: 
-The spectrum from loose to tight is not a quality ranking — it is a fitness question. A Brain Dump Protocol is the right tool when the problem space is not yet understood. A Decision Protocol is the right tool when the group is ready to converge. Starting with a tight Protocol before the problem is decomposed produces poor output because the epistemic prerequisites are not met.
-
-The `dependsOn` field on `ProtocolStage` makes this explicit. A stage that depends on decomposition results cannot run before those results exist. This is not just sequencing — it is a statement about what understanding is required before the next stage is meaningful.
-
-
-##### Session
-
-**Content**: 
-A live collaborative process model with real-time facilitation, AI assistance, and collaborative editing. A Session produces or enriches Records but does not own them. Session-level Protocol management (tracking active stage, managing participant attention) is a natural successor to `ext:protocol` and `ext:addressability`. Deferred pending implementation experience.
-
-
-##### The `FieldRef` shape
-
-`FieldRef`, in pseudo-IDL:
-
-```typescript
-{
-  fieldId: UUID
-  typeId?: UUID    // which Type this Field appears in
-}
-```
-
-
-##### The `ProtocolStage` shape
-
-`ProtocolStage`, in pseudo-IDL:
-
-```typescript
-{
-  stageId: string       // stable key within this Protocol
-  name: string          // short, human-readable stage name (e.g. "Background", "Key requirements")
-  order: integer        // min: 0; declared composition order of the stages — see note below
-  purpose?: string      // what understanding this stage builds
-  question?: string     // the core question this stage answers
-  dependsOn: string[]   // stageId values; epistemic dependencies, not just ordering
-  completionCriteria?: string  // how to know this stage is sufficient to proceed
-  contributesTo?: FieldRef[]   // which Record Fields this stage feeds
-  outputType?: UUID            // LINEAGE reference (rfc-decision-c8704763) to the Type this stage
-                                // produces its own intermediate Record as; the effective
-                                // package set resolves it. typeVersion is dropped — version-
-                                // optional hybrids are forbidden.
-  aiGuidance?: AiGuidance       // the closed, structured guidance object used everywhere else in
-                                // the model (purpose/extraction/negativeGuidance/examples) — not a
-                                // plain string (rfc-decision, srs#379: structured over serialised).
-}
-```
-
-
-##### The `Protocol` shape
-
-`Protocol`, in pseudo-IDL:
-
-```typescript
-{
-  id: UUID
-  namespace: string
-  name: string
-  version: integer   // min: 1
-
-  description?: string
-
-  targetType: UUID | ""
-  // The Record type this Protocol produces — a LINEAGE reference (bare UUID;
-  // rfc-decision-c8704763), never the canonical namespace/name@version form (that is
-  // DISPLAY-only and is never stored). Empty string for loose / exploratory Protocols
-  // (Brain Dump, Decomposition) whose output is input context for a tighter Protocol.
-
-  stages: ProtocolStage[]
-
-  tags?: string[]
-  createdAt: ISO8601
-}
-```
-
-
-##### A Protocol chain for a governance decision
-
-Three Protocols in sequence, from brain dump to Decision Record. Non-normative:
-
-```
-Brain Dump Protocol (loose, no targetType)
-  → AttentionState: { containerId: C1 }
-  → Produces: Note N1 (unstructured brainstorm)
-
-Decomposition Protocol (loose, targetType: Component)
-  → AttentionState: { containerId: C1, recordId: N1 }
-  → Produces: Notes N2, N3, N4  [derived-from N1]
-
-Decision Protocol (tight, targetType: Decision)
-  → AttentionState: { containerId: C1, protocolRunId: R1, stageId: "criteria" }
-  → Stage "criteria" produces: Options Analysis Record R-OA  [derived-from N2, N3]
-  → Stage "decision" produces: Decision Record R-D           [derived-from R-OA]
-
-Conversation chunks produced during Decision stage:
-  chunk-42: { AttentionState: { containerId: C1, recordId: R-OA, fieldId: F-criteria, ... } }
-  chunk-43: { AttentionState: { containerId: C1, recordId: R-D, fieldId: F-outcome, ... } }
-
-Context query for R-D / F-outcome:
-  → Field aiGuidance from Decision Type + outcome Field
-  → Current value for F-outcome
-  → Chunks tagged with { recordId: R-D, fieldId: F-outcome } — chunk-43
-  → Chunks tagged with { recordId: R-D } — broader session context
-  → Related Records via Relations — R-OA via derived-from
-```
-
-
-##### ext:protocol
-
-**Required for**: facilitation tools, structured deliberation, any implementation that guides users through epistemic stages.
-
-Replaces `TemplateFacilitationStep` from v1. Protocol is epistemically richer: stages have explicit dependencies, completion criteria, and may produce intermediate Records.
-
-
-##### `FieldRef`
-
-A reference to a Field within a Type.
-
-Example: the `FieldRef` shape.
-
-
-##### `ProtocolStage`
-
-A named stage in a Protocol. Stages have epistemic dependencies (`dependsOn`) — not just ordering. A stage may only proceed when its dependencies are sufficient.
-
-Example: the `ProtocolStage` shape.
-
-**`order` vs `dependsOn`:** `order` is the declared composition order of the stages — structure, not presentation (RFC-015's layering table now states this explicitly as its own row: composition order is structure; display order is presentation; sequence is assertion). It provides the render default for how stages are shown in a UI or facilitation guide; a View may override for display. Execution sequence is determined by `dependsOn` resolution: a stage runs when all its declared dependencies are satisfied, regardless of its `order` value. Authors must ensure `order` is consistent with the partial order implied by `dependsOn` (i.e. a stage's `order` value should be greater than the `order` of any stage it depends on). See Invariant 31.
-
-
-##### `Protocol`
-
-An epistemically ordered process for building quality Records through structured conversation or facilitation. A Protocol is a package definition (declared in `package.json`'s `protocols` array, stored under the package's `protocols/` subtree) — not an instance Record.
-
-Example: the `Protocol` shape.
-
-**Property names are unprefixed** (`id`, not `protocolId`; `stages`, not `protocolStages`; and so on) — the same convention every other package-declared definition entity uses (Type, Field, Vocabulary, Lifecycle, RelationTypeDefinition, Theme, Blueprint all reuse the shared `id`/`namespace`/`name`/`version`/`description`/`createdAt` fields unprefixed). An earlier owed-schema pass (`docs/schema/2.0/protocol.json`, #297/#378) had shipped a `protocol`-prefixed shape matching the implementation of the day; a decision record ruled the unprefixed shape canonical (srs#379) and the schema now matches this prose. The implementation-side rename (the Rust `Protocol`/`ProtocolStage` structs, the CLI, and one still-vendored example corpus) is a tracked follow-up, staged like any other rename (rfc-decision-628cf6c4) — this prose and the schema describe the ruled target shape, not necessarily every artifact's current byte-for-byte content.
-
-**The Protocol spectrum:**
-
-```
-Loose                                                    Tight
-─────────────────────────────────────────────────────────────
-Brain Dump → Decomposition → Options Analysis → Decision
-```
-
-Loose Protocols produce open material. Tight Protocols converge on a specific Record type. The output of a loose Protocol is the input context for something tighter.
-
-**Generic Protocols** (reusable across domains):
-- Brain Dump — externalise all thinking without constraint
-- Decomposition — identify major components from raw material
-- Review — what is established, what is still open
-- Prioritisation — which components to resolve first
-
-**Domain-specific Protocols** (target a specific Record type):
-- Decision — context → criteria → options → evaluation → decision
-- Proposal — problem → solution shape → constraints → proposal
-
-**Protocol chaining and provenance**: The output of one Protocol is the input context for the next. This derivation chain is traceable through `derived-from` Relations, making the quality and history of the final Record auditable.
-
-**Non-normative example — Protocol chain for a governance decision:**
-
-Example: a Protocol chain for a governance decision.
-
-The final Decision Record is auditable because every Protocol stage left addressable artefacts. The quality of the outcome is traceable to the conversation that produced it.
-
-Views (`ext:views-l1`) no longer contain facilitation logic. A View is a presentation concern; a Protocol is an epistemic one.
-
-
-
-#### Addressability
-
-A single addressing scheme spanning document space, process space and conversation space, so that anything that can be referred to can be resolved — and so that a transcript fragment and a field on a record are co-addressable, which is what makes an assertion linking them possible. Alongside the stable address sits the live cursor: the current focus of an active process run, which moves continuously and is stamped onto conversation material as it is produced. Because it is stamped at production time, asking for everything said while attention was on this field becomes a query, not a search.
-
-**Notes**: A stable address and a live cursor are structurally similar and must not be merged: one identifies an element, the other records where focus currently is. Likewise a cursor is set live and a source reference is set retrospectively.
-
-##### AttentionState.containerId must reference a valid…
-
-**Number**: 34
-
-`AttentionState.containerId` must reference a valid `Container.containerId`. Other Address components (`recordId`, `fieldId`, `protocolRunId`, `stageId`) are optional and may be absent when focus has not yet narrowed.
-
-
-##### Why Address and AttentionState are needed
-
-**Content**: 
-v1 noted "focus links" as a session-layer concern without defining a mechanism. The mechanism was absent.
-
-Without co-addressability, the transcript/SRS separation is clean in principle but broken in practice. There is no way to say "this conversation happened while we were focused on this Field." Retrospective `SourceReference` links help, but they require someone to explicitly annotate which conversation produced which value. For real-time facilitation, that annotation needs to happen live.
-
-`AttentionState` is the live cursor. Every transcript chunk produced while a Protocol stage is active carries the current `AttentionState` as a tag. Context assembly later queries by address: "all chunks where attention was on Field X in Record Y." The annotation is free because it was captured at production time.
-
-`Address` is the addressing scheme that makes co-addressability possible. A transcript chunk and a Field Revision are in the same address space — they can reference each other because both have resolvable addresses.
-
-**Multi-Container addressing**: A Record may belong to more than one Container simultaneously (a task may exist in both a project Container and a sprint Container). That Record therefore has multiple valid document-space Addresses — one per Container context. This is intentional: `containerId` in a document-space `Address` is not a uniqueness constraint, it is a *context specifier*. `AttentionState.containerId` records which Container was active during a live session, making the contextual anchor explicit. When a session-tagged transcript chunk is later queried, the Container in the `AttentionState` tells you not just *what Record* was being discussed but *in which context* it was being discussed.
-
-
-##### Why Revision is addressable
-
-**Content**: 
-In v1, field revision was an implementation concern. The spec described when to edit in-place versus create a new Record, but individual revisions were not addressable — you could not ask "what did this field say before the last Protocol run?" at the interoperability layer.
-
-This matters for:
-- **Governance challenge**: if a Record is challenged, you need to trace which conversation produced each field value and which version was in place when a downstream decision was made.
-- **Context assembly**: when generating the next draft, knowing what changed between revision 2 and revision 3 — and what conversation produced that change — is more useful than knowing only the current value.
-- **Audit**: a complete audit trail requires addressable history, not just current state.
-
-`Revision` is the addressable audit trail. It does not replace the edit-in-place vs. new-Record judgment for minor corrections. That remains an implementation concern. Revision is the interoperability layer for cases where history itself is a first-class concern.
-
-
-##### Addressability as a prerequisite for live facilitation
-
-**Content**: 
-`ext:addressability` is not just about naming things. It is the mechanism that makes the conversation layer useful. Without `AttentionState`, transcript chunks have no address-time connection to the Records they inform. Without `Revision`, the history of a field's value is an implementation detail not visible at the interoperability layer.
-
-Any implementation that facilitates live sessions — where conversation material is produced while people are working on specific Records and Fields — should implement `ext:addressability`. Without it, context assembly is purely retrospective, and the quality of AI assistance degrades accordingly.
-
-**Diff rendering:** implementations rendering Revision history for governance review should support a diff view that shows field-level removals alongside additions, not only the current value. The Revision chain already provides the data needed for three useful modes: final (current value only), all markup (current value plus prior content shown as removed and new content as added), and original (the value at a specified Revision). This is a rendering pattern, not a separate data shape.
-
-
-##### Sub-field addressing
-
-**Content**: 
-Web UI comments and annotations attached to specific text within a Field value require addressing below the Field level. `ext:addressability` currently addresses at Field granularity. Sub-field text selection addressing is architecturally possible (the Address space accommodates it) but is deferred as a separate extension.
-
----
-
-
-##### The `Address` union
-
-`Address`, in pseudo-IDL:
-
-```typescript
-type Address =
-  | {
-      space: "document"
-      containerId: UUID
-      recordId?: UUID
-      fieldId?: UUID
-    }
-  | {
-      space: "process"
-      runId: UUID          // Protocol run ID; requires ext:protocol
-      stageId?: string
-    }
-  | {
-      space: "conversation"
-      sessionId: UUID
-      chunkId?: UUID
-      annotationId?: UUID
-    }
-```
-
-
-##### The `AttentionState` shape
-
-`AttentionState`, in pseudo-IDL:
-
-```typescript
-{
-  containerId: UUID
-  recordId?: UUID
-  fieldId?: UUID
-  protocolRunId?: UUID
-  stageId?: string
-}
-```
-
-
-##### ext:addressability
-
-**Required for**: any implementation with live facilitation or multi-session extraction.
-
-Defines a universal addressing scheme and the mechanisms that connect conversation material to document elements.
-
-
-##### `Address`
-
-A stable, resolvable identifier for any element across document space, process space, and conversation space.
-
-Example: the `Address` union.
-
-Every element that can be referred to has an Address. A transcript chunk and a document-space field are co-addressable because assertions about one referencing the other require both to be resolvable.
-
-
-##### `AttentionState`
-
-The current focus of an active Protocol run — a live cursor across the address space. `AttentionState` and `Address` are structurally related but serve distinct roles: an `Address` is a stable, resolvable identifier for a specific element; `AttentionState` is the mutable cursor that records *where focus currently is* during an active session. An `AttentionState` value at a point in time resolves to a document-space `Address`, but it is stored separately because it changes continuously as the Protocol advances.
-
-Conversation material is tagged with the active `AttentionState` as it is produced. This makes context assembly efficient: "all chunks produced while focus was on this Field" is a queryable address predicate.
-
-Example: the `AttentionState` shape.
-
-`AttentionState` is set live by the session or Protocol runner. `SourceReference` is set retrospectively at extraction or editorial review time. Both are needed; they answer different questions.
-
-
-##### Context Query (behavioural requirement)
-
-A conforming `ext:addressability` implementation must be able to assemble relevant material given an address and a purpose. This is a behavioural requirement, not a data shape.
-
-**Required query patterns:**
-
-| Pattern | Address | Returns |
-|---|---|---|
-| Field context | `{recordId}/{fieldId}` | Current value, chunks tagged to this Field, Field `aiGuidance` |
-| Record context | `{recordId}` | All field values, chunks tagged to this Record, Relations, Protocol run history |
-| Stage context | `{runId}/{stageId}` | All chunks produced during this stage, Fields active in this stage |
-
-**Recommended assembly order for AI assistance:**
-
-1. Type and Field `aiGuidance` — what this field captures, how to extract it
-2. Current value — what has already been established
-3. Chunks tagged to this Field via AttentionState — most focused context
-4. Chunks tagged to the parent Record — broader session context
-5. Related Records via Relations — structural context
-
-**Note (2026-08-21, `rfc-decision-2a1e1590`)**: the per-field `Revision` snapshot mechanism (addressable field-value history, `revisionId`, revision chains, revision-trace queries) previously specified here is removed under the dormancy rule — zero corpus use, and it was incompletely specified (a PascalCase wire-format leak in its agent tag, and a coupling that named a pre-RFC-006 field). `Address`, `AttentionState`, and the Context Query requirement above are untouched by that removal. Return trigger: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface.
-
-
-
-#### Discovery
-
-A portable contract for asking a repository what it holds, split deliberately into two halves that behave differently. Structured filters, over type, container, tag, tier and lifecycle state, are exact-match predicates: two conforming implementations with the same data must return the same set. Free-text content matching is a recall floor: every instance whose projected text contains the normalised query must be returned, and returning more, or ranking differently, is explicitly permitted. This is what lets a naive substring matcher and a semantic search engine both conform.
-
-**Notes**: Matching runs over a deterministic text projection: an ordered sequence of segments derived from an instance by a stated rule about which fields are searchable, normalised at match time by Unicode NFC and case folding, with punctuation, diacritics and whitespace left intact.
-
-##### lifecycleStates in DiscoveryQuery is an inclusive multi-value lifecycle filter
-
-**Number**: I-142
-
-When DiscoveryQuery carries a non-empty lifecycleStates array, implementations MUST restrict the query result to instances whose lifecycleState matches any value in the array (OR semantics). An instance with no lifecycleState MUST be excluded when lifecycleStates is present and non-empty. When lifecycleStates is absent or empty, no filtering by this field is applied and all lifecycle states (including absent) are included. Implementations that do not declare ext:lifecycle MUST ignore lifecycleStates and MUST NOT produce a validation error on its presence.
-
-**Rationale**: Multi-value OR semantics mirrors typeFilter and enables queries that span multiple lifecycle stages (e.g. draft and active). The ext:lifecycle guard ensures that implementations without a lifecycle model are not broken by the field. Originally numbered 011-1 under RFC-011's rule-set-qualified proposal-stage numbering; relocated from package/records/ into the projection root and renumbered I-142 upon RFC-011 acceptance (srs#410, rfc-decision-628cf6c4). Retained at I-142 through the srs#525 SectionSource -> DiscoveryQuery collapse (rfc-decision-cce3c00e, rfc-decision-9ee14517): the predicate moved from SectionSource.type-query to DiscoveryQuery, now governed by RFC-012 Rev 12 (formerly RFC-011 Change A) -- identifier stability preferred over renumbering (identity over label).
-
-
-##### excludeLifecycleStates in DiscoveryQuery is an exclusion lifecycle filter applied after inclusion
-
-**Number**: I-143
-
-When DiscoveryQuery carries a non-empty excludeLifecycleStates array, implementations MUST exclude from the query result any instance whose lifecycleState matches any value in the array. When lifecycleStates and excludeLifecycleStates are both present and non-empty, inclusion filtering (I-142) MUST be applied first; exclusion filtering is then applied to the survivors. An instance with no lifecycleState is not excluded by excludeLifecycleStates (only instances with a matching non-null lifecycleState are excluded). When excludeLifecycleStates is absent or empty, no exclusion is applied. Implementations that do not declare ext:lifecycle MUST ignore excludeLifecycleStates and MUST NOT produce a validation error on its presence.
-
-**Rationale**: Exclusion is more forward-compatible than inclusion for the decision-log pattern: specifying excludeLifecycleStates: [superseded, abandoned] automatically includes any new lifecycle states added in future without Composition updates. Inclusion-first-then-exclusion semantics allow fine-grained control when both fields are present. Originally numbered 011-2 under RFC-011's rule-set-qualified proposal-stage numbering; relocated from package/records/ into the projection root and renumbered I-143 upon RFC-011 acceptance (srs#410, rfc-decision-628cf6c4). Retained at I-143 through the srs#525 SectionSource -> DiscoveryQuery collapse (rfc-decision-cce3c00e, rfc-decision-9ee14517): the predicate moved from SectionSource.type-query to DiscoveryQuery, now governed by RFC-012 Rev 12 (formerly RFC-011 Change B) -- identifier stability preferred over renumbering (identity over label).
-
-
-##### Structured filter predicates are exact-match
-
-**Number**: I-113
-
-An implementation that declares `ext:discovery` MUST include in its DiscoveryQuery result set every instance that satisfies all specified structured filter predicates (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `excludeLifecycleStates`, `tier`), and MUST NOT include any instance that fails any specified structured filter predicate. (RFC-012 R1.)
-
-
-##### Content-match is a guaranteed recall floor
-
-**Number**: I-114
-
-For a `contentMatch` predicate with normalized query string `q`, an implementation that declares `ext:discovery` MUST include every instance whose Text Projection contains at least one `TextSegment` whose normalized `text` contains `q` as a substring (case-folded NFC substring match). (RFC-012 R2.)
-
-
-##### Extra content-match results are permitted
-
-**Number**: I-115
-
-An implementation MAY include instances beyond the recall-floor set defined by I-114 (e.g. via stemming, phonetic matching, or semantic similarity). Returning extra results does not violate `ext:discovery` conformance. (RFC-012 R3.)
-
-
-##### Result ranking is implementation-defined
-
-**Number**: I-116
-
-An implementation MAY rank DiscoveryQuery results in any order. The recall-floor guarantee of I-114 applies to inclusion in the result set only, not to rank position. (RFC-012 R4.)
-
-
-##### Structured filters and content-match compose by conjunction
-
-**Number**: I-117
-
-When both structured filters and `contentMatch` are specified on a DiscoveryQuery, an instance MUST satisfy all structured filter predicates (exact-match, I-113) AND the content-match recall-floor predicate (I-114). The structured-filter constraints cannot be overridden or widened by content-match extra recall. (RFC-012 R5.)
-
-
-##### containerId filter uses effective container membership
-
-**Number**: I-118
-
-A `containerId` filter predicate MUST match exactly the instances in effective(C) for the named Container C: the recursive closure over the Container's declared `rootInstanceIds`, `memberInstanceIds` and `childContainerIds` (RFC-034 [R8]; I-147). Discovery scopes to the full effective (deep) closure; a `contains` Relation never contributes (I-148). The authoritative inputs are the Container objects and their declared child graph in the repository's authoritative store (RFC-038 [R1]). An implementation MAY maintain a derived catalog for performance but MUST treat the store as authoritative when they differ; there is no manifest `instanceIndex` to use as a cache, as it is retired (RFC-038 [R2]). (RFC-012 R6, as amended by RFC-034 Change D.2 on 2026-09-06: the former three-condition rule of rootInstanceIds, OR memberInstanceIds, OR reachable via transitive `contains` traversal is superseded; its traversal branch is removed.)
-
-
-##### Multi-tag filter uses AND semantics with vocabulary resolution
-
-**Number**: I-119
-
-A `tag` predicate with multiple values MUST use AND semantics — all specified tags must be present on the instance. Both query tags and stored instance tags are canonicalized via RFC-006 key-or-alias resolution when a Vocabulary is declared for the tag key; when no Vocabulary is declared, raw string comparison applies (case-sensitive). (RFC-012 R7.)
-
-
-##### Text Projection includes only Fields matching the RFC-032 searchability predicate
-
-**Number**: I-120
-
-For Tier 2, the Text Projection MUST include a Field only when `fieldType.datatype == "string"` and `fieldType.format` is absent or one of `"plain"`, `"markdown"`, or `"uri"`. `valueDomain` does not affect searchability. A single-cardinality Field emits one segment; a list-cardinality Field emits one segment per array element in order. Fields with `format: "uuid"` or `format: "email"`, or datatype `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, or `map`, MUST NOT contribute `TextSegment`s. (RFC-012 R8; RFC-032 Rev-7 erratum.)
-
-
-##### Text Projection includes tags; display labels are optional
-
-**Number**: I-121
-
-The Text Projection MUST include `tags` array entries as `TextSegment`s after field segments. An implementation MAY additionally include `FieldAssignment.displayLabel` values as segments after tags — this is not required, and two conforming implementations may differ on whether display-label segments are included. (RFC-012 R9.)
-
-
-##### Text normalization is NFC + case folding, no stripping
-
-**Number**: I-122
-
-Normalization of `TextSegment.text` MUST apply Unicode Normalization Form C (NFC) followed by Unicode simple case folding (locale-independent). Implementations MUST NOT strip punctuation, diacritics, or whitespace during this normalization step; additional stemming or tokenization is permitted for ranking purposes only, not as a substitute for the normalized canonical search string. (RFC-012 R10.)
-
-
-
-#### Semantic order
-
-A `precedes` Relation states reading or execution order as a claim about meaning: this element comes before that one, and getting the order wrong is getting the claim wrong, not choosing a different layout. Specification sections in document order, and protocol stages in execution sequence, are both `precedes` chains: reversing either one changes what is true, not how it looks.
-
-`precedes` is one Relation among the canonical types, read by walking the chain from sibling to sibling.
-
-Order that reflects curation, display preference, or layout is presentation, not meaning, and belongs in the view layer. A Composition MAY sequence the same elements differently for rendering; that sequence is an arrangement, not a competing claim. Where the two disagree, the `precedes` chain is what the elements assert about each other. A `precedes` edge created to control how something displays is a misuse of the mechanism.
 
 
 
@@ -3089,6 +2545,70 @@ When both `local-ahead` and `diverged` conditions hold simultaneously, implement
 
 The `"upstream-ahead"` state (a newer version exists upstream) requires `ext:registry` and is out of scope for local divergence detection.
 
+
+
+
+#### Blueprint
+
+The definition of a whole document type: which Record Types it produces at the root, what Relations are expected between the resulting Records, and which Types must be present for it to count as complete. It is the artefact handed to an extraction pipeline, and it answers a different question from a view — a Blueprint says what this document *is* and what should be extracted, at definition time, from source material; a view says how records that already exist are assembled for reading.
+
+**Notes**: Its type pointers are version-exact, so the shape a Blueprint asks for cannot drift under it when a Type is reversioned.
+
+##### Why Blueprint is a new concept
+
+**Content**: 
+In v1, there was no way to specify what a document type *is* — what needs to be extracted from source material in order to build it. `DocumentTemplate` (now Composition) handled *assembly* of existing Records into readable output. But nothing owned the prior question: "Given a transcript of a governance meeting, what Types should I extract, how should they relate to each other, and what does 'complete' mean?"
+
+Blueprint fills that gap. A Blueprint is the artefact you hand to an extraction pipeline. It specifies root Types, expected Relations between extracted Records, and completeness criteria. The Extraction pipeline consults the Blueprint to know what to look for; the Composition consults existing Records to know what to render.
+
+The two are complementary: Blueprint → Records → Composition.
+
+
+##### Blueprint vs View — the extraction gap
+
+**Content**: 
+A View answers: given a Record that already exists, how do I render it for a specific audience?
+
+A Blueprint answers: given source material, what Records should I extract, and how do they relate?
+
+These are complementary but distinct. A Composition cannot serve as an extraction blueprint because it assumes Records already exist. A Blueprint cannot serve as a Composition because it does not specify how to render field values for an audience.
+
+An extraction pipeline uses Blueprint + Field `aiGuidance` + Protocol to produce Records. A rendering pipeline uses View + Composition to project those Records into readable form.
+
+
+##### Blueprint.rootTypes entries must be ExactTypeRef (typeVersion required)
+
+**Number**: I-78
+
+Each entry in Blueprint.rootTypes MUST be an ExactTypeRef: both typeId (UUID) and typeVersion (integer >= 1) MUST be present. Implementations MUST resolve each entry against the Package (the union of all packages in scope per packageRef/packageRefs) at Blueprint load time; an entry that does not resolve MUST produce a diagnostic. An empty rootTypes array is valid and produces no diagnostics.
+
+
+##### `RelationSpec`
+
+**Required for**: extraction pipelines, founding document workflows, any system that needs to specify what a document type IS before assembling it.
+
+
+##### RelationSpec
+
+Declares an expected Relation between two Record types within a Blueprint.
+
+See the generated reference below for `RelationSpec`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list (and no longer risks drifting from the current `ExactTypeRef`-based schema, as the superseded prose here had).
+
+
+##### `Blueprint`
+
+The definition of a complete document type — which Types it contains, what Relations exist between resulting Records, and what "complete" means. A Blueprint is the artefact handed to an extraction pipeline.
+
+See the generated reference below for `Blueprint`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+
+**Blueprint vs View:**
+
+| | Blueprint | View / Composition |
+|---|---|---|
+| Question it answers | What IS this document type? What should be extracted? | How are existing Records assembled into readable output? |
+| Operates at | Definition time | Projection time |
+| Input | Source material (transcripts, conversations) | Existing Records in a Container |
+| Output | Extraction instructions → Records | Rendered document |
 
 
 
@@ -3875,6 +3395,241 @@ To create an independent copy of a repository — not a sync — the importer mu
 2. **Mint new inner IDs with lineage**: the copy mints fresh UUIDs and adds `derived-from` Relations from each new instance to the source `instanceId`. Appropriate when the copy will evolve independently.
 
 An importer must not mix strategies within a single copy operation.
+
+
+
+#### Protocol
+
+An epistemically ordered process for building a good Record through structured conversation: named stages, each with the question it answers, the understanding it builds, how to tell it is sufficient, and which Record fields it feeds. Stages declare epistemic dependencies on other stages, and not an ordering: a stage may run when what it needs is established, regardless of where it sits in the declared sequence. Protocols range from loose ones that produce open material to tight ones converging on a specific Record type, and the output of a loose one is the input context for a tighter one.
+
+**Notes**: A Protocol is a package definition, not an instance. It is an epistemic concern, deliberately separated from presentation: the logic that guides a session was removed from views and lives here.
+
+##### Every stageId in ProtocolStage.dependsOn[] must reference a stageId…
+
+**Number**: 29
+
+Every `stageId` in `ProtocolStage.dependsOn[]` must reference a `stageId` declared in the enclosing `Protocol.stages[]`. A stage may not declare a dependency on itself.
+
+
+##### Every fieldId in ProtocolStage.contributesTo[] must reference a…
+
+**Number**: 30
+
+Every `fieldId` in `ProtocolStage.contributesTo[]` must reference a `fieldId` that appears in the stage's own `outputType`'s effective field list (when `outputType` is declared), or in `Protocol.targetType`'s effective field list (when `outputType` is absent). A single stage must not contribute to both its own `outputType` and the enclosing `Protocol.targetType`. When neither `outputType` nor `Protocol.targetType` is declared, `contributesTo` must be empty.
+
+
+##### For every pair of stages A and B within a Protocol where B.dependsOn…
+
+**Number**: 31
+
+For every pair of stages A and B within a `Protocol` where B.dependsOn includes A.stageId, B.order must be greater than A.order. `order` is the declared composition order of the stages — structure, not presentation; it provides the render default. Execution sequence is determined by `dependsOn` resolution. The two must not contradict each other.
+
+
+##### Why Protocol replaces TemplateFacilitationStep
+
+**Content**: 
+`TemplateFacilitationStep` in v1 was field-ordering with AI guidance attached. It could specify which fields to present in which order, with optional framing. This was sufficient for a linear form-filling workflow.
+
+But the process of building a quality Record through group deliberation is not a form-filling workflow. It is an epistemically ordered process: you cannot meaningfully evaluate options before you have articulated criteria; you cannot propose a course of action before you have characterised the problem.
+
+Protocol stages have:
+- `dependsOn` — explicit epistemic dependencies, not just ordering. A stage may not proceed until its dependencies are sufficient.
+- `completionCriteria` — how to know a stage is adequate to proceed.
+- `outputType` — a stage may produce its own intermediate Record, not just fill fields in the final one.
+- `question` — the core epistemic question this stage answers.
+
+The distinction is between a View (which fields to show, in what order, for presentation purposes) and a Protocol (how to build understanding epistemically, stage by stage). These are separate concerns. Collapsing them into one construct produced a type that was adequate for neither.
+
+A Record is the *compressed output* of a Protocol run. The Protocol is the process that produced the understanding; the Record is what that understanding looks like expressed in the standard vocabulary.
+
+
+##### Protocol chaining and provenance traces
+
+**Content**: 
+Loose Protocols produce open material. Tight Protocols converge on a specific Record. The output of one Protocol is the input context for the next.
+
+Example chain for a governance decision:
+```
+Brain Dump Protocol → unstructured Notes
+Decomposition Protocol → component Notes (derived-from Brain Dump Notes)
+Options Analysis Protocol → Options Analysis Record (derived-from Decomposition Notes)
+Decision Protocol → Decision Record (derived-from Options Analysis Record)
+```
+
+When a Decision Record is challenged, you can traverse back through the full chain: Decision ← Options Analysis ← Decomposition ← Brain Dump ← transcript chunks. The quality of the final Record is auditable because every stage of the process left addressable artefacts.
+
+With `ext:addressability`, each stage's conversation chunks carry the `AttentionState` at the time they were produced. "What was being discussed when the options were evaluated?" is a queryable question.
+
+
+##### Protocol loose-to-tight spectrum
+
+**Content**: 
+The spectrum from loose to tight is not a quality ranking — it is a fitness question. A Brain Dump Protocol is the right tool when the problem space is not yet understood. A Decision Protocol is the right tool when the group is ready to converge. Starting with a tight Protocol before the problem is decomposed produces poor output because the epistemic prerequisites are not met.
+
+The `dependsOn` field on `ProtocolStage` makes this explicit. A stage that depends on decomposition results cannot run before those results exist. This is not just sequencing — it is a statement about what understanding is required before the next stage is meaningful.
+
+
+##### Session
+
+**Content**: 
+A live collaborative process model with real-time facilitation, AI assistance, and collaborative editing. A Session produces or enriches Records but does not own them. Session-level Protocol management (tracking active stage, managing participant attention) is a natural successor to `ext:protocol` and `ext:addressability`. Deferred pending implementation experience.
+
+
+##### The `FieldRef` shape
+
+`FieldRef`, in pseudo-IDL:
+
+```typescript
+{
+  fieldId: UUID
+  typeId?: UUID    // which Type this Field appears in
+}
+```
+
+
+##### The `ProtocolStage` shape
+
+`ProtocolStage`, in pseudo-IDL:
+
+```typescript
+{
+  stageId: string       // stable key within this Protocol
+  name: string          // short, human-readable stage name (e.g. "Background", "Key requirements")
+  order: integer        // min: 0; declared composition order of the stages — see note below
+  purpose?: string      // what understanding this stage builds
+  question?: string     // the core question this stage answers
+  dependsOn: string[]   // stageId values; epistemic dependencies, not just ordering
+  completionCriteria?: string  // how to know this stage is sufficient to proceed
+  contributesTo?: FieldRef[]   // which Record Fields this stage feeds
+  outputType?: UUID            // LINEAGE reference (rfc-decision-c8704763) to the Type this stage
+                                // produces its own intermediate Record as; the effective
+                                // package set resolves it. typeVersion is dropped — version-
+                                // optional hybrids are forbidden.
+  aiGuidance?: AiGuidance       // the closed, structured guidance object used everywhere else in
+                                // the model (purpose/extraction/negativeGuidance/examples) — not a
+                                // plain string (rfc-decision, srs#379: structured over serialised).
+}
+```
+
+
+##### The `Protocol` shape
+
+`Protocol`, in pseudo-IDL:
+
+```typescript
+{
+  id: UUID
+  namespace: string
+  name: string
+  version: integer   // min: 1
+
+  description?: string
+
+  targetType: UUID | ""
+  // The Record type this Protocol produces — a LINEAGE reference (bare UUID;
+  // rfc-decision-c8704763), never the canonical namespace/name@version form (that is
+  // DISPLAY-only and is never stored). Empty string for loose / exploratory Protocols
+  // (Brain Dump, Decomposition) whose output is input context for a tighter Protocol.
+
+  stages: ProtocolStage[]
+
+  tags?: string[]
+  createdAt: ISO8601
+}
+```
+
+
+##### A Protocol chain for a governance decision
+
+Three Protocols in sequence, from brain dump to Decision Record. Non-normative:
+
+```
+Brain Dump Protocol (loose, no targetType)
+  → AttentionState: { containerId: C1 }
+  → Produces: Note N1 (unstructured brainstorm)
+
+Decomposition Protocol (loose, targetType: Component)
+  → AttentionState: { containerId: C1, recordId: N1 }
+  → Produces: Notes N2, N3, N4  [derived-from N1]
+
+Decision Protocol (tight, targetType: Decision)
+  → AttentionState: { containerId: C1, protocolRunId: R1, stageId: "criteria" }
+  → Stage "criteria" produces: Options Analysis Record R-OA  [derived-from N2, N3]
+  → Stage "decision" produces: Decision Record R-D           [derived-from R-OA]
+
+Conversation chunks produced during Decision stage:
+  chunk-42: { AttentionState: { containerId: C1, recordId: R-OA, fieldId: F-criteria, ... } }
+  chunk-43: { AttentionState: { containerId: C1, recordId: R-D, fieldId: F-outcome, ... } }
+
+Context query for R-D / F-outcome:
+  → Field aiGuidance from Decision Type + outcome Field
+  → Current value for F-outcome
+  → Chunks tagged with { recordId: R-D, fieldId: F-outcome } — chunk-43
+  → Chunks tagged with { recordId: R-D } — broader session context
+  → Related Records via Relations — R-OA via derived-from
+```
+
+
+##### ext:protocol
+
+**Required for**: facilitation tools, structured deliberation, any implementation that guides users through epistemic stages.
+
+Replaces `TemplateFacilitationStep` from v1. Protocol is epistemically richer: stages have explicit dependencies, completion criteria, and may produce intermediate Records.
+
+
+##### `FieldRef`
+
+A reference to a Field within a Type.
+
+Example: the `FieldRef` shape.
+
+
+##### `ProtocolStage`
+
+A named stage in a Protocol. Stages have epistemic dependencies (`dependsOn`) — not just ordering. A stage may only proceed when its dependencies are sufficient.
+
+Example: the `ProtocolStage` shape.
+
+**`order` vs `dependsOn`:** `order` is the declared composition order of the stages — structure, not presentation (RFC-015's layering table now states this explicitly as its own row: composition order is structure; display order is presentation; sequence is assertion). It provides the render default for how stages are shown in a UI or facilitation guide; a View may override for display. Execution sequence is determined by `dependsOn` resolution: a stage runs when all its declared dependencies are satisfied, regardless of its `order` value. Authors must ensure `order` is consistent with the partial order implied by `dependsOn` (i.e. a stage's `order` value should be greater than the `order` of any stage it depends on). See Invariant 31.
+
+
+##### `Protocol`
+
+An epistemically ordered process for building quality Records through structured conversation or facilitation. A Protocol is a package definition (declared in `package.json`'s `protocols` array, stored under the package's `protocols/` subtree) — not an instance Record.
+
+Example: the `Protocol` shape.
+
+**Property names are unprefixed** (`id`, not `protocolId`; `stages`, not `protocolStages`; and so on) — the same convention every other package-declared definition entity uses (Type, Field, Vocabulary, Lifecycle, RelationTypeDefinition, Theme, Blueprint all reuse the shared `id`/`namespace`/`name`/`version`/`description`/`createdAt` fields unprefixed). An earlier owed-schema pass (`docs/schema/2.0/protocol.json`, #297/#378) had shipped a `protocol`-prefixed shape matching the implementation of the day; a decision record ruled the unprefixed shape canonical (srs#379) and the schema now matches this prose. The implementation-side rename (the Rust `Protocol`/`ProtocolStage` structs, the CLI, and one still-vendored example corpus) is a tracked follow-up, staged like any other rename (rfc-decision-628cf6c4) — this prose and the schema describe the ruled target shape, not necessarily every artifact's current byte-for-byte content.
+
+**The Protocol spectrum:**
+
+```
+Loose                                                    Tight
+─────────────────────────────────────────────────────────────
+Brain Dump → Decomposition → Options Analysis → Decision
+```
+
+Loose Protocols produce open material. Tight Protocols converge on a specific Record type. The output of a loose Protocol is the input context for something tighter.
+
+**Generic Protocols** (reusable across domains):
+- Brain Dump — externalise all thinking without constraint
+- Decomposition — identify major components from raw material
+- Review — what is established, what is still open
+- Prioritisation — which components to resolve first
+
+**Domain-specific Protocols** (target a specific Record type):
+- Decision — context → criteria → options → evaluation → decision
+- Proposal — problem → solution shape → constraints → proposal
+
+**Protocol chaining and provenance**: The output of one Protocol is the input context for the next. This derivation chain is traceable through `derived-from` Relations, making the quality and history of the final Record auditable.
+
+**Non-normative example — Protocol chain for a governance decision:**
+
+Example: a Protocol chain for a governance decision.
+
+The final Decision Record is auditable because every Protocol stage left addressable artefacts. The quality of the outcome is traceable to the conversation that produced it.
+
+Views (`ext:views-l1`) no longer contain facilitation logic. A View is a presentation concern; a Protocol is an epistemic one.
 
 
 
@@ -5523,6 +5278,156 @@ View, Composition, and Theme are the constructs a projection is built from: View
 
 The independently adoptable capability modules a repository may declare, and how they interact with each other and with the core.
 
+#### Addressability
+
+A single addressing scheme spanning document space, process space and conversation space, so that anything that can be referred to can be resolved — and so that a transcript fragment and a field on a record are co-addressable, which is what makes an assertion linking them possible. Alongside the stable address sits the live cursor: the current focus of an active process run, which moves continuously and is stamped onto conversation material as it is produced. Because it is stamped at production time, asking for everything said while attention was on this field becomes a query, not a search.
+
+**Notes**: A stable address and a live cursor are structurally similar and must not be merged: one identifies an element, the other records where focus currently is. Likewise a cursor is set live and a source reference is set retrospectively.
+
+##### AttentionState.containerId must reference a valid…
+
+**Number**: 34
+
+`AttentionState.containerId` must reference a valid `Container.containerId`. Other Address components (`recordId`, `fieldId`, `protocolRunId`, `stageId`) are optional and may be absent when focus has not yet narrowed.
+
+
+##### Why Address and AttentionState are needed
+
+**Content**: 
+v1 noted "focus links" as a session-layer concern without defining a mechanism. The mechanism was absent.
+
+Without co-addressability, the transcript/SRS separation is clean in principle but broken in practice. There is no way to say "this conversation happened while we were focused on this Field." Retrospective `SourceReference` links help, but they require someone to explicitly annotate which conversation produced which value. For real-time facilitation, that annotation needs to happen live.
+
+`AttentionState` is the live cursor. Every transcript chunk produced while a Protocol stage is active carries the current `AttentionState` as a tag. Context assembly later queries by address: "all chunks where attention was on Field X in Record Y." The annotation is free because it was captured at production time.
+
+`Address` is the addressing scheme that makes co-addressability possible. A transcript chunk and a Field Revision are in the same address space — they can reference each other because both have resolvable addresses.
+
+**Multi-Container addressing**: A Record may belong to more than one Container simultaneously (a task may exist in both a project Container and a sprint Container). That Record therefore has multiple valid document-space Addresses — one per Container context. This is intentional: `containerId` in a document-space `Address` is not a uniqueness constraint, it is a *context specifier*. `AttentionState.containerId` records which Container was active during a live session, making the contextual anchor explicit. When a session-tagged transcript chunk is later queried, the Container in the `AttentionState` tells you not just *what Record* was being discussed but *in which context* it was being discussed.
+
+
+##### Why Revision is addressable
+
+**Content**: 
+In v1, field revision was an implementation concern. The spec described when to edit in-place versus create a new Record, but individual revisions were not addressable — you could not ask "what did this field say before the last Protocol run?" at the interoperability layer.
+
+This matters for:
+- **Governance challenge**: if a Record is challenged, you need to trace which conversation produced each field value and which version was in place when a downstream decision was made.
+- **Context assembly**: when generating the next draft, knowing what changed between revision 2 and revision 3 — and what conversation produced that change — is more useful than knowing only the current value.
+- **Audit**: a complete audit trail requires addressable history, not just current state.
+
+`Revision` is the addressable audit trail. It does not replace the edit-in-place vs. new-Record judgment for minor corrections. That remains an implementation concern. Revision is the interoperability layer for cases where history itself is a first-class concern.
+
+
+##### Addressability as a prerequisite for live facilitation
+
+**Content**: 
+`ext:addressability` is not just about naming things. It is the mechanism that makes the conversation layer useful. Without `AttentionState`, transcript chunks have no address-time connection to the Records they inform. Without `Revision`, the history of a field's value is an implementation detail not visible at the interoperability layer.
+
+Any implementation that facilitates live sessions — where conversation material is produced while people are working on specific Records and Fields — should implement `ext:addressability`. Without it, context assembly is purely retrospective, and the quality of AI assistance degrades accordingly.
+
+**Diff rendering:** implementations rendering Revision history for governance review should support a diff view that shows field-level removals alongside additions, not only the current value. The Revision chain already provides the data needed for three useful modes: final (current value only), all markup (current value plus prior content shown as removed and new content as added), and original (the value at a specified Revision). This is a rendering pattern, not a separate data shape.
+
+
+##### Sub-field addressing
+
+**Content**: 
+Web UI comments and annotations attached to specific text within a Field value require addressing below the Field level. `ext:addressability` currently addresses at Field granularity. Sub-field text selection addressing is architecturally possible (the Address space accommodates it) but is deferred as a separate extension.
+
+---
+
+
+##### The `Address` union
+
+`Address`, in pseudo-IDL:
+
+```typescript
+type Address =
+  | {
+      space: "document"
+      containerId: UUID
+      recordId?: UUID
+      fieldId?: UUID
+    }
+  | {
+      space: "process"
+      runId: UUID          // Protocol run ID; requires ext:protocol
+      stageId?: string
+    }
+  | {
+      space: "conversation"
+      sessionId: UUID
+      chunkId?: UUID
+      annotationId?: UUID
+    }
+```
+
+
+##### The `AttentionState` shape
+
+`AttentionState`, in pseudo-IDL:
+
+```typescript
+{
+  containerId: UUID
+  recordId?: UUID
+  fieldId?: UUID
+  protocolRunId?: UUID
+  stageId?: string
+}
+```
+
+
+##### ext:addressability
+
+**Required for**: any implementation with live facilitation or multi-session extraction.
+
+Defines a universal addressing scheme and the mechanisms that connect conversation material to document elements.
+
+
+##### `Address`
+
+A stable, resolvable identifier for any element across document space, process space, and conversation space.
+
+Example: the `Address` union.
+
+Every element that can be referred to has an Address. A transcript chunk and a document-space field are co-addressable because assertions about one referencing the other require both to be resolvable.
+
+
+##### `AttentionState`
+
+The current focus of an active Protocol run — a live cursor across the address space. `AttentionState` and `Address` are structurally related but serve distinct roles: an `Address` is a stable, resolvable identifier for a specific element; `AttentionState` is the mutable cursor that records *where focus currently is* during an active session. An `AttentionState` value at a point in time resolves to a document-space `Address`, but it is stored separately because it changes continuously as the Protocol advances.
+
+Conversation material is tagged with the active `AttentionState` as it is produced. This makes context assembly efficient: "all chunks produced while focus was on this Field" is a queryable address predicate.
+
+Example: the `AttentionState` shape.
+
+`AttentionState` is set live by the session or Protocol runner. `SourceReference` is set retrospectively at extraction or editorial review time. Both are needed; they answer different questions.
+
+
+##### Context Query (behavioural requirement)
+
+A conforming `ext:addressability` implementation must be able to assemble relevant material given an address and a purpose. This is a behavioural requirement, not a data shape.
+
+**Required query patterns:**
+
+| Pattern | Address | Returns |
+|---|---|---|
+| Field context | `{recordId}/{fieldId}` | Current value, chunks tagged to this Field, Field `aiGuidance` |
+| Record context | `{recordId}` | All field values, chunks tagged to this Record, Relations, Protocol run history |
+| Stage context | `{runId}/{stageId}` | All chunks produced during this stage, Fields active in this stage |
+
+**Recommended assembly order for AI assistance:**
+
+1. Type and Field `aiGuidance` — what this field captures, how to extract it
+2. Current value — what has already been established
+3. Chunks tagged to this Field via AttentionState — most focused context
+4. Chunks tagged to the parent Record — broader session context
+5. Related Records via Relations — structural context
+
+**Note (2026-08-21, `rfc-decision-2a1e1590`)**: the per-field `Revision` snapshot mechanism (addressable field-value history, `revisionId`, revision chains, revision-trace queries) previously specified here is removed under the dormancy rule — zero corpus use, and it was incompletely specified (a PascalCase wire-format leak in its agent tag, and a coupling that named a pre-RFC-006 field). `Address`, `AttentionState`, and the Context Query requirement above are untouched by that removal. Return trigger: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface.
+
+
+
 #### Conversation boundary
 
 The permanent architectural line between raw multimodal source material (speech, threads, annotations) and the negotiated semantic state SRS captures. The two layers reference each other in both directions but never merge: material on the conversation side is addressable evidence, and it does not become an instance automatically. A transcript chunk cited as evidence for a field value is not a Note unless someone deliberately models it as one.
@@ -5539,6 +5444,101 @@ If SRS tried to be a transcript standard, it would need to model speaker identit
 The boundary makes both layers better at what they do. The connection between them — `SourceReference` and `AttentionState` — is the bidirectional bridge. Each layer references the other; neither absorbs the other.
 
 ---
+
+
+
+#### Discovery
+
+A portable contract for asking a repository what it holds, split deliberately into two halves that behave differently. Structured filters, over type, container, tag, tier and lifecycle state, are exact-match predicates: two conforming implementations with the same data must return the same set. Free-text content matching is a recall floor: every instance whose projected text contains the normalised query must be returned, and returning more, or ranking differently, is explicitly permitted. This is what lets a naive substring matcher and a semantic search engine both conform.
+
+**Notes**: Matching runs over a deterministic text projection: an ordered sequence of segments derived from an instance by a stated rule about which fields are searchable, normalised at match time by Unicode NFC and case folding, with punctuation, diacritics and whitespace left intact.
+
+##### lifecycleStates in DiscoveryQuery is an inclusive multi-value lifecycle filter
+
+**Number**: I-142
+
+When DiscoveryQuery carries a non-empty lifecycleStates array, implementations MUST restrict the query result to instances whose lifecycleState matches any value in the array (OR semantics). An instance with no lifecycleState MUST be excluded when lifecycleStates is present and non-empty. When lifecycleStates is absent or empty, no filtering by this field is applied and all lifecycle states (including absent) are included. Implementations that do not declare ext:lifecycle MUST ignore lifecycleStates and MUST NOT produce a validation error on its presence.
+
+**Rationale**: Multi-value OR semantics mirrors typeFilter and enables queries that span multiple lifecycle stages (e.g. draft and active). The ext:lifecycle guard ensures that implementations without a lifecycle model are not broken by the field. Originally numbered 011-1 under RFC-011's rule-set-qualified proposal-stage numbering; relocated from package/records/ into the projection root and renumbered I-142 upon RFC-011 acceptance (srs#410, rfc-decision-628cf6c4). Retained at I-142 through the srs#525 SectionSource -> DiscoveryQuery collapse (rfc-decision-cce3c00e, rfc-decision-9ee14517): the predicate moved from SectionSource.type-query to DiscoveryQuery, now governed by RFC-012 Rev 12 (formerly RFC-011 Change A) -- identifier stability preferred over renumbering (identity over label).
+
+
+##### excludeLifecycleStates in DiscoveryQuery is an exclusion lifecycle filter applied after inclusion
+
+**Number**: I-143
+
+When DiscoveryQuery carries a non-empty excludeLifecycleStates array, implementations MUST exclude from the query result any instance whose lifecycleState matches any value in the array. When lifecycleStates and excludeLifecycleStates are both present and non-empty, inclusion filtering (I-142) MUST be applied first; exclusion filtering is then applied to the survivors. An instance with no lifecycleState is not excluded by excludeLifecycleStates (only instances with a matching non-null lifecycleState are excluded). When excludeLifecycleStates is absent or empty, no exclusion is applied. Implementations that do not declare ext:lifecycle MUST ignore excludeLifecycleStates and MUST NOT produce a validation error on its presence.
+
+**Rationale**: Exclusion is more forward-compatible than inclusion for the decision-log pattern: specifying excludeLifecycleStates: [superseded, abandoned] automatically includes any new lifecycle states added in future without Composition updates. Inclusion-first-then-exclusion semantics allow fine-grained control when both fields are present. Originally numbered 011-2 under RFC-011's rule-set-qualified proposal-stage numbering; relocated from package/records/ into the projection root and renumbered I-143 upon RFC-011 acceptance (srs#410, rfc-decision-628cf6c4). Retained at I-143 through the srs#525 SectionSource -> DiscoveryQuery collapse (rfc-decision-cce3c00e, rfc-decision-9ee14517): the predicate moved from SectionSource.type-query to DiscoveryQuery, now governed by RFC-012 Rev 12 (formerly RFC-011 Change B) -- identifier stability preferred over renumbering (identity over label).
+
+
+##### Structured filter predicates are exact-match
+
+**Number**: I-113
+
+An implementation that declares `ext:discovery` MUST include in its DiscoveryQuery result set every instance that satisfies all specified structured filter predicates (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `excludeLifecycleStates`, `tier`), and MUST NOT include any instance that fails any specified structured filter predicate. (RFC-012 R1.)
+
+
+##### Content-match is a guaranteed recall floor
+
+**Number**: I-114
+
+For a `contentMatch` predicate with normalized query string `q`, an implementation that declares `ext:discovery` MUST include every instance whose Text Projection contains at least one `TextSegment` whose normalized `text` contains `q` as a substring (case-folded NFC substring match). (RFC-012 R2.)
+
+
+##### Extra content-match results are permitted
+
+**Number**: I-115
+
+An implementation MAY include instances beyond the recall-floor set defined by I-114 (e.g. via stemming, phonetic matching, or semantic similarity). Returning extra results does not violate `ext:discovery` conformance. (RFC-012 R3.)
+
+
+##### Result ranking is implementation-defined
+
+**Number**: I-116
+
+An implementation MAY rank DiscoveryQuery results in any order. The recall-floor guarantee of I-114 applies to inclusion in the result set only, not to rank position. (RFC-012 R4.)
+
+
+##### Structured filters and content-match compose by conjunction
+
+**Number**: I-117
+
+When both structured filters and `contentMatch` are specified on a DiscoveryQuery, an instance MUST satisfy all structured filter predicates (exact-match, I-113) AND the content-match recall-floor predicate (I-114). The structured-filter constraints cannot be overridden or widened by content-match extra recall. (RFC-012 R5.)
+
+
+##### containerId filter uses effective container membership
+
+**Number**: I-118
+
+A `containerId` filter predicate MUST match exactly the instances in effective(C) for the named Container C: the recursive closure over the Container's declared `rootInstanceIds`, `memberInstanceIds` and `childContainerIds` (RFC-034 [R8]; I-147). Discovery scopes to the full effective (deep) closure; a `contains` Relation never contributes (I-148). The authoritative inputs are the Container objects and their declared child graph in the repository's authoritative store (RFC-038 [R1]). An implementation MAY maintain a derived catalog for performance but MUST treat the store as authoritative when they differ; there is no manifest `instanceIndex` to use as a cache, as it is retired (RFC-038 [R2]). (RFC-012 R6, as amended by RFC-034 Change D.2 on 2026-09-06: the former three-condition rule of rootInstanceIds, OR memberInstanceIds, OR reachable via transitive `contains` traversal is superseded; its traversal branch is removed.)
+
+
+##### Multi-tag filter uses AND semantics with vocabulary resolution
+
+**Number**: I-119
+
+A `tag` predicate with multiple values MUST use AND semantics — all specified tags must be present on the instance. Both query tags and stored instance tags are canonicalized via RFC-006 key-or-alias resolution when a Vocabulary is declared for the tag key; when no Vocabulary is declared, raw string comparison applies (case-sensitive). (RFC-012 R7.)
+
+
+##### Text Projection includes only Fields matching the RFC-032 searchability predicate
+
+**Number**: I-120
+
+For Tier 2, the Text Projection MUST include a Field only when `fieldType.datatype == "string"` and `fieldType.format` is absent or one of `"plain"`, `"markdown"`, or `"uri"`. `valueDomain` does not affect searchability. A single-cardinality Field emits one segment; a list-cardinality Field emits one segment per array element in order. Fields with `format: "uuid"` or `format: "email"`, or datatype `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, or `map`, MUST NOT contribute `TextSegment`s. (RFC-012 R8; RFC-032 Rev-7 erratum.)
+
+
+##### Text Projection includes tags; display labels are optional
+
+**Number**: I-121
+
+The Text Projection MUST include `tags` array entries as `TextSegment`s after field segments. An implementation MAY additionally include `FieldAssignment.displayLabel` values as segments after tags — this is not required, and two conforming implementations may differ on whether display-label segments are included. (RFC-012 R9.)
+
+
+##### Text normalization is NFC + case folding, no stripping
+
+**Number**: I-122
+
+Normalization of `TextSegment.text` MUST apply Unicode Normalization Form C (NFC) followed by Unicode simple case folding (locale-independent). Implementations MUST NOT strip punctuation, diacritics, or whitespace during this normalization step; additional stemming or tokenization is permitted for ranking purposes only, not as a substitute for the normalized canonical search string. (RFC-012 R10.)
 
 
 
@@ -6987,21 +6987,6 @@ These values govern the SRS standard layer. Rust, web, and other implementation 
 - **I-140.** A Type's projected JSON Schema describes the `fieldValues` object, not the whole Record document. `i…
 - **I-141.** Instance `fieldValues` keys MUST be serialised in `FieldAssignment.order`, and nested composite obje…
 
-#### Discovery
-
-- **I-113.** An implementation that declares `ext:discovery` MUST include in its DiscoveryQuery result set every…
-- **I-114.** For a `contentMatch` predicate with normalized query string `q`, an implementation that declares `ex…
-- **I-115.** An implementation MAY include instances beyond the recall-floor set defined by I-114 (e.g. via stemm…
-- **I-116.** An implementation MAY rank DiscoveryQuery results in any order. The recall-floor guarantee of I-114…
-- **I-117.** When both structured filters and `contentMatch` are specified on a DiscoveryQuery, an instance MUST…
-- **I-118.** A `containerId` filter predicate MUST match exactly the instances in effective(C) for the named Cont…
-- **I-119.** A `tag` predicate with multiple values MUST use AND semantics — all specified tags must be present o…
-- **I-120.** For Tier 2, the Text Projection MUST include a Field only when `fieldType.datatype == "string"` and…
-- **I-121.** The Text Projection MUST include `tags` array entries as `TextSegment`s after field segments. An imp…
-- **I-122.** Normalization of `TextSegment.text` MUST apply Unicode Normalization Form C (NFC) followed by Unicod…
-- **I-142.** When DiscoveryQuery carries a non-empty lifecycleStates array, implementations MUST restrict the que…
-- **I-143.** When DiscoveryQuery carries a non-empty excludeLifecycleStates array, implementations MUST exclude f…
-
 #### Source reference
 
 - **48.** A `SourceReference` with `sourceType: "repository-document"` must have a `sourceId` matching a `Sour…
@@ -7012,20 +6997,6 @@ These values govern the SRS standard layer. Rust, web, and other implementation 
 #### Relation type definition
 
 - **I-88.** The `sourceRole` value set — the closed enum of the implemented schema revision, including values ad…
-
-#### Addressability
-
-- **34.** `AttentionState.containerId` must reference a valid `Container.containerId`. Other Address component…
-
-#### Blueprint
-
-- **I-78.** Each entry in Blueprint.rootTypes MUST be an ExactTypeRef: both typeId (UUID) and typeVersion (integ…
-
-#### Protocol
-
-- **29.** Every `stageId` in `ProtocolStage.dependsOn[]` must reference a `stageId` declared in the enclosing…
-- **30.** Every `fieldId` in `ProtocolStage.contributesTo[]` must reference a `fieldId` that appears in the st…
-- **31.** For every pair of stages A and B within a `Protocol` where B.dependsOn includes A.stageId, B.order m…
 
 #### Container
 
@@ -7050,6 +7021,12 @@ These values govern the SRS standard layer. Rust, web, and other implementation 
 #### Semantic order
 
 - **I-125.** `precedes` relations MUST be used only to express sequences where a different order would be semanti…
+
+#### Protocol
+
+- **29.** Every `stageId` in `ProtocolStage.dependsOn[]` must reference a `stageId` declared in the enclosing…
+- **30.** Every `fieldId` in `ProtocolStage.contributesTo[]` must reference a `fieldId` that appears in the st…
+- **31.** For every pair of stages A and B within a `Protocol` where B.dependsOn includes A.stageId, B.order m…
 
 #### Repository
 
@@ -7095,6 +7072,10 @@ These values govern the SRS standard layer. Rust, web, and other implementation 
 - **I-83.** A tool MUST resolve every `typeId` and `fieldId` referenced by any Tier 2 Record against the union o…
 - **I-103.** A conformant implementation MUST NOT refuse to load, validate, or export a repository solely because…
 
+#### Blueprint
+
+- **I-78.** Each entry in Blueprint.rootTypes MUST be an ExactTypeRef: both typeId (UUID) and typeVersion (integ…
+
 #### Projection
 
 - **I-128.** When `manifest.renderedPresentations` is present and non-empty, a conformant viewer MUST select as t…
@@ -7114,6 +7095,25 @@ These values govern the SRS standard layer. Rust, web, and other implementation 
 - **I-127.** When both `typeFilter` and `memberOrder` are present on a `container-subset` section, `typeFilter` i…
 - **I-138.** A Composition projection MUST key `ProjectedRecord.fields` and `orderedFieldKeys` by `Field.name`, a…
 - **I-144.** When SectionSource.discovery-query carries containerScope, implementations MUST apply the following…
+
+#### Discovery
+
+- **I-113.** An implementation that declares `ext:discovery` MUST include in its DiscoveryQuery result set every…
+- **I-114.** For a `contentMatch` predicate with normalized query string `q`, an implementation that declares `ex…
+- **I-115.** An implementation MAY include instances beyond the recall-floor set defined by I-114 (e.g. via stemm…
+- **I-116.** An implementation MAY rank DiscoveryQuery results in any order. The recall-floor guarantee of I-114…
+- **I-117.** When both structured filters and `contentMatch` are specified on a DiscoveryQuery, an instance MUST…
+- **I-118.** A `containerId` filter predicate MUST match exactly the instances in effective(C) for the named Cont…
+- **I-119.** A `tag` predicate with multiple values MUST use AND semantics — all specified tags must be present o…
+- **I-120.** For Tier 2, the Text Projection MUST include a Field only when `fieldType.datatype == "string"` and…
+- **I-121.** The Text Projection MUST include `tags` array entries as `TextSegment`s after field segments. An imp…
+- **I-122.** Normalization of `TextSegment.text` MUST apply Unicode Normalization Form C (NFC) followed by Unicod…
+- **I-142.** When DiscoveryQuery carries a non-empty lifecycleStates array, implementations MUST restrict the que…
+- **I-143.** When DiscoveryQuery carries a non-empty excludeLifecycleStates array, implementations MUST exclude f…
+
+#### Addressability
+
+- **34.** `AttentionState.containerId` must reference a valid `Container.containerId`. Other Address component…
 
 #### Conformance
 
