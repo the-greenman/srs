@@ -3870,6 +3870,15 @@ When `manifest.renderedPresentations` is present and non-empty, a conformant vie
 **Rationale**: `renderedPresentations` declares which Composition(s) constitute the repository's presentations so a conformant viewer opens the document the group intended, without requiring every viewer to guess. A multi-package `compositionId` collision is reported as an error (not resolved by implementation-defined precedence) because silently picking one package's Composition over another's would be a non-deterministic, non-portable choice.
 
 
+##### Projection
+
+Rendered output is derived from records and is never itself a source of truth for them. A document, a table, an export, or a serialised copy is a view produced from the records on demand: rendering it again produces the same result, because nothing in it originates the meaning it shows.
+
+A projection keeps a traceable line back to the records it renders. Editing the rendered artifact directly, instead of the records, creates a second copy of the meaning that the records no longer agree with, and the disagreement has no mechanical way to resolve.
+
+View, Composition, and Theme are the constructs a projection is built from: View selects the presentation, Composition assembles what gets rendered, and Theme supplies the templates the rendering fills in. Each rests on the same rule: render the output, never author it directly.
+
+
 ##### View
 
 A named, versioned presentation over a set of Fields: which field rows appear, in what display order, under what labels, with what editor hints, and whether each is visible. It is field-centric, not Type-bound: any Record carrying the fields a View requires can be rendered through it — and it constrains presentation only. A View may not override, redefine or duplicate the semantics of any Field or Type it references.
@@ -3915,389 +3924,6 @@ A future version may define:
 - `composesViews?: UUID[]` — mixin composition; multiple Views contribute non-overlapping configuration
 
 Current design: `View` is a leaf type. Use Lineage tracking to record inheritance relationships.
-
-
-###### The `FieldView` shape
-
-`FieldView`, in pseudo-IDL:
-
-```typescript
-{
-  fieldId: UUID       // must reference a valid Field.id in the effective package set
-  order: integer      // min: 0; display order within this View
-  required?: boolean  // View-level workflow constraint; does not alter Field contract
-  visible?: boolean   // default: true
-  labelMode?: "inline" | "none"  // default: "inline"; "none" emits the value with no label (RFC-037 Rev 5)
-
-  // Presentation overrides — View scope only
-  displayLabel?: string
-  displayHint?: string
-  editorHintOverride?: string
-}
-```
-
-
-###### The `RecordPropertyView` shape
-
-`RecordPropertyView`, in pseudo-IDL:
-
-```typescript
-{
-  property: "lifecycleState" | "tags" | "createdAt" | "updatedAt"
-  order: integer      // min: 0; shared display-order axis with FieldView
-  displayLabel?: string
-  visible?: boolean   // default: true
-}
-```
-
-
-###### The `ExportConfig` shape
-
-`ExportConfig`, in pseudo-IDL:
-
-```typescript
-{
-  format?: string        // target format hint, e.g. "markdown", "adoc", "json"
-  preamble?: string
-  // Template string rendered before field values.
-  // Variable substitution uses {{variable-name}} syntax.
-  // Standard variables: {{instance-id}}, {{date}}, {{status}}, {{namespace}}, {{name}}
-
-  omitEmptyFields?: boolean  // default: false
-}
-```
-
-
-###### The `View` shape
-
-`View`, in pseudo-IDL:
-
-```typescript
-{
-  id: UUID
-  namespace: string
-  name: string
-  version: integer   // min: 1
-
-  description: string    // when to use this View; what workflow or audience it serves
-
-  aiGuidance?: AiGuidance
-  // purpose: the workflow context this View serves
-  // extraction: session-level framing injected before field extraction
-
-  fieldViews: (FieldView | RecordPropertyView)[]
-
-  compatibleTypes?: string[]
-  // Optional Type-key (namespace/name) hints this View was designed for.
-  // Informative only. Compatibility is determined by field presence.
-
-  exportConfig?: ExportConfig
-
-  tags?: string[]
-  createdAt: ISO8601
-  lineage?: Lineage
-  provenance?: Provenance
-}
-```
-
-
-###### The `CompositeRendererBinding` shape
-
-`CompositeRendererBinding`, in pseudo-IDL:
-
-```typescript
-CompositeRendererBinding {
-  renderer: string
-  // Bare lower-kebab identifiers are SRS-reserved and introduced only by a ratified RFC:
-  //   "table"     — the SRS-defined composite renderer
-  //   "baseline"  — sentinel meaning explicitly no renderer; cancels a broader declaration site
-  // Vendor identifiers use "{reverse-domain}/{name}" with at least two reverse-domain labels.
-  // Grammar: ^([a-z][a-z0-9-]*|[a-z0-9-]+(\.[a-z0-9-]+)+/[^/]+)$ — enforced at render and
-  // validation time, not by JSON Schema, so a malformed value degrades per [CR-036-7].
-
-  roles?: { [roleName: string]: UUID }
-  // Explicit, UUID-anchored role -> Field.id binding, overriding the by-name defaults.
-}
-```
-
-
-###### The `SectionSource` union
-
-`SectionSource`, in pseudo-IDL:
-
-```typescript
-type SectionSource =
-  | {
-      type: "discovery-query"
-      query: DiscoveryQuery   // ext:discovery (RFC-012)
-      // The selection predicate. typeNamespace + typeName together replace the retired
-      // typeKey (namespace/name) axis; lifecycleState/lifecycleStates/excludeLifecycleStates
-      // replace the SectionSource-local copies of the same axes (formerly RFC-011 Changes
-      // A/B, now governed by RFC-012 Rev 12: I-142/I-143). See the ext:discovery extension's
-      // `DiscoveryQuery` shape for the full predicate set.
-      containerIds?: UUID[]
-      containerScope?: "explicit" | "repository" | "subtree"
-      // RFC-011 [N+27] / I-144, arrangement, not selection: which containers bound the
-      // candidate set, layered on top of query rather than folded into it (DiscoveryQuery's
-      // own containerId predicate is single-valued and takes one container's effective
-      // membership; it cannot express this). One scoping vocabulary (RFC-034 [R8]).
-      // Default: "explicit" (direct(C) of each listed container: its own members, no
-      // nested subtree). "repository": all containers; containerIds[] ignored. "subtree":
-      // effective(C) — the closure over declared childContainerIds; follows child edges
-      // only, never contains Relations. Absent is equivalent to "explicit".
-    }
-  | {
-      type: "container-subset"
-      containerId: UUID
-      containerType?: string
-      typeFilter?: string[]   // RFC-008. namespace/name keys, version-independent.
-      // When present and non-empty, restricts members to the listed Types. Ordering is
-      // the container-wide precedes order (below) projected onto the survivors. Absent or
-      // empty = all members. Exclusive to container-subset.
-      // Default ordering: when DocumentSection.ordering is absent, members are ordered
-      // by the precedes relation chain among them; createdAt ascending is the tiebreak
-      // for members not connected by any precedes relation.
-    }
-```
-
-
-###### The `DocumentSection` shape
-
-`DocumentSection`, in pseudo-IDL:
-
-```typescript
-{
-  sectionId: string
-  title?: string
-  description?: string
-  order: integer   // min: 0
-
-  source: SectionSource
-
-  renderViewId?: UUID    // View (ext:views-l1) used to render each instance in this section
-  // When absent, implementations MUST use the default rendering baseline (see below).
-  // When typeDispatch matches the record's resolved type, it takes precedence over renderViewId.
-
-  typeDispatch?: { [typeKey: string]: UUID }   // RFC-008
-  // Maps a record's resolved type (namespace/name, version-independent) to the
-  // ext:views-l1 View used to render records of that Type within this section. Consulted
-  // before renderViewId; unmatched Types fall back to renderViewId then the default
-  // baseline. Lets one heterogeneous section render each Type with its own L1 View.
-  // typeDispatch never changes member order (order follows the source).
-
-  titleFieldId?: UUID
-  // The fieldId whose value provides the per-record heading within this section.
-  // Constraints (RFC-032 Rev-7 [N+1]):
-  //   - The referenced field must be effective-single.
-  //   - datatype string; valueDomain absent/open; format absent/plain/markdown.
-  //   - When a record's type does not carry this field, the per-record heading is
-  //     omitted silently — this is not a render failure. This enables heterogeneous
-  //     sections (e.g. container-subset) where some record types carry the heading
-  //     field and others do not.
-  // When absent, no per-record heading is emitted.
-  // Enforced at render time; implementations SHOULD also enforce at package validation time
-  // when the section source is statically determinable.
-
-  ordering?: {
-    fieldId?: UUID
-    direction?: "asc" | "desc"  // default: "asc"
-    memberOrder?: UUID[]
-    // RFC-015 Change B. View-owned explicit presentation sequence, container-subset
-    // sections only. Lists member instanceIds in presentation order; members not
-    // listed are appended in [N+12] order (precedes topological sort, createdAt
-    // tiebreak). MUST NOT be combined with fieldId — a section carrying both is
-    // invalid (Rule [N+29]).
-  }
-
-  required?: boolean
-  emptyBehavior?: "hide" | "show-placeholder"
-
-  relationsPresentation?: RelationsPresentation   // RFC-027
-  // When present, render a deterministic per-member links block (the member's
-  // Relations of the declared types) after each member this section renders — all
-  // SectionSource variants, all member tiers. Independent of emptyBehavior.
-  // See RelationsPresentation below. Rules [I-027-1]-[I-027-8] (RFC-027).
-
-  compositeRenderers?: CompositeRendererDirective[]   // RFC-036
-  // Composite renderer dispatch for records rendered by this section. The primary
-  // ext:views-l2 declaration site, following RFC-027's placement of relationsPresentation.
-  // Resolved after FieldView.compositeRenderer and before Composition.compositeRenderers
-  // ([CR-036-6]). More than one entry for the same fieldId is a validation diagnostic; the
-  // first in array order wins.
-}
-```
-
-
-###### The `CompositeRendererDirective` shape
-
-`CompositeRendererDirective`, in pseudo-IDL:
-
-```typescript
-{
-  fieldId: UUID
-  // The composite-range Field this directive binds. MUST resolve to a Field whose
-  // fieldType.datatype is "ref" and mode is "inline" ([CR-036-3]); a fieldId absent from
-  // a rendered instance's Type is ignored without a diagnostic ([CR-036-4]).
-
-  renderer: string
-  // Composite renderer identifier, as `CompositeRendererBinding.renderer` (`ext:views-l1`).
-  // "baseline" is the reserved sentinel meaning explicitly no renderer, used to cancel a
-  // broader declaration site. Grammar enforced at render and validation time ([CR-036-1]).
-
-  roles?: { [roleName: string]: UUID }
-  // Explicit, UUID-anchored role -> Field.id binding, overriding the by-name defaults of
-  // [CR-036-8].
-}
-```
-
-
-###### The `RelationsPresentation` shape
-
-`RelationsPresentation`, in pseudo-IDL:
-
-```typescript
-{
-  include: RelationPresentationEntry[]
-  // min 1; display order. Duplicate relationType entries are a repository-validation
-  // diagnostic; a renderer encountering them renders each independently.
-  label?: string
-  // Reserved for a future grouped/headed presentation. No rendering behaviour is
-  // defined; implementations MUST ignore it when rendering.
-}
-
-// RelationPresentationEntry
-{
-  relationType: string
-  // Bare canonical key (e.g. "supersedes") or namespace/name for custom types.
-  // Expected to resolve to an installed RelationTypeDefinition (RFC-005); checked at
-  // repository validation time. At render time a non-resolving, retired-only, or
-  // conflict-ambiguous entry is skipped with a diagnostic; entries resolving to
-  // active/deprecated/tombstone definitions display (rendering is a historical read).
-  // None of these conditions may abort the render.
-  directions?: "forward" | "inverse" | "both"   // default: "forward"
-  // Display-only: inverse Relations are never stored or synthesised (Invariant 16).
-  forwardLabel?: string
-  // Override for edges where the member is the source. Default ladder: installed
-  // definition label, then humanized relation type key.
-  inverseLabel?: string
-  // Override for edges where the member is the target. Default ladder: humanized
-  // declared inverseType query label (RFC-005), then forward label + " (incoming)".
-}
-```
-
-
-###### The `NavigationLink` shape
-
-`NavigationLink`, in pseudo-IDL:
-
-```typescript
-{
-  fromSectionId: string
-  toSectionId: string
-  label?: string
-  bidirectional?: boolean  // default: false
-}
-```
-
-
-###### The `ThemeReference` shape
-
-`ThemeReference`, in pseudo-IDL:
-
-```typescript
-{
-  mode: "local" | "remote" | "bundled"
-  path?: string     // required when mode === "local"
-  url?: string      // required when mode === "remote"
-  themeId?: UUID    // references Theme.id in Package.themes[]; required when mode === "bundled"
-}
-```
-
-
-###### The `ThemeVariant` shape
-
-`ThemeVariant`, in pseudo-IDL:
-
-```typescript
-{
-  name: string           // case-sensitive; MUST be unique within Composition.themeVariants
-  description?: string
-  themeRef: ThemeReference
-}
-```
-
-
-###### The `Composition` shape
-
-`Composition`, in pseudo-IDL.
-
-```typescript
-{
-  id: UUID
-  namespace: string
-  name: string
-  version: integer   // min: 1
-
-  description: string    // what kind of document this produces; intended audience
-
-  containerType?: string  // when set, intended for Containers of this type
-
-  sections: DocumentSection[]
-
-  navigationLinks?: NavigationLink[]
-
-  exportConfig?: ExportConfig   // ext:views-l1 -- the shape View.exportConfig also uses
-  // format?: string
-  //   Portable values: "markdown", "adoc", "html", "text", "json". Implementations MAY
-  //   support additional values; non-portable values MUST NOT cause a validation error.
-  //   When absent, output format is implementation-defined. Governs this Composition's own
-  //   document-level rendering (all section rendering, the document title). A dispatched L1
-  //   View's own exportConfig.format has no effect here -- a different render context, not
-  //   an override (srs#525: one shape, two attachment points, no precedence between them).
-  //   When format is "json", implementations MUST produce a structured JSON projection
-  //   conforming to the document-view-output.json schema instead of rendered markup. In
-  //   json mode: theme application, heading injection, and depthOffset do not apply;
-  //   {{heading-N}} variables in preamble templates MUST be substituted as empty strings;
-  //   containerId is resolved from the first container-subset SectionSource, or null when
-  //   none is present.
-  // preamble?: string
-  //   Template string rendered before all sections. Standard variables: {{container-title}},
-  //   {{date}}, {{container-id}}, {{heading-1}}, {{heading-2}}. When absent and format is
-  //   "markdown", "html", or "adoc", implementations MUST render a document title heading at
-  //   level 1 + depthOffset containing container-title.
-  // omitEmptyFields?: boolean
-  //   Available on this shape for consistency with View.exportConfig; no normative rule at
-  //   Composition level currently reads it (empty-section display is DocumentSection.
-  //   emptyBehavior; empty-field display in the Default Rendering Baseline follows the
-  //   Normative Field-Row Form rules below).
-
-  depthOffset?: integer   // min: 0; default: 0
-  // Shifts all auto-rendered heading levels by this amount.
-  // At depthOffset 0: document title H1, sections H2, records H3.
-  // At depthOffset 1: H2, H3, H4 respectively.
-  // Implementations SHOULD emit a warning diagnostic when depthOffset > 4.
-
-  themeRef?: ThemeReference
-  // Default Theme (ext:themes-l1). Applied when no variant is selected at render time.
-  // When ext:themes-l1 is not declared, implementations MUST ignore this field
-  // and MUST NOT error on its presence.
-
-  themeVariants?: ThemeVariant[]
-  // Named alternative themes selectable at render invocation.
-  // When ext:themes-l1 is not declared, implementations MUST ignore this field.
-
-  compositeRenderers?: CompositeRendererDirective[]   // RFC-036
-  // Document-wide default composite renderer dispatch, applied to any section that
-  // declares no matching DocumentSection.compositeRenderers entry. Lowest-precedence
-  // declaration site ([CR-036-6]); a section or FieldView cancels it with renderer: "baseline".
-
-  aiGuidance?: AiGuidance
-  tags?: string[]
-  createdAt: ISO8601
-  lineage?: Lineage
-  provenance?: Provenance
-}
-```
 
 
 ###### The html multi-entry field row
@@ -4577,173 +4203,6 @@ The baseline is a floor, not a ceiling. An L1 View via `renderViewId` always tak
 `emptyBehavior` in the L1 View path: when `renderViewId` is set, empty field handling is governed by `ExportConfig.omitEmptyFields` on the referenced L1 View. `DocumentSection.emptyBehavior` does not apply in the L1 View rendering path.
 
 
-###### Normative Field-Row Form (RFC-037)
-
-The emitted form of a field row in a rendered `Composition`, and on RFC-036 Change C's
-composite baseline where that baseline emits an individual field row. These forms are the content
-`ElementTemplates.fieldRow` receives as `{{content}}`; a Theme may wrap the row and MUST NOT replace
-it ([T-3]), and when no `fieldRow` template resolves the forms below are emitted unwrapped. They are
-the terminal rung of RFC-036's row-template ladder (`compositeFieldRowTemplates` -> `fieldRow` ->
-baseline field-row form), closing RFC-036 Open Question 2.
-
-A composite is a Field whose `fieldType.datatype` is `"ref"` **and** whose `fieldType.mode` is
-`"inline"` — the pair [CR-036-3] requires; `inline` is a `mode` value, not a datatype. A composite is
-rendered by RFC-036 Change C, not by these rules; these rules govern the field rows *within* each
-composite block. A `ref` Field whose `mode` is `"reference"` is **not** a composite and renders as an
-ordinary field row under these rules, as [CR-036-3] directs for any Field that is not a `ref`+`inline`
-composite.
-
-**Value sequence.** A field renders as multi-entry when Step 2 finds it present through an ordered
-sequence. Both mechanisms are covered without preference: `fieldType.cardinality: "list"` (RFC-032
-[R4], values carried as a JSON array at the field's key) — the legacy `ext:repeatable-fields` path is removed (RFC-039 [R7]).
-(`FieldValue.entries`). *Sequence order* means array index order on the former, `entries` order on
-the latter. Cardinality — not element count — selects the form: a one-element sequence renders in
-block form, so a Type's rendered shape does not vary with instance data.
-
-**Scalar rows.** For a present single-valued field, exactly one row, beginning on its own line.
-Whether the value shares the label's line is a property of the value's own nature, never of the
-renderer: a value **opens a block-level construct** when its first line is a fenced code block's
-opening fence, an unordered or ordered list item, a table row (`|`), an ATX heading (`#`), a
-blockquote (`>`), or a thematic break. A value whose first line is none of these is *inline*.
-
-**Inline**: label and value share the label's line.
-
-| Format | Normative row form |
-|---|---|
-| `markdown` | `**<label>**: <value>` |
-| `adoc` | `*<label>*: <value>` |
-| `text` | `<label>: <value>` |
-| `html` | `<div class="srs-field srs-fieldname-{name}"><strong class="srs-field-label field-label">{label}</strong>: <span class="srs-field-value field-value">{value}</span></div>` |
-
-**Block-opening (RFC-037 Revision 4)**: the label occupies its own line, retaining the trailing
-colon and carrying no value. The value begins on the line immediately following.
-
-| Format | Label line |
-|---|---|
-| `markdown` | `**<label>**:` |
-| `adoc` | `*<label>*:` |
-| `text` | `<label>:` |
-| `html` | unaffected: the value already sits in its own `span`, distinct from the label |
-
-In the three text formats the separator, where label and value share a line, is a literal colon and
-single space (U+003A U+0020); where they do not, the label line ends in the colon itself. In
-`html`, the element names, nesting, order, literal colon and `srs-`-prefixed class names are
-normative; inter-element whitespace is not, following the precedent [CR-036-15] sets for pinned HTML
-output. Implementations SHOULD emit the single-line form so conformance fixtures have a canonical
-serialisation. **These classes belong to the baseline's output specification, not to
-`ext:themes-l1`:** implementations MUST emit them whether or not that extension is declared and
-whether or not a Theme resolves.
-
-The block-opening rule fixes the presentation layer instead of constraining record content
-(`finding-153f4d63`): a rendering-layer quirk that dictates what a value may contain is a layer
-violation in the direction the charter cares about, and the fix belongs where the defect is.
-
-**Multi-entry rows.** A multi-entry value MUST render as a block list and MUST NOT be comma-joined.
-The label occupies its own line (in `html`, its own element) and retains its trailing colon:
-
-| Format | Label line | Entry marker |
-|---|---|---|
-| `markdown` | `**<label>**:` | `- ` |
-| `adoc` | `*<label>*:` | `* ` |
-| `text` | `<label>:` | `- ` |
-| `html` | the `strong` element, inside the same `div` the scalar row uses | one `<li class="srs-field-value field-value">` per entry inside an unclassed `<ul>` |
-
-The full `html` multi-entry row is:
-
-Example: the html multi-entry field row.
-
-The enclosing `div` is the same one the scalar row uses: a multi-entry row is still a field row and
-must carry what [T-8] requires of one.
-
-In the text formats the list begins on the line immediately after the label line with no blank line
-between. An entry whose rendered value is empty is omitted from the list; a sequence with no
-surviving entries is absent and emits no row.
-
-**Row separation.** In `markdown`, `adoc` and `text`, implementations MUST emit a blank line between
-consecutive field rows, and MUST emit a blank line after a block list's final entry before any
-following row, heading or relations block. In `html` implementations MUST NOT insert a separator
-element between rows. The same separation applies between consecutive relation rows in a links block.
-This is structural, not cosmetic: without the blank line a following row is a CommonMark lazy
-continuation of the list's last item and is swallowed into it.
-
-**Continuation.** When a surviving entry's value spans several lines, every line after the first is
-indented two spaces in `markdown` and `text` — the width of the `- ` marker, and never more, since four
-spaces would make the continuation an indented code block. An entry whose value contains a blank line
-remains a single list item, its subsequent blocks attached at that same content column; no blank line
-terminates the item. In `adoc`, indentation does not attach a block to a list item: implementations
-MUST emit a `+` continuation line before each subsequent block, and indentation is not normative there. Continuation applies to entries only — a single-valued field's
-value is emitted verbatim, and any further lines sit at column zero, unindented and unaltered.
-
-**Empty and placeholder.** A field Step 2 resolves as absent emits no row. When
-`DocumentSection.emptyBehavior` is `"show-placeholder"` and the field is `required: true`,
-implementations MUST emit a row carrying the literal `(empty)` — this supersedes Step 4's former
-MAY. The placeholder row takes scalar form regardless of cardinality. In `html` the value element
-additionally carries `srs-empty-value`. The rule does not reach the L1 View path, where
-`ExportConfig.omitEmptyFields` governs.
-
-**Class identity.** `{name}` in `srs-fieldname-{name}` is `Field.name` normalised by the five-step
-rule ([T-8]), never `FieldAssignment.displayLabel` — a rendering-only label must not move a stylesheet
-hook. The class vocabulary and the five-step rule are normative for baseline output independently of
-whether `ext:themes-l1` is declared, so a non-declaring implementation is not required to read that
-extension in order to comply. A relation row has no `Field.name`: it omits `srs-fieldname-*` and
-carries `srs-relationtype-{relationTypeKey}` instead. The five-step rule has no replacement for `/`, so
-step 3 deletes it and `core/depends-on` normalises to `coredepends-on` — deterministic, and noted so no
-implementer treats it as a bug to fix unilaterally.
-
-**Content.** In `markdown`, `adoc` and `text` the rendered label and value are emitted verbatim and
-MUST NOT be escaped or altered, except for the continuation above — field values in this model
-routinely are markup. In `html`, label and value content MUST be escaped (`&`, `<`, `>`, `"`, `'`).
-The baseline performs no markup conversion, so a markdown-bearing value appears in `html` as literal
-source; converted output is a Theme or L1 View concern.
-
-**Labels.** Resolution stays exactly Step 3: `FieldAssignment.displayLabel`, falling back to raw
-`Field.name`, with no humanisation or case conversion.
-Tier 0 Notes emit no field rows.
-
-**Label mode (amended by RFC-037 Rev 5).** A bound View's `FieldView.labelMode` selects which of two
-forms a row takes. `inline`, the default, is every form above. `none` emits the field's rendered
-value alone, with no label and no separating colon: in `markdown`, `adoc` and `text` a single-valued
-value begins the row at column zero, whether or not its first line opens a block-level construct,
-and a multi-entry value keeps its block list with the label line omitted; in `html` the `strong`
-label element and the literal colon are not emitted, and the enclosing `div`, its classes and the
-value element are unchanged. Row separation, continuation, entry omission, absence, escaping and the
-class vocabulary apply to a `none` row exactly as to an `inline` one. A `FieldView` reaches a row
-only where a View is bound to the rendering; where none is, `inline` applies.
-
-`labelMode` is presentation only, in the sense Invariant 13 fixes for `displayLabel`, `displayHint`
-and `editorHintOverride`: it never affects validation, AI guidance, extraction, `fieldType`
-interpretation, Relations or Discovery Text Projection, and it never changes which fields are
-present in a Record or in a structured projection of it. It is not a way to remove a field from
-rendering. `FieldView.visible` is that, and a row whose label is suppressed still carries its whole
-value. `labelMode` is the only mechanism by which a field row's label is omitted: a Theme neither
-suppresses a label it did not suppress nor restores one it did, and `fieldRow` keeps wrapping,
-unchanged, what the baseline emits ([T-3]).
-
-**[FR-037-20]** `FieldView.labelMode` is an optional string whose value MUST be `"inline"` or
-`"none"`; when absent, `"inline"` applies. Under `"inline"` implementations MUST emit the forms above.
-Under `"none"`, on every path these rules cover, implementations MUST emit the field's rendered value
-with no resolved label and no separating colon, in the per-format forms described above. Row
-separation, continuation, entry omission, absence, escaping and the class vocabulary apply
-unchanged.
-
-**[FR-037-21]** `labelMode` is presentation only (Invariant 13). It MUST NOT affect validation, AI
-guidance, extraction, `fieldType` interpretation, Relations or Discovery Text Projection, and it MUST
-NOT change which fields are present in a Record or in any structured projection of it. It MUST NOT be
-used to remove a field from rendering; `FieldView.visible` is the sole mechanism for that.
-
-**[FR-037-22]** `FieldView.labelMode` is the only mechanism by which a field row's label is omitted.
-A Theme MUST NOT suppress a label that `labelMode` did not, and MUST NOT reintroduce one that it did;
-`ElementTemplates.fieldRow` continues to wrap, unchanged, what these rules emit ([T-3]).
-
-**Conformance boundary (amended by RFC-037 Rev 5).** These forms bind any implementation emitting a
-`Composition` in `markdown`, `adoc`, `text` or `html`, whether or not a section's `renderViewId` (or
-a `typeDispatch` binding) resolves a View for it. A bound View still decides which rows are emitted
-and in what order: its `omitEmptyFields`, `fieldOrder` and `preamble` apply unchanged, and [T-10]
-still applies `fieldRow` to each surviving row. The forms above say what each surviving row looks
-like, on both paths. They do not bind native application UI that is not emitting a `Composition`; a
-client-side `Composition` renderer in a covered format is not exempt.
-
-
 ###### L1/L2 ExportConfig — two attachment points, no precedence (srs#525)
 
 `ExportConfig` (ext:views-l1) is one shared shape attached at two points: `View.exportConfig` and `Composition.exportConfig`. Each attachment governs its own render context; neither overrides the other, because they never describe the same concern:
@@ -4883,188 +4342,6 @@ A Composition projection MUST key `ProjectedRecord.fields` and `orderedFieldKeys
 A visual presentation layer attached to a rendered document (stylesheets, typography, assets, cover pages and templates that wrap each structural level of output), declared for named output formats and applied only when the render is in one of them. A theme wraps finished content and may never replace, suppress or reorder it, so removing the theme changes how output looks and never what it says.
 
 **Notes**: The semantic CSS class vocabulary is part of the output specification and not of the theme extension: a conforming implementation emits it whether or not any theme resolves.
-
-###### The `AssetDeclaration` shape
-
-`AssetDeclaration`, in pseudo-IDL:
-
-```typescript
-{
-  type: "image" | "font" | "stylesheet" | "data"
-  mode: "local" | "remote" | "inline"
-
-  path?: string      // required when mode === "local"
-  url?: string       // required when mode === "remote"
-  data?: string      // base64 for binary; raw text for stylesheet/data; required when mode === "inline"
-  mimeType?: string  // e.g. "image/png", "font/woff2", "text/css"
-}
-```
-
-
-###### The `PageTemplates` shape
-
-`PageTemplates`, in pseudo-IDL:
-
-```typescript
-{
-  coverPage?: string
-  // Available variables: all Composition preamble variables + {{asset:*}}
-  // {{heading-1}} is available here only (resolves via Composition.depthOffset).
-
-  pageHeader?: string
-  // Available: {{page-number}}, {{asset:*}}
-
-  pageFooter?: string
-  // Available: {{page-number}}, {{asset:*}}
-}
-```
-
-
-###### The `ElementTemplates` shape
-
-`ElementTemplates`, in pseudo-IDL:
-
-```typescript
-{
-  documentWrapper?: string
-  // Wraps the entire rendered document body.
-  // Available: {{content}}, {{container-title}}, {{date}}, {{asset:*}}
-
-  sectionWrapper?: string
-  // Wraps each section (heading + records).
-  // Available: {{content}}, {{section-title}}, {{section-id}}, {{asset:*}}
-
-  sectionWrapperOverrides?: Array<{
-    sectionId: string   // matches DocumentSection.sectionId; case-sensitive
-    template: string    // same variables as sectionWrapper
-  }>
-  // Per-section override. Takes precedence over sectionWrapper when sectionId matches.
-  // sectionId values MUST be unique within the array (enforced at package validation time).
-
-  recordWrapper?: string
-  // Wraps each record (heading + field rows).
-  // Available: {{content}}, {{record-heading}}, {{type-namespace}}, {{type-name}}, {{asset:*}}
-  // {{record-heading}} is the titleFieldId value for this record, or empty string.
-
-  recordWrapperOverrides?: Array<{
-    typeId: UUID      // matches Record.typeId
-    template: string  // same variables as recordWrapper
-  }>
-  // Per-type override. Takes precedence over recordWrapper when typeId matches.
-  // typeId values MUST be unique within the array (enforced at package validation time).
-
-  fieldRow?: string
-  // Wraps each field label + value pair.
-  // Available: {{field-label}}, {{field-value}}, {{field-name}}, {{content}}
-  // When renderViewId is set, applies after ExportConfig.omitEmptyFields filtering.
-  // Field rows follow their position in View.fieldViews[].order. Does NOT wrap ExportConfig.preamble content.
-
-  groupFieldRowTemplates?: { [fieldName: string]: string }
-  // RFC-007 [T-Gx1]–[T-Gx3]: per-field-name templates for individual field rows in group entries.
-  // Key: Field.name (e.g. "item-term"). Value: template supporting {{field-value}}, {{field-label}}.
-  // When a key matches, that template MUST be used instead of fieldRow for that field row [T-Gx3].
-  // Applied only when compositeRenderer is absent or unrecognised (per-field baseline) [T-Gx1].
-  // Unknown field names in this map MUST be silently ignored [T-Gx2].
-
-  compositeRendererConfig?: { [rendererName: string]: object }
-  // RFC-007 [T-Cx1]–[T-Cx5]: per-renderer config, keyed by the same identifier space as
-  // FieldGroup.compositeRenderer. Unknown properties in a known renderer sub-object MUST be
-  // silently ignored [T-Cx5].
-  //
-  // The "table" renderer reads compositeRendererConfig["table"]:
-  //   {
-  //     tableClass?: string
-  //     // CSS class on <table> (HTML only). Default: "srs-data-table" [T-Cx1].
-  //     // Set to "" to suppress the class attribute [T-Cx2].
-  //
-  //     wrapperTemplate?: string
-  //     // Wraps the full rendered entry. Tokens: {{subheading}}, {{label}}, {{table}}.
-  //     // Absent optional field tokens ({{subheading}}, {{label}}) MUST resolve to "".
-  //     // Default (HTML): <figure class="srs-table">{{subheading}}{{label}}{{table}}</figure>
-  //     // Default (other formats): no wrapper applied.
-  //     // When explicitly set, applies regardless of output format [T-Cx4].
-  //
-  //     captionTemplate?: string
-  //     // Template for the label field. Token: {{field-value}}.
-  //     // Default (HTML): <figcaption>{{field-value}}</figcaption>
-  //     // Default (markdown): *{{field-value}}*
-  //     // Default (other formats): {{field-value}} with no decoration.
-  //   }
-  // Scoped to the Theme instance; applies to all composite renderer groups in the pass
-  // that resolves this Theme. [T-Cx3] — applies ONLY to compositeRenderer: "table" groups.
-}
-```
-
-
-###### The `StylesheetDeclaration` shape
-
-`StylesheetDeclaration`, in pseudo-IDL:
-
-```typescript
-{
-  mode: "inline" | "local" | "remote"
-  content?: string   // inline CSS; required when mode === "inline"
-  path?: string      // required when mode === "local"
-  url?: string       // required when mode === "remote"
-}
-```
-
-
-###### The `TypographyHints` shape
-
-`TypographyHints`, in pseudo-IDL:
-
-```typescript
-{
-  baseFont?: string
-  headingFont?: string
-  monoFont?: string
-  baseFontSize?: string  // e.g. "16px", "1rem", "11pt"
-  lineHeight?: string    // e.g. "1.5", "24px"
-}
-```
-
-
-###### The `Theme` shape
-
-`Theme`, in pseudo-IDL:
-
-```typescript
-{
-  id: UUID
-  namespace: string
-  name: string
-  version: integer   // min: 1
-
-  description: string
-  // What this theme is for; intended output format and audience.
-
-  targets: string[]   // required; min 1 entry
-  // Output formats this theme is designed for (e.g. "html", "markdown", "adoc").
-  // Implementations apply this theme only when Composition.format appears in this list.
-  // An empty targets array is a validation error (Rule [T-1b]).
-
-  assets?: { [assetName: string]: AssetDeclaration }
-  // Named asset declarations. Names MUST be unique within the Theme.
-
-  cssClassFields?: UUID[]
-  // fieldIds whose values are injected as CSS classes on record wrapper elements.
-  // For each listed fieldId, if the record has an effective-single Field eligible
-  // under [T-9], the class srs-field-{fieldName}-{normalisedValue} is added.
-  // Only applies to "html" and "pdf" output. Other Fields are silently skipped.
-
-  pageTemplates?: PageTemplates
-  elementTemplates?: ElementTemplates
-  stylesheet?: StylesheetDeclaration
-  typography?: TypographyHints
-
-  tags?: string[]
-  createdAt: ISO8601
-  lineage?: Lineage
-  provenance?: Provenance
-}
-```
-
 
 ###### ext:themes-l1
 
@@ -5280,13 +4557,743 @@ RFC-036 row-template ladder, and (Rev 5) what [T-10] wraps on a bound View.
 
 
 
-#### Projection
+#### Presentation shapes (reference)
 
-Rendered output is derived from records and is never itself a source of truth for them. A document, a table, an export, or a serialised copy is a view produced from the records on demand: rendering it again produces the same result, because nothing in it originates the meaning it shows.
+Pseudo-IDL for the shapes View, Composition and Theme are built from. Each is reference material for the mechanism that names it ("Example: the `X` shape"), collected under this single heading instead of scattered through the main line.
 
-A projection keeps a traceable line back to the records it renders. Editing the rendered artifact directly, instead of the records, creates a second copy of the meaning that the records no longer agree with, and the disagreement has no mechanical way to resolve.
+**Notes**: Grouped by P6 (srs#807) under X1's reference-material treatment: these hand-authored shape blocks were previously scattered as flat siblings inside View and Theme, breaking the narrative with no connecting prose between them.
 
-View, Composition, and Theme are the constructs a projection is built from: View selects the presentation, Composition assembles what gets rendered, and Theme supplies the templates the rendering fills in. Each rests on the same rule: render the output, never author it directly.
+##### The `SectionSource` union
+
+`SectionSource`, in pseudo-IDL:
+
+```typescript
+type SectionSource =
+  | {
+      type: "discovery-query"
+      query: DiscoveryQuery   // ext:discovery (RFC-012)
+      // The selection predicate. typeNamespace + typeName together replace the retired
+      // typeKey (namespace/name) axis; lifecycleState/lifecycleStates/excludeLifecycleStates
+      // replace the SectionSource-local copies of the same axes (formerly RFC-011 Changes
+      // A/B, now governed by RFC-012 Rev 12: I-142/I-143). See the ext:discovery extension's
+      // `DiscoveryQuery` shape for the full predicate set.
+      containerIds?: UUID[]
+      containerScope?: "explicit" | "repository" | "subtree"
+      // RFC-011 [N+27] / I-144, arrangement, not selection: which containers bound the
+      // candidate set, layered on top of query rather than folded into it (DiscoveryQuery's
+      // own containerId predicate is single-valued and takes one container's effective
+      // membership; it cannot express this). One scoping vocabulary (RFC-034 [R8]).
+      // Default: "explicit" (direct(C) of each listed container: its own members, no
+      // nested subtree). "repository": all containers; containerIds[] ignored. "subtree":
+      // effective(C) — the closure over declared childContainerIds; follows child edges
+      // only, never contains Relations. Absent is equivalent to "explicit".
+    }
+  | {
+      type: "container-subset"
+      containerId: UUID
+      containerType?: string
+      typeFilter?: string[]   // RFC-008. namespace/name keys, version-independent.
+      // When present and non-empty, restricts members to the listed Types. Ordering is
+      // the container-wide precedes order (below) projected onto the survivors. Absent or
+      // empty = all members. Exclusive to container-subset.
+      // Default ordering: when DocumentSection.ordering is absent, members are ordered
+      // by the precedes relation chain among them; createdAt ascending is the tiebreak
+      // for members not connected by any precedes relation.
+    }
+```
+
+
+##### The `DocumentSection` shape
+
+`DocumentSection`, in pseudo-IDL:
+
+```typescript
+{
+  sectionId: string
+  title?: string
+  description?: string
+  order: integer   // min: 0
+
+  source: SectionSource
+
+  renderViewId?: UUID    // View (ext:views-l1) used to render each instance in this section
+  // When absent, implementations MUST use the default rendering baseline (see below).
+  // When typeDispatch matches the record's resolved type, it takes precedence over renderViewId.
+
+  typeDispatch?: { [typeKey: string]: UUID }   // RFC-008
+  // Maps a record's resolved type (namespace/name, version-independent) to the
+  // ext:views-l1 View used to render records of that Type within this section. Consulted
+  // before renderViewId; unmatched Types fall back to renderViewId then the default
+  // baseline. Lets one heterogeneous section render each Type with its own L1 View.
+  // typeDispatch never changes member order (order follows the source).
+
+  titleFieldId?: UUID
+  // The fieldId whose value provides the per-record heading within this section.
+  // Constraints (RFC-032 Rev-7 [N+1]):
+  //   - The referenced field must be effective-single.
+  //   - datatype string; valueDomain absent/open; format absent/plain/markdown.
+  //   - When a record's type does not carry this field, the per-record heading is
+  //     omitted silently — this is not a render failure. This enables heterogeneous
+  //     sections (e.g. container-subset) where some record types carry the heading
+  //     field and others do not.
+  // When absent, no per-record heading is emitted.
+  // Enforced at render time; implementations SHOULD also enforce at package validation time
+  // when the section source is statically determinable.
+
+  ordering?: {
+    fieldId?: UUID
+    direction?: "asc" | "desc"  // default: "asc"
+    memberOrder?: UUID[]
+    // RFC-015 Change B. View-owned explicit presentation sequence, container-subset
+    // sections only. Lists member instanceIds in presentation order; members not
+    // listed are appended in [N+12] order (precedes topological sort, createdAt
+    // tiebreak). MUST NOT be combined with fieldId — a section carrying both is
+    // invalid (Rule [N+29]).
+  }
+
+  required?: boolean
+  emptyBehavior?: "hide" | "show-placeholder"
+
+  relationsPresentation?: RelationsPresentation   // RFC-027
+  // When present, render a deterministic per-member links block (the member's
+  // Relations of the declared types) after each member this section renders — all
+  // SectionSource variants, all member tiers. Independent of emptyBehavior.
+  // See RelationsPresentation below. Rules [I-027-1]-[I-027-8] (RFC-027).
+
+  compositeRenderers?: CompositeRendererDirective[]   // RFC-036
+  // Composite renderer dispatch for records rendered by this section. The primary
+  // ext:views-l2 declaration site, following RFC-027's placement of relationsPresentation.
+  // Resolved after FieldView.compositeRenderer and before Composition.compositeRenderers
+  // ([CR-036-6]). More than one entry for the same fieldId is a validation diagnostic; the
+  // first in array order wins.
+}
+```
+
+
+##### The `CompositeRendererDirective` shape
+
+`CompositeRendererDirective`, in pseudo-IDL:
+
+```typescript
+{
+  fieldId: UUID
+  // The composite-range Field this directive binds. MUST resolve to a Field whose
+  // fieldType.datatype is "ref" and mode is "inline" ([CR-036-3]); a fieldId absent from
+  // a rendered instance's Type is ignored without a diagnostic ([CR-036-4]).
+
+  renderer: string
+  // Composite renderer identifier, as `CompositeRendererBinding.renderer` (`ext:views-l1`).
+  // "baseline" is the reserved sentinel meaning explicitly no renderer, used to cancel a
+  // broader declaration site. Grammar enforced at render and validation time ([CR-036-1]).
+
+  roles?: { [roleName: string]: UUID }
+  // Explicit, UUID-anchored role -> Field.id binding, overriding the by-name defaults of
+  // [CR-036-8].
+}
+```
+
+
+##### The `RelationsPresentation` shape
+
+`RelationsPresentation`, in pseudo-IDL:
+
+```typescript
+{
+  include: RelationPresentationEntry[]
+  // min 1; display order. Duplicate relationType entries are a repository-validation
+  // diagnostic; a renderer encountering them renders each independently.
+  label?: string
+  // Reserved for a future grouped/headed presentation. No rendering behaviour is
+  // defined; implementations MUST ignore it when rendering.
+}
+
+// RelationPresentationEntry
+{
+  relationType: string
+  // Bare canonical key (e.g. "supersedes") or namespace/name for custom types.
+  // Expected to resolve to an installed RelationTypeDefinition (RFC-005); checked at
+  // repository validation time. At render time a non-resolving, retired-only, or
+  // conflict-ambiguous entry is skipped with a diagnostic; entries resolving to
+  // active/deprecated/tombstone definitions display (rendering is a historical read).
+  // None of these conditions may abort the render.
+  directions?: "forward" | "inverse" | "both"   // default: "forward"
+  // Display-only: inverse Relations are never stored or synthesised (Invariant 16).
+  forwardLabel?: string
+  // Override for edges where the member is the source. Default ladder: installed
+  // definition label, then humanized relation type key.
+  inverseLabel?: string
+  // Override for edges where the member is the target. Default ladder: humanized
+  // declared inverseType query label (RFC-005), then forward label + " (incoming)".
+}
+```
+
+
+##### The `NavigationLink` shape
+
+`NavigationLink`, in pseudo-IDL:
+
+```typescript
+{
+  fromSectionId: string
+  toSectionId: string
+  label?: string
+  bidirectional?: boolean  // default: false
+}
+```
+
+
+##### The `ThemeReference` shape
+
+`ThemeReference`, in pseudo-IDL:
+
+```typescript
+{
+  mode: "local" | "remote" | "bundled"
+  path?: string     // required when mode === "local"
+  url?: string      // required when mode === "remote"
+  themeId?: UUID    // references Theme.id in Package.themes[]; required when mode === "bundled"
+}
+```
+
+
+##### The `ThemeVariant` shape
+
+`ThemeVariant`, in pseudo-IDL:
+
+```typescript
+{
+  name: string           // case-sensitive; MUST be unique within Composition.themeVariants
+  description?: string
+  themeRef: ThemeReference
+}
+```
+
+
+##### The `Composition` shape
+
+`Composition`, in pseudo-IDL.
+
+```typescript
+{
+  id: UUID
+  namespace: string
+  name: string
+  version: integer   // min: 1
+
+  description: string    // what kind of document this produces; intended audience
+
+  containerType?: string  // when set, intended for Containers of this type
+
+  sections: DocumentSection[]
+
+  navigationLinks?: NavigationLink[]
+
+  exportConfig?: ExportConfig   // ext:views-l1 -- the shape View.exportConfig also uses
+  // format?: string
+  //   Portable values: "markdown", "adoc", "html", "text", "json". Implementations MAY
+  //   support additional values; non-portable values MUST NOT cause a validation error.
+  //   When absent, output format is implementation-defined. Governs this Composition's own
+  //   document-level rendering (all section rendering, the document title). A dispatched L1
+  //   View's own exportConfig.format has no effect here -- a different render context, not
+  //   an override (srs#525: one shape, two attachment points, no precedence between them).
+  //   When format is "json", implementations MUST produce a structured JSON projection
+  //   conforming to the document-view-output.json schema instead of rendered markup. In
+  //   json mode: theme application, heading injection, and depthOffset do not apply;
+  //   {{heading-N}} variables in preamble templates MUST be substituted as empty strings;
+  //   containerId is resolved from the first container-subset SectionSource, or null when
+  //   none is present.
+  // preamble?: string
+  //   Template string rendered before all sections. Standard variables: {{container-title}},
+  //   {{date}}, {{container-id}}, {{heading-1}}, {{heading-2}}. When absent and format is
+  //   "markdown", "html", or "adoc", implementations MUST render a document title heading at
+  //   level 1 + depthOffset containing container-title.
+  // omitEmptyFields?: boolean
+  //   Available on this shape for consistency with View.exportConfig; no normative rule at
+  //   Composition level currently reads it (empty-section display is DocumentSection.
+  //   emptyBehavior; empty-field display in the Default Rendering Baseline follows the
+  //   Normative Field-Row Form rules below).
+
+  depthOffset?: integer   // min: 0; default: 0
+  // Shifts all auto-rendered heading levels by this amount.
+  // At depthOffset 0: document title H1, sections H2, records H3.
+  // At depthOffset 1: H2, H3, H4 respectively.
+  // Implementations SHOULD emit a warning diagnostic when depthOffset > 4.
+
+  themeRef?: ThemeReference
+  // Default Theme (ext:themes-l1). Applied when no variant is selected at render time.
+  // When ext:themes-l1 is not declared, implementations MUST ignore this field
+  // and MUST NOT error on its presence.
+
+  themeVariants?: ThemeVariant[]
+  // Named alternative themes selectable at render invocation.
+  // When ext:themes-l1 is not declared, implementations MUST ignore this field.
+
+  compositeRenderers?: CompositeRendererDirective[]   // RFC-036
+  // Document-wide default composite renderer dispatch, applied to any section that
+  // declares no matching DocumentSection.compositeRenderers entry. Lowest-precedence
+  // declaration site ([CR-036-6]); a section or FieldView cancels it with renderer: "baseline".
+
+  aiGuidance?: AiGuidance
+  tags?: string[]
+  createdAt: ISO8601
+  lineage?: Lineage
+  provenance?: Provenance
+}
+```
+
+
+##### The `FieldView` shape
+
+`FieldView`, in pseudo-IDL:
+
+```typescript
+{
+  fieldId: UUID       // must reference a valid Field.id in the effective package set
+  order: integer      // min: 0; display order within this View
+  required?: boolean  // View-level workflow constraint; does not alter Field contract
+  visible?: boolean   // default: true
+  labelMode?: "inline" | "none"  // default: "inline"; "none" emits the value with no label (RFC-037 Rev 5)
+
+  // Presentation overrides — View scope only
+  displayLabel?: string
+  displayHint?: string
+  editorHintOverride?: string
+}
+```
+
+
+##### The `RecordPropertyView` shape
+
+`RecordPropertyView`, in pseudo-IDL:
+
+```typescript
+{
+  property: "lifecycleState" | "tags" | "createdAt" | "updatedAt"
+  order: integer      // min: 0; shared display-order axis with FieldView
+  displayLabel?: string
+  visible?: boolean   // default: true
+}
+```
+
+
+##### The `ExportConfig` shape
+
+`ExportConfig`, in pseudo-IDL:
+
+```typescript
+{
+  format?: string        // target format hint, e.g. "markdown", "adoc", "json"
+  preamble?: string
+  // Template string rendered before field values.
+  // Variable substitution uses {{variable-name}} syntax.
+  // Standard variables: {{instance-id}}, {{date}}, {{status}}, {{namespace}}, {{name}}
+
+  omitEmptyFields?: boolean  // default: false
+}
+```
+
+
+##### The `View` shape
+
+`View`, in pseudo-IDL:
+
+```typescript
+{
+  id: UUID
+  namespace: string
+  name: string
+  version: integer   // min: 1
+
+  description: string    // when to use this View; what workflow or audience it serves
+
+  aiGuidance?: AiGuidance
+  // purpose: the workflow context this View serves
+  // extraction: session-level framing injected before field extraction
+
+  fieldViews: (FieldView | RecordPropertyView)[]
+
+  compatibleTypes?: string[]
+  // Optional Type-key (namespace/name) hints this View was designed for.
+  // Informative only. Compatibility is determined by field presence.
+
+  exportConfig?: ExportConfig
+
+  tags?: string[]
+  createdAt: ISO8601
+  lineage?: Lineage
+  provenance?: Provenance
+}
+```
+
+
+##### The `CompositeRendererBinding` shape
+
+`CompositeRendererBinding`, in pseudo-IDL:
+
+```typescript
+CompositeRendererBinding {
+  renderer: string
+  // Bare lower-kebab identifiers are SRS-reserved and introduced only by a ratified RFC:
+  //   "table"     — the SRS-defined composite renderer
+  //   "baseline"  — sentinel meaning explicitly no renderer; cancels a broader declaration site
+  // Vendor identifiers use "{reverse-domain}/{name}" with at least two reverse-domain labels.
+  // Grammar: ^([a-z][a-z0-9-]*|[a-z0-9-]+(\.[a-z0-9-]+)+/[^/]+)$ — enforced at render and
+  // validation time, not by JSON Schema, so a malformed value degrades per [CR-036-7].
+
+  roles?: { [roleName: string]: UUID }
+  // Explicit, UUID-anchored role -> Field.id binding, overriding the by-name defaults.
+}
+```
+
+
+##### The `AssetDeclaration` shape
+
+`AssetDeclaration`, in pseudo-IDL:
+
+```typescript
+{
+  type: "image" | "font" | "stylesheet" | "data"
+  mode: "local" | "remote" | "inline"
+
+  path?: string      // required when mode === "local"
+  url?: string       // required when mode === "remote"
+  data?: string      // base64 for binary; raw text for stylesheet/data; required when mode === "inline"
+  mimeType?: string  // e.g. "image/png", "font/woff2", "text/css"
+}
+```
+
+
+##### The `PageTemplates` shape
+
+`PageTemplates`, in pseudo-IDL:
+
+```typescript
+{
+  coverPage?: string
+  // Available variables: all Composition preamble variables + {{asset:*}}
+  // {{heading-1}} is available here only (resolves via Composition.depthOffset).
+
+  pageHeader?: string
+  // Available: {{page-number}}, {{asset:*}}
+
+  pageFooter?: string
+  // Available: {{page-number}}, {{asset:*}}
+}
+```
+
+
+##### The `ElementTemplates` shape
+
+`ElementTemplates`, in pseudo-IDL:
+
+```typescript
+{
+  documentWrapper?: string
+  // Wraps the entire rendered document body.
+  // Available: {{content}}, {{container-title}}, {{date}}, {{asset:*}}
+
+  sectionWrapper?: string
+  // Wraps each section (heading + records).
+  // Available: {{content}}, {{section-title}}, {{section-id}}, {{asset:*}}
+
+  sectionWrapperOverrides?: Array<{
+    sectionId: string   // matches DocumentSection.sectionId; case-sensitive
+    template: string    // same variables as sectionWrapper
+  }>
+  // Per-section override. Takes precedence over sectionWrapper when sectionId matches.
+  // sectionId values MUST be unique within the array (enforced at package validation time).
+
+  recordWrapper?: string
+  // Wraps each record (heading + field rows).
+  // Available: {{content}}, {{record-heading}}, {{type-namespace}}, {{type-name}}, {{asset:*}}
+  // {{record-heading}} is the titleFieldId value for this record, or empty string.
+
+  recordWrapperOverrides?: Array<{
+    typeId: UUID      // matches Record.typeId
+    template: string  // same variables as recordWrapper
+  }>
+  // Per-type override. Takes precedence over recordWrapper when typeId matches.
+  // typeId values MUST be unique within the array (enforced at package validation time).
+
+  fieldRow?: string
+  // Wraps each field label + value pair.
+  // Available: {{field-label}}, {{field-value}}, {{field-name}}, {{content}}
+  // When renderViewId is set, applies after ExportConfig.omitEmptyFields filtering.
+  // Field rows follow their position in View.fieldViews[].order. Does NOT wrap ExportConfig.preamble content.
+
+  groupFieldRowTemplates?: { [fieldName: string]: string }
+  // RFC-007 [T-Gx1]–[T-Gx3]: per-field-name templates for individual field rows in group entries.
+  // Key: Field.name (e.g. "item-term"). Value: template supporting {{field-value}}, {{field-label}}.
+  // When a key matches, that template MUST be used instead of fieldRow for that field row [T-Gx3].
+  // Applied only when compositeRenderer is absent or unrecognised (per-field baseline) [T-Gx1].
+  // Unknown field names in this map MUST be silently ignored [T-Gx2].
+
+  compositeRendererConfig?: { [rendererName: string]: object }
+  // RFC-007 [T-Cx1]–[T-Cx5]: per-renderer config, keyed by the same identifier space as
+  // FieldGroup.compositeRenderer. Unknown properties in a known renderer sub-object MUST be
+  // silently ignored [T-Cx5].
+  //
+  // The "table" renderer reads compositeRendererConfig["table"]:
+  //   {
+  //     tableClass?: string
+  //     // CSS class on <table> (HTML only). Default: "srs-data-table" [T-Cx1].
+  //     // Set to "" to suppress the class attribute [T-Cx2].
+  //
+  //     wrapperTemplate?: string
+  //     // Wraps the full rendered entry. Tokens: {{subheading}}, {{label}}, {{table}}.
+  //     // Absent optional field tokens ({{subheading}}, {{label}}) MUST resolve to "".
+  //     // Default (HTML): <figure class="srs-table">{{subheading}}{{label}}{{table}}</figure>
+  //     // Default (other formats): no wrapper applied.
+  //     // When explicitly set, applies regardless of output format [T-Cx4].
+  //
+  //     captionTemplate?: string
+  //     // Template for the label field. Token: {{field-value}}.
+  //     // Default (HTML): <figcaption>{{field-value}}</figcaption>
+  //     // Default (markdown): *{{field-value}}*
+  //     // Default (other formats): {{field-value}} with no decoration.
+  //   }
+  // Scoped to the Theme instance; applies to all composite renderer groups in the pass
+  // that resolves this Theme. [T-Cx3] — applies ONLY to compositeRenderer: "table" groups.
+}
+```
+
+
+##### The `StylesheetDeclaration` shape
+
+`StylesheetDeclaration`, in pseudo-IDL:
+
+```typescript
+{
+  mode: "inline" | "local" | "remote"
+  content?: string   // inline CSS; required when mode === "inline"
+  path?: string      // required when mode === "local"
+  url?: string       // required when mode === "remote"
+}
+```
+
+
+##### The `TypographyHints` shape
+
+`TypographyHints`, in pseudo-IDL:
+
+```typescript
+{
+  baseFont?: string
+  headingFont?: string
+  monoFont?: string
+  baseFontSize?: string  // e.g. "16px", "1rem", "11pt"
+  lineHeight?: string    // e.g. "1.5", "24px"
+}
+```
+
+
+##### The `Theme` shape
+
+`Theme`, in pseudo-IDL:
+
+```typescript
+{
+  id: UUID
+  namespace: string
+  name: string
+  version: integer   // min: 1
+
+  description: string
+  // What this theme is for; intended output format and audience.
+
+  targets: string[]   // required; min 1 entry
+  // Output formats this theme is designed for (e.g. "html", "markdown", "adoc").
+  // Implementations apply this theme only when Composition.format appears in this list.
+  // An empty targets array is a validation error (Rule [T-1b]).
+
+  assets?: { [assetName: string]: AssetDeclaration }
+  // Named asset declarations. Names MUST be unique within the Theme.
+
+  cssClassFields?: UUID[]
+  // fieldIds whose values are injected as CSS classes on record wrapper elements.
+  // For each listed fieldId, if the record has an effective-single Field eligible
+  // under [T-9], the class srs-field-{fieldName}-{normalisedValue} is added.
+  // Only applies to "html" and "pdf" output. Other Fields are silently skipped.
+
+  pageTemplates?: PageTemplates
+  elementTemplates?: ElementTemplates
+  stylesheet?: StylesheetDeclaration
+  typography?: TypographyHints
+
+  tags?: string[]
+  createdAt: ISO8601
+  lineage?: Lineage
+  provenance?: Provenance
+}
+```
+
+
+##### Normative Field-Row Form (RFC-037)
+
+The emitted form of a field row in a rendered `Composition`, and on RFC-036 Change C's
+composite baseline where that baseline emits an individual field row. These forms are the content
+`ElementTemplates.fieldRow` receives as `{{content}}`; a Theme may wrap the row and MUST NOT replace
+it ([T-3]), and when no `fieldRow` template resolves the forms below are emitted unwrapped. They are
+the terminal rung of RFC-036's row-template ladder (`compositeFieldRowTemplates` -> `fieldRow` ->
+baseline field-row form), closing RFC-036 Open Question 2.
+
+A composite is a Field whose `fieldType.datatype` is `"ref"` **and** whose `fieldType.mode` is
+`"inline"` — the pair [CR-036-3] requires; `inline` is a `mode` value, not a datatype. A composite is
+rendered by RFC-036 Change C, not by these rules; these rules govern the field rows *within* each
+composite block. A `ref` Field whose `mode` is `"reference"` is **not** a composite and renders as an
+ordinary field row under these rules, as [CR-036-3] directs for any Field that is not a `ref`+`inline`
+composite.
+
+**Value sequence.** A field renders as multi-entry when Step 2 finds it present through an ordered
+sequence. Both mechanisms are covered without preference: `fieldType.cardinality: "list"` (RFC-032
+[R4], values carried as a JSON array at the field's key) — the legacy `ext:repeatable-fields` path is removed (RFC-039 [R7]).
+(`FieldValue.entries`). *Sequence order* means array index order on the former, `entries` order on
+the latter. Cardinality — not element count — selects the form: a one-element sequence renders in
+block form, so a Type's rendered shape does not vary with instance data.
+
+**Scalar rows.** For a present single-valued field, exactly one row, beginning on its own line.
+Whether the value shares the label's line is a property of the value's own nature, never of the
+renderer: a value **opens a block-level construct** when its first line is a fenced code block's
+opening fence, an unordered or ordered list item, a table row (`|`), an ATX heading (`#`), a
+blockquote (`>`), or a thematic break. A value whose first line is none of these is *inline*.
+
+**Inline**: label and value share the label's line.
+
+| Format | Normative row form |
+|---|---|
+| `markdown` | `**<label>**: <value>` |
+| `adoc` | `*<label>*: <value>` |
+| `text` | `<label>: <value>` |
+| `html` | `<div class="srs-field srs-fieldname-{name}"><strong class="srs-field-label field-label">{label}</strong>: <span class="srs-field-value field-value">{value}</span></div>` |
+
+**Block-opening (RFC-037 Revision 4)**: the label occupies its own line, retaining the trailing
+colon and carrying no value. The value begins on the line immediately following.
+
+| Format | Label line |
+|---|---|
+| `markdown` | `**<label>**:` |
+| `adoc` | `*<label>*:` |
+| `text` | `<label>:` |
+| `html` | unaffected: the value already sits in its own `span`, distinct from the label |
+
+In the three text formats the separator, where label and value share a line, is a literal colon and
+single space (U+003A U+0020); where they do not, the label line ends in the colon itself. In
+`html`, the element names, nesting, order, literal colon and `srs-`-prefixed class names are
+normative; inter-element whitespace is not, following the precedent [CR-036-15] sets for pinned HTML
+output. Implementations SHOULD emit the single-line form so conformance fixtures have a canonical
+serialisation. **These classes belong to the baseline's output specification, not to
+`ext:themes-l1`:** implementations MUST emit them whether or not that extension is declared and
+whether or not a Theme resolves.
+
+The block-opening rule fixes the presentation layer instead of constraining record content
+(`finding-153f4d63`): a rendering-layer quirk that dictates what a value may contain is a layer
+violation in the direction the charter cares about, and the fix belongs where the defect is.
+
+**Multi-entry rows.** A multi-entry value MUST render as a block list and MUST NOT be comma-joined.
+The label occupies its own line (in `html`, its own element) and retains its trailing colon:
+
+| Format | Label line | Entry marker |
+|---|---|---|
+| `markdown` | `**<label>**:` | `- ` |
+| `adoc` | `*<label>*:` | `* ` |
+| `text` | `<label>:` | `- ` |
+| `html` | the `strong` element, inside the same `div` the scalar row uses | one `<li class="srs-field-value field-value">` per entry inside an unclassed `<ul>` |
+
+The full `html` multi-entry row is:
+
+Example: the html multi-entry field row.
+
+The enclosing `div` is the same one the scalar row uses: a multi-entry row is still a field row and
+must carry what [T-8] requires of one.
+
+In the text formats the list begins on the line immediately after the label line with no blank line
+between. An entry whose rendered value is empty is omitted from the list; a sequence with no
+surviving entries is absent and emits no row.
+
+**Row separation.** In `markdown`, `adoc` and `text`, implementations MUST emit a blank line between
+consecutive field rows, and MUST emit a blank line after a block list's final entry before any
+following row, heading or relations block. In `html` implementations MUST NOT insert a separator
+element between rows. The same separation applies between consecutive relation rows in a links block.
+This is structural, not cosmetic: without the blank line a following row is a CommonMark lazy
+continuation of the list's last item and is swallowed into it.
+
+**Continuation.** When a surviving entry's value spans several lines, every line after the first is
+indented two spaces in `markdown` and `text` — the width of the `- ` marker, and never more, since four
+spaces would make the continuation an indented code block. An entry whose value contains a blank line
+remains a single list item, its subsequent blocks attached at that same content column; no blank line
+terminates the item. In `adoc`, indentation does not attach a block to a list item: implementations
+MUST emit a `+` continuation line before each subsequent block, and indentation is not normative there. Continuation applies to entries only — a single-valued field's
+value is emitted verbatim, and any further lines sit at column zero, unindented and unaltered.
+
+**Empty and placeholder.** A field Step 2 resolves as absent emits no row. When
+`DocumentSection.emptyBehavior` is `"show-placeholder"` and the field is `required: true`,
+implementations MUST emit a row carrying the literal `(empty)` — this supersedes Step 4's former
+MAY. The placeholder row takes scalar form regardless of cardinality. In `html` the value element
+additionally carries `srs-empty-value`. The rule does not reach the L1 View path, where
+`ExportConfig.omitEmptyFields` governs.
+
+**Class identity.** `{name}` in `srs-fieldname-{name}` is `Field.name` normalised by the five-step
+rule ([T-8]), never `FieldAssignment.displayLabel` — a rendering-only label must not move a stylesheet
+hook. The class vocabulary and the five-step rule are normative for baseline output independently of
+whether `ext:themes-l1` is declared, so a non-declaring implementation is not required to read that
+extension in order to comply. A relation row has no `Field.name`: it omits `srs-fieldname-*` and
+carries `srs-relationtype-{relationTypeKey}` instead. The five-step rule has no replacement for `/`, so
+step 3 deletes it and `core/depends-on` normalises to `coredepends-on` — deterministic, and noted so no
+implementer treats it as a bug to fix unilaterally.
+
+**Content.** In `markdown`, `adoc` and `text` the rendered label and value are emitted verbatim and
+MUST NOT be escaped or altered, except for the continuation above — field values in this model
+routinely are markup. In `html`, label and value content MUST be escaped (`&`, `<`, `>`, `"`, `'`).
+The baseline performs no markup conversion, so a markdown-bearing value appears in `html` as literal
+source; converted output is a Theme or L1 View concern.
+
+**Labels.** Resolution stays exactly Step 3: `FieldAssignment.displayLabel`, falling back to raw
+`Field.name`, with no humanisation or case conversion.
+Tier 0 Notes emit no field rows.
+
+**Label mode (amended by RFC-037 Rev 5).** A bound View's `FieldView.labelMode` selects which of two
+forms a row takes. `inline`, the default, is every form above. `none` emits the field's rendered
+value alone, with no label and no separating colon: in `markdown`, `adoc` and `text` a single-valued
+value begins the row at column zero, whether or not its first line opens a block-level construct,
+and a multi-entry value keeps its block list with the label line omitted; in `html` the `strong`
+label element and the literal colon are not emitted, and the enclosing `div`, its classes and the
+value element are unchanged. Row separation, continuation, entry omission, absence, escaping and the
+class vocabulary apply to a `none` row exactly as to an `inline` one. A `FieldView` reaches a row
+only where a View is bound to the rendering; where none is, `inline` applies.
+
+`labelMode` is presentation only, in the sense Invariant 13 fixes for `displayLabel`, `displayHint`
+and `editorHintOverride`: it never affects validation, AI guidance, extraction, `fieldType`
+interpretation, Relations or Discovery Text Projection, and it never changes which fields are
+present in a Record or in a structured projection of it. It is not a way to remove a field from
+rendering. `FieldView.visible` is that, and a row whose label is suppressed still carries its whole
+value. `labelMode` is the only mechanism by which a field row's label is omitted: a Theme neither
+suppresses a label it did not suppress nor restores one it did, and `fieldRow` keeps wrapping,
+unchanged, what the baseline emits ([T-3]).
+
+**[FR-037-20]** `FieldView.labelMode` is an optional string whose value MUST be `"inline"` or
+`"none"`; when absent, `"inline"` applies. Under `"inline"` implementations MUST emit the forms above.
+Under `"none"`, on every path these rules cover, implementations MUST emit the field's rendered value
+with no resolved label and no separating colon, in the per-format forms described above. Row
+separation, continuation, entry omission, absence, escaping and the class vocabulary apply
+unchanged.
+
+**[FR-037-21]** `labelMode` is presentation only (Invariant 13). It MUST NOT affect validation, AI
+guidance, extraction, `fieldType` interpretation, Relations or Discovery Text Projection, and it MUST
+NOT change which fields are present in a Record or in any structured projection of it. It MUST NOT be
+used to remove a field from rendering; `FieldView.visible` is the sole mechanism for that.
+
+**[FR-037-22]** `FieldView.labelMode` is the only mechanism by which a field row's label is omitted.
+A Theme MUST NOT suppress a label that `labelMode` did not, and MUST NOT reintroduce one that it did;
+`ElementTemplates.fieldRow` continues to wrap, unchanged, what these rules emit ([T-3]).
+
+**Conformance boundary (amended by RFC-037 Rev 5).** These forms bind any implementation emitting a
+`Composition` in `markdown`, `adoc`, `text` or `html`, whether or not a section's `renderViewId` (or
+a `typeDispatch` binding) resolves a View for it. A bound View still decides which rows are emitted
+and in what order: its `omitEmptyFields`, `fieldOrder` and `preamble` apply unchanged, and [T-10]
+still applies `fieldRow` to each surviving row. The forms above say what each surviving row looks
+like, on both paths. They do not bind native application UI that is not emitting a `Composition`; a
+client-side `Composition` renderer in a covered format is not exempt.
+
 
 
 

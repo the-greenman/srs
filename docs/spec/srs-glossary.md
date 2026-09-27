@@ -348,6 +348,15 @@ Transcript chunks referenced in `SourceReference` are source material — addres
 **Key**: part:presentation
 
 
+### Presentation shapes (reference)
+
+**Definition**: Pseudo-IDL for the shapes View, Composition and Theme are built from. Each is reference material for the mechanism that names it ("Example: the `X` shape"), collected under this single heading instead of scattered through the main line.
+
+**Notes**: Grouped by P6 (srs#807) under X1's reference-material treatment: these hand-authored shape blocks were previously scattered as flat siblings inside View and Theme, breaking the narrative with no connecting prose between them.
+
+**Key**: record:concepts/presentation-shapes-reference
+
+
 ### Projection
 
 **Definition**: The principle that rendered output is derived from records and never the source of truth for them. Records hold the meaning; a document, a table, an export, a JSON serialisation are all views onto that meaning, produced on demand and discardable. A projection must keep a clear line back to canonical meaning and must never quietly become a second semantic source, which is what happens when someone edits the rendered artifact instead of the records.
