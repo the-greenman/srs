@@ -2324,7 +2324,7 @@ Order that reflects curation, display preference, or layout is presentation, not
 
 ## Distribution
 
-How definitions travel between repositories: Package, Reference, Lineage, and Provenance.
+How definitions and instances travel outside the tool that made them. A Package bundles Field, Type, Vocabulary and view definitions with a dependency manifest, self-contained or referencing what it depends on. A Repository lays a package and its instances out on disk, with its own layout, manifest, and shape for archives and single-file exchange. Blueprint and Protocol are package-layer definitions built on the entity model — what a whole document extracts to, and how a Record gets built through staged conversation. Where a definition came from, and who published it, is recorded separately, so a consumer can tell an update from a fork.
 
 #### Package
 
@@ -2718,6 +2718,256 @@ A sidecar MUST reside in the same directory as the content file it describes. A 
 At most one `attachment_policy` record of the `com.semanticops.base/repo_settings` type MAY exist per repository. A conformant implementation encountering two or more MUST surface a diagnostic and treat the policy as absent (applying the no-policy defaults: all MIME types accepted, no size limits enforced, no size-or-MIME-type-policy diagnostics emitted).
 
 
+##### ext:repository
+
+**Required for**: any implementation that stores SRS content as files, produces sharable SRS archives, or supports interoperable export and import.
+
+Defines the **SRS Live Repository Format**: a normative directory layout, manifest, and file conventions for SRS content stored on a filesystem. The **SRS Archive** — the shareable export format — is a self-contained snapshot of a live repository packaged as a ZIP file. The live repository is the working format; the archive is the export. Both are defined here because an archive is structurally identical to a repository snapshot.
+
+A conforming implementation must be able to round-trip between a live repository and an archive without data loss.
+
+
+##### Value assessment
+
+The repository format is valuable when it improves independent inspection, import/export, re-import, collaboration, provenance, and conflict handling without requiring a running service. It is not valuable if it makes simple archives tool-dependent, hides semantic identity behind filenames or storage history, or confuses storage history with SRS semantic history.
+
+For that reason, SRS repository identity remains inside SRS data (`repositoryId`, `instanceId`, `relationId`, `documentId`, Field/Type IDs, and package IDs). Optional storage or backup systems may record how files changed, but they do not replace SRS IDs, Relations, lifecycle state, `createdAt`, or `updatedAt`.
+
+
+##### Repository layout
+
+A conforming repository has the following root structure:
+
+Example: the repository root layout.
+
+The `.srs` marker is a directory that identifies the repository root. It `SHOULD` contain at least one regular file — by convention `.srs/README.md`, an *About SRS* orientation document — so it survives storage and archive round-trips that do not preserve empty directories; its contents are implementation-private and carry no normative weight. A reader must locate the marker before treating a directory as a repository.
+
+Only `manifest.json` and `.srs` are required at root. Other folders are created as content is added. Implementations may add folders for application-local purposes; folder names defined by this extension are reserved.
+
+Reserved content folders may contain implementation-defined subfolders. For example, a repository may store Tier 2 instances under `records/decisions/`, `records/articles/`, or `records/roles/` so long as every instance remains listed in `RepositoryManifest.instanceIndex` with its full relative path.
+
+**Folder responsibilities:**
+
+| Folder | Contents | Required when |
+|---|---|---|
+| `source-documents/` | Raw source files with `.meta.json` sidecars | Source documents are present |
+| `notes/` | `Note` instance files (Tier 0) | Notes are present |
+| `records/` | `Record` instance files (Tier 2) | Records are present |
+| `relations/` | `Relation` record files | Relations are present |
+| `package/` | Local `Package` and definition source files | Local definitions are present |
+
+###### The repository root layout
+
+The directories a conforming repository has at its root:
+
+```
+<repository-root>/
+  .srs/                          ← required marker directory
+  manifest.json                  ← required: root manifest and instance index
+  source-documents/              ← raw source material with sidecar metadata
+  notes/                         ← Tier 0 Note instances
+  records/                       ← Tier 2 Record instances
+  relations/                     ← Relation records
+  package/                       ← local Package, field, type, and view definitions
+```
+
+
+###### File naming
+
+Instance files may be named by the implementation. The authoritative identifier (`instanceId`, `relationId`, `documentId`) is stored inside the file; it is not derived from the filename.
+
+Recommended convention: `<human-readable-slug>.json`. Where uniqueness within a folder cannot be guaranteed, `<slug>-<first-8-chars-of-uuid>.json` is recommended.
+
+
+
+##### Manifest
+
+Every repository declares its manifest at `manifest.json`, the one file a reader or a loader consults first: the repository's `repositoryId`, its `srsVersion` and `dataModelRevision`, its `packageRef`, its required root `container`, and the index entries a loader uses to resolve every other file without walking the whole tree.
+
+`RepositoryManifest.instanceIndex` lists every instance by relative path and content hash (`InstanceIndexEntry`); the manifest is the map, and the `records/` and `relations/` trees remain the tree-authoritative source (RFC-038). A mismatch between map and tree is a validation error, not a silent override. `RepositoryManifest.sourceDocumentIndex` does the same for source documents (`SourceDocumentIndexEntry`), and `relationsChecksum` (`RelationsChecksumEntry`) lets a consumer detect a stale `relations/` tree without re-parsing it. `PackageRef` names where the package that defines this repository's Fields and Types lives, local or by reference. A `SourceAnchor` anchors a source document to the position in a Tier 2 Record's content it was extracted from.
+
+The manifest's `container` field is the repository's required root Container (RFC-013): its `identityInstanceId` names the repository's identity Record, and every other member is a navigation section, ordered by the `precedes` chain over them.
+
+###### `RepositoryManifest`
+
+The root manifest. Must be present at `manifest.json` in the repository root.
+
+Example: the `RepositoryManifest` shape.
+
+
+###### The `RepositoryManifest` shape
+
+`RepositoryManifest`, in pseudo-IDL:
+
+```typescript
+{
+  formatVersion: string      // SRS repository format version, e.g. "1.0"
+  srsVersion: string         // SRS spec version, e.g. "2.0"
+  conformance: string        // full conformance declaration string
+
+  repositoryId: UUID         // stable identifier; does not change on export or copy
+  title: string              // human-readable name for this repository
+
+  container: Container       // inline Container — canonical; authoritative over
+                             // any separate container.json in the root
+
+  packageRef?: PackageRef    // reference to local or external package definitions
+
+  instanceIndex: InstanceIndexEntry[]
+  // Authoritative list of all SRS instances in this repository.
+  // An instance not in the index is not a member, even if its file is present.
+
+  relationsPath?: string | string[]
+  // Relative path(s) to relation file(s). Default: "relations/relations.json"
+
+  sourceDocumentsPath?: string
+  // Relative path to source documents folder. Default: "source-documents/"
+
+  sourceDocumentIndex?: SourceDocumentIndexEntry[]
+  // Optional explicit index of source documents. When present, implementations
+  // may use this for discovery instead of scanning for *.meta.json files.
+  // When absent, discovery is by sidecar scan. See Invariant 52.
+
+  relationsChecksums?: RelationsChecksumEntry[]
+  // Optional checksums for each relations file declared in relationsPath.
+  // Enables fast no-op detection for relation collections during re-import.
+
+  createdAt: ISO8601
+  updatedAt?: ISO8601
+}
+```
+
+
+###### `PackageRef`
+
+Reference to the package supplying Field and Type definitions for this repository.
+
+Example: the `PackageRef` shape.
+
+When `packageRef` is absent, all Type and Field definitions are expected pre-installed. When `mode` is `"local"`, the package at `path` must be `mode: "bundled"` and must include all Fields and Types referenced by any Tier 2 Record in the repository (see Invariant 50).
+
+
+###### The `PackageRef` shape
+
+`PackageRef`, in pseudo-IDL:
+
+```typescript
+{
+  mode: "local" | "remote"  // renamed from "external" (rfc-decision-c8704763)
+
+  // local: definitions live in the repository under package/
+  path?: string           // relative path to package.json; default: "package/package.json"
+
+  // remote: definitions are expected pre-installed in the consumer's registry
+  packageId?: UUID
+  packageName?: string
+  packageVersion?: string
+}
+```
+
+
+###### `InstanceIndexEntry`
+
+One entry in the manifest instance index.
+
+Example: the `InstanceIndexEntry` shape.
+
+`path` is the authoritative locator. If `typeName` or `title` conflict with the resolved instance file, the file content takes precedence.
+
+
+###### The `InstanceIndexEntry` shape
+
+`InstanceIndexEntry`, in pseudo-IDL:
+
+```typescript
+{
+  instanceId: UUID
+  tier: 0 | 2             // 0: Note, 2: Record (1 is a retired gap — Tier 1/TypedRecord, rfc-decision-53635966)
+  path: string            // relative path from repository root
+                          // e.g. "records/decisions/decision-mounting-system.json"
+
+  typeId?: UUID           // Tier 2 only: the Type this Record instantiates
+  typeName?: string       // denormalised convenience; not authoritative
+  title?: string          // denormalised for display; not authoritative
+
+  checksum?: string       // digest of the instance file: "<algorithm>:<hex>"
+                          // e.g. "sha256:4b2c...". Enables fast no-op detection
+                          // during re-import without reading file content.
+}
+```
+
+
+###### `RelationsChecksumEntry`
+
+One entry in the optional `relationsChecksums` manifest field.
+
+Example: the `RelationsChecksumEntry` shape.
+
+
+###### The `RelationsChecksumEntry` shape
+
+`RelationsChecksumEntry`, in pseudo-IDL:
+
+```typescript
+{
+  path: string       // matches an entry in relationsPath
+  checksum: string   // digest of the relations file: "<algorithm>:<hex>"
+}
+```
+
+
+###### `SourceAnchor`
+
+A lightweight locator for a position within a source document. Used primarily when capturing a repository-local excerpt from a larger mutable source document in a standalone repository.
+
+Example: the `SourceAnchor` shape.
+
+
+###### The `SourceAnchor` shape
+
+`SourceAnchor`, in pseudo-IDL:
+
+```typescript
+{
+  kind: "line-range" | "char-range" | "timestamp-range" | "message-id" | "json-pointer" | "custom"
+  value: string
+  note?: string
+}
+```
+
+
+###### Relations storage
+
+Relations are stored as a **JSON object** conforming to the relations-collection schema: a `$schema` key and a `relations` array. A bare JSON array is not a conforming relations file. The default location is `relations/relations.json`. When `relationsPath` is an array of paths, their `relations` arrays are concatenated for resolution. A `relationId` must be unique across all relation files in the repository.
+
+
+###### Schema conventions
+
+Every JSON file in a repository should declare its schema via a `$schema` key as the first property. This makes the repository self-describing to JSON Schema validators and AI agents without requiring external tooling.
+
+**Canonical schema URLs** (SRS 2.0 structural schemas):
+
+| File type | `$schema` value |
+|-----------|----------------|
+| `manifest.json` | `https://srs.semanticops.com/schema/2.0/manifest.json` |
+| Notes (Tier 0) | `https://srs.semanticops.com/schema/2.0/note.json` |
+| Records (Tier 2) | `https://srs.semanticops.com/schema/2.0/record.json` |
+| Relations collection | `https://srs.semanticops.com/schema/2.0/relations-collection.json` |
+| Source document sidecar | `https://srs.semanticops.com/schema/2.0/source-document-meta.json` |
+| Field definition | `https://srs.semanticops.com/schema/2.0/field.json` |
+| Type definition | `https://srs.semanticops.com/schema/2.0/type.json` |
+| Package | `https://srs.semanticops.com/schema/2.0/package.json` |
+
+**Domain schemas**: A package may supply additional domain schemas that validate type-specific field constraints. These narrow the structural Record schema with `allOf` and are placed in `package/schemas/`. A domain schema's `$id` should follow the pattern `https://srs.semanticops.com/schema/domain/<namespace>/<typeName>/<version>.json`. Records conforming to a specific Type may declare the domain schema `$id` instead of the generic record schema URL.
+
+**Relations collection format**: The relations file must be a JSON object with a `$schema` key and a `relations` array — not a bare array. This ensures the file is self-identifying.
+
+**Offline use**: Conforming implementations are not required to fetch schema files at runtime. The `$schema` key is a documentation and tooling hint, not a live reference. A repository may include a local copy of the structural schemas in a `schemas/` directory at the repository root for offline validation.
+
+**AI comprehension**: The presence of `$schema` in every file allows an AI agent to identify the purpose of any file without reading its full content. Combined with the `instanceIndex` in `manifest.json` and any `aiGuidance` blocks, a repository becomes traversable by an LLM without prior knowledge of its structure.
+
+
+
 ##### Travelling form
 
 The shape SRS content takes when it leaves the place it was made: a zip archive that is a self-contained snapshot of a repository, a single-file JSON store, or a slice carrying one container's closure as an independently openable archive. The standing test is that anything a repository is allowed to hold must be expressible in the corresponding travelling form — a capability that exists only in place is captivity, not a feature. Round-tripping between forms must lose nothing.
@@ -2799,6 +3049,100 @@ The property `ext:slices` adds to `RepositoryManifest`:
   ]
 }
 ```
+
+
+###### `SourceReference` additions
+
+When `ext:repository` is declared, `SourceReference.sourceType` gains the value `"repository-document"`. A reference with `sourceType: "repository-document"` uses `sourceId` to carry the `SourceDocument.documentId`. The content file is located via the matching sidecar in `sourceDocumentsPath`.
+
+`"external-document"` remains valid for documents that are genuinely external to the repository. `"repository-document"` must be used for documents stored within the same repository.
+
+For standalone transcript and chat repositories, the recommended pattern is:
+
+- store the full export or dump as a `SourceDocument`
+- cite it using `sourceType: "repository-document"`
+- when exact quoted provenance matters and the parent source may change, capture a repository-local excerpt as its own `SourceDocument` and cite the excerpt instead of the mutable parent
+
+
+###### Archive format
+
+An archive is a self-contained, shareable snapshot of a live repository.
+
+**Format**: ZIP file. Recommended file extension: `.srs`.
+
+**Archive root**: The repository root maps to the ZIP root. `manifest.json` must be at the ZIP root, not inside a subdirectory.
+
+**Self-containment requirements**: A conforming archive must include:
+- `manifest.json` and the `.srs` marker
+- All instance files referenced in the manifest instance index
+- All relation files declared in `relationsPath`
+- All source document content files and sidecars referenced by any `SourceReference` within any instance **or Relation** in the archive
+- When `PackageRef.mode === "local"`: the full local package
+
+Remote package dependencies (`mode: "remote"`) are declared in `packageRef` and expected pre-installed at the consumer. They are not bundled in the archive.
+
+**Producing an archive:**
+1. Verify the manifest instance index is complete and consistent with the filesystem
+2. Collect all files per the self-containment requirements above
+3. ZIP from the repository root such that `manifest.json` is at the ZIP root
+4. Verify the archive contains `manifest.json` at root before publishing
+
+**Consuming an archive:**
+1. Unzip to a staging or working location
+2. Locate and parse `manifest.json`
+3. Read `conformance`; surface any unsupported extensions to the user before proceeding
+4. Load all instances via the instance index
+5. Load relations from `relationsPath`
+6. Resolve `repository-document` source references via `sourceDocumentsPath`
+
+A conforming consumer must not silently discard instances, relations, or source documents present in the archive. Unknown extension content should be preserved and surfaced rather than dropped.
+
+When importing into an existing store, apply the identity-based import rules defined in the next section.
+
+
+###### Import / re-import semantics
+
+Import operations are **identity-based**, not path- or filename-based. A consumer receiving an archive or syncing a live repository must never create a duplicate object solely because the archive path, filename, or repository directory name differs from what already exists locally.
+
+**Repository identity**
+
+`repositoryId` is the sync key for a repository. If an incoming repository has a `repositoryId` that already exists in the consumer's local store, the operation is a sync/update of that repository — not a new repository alongside it.
+
+**Object-level identity rules**
+
+Each object type has a stable identity key:
+
+| Object | Identity key |
+|--------|-------------|
+| Note, Record | `instanceId` |
+| Relation | `relationId` |
+| Source document | `documentId` |
+| Field definition | `id` + `version` |
+| Type definition | `id` + `version` |
+| Package | `packageId` + `packageVersion` |
+
+Resolution rules for each incoming object:
+
+- **Same key, same content** (or matching checksum): **no-op**. Do not write, overwrite, or create a duplicate.
+- **Same key, different content** (or mismatched checksum): **conflict**. Surface the conflict explicitly. Silent overwrite is not conformant; silent discard is not conformant.
+- **New key**: insert.
+
+**Checksum-assisted comparison**
+
+`InstanceIndexEntry.checksum`, `SourceDocumentIndexEntry.sidecarChecksum`, `SourceDocumentIndexEntry.contentChecksum`, and `relationsChecksums[*].checksum` allow fast no-op detection without reading file content. If an incoming checksum matches the locally stored checksum for the same identity key, the object is unchanged and the import step may skip it without further comparison.
+
+Checksum format: `<algorithm>:<hex-encoded-digest>`. SHA-256 is strongly recommended: `sha256:<64-char-hex>`. The algorithm prefix makes the format self-identifying; other algorithms are permitted when both producer and consumer agree.
+
+When checksums are absent, a conforming importer must compare content directly, or treat every write as idempotent if the implementation does not track prior state.
+
+**Copy semantics**
+
+To create an independent copy of a repository — not a sync — the importer must mint a **new `repositoryId`**. For inner objects, two strategies are valid:
+
+1. **Preserve inner IDs**: the copy carries the same `instanceId`, `relationId`, and `documentId` values as the source. Appropriate for read-only snapshots and archive mirrors.
+2. **Mint new inner IDs with lineage**: the copy mints fresh UUIDs and adds `derived-from` Relations from each new instance to the source `instanceId`. Appropriate when the copy will evolve independently.
+
+An importer must not mix strategies within a single copy operation.
 
 
 ###### JSON Store
@@ -2959,149 +3303,30 @@ A conformant slice producer MUST NOT place a relation in the archive's relations
 
 
 
-##### The repository root layout
+##### Source documents
 
-The directories a conforming repository has at its root:
+A `SourceDocument` records one piece of raw material a Record refers to but does not itself carry: a `documentId`, a `contentPath`, and a `.meta.json` sidecar with its provenance (title, media type, checksum) and where in a Tier 2 Record's content it was used, via a `SourceAnchor`. It lives under `sourceDocumentsPath` (default `source-documents/`); the sidecar sits in the same directory as its content file, and `contentPath` may name a subdirectory beneath that root but never escape it.
 
-```
-<repository-root>/
-  .srs/                          ← required marker directory
-  manifest.json                  ← required: root manifest and instance index
-  source-documents/              ← raw source material with sidecar metadata
-  notes/                         ← Tier 0 Note instances
-  records/                       ← Tier 2 Record instances
-  relations/                     ← Relation records
-  package/                       ← local Package, field, type, and view definitions
-```
+An `attachment_policy` record, at most one per repository, bounds how many of these a single Record may reference and how large each may be; a repository that declares no policy uses the built-in defaults. `RepositoryManifest.sourceDocumentIndex` lists every one by path and checksum (`SourceDocumentIndexEntry`), the same map-versus-tree relationship instance files have: the tree on disk is authoritative, the index is a validated cross-check.
 
+###### `SourceDocument`
 
-##### The `RepositoryManifest` shape
+A raw source document stored within the repository. Source documents are source material — transcripts, recordings, founding documents, email threads — that Records cite via `SourceReference`. They are not SRS instances and do not appear in the instance index.
 
-`RepositoryManifest`, in pseudo-IDL:
+Example: the `SourceDocument` shape.
 
-```typescript
-{
-  formatVersion: string      // SRS repository format version, e.g. "1.0"
-  srsVersion: string         // SRS spec version, e.g. "2.0"
-  conformance: string        // full conformance declaration string
+Each source document is stored as a content file paired with a metadata sidecar in `source-documents/`:
 
-  repositoryId: UUID         // stable identifier; does not change on export or copy
-  title: string              // human-readable name for this repository
+Example: a source document and its sidecar.
 
-  container: Container       // inline Container — canonical; authoritative over
-                             // any separate container.json in the root
+The content file and sidecar share the same filename stem. `contentPath` in the sidecar is the content filename (including extension), making the pair resolvable by scanning for `.meta.json` files without requiring the content extension to be derivable from the `documentId`.
 
-  packageRef?: PackageRef    // reference to local or external package definitions
+Source documents may themselves be excerpts. This supports manual, one-off chunking for provenance when the underlying source is large, awkward to cite precisely, or not guaranteed to remain immutable. An excerpt is still just a `SourceDocument`: it lives in `source-documents/`, has its own `documentId`, and is cited via `sourceType: "repository-document"` like any other repository-local source.
 
-  instanceIndex: InstanceIndexEntry[]
-  // Authoritative list of all SRS instances in this repository.
-  // An instance not in the index is not a member, even if its file is present.
-
-  relationsPath?: string | string[]
-  // Relative path(s) to relation file(s). Default: "relations/relations.json"
-
-  sourceDocumentsPath?: string
-  // Relative path to source documents folder. Default: "source-documents/"
-
-  sourceDocumentIndex?: SourceDocumentIndexEntry[]
-  // Optional explicit index of source documents. When present, implementations
-  // may use this for discovery instead of scanning for *.meta.json files.
-  // When absent, discovery is by sidecar scan. See Invariant 52.
-
-  relationsChecksums?: RelationsChecksumEntry[]
-  // Optional checksums for each relations file declared in relationsPath.
-  // Enables fast no-op detection for relation collections during re-import.
-
-  createdAt: ISO8601
-  updatedAt?: ISO8601
-}
-```
+When `excerpt` is present, the content file is the frozen captured snippet. `excerpt.sourceDocumentId` identifies the repository-local parent source document it was taken from, and `excerpt.anchor` records where it came from using a lightweight locator such as a line range, message ID, timestamp range, or JSON Pointer. `sourceChecksumAtCapture`, when present, records the parent content digest at extraction time to preserve provenance even if the parent source later changes.
 
 
-##### The `PackageRef` shape
-
-`PackageRef`, in pseudo-IDL:
-
-```typescript
-{
-  mode: "local" | "remote"  // renamed from "external" (rfc-decision-c8704763)
-
-  // local: definitions live in the repository under package/
-  path?: string           // relative path to package.json; default: "package/package.json"
-
-  // remote: definitions are expected pre-installed in the consumer's registry
-  packageId?: UUID
-  packageName?: string
-  packageVersion?: string
-}
-```
-
-
-##### The `InstanceIndexEntry` shape
-
-`InstanceIndexEntry`, in pseudo-IDL:
-
-```typescript
-{
-  instanceId: UUID
-  tier: 0 | 2             // 0: Note, 2: Record (1 is a retired gap — Tier 1/TypedRecord, rfc-decision-53635966)
-  path: string            // relative path from repository root
-                          // e.g. "records/decisions/decision-mounting-system.json"
-
-  typeId?: UUID           // Tier 2 only: the Type this Record instantiates
-  typeName?: string       // denormalised convenience; not authoritative
-  title?: string          // denormalised for display; not authoritative
-
-  checksum?: string       // digest of the instance file: "<algorithm>:<hex>"
-                          // e.g. "sha256:4b2c...". Enables fast no-op detection
-                          // during re-import without reading file content.
-}
-```
-
-
-##### The `SourceDocumentIndexEntry` shape
-
-`SourceDocumentIndexEntry`, in pseudo-IDL:
-
-```typescript
-{
-  documentId: UUID          // matches SourceDocument.documentId in the sidecar
-  sidecarPath: string       // relative path from sourceDocumentsPath to the .meta.json sidecar
-  contentPath: string       // relative path from sourceDocumentsPath to the content file
-  title?: string            // denormalised for display; not authoritative
-
-  sidecarChecksum?: string  // digest of the .meta.json sidecar: "<algorithm>:<hex>"
-  contentChecksum?: string  // digest of the content file: "<algorithm>:<hex>"
-}
-```
-
-
-##### The `RelationsChecksumEntry` shape
-
-`RelationsChecksumEntry`, in pseudo-IDL:
-
-```typescript
-{
-  path: string       // matches an entry in relationsPath
-  checksum: string   // digest of the relations file: "<algorithm>:<hex>"
-}
-```
-
-
-##### The `SourceAnchor` shape
-
-`SourceAnchor`, in pseudo-IDL:
-
-```typescript
-{
-  kind: "line-range" | "char-range" | "timestamp-range" | "message-id" | "json-pointer" | "custom"
-  value: string
-  note?: string
-}
-```
-
-
-##### The `SourceDocument` shape
+###### The `SourceDocument` shape
 
 `SourceDocument`, in pseudo-IDL:
 
@@ -3139,7 +3364,7 @@ The directories a conforming repository has at its root:
 ```
 
 
-##### A source document and its sidecar
+###### A source document and its sidecar
 
 The content file and its metadata sidecar, sharing one filename stem:
 
@@ -3150,78 +3375,7 @@ source-documents/
 ```
 
 
-##### ext:repository
-
-**Required for**: any implementation that stores SRS content as files, produces sharable SRS archives, or supports interoperable export and import.
-
-Defines the **SRS Live Repository Format**: a normative directory layout, manifest, and file conventions for SRS content stored on a filesystem. The **SRS Archive** — the shareable export format — is a self-contained snapshot of a live repository packaged as a ZIP file. The live repository is the working format; the archive is the export. Both are defined here because an archive is structurally identical to a repository snapshot.
-
-A conforming implementation must be able to round-trip between a live repository and an archive without data loss.
-
-
-##### Value assessment
-
-The repository format is valuable when it improves independent inspection, import/export, re-import, collaboration, provenance, and conflict handling without requiring a running service. It is not valuable if it makes simple archives tool-dependent, hides semantic identity behind filenames or storage history, or confuses storage history with SRS semantic history.
-
-For that reason, SRS repository identity remains inside SRS data (`repositoryId`, `instanceId`, `relationId`, `documentId`, Field/Type IDs, and package IDs). Optional storage or backup systems may record how files changed, but they do not replace SRS IDs, Relations, lifecycle state, `createdAt`, or `updatedAt`.
-
-
-##### Repository layout
-
-A conforming repository has the following root structure:
-
-Example: the repository root layout.
-
-The `.srs` marker is a directory that identifies the repository root. It `SHOULD` contain at least one regular file — by convention `.srs/README.md`, an *About SRS* orientation document — so it survives storage and archive round-trips that do not preserve empty directories; its contents are implementation-private and carry no normative weight. A reader must locate the marker before treating a directory as a repository.
-
-Only `manifest.json` and `.srs` are required at root. Other folders are created as content is added. Implementations may add folders for application-local purposes; folder names defined by this extension are reserved.
-
-Reserved content folders may contain implementation-defined subfolders. For example, a repository may store Tier 2 instances under `records/decisions/`, `records/articles/`, or `records/roles/` so long as every instance remains listed in `RepositoryManifest.instanceIndex` with its full relative path.
-
-**Folder responsibilities:**
-
-| Folder | Contents | Required when |
-|---|---|---|
-| `source-documents/` | Raw source files with `.meta.json` sidecars | Source documents are present |
-| `notes/` | `Note` instance files (Tier 0) | Notes are present |
-| `records/` | `Record` instance files (Tier 2) | Records are present |
-| `relations/` | `Relation` record files | Relations are present |
-| `package/` | Local `Package` and definition source files | Local definitions are present |
-
-
-##### File naming
-
-Instance files may be named by the implementation. The authoritative identifier (`instanceId`, `relationId`, `documentId`) is stored inside the file; it is not derived from the filename.
-
-Recommended convention: `<human-readable-slug>.json`. Where uniqueness within a folder cannot be guaranteed, `<slug>-<first-8-chars-of-uuid>.json` is recommended.
-
-
-##### `RepositoryManifest`
-
-The root manifest. Must be present at `manifest.json` in the repository root.
-
-Example: the `RepositoryManifest` shape.
-
-
-##### `PackageRef`
-
-Reference to the package supplying Field and Type definitions for this repository.
-
-Example: the `PackageRef` shape.
-
-When `packageRef` is absent, all Type and Field definitions are expected pre-installed. When `mode` is `"local"`, the package at `path` must be `mode: "bundled"` and must include all Fields and Types referenced by any Tier 2 Record in the repository (see Invariant 50).
-
-
-##### `InstanceIndexEntry`
-
-One entry in the manifest instance index.
-
-Example: the `InstanceIndexEntry` shape.
-
-`path` is the authoritative locator. If `typeName` or `title` conflict with the resolved instance file, the file content takes precedence.
-
-
-##### `SourceDocumentIndexEntry`
+###### `SourceDocumentIndexEntry`
 
 One entry in the optional `sourceDocumentIndex`.
 
@@ -3230,53 +3384,22 @@ Example: the `SourceDocumentIndexEntry` shape.
 When `sourceDocumentIndex` is present, every entry must correspond to a valid sidecar that satisfies Invariant 52. The index does not replace sidecar resolution; consumers must still parse the sidecar to obtain the full `SourceDocument` record.
 
 
-##### `RelationsChecksumEntry`
+###### The `SourceDocumentIndexEntry` shape
 
-One entry in the optional `relationsChecksums` manifest field.
+`SourceDocumentIndexEntry`, in pseudo-IDL:
 
-Example: the `RelationsChecksumEntry` shape.
+```typescript
+{
+  documentId: UUID          // matches SourceDocument.documentId in the sidecar
+  sidecarPath: string       // relative path from sourceDocumentsPath to the .meta.json sidecar
+  contentPath: string       // relative path from sourceDocumentsPath to the content file
+  title?: string            // denormalised for display; not authoritative
 
+  sidecarChecksum?: string  // digest of the .meta.json sidecar: "<algorithm>:<hex>"
+  contentChecksum?: string  // digest of the content file: "<algorithm>:<hex>"
+}
+```
 
-##### `SourceAnchor`
-
-A lightweight locator for a position within a source document. Used primarily when capturing a repository-local excerpt from a larger mutable source document in a standalone repository.
-
-Example: the `SourceAnchor` shape.
-
-
-##### `SourceDocument`
-
-A raw source document stored within the repository. Source documents are source material — transcripts, recordings, founding documents, email threads — that Records cite via `SourceReference`. They are not SRS instances and do not appear in the instance index.
-
-Example: the `SourceDocument` shape.
-
-Each source document is stored as a content file paired with a metadata sidecar in `source-documents/`:
-
-Example: a source document and its sidecar.
-
-The content file and sidecar share the same filename stem. `contentPath` in the sidecar is the content filename (including extension), making the pair resolvable by scanning for `.meta.json` files without requiring the content extension to be derivable from the `documentId`.
-
-Source documents may themselves be excerpts. This supports manual, one-off chunking for provenance when the underlying source is large, awkward to cite precisely, or not guaranteed to remain immutable. An excerpt is still just a `SourceDocument`: it lives in `source-documents/`, has its own `documentId`, and is cited via `sourceType: "repository-document"` like any other repository-local source.
-
-When `excerpt` is present, the content file is the frozen captured snippet. `excerpt.sourceDocumentId` identifies the repository-local parent source document it was taken from, and `excerpt.anchor` records where it came from using a lightweight locator such as a line range, message ID, timestamp range, or JSON Pointer. `sourceChecksumAtCapture`, when present, records the parent content digest at extraction time to preserve provenance even if the parent source later changes.
-
-
-##### `SourceReference` additions
-
-When `ext:repository` is declared, `SourceReference.sourceType` gains the value `"repository-document"`. A reference with `sourceType: "repository-document"` uses `sourceId` to carry the `SourceDocument.documentId`. The content file is located via the matching sidecar in `sourceDocumentsPath`.
-
-`"external-document"` remains valid for documents that are genuinely external to the repository. `"repository-document"` must be used for documents stored within the same repository.
-
-For standalone transcript and chat repositories, the recommended pattern is:
-
-- store the full export or dump as a `SourceDocument`
-- cite it using `sourceType: "repository-document"`
-- when exact quoted provenance matters and the parent source may change, capture a repository-local excerpt as its own `SourceDocument` and cite the excerpt instead of the mutable parent
-
-
-##### Relations storage
-
-Relations are stored as a **JSON object** conforming to the relations-collection schema: a `$schema` key and a `relations` array. A bare JSON array is not a conforming relations file. The default location is `relations/relations.json`. When `relationsPath` is an array of paths, their `relations` arrays are concatenated for resolution. A `relationId` must be unique across all relation files in the repository.
 
 
 ##### Repository mutability and semantic evolution
@@ -3288,113 +3411,6 @@ SRS repositories may evolve over time. Mutation policy is tiered:
 - Semantic changes to Tier 2 Records create a new Record linked to the prior Record by `refines` or `supersedes`.
 
 Storage history does not replace semantic history. A filesystem backup, archive timestamp, or application log may prove that a JSON file changed, but SRS Relations express what the change means. A conforming repository implementation must not treat storage history as a substitute for `supersedes`, `refines`, `derived-from`, lifecycle state, or object timestamps.
-
-
-##### Schema conventions
-
-Every JSON file in a repository should declare its schema via a `$schema` key as the first property. This makes the repository self-describing to JSON Schema validators and AI agents without requiring external tooling.
-
-**Canonical schema URLs** (SRS 2.0 structural schemas):
-
-| File type | `$schema` value |
-|-----------|----------------|
-| `manifest.json` | `https://srs.semanticops.com/schema/2.0/manifest.json` |
-| Notes (Tier 0) | `https://srs.semanticops.com/schema/2.0/note.json` |
-| Records (Tier 2) | `https://srs.semanticops.com/schema/2.0/record.json` |
-| Relations collection | `https://srs.semanticops.com/schema/2.0/relations-collection.json` |
-| Source document sidecar | `https://srs.semanticops.com/schema/2.0/source-document-meta.json` |
-| Field definition | `https://srs.semanticops.com/schema/2.0/field.json` |
-| Type definition | `https://srs.semanticops.com/schema/2.0/type.json` |
-| Package | `https://srs.semanticops.com/schema/2.0/package.json` |
-
-**Domain schemas**: A package may supply additional domain schemas that validate type-specific field constraints. These narrow the structural Record schema with `allOf` and are placed in `package/schemas/`. A domain schema's `$id` should follow the pattern `https://srs.semanticops.com/schema/domain/<namespace>/<typeName>/<version>.json`. Records conforming to a specific Type may declare the domain schema `$id` instead of the generic record schema URL.
-
-**Relations collection format**: The relations file must be a JSON object with a `$schema` key and a `relations` array — not a bare array. This ensures the file is self-identifying.
-
-**Offline use**: Conforming implementations are not required to fetch schema files at runtime. The `$schema` key is a documentation and tooling hint, not a live reference. A repository may include a local copy of the structural schemas in a `schemas/` directory at the repository root for offline validation.
-
-**AI comprehension**: The presence of `$schema` in every file allows an AI agent to identify the purpose of any file without reading its full content. Combined with the `instanceIndex` in `manifest.json` and any `aiGuidance` blocks, a repository becomes traversable by an LLM without prior knowledge of its structure.
-
-
-##### Archive format
-
-An archive is a self-contained, shareable snapshot of a live repository.
-
-**Format**: ZIP file. Recommended file extension: `.srs`.
-
-**Archive root**: The repository root maps to the ZIP root. `manifest.json` must be at the ZIP root, not inside a subdirectory.
-
-**Self-containment requirements**: A conforming archive must include:
-- `manifest.json` and the `.srs` marker
-- All instance files referenced in the manifest instance index
-- All relation files declared in `relationsPath`
-- All source document content files and sidecars referenced by any `SourceReference` within any instance **or Relation** in the archive
-- When `PackageRef.mode === "local"`: the full local package
-
-Remote package dependencies (`mode: "remote"`) are declared in `packageRef` and expected pre-installed at the consumer. They are not bundled in the archive.
-
-**Producing an archive:**
-1. Verify the manifest instance index is complete and consistent with the filesystem
-2. Collect all files per the self-containment requirements above
-3. ZIP from the repository root such that `manifest.json` is at the ZIP root
-4. Verify the archive contains `manifest.json` at root before publishing
-
-**Consuming an archive:**
-1. Unzip to a staging or working location
-2. Locate and parse `manifest.json`
-3. Read `conformance`; surface any unsupported extensions to the user before proceeding
-4. Load all instances via the instance index
-5. Load relations from `relationsPath`
-6. Resolve `repository-document` source references via `sourceDocumentsPath`
-
-A conforming consumer must not silently discard instances, relations, or source documents present in the archive. Unknown extension content should be preserved and surfaced rather than dropped.
-
-When importing into an existing store, apply the identity-based import rules defined in the next section.
-
-
-##### Import / re-import semantics
-
-Import operations are **identity-based**, not path- or filename-based. A consumer receiving an archive or syncing a live repository must never create a duplicate object solely because the archive path, filename, or repository directory name differs from what already exists locally.
-
-**Repository identity**
-
-`repositoryId` is the sync key for a repository. If an incoming repository has a `repositoryId` that already exists in the consumer's local store, the operation is a sync/update of that repository — not a new repository alongside it.
-
-**Object-level identity rules**
-
-Each object type has a stable identity key:
-
-| Object | Identity key |
-|--------|-------------|
-| Note, Record | `instanceId` |
-| Relation | `relationId` |
-| Source document | `documentId` |
-| Field definition | `id` + `version` |
-| Type definition | `id` + `version` |
-| Package | `packageId` + `packageVersion` |
-
-Resolution rules for each incoming object:
-
-- **Same key, same content** (or matching checksum): **no-op**. Do not write, overwrite, or create a duplicate.
-- **Same key, different content** (or mismatched checksum): **conflict**. Surface the conflict explicitly. Silent overwrite is not conformant; silent discard is not conformant.
-- **New key**: insert.
-
-**Checksum-assisted comparison**
-
-`InstanceIndexEntry.checksum`, `SourceDocumentIndexEntry.sidecarChecksum`, `SourceDocumentIndexEntry.contentChecksum`, and `relationsChecksums[*].checksum` allow fast no-op detection without reading file content. If an incoming checksum matches the locally stored checksum for the same identity key, the object is unchanged and the import step may skip it without further comparison.
-
-Checksum format: `<algorithm>:<hex-encoded-digest>`. SHA-256 is strongly recommended: `sha256:<64-char-hex>`. The algorithm prefix makes the format self-identifying; other algorithms are permitted when both producer and consumer agree.
-
-When checksums are absent, a conforming importer must compare content directly, or treat every write as idempotent if the implementation does not track prior state.
-
-**Copy semantics**
-
-To create an independent copy of a repository — not a sync — the importer must mint a **new `repositoryId`**. For inner objects, two strategies are valid:
-
-1. **Preserve inner IDs**: the copy carries the same `instanceId`, `relationId`, and `documentId` values as the source. Appropriate for read-only snapshots and archive mirrors.
-2. **Mint new inner IDs with lineage**: the copy mints fresh UUIDs and adds `derived-from` Relations from each new instance to the source `instanceId`. Appropriate when the copy will evolve independently.
-
-An importer must not mix strategies within a single copy operation.
 
 
 
