@@ -1,0 +1,35 @@
+{
+  "$comment": "Known violations of scripts/check-spec-rendered-order.mjs (srs#801, X1). Same six pairs check-spec-readability.mjs's tree-order total already tracks in spec-readability-allowlist.json under reading-order-forward-reference (Type/Field assignment/AI guidance before Field; Note/Record before Semantic maturity tier; Relation before Instance), confirmed here to be genuine at the RENDERED position too, not just the computed tree position — the composition faithfully renders the tree order, so this check's residual violations are the same pre-existing structural debt, not a defect this unit introduced. P2 (Foundations reads in dependency order) and P3 (Instances) are the read-through's units that fold these. Entry shape: {pair:[sourceId,targetId], issue, note}. The check fails on any violation NOT listed here and on any entry that no longer matches a violation — shrinking this file is those units' job. Growing it needs an issue.",
+  "entries": [
+    {
+      "pair": ["17faf6f1-9b73-4cc5-90bd-7735b933da08", "07ee545a-dba3-4253-bcbb-19a58330f79c"],
+      "issue": "the-greenman/srs#787",
+      "note": "\"Type\" (source) depends on \"Field\" (target) but Type renders first in Foundations. Same pair as spec-readability-allowlist.json's reading-order-forward-reference entry for these ids. Fold candidate: P2."
+    },
+    {
+      "pair": ["17fb1629-855c-481f-937a-3e1db05215d8", "07ee545a-dba3-4253-bcbb-19a58330f79c"],
+      "issue": "the-greenman/srs#787",
+      "note": "\"Field assignment\" depends on \"Field\" but is nested inside Type, rendering before Field. Same pair as spec-readability-allowlist.json. Fold candidate: P2."
+    },
+    {
+      "pair": ["89444ae5-3dc7-4ffd-ac60-3bc9559c9331", "873099c5-093d-4684-8c36-46f813847c1a"],
+      "issue": "the-greenman/srs#787",
+      "note": "\"AI guidance\" depends on \"Field\" but renders earlier in Foundations. Same pair as spec-readability-allowlist.json. Fold candidate: P2."
+    },
+    {
+      "pair": ["42ed953e-2b89-4bb9-a1b1-a8dcad0d24e5", "873099c5-093d-4684-8c36-46f813847c1a"],
+      "issue": "the-greenman/srs#787",
+      "note": "A second concept depending on \"Field\" ahead of its own introduction. Same pair as spec-readability-allowlist.json. Fold candidate: P2."
+    },
+    {
+      "pair": ["1e23ee5d-0406-485d-a927-6c62dfee58f1", "e1f255e4-8050-481f-ad49-a44f24bfca0f"],
+      "issue": "the-greenman/srs#787",
+      "note": "\"Relation\" depends on \"Instance\" but Relation (Part Structure) renders before Instance (Part Instances) in Part order. Same pair as spec-readability-allowlist.json. Fold candidate: P3/P4."
+    },
+    {
+      "pair": ["9bccaa53-6d98-4ca9-967b-fb27ec6e72d5", "873099c5-093d-4684-8c36-46f813847c1a"],
+      "issue": "the-greenman/srs#787",
+      "note": "A third concept depending on \"Field\" ahead of its own introduction. Same pair as spec-readability-allowlist.json. Fold candidate: P2."
+    }
+  ]
+}

@@ -42,6 +42,20 @@ function sanitizeConstraint(body) {
 }
 
 /**
+ * srs#801 (X1, ruling R1 on srs#787): Key Invariants stops being a second verbatim printing of
+ * every invariant's full normative text and becomes a genuine INDEX — one line naming the
+ * invariant and pointing back at where its authoritative text lives (the concept heading it
+ * renders under earlier in the document), not a copy of that text. Collapses whitespace so a
+ * multi-paragraph invariant still contributes one index line.
+ */
+function indexEntry(rawValue, body) {
+  const oneLine = body.replace(/\s+/g, " ").trim();
+  const EXCERPT_LEN = 100;
+  const excerpt = oneLine.length > EXCERPT_LEN ? `${oneLine.slice(0, EXCERPT_LEN).trimEnd()}…` : oneLine;
+  return `${renderLabel(rawValue)} ${excerpt}`;
+}
+
+/**
  * The repository-relative root this projection reads, exported so the publication reachability
  * guard (#285) takes the projection's scope *from the projection* instead of restating it. RFC-016
  * [R1] makes every record here a published record even though no DocumentView section selects it —
@@ -278,12 +292,20 @@ export async function renderInvariants(repoPath) {
   }
   groupOrder.sort((a, b) => (positionOf.get(a) ?? Infinity) - (positionOf.get(b) ?? Infinity));
 
-  const lines = ["Conforming implementations must uphold the following invariants."];
+  // srs#801 (X1): a generated INDEX, not a second normative printing — each line names an
+  // invariant and gives a short excerpt of its text as a locator, not the full text. The
+  // authoritative statement is the one rendered earlier, under the concept heading named here.
+  const lines = [
+    "*Generated index — not normative prose in its own right. Every invariant's authoritative " +
+      "text is the copy rendered earlier, under the concept heading named below.*",
+    "",
+  ];
   for (const parentId of groupOrder) {
     lines.push(`#### ${conceptTitleById.get(parentId)}`, "");
     for (const rec of groups.get(parentId)) {
-      lines.push(`${renderLabel(rec.rawNum)} ${rec.constraint}`, "");
+      lines.push(`- ${indexEntry(rec.rawNum, rec.constraint)}`);
     }
+    lines.push("");
   }
 
   return lines.join("\n");
