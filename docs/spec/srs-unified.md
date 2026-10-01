@@ -1403,6 +1403,8 @@ Custom types not covered by these should use `namespace/name` format (e.g. `com.
 
 **Relations do not change lifecycle state.** A `supersedes` Relation does not mutate the prior Record's `lifecycleState`. Lifecycle state changes are explicit acts by an implementation's transition mechanism.
 
+**Amended by RFC-043 (effective at dataModelRevision 8).** `precedes` is a claim about the records that a different order would be wrong; it is never read for navigation or document presentation ([R12], [R13]). Navigation follows the root container's entries, and a document's order is declared on its Container. Rule [N+12] remains the order of a rule section only. (Prior text, in force until a corpus is at revision 8: the text above.)
+
 **Intro**: **Directionality convention:**
 `sourceInstanceId` is the asserting instance; `targetInstanceId` is the related instance. The Relation reads: "source [relationType] target."
 
@@ -1986,6 +1988,8 @@ The invariant does not assign agency or authority to the `source` slot — those
 
 **R11 — What a record *is* changes by re-instantiation linked by a relation, never by in-place mutation.** Field values and lifecycle state mutate in place; a record's identity — its Type, its tier, its position in a supersession lineage — does not. When a record becomes something else (superseded, graduated across tiers, retyped to a specialist type, or a cited source becoming an instance), the original is preserved and a new instance is created, linked by a lineage relation; the relation graph is the authoritative record of what became what. Retype additionally rebinds the lifecycle: the new Type's state machine applies from its initial state, so a state reached under the prior Type does not survive the retype.
 
+*Superseded in part by RFC-043 at dataModelRevision 8 (2026-10-01).* R8's membership statement now reads: Container membership is the `instanceId` values of the entries in `memberInstanceIds`, an ordered outline of `{instanceId, depth?}`, with `rootInstanceIds` removed (RFC-043 [R1], [R3], [R4]). `precedes` remains solely a claim that a different order would be wrong, never a presentational or navigation order ([R12], [R13]). The text above stays true for corpora below revision 8.
+
 
 ##### How graduation is recorded
 
@@ -2158,12 +2162,16 @@ A grouping boundary over a collection of instances, answering the scoping questi
 
 `Container.containerId` is not an instance ID. It must not appear in `Container.rootInstanceIds`, `Container.memberInstanceIds`, `Relation.sourceInstanceId`, or `Relation.targetInstanceId`.
 
+**Amended by RFC-043 (effective at dataModelRevision 8).** `Container.containerId` is not an instance ID. It must not appear as the `instanceId` of any entry in `Container.memberInstanceIds`, nor in `Relation.sourceInstanceId` or `Relation.targetInstanceId`; `Container.rootInstanceIds` is removed ([R4]) and `memberInstanceIds` is an ordered list of entries `{instanceId, depth?}` ([R1]). (Prior text, in force until a corpus is at revision 8: the statement above.)
+
 
 ##### Container.rootInstanceIds and Container.memberInstanceIds, when…
 
 **Number**: 21
 
 `Container.rootInstanceIds` and `Container.memberInstanceIds`, when present, must reference valid SRS instance IDs (`Note.instanceId` or `Record.instanceId`).
+
+**Amended by RFC-043 (effective at dataModelRevision 8).** Every entry in `Container.memberInstanceIds` MUST have an `instanceId` that references a valid SRS instance ID (`Note.instanceId` or `Record.instanceId`), appearing exactly once and resolving to an instance ([R2]). This is required of every container, not only the root container; a dangling entry is a validation error, and the repair operation removes it ([R20]). `rootInstanceIds` is removed ([R4]). (Prior text, in force until a corpus is at revision 8: the statement above.)
 
 
 ##### Why Containers and Relations are complementary
@@ -2175,12 +2183,16 @@ Container provides the boundary. "These Records collectively form a unit for bou
 
 *Corrected 2026-09-06 (RFC-034, rfc-decision-0750c62f).* This note originally closed by saying that relationship-first implementations derive Container membership by traversing `contains` Relations from root instances, that container-first implementations use explicit `memberInstanceIds`, and that both strategies are valid. That last claim is withdrawn: membership is declared (`rootInstanceIds`, `memberInstanceIds`, nested through `childContainerIds`) and a Relation never defines it. The complementarity this note argues for is unchanged — and sharpened: `contains` is the part-of tree where meaning lives and must still be maintained; a Container is a bookmark over that tree, never a replacement for it.
 
+*Superseded in part by RFC-043 at dataModelRevision 8 (2026-10-01).* Declared membership is the `instanceId` values of the entries in `memberInstanceIds`, a flat ordered outline of `{instanceId, depth?}`, and `rootInstanceIds` is removed. The complementarity argued for here is unchanged; order and depth are layout on the Container and assert nothing about the records (RFC-043 [R3], [R13]). The text above stays true for corpora below revision 8.
+
 
 ##### containerType should equal resolved root Type name when rootInstanceIds is present
 
 **Number**: I-64
 
 When a Container has one or more rootInstanceIds and also carries containerType, implementations SHOULD emit a diagnostic if containerType does not equal the resolved root Type name field (the local name within its namespace, not namespace/name). The root Record Type is authoritative; a mismatch does NOT make the Container invalid. Containers with no rootInstanceIds may carry any containerType value without triggering this rule.
+
+**Amended by RFC-043 (effective at dataModelRevision 8).** When a Container carries `anchorInstanceId` and also carries `containerType`, implementations SHOULD emit a diagnostic if `containerType` does not equal the resolved Type name of the anchor record (the local name within its namespace). The anchor record is authoritative and a mismatch does NOT make the Container invalid. `rootInstanceIds` is removed ([R4]), so the root Record Type is the Type of the anchor entry. (Prior text, in force until a corpus is at revision 8: the statement above.)
 
 
 ##### All conforming implementations must provide containers_for_instance
@@ -2189,12 +2201,16 @@ When a Container has one or more rootInstanceIds and also carries containerType,
 
 All conforming SRS implementations MUST implement the containers_for_instance operation. Given an instanceId, it returns every Container C for which the instance is in effective(C): the recursive, duplicate-free closure over C's declared rootInstanceIds, memberInstanceIds and childContainerIds (RFC-034 Changes A and B, [R5]; I-146, I-147). Membership is declared: a contains Relation, or any other Relation, never contributes a member (I-148). The result set MUST be consistent with the current state of those Container fields. Amended by RFC-034 (2026-09-06, rfc-decision-0750c62f): the original statement's third branch, "or transitive contains-Relation traversal from rootInstanceIds", is superseded; the traversal is no longer a membership rule, and contains remains the part-of tree where meaning lives.
 
+**Amended by RFC-043 (effective at dataModelRevision 8).** `effective(C)` is the recursive, duplicate-free closure over the `instanceId` values of C's `memberInstanceIds` entries read flat, ignoring `depth`, and over `childContainerIds` ([R3], [R18]); `rootInstanceIds` is removed ([R4]). Order and depth of entries never change which containers an instance belongs to. (Prior text, in force until a corpus is at revision 8: the statement above.)
+
 
 ##### identityInstanceId resolves to a member of its container
 
 **Number**: I-81
 
 When present on a Container, identityInstanceId MUST equal an id contained in that Container's rootInstanceIds or memberInstanceIds. On the root container it names the repository's identity record. If it resolves to no such member, the repository is invalid. Reassigning identityInstanceId to a different member MUST NOT change the repositoryId, the container's containerId, or any instance id; the new target must already be a member before the pointer moves to it, so the repository is never transiently invalid.
+
+**Amended by RFC-043 (effective at dataModelRevision 8).** When present on a Container, `identityInstanceId` MUST equal the `instanceId` of an entry in that Container's `memberInstanceIds` ([R3]). In the root container the identity entry MUST be at depth 0 and MUST have no descendants ([R2]). A mutating operation that would remove the identity entry is rejected until the pointer is moved to another member ([R7]); the repair operation never changes the pointer ([R20]). `rootInstanceIds` is removed ([R4]). (Prior text, in force until a corpus is at revision 8: the statement above.)
 
 
 ##### Section roots SHOULD root a container in the container set
@@ -2209,6 +2225,8 @@ When the repository's container set (RFC-038 [R1]) is non-empty, each non-identi
 **Number**: I-145
 
 When present on a Container, anchorInstanceId MUST equal an id contained in that Container's rootInstanceIds or memberInstanceIds. It names the record whose Type (typeId + typeVersion) is the Container's typing anchor for RFC-009 Composition.rootTypeRefs matching (I-63) and RFC-010 three-way-merge container-root conflict detection. If it resolves to no such member, the repository is invalid. When anchorInstanceId is absent (a repository authored before srs#446), an implementation MUST fall back to treating rootInstanceIds[0] (the first entry) as the typing anchor; this positional fallback is transitional and is withdrawn at the Continuity flip (rfc-decision-cce3c00e axis 2-8, the first full public release), after which anchorInstanceId is required wherever a typing anchor is needed. rootInstanceIds and memberInstanceIds otherwise carry no positional significance (RFC-013 [R5]).
+
+**Amended by RFC-043 (effective at dataModelRevision 8).** `anchorInstanceId`, when present, MUST equal the `instanceId` of an entry in `memberInstanceIds` ([R3]) and remains the sole declared typing anchor; position in the entry list carries no typing role ([R5]). The `rootInstanceIds[0]` positional fallback is withdrawn and `rootInstanceIds` is removed ([R4], [R19]); the migration writes `anchorInstanceId` explicitly wherever the fallback applied. (Prior text, in force until a corpus is at revision 8: the statement above.)
 
 
 ##### Directory-kind scopes via typed identity records
@@ -2233,6 +2251,8 @@ When present on a Container, anchorInstanceId MUST equal an id contained in that
 **Number**: I-146
 
 A Container's direct membership is exactly the duplicate-free, unordered union of its rootInstanceIds and memberInstanceIds. An omitted memberInstanceIds contributes no additional direct members and MUST NOT be read as opting into Relation traversal.
+
+**Amended by RFC-043 (effective at dataModelRevision 8).** A Container's direct membership `direct(C)` is exactly the set of `instanceId` values of its `memberInstanceIds` entries, read flat whatever their depth ([R3]). An omitted `memberInstanceIds` contributes no members and MUST NOT be read as opting into Relation traversal. The set is duplicate-free; the list that carries it is ordered ([R1], [R2]), and `rootInstanceIds` is removed ([R4]). (Prior text, in force until a corpus is at revision 8: the statement above.)
 
 **Rationale**: RFC-034 [R1] (Change A). Both arrays keep their authoring roles: roots anchor the scope, memberInstanceIds adds explicit members. The pre-RFC-034 rule that an omitted memberInstanceIds meant membership was derived by traversing contains from the roots is retired by rfc-decision-0750c62f.
 
@@ -2260,6 +2280,8 @@ A Relation of any type, including contains, MUST NOT cause an instance to appear
 **Number**: I-149
 
 A Record-selection query (srs find, a Composition SectionSource, an SQL view, a JSONPath expression, a graph traversal) MUST NOT be treated as persisted Container membership unless an authoring operation writes its selected ids to the Container's explicit membership fields.
+
+**Amended by RFC-043 (effective at dataModelRevision 8).** A Record-selection query MUST NOT be treated as persisted Container membership unless an authoring operation writes its selected ids as entries in the Container's `memberInstanceIds`. (Prior text, in force until a corpus is at revision 8: the statement above.)
 
 **Rationale**: RFC-034 [R6] (Change E). Container is the declared selection and DiscoveryQuery the computed one; two selection constructs for two goals and no third (rfc-decision-0750c62f). Materialising a query result into memberInstanceIds creates a new explicit boundary; it does not make the query the boundary's live definition.
 
@@ -2293,6 +2315,8 @@ Nested scopes are declared through `childContainerIds`, an unordered set of `con
 Relations do not define membership (I-148). `contains` remains the part-of tree that navigation depth, layering and any tree walk are built on, and it is still maintained; a Container is a bookmark over that tree. This supersedes the pre-RFC-034 rule that omitted membership was derived by traversing `contains` from the roots.
 
 One definition serves every membership question: `containers_for_instance` (I-66), member listing and view resolution, RFC-012 `containerId` discovery (I-118), RFC-011 `containerScope` with `"explicit"` as `direct(C)` and `"subtree"` as `effective(C)` (I-144), and the RFC-026 slice closure (I-151). No membership array carries an order; ordering stays with `precedes` and Composition (RFC-015). A query is a separate, read-only selection and never changes membership by itself (I-149).
+
+**Amended by RFC-043 (effective at dataModelRevision 8).** `memberInstanceIds` is a flat ordered outline of entries `{instanceId, depth?}` and `rootInstanceIds` is removed ([R1], [R4]). Membership is the entry ids read flat ([R3]); each id appears once and resolves ([R2]); an entry's parent is the nearest preceding entry with a smaller depth ([R5]). Removing an entry promotes its descendants one level ([R7]). (Prior text, in force until a corpus is at revision 8: the text above.)
 
 
 
@@ -2666,12 +2690,16 @@ A checksum value in `InstanceIndexEntry.checksum`, `SourceDocumentIndexEntry.sid
 
 Every SRS repository manifest MUST embed exactly one root Container in manifest.container. The root Container MUST satisfy the core Container invariants unchanged: Invariant 20 (its containerId is not an instance ID and never appears in rootInstanceIds, memberInstanceIds, Relation.sourceInstanceId, or Relation.targetInstanceId) and Invariant 21 (every id in rootInstanceIds/memberInstanceIds references a valid SRS instance id).
 
+**Amended by RFC-043 (effective at dataModelRevision 8).** The root Container MUST satisfy the core Container invariants unchanged: Invariant 20 (its `containerId` is not an instance ID and never appears as an entry `instanceId` in `memberInstanceIds`, nor in `Relation.sourceInstanceId` or `Relation.targetInstanceId`) and Invariant 21 (every entry's `instanceId` in `memberInstanceIds` references a valid SRS instance id). `rootInstanceIds` is removed ([R4]). (Prior text, in force until a corpus is at revision 8: the statement above.)
+
 
 ##### Root container membership ids resolve in the authoritative instance set
 
 **Number**: I-80
 
 Every id in the root container's rootInstanceIds and memberInstanceIds MUST resolve to a member of the repository's authoritative instance set. There is no manifest `instanceIndex` to consult — it is retired (RFC-038 [R2]); the repository's authoritative store, enumerated from the tree, is that set (RFC-038 [R1]). This is the root-container specialization of core Invariant 21, stated separately so the required-root-container guarantee is self-contained.
+
+**Amended by RFC-043 (effective at dataModelRevision 8).** Every entry `instanceId` in the root container's `memberInstanceIds` MUST resolve to a member of the repository's authoritative instance set ([R2]); `rootInstanceIds` is removed ([R4]). The same resolution rule now applies to every container (Invariant 21 as amended), and a violation is repaired by the repair operation ([R20]). (Prior text, in force until a corpus is at revision 8: the statement above.)
 
 
 ##### manifest.container.identityInstanceId MUST reference a Tier-2 com.semanticops.core/purpose Record
@@ -2787,6 +2815,8 @@ Every repository declares its manifest at `manifest.json`, the one file a reader
 `RepositoryManifest.instanceIndex` lists every instance by relative path and content hash (`InstanceIndexEntry`); the manifest is the map, and the `records/` and `relations/` trees remain the tree-authoritative source (RFC-038). A mismatch between map and tree is a validation error, not a silent override. `RepositoryManifest.sourceDocumentIndex` does the same for source documents (`SourceDocumentIndexEntry`), and `relationsChecksum` (`RelationsChecksumEntry`) lets a consumer detect a stale `relations/` tree without re-parsing it. `PackageRef` names where the package that defines this repository's Fields and Types lives, local or by reference. A `SourceAnchor` anchors a source document to the position in a Tier 2 Record's content it was extracted from.
 
 The manifest's `container` field is the repository's required root Container (RFC-013): its `identityInstanceId` names the repository's identity Record, and every other member is a navigation section, ordered by the `precedes` chain over them.
+
+**Amended by RFC-043 (effective at dataModelRevision 8).** The root Container's order is navigation order: navigation is the order of the entries of `manifest.container.memberInstanceIds`, excluding the entry named by `identityInstanceId`, with depth-0 entries as the navigation sections and deeper entries nested under their derived parent ([R12]). Navigation is not derived from the `precedes` chain or Rule [N+12], and the identity entry is at depth 0 with no descendants ([R2]). At dataModelRevision 8 the manifest's `dataModelRevision` is 8 ([R16]). (Prior text, in force until a corpus is at revision 8: the final paragraph above.)
 
 ###### `RepositoryManifest`
 
@@ -3276,6 +3306,8 @@ The slice archive's `manifest.repositoryId` MUST be a **new UUID** distinct from
 ###### Container-membership closure
 
 The closure root is the container identified by `spec.id`. The slice includes (I-151, RFC-034 [R9]): (1) `manifest.container` set to the closure-root container; (2) the root container's effective membership, meaning its `rootInstanceIds` and `memberInstanceIds` recursively through the containers declared in `childContainerIds`; (3) all type and field definitions referenced by included instances (directly or via Type FieldAssignments), copied into the slice's `package/` directory; (4) all relations with both endpoints inside the included set; (5) all source-document sidecar entries (RFC-038 [R25], amending RFC-017 [R2]/[R12]; I-102/I-112; not a manifest `sourceDocumentIndex`, retired per RFC-038 [R2]) and content files referenced by included instances; (6) the closure-root container and every container reachable from it through `childContainerIds`, with those declared child edges preserved. An unrelated container is not included on the strength of its roots or members happening to be subsets of the included set; that pre-RFC-034 subset rule is replaced.
+
+**Amended by RFC-043 (effective at dataModelRevision 8).** Closure and membership read the `instanceId` values of `memberInstanceIds` entries flat, ignoring `depth` ([R3]); `rootInstanceIds` is removed ([R4]). A `containerId` filter and a slice use that one definition ([R18]); a slice keeps in every contained container the entries for the included records and drops each excluded record's entry by the promoting removal ([R7], [R18]). (Prior text, in force until a corpus is at revision 8: the text above.)
 
 
 ###### Dangling-edge policy
@@ -4185,6 +4217,8 @@ A nested section's position comes from the parent's order, never from `childCont
 
 A record that is a direct member of several containers rendered by one Composition renders at each place, once per place. A renderer MUST NOT de-duplicate it, and the repetition states nothing about the record: its `contains` parent and its `precedes` edges are unchanged.
 
+**Amended by RFC-043 (effective at dataModelRevision 8).** A section declares `ordering.source`, `arranged` or `rule` (default `rule`); `memberOrder` is removed ([R8]). A rule section orders by `ordering.fieldId` or Rule [N+12]. An arranged section renders the container's entries in their own order and depth ([R9] to [R11]), and may omit `containerId` ([R10]). (Prior text, in force until revision 8: the text above.)
+
 
 ###### Default Rendering Baseline
 
@@ -4317,6 +4351,8 @@ When SectionSource.discovery-query carries containerScope, implementations MUST 
 
 When `DocumentSection.ordering.memberOrder` is present and the section's `source.type` is `container-subset`, implementations MUST apply it as the presentation sequence: (1) emit listed `instanceId`s that are current container members in the declared order; (2) skip listed `instanceId`s that are no longer container members — implementations MUST emit a diagnostic; this MUST NOT be treated as a validation failure; (3) append surviving container members not in `memberOrder`, ordered by topological sort over `precedes` edges with a `createdAt`-ascending tiebreak (the default container-subset ordering `ext:views-l2` already specifies); (4) when `ordering.direction` is `"desc"`, the entire output sequence produced by steps (1)–(3) MUST be reversed before emission. `memberOrder` MUST NOT be combined with `ordering.fieldId` on the same section — a section carrying both is invalid; implementations MUST report a validation error. `memberOrder` on a non-`container-subset` section MUST be ignored with a diagnostic and SHOULD be rejected at package-validation time. (RFC-015 Change B.)
 
+**Retired by RFC-043 (effective at dataModelRevision 8).** `ordering.memberOrder` is removed and this algorithm is replaced by RFC-043 [R8] to [R11]: a section declares `ordering.source` as `arranged` or `rule`, and an arranged section renders the container's own entries in their sequence and depth ([R9]). Step 2 (skipping a listed id that is no longer a member, with a diagnostic only) is reversed by RFC-043 Change G: an entry naming an unresolved instance is a validation error ([R2]) removed by the repair operation ([R20]). The mutual exclusion with `ordering.fieldId` and the restriction to `container-subset` sections are restated as errors for an arranged section ([R10]), and the `desc` reversal of step 4 is restated in [R9]. (Prior text, in force until a corpus is at revision 8: the statement above.)
+
 **Rationale**: A departed `memberOrder` entry (step 2) is a diagnostic, not an error, because stale UUID references accumulate naturally as records are removed from containers; treating them as errors would make `memberOrder` fragile in practice. `memberOrder` on a non-`container-subset` section, by contrast, is a schema-authoring mistake with no legitimate interpretation, warranting rejection rather than silent recovery.
 
 
@@ -4325,6 +4361,8 @@ When `DocumentSection.ordering.memberOrder` is present and the section's `source
 **Number**: I-127
 
 When both `typeFilter` and `memberOrder` are present on a `container-subset` section, `typeFilter` is applied first to obtain the filtered member set; `memberOrder` is then applied over that filtered set. `memberOrder` entries naming members excluded by `typeFilter` are silently skipped (no diagnostic). Unlisted filtered survivors are appended in the same topological-sort-by-`precedes` order used in Invariant I-126 step (3). The `direction` reversal of Invariant I-126 step (4) applies to the combined result after `typeFilter` and `memberOrder` are both applied. (RFC-015 Change B.)
+
+**Retired by RFC-043 (effective at dataModelRevision 8).** `ordering.memberOrder` is removed, so there is no `memberOrder` to combine with `typeFilter`; this invariant is replaced by RFC-043 [R9]: an arranged section excludes entries by `typeFilter` using the promoting removal (the entries beneath an excluded entry are promoted one level, never hidden), then applies `direction`. The silent skip of excluded ids is replaced by that removal, and every entry not excluded renders ([R11]). (Prior text, in force until a corpus is at revision 8: the statement above.)
 
 **Rationale**: Without a fixed application order, `typeFilter` and `memberOrder` could interact ambiguously (e.g. a listed member excluded by the type filter). Filter-then-order matches the filter-then-project pattern already used elsewhere for `typeFilter` and keeps the two concerns composable and independently reasoned about.
 
@@ -4668,6 +4706,8 @@ type SectionSource =
   // first in array order wins.
 }
 ```
+
+**Amended by RFC-043 (effective at dataModelRevision 8).** `ordering.memberOrder` is removed from the `ordering` object above ([R8]) and the object gains `source?: "arranged" | "rule"` (absent means "rule"). An arranged section renders the entries of its container in their own order and depth, cannot be combined with `fieldId` or `containerScope: "subtree"`, and is valid only on a `container-subset` source ([R9], [R10]); on that source `containerId` may be omitted only when the section is arranged. (Prior text, in force until a corpus is at revision 8: the shape above, including `memberOrder`.)
 
 
 ##### The `CompositeRendererDirective` shape
@@ -5364,6 +5404,8 @@ Extensions are optional, independently adoptable capability modules. Each declar
 **Status**: live
 
 **Adds**: Document-level projection: assembling multiple Records into a rendered document via a `Composition`, dispatching each section's field content to an L1 `View`, with its own `ExportConfig` attachment point for document-level rendering (distinct from the one on `View` itself) and ordering support including `DocumentSection.ordering.memberOrder`. Requires `ext:views-l1`, whose per-record field rendering it composes over.
+
+**Amended by RFC-043 (effective at dataModelRevision 8).** Ordering support is `DocumentSection.ordering.source` (`arranged` or `rule`), and `ordering.memberOrder` is retired ([R8]): an arranged section renders the container's own entry order and depth ([R9]). (Prior text, in force until a corpus is at revision 8: the sentence above, which names `DocumentSection.ordering.memberOrder`.)
 
 **Cost of Non-Adoption**: Without it, an implementation can render a single Record through an L1 `View` but cannot assemble multiple Records into a composed, multi-section document — there is no `Composition` to dispatch sections to Views, order members, or attach document-level `ExportConfig`.
 
@@ -6479,6 +6521,8 @@ When both structured filters and `contentMatch` are specified on a DiscoveryQuer
 **Number**: I-118
 
 A `containerId` filter predicate MUST match exactly the instances in effective(C) for the named Container C: the recursive closure over the Container's declared `rootInstanceIds`, `memberInstanceIds` and `childContainerIds` (RFC-034 [R8]; I-147). Discovery scopes to the full effective (deep) closure; a `contains` Relation never contributes (I-148). The authoritative inputs are the Container objects and their declared child graph in the repository's authoritative store (RFC-038 [R1]). An implementation MAY maintain a derived catalog for performance but MUST treat the store as authoritative when they differ; there is no manifest `instanceIndex` to use as a cache, as it is retired (RFC-038 [R2]). (RFC-012 R6, as amended by RFC-034 Change D.2 on 2026-09-06: the former three-condition rule of rootInstanceIds, OR memberInstanceIds, OR reachable via transitive `contains` traversal is superseded; its traversal branch is removed.)
+
+**Amended by RFC-043 (effective at dataModelRevision 8).** A `containerId` filter predicate MUST match an instance exactly when its id is an entry `instanceId` of the named Container or, under RFC-034 [R8]'s scoping vocabulary, of a container in its `effective(C)` closure ([R18]). Entries are read flat and `depth` is ignored ([R3]); `rootInstanceIds` is removed ([R4]) and the closure itself is unchanged. (Prior text, in force until a corpus is at revision 8: the statement above.)
 
 
 ##### Multi-tag filter uses AND semantics with vocabulary resolution

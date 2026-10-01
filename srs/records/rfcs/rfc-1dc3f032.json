@@ -10,13 +10,13 @@
     "author": "the-greenman",
     "affected_components": "`ordering.memberOrder` on `container-subset` sections + `renderedPresentations` on the manifest. Invariants I-125–I-128 (RFC-015 Rules [N+28]-[N+31]).\n\n<!-- srs-integration:v1\nschema:composition.json\nschema:manifest.json\nI-125\nI-126\nI-127\nI-128\n-->",
     "proposal_artifact_path": "rfcs/rfc-015-view-owned-ordering-declared-presentations.md",
-    "content": "Separates semantic order (`precedes`) from presentational order via a view-owned `ordering.memberOrder` list on `container-subset` DocumentView sections and a normative `renderedPresentations` array on the manifest declaring the default presentation. Full text: rfcs/rfc-015-view-owned-ordering-declared-presentations.md."
+    "content": "Separates semantic order (`precedes`) from presentational order via a view-owned `ordering.memberOrder` list on `container-subset` DocumentView sections and a normative `renderedPresentations` array on the manifest declaring the default presentation. Full text: rfcs/rfc-015-view-owned-ordering-declared-presentations.md.\n\nRFC-043 Door 3 amendment (effective at dataModelRevision 8): `ordering.memberOrder` and Invariants I-126 and I-127 ([N+29], [N+30]) are retired and replaced by `ordering.source` (`arranged` or `rule`) and RFC-043 [R8] to [R11]; the stale-entry leniency is reversed (Change G, [R2], [R20]). The `renderedPresentations` part is unaffected."
   },
   "lifecycleState": "accepted",
   "tags": [
     "topic:rfc"
   ],
   "createdAt": "2026-07-21T17:31:55.346814294+00:00",
-  "updatedAt": "2026-09-02T18:14:32.508642730+00:00",
+  "updatedAt": "2026-10-01T11:20:25.849731904+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

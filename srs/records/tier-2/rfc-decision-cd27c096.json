@@ -1,0 +1,38 @@
+{
+  "instanceId": "cd27c096-888c-44af-949f-8529a069d9e1",
+  "typeId": "6a000004-0000-4000-a000-000000000004",
+  "typeVersion": 2,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc-decision",
+  "fieldValues": {
+    "title": "A Container is a declared selection that may be an ordered, depth-annotated outline; membership is the entry ids",
+    "decision_date": "2026-10-01",
+    "decision_rationale": "rfc-decision-0750c62f placed the Container on the EXPRESSION plane as a declared selection that carries no meaning of its own, and that core stands. Three of its consequences described the shape of the Container at the time and no longer hold once the Container carries the sequence and nesting of a document. Consequence 1 named two arrays, memberInstanceIds and rootInstanceIds, as the membership; a second list of the same kind of thing is redundant once membership is declared and contains traversal is gone, and its four jobs (typing, identity, the section-to-container link, traversal) each move to a declared field or are removed. Consequence 3 said navigation below the root follows the part-of tree under a rule over the root container; the root container's own order is now its entry order. Consequence 4 said depth in a rendered document rides the part-of tree and a renderer does not ask the container; an arranged section takes its depth from the Container's entries. An ordered, depth-annotated list is still a selection: it names records by reference, asserts nothing about them, and removing every depth leaves a valid selection.",
+    "decision_statement": "A Container remains a named, declared selection on the EXPRESSION plane and carries no semantic claim. Its membership is the set of instanceIds in its memberInstanceIds entries, read flat, and rootInstanceIds is removed. The entries are ordered and carry an optional depth, which is layout only: it changes no record, relation or other container. Navigation of the repository is the root container's entry order, with the entry named by identityInstanceId excluded, as a declared exception to the rule that position carries no role; navigation below a section still follows the part-of tree. Depth in a rendered document is the Container's declared depth for an arranged section and the part-of tree otherwise. The Container still holds no per-entry data beyond placement, so no layer is crossed and rfc-decision-0118e938 is neither amended nor superseded.",
+    "decision_scope": "The Container schema's memberInstanceIds and rootInstanceIds properties and what they mean, the root container's role in navigation order, and where a renderer takes depth from. Does not change that a Container is a selection and nothing else, does not change identityInstanceId or anchorInstanceId beyond requiring them to name an entry, and does not touch the contains relation's role as the part-of tree.",
+    "governing_values": [
+      "shared-coherence",
+      "semantic-integrity"
+    ],
+    "project_phase": "formation",
+    "alternatives_considered": "Keep rootInstanceIds beside an ordered memberInstanceIds. Rejected by the owner: two membership lists, and an id could sit in both. Keep Rule [N+12] as the navigation rule and order only documents. Rejected: a presentational fact would stay derived from semantic edges, and the root container would carry two orders that must agree. Add a per-entry fold or visibility flag. Rejected by the owner: that is an editor mechanic and would have required declaring a layer crossing against rfc-decision-0118e938.",
+    "accepted_costs": "Navigation order now lives in the root container and no longer in the precedes edges: the 20 precedes edges between root-container members across three corpora serve no navigation purpose after migration and are kept by owner ruling, each repository free to prune them. Position carries a declared navigation role in the root container only, so a tool that reorders the root container's entries changes the sidebar. The section-to-container link moves to anchorInstanceId, which changes the container view (no roots-first prefix) and the nondeterministic last-wins link for 8 muSrs roots.",
+    "evidence_refs": [
+      "the-greenman/srs#849 (RFC-043, accepted by the owner 2026-10-01; rulings recorded in the issue comments of that date)",
+      "rfcs/rfc-043-container-outline-arrangement.md, Revision 10 (Change A to Change J, Conformance Rules [R1] to [R20])",
+      "rfc-decision-0750c62f (superseded in part: consequences 1, 3 and 4 restated; the core stands)",
+      "rfc-decision-0118e938 (a Container is a selection and nothing else; honoured, not superseded)",
+      "rfc-decision-8aed3412 (successor filed with this record)",
+      "srs#446 (explicit typing anchor, the positional-role defect this record does not reintroduce)"
+    ],
+    "review_trigger": "Review if a consumer needs per-entry data beyond placement, which would be a layer crossing to rule on explicitly against rfc-decision-0118e938, or if the root container's declared navigation role proves to make reordering the sidebar unsafe for tools."
+  },
+  "lifecycleState": "accepted",
+  "tags": [
+    "topic:rfc",
+    "cell:containment"
+  ],
+  "createdAt": "2026-10-01T11:22:23.782133086+00:00",
+  "updatedAt": "2026-10-01T11:22:37.842818197+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

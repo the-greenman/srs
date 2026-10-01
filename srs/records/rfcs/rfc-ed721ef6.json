@@ -10,13 +10,13 @@
     "author": "the-greenman",
     "affected_components": "Governance-package DocumentView + seed root container. No canonical spec record/schema artifact (downstream package only).\n\n<!-- srs-integration:v1\ntooling-only\n-->",
     "proposal_artifact_path": "rfcs/rfc-025-governance-primary-export-documentview.md",
-    "content": "Adds a `governance-document` DocumentView to the `com.mudemocracy.governance` package and fixes the empty-governance seed to ship a conforming root container plus a `renderedPresentations` default. Introduces no new spec types or schema fields. Full text: rfcs/rfc-025-governance-primary-export-documentview.md."
+    "content": "Adds a `governance-document` DocumentView to the `com.mudemocracy.governance` package and fixes the empty-governance seed to ship a conforming root container plus a `renderedPresentations` default. Introduces no new spec types or schema fields. Full text: rfcs/rfc-025-governance-primary-export-documentview.md. RFC-043 Door 3 amendment (Revision 5, 2026-10-01, effective at dataModelRevision 8): the example root container shape and the migration step that populates the member list use ordered entries instead of rootInstanceIds plus memberInstanceIds."
   },
   "lifecycleState": "accepted",
   "tags": [
     "topic:rfc"
   ],
   "createdAt": "2026-07-21T17:31:55.380846707+00:00",
-  "updatedAt": "2026-08-28T13:58:14.388246197+00:00",
+  "updatedAt": "2026-10-01T11:24:56.314264537+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

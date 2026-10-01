@@ -117,6 +117,8 @@ Container provides the boundary. "These Records collectively form a unit for bou
 
 *Corrected 2026-09-06 (RFC-034, rfc-decision-0750c62f).* This note originally closed by saying that relationship-first implementations derive Container membership by traversing `contains` Relations from root instances, that container-first implementations use explicit `memberInstanceIds`, and that both strategies are valid. That last claim is withdrawn: membership is declared (`rootInstanceIds`, `memberInstanceIds`, nested through `childContainerIds`) and a Relation never defines it. The complementarity this note argues for is unchanged — and sharpened: `contains` is the part-of tree where meaning lives and must still be maintained; a Container is a bookmark over that tree, never a replacement for it.
 
+*Superseded in part by RFC-043 at dataModelRevision 8 (2026-10-01).* Declared membership is the `instanceId` values of the entries in `memberInstanceIds`, a flat ordered outline of `{instanceId, depth?}`, and `rootInstanceIds` is removed. The complementarity argued for here is unchanged; order and depth are layout on the Container and assert nothing about the records (RFC-043 [R3], [R13]). The text above stays true for corpora below revision 8.
+
 
 ### Why the conversation layer is a permanent boundary
 
@@ -368,6 +370,8 @@ Web UI comments and annotations attached to specific text within a Field value r
 **R10 — Every principle has an enforcement point.** Each principle is enforced by schema, a write-time check, an at-rest validation diagnostic, or a structured projection to clients. A principle stated in prose but enforced nowhere is a defect, to be enforced or removed.
 
 **R11 — What a record *is* changes by re-instantiation linked by a relation, never by in-place mutation.** Field values and lifecycle state mutate in place; a record's identity — its Type, its tier, its position in a supersession lineage — does not. When a record becomes something else (superseded, graduated across tiers, retyped to a specialist type, or a cited source becoming an instance), the original is preserved and a new instance is created, linked by a lineage relation; the relation graph is the authoritative record of what became what. Retype additionally rebinds the lifecycle: the new Type's state machine applies from its initial state, so a state reached under the prior Type does not survive the retype.
+
+*Superseded in part by RFC-043 at dataModelRevision 8 (2026-10-01).* R8's membership statement now reads: Container membership is the `instanceId` values of the entries in `memberInstanceIds`, an ordered outline of `{instanceId, depth?}`, with `rootInstanceIds` removed (RFC-043 [R1], [R3], [R4]). `precedes` remains solely a claim that a different order would be wrong, never a presentational or navigation order ([R12], [R13]). The text above stays true for corpora below revision 8.
 
 
 ### The inheritance floor and the documentation-only rule

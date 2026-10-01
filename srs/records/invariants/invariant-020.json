@@ -7,7 +7,7 @@
   "fieldValues": {
     "invariant_number": "20",
     "title": "Container.containerId is not an instance ID. It must not appear in…",
-    "normative_statement": "`Container.containerId` is not an instance ID. It must not appear in `Container.rootInstanceIds`, `Container.memberInstanceIds`, `Relation.sourceInstanceId`, or `Relation.targetInstanceId`."
+    "normative_statement": "`Container.containerId` is not an instance ID. It must not appear in `Container.rootInstanceIds`, `Container.memberInstanceIds`, `Relation.sourceInstanceId`, or `Relation.targetInstanceId`.\n\n**Amended by RFC-043 (effective at dataModelRevision 8).** `Container.containerId` is not an instance ID. It must not appear as the `instanceId` of any entry in `Container.memberInstanceIds`, nor in `Relation.sourceInstanceId` or `Relation.targetInstanceId`; `Container.rootInstanceIds` is removed ([R4]) and `memberInstanceIds` is an ordered list of entries `{instanceId, depth?}` ([R1]). (Prior text, in force until a corpus is at revision 8: the statement above.)"
   },
   "tags": [
     "concern:validation",
@@ -15,7 +15,7 @@
     "topic:conformance"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-09-07T19:59:34.670569733+00:00",
+  "updatedAt": "2026-10-01T11:20:20.725590330+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

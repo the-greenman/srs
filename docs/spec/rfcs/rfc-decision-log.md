@@ -1810,3 +1810,69 @@ This is not the sanctioned two-tier boundary that rfc-decision-43249f53 rejected
 **Review Trigger**: Review when SRS gains declared structural constraints (srs#820) - acyclicity, cardinality, endpoint-type restriction, uniqueness-within-scope - because every rule held on that machinery then becomes declarable and must move from held to enforced, or be retired. Review also when a held rule's named machinery issue closes without the machinery having been built: that converts a debt into the standing exemption this record refuses, and the held rule falls back to relocation or retirement rather than staying on the normative surface unexamined.
 
 
+**Title**: Context order is declared on the Container as an ordered outline of entries; the Composition declares only where its order comes from
+
+**Status**: Accepted
+
+**Decision Date**: 2026-10-01
+
+**Decision Rationale**: rfc-decision-8aed3412 ruled that a telling is assembled from reusable parts, that Containers carry membership and nesting of scopes, and that the Composition carries order through the section's memberOrder. Living with memberOrder showed the defect in that last sentence. A Composition is a type-layer template, and a memberOrder is a list of the instance ids of specific records written into a package file: the same mistake as adding specific content records to a Type (layer rule 1, one home). Measured at acceptance, the two spec Compositions hold 60 such ids and one muSrs Composition holds 30 more, so a document's order is edited in three package files whenever the content is reordered, while 489 of the spec's 519 Part members have no declared order at all. The Container is already the per-document object and already lists exactly the records the order is about, so one list there makes membership and sequence the same fact and removes the second structure that could drift from it. The owner ruled on 2026-10-01, in the RFC-043 review, that the encoding is a flat outline of entries with a depth, not a tree and not a second arrangement object.
+
+**Decision**: The sequence and nesting of the records a document holds are declared on the document's Container, as the ordered list memberInstanceIds whose entries carry an instanceId and an optional depth. The set of instanceIds is the membership, read flat. Nesting is derived from depth and never stored. A Composition section names no record and holds no order: it declares only an ordering source, either arranged (render the container's entries in their own sequence and at their own depth) or rule (order by a field or by Rule [N+12]). Membership and nesting of scopes stay with Containers as rfc-decision-8aed3412 ruled, with childContainerIds for nested scopes; what is superseded is the single sentence that located context order in the Composition's memberOrder, which is retired. The precedes relation remains semantic order only and is neither removed nor read for presentation.
+
+**Scope**: Where a document's presentational sequence is declared: the Container's memberInstanceIds entries, the Composition section's ordering.source, and the retirement of ordering.memberOrder (RFC-015 [N+29], Invariants I-126 and I-127). Does not change which relations are the MEANING tree, does not change childContainerIds or the nesting of scopes, and does not change rfc-decision-8aed3412's other dispositions: reuse of parts across tellings, no context on an edge, and instrumentation of the nested-rendering path.
+
+**Governing Values**:
+- shared-coherence
+- semantic-integrity
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Keep memberOrder and add depth to it inside the Composition. Rejected by the owner: it keeps record ids in a type-layer template and requires editing a versioned package definition on every drag. Declare order and nesting as contains or precedes edges per document. Rejected: an edge is a global claim and a record shared by two essays would have one parent, which is the context-on-an-edge outcome rfc-decision-8aed3412 already declined. A separate arrangement record referenced by the Container. Rejected: two objects per document that can disagree, and a copy needs both. A recursive tree of nodes in the member list. Replaced by the flat outline: it stores nesting twice and needs a self-referential Type the metamodel generator does not model.
+
+**Accepted Costs**: A breaking change at dataModelRevision 8: every container in every corpus changes shape (79 across the six measured repositories, plus the srs-rust and discovery fixtures), carried by a registry migration in srs-rust that is retired later under srs-rust#1138. Three Composition files, 16 sections and 90 ids lose memberOrder. Two writers who reorder one container concurrently conflict as a whole, because the three-way merge does not merge arrangement per entry. A Composition can no longer pin an order for a container it renders.
+
+**Evidence**:
+- the-greenman/srs#849 (RFC-043, accepted by the owner 2026-10-01; rulings recorded in the issue comments of that date)
+- rfcs/rfc-043-container-outline-arrangement.md, Revision 10 (Change A to Change J, Conformance Rules [R1] to [R20])
+- rfc-decision-8aed3412 (superseded in part: the sentence locating context order)
+- rfc-decision-0750c62f (a Container is a declared selection; successor filed with this record)
+- rfc-decision-628cf6c4 (a reshape is a migration with a generation stamp)
+- srs-rust#1133 (the registry migration)
+
+**Review Trigger**: Review if two-origin editing of one document (RFC-014 record layer) becomes real and the whole-container arrangement conflict proves too coarse, which would be evidence for an entry-level merge, not against declaring order on the Container.
+
+
+**Title**: A Container is a declared selection that may be an ordered, depth-annotated outline; membership is the entry ids
+
+**Status**: Accepted
+
+**Decision Date**: 2026-10-01
+
+**Decision Rationale**: rfc-decision-0750c62f placed the Container on the EXPRESSION plane as a declared selection that carries no meaning of its own, and that core stands. Three of its consequences described the shape of the Container at the time and no longer hold once the Container carries the sequence and nesting of a document. Consequence 1 named two arrays, memberInstanceIds and rootInstanceIds, as the membership; a second list of the same kind of thing is redundant once membership is declared and contains traversal is gone, and its four jobs (typing, identity, the section-to-container link, traversal) each move to a declared field or are removed. Consequence 3 said navigation below the root follows the part-of tree under a rule over the root container; the root container's own order is now its entry order. Consequence 4 said depth in a rendered document rides the part-of tree and a renderer does not ask the container; an arranged section takes its depth from the Container's entries. An ordered, depth-annotated list is still a selection: it names records by reference, asserts nothing about them, and removing every depth leaves a valid selection.
+
+**Decision**: A Container remains a named, declared selection on the EXPRESSION plane and carries no semantic claim. Its membership is the set of instanceIds in its memberInstanceIds entries, read flat, and rootInstanceIds is removed. The entries are ordered and carry an optional depth, which is layout only: it changes no record, relation or other container. Navigation of the repository is the root container's entry order, with the entry named by identityInstanceId excluded, as a declared exception to the rule that position carries no role; navigation below a section still follows the part-of tree. Depth in a rendered document is the Container's declared depth for an arranged section and the part-of tree otherwise. The Container still holds no per-entry data beyond placement, so no layer is crossed and rfc-decision-0118e938 is neither amended nor superseded.
+
+**Scope**: The Container schema's memberInstanceIds and rootInstanceIds properties and what they mean, the root container's role in navigation order, and where a renderer takes depth from. Does not change that a Container is a selection and nothing else, does not change identityInstanceId or anchorInstanceId beyond requiring them to name an entry, and does not touch the contains relation's role as the part-of tree.
+
+**Governing Values**:
+- shared-coherence
+- semantic-integrity
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Keep rootInstanceIds beside an ordered memberInstanceIds. Rejected by the owner: two membership lists, and an id could sit in both. Keep Rule [N+12] as the navigation rule and order only documents. Rejected: a presentational fact would stay derived from semantic edges, and the root container would carry two orders that must agree. Add a per-entry fold or visibility flag. Rejected by the owner: that is an editor mechanic and would have required declaring a layer crossing against rfc-decision-0118e938.
+
+**Accepted Costs**: Navigation order now lives in the root container and no longer in the precedes edges: the 20 precedes edges between root-container members across three corpora serve no navigation purpose after migration and are kept by owner ruling, each repository free to prune them. Position carries a declared navigation role in the root container only, so a tool that reorders the root container's entries changes the sidebar. The section-to-container link moves to anchorInstanceId, which changes the container view (no roots-first prefix) and the nondeterministic last-wins link for 8 muSrs roots.
+
+**Evidence**:
+- the-greenman/srs#849 (RFC-043, accepted by the owner 2026-10-01; rulings recorded in the issue comments of that date)
+- rfcs/rfc-043-container-outline-arrangement.md, Revision 10 (Change A to Change J, Conformance Rules [R1] to [R20])
+- rfc-decision-0750c62f (superseded in part: consequences 1, 3 and 4 restated; the core stands)
+- rfc-decision-0118e938 (a Container is a selection and nothing else; honoured, not superseded)
+- rfc-decision-8aed3412 (successor filed with this record)
+- srs#446 (explicit typing anchor, the positional-role defect this record does not reintroduce)
+
+**Review Trigger**: Review if a consumer needs per-entry data beyond placement, which would be a layer crossing to rule on explicitly against rfc-decision-0118e938, or if the root container's declared navigation role proves to make reordering the sidebar unsafe for tools.
+
+

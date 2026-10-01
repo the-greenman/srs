@@ -7,9 +7,9 @@
   "fieldValues": {
     "invariant_number": "I-81",
     "title": "identityInstanceId resolves to a member of its container",
-    "normative_statement": "When present on a Container, identityInstanceId MUST equal an id contained in that Container's rootInstanceIds or memberInstanceIds. On the root container it names the repository's identity record. If it resolves to no such member, the repository is invalid. Reassigning identityInstanceId to a different member MUST NOT change the repositoryId, the container's containerId, or any instance id; the new target must already be a member before the pointer moves to it, so the repository is never transiently invalid."
+    "normative_statement": "When present on a Container, identityInstanceId MUST equal an id contained in that Container's rootInstanceIds or memberInstanceIds. On the root container it names the repository's identity record. If it resolves to no such member, the repository is invalid. Reassigning identityInstanceId to a different member MUST NOT change the repositoryId, the container's containerId, or any instance id; the new target must already be a member before the pointer moves to it, so the repository is never transiently invalid.\n\n**Amended by RFC-043 (effective at dataModelRevision 8).** When present on a Container, `identityInstanceId` MUST equal the `instanceId` of an entry in that Container's `memberInstanceIds` ([R3]). In the root container the identity entry MUST be at depth 0 and MUST have no descendants ([R2]). A mutating operation that would remove the identity entry is rejected until the pointer is moved to another member ([R7]); the repair operation never changes the pointer ([R20]). `rootInstanceIds` is removed ([R4]). (Prior text, in force until a corpus is at revision 8: the statement above.)"
   },
   "createdAt": "2026-06-28T14:37:38.826145632+00:00",
-  "updatedAt": "2026-09-07T19:59:41.663824312+00:00",
+  "updatedAt": "2026-10-01T11:20:21.871617932+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

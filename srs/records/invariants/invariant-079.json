@@ -7,9 +7,9 @@
   "fieldValues": {
     "invariant_number": "I-79",
     "title": "manifest.container is required and satisfies core Container invariants 20-21",
-    "normative_statement": "Every SRS repository manifest MUST embed exactly one root Container in manifest.container. The root Container MUST satisfy the core Container invariants unchanged: Invariant 20 (its containerId is not an instance ID and never appears in rootInstanceIds, memberInstanceIds, Relation.sourceInstanceId, or Relation.targetInstanceId) and Invariant 21 (every id in rootInstanceIds/memberInstanceIds references a valid SRS instance id)."
+    "normative_statement": "Every SRS repository manifest MUST embed exactly one root Container in manifest.container. The root Container MUST satisfy the core Container invariants unchanged: Invariant 20 (its containerId is not an instance ID and never appears in rootInstanceIds, memberInstanceIds, Relation.sourceInstanceId, or Relation.targetInstanceId) and Invariant 21 (every id in rootInstanceIds/memberInstanceIds references a valid SRS instance id).\n\n**Amended by RFC-043 (effective at dataModelRevision 8).** The root Container MUST satisfy the core Container invariants unchanged: Invariant 20 (its `containerId` is not an instance ID and never appears as an entry `instanceId` in `memberInstanceIds`, nor in `Relation.sourceInstanceId` or `Relation.targetInstanceId`) and Invariant 21 (every entry's `instanceId` in `memberInstanceIds` references a valid SRS instance id). `rootInstanceIds` is removed ([R4]). (Prior text, in force until a corpus is at revision 8: the statement above.)"
   },
   "createdAt": "2026-06-28T14:37:38.745409348+00:00",
-  "updatedAt": "2026-09-07T19:59:41.281378647+00:00",
+  "updatedAt": "2026-10-01T11:20:21.489177694+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
