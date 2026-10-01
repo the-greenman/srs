@@ -7,9 +7,9 @@
   "fieldValues": {
     "invariant_number": "I-64",
     "title": "containerType should equal resolved root Type name when rootInstanceIds is present",
-    "normative_statement": "When a Container has one or more rootInstanceIds and also carries containerType, implementations SHOULD emit a diagnostic if containerType does not equal the resolved root Type name field (the local name within its namespace, not namespace/name). The root Record Type is authoritative; a mismatch does NOT make the Container invalid. Containers with no rootInstanceIds may carry any containerType value without triggering this rule.\n\n**Amended by RFC-043 (effective at dataModelRevision 8).** When a Container carries `anchorInstanceId` and also carries `containerType`, implementations SHOULD emit a diagnostic if `containerType` does not equal the resolved Type name of the anchor record (the local name within its namespace). The anchor record is authoritative and a mismatch does NOT make the Container invalid. `rootInstanceIds` is removed ([R4]), so the root Record Type is the Type of the anchor entry. (Prior text, in force until a corpus is at revision 8: the statement above.)"
+    "normative_statement": "When a Container carries `anchorInstanceId` and also carries `containerType`, implementations SHOULD emit a diagnostic if `containerType` does not equal the resolved Type name of the anchor record (the local name within its namespace). The anchor record is authoritative and a mismatch does NOT make the Container invalid. `rootInstanceIds` is removed ([R4]), so the root Record Type is the Type of the anchor entry."
   },
   "createdAt": "2026-06-24T16:06:22.927306133+00:00",
-  "updatedAt": "2026-10-01T11:20:21.108746587+00:00",
+  "updatedAt": "2026-10-01T12:54:46.191833031+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

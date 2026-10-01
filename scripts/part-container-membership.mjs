@@ -4,9 +4,9 @@
  * RFC-042 [R7]) by walking the `contains` tree from the Part concept, the same walk
  * check-spec-coherence.mjs check 4 (part-order) uses to build `partOf`.
  *
- * A Part container's `memberInstanceIds` is the Part's full `contains`-subtree, EXCLUDING the
- * Part concept itself (which is the container's `anchorInstanceId` / sole `rootInstanceIds`
- * entry — I-82, srs-rust#460: an anchor must not also be a member).
+ * A Part container's `memberInstanceIds` entry ids (RFC-043 [R1], [R19]) are the Part concept itself
+ * (the container's `anchorInstanceId`, which MUST be an entry, [R3]) plus the Part's full
+ * `contains`-subtree. Entry order and depth are layout and are not compared here.
  *
  * Usage:
  *   node scripts/part-container-membership.mjs [root]              # print computed membership per Part
@@ -16,6 +16,7 @@ import { readdir, readFile } from "fs/promises";
 import { existsSync } from "fs";
 import { join, dirname, resolve, relative } from "path";
 import { fileURLToPath } from "url";
+import { entryIds } from "./lib/container-entries.mjs";
 
 const args = process.argv.slice(2).filter((a) => !a.startsWith("--"));
 const CHECK = process.argv.includes("--check");
@@ -45,7 +46,7 @@ for (const r of relations) {
 }
 function subtree(id) {
   const seen = new Set();
-  const stack = [...(children.get(id) ?? [])]; // exclude id itself — anchor is not a member
+  const stack = [...(children.get(id) ?? [])]; // the anchor is added by the caller (it is an entry, RFC-043 [R19])
   while (stack.length) {
     const x = stack.pop();
     if (seen.has(x)) continue;
@@ -58,7 +59,7 @@ function subtree(id) {
 const manifest = JSON.parse(await readFile(join(ROOT, "srs/manifest.json"), "utf8"));
 const rootContainer = manifest.container ?? {};
 const identity = rootContainer.identityInstanceId;
-const parts = (rootContainer.memberInstanceIds ?? []).filter((m) => m !== identity);
+const parts = (rootContainer.memberInstanceIds ?? []).filter((e) => (e.depth ?? 0) === 0 && e.instanceId !== identity).map((e) => e.instanceId);
 
 const containerFiles = await walkJson(join(ROOT, "srs/containers"));
 const containersByAnchor = new Map();
@@ -68,7 +69,7 @@ for (const [p, c] of containerFiles) {
 
 let drift = 0;
 for (const partId of parts) {
-  const computed = [...subtree(partId)].sort();
+  const computed = [partId, ...subtree(partId)].sort();
   const title = records.get(partId)?.fieldValues?.title ?? partId;
   const entry = containersByAnchor.get(partId);
   if (!entry) {
@@ -76,7 +77,7 @@ for (const partId of parts) {
     drift++;
     continue;
   }
-  const declared = [...(entry.doc.memberInstanceIds ?? [])].sort();
+  const declared = entryIds(entry.doc).sort();
   const same = computed.length === declared.length && computed.every((id, i) => id === declared[i]);
   console.log(`${title}: ${computed.length} computed, ${declared.length} declared${same ? " (match)" : " (DRIFT)"}`);
   if (!same) drift++;

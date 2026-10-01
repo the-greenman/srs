@@ -79,7 +79,7 @@ env:
   # 400-404 carry unrelated changes (navigation membership srs-rust#1097,
   # write-time schema validation srs-rust#1102) that this bump does not
   # intend to pick up.
-  SRS_RUST_CLI_TAG: v0.1.0-build.414
+  SRS_RUST_CLI_TAG: v0.1.0-build.417
 
 jobs:
   check-release-drift:

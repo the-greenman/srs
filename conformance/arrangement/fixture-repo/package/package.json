@@ -1,0 +1,24 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/package-manifest.json",
+  "id": "4e32a7d8-5280-4764-af28-3c090835afcb",
+  "namespace": "com.example.arrangement",
+  "name": "primary",
+  "version": "1.0.0",
+  "title": "primary",
+  "description": "",
+  "status": "active",
+  "createdAt": "2026-01-01T00:00:00Z",
+  "fields": [
+    "fields/title-0a0000e1.json"
+  ],
+  "types": [
+    "types/item-0a0000b1.json"
+  ],
+  "relationTypes": [],
+  "views": [],
+  "compositions": [
+    "compositions/outline-view-0a0000d1.json",
+    "compositions/outline-view-desc-0a0000d1.json"
+  ],
+  "blueprints": []
+}

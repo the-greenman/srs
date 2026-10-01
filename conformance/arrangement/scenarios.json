@@ -1,0 +1,344 @@
+{
+  "$comment": "RFC-043 arrangement conformance. Expectations were produced by running the revision-8 srs-rust build against fixture-repo (see README). Pending scenarios are listed in README.md.",
+  "scenarios": [
+    {
+      "name": "flat_membership_ignores_depth",
+      "rules": [
+        "R1",
+        "R3"
+      ],
+      "description": "direct(C) is the set of entry instanceIds read flat. Alpha..Eta are all members whatever their depth; order and depth are layout only.",
+      "container": "0a0000c1-0000-4000-8000-000000000001",
+      "expectedDirectMembers": [
+        "21dbfbfa-dd9e-47a8-b785-a00bac9497ae",
+        "291abed5-1baa-429f-948e-3cb4bf267c07",
+        "3c8311aa-410e-4052-be62-dba11656a94b",
+        "64514d71-a09c-4a1a-90a3-97c4da7f2b55",
+        "8eef4acf-ac8f-4496-902a-5d06e034fc46",
+        "c15b3417-3578-416a-bc50-8c1a2e16eb47",
+        "dc328f4b-cd1d-40f7-92ec-0c36b69894bc"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "derived_parents",
+      "rules": [
+        "R1",
+        "R5"
+      ],
+      "description": "An entry's parent is the nearest preceding entry with a smaller depth; nesting is derived, never stored.",
+      "container": "0a0000c1-0000-4000-8000-000000000001",
+      "expectedParents": {
+        "dc328f4b-cd1d-40f7-92ec-0c36b69894bc": null,
+        "8eef4acf-ac8f-4496-902a-5d06e034fc46": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc",
+        "3c8311aa-410e-4052-be62-dba11656a94b": "8eef4acf-ac8f-4496-902a-5d06e034fc46",
+        "c15b3417-3578-416a-bc50-8c1a2e16eb47": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc",
+        "291abed5-1baa-429f-948e-3cb4bf267c07": null,
+        "21dbfbfa-dd9e-47a8-b785-a00bac9497ae": "291abed5-1baa-429f-948e-3cb4bf267c07",
+        "64514d71-a09c-4a1a-90a3-97c4da7f2b55": "21dbfbfa-dd9e-47a8-b785-a00bac9497ae"
+      }
+    },
+    {
+      "name": "arranged_markdown_headings",
+      "rules": [
+        "R9"
+      ],
+      "description": "An arranged section without containerId renders the supplied container's entries in sequence, each heading at level 3 + depthOffset + depth (the section heading itself is level 2).",
+      "operation": {
+        "render": "composition",
+        "view": "0a0000d1-0000-4000-8000-000000000001",
+        "container": "0a0000c1-0000-4000-8000-000000000001",
+        "format": "markdown"
+      },
+      "expectedHeadings": [
+        {
+          "level": 3,
+          "title": "Alpha"
+        },
+        {
+          "level": 4,
+          "title": "Beta"
+        },
+        {
+          "level": 5,
+          "title": "Gamma"
+        },
+        {
+          "level": 4,
+          "title": "Delta"
+        },
+        {
+          "level": 3,
+          "title": "Epsilon"
+        },
+        {
+          "level": 4,
+          "title": "Zeta"
+        },
+        {
+          "level": 5,
+          "title": "Eta"
+        }
+      ]
+    },
+    {
+      "name": "arranged_desc_reverses_sibling_lists",
+      "rules": [
+        "R9"
+      ],
+      "description": "direction desc reverses every sibling list; subtrees keep their parent and relative depth.",
+      "operation": {
+        "render": "composition",
+        "view": "0a0000d1-0000-4000-8000-000000000002",
+        "container": "0a0000c1-0000-4000-8000-000000000001",
+        "format": "markdown"
+      },
+      "expectedHeadings": [
+        {
+          "level": 3,
+          "title": "Epsilon"
+        },
+        {
+          "level": 4,
+          "title": "Zeta"
+        },
+        {
+          "level": 5,
+          "title": "Eta"
+        },
+        {
+          "level": 3,
+          "title": "Alpha"
+        },
+        {
+          "level": 4,
+          "title": "Delta"
+        },
+        {
+          "level": 4,
+          "title": "Beta"
+        },
+        {
+          "level": 5,
+          "title": "Gamma"
+        }
+      ]
+    },
+    {
+      "name": "arranged_section_needs_a_container",
+      "rules": [
+        "R9",
+        "R10"
+      ],
+      "description": "An arranged section without containerId and with no container supplied to the render is an error diagnostic and renders nothing.",
+      "operation": {
+        "render": "composition",
+        "view": "0a0000d1-0000-4000-8000-000000000001",
+        "container": null,
+        "format": "markdown"
+      },
+      "expectedOutcome": "error-diagnostic"
+    },
+    {
+      "name": "navigation_is_depth_zero_entry_order",
+      "rules": [
+        "R12"
+      ],
+      "description": "Navigation follows the root container's entries with the identity entry excluded; depth-0 entries are sections, deeper entries nest under their derived parent.",
+      "operation": {
+        "repo": "navigation"
+      },
+      "rootContainerId": "0a000000-0000-4000-8000-000000000001",
+      "expectedSections": [
+        {
+          "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc",
+          "children": [
+            "8eef4acf-ac8f-4496-902a-5d06e034fc46"
+          ]
+        },
+        {
+          "instanceId": "291abed5-1baa-429f-948e-3cb4bf267c07",
+          "children": []
+        }
+      ],
+      "identityInstanceId": "ca6da9bd-3230-437d-9b7f-febcbd7584dc"
+    },
+    {
+      "name": "first_entry_must_be_depth_zero",
+      "rules": [
+        "R2"
+      ],
+      "description": "The first entry MUST have depth 0.",
+      "operation": {
+        "container": "update",
+        "containerId": "0a0000c1-0000-4000-8000-000000000001",
+        "memberInstanceIds": [
+          {
+            "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc",
+            "depth": 1
+          },
+          {
+            "instanceId": "8eef4acf-ac8f-4496-902a-5d06e034fc46",
+            "depth": 1
+          }
+        ]
+      },
+      "expectedOutcome": "refused",
+      "expectedCode": "arrangement-depth"
+    },
+    {
+      "name": "depth_may_rise_by_one_only",
+      "rules": [
+        "R2"
+      ],
+      "description": "Each later entry's depth MUST be at most one more than the previous entry's.",
+      "operation": {
+        "container": "update",
+        "containerId": "0a0000c1-0000-4000-8000-000000000001",
+        "memberInstanceIds": [
+          {
+            "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc"
+          },
+          {
+            "instanceId": "8eef4acf-ac8f-4496-902a-5d06e034fc46",
+            "depth": 2
+          }
+        ]
+      },
+      "expectedOutcome": "refused",
+      "expectedCode": "arrangement-depth"
+    },
+    {
+      "name": "duplicate_id_refused",
+      "rules": [
+        "R2"
+      ],
+      "description": "Each instanceId MUST appear exactly once.",
+      "operation": {
+        "container": "update",
+        "containerId": "0a0000c1-0000-4000-8000-000000000001",
+        "memberInstanceIds": [
+          {
+            "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc"
+          },
+          {
+            "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc",
+            "depth": 1
+          }
+        ]
+      },
+      "expectedOutcome": "refused",
+      "expectedCode": "arrangement-duplicate"
+    },
+    {
+      "name": "unresolved_id_refused",
+      "rules": [
+        "R2"
+      ],
+      "description": "Each instanceId MUST resolve to an instance.",
+      "operation": {
+        "container": "update",
+        "containerId": "0a0000c1-0000-4000-8000-000000000001",
+        "memberInstanceIds": [
+          {
+            "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc"
+          },
+          {
+            "instanceId": "00000000-0000-4000-8000-0000000000ff"
+          }
+        ]
+      },
+      "expectedOutcome": "refused",
+      "expectedCode": "instance not found (arrangement-unresolved on a stored container)"
+    },
+    {
+      "name": "entry_carries_no_other_property",
+      "rules": [
+        "R1"
+      ],
+      "description": "An entry MUST NOT carry any property besides instanceId and depth (no fold or visibility state).",
+      "operation": {
+        "container": "update",
+        "containerId": "0a0000c1-0000-4000-8000-000000000001",
+        "memberInstanceIds": [
+          {
+            "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc",
+            "collapsed": true
+          }
+        ]
+      },
+      "expectedOutcome": "refused"
+    },
+    {
+      "name": "member_removal_promotes_descendants",
+      "rules": [
+        "R7"
+      ],
+      "description": "Removing an entry lowers by one the depth of every entry in its run. Removing Beta promotes Gamma to depth 1; Delta is unaffected.",
+      "operation": {
+        "container": "members-remove",
+        "containerId": "0a0000c1-0000-4000-8000-000000000001",
+        "instanceId": "8eef4acf-ac8f-4496-902a-5d06e034fc46"
+      },
+      "expectedMembers": [
+        {
+          "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc"
+        },
+        {
+          "instanceId": "3c8311aa-410e-4052-be62-dba11656a94b",
+          "depth": 1
+        },
+        {
+          "instanceId": "c15b3417-3578-416a-bc50-8c1a2e16eb47",
+          "depth": 1
+        },
+        {
+          "instanceId": "291abed5-1baa-429f-948e-3cb4bf267c07"
+        },
+        {
+          "instanceId": "21dbfbfa-dd9e-47a8-b785-a00bac9497ae",
+          "depth": 1
+        },
+        {
+          "instanceId": "64514d71-a09c-4a1a-90a3-97c4da7f2b55",
+          "depth": 2
+        }
+      ],
+      "expectedPromoted": [
+        "3c8311aa-410e-4052-be62-dba11656a94b"
+      ],
+      "expectedRemoved": [
+        "8eef4acf-ac8f-4496-902a-5d06e034fc46"
+      ]
+    },
+    {
+      "name": "anchor_entry_cannot_be_removed",
+      "rules": [
+        "R7"
+      ],
+      "description": "Removing the entry named by anchorInstanceId is rejected whole with arrangement-pointer; nothing changes.",
+      "operation": {
+        "container": "members-remove",
+        "containerId": "0a0000c1-0000-4000-8000-000000000001",
+        "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc"
+      },
+      "expectedOutcome": "refused",
+      "expectedCode": "arrangement-pointer"
+    },
+    {
+      "name": "identity_entry_cannot_be_removed",
+      "rules": [
+        "R7",
+        "R2"
+      ],
+      "description": "Removing the root container's identity entry is rejected whole with arrangement-pointer.",
+      "operation": {
+        "container": "members-remove",
+        "containerId": "0a000000-0000-4000-8000-000000000001",
+        "instanceId": "ca6da9bd-3230-437d-9b7f-febcbd7584dc"
+      },
+      "expectedOutcome": "refused",
+      "expectedCode": "arrangement-pointer"
+    }
+  ]
+}

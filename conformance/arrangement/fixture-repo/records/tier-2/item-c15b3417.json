@@ -1,0 +1,13 @@
+{
+  "instanceId": "c15b3417-3578-416a-bc50-8c1a2e16eb47",
+  "typeId": "0a0000b1-0000-4000-8000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.example.arrangement",
+  "typeName": "item",
+  "fieldValues": {
+    "title": "Delta"
+  },
+  "createdAt": "2026-10-01T13:07:17.119666179+00:00",
+  "updatedAt": "2026-10-01T13:07:17.119670290+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

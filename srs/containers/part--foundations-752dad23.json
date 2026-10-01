@@ -2,115 +2,327 @@
   "containerId": "752dad23-8a6d-44e5-98c9-f081d2cc634e",
   "title": "Part: Foundations",
   "anchorInstanceId": "1f57e484-f870-4704-814d-f3f0614c3641",
-  "rootInstanceIds": [
-    "1f57e484-f870-4704-814d-f3f0614c3641"
-  ],
   "memberInstanceIds": [
-    "07c8a806-83fc-47ea-bf5c-39c164b12193",
-    "0e6f7aea-b283-4524-852b-60b7f7b51c54",
-    "113d18d8-9b25-4f55-b997-19e1a75a042d",
-    "1188b6bb-ceb1-494e-960a-cf7a00b8c3ed",
-    "1a197c13-8ae9-4b68-80b3-d759f12160da",
-    "1af209f4-71ff-4687-9bbd-7aef2973be7f",
-    "1b135eb4-7530-459f-a6c4-07151832f691",
-    "22ddae43-69a2-4e99-ae68-296f26d80497",
-    "23a95ef4-c996-4138-b940-a2de197d1c8c",
-    "23d4b612-b0c4-4083-afc4-7ba7a610266c",
-    "249c1928-5cdd-46c1-af48-68fe00c24463",
-    "26e2185d-7021-4e0e-a75d-ed2bf0004e34",
-    "276576a4-0b84-4a66-bb33-f336b6979f98",
-    "2d633fa8-4bc2-4bf6-b7b5-6ac1491b6798",
-    "30a555c0-060a-42ef-8f05-6a0aa8d9efef",
-    "3c23f463-4993-4419-b121-5fadf927b560",
-    "3f889a7c-33d3-41fa-87fc-36c762bd4845",
-    "4177d637-3077-4769-b551-72d40f83037f",
-    "428efcdf-d481-4f68-9124-a78c5e812350",
-    "42ed953e-2b89-4bb9-a1b1-a8dcad0d24e5",
-    "443a2ec7-2873-4e73-885e-da0dcbbde91f",
-    "48c91235-47e9-4079-8884-30e34d5b8fc2",
-    "49b35d62-1ce4-4c39-8c11-8837b1f635ff",
-    "4d411f1b-f4c8-4452-ac3b-6abb26cbc208",
-    "511d4a2b-b21e-4716-adde-33eb9431312c",
-    "54b99288-9f06-4aad-a41c-c7968f7ff9cd",
-    "582f68ee-42dd-494a-a431-8c3efd038bc8",
-    "5a7dcf06-7ba3-480d-9860-d3d6fa5cc18e",
-    "5dabaed0-e6fa-4eea-af32-63830358d0e2",
-    "6143965c-ac6f-4473-a7d2-ef21d276bdfd",
-    "63b9956d-3857-4a70-9310-b0b033e1c128",
-    "6e1cd742-d116-45a6-a63c-21cce8b18dda",
-    "6e22219b-ba96-491e-b8d6-37fee04e2030",
-    "6e7cb1a4-5502-4375-b44f-f16340c87dbf",
-    "71458b11-1533-455d-974c-352340157bc1",
-    "774e74c1-80f2-4303-b2e9-67f41d0c6875",
-    "7dfb78ce-7111-4d25-8510-312efe5effb2",
-    "7ec029e9-592b-4f72-8c9d-23a302725a82",
-    "809ec39e-12f9-4e7f-96da-fbc5f202e808",
-    "80a322d7-e7f5-471a-b66f-da1e3ec7b124",
-    "83f026ee-f6b1-4c4f-a059-9deba002d857",
-    "873099c5-093d-4684-8c36-46f813847c1a",
-    "890d7d54-81f6-4001-bf31-30b156844431",
-    "89444ae5-3dc7-4ffd-ac60-3bc9559c9331",
-    "8eeb0cad-bd38-4bbc-8f0e-870f6e14b4bf",
-    "938f44fa-e4e5-4334-a260-4654c5661f7d",
-    "976bd11e-63a2-4c00-b6c4-cccac65b9ada",
-    "99354119-e59f-457a-99d5-c2c3208e4a09",
-    "9abb5b0d-933a-4cd2-8bea-576636aae836",
-    "9addbd4c-45d9-4e96-93fc-12879b65dae1",
-    "9bccaa53-6d98-4ca9-967b-fb27ec6e72d5",
-    "9d686444-89d9-4a30-a9c3-b08bd31b62ca",
-    "a5194299-a090-4168-8838-1f0ac1538645",
-    "a7fea9f4-6da7-4b7c-9fd9-2b77310aea2c",
-    "acddda1f-52ae-442e-bcd9-b59b34c97c32",
-    "af14997a-09f1-4eb2-85a9-d0262024d5de",
-    "b1000000-0000-4000-a000-000000000006",
-    "b1000000-0000-4000-a000-000000000007",
-    "baa235fe-3ca6-483e-b0d0-108031418cf8",
-    "be252a63-49ea-4a11-b29f-42c94fcb1a7e",
-    "be8125aa-ef62-4054-8c74-28e092111524",
-    "c388f8ab-41e4-4669-851c-1c0eb4b6f0b4",
-    "cd3c9215-04a8-4111-ab1d-582b8920b0df",
-    "d03a6f95-2667-41fa-b00e-fad01e73d9d0",
-    "d3c04f50-c0af-49e4-90cd-d0279073063f",
-    "d87505e8-f071-47dd-bbaa-39645863cfeb",
-    "d9688199-0e6e-480c-9bc7-5efbab6c9bb0",
-    "d9dd6beb-ddca-4901-bee3-8c5075f582c9",
-    "ddb67eae-9545-49e6-aa6b-acf7da79ccd8",
-    "e0ab6b5b-506f-48a1-a255-8edb8ada6be3",
-    "e1000001-0000-4000-a000-000000000001",
-    "e1000002-0000-4000-a000-000000000002",
-    "e1000003-0000-4000-a000-000000000003",
-    "e1000004-0000-4000-a000-000000000004",
-    "e1000005-0000-4000-a000-000000000005",
-    "e1000006-0000-4000-a000-000000000006",
-    "e1000009-0000-4000-a000-000000000009",
-    "e1000038-0000-4000-a000-000000000038",
-    "e1000039-0000-4000-a000-000000000039",
-    "e1000040-0000-4000-a000-000000000040",
-    "e1000041-0000-4000-a000-000000000041",
-    "e1000042-0000-4000-a000-000000000042",
-    "e1000043-0000-4000-a000-000000000043",
-    "e1000054-0000-4000-a000-000000000054",
-    "e249588c-0d97-40fe-b2d2-7014ba16e993",
-    "e265a135-9c11-478f-b390-1787f2faf83c",
-    "e4837800-1803-4b0b-9a9f-08ff3e5cb95a",
-    "e4d27410-2827-49d4-9b0e-968aa877a60a",
-    "eec1e40c-9aee-49b1-bc10-baac94b79a25",
-    "eef3af08-1766-4bc6-8d28-053f59e23e43",
-    "ef2e0f72-c03e-449c-99ba-ad517fd1360b",
-    "f0a194f1-a58f-4bb6-a4ec-2a5360c84da1",
-    "f1000003-0000-4000-a000-000000000003",
-    "f1000004-0000-4000-a000-000000000004",
-    "f1000010-0000-4000-a000-000000000010",
-    "f1000016-0000-4000-a000-000000000016",
-    "f1000018-0000-4000-a000-000000000018",
-    "f1000029-0000-4000-a000-000000000029",
-    "f1000035-0000-4000-a000-000000000035",
-    "f3b67e2a-22c8-40e4-8447-7a29717cd1ff",
-    "f609a191-d87b-418e-9e48-f2730f454457",
-    "f6727489-d943-456e-bd50-e1110db2f6d5",
-    "f73cc1ed-2242-4757-9b72-ce4754fbd85c",
-    "fc982bf7-aae6-4a29-a20b-0ca6841ffaed",
-    "fef34bae-b21b-4217-b2ba-f1f58213ff44",
-    "ffe99460-9afe-4464-b62e-707559dc8ad1"
+    {
+      "instanceId": "af14997a-09f1-4eb2-85a9-d0262024d5de"
+    },
+    {
+      "instanceId": "48c91235-47e9-4079-8884-30e34d5b8fc2"
+    },
+    {
+      "instanceId": "938f44fa-e4e5-4334-a260-4654c5661f7d"
+    },
+    {
+      "instanceId": "1188b6bb-ceb1-494e-960a-cf7a00b8c3ed"
+    },
+    {
+      "instanceId": "873099c5-093d-4684-8c36-46f813847c1a"
+    },
+    {
+      "instanceId": "89444ae5-3dc7-4ffd-ac60-3bc9559c9331"
+    },
+    {
+      "instanceId": "9bccaa53-6d98-4ca9-967b-fb27ec6e72d5"
+    },
+    {
+      "instanceId": "ef2e0f72-c03e-449c-99ba-ad517fd1360b"
+    },
+    {
+      "instanceId": "ffe99460-9afe-4464-b62e-707559dc8ad1"
+    },
+    {
+      "instanceId": "f0a194f1-a58f-4bb6-a4ec-2a5360c84da1"
+    },
+    {
+      "instanceId": "e4837800-1803-4b0b-9a9f-08ff3e5cb95a"
+    },
+    {
+      "instanceId": "b1000000-0000-4000-a000-000000000006"
+    },
+    {
+      "instanceId": "b1000000-0000-4000-a000-000000000007"
+    },
+    {
+      "instanceId": "e1000001-0000-4000-a000-000000000001"
+    },
+    {
+      "instanceId": "e1000002-0000-4000-a000-000000000002"
+    },
+    {
+      "instanceId": "e1000003-0000-4000-a000-000000000003"
+    },
+    {
+      "instanceId": "e1000004-0000-4000-a000-000000000004"
+    },
+    {
+      "instanceId": "e1000005-0000-4000-a000-000000000005"
+    },
+    {
+      "instanceId": "e1000006-0000-4000-a000-000000000006"
+    },
+    {
+      "instanceId": "e1000038-0000-4000-a000-000000000038"
+    },
+    {
+      "instanceId": "e1000039-0000-4000-a000-000000000039"
+    },
+    {
+      "instanceId": "e1000040-0000-4000-a000-000000000040"
+    },
+    {
+      "instanceId": "e1000041-0000-4000-a000-000000000041"
+    },
+    {
+      "instanceId": "e1000042-0000-4000-a000-000000000042"
+    },
+    {
+      "instanceId": "e1000043-0000-4000-a000-000000000043"
+    },
+    {
+      "instanceId": "f1000003-0000-4000-a000-000000000003"
+    },
+    {
+      "instanceId": "f1000004-0000-4000-a000-000000000004"
+    },
+    {
+      "instanceId": "f1000010-0000-4000-a000-000000000010"
+    },
+    {
+      "instanceId": "f1000016-0000-4000-a000-000000000016"
+    },
+    {
+      "instanceId": "f1000018-0000-4000-a000-000000000018"
+    },
+    {
+      "instanceId": "f1000029-0000-4000-a000-000000000029"
+    },
+    {
+      "instanceId": "f1000035-0000-4000-a000-000000000035"
+    },
+    {
+      "instanceId": "be8125aa-ef62-4054-8c74-28e092111524"
+    },
+    {
+      "instanceId": "9d686444-89d9-4a30-a9c3-b08bd31b62ca"
+    },
+    {
+      "instanceId": "890d7d54-81f6-4001-bf31-30b156844431"
+    },
+    {
+      "instanceId": "1b135eb4-7530-459f-a6c4-07151832f691"
+    },
+    {
+      "instanceId": "cd3c9215-04a8-4111-ab1d-582b8920b0df"
+    },
+    {
+      "instanceId": "9abb5b0d-933a-4cd2-8bea-576636aae836"
+    },
+    {
+      "instanceId": "443a2ec7-2873-4e73-885e-da0dcbbde91f"
+    },
+    {
+      "instanceId": "0e6f7aea-b283-4524-852b-60b7f7b51c54"
+    },
+    {
+      "instanceId": "5a7dcf06-7ba3-480d-9860-d3d6fa5cc18e"
+    },
+    {
+      "instanceId": "99354119-e59f-457a-99d5-c2c3208e4a09"
+    },
+    {
+      "instanceId": "fc982bf7-aae6-4a29-a20b-0ca6841ffaed"
+    },
+    {
+      "instanceId": "6e7cb1a4-5502-4375-b44f-f16340c87dbf"
+    },
+    {
+      "instanceId": "e4d27410-2827-49d4-9b0e-968aa877a60a"
+    },
+    {
+      "instanceId": "4d411f1b-f4c8-4452-ac3b-6abb26cbc208"
+    },
+    {
+      "instanceId": "49b35d62-1ce4-4c39-8c11-8837b1f635ff"
+    },
+    {
+      "instanceId": "fef34bae-b21b-4217-b2ba-f1f58213ff44"
+    },
+    {
+      "instanceId": "1af209f4-71ff-4687-9bbd-7aef2973be7f"
+    },
+    {
+      "instanceId": "07c8a806-83fc-47ea-bf5c-39c164b12193"
+    },
+    {
+      "instanceId": "774e74c1-80f2-4303-b2e9-67f41d0c6875"
+    },
+    {
+      "instanceId": "e0ab6b5b-506f-48a1-a255-8edb8ada6be3"
+    },
+    {
+      "instanceId": "d03a6f95-2667-41fa-b00e-fad01e73d9d0"
+    },
+    {
+      "instanceId": "a5194299-a090-4168-8838-1f0ac1538645"
+    },
+    {
+      "instanceId": "2d633fa8-4bc2-4bf6-b7b5-6ac1491b6798"
+    },
+    {
+      "instanceId": "428efcdf-d481-4f68-9124-a78c5e812350"
+    },
+    {
+      "instanceId": "d9dd6beb-ddca-4901-bee3-8c5075f582c9"
+    },
+    {
+      "instanceId": "54b99288-9f06-4aad-a41c-c7968f7ff9cd"
+    },
+    {
+      "instanceId": "6143965c-ac6f-4473-a7d2-ef21d276bdfd"
+    },
+    {
+      "instanceId": "42ed953e-2b89-4bb9-a1b1-a8dcad0d24e5"
+    },
+    {
+      "instanceId": "f3b67e2a-22c8-40e4-8447-7a29717cd1ff"
+    },
+    {
+      "instanceId": "26e2185d-7021-4e0e-a75d-ed2bf0004e34"
+    },
+    {
+      "instanceId": "9addbd4c-45d9-4e96-93fc-12879b65dae1"
+    },
+    {
+      "instanceId": "e249588c-0d97-40fe-b2d2-7014ba16e993"
+    },
+    {
+      "instanceId": "582f68ee-42dd-494a-a431-8c3efd038bc8"
+    },
+    {
+      "instanceId": "3c23f463-4993-4419-b121-5fadf927b560"
+    },
+    {
+      "instanceId": "8eeb0cad-bd38-4bbc-8f0e-870f6e14b4bf"
+    },
+    {
+      "instanceId": "809ec39e-12f9-4e7f-96da-fbc5f202e808"
+    },
+    {
+      "instanceId": "ddb67eae-9545-49e6-aa6b-acf7da79ccd8"
+    },
+    {
+      "instanceId": "6e1cd742-d116-45a6-a63c-21cce8b18dda"
+    },
+    {
+      "instanceId": "23a95ef4-c996-4138-b940-a2de197d1c8c"
+    },
+    {
+      "instanceId": "5dabaed0-e6fa-4eea-af32-63830358d0e2"
+    },
+    {
+      "instanceId": "be252a63-49ea-4a11-b29f-42c94fcb1a7e"
+    },
+    {
+      "instanceId": "baa235fe-3ca6-483e-b0d0-108031418cf8"
+    },
+    {
+      "instanceId": "6e22219b-ba96-491e-b8d6-37fee04e2030"
+    },
+    {
+      "instanceId": "d3c04f50-c0af-49e4-90cd-d0279073063f"
+    },
+    {
+      "instanceId": "511d4a2b-b21e-4716-adde-33eb9431312c"
+    },
+    {
+      "instanceId": "3f889a7c-33d3-41fa-87fc-36c762bd4845"
+    },
+    {
+      "instanceId": "63b9956d-3857-4a70-9310-b0b033e1c128"
+    },
+    {
+      "instanceId": "976bd11e-63a2-4c00-b6c4-cccac65b9ada"
+    },
+    {
+      "instanceId": "d9688199-0e6e-480c-9bc7-5efbab6c9bb0"
+    },
+    {
+      "instanceId": "22ddae43-69a2-4e99-ae68-296f26d80497"
+    },
+    {
+      "instanceId": "7dfb78ce-7111-4d25-8510-312efe5effb2"
+    },
+    {
+      "instanceId": "e1000009-0000-4000-a000-000000000009"
+    },
+    {
+      "instanceId": "e1000054-0000-4000-a000-000000000054"
+    },
+    {
+      "instanceId": "1f57e484-f870-4704-814d-f3f0614c3641"
+    },
+    {
+      "instanceId": "71458b11-1533-455d-974c-352340157bc1"
+    },
+    {
+      "instanceId": "f609a191-d87b-418e-9e48-f2730f454457"
+    },
+    {
+      "instanceId": "113d18d8-9b25-4f55-b997-19e1a75a042d"
+    },
+    {
+      "instanceId": "30a555c0-060a-42ef-8f05-6a0aa8d9efef"
+    },
+    {
+      "instanceId": "7ec029e9-592b-4f72-8c9d-23a302725a82"
+    },
+    {
+      "instanceId": "e265a135-9c11-478f-b390-1787f2faf83c"
+    },
+    {
+      "instanceId": "c388f8ab-41e4-4669-851c-1c0eb4b6f0b4"
+    },
+    {
+      "instanceId": "249c1928-5cdd-46c1-af48-68fe00c24463"
+    },
+    {
+      "instanceId": "a7fea9f4-6da7-4b7c-9fd9-2b77310aea2c"
+    },
+    {
+      "instanceId": "d87505e8-f071-47dd-bbaa-39645863cfeb"
+    },
+    {
+      "instanceId": "83f026ee-f6b1-4c4f-a059-9deba002d857"
+    },
+    {
+      "instanceId": "acddda1f-52ae-442e-bcd9-b59b34c97c32"
+    },
+    {
+      "instanceId": "eef3af08-1766-4bc6-8d28-053f59e23e43"
+    },
+    {
+      "instanceId": "4177d637-3077-4769-b551-72d40f83037f"
+    },
+    {
+      "instanceId": "f6727489-d943-456e-bd50-e1110db2f6d5"
+    },
+    {
+      "instanceId": "276576a4-0b84-4a66-bb33-f336b6979f98"
+    },
+    {
+      "instanceId": "f73cc1ed-2242-4757-9b72-ce4754fbd85c"
+    },
+    {
+      "instanceId": "1a197c13-8ae9-4b68-80b3-d759f12160da"
+    },
+    {
+      "instanceId": "23d4b612-b0c4-4083-afc4-7ba7a610266c"
+    },
+    {
+      "instanceId": "80a322d7-e7f5-471a-b66f-da1e3ec7b124"
+    },
+    {
+      "instanceId": "eec1e40c-9aee-49b1-bc10-baac94b79a25"
+    }
   ]
 }

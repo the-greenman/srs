@@ -1,0 +1,19 @@
+{
+  "id": "0a0000b1-0000-4000-8000-000000000001",
+  "namespace": "com.example.arrangement",
+  "name": "item",
+  "version": 1,
+  "description": "A titled item placed in an arranged outline.",
+  "fields": [
+    {
+      "fieldId": "0a0000e1-0000-4000-8000-000000000001",
+      "order": 1,
+      "required": true
+    }
+  ],
+  "aiGuidance": {
+    "purpose": "A titled item placed in an arranged outline."
+  },
+  "createdAt": "2026-10-01T13:07:16.862637371+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json"
+}

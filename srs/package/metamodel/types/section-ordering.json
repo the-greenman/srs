@@ -4,7 +4,7 @@
     "purpose": "Describes a DocumentSection's ordering directive."
   },
   "createdAt": "2026-07-29T00:00:00Z",
-  "description": "DocumentSection.ordering — field-based sort direction, or an explicit member-order presentation sequence, for a DocumentSection.",
+  "description": "DocumentSection.ordering — field-based sort direction, or the order source (arranged or rule, RFC-043), for a DocumentSection.",
   "fields": [
     {
       "fieldId": "4b000033-0000-4000-a000-000000000033",
@@ -19,10 +19,9 @@
       "displayLabel": "Direction"
     },
     {
-      "fieldId": "4b0000c3-0000-4000-a000-0000000000c3",
+      "fieldId": "4b000115-0000-4000-a000-000000000115",
       "order": 2,
-      "required": false,
-      "displayLabel": "Member Order"
+      "required": false
     }
   ],
   "id": "4c000035-0000-4000-a000-000000000035",

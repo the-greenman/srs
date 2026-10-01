@@ -1,0 +1,13 @@
+{
+  "instanceId": "3c8311aa-410e-4052-be62-dba11656a94b",
+  "typeId": "0a0000b1-0000-4000-8000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.example.arrangement",
+  "typeName": "item",
+  "fieldValues": {
+    "title": "Gamma"
+  },
+  "createdAt": "2026-10-01T13:07:17.057401315+00:00",
+  "updatedAt": "2026-10-01T13:07:17.057405449+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

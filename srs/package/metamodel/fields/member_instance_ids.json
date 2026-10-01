@@ -1,17 +1,21 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
   "aiGuidance": {
-    "purpose": "Explicit membership list for all instances in scope."
+    "purpose": "RFC-043 [R1]: the ordered outline of entries. Entry ids are direct(C), list order is the sequence, depth is nesting."
   },
   "createdAt": "2026-07-29T00:00:00Z",
-  "description": "Explicit membership list for all instances in scope.",
+  "description": "RFC-043 [R1]: the ordered outline of entries. Entry ids are direct(C), list order is the sequence, depth is nesting.",
   "id": "4b000073-0000-4000-a000-000000000073",
   "name": "member_instance_ids",
   "namespace": "com.semanticops.srs",
   "fieldType": {
-    "datatype": "string",
-    "format": "uuid",
-    "cardinality": "list"
+    "datatype": "ref",
+    "mode": "inline",
+    "cardinality": "list",
+    "rangeType": {
+      "typeId": "4c00004c-0000-4000-a000-00000000004c",
+      "typeVersion": 1
+    }
   },
   "version": 1
 }

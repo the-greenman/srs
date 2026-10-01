@@ -3,6 +3,8 @@
   "title": "Extensions",
   "containerType": "section",
   "memberInstanceIds": [
-    "996e81fe-1c1f-4317-bd92-e9c8332905d8"
+    {
+      "instanceId": "996e81fe-1c1f-4317-bd92-e9c8332905d8"
+    }
   ]
 }

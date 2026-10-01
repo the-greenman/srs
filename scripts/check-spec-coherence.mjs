@@ -52,6 +52,7 @@ import { readdir, readFile } from "fs/promises";
 import { existsSync } from "fs";
 import { join, dirname, resolve, relative } from "path";
 import { fileURLToPath } from "url";
+import { entryIds } from "./lib/container-entries.mjs";
 
 const ROOT = process.argv[2]
   ? resolve(process.argv[2])
@@ -92,7 +93,7 @@ const manifest = existsSync(join(ROOT, "srs/manifest.json"))
   ? JSON.parse(await readFile(join(ROOT, "srs/manifest.json"), "utf8"))
   : {};
 const rootContainer = manifest.container ?? {};
-const rootMembers = new Set([...(rootContainer.memberInstanceIds ?? []), ...(rootContainer.rootInstanceIds ?? [])]);
+const rootMembers = new Set(entryIds(rootContainer));
 
 const name = (id) => records.get(id)?.fieldValues?.title ?? records.get(id)?.path ?? id;
 const isConcept = (id) => records.get(id)?.type === CONCEPT;

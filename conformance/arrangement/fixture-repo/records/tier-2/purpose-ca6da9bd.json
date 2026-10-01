@@ -1,0 +1,14 @@
+{
+  "instanceId": "ca6da9bd-3230-437d-9b7f-febcbd7584dc",
+  "typeId": "3c000001-0000-4000-a000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.core",
+  "typeName": "purpose",
+  "fieldValues": {
+    "statement": "",
+    "title": "Arrangement Conformance Fixture"
+  },
+  "createdAt": "2026-10-01T13:07:16.723107795+00:00",
+  "updatedAt": "2026-10-01T13:07:16.723107795+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

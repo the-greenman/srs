@@ -37,6 +37,7 @@ import { existsSync } from "fs";
 import { join, dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 import { loadInstances, loadRelations } from "./lib/rfc-038-tree.mjs";
+import { entryIds } from "./lib/container-entries.mjs";
 
 const ROOT = process.argv[2]
   ? resolve(process.argv[2])
@@ -110,7 +111,7 @@ const manifest = existsSync(join(REPO, "manifest.json"))
   ? JSON.parse(await readFile(join(REPO, "manifest.json"), "utf8"))
   : {};
 const rootContainer = manifest.container ?? {};
-const rootMembers = [...new Set([...(rootContainer.memberInstanceIds ?? []), ...(rootContainer.rootInstanceIds ?? [])])];
+const rootMembers = entryIds(rootContainer);
 const identity = rootContainer.identityInstanceId;
 const treeOrder = [];
 {

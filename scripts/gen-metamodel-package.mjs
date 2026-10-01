@@ -151,6 +151,8 @@ const TYPE_ORDER = [
   [73, 'typography-hints'],
   [74, 'theme'],
   [75, 'srsj-envelope'],
+  // -- RFC-043 (dataModelRevision 8): one placed member of a Container's ordered outline.
+  [76, 'container-entry'],
 ];
 const typeIdByName = Object.fromEntries(TYPE_ORDER.map(([n, name]) => [name, typeUuid(n)]));
 const ref = (typeName, mode, cardinality, extra) => {
@@ -318,8 +320,9 @@ const FIELD_SPECS = [
   [111, 'confidence', { datatype: 'number', constraints: { minimum: 0, maximum: 1 } }, 'Confidence score for this source reference, 0-1.'],
   [112, 'note', { datatype: 'string' }, 'Free-form human clarification. Shared by SourceReference.note and SourceAnchor.note.'],
   [113, 'container_id', { datatype: 'string', format: 'uuid' }, 'Stable UUID for this Container. Must not appear in Relation.sourceInstanceId or targetInstanceId.'],
-  [114, 'root_instance_ids', { datatype: 'string', format: 'uuid', cardinality: 'list' }, 'Top-level instances this Container was created to hold.'],
-  [115, 'member_instance_ids', { datatype: 'string', format: 'uuid', cardinality: 'list' }, 'Explicit membership list for all instances in scope.'],
+  // 114: `root_instance_ids` — RETIRED, never reused (append-only numbering). RFC-043 [R4]: Container.rootInstanceIds
+  // is removed at dataModelRevision 8; membership and layout are the single memberInstanceIds entry list.
+  [115, 'member_instance_ids', ref('container-entry', 'inline', 'list'), "RFC-043 [R1]: the ordered outline of entries. Entry ids are direct(C), list order is the sequence, depth is nesting."],
   [116, 'identity_instance_id', { datatype: 'string', format: 'uuid' }, 'RFC-013/RFC-029 — the instance id of this Container\'s identity/purpose record.'],
   [117, 'anchor_instance_id', { datatype: 'string', format: 'uuid' }, 'RFC-009 (amended srs#446) — the instance id whose Type is this Container\'s typing anchor.'],
   [118, 'root_types', ref('exact-type-ref', 'inline', 'list'), 'ext:blueprint — the Record Type(s) this Blueprint produces as root Records.'],
@@ -410,7 +413,8 @@ const FIELD_SPECS = [
   [192, 'type_dispatch', { datatype: 'map', valueRange: 'string' }, 'RFC-008 (ext:views-l2) — map from a record\'s resolved type key to the ext:views-l1 View UUID used to render records of that type within a DocumentSection.'],
   [193, 'title_field_id', { datatype: 'string', format: 'uuid' }, 'The fieldId whose value provides the per-record heading within a DocumentSection.'],
   [194, 'sort_direction', closed(['asc', 'desc']), 'Sort direction for a DocumentSection\'s field-based ordering. Default: asc.'],
-  [195, 'member_order', { datatype: 'string', format: 'uuid', cardinality: 'list' }, 'RFC-015 [N+29] — view-owned explicit presentation sequence for container-subset sections.'],
+  // 195: `member_order` — RETIRED, never reused (append-only numbering). RFC-043 retires
+  // ordering.memberOrder (RFC-015 [N+29], I-126/I-127); `source: 'arranged'` replaces it.
   [196, 'section_ordering', ref('section-ordering', 'inline', 'single'), 'DocumentSection.ordering — field-based or explicit member-order presentation directive.'],
   [197, 'empty_behavior', closed(['hide', 'show-placeholder']), 'What to do when a DocumentSection has no records. Default: hide.'],
   [198, 'composite_renderers', ref('composite-renderer-directive', 'inline', 'list'), 'RFC-036 — composite renderer dispatch declared at a Composition or a DocumentSection.'],
@@ -511,6 +515,8 @@ const FIELD_SPECS = [
   // retired, never recycled (see their notes above).
   [273, 'tier', closedInt([0, 2]), 'ext:discovery DiscoveryQuery.tier — instance tier filter. 0 = Note, 2 = Record. Tier 1 (TypedRecord) was removed (rfc-decision-53635966); the gap in numbering is retained deliberately for reference stability.'],
   [274, 'assets', mapRef('asset-declaration'), 'ext:themes-l1 Theme.assets — named asset declarations, keyed by name (unique within the Theme). Referenced in templates as {{asset:name}}.'],
+  [276, 'depth', { datatype: 'integer', constraints: { minimum: 0 } }, 'RFC-043 [R1]: nesting level of a Container entry, layout only. Absent means 0.'],
+  [277, 'source', closed(['arranged', 'rule']), "RFC-043 [R8]-[R11]: where a container-subset section's order comes from, 'rule' (default) or 'arranged' (the container's own entries)."],
   [275, 'label_mode', closed(['inline', 'none']), "RFC-037 Revision 5. FieldView.labelMode, presentation only (Invariant 13). 'inline' (the default) carries the row's resolved label; 'none' emits the value alone, with no label and no separating colon."],
 ];
 const fieldIdByName = {};
@@ -815,12 +821,17 @@ const TYPE_SPECS = {
       a('created_at', false), a('notes', false), a('source_refs', false, 'Source Refs'),
     ],
   },
+  'container-entry': {
+    description: 'RFC-043 [R1]: one placed member of a Container, the record it places and its nesting level.',
+    purpose: 'Describes a ContainerEntry: the instanceId placed and its optional depth.',
+    assignments: [a('instance_id', true, 'Instance Id'), a('depth', false)],
+  },
   container: {
     description: 'A lightweight grouping boundary over a collection of instances.',
     purpose: 'Describes a Container: its identity, membership, typing anchor, and identity record.',
     assignments: [
       a('container_id', true, 'Container Id'), a('title', true), a('namespace', false), a('name', false),
-      a('description', false), a('root_instance_ids', false, 'Root Instance Ids'),
+      a('description', false),
       a('member_instance_ids', false, 'Member Instance Ids'), a('identity_instance_id', false, 'Identity Instance Id'),
       a('anchor_instance_id', false, 'Anchor Instance Id'), a('tags', false),
       a('created_at', false), a('updated_at', false, 'Updated At'),
@@ -1084,9 +1095,9 @@ const TYPE_SPECS = {
     assignments: [a('field_id', true, 'Field'), a('renderer', true), a('renderer_roles', false, 'Roles')],
   },
   'section-ordering': {
-    description: 'DocumentSection.ordering — field-based sort direction, or an explicit member-order presentation sequence, for a DocumentSection.',
+    description: 'DocumentSection.ordering — field-based sort direction, or the order source (arranged or rule, RFC-043), for a DocumentSection.',
     purpose: 'Describes a DocumentSection\'s ordering directive.',
-    assignments: [a('field_id', false, 'Field'), a('sort_direction', false, 'Direction'), a('member_order', false, 'Member Order')],
+    assignments: [a('field_id', false, 'Field'), a('sort_direction', false, 'Direction'), a('source', false)],
   },
   'document-section': {
     description: 'One section within a Composition. `source` (SectionSource) is excluded — a JSON-Schema `oneOf` of two anonymous discriminated branches with no flat properties bag outside the union; no discriminated-union datatype exists in the metamodel today (srs#541 finding, filed as its own emitter-capability gap).',
@@ -1326,7 +1337,7 @@ function packageIndex() {
     // migration #2 (toRevision 2); this train's definition-layer removals under reject-unknown
     // (defaultValue both sites, deprecatedAt) and additions (FieldAssignment.description,
     // Type.lineage/provenance) are migration #3, stamped once here at Unit 1 landing.
-    dataModelRevision: 3,
+    dataModelRevision: 8,
     description: 'The self-hosted SRS meta-model (RFC-033/RFC-040): Field, Type, FieldAssignment, and value-objects expressed as SRS Type definitions. Frozen-seed source for docs/schema/2.0/{field,type}.json.',
     fields: FIELD_SPECS.map(([, name]) => `fields/${name}.json`),
     id: PACKAGE_ID,

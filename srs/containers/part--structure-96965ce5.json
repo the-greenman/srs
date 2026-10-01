@@ -2,51 +2,135 @@
   "containerId": "96965ce5-ad64-45b1-8d74-eccc6773db5e",
   "title": "Part: Structure",
   "anchorInstanceId": "1ba1845b-1c54-468c-8da9-0b227ae0931f",
-  "rootInstanceIds": [
-    "1ba1845b-1c54-468c-8da9-0b227ae0931f"
-  ],
   "memberInstanceIds": [
-    "03c74603-1fcd-435d-a3d0-07069da3d3b8",
-    "12a4cf6e-f707-429a-8704-a253da88e4d8",
-    "13b3461c-ecba-4a88-877d-ae0ea8fae0c5",
-    "173f5b74-8e4c-4227-833c-20ad36c5688e",
-    "18015847-34fc-4b84-9f3f-54ef72331424",
-    "18b7d630-2595-4613-b28a-4f4ac3ac6326",
-    "1e23ee5d-0406-485d-a927-6c62dfee58f1",
-    "209e7a48-cb65-4e7e-abaa-bc8635c35631",
-    "2be86c08-b427-4510-a1e8-25524f90ddaf",
-    "4b4ef7db-db4a-409b-a79c-37ff0659cf6c",
-    "5103308f-847d-4c17-a3a4-7a9fd6cdded0",
-    "51b430c9-b723-47dd-ace9-61d202ded4c2",
-    "5852266d-d0f0-4685-8d9c-83fafe5533e8",
-    "59b6eaff-2f57-4ca7-accf-28ff82eb1e08",
-    "5d527a48-5a00-4fdc-a1e0-cf3bec546dcc",
-    "67f2621d-82df-4b2f-bc4f-a21788b02aae",
-    "6970c1bc-42b1-4c4c-b59e-3600f8236f3d",
-    "7a7c02a5-af8a-4534-889f-abd75964b144",
-    "8948c35e-c340-4328-9845-f1523698ff4e",
-    "8b166381-c6e3-4db7-b193-bf635bd61249",
-    "8b8377fc-7666-4f52-973c-d751d2d56264",
-    "991f4c9c-71bc-4190-97c0-4ad17544bb44",
-    "a00fa3cd-0a03-445f-9c2b-ba326c191acb",
-    "b1000000-0000-4000-a000-000000000001",
-    "b6f2ee88-0d53-4396-886d-472fcee2ebb6",
-    "ba699995-0306-4dcb-be1e-27f20eedcf1d",
-    "d1750acd-fec2-487c-a0c1-776daf7cd9f2",
-    "d85abd4c-ca6b-4c36-939c-fde7ad373a00",
-    "dc06a69d-8c56-4e88-8d1d-b307454b5eb2",
-    "e1000016-0000-4000-a000-000000000016",
-    "e1000017-0000-4000-a000-000000000017",
-    "e1000020-0000-4000-a000-000000000020",
-    "e1000021-0000-4000-a000-000000000021",
-    "e1000048-0000-4000-a000-000000000048",
-    "e58d874f-eb98-4c0b-b717-1a7059c2a5de",
-    "f1000012-0000-4000-a000-000000000012",
-    "f1000013-0000-4000-a000-000000000013",
-    "f1000017-0000-4000-a000-000000000017",
-    "f1000020-0000-4000-a000-000000000020",
-    "f48d489f-2081-441f-ae7b-27e4046227b7",
-    "f64d7c25-9774-4edd-bd92-a31a8fce0d7d",
-    "fd9036ba-6a2c-493c-84b3-362ad83adbd7"
+    {
+      "instanceId": "1e23ee5d-0406-485d-a927-6c62dfee58f1"
+    },
+    {
+      "instanceId": "b6f2ee88-0d53-4396-886d-472fcee2ebb6"
+    },
+    {
+      "instanceId": "67f2621d-82df-4b2f-bc4f-a21788b02aae"
+    },
+    {
+      "instanceId": "12a4cf6e-f707-429a-8704-a253da88e4d8"
+    },
+    {
+      "instanceId": "7a7c02a5-af8a-4534-889f-abd75964b144"
+    },
+    {
+      "instanceId": "209e7a48-cb65-4e7e-abaa-bc8635c35631"
+    },
+    {
+      "instanceId": "b1000000-0000-4000-a000-000000000001"
+    },
+    {
+      "instanceId": "e1000016-0000-4000-a000-000000000016"
+    },
+    {
+      "instanceId": "e1000017-0000-4000-a000-000000000017"
+    },
+    {
+      "instanceId": "e1000020-0000-4000-a000-000000000020"
+    },
+    {
+      "instanceId": "e1000021-0000-4000-a000-000000000021"
+    },
+    {
+      "instanceId": "e1000048-0000-4000-a000-000000000048"
+    },
+    {
+      "instanceId": "f1000012-0000-4000-a000-000000000012"
+    },
+    {
+      "instanceId": "f1000013-0000-4000-a000-000000000013"
+    },
+    {
+      "instanceId": "f1000017-0000-4000-a000-000000000017"
+    },
+    {
+      "instanceId": "f1000020-0000-4000-a000-000000000020"
+    },
+    {
+      "instanceId": "ba699995-0306-4dcb-be1e-27f20eedcf1d"
+    },
+    {
+      "instanceId": "13b3461c-ecba-4a88-877d-ae0ea8fae0c5"
+    },
+    {
+      "instanceId": "5d527a48-5a00-4fdc-a1e0-cf3bec546dcc"
+    },
+    {
+      "instanceId": "f64d7c25-9774-4edd-bd92-a31a8fce0d7d"
+    },
+    {
+      "instanceId": "8b8377fc-7666-4f52-973c-d751d2d56264"
+    },
+    {
+      "instanceId": "991f4c9c-71bc-4190-97c0-4ad17544bb44"
+    },
+    {
+      "instanceId": "59b6eaff-2f57-4ca7-accf-28ff82eb1e08"
+    },
+    {
+      "instanceId": "2be86c08-b427-4510-a1e8-25524f90ddaf"
+    },
+    {
+      "instanceId": "d85abd4c-ca6b-4c36-939c-fde7ad373a00"
+    },
+    {
+      "instanceId": "8b166381-c6e3-4db7-b193-bf635bd61249"
+    },
+    {
+      "instanceId": "5852266d-d0f0-4685-8d9c-83fafe5533e8"
+    },
+    {
+      "instanceId": "f48d489f-2081-441f-ae7b-27e4046227b7"
+    },
+    {
+      "instanceId": "18015847-34fc-4b84-9f3f-54ef72331424"
+    },
+    {
+      "instanceId": "51b430c9-b723-47dd-ace9-61d202ded4c2"
+    },
+    {
+      "instanceId": "e58d874f-eb98-4c0b-b717-1a7059c2a5de"
+    },
+    {
+      "instanceId": "dc06a69d-8c56-4e88-8d1d-b307454b5eb2"
+    },
+    {
+      "instanceId": "fd9036ba-6a2c-493c-84b3-362ad83adbd7"
+    },
+    {
+      "instanceId": "a00fa3cd-0a03-445f-9c2b-ba326c191acb"
+    },
+    {
+      "instanceId": "173f5b74-8e4c-4227-833c-20ad36c5688e"
+    },
+    {
+      "instanceId": "4b4ef7db-db4a-409b-a79c-37ff0659cf6c"
+    },
+    {
+      "instanceId": "8948c35e-c340-4328-9845-f1523698ff4e"
+    },
+    {
+      "instanceId": "03c74603-1fcd-435d-a3d0-07069da3d3b8"
+    },
+    {
+      "instanceId": "6970c1bc-42b1-4c4c-b59e-3600f8236f3d"
+    },
+    {
+      "instanceId": "1ba1845b-1c54-468c-8da9-0b227ae0931f"
+    },
+    {
+      "instanceId": "18b7d630-2595-4613-b28a-4f4ac3ac6326"
+    },
+    {
+      "instanceId": "d1750acd-fec2-487c-a0c1-776daf7cd9f2"
+    },
+    {
+      "instanceId": "5103308f-847d-4c17-a3a4-7a9fd6cdded0"
+    }
   ]
 }
