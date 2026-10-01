@@ -1,0 +1,331 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://srs.semanticops.com/schema/2.0/package-bundle.json",
+  "title": "SRS Package Bundle",
+  "description": "A distributable package artifact containing Field and Type definitions inlined as objects. Self-contained when mode is 'bundled'; declares external dependencies when mode is 'standalone'. Produced by the package distribution tooling from a package-manifest.json source tree.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packageId",
+    "packageName",
+    "packageVersion",
+    "publishedAt",
+    "mode",
+    "fields",
+    "types",
+    "dependencyRefs"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "SRS spec version this package was authored against, e.g. '2.0'."
+    },
+    "packageId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "packageName": {
+      "type": "string"
+    },
+    "packageVersion": {
+      "type": "string",
+      "description": "Semver, e.g. '1.2.0'."
+    },
+    "dataModelRevision": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "RFC-033 / #265 — the data-model generation this bundle was generated for. Absent means revision 0. The emitter (#259) stamps this so repo stamp, bundle version, and migration-registry generation reference one number. RFC-043 is the migration toRevision 8 (container members become ordered entries; rootInstanceIds and Composition memberOrder removed); a bundle embeds Compositions, so its memberOrder is migrated by the pre-load transformer (RFC-043 [R17]). Not dotted semver."
+    },
+    "publishedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "publisher": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "homepage": {
+      "type": "string",
+      "format": "uri"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "bundled",
+        "standalone"
+      ],
+      "description": "bundled: all referenced Fields, Types, and Views are included inline. standalone: dependencies are expected pre-installed; dependencyRefs is the required manifest."
+    },
+    "fields": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Field"
+      },
+      "description": "Field definitions. In bundled mode, all Fields referenced by any included Type must be present."
+    },
+    "types": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Type"
+      }
+    },
+    "views": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "ext:views-l1; omit if not in use."
+    },
+    "compositions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "ext:views-l2; omit if not in use."
+    },
+    "vocabularies": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Vocabulary definitions included in this bundle (RFC-006)."
+    },
+    "lifecycles": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Lifecycle definitions included in this bundle (RFC-006)."
+    },
+    "relationTypes": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Relation type definitions included in this bundle."
+    },
+    "dependencyRefs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Reference"
+      },
+      "description": "Required in both modes. Consumers use this to validate completeness without parsing content internals."
+    }
+  },
+  "$defs": {
+    "Field": {
+      "type": "object",
+      "required": [
+        "id",
+        "namespace",
+        "name",
+        "version",
+        "description",
+        "aiGuidance",
+        "fieldType",
+        "createdAt"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "aiGuidance": {
+          "type": "object",
+          "required": [
+            "purpose"
+          ],
+          "properties": {
+            "purpose": {
+              "type": "string"
+            }
+          }
+        },
+        "fieldType": {
+          "type": "object",
+          "required": [
+            "datatype"
+          ],
+          "additionalProperties": true,
+          "description": "RFC-032 decomposed value type — see field.json $defs.FieldType. Embedded loosely here (additionalProperties:true); the bundle schema mirrors field.json's Field shape.",
+          "properties": {
+            "datatype": {
+              "type": "string",
+              "enum": [
+                "string",
+                "number",
+                "integer",
+                "boolean",
+                "date",
+                "date-time",
+                "ref",
+                "dependent",
+                "map"
+              ]
+            }
+          }
+        },
+        "editorHint": {
+          "type": "string",
+          "enum": [
+            "singleline",
+            "textarea",
+            "rich-text",
+            "date-picker",
+            "dropdown",
+            "multi-select",
+            "voice"
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Type": {
+      "type": "object",
+      "required": [
+        "id",
+        "namespace",
+        "name",
+        "version",
+        "description",
+        "fields"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FieldAssignment"
+          }
+        },
+        "aiGuidance": {
+          "type": "object"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "not": {
+        "required": [
+          "fieldGroups"
+        ]
+      },
+      "description": "Embedded loosely (additionalProperties:true) mirroring type.json, except that fieldGroups is rejected outright — RFC-039 [R7] removes the construct, and without this clause a bundle carrying one would still validate."
+    },
+    "FieldAssignment": {
+      "type": "object",
+      "required": [
+        "fieldId",
+        "order",
+        "required"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "fieldId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "displayLabel": {
+          "type": "string"
+        },
+        "defaultValue": {}
+      }
+    },
+    "Reference": {
+      "type": "object",
+      "required": [
+        "id",
+        "namespace",
+        "name",
+        "version"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "definitionType": {
+          "$comment": "GENERATED — derived from package-manifest.json's ten definition-kind properties by scripts/gen-package-bundle-definition-type.mjs --check (rfc-decision-c8704763 item 4; finding A6). Do not hand-edit this enum.",
+          "type": "string",
+          "enum": [
+            "blueprint",
+            "composition",
+            "field",
+            "lifecycle",
+            "protocol",
+            "relation-type",
+            "theme",
+            "type",
+            "view",
+            "vocabulary"
+          ]
+        }
+      }
+    }
+  }
+}
