@@ -179,7 +179,8 @@ the bug. New meaning gets a row here in the change that creates it.
 | Normative spec content | `srs/records/**` | `scripts/publish-spec.mjs`; the pinned `srs` CLI; every RFC fold |
 | Invariants | `srs/records/invariants/` only — placement **is** the ratification act (srs#410) | `check-invariant-placement` — fail-closed, with no exclusion-list escape, unlike the reachability guard |
 | Decisions, charter-class and otherwise | `srs/records/tier-2/rfc-decision-*.json` | this page; `check-decision-compass-drift`; `check-decision-cell-tags`; `docs/spec/rfcs/rfc-decision-log.md` |
-| Ordering, membership and repository identity | `srs/relations/` and `srs/manifest.json` | navigation, `publish-spec.mjs`, `repo validate` |
+| Semantic order (`precedes`, `contains`, `depends-on`) | `srs/relations/` (MEANING plane) | `repo validate`, `check-spec-coherence` |
+| Membership, document sequence, navigation order and repository identity | The Container's `memberInstanceIds` entries (order and depth) and its `identityInstanceId`, in `srs/manifest.json` (the root container) and `srs/containers/` (EXPRESSION plane, selection layer); RFC-043, effective at `dataModelRevision` 8. Until a corpus is at revision 8, navigation order is still derived from `precedes` through Rule [N+12] and membership is `rootInstanceIds` plus `memberInstanceIds` | navigation, `publish-spec.mjs`, `repo validate` |
 | Known concept-tree coherence violations (grandfathered) | `scripts/spec-coherence-allowlist.json` | `check-spec-coherence` (#560, #623) |
 
 **EXPRESSION** — selection → composition → presentation → projection.

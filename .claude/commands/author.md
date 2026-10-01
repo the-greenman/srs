@@ -196,6 +196,8 @@ echo '{
 }' | srs document-view create --repo <path> --pretty
 ```
 
+The container example above is the `dataModelRevision` 7 shape, which is what the pinned CLI writes today. RFC-043 (accepted) replaces it at revision 8: there is no `rootInstanceIds`, and `memberInstanceIds` is an ordered list of entries `{ "instanceId": "<uuid>", "depth": 1 }` (depth optional, 0 by default). Do not hand-write entries before srs-rust#1133 ships the tool support; keep copying the revision-7 shape until the corpus is migrated.
+
 Capture every `instanceId`, `containerId`, `viewId` returned — you will need them for subsequent relations and the PR description.
 
 ### Validate after each write batch
