@@ -2521,6 +2521,89 @@ async function repositoryCellCases(root) {
   );
 }
 
+// ---- RFC-043 ruling M / srs#851 — a Composition names no Container by id (enforced allowlist) ---
+async function compositionContainerLiteralCases(root) {
+  console.log("RFC-043 / srs#851 — composition container literal: enforced allowlist");
+
+  const composition = (containerId) => ({
+    id: "00000000-0000-4000-8000-0000000000c1",
+    sections: [{ sectionId: "s", source: { type: "container-subset", ...(containerId ? { containerId } : {}) } }],
+  });
+  const C = "00000000-0000-4000-8000-0000000000c2";
+  const compPath = "package/compositions/essay.json";
+  const entry = (extra = {}) => ({
+    path: compPath,
+    pointer: "/sections/0/source",
+    containerId: C,
+    reason: "fixture",
+    disposition: "pending",
+    issue: "#851",
+    ...extra,
+  });
+
+  const unlisted = join(root, "unlisted");
+  await writeJson(join(unlisted, compPath), composition(C));
+  expect(
+    "rejects a container-subset containerId literal that is not allowlisted (a new literal fails)",
+    runCheck("check-composition-container-literal.mjs", unlisted),
+    { exit: 1, contains: [compPath, "/sections/0/source", "name a Container by id"] },
+  );
+
+  const clean = join(root, "clean");
+  await writeJson(join(clean, compPath), composition(null));
+  expect(
+    "accepts an arranged-style container-subset source with no containerId",
+    runCheck("check-composition-container-literal.mjs", clean),
+    { exit: 0 },
+  );
+
+  const listed = join(root, "listed");
+  await writeJson(join(listed, compPath), composition(C));
+  await writeJson(join(listed, "scripts/composition-container-literal-allowlist.json"), { entries: [entry()] });
+  expect(
+    "accepts a literal covered by an allowlist entry citing an issue",
+    runCheck("check-composition-container-literal.mjs", listed),
+    { exit: 0, contains: ["1 known literal(s) allowlisted"] },
+  );
+
+  const changed = join(root, "changed-literal");
+  await writeJson(join(changed, compPath), composition("00000000-0000-4000-8000-0000000000c3"));
+  await writeJson(join(changed, "scripts/composition-container-literal-allowlist.json"), { entries: [entry()] });
+  expect(
+    "rejects a changed literal: the allowlist keys on the literal itself, so it is a new violation and the old entry is stale",
+    runCheck("check-composition-container-literal.mjs", changed),
+    { exit: 1, contains: ["name a Container by id", "no longer match a literal"] },
+  );
+
+  const stale = join(root, "stale");
+  await writeJson(join(stale, compPath), composition(null));
+  await writeJson(join(stale, "scripts/composition-container-literal-allowlist.json"), { entries: [entry()] });
+  expect(
+    "rejects an allowlist entry whose literal is gone (srs#851 shrinks the file)",
+    runCheck("check-composition-container-literal.mjs", stale),
+    { exit: 1, contains: ["no longer match a literal"] },
+  );
+
+  const archive = join(root, "archive");
+  await writeJson(join(archive, "gallery.srsj"), { package: { compositions: [composition(C)] } });
+  expect(
+    "walks .srsj archives, not only package files",
+    runCheck("check-composition-container-literal.mjs", archive),
+    { exit: 1, contains: ["gallery.srsj"] },
+  );
+
+  const malformed = join(root, "malformed");
+  await writeJson(join(malformed, compPath), composition(C));
+  await writeJson(join(malformed, "scripts/composition-container-literal-allowlist.json"), {
+    entries: [entry({ disposition: "settled", issue: "later" })],
+  });
+  expect(
+    "rejects an allowlist entry with a bad disposition or issue reference",
+    runCheck("check-composition-container-literal.mjs", malformed),
+    { exit: 1, contains: ['must be "permanent" or "pending"', "not a GitHub issue reference"] },
+  );
+}
+
 // check-programme-conformance.mjs and its negative-test coverage moved with the programme
 // repository itself (srs#786) — both now live in the standalone srs-programme repo.
 
@@ -2656,6 +2739,7 @@ try {
   await versioningCellCases(join(root, "versioning-cell"));
   await attributionCellCases(join(root, "attribution-cell"));
   await repositoryCellCases(join(root, "repository-cell"));
+  await compositionContainerLiteralCases(join(root, "composition-container-literal"));
   await partContainerMembershipCases(join(root, "part-container-membership"));
   await prClassificationCases(join(root, "pr-classification"));
 } finally {
