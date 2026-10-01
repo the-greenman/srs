@@ -157,6 +157,8 @@ chain as "fully UUID-anchored" with "no string joins anywhere in this linkage". 
 retained as the zero-configuration default because both corpus table types already use the conventional
 names.
 
+> **Amended by RFC-043 (effective at `dataModelRevision` 8).** Editorial pointer only, no normative change: the typed chain reads `Blueprint.rootTypes → Composition.rootTypeRefs → Container.anchorInstanceId`, because `Container.rootInstanceIds` is removed at revision 8 (RFC-043 [R4]) and the typing anchor has been the explicit `anchorInstanceId` since srs#446. *(Prior text, in force until a corpus is at revision 8: "`Blueprint.rootTypes → DocumentView.rootTypeRefs → Container.rootInstanceIds`".)*
+
 `renderer: "baseline"` is a reserved sentinel meaning *explicitly no renderer* — the composite is rendered
 by the baseline of Change C. It exists so that a more specific declaration site can cancel a broader one
 ([CR-036-6]); without it, precedence would be one-way and a document-wide directive could never be undone.
