@@ -1,0 +1,38 @@
+{
+  "instanceId": "0df19d60-a862-4e2d-a518-d12851fa6de1",
+  "typeId": "6a000004-0000-4000-a000-000000000004",
+  "typeVersion": 2,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc-decision",
+  "fieldValues": {
+    "title": "Context order is declared on the Container as an ordered outline of entries; the Composition declares only where its order comes from",
+    "decision_date": "2026-10-01",
+    "decision_rationale": "rfc-decision-8aed3412 ruled that a telling is assembled from reusable parts, that Containers carry membership and nesting of scopes, and that the Composition carries order through the section's memberOrder. Living with memberOrder showed the defect in that last sentence. A Composition is a type-layer template, and a memberOrder is a list of the instance ids of specific records written into a package file: the same mistake as adding specific content records to a Type (layer rule 1, one home). Measured at acceptance, the two spec Compositions hold 60 such ids and one muSrs Composition holds 30 more, so a document's order is edited in three package files whenever the content is reordered, while 489 of the spec's 519 Part members have no declared order at all. The Container is already the per-document object and already lists exactly the records the order is about, so one list there makes membership and sequence the same fact and removes the second structure that could drift from it. The owner ruled on 2026-10-01, in the RFC-043 review, that the encoding is a flat outline of entries with a depth, not a tree and not a second arrangement object.",
+    "decision_statement": "The sequence and nesting of the records a document holds are declared on the document's Container, as the ordered list memberInstanceIds whose entries carry an instanceId and an optional depth. The set of instanceIds is the membership, read flat. Nesting is derived from depth and never stored. A Composition section names no record and holds no order: it declares only an ordering source, either arranged (render the container's entries in their own sequence and at their own depth) or rule (order by a field or by Rule [N+12]). Membership and nesting of scopes stay with Containers as rfc-decision-8aed3412 ruled, with childContainerIds for nested scopes; what is superseded is the single sentence that located context order in the Composition's memberOrder, which is retired. The precedes relation remains semantic order only and is neither removed nor read for presentation.",
+    "decision_scope": "Where a document's presentational sequence is declared: the Container's memberInstanceIds entries, the Composition section's ordering.source, and the retirement of ordering.memberOrder (RFC-015 [N+29], Invariants I-126 and I-127). Does not change which relations are the MEANING tree, does not change childContainerIds or the nesting of scopes, and does not change rfc-decision-8aed3412's other dispositions: reuse of parts across tellings, no context on an edge, and instrumentation of the nested-rendering path.",
+    "governing_values": [
+      "shared-coherence",
+      "semantic-integrity"
+    ],
+    "project_phase": "formation",
+    "alternatives_considered": "Keep memberOrder and add depth to it inside the Composition. Rejected by the owner: it keeps record ids in a type-layer template and requires editing a versioned package definition on every drag. Declare order and nesting as contains or precedes edges per document. Rejected: an edge is a global claim and a record shared by two essays would have one parent, which is the context-on-an-edge outcome rfc-decision-8aed3412 already declined. A separate arrangement record referenced by the Container. Rejected: two objects per document that can disagree, and a copy needs both. A recursive tree of nodes in the member list. Replaced by the flat outline: it stores nesting twice and needs a self-referential Type the metamodel generator does not model.",
+    "accepted_costs": "A breaking change at dataModelRevision 8: every container in every corpus changes shape (79 across the six measured repositories, plus the srs-rust and discovery fixtures), carried by a registry migration in srs-rust that is retired later under srs-rust#1138. Three Composition files, 16 sections and 90 ids lose memberOrder. Two writers who reorder one container concurrently conflict as a whole, because the three-way merge does not merge arrangement per entry. A Composition can no longer pin an order for a container it renders.",
+    "evidence_refs": [
+      "the-greenman/srs#849 (RFC-043, accepted by the owner 2026-10-01; rulings recorded in the issue comments of that date)",
+      "rfcs/rfc-043-container-outline-arrangement.md, Revision 10 (Change A to Change J, Conformance Rules [R1] to [R20])",
+      "rfc-decision-8aed3412 (superseded in part: the sentence locating context order)",
+      "rfc-decision-0750c62f (a Container is a declared selection; successor filed with this record)",
+      "rfc-decision-628cf6c4 (a reshape is a migration with a generation stamp)",
+      "srs-rust#1133 (the registry migration)"
+    ],
+    "review_trigger": "Review if two-origin editing of one document (RFC-014 record layer) becomes real and the whole-container arrangement conflict proves too coarse, which would be evidence for an entry-level merge, not against declaring order on the Container."
+  },
+  "lifecycleState": "accepted",
+  "tags": [
+    "topic:rfc",
+    "cell:containment"
+  ],
+  "createdAt": "2026-10-01T11:22:23.685330534+00:00",
+  "updatedAt": "2026-10-01T11:22:37.672321773+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

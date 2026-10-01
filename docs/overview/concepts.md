@@ -129,8 +129,11 @@ document order; point-to-point relations use `from`/`to`.
 ## Container — a grouping boundary
 
 A **Container** is a lightweight boundary that groups instances (for example, "all records
-implementing RFC-001"). Membership is expressed either by `rootInstanceIds` (derive the
-set by traversing `contains` relations) or by an explicit `memberInstanceIds` list.
+implementing RFC-001"). Membership is an explicit declaration, never derived from `contains` relations (RFC-034).
+From `dataModelRevision` 8 (RFC-043) it is the ordered `memberInstanceIds` list: each entry
+is an `instanceId` with an optional `depth`, the ids are the membership, and the order and
+depth are the document's outline (until a corpus is migrated, the earlier
+`rootInstanceIds` plus `memberInstanceIds` form still applies).
 
 A Container's `containerId` is a distinct kind of identifier: **it must never appear as the
 source or target of a Relation.** Containers organise; they don't participate in the

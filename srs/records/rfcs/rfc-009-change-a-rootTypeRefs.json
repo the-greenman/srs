@@ -7,10 +7,10 @@
   "fieldValues": {
     "title": "RFC-009 Change A: Add rootTypeRefs to DocumentView",
     "affected_components": "ext:views-l2, document-view.json",
-    "proposed_change": "Add optional rootTypeRefs?: ExactTypeRef[] to DocumentView. When set, the DocumentView applies to Containers whose typing anchor (Container.anchorInstanceId; RFC-009 Rev 6/srs#446) has a typeId/typeVersion matching any ExactTypeRef entry. Pre-#446 repositories resolve the anchor via the transitional rootInstanceIds[0] fallback. ExactTypeRef requires both typeId (UUID) and typeVersion (integer >= 1). Multi-entry OR semantics. Soft-deprecates containerType to a back-compat hint. Conformance rules I-63, I-145.",
+    "proposed_change": "Add optional rootTypeRefs?: ExactTypeRef[] to DocumentView. When set, the DocumentView applies to Containers whose typing anchor (Container.anchorInstanceId; RFC-009 Rev 6/srs#446) has a typeId/typeVersion matching any ExactTypeRef entry. Pre-#446 repositories resolve the anchor via the transitional rootInstanceIds[0] fallback. ExactTypeRef requires both typeId (UUID) and typeVersion (integer >= 1). Multi-entry OR semantics. Soft-deprecates containerType to a back-compat hint. Conformance rules I-63, I-145.\n\n**Amended by RFC-043 (effective at dataModelRevision 8).** The `rootInstanceIds[0]` fallback is withdrawn; the typing anchor is always `Container.anchorInstanceId`, which must equal an entry `instanceId` in `memberInstanceIds` ([R3], [R4], [R19]). (Prior text, in force until a corpus is at revision 8: the statement above.)",
     "rationale": "UUID-based anchoring replaces fragile containerType string join. ExactTypeRef is version-exact because the DocumentView-to-Container match is a package-validation-time claim requiring both typeId and typeVersion to resolve."
   },
   "createdAt": "2026-06-24T16:05:55.585910390+00:00",
-  "updatedAt": "2026-08-28T14:09:18.120113337+00:00",
+  "updatedAt": "2026-10-01T11:20:24.744006391+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

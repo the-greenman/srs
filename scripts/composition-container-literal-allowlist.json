@@ -1,0 +1,197 @@
+{
+  "$comment": "Known violations of scripts/check-composition-container-literal.mjs (RFC-043, owner ruling 2026-10-01: ALLOW the containerId literal for now, as an enforced allowlist tied to srs#851). Entry shape: {path, pointer, containerId, reason, disposition, issue}, the same discipline as scripts/repository-cell-allowlist.json; pointer is the JSON pointer to the container-subset source object. The check fails on any literal NOT listed here (so a new literal fails) and on any entry that no longer matches a literal (shrinking this file IS the fix). srs#851 removes the literals from the spec Compositions and the gallery example and then deletes this file and its checks.json registry entry. Measured 2026-10-01: 18 sites in the two spec Compositions, 3 in the gallery example package, 3 in the gallery.srsj archive (24).",
+  "entries": [
+    {
+      "path": "docs/spec/examples/gallery-project-v2/package/compositions/articles-and-roles-78b11038.json",
+      "pointer": "/sections/0/source",
+      "containerId": "f7562aa3-98c7-44be-b4c5-5474df6441f2",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "docs/spec/examples/gallery-project-v2/package/compositions/articles-and-roles-78b11038.json",
+      "pointer": "/sections/1/source",
+      "containerId": "b30db206-e9a7-4588-a9aa-53451aacd243",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "docs/spec/examples/gallery-project-v2/package/compositions/decision-deliberation-5a3ce87e.json",
+      "pointer": "/sections/0/source",
+      "containerId": "138e2fac-6a8a-4a06-9511-5aefd99ceae9",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "docs/spec/examples/gallery.srsj",
+      "pointer": "/data/package/document-views/articles-and-roles-78b11038.json/sections/0/source",
+      "containerId": "f7562aa3-98c7-44be-b4c5-5474df6441f2",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "docs/spec/examples/gallery.srsj",
+      "pointer": "/data/package/document-views/articles-and-roles-78b11038.json/sections/1/source",
+      "containerId": "b30db206-e9a7-4588-a9aa-53451aacd243",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "docs/spec/examples/gallery.srsj",
+      "pointer": "/data/package/document-views/decision-deliberation-5a3ce87e.json/sections/0/source",
+      "containerId": "138e2fac-6a8a-4a06-9511-5aefd99ceae9",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "srs/package/spec-authoring-core/compositions/spec-document-view.json",
+      "pointer": "/sections/0/source",
+      "containerId": "2ea344e1-f64e-4817-99f7-fe1b1e4046ce",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "srs/package/spec-authoring-core/compositions/spec-document-view.json",
+      "pointer": "/sections/1/source",
+      "containerId": "752dad23-8a6d-44e5-98c9-f081d2cc634e",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "srs/package/spec-authoring-core/compositions/spec-document-view.json",
+      "pointer": "/sections/2/source",
+      "containerId": "2da5d723-f09f-4acf-9b86-a99745193ee5",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "srs/package/spec-authoring-core/compositions/spec-document-view.json",
+      "pointer": "/sections/3/source",
+      "containerId": "96965ce5-ad64-45b1-8d74-eccc6773db5e",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "srs/package/spec-authoring-core/compositions/spec-document-view.json",
+      "pointer": "/sections/4/source",
+      "containerId": "97838af7-50f8-4da2-9d8f-d7dbf9296c80",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "srs/package/spec-authoring-core/compositions/spec-document-view.json",
+      "pointer": "/sections/5/source",
+      "containerId": "fdb7d202-f9a5-4c8f-a2a8-d6c79add89ce",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "srs/package/spec-authoring-core/compositions/spec-document-view.json",
+      "pointer": "/sections/6/source",
+      "containerId": "a7b772f2-0093-4ccc-8050-0f7831421eaf",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "srs/package/spec-authoring-core/compositions/spec-document-view.json",
+      "pointer": "/sections/7/source",
+      "containerId": "1dc2ab2d-7873-4179-8a40-d591e9c90bb0",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "srs/package/spec-authoring-core/compositions/spec-document-view.json",
+      "pointer": "/sections/8/source",
+      "containerId": "618920ec-c417-4f91-acce-c5ea79b743f2",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "srs/package/spec-authoring-core/compositions/unified-document-view.json",
+      "pointer": "/sections/0/source",
+      "containerId": "2ea344e1-f64e-4817-99f7-fe1b1e4046ce",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "srs/package/spec-authoring-core/compositions/unified-document-view.json",
+      "pointer": "/sections/1/source",
+      "containerId": "752dad23-8a6d-44e5-98c9-f081d2cc634e",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "srs/package/spec-authoring-core/compositions/unified-document-view.json",
+      "pointer": "/sections/2/source",
+      "containerId": "2da5d723-f09f-4acf-9b86-a99745193ee5",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "srs/package/spec-authoring-core/compositions/unified-document-view.json",
+      "pointer": "/sections/3/source",
+      "containerId": "96965ce5-ad64-45b1-8d74-eccc6773db5e",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "srs/package/spec-authoring-core/compositions/unified-document-view.json",
+      "pointer": "/sections/4/source",
+      "containerId": "97838af7-50f8-4da2-9d8f-d7dbf9296c80",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "srs/package/spec-authoring-core/compositions/unified-document-view.json",
+      "pointer": "/sections/5/source",
+      "containerId": "fdb7d202-f9a5-4c8f-a2a8-d6c79add89ce",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "srs/package/spec-authoring-core/compositions/unified-document-view.json",
+      "pointer": "/sections/6/source",
+      "containerId": "a7b772f2-0093-4ccc-8050-0f7831421eaf",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "srs/package/spec-authoring-core/compositions/unified-document-view.json",
+      "pointer": "/sections/7/source",
+      "containerId": "1dc2ab2d-7873-4179-8a40-d591e9c90bb0",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    },
+    {
+      "path": "srs/package/spec-authoring-core/compositions/unified-document-view.json",
+      "pointer": "/sections/8/source",
+      "containerId": "618920ec-c417-4f91-acce-c5ea79b743f2",
+      "reason": "Composition container-subset source names a Container by id: a type-layer template naming content. Allowed for now by owner ruling 2026-10-01 (RFC-043 ruling M); removed by srs#851, which then deletes this entry.",
+      "disposition": "pending",
+      "issue": "#851"
+    }
+  ]
+}

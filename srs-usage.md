@@ -484,7 +484,7 @@ Relations are semantic claims, not ownership. Asserting a relation does not chan
 
 **Choosing a type.** Every `relationType` must resolve to an installed `RelationTypeDefinition` in the effective package set (RFC-005) — the seven canonical types above ship in the core package. To use a domain-specific relation (`delegates`, `amends`, `com.acme.hr/transferred-to`), first install a namespaced definition via `srs relation-type create`; a string that resolves to nothing is a validation error, not a soft convention.
 
-**Ordering.** `precedes` is for *semantic* sequence only — where a different order would be wrong (spec sections, process steps). For presentational ordering use the view layer (`ordering.memberOrder`; see "Presentational vs semantic ordering" below). Never assert `precedes` to make a list look right.
+**Ordering.** `precedes` is for *semantic* sequence only — where a different order would be wrong (spec sections, process steps). For presentational ordering use the Container's ordered entries (RFC-043, effective at `dataModelRevision` 8) or, at revision 7, the view layer (`ordering.memberOrder`; see "Presentational vs semantic ordering" below). Never assert `precedes` to make a list look right.
 
 ### Superseding a Record (use `record successor`, not a hand-assembled edge)
 
@@ -1739,7 +1739,11 @@ Membership is a declared selection only. The branch that once derived membership
 
 CLI: `srs container list --member <instanceId> --repo <path>`. The result is consistent with current `rootInstanceIds` and `memberInstanceIds` in the repository.
 
+**From `dataModelRevision` 8 (RFC-043, accepted; the corpus migration lands after srs-rust#1133):** membership is the set of `instanceId` values of the Container's `memberInstanceIds` entries, read flat and ignoring `depth`; `rootInstanceIds` is removed and there is one list, not two.
+
 ### Building a navigation section: the anchor is a root, not a member (I-82, srs-rust#460)
+
+> **From `dataModelRevision` 8 (RFC-043):** `rootInstanceIds` is removed, so "root, not member" no longer exists. The anchor record is simply an entry in `memberInstanceIds`; `anchorInstanceId` is the explicit link from a navigation section to its container (the section container of a record is the Container whose `anchorInstanceId` equals the record's id) and `identityInstanceId` names the identity entry. In the root container the entry order is the navigation order and a depth-0 entry is a navigation section. The text below is the revision-7 rule that holds until a corpus is migrated.
 
 A container that represents a navigation section names its anchor record in `rootInstanceIds`, not `memberInstanceIds`. Set `identityInstanceId` and `anchorInstanceId` to that same record. Two ways to get this wrong, both easy to ship unnoticed:
 
@@ -1806,6 +1810,8 @@ Do not create `precedes` relations to achieve a presentational goal. `precedes` 
 ```
 
 `memberOrder` lists instanceIds in presentation order; container members not listed are appended in [N+12] order (topological then `createdAt` tiebreak). It MUST NOT be combined with `fieldId` on the same section. On non-`container-subset` sources it is ignored with a diagnostic.
+
+**From `dataModelRevision` 8 (RFC-043, accepted, effective when a corpus is migrated):** `ordering.memberOrder` is retired. A document's order and nesting are declared on its Container as the ordered list `memberInstanceIds`, whose entries carry an `instanceId` and an optional `depth` (nesting is derived from depth, never stored: an entry's parent is the nearest preceding entry with a smaller depth; the first entry has depth 0 and a depth rises by at most one per entry). A Composition section names no record and declares only `ordering.source`: `"arranged"` renders the container's entries in their own sequence and at their own depth, `"rule"` (the default) orders by `ordering.fieldId` or Rule [N+12] and ignores depth. An arranged section omits `containerId` and renders the container being rendered; the literals that exist today are an enforced allowlist (`scripts/check-composition-container-literal.mjs`, srs#851), and new ones fail the check. Removing an entry promotes its descendants one level, moving an entry moves its whole run, and order is data (no tool sorts the entries). `precedes` stays semantic order only. Until srs-rust ships revision 8 (srs-rust#1133) keep using `memberOrder` as above; do not hand-write entries.
 
 Creating `precedes` for presentation pollutes the semantic graph permanently — tooling cannot distinguish semantic from presentational `precedes` edges, and the relation persists even when the DocumentView is removed.
 

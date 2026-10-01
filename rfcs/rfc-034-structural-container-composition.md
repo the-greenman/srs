@@ -2,7 +2,7 @@
 
 # RFC-034: Container Structure and Nesting
 
-**Status**: Accepted (Revision 6)
+**Status**: Accepted (Revision 7)
 
 **Affects**: `Container` membership semantics; a new optional `Container.childContainerIds` nesting edge; both closed Container JSON Schema definitions (`container.json` and `manifest.json#/$defs/Container`); the Container shape carried in SRSJ; `containers_for_instance`; RFC-011 `containerScope` semantics (`explicit` = `direct`, `subtree` = `effective`; supersedes the traversal branch of I-011-3); RFC-012 `containerId` filtering (R6/I-118); container view resolution; RFC-026 container-slice closure; core Container prose (subsection 4.6.4.6), I-66, and design-note 013 ("Why Containers and Relations are complementary").
 
@@ -16,6 +16,7 @@
 | 4 | 2026-07-29 | Unify container-scope vocabulary on `direct`/`effective`: re-anchor `containerScope: "explicit"` to `direct(C)` (retaining RFC-011's original meaning and preserving shallow querying) and `"subtree"` to `effective(C)`, rather than collapsing both to effective. |
 | 5 | 2026-09-06 | Disposition ruled by `rfc-decision-0750c62f` (Container is a declared selection on the expression plane; `contains` is the part-of tree where meaning lives). Executes that ruling: adopts Change C and Change B as drafted; renames the RFC per `rfc-decision-92d2da05` from "Structural Container Composition" to "Container Structure and Nesting" so the noun `Composition` (the renamed DocumentView entity) stays unambiguous; rewrites Change E and "Authored scope versus evaluated Selection" against the current query surface — `srs find`, a Composition `SectionSource`'s `discovery-query` (ext:discovery, replacing the retired `type-query`/`relation-query`/`fixed-instances` variants per srs#525), an SQL view, JSONPath, and graph traversal — rather than the retired `DocumentView type-query`/`relation-query` vocabulary; adds an explicit one-way-door mitigation statement that `contains` remains the part-of tree and must still be maintained now that it no longer defines membership; notes that `design-capture-directory-kind-scopes` graduates alongside this RFC's acceptance; and backfills the `## Charter alignment` section (cell:containment, mode: complicated) that predates Stage 1.5, per the RFC-040/srs#498 precedent. |
 | 6 | 2026-09-06 | Accepted by the owner (srs#267, 2026-09-06T13:08Z, citing `rfc-decision-0750c62f`); spec records authored in srs/srs — RFC stub record `rfc-02618b7f` with its integration manifest; I-66, I-118 and I-144 amended in place with visible markers; Container subsection carries the membership/nesting prose; conformance rules [R1]–[R4], [R6], [R7], [R9] become invariants I-146 to I-151 ([R5] is the amended I-66, [R8] the amended I-118/I-144); Container concept, design-note 013, ext:slices closure, ext:views-l2 `containerScope` and ext:discovery `containerId` re-stated; `childContainerIds` added to `container.json`, `manifest.json#/$defs/Container` and the SRSJ Container shape; the `composition.json`/`discovery.json` `containerId` and `containerScope` descriptions corrected; `design-capture-directory-kind-scopes` graduated to design-note 046. No content change to the accepted Revision 5 text. |
+| 7 | 2026-10-01 | Door 3 amendment executing RFC-043 (the-greenman/srs#849, accepted): amends [R1], [R3], [R7] (tail), [R8] and [R9], the Change A `direct(C)` definition, the structural-coherence paragraph, the I-20 guard text, the Compatibility and Migration paragraph on assisted nesting migration, and the Testability scenario rows, so that `direct(C)` is the set of entry ids of `memberInstanceIds`, `rootInstanceIds` is gone, and "unordered" no longer applies to `memberInstanceIds` (it is kept for `childContainerIds` order). Effective at dataModelRevision 8; the text above stays in force for revision-7 corpora until then. |
 
 ---
 
@@ -90,6 +91,8 @@ The two arrays continue to have their existing distinct authoring roles: roots a
 
 An omitted `memberInstanceIds` means that the Container has no additional direct members. It does **not** opt into Relation traversal.
 
+> **Amended by RFC-043 (effective at `dataModelRevision` 8).** `direct(C)` is the set of `instanceId` values of `C.memberInstanceIds`, read flat whatever each entry's `depth`: `direct(C) = set(ids of C.memberInstanceIds or [])`. `rootInstanceIds` is removed (RFC-043 [R4]), so there are no separate roots; the typing anchor is `anchorInstanceId` and the identity is `identityInstanceId`, and both MUST equal an id in `direct(C)`. `memberInstanceIds` is now an ordered outline of entries `{instanceId, depth?}`, so the statement that neither array implies an order is withdrawn for `memberInstanceIds`: its array order is declared layout (RFC-043 [R5]), and membership is still a set because an `instanceId` appears exactly once. `childContainerIds` stays an order-agnostic set. *(Prior text, in force until a corpus is at revision 8: "`direct(C) = set(C.rootInstanceIds or []) ∪ set(C.memberInstanceIds or [])` ... Neither array implies an order.")*
+
 ### Change B — declared nesting and effective membership
 
 A Container MAY declare an ordered-agnostic set of child scopes:
@@ -99,6 +102,8 @@ A Container MAY declare an ordered-agnostic set of child scopes:
 A Container `child` is an **admitted child** of a distinct Container `parent` exactly when `child.containerId ∈ parent.childContainerIds`. Nesting is declared, never inferred from membership overlap. A Container rooted at an instance that appears in another Container's membership acquires **no** relationship to it unless that Container names it in `childContainerIds`. `childContainerIds` holds `containerId`s, not instance ids; it is the one place a Container references another Container, and it never makes a `containerId` an instance member (I-20 is unaffected).
 
 **Structural coherence.** A child MAY be rootless. When an admitted child has one or more `rootInstanceIds`, those roots SHOULD be a subset of `direct(parent)`. This preserves the existing root-node convention for navigable sections: a parent's direct membership contains the Records that anchor its child scopes. A rootless child remains valid because the explicit `childContainerIds` edge is sufficient to author the nesting; this is useful for loose collections and folder-like scopes that have no distinguished root Record. If a rooted child's roots are not all in `direct(parent)`, an implementation SHOULD emit a structural-coherence diagnostic, but the declared edge remains authoritative and the child's members still contribute to effective membership.
+
+> **Amended by RFC-043 (effective at `dataModelRevision` 8).** A child's anchor (`anchorInstanceId`) SHOULD be in `direct(parent)`; a violation produces the same structural-coherence diagnostic, and the declared edge remains authoritative. A child with no `anchorInstanceId` is exempt, as a rootless child was (RFC-043 [R19]). *(Prior text, in force until a corpus is at revision 8: "When an admitted child has one or more `rootInstanceIds`, those roots SHOULD be a subset of `direct(parent)`.")*
 
 The **effective membership** of a Container is the least fixed point:
 
@@ -168,6 +173,8 @@ Both closed Container schema definitions MUST admit the same new optional proper
 
 The property contains Container UUIDs, not instance UUIDs. It therefore does not weaken I-20 and MUST NOT be accepted in `rootInstanceIds`, `memberInstanceIds`, or Relation endpoints.
 
+> **Amended by RFC-043 (effective at `dataModelRevision` 8).** The guard no longer names `rootInstanceIds`: `childContainerIds` MUST NOT be accepted in `memberInstanceIds` entries or Relation endpoints (I-20 is unaffected). *(Prior text, in force until a corpus is at revision 8: "MUST NOT be accepted in `rootInstanceIds`, `memberInstanceIds`, or Relation endpoints.")*
+
 SRSJ requires no envelope or serialization-algorithm change: a serialized Container may carry `childContainerIds` in the same way it carries any other Container property. Compatibility is asymmetric because the existing Container schemas are closed. Existing repositories without the field remain valid under the revised schemas; a repository that uses the new field will be rejected by an older validator that does not recognize it.
 
 ---
@@ -210,6 +217,8 @@ This RFC deliberately does **not** introduce a named `Selection` record for the 
 >
 > **[R9]** An RFC-026 container slice MUST include the closure root, its transitive `childContainerIds` descendants, and the root's effective member set. It MUST preserve declared edges among those Containers and MUST NOT include an unrelated Container solely because its roots or members are subsets of the included instance set.
 
+> **Amended by RFC-043 (effective at `dataModelRevision` 8).** **[R1]**, **[R3]**, **[R7]** (its tail) and **[R9]** read as follows. **[R1]**: a Container's direct membership is exactly the set of `instanceId` values of its `memberInstanceIds` entries, read flat and ignoring `depth` (RFC-043 [R3]); an omitted `memberInstanceIds` contributes no direct members. **[R3]**: the closure over `childContainerIds` is computed as before and deduplicates instance ids; an implementation MUST NOT infer an ordering from `childContainerIds` order, but `memberInstanceIds` order is declared and is not an inference (RFC-043 [R5]). **[R7] (tail)**: when a child has an `anchorInstanceId`, it SHOULD occur in the parent's direct membership, with the same diagnostic and the same non-removal of the declared edge. **[R9]**: a slice keeps, in every container it contains (the closure root and each descendant), the entries for the records the slice includes and drops each excluded record's entry by the promoting removal (RFC-043 [R7], [R18]), so each container in the slice is a valid outline. The amended statements of I-66, I-118 and I-146 to I-151 follow these readings. *(Prior text, in force until a corpus is at revision 8: [R1] "exactly the duplicate-free union of its `rootInstanceIds` and `memberInstanceIds`"; [R3] "MUST NOT infer an ordering from either membership array"; [R7] "those roots SHOULD occur in the parent's direct membership".)*
+
 ---
 
 ## Compatibility and Migration
@@ -217,6 +226,8 @@ This RFC deliberately does **not** introduce a named `Selection` record for the 
 This RFC adds one new optional Container property, `childContainerIds`. A repository that expresses no nesting, or whose scope is fully captured by explicit membership arrays, needs no change: an absent `childContainerIds` means the Container has no admitted children.
 
 A repository whose nesting was previously *implied* by a section root appearing in a parent's membership must now declare that nesting explicitly in `childContainerIds`; root co-membership alone no longer composes scope. An implementation MAY offer assisted migration that proposes a `childContainerIds` edge for each Container whose non-empty `rootInstanceIds` are a subset of another Container's direct membership, but MUST present the proposed edges for author review — the implicit form cannot distinguish deliberate nesting from incidental overlap, which is the ambiguity this RFC removes.
+
+> **Amended by RFC-043 (effective at `dataModelRevision` 8).** The assisted migration proposes a `childContainerIds` edge for each Container whose `anchorInstanceId` is in another Container's direct membership; `rootInstanceIds` no longer exists to compare. The proposed edges are still presented for author review. *(Prior text, in force until a corpus is at revision 8: "whose non-empty `rootInstanceIds` are a subset of another Container's direct membership".)*
 
 A repository that relied on an implementation-specific `contains` traversal must materialize its intended boundary into `memberInstanceIds` and `childContainerIds`. There is deliberately no normative automatic migration from Relations: the old specification never fixed the Relation direction, traversal depth, or cycle policy needed to derive one safely.
 
@@ -289,6 +300,8 @@ The following scenarios are normative paper exercises for this proposal. They de
 | Slice integration | `A.childContainerIds = [B]`; unrelated `C` happens to have all of its members in `effective(A)` | An RFC-026 slice rooted at `A` includes `A` and `B`, preserves `A → B`, and excludes `C` |
 | Tier-0 folder analogy | Nested Tier-0 Containers represent directories, including one child with no distinguished root Note | Declared `childContainerIds` reproduce the folder hierarchy; a root Note may supply a navigation anchor but is not required for the directory edge |
 | Dynamic snapshot distinction | A predicate currently selects `{b, c}` and later selects `{b, c, d}` after a Record edit | A materialized Container remains `{b, c}` until an author writes `d`; the query result may change independently |
+
+> **Amended by RFC-043 (effective at `dataModelRevision` 8).** The Example and Testability rows that set `rootInstanceIds` (the `roots` and `.roots` columns) are restated at revision 8 with the root as the Container's `anchorInstanceId` and an entry in `memberInstanceIds`, for example `A.memberInstanceIds = [a, b]` with `A.anchorInstanceId = a`; the required outcomes are unchanged, because `direct(C)` is the set of entry ids. *(Prior text, in force until a corpus is at revision 8: "`A.rootInstanceIds = [a]`, `A.memberInstanceIds = [b]`".)*
 
 ---
 

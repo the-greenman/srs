@@ -1,16 +1,16 @@
 {
-  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
-  "createdAt": "2026-06-24T16:05:55.714512418+00:00",
+  "instanceId": "c59a36db-5866-4b72-bc90-f0afa4afa1e0",
+  "typeId": "6a000002-0000-4000-a000-000000000002",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc-change",
   "fieldValues": {
     "title": "RFC-009 Change D: Define containers_for_instance as a normative core operation",
     "affected_components": "Container (core)",
-    "proposed_change": "containers_for_instance(instanceId: UUID) -> Container[]: returns all Containers that include the instance via (1) rootInstanceIds membership, (2) memberInstanceIds membership, or (3) transitive contains Relation traversal from rootInstanceIds. Union of three conditions. All conforming implementations MUST provide this operation (I-66). Core operation, not extension-gated.",
+    "proposed_change": "containers_for_instance(instanceId: UUID) -> Container[]: returns all Containers that include the instance via (1) rootInstanceIds membership, (2) memberInstanceIds membership, or (3) transitive contains Relation traversal from rootInstanceIds. Union of three conditions. All conforming implementations MUST provide this operation (I-66). Core operation, not extension-gated.\n\n**Amended by RFC-043 (effective at dataModelRevision 8).** `containers_for_instance` returns every Container whose `effective(C)` contains the instance, where membership is the `instanceId` values of the entries in `memberInstanceIds` read flat ([R3], [R18]); `rootInstanceIds` is removed ([R4]). (Prior text, in force until a corpus is at revision 8: the statement above.)",
     "rationale": "The three inclusion conditions are all core Container and Relation concepts. Gating behind an extension would leave implementations without a reliable root-record to container reverse lookup. Core entities need core operations."
   },
-  "instanceId": "c59a36db-5866-4b72-bc90-f0afa4afa1e0",
-  "typeId": "6a000002-0000-4000-a000-000000000002",
-  "typeName": "rfc-change",
-  "typeNamespace": "com.semanticops.spec",
-  "typeVersion": 1,
-  "updatedAt": "2026-06-24T16:05:55.714513629+00:00"
+  "createdAt": "2026-06-24T16:05:55.714512418+00:00",
+  "updatedAt": "2026-10-01T11:20:25.103786359+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

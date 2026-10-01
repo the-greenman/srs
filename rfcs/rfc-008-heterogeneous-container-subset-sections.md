@@ -2,7 +2,7 @@
 
 # RFC-008: Heterogeneous ContainerSubset Sections — `typeFilter` and `typeDispatch`
 
-**Status**: Accepted (Revision 5)
+**Status**: Accepted (Revision 6)
 **Affects**: `ext:views-l2` (`DocumentView.DocumentSection`, `SectionSource` `container-subset` variant), `document-view.json` schema. Builds on base-spec ordering Rule **[N+12]** and heterogeneous-heading Rule **[N+1]** (both `ext:views-l2`, from RFC-001).
 **Author**: Peter Brownell
 **Date**: 2026-06-07
@@ -18,6 +18,7 @@
 | 3 | 2026-06-07 | Address round-2 review (zero blocking): add [DV-Dx5] making source ordering normative (`container-subset` → [N+12]; `fixed-instances` → `instanceIds[]` order); specify fallback-`renderViewId` type-mismatch degradation in [DV-Dx3]; add unresolvable-`typeId` case to [DV-Fx5]; add packaged bare-key portability clause to [DV-Mx1]; cite base-spec baseline rule [N]; name the canonical schema file and note `check-schema-sync.sh` verifies both crate and vscode copies; add `titleFieldId`-description schema-drift fix to the Schema changes table |
 | 4 | 2026-06-07 | Accepted (zero blocking findings across two review rounds). Implementation started on branch `rfc/008-heterogeneous-container-subset-sections`: `document-view.json` schema edits landed (`typeDispatch`, `typeFilter`, `titleFieldId` drift fix) and synced to srs-rust + srs-vscode. Spec-record authoring + re-render (Stage 6) deferred until the in-progress RFC-006 work merges and the main spec tree is clean. |
 | 5 | 2026-06-07 | Stage 6: authored the changes as spec records in `srs/` — `ext:views-l2` subsections `07-7` (added `typeFilter`/`typeDispatch` to the `SectionSource`/`DocumentSection` definitions + "Heterogeneous Section Rendering" prose) and `08-14` (conformance rules `[N+13]`–`[N+24]`, each annotated with its RFC `[DV-*]` origin). Re-rendered `docs/spec/srs-spec.md`. The other projections (`srs-unified.md`, `srs-rationale.md`, `rfc-catalog.md`) carry pre-existing accumulated render drift and are left for the canonical `publish-spec.mjs` run on a clean main tree. |
+| 6 | 2026-10-01 | Door 3 amendment executing RFC-043 (the-greenman/srs#849, accepted): [DV-Dx5], [DV-Fx3], the Change B ordering sentence and the Change A filter-then-project bullet are amended: container-subset ordering is Rule [N+12] only for an `ordering.source` of `"rule"`, while an `"arranged"` section takes the container's entry order and depth, and `typeFilter` on an arranged section uses the promoting removal. Effective at `dataModelRevision` 8; the text above stays in force for revision-7 corpora until then. |
 
 ---
 
@@ -91,6 +92,8 @@ Resolution order for rendering a record in a section:
 
 The type key is `namespace/name` **without** version: dispatch selection MUST NOT change when a record binds to a newer version of the same `namespace/name` type lineage. `typeDispatch` is independent of the section's `source` variant — it applies to any source that can yield heterogeneous members (most usefully `container-subset` and `fixed-instances`). `typeDispatch` selects *how* each member renders; it never changes member *order*. Order is governed entirely by the source: [N+12] for `container-subset`, and the declared `instanceIds[]` array order for `fixed-instances`.
 
+> **Amended by RFC-043 (effective at `dataModelRevision` 8).** For a `container-subset` section, order is governed by `ordering.source`. When it is `"rule"` (the default, and the only behaviour before this amendment) the order is `ordering.fieldId` where present, otherwise Rule [N+12], and every record renders at depth 0. When it is `"arranged"` the order and depth are the entries of the container being rendered, in array order (RFC-043 Change C), and Rule [N+12] is not consulted. `typeDispatch` still selects only how each member renders and never changes order. The `fixed-instances` order is unchanged. *(Prior text, in force until a corpus is at revision 8: "Order is governed entirely by the source: [N+12] for `container-subset`".)*
+
 `typeDispatch` does not alter the existing heterogeneous-heading behaviour: per base-spec Rule **[N+1]**, when a section sets `titleFieldId` and a member's type does not carry that field, the per-record heading is omitted for that member (not a render failure). This already supports the mixed-type sections that `typeDispatch` targets.
 
 ### Change A — type restriction on the `container-subset` source (`typeFilter`)
@@ -120,6 +123,8 @@ Semantics:
 - **Ordering is the base-spec [N+12] order computed over the full container, then projected onto the filtered subset (filter-then-project).** Concretely: run [N+12] (topological sort by `precedes` with `createdAt`-ascending tiebreak, reversed when `ordering.direction` is `desc`) across all container members, then drop the non-surviving members from that sequence. This preserves the relative order of survivors even when an excluded member was a `precedes` bridge between two survivors, and inherits [N+12]'s tiebreak for survivors not connected by `precedes` (see [DV-Fx3]). Filtering changes *which* members appear, never the [N+12] order among those that remain.
 - `typeFilter` and `typeDispatch` are orthogonal and may be combined on the same section: `typeFilter` selects which records appear; `typeDispatch` selects how each appearing record is rendered.
 
+> **Amended by RFC-043 (effective at `dataModelRevision` 8).** The filter-then-project computation of the [N+12] order over the full container applies to a `"rule"` section only. On an `"arranged"` section `typeFilter` excludes entries by the promoting removal (RFC-043 Change A): each excluded entry is removed and the depth of every entry in its run is reduced by one, so excluding an entry never hides what is arranged beneath it, and the survivors keep the container's entry order at their effective depth. *(Prior text, in force until a corpus is at revision 8: "Ordering is the base-spec [N+12] order computed over the full container, then projected onto the filtered subset (filter-then-project)".)*
+
 ### Interaction with field-based `ordering`
 
 When a section carries both a `container-subset` source (with or without `typeFilter`) and a field-based `ordering.fieldId`, `typeFilter` is applied first to select the member set, and then `ordering` determines the sequence. Per [N+12], declaring `ordering.fieldId` already replaces the `precedes`-chain ordering with field-value ordering; [DV-Fx3]'s filter-then-project rule therefore governs only the `precedes`-derived case and is moot when `ordering.fieldId` is set (the field sort runs over the filtered survivors).
@@ -144,11 +149,15 @@ RFC-007 governs *intra-record* rendering — how a single record's `FieldGroup` 
 
 > **[DV-Dx5]** `typeDispatch` MUST NOT change member ordering. Member order is determined solely by the section's source: base-spec [N+12] for `container-subset`, and the declared `instanceIds[]` array order for `fixed-instances`.
 
+> **Amended by RFC-043 (effective at `dataModelRevision` 8).** **[DV-Dx5]** `typeDispatch` MUST NOT change member ordering. Member order is determined solely by the section's ordering source: for a `container-subset` section with `ordering.source` of `"rule"` (the default) it is `ordering.fieldId` with its `direction` where present, otherwise base-spec [N+12], with every record at depth 0; with `ordering.source` of `"arranged"` it is the container's entries in array order at their own depth (RFC-043 [R8], [R9]); for `fixed-instances` it is the declared `instanceIds[]` array order. *(Prior text, in force until a corpus is at revision 8: "Member order is determined solely by the section's source: base-spec [N+12] for `container-subset`".)*
+
 > **[DV-Fx1]** The `container-subset` source variant MAY carry a `typeFilter` array of `namespace/name` strings. `typeFilter` MUST NOT appear on any other `SectionSource` variant. When absent or empty, the resolved member set is every container member, unchanged from prior behaviour.
 
 > **[DV-Fx2]** When `typeFilter` is present and non-empty, the resolved member set MUST be restricted to container members whose resolved type (per [DV-Mx1]) matches one of the listed keys.
 
 > **[DV-Fx3]** When a `typeFilter`-restricted `container-subset` section declares no `ordering.fieldId`, an implementation MUST order the surviving members by projecting the base-spec [N+12] order: compute the [N+12] order (topological sort by `precedes` with `createdAt`-ascending tiebreak, reversed when `ordering.direction` is `desc`) over the **full** container member set, then remove the non-surviving members from that sequence. Removing a member that was a `precedes` bridge between two survivors MUST NOT reorder those survivors. The result is deterministic because it inherits [N+12]'s total order.
+
+> **Amended by RFC-043 (effective at `dataModelRevision` 8).** **[DV-Fx3]** applies only to a `container-subset` section whose `ordering.source` is `"rule"` and which declares no `ordering.fieldId`. For an `"arranged"` section the implementation MUST drop each `typeFilter`-excluded entry by the promoting removal (RFC-043 [R7], [R9]) and MUST NOT compute an [N+12] order; descending direction reverses every sibling list at every level, children staying under their parent. *(Prior text, in force until a corpus is at revision 8: "an implementation MUST order the surviving members by projecting the base-spec [N+12] order".)*
 
 > **[DV-Fx4]** When a section specifies both `typeFilter` and `ordering.fieldId`, the implementation MUST apply `typeFilter` first and then sort the survivors by `ordering.fieldId`. Per [N+12], `ordering.fieldId` supersedes the `precedes`-chain order; [DV-Fx3] does not apply in that case.
 

@@ -9,7 +9,7 @@
     "title": "Views L2",
     "content": "",
     "extension_status": "live",
-    "extension_adds": "Document-level projection: assembling multiple Records into a rendered document via a `Composition`, dispatching each section's field content to an L1 `View`, with its own `ExportConfig` attachment point for document-level rendering (distinct from the one on `View` itself) and ordering support including `DocumentSection.ordering.memberOrder`. Requires `ext:views-l1`, whose per-record field rendering it composes over.",
+    "extension_adds": "Document-level projection: assembling multiple Records into a rendered document via a `Composition`, dispatching each section's field content to an L1 `View`, with its own `ExportConfig` attachment point for document-level rendering (distinct from the one on `View` itself) and ordering support including `DocumentSection.ordering.memberOrder`. Requires `ext:views-l1`, whose per-record field rendering it composes over.\n\n**Amended by RFC-043 (effective at dataModelRevision 8).** Ordering support is `DocumentSection.ordering.source` (`arranged` or `rule`), and `ordering.memberOrder` is retired ([R8]): an arranged section renders the container's own entry order and depth ([R9]). (Prior text, in force until a corpus is at revision 8: the sentence above, which names `DocumentSection.ordering.memberOrder`.)",
     "extension_cost_of_non_adoption": "Without it, an implementation can render a single Record through an L1 `View` but cannot assemble multiple Records into a composed, multi-section document — there is no `Composition` to dispatch sections to Views, order members, or attach document-level `ExportConfig`."
   },
   "tags": [
@@ -19,7 +19,7 @@
     "topic:extensions"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-09-17T12:30:19.582257973+00:00",
+  "updatedAt": "2026-10-01T11:20:24.034738403+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

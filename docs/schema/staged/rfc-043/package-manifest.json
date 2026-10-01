@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://srs.semanticops.com/schema/2.0/package-manifest.json",
+  "title": "SRS Package Manifest (ext:repository)",
+  "description": "Index manifest for a local file-based SRS package. Declares identity, lists relative paths to field, type, view, and relation-type definition files, and records dependency references to other packages. Governs the package/ directory layout within an ext:repository.",
+  "type": "object",
+  "required": ["$schema", "id", "namespace", "name", "version", "title", "description", "status", "fields", "types", "createdAt"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "https://srs.semanticops.com/schema/2.0/package-manifest.json"
+    },
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Stable UUID for this package. Never changes across versions."
+    },
+    "namespace": {
+      "type": "string",
+      "description": "Reverse-DNS namespace, e.g. com.semanticops.srs."
+    },
+    "name": {
+      "type": "string",
+      "description": "Machine-readable package name within the namespace, kebab-case."
+    },
+    "version": {
+      "type": "string",
+      "description": "Semver string, e.g. 1.0.0."
+    },
+    "dataModelRevision": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "RFC-033 / #265 — the data-model generation this package's definitions were authored/generated for. Absent means revision 0. Distinct from the package's own semver version. RFC-043 is the migration toRevision 8 (container members become ordered entries; rootInstanceIds and Composition memberOrder removed); a package carries Compositions, so its memberOrder is migrated with it (RFC-043 [R17]). Not dotted semver."
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable display name."
+    },
+    "description": {
+      "type": "string",
+      "description": "What this package provides and who it is for."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "active", "deprecated"],
+      "description": "Publication status of this package."
+    },
+    "fields": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Relative paths from this package directory to field definition files, e.g. fields/title.json."
+    },
+    "types": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Relative paths from this package directory to type definition files."
+    },
+    "views": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Relative paths from this package directory to L1 View definition files (ext:views-l1). Omit or use empty array if the package defines no Views."
+    },
+    "compositions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "ext:views-l2 — relative paths from this package directory to Composition definition files. Omit if the package defines no Compositions."
+    },
+    "themes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "ext:themes-l1 — relative paths from this package directory to Theme definition files. Omit if the package defines no Themes."
+    },
+    "relationTypes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Relative paths from this package directory to relation-type definition files. Omit if the package defines no relation types."
+    },
+    "vocabularies": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Relative paths from this package directory to Vocabulary definition files (RFC-006)."
+    },
+    "lifecycles": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Relative paths from this package directory to Lifecycle definition files (RFC-006)."
+    },
+    "blueprints": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Relative paths from this package directory to Blueprint definition files (ext:blueprint). Omit or use empty array if the package defines no Blueprints."
+    },
+    "protocols": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Relative paths from this package directory to Protocol definition files (ext:protocol). Omit or use empty array if the package defines no Protocols."
+    },
+    "packageDependencies": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/DependencyRef" },
+      "description": "Other packages this package depends on. Consumers must resolve these before using this package.",
+      "$comment": "srs-rust#873/#910: renamed from `dependencyRefs` (srs#478, rfc-decision-c8704763 item 2) — the fold rides srs-rust#910's shared dataModelRevision 6 stamp per the map's accepted (unvetoed) proposal on srs#524. The old name is read only by the `composition-cutover` migration (#6), never the runtime load path."
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "DependencyRef": {
+      "type": "object",
+      "required": ["namespace", "name", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "namespace": { "type": "string" },
+        "name": { "type": "string" },
+        "version": {
+          "type": "string",
+          "description": "Semver version of the depended-upon package."
+        }
+      }
+    }
+  }
+}

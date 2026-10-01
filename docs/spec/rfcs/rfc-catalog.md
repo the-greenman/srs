@@ -88,6 +88,8 @@ I-145
 
 **Content**: Adds UUID-based typed anchors to the Blueprint→View→Container linkage: DocumentView.rootTypeRefs (ExactTypeRef[]) for Container matching; Blueprint.rootTypes formally defined as ExactTypeRef[]; containers_for_instance as a normative core operation; Container metadata spec alignment (description, vocabulary-backed tags). Invariants I-63 through I-66 and I-78. Tracked in srs#39 (original), srs#67 (blueprint extension). Amended by srs#446 (Rev 6): the typing anchor is Container.anchorInstanceId (I-145), not rootInstanceIds[0]; see rfc-decision-cce3c00e.
 
+RFC-043 Door 3 amendment (effective at dataModelRevision 8): the Container linkage reads `anchorInstanceId`, which must equal an entry `instanceId` in `memberInstanceIds`; `rootInstanceIds` and its `[0]` fallback are removed (RFC-043 [R3], [R4], [R19]), and I-64, I-66 and I-145 are amended accordingly.
+
 
 **Title**: RFC-011: DocumentView query extensions — lifecycle-state exclusion and repository-wide type queries
 
@@ -288,6 +290,8 @@ schema:composition.json
 
 **Content**: Adds two backward-compatible optional fields under `ext:views-l2` — `typeDispatch` on `DocumentSection` (per-type L1 view selection) and `typeFilter` on the `container-subset` source — to allow heterogeneous cross-type sections that preserve `precedes` reading order. Full text: rfcs/rfc-008-heterogeneous-container-subset-sections.md.
 
+RFC-043 Door 3 amendment (Revision 6, 2026-10-01, effective at dataModelRevision 8): container-subset ordering is Rule [N+12] only for ordering.source rule; an arranged section takes the container's entry order and depth; typeFilter on an arranged section uses the promoting removal.
+
 
 **Title**: RFC-012: Discovery Contract & Text Projection
 
@@ -320,7 +324,7 @@ I-143
 
 **Proposal Artifact Path**: rfcs/rfc-012-discovery-contract-text-projection.md
 
-**Content**: Defines a portable Discovery Contract (structured filter axes), a deterministic Text Projection, normalization rules, and an opt-in `ext:discovery` extension, plus a conformance fixture. The `discovery.json` schema, `conformance/discovery/` fixture, `ext:discovery` extension record, and I-113–I-124 invariants are all folded into the canonical spec. Full text: rfcs/rfc-012-discovery-contract-text-projection.md.
+**Content**: Defines a portable Discovery Contract (structured filter axes), a deterministic Text Projection, normalization rules, and an opt-in `ext:discovery` extension, plus a conformance fixture. The `discovery.json` schema, `conformance/discovery/` fixture, `ext:discovery` extension record, and I-113–I-124 invariants are all folded into the canonical spec. Full text: rfcs/rfc-012-discovery-contract-text-projection.md. RFC-043 Door 3 amendment (Revision 13, 2026-10-01, effective at dataModelRevision 8): the containerId filter reads the entry ids of the container or of its effective(C) closure (one condition, not three); the conformance fixture's containers move to the entry shape.
 
 
 **Title**: RFC-013: Required Root Container & Structural Navigation
@@ -346,6 +350,8 @@ I-82
 
 **Content**: Makes `manifest.container` required, adds a reassignable identity pointer `Container.identityInstanceId` to both Container schemas, and defines a structural navigation model derived from existing primitives (container membership + `precedes` order). Full text: rfcs/rfc-013-required-root-container.md. Rev 7 (srs#446): [R9] tightened — a duplicate manifest.container/container-set containerId is fatal under RFC-038 [R12], no precedence; [R5] confirmed as holding without exception now that RFC-009 no longer relies on rootInstanceIds[0] position.
 
+RFC-043 Door 3 amendment (effective at dataModelRevision 8): navigation order is the order of the root container's `memberInstanceIds` entries (identity entry excluded, depth-0 entries the sections), replacing the Rule [N+12] derivation of Change C and [R5] ([R12]); [R2] resolves entry ids; identity and anchor pointers are entry ids; and [R6] reads "is the anchor of some Container" ([R19]).
+
 
 **Title**: RFC-015: View-Owned Ordering & Declared Root Presentations
 
@@ -369,6 +375,8 @@ I-128
 **Proposal Artifact Path**: rfcs/rfc-015-view-owned-ordering-declared-presentations.md
 
 **Content**: Separates semantic order (`precedes`) from presentational order via a view-owned `ordering.memberOrder` list on `container-subset` DocumentView sections and a normative `renderedPresentations` array on the manifest declaring the default presentation. Full text: rfcs/rfc-015-view-owned-ordering-declared-presentations.md.
+
+RFC-043 Door 3 amendment (effective at dataModelRevision 8): `ordering.memberOrder` and Invariants I-126 and I-127 ([N+29], [N+30]) are retired and replaced by `ordering.source` (`arranged` or `rule`) and RFC-043 [R8] to [R11]; the stale-entry leniency is reversed (Change G, [R2], [R20]). The `renderedPresentations` part is unaffected.
 
 
 **Title**: RFC-017: Decision-log Attachments, Base-package Settings, Archive Determinism, and srsj-gzip Retirement
@@ -521,7 +529,7 @@ tooling-only
 
 **Proposal Artifact Path**: rfcs/rfc-025-governance-primary-export-documentview.md
 
-**Content**: Adds a `governance-document` DocumentView to the `com.mudemocracy.governance` package and fixes the empty-governance seed to ship a conforming root container plus a `renderedPresentations` default. Introduces no new spec types or schema fields. Full text: rfcs/rfc-025-governance-primary-export-documentview.md.
+**Content**: Adds a `governance-document` DocumentView to the `com.mudemocracy.governance` package and fixes the empty-governance seed to ship a conforming root container plus a `renderedPresentations` default. Introduces no new spec types or schema fields. Full text: rfcs/rfc-025-governance-primary-export-documentview.md. RFC-043 Door 3 amendment (Revision 5, 2026-10-01, effective at dataModelRevision 8): the example root container shape and the migration step that populates the member list use ordered entries instead of rootInstanceIds plus memberInstanceIds.
 
 
 **Title**: RFC-026: ext:slices — Container Slices (Subset Repository Export)
@@ -547,7 +555,7 @@ I-153
 
 **Content**: Defines `ext:slices` — a normative extension for container-membership slice export as a valid `.srs` archive. A container slice carries the records reachable from a container's membership, their type/field definitions, intra-slice relations, and referenced source documents. Dangling cross-boundary relations are preserved in `slice.externalRelationRefs[]` (not silently dropped), following the `ext:federation` graceful-degradation precedent. Schema change: `docs/schema/2.0/manifest.json` gains an optional `slice` property with `$defs.Slice`, `$defs.SliceSpec` (type enum: `["container"]`), and `$defs.SliceExternalRef`. Package export — distributing a package's definitions as a `package-bundle.json` — is explicitly excluded from this RFC's scope (RFC-003). Full text: rfcs/rfc-026-ext-slices-subset-export.md.
 
-Revision 7 (srs#766) folds RFC-038 [R25]'s amendment of [R5]/[R6]/[R13] against the tree-authoritative container set and instance set, restated as invariants I-152 and I-153.
+Revision 7 (srs#766) folds RFC-038 [R25]'s amendment of [R5]/[R6]/[R13] against the tree-authoritative container set and instance set, restated as invariants I-152 and I-153. RFC-043 Door 3 amendment (Revision 8, 2026-10-01, effective at dataModelRevision 8): slice closure reads entry ids and a slice drops an excluded record's entry by the promoting removal in every container it contains.
 
 
 **Title**: RFC-027: Per-record relation display in document views (relationsPresentation)
@@ -594,6 +602,8 @@ I-87
 **Proposal Artifact Path**: rfcs/rfc-029-core-base-package-identity-type.md
 
 **Content**: RFC-013 introduced identityInstanceId as a pointer from the root container to the repository's identity record, defaulting to an un-navigable, non-semantic Tier-0 root note. This RFC introduces a minimal com.semanticops.core/purpose Tier-2 type -- carrying a required statement field and an optional title field -- defined in an always-available core base package that every conforming SRS implementation implicitly merges into every repository's resolved package (RFC-014 R6 union), without requiring any packageRef declaration. identityInstanceId on the root container is tightened to MUST reference a Tier-2 purpose Record, superseding RFC-013's Tier-0-note default, subject to a migration grace period (R7) for existing repositories. This record was authored under issue the-greenman/srs#209 (renumbered from RFC-018 to resolve a number collision with RFC-018: Repository Changelog Extension); the RFC was originally accepted and implemented under the 018 number in July 2026 (see revision history in rfcs/rfc-029-core-base-package-identity-type.md).
+
+RFC-043 Door 3 amendment (Revision 6, 2026-10-01, effective at dataModelRevision 8): the purpose record is placed as an entry in memberInstanceIds, depth 0 with no descendants.
 
 
 **Title**: RFC-030: Rename Field's normative `selectOptions` property to `allowedValues`
@@ -890,7 +900,7 @@ RFC-038 makes the authoritative store answer membership and the manifest a stabl
 
 Evidence drove the design corrections. Keying discovery on declared package boundaries loses 7 of 375 `srs` instances, which sit beside an undeclared sixth package manifest, so the rule keys on the presence of a conforming manifest instead. Requiring `$schema` would invalidate conforming Records, and declaring it does not imply conformance. Retiring `sourceDocumentIndex` costs zero tombstones. The `muSrs` cross-check then exposed two package roots with 27 duplicate definitions, conflicting inline/file root Containers, source payloads accidentally made fatal, and package manifests absent from their own admissible set; Revision 5 closes each rule and migration gap. Revision 7 turns the remaining work into explicit repairs rather than owner choices. Revision 8 adds the two schema gaps that fail-closed loading turns into prerequisites — an absent `protocol.json` that both governance packages need, and `relation-type.json`'s missing `additionalProperties: false` — and stamps `core-bundle.srsj`, which [R21] would otherwise make unreadable. Revision 9 records the owner's disposition of the one item Revision 8 left open, moving `spec/srs-purpose-and-scope.md` out of the source-document set rather than adopting it.
 
-Independent implementations of the proposed discovery rule return exactly the indexed instances in both measured live repositories: 375/375 for `srs` and 32/32 for `muSrs`, with zero discovered-only, indexed-only, or path-disagreement cases. No instance moves; the remaining non-instance repairs have defined outcomes. Full text: rfcs/rfc-038-tree-authoritative-storage.md.
+Independent implementations of the proposed discovery rule return exactly the indexed instances in both measured live repositories: 375/375 for `srs` and 32/32 for `muSrs`, with zero discovered-only, indexed-only, or path-disagreement cases. No instance moves; the remaining non-instance repairs have defined outcomes. Full text: rfcs/rfc-038-tree-authoritative-storage.md. RFC-043 Door 3 amendment (Revision 14, 2026-10-01, effective at dataModelRevision 8): entries of memberInstanceIds are never sorted or reordered by a canonicalizer, archive writer or enumeration; a deleted record's entry is removed by the promoting removal and an unresolved entry is a validation error repaired by the repair operation.
 
 
 **Title**: RFC-040: Metamodel v1.1.0 — the definition-layer train
@@ -999,6 +1009,8 @@ ext:slices
 
 **Content**: Defines a Container as an explicit, declared scope on the expression plane (rfc-decision-0750c62f). Direct membership is rootInstanceIds ∪ memberInstanceIds (Change A); nesting is declared through the new optional childContainerIds edge and effective membership is the recursive, deduplicated closure over it (Change B); Relations, contains included, never define membership, while contains remains the part-of tree and must still be maintained (Change C); containers_for_instance, member resolution, RFC-011 containerScope (explicit = direct, subtree = effective), RFC-012 containerId filtering and RFC-026 slice closure use that one definition (Change D); queries are separate, read-only selections (Change E). Conformance rules [R1]–[R9]. Accepted by the owner 2026-09-06 (srs#267) as Revision 5; renamed from 'Structural Container Composition' per rfc-decision-92d2da05. Charter Check: cell:containment, decision_mode complicated.
 
+RFC-043 Door 3 amendment (effective at dataModelRevision 8): direct membership `direct(C)` is the set of entry `instanceId` values of `memberInstanceIds`, an ordered outline read flat, replacing `rootInstanceIds ∪ memberInstanceIds` ([R3], [R4]); "unordered" is removed for `memberInstanceIds` and kept for `childContainerIds` order ([R5]); I-20, I-21, I-66, I-118 and I-146 are amended, and slice closure reads entry ids ([R18]).
+
 
 **Title**: RFC-042: The concept tree is the spine of the specification
 
@@ -1022,7 +1034,7 @@ schema:document-view-output.json
 
 **Proposal Artifact Path**: rfcs/rfc-042-concept-tree-spine.md
 
-**Content**: Establishes the concept tree as the spine the specification's structure is read from, replacing section and subsection as authored structure. The tree is Record and Relation instances joined by contains, precedes and depends-on. A leaf's Type states its role (concept, mechanism, example, invariant, requirement, design-note); its contains parent states its place in the tree; depends-on states its prerequisites. Containers, compositions, navigation and rendering depth consume this tree by traversal, and none of it re-implements the walk. Accepted by the owner 2026-09-07 (srs#558) as Revision 3. Charter Check: cell:containment, cell:reference, decision_mode complicated. Canonical folding is Wave 3 (srs#559, #562, #563, #564), landing additively; this stub is grandfathered pending that completion. Revision 5 (2026-09-19, srs#796) adds the nested-section rendering rule [R20] to [R25] and lifts the flat-Composition limit, executing rfc-decision-8aed3412.
+**Content**: Establishes the concept tree as the spine the specification's structure is read from, replacing section and subsection as authored structure. The tree is Record and Relation instances joined by contains, precedes and depends-on. A leaf's Type states its role (concept, mechanism, example, invariant, requirement, design-note); its contains parent states its place in the tree; depends-on states its prerequisites. Containers, compositions, navigation and rendering depth consume this tree by traversal, and none of it re-implements the walk. Accepted by the owner 2026-09-07 (srs#558) as Revision 3. Charter Check: cell:containment, cell:reference, decision_mode complicated. Canonical folding is Wave 3 (srs#559, #562, #563, #564), landing additively; this stub is grandfathered pending that completion. Revision 5 (2026-09-19, srs#796) adds the nested-section rendering rule [R20] to [R25] and lifts the flat-Composition limit, executing rfc-decision-8aed3412. RFC-043 Door 3 amendment (Revision 6, 2026-10-01, effective at dataModelRevision 8): [R20] renders direct(C) ordered by the container's arrangement, ordering.fieldId or Rule [N+12]; [R22] drops the single-rootInstanceId fallback; memberOrder is retired; unchanged for containerScope subtree sections.
 
 
 **Title**: RFC-005: Core Relation Type Definitions
@@ -1050,5 +1062,36 @@ I-88
 **Proposal Artifact Path**: rfcs/rfc-005-installable-verifiable-relation-types.md
 
 **Content**: Makes `RelationTypeDefinition` a required Package component and definition lookup mandatory: every `Relation.relationType` string must resolve to exactly one installed `RelationTypeDefinition` in the effective package set before a Relation is accepted. Ships the seven canonical SRS relation types (`contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`) as installed, versioned definitions in the core `com.semanticops.srs` package, retiring the prior documented naming convention. Retires `ext:recommended-relations` to a compatibility label only. Full text: rfcs/rfc-005-installable-verifiable-relation-types.md.
+
+
+**Title**: RFC-043: Ordered container members, outline arrangement, separated from Compositions
+
+**RFC Number**: 043
+
+**Status**: Accepted
+
+**Author**: design dialogue draft (owner rulings recorded in the-greenman/muDemocracy.org#224 and #225 and the-greenman/srs#849)
+
+**Affected Components**: Container (memberInstanceIds becomes a flat ordered outline of entries with an optional depth; rootInstanceIds removed), ext:views-l2 (DocumentSection.ordering.memberOrder retired, ordering.source added, container-subset containerId optional), the navigation order of the root container (Rule [N+12] stops being the navigation rule), the dataModelRevision generation (7 to 8), Invariants I-20, I-21, I-64, I-66, I-79 to I-81, I-118, I-145, I-146, I-149 (amended, effective at revision 8) and I-126, I-127 (retired at revision 8), the Door 3 revisions of RFC-008, 009, 012, 013, 015, 025, 026, 029, 034, 038, 042 (and editorial pointers in RFC-010 and 036), and successor records for rfc-decision-8aed3412 and rfc-decision-0750c62f. Landing is two-phase because the data migration lives in the srs-rust migration registry (srs-rust#1133) and the pinned binary cannot load a revision-8 corpus: what lands with acceptance is the RFC text, the Door 3 amendments, the amended invariants and mechanism records (each gated "effective at dataModelRevision 8"), the successor decision records and the enforced composition-container-literal allowlist (srs#851). The schema files (container.json, manifest.json, srsj-envelope.json, composition.json, document-view-output.json, package-manifest.json, package-bundle.json, blueprint.json, discovery.json) are staged under docs/schema/staged/rfc-043/ and are promoted into docs/schema/2.0/ in the corpus-migration step, together with the metamodel generator change and the migrated corpus; the integration manifest therefore names the artifacts folded now and no schema: token.
+
+<!-- srs-integration:v1
+cell:containment
+cell:governance
+cell:portability
+cell:repository
+I-20
+I-118
+I-126
+I-127
+I-145
+I-146
+ext:views-l2
+-->
+
+**Dependency Refs**: Builds on RFC-034 (Container structure, Accepted), RFC-013 (root container, Accepted), RFC-015 (view-owned ordering, Accepted), RFC-042 Revision 5 (declared child containers, Accepted), RFC-009 Revision 6 (anchorInstanceId, Accepted), RFC-033 (dataModelRevision, Accepted), srs-rust ADR-032 (migration registry) and the retirement policy in srs-rust#1138. Consults rfc-decision-0118e938 (honoured), rfc-decision-0750c62f and rfc-decision-8aed3412 (superseded in part by successor records), rfc-decision-628cf6c4, rfc-decision-92d2da05, rfc-decision-e99a9437.
+
+**Proposal Artifact Path**: rfcs/rfc-043-container-outline-arrangement.md
+
+**Content**: Makes a Container's memberInstanceIds a flat, ordered outline of entries (instanceId and optional depth): membership when read flat, layout when read in order, with nesting derived from depth. A Composition no longer names records: memberOrder is retired and a section declares only an ordering source, arranged or rule. rootInstanceIds is removed; navigation order is the root container's entry order; the 20 root-container precedes edges are kept (owner ruling 2026-10-01). dataModelRevision 8, migrated by an srs-rust registry entry (srs-rust#1133). Accepted by the owner 2026-10-01 (srs#849) as Revision 10, with two final rulings: keep the 20 precedes edges, and allow the container-subset containerId literal for now as an enforced allowlist tied to srs#851 (scripts/check-composition-container-literal.mjs). Charter Check: cell:containment, cell:governance, cell:portability, cell:repository, decision_mode complex. Revision 10 lands in two phases (see affected components): the corpus and schemas stay at revision 7 until srs-rust ships the migration.
 
 

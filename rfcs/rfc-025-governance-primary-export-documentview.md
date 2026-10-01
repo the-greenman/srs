@@ -2,7 +2,7 @@
 
 # RFC-025: Governance Package — Primary-Export DocumentView and Seed Root Container
 
-**Status**: Accepted (Revision 4)
+**Status**: Accepted (Revision 5)
 **Affects**: `packages/com.mudemocracy.governance/1.0.0/` (new `governance-document` DocumentView; seed `manifest.container` + `renderedPresentations`)
 **Author**: the-greenman (from epic the-greenman/srs#95, Phase 3 / Gate C, issue #97)
 **Date**: 2026-07-06
@@ -18,6 +18,7 @@
 | 2 | 2026-07-06 | Address Stage 3 review findings. Blocking: add `$schema`, `description`, `createdAt` to DocumentView properties table; add `order` integers and `titleFieldId` UUID to sections table; specify `articlenumber` fieldId UUID in ordering; add `title` to seed container JSON; add Rationale entry for stable root containerId. Should-fix: add seed `data` key name; add Migration section; reframe R1 with provenance anchor; promote R3 SHOULD→MUST for isDefault ordering; add R3 enforcement surface; add Rationale entry for decisions lifecycle decision. Nits: "absent" ordering terminology; acknowledge `identityInstanceId` omission; name `documentViews` array; trim R4. Declined: RFC-015 dependency flag (RFC-015 merged as PR #115 on 2026-07-03). |
 | 4 | 2026-07-14 | **Renumbered RFC-017 → RFC-025** (owner decision, srs#171): the number collided with the in-flight attachments RFC (srs#101), which keeps RFC-017 as the number the ecosystem already cites. Content unchanged. |
 | 3 | 2026-07-06 | Address Stage 3 Round 2 findings. Blocking: specify that seed's embedded `data["package/package.json"]["documentViews"]` must also be updated to include the new view path. Should-fix: scope R1's `containerId` requirement prospectively (applies to repos newly created from the updated seed); update Migration step 1 to distinguish RFC-017 full conformance (use `54432eb2-...`) from RFC-013-only conformance (any valid UUID). |
+| 5 | 2026-10-01 | Door 3 amendment executing RFC-043 (the-greenman/srs#849, accepted): amends the example root container shape (`memberInstanceIds` becomes an ordered list of entries and `rootInstanceIds` is removed, RFC-043 [R1] and [R4]) and migration step 1, which populates the member list (entries appended at depth 0, in the order of the existing containers). Effective at `dataModelRevision` 8; the text above stays in force for revision-7 corpora until then. |
 
 ---
 
@@ -98,6 +99,8 @@ The seed file at `packages/com.mudemocracy.governance/1.0.0/seed/empty-governanc
 }
 ```
 
+> **Amended by RFC-043 (effective at `dataModelRevision` 8).** At revision 8 this example has no `rootInstanceIds`; its `memberInstanceIds` is an array of entries (`{instanceId, depth?}`), here empty (RFC-043 [R1], [R4]). *(Prior text, in force until a corpus is at revision 8: the example above, with `"rootInstanceIds": []`.)*
+
 **`renderedPresentations`** (RFC-015 Rule [N+31]): declares the `governance-document` view as the default presentation for the repository.
 
 ```json
@@ -148,6 +151,8 @@ For pre-existing governance repositories:
 1. **Add `manifest.container`**: Follow RFC-013's generic migration procedure — assign `containerId: "54432eb2-7961-4538-ac16-9e25dcfa2f42"` for full RFC-025 conformance, or any valid UUID for RFC-013 conformance only; populate `memberInstanceIds` from existing containers; set `identityInstanceId` to the `instanceId` of the Tier 0 root note.
 2. **Add `renderedPresentations`**: Add an entry for `viewId: "732a982b-3765-4f22-90e0-e456463bac54"` with `isDefault: true`. This is a manifest-only edit; no records, relations, or instance data change.
 3. Run `srs repo validate` after both edits; 0 errors is the acceptance criterion.
+
+> **Amended by RFC-043 (effective at `dataModelRevision` 8).** The seed's example container and the migration above take the revision-8 shape: `rootInstanceIds` is removed and a Container carrying it is invalid (RFC-043 [R4]); `memberInstanceIds` is an array of entries, each carrying `instanceId` and optionally `depth` (absent means 0), so the seed's empty membership is an empty `memberInstanceIds` array alone (RFC-043 [R1]). When migration step 1 populates the member list, each member becomes an entry, appended at depth 0 (RFC-043 Change D, add); the entry order is the root container's navigation order (RFC-043 [R12]) and the identity entry MUST be at depth 0 with no descendants ([R2]). *(Prior text, in force until a corpus is at revision 8: the seed example carrying `"memberInstanceIds": []` with `"rootInstanceIds": []`, and "populate `memberInstanceIds` from existing containers".)*
 
 ---
 

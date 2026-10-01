@@ -532,6 +532,16 @@
       "description": "Each of the nine Part containers' declared memberInstanceIds equals the full contains-subtree computed by walking from the Part concept (the same walk check-spec-coherence.mjs's part-order check uses) — RFC-042's Part containers are shaped as exactly this subtree, and check-publication-reachability.mjs's container-subset descent relies on it staying true. The script has no write mode; membership is regenerated one instance at a time via `srs container members add`/`remove`, never hand-edited."
     },
     {
+      "id": "composition-container-literal",
+      "script": "check-composition-container-literal.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "containment",
+      "governing": "RFC-043 ruling M; owner ruling 2026-10-01 (allow for now, enforced); rfc-decision-0750c62f; srs#851",
+      "expiry": "srs#851",
+      "description": "No Composition `container-subset` source names a Container by id (a type-layer template naming content, the same layer leak RFC-043 removes for record ids). Whole-tree walk of every *.json and *.srsj for an object with type container-subset and a string containerId. The 24 literals that exist today (18 in the two spec Compositions, 3 in the gallery example package, 3 in the gallery.srsj archive) are an ENFORCED allowlist, scripts/composition-container-literal-allowlist.json, each entry citing srs#851: a new literal fails, and so does an allowlist entry that no longer matches one (shrink discipline). srs#851 removes the literals and then the allowlist file and this registry row. Its guard-bite cases live in the existing guards-bite entry's tests/guards/run.mjs."
+    },
+    {
       "id": "pr-classification",
       "script": "check-pr-classification.mjs",
       "args": [],

@@ -10,10 +10,10 @@
     "author": "Peter Brownell",
     "affected_components": "ext:views-l2 (DocumentView), Container (core), ext:blueprint (Blueprint), document-view.json, container.json, manifest.json, blueprint.json\n\n<!-- srs-integration:v1\next:views-l2\nschema:composition.json\nschema:container.json\nschema:manifest.json\nschema:blueprint.json\nI-63\nI-64\nI-65\nI-66\nI-78\nI-145\n-->",
     "proposal_artifact_path": "rfcs/rfc-009-root-record-type-anchor.md",
-    "content": "Adds UUID-based typed anchors to the Blueprint→View→Container linkage: DocumentView.rootTypeRefs (ExactTypeRef[]) for Container matching; Blueprint.rootTypes formally defined as ExactTypeRef[]; containers_for_instance as a normative core operation; Container metadata spec alignment (description, vocabulary-backed tags). Invariants I-63 through I-66 and I-78. Tracked in srs#39 (original), srs#67 (blueprint extension). Amended by srs#446 (Rev 6): the typing anchor is Container.anchorInstanceId (I-145), not rootInstanceIds[0]; see rfc-decision-cce3c00e."
+    "content": "Adds UUID-based typed anchors to the Blueprint→View→Container linkage: DocumentView.rootTypeRefs (ExactTypeRef[]) for Container matching; Blueprint.rootTypes formally defined as ExactTypeRef[]; containers_for_instance as a normative core operation; Container metadata spec alignment (description, vocabulary-backed tags). Invariants I-63 through I-66 and I-78. Tracked in srs#39 (original), srs#67 (blueprint extension). Amended by srs#446 (Rev 6): the typing anchor is Container.anchorInstanceId (I-145), not rootInstanceIds[0]; see rfc-decision-cce3c00e.\n\nRFC-043 Door 3 amendment (effective at dataModelRevision 8): the Container linkage reads `anchorInstanceId`, which must equal an entry `instanceId` in `memberInstanceIds`; `rootInstanceIds` and its `[0]` fallback are removed (RFC-043 [R3], [R4], [R19]), and I-64, I-66 and I-145 are amended accordingly."
   },
   "lifecycleState": "accepted",
   "createdAt": "2026-06-24T16:05:18.002057939+00:00",
-  "updatedAt": "2026-09-02T18:14:32.665477864+00:00",
+  "updatedAt": "2026-10-01T11:20:25.461262298+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

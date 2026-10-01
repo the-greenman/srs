@@ -2,7 +2,7 @@
 
 # RFC-029: Core Base Package and Required `com.semanticops.core/purpose` Identity Type
 
-**Status**: Accepted (Revision 5)
+**Status**: Accepted (Revision 6)
 **Affects**: `com.semanticops.core` namespace (new); `purpose` Type (new Tier-2 type); `manifest.json` Container `identityInstanceId` description; `container.json` `identityInstanceId` description; `ext:repository` (`repo create` behaviour); invariants I-85 (`9d686444`), I-86 (`890d7d54`), I-87 (`818d636c`); RFC-013 I-81 (retained, I-87 layers on top)
 **Author**: the-greenman (from issue the-greenman/srs#134)
 **Date**: 2026-07-08
@@ -20,6 +20,7 @@
 | 3 | 2026-07-08 | Implementation started; RFC file committed to branch `rfc/018-core-base-package-identity-type`; schema descriptions updated in `docs/schema/2.0/manifest.json` and `docs/schema/2.0/container.json` to reference RFC-018 and qualify the type constraint to the root container only. |
 | 4 | 2026-07-08 | Accepted; spec records authored in `srs/srs/` — invariants I-85 (`9d686444`), I-86 (`890d7d54`), I-87 (`818d636c`) as `com.semanticops.spec/invariant` records under `records/invariants/`; `srs repo validate` clean (0 errors, 5 pre-existing warnings). Provisional labels I-CORE-A/B/C → permanent I-85, I-86, I-87. |
 | 5 | 2026-07-23 | Renumbered RFC-018 → RFC-029 to resolve a number collision with RFC-018 (Repository Changelog Extension), which had already claimed 018 with its own accepted, record-backed proposal (the-greenman/srs#209). File renamed `rfc-018-core-base-package-identity-type.md` → `rfc-029-core-base-package-identity-type.md`; self-references throughout updated to RFC-029; `docs/schema/2.0/manifest.json` and `container.json` `identityInstanceId` descriptions updated from RFC-018 to RFC-029; a stub `com.semanticops.spec/rfc` record authored for this RFC under number 029 (no such record previously existed under 018). |
+| 6 | 2026-10-01 | Door 3 amendment executing RFC-043 (the-greenman/srs#849, accepted): amends the placement of the `purpose` record in Change B step 3 and in migration step 2 ("`rootInstanceIds` or `memberInstanceIds`" becomes an entry in `memberInstanceIds`, RFC-043 [R1] and [R4]). Effective at `dataModelRevision` 8; the text above stays in force for revision-7 corpora until then. |
 
 ---
 
@@ -117,6 +118,8 @@ What RFC-029 **supersedes** in RFC-013:
 3. The `purpose` Record MUST be added to the root container's membership set (`rootInstanceIds` or `memberInstanceIds`).
 4. `manifest.container.identityInstanceId` MUST be set to the new `purpose` Record's `instanceId`.
 5. A `repo create` implementation MAY still create a Tier-0 root note for use as a navigation section, but MUST NOT set `identityInstanceId` to it.
+
+> **Amended by RFC-043 (effective at `dataModelRevision` 8).** Step 3 reads: the `purpose` Record MUST be added to the root container as an entry in `memberInstanceIds` (an entry is `{instanceId, depth?}`); `rootInstanceIds` no longer exists (RFC-043 [R1], [R4]). The entry MUST be at depth 0 with no descendants, and it is excluded from the navigation outline as the identity entry (RFC-043 [R2], [R12]). *(Prior text, in force until a corpus is at revision 8: "added to the root container's membership set (`rootInstanceIds` or `memberInstanceIds`)".)*
 
 ---
 
@@ -228,6 +231,8 @@ Existing repositories that were conformant under RFC-013 (with a Tier-0 note or 
 3. Repoint `manifest.container.identityInstanceId` to the new `purpose` Record's `instanceId`.
 4. The old identity record MAY be retained as a navigation section member or removed, at the repository owner's discretion.
 5. Run `srs repo validate` — must report 0 errors.
+
+> **Amended by RFC-043 (effective at `dataModelRevision` 8).** Migration step 2 reads: add the new `purpose` Record to the root container as an entry in `memberInstanceIds` (depth 0, no descendants) before updating `identityInstanceId`, so that I-81 remains satisfied at all steps. *(Prior text, in force until a corpus is at revision 8: "`rootInstanceIds` or `memberInstanceIds`".)*
 
 The migration command is implemented in srs-rust#426. The dogfood repos (`srs/srs` and the `srs-gov` seed) are migrated as part of that issue's scope.
 
