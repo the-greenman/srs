@@ -4,9 +4,17 @@
   "description": "Articles covering the SRS discovery contract domain.",
   "containerType": "collection",
   "memberInstanceIds": [
-    "00000001-0000-4000-8000-000000000001",
-    "00000001-0000-4000-8000-000000000002",
-    "00000001-0000-4000-8000-000000000003"
+    {
+      "instanceId": "00000001-0000-4000-8000-000000000001"
+    },
+    {
+      "instanceId": "00000001-0000-4000-8000-000000000002"
+    },
+    {
+      "instanceId": "00000001-0000-4000-8000-000000000003"
+    }
   ],
-  "tags": ["discovery"]
+  "tags": [
+    "discovery"
+  ]
 }

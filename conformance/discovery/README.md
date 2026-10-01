@@ -38,7 +38,7 @@ as of srs-rust#1024 (owner ruling, 2026-09-17) they do not.
 
 | Layer | State | Authority |
 |---|---|---|
-| **Data model** (RFC-032 `fieldType`, RFC-039 name-keyed carrier) | **Migrated.** `dataModelRevision: 2`; no Field carries the pre-RFC-032 `valueType`, no record carries the pre-RFC-039 pair-array. | #242 Phase B / #286 |
+| **Data model** (RFC-032 `fieldType`, RFC-039 name-keyed carrier) | **Migrated.** `dataModelRevision: 8` (rev 2 forward through the registry, srs#852; containers hold RFC-043 entries); no Field carries the pre-RFC-032 `valueType`, no record carries the pre-RFC-039 pair-array. | #242 Phase B / #286 |
 | **Storage** (RFC-038 tree-authoritative) | **Migrated.** `manifest.json` carries no `instanceIndex`/`containerIndex`/`relationsPath`; the (always-empty) `relations/relations.json` collection file is removed; a root container is declared inline at `manifest.container` (RFC-013 I-79). | RFC-038 Revision 13, reversing Revision 7's disposition |
 
 RFC-038 Rev 7 (2026-08-01) originally kept this repository as test data rather than inventing
@@ -64,11 +64,10 @@ repository:
 
 ```
 $ srs repo validate --repo conformance/discovery/fixture-repo
-{"ok": true, ..., "summary": {"checked": 9, "errors": 0, "warnings": 10}}
+{"ok": true, ..., "summary": {"checked": 9, "errors": 0, "warnings": 9}}
 ```
 
-The 10 warnings are the two accepted gaps above (9 I-82 hits + 1 I-81 hit) plus the unrelated
-`dataModelRevision` compatibility-path notice every rev-2 repository gets from a rev-7-writing build.
+The 9 warnings are the two accepted gaps above (8 I-82 hits + 1 I-81 hit).
 The scenario runner below is unaffected either way — it reads the tree directly and never depended
 on `srs repo validate` passing.
 

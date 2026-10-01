@@ -307,11 +307,6 @@
       "rule": "keyword-register",
       "matched": "SHOULD"
     },
-    "srs/records/examples/example-9efa1509.json#content#keyword-register#64e64095": {
-      "issue": "the-greenman/srs#563",
-      "rule": "keyword-register",
-      "matched": "MUST NOT"
-    },
     "srs/records/examples/example-9efa1509.json#content#keyword-register#9fbee2af": {
       "issue": "the-greenman/srs#563",
       "rule": "keyword-register",
@@ -418,11 +413,6 @@
       "matched": "**Retired as an independent content copy (srs#285 / srs#411).** The current, normative tex…"
     },
     "srs/records/extensions/ext-views-l1.json#content#heading-restatement": {
-      "issue": "the-greenman/srs#563",
-      "rule": "heading-restatement",
-      "matched": "**Retired as an independent content copy (srs#285 / srs#407).** The current, normative tex…"
-    },
-    "srs/records/extensions/ext-views-l2.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
       "matched": "**Retired as an independent content copy (srs#285 / srs#407).** The current, normative tex…"
@@ -661,16 +651,6 @@
       "issue": "the-greenman/srs#563",
       "rule": "lowercase-2119",
       "matched": "must not"
-    },
-    "srs/records/invariants/invariant-021.json#normative_statement#heading-restatement": {
-      "issue": "the-greenman/srs#563",
-      "rule": "heading-restatement",
-      "matched": "`Container.rootInstanceIds` and `Container.memberInstanceIds`, when present, must referenc…"
-    },
-    "srs/records/invariants/invariant-021.json#normative_statement#lowercase-2119#4137b01e": {
-      "issue": "the-greenman/srs#563",
-      "rule": "lowercase-2119",
-      "matched": "must"
     },
     "srs/records/invariants/invariant-028.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
@@ -952,16 +932,6 @@
       "rule": "lowercase-2119",
       "matched": "must"
     },
-    "srs/records/invariants/invariant-080.json#normative_statement#em-dash-cap#61005f1a": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): Every id in the root container's rootInstanceIds and…"
-    },
-    "srs/records/invariants/invariant-081.json#normative_statement#lowercase-2119#4137b01e": {
-      "issue": "the-greenman/srs#563",
-      "rule": "lowercase-2119",
-      "matched": "must"
-    },
     "srs/records/invariants/invariant-082.json#normative_statement#soft-hedges#d1ffaf02": {
       "issue": "the-greenman/srs#563",
       "rule": "soft-hedges",
@@ -1036,11 +1006,6 @@
       "issue": "the-greenman/srs#563",
       "rule": "soft-hedges",
       "matched": "rather"
-    },
-    "srs/records/invariants/invariant-20bd523e.json#normative_statement#em-dash-cap#d8f1d37b": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 0): When `DocumentSection.ordering.memberOrder` is prese…"
     },
     "srs/records/invariants/invariant-20bd523e.json#rationale#soft-hedges#d1ffaf02": {
       "issue": "the-greenman/srs#563",
@@ -1592,11 +1557,6 @@
       "rule": "em-dash-cap",
       "matched": "4 em-dashes in one paragraph (cap 1): ```typescript relation-spec { relationType: string /…"
     },
-    "srs/records/tier-2/generated-type-reference-d03a6f95.json#content#em-dash-cap#81d48a09": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): ```typescript container { containerId: string // Sta…"
-    },
     "srs/records/tier-2/generated-type-reference-d03a6f95.json#content#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
@@ -1826,11 +1786,6 @@
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
       "matched": "1 em-dashes in one paragraph (cap 0): - **`typeFilter`** (on the `container-subset` source…"
-    },
-    "srs/records/tier-2/mechanism-14edeb69.json#content#em-dash-cap#fbab0348": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "1 em-dashes in one paragraph (cap 0): A `container-subset` section can mix Record Types — …"
     },
     "srs/records/tier-2/mechanism-16667c90.json#content#lowercase-2119#df0465d9": {
       "issue": "the-greenman/srs#563",
@@ -2806,6 +2761,11 @@
       "issue": "the-greenman/srs#563",
       "rule": "enable",
       "matched": "Enables"
+    },
+    "srs/records/tier-2/generated-type-reference-d03a6f95.json#content#em-dash-cap#3478c85f": {
+      "issue": "the-greenman/srs#563",
+      "rule": "em-dash-cap",
+      "matched": "2 em-dashes in one paragraph (cap 1): ```typescript container { containerId: string // Sta…"
     }
   }
 }

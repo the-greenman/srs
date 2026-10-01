@@ -50,7 +50,7 @@
     "views/rfc-status-view-1aedea8d.json",
     "views/rfc-decision-status-view-2cd5576f.json"
   ],
-  "dataModelRevision": 3,
+  "dataModelRevision": 8,
   "relationTypes": [
     "relation-types/rfc-targets-section.json",
     "relation-types/rfc-change-sequence.json",

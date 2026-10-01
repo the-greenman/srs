@@ -4,8 +4,14 @@
   "description": "Project instances currently in active development.",
   "containerType": "collection",
   "memberInstanceIds": [
-    "00000002-0000-4000-8000-000000000001",
-    "00000002-0000-4000-8000-000000000002"
+    {
+      "instanceId": "00000002-0000-4000-8000-000000000001"
+    },
+    {
+      "instanceId": "00000002-0000-4000-8000-000000000002"
+    }
   ],
-  "tags": ["projects"]
+  "tags": [
+    "projects"
+  ]
 }

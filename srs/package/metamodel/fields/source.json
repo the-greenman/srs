@@ -1,0 +1,20 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "RFC-043 [R8]-[R11]: where a container-subset section's order comes from, 'rule' (default) or 'arranged' (the container's own entries)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-043 [R8]-[R11]: where a container-subset section's order comes from, 'rule' (default) or 'arranged' (the container's own entries).",
+  "id": "4b000115-0000-4000-a000-000000000115",
+  "name": "source",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "arranged",
+      "rule"
+    ]
+  },
+  "version": 1
+}

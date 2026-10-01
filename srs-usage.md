@@ -484,7 +484,7 @@ Relations are semantic claims, not ownership. Asserting a relation does not chan
 
 **Choosing a type.** Every `relationType` must resolve to an installed `RelationTypeDefinition` in the effective package set (RFC-005) — the seven canonical types above ship in the core package. To use a domain-specific relation (`delegates`, `amends`, `com.acme.hr/transferred-to`), first install a namespaced definition via `srs relation-type create`; a string that resolves to nothing is a validation error, not a soft convention.
 
-**Ordering.** `precedes` is for *semantic* sequence only — where a different order would be wrong (spec sections, process steps). For presentational ordering use the Container's ordered entries (RFC-043, effective at `dataModelRevision` 8) or, at revision 7, the view layer (`ordering.memberOrder`; see "Presentational vs semantic ordering" below). Never assert `precedes` to make a list look right.
+**Ordering.** `precedes` is for *semantic* sequence only — where a different order would be wrong (spec sections, process steps). For presentational ordering use the Container's ordered entries (RFC-043; see "Presentational vs semantic ordering" below). Never assert `precedes` to make a list look right.
 
 ### Superseding a Record (use `record successor`, not a hand-assembled edge)
 
@@ -1731,87 +1731,76 @@ A `DocumentView` selects which `Container`s it applies to via `rootTypeRefs` —
 Container `tags` follow the same vocabulary resolution rules as Record tags (RFC-006). When a Vocabulary in the package declares Terms for a given tag key, Container tags bearing that key **MUST** resolve against those Terms. Free-string tags are valid when no Vocabulary governs the key.
 
 ### `containers_for_instance` is a normative core operation (RFC-009 I-66)
-The reverse lookup `containers_for_instance(instanceId) → Container[]` is a **normative** SRS operation, not an implementation detail. A Container includes an instance if:
-1. the instance appears in `Container.rootInstanceIds`, or
-2. the instance appears in `Container.memberInstanceIds`.
+The reverse lookup `containers_for_instance(instanceId) → Container[]` is a **normative** SRS operation, not an implementation detail. A Container includes an instance if the instance is the `instanceId` of an entry in `Container.memberInstanceIds` (read flat, ignoring `depth`, RFC-043 [R3]), or of a container in its `effective(C)` closure over `childContainerIds`.
 
 Membership is a declared selection only. The branch that once derived membership by traversing a `contains` Relation from the Container's root instances is retired — `rfc-decision-0750c62f` (RFC-034 Change C, adopted): a `contains` edge is a semantic composition claim, never membership evidence, and Invariant I-66's traversal branch is superseded. A `contains` edge may target any instance, Tier-0 Note or Tier-2 Record alike — nothing in the Relation model restricts its endpoints to typed Records.
 
-CLI: `srs container list --member <instanceId> --repo <path>`. The result is consistent with current `rootInstanceIds` and `memberInstanceIds` in the repository.
+CLI: `srs container list --member <instanceId> --repo <path>`. The result is consistent with the current `memberInstanceIds` entries in the repository. There is one membership list: `rootInstanceIds` no longer exists (RFC-043 [R4], `dataModelRevision` 8).
 
-**From `dataModelRevision` 8 (RFC-043, accepted; the corpus migration lands after srs-rust#1133):** membership is the set of `instanceId` values of the Container's `memberInstanceIds` entries, read flat and ignoring `depth`; `rootInstanceIds` is removed and there is one list, not two.
+### Building a navigation section: the anchor is an entry (RFC-043 [R19], I-82)
 
-### Building a navigation section: the anchor is a root, not a member (I-82, srs-rust#460)
+A container that represents a navigation section names its anchor record in `anchorInstanceId`, and the anchor is an entry of `memberInstanceIds` like any other member (`rootInstanceIds` is removed). The section container of a record is the Container whose `anchorInstanceId` equals the record's id; a container with no anchor has no section link, which is not an error, and two containers naming the same anchor produce the `section-container-ambiguous` diagnostic. Set `identityInstanceId` to the same record when the container is the section's identity. In the root container (`manifest.container`) the entry order is the navigation order: a depth-0 entry is a navigation section and a deeper entry nests under its derived parent. **I-82** ("each non-identity section root SHOULD be the anchor of some Container in the container set") is an advisory `Warning` and is easy to miss: a record listed in the root container with no container anchored on it fires it.
 
-> **From `dataModelRevision` 8 (RFC-043):** `rootInstanceIds` is removed, so "root, not member" no longer exists. The anchor record is simply an entry in `memberInstanceIds`; `anchorInstanceId` is the explicit link from a navigation section to its container (the section container of a record is the Container whose `anchorInstanceId` equals the record's id) and `identityInstanceId` names the identity entry. In the root container the entry order is the navigation order and a depth-0 entry is a navigation section. The text below is the revision-7 rule that holds until a corpus is migrated.
+Build or fix a section with `srs container members add <containerId> <instanceId> [--position N] [--depth D]`, `members move` and `members remove`; do not hand-write entries.
 
-A container that represents a navigation section names its anchor record in `rootInstanceIds`, not `memberInstanceIds`. Set `identityInstanceId` and `anchorInstanceId` to that same record. Two ways to get this wrong, both easy to ship unnoticed:
-
-- **Listed only as a member.** The record is then not the root of any container, so **I-82** ("each non-identity section root SHOULD be the root of some Container in the container set") fires for every section built this way. It is an advisory `Warning` — `ok`/exit code are unaffected — so it is easy to miss.
-- **Listed as both root and member.** The container trips srs-rust#460, where `repository_navigation` silently empties the rendered sidebar. This shape is not merely untidy: it can produce an empty navigation with no diagnostic at all.
-
-If a record was added as a member and needs to become the section root instead, `srs container roots add` followed by `srs container members remove` moves it — `roots add` does not implicitly remove the same id from `memberInstanceIds`.
-
-The working shape lives in `containers/` in the-greenman/srs-programme (moved out of `srs` at #786, published, not local): each phase container's anchor record is its sole `rootInstanceIds` entry and does not also appear in `memberInstanceIds`. `srs repo navigation` renders all five sections (phase 5 "Read as a human" added 2026-09-17) in `precedes` order with zero diagnostics against that shape.
+The working shape lives in `containers/` in the-greenman/srs-programme (moved out of `srs` at #786, published, not local): each phase container names its anchor record in `anchorInstanceId` and lists it as an entry. `srs repo navigation` renders all five sections (phase 5 "Read as a human" added 2026-09-17) in the root container's entry order with zero diagnostics against that shape.
 
 ### Blueprint.rootTypes must be ExactTypeRef[] (RFC-009 I-78, Change E)
 `Blueprint.rootTypes` uses the same `ExactTypeRef` shape as `DocumentView.rootTypeRefs` — **both** `typeId` (UUID) and `typeVersion` (integer ≥ 1) are **required**. Each entry MUST resolve against the Package at Blueprint load time; an unresolvable entry produces a diagnostic but does not invalidate the whole Blueprint.
 
-This completes the fully UUID-anchored typed chain: `Blueprint.rootTypes → DocumentView.rootTypeRefs → Container.rootInstanceIds`. No string joins remain in this linkage.
+This completes the fully UUID-anchored typed chain: `Blueprint.rootTypes → DocumentView.rootTypeRefs → Container.anchorInstanceId`. No string joins remain in this linkage.
 
 **Migration:** existing Blueprint files whose `rootTypes` entries carry only `typeId` (no `typeVersion`) will fail `blueprint.json` schema validation and produce a diagnostic. Add the `typeVersion` integer to restore full ExactTypeRef conformance. An empty `rootTypes: []` array is valid.
 
 ### Container membership must name an instance that exists ([R13]/[R24])
 
-`srs container roots add` and `srs container members add` require the instance id to resolve to a real instance in the repository. Create the Note or Record **first**, then add it to the container. An id that resolves to nothing is rejected with `ok: false`:
+`srs container members add` requires the instance id to resolve to a real instance in the repository. Create the Note or Record **first**, then add it to the container. An id that resolves to nothing is rejected with `ok: false`:
 
 ```console
-$ srs container roots add --repo <path> <containerId> ""
+$ srs container members add --repo <path> <containerId> ""
 {"ok":false,"diagnostics":["invalid input: instance_id must not be empty"]}
 
-$ srs container roots add --repo <path> <containerId> dddddddd-dddd-4ddd-8ddd-dddddddddddd
+$ srs container members add --repo <path> <containerId> dddddddd-dddd-4ddd-8ddd-dddddddddddd
 {"ok":false,"diagnostics":["instance not found: dddddddd-dddd-4ddd-8ddd-dddddddddddd"]}
 ```
 
-This is stricter than it may look, and deliberately so. A `rootInstanceIds` / `memberInstanceIds` entry that resolves to nothing is a fatal `SRS038-R13-DANGLING-REFERENCE` diagnostic, and under [R24] a fatal diagnostic fails the *whole* catalog load — so persisting one does not break the container, it makes **every** command on the repository fail, including the ones you would use to inspect or undo it.
+This is stricter than it may look, and deliberately so. A `memberInstanceIds` entry that resolves to nothing is a fatal `SRS038-R13-DANGLING-REFERENCE` diagnostic, and under [R24] a fatal diagnostic fails the *whole* catalog load — so persisting one does not break the container, it makes **every** command on the repository fail, including the ones you would use to inspect or undo it.
 
 **Recovery.** If a repository is already in that state (from an older binary, an import, or a hand-edited file), do **not** hand-edit JSON. Two commands still work, by design:
 
 1. `srs repo validate --repo <path>` — reports diagnostics rather than failing on them, and names both the offending container and the dangling id.
-2. `srs container roots remove` / `srs container members remove` — removal can only ever *reduce* the reference set, so it is treated as a repair operation and works on a repository nothing else can load.
+2. `srs container members remove` and `srs container members repair` — removal can only ever *reduce* the reference set, so it is treated as a repair operation and works on a repository nothing else can load. `repair` removes every entry whose instance no longer resolves and promotes the entries beneath it (RFC-043 [R20]); a removed entry never leaves a depth jump.
 
 ```console
 $ srs repo validate --repo <path>
-{"ok":false,"diagnostics":["[containers/c-2222.json] SRS038-R13-DANGLING-REFERENCE: container rootInstanceIds 'dddddddd-…' resolves to nothing in the instance set"]}
+{"ok":false,"diagnostics":["[containers/c-2222.json] SRS038-R13-DANGLING-REFERENCE: container memberInstanceIds 'dddddddd-…' resolves to nothing in the instance set"]}
 
-$ srs container roots remove --repo <path> <containerId> dddddddd-dddd-4ddd-8ddd-dddddddddddd
+$ srs container members remove --repo <path> <containerId> dddddddd-dddd-4ddd-8ddd-dddddddddddd
 {"ok":true,...}                                    # repository loads again
 ```
 
-Note that `srs container create` and `srs container update` take the membership list wholesale and are checked less strictly — they reject a blank id but still accept a well-formed id that resolves to nothing. Run `srs repo validate` after either.
+Note that `srs container create` and `srs container update` take the entry list wholesale. They reject an invalid arrangement (first entry not at depth 0, a depth rising by more than one, a duplicate id: `arrangement-depth`, `arrangement-duplicate`) and an id that resolves to nothing. Run `srs repo validate` after either.
 
 ### Shared-ownership containers must use members add/remove, never update (srs#732)
 
 The wholesale-replace behaviour noted just above is safe for a container with a single writer. It is not safe when more than one writer contributes members to the same Container — several stages of a migration script, two agents, a script plus a human. A writer that calls `container update` with only the ids **it** knows about silently deletes every member contributed by the others, because `update` replaces the field rather than merging into it. `srs repo validate` stays green afterward — a container that has lost members is still structurally valid, so nothing signals the loss.
 
-**Rule:** if a Container has more than one writer, each writer MUST use `srs container members add` / `srs container members remove` (or `roots add` / `roots remove`) for the subset it owns, and MUST NOT call `container update` for `memberInstanceIds`. Reserve `update` for a single-owner container, or for a writer that has just read the full current membership and is deliberately replacing it. The same hazard applies to `rootInstanceIds` and `childContainerIds` — any field on a shared container that `update` replaces wholesale carries it.
+**Rule:** if a Container has more than one writer, each writer MUST use `srs container members add` / `srs container members remove` (or `members move`) for the subset it owns, and MUST NOT call `container update` for `memberInstanceIds`. Reserve `update` for a single-owner container, or for a writer that has just read the full current membership and is deliberately replacing it. The same hazard applies to `childContainerIds` — any field on a shared container that `update` replaces wholesale carries it.
 
-### Presentational vs semantic ordering (RFC-015 [N+28]–[N+29])
-Do not create `precedes` relations to achieve a presentational goal. `precedes` is the SRS relation for semantic sequence — the kind of ordering where a different arrangement would be semantically *wrong* (e.g. Step 1 must precede Step 2). For purely presentational ordering (newest-first decisions, manual curation, display preference), use `ordering.memberOrder` on a `container-subset` DocumentView section:
+### Presentational vs semantic ordering (RFC-043, RFC-015 [N+28])
+Do not create `precedes` relations to achieve a presentational goal. `precedes` is the SRS relation for semantic sequence — the kind of ordering where a different arrangement would be semantically *wrong* (e.g. Step 1 must precede Step 2). A document's presentational order and nesting (newest-first decisions, manual curation, an outline) are declared on its Container as the ordered list `memberInstanceIds`, whose entries carry an `instanceId` and an optional `depth`. Nesting is derived from depth, never stored: an entry's parent is the nearest preceding entry with a smaller depth; the first entry has depth 0 and a depth rises by at most one per entry. Order is data: no tool sorts the entries.
+
+A Composition section names no record and declares only `ordering.source`:
 
 ```json
 {
   "sectionId": "decisions",
-  "source": { "type": "container-subset", "containerId": "<uuid>" },
-  "ordering": {
-    "memberOrder": ["<instanceId-1>", "<instanceId-2>", "<instanceId-3>"]
-  }
+  "source": { "type": "container-subset" },
+  "ordering": { "source": "arranged" }
 }
 ```
 
-`memberOrder` lists instanceIds in presentation order; container members not listed are appended in [N+12] order (topological then `createdAt` tiebreak). It MUST NOT be combined with `fieldId` on the same section. On non-`container-subset` sources it is ignored with a diagnostic.
-
-**From `dataModelRevision` 8 (RFC-043, accepted, effective when a corpus is migrated):** `ordering.memberOrder` is retired. A document's order and nesting are declared on its Container as the ordered list `memberInstanceIds`, whose entries carry an `instanceId` and an optional `depth` (nesting is derived from depth, never stored: an entry's parent is the nearest preceding entry with a smaller depth; the first entry has depth 0 and a depth rises by at most one per entry). A Composition section names no record and declares only `ordering.source`: `"arranged"` renders the container's entries in their own sequence and at their own depth, `"rule"` (the default) orders by `ordering.fieldId` or Rule [N+12] and ignores depth. An arranged section omits `containerId` and renders the container being rendered; the literals that exist today are an enforced allowlist (`scripts/check-composition-container-literal.mjs`, srs#851), and new ones fail the check. Removing an entry promotes its descendants one level, moving an entry moves its whole run, and order is data (no tool sorts the entries). `precedes` stays semantic order only. Until srs-rust ships revision 8 (srs-rust#1133) keep using `memberOrder` as above; do not hand-write entries.
+`"arranged"` renders the container's entries in their own sequence and at their own depth (heading level `3 + depthOffset + depth`, clamped at 6 with a diagnostic); `"rule"` (the default) orders by `ordering.fieldId` or Rule [N+12] and ignores depth. An arranged section MUST NOT carry `ordering.fieldId` or `containerScope: "subtree"`. It omits `containerId` and renders the container being rendered (`srs render composition --container <id>`); the container being rendered overrides any literal `containerId` the section carries (RFC-043 [R9], ruling Q). The literals that exist are an enforced allowlist (`scripts/check-composition-container-literal.mjs`, srs#851), and new ones fail the check. Edit the arrangement with `srs container members add|move|remove`: removing an entry promotes its descendants one level, and moving an entry moves its whole run. `ordering.memberOrder` is retired (a revision-7 corpus is migrated by `srs repo apply-migration --id rfc043-container-entries`).
 
 Creating `precedes` for presentation pollutes the semantic graph permanently — tooling cannot distinguish semantic from presentational `precedes` edges, and the relation persists even when the DocumentView is removed.
 

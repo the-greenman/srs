@@ -660,7 +660,7 @@ async function publicationReachabilityCases(root) {
   const baseManifest = JSON.parse(await readFile(manifestPath, "utf8"));
   await writeJson(manifestPath, {
     ...baseManifest,
-    container: { ...baseManifest.container, memberInstanceIds: [ID(2)] },
+    container: { ...baseManifest.container, memberInstanceIds: [{ instanceId: ID(2) }] },
   });
   expect("accepts a record reached only by root container membership", runCheck("check-publication-reachability.mjs", root), {
     exit: 0,
@@ -674,7 +674,7 @@ async function publicationReachabilityCases(root) {
   await writeJson(join(repo, "containers/orphan.json"), {
     containerId: "00000000-0000-4000-8000-000000000602",
     title: "Referenced by nothing",
-    memberInstanceIds: [ID(2)],
+    memberInstanceIds: [{ instanceId: ID(2) }],
   });
   expect("does not let an unreferenced Container publish a record", runCheck("check-publication-reachability.mjs", root), {
     exit: 1,
@@ -739,7 +739,7 @@ async function publicationReachabilityCases(root) {
   await writeJson(join(repo, "containers/fixture-container.json"), {
     containerId,
     anchorInstanceId: ID(1),
-    rootInstanceIds: [ID(1)],
+    memberInstanceIds: [{ instanceId: ID(1) }],
   });
   expect("a container-subset section resolves via the named Container's anchor", runCheck("check-publication-reachability.mjs", root), {
     exit: 0,
@@ -2124,7 +2124,7 @@ async function specReadabilityCases(root) {
   // children with no `precedes` edge between any pair — under check-spec-coherence.mjs's weaker
   // ancestor-comparison test this sibling set would be "unordered", but Rule [N+12]'s createdAt
   // tiebreak still gives it one definite order: Leaf, then Alpha, then Beta.
-  await writeJson(join(root, "srs/manifest.json"), { container: { containerId: "00000000-0000-4000-8000-0000000000f0", memberInstanceIds: [P] } });
+  await writeJson(join(root, "srs/manifest.json"), { container: { containerId: "00000000-0000-4000-8000-0000000000f0", memberInstanceIds: [{ instanceId: P }] } });
   await writeJson(join(root, "srs/records/concepts/p.json"), concept(P, "Part One", "2026-09-06T00:00:00Z"));
   await writeJson(join(root, "srs/records/concepts/a.json"), concept(A, "Alpha", "2026-09-06T00:00:01Z"));
   await writeJson(join(root, "srs/records/concepts/b.json"), concept(B, "Beta", "2026-09-06T00:00:02Z"));
@@ -2627,13 +2627,13 @@ async function partContainerMembershipCases(root) {
   });
   const containerFile = join(root, "srs/containers/part-p.json");
 
-  await writeJson(join(root, "srs/manifest.json"), { container: { memberInstanceIds: [P] } });
+  await writeJson(join(root, "srs/manifest.json"), { container: { memberInstanceIds: [{ instanceId: P }] } });
   await writeJson(join(root, "srs/records/concepts/p.json"), concept(P, "Part P"));
   await writeJson(join(root, "srs/records/concepts/c1.json"), concept(C1, "Child"));
   await writeJson(join(root, "srs/records/concepts/c2.json"), concept(C2, "Grandchild"));
   await writeJson(join(root, "srs/relations/r1.json"), rel("g1", P, C1));
   await writeJson(join(root, "srs/relations/r2.json"), rel("g2", C1, C2));
-  await writeJson(containerFile, { containerId, anchorInstanceId: P, memberInstanceIds: [C1, C2] });
+  await writeJson(containerFile, { containerId, anchorInstanceId: P, memberInstanceIds: [P, C1, C2].map((instanceId) => ({ instanceId })) });
 
   expect("accepts declared membership matching the computed contains-subtree", runCheck("part-container-membership.mjs", root, "--check"), {
     exit: 0,
@@ -2642,14 +2642,14 @@ async function partContainerMembershipCases(root) {
 
   // Perturb: drop the grandchild from declared membership — a real edit that predates a new edge
   // deeper in the tree, exactly the drift class this guard exists to catch.
-  await writeJson(containerFile, { containerId, anchorInstanceId: P, memberInstanceIds: [C1] });
+  await writeJson(containerFile, { containerId, anchorInstanceId: P, memberInstanceIds: [P, C1].map((instanceId) => ({ instanceId })) });
   expect("rejects declared membership that has drifted from the computed subtree", runCheck("part-container-membership.mjs", root, "--check"), {
     exit: 1,
     contains: ["DRIFT", "1 Part container(s) drifted"],
   });
 
   // Restore — green again.
-  await writeJson(containerFile, { containerId, anchorInstanceId: P, memberInstanceIds: [C1, C2] });
+  await writeJson(containerFile, { containerId, anchorInstanceId: P, memberInstanceIds: [P, C1, C2].map((instanceId) => ({ instanceId })) });
   expect("accepts membership once restored", runCheck("part-container-membership.mjs", root, "--check"), {
     exit: 0,
     contains: ["✓ all 1 Part containers match"],

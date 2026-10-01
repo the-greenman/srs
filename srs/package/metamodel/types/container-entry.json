@@ -1,0 +1,25 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a ContainerEntry: the instanceId placed and its optional depth."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-043 [R1]: one placed member of a Container, the record it places and its nesting level.",
+  "fields": [
+    {
+      "fieldId": "4b00005a-0000-4000-a000-00000000005a",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Instance Id"
+    },
+    {
+      "fieldId": "4b000114-0000-4000-a000-000000000114",
+      "order": 1,
+      "required": false
+    }
+  ],
+  "id": "4c00004c-0000-4000-a000-00000000004c",
+  "name": "container-entry",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

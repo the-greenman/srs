@@ -1,0 +1,13 @@
+{
+  "instanceId": "64514d71-a09c-4a1a-90a3-97c4da7f2b55",
+  "typeId": "0a0000b1-0000-4000-8000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.example.arrangement",
+  "typeName": "item",
+  "fieldValues": {
+    "title": "Eta"
+  },
+  "createdAt": "2026-10-01T13:07:17.325048011+00:00",
+  "updatedAt": "2026-10-01T13:07:17.325052084+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -7,9 +7,9 @@
   "fieldValues": {
     "invariant_number": "I-80",
     "title": "Root container membership ids resolve in the authoritative instance set",
-    "normative_statement": "Every id in the root container's rootInstanceIds and memberInstanceIds MUST resolve to a member of the repository's authoritative instance set. There is no manifest `instanceIndex` to consult — it is retired (RFC-038 [R2]); the repository's authoritative store, enumerated from the tree, is that set (RFC-038 [R1]). This is the root-container specialization of core Invariant 21, stated separately so the required-root-container guarantee is self-contained.\n\n**Amended by RFC-043 (effective at dataModelRevision 8).** Every entry `instanceId` in the root container's `memberInstanceIds` MUST resolve to a member of the repository's authoritative instance set ([R2]); `rootInstanceIds` is removed ([R4]). The same resolution rule now applies to every container (Invariant 21 as amended), and a violation is repaired by the repair operation ([R20]). (Prior text, in force until a corpus is at revision 8: the statement above.)"
+    "normative_statement": "Every entry `instanceId` in the root container's `memberInstanceIds` MUST resolve to a member of the repository's authoritative instance set ([R2]); `rootInstanceIds` is removed ([R4]). The same resolution rule now applies to every container (Invariant 21 as amended), and a violation is repaired by the repair operation ([R20])."
   },
   "createdAt": "2026-06-28T14:37:38.785442829+00:00",
-  "updatedAt": "2026-10-01T11:20:21.681683166+00:00",
+  "updatedAt": "2026-10-01T12:54:46.600344265+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

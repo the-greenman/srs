@@ -1,0 +1,29 @@
+{
+  "container": {
+    "containerId": "0a000000-0000-4000-8000-000000000001",
+    "title": "Arrangement Conformance Fixture",
+    "identityInstanceId": "ca6da9bd-3230-437d-9b7f-febcbd7584dc",
+    "memberInstanceIds": [
+      {
+        "instanceId": "ca6da9bd-3230-437d-9b7f-febcbd7584dc"
+      },
+      {
+        "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc"
+      },
+      {
+        "instanceId": "8eef4acf-ac8f-4496-902a-5d06e034fc46",
+        "depth": 1
+      },
+      {
+        "instanceId": "291abed5-1baa-429f-948e-3cb4bf267c07"
+      }
+    ]
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/manifest.json",
+  "createdAt": "2026-10-01T13:07:16.722952195+00:00",
+  "dataModelRevision": 8,
+  "namespace": "com.example.arrangement",
+  "repositoryId": "0a000000-0000-4000-8000-000000000001",
+  "srsVersion": "2.0-draft",
+  "title": "Arrangement Conformance Fixture"
+}

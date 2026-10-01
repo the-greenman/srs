@@ -1,0 +1,13 @@
+{
+  "instanceId": "21dbfbfa-dd9e-47a8-b785-a00bac9497ae",
+  "typeId": "0a0000b1-0000-4000-8000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.example.arrangement",
+  "typeName": "item",
+  "fieldValues": {
+    "title": "Zeta"
+  },
+  "createdAt": "2026-10-01T13:07:17.261866759+00:00",
+  "updatedAt": "2026-10-01T13:07:17.261875120+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

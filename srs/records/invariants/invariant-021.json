@@ -7,7 +7,7 @@
   "fieldValues": {
     "invariant_number": "21",
     "title": "Container.rootInstanceIds and Container.memberInstanceIds, when…",
-    "normative_statement": "`Container.rootInstanceIds` and `Container.memberInstanceIds`, when present, must reference valid SRS instance IDs (`Note.instanceId` or `Record.instanceId`).\n\n**Amended by RFC-043 (effective at dataModelRevision 8).** Every entry in `Container.memberInstanceIds` MUST have an `instanceId` that references a valid SRS instance ID (`Note.instanceId` or `Record.instanceId`), appearing exactly once and resolving to an instance ([R2]). This is required of every container, not only the root container; a dangling entry is a validation error, and the repair operation removes it ([R20]). `rootInstanceIds` is removed ([R4]). (Prior text, in force until a corpus is at revision 8: the statement above.)"
+    "normative_statement": "Every entry in `Container.memberInstanceIds` MUST have an `instanceId` that references a valid SRS instance ID (`Note.instanceId` or `Record.instanceId`), appearing exactly once and resolving to an instance ([R2]). This is required of every container, not only the root container; a dangling entry is a validation error, and the repair operation removes it ([R20]). `rootInstanceIds` is removed ([R4])."
   },
   "tags": [
     "concern:validation",
@@ -15,7 +15,7 @@
     "topic:conformance"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-10-01T11:20:20.909930425+00:00",
+  "updatedAt": "2026-10-01T12:54:46.071656836+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

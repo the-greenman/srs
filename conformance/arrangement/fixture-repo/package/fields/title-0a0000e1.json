@@ -1,0 +1,14 @@
+{
+  "id": "0a0000e1-0000-4000-8000-000000000001",
+  "namespace": "com.example.arrangement",
+  "name": "title",
+  "version": 1,
+  "description": "The item title.",
+  "aiGuidance": {
+    "purpose": "The heading text of an item in an arranged outline."
+  },
+  "fieldType": {
+    "datatype": "string"
+  },
+  "createdAt": "2026-10-01T13:07:16.792515476+00:00"
+}

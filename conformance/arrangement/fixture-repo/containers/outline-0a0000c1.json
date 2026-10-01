@@ -1,0 +1,33 @@
+{
+  "containerId": "0a0000c1-0000-4000-8000-000000000001",
+  "title": "Outline",
+  "anchorInstanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc",
+  "memberInstanceIds": [
+    {
+      "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc"
+    },
+    {
+      "instanceId": "8eef4acf-ac8f-4496-902a-5d06e034fc46",
+      "depth": 1
+    },
+    {
+      "instanceId": "3c8311aa-410e-4052-be62-dba11656a94b",
+      "depth": 2
+    },
+    {
+      "instanceId": "c15b3417-3578-416a-bc50-8c1a2e16eb47",
+      "depth": 1
+    },
+    {
+      "instanceId": "291abed5-1baa-429f-948e-3cb4bf267c07"
+    },
+    {
+      "instanceId": "21dbfbfa-dd9e-47a8-b785-a00bac9497ae",
+      "depth": 1
+    },
+    {
+      "instanceId": "64514d71-a09c-4a1a-90a3-97c4da7f2b55",
+      "depth": 2
+    }
+  ]
+}

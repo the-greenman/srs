@@ -1,0 +1,24 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/composition.json",
+  "id": "0a0000d1-0000-4000-8000-000000000002",
+  "namespace": "com.example.arrangement",
+  "name": "outline-view-desc",
+  "version": 1,
+  "description": "",
+  "sections": [
+    {
+      "sectionId": "arranged-desc",
+      "title": "Arranged outline, descending",
+      "order": 1,
+      "source": {
+        "type": "container-subset"
+      },
+      "titleFieldId": "0a0000e1-0000-4000-8000-000000000001",
+      "ordering": {
+        "direction": "desc",
+        "source": "arranged"
+      }
+    }
+  ],
+  "createdAt": "2026-10-01T13:07:25.771828517+00:00"
+}

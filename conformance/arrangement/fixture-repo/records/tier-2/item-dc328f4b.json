@@ -1,0 +1,13 @@
+{
+  "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc",
+  "typeId": "0a0000b1-0000-4000-8000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.example.arrangement",
+  "typeName": "item",
+  "fieldValues": {
+    "title": "Alpha"
+  },
+  "createdAt": "2026-10-01T13:07:16.925579065+00:00",
+  "updatedAt": "2026-10-01T13:07:16.925582688+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

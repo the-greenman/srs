@@ -30,8 +30,8 @@
  *      become a presentation surface, exactly because a section names it (see the note on
  *      `containers()` below).
  *   2. **Root container membership** — `manifest.container` only (RFC-013's required root container,
- *      the top of structural navigation): `identityInstanceId`, `memberInstanceIds`,
- *      `rootInstanceIds`. A Container under `containers/` is deliberately NOT a surface by
+ *      the top of structural navigation): `identityInstanceId`, the `memberInstanceIds`
+ *      entry ids (RFC-043). A Container under `containers/` is deliberately NOT a surface by
  *      existing — see the note on `containers()` for the wrong verdict that produced.
  *   3. **The RFC-016 invariant projection** — [R1]: every `com.semanticops.spec/invariant` record
  *      MUST appear in the rendered Key Invariants region of each view marked `requiresKeyInvariants`.
@@ -92,6 +92,7 @@ import { fileURLToPath } from "url";
 import { instancePaths, loadInstances, loadRelations } from "./lib/rfc-038-tree.mjs";
 import { INVARIANT_PROJECTION_ROOT, isInInvariantProjectionRoot } from "./render-invariants.mjs";
 import { EXPORTED_VIEW_IDS } from "./lib/view-exports.mjs";
+import { entryIds } from "./lib/container-entries.mjs";
 
 // `fileURLToPath`, not `new URL(..).pathname` — the percent-encoding trap the sibling guards
 // document against; getting it wrong breaks every run under a checkout path containing a space.
@@ -268,8 +269,8 @@ async function reachability(repoRoot) {
   const { views, unexported } = await declaredDocumentViews(repoRoot);
   const queried = new Map(); // typeNamespace/typeName -> { descends, via }
   // containerId -> { descends, via } — a container-subset section's root is the container's own
-  // anchor/root record (RFC-042's Part containers: `rootInstanceIds: [anchorInstanceId]`,
-  // `memberInstanceIds` the declared `contains` subtree). The generic `contains` descent below
+  // anchor/root record (RFC-042's Part containers: `anchorInstanceId` an entry of
+  // `memberInstanceIds`, the declared `contains` subtree). The generic `contains` descent below
   // (shared with every other surface) walks from that anchor through the whole subtree, which is
   // exactly the declared membership per `scripts/part-container-membership.mjs` — modelling one
   // root plus descent, rather than re-deriving the flat member list, is what keeps this in step
@@ -296,9 +297,9 @@ async function reachability(repoRoot) {
         );
         continue;
       }
-      const anchor = entry.container.anchorInstanceId ?? entry.container.rootInstanceIds?.[0];
+      const anchor = entry.container.anchorInstanceId;
       if (!anchor) {
-        fail(`${entry.path} (named by ${path} section "${section.sectionId}") has no anchorInstanceId/rootInstanceIds entry to root the section on`);
+        fail(`${entry.path} (named by ${path} section "${section.sectionId}") has no anchorInstanceId to root the section on`);
         continue;
       }
       const descends = section.titleFieldId !== undefined && section.titleFieldId !== null;
@@ -388,8 +389,7 @@ async function reachability(repoRoot) {
   for (const { path, container } of await containers(repoRoot)) {
     const members = [
       ...(container.identityInstanceId ? [container.identityInstanceId] : []),
-      ...(container.memberInstanceIds ?? []),
-      ...(container.rootInstanceIds ?? []),
+      ...entryIds(container),
     ];
     for (const id of members) roots.push({ id, surface: `container ${path}`, path: byId.get(id) });
   }

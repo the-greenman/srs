@@ -1,4 +1,5 @@
 {
+  "$schema": "https://srs.semanticops.com/schema/2.0/composition.json",
   "id": "3a000001-0000-4000-a000-000000000001",
   "namespace": "com.semanticops.spec",
   "name": "spec-document-view",
@@ -14,13 +15,16 @@
         "containerId": "2ea344e1-f64e-4817-99f7-fe1b1e4046ce"
       },
       "typeDispatch": {
-        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c",
         "com.semanticops.spec/concept": "989bc844-65a8-47f6-848d-1fe61f0666b2",
-        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
         "com.semanticops.spec/example": "493ffbb5-3cf9-438d-bebf-ef02d5aeb478",
-        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
+        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f",
+        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
+      "ordering": {
+        "source": "arranged"
+      },
       "emptyBehavior": "hide"
     },
     {
@@ -32,29 +36,17 @@
         "containerId": "752dad23-8a6d-44e5-98c9-f081d2cc634e"
       },
       "typeDispatch": {
-        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c",
         "com.semanticops.spec/concept": "989bc844-65a8-47f6-848d-1fe61f0666b2",
-        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
         "com.semanticops.spec/example": "493ffbb5-3cf9-438d-bebf-ef02d5aeb478",
-        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
+        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f",
+        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
-      "emptyBehavior": "hide",
       "ordering": {
-        "memberOrder": [
-          "af14997a-09f1-4eb2-85a9-d0262024d5de",
-          "48c91235-47e9-4079-8884-30e34d5b8fc2",
-          "938f44fa-e4e5-4334-a260-4654c5661f7d",
-          "1188b6bb-ceb1-494e-960a-cf7a00b8c3ed",
-          "873099c5-093d-4684-8c36-46f813847c1a",
-          "89444ae5-3dc7-4ffd-ac60-3bc9559c9331",
-          "9bccaa53-6d98-4ca9-967b-fb27ec6e72d5",
-          "ef2e0f72-c03e-449c-99ba-ad517fd1360b",
-          "ffe99460-9afe-4464-b62e-707559dc8ad1",
-          "f0a194f1-a58f-4bb6-a4ec-2a5360c84da1",
-          "e4837800-1803-4b0b-9a9f-08ff3e5cb95a"
-        ]
-      }
+        "source": "arranged"
+      },
+      "emptyBehavior": "hide"
     },
     {
       "sectionId": "part-instances",
@@ -65,20 +57,17 @@
         "containerId": "2da5d723-f09f-4acf-9b86-a99745193ee5"
       },
       "typeDispatch": {
-        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c",
         "com.semanticops.spec/concept": "989bc844-65a8-47f6-848d-1fe61f0666b2",
-        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
         "com.semanticops.spec/example": "493ffbb5-3cf9-438d-bebf-ef02d5aeb478",
-        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
+        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f",
+        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
-      "emptyBehavior": "hide",
       "ordering": {
-        "memberOrder": [
-          "07ee545a-dba3-4253-bcbb-19a58330f79c",
-          "e1f255e4-8050-481f-ad49-a44f24bfca0f"
-        ]
-      }
+        "source": "arranged"
+      },
+      "emptyBehavior": "hide"
     },
     {
       "sectionId": "part-structure",
@@ -89,24 +78,17 @@
         "containerId": "96965ce5-ad64-45b1-8d74-eccc6773db5e"
       },
       "typeDispatch": {
-        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c",
         "com.semanticops.spec/concept": "989bc844-65a8-47f6-848d-1fe61f0666b2",
-        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
         "com.semanticops.spec/example": "493ffbb5-3cf9-438d-bebf-ef02d5aeb478",
-        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
+        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f",
+        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
-      "emptyBehavior": "hide",
       "ordering": {
-        "memberOrder": [
-          "1e23ee5d-0406-485d-a927-6c62dfee58f1",
-          "b6f2ee88-0d53-4396-886d-472fcee2ebb6",
-          "67f2621d-82df-4b2f-bc4f-a21788b02aae",
-          "12a4cf6e-f707-429a-8704-a253da88e4d8",
-          "7a7c02a5-af8a-4534-889f-abd75964b144",
-          "209e7a48-cb65-4e7e-abaa-bc8635c35631"
-        ]
-      }
+        "source": "arranged"
+      },
+      "emptyBehavior": "hide"
     },
     {
       "sectionId": "part-distribution",
@@ -117,13 +99,16 @@
         "containerId": "97838af7-50f8-4da2-9d8f-d7dbf9296c80"
       },
       "typeDispatch": {
-        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c",
         "com.semanticops.spec/concept": "989bc844-65a8-47f6-848d-1fe61f0666b2",
-        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
         "com.semanticops.spec/example": "493ffbb5-3cf9-438d-bebf-ef02d5aeb478",
-        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
+        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f",
+        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
+      "ordering": {
+        "source": "arranged"
+      },
       "emptyBehavior": "hide"
     },
     {
@@ -135,13 +120,16 @@
         "containerId": "fdb7d202-f9a5-4c8f-a2a8-d6c79add89ce"
       },
       "typeDispatch": {
-        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c",
         "com.semanticops.spec/concept": "989bc844-65a8-47f6-848d-1fe61f0666b2",
-        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
         "com.semanticops.spec/example": "493ffbb5-3cf9-438d-bebf-ef02d5aeb478",
-        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
+        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f",
+        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
+      "ordering": {
+        "source": "arranged"
+      },
       "emptyBehavior": "hide"
     },
     {
@@ -153,24 +141,17 @@
         "containerId": "a7b772f2-0093-4ccc-8050-0f7831421eaf"
       },
       "typeDispatch": {
-        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c",
         "com.semanticops.spec/concept": "989bc844-65a8-47f6-848d-1fe61f0666b2",
-        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
         "com.semanticops.spec/example": "493ffbb5-3cf9-438d-bebf-ef02d5aeb478",
-        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
+        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f",
+        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
-      "emptyBehavior": "hide",
       "ordering": {
-        "memberOrder": [
-          "580cfe0e-b23e-4215-a3c4-22cbd0526810",
-          "4d1fa8d8-0048-4b32-ae0d-f4bccbc9e959",
-          "94c41365-f841-4b49-b2ac-3711a5403fe8",
-          "706db1c3-08ee-42a6-9cd2-7fe4740f481d",
-          "82e46ffb-f437-4659-8eec-dbcd6d8a52a9",
-          "c34c0dd8-ce40-4dd9-82a4-2c5ccab8c26f"
-        ]
-      }
+        "source": "arranged"
+      },
+      "emptyBehavior": "hide"
     },
     {
       "sectionId": "part-conformance",
@@ -181,23 +162,17 @@
         "containerId": "1dc2ab2d-7873-4179-8a40-d591e9c90bb0"
       },
       "typeDispatch": {
-        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c",
         "com.semanticops.spec/concept": "989bc844-65a8-47f6-848d-1fe61f0666b2",
-        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
         "com.semanticops.spec/example": "493ffbb5-3cf9-438d-bebf-ef02d5aeb478",
-        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
+        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f",
+        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
-      "emptyBehavior": "hide",
       "ordering": {
-        "memberOrder": [
-          "a5c04203-5960-4748-b3cf-1ae339277cad",
-          "06a60bf4-87ef-435b-a440-a94f0e1e393d",
-          "9a584293-d7a5-4182-bb98-0dcef5f1913a",
-          "785654d0-2016-4a14-89ba-fee4376f9a87",
-          "0814b52c-b5bd-491c-8b5c-d366e7a13233"
-        ]
-      }
+        "source": "arranged"
+      },
+      "emptyBehavior": "hide"
     },
     {
       "sectionId": "part-governance",
@@ -208,19 +183,21 @@
         "containerId": "618920ec-c417-4f91-acce-c5ea79b743f2"
       },
       "typeDispatch": {
-        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c",
         "com.semanticops.spec/concept": "989bc844-65a8-47f6-848d-1fe61f0666b2",
-        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
         "com.semanticops.spec/example": "493ffbb5-3cf9-438d-bebf-ef02d5aeb478",
-        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f"
+        "com.semanticops.spec/invariant": "c20c6fff-f993-4573-b1bb-14f74593899f",
+        "com.semanticops.spec/mechanism": "d82ad74f-0560-4e14-b1be-e442aa706964",
+        "com.semanticops.spec/table": "77f51737-191c-4229-ac24-3ae28dfc946c"
       },
       "titleFieldId": "1a000001-0000-4000-a000-000000000001",
+      "ordering": {
+        "source": "arranged"
+      },
       "emptyBehavior": "hide"
     }
   ],
-  "createdAt": "2026-05-27T00:00:00Z",
-  "$schema": "https://srs.semanticops.com/schema/2.0/composition.json",
   "exportConfig": {
     "format": "markdown"
-  }
+  },
+  "createdAt": "2026-05-27T00:00:00Z"
 }
