@@ -26,6 +26,8 @@ Before making or reviewing any design or spec decision, read **[`docs/charter/de
 
 **Container** — lightweight grouping boundary. Its `containerId` is distinct from instance IDs and must not appear as a Relation source/target. `memberInstanceIds` is a flat ordered outline of entries `{instanceId, depth?}` (RFC-043, `dataModelRevision` 8): the ids are the membership, the order and depth are the document's layout, and `rootInstanceIds` no longer exists.
 
+**Package requirement** — a package manifest's `packageDependencies` entries (`DependencyRef`) are keyed by the required package's `packageId`; `namespace`/`name` are display labels and `version` is SemVer 2.0.0 under the RFC-044 compatibility-band rule. The bundle's `dependencyRefs` is the different list of definition References; never write `Package.packageDependencies` for it (`check-package-bundle-alignment.mjs`).
+
 **Repository** — directory with `.srs/` marker + `manifest.json`. Membership is tree-authoritative: the repository's catalog, enumerated from the tree under the reserved instance roots, is the authoritative member list (RFC-038 [R1]). There is no `instanceIndex` in the manifest; it is retired (RFC-038 [R2]), except the root container, which the manifest carries inline at `manifest.container` (RFC-038 [R1]).
 
 ## Git commit signing (local CLI use)
