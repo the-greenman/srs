@@ -152,6 +152,15 @@
       "description": "Every definition kind docs/schema/2.0/package-manifest.json declares (fields, types, views, ...) resolves to an actual schema file in docs/schema/2.0/ \u2014 a declared kind is not real unless it reaches its schema."
     },
     {
+      "id": "package-bundle-alignment",
+      "script": "check-package-bundle-alignment.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "portability",
+      "governing": "RFC-044 (srs#855) [R2] [R6] [R7] [R8]; rfc-decision-8948e43f",
+      "description": "Spec-authoring lints for RFC-044: every definition kind package-manifest.json declares is an array property of package-bundle.json ([R6]); the two $defs.DependencyRef copies are deep-equal ([R8]); no record under srs/records/ says Package.packageDependencies, the definition-reference list being Package.dependencyRefs ([R7]); the DependencyRef.version SemVer pattern accepts and rejects the RFC's fixture versions ([R2])."
+    },
+    {
       "id": "package-bundle-definition-type-sync",
       "script": "gen-package-bundle-definition-type.mjs",
       "args": [
