@@ -551,6 +551,15 @@
       "description": "No Composition `container-subset` source names a Container by id (a type-layer template naming content, the same layer leak RFC-043 removes for record ids). Whole-tree walk of every *.json and *.srsj for an object with type container-subset and a string containerId. The 24 literals that exist today (18 in the two spec Compositions, 3 in the gallery example package, 3 in the gallery.srsj archive) are an ENFORCED allowlist, scripts/composition-container-literal-allowlist.json, each entry citing srs#851: a new literal fails, and so does an allowlist entry that no longer matches one (shrink discipline). srs#851 removes the literals and then the allowlist file and this registry row. Its guard-bite cases live in the existing guards-bite entry's tests/guards/run.mjs."
     },
     {
+      "id": "actor-defs-identical",
+      "script": "check-actor-defs-identical.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "identity",
+      "governing": "RFC-046 [R1]; srs#850",
+      "description": "The `$defs/Actor` entries in docs/schema/2.0/record.json, note.json and relation.json are byte-identical (compared as exact source text, so whitespace drift fails). The committed schemas use no cross-file $ref, so the one Actor shape is repeated; this check keeps the three copies one shape (RFC-046 [R1])."
+    },
+    {
       "id": "pr-classification",
       "script": "check-pr-classification.mjs",
       "args": [],

@@ -1139,3 +1139,30 @@ mechanism:package-requirement-check
 **Content**: Makes a package requirement identity-keyed: DependencyRef carries a required packageId, with namespace and name demoted to display labels, and its version gets a stated rule (same compatibility band, at least the stated version; below 1.0 the MINOR acts as the major; a pre-release only satisfies its own release). The package bundle gains the same packageDependencies property, packageNamespace, and the three definition kinds it could not carry (themes, blueprints, protocols). The name packageDependencies means only the package requirement list and dependencyRefs only the definition-reference list. An optional ext:repository consumer check reports package-dependency-unsatisfied with one reason from a closed, ordered list, at default severity warning, never as a load failure. No dataModelRevision bump: the 4 tracked entries are repaired directly. Accepted by the owner 2026-10-02 (srs#855) as Revision 4. Charter Check: cell:identity, cell:reference, cell:description, cell:conformance, cell:portability, decision mode complicated.
 
 
+**Title**: RFC-046: Actor provenance — createdBy on Record, Note and Relation
+
+**RFC Number**: 046
+
+**Status**: Accepted
+
+**Author**: Peter Brownell (owner ruling 2026-10-02, the-greenman/srs#850)
+
+**Affected Components**: Record, Note and Relation (new optional createdBy, one shared single-shaped Actor with kind human or ai, a stable opaque id and an optional display name), FieldMeta.source (its human and ai values declared the shared actor vocabulary, no shape change), the creating, updating and migrating operations of conforming implementations (stamp from the session actor at creation only, never from a request; preserve everywhere else), the dataModelRevision generation (8 to 9). Folded into the canonical schemas: docs/schema/2.0/record.json, note.json and relation.json (byte-identical $defs/Actor, checked by scripts/check-actor-defs-identical.mjs) and the dataModelRevision description in manifest.json. Revision choreography: the 8 to 9 corpus migration lands after srs-rust support for revision 9 releases; the pins advance afterwards.
+
+<!-- srs-integration:v1
+schema:record.json
+schema:note.json
+schema:relation.json
+schema:manifest.json
+cell:attribution
+cell:identity
+cell:portability
+-->
+
+**Dependency Refs**: Builds on RFC-038 (independent relation files, Accepted), RFC-033 (dataModelRevision, Accepted) and rfc-decision-16b20c56 (the attribution principle: optional, single-shaped, never authority). Consults rfc-decision-4f1e12e5 (entry 1 removed the Relation provenance fields; this RFC is its return claimant for createdBy only), rfc-decision-cce3c00e, rfc-decision-9ee14517, rfc-decision-0118e938, rfc-decision-c20fcff8, rfc-decision-1e7c0c8e, rfc-decision-2a1e1590, rfc-decision-7caca3a1.
+
+**Proposal Artifact Path**: rfcs/rfc-046-actor-provenance.md
+
+**Content**: Adds one optional, single-shaped property, createdBy, to Record, Note and Relation. It names the actor with a kind (human or ai), a stable opaque id and an optional display name. The implementation stamps it when a new instance is persisted, from the session actor its host configures outside any request, and never from the request, so an agent cannot claim to be someone else. It is set once, preserved by every other operation, and never affects validity: testimony, not authority. The data model moves to revision 9 so that older binaries refuse the property and cannot drop it. Accepted by the owner 2026-10-02 (srs#850) as Revision 6; the Actor kind stays ai. Charter Check: cell:attribution, cell:identity, cell:portability, decision_mode complicated.
+
+
