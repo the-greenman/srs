@@ -61,9 +61,10 @@
   "updatedAt": "2026-08-02T00:00:00Z",
   "packageDependencies": [
     {
+      "packageId": "4a000001-0000-4000-a000-000000000001",
       "namespace": "com.semanticops.spec",
       "name": "spec-authoring-core",
-      "version": "1.0.0"
+      "version": "3.0.0"
     }
   ]
 }
