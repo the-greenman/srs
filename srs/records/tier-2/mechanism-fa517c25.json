@@ -1,0 +1,18 @@
+{
+  "instanceId": "fa517c25-f4e2-4866-9b4f-53df63d74f16",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Package requirement",
+    "content": "A package declares the packages it requires in `packageDependencies`, a list of `DependencyRef` entries. A `DependencyRef` MUST carry `packageId`, `namespace`, `name` and `version`, and no other property (RFC-044 [R1]). `packageId` is the `id` of the required package and the key of the requirement. `namespace` and `name` are display labels: they never decide whether the requirement is satisfied. `version` MUST match the SemVer 2.0.0 pattern, the anchored regular expression published at semver.org (RFC-044 [R2]).\n\nAn installed package version `I` satisfies a requirement version `R` if and only if, in order (RFC-044 [R3]): (1) `I` is in `R`'s compatibility band: the same MAJOR when `R`'s MAJOR is at least 1; the same MAJOR 0 and the same MINOR when `R` is `0.y.z` with `y` at least 1; the same MAJOR, MINOR and PATCH when `R` is `0.0.z`; (2) if `I` carries a pre-release tag, `I` and `R` have identical MAJOR, MINOR and PATCH; (3) `I` has SemVer 2.0.0 precedence greater than or equal to `R`. Build metadata is ignored. For `R` = `1.2.0`, `1.3.5` satisfies and `2.0.0`, `1.1.9` and `1.3.0-rc.1` do not; for `R` = `0.1.0`, `0.1.7` satisfies and `0.2.0` does not.\n\n`packageDependencies` denotes only the list of required packages, and the list of definition References a package's content points at is `dependencyRefs`. An implementation MUST NOT read either property as the other (RFC-044 [R7]).\n\nA Package Bundle MUST declare `packageNamespace` and `packageDependencies` (possibly empty), and MUST accept `themes`, `blueprints` and `protocols` as optional arrays, so that every definition kind a package manifest declares has an array of the same name in the bundle (RFC-044 [R5], [R6]). A `DependencyRef` in a bundle has exactly the shape and meaning of one in a package manifest (RFC-044 [R8]). Once RFC-003's whole-package export is accepted, a bundle it produces carries the source manifest's `namespace` as `packageNamespace` and its `packageDependencies` unchanged (absent counts as `[]`), except that it MAY omit the entry for a package whose every definition it inlines. `dataModelRevision` is unchanged by RFC-044 (RFC-044 [R12])."
+  },
+  "tags": [
+    "construct:package",
+    "topic:distribution"
+  ],
+  "createdAt": "2026-10-02T19:21:18.016530589+00:00",
+  "updatedAt": "2026-10-02T19:21:18.016534659+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

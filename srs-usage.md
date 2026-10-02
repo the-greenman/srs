@@ -1441,6 +1441,16 @@ After install, the boundary directory contains `.srs-import/import-records.json`
 
 Re-running `package install` with the same source directory is idempotent: all definitions are skipped as identical and no import records are overwritten.
 
+### Package requirements (`packageDependencies`, RFC-044)
+
+A package manifest's `packageDependencies` lists the packages it requires. Each entry is a `DependencyRef`: `packageId` (the required package's `id`, the key), `namespace` and `name` (display labels only) and `version` (SemVer 2.0.0). An installed version satisfies the entry when it is in the same compatibility band (same MAJOR; below 1.0 the same `0.MINOR`; for `0.0.z` the same release), is not a pre-release of a different release, and is at least the stated version. The bundle's `dependencyRefs` is a different list (definition References the content points at); never read one as the other.
+
+Agent rules:
+
+- **Never fill a missing `packageId` by matching `namespace`/`name`.** Resolve it from the installed set (`srs package list`) and, if no single id matches, stop and ask the repository owner (RFC-044 [R11]).
+- A consumer that checks requirements reports `package-dependency-unsatisfied` (warning; reasons `no-package-id`, `self-requirement`, `missing`, `version-unknown`, `incompatible`, `prerelease-excluded`, `version-too-low`) and `package-dependency-label-mismatch` (info). Neither fails a load.
+- **Tool gap:** no CLI command or MCP tool writes `packageDependencies` yet (srs-rust#1168). Do not hand-edit around it; file or cite the gap and park the repair.
+
 ### Registering a local package boundary
 
 `srs package import` registers an existing directory inside the repository as a named package boundary. Use this when the definitions are already in the repo (not copied from outside):

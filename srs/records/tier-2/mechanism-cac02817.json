@@ -1,0 +1,19 @@
+{
+  "instanceId": "cac02817-6919-48dc-ae52-026d456fec20",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Installed package set",
+    "content": "A package requirement check compares requirements against these members (RFC-044 [R4]).\n\nEach `PackageRef` in the manifest's `packageRefs` contributes one member; when `packageRefs` is present `packageRef` is ignored, and otherwise `packageRef` contributes the one member. A `local` ref resolves to the package manifest at its `path`, and a `remote` ref to the package the consumer's registry holds for its `packageId`. The member's identity is the resolved manifest's `id`, and its version that manifest's `version`. When the ref's own values disagree with that manifest, the manifest wins. A ref that cannot be resolved to a readable manifest contributes a member identified by `PackageRef.packageId` and versioned by `PackageRef.packageVersion` (absent means unknown), or no member when it has no `packageId`.\n\nRefs that resolve to the same `id` at different versions are separate members, and a requirement on that `id` is satisfied when at least one of them satisfies it. The core base package (`com.semanticops.core`, `id` `3a000001-0000-4000-a000-000000000001`) is a member, at the version of the core package the consumer implements. `upstreamPackage` contributes nothing: it records what the repository was initialised from, not what is installed."
+  },
+  "tags": [
+    "construct:package",
+    "construct:repository",
+    "topic:extensions"
+  ],
+  "createdAt": "2026-10-02T19:21:18.099183154+00:00",
+  "updatedAt": "2026-10-02T19:23:45.924309203+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

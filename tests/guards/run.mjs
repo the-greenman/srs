@@ -274,6 +274,58 @@ async function schemaKindCases(root) {
   });
 }
 
+// ---- RFC-044 (srs#855) — package-bundle.json aligned with package-manifest.json ---------------------
+async function packageBundleAlignmentCases(root) {
+  console.log("RFC-044 — package bundle alignment");
+  const schemaDir = join(root, "docs/schema/2.0");
+  await cp(join(REPO, "docs/schema/2.0"), schemaDir, { recursive: true });
+  const record = join(root, "srs/records/invariants/fixture.json");
+  await writeJson(record, { fieldValues: { normative_statement: "must appear in `Package.dependencyRefs`." } });
+  const run = () => runCheck("check-package-bundle-alignment.mjs", root);
+  expect("passes on the canonical schema set", run(), { exit: 0, contains: ["✓ package-bundle.json is aligned"] });
+
+  const bundlePath = join(schemaDir, "package-bundle.json");
+  const bundle = JSON.parse(await readFile(bundlePath, "utf8"));
+
+  // [R6] a manifest kind the bundle cannot carry — the srs#390 state for themes/blueprints/protocols.
+  const { protocols, ...rest } = bundle.properties;
+  await writeJson(bundlePath, { ...bundle, properties: rest });
+  expect("rejects a manifest definition kind missing from the bundle", run(), {
+    exit: 1,
+    contains: ["[R6]", "protocols"],
+  });
+
+  // [R8] the two DependencyRef copies drift apart.
+  const drifted = structuredClone(bundle);
+  drifted.$defs.DependencyRef.required = ["namespace", "name", "version"];
+  await writeJson(bundlePath, drifted);
+  expect("rejects a bundle DependencyRef that differs from the manifest's", run(), {
+    exit: 1,
+    contains: ["[R8]", "differs"],
+  });
+
+  // [R2] a pattern that accepts a two-part version.
+  const loose = structuredClone(bundle);
+  await writeJson(bundlePath, bundle);
+  const manifestPath = join(schemaDir, "package-manifest.json");
+  const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+  const looseManifest = structuredClone(manifest);
+  looseManifest.$defs.DependencyRef.properties.version.pattern = "^.+$";
+  loose.$defs.DependencyRef = looseManifest.$defs.DependencyRef;
+  await writeJson(manifestPath, looseManifest);
+  await writeJson(bundlePath, loose);
+  expect("rejects a version pattern that accepts non-SemVer", run(), { exit: 1, contains: ["[R2]", '"1.0"'] });
+  await writeJson(manifestPath, manifest);
+  await writeJson(bundlePath, bundle);
+
+  // [R7] the prose name collision this RFC removed.
+  await writeJson(record, { fieldValues: { normative_statement: "must appear in `Package.packageDependencies`." } });
+  expect("rejects a record that says Package.packageDependencies", run(), {
+    exit: 1,
+    contains: ["[R7]", "fixture.json"],
+  });
+}
+
 // ---- #391 — validate-package.mjs covers all ten definition kinds ---------------------------------
 async function validatePackageCases(root) {
   console.log("#391 — package validation covers every declared definition kind");
@@ -2718,6 +2770,7 @@ const root = await mkdtemp(join(tmpdir(), "srs-guards-"));
 try {
   await fieldNameCases(join(root, "field-name"));
   await schemaKindCases(join(root, "schema-kind"));
+  await packageBundleAlignmentCases(join(root, "package-bundle-alignment"));
   await validatePackageCases(join(root, "validate-package"));
   await publicationReachabilityCases(join(root, "publication-reachability"));
   await invariantPlacementCases(join(root, "invariant-placement"));

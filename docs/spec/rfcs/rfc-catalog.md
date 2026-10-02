@@ -1100,6 +1100,45 @@ schema:srsj-envelope.json
 **Content**: Makes a Container's memberInstanceIds a flat, ordered outline of entries (instanceId and optional depth): membership when read flat, layout when read in order, with nesting derived from depth. A Composition no longer names records: memberOrder is retired and a section declares only an ordering source, arranged or rule. rootInstanceIds is removed; navigation order is the root container's entry order; the 20 root-container precedes edges are kept (owner ruling 2026-10-01). dataModelRevision 8, migrated by an srs-rust registry entry (srs-rust#1133). Accepted by the owner 2026-10-01 (srs#849) as Revision 10, with two final rulings: keep the 20 precedes edges, and allow the container-subset containerId literal for now as an enforced allowlist tied to srs#851 (scripts/check-composition-container-literal.mjs). Charter Check: cell:containment, cell:governance, cell:portability, cell:repository, decision_mode complex. Revision 10 landed in two phases (see affected components); phase 2 (srs#852, Revision 11) migrated the corpus to dataModelRevision 8 and promoted the schemas. Revision 11 records owner ruling Q: the container being rendered overrides a section's literal containerId.
 
 
+**Title**: RFC-044: Package requirement identity — packageDependencies.packageId and package-bundle alignment
+
+**RFC Number**: 044
+
+**Status**: Accepted
+
+**Author**: design dialogue draft; owner rulings of 2026-10-02 folded in (the-greenman/srs#855)
+
+**Affected Components**: DependencyRef in package-manifest.json gains a required packageId (the key) and a SemVer 2.0.0 pattern on version, with namespace and name as display labels; package-bundle.json gains required packageNamespace and packageDependencies (a local DependencyRef copy) and optional themes, blueprints and protocols (the schema half of srs#390); the abstract Package model (example-745529e6, mechanism-bc156a49, table-e6e67001) and Invariants 7, 8, 15, 35, 36, 37 and 43 name the definition-reference list dependencyRefs; the conformance rules are three new mechanism records (Package requirement under the Distribution group; Installed package set and Package requirement check under ext:repository) defining the optional package requirement check (diagnostic package-dependency-unsatisfied at default severity warning, package-dependency-label-mismatch at info); a successor decision supersedes rfc-decision-c8704763's package-dependency sentence; scripts/check-package-bundle-alignment.mjs is a new check. No dataModelRevision bump.
+
+<!-- srs-integration:v1
+cell:identity
+cell:reference
+cell:description
+cell:conformance
+cell:portability
+schema:package-manifest.json
+schema:package-bundle.json
+ext:repository
+I-7
+I-8
+I-15
+I-35
+I-36
+I-37
+I-43
+mechanism:package
+mechanism:package-requirement
+mechanism:installed-package-set
+mechanism:package-requirement-check
+-->
+
+**Dependency Refs**: Builds on RFC-003 (Draft, Revision 5: the Package Bundle; whole-package export acceptance tracked in srs#857), RFC-014 (Accepted: packageRefs, the R6 multi-version union), RFC-029 (Accepted: the implicit core base package), RFC-033 (Accepted: dataModelRevision), RFC-040 (Accepted: the dependencyRefs to packageDependencies fold), RFC-043 (Accepted: revision 8). Supersedes in part rfc-decision-c8704763; consults rfc-decision-cce3c00e, rfc-decision-8948e43f, rfc-decision-628cf6c4, rfc-decision-2e0cd70a, rfc-decision-4431046e.
+
+**Proposal Artifact Path**: rfcs/rfc-044-package-requirement-identity.md
+
+**Content**: Makes a package requirement identity-keyed: DependencyRef carries a required packageId, with namespace and name demoted to display labels, and its version gets a stated rule (same compatibility band, at least the stated version; below 1.0 the MINOR acts as the major; a pre-release only satisfies its own release). The package bundle gains the same packageDependencies property, packageNamespace, and the three definition kinds it could not carry (themes, blueprints, protocols). The name packageDependencies means only the package requirement list and dependencyRefs only the definition-reference list. An optional ext:repository consumer check reports package-dependency-unsatisfied with one reason from a closed, ordered list, at default severity warning, never as a load failure. No dataModelRevision bump: the 4 tracked entries are repaired directly. Accepted by the owner 2026-10-02 (srs#855) as Revision 4. Charter Check: cell:identity, cell:reference, cell:description, cell:conformance, cell:portability, decision mode complicated.
+
+
 **Title**: RFC-046: Actor provenance — createdBy on Record, Note and Relation
 
 **RFC Number**: 046
