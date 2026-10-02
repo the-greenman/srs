@@ -153,6 +153,8 @@ const TYPE_ORDER = [
   [75, 'srsj-envelope'],
   // -- RFC-043 (dataModelRevision 8): one placed member of a Container's ordered outline.
   [76, 'container-entry'],
+  // -- RFC-045 (srs#858): a readme carried by a travelling form, its actual path and its text.
+  [77, 'bundled-readme'],
 ];
 const typeIdByName = Object.fromEntries(TYPE_ORDER.map(([n, name]) => [name, typeUuid(n)]));
 const ref = (typeName, mode, cardinality, extra) => {
@@ -383,7 +385,7 @@ const FIELD_SPECS = [
   [164, 'declared_extensions', { datatype: 'string', cardinality: 'list' }, 'SRS extensions this repository conforms to, e.g. [\'ext:lifecycle\', \'ext:views-l1\'].'],
   [165, 'container', ref('container', 'inline', 'single'), 'Embedded Container record — canonical source of truth for this repository\'s identity.'],
   [166, 'package_ref_mode', closed(['local', 'remote']), 'LOCATOR (rfc-decision-c8704763). local: definitions live in the repository under package/. remote: pre-installed in the consumer\'s registry.'],
-  [167, 'path', { datatype: 'string' }, 'Relative path to a referenced file (a package directory/package.json, or a Theme JSON file).'],
+  [167, 'path', { datatype: 'string' }, 'Relative path to a file within the artifact that holds it.'],
   [168, 'package_id', { datatype: 'string', format: 'uuid' }, 'Stable UUID of a package.'],
   [169, 'package_name', { datatype: 'string' }, 'Human-readable name of a package.'],
   [170, 'package_ref', ref('package-ref', 'inline', 'single'), 'Reference to the SRS Package that supplies field and type definitions (single package).'],
@@ -518,6 +520,8 @@ const FIELD_SPECS = [
   [276, 'depth', { datatype: 'integer', constraints: { minimum: 0 } }, 'RFC-043 [R1]: nesting level of a Container entry, layout only. Absent means 0.'],
   [277, 'source', closed(['arranged', 'rule']), "RFC-043 [R8]-[R11]: where a container-subset section's order comes from, 'rule' (default) or 'arranged' (the container's own entries)."],
   [275, 'label_mode', closed(['inline', 'none']), "RFC-037 Revision 5. FieldView.labelMode, presentation only (Invariant 13). 'inline' (the default) carries the row's resolved label; 'none' emits the value alone, with no label and no separating colon."],
+  // -- RFC-045 (srs#858): the optional readme a .srsj envelope (and a package bundle) carries.
+  [278, 'readme', ref('bundled-readme', 'inline', 'single'), "RFC-045 [R2]: an optional readme carried by a travelling form, its actual path within the artifact and its UTF-8 text. Opaque: no model fact is derived from it ([R1])."],
 ];
 const fieldIdByName = {};
 for (const [n, name] of FIELD_SPECS) fieldIdByName[name] = fieldUuid(n);
@@ -825,6 +829,11 @@ const TYPE_SPECS = {
     description: 'RFC-043 [R1]: one placed member of a Container, the record it places and its nesting level.',
     purpose: 'Describes a ContainerEntry: the instanceId placed and its optional depth.',
     assignments: [a('instance_id', true, 'Instance Id'), a('depth', false)],
+  },
+  'bundled-readme': {
+    description: 'RFC-045 [R2]: a readme carried by a travelling form (package bundle, .srsj): its actual path within the artifact and its text. Opaque ([R1]); the path and content rules ([R2], [R4]) are checked by implementations.',
+    purpose: 'Describes a BundledReadme: the readme file\'s path within the artifact and its content.',
+    assignments: [a('path', true), a('content', true)],
   },
   container: {
     description: 'A lightweight grouping boundary over a collection of instances.',
@@ -1271,9 +1280,9 @@ const TYPE_SPECS = {
   // permanent exclusion.
   // -------------------------------------------------------------------------------------------
   'srsj-envelope': {
-    description: 'RFC-038/RFC-039 — the {srsj, manifest, data} bundle envelope for a .srsj repository archive. `srsj` is the archive format version-gate string ([R24]); `manifest` is the archived repository\'s Manifest; `data` is a flat map keyed by each file\'s relative path within the repository tree to that file\'s parsed JSON content.',
-    purpose: 'Describes an SrsjEnvelope: the version gate, the archived Manifest, and the flattened file-tree payload.',
-    assignments: [a('srsj', true), a('manifest', true), a('envelope_data', true, 'Data')],
+    description: 'RFC-038/RFC-039 — the {srsj, manifest, data} bundle envelope for a .srsj repository archive. `srsj` is the archive format version-gate string ([R24]); `manifest` is the archived repository\'s Manifest; `data` is a flat map keyed by each file\'s relative path within the repository tree to that file\'s parsed JSON content; `readme` (RFC-045) is the repository\'s optional readme, its path relative to the repository root and its text.',
+    purpose: 'Describes an SrsjEnvelope: the version gate, the archived Manifest, the flattened file-tree payload, and the optional readme.',
+    assignments: [a('srsj', true), a('manifest', true), a('envelope_data', true, 'Data'), a('readme', false)],
   },
 };
 

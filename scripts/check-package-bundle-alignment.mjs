@@ -11,6 +11,8 @@
  *   (c) [R7] no record under srs/records/ says `Package.packageDependencies` (the abstract Package
  *       model's definition-reference list is `dependencyRefs`).
  *   (d) [R2] the DependencyRef.version pattern accepts and rejects the RFC's fixture versions.
+ *   (e) RFC-045 (srs#858): the `$defs.BundledReadme` copies in package-bundle.json and
+ *       srsj-envelope.json are deep-equal (one readme shape for both JSON travelling forms).
  *
  *   node scripts/check-package-bundle-alignment.mjs [root]   # root defaults to the repo root
  */
@@ -81,12 +83,19 @@ async function main() {
     for (const v of SEMVER_INVALID) if (re.test(v)) errors.push(`[R2] DependencyRef.version pattern accepts invalid "${v}"`);
   }
 
+  // (e) RFC-045
+  const envelope = await loadJson(join(SCHEMA_DIR, "srsj-envelope.json"));
+  const rb = bundle.$defs?.BundledReadme;
+  const re = envelope.$defs?.BundledReadme;
+  if (!rb || !re) errors.push("[RFC-045] $defs.BundledReadme missing from package-bundle.json or srsj-envelope.json");
+  else if (!isDeepStrictEqual(rb, re)) errors.push("[RFC-045] package-bundle.json $defs.BundledReadme differs from srsj-envelope.json $defs.BundledReadme");
+
   if (errors.length > 0) {
     errors.forEach((e) => console.log(`  ✗ ${e}`));
     console.log(`\n✗ ${errors.length} package bundle alignment problem(s).`);
     process.exit(1);
   }
-  console.log(`  ${kinds.length} definition kinds carried; DependencyRef copies equal; ${scanned} records scanned`);
+  console.log(`  ${kinds.length} definition kinds carried; DependencyRef and BundledReadme copies equal; ${scanned} records scanned`);
   console.log("\n✓ package-bundle.json is aligned with package-manifest.json");
 }
 

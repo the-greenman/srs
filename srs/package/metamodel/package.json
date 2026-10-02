@@ -272,7 +272,8 @@
     "fields/assets.json",
     "fields/depth.json",
     "fields/source.json",
-    "fields/label_mode.json"
+    "fields/label_mode.json",
+    "fields/readme.json"
   ],
   "id": "4a000004-0000-4000-a000-000000000004",
   "name": "metamodel",
@@ -355,7 +356,8 @@
     "types/typography-hints.json",
     "types/theme.json",
     "types/srsj-envelope.json",
-    "types/container-entry.json"
+    "types/container-entry.json",
+    "types/bundled-readme.json"
   ],
   "version": "1.1.0"
 }
