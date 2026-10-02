@@ -22,7 +22,7 @@ Before making or reviewing any design or spec decision, read **[`docs/charter/de
 - **Tier 0 (Note)**: free text sections, no type binding
 - **Tier 2 (Record)**: instantiated Type via `typeId` + `typeVersion`; carries `fieldValues` — an object keyed by `Field.name` verbatim, values recursive per the Field's `fieldType` (RFC-039)
 
-**Relation** — typed edge between two instance UUIDs. Canonical types: `contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`.
+**Relation** — typed edge between two instance UUIDs. Canonical types: `contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`. Record, Note and Relation may carry an optional `createdBy` Actor (`{kind: human|ai, id, name?}`, RFC-046, `dataModelRevision` 9): stamped by the implementation from the session actor at creation only, never supplied by a request, preserved by every other operation; testimony, never authority.
 
 **Container** — lightweight grouping boundary. Its `containerId` is distinct from instance IDs and must not appear as a Relation source/target. `memberInstanceIds` is a flat ordered outline of entries `{instanceId, depth?}` (RFC-043, `dataModelRevision` 8): the ids are the membership, the order and depth are the document's layout, and `rootInstanceIds` no longer exists.
 

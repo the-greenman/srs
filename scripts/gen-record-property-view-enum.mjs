@@ -2,8 +2,8 @@
 /**
  * Keep RecordPropertyView.property's closed enum derived from record.json's declared top-level
  * properties (RFC-041 Change B / [R5]). Identity and type-binding keys, value carriers, the open
- * implementation-local meta bag, and sourceRefs (whose composite-array rendering is deferred) are
- * excluded by the RFC; every other declared property is addressable through RecordPropertyView.
+ * implementation-local meta bag, sourceRefs (whose composite-array rendering is deferred) and createdBy (RFC-046
+ * Change D: attribution is not projected) are excluded; every other declared property is addressable through RecordPropertyView.
  *
  *   node scripts/gen-record-property-view-enum.mjs           # update view.json
  *   node scripts/gen-record-property-view-enum.mjs --check   # fail if committed output drifts
@@ -29,6 +29,7 @@ const EXCLUDED_PROPERTIES = new Set([
   "fieldMeta",
   "meta",
   "sourceRefs",
+  "createdBy", // RFC-046 Change D: attribution is not projected into views or Discovery
 ]);
 
 async function readJson(path) {
