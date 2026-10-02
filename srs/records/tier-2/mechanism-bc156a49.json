@@ -6,14 +6,14 @@
   "typeName": "mechanism",
   "fieldValues": {
     "title": "Package",
-    "content": "The distributable artefact. Contains Field, Type, View, and Relation type definitions with a complete dependency manifest.\n\nExample: the `Package` shape.\n\n`dependencyRefs` is required in both modes. Consumers use it to validate completeness without parsing content internals. `packageDependencies` is a different list: the packages this package requires (see Package requirement)."
+    "content": "The distributable artefact. Contains Field, Type, View, and Relation type definitions with a complete dependency manifest.\n\nExample: the `Package` shape.\n\n`dependencyRefs` is required in both modes. Consumers use it to validate completeness without parsing content internals. `packageDependencies` is a different list: the packages this package requires (see Package requirement).\n\nA package bundle MAY carry the package's readme as `readme`, its actual path relative to the package directory and its text (see Bundled readme). It is the exported package's own: a `mode: \"bundled\"` bundle inlines its dependencies' definitions, not their readmes. *(Effective with RFC-003 whole-package export, srs#857.)* An implementation that writes a package bundle carrying a valid `readme` out as a package directory MUST write `content`, encoded as UTF-8, to `path` relative to that directory, subject to the Bundled readme write rule. An implementation that installs such a bundle without writing a package directory SHOULD retain `readme` with the installed package so that a later whole-package export of that package carries it (RFC-045 [R3])."
   },
   "tags": [
     "construct:package",
     "topic:distribution"
   ],
   "createdAt": "2026-09-11T07:48:03.432143285+00:00",
-  "updatedAt": "2026-10-02T19:20:51.388267705+00:00",
+  "updatedAt": "2026-10-02T22:17:30.701988317+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "meta": {
     "derivedFrom": "9a4a70af-dbce-55e3-abee-175d2491f656"
