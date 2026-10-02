@@ -545,7 +545,7 @@
     "srs/records/invariants/invariant-008.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "If `Package.mode === \"bundled\"`: every `Reference` in `packageDependencies` must have a ma…"
+      "matched": "If `Package.mode === \"bundled\"`: every `Reference` in `dependencyRefs` must have a matchin…"
     },
     "srs/records/invariants/invariant-008.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",
@@ -795,7 +795,7 @@
     "srs/records/invariants/invariant-043.json#normative_statement#heading-restatement": {
       "issue": "the-greenman/srs#563",
       "rule": "heading-restatement",
-      "matched": "When `ext:type-inheritance` is declared, `Package.packageDependencies` must include a `Ref…"
+      "matched": "When `ext:type-inheritance` is declared, `Package.dependencyRefs` must include a `Referenc…"
     },
     "srs/records/invariants/invariant-043.json#normative_statement#lowercase-2119#4137b01e": {
       "issue": "the-greenman/srs#563",

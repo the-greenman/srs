@@ -590,11 +590,11 @@ When `Type.fieldOrder` is present, it must contain exactly the set of field UUID
 Every `fieldId` in `Type.fieldAssignmentOverrides[]` must reference a field inherited from the base Type or an ancestor Type. Overrides must not reference fields declared in the specializing Type's own `fields[]`, must not alter Field semantics, and must not relax an inherited required field from `true` to `false`.
 
 
-##### When ext:type-inheritance is declared, Package.packageDependencies must…
+##### When ext:type-inheritance is declared, Package.dependencyRefs must…
 
 **Number**: 43
 
-When `ext:type-inheritance` is declared, `Package.packageDependencies` must include a `Reference` for every Type in the transitive closure of base Types for any Type in `Package.types[]`. If `mode === "bundled"`, all such base Types must be present in `types[]`.
+When `ext:type-inheritance` is declared, `Package.dependencyRefs` must include a `Reference` for every Type in the transitive closure of base Types for any Type in `Package.types[]`. If `mode === "bundled"`, all such base Types must be present in `types[]`.
 
 
 ##### Why Type inheritance is conservative
@@ -2342,42 +2342,42 @@ The distributable unit of definitions: Fields, Types, and the vocabularies, life
 
 **Number**: 7
 
-Every `fieldId` referenced in any `FieldAssignment` within a `Package.types[]` must appear as the `id` of an entry in `Package.packageDependencies`.
+Every `fieldId` referenced in any `FieldAssignment` within a `Package.types[]` must appear as the `id` of an entry in `Package.dependencyRefs`.
 
 
-##### If Package.mode === "bundled": every Reference in packageDependencies must…
+##### If Package.mode === "bundled": every Reference in dependencyRefs must…
 
 **Number**: 8
 
-If `Package.mode === "bundled"`: every `Reference` in `packageDependencies` must have a matching `Field` in `fields[]` (matched on `id` and `version`).
+If `Package.mode === "bundled"`: every `Reference` in `dependencyRefs` must have a matching `Field` in `fields[]` (matched on `id` and `version`).
 
 
 ##### Every typeId referenced by any View in Package.views[] must appear in…
 
 **Number**: 15
 
-Every `typeId` referenced by any `View` in `Package.views[]` must appear in `Package.packageDependencies` with `definitionType: "type"`. If `mode === "bundled"`, that `Type` must be present in `types[]`.
+Every `typeId` referenced by any `View` in `Package.views[]` must appear in `Package.dependencyRefs` with `definitionType: "type"`. If `mode === "bundled"`, that `Type` must be present in `types[]`.
 
 
 ##### Every DocumentSection.renderViewId in any Composition within…
 
 **Number**: 35
 
-Every `DocumentSection.renderViewId` in any `Composition` within `Package.compositions[]` must reference a `View.id` that appears in `Package.views[]` or `Package.packageDependencies`. If `mode === "bundled"`, that `View` must be present in `Package.views[]`. (`packageDependencies`: srs-rust#873/#910, folded onto this same rev-6 stamp.)
+Every `DocumentSection.renderViewId` in any `Composition` within `Package.compositions[]` must reference a `View.id` that appears in `Package.views[]` or `Package.dependencyRefs`. If `mode === "bundled"`, that `View` must be present in `Package.views[]`.
 
 
 ##### Every TypeRef.typeId referenced in any Blueprint.rootTypes[],…
 
 **Number**: 36
 
-Every `TypeRef.typeId` referenced in any `Blueprint.rootTypes[]`, `Blueprint.requiredTypes[]`, or in any `RelationSpec.sourceType` or `RelationSpec.targetType` within `Blueprint.structure[]`, for each Blueprint in `Package.blueprints[]`, must appear in `Package.packageDependencies` with `definitionType: "type"`. If `mode === "bundled"`, each such Type must be present in `Package.types[]`.
+Every `TypeRef.typeId` referenced in any `Blueprint.rootTypes[]`, `Blueprint.requiredTypes[]`, or in any `RelationSpec.sourceType` or `RelationSpec.targetType` within `Blueprint.structure[]`, for each Blueprint in `Package.blueprints[]`, must appear in `Package.dependencyRefs` with `definitionType: "type"`. If `mode === "bundled"`, each such Type must be present in `Package.types[]`.
 
 
 ##### Every Protocol.protocolTargetType and ProtocolStage.outputType referenced…
 
 **Number**: 37
 
-Every `Protocol.protocolTargetType` (when a non-empty UUID) and every `ProtocolStage.outputType`, for each Protocol in `Package.protocols[]`, must appear in `Package.packageDependencies` with `definitionType: "type"`. Every `FieldRef.fieldId` in any `ProtocolStage.contributesTo[]` must appear in `Package.packageDependencies` with `definitionType: "field"`. If `mode === "bundled"`, those Types must be in `Package.types[]` and those Fields in `Package.fields[]`.
+Every `Protocol.protocolTargetType` (when a non-empty UUID) and every `ProtocolStage.outputType`, for each Protocol in `Package.protocols[]`, must appear in `Package.dependencyRefs` with `definitionType: "type"`. Every `FieldRef.fieldId` in any `ProtocolStage.contributesTo[]` must appear in `Package.dependencyRefs` with `definitionType: "field"`. If `mode === "bundled"`, those Types must be in `Package.types[]` and those Fields in `Package.fields[]`.
 
 
 ##### When PackageRef.mode === "local", the package at the declared path…
@@ -3733,7 +3733,7 @@ The distributable artefact. Contains Field, Type, View, and Relation type defini
 
 Example: the `Package` shape.
 
-`packageDependencies` is required in both modes. Consumers use it to validate completeness without parsing content internals.
+`dependencyRefs` is required in both modes. Consumers use it to validate completeness without parsing content internals. `packageDependencies` is a different list: the packages this package requires (see Package requirement).
 
 ###### The `Package` shape
 
@@ -3744,6 +3744,7 @@ Example: the `Package` shape.
   schemaVersion: string      // SRS spec version, e.g. "2.0"
   packageId: UUID
   packageName: string
+  packageNamespace: string   // label; identity is packageId (RFC-044)
   packageVersion: string     // semver, e.g. "1.2.0"
   publishedAt: ISO8601
   publisher?: string
@@ -3755,6 +3756,7 @@ Example: the `Package` shape.
   types: Type[]
   views?: View[]             // ext:views-l1; omit if not in use
   compositions?: Composition[]  // ext:views-l2; omit if not in use
+  themes?: Theme[]           // ext:themes-l1; omit if not in use
   blueprints?: Blueprint[]   // core; omit if not in use
   protocols?: Protocol[]     // ext:protocol; omit if not in use
   relationTypes?: RelationTypeDefinition[]  // relation type definitions
@@ -3763,7 +3765,15 @@ Example: the `Package` shape.
 
   mode: "bundled" | "standalone"
 
-  packageDependencies: Reference[]
+  dependencyRefs: Reference[]          // definitions the content points at
+  packageDependencies: DependencyRef[] // packages this package requires (RFC-044)
+}
+
+DependencyRef {
+  packageId: UUID            // the key: the required package's id
+  namespace: string          // display label
+  name: string               // display label
+  version: string            // SemVer 2.0.0; same compatibility band, at least this version
 }
 ```
 
@@ -3773,7 +3783,7 @@ Example: the `Package` shape.
 | Mode | Meaning |
 | --- | --- |
 | `"bundled"` | All Field records referenced by any Type, all Type records referenced by any Type or View, and all View records referenced by any Composition are included in their respective arrays. Self-contained. |
-| `"standalone"` | Dependencies are expected pre-installed in the consumer's registry. `packageDependencies` is the required manifest. |
+| `"standalone"` | Dependencies are expected pre-installed in the consumer's registry. `dependencyRefs` is the required manifest. |
 
 
 
@@ -3851,6 +3861,17 @@ Example: the `Provenance` shape.
 }
 ```
 
+
+
+##### Package requirement
+
+A package declares the packages it requires in `packageDependencies`, a list of `DependencyRef` entries. A `DependencyRef` MUST carry `packageId`, `namespace`, `name` and `version`, and no other property (RFC-044 [R1]). `packageId` is the `id` of the required package and the key of the requirement. `namespace` and `name` are display labels: they never decide whether the requirement is satisfied. `version` MUST match the SemVer 2.0.0 pattern, the anchored regular expression published at semver.org (RFC-044 [R2]).
+
+An installed package version `I` satisfies a requirement version `R` if and only if, in order (RFC-044 [R3]): (1) `I` is in `R`'s compatibility band: the same MAJOR when `R`'s MAJOR is at least 1; the same MAJOR 0 and the same MINOR when `R` is `0.y.z` with `y` at least 1; the same MAJOR, MINOR and PATCH when `R` is `0.0.z`; (2) if `I` carries a pre-release tag, `I` and `R` have identical MAJOR, MINOR and PATCH; (3) `I` has SemVer 2.0.0 precedence greater than or equal to `R`. Build metadata is ignored. For `R` = `1.2.0`, `1.3.5` satisfies and `2.0.0`, `1.1.9` and `1.3.0-rc.1` do not; for `R` = `0.1.0`, `0.1.7` satisfies and `0.2.0` does not.
+
+`packageDependencies` denotes only the list of required packages, and the list of definition References a package's content points at is `dependencyRefs`. An implementation MUST NOT read either property as the other (RFC-044 [R7]).
+
+A Package Bundle MUST declare `packageNamespace` and `packageDependencies` (possibly empty), and MUST accept `themes`, `blueprints` and `protocols` as optional arrays, so that every definition kind a package manifest declares has an array of the same name in the bundle (RFC-044 [R5], [R6]). A `DependencyRef` in a bundle has exactly the shape and meaning of one in a package manifest (RFC-044 [R8]). Once RFC-003's whole-package export is accepted, a bundle it produces carries the source manifest's `namespace` as `packageNamespace` and its `packageDependencies` unchanged (absent counts as `[]`), except that it MAY omit the entry for a package whose every definition it inlines. `dataModelRevision` is unchanged by RFC-044 (RFC-044 [R12]).
 
 
 
@@ -6250,6 +6271,26 @@ blueprint {
 
 **Cost of Non-Adoption**: Without it, there is no standalone, directory-based repository format operable offline: no marker directory, no manifest declaring packages and root container, and no tree-authoritative membership rule. An implementation is left with the single-file `.srsj` JSON Store alone, or a bespoke storage mechanism of its own.
 
+###### Installed package set
+
+A package requirement check compares requirements against these members (RFC-044 [R4]).
+
+Each `PackageRef` in the manifest's `packageRefs` contributes one member; when `packageRefs` is present `packageRef` is ignored, and otherwise `packageRef` contributes the one member. A `local` ref resolves to the package manifest at its `path`, and a `remote` ref to the package the consumer's registry holds for its `packageId`. The member's identity is the resolved manifest's `id`, and its version that manifest's `version`. When the ref's own values disagree with that manifest, the manifest wins. A ref that cannot be resolved to a readable manifest contributes a member identified by `PackageRef.packageId` and versioned by `PackageRef.packageVersion` (absent means unknown), or no member when it has no `packageId`.
+
+Refs that resolve to the same `id` at different versions are separate members, and a requirement on that `id` is satisfied when at least one of them satisfies it. The core base package (`com.semanticops.core`, `id` `3a000001-0000-4000-a000-000000000001`) is a member, at the version of the core package the consumer implements. `upstreamPackage` contributes nothing: it records what the repository was initialised from, not what is installed.
+
+
+###### Package requirement check
+
+A consumer MAY check every `packageDependencies` entry of every member of a repository's installed set, and of a bundle before install (RFC-044 [R9]). A consumer that never checks is conforming. An unsatisfied requirement, and a `DependencyRef` that fails schema validation, MUST NOT cause a repository load to fail.
+
+For a member `P` and an entry `D` of its `packageDependencies`, a consumer that checks MUST decide the outcome by these steps in order, and MUST NOT decide it from `namespace` or `name` (RFC-044 [R10]). (1) `D` without `packageId`: unsatisfied, reason `no-package-id`. (2) `D.packageId` equal to `P`'s own `id`: unsatisfied, reason `self-requirement`. (3) No member with that `id`: unsatisfied, reason `missing`. (4) Satisfied if any such candidate satisfies `D.version`. Otherwise the reason comes from one candidate: candidates of unknown version are not eligible (all unknown gives `version-unknown`); the chosen candidate is the highest-precedence one inside the requirement's compatibility band, or the highest overall when none is; the reason is the first version clause it fails: `incompatible`, `prerelease-excluded` or `version-too-low`. A bundle is checked the same way with `P` the bundle and the candidates drawn from the target repository. The check is not recursive.
+
+Each unsatisfied entry MUST be reported as `package-dependency-unsatisfied`, default severity warning, with exactly one of those reasons, naming the requiring package's `id`, the entry's `packageId`, labels and `version`, and the candidates' installed versions. When a candidate's `namespace` or `name` differs from the entry's labels, the consumer MUST report `package-dependency-label-mismatch` once for the entry, default severity info. A client MAY refuse an action on `package-dependency-unsatisfied`; which actions it refuses is the client's own choice.
+
+A `DependencyRef` without `packageId` is invalid against `package-manifest.json`, reported at error severity by a validator that checks manifests against the schema, while the load proceeds (RFC-044 [R11]). No reader or writer MAY supply a missing `packageId` by matching labels. A writer MUST preserve such an entry until it is repaired, and an exporter MUST NOT copy it into a bundle.
+
+
 
 
 #### Extension Interactions
@@ -6993,7 +7034,7 @@ These values govern the SRS standard layer. Rust, web, and other implementation 
 - **40.** A specializing Type must not declare a `fieldId` in its own `fields[]` that duplicates any `fieldId`…
 - **41.** When `Type.fieldOrder` is present, it must contain exactly the set of field UUIDs in the Type's effe…
 - **42.** Every `fieldId` in `Type.fieldAssignmentOverrides[]` must reference a field inherited from the base…
-- **43.** When `ext:type-inheritance` is declared, `Package.packageDependencies` must include a `Reference` fo…
+- **43.** When `ext:type-inheritance` is declared, `Package.dependencyRefs` must include a `Reference` for eve…
 - **I-97.** `validationRules` are not inherited. A Type's `validationRules` array is the complete and exclusive…
 
 #### Field
@@ -7104,8 +7145,8 @@ These values govern the SRS standard layer. Rust, web, and other implementation 
 #### Package
 
 - **7.** Every `fieldId` referenced in any `FieldAssignment` within a `Package.types[]` must appear as the `i…
-- **8.** If `Package.mode === "bundled"`: every `Reference` in `packageDependencies` must have a matching `Fi…
-- **15.** Every `typeId` referenced by any `View` in `Package.views[]` must appear in `Package.packageDependen…
+- **8.** If `Package.mode === "bundled"`: every `Reference` in `dependencyRefs` must have a matching `Field`…
+- **15.** Every `typeId` referenced by any `View` in `Package.views[]` must appear in `Package.dependencyRefs`…
 - **35.** Every `DocumentSection.renderViewId` in any `Composition` within `Package.compositions[]` must refer…
 - **36.** Every `TypeRef.typeId` referenced in any `Blueprint.rootTypes[]`, `Blueprint.requiredTypes[]`, or in…
 - **37.** Every `Protocol.protocolTargetType` (when a non-empty UUID) and every `ProtocolStage.outputType`, fo…

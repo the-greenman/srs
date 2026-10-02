@@ -1,0 +1,20 @@
+{
+  "instanceId": "0e28fcd7-e2d6-4f79-a65a-66230edcf576",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Package requirement check",
+    "content": "A consumer MAY check every `packageDependencies` entry of every member of a repository's installed set, and of a bundle before install (RFC-044 [R9]). A consumer that never checks is conforming. An unsatisfied requirement, and a `DependencyRef` that fails schema validation, MUST NOT cause a repository load to fail.\n\nFor a member `P` and an entry `D` of its `packageDependencies`, a consumer that checks MUST decide the outcome by these steps in order, and MUST NOT decide it from `namespace` or `name` (RFC-044 [R10]). (1) `D` without `packageId`: unsatisfied, reason `no-package-id`. (2) `D.packageId` equal to `P`'s own `id`: unsatisfied, reason `self-requirement`. (3) No member with that `id`: unsatisfied, reason `missing`. (4) Satisfied if any such candidate satisfies `D.version`. Otherwise the reason comes from one candidate: candidates of unknown version are not eligible (all unknown gives `version-unknown`); the chosen candidate is the highest-precedence one inside the requirement's compatibility band, or the highest overall when none is; the reason is the first version clause it fails: `incompatible`, `prerelease-excluded` or `version-too-low`. A bundle is checked the same way with `P` the bundle and the candidates drawn from the target repository. The check is not recursive.\n\nEach unsatisfied entry MUST be reported as `package-dependency-unsatisfied`, default severity warning, with exactly one of those reasons, naming the requiring package's `id`, the entry's `packageId`, labels and `version`, and the candidates' installed versions. When a candidate's `namespace` or `name` differs from the entry's labels, the consumer MUST report `package-dependency-label-mismatch` once for the entry, default severity info. A client MAY refuse an action on `package-dependency-unsatisfied`; which actions it refuses is the client's own choice.\n\nA `DependencyRef` without `packageId` is invalid against `package-manifest.json`, reported at error severity by a validator that checks manifests against the schema, while the load proceeds (RFC-044 [R11]). No reader or writer MAY supply a missing `packageId` by matching labels. A writer MUST preserve such an entry until it is repaired, and an exporter MUST NOT copy it into a bundle."
+  },
+  "tags": [
+    "construct:package",
+    "construct:repository",
+    "topic:extensions",
+    "topic:conformance"
+  ],
+  "createdAt": "2026-10-02T19:21:18.179265359+00:00",
+  "updatedAt": "2026-10-02T19:21:18.179270476+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

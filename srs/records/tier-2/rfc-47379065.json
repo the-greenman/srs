@@ -1,0 +1,20 @@
+{
+  "instanceId": "47379065-1187-4024-b463-62be00e46968",
+  "typeId": "6a000001-0000-4000-a000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc",
+  "fieldValues": {
+    "title": "RFC-044: Package requirement identity — packageDependencies.packageId and package-bundle alignment",
+    "rfc_number": "044",
+    "author": "design dialogue draft; owner rulings of 2026-10-02 folded in (the-greenman/srs#855)",
+    "affected_components": "DependencyRef in package-manifest.json gains a required packageId (the key) and a SemVer 2.0.0 pattern on version, with namespace and name as display labels; package-bundle.json gains required packageNamespace and packageDependencies (a local DependencyRef copy) and optional themes, blueprints and protocols (the schema half of srs#390); the abstract Package model (example-745529e6, mechanism-bc156a49, table-e6e67001) and Invariants 7, 8, 15, 35, 36, 37 and 43 name the definition-reference list dependencyRefs; the conformance rules are three new mechanism records (Package requirement under the Distribution group; Installed package set and Package requirement check under ext:repository) defining the optional package requirement check (diagnostic package-dependency-unsatisfied at default severity warning, package-dependency-label-mismatch at info); a successor decision supersedes rfc-decision-c8704763's package-dependency sentence; scripts/check-package-bundle-alignment.mjs is a new check. No dataModelRevision bump.\n\n<!-- srs-integration:v1\ncell:identity\ncell:reference\ncell:description\ncell:conformance\ncell:portability\nschema:package-manifest.json\nschema:package-bundle.json\next:repository\nI-7\nI-8\nI-15\nI-35\nI-36\nI-37\nI-43\nmechanism:package\nmechanism:package-requirement\nmechanism:installed-package-set\nmechanism:package-requirement-check\n-->",
+    "dependency_refs": "Builds on RFC-003 (Draft, Revision 5: the Package Bundle; whole-package export acceptance tracked in srs#857), RFC-014 (Accepted: packageRefs, the R6 multi-version union), RFC-029 (Accepted: the implicit core base package), RFC-033 (Accepted: dataModelRevision), RFC-040 (Accepted: the dependencyRefs to packageDependencies fold), RFC-043 (Accepted: revision 8). Supersedes in part rfc-decision-c8704763; consults rfc-decision-cce3c00e, rfc-decision-8948e43f, rfc-decision-628cf6c4, rfc-decision-2e0cd70a, rfc-decision-4431046e.",
+    "proposal_artifact_path": "rfcs/rfc-044-package-requirement-identity.md",
+    "content": "Makes a package requirement identity-keyed: DependencyRef carries a required packageId, with namespace and name demoted to display labels, and its version gets a stated rule (same compatibility band, at least the stated version; below 1.0 the MINOR acts as the major; a pre-release only satisfies its own release). The package bundle gains the same packageDependencies property, packageNamespace, and the three definition kinds it could not carry (themes, blueprints, protocols). The name packageDependencies means only the package requirement list and dependencyRefs only the definition-reference list. An optional ext:repository consumer check reports package-dependency-unsatisfied with one reason from a closed, ordered list, at default severity warning, never as a load failure. No dataModelRevision bump: the 4 tracked entries are repaired directly. Accepted by the owner 2026-10-02 (srs#855) as Revision 4. Charter Check: cell:identity, cell:reference, cell:description, cell:conformance, cell:portability, decision mode complicated."
+  },
+  "lifecycleState": "accepted",
+  "createdAt": "2026-10-02T19:17:24.236107818+00:00",
+  "updatedAt": "2026-10-02T19:21:37.943182883+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

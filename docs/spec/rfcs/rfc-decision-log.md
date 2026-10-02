@@ -1876,3 +1876,35 @@ This is not the sanctioned two-tier boundary that rfc-decision-43249f53 rejected
 **Review Trigger**: Review if a consumer needs per-entry data beyond placement, which would be a layer crossing to rule on explicitly against rfc-decision-0118e938, or if the root container's declared navigation role proves to make reordering the sidebar unsafe for tools.
 
 
+**Title**: A package requirement is keyed by the required package's id, with a SemVer compatibility constraint
+
+**Status**: Accepted
+
+**Decision Date**: 2026-10-02
+
+**Decision Rationale**: rfc-decision-c8704763 kept package dependencies KEYED by namespace/name. A namespace and name are labels: a requirement keyed by them is satisfied by an unrelated package that reuses the labels and fails for the same package after a rename, and an editor declaring 'I need this package' (muDemocracy.org#242) needs a key that survives a rename. Every other pointer to a package (PackageRef.packageId, upstreamPackage.packageId, the bundle's packageId) already uses the package UUID, so keying the requirement by it is one concept fewer, not one more (Identity: identifier over label, rfc-decision-cce3c00e). Under rfc-decision-4431046e the position change is a refinement recorded as a successor rather than an edit. The owner ruled on 2026-10-02, in the RFC-044 review, to accept the change.
+
+**Decision**: A package dependency (packageDependencies, DependencyRef) names the required package by its packageId, the package's own UUID, which is the key that decides satisfaction; namespace and name are kept as required display labels and never decide it. The constraint stays the one sanctioned package-layer form, a version rule on a lineage key: an installed version satisfies a requirement when it is in the requirement's compatibility band (same MAJOR; below 1.0 the same 0.MINOR; for 0.0.z the same release), is not a pre-release of a different release, and has equal or higher SemVer precedence. This supersedes only rfc-decision-c8704763's sentence 'Package dependencies are the one sanctioned constraint form: KEYED with a semver range, existing only at the package layer.' Its other rulings stand: the constraint form exists only at the package layer, and there is no fifth reference strength.
+
+**Scope**: The key and the version rule of DependencyRef in package-manifest.json and package-bundle.json. Does not change the four reference strengths, PINNED dependencyRefs (definition References), PackageRef or upstreamPackage, and adds no range grammar.
+
+**Governing Values**:
+- shared-coherence
+- semantic-integrity
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Keep namespace/name as the key and add an optional packageId: rejected, it leaves two ways to match and a client would match by label until a rename. A version range grammar (^1.2.0, >=1 <3): rejected, a second grammar for no present need. No special treatment of 0.x: rejected by the owner, it lets 0.9.0 satisfy 0.1.0.
+
+**Accepted Costs**: A package re-published under a new id (for example an RFC-003 subset export) is a different package for requirement purposes and a requirement must be re-pointed by hand. The 4 existing entries in tracked corpora (plus 2 in srs-rust test data) are repaired directly, with no dataModelRevision bump; an entry that cannot be resolved to one installed id is reported, never guessed.
+
+**Evidence**:
+- the-greenman/srs#855 (RFC-044, accepted by the owner 2026-10-02; owner rulings 1 to 9 in the RFC)
+- rfcs/rfc-044-package-requirement-identity.md, Revision 4 (Changes A to E, Conformance Rules [R1] to [R12])
+- rfc-decision-c8704763 (superseded in part: the package-dependency sentence)
+- docs/schema/2.0/package-manifest.json and package-bundle.json $defs.DependencyRef
+- srs-rust#1087 (reference implementation of the check)
+
+**Review Trigger**: Review if a real case needs a requirement on alternatives or on an optional package, or if a deliberate re-publication under a new id becomes common enough that re-pointing requirements by hand is a burden.
+
+
