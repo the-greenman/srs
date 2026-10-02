@@ -1876,3 +1876,36 @@ This is not the sanctioned two-tier boundary that rfc-decision-43249f53 rejected
 **Review Trigger**: Review if a consumer needs per-entry data beyond placement, which would be a layer crossing to rule on explicitly against rfc-decision-0118e938, or if the root container's declared navigation role proves to make reordering the sidebar unsafe for tools.
 
 
+**Title**: Attribution returns as one optional createdBy Actor on Record, Note and Relation, stamped by the implementation from the session actor
+
+**Status**: Accepted
+
+**Decision Date**: 2026-10-02
+
+**Decision Rationale**: rfc-decision-16b20c56 fixed three constraints for any attribution mechanism in advance: optional, single-shaped, never authority, with a review trigger of agent-written content needing to be marked. rfc-decision-4f1e12e5 removed the Relation provenance fields, including createdBy, with the trigger that the attribution mechanism's return claimant would restore what it needed. That claimant arrived: the essay editor (muDemocracy.org#227) and the agent stewardship process must show which human or named agent wrote each record, note and link, and tell two agents apart. A field the writer fills in (an author field on a comment Type) is worth nothing, because any agent can write any name, it works only for the Types that declare it, and a Relation, which is closed, cannot have one. The only placement that means anything across actors is below content, in the instance envelope, written by the implementation from the session doing the writing. The owner ruled on 2026-10-02 (srs#850) that the creator alone is recorded, that the Actor kind stays ai, and that the schemas are closed so older binaries must refuse a corpus carrying the property instead of dropping it, which is a data-model revision.
+
+**Decision**: Record, Note and Relation each gain one optional property, createdBy, holding an Actor: a kind of human or ai, a stable opaque id and an optional display name, the same shape everywhere and the same actor vocabulary as FieldMeta.source. The implementation sets it once, when a new instance is persisted, from the session actor its host supplies outside the request, and never from the request: a creation request that carries createdBy is refused. Every other operation preserves it exactly, and it is testimony, never authority: validity never depends on it, and an instance without it is unattributed, not invalid. The data model moves to revision 9, so an implementation that does not support revision 9 refuses a corpus carrying createdBy instead of reading or dropping it.
+
+**Scope**: The createdBy property on Record, Note and Relation, the shared Actor shape and its single vocabulary with FieldMeta.source, the session-actor stamping and preservation rules, and the dataModelRevision 9 stamp (RFC-046 [R1] to [R13]). Does not restore the other removed Relation provenance fields (assertedBy, confidence, status, validFrom, validUntil), does not add createdBy to definitions, Containers or Compositions, does not record who last modified an instance, and does not make attribution authoritative: signatures and verified publishers remain the future verification design that rfc-decision-16b20c56 reserves.
+
+**Governing Values**:
+- integrity-of-provenance
+- semantic-integrity
+
+**Project Phase**: formation
+
+**Alternatives Considered**: An author field on the Types that need it. Rejected: it is self-asserted, covers only the Types that declare it, cannot exist on a Relation, and is a second attribution shape beside FieldMeta.source. createdBy plus updatedBy. Deferred: no consumer has asked, a single last-modifier slot loses every earlier modifier now that revisions are removed, and adding it later is additive and reuses the Actor shape. Actors as records, with createdBy holding an instance id. Rejected for now: every repository would need actor records before it could attribute anything, and the inline Actor can be linked to such records later by matching id. Restoring the full removed provenance set. Rejected: zero of 250 relations used it, and the return claimant needs the creator only. Letting a privileged caller supply createdBy. Rejected: any creation path that accepts a supplied actor is the forgery path this closes. No revision bump. Rejected: the schemas are closed, so every pinned binary would reject stamped files one by one or drop the field on rewrite with no corpus-level signal.
+
+**Accepted Costs**: The revision-bump choreography: one srs-rust release with revision 9 support and the 8 to 9 registry entry, then one pin advance each in the spec render pin (build.417), srs-web (build.425) and muDemocracy.org (build.417); until then each of them refuses a migrated corpus as newer. A session with an actor is refused creating operations in a corpus that has not yet been migrated to revision 9, so the corpus must be migrated first. Attribution stays testimony: anyone with direct file access can write any createdBy, and an instance written by a session without an actor, an older tool or by hand is unattributed. Only the creator is recorded, not who last changed an instance.
+
+**Evidence**:
+- the-greenman/srs#850 (RFC-046, accepted by the owner 2026-10-02)
+- rfcs/rfc-046-actor-provenance.md, Revision 6 (Change A to Change F, Conformance Rules [R1] to [R13])
+- rfc-decision-16b20c56 (the attribution principle this applies)
+- rfc-decision-4f1e12e5 (entry 1, the Relation provenance removal this answers)
+- docs/schema/2.0/record.json, note.json and relation.json ($defs/Actor and createdBy)
+- the-greenman/muDemocracy.org#227 (the consumer that needs per-instance authorship)
+
+**Review Trigger**: Review when the verification or promotion design that rfc-decision-16b20c56 reserves arrives and attribution may become office rather than testimony, or when a consumer needs the last modifier of an instance and not only its creator.
+
+

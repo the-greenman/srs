@@ -1100,3 +1100,30 @@ schema:srsj-envelope.json
 **Content**: Makes a Container's memberInstanceIds a flat, ordered outline of entries (instanceId and optional depth): membership when read flat, layout when read in order, with nesting derived from depth. A Composition no longer names records: memberOrder is retired and a section declares only an ordering source, arranged or rule. rootInstanceIds is removed; navigation order is the root container's entry order; the 20 root-container precedes edges are kept (owner ruling 2026-10-01). dataModelRevision 8, migrated by an srs-rust registry entry (srs-rust#1133). Accepted by the owner 2026-10-01 (srs#849) as Revision 10, with two final rulings: keep the 20 precedes edges, and allow the container-subset containerId literal for now as an enforced allowlist tied to srs#851 (scripts/check-composition-container-literal.mjs). Charter Check: cell:containment, cell:governance, cell:portability, cell:repository, decision_mode complex. Revision 10 landed in two phases (see affected components); phase 2 (srs#852, Revision 11) migrated the corpus to dataModelRevision 8 and promoted the schemas. Revision 11 records owner ruling Q: the container being rendered overrides a section's literal containerId.
 
 
+**Title**: RFC-046: Actor provenance — createdBy on Record, Note and Relation
+
+**RFC Number**: 046
+
+**Status**: Accepted
+
+**Author**: Peter Brownell (owner ruling 2026-10-02, the-greenman/srs#850)
+
+**Affected Components**: Record, Note and Relation (new optional createdBy, one shared single-shaped Actor with kind human or ai, a stable opaque id and an optional display name), FieldMeta.source (its human and ai values declared the shared actor vocabulary, no shape change), the creating, updating and migrating operations of conforming implementations (stamp from the session actor at creation only, never from a request; preserve everywhere else), the dataModelRevision generation (8 to 9). Folded into the canonical schemas: docs/schema/2.0/record.json, note.json and relation.json (byte-identical $defs/Actor, checked by scripts/check-actor-defs-identical.mjs) and the dataModelRevision description in manifest.json. Revision choreography: the 8 to 9 corpus migration lands after srs-rust support for revision 9 releases; the pins advance afterwards.
+
+<!-- srs-integration:v1
+schema:record.json
+schema:note.json
+schema:relation.json
+schema:manifest.json
+cell:attribution
+cell:identity
+cell:portability
+-->
+
+**Dependency Refs**: Builds on RFC-038 (independent relation files, Accepted), RFC-033 (dataModelRevision, Accepted) and rfc-decision-16b20c56 (the attribution principle: optional, single-shaped, never authority). Consults rfc-decision-4f1e12e5 (entry 1 removed the Relation provenance fields; this RFC is its return claimant for createdBy only), rfc-decision-cce3c00e, rfc-decision-9ee14517, rfc-decision-0118e938, rfc-decision-c20fcff8, rfc-decision-1e7c0c8e, rfc-decision-2a1e1590, rfc-decision-7caca3a1.
+
+**Proposal Artifact Path**: rfcs/rfc-046-actor-provenance.md
+
+**Content**: Adds one optional, single-shaped property, createdBy, to Record, Note and Relation. It names the actor with a kind (human or ai), a stable opaque id and an optional display name. The implementation stamps it when a new instance is persisted, from the session actor its host configures outside any request, and never from the request, so an agent cannot claim to be someone else. It is set once, preserved by every other operation, and never affects validity: testimony, not authority. The data model moves to revision 9 so that older binaries refuse the property and cannot drop it. Accepted by the owner 2026-10-02 (srs#850) as Revision 6; the Actor kind stays ai. Charter Check: cell:attribution, cell:identity, cell:portability, decision_mode complicated.
+
+
