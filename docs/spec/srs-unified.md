@@ -3185,6 +3185,29 @@ The top-level keys of a JSON Store file:
 
 Defines the **SRS JSON Store format** (`.srsj`): a single-file, self-contained serialization of a complete SRS repository. The JSON Store is an alternative to the filesystem layout defined by `ext:repository`. Both formats carry identical semantic content; an implementation must be able to convert between them losslessly.
 
+###### Bundled readme
+
+A package bundle and a `.srsj` archive MAY carry one readme as `readme`, an object with exactly two required string properties, `path` and `content` (RFC-045 [R2]). `path` is the file's actual path within the artifact, relative to the package directory in a bundle and to the repository root in a `.srsj`; `content` is the file's bytes decoded as UTF-8 with no other change, and MUST consist only of Unicode scalar values. A producer MUST NOT set `readme` from a file whose bytes are not valid UTF-8, from a symbolic link, or from a file reached through a symbolic link, and MUST record a `path` that satisfies the path rules below. The spec does not require a readme, name one, or say how a producer chooses it: which file is the readme is a tooling convention.
+
+The content is opaque (RFC-045 [R1]). An implementation MUST NOT derive validity, identity, lifecycle state, relations, membership, ordering or any other model fact from it, MUST NOT validate it as Markdown or any other format, and MUST NOT compare it with any record, `description` or identity record. The only checks it MAY make on `content` are the content rule, the byte comparison of the write rule, and an implementation-defined size limit, whose violation it MUST report as `readme-invalid` and never handle by silently dropping the readme. A travelling form without `readme` is conformant, and an implementation MUST NOT report the absence of a readme as an error or a warning.
+
+Keeping it (RFC-045 [R5]). An implementation that reads a package bundle or `.srsj` carrying a valid `readme` and writes a travelling form of the same artifact from it (a re-export or re-pack, any rewrite by an upgrade or migration, or a conversion from `.srsj` to `.srs`) MUST carry the readme with `path` and `content` unchanged, unless the user explicitly instructs it to remove or replace the readme. In a `.srs` the readme is carried as a regular-file entry at `path`. A new artifact made from part of one (an RFC-003 subset export, an RFC-026 slice) is not the same artifact. A `.srs` marks no readme, so a readme file in one is ordinary application content, preserved by RFC-038 [R10].
+
+Where the path may point, and what happens to an invalid readme: see Bundled readme path rules. How it is written out: see Bundled readme write rule.
+
+###### Bundled readme path rules
+
+A `readme.path` MUST be non-empty, MUST use `/` as separator, MUST NOT begin with `/`, MUST NOT contain `\`, `:` or any character U+0000 to U+001F or U+007F, and MUST NOT contain an empty, `.` or `..` segment or a segment ending in `.` or a space. In a package bundle it MUST NOT be `package.json`. In a `.srsj` it MUST NOT be `manifest.json` or `.srs`, MUST NOT equal, lie inside, or be a proper ancestor of a key of `data`, and MUST NOT equal or lie inside `records`, `notes`, `typed-records`, `relations`, `containers`, the envelope manifest's `sourceDocumentsPath` (`source-documents` when absent) or its `changelogPath` when present (each compared after removing a leading `./` and any trailing `/`), or any local package root (the root itself when `package.json` is a key of `data`; every directory `D` such that `D/package.json` is a key of `data`). These exclusions are compared ASCII-case-insensitively; there is no Unicode normalisation. A path inside `.srs/` is allowed. The rules are checked by implementations, not by the JSON Schema, so a schema-valid form can still carry an invalid readme. (RFC-045 [R4])
+
+A `readme` that violates the path rules, the content rule (where the implementation's JSON parser accepts the document at all) or an implementation's size limit MUST be reported as an error with code `readme-invalid`, naming the travelling form, the `path` value and the rule broken; it MUST NOT be written anywhere and MUST NOT be carried into any travelling form written from this one; and the load, unpack or rewrite MUST otherwise proceed.
+
+
+###### Bundled readme write rule
+
+An implementation that writes a carried readme out, to a file system or as a `.srs` archive, MUST NOT write any file it generates on its own account (a marker placeholder, a scaffold) at the readme's `path`. On a file system it MUST write the readme after every other carried file of the same operation, creating missing parent directories, and MUST NOT write it over any existing file or directory, nor through a symbolic link at any component of `path`, unless the user explicitly instructs it to replace that file (and never through a symbolic link). When a component of the path is a symbolic link, or, absent such an instruction, an entry exists at the target path and is not a regular file whose bytes equal the UTF-8 encoding of `content`, or the readme cannot be written there for any other reason, it MUST leave what is there unmodified, MUST report a warning with code `readme-write-conflict` naming the path, and MUST complete the rest of the operation. (RFC-045 [R6])
+
+
+
 
 ###### Purpose and trade-offs
 
@@ -3734,6 +3757,8 @@ The distributable artefact. Contains Field, Type, View, and Relation type defini
 Example: the `Package` shape.
 
 `dependencyRefs` is required in both modes. Consumers use it to validate completeness without parsing content internals. `packageDependencies` is a different list: the packages this package requires (see Package requirement).
+
+A package bundle MAY carry the package's readme as `readme`, its actual path relative to the package directory and its text (see Bundled readme). It is the exported package's own: a `mode: "bundled"` bundle inlines its dependencies' definitions, not their readmes. *(Effective with RFC-003 whole-package export, srs#857.)* An implementation that writes a package bundle carrying a valid `readme` out as a package directory MUST write `content`, encoded as UTF-8, to `path` relative to that directory, subject to the Bundled readme write rule. An implementation that installs such a bundle without writing a package directory SHOULD retain `readme` with the installed package so that a later whole-package export of that package carries it (RFC-045 [R3]).
 
 ###### The `Package` shape
 
@@ -6012,6 +6037,7 @@ theme {
 | `srsj` | string | yes | — | core | The .srsj archive's version-gate string ([R24]). |
 | `manifest` | ref → `manifest` (inline) | yes | — | core | The archived repository's Manifest (validates against manifest.json). |
 | `data` | map<string, open> | yes | — | core | Flat map keyed by the file's relative path within the repository tree to that file's parsed JSON content. Distinct from the `meta` extension bag — this is the archive's actual file payload, not open metadata. |
+| `readme` | ref → `bundled-readme` (inline) | no | — | core | RFC-045 [R2]: an optional readme carried by a travelling form, its actual path within the artifact and its UTF-8 text. Opaque: no model fact is derived from it ([R1]). |
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/srsj-envelope.json>
 
@@ -6022,6 +6048,7 @@ srsj-envelope {
   srsj: string // The .srsj archive's version-gate string ([R24]).
   manifest: ref → `manifest` (inline) // The archived repository's Manifest (validates against manifest.json).
   data: map<string, open> // Flat map keyed by the file's relative path within the repository tree to that file's parsed JSON content. Distinct from the `meta` extension bag — this is the archive's actual file payload, not open metadata.
+  readme?: ref → `bundled-readme` (inline) // RFC-045 [R2]: an optional readme carried by a travelling form, its actual path within the artifact and its UTF-8 text. Opaque: no model fact is derived from it ([R1]).
 }
 ```
 
@@ -6267,7 +6294,7 @@ blueprint {
 
 **Status**: live
 
-**Adds**: The file-based repository format: a marker directory identifying the root, a manifest declaring the repository's stable id, its packages, its required root container and its declared extensions, and reserved folders for instances, relations, source documents and local definitions. Membership is authoritative from the tree itself — a file present under a reserved root is a member, with no manifest index to disagree with it — and the repository is operable with no running service, no registry and no network. The `.srsj` JSON Store is a single-file, lossless serialization of the same semantic content, for when portability matters more than per-file inspection.
+**Adds**: The file-based repository format: a marker directory identifying the root, a manifest declaring the repository's stable id, its packages, its required root container and its declared extensions, and reserved folders for instances, relations, source documents and local definitions. Membership is authoritative from the tree itself — a file present under a reserved root is a member, with no manifest index to disagree with it — and the repository is operable with no running service, no registry and no network. The `.srsj` JSON Store is a single-file, lossless serialization of the same semantic content, for when portability matters more than per-file inspection. A `.srsj` can also carry the repository's readme beside `data`, as its actual path and text, restored at that path on unpack and kept on every rewrite (RFC-045, see Bundled readme); in a `.srs` a readme is one more entry at its path, ordinary application content that RFC-038 [R10] already preserves.
 
 **Cost of Non-Adoption**: Without it, there is no standalone, directory-based repository format operable offline: no marker directory, no manifest declaring packages and root container, and no tree-authoritative membership rule. An implementation is left with the single-file `.srsj` JSON Store alone, or a bespoke storage mechanism of its own.
 

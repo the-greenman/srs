@@ -1,0 +1,19 @@
+{
+  "instanceId": "5b245366-67d0-4ee6-b992-9be8c31aa900",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Bundled readme",
+    "content": "A package bundle and a `.srsj` archive MAY carry one readme as `readme`, an object with exactly two required string properties, `path` and `content` (RFC-045 [R2]). `path` is the file's actual path within the artifact, relative to the package directory in a bundle and to the repository root in a `.srsj`; `content` is the file's bytes decoded as UTF-8 with no other change, and MUST consist only of Unicode scalar values. A producer MUST NOT set `readme` from a file whose bytes are not valid UTF-8, from a symbolic link, or from a file reached through a symbolic link, and MUST record a `path` that satisfies the path rules below. The spec does not require a readme, name one, or say how a producer chooses it: which file is the readme is a tooling convention.\n\nThe content is opaque (RFC-045 [R1]). An implementation MUST NOT derive validity, identity, lifecycle state, relations, membership, ordering or any other model fact from it, MUST NOT validate it as Markdown or any other format, and MUST NOT compare it with any record, `description` or identity record. The only checks it MAY make on `content` are the content rule, the byte comparison of the write rule, and an implementation-defined size limit, whose violation it MUST report as `readme-invalid` and never handle by silently dropping the readme. A travelling form without `readme` is conformant, and an implementation MUST NOT report the absence of a readme as an error or a warning.\n\nKeeping it (RFC-045 [R5]). An implementation that reads a package bundle or `.srsj` carrying a valid `readme` and writes a travelling form of the same artifact from it (a re-export or re-pack, any rewrite by an upgrade or migration, or a conversion from `.srsj` to `.srs`) MUST carry the readme with `path` and `content` unchanged, unless the user explicitly instructs it to remove or replace the readme. In a `.srs` the readme is carried as a regular-file entry at `path`. A new artifact made from part of one (an RFC-003 subset export, an RFC-026 slice) is not the same artifact. A `.srs` marks no readme, so a readme file in one is ordinary application content, preserved by RFC-038 [R10].\n\nWhere the path may point, and what happens to an invalid readme: see Bundled readme path rules. How it is written out: see Bundled readme write rule."
+  },
+  "tags": [
+    "construct:package",
+    "construct:repository",
+    "topic:distribution"
+  ],
+  "createdAt": "2026-10-02T22:17:04.033245479+00:00",
+  "updatedAt": "2026-10-02T22:21:19.062702222+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

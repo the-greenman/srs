@@ -1166,3 +1166,32 @@ cell:portability
 **Content**: Adds one optional, single-shaped property, createdBy, to Record, Note and Relation. It names the actor with a kind (human or ai), a stable opaque id and an optional display name. The implementation stamps it when a new instance is persisted, from the session actor its host configures outside any request, and never from the request, so an agent cannot claim to be someone else. It is set once, preserved by every other operation, and never affects validity: testimony, not authority. The data model moves to revision 9 so that older binaries refuse the property and cannot drop it. Accepted by the owner 2026-10-02 (srs#850) as Revision 6; the Actor kind stays ai. Charter Check: cell:attribution, cell:identity, cell:portability, decision_mode complicated.
 
 
+**Title**: RFC-045: Self-describing artifacts — a readme travels with packages and repositories
+
+**RFC Number**: 045
+
+**Status**: Accepted
+
+**Author**: design dialogue draft; owner rulings of 2026-10-02 folded in (the-greenman/srs#858)
+
+**Affected Components**: package-bundle.json and srsj-envelope.json each gain an optional readme, a BundledReadme {path, content}: the readme file's actual path within the artifact and its UTF-8 text (a local $defs copy in each, kept deep-equal by scripts/check-package-bundle-alignment.mjs). srsj-envelope.json is a generated row: the metamodel gains the value-object Type bundled-readme over the existing path and content Fields and the Field readme on srsj-envelope. The conformance rules fold into three new mechanism records: Bundled readme (shape, opaque content, keep on rewrite), contained by ext:json-store, and its children Bundled readme path rules (readme-invalid at error) and Bundled readme write rule (write without overwriting, readme-write-conflict at warning); the bundle unpack and install rule is appended to the Package mechanism; the ext:repository extension record notes the .srsj readme and that a .srs carries it as an ordinary entry. The readme is allowed, never required; the spec names no default file. No dataModelRevision bump.
+
+<!-- srs-integration:v1
+cell:portability
+cell:description
+schema:package-bundle.json
+schema:srsj-envelope.json
+ext:repository
+mechanism:bundled-readme
+mechanism:bundled-readme-path-rules
+mechanism:bundled-readme-write-rule
+mechanism:package
+-->
+
+**Dependency Refs**: Builds on RFC-003 (Draft, Revision 5: the Package Bundle; whole-package export acceptance tracked in srs#857), RFC-017 (Accepted: the deterministic .srs archive), RFC-033 (Accepted: dataModelRevision), RFC-038 (Accepted: reserved locations [R5], application content [R10], snapshots [R17]), RFC-044 (Accepted: package-bundle.json patch and the alignment check). Consults rfc-decision-cce3c00e, rfc-decision-8948e43f, rfc-decision-1967b8eb, rfc-decision-2e0cd70a, rfc-decision-628cf6c4, rfc-decision-c8704763, rfc-decision-1e7c0c8e, rfc-decision-c20fcff8, rfc-decision-9ee14517, rfc-decision-0118e938, rfc-decision-6523cf5e, rfc-decision-7caca3a1, rfc-decision-e99a9437, rfc-decision-991c062f.
+
+**Proposal Artifact Path**: rfcs/rfc-045-self-describing-artifacts-readme.md
+
+**Content**: Lets a package bundle (.srspkg) and a .srsj archive carry one readme as readme: {path, content}, the file's actual path within the artifact and its text, so that unpacking restores it under the same name, never over an existing file, and every rewrite of the same artifact keeps it. The content is opaque: nothing derives any model fact from it. A .srs already carries a readme as an ordinary entry. The spec does not require a readme, name one, or say how a tool finds it; those are non-normative tooling conventions. Accepted by the owner 2026-10-02 (srs#858) as Revision 8. Charter Check: cell:portability, cell:description, decision mode complicated.
+
+

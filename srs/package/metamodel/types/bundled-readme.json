@@ -1,0 +1,24 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a BundledReadme: the readme file's path within the artifact and its content."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-045 [R2]: a readme carried by a travelling form (package bundle, .srsj): its actual path within the artifact and its text. Opaque ([R1]); the path and content rules ([R2], [R4]) are checked by implementations.",
+  "fields": [
+    {
+      "fieldId": "4b0000a7-0000-4000-a000-0000000000a7",
+      "order": 0,
+      "required": true
+    },
+    {
+      "fieldId": "4b000063-0000-4000-a000-000000000063",
+      "order": 1,
+      "required": true
+    }
+  ],
+  "id": "4c00004d-0000-4000-a000-00000000004d",
+  "name": "bundled-readme",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

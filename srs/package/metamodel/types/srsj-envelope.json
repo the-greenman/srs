@@ -1,10 +1,10 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
   "aiGuidance": {
-    "purpose": "Describes an SrsjEnvelope: the version gate, the archived Manifest, and the flattened file-tree payload."
+    "purpose": "Describes an SrsjEnvelope: the version gate, the archived Manifest, the flattened file-tree payload, and the optional readme."
   },
   "createdAt": "2026-07-29T00:00:00Z",
-  "description": "RFC-038/RFC-039 — the {srsj, manifest, data} bundle envelope for a .srsj repository archive. `srsj` is the archive format version-gate string ([R24]); `manifest` is the archived repository's Manifest; `data` is a flat map keyed by each file's relative path within the repository tree to that file's parsed JSON content.",
+  "description": "RFC-038/RFC-039 — the {srsj, manifest, data} bundle envelope for a .srsj repository archive. `srsj` is the archive format version-gate string ([R24]); `manifest` is the archived repository's Manifest; `data` is a flat map keyed by each file's relative path within the repository tree to that file's parsed JSON content; `readme` (RFC-045) is the repository's optional readme, its path relative to the repository root and its text.",
   "fields": [
     {
       "fieldId": "4b00010e-0000-4000-a000-00000000010e",
@@ -21,6 +21,11 @@
       "order": 2,
       "required": true,
       "displayLabel": "Data"
+    },
+    {
+      "fieldId": "4b000116-0000-4000-a000-000000000116",
+      "order": 3,
+      "required": false
     }
   ],
   "id": "4c00004b-0000-4000-a000-00000000004b",

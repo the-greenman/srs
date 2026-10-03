@@ -1451,6 +1451,17 @@ Agent rules:
 - A consumer that checks requirements reports `package-dependency-unsatisfied` (warning; reasons `no-package-id`, `self-requirement`, `missing`, `version-unknown`, `incompatible`, `prerelease-excluded`, `version-too-low`) and `package-dependency-label-mismatch` (info). Neither fails a load.
 - **Tool gap:** no CLI command or MCP tool writes `packageDependencies` yet (srs-rust#1168). Do not hand-edit around it; file or cite the gap and park the repair.
 
+### Bundled readme (`readme`, RFC-045)
+
+A package bundle (`.srspkg`) and a `.srsj` archive may carry one readme as `readme: {path, content}`: the file's actual path within the artifact (relative to the package directory, or to the repository root) and its UTF-8 text. It is allowed, never required, and the spec names no default file; which file a tool picks is a tooling convention (the reference tools use `README.md` beside `package.json` for a package and `.srs/README.md` for a repository). A `.srs` needs no property: a readme there is an ordinary entry at its path.
+
+Agent rules:
+
+- **The readme is opaque prose, never authority.** Derive nothing from it (validity, identity, purpose, membership, order); the identity record and the records are right when they disagree (RFC-045 [R1]).
+- **Keep it.** When you rewrite or convert a bundle or `.srsj` that carries `readme`, it must come out with `path` and `content` unchanged unless the user asked to remove or replace it ([R5]). Do not move it into `data`: `data` holds parsed JSON only.
+- **Never overwrite on unpack.** It is written at `path` after every other file, never over an existing file or through a symbolic link; a clash is the warning `readme-write-conflict` ([R6]). A bad path or un-encodable text is the error `readme-invalid`, and that readme is then neither written nor carried ([R4]).
+- **Tool support is pending** (srs-rust#1164): until it ships, `repo copy`, `package export` and `package install` neither write nor read `readme`, and a build without that support refuses a `.srsj` that carries one. Do not hand-add a `readme` to a travelling form to work around it.
+
 ### Registering a local package boundary
 
 `srs package import` registers an existing directory inside the repository as a named package boundary. Use this when the definitions are already in the repo (not copied from outside):

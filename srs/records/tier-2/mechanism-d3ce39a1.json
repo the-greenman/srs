@@ -1,0 +1,19 @@
+{
+  "instanceId": "d3ce39a1-aa4d-41f2-a4ee-0efe2e660df6",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Bundled readme write rule",
+    "content": "An implementation that writes a carried readme out, to a file system or as a `.srs` archive, MUST NOT write any file it generates on its own account (a marker placeholder, a scaffold) at the readme's `path`. On a file system it MUST write the readme after every other carried file of the same operation, creating missing parent directories, and MUST NOT write it over any existing file or directory, nor through a symbolic link at any component of `path`, unless the user explicitly instructs it to replace that file (and never through a symbolic link). When a component of the path is a symbolic link, or, absent such an instruction, an entry exists at the target path and is not a regular file whose bytes equal the UTF-8 encoding of `content`, or the readme cannot be written there for any other reason, it MUST leave what is there unmodified, MUST report a warning with code `readme-write-conflict` naming the path, and MUST complete the rest of the operation. (RFC-045 [R6])"
+  },
+  "tags": [
+    "construct:package",
+    "construct:repository",
+    "topic:distribution"
+  ],
+  "createdAt": "2026-10-02T22:21:19.334859855+00:00",
+  "updatedAt": "2026-10-02T22:21:19.334873900+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

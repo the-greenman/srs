@@ -157,8 +157,8 @@
       "args": [],
       "tier": "always",
       "cell": "portability",
-      "governing": "RFC-044 (srs#855) [R2] [R6] [R7] [R8]; rfc-decision-8948e43f",
-      "description": "Spec-authoring lints for RFC-044: every definition kind package-manifest.json declares is an array property of package-bundle.json ([R6]); the two $defs.DependencyRef copies are deep-equal ([R8]); no record under srs/records/ says Package.packageDependencies, the definition-reference list being Package.dependencyRefs ([R7]); the DependencyRef.version SemVer pattern accepts and rejects the RFC's fixture versions ([R2])."
+      "governing": "RFC-044 (srs#855) [R2] [R6] [R7] [R8]; RFC-045 (srs#858); rfc-decision-8948e43f",
+      "description": "Spec-authoring lints for RFC-044: every definition kind package-manifest.json declares is an array property of package-bundle.json ([R6]); the two $defs.DependencyRef copies are deep-equal ([R8]); no record under srs/records/ says Package.packageDependencies, the definition-reference list being Package.dependencyRefs ([R7]); the DependencyRef.version SemVer pattern accepts and rejects the RFC's fixture versions ([R2]); and the two $defs.BundledReadme copies in package-bundle.json and srsj-envelope.json are deep-equal (RFC-045)."
     },
     {
       "id": "package-bundle-definition-type-sync",
