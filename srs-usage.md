@@ -1122,7 +1122,11 @@ Returns the current value, full revision history (oldest-first), field metadata 
 srs context record --repo <path> <record-id>
 ```
 
-Returns all field values, type metadata, display label, and all outbound relations for the named record.
+Returns all field values, type metadata, display label, and every relation touching the record in **both directions**, with the other endpoint inline. Add the global `--container <cid>` to also get the record's arrangement in that container (the record must be a member, else an error envelope).
+
+```bash
+srs context record --repo <path> <record-id> --container <container-id>
+```
 
 ```json
 {
@@ -1137,19 +1141,26 @@ Returns all field values, type metadata, display label, and all outbound relatio
     "fieldValues": { "title": "First Decision" },
     "relations": [
       {
-        "id": "<uuid>",
+        "direction": "in",
+        "relationId": "<uuid>",
+        "relationType": "derived-from",
         "sourceId": "<uuid>",
         "targetId": "<uuid>",
-        "relationTypeKey": "depends-on"
+        "neighbour": { "kind": "record", "instanceId": "<uuid>", "fieldValues": { } }
       }
     ],
+    "containerId": "<uuid>",
+    "entry": { "instanceId": "<uuid>", "depth": 0, "parentInstanceId": null, "hasChildren": true, "runSize": 3, "runEnd": 3 },
+    "subtree": [ { "instanceId": "<uuid>", "depth": 1, "parentInstanceId": "<uuid>", "hasChildren": false, "runSize": 1, "runEnd": 2 } ],
     "taggedChunks": [],
     "protocolRunHistory": []
   }
 }
 ```
 
-`relations` contains only **outbound** edges (this record as source). Inbound edges are excluded. `protocolRunHistory` contains summaries of all protocol runs whose `targetRecordId` matches this record — populated by `protocol run create` and `advance` (see §3a Protocol Run Execution).
+`relations` is one flat list: `direction` is `out` (this record is the source) or `in` (it is the target); `neighbour` is the other endpoint inline (`kind` `record` or `note`, the full instance) or `null` when it does not resolve. Order is `relationType`, then the neighbour's `createdAt` (missing last), then `relationId`, so a thread of comments on one relation type reads chronologically. **Behaviour change (srs-rust#1134):** this list used to be outbound only; a consumer that assumed `sourceId == recordId` must check `direction`. Structural edges (`contains`, `precedes`) are included. `containerId`, `entry` and `subtree` appear only with `--container`; `subtree` is the descendant outline entries only (use `record get` / the `record/{id}` resource for their content). The subject must be a Tier-2 record; notes appear as neighbours. `protocolRunHistory` contains summaries of all protocol runs whose `targetRecordId` matches this record (see §3a Protocol Run Execution).
+
+The same read is the MCP resource `srs://<repositoryId>/context/{containerId}/{instanceId}` (container-less: `srs://<repositoryId>/context/{instanceId}`), served identically by the native server and the browser session, and the WASM `context_record` input `{"recordId", "containerId"?}`.
 
 ### Revision trace
 
@@ -1629,6 +1640,7 @@ The URI scheme is implementation tooling (srs-rust ADR-037), built from existing
 | `srs://<repositoryId>/tree/{instanceId}` | The same recursive `contains` tree, rooted at one instance instead of the auto-detected roots — descend from a navigation section's or container member's `sectionContainerId` by its `instanceId`; exposed as a resource template |
 | `srs://<repositoryId>/agent-index` | AI orientation index: repository identity, counts, installed types, top-level sections, suggested entry points (JSON — same as `srs repo agent-index`). The other zero-context entry point (RFC-042 Change H, srs#620) |
 | `srs://<repositoryId>/record/{instanceId}` | One record, any tier (JSON; exposed as a resource template) |
+| `srs://<repositoryId>/context/{containerId}/{instanceId}` | Everything about one record in one read (JSON — same as `srs context record --container`): fields, relations in both directions with neighbours inline, arrangement `entry` + `subtree`. Drop the container segment for no subtree. Template |
 | `srs://<repositoryId>/container/<containerId>` | Container resolve-view: authored columns + ordered members (JSON — same as `container resolve-view`). Each member carries `sectionContainerId`, same key and meaning as the navigation row above |
 | `srs://<repositoryId>/composition/<compositionId>` | Rendered composition (markdown — same as `render composition`). Renamed from `view`/`documentView` (srs-rust#910, `rfc-decision-92d2da05`) — no alias is kept, per the standing zero-backwards-compatibility rule |
 | `srs://<repositoryId>/type/{typeId}` | Type authoring schema (JSON — same as `type schema`): properties are keyed by `Field.name` (RFC-039) and carry `x-srs-ai-guidance`, `x-srs-description`, `x-srs-instructions`; a `vocabularyRef`-backed select field also carries `x-srs-vocabulary-terms` (key/label/description of each active term, srs-rust#1002); enumerated per type and available as a template |
