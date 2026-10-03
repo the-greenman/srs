@@ -1470,6 +1470,7 @@ The reader runs a fixed pipeline: parse, refuse `readme`, refuse a newer revisio
 | `bundle-not-json` | not a JSON object |
 | `bundle-readme-unsupported` | the bundle carries `readme`; refused, not dropped, until srs-rust#1164 ships (remove it by hand only if the user asks; see Bundled readme below) |
 | `bundle-revision-too-new` | `dataModelRevision` is above what this `srs` supports; upgrade `srs` (an absent stamp means 0) |
+| `bundle-migration-refused` | the RFC-043 pre-load transformer refused the bundle; the message keeps the inner code |
 | `bundle-schema-invalid` | fails `package-bundle.json`; for a bundle older than current the message names its revision and says to re-export it |
 | `bundle-definition-invalid` | an inlined definition fails the loader checks (message names `<bundle>/<kind>/<index>`) |
 
@@ -1487,8 +1488,9 @@ srs package export --repo /path/to/repo \
 
 - The whole boundary is exported, `mode: "bundled"` only; `packageId` and `packageVersion` are the boundary's `id` and `version`. Definitions from the repository's other package boundaries that the boundary references are inlined (reported in `inlined`).
 - The embedded `com.semanticops.core` definitions are **omitted** (every repository already has them, ADR-025); this deliberately deviates from RFC-003 [C1] (ADR-050, owner ruling).
-- `publishedAt` is part of the bytes. **Pass a fixed `--published-at` for byte-reproducible output and a stable sha256**; an invalid value fails with `bundle-published-at-invalid`.
+- `publishedAt` is part of the bytes. **Pass a fixed `--published-at` for byte-reproducible output and a stable sha256**; a value that is not RFC 3339 fails with `bundle-published-at-invalid`.
 - Export never emits `readme`.
+- Export fails with `bundle-boundary-unreadable` when the target boundary's `package.json` cannot be loaded (rather than producing an empty bundle).
 
 ```json
 {
