@@ -1,0 +1,18 @@
+{
+  "instanceId": "b63bc07f-9364-4e3f-8521-85a2c741d097",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Package export",
+    "content": "Exporting a package takes one package installed in a repository (its package manifest and the definition files the manifest lists) and writes a Package Bundle: one JSON document conforming to `package-bundle.json` that carries definitions inline in the ten definition arrays (`fields`, `types`, `views`, `compositions`, `vocabularies`, `lifecycles`, `relationTypes`, `themes`, `blueprints`, `protocols`) with the package's publication metadata. Install consumes a bundle; export produces one. This mechanism defines whole-package export (RFC-003). Subset export is RFC-047 (Draft) and binds nothing.\n\nA package export MUST be emitted as a Package Bundle. A whole-package export MUST carry every definition its source package manifest lists, each at the `version` its definition file carries, and MUST resolve every PINNED and LINEAGE reference a carried definition makes (Package export reference sites) in the exporting repository's effective package set, the RFC-014 union with the RFC-029 core package. A PINNED reference reaches the one version it names; a LINEAGE reference reaches every version of its `id` the set holds. KEYED and LOCATOR references are not followed (RFC-003 [C1]).\n\nIn both modes, every definition version so reached MUST be listed in `dependencyRefs`, one `Reference` per `id` and `version`, including the source package's own referenced definitions: the list means referenced, not missing (RFC-044 [R7]). In `mode: \"bundled\"`, the default, every definition so reached MUST be carried, transitively. In `mode: \"standalone\"` only the source package's own definitions are carried. A definition of the RFC-029 core package so reached, other than one the source manifest lists, MUST NOT be carried in either mode and MUST be listed in `dependencyRefs`: core is substrate every implementation embeds, identical by `id` and `version`, so it is declared, not carried (srs#869).\n\nAn exporter MUST stop with a diagnostic and write no file when a listed definition file is missing or does not parse, a carried definition fails its own schema, a followed reference does not resolve, two different definitions with the same `id` and `version` would be carried, or RFC-044 [R11] forbids it (RFC-003 [C1]).\n\nA Package Bundle MUST carry definitions only, plus the package metadata `package-bundle.json` declares, including an RFC-045 `readme`. It MUST NOT contain instances, relations, source documents, a `manifest.json`, a `.srs/` marker, a root container or an `instanceIndex`, and a conformant tool MUST NOT open, validate or navigate it as an SRS repository (RFC-003 [C2])."
+  },
+  "tags": [
+    "construct:package",
+    "topic:distribution"
+  ],
+  "createdAt": "2026-10-03T15:36:30.273063626+00:00",
+  "updatedAt": "2026-10-03T15:36:30.273070790+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

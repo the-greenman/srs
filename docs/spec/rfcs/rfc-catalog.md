@@ -49,15 +49,42 @@ schema:package-bundle.json
 **Content**: Draft: `ext:schema-notation`, a semantic, target-neutral schema definition model for spec authoring (JSON Schema / TypeScript / protobuf / Rust are projections). Carries the proposed-package / proposed-schemas boundary fixture under rfcs/rfc-004/. Full text: rfcs/rfc-004.md.
 
 
-**Title**: RFC-003: Definition Distribution and Repository Slices
+**Title**: RFC-003: Package export — the Package Bundle and .srspkg
 
 **RFC Number**: 003
 
-**Status**: Draft
+**Status**: Accepted
+
+**Author**: Codex draft (Revisions 1–4); package-export development (Revision 5); acceptance-scope revisions and owner rulings for the-greenman/srs#857 (Revisions 6–10)
+
+**Affected Components**: Whole-package export: a new Package export mechanism in the Distribution group ([C1] closure by reference strength, the RFC-029 core-package exception, export failure, [C2] not a repository) with four children: Package export reference sites (the PINNED/LINEAGE/KEYED/LOCATOR site table), Package export identity ([C3], [C4], property sources), Package Bundle serialisation ([C5] the .srspkg file and determinism) and Package bundle revision gate ([C6], including the re-stamp step). The Package mechanism points at it. The bundled-mode clause of Invariants 8, 15, 35, 36, 37 and 43 gains the core-package exception. package-bundle.json changes description text only. Subset export, ext:registry distribution, entryRefs, ConflictRecord and ext:binding moved to RFC-047 (Draft). No dataModelRevision bump.
+
+<!-- srs-integration:v1
+cell:portability
+cell:reference
+cell:identity
+cell:conformance
+cell:versioning
+schema:package-bundle.json
+mechanism:package-export
+mechanism:package-export-reference-sites
+mechanism:package-export-identity
+mechanism:package-bundle-serialisation
+mechanism:package-bundle-revision-gate
+mechanism:package
+I-8
+I-15
+I-35
+I-36
+I-37
+I-43
+-->
+
+**Dependency Refs**: Builds on RFC-014 (Accepted: packageRefs, R3, R6), RFC-017 (Accepted: [R6] per-implementation byte determinism), RFC-029 (Accepted: the embedded core package), RFC-033 (Accepted: dataModelRevision, [R6]), RFC-043 (Accepted: [R17] bundle-form transformer), RFC-044 (Accepted: packageNamespace, packageDependencies, [R5], [R7], [R11]), RFC-045 (Accepted: bundle readme), RFC-046 (Accepted: dataModelRevision 9, no bundle shape change). Hands off to RFC-047 (Draft, the-greenman/srs#871). Consults rfc-decision-cce3c00e, rfc-decision-8948e43f, rfc-decision-c8704763, rfc-decision-16b20c56, rfc-decision-2e0cd70a, rfc-decision-628cf6c4, rfc-decision-c20fcff8, rfc-decision-9ee14517, rfc-decision-0118e938, rfc-decision-7caca3a1, rfc-decision-e99a9437, rfc-decision-4431046e, rfc-decision-aee09992, rfc-decision-d5524758. Decision recorded: rfc-decision-a8dcbfe5.
 
 **Proposal Artifact Path**: rfcs/rfc-003.md
 
-**Content**: Draft: distribution model and container slices for SRS repositories. Import-tracking / package-binding sub-scope was carved out into RFC-014. Full text: rfcs/rfc-003.md.
+**Content**: Defines whole-package export: exporting an installed package writes one Package Bundle (package-bundle.json), a single deterministic sorted-key JSON file with the .srspkg suffix, carrying every definition of the package under the package's own id and version, the definitions its PINNED and LINEAGE references reach (bundled mode), and never any records. Definitions of the embedded RFC-029 core package are listed in dependencyRefs, not carried. A reader gates a bundle on its dataModelRevision. Narrowed from Revision 5's distribution and slices scope; the remainder is RFC-047 (Draft). Accepted by the owner 2026-10-03 (the-greenman/srs#857, #869) as Revision 10. Charter Check: cell:portability, cell:reference, cell:identity, cell:conformance, cell:versioning; decision mode complex.
 
 
 **Title**: RFC-009: Root-record Type as the typing anchor for Containers, Document Views, and distributable units
@@ -1193,5 +1220,20 @@ mechanism:package
 **Proposal Artifact Path**: rfcs/rfc-045-self-describing-artifacts-readme.md
 
 **Content**: Lets a package bundle (.srspkg) and a .srsj archive carry one readme as readme: {path, content}, the file's actual path within the artifact and its text, so that unpacking restores it under the same name, never over an existing file, and every rewrite of the same artifact keeps it. The content is opaque: nothing derives any model fact from it. A .srs already carries a readme as an ordinary entry. The spec does not require a readme, name one, or say how a tool finds it; those are non-normative tooling conventions. Accepted by the owner 2026-10-02 (srs#858) as Revision 8. Charter Check: cell:portability, cell:description, decision mode complicated.
+
+
+**Title**: RFC-047: Definition Distribution — Entry Points, Subset Export, Registry, and Binding
+
+**RFC Number**: 047
+
+**Status**: Draft
+
+**Author**: Codex draft (as RFC-003 Revisions 1–5); carried to its own number 2026-10-02
+
+**Dependency Refs**: Builds on RFC-003 (Accepted, Revision 10: the Package Bundle, whole-package export and the .srspkg file form), RFC-014 (Accepted), RFC-026 (Accepted), RFC-044 (Accepted).
+
+**Proposal Artifact Path**: rfcs/rfc-047-definition-distribution-registry-binding.md
+
+**Content**: Draft: the parts of RFC-003 Revision 5 that are not whole-package export, carried unchanged when RFC-003 was narrowed and accepted (the-greenman/srs#857): Package as the distribution unit, entryRefs, subset export (a new package with a newly minted packageId), ext:registry distribution (downloadUrl, sha256), import semantics and ConflictRecord, ext:binding, and distribution workflow guidance. Not yet re-reviewed against the current model and binds nothing until accepted. Tracked in the-greenman/srs#871. Full text: rfcs/rfc-047-definition-distribution-registry-binding.md.
 
 

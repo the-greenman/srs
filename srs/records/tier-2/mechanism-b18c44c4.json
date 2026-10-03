@@ -1,0 +1,18 @@
+{
+  "instanceId": "b18c44c4-bd62-40cd-8b62-57695e6c9512",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Package Bundle serialisation",
+    "content": "A Package Bundle that a package export writes to a file MUST be a single JSON document, UTF-8 without a byte-order mark, with the suffix `.srspkg`, and no archive wrapper (RFC-003 [C5]). The `.srspkg` file is the distributed artifact, the package counterpart of the `.srsj` repository file; tools SHOULD recognise a bundle by the suffix.\n\nEvery object at every depth MUST write its members in ascending order of member name by Unicode code point (not UTF-16 code unit), with no duplicate names. Arrays MUST keep their element order, except that the ten definition arrays MUST be ordered ascending by `id` and then `version` (numerically), and `dependencyRefs` by `id`, `version`, then `definitionType` (absent first), with `id`s compared as written by code point. Order inside a definition and the order of `packageDependencies` are content and are kept. `fields`, `types`, `dependencyRefs` and `packageDependencies` MUST be written, possibly empty; any other definition array with no entries MUST NOT be written (RFC-003 [C5]).\n\nIdentical content means identical definitions and identical values of every top-level property, including `publishedAt`, `mode`, `dataModelRevision` and `readme`. Given identical content, the same build of an exporter MUST write byte-for-byte identical files on every invocation, and no other input (file-system order, timestamps, host, locale) may change a byte. Byte identity between different exporters is not required: whitespace, a trailing newline, string-escape spelling and number spelling are the exporter's choice, held fixed within one build, as RFC-017 [R6] scopes the `.srs` archive (RFC-003 [C5]).\n\nConsequence: a `.srspkg` is content-hashable per exporter build, and a committed one changes in a diff only where the package changed while one exporter writes it. A different exporter, or a new release of one, may change every line's whitespace and its hash, and an exporter that stamps the current time as `publishedAt` writes a new file each run."
+  },
+  "tags": [
+    "construct:package",
+    "topic:distribution"
+  ],
+  "createdAt": "2026-10-03T15:36:30.503705630+00:00",
+  "updatedAt": "2026-10-03T15:38:14.549175602+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

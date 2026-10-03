@@ -1,0 +1,18 @@
+{
+  "instanceId": "012a2148-709f-4d05-8e0f-7363496bda70",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Package bundle revision gate",
+    "content": "A whole-package export MUST stamp the bundle's `dataModelRevision` with the exporting repository's `dataModelRevision`; the package manifest's own stamp is not consulted (RFC-003 [C6]). The repository's stamp is the authority: a repository at revision N loads and migrates its packages as revision N.\n\nA reader of a bundle as input to package install, or of a `.srspkg`, MUST treat an absent stamp as revision 0 (RFC-033 [R6]). An implementation's own embedded core package (RFC-029) is not read under this rule. The reader then:\n\n- MUST refuse a bundle stamped above its supported revision, installing nothing;\n- MUST bring a bundle stamped below its supported revision forward through a bundle-form transformer for every intervening step, one step at a time, before reading any definition, refusing the bundle and installing nothing when a step has no transformer or a transformer refuses; what a transformer reports it could not carry forward is passed on as diagnostics and the install proceeds;\n- reads a bundle stamped at its revision as is.\n\nEach refusal MUST be reported with a diagnostic naming the revisions or step involved (RFC-003 [C6]).\n\nA step whose migration changes no shape a Package Bundle carries has the re-stamp as its bundle-form transformer: the reader sets the bundle's revision to the step's target and continues. RFC-043 [R17] is the bundle-form transformer from revision 7 to 8; RFC-046's step from 8 to 9 is a re-stamp, because it adds `createdBy` to instances only. A revision-9 reader therefore reads bundles stamped 7, 8 or 9 and refuses one stamped below 7 or unstamped. Every bundle a conforming exporter writes is stamped. Reading an older generation's definitions as current is the bundle form of what Invariant I-135 forbids for a record."
+  },
+  "tags": [
+    "construct:package",
+    "topic:distribution"
+  ],
+  "createdAt": "2026-10-03T15:36:30.580807212+00:00",
+  "updatedAt": "2026-10-03T15:36:30.580814074+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
