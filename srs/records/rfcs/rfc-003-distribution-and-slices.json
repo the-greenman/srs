@@ -5,17 +5,20 @@
   "typeNamespace": "com.semanticops.spec",
   "typeName": "rfc",
   "fieldValues": {
-    "title": "RFC-003: Definition Distribution and Repository Slices",
+    "title": "RFC-003: Package export — the Package Bundle and .srspkg",
     "rfc_number": "003",
+    "author": "Codex draft (Revisions 1–4); package-export development (Revision 5); acceptance-scope revisions and owner rulings for the-greenman/srs#857 (Revisions 6–10)",
+    "affected_components": "Whole-package export: a new Package export mechanism in the Distribution group ([C1] closure by reference strength, the RFC-029 core-package exception, export failure, [C2] not a repository) with four children: Package export reference sites (the PINNED/LINEAGE/KEYED/LOCATOR site table), Package export identity ([C3], [C4], property sources), Package Bundle serialisation ([C5] the .srspkg file and determinism) and Package bundle revision gate ([C6], including the re-stamp step). The Package mechanism points at it. The bundled-mode clause of Invariants 8, 15, 35, 36, 37 and 43 gains the core-package exception. package-bundle.json changes description text only. Subset export, ext:registry distribution, entryRefs, ConflictRecord and ext:binding moved to RFC-047 (Draft). No dataModelRevision bump.\n\n<!-- srs-integration:v1\ncell:portability\ncell:reference\ncell:identity\ncell:conformance\ncell:versioning\nschema:package-bundle.json\nmechanism:package-export\nmechanism:package-export-reference-sites\nmechanism:package-export-identity\nmechanism:package-bundle-serialisation\nmechanism:package-bundle-revision-gate\nmechanism:package\nI-8\nI-15\nI-35\nI-36\nI-37\nI-43\n-->",
+    "dependency_refs": "Builds on RFC-014 (Accepted: packageRefs, R3, R6), RFC-017 (Accepted: [R6] per-implementation byte determinism), RFC-029 (Accepted: the embedded core package), RFC-033 (Accepted: dataModelRevision, [R6]), RFC-043 (Accepted: [R17] bundle-form transformer), RFC-044 (Accepted: packageNamespace, packageDependencies, [R5], [R7], [R11]), RFC-045 (Accepted: bundle readme), RFC-046 (Accepted: dataModelRevision 9, no bundle shape change). Hands off to RFC-047 (Draft, the-greenman/srs#871). Consults rfc-decision-cce3c00e, rfc-decision-8948e43f, rfc-decision-c8704763, rfc-decision-16b20c56, rfc-decision-2e0cd70a, rfc-decision-628cf6c4, rfc-decision-c20fcff8, rfc-decision-9ee14517, rfc-decision-0118e938, rfc-decision-7caca3a1, rfc-decision-e99a9437, rfc-decision-4431046e, rfc-decision-aee09992, rfc-decision-d5524758. Decision recorded: rfc-decision-a8dcbfe5.",
     "proposal_artifact_path": "rfcs/rfc-003.md",
-    "content": "Draft: distribution model and container slices for SRS repositories. Import-tracking / package-binding sub-scope was carved out into RFC-014. Full text: rfcs/rfc-003.md."
+    "content": "Defines whole-package export: exporting an installed package writes one Package Bundle (package-bundle.json), a single deterministic sorted-key JSON file with the .srspkg suffix, carrying every definition of the package under the package's own id and version, the definitions its PINNED and LINEAGE references reach (bundled mode), and never any records. Definitions of the embedded RFC-029 core package are listed in dependencyRefs, not carried. A reader gates a bundle on its dataModelRevision. Narrowed from Revision 5's distribution and slices scope; the remainder is RFC-047 (Draft). Accepted by the owner 2026-10-03 (the-greenman/srs#857, #869) as Revision 10. Charter Check: cell:portability, cell:reference, cell:identity, cell:conformance, cell:versioning; decision mode complex."
   },
-  "lifecycleState": "draft",
+  "lifecycleState": "accepted",
   "tags": [
     "topic:rfc"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-08-28T13:58:07.708329595+00:00",
+  "updatedAt": "2026-10-03T15:38:14.693281218+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {
