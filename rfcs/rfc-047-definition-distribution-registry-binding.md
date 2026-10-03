@@ -1,10 +1,10 @@
-> **Origin**: carried from RFC-003 Revision 5 (`rfcs/rfc-003.md`, the-greenman/srs#857). RFC-003 Revision 6 narrowed RFC-003 to whole-package export so that subset could be accepted; every other part of RFC-003 Revision 5 moved here unchanged, except where noted in the Revision history. GitHub issue: to be filed when the owner approves RFC-003 Revision 6's mechanics.
+> **Origin**: carried from RFC-003 Revision 5 (`rfcs/rfc-003.md`, the-greenman/srs#857). RFC-003 Revision 6 narrowed RFC-003 to whole-package export so that subset could be accepted; every other part of RFC-003 Revision 5 moved here unchanged, except where noted in the Revision history. GitHub issue: [the-greenman/srs#871](https://github.com/the-greenman/srs/issues/871), filed when the owner accepted RFC-003 Revision 10's mechanics (2026-10-03).
 
 # RFC-047: Definition Distribution — Entry Points, Subset Export, Registry, and Binding
 
 **Status**: Draft (Revision 1)
 **Affects**: Distribution Group (Core), `ext:import-tracking`, `ext:registry`, `ext:binding`, `ext:themes-l1`
-**Builds on**: RFC-003 (the Package Bundle, whole-package export and the `.srspkg` file form, [C1]–[C6]); RFC-014 (Accepted); RFC-026 (Accepted); RFC-044 (Accepted)
+**Builds on**: RFC-003 (Accepted, Revision 10: the Package Bundle, whole-package export and the `.srspkg` file form, [C1]–[C6]); RFC-014 (Accepted); RFC-026 (Accepted); RFC-044 (Accepted)
 **Author**: Codex draft (as RFC-003 Revisions 1–5); carried to its own number 2026-10-02
 **Date**: 2026-05-27 (carried 2026-10-02)
 
