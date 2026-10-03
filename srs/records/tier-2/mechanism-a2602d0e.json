@@ -1,0 +1,18 @@
+{
+  "instanceId": "a2602d0e-d006-4c9e-b88d-772e42b7aa1b",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Package export identity",
+    "content": "A Package Bundle carries two independent identity layers. For a whole-package export, `packageId` and `packageVersion` MUST equal the source package manifest's `id` and `version`, and `packageName` MUST equal its `name` (RFC-003 [C3]); `packageNamespace` and `packageDependencies` are set by RFC-044 [R5] and [R11]. A whole-package export never mints a new `packageId`, so a later export of the same package is the same `packageId` at a higher `packageVersion` and a consumer, through RFC-014's `upstreamPackage`, recognises it as an update. Every carried definition MUST preserve its `id`, `namespace`, `name` and `version`; definition identity MUST NOT be rewritten on export (RFC-003 [C4]). A consumer deduplicates definitions by `id` and `version`, whichever bundle delivered them.\n\nEach top-level property has one source:\n\n| Property | Source |\n|---|---|\n| `packageId`, `packageVersion`, `packageName` | the manifest's `id`, `version`, `name` |\n| `packageNamespace`, `packageDependencies` | the manifest's `namespace` and `packageDependencies` (RFC-044 [R5], [R11]) |\n| `schemaVersion` | the constant `\"2.0\"` |\n| `dataModelRevision` | the exporting repository's `dataModelRevision` (Package bundle revision gate) |\n| `mode` | the caller; `\"bundled\"` when none is given |\n| `publishedAt` | the caller; the current time when none is given |\n| `publisher`, `homepage` | the caller, when given |\n| `description` | the manifest's `description`, when it has one |\n| `readme` | the package directory's readme file (RFC-045) |\n| `$schema` | the constant `https://srs.semanticops.com/schema/2.0/package-bundle.json` |\n| the ten definition arrays, `dependencyRefs` | the closure (Package export) |\n\nThe manifest's `title`, `status`, `createdAt`, `updatedAt` and definition file paths are not carried."
+  },
+  "tags": [
+    "construct:package",
+    "topic:distribution"
+  ],
+  "createdAt": "2026-10-03T15:36:30.422455616+00:00",
+  "updatedAt": "2026-10-03T15:36:30.422464266+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

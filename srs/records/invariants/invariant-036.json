@@ -7,7 +7,7 @@
   "fieldValues": {
     "invariant_number": "36",
     "title": "Every TypeRef.typeId referenced in any Blueprint.rootTypes[],…",
-    "normative_statement": "Every `TypeRef.typeId` referenced in any `Blueprint.rootTypes[]`, `Blueprint.requiredTypes[]`, or in any `RelationSpec.sourceType` or `RelationSpec.targetType` within `Blueprint.structure[]`, for each Blueprint in `Package.blueprints[]`, must appear in `Package.dependencyRefs` with `definitionType: \"type\"`. If `mode === \"bundled\"`, each such Type must be present in `Package.types[]`."
+    "normative_statement": "Every `TypeRef.typeId` referenced in any `Blueprint.rootTypes[]`, `Blueprint.requiredTypes[]`, or in any `RelationSpec.sourceType` or `RelationSpec.targetType` within `Blueprint.structure[]`, for each Blueprint in `Package.blueprints[]`, must appear in `Package.dependencyRefs` with `definitionType: \"type\"`. If `mode === \"bundled\"`, each such Type must be present in `Package.types[]` unless it is a definition of the RFC-029 core package, which is listed in `dependencyRefs` and need not be carried (RFC-003 [C1])."
   },
   "tags": [
     "concern:validation",
@@ -17,7 +17,7 @@
     "topic:conformance"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-10-02T19:15:12.648961221+00:00",
+  "updatedAt": "2026-10-03T15:35:49.765967337+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {

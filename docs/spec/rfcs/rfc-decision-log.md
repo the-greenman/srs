@@ -1941,3 +1941,35 @@ This is not the sanctioned two-tier boundary that rfc-decision-43249f53 rejected
 **Review Trigger**: Review when the verification or promotion design that rfc-decision-16b20c56 reserves arrives and attribution may become office rather than testimony, or when a consumer needs the last modifier of an instance and not only its creator.
 
 
+**Title**: A whole-package export declares the embedded core package in dependencyRefs instead of carrying it
+
+**Status**: Accepted
+
+**Decision Date**: 2026-10-03
+
+**Decision Rationale**: RFC-003 Revision 9 required a bundled export to carry every definition reached by a followed reference. The first exporter (srs-rust#1210, srs-rust#663 owner ruling O2) omitted core definitions, because every repository embeds them (ADR-025), and wrote dependencyRefs as []. Mapped across the cells it touches (decision mode complex): Portability (preserve over recognize) is met by declaration, because core is substrate every implementation embeds and is identical by id and version everywhere, so naming a core definition preserves exactly what carrying it would. Attribution (stated over assumed) and the Water column (connection carried, never dropped) are met only if the dependency is stated, so every reached core version is listed in dependencyRefs. Reference (declared strength over convenient reach) is met because the closure still follows exactly the PINNED and LINEAGE sites. Identity (identifier over label) is met because the declaration is by id and version, and the Earth rule is untouched: two different definitions with the same id and version still stop the export. The owner ruled the compromise on 2026-10-03 (srs#869), folded as RFC-003 Revision 10.
+
+**Decision**: A whole-package export does not carry definitions of the RFC-029 core package in its definition arrays, in either mode, and lists every core definition version reached by a followed PINNED or LINEAGE reference in dependencyRefs, one entry per id and version. The closure rule is unchanged; only what is carried differs. The exception covers core definitions reached from another package, never the source package's own: an export of the core package itself carries every definition its manifest lists. The bundled-mode clauses of Invariants 8, 15, 35, 36, 37 and 43 carry the same exception.
+
+**Scope**: The definition arrays and dependencyRefs of a Package Bundle written by a whole-package export (RFC-003 [C1]), and the bundled-mode clause of the six Package invariants. Does not change the reference strengths, the standalone mode, or how a consumer installs a bundle.
+
+**Governing Values**:
+- portability
+- semantic-integrity
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Carry core definitions like any other (Revision 9 literal): rejected, it repeats the substrate in every bundle and makes every install deduplicate it, preserving nothing a consumer could lack. Omit core and write dependencyRefs as [] (srs-rust#1210 as merged): rejected, the dependency is assumed rather than stated and followed references are dropped (Attribution, Water). Let the exporter choose per call: rejected, two ways for one goal and two different bundles for the same package (Conformance, one way over many).
+
+**Accepted Costs**: A bundled bundle is not self-contained for core definitions: a reader without the RFC-029 core package cannot install it, which no conforming implementation is. The six Package invariants gain an exception to their bundled-mode clause. Bundles written by srs-rust#1210 before srs-rust#1212 lands carry no core dependencyRefs and are re-exported.
+
+**Evidence**:
+- the-greenman/srs#869 (owner ruling O2 compromise, 2026-10-03)
+- the-greenman/srs#857 (RFC-003 acceptance)
+- rfcs/rfc-003.md, Revision 10 (Change C, [C1], Charter alignment geometry)
+- docs/schema/2.0/package-bundle.json (mode description)
+- the-greenman/srs-rust#1210 (first exporter), the-greenman/srs-rust#1212 (conformance)
+
+**Review Trigger**: Review if an implementation can legitimately lack or differ in the RFC-029 core package (for example a core package with more than one version in use), or if a second package becomes substrate that every implementation embeds.
+
+
