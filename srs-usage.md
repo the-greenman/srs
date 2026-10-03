@@ -1609,6 +1609,8 @@ Container slice export will be surfaced as `srs archive pack --container <contai
 
 The `srs` binary can serve one repository over the Model Context Protocol (stdio), making every MCP client (Claude Code, Cursor, Copilot, Goose, …) an SRS client with the same validated write contract the CLI enforces. The server is a thin adapter over the same repository services — CLI and MCP always agree.
 
+The generic SRS MCP surface (all tools including `container_copy` and `record_fork`, the resources below, and the blueprint prompts) is implemented once in the WASM-safe `srs-mcp-core` crate over an injected `RepositoryStore`; it owns no stdio, HTTP, `rmcp` or `tokio`. `srs mcp serve` is the native stdio adapter over it (`rmcp`/`tokio` live only in `srs-mcp`). The browser exposes the same surface as the WASM `McpSession` (`srs-bindings`) over the already-open store: `handle(message)` takes one JSON-RPC message and returns the response text. Writes land in the open working copy and are visible to the UI's reads and exports; nothing persists until the human saves in the browser. Transport (framing, auth, origin policy) is the host's job — srs-web relays it (srs-web#306). Same tools, same contracts, same diagnostics on both paths.
+
 ```bash
 srs mcp serve --repo <path>      # stdio MCP server; --repo auto-detects from cwd if omitted
 ```
