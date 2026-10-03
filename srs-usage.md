@@ -1816,10 +1816,6 @@ $ srs container members remove --repo <path> <containerId> dddddddd-dddd-4ddd-8d
 
 Note that `srs container create` and `srs container update` take the entry list wholesale. They reject an invalid arrangement (first entry not at depth 0, a depth rising by more than one, a duplicate id: `arrangement-depth`, `arrangement-duplicate`) and an id that resolves to nothing. Run `srs repo validate` after either.
 
-### Shared-ownership containers must use members add/remove, never update (srs#732)
-
-The wholesale-replace behaviour noted just above is safe for a container with a single writer. It is not safe when more than one writer contributes members to the same Container — several stages of a migration script, two agents, a script plus a human. A writer that calls `container update` with only the ids **it** knows about silently deletes every member contributed by the others, because `update` replaces the field rather than merging into it. `srs repo validate` stays green afterward — a container that has lost members is still structurally valid, so nothing signals the loss.
-
 ### Copying a document and forking an element (`container copy`, `record fork`)
 
 Many-document work without duplicating content (srs-rust#1136):
@@ -1833,6 +1829,10 @@ srs record fork --repo <path> --container <containerId> <recordId>
 - `record fork` ("make local copy") needs the global `--container` (it is required): the record and its nested children (its outline subtree in that container) become NEW records of the same type and field values, each with one `derived-from` edge (fork to original), swapped in place into THAT container only. Every other container keeps the originals. The anchor/identity entry, a non-member and the root container are refused.
 - Forks are attributed to the session actor (`createdBy`), never the original's. Only field values carry over (not tags or meta), and only the `derived-from` edge: the original's other relations and comments stay with the original.
 - The same operations are the MCP tools `container_copy` and `record_fork` and the WASM methods `copy_container` and `fork_record`.
+
+### Shared-ownership containers must use members add/remove, never update (srs#732)
+
+The wholesale-replace behaviour noted just above is safe for a container with a single writer. It is not safe when more than one writer contributes members to the same Container — several stages of a migration script, two agents, a script plus a human. A writer that calls `container update` with only the ids **it** knows about silently deletes every member contributed by the others, because `update` replaces the field rather than merging into it. `srs repo validate` stays green afterward — a container that has lost members is still structurally valid, so nothing signals the loss.
 
 **Rule:** if a Container has more than one writer, each writer MUST use `srs container members add` / `srs container members remove` (or `members move`) for the subset it owns, and MUST NOT call `container update` for `memberInstanceIds`. Reserve `update` for a single-owner container, or for a writer that has just read the full current membership and is deliberately replacing it. The same hazard applies to `childContainerIds` — any field on a shared container that `update` replaces wholesale carries it.
 
