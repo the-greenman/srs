@@ -1487,7 +1487,8 @@ srs package export --repo /path/to/repo \
 ```
 
 - The whole boundary is exported, `mode: "bundled"` only; `packageId` and `packageVersion` are the boundary's `id` and `version`. Definitions from the repository's other package boundaries that the boundary references are inlined (reported in `inlined`).
-- The embedded `com.semanticops.core` definitions are **omitted** (every repository already has them, ADR-025); this deliberately deviates from RFC-003 [C1] (ADR-050, owner ruling).
+- The embedded `com.semanticops.core` definitions are **omitted** from the definition arrays (every repository already has them, ADR-025), as RFC-003 [C1] (Revision 10, accepted) allows; [C1] also requires every reached core definition version to be listed in `dependencyRefs`.
+- **Not yet conformant to RFC-003 Revision 10** (srs-rust#1212): `dependencyRefs` is written as `[]`, `dataModelRevision` is the binary's revision rather than the repository's, `schemaVersion` is the manifest's `srsVersion`, definition arrays are not sorted by `id` then `version`, a duplicate `id` is not refused, and `description` is dropped. Bundles written before srs-rust#1212 lands should be re-exported after it; do not hand-edit a `.srspkg` to compensate.
 - `publishedAt` is part of the bytes. **Pass a fixed `--published-at` for byte-reproducible output and a stable sha256**; a value that is not RFC 3339 fails with `bundle-published-at-invalid`.
 - Export never emits `readme`.
 - Export fails with `bundle-boundary-unreadable` when the target boundary's `package.json` cannot be loaded (rather than producing an empty bundle).
