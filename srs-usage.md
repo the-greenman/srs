@@ -1072,7 +1072,7 @@ Returns an error envelope (`"ok": false`) when the package name is not found in 
 
 ### Relationship to `srs package install`
 
-`srs registry` is discovery-only: it reads catalog files and returns structured metadata. To install a package from a registry entry, pass the `downloadUrl` from a registry entry to `srs package install --url <downloadUrl> --repo <path>`.
+`srs registry` is discovery-only: it reads catalog files and returns structured metadata. There is no `--url` install: `srs package install` takes a local package directory or a local `.srspkg` file (see **5g**). Download the registry entry's `downloadUrl` yourself, verify it, then install the local file with `srs package install --bundle <file.srspkg> --repo <path>` (or the unpacked directory as the positional argument).
 
 ---
 
@@ -1409,10 +1409,10 @@ This section documents the `srs package` sub-commands that install and track ups
 
 ### Installing a package
 
-`srs package install` copies every definition from an external package directory into a sub-package boundary inside the target repository, registers the boundary, and writes import records + reference copies for divergence tracking.
+`srs package install <source_dir>` (the source directory is a positional argument; there is no `--source-dir` flag) copies every definition from an external package directory into a sub-package boundary inside the target repository, registers the boundary, and writes import records + reference copies for divergence tracking.
 
 ```bash
-srs package install --source-dir /path/to/governance-package \
+srs package install /path/to/governance-package \
   --repo /path/to/target-repo \
   --boundary packages/ext          # optional; defaults to packages/<package-name>
 ```
@@ -1420,7 +1420,7 @@ srs package install --source-dir /path/to/governance-package \
 `--strict` refuses to install if any definition would conflict with an existing same-key/different-UUID definition (the default is to flag conflicts but still succeed):
 
 ```bash
-srs package install --source-dir /path/to/pkg --repo /path/to/repo --strict
+srs package install /path/to/pkg --repo /path/to/repo --strict
 ```
 
 The payload reports what was installed, skipped (idempotent re-run), and flagged as conflicts:
@@ -1443,7 +1443,8 @@ The payload reports what was installed, skipped (idempotent re-run), and flagged
       { "kind": "field", "installed": 8, "skippedIdentical": 0, "conflicts": 0 },
       { "kind": "type",  "installed": 4, "skippedIdentical": 0, "conflicts": 0 },
       { "kind": "blueprint", "installed": 2, "skippedIdentical": 0, "conflicts": 0 }
-    ]
+    ],
+    "notes": []
   }
 }
 ```
@@ -1451,6 +1452,75 @@ The payload reports what was installed, skipped (idempotent re-run), and flagged
 After install, the boundary directory contains `.srs-import/import-records.json` (provenance + divergence state) and `.srs-import/refs/` (reference copies of each installed definition). These are managed automatically — do not edit them directly.
 
 Re-running `package install` with the same source directory is idempotent: all definitions are skipped as identical and no import records are overwritten.
+
+### Installing from a `.srspkg` bundle
+
+`--bundle <file.srspkg>` installs a Package Bundle (`package-bundle.json`, RFC-003 Change C) instead of a directory; `<source_dir>` and `--bundle` are mutually exclusive and one is required. `--boundary` and `--strict` behave as above, and the payload is the same shape (above). It reuses the same install core, so import records and reference copies are written the same way and a re-run is idempotent.
+
+```bash
+srs package install --bundle governance.srspkg --repo /path/to/target-repo
+```
+
+`payload.notes` is always present: it is empty for a directory install and carries non-fatal pre-load transformer notes for a bundle (RFC-043, e.g. `migration-memberorder-dropped`).
+
+The reader runs a fixed pipeline: parse, refuse `readme`, refuse a newer revision, run the RFC-043 pre-load transformer, validate against the embedded `package-bundle.json`, then validate every definition with the loader's own strictness. Refusals are errors (`ok: false`) carrying one of these codes:
+
+| Code | Meaning |
+|---|---|
+| `bundle-not-json` | not a JSON object |
+| `bundle-readme-unsupported` | the bundle carries `readme`; refused, not dropped, until srs-rust#1164 ships (remove it by hand only if the user asks; see Bundled readme below) |
+| `bundle-revision-too-new` | `dataModelRevision` is above what this `srs` supports; upgrade `srs` (an absent stamp means 0) |
+| `bundle-migration-refused` | the RFC-043 pre-load transformer refused the bundle; the message keeps the inner code |
+| `bundle-schema-invalid` | fails `package-bundle.json`; for a bundle older than current the message names its revision and says to re-export it |
+| `bundle-definition-invalid` | an inlined definition fails the loader checks (message names `<bundle>/<kind>/<index>`) |
+
+### Exporting a `.srspkg` bundle
+
+`srs package export` writes one package boundary as a deterministic `.srspkg` (ADR-050).
+
+```bash
+srs package export --repo /path/to/repo \
+  --selector packages/ext \          # optional; omit for the primary package
+  --output governance.srspkg \
+  --published-at 2026-10-03T00:00:00Z \   # optional RFC 3339; default now
+  --publisher "Example Org"            # optional
+```
+
+- The whole boundary is exported, `mode: "bundled"` only; `packageId` and `packageVersion` are the boundary's `id` and `version`. Definitions from the repository's other package boundaries that the boundary references are inlined (reported in `inlined`).
+- The embedded `com.semanticops.core` definitions are **omitted** (every repository already has them, ADR-025); this deliberately deviates from RFC-003 [C1] (ADR-050, owner ruling).
+- `publishedAt` is part of the bytes. **Pass a fixed `--published-at` for byte-reproducible output and a stable sha256**; a value that is not RFC 3339 fails with `bundle-published-at-invalid`.
+- Export never emits `readme`.
+- Export fails with `bundle-boundary-unreadable` when the target boundary's `package.json` cannot be loaded (rather than producing an empty bundle).
+
+```json
+{
+  "ok": true,
+  "command": "package export",
+  "payload": {
+    "outputPath": "governance.srspkg",
+    "packageId": "<uuid>",
+    "packageNamespace": "com.example.governance",
+    "packageName": "governance",
+    "packageVersion": "2.1.0",
+    "dataModelRevision": 9,
+    "publishedAt": "2026-10-03T00:00:00Z",
+    "sha256": "sha256:<64 lowercase hex>",
+    "byteLength": 12345,
+    "definitionCount": 14,
+    "inlined": [],
+    "kinds": [ { "kind": "field", "count": 8 } ]
+  }
+}
+```
+
+`summary.sha256` (WASM) and `payload.sha256` (CLI) are `sha256:<64 lowercase hex>` of the file bytes, the same convention as attachments. `inlined` is the sorted list of definition ids pulled in from other boundaries; `kinds` lists non-empty kinds only.
+
+### WASM parity (`SrsRepository`)
+
+The same services are exposed to the browser:
+
+- `export_package_bundle(inputJson)` with `inputJson = {"selector"?, "publishedAt"?, "publisher"?}`; returns `{text, summary}` where `summary` has the export payload's fields. Read-only (the write epoch does not move). It returns the text rather than writing a file; the caller saves it.
+- `install_package_bundle(bundleJson, optionsJson)` with `bundleJson` the file's text and `optionsJson = {"boundaryPath"?, "strict"?}` (`"{}"` for defaults); returns the same fields as the CLI install payload, including `notes`. It advances the write epoch, so the session is dirty. Verify the file's sha256 over its bytes before passing the text, and call `check_package_requirements(bundleJson)` first for RFC-044 requirement outcomes.
 
 ### Package requirements (`packageDependencies`, RFC-044)
 
@@ -1471,7 +1541,7 @@ Agent rules:
 - **The readme is opaque prose, never authority.** Derive nothing from it (validity, identity, purpose, membership, order); the identity record and the records are right when they disagree (RFC-045 [R1]).
 - **Keep it.** When you rewrite or convert a bundle or `.srsj` that carries `readme`, it must come out with `path` and `content` unchanged unless the user asked to remove or replace it ([R5]). Do not move it into `data`: `data` holds parsed JSON only.
 - **Never overwrite on unpack.** It is written at `path` after every other file, never over an existing file or through a symbolic link; a clash is the warning `readme-write-conflict` ([R6]). A bad path or un-encodable text is the error `readme-invalid`, and that readme is then neither written nor carried ([R4]).
-- **Tool support is pending** (srs-rust#1164): until it ships, `repo copy`, `package export` and `package install` neither write nor read `readme`, and a build without that support refuses a `.srsj` that carries one. Do not hand-add a `readme` to a travelling form to work around it.
+- **Tool support is pending** (srs-rust#1164): until it ships, `repo copy` and `package export` neither write nor read `readme`, `package install --bundle` refuses a bundle that carries one (`bundle-readme-unsupported`), and a build without that support refuses a `.srsj` that carries one. Do not hand-add a `readme` to a travelling form to work around it.
 
 ### Registering a local package boundary
 
