@@ -25,7 +25,7 @@ Never assume you understand the repo's content from its directory listing.
 
 **Do not create, edit, or delete SRS JSON files directly.** Use the tool surfaces, in this order:
 
-1. **A mounted SRS MCP server, when your session has one.** `srs mcp serve` exposes validated tools (`find`, `similar`, `neighbours`, `read`, `record_create`, `record_update`, `relation_create`, `note_create`, `note_graduate`, `record_transition`, `container_member_add`/`remove`, `repo_validate`, `type_schema`) and resources (`srs://<repoId>/map`, `/navigation`, `/tree`, `/tree/{id}`, `/agent-index`, `/record/{id}`, `/container/{id}`, `/protocol`, `/protocol/{id}`). Every write enforces the repository's type and relation contracts and returns diagnostics on rejection — it is the cheapest path that is also the correct one. In agent sessions these tools may arrive deferred; load them by name before assuming they are absent. For an agent with no prior context on the repository, `/tree` and `/agent-index` are the two resources to read first — see [5i](#5i-mcp-server-srs-mcp-serve).
+1. **A mounted SRS MCP server, when your session has one.** `srs mcp serve` exposes validated tools (`find`, `similar`, `neighbours`, `read`, `record_create`, `record_update`, `relation_create`, `note_create`, `note_graduate`, `record_transition`, `container_member_add`/`remove`, `repo_validate`, `type_schema`) and resources (`srs://<repoId>/map`, `/navigation`, `/tree`, `/tree/{id}`, `/agent-index`, `/record/{id}`, `/context/{containerId}/{id}`, `/container/{id}`, `/composition/{id}`, `/type/{id}`, `/relation-types`, `/protocol`, `/protocol/{id}`). Every write enforces the repository's type and relation contracts and returns diagnostics on rejection — it is the cheapest path that is also the correct one. In agent sessions these tools may arrive deferred; load them by name before assuming they are absent. For an agent with no prior context on the repository, `/tree` and `/agent-index` are the two resources to read first — see [5i](#5i-mcp-server-srs-mcp-serve).
 2. **The `srs` CLI** for everything else — always the current release asset, never a stale local build (a pre-cutover binary fails on a current-generation repository, and vice versa).
 3. **Direct file edits only when neither tool can express the operation** (for example, a definition kind with no `create` command yet). Then: document why, make the minimal edit, and immediately run `srs repo validate` and fix every diagnostic before continuing.
 
@@ -304,15 +304,16 @@ srs find --repo <path> --type-namespace governance --type-name decision \
   --tier 2 --container <containerId> --pretty
 ```
 
-`find` → `{ "result": { "hits": [{ "instanceId", "uri", "label", "typeId"?, "containerIds", "typeNamespace", "typeName", "lifecycleState"?, "score"?, "snippet"?, "matchedFields": [...] }], "total", "facets", "diagnostics" } }`.
+`find` → `{ "result": { "hits": [{ "instanceId", "uri", "label", "typeId"?, "containerIds", "typeNamespace"?, "typeName"?, "lifecycleState"?, "score"?, "snippet"?, "matchedFields": [...] }], "total", "facets", "diagnostics" } }`.
 
-- **Tiers.** Tier-2 records and Tier-0 notes are both searched. A note has no `typeId`; type and lifecycle filters exclude notes.
+- **CLI vs MCP defaults.** CLI `find` is unbounded (no default limit) and ranks only with `--rank`; the MCP `find` tool defaults to `limit` 25 and ranks by default.
+- **Tiers.** Tier-2 records and Tier-0 notes are both searched. A note hit has no `typeId`, `typeNamespace` or `typeName`; type and lifecycle filters exclude notes.
 - **`--text`** matches instances containing every whitespace-separated word, in any field and any order (a phrase match is always included). Hits are ordered by `instanceId` with no `score` unless you pass `--rank`, which orders the *same* hits by BM25 relevance (label/title above short fields above long bodies; length-normalised) and fills `score`, ties by `instanceId`. The MCP `find` tool ranks by default (`rank: false` restores id order).
 - **Hit fields.** `uri` is `srs://<repo>/record/<id>`, readable with the MCP `read` tool. `containerIds` is declared membership only.
-- **Warnings.** An unknown `--type`, `--type-id` or `--container` returns zero hits plus a `warning:` entry in `diagnostics`; it is not an error.
-- **`facets`** are counted over the WHOLE match set, before `--limit`/`--offset`: `byType`, `notes` (Tier-0 count, omitted when 0), `tags`, and `fields[]` = `{ field, values: [{ value, count }], other? }` for each closed string field keyed by `Field.name` (at most 25). Each facet keeps the top 20 values (count desc, then value) plus `other`, the occurrences in omitted values. Empty facets are omitted; an unknown container yields `facets: {}`.
-- **`--limit 0`** returns no hits and just the facets: with no filters it is the cheap whole-repository map (about 14 KB on a large corpus), and with `--type` it is that type's keyword map.
-- **`--similar <instanceId>`** (more-like-this) returns the same payload with hits ranked by BM25 overlap with the source's characteristic terms; the source is excluded. `--tier/--tag/--type/--container/--limit/--offset` narrow the candidates; it cannot be combined with `--text`. Lexical, no embeddings.
+- **Warnings.** A well-formed but unknown `--type namespace/name`, `--type-id` or `--container` returns zero hits plus a `warning:` entry in `diagnostics`. A malformed `--type` (no `namespace/name`, e.g. `--type nonesuch`) is an error envelope (`ok: false`, "Expected format: namespace/name").
+- **`facets`** are counted over the WHOLE match set, before `--limit`/`--offset`: `byType`, `notes` (Tier-0 count, omitted when 0), `tags`, and `fields[]` = `{ field, values: [{ value, count }], other? }` for each closed string field keyed by `Field.name` (at most 25). Each facet keeps the top 20 values (count desc, then value) plus `other`, the occurrences in omitted values. `fields[]` appears only when closed string fields exist; empty facets are omitted; an unknown container yields `facets: {}`.
+- **`--limit 0`** returns no hits and just the facets: with no filters it is the cheap whole-repository map (about 14 KB on muSrs: 886 instances, 22 field facets, srs-rust#1242), and with `--type` it is that type's keyword map.
+- **`--similar <instanceId>`** (more-like-this) returns the same payload with hits ranked by BM25 overlap with the source's characteristic terms; the source is excluded. `--tier/--tag/--type/--container/--lifecycle-state/--limit/--offset` narrow the candidates; it cannot be combined with `--text`. Lexical, no embeddings.
 - `--tag` and `--exclude-lifecycle-state` are repeatable; `--exclude-lifecycle-state` drops records whose `lifecycleState` is in the set (records without a lifecycle state are never excluded).
 
 ```bash
@@ -360,7 +361,7 @@ EOF
 
 ### Graduating a Note to a Record
 
-`srs note graduate` promotes a Tier-0 Note to a typed Tier-2 Record in one atomic step: the Record is created, `graduatedAt` is stamped on the Note, and both are returned in a single envelope.
+`srs note graduate` promotes a Tier-0 Note to a typed Tier-2 Record in one atomic step: the Record is created, a `derived-from` relation (Record derived from Note) records the graduation (there is no `graduatedAt` stamp), and both are returned in a single envelope.
 
 First resolve the target type's field IDs (same as for `record create`):
 
@@ -382,7 +383,7 @@ EOF
 The stdin shape is the same `CreateRecordInput` used by `record create`: `fieldValues` (an **object keyed by `Field.name` verbatim** — RFC-039), optional `fieldMeta` (per-field provenance keyed identically), optional `tags`.
 
 The response `data` contains:
-- `note` — the original Note with `graduatedAt` stamped (ISO-8601 UTC)
+- `note` — the original Note, unchanged (graduation is the `derived-from` relation, not a stamp)
 - `record` — the newly created typed Record
 
 On error (note not found, entity is not a Note, type not found, required field missing) neither write is applied.
@@ -1774,7 +1775,7 @@ The tool set mirrors the discovery ladder and write workflows in this document. 
 - **`record_transition`** — transition a record's lifecycle state as defined in its Type's lifecycle. Use `record_allowed_transitions` first to see which transitions are available. Supply either `to` (target state key) or `byTransition` (named transition, e.g. `promote`), not both. RFC-022: when the target state has a `requiresRelation` obligation, supply `fulfillment.newRecord` (spawn a successor) or `fulfillment.existingInstanceId` (adopt an existing instance). Returns the updated record, any warnings (e.g. final-state notice), and the fulfillment artifacts if spawned.
 - **`record_allowed_transitions`** — return the allowed next lifecycle transitions from a record's current state. Returns `currentState` (empty string if never transitioned), a list of transitions each with `name`/`to`/`toIsFinal`/`requiresRelation`, and `isImmutable`. Read this before calling `record_transition` — an unknown transition is rejected.
 - **`record_successor`** — create a successor Record and the linking relation in one atomic operation. The successor inherits the predecessor's `typeId` (and optionally a pinned `typeVersion`). `relationType` is `supersedes` or `refines`, or omitted to have the core derive it from the predecessor's lifecycle `requiresRelation` (RFC-022 R6/I-99; a structured error names the candidates when none or several). Validation is enforced before any write. Returns both the new Record and the linking Relation.
-- **`note_graduate`** — promote a Tier-0 Note to a typed Tier-2 Record in one atomic step. The Note's `graduatedAt` is stamped; a new Record is created from the supplied type and `fieldValues`. Optional `containerId` adds the Record to a container. The Note is preserved with its `graduatedAt` timestamp — it is not deleted. Returns both the updated Note and the new Record.
+- **`note_graduate`** — promote a Tier-0 Note to a typed Tier-2 Record in one atomic step. A new Record is created from the supplied type and `fieldValues`. Optional `containerId` adds the Record to a container. A `derived-from` relation records the graduation; the Note is preserved, not deleted. Returns both the Note and the new Record.
 - **`container_member_add`** — add an instance to a container's `memberInstanceIds`. Idempotent — adding an already-present member is not an error. Returns the updated `memberInstanceIds` list.
 - **`container_member_remove`** — remove an instance from a container's `memberInstanceIds`. Returns the updated `memberInstanceIds` list. No-op if the instance is not a member.
 
