@@ -1110,6 +1110,13 @@ Declaring both is a validation error (V7). An inline lifecycle's effective state
 - `Record.lifecycleState` resolves under V1.
 
 
+##### record successor derives an omitted relationType from the lifecycle, or rejects
+
+**Number**: I-154
+
+When `record successor` omits `relationType`, an implementation MUST derive it from the effective lifecycle of the predecessor's Type (at the successor's resolved type version): for every state whose `requiresRelation` has `enforcement` `hard` (the default) and `direction` `incoming` (the default), take the first declared `relationType` (the I-99 first-declared rule). If exactly one distinct type results it MUST be used; if none or several distinct types result, the operation MUST be rejected with a machine-readable error (naming the candidates when there are several) and neither the successor Record nor the Relation may be written. A supplied `relationType` MUST be used as given, and no relation type may come from any source other than a lifecycle declaration. (RFC-022 Revision 5, [R11]; amends Change B.)
+
+
 
 #### Foundation Group (Core)
 
@@ -7128,6 +7135,7 @@ These values govern the SRS standard layer. Rust, web, and other implementation 
 - **I-98.** A Record MUST NOT rest in a lifecycle state that declares `requiresRelation` unless at least one Rel…
 - **I-99.** A fulfillment supplied with a lifecycle transition MUST be applied as one all-or-nothing operation:…
 - **I-100.** Allowed-transitions projections MUST include the target state's `requiresRelation` declaration on ea…
+- **I-154.** When `record successor` omits `relationType`, an implementation MUST derive it from the effective li…
 
 #### AI guidance
 
