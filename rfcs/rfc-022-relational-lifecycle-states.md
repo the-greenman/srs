@@ -17,7 +17,7 @@
 | 2 | 2026-07-10 | Implementation started; RFC file committed to branch `claude/fulfillment-implementation-plan-q4m4rd`. |
 | 3 | 2026-07-10 | Accepted; implemented across srs-rust (#503, #505), srs (#161, #162), srs-web (#206). Three lifecycle invariants + `ext:lifecycle` text authored. *(The acceptance header and invariant records were orphaned on the branch above; the invariants were re-landed as I-98/I-99/I-100 by srs#177 during the invariant-numbering cleanup — the numbers I-88/I-89/I-90 first claimed for them collided with pre-existing records; see #171.)* |
 | 4 | 2026-07-14 | **Amendment (owner-directed, srs#171):** `requiresRelation` gains `enforcement: "hard" \| "advisory"` (default `hard`). Separates *definitional* relational states (hard — supersession) from *evidentiary/contextual* ones (advisory — e.g. ratification-needs-a-vote, relation may lag). Adds R2a; qualifies R2 to `hard`; incorporates the former Alt D as the advisory mode; adds Alt E (contextual case resolved by retype, a separate RFC). Schema: `enforcement` added to `RequiresRelation` in `lifecycle.json` + `type.json`. |
-| 5 | 2026-10-04 | **Clarification (non-normative; no conformance rule, schema or invariant changes; srs-rust#1238):** `record successor` MAY omit `relationType`; the implementation then derives it from the predecessor's effective lifecycle by the R6 / I-99 default rule, or fails with a structured error. See the note under Change B. |
+| 5 | 2026-10-04 | **Amendment of Change B (normative; srs-rust#1238):** `record successor` MAY omit `relationType`; the implementation then derives it from the predecessor's effective lifecycle by the R6 / I-99 first-declared rule across states, or rejects the call. Adds conformance rule [R11] and invariant I-154. |
 
 ---
 
@@ -102,9 +102,9 @@ The canonical transition operation (`record transition`; `set_lifecycle_state` o
 
 An unfulfillable transition fails with a **structured error** identifying the unmet obligation (state key, required relation type(s), direction), so clients can render "needs a successor" from the error payload without string-matching state names.
 
-`record successor` (relation-only successor creation, predecessor untouched) is unchanged and remains the first half of the two-phase workflow (`existingInstanceId` is the second half).
+`record successor` (relation-only successor creation, predecessor untouched) keeps its meaning (with the omission of `relationType` amended below) and remains the first half of the two-phase workflow (`existingInstanceId` is the second half).
 
-> **Note (Revision 5, non-normative).** `record successor` takes an explicit `relationType` (`supersedes` or `refines`). It MAY omit it, so that clients need not name the relation for a record in a final or immutable state, which has no outgoing transitions and therefore no `requiresRelation` projection (Change C). The implementation then collects the `requiresRelation` declarations of the predecessor's effective lifecycle whose `enforcement` is `hard` and whose `direction` is `incoming` (or omitted), and takes the first declared `relationType` of each, as in R6 / I-99. If exactly one distinct type results it is used; if none or several result, the operation fails with a structured error naming the candidates and no relation or record is written. A supplied `relationType` behaves exactly as before. An implementation never supplies a default of its own: the relation is always one a lifecycle declared (see Rationale, "No implicit relation-type default").
+> **Amendment (Revision 5).** `record successor` takes a `relationType` (`supersedes` or `refines`). It MAY omit it, so that a client need not name the relation for a record in a final or immutable state, which has no outgoing transitions and therefore no `requiresRelation` projection (Change C). The derivation rule is [R11]. A supplied `relationType` behaves exactly as before. An implementation MUST NOT supply a default of its own: the relation is always one a lifecycle declared (see Rationale, "No implicit relation-type default").
 
 ### Change C — Expose the obligation on the allowed-transitions projection
 
@@ -139,6 +139,8 @@ Repository validation (`repo validate`) checks the declared invariant at rest: a
 > **[R9]** Allowed-transitions projections MUST include the target state's `requiresRelation` declaration on each transition option whose target state declares one.
 >
 > **[R10]** Repository validation MUST emit a warning-severity diagnostic for every record at rest that violates R1, and MUST NOT treat such a violation as a hard validation error.
+>
+> **[R11]** When `record successor` omits `relationType`, an implementation MUST derive it from the effective lifecycle of the predecessor's Type (at the successor's resolved type version): collect, for every state whose `requiresRelation` has `enforcement` `hard` (the default) and `direction` `incoming` (the default), the first declared `relationType`, as in R6. If exactly one distinct type results the implementation MUST use it. If none or several distinct types result, the implementation MUST reject the operation with a machine-readable error (naming the candidates when there are several) and MUST NOT write the successor record or the relation. A supplied `relationType` MUST be used as given. The relation type MUST NOT come from any source other than a lifecycle declaration. (I-154.)
 
 ---
 

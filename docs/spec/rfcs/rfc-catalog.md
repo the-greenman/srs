@@ -502,7 +502,7 @@ cell:identity
 
 **Author**: the-greenman
 
-**Affected Components**: `LifecycleState.requiresRelation` (relationType/direction/enforcement) in `lifecycle.json` + inline `type.json`; invariants I-98–I-100.
+**Affected Components**: `LifecycleState.requiresRelation` (relationType/direction/enforcement) in `lifecycle.json` + inline `type.json`; invariants I-98–I-100 and I-154 (Revision 5: `record successor` derives an omitted `relationType`, [R11]).
 
 <!-- srs-integration:v1
 ext:lifecycle
@@ -511,11 +511,12 @@ schema:type.json
 I-98
 I-99
 I-100
+I-154
 -->
 
 **Proposal Artifact Path**: rfcs/rfc-022-relational-lifecycle-states.md
 
-**Content**: Adds `LifecycleState.requiresRelation` (with `relationType`/`direction`/`enforcement` hard|advisory) so a record may only rest in a state if a satisfying relation exists, plus atomic `fulfillment` on the transition write path and an at-rest validation warning. Full text: rfcs/rfc-022-relational-lifecycle-states.md.
+**Content**: Adds `LifecycleState.requiresRelation` (with `relationType`/`direction`/`enforcement` hard|advisory) so a record may only rest in a state if a satisfying relation exists, plus atomic `fulfillment` on the transition write path and an at-rest validation warning. Full text: rfcs/rfc-022-relational-lifecycle-states.md. Revision 5 amends Change B: `record successor` may omit `relationType` ([R11], I-154).
 
 
 **Title**: RFC-023: SourceReference vocabulary disjointness — sourceRole replaces relationType
