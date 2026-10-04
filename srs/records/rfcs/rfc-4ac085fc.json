@@ -8,15 +8,15 @@
     "title": "RFC-022: Relational lifecycle states — requiresRelation + transition fulfillment",
     "rfc_number": "022",
     "author": "the-greenman",
-    "affected_components": "`LifecycleState.requiresRelation` (relationType/direction/enforcement) in `lifecycle.json` + inline `type.json`; invariants I-98–I-100.\n\n<!-- srs-integration:v1\next:lifecycle\nschema:lifecycle.json\nschema:type.json\nI-98\nI-99\nI-100\n-->",
+    "affected_components": "`LifecycleState.requiresRelation` (relationType/direction/enforcement) in `lifecycle.json` + inline `type.json`; invariants I-98–I-100 and I-154 (Revision 5: `record successor` derives an omitted `relationType`, [R11]).\n\n<!-- srs-integration:v1\next:lifecycle\nschema:lifecycle.json\nschema:type.json\nI-98\nI-99\nI-100\nI-154\n-->",
     "proposal_artifact_path": "rfcs/rfc-022-relational-lifecycle-states.md",
-    "content": "Adds `LifecycleState.requiresRelation` (with `relationType`/`direction`/`enforcement` hard|advisory) so a record may only rest in a state if a satisfying relation exists, plus atomic `fulfillment` on the transition write path and an at-rest validation warning. Full text: rfcs/rfc-022-relational-lifecycle-states.md."
+    "content": "Adds `LifecycleState.requiresRelation` (with `relationType`/`direction`/`enforcement` hard|advisory) so a record may only rest in a state if a satisfying relation exists, plus atomic `fulfillment` on the transition write path and an at-rest validation warning. Full text: rfcs/rfc-022-relational-lifecycle-states.md. Revision 5 amends Change B: `record successor` may omit `relationType` ([R11], I-154)."
   },
   "lifecycleState": "accepted",
   "tags": [
     "topic:rfc"
   ],
   "createdAt": "2026-07-21T17:31:55.370333954+00:00",
-  "updatedAt": "2026-08-28T13:58:12.391829448+00:00",
+  "updatedAt": "2026-10-04T11:44:58.457830941+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

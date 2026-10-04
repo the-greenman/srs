@@ -13,6 +13,9 @@
  *   (d) [R2] the DependencyRef.version pattern accepts and rejects the RFC's fixture versions.
  *   (e) RFC-045 (srs#858): the `$defs.BundledReadme` copies in package-bundle.json and
  *       srsj-envelope.json are deep-equal (one readme shape for both JSON travelling forms).
+ *   (f) srs#877: type.json's `$defs.com.semanticops.srs__field-assignment__v1` and
+ *       package-bundle.json's `$defs.FieldAssignment` are deep-equal (a Type's FieldAssignment
+ *       must travel unchanged in its bundle form — rfc-decision-8948e43f, rfc-decision-0225099b).
  *
  *   node scripts/check-package-bundle-alignment.mjs [root]   # root defaults to the repo root
  */
@@ -45,6 +48,7 @@ async function main() {
   const errors = [];
   const manifest = await loadJson(join(SCHEMA_DIR, "package-manifest.json"));
   const bundle = await loadJson(join(SCHEMA_DIR, "package-bundle.json"));
+  const type = await loadJson(join(SCHEMA_DIR, "type.json"));
 
   // (a) [R6]
   const { kinds, composed } = await definitionKinds(ROOT);
@@ -90,12 +94,18 @@ async function main() {
   if (!rb || !re) errors.push("[RFC-045] $defs.BundledReadme missing from package-bundle.json or srsj-envelope.json");
   else if (!isDeepStrictEqual(rb, re)) errors.push("[RFC-045] package-bundle.json $defs.BundledReadme differs from srsj-envelope.json $defs.BundledReadme");
 
+  // (f) srs#877
+  const tfa = type.$defs?.["com.semanticops.srs__field-assignment__v1"];
+  const bfa = bundle.$defs?.FieldAssignment;
+  if (!tfa || !bfa) errors.push("[srs#877] $defs.FieldAssignment missing from type.json (com.semanticops.srs__field-assignment__v1) or package-bundle.json");
+  else if (!isDeepStrictEqual(tfa, bfa)) errors.push("[srs#877] package-bundle.json $defs.FieldAssignment differs from type.json $defs.com.semanticops.srs__field-assignment__v1");
+
   if (errors.length > 0) {
     errors.forEach((e) => console.log(`  ✗ ${e}`));
     console.log(`\n✗ ${errors.length} package bundle alignment problem(s).`);
     process.exit(1);
   }
-  console.log(`  ${kinds.length} definition kinds carried; DependencyRef and BundledReadme copies equal; ${scanned} records scanned`);
+  console.log(`  ${kinds.length} definition kinds carried; DependencyRef, BundledReadme and FieldAssignment copies equal; ${scanned} records scanned`);
   console.log("\n✓ package-bundle.json is aligned with package-manifest.json");
 }
 

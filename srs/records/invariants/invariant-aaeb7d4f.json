@@ -1,0 +1,15 @@
+{
+  "instanceId": "aaeb7d4f-2554-43f6-964b-291e6f217084",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "invariant",
+  "fieldValues": {
+    "invariant_number": "I-154",
+    "title": "record successor derives an omitted relationType from the lifecycle, or rejects",
+    "normative_statement": "When `record successor` omits `relationType`, an implementation MUST derive it from the effective lifecycle of the predecessor's Type (at the successor's resolved type version): for every state whose `requiresRelation` has `enforcement` `hard` (the default) and `direction` `incoming` (the default), take the first declared `relationType` (the I-99 first-declared rule). If exactly one distinct type results it MUST be used; if none or several distinct types result, the operation MUST be rejected with a machine-readable error (naming the candidates when there are several) and neither the successor Record nor the Relation may be written. A supplied `relationType` MUST be used as given, and no relation type may come from any source other than a lifecycle declaration. (RFC-022 Revision 5, [R11]; amends Change B.)"
+  },
+  "createdAt": "2026-10-04T11:44:46.020044135+00:00",
+  "updatedAt": "2026-10-04T11:44:46.020050839+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
