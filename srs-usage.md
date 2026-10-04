@@ -1670,9 +1670,35 @@ The following remain errors regardless of slice status: dangling edges in the re
 
 When a relation connects an included instance to an excluded instance, the producer removes it from the relations collection and records it in `slice.externalRelationRefs[]`. This is provenance data, not a defect — a non-empty list means "this slice has N cross-boundary relations to the source repository." The `relationType` values are provenance copies only; they are not subject to RFC-005 definition-lookup in the slice archive.
 
-### CLI commands (pending implementation — srs-rust#631, #633)
+### CLI command: `srs slice export` (srs-rust#631, ADR-051)
 
-Container slice export will be surfaced as `srs archive pack --container <containerId> --output <file>.srs` (tracking issue srs-rust#633), using the slices engine (srs-rust#631). The payload will carry the closure type, included instance count, and dangling-edge count. Until those issues land, no CLI command produces or validates slice archives.
+```bash
+srs slice export --container <containerId> out.srs --repo <path>
+```
+
+Writes the container named by the global `--container` flag as a standalone slice archive. Open or restore it like any `.srs` (`srs archive unpack out.srs --target <dir>`, WASM `loadArchive`); WASM clients produce the same bytes with `SrsRepository.export_slice(containerId)`.
+
+What the slice carries:
+
+- **Records:** the boundary container's entries, which become the slice's root container (`manifest.container`) with the outline unchanged.
+- **Relations:** those whose both endpoints are included. Relations with exactly one endpoint inside go to `slice.externalRelationRefs`; relations with both endpoints outside are omitted.
+- **Sub-containers:** those with at least one entry, every one included. `childContainerIds` are copied as-is.
+- **Source documents:** those cited by included records or included relations, with their content unless tombstoned.
+- **Packages:** every package the slice uses, carried whole and unchanged at its source path. "Uses" means the packages holding the records' Types and the relations' RelationTypes, plus every package those definitions reference or list in `packageDependencies`. The primary `package/` is always carried. `packageRefs` to packages that are not carried are dropped. This follows the owner ruling on srs-rust#631 ahead of RFC-026 Revision 9, which replaces the Types-and-Fields-only rule.
+
+The manifest keeps every source property except a new `repositoryId`, the boundary as `container`, `ext:slices` added to `declaredExtensions`, the `slice` block, and the `packageRefs` filter above.
+
+Payload (`slice export`): `outputPath`, `fileSizeBytes`, `containerId`, `sliceRepositoryId`, `originRepositoryId`, `exportedAt`, `instanceCount`, `relationCount`, `containerCount`, `sourceDocumentCount`, `packageCount`, `externalRelationRefCount`.
+
+Refusals:
+
+- `slice-root-identity-invalid` when the container's identity entry is missing, is not at depth 0, or has descendants. A slice root must satisfy RFC-043's root identity rule, and the outline is never rewritten to make it fit.
+- An unknown container returns `container not found`.
+- A repository whose catalog has errors (for example a dangling container entry) is refused. Repair it first.
+
+`srs repo validate` on a slice reports one info diagnostic with the cut-edge count. It reports an error when `slice.spec.type` is not `container` ([R10]), when `slice.spec.id` is not the root container ([R12]), or when `repositoryId` equals the origin's ([R3]). It warns when `ext:slices` is undeclared ([R4]). A composition section naming a container outside the slice, and an unresolved `rootTypeRefs` entry, are reported as info rather than warnings.
+
+A slice's root container is a repository root, so the RFC-013/RFC-018 root rules apply to it in full ([R12]). Slicing a container whose identity record is not a `purpose` record produces an I-81 warning. A container with sub-containers produces I-82 warnings for members that anchor no container.
 
 ---
 
