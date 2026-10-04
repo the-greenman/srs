@@ -2,7 +2,7 @@
 
 # RFC-022: Relational lifecycle states — `requiresRelation` + transition fulfillment
 
-**Status**: Accepted (Revision 4)
+**Status**: Accepted (Revision 5)
 **Affects**: `ext:lifecycle` (LifecycleState, transition semantics), `lifecycle.json`, `type.json`, canonical CLI contract (`record transition`), `repo validate` diagnostics
 **Author**: design dialogue draft (issue #158 discussion)
 **Date**: 2026-07-10
@@ -17,6 +17,7 @@
 | 2 | 2026-07-10 | Implementation started; RFC file committed to branch `claude/fulfillment-implementation-plan-q4m4rd`. |
 | 3 | 2026-07-10 | Accepted; implemented across srs-rust (#503, #505), srs (#161, #162), srs-web (#206). Three lifecycle invariants + `ext:lifecycle` text authored. *(The acceptance header and invariant records were orphaned on the branch above; the invariants were re-landed as I-98/I-99/I-100 by srs#177 during the invariant-numbering cleanup — the numbers I-88/I-89/I-90 first claimed for them collided with pre-existing records; see #171.)* |
 | 4 | 2026-07-14 | **Amendment (owner-directed, srs#171):** `requiresRelation` gains `enforcement: "hard" \| "advisory"` (default `hard`). Separates *definitional* relational states (hard — supersession) from *evidentiary/contextual* ones (advisory — e.g. ratification-needs-a-vote, relation may lag). Adds R2a; qualifies R2 to `hard`; incorporates the former Alt D as the advisory mode; adds Alt E (contextual case resolved by retype, a separate RFC). Schema: `enforcement` added to `RequiresRelation` in `lifecycle.json` + `type.json`. |
+| 5 | 2026-10-04 | **Clarification (non-normative; no conformance rule, schema or invariant changes; srs-rust#1238):** `record successor` MAY omit `relationType`; the implementation then derives it from the predecessor's effective lifecycle by the R6 / I-99 default rule, or fails with a structured error. See the note under Change B. |
 
 ---
 
@@ -102,6 +103,8 @@ The canonical transition operation (`record transition`; `set_lifecycle_state` o
 An unfulfillable transition fails with a **structured error** identifying the unmet obligation (state key, required relation type(s), direction), so clients can render "needs a successor" from the error payload without string-matching state names.
 
 `record successor` (relation-only successor creation, predecessor untouched) is unchanged and remains the first half of the two-phase workflow (`existingInstanceId` is the second half).
+
+> **Note (Revision 5, non-normative).** `record successor` takes an explicit `relationType` (`supersedes` or `refines`). It MAY omit it, so that clients need not name the relation for a record in a final or immutable state, which has no outgoing transitions and therefore no `requiresRelation` projection (Change C). The implementation then collects the `requiresRelation` declarations of the predecessor's effective lifecycle whose `enforcement` is `hard` and whose `direction` is `incoming` (or omitted), and takes the first declared `relationType` of each, as in R6 / I-99. If exactly one distinct type results it is used; if none or several result, the operation fails with a structured error naming the candidates and no relation or record is written. A supplied `relationType` behaves exactly as before. An implementation never supplies a default of its own: the relation is always one a lifecycle declared (see Rationale, "No implicit relation-type default").
 
 ### Change C — Expose the obligation on the allowed-transitions projection
 
