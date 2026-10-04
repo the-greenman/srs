@@ -304,7 +304,7 @@ srs find --repo <path> --type-namespace governance --type-name decision \
   --tier 2 --container <containerId> --pretty
 ```
 
-`find` → `{ "result": { "hits": [{ "instanceId", "label", "typeNamespace", "typeName", "lifecycleState"?, "score"?, "snippet"?, "matchedFields": [...] }], "total", "diagnostics" } }`. `--tag` and `--exclude-lifecycle-state` are repeatable; `--exclude-lifecycle-state` drops records whose `lifecycleState` is in the set (records without a lifecycle state are never excluded).
+`find` → `{ "result": { "hits": [{ "instanceId", "label", "typeNamespace", "typeName", "lifecycleState"?, "score"?, "snippet"?, "matchedFields": [...] }], "total", "diagnostics" } }`. `--text` matches records containing every whitespace-separated word, in any field and order. Hits are ordered by `instanceId` and carry no `score` unless you pass `--rank`, which orders the *same* hits by BM25 relevance (label/title above short fields above long bodies; length-normalised) and fills `score`, ties by `instanceId`. The MCP `find` tool ranks by default (`rank: false` restores id order). `--tag` and `--exclude-lifecycle-state` are repeatable; `--exclude-lifecycle-state` drops records whose `lifecycleState` is in the set (records without a lifecycle state are never excluded).
 
 **Authored lists = `resolve-view` + `find`.** An interactive list (e.g. a governance decision log) is an *authored* view composed with a *runtime* query — never a bespoke client filter. `srs container resolve-view <containerId>` returns the authored columns, the ordered members, **and** the authored default-hidden lifecycle states:
 
