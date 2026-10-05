@@ -3,37 +3,103 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Semantic Record System: an open standard for portable, inspectable semantic documents." />
-    <title>Semantic Record System</title>
+    <meta name="color-scheme" content="light dark" />
+    <meta name="description" content="SRS (pronounced &quot;source&quot;) is an open standard for portable semantic documents that people and AI can both understand and use. This site hosts the specification and the JSON Schemas." />
+    <title>SRS specification and schemas</title>
     <style>
-      :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #1f1d1a; background: #f8f6f1; }
-      body { max-width: 780px; margin: 0 auto; padding: 8vh 24px; line-height: 1.6; }
-      h1 { font-size: clamp(2.2rem, 8vw, 4.8rem); letter-spacing: -0.06em; line-height: 0.95; margin: 0; }
-      h2 { margin: 2.5rem 0 0.6rem; font-size: 1.15rem; }
-      p { color: #4d4942; font-size: 1.08rem; }
-      .eyebrow { color: #7a7368; font: 600 .75rem/1.2 ui-monospace, monospace; letter-spacing: .07em; text-transform: uppercase; }
-      nav { display: grid; gap: 10px; margin: 2rem 0; }
-      a { color: inherit; }
-      nav a { display: block; border: 1px solid #d5cfc5; border-radius: 10px; padding: 14px 16px; background: #fffdf9; text-decoration: none; }
-      nav a:hover, nav a:focus-visible { border-color: #1f1d1a; outline: none; }
-      nav strong, nav span { display: block; }
-      nav span { color: #716b62; font-size: .9rem; margin-top: 3px; }
-      footer { border-top: 1px solid #d5cfc5; color: #716b62; font-size: .9rem; margin-top: 3rem; padding-top: 1rem; }
+      :root {
+        --paper: #f4f2ee; --text: #2b2926; --ink: #1a1a1a; --muted: #66625c; --rule: #d9d5cd; --s: #cc3300;
+        --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root { --paper: #1a1a1a; --text: #e8e5df; --ink: #f4f2ee; --muted: #a09b93; --rule: #3a3733; --s: #ff7f56; }
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--paper); color: var(--text); font: 1rem/1.6 var(--sans); }
+      main { max-width: 760px; margin: 0 auto; padding: 8vh 24px 6vh; }
+      header { display: flex; align-items: center; gap: 14px; margin-bottom: 2rem; }
+      header svg { width: 44px; height: 44px; flex: none; }
+      .host { margin: 0; color: var(--muted); font: 0.9rem/1.2 var(--mono); }
+      .lede { color: var(--ink); font-size: clamp(1.25rem, 3.5vw, 1.6rem); line-height: 1.4; margin: 0 0 1rem; }
+      p { margin: 0 0 1rem; }
+      h2 { color: var(--ink); font-size: 1.05rem; margin: 2.25rem 0 0.5rem; padding-top: 1rem; border-top: 1px solid var(--rule); }
+      ul { list-style: none; margin: 0; padding: 0; }
+      li { margin: 0.35rem 0; }
+      a { color: var(--ink); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+      a:hover, a:focus-visible { color: var(--s); }
+      code, .files a { font: 0.88em var(--mono); }
+      .note { color: var(--muted); }
+      .files { display: flex; flex-wrap: wrap; gap: 0.15rem 1rem; margin-top: 0.75rem; }
+      footer { color: var(--muted); font-size: 0.9rem; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--rule); }
+      .m-paper { fill: var(--paper); }
+      .m-ink { fill: var(--ink); }
+      .m-rim { fill: none; stroke: var(--ink); stroke-width: 1.25; }
+      .m-s { fill: none; stroke: var(--s); stroke-width: 1; }
     </style>
   </head>
   <body>
-    <p class="eyebrow">Open semantic-document standard</p>
-    <h1>Semantic Record System</h1>
-    <p>SRS is an open standard for semantic documents that people and software can inspect, understand, move and continue using without dependence on the system that created them.</p>
+    <main>
+      <header>
+        <svg viewBox="0 0 24 24" role="img" aria-label="SRS mark">
+          <circle class="m-paper" cx="12" cy="12" r="10.75" />
+          <path class="m-ink" d="M12 1.25A10.75 10.75 0 0 1 12 22.75A5.375 5.375 0 0 0 12 12A5.375 5.375 0 0 1 12 1.25Z" />
+          <path class="m-s" d="M12 1.25A5.375 5.375 0 0 0 12 12A5.375 5.375 0 0 1 12 22.75" />
+          <circle class="m-paper" cx="12" cy="6.625" r="1.505" />
+          <circle class="m-ink" cx="12" cy="17.375" r="1.505" />
+          <circle class="m-rim" cx="12" cy="12" r="10.75" />
+        </svg>
+        <p class="host">srs.semanticops.com</p>
+      </header>
 
-    <nav aria-label="SRS documentation">
-      <a href="./strategy/"><strong>Strategic map</strong><span>Capabilities, release boundaries and current evidence.</span></a>
-      <a href="./spec/srs-spec.md"><strong>Specification</strong><span>The normative SRS 2.0 specification.</span></a>
-      <a href="./spec/srs-unified.md"><strong>Specification and rationale</strong><span>A single-pass reading of the specification and its design reasoning.</span></a>
-      <a href="./overview/concepts.md"><strong>Conceptual introduction</strong><span>A gentler introduction to the main ideas.</span></a>
-      <a href="https://github.com/the-greenman/srs"><strong>Source repository</strong><span>Records, schemas, RFCs and implementation guidance.</span></a>
-    </nav>
+      <p class="lede">SRS (pronounced "source") is an open standard for portable semantic documents that people and AI can both understand and use.</p>
+      <p>Read the explanation at <a href="https://semanticops.com">semanticops.com</a>. Agents start at <a href="https://semanticops.com/llms.txt">semanticops.com/llms.txt</a>. This site is the reference: the specification and the JSON Schemas.</p>
 
-    <footer>The documentation is published as portable files. The repository is the source for the current specification and its generated projections.</footer>
+      <h2>Specification</h2>
+      <ul>
+        <li><a href="spec/srs-spec.md"><code>spec/srs-spec.md</code></a> <span class="note">the normative specification</span></li>
+        <li><a href="spec/srs-unified.md"><code>spec/srs-unified.md</code></a> <span class="note">the specification with its rationale, in one read</span></li>
+      </ul>
+      <p class="note" style="margin-top: 0.75rem">For the concepts, read the <a href="https://semanticops.com/model/">model</a>.</p>
+
+      <h2>JSON Schemas</h2>
+      <p>Each file is served at <code>/schema/2.0/&lt;name&gt;.json</code>, and that URL is the schema's <code>$id</code>. See the <a href="schema/2.0/README.md">schema notes</a>.</p>
+      <div class="files" aria-label="JSON Schema files in schema/2.0/">
+        <a href="schema/2.0/blueprint.json">blueprint.json</a>
+        <a href="schema/2.0/composition.json">composition.json</a>
+        <a href="schema/2.0/container.json">container.json</a>
+        <a href="schema/2.0/discovery.json">discovery.json</a>
+        <a href="schema/2.0/document-view-output.json">document-view-output.json</a>
+        <a href="schema/2.0/field.json">field.json</a>
+        <a href="schema/2.0/lifecycle.json">lifecycle.json</a>
+        <a href="schema/2.0/manifest.json">manifest.json</a>
+        <a href="schema/2.0/note.json">note.json</a>
+        <a href="schema/2.0/package-bundle.json">package-bundle.json</a>
+        <a href="schema/2.0/package-manifest.json">package-manifest.json</a>
+        <a href="schema/2.0/protocol.json">protocol.json</a>
+        <a href="schema/2.0/record.json">record.json</a>
+        <a href="schema/2.0/relation.json">relation.json</a>
+        <a href="schema/2.0/relation-type.json">relation-type.json</a>
+        <a href="schema/2.0/source-document-meta.json">source-document-meta.json</a>
+        <a href="schema/2.0/srsj-envelope.json">srsj-envelope.json</a>
+        <a href="schema/2.0/term.json">term.json</a>
+        <a href="schema/2.0/theme.json">theme.json</a>
+        <a href="schema/2.0/type.json">type.json</a>
+        <a href="schema/2.0/view.json">view.json</a>
+        <a href="schema/2.0/vocabulary.json">vocabulary.json</a>
+      </div>
+
+      <h2>Strategic map</h2>
+      <ul>
+        <li><a href="strategy/"><code>strategy/</code></a> <span class="note">capabilities, release boundaries and current evidence</span></li>
+      </ul>
+
+      <h2>Source</h2>
+      <ul>
+        <li><a href="https://github.com/the-greenman/srs">github.com/the-greenman/srs</a> <span class="note">the specification, authored as its own data</span></li>
+      </ul>
+
+      <footer>The specification here is a projection of the records in the source repository.</footer>
+    </main>
   </body>
 </html>
