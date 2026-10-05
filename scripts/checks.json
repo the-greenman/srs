@@ -1,9 +1,10 @@
 {
-  "$comment": "The one declared registry of every spec-repo conformance check (rfc-decision-19997e24, issue #495). validate-all.mjs is a loop over this file's `always`-tier entries, in array order \u2014 order matters for at least one entry (see `afterId`), so this stays a JSON array, never re-sorted. `check-checks-registry-membership.mjs` (itself listed below) fails the build if a `scripts/check-*.mjs` file on disk is missing from this file. Fields per entry: `id` (stable, kebab-case), `script` (path passed to `runScript`, relative to scripts/ exactly as today \u2014 no renames), `args` (argv passed to the script), `tier` (`always` run by `node scripts/validate-all.mjs`; `pinned-cli` needs the pinned `srs` binary from scripts/fetch-pinned-srs.mjs and is not runnable from plain `node`; `ci-only` is reached only by a CI workflow step with no local entry point), `cell` (the Pattern Grid slug this check guards against drift in, per scripts/lib/pattern-grid-cells.json), `governing` (the RFC/decision/issue that introduced the rule), `description` (what the check actually asserts and why), and optionally `afterId` (this check must run after the named id \u2014 an execution-order dependency, not just a display grouping) and `expiry` (an issue tracking when a grandfathered check is expected to retire). This is a stepping stone toward checks-as-records (rfc-decision-19997e24's trajectory clause, handed to the #490 fold) \u2014 the JSON here is meant to become a generated projection, not a permanent hand-authored artifact.",
+  "$comment": "The one declared registry of every spec-repo conformance check (rfc-decision-19997e24, issue #495). validate-all.mjs is a loop over this file's `always`-tier entries, in array order \u2014 order matters for at least one entry (see `afterId`), so this stays a JSON array, never re-sorted. `check-checks-registry-membership.mjs` (itself listed below) fails the build if a `scripts/check-*.mjs` file on disk is missing from this file. Fields per entry: `id` (stable, kebab-case), `script` (path passed to `runScript`, relative to scripts/ exactly as today \u2014 no renames), `args` (argv passed to the script), `tier` (`always` run by `node scripts/validate-all.mjs`; `pinned-cli` needs the pinned `srs` binary from scripts/fetch-pinned-srs.mjs and is not runnable from plain `node`; `ci-only` is reached only by a CI workflow step with no local entry point; `manual` is run by a person against live hosts, so no CI step and not validate-all can reach it), `cell` (the Pattern Grid slug this check guards against drift in, per scripts/lib/pattern-grid-cells.json), `governing` (the RFC/decision/issue that introduced the rule), `description` (what the check actually asserts and why), and optionally `afterId` (this check must run after the named id \u2014 an execution-order dependency, not just a display grouping) and `expiry` (an issue tracking when a grandfathered check is expected to retire). This is a stepping stone toward checks-as-records (rfc-decision-19997e24's trajectory clause, handed to the #490 fold) \u2014 the JSON here is meant to become a generated projection, not a permanent hand-authored artifact.",
   "tiers": [
     "always",
     "pinned-cli",
-    "ci-only"
+    "ci-only",
+    "manual"
   ],
   "checks": [
     {
@@ -567,6 +568,24 @@
       "cell": "conformance",
       "governing": "rfc-decision-19997e24; rfc-decision-7caca3a1; srs#716",
       "description": "The PR body's `Mode: ... · Cell: ... · Door: ...` classification line resolves against the declared mode vocabulary (scripts/lib/decision-modes.json) and the twelve Pattern Grid cells (scripts/lib/pattern-grid-cells.json, glyph or name or both), the door is one of 1/2/3/non-normative, and a `gate:auto-merge` label is consistent with the stated mode/door per the autonomy contract (srs#580: mode clear/complicated AND door 1/non-normative). Reads the PR body and labels from PR_BODY/PR_LABELS (CI) or a body-file argument (the negative test) — there is no repository tree to walk, so this check has no local validate-all entry point; a CI workflow step supplies the PR event context."
+    },
+    {
+      "id": "hosting-parity",
+      "script": "check-hosting-parity.mjs",
+      "args": [],
+      "tier": "manual",
+      "cell": "identity",
+      "governing": "docs/HOSTING.md (srs.semanticops.com moves from GitHub Pages to a Cloudflare Worker)",
+      "description": "Every file under docs/ is served by a candidate host with the same status, Content-Type, Access-Control-Allow-Origin and body bytes as by the incumbent, so each https://srs.semanticops.com/schema/2.0/<name>.json $id/$schema identifier keeps resolving unchanged. Run by hand with the staging host's base URL as its argument (`node scripts/check-hosting-parity.mjs <B>`); it needs network access to both hosts, so neither CI nor validate-all can run it."
+    },
+    {
+      "id": "hosting-parity-bite",
+      "script": "../tests/hosting-parity/run.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "assertion",
+      "governing": "docs/HOSTING.md",
+      "description": "The hosting-parity check demonstrably passes on identical hosts and fails, naming the URL, on a changed body, a missing CORS header, a wrong content type, a missing directory index or /dir redirect, and a 200 for a missing path. Offline: local HTTP servers stand in for both hosts."
     }
   ]
 }

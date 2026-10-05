@@ -1,0 +1,15 @@
+// Host-binding config for srs.semanticops.com: it says where the rendered docs/ directory is
+// served from. It is the same class of file as CNAME and carries no spec content.
+// An assets-only Worker (no `main`): Cloudflare Workers static assets serve ./docs as plain files.
+// Deploys and the cutover are owner-run, see docs/HOSTING.md. No routes until the cutover PR.
+{
+  "name": "srs-semanticops-com",
+  "compatibility_date": "2026-10-05",
+  // Staging only, for scripts/check-hosting-parity.mjs. The cutover PR sets this to false and adds the route.
+  "workers_dev": true,
+  "assets": {
+    "directory": "./docs",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  }
+}

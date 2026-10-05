@@ -1,0 +1,10 @@
+# Files in docs/ that Workers static assets must not serve. `_headers` and `.assetsignore`
+# are consumed by the platform and never served. Dot-directories such as
+# spec/examples/gallery-project-v2/.srs/ are NOT listed here: GitHub Pages serves them today.
+
+# GitHub Pages artefacts, retired at the cutover (docs/HOSTING.md)
+/CNAME
+/.nojekyll
+
+# Operator notes, not part of the published site
+/HOSTING.md

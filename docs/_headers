@@ -1,0 +1,25 @@
+# Response headers for Cloudflare Workers static assets. The platform consumes this file; it is
+# not served. These rules make the Worker answer as GitHub Pages does today, so that every
+# https://srs.semanticops.com/schema/2.0/<name>.json $id/$schema identifier keeps resolving with
+# the same body and headers. Verify with scripts/check-hosting-parity.mjs.
+#
+# .md (text/markdown; charset=utf-8) and .mjs (text/javascript; charset=utf-8) already get the
+# Pages types from the platform's extension table, so they have no rule: a rule here would also
+# retype the 404 page returned for a missing .md or .mjs path.
+
+# Pages sends this on every response; browsers fetch schemas cross-origin.
+/*
+  Access-Control-Allow-Origin: *
+
+# Pages types every .json as application/json with a charset. Workers omits the charset by default.
+/*.json
+  Content-Type: application/json; charset=utf-8
+
+# Pages sends max-age=600. Schemas are identifiers whose content moves with master, so ten minutes
+# stays; the Worker revalidates by ETag after that.
+/schema/*
+  Cache-Control: public, max-age=600
+
+# Pages serves .srsj as application/octet-stream; the file is JSON (srsj-envelope.json).
+/*.srsj
+  Content-Type: application/json
