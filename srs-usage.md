@@ -25,7 +25,7 @@ Never assume you understand the repo's content from its directory listing.
 
 **Do not create, edit, or delete SRS JSON files directly.** Use the tool surfaces, in this order:
 
-1. **A mounted SRS MCP server, when your session has one.** `srs mcp serve` exposes validated tools (`find`, `record_create`, `record_update`, `relation_create`, `note_create`, `note_graduate`, `record_transition`, `container_member_add`/`remove`, `repo_validate`, `type_schema`) and resources (`srs://<repoId>/map`, `/navigation`, `/tree`, `/tree/{id}`, `/agent-index`, `/record/{id}`, `/container/{id}`, `/protocol`, `/protocol/{id}`). Every write enforces the repository's type and relation contracts and returns diagnostics on rejection — it is the cheapest path that is also the correct one. In agent sessions these tools may arrive deferred; load them by name before assuming they are absent. For an agent with no prior context on the repository, `/tree` and `/agent-index` are the two resources to read first — see [5i](#5i-mcp-server-srs-mcp-serve).
+1. **A mounted SRS MCP server, when your session has one.** `srs mcp serve` exposes validated tools (`find`, `similar`, `neighbours`, `read`, `record_create`, `record_update`, `relation_create`, `note_create`, `note_graduate`, `record_transition`, `container_member_add`/`remove`, `repo_validate`, `type_schema`) and resources (`srs://<repoId>/map`, `/navigation`, `/tree`, `/tree/{id}`, `/agent-index`, `/record/{id}`, `/context/{containerId}/{id}`, `/container/{id}`, `/composition/{id}`, `/type/{id}`, `/relation-types`, `/protocol`, `/protocol/{id}`). Every write enforces the repository's type and relation contracts and returns diagnostics on rejection — it is the cheapest path that is also the correct one. In agent sessions these tools may arrive deferred; load them by name before assuming they are absent. For an agent with no prior context on the repository, `/tree` and `/agent-index` are the two resources to read first — see [5i](#5i-mcp-server-srs-mcp-serve).
 2. **The `srs` CLI** for everything else — always the current release asset, never a stale local build (a pre-cutover binary fails on a current-generation repository, and vice versa).
 3. **Direct file edits only when neither tool can express the operation** (for example, a definition kind with no `create` command yet). Then: document why, make the minimal edit, and immediately run `srs repo validate` and fix every diagnostic before continuing.
 
@@ -293,7 +293,7 @@ Protocol run history for a record appears in `srs context record <recordId>` und
 
 ## 3b. Discovery and authored lists (`find` + `resolve-view`)
 
-`srs find` (ext:discovery, RFC-012) is the deterministic query primitive: filter records by structured axes and/or a content substring, recall-floor matching over every searchable text field (not just title).
+`srs find` (ext:discovery, RFC-012) is the deterministic query primitive: filter records and Tier-0 notes by structured axes and/or content words, recall-floor matching over every searchable text field (not just title).
 
 ```bash
 # Structured + content query (all axes optional, AND-combined)
@@ -304,7 +304,28 @@ srs find --repo <path> --type-namespace governance --type-name decision \
   --tier 2 --container <containerId> --pretty
 ```
 
-`find` → `{ "result": { "hits": [{ "instanceId", "label", "typeNamespace", "typeName", "lifecycleState"?, "score"?, "snippet"?, "matchedFields": [...] }], "total", "diagnostics" } }`. `--tag` and `--exclude-lifecycle-state` are repeatable; `--exclude-lifecycle-state` drops records whose `lifecycleState` is in the set (records without a lifecycle state are never excluded).
+`find` → `{ "result": { "hits": [{ "instanceId", "uri", "label", "typeId"?, "containerIds", "typeNamespace"?, "typeName"?, "lifecycleState"?, "score"?, "snippet"?, "matchedFields": [...] }], "total", "facets", "diagnostics" } }`.
+
+- **CLI vs MCP defaults.** CLI `find` is unbounded (no default limit) and ranks only with `--rank`; the MCP `find` tool defaults to `limit` 25 and ranks by default.
+- **Tiers.** Tier-2 records and Tier-0 notes are both searched. A note hit has no `typeId`, `typeNamespace` or `typeName`; type and lifecycle filters exclude notes.
+- **`--text`** matches instances containing every whitespace-separated word, in any field and any order (a phrase match is always included). Hits are ordered by `instanceId` with no `score` unless you pass `--rank`, which orders the *same* hits by BM25 relevance (label/title above short fields above long bodies; length-normalised) and fills `score`, ties by `instanceId`. The MCP `find` tool ranks by default (`rank: false` restores id order).
+- **Hit fields.** `uri` is `srs://<repo>/record/<id>`, readable with the MCP `read` tool. `containerIds` is declared membership only.
+- **Warnings.** A well-formed but unknown `--type namespace/name`, `--type-id` or `--container` returns zero hits plus a `warning:` entry in `diagnostics`. A malformed `--type` (no `namespace/name`, e.g. `--type nonesuch`) is an error envelope (`ok: false`, "Expected format: namespace/name").
+- **`facets`** are counted over the WHOLE match set, before `--limit`/`--offset`: `byType`, `notes` (Tier-0 count, omitted when 0), `tags`, and `fields[]` = `{ field, values: [{ value, count }], other? }` for each closed string field keyed by `Field.name` (at most 25). Each facet keeps the top 20 values (count desc, then value) plus `other`, the occurrences in omitted values. `fields[]` appears only when closed string fields exist; empty facets are omitted; an unknown container yields `facets: {}`.
+- **`--limit 0`** returns no hits and just the facets: with no filters it is the cheap whole-repository map (about 14 KB on muSrs: 886 instances, 22 field facets, srs-rust#1242), and with `--type` it is that type's keyword map.
+- **`--similar <instanceId>`** (more-like-this) returns the same payload with hits ranked by BM25 overlap with the source's characteristic terms; the source is excluded. `--tier/--tag/--type/--container/--lifecycle-state/--limit/--offset` narrow the candidates; it cannot be combined with `--text`. Lexical, no embeddings.
+- `--tag` and `--exclude-lifecycle-state` are repeatable; `--exclude-lifecycle-state` drops records whose `lifecycleState` is in the set (records without a lifecycle state are never excluded).
+
+```bash
+srs find --repo <path> --limit 0 --pretty                               # 1. orient: facets only
+srs find --repo <path> --text "relation direction" --rank --limit 10    # 2. ranked search
+srs relation neighbours <instanceId> --repo <path> --type contains --direction in --limit 25   # 3. bounded edges
+srs find --repo <path> --similar <instanceId> --limit 10                # 4. what else is about this?
+```
+
+**Discovery ladder for a cold agent.** (1) `find --limit 0` (MCP `find {limit:0}`) or `repo agent-index` for orientation; (2) ranked `find --text`; (3) read a hit's `uri` (MCP `read`, or the `record/{id}` resource) and, for a hub record, `relation neighbours` instead of the context read; (4) `find --similar` / MCP `similar` to widen from a good hit.
+
+`srs relation neighbours <id> [--type <relationType>] [--direction out|in] [--limit N] [--offset N]` lists a Record's or Note's relation edges, paged: `{ "result": { "instanceId", "total", "neighbours": [{ "direction", "relationId", "relationType", "neighbour": { "instanceId", "uri", "label", "typeNamespace", "typeName" } }] } }`. `total` counts every matching edge before paging; the neighbour record itself is never returned (read its `uri`).
 
 **Authored lists = `resolve-view` + `find`.** An interactive list (e.g. a governance decision log) is an *authored* view composed with a *runtime* query — never a bespoke client filter. `srs container resolve-view <containerId>` returns the authored columns, the ordered members, **and** the authored default-hidden lifecycle states:
 
@@ -340,7 +361,7 @@ EOF
 
 ### Graduating a Note to a Record
 
-`srs note graduate` promotes a Tier-0 Note to a typed Tier-2 Record in one atomic step: the Record is created, `graduatedAt` is stamped on the Note, and both are returned in a single envelope.
+`srs note graduate` promotes a Tier-0 Note to a typed Tier-2 Record in one atomic step: the Record is created, a `derived-from` relation (Record derived from Note) records the graduation (there is no `graduatedAt` stamp), and both are returned in a single envelope.
 
 First resolve the target type's field IDs (same as for `record create`):
 
@@ -362,7 +383,7 @@ EOF
 The stdin shape is the same `CreateRecordInput` used by `record create`: `fieldValues` (an **object keyed by `Field.name` verbatim** — RFC-039), optional `fieldMeta` (per-field provenance keyed identically), optional `tags`.
 
 The response `data` contains:
-- `note` — the original Note with `graduatedAt` stamped (ISO-8601 UTC)
+- `note` — the original Note, unchanged (graduation is the `derived-from` relation, not a stamp)
 - `record` — the newly created typed Record
 
 On error (note not found, entity is not a Note, type not found, required field missing) neither write is applied.
@@ -1158,7 +1179,7 @@ srs context record --repo <path> <record-id> --container <container-id>
 }
 ```
 
-`relations` is one flat list: `direction` is `out` (this record is the source) or `in` (it is the target); `neighbour` is the other endpoint inline (`kind` `record` or `note`, the full instance) or `null` when it does not resolve. Order is `relationType`, then the neighbour's `createdAt` (missing last), then `relationId`, so a thread of comments on one relation type reads chronologically. **Behaviour change (srs-rust#1134):** this list used to be outbound only; a consumer that assumed `sourceId == recordId` must check `direction`. Structural edges (`contains`, `precedes`) are included. `containerId`, `entry` and `subtree` appear only with `--container`; `subtree` is the descendant outline entries only (use `record get` / the `record/{id}` resource for their content). The subject must be a Tier-2 record; notes appear as neighbours. `protocolRunHistory` contains summaries of all protocol runs whose `targetRecordId` matches this record (see §3a Protocol Run Execution).
+`relations` is one flat list: `direction` is `out` (this record is the source) or `in` (it is the target); `neighbour` is the other endpoint inline (`kind` `record` or `note`, the full instance) or `null` when it does not resolve. Order is `relationType`, then the neighbour's `createdAt` (missing last), then `relationId`, so a thread of comments on one relation type reads chronologically. **Behaviour change (srs-rust#1134):** this list used to be outbound only; a consumer that assumed `sourceId == recordId` must check `direction`. Structural edges (`contains`, `precedes`) are included. `containerId`, `entry` and `subtree` appear only with `--container`; `subtree` is the descendant outline entries only (use `record get` / the `record/{id}` resource for their content). The subject may be a Record or a Note. For a hub record with many edges use the bounded `srs relation neighbours` command / MCP `neighbours` tool instead. `protocolRunHistory` contains summaries of all protocol runs whose `targetRecordId` matches this record (see §3a Protocol Run Execution).
 
 The same read is the MCP resource `srs://<repositoryId>/context/{containerId}/{instanceId}` (container-less: `srs://<repositoryId>/context/{instanceId}`), served identically by the native server and the browser session, and the WASM `context_record` input `{"recordId", "containerId"?}`.
 
@@ -1470,6 +1491,7 @@ The reader runs a fixed pipeline: parse, refuse `readme`, refuse a newer revisio
 | `bundle-not-json` | not a JSON object |
 | `bundle-readme-unsupported` | the bundle carries `readme`; refused, not dropped, until srs-rust#1164 ships (remove it by hand only if the user asks; see Bundled readme below) |
 | `bundle-revision-too-new` | `dataModelRevision` is above what this `srs` supports; upgrade `srs` (an absent stamp means 0) |
+| `bundle-migration-step-missing` | the bundle's `dataModelRevision` is below this `srs`'s reader floor: a data-model step between it and the current revision has no bundle-form transformer. Re-export the bundle with a current `srs`; do not hand-edit the stamp |
 | `bundle-migration-refused` | the RFC-043 pre-load transformer refused the bundle; the message keeps the inner code |
 | `bundle-schema-invalid` | fails `package-bundle.json`; for a bundle older than current the message names its revision and says to re-export it |
 | `bundle-definition-invalid` | an inlined definition fails the loader checks (message names `<bundle>/<kind>/<index>`) |
@@ -1483,15 +1505,31 @@ srs package export --repo /path/to/repo \
   --selector packages/ext \          # optional; omit for the primary package
   --output governance.srspkg \
   --published-at 2026-10-03T00:00:00Z \   # optional RFC 3339; default now
-  --publisher "Example Org"            # optional
+  --publisher "Example Org" \            # optional
+  --homepage https://example.org/governance \   # optional
+  --mode bundled                       # bundled (default) | standalone
 ```
 
-- The whole boundary is exported, `mode: "bundled"` only; `packageId` and `packageVersion` are the boundary's `id` and `version`. Definitions from the repository's other package boundaries that the boundary references are inlined (reported in `inlined`).
-- The embedded `com.semanticops.core` definitions are **omitted** from the definition arrays (every repository already has them, ADR-025), as RFC-003 [C1] (Revision 10, accepted) allows; [C1] also requires every reached core definition version to be listed in `dependencyRefs`.
-- **Not yet conformant to RFC-003 Revision 10** (srs-rust#1212): `dependencyRefs` is written as `[]`, `dataModelRevision` is the binary's revision rather than the repository's, `schemaVersion` is the manifest's `srsVersion`, definition arrays are not sorted by `id` then `version`, a duplicate `id` is not refused, and `description` is dropped. Bundles written before srs-rust#1212 lands should be re-exported after it; do not hand-edit a `.srspkg` to compensate.
+- The whole boundary is exported. `packageId` and `packageVersion` are the boundary's `id` and `version`; `description` is copied from the boundary's `package.json` when it is a string; `homepage` and `publisher` are caller-supplied and omitted when not given.
+- `--mode bundled` (default) also inlines every definition the boundary's PINNED and LINEAGE references reach from the repository's other package boundaries (reported in `inlined`). `--mode standalone` carries only the boundary's own definitions. In both modes every reached definition is listed in `dependencyRefs` (`dependencyRefCount` in the payload).
+- A reached `com.semanticops.core` definition is not carried unless the exported package itself lists it (every repository has core, ADR-025); it is listed in `dependencyRefs` only (RFC-003 [C1], Revision 10). The exemption is per `(id, version)`: a non-core version of a core id is carried like any other definition.
+- `dataModelRevision` is the repository's own stamp; `schemaVersion` is `"2.0"`; definition arrays are sorted by `id` then `version`; keys are canonicalized; the boundary's `packageDependencies` are carried through. The bundle is validated against `package-bundle.json` before anything is written.
+- **Standalone install consequence.** A standalone bundle installs, but the destination catalog then holds references that dangle (R13) until the packages providing the `dependencyRefs` are installed (srs#875). Prefer `bundled` unless the destination already has the dependencies.
+- Export refuses (`ok: false`, nothing written) with:
+
+| Code | Meaning |
+|---|---|
+| `bundle-published-at-invalid` | `--published-at` is not RFC 3339 |
+| `bundle-boundary-unreadable` | the target boundary's `package.json` cannot be loaded (no empty bundle is produced); an unknown `--selector` is a package-not-found error |
+| `bundle-identity-conflict` | one `id` and version has two different definitions across the package set; the export cannot choose |
+| `bundle-reference-unresolved` | a followed reference is in neither the repository's package set nor the core package |
+| `bundle-definition-invalid` | a carried definition fails its schema |
+| `bundle-schema-invalid` | the assembled bundle fails `package-bundle.json`; a malformed `packageDependencies` adds the hint to run `srs package dependency add --repair-legacy` |
+
+- **`bundle-below-reader-floor` note.** If the repository's `dataModelRevision` is below the reader floor of the exporting `srs`, the export still succeeds and `payload.notes` carries `bundle-below-reader-floor: ...`: readers at the current revision will refuse the file (`bundle-migration-step-missing`). Migrate the repository first (`srs repo apply-migration`), then re-export. Otherwise `notes` is `[]`.
+- Bundles written before srs-rust#1212 (`dependencyRefs: []`, binary-revision stamp, unsorted arrays) are not conformant; re-export them and do not hand-edit a `.srspkg` to compensate.
 - `publishedAt` is part of the bytes. **Pass a fixed `--published-at` for byte-reproducible output and a stable sha256**; a value that is not RFC 3339 fails with `bundle-published-at-invalid`.
 - Export never emits `readme`.
-- Export fails with `bundle-boundary-unreadable` when the target boundary's `package.json` cannot be loaded (rather than producing an empty bundle).
 
 ```json
 {
@@ -1504,23 +1542,26 @@ srs package export --repo /path/to/repo \
     "packageName": "governance",
     "packageVersion": "2.1.0",
     "dataModelRevision": 9,
+    "mode": "bundled",
     "publishedAt": "2026-10-03T00:00:00Z",
     "sha256": "sha256:<64 lowercase hex>",
     "byteLength": 12345,
     "definitionCount": 14,
+    "dependencyRefCount": 3,
     "inlined": [],
+    "notes": [],
     "kinds": [ { "kind": "field", "count": 8 } ]
   }
 }
 ```
 
-`summary.sha256` (WASM) and `payload.sha256` (CLI) are `sha256:<64 lowercase hex>` of the file bytes, the same convention as attachments. `inlined` is the sorted list of definition ids pulled in from other boundaries; `kinds` lists non-empty kinds only.
+`summary.sha256` (WASM) and `payload.sha256` (CLI) are `sha256:<64 lowercase hex>` of the file bytes, the same convention as attachments. `inlined` is the sorted list of definition ids pulled in from other boundaries (core definitions are never in it); `mode` is `bundled` or `standalone`; `dependencyRefCount` is the length of the bundle's `dependencyRefs`; `notes` is the list of non-fatal export notes; `kinds` lists non-empty kinds only.
 
 ### WASM parity (`SrsRepository`)
 
 The same services are exposed to the browser:
 
-- `export_package_bundle(inputJson)` with `inputJson = {"selector"?, "publishedAt"?, "publisher"?}`; returns `{text, summary}` where `summary` has the export payload's fields. Read-only (the write epoch does not move). It returns the text rather than writing a file; the caller saves it.
+- `export_package_bundle(inputJson)` with `inputJson = {"selector"?, "publishedAt"?, "publisher"?, "homepage"?, "mode"?}` (`mode` is `bundled` or `standalone`); returns `{text, summary}` where `summary` has the export payload's fields. Read-only (the write epoch does not move). It returns the text rather than writing a file; the caller saves it.
 - `install_package_bundle(bundleJson, optionsJson)` with `bundleJson` the file's text and `optionsJson = {"boundaryPath"?, "strict"?}` (`"{}"` for defaults); returns the same fields as the CLI install payload, including `notes`. It advances the write epoch, so the session is dirty. Verify the file's sha256 over its bytes before passing the text, and call `check_package_requirements(bundleJson)` first for RFC-044 requirement outcomes.
 
 ### Package requirements (`packageDependencies`, RFC-044)
@@ -1736,10 +1777,10 @@ The URI scheme is implementation tooling (srs-rust ADR-037), built from existing
 | `srs://<repositoryId>/map` | Repo map: counts, package info, relation summary (JSON — same shape as `repo map`) |
 | `srs://<repositoryId>/navigation` | Identity record + ordered navigation sections (JSON — same as `repo navigation`). `identity` is **optional** — see below. Each section also carries `sectionContainerId` (present, not `null`, only when that section itself roots a sub-container) — the descent hook that lets an agent walk navigation → section → sub-container without listing every container in the repository |
 | `srs://<repositoryId>/tree` | Recursive `contains` tree from every auto-detected root, with depth and cycle pruning (JSON — same result as `srs tree`). One of the two zero-context entry points (RFC-042 Change H, srs#620) — read this to see the whole repository's shape before reading anything else |
-| `srs://<repositoryId>/tree/{instanceId}` | The same recursive `contains` tree, rooted at one instance instead of the auto-detected roots — descend from a navigation section's or container member's `sectionContainerId` by its `instanceId`; exposed as a resource template |
-| `srs://<repositoryId>/agent-index` | AI orientation index: repository identity, counts, installed types, top-level sections, suggested entry points (JSON — same as `srs repo agent-index`). The other zero-context entry point (RFC-042 Change H, srs#620) |
-| `srs://<repositoryId>/record/{instanceId}` | One record, any tier (JSON; exposed as a resource template) |
-| `srs://<repositoryId>/context/{containerId}/{instanceId}{?excludeRelationCategories}` | Everything about one record in one read (JSON — same as `srs context record --container`): fields, relations in both directions with neighbours inline, arrangement `entry` + `subtree`. Drop the container segment for no subtree. `?excludeRelationCategories=composition,sequence` drops edges by relation-type category. Template |
+| `srs://<repositoryId>/tree/{instanceId}` | The same recursive `contains` tree, rooted at one instance instead of the auto-detected roots — descend from a navigation section's or container member's `sectionContainerId` by its `instanceId`; exposed as a resource template. Both tree resources take `?maxDepth=N` (0 = roots only), `?relationType=<key>` and `?typeFilter=<namespace/name>` to bound the walk |
+| `srs://<repositoryId>/agent-index` | AI orientation index: repository identity, counts, installed types (`types[].typeId`), top-level sections, suggested entry points (`entryPoints`: `[{ path, instanceId?, uri? }]`) (JSON — same as `srs repo agent-index`). The other zero-context entry point (RFC-042 Change H, srs#620) |
+| `srs://<repositoryId>/record/{instanceId}` | One record or Tier-0 note (a note returns the Note shape; JSON; exposed as a resource template) |
+| `srs://<repositoryId>/context/{containerId}/{instanceId}{?excludeRelationCategories}` | Everything about one record or note in one read (JSON — same as `srs context record --container`): fields, relations in both directions with neighbours inline, arrangement `entry` + `subtree`. Drop the container segment for no subtree. `?excludeRelationCategories=composition,sequence` drops edges by relation-type category; for a hub record prefer the bounded `neighbours` tool. Template |
 | `srs://<repositoryId>/container/<containerId>` | Container resolve-view: authored columns + ordered members (JSON — same as `container resolve-view`). Each member carries `sectionContainerId`, same key and meaning as the navigation row above |
 | `srs://<repositoryId>/composition/<compositionId>` | Rendered composition (markdown — same as `render composition`). Renamed from `view`/`documentView` (srs-rust#910, `rfc-decision-92d2da05`) — no alias is kept, per the standing zero-backwards-compatibility rule |
 | `srs://<repositoryId>/type/{typeId}` | Type authoring schema (JSON — same as `type schema`): properties are keyed by `Field.name` (RFC-039) and carry `x-srs-ai-guidance`, `x-srs-description`, `x-srs-instructions`; a `vocabularyRef`-backed select field also carries `x-srs-vocabulary-terms` (key/label/description of each active term, srs-rust#1002); enumerated per type and available as a template |
@@ -1769,7 +1810,10 @@ The tool set mirrors the discovery ladder and write workflows in this document. 
 
 - **`repo_validate`** — validate the whole repository and return the diagnostics array plus a summary. Run after every write batch; an empty diagnostics array means the repository is consistent. Diagnostics are data, not an error.
 - **`type_schema`** — the authoring contract for a type by UUID (`typeVersion` optional; latest when omitted): a JSON Schema whose properties are keyed by `Field.name` — exactly the keys `record_create` `fieldValues` uses (RFC-039; the `x-srs-field-id` bridge is retired) — carrying the field's `aiGuidance`. An inline-composite range is expanded in place. Read this before authoring records of an unfamiliar type; discover typeIds from the type resources.
-- **`find`** — the deterministic discovery query (ext:discovery): all axes optional and AND-combined (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `excludeLifecycleStates`, `tier`, `contentMatch`). Serves Tier 2 in this build; other tier values return zero hits with a diagnostic.
+- **`find`** — the deterministic discovery query (ext:discovery): all axes optional and AND-combined (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `excludeLifecycleStates`, `tier`, `contentMatch`). Serves Tier 2 and Tier 0 (type and lifecycle filters exclude notes). Hits are BM25-ranked with a `score` by default (`rank: false` orders by `instanceId`); `contentMatch` matches every word in any order; `limit` defaults to 25. Hits carry `uri`, `typeId` (absent for notes) and `containerIds`; the reply carries `facets` over the whole match set, so `find {limit:0}` with no filters is the cheap repository map. An unknown type, `typeId` or `containerId` returns zero hits with a `warning:` diagnostic.
+- **`similar`** — `{instanceId, limit? (default 25), ...find filters}`: more-like-this. Find-shaped hits (instanceId, uri, label, type, score) ranked by BM25 overlap with the source's characteristic terms, never the source itself; `typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `tier` narrow candidates; no `contentMatch`. Lexical, no embeddings. Same as `srs find --similar`.
+- **`neighbours`** — `{instanceId, relationType?, direction? (out|in; default both), limit? (default 25, max 100), offset?}`: bounded read of one Record's or Note's relation edges. Returns `total` and a page of `{direction, relationId, relationType, neighbour: {instanceId, uri, label, type}}`, never the neighbour record. Prefer it to the `context` resource for hub records.
+- **`read`** — `{uri}`: any `srs://<repoId>/…` resource (map, navigation, agent-index, tree, record, context, container, view, type, protocol, relation-types) returned exactly as `resources/read` would, for clients that call tools but not resources (claude.ai relay). Text capped at 96000 bytes: a longer resource is cut with a trailing `[truncated: …]` notice and `structuredContent.truncated: true` (use `find` limit/offset, `tree/{id}`, `container_outline` or `record/{id}` instead). Errors are the resource errors (`-32602`, `-32002`).
 - **`record_create`** — create a typed Tier-2 Record (`type` = `namespace/name`, `fieldValues` keyed by `Field.name` verbatim — read `type_schema` first; its property keys are exactly the carrier keys). Validation is enforced: missing required or unknown fields are rejected with diagnostics and **nothing is written**. Optional `containerId` adds to a container atomically.
 - **`relation_create`** — assert a typed binary relation (`source [relationType] target`, forward form only). The `relationType` must resolve to an installed `RelationTypeDefinition` (RFC-005/R3) — an unknown type is a validation error.
 - **`note_create`** — create a Tier-0 Note (free-text sections). Optional `containerId` adds to a container atomically.
@@ -1777,7 +1821,7 @@ The tool set mirrors the discovery ladder and write workflows in this document. 
 - **`record_transition`** — transition a record's lifecycle state as defined in its Type's lifecycle. Use `record_allowed_transitions` first to see which transitions are available. Supply either `to` (target state key) or `byTransition` (named transition, e.g. `promote`), not both. RFC-022: when the target state has a `requiresRelation` obligation, supply `fulfillment.newRecord` (spawn a successor) or `fulfillment.existingInstanceId` (adopt an existing instance). Returns the updated record, any warnings (e.g. final-state notice), and the fulfillment artifacts if spawned.
 - **`record_allowed_transitions`** — return the allowed next lifecycle transitions from a record's current state. Returns `currentState` (empty string if never transitioned), a list of transitions each with `name`/`to`/`toIsFinal`/`requiresRelation`, and `isImmutable`. Read this before calling `record_transition` — an unknown transition is rejected.
 - **`record_successor`** — create a successor Record and the linking relation in one atomic operation. The successor inherits the predecessor's `typeId` (and optionally a pinned `typeVersion`). `relationType` is `supersedes` or `refines`, or omitted to have the core derive it from the predecessor's lifecycle `requiresRelation` (RFC-022 R6/I-99; a structured error names the candidates when none or several). Validation is enforced before any write. Returns both the new Record and the linking Relation.
-- **`note_graduate`** — promote a Tier-0 Note to a typed Tier-2 Record in one atomic step. The Note's `graduatedAt` is stamped; a new Record is created from the supplied type and `fieldValues`. Optional `containerId` adds the Record to a container. The Note is preserved with its `graduatedAt` timestamp — it is not deleted. Returns both the updated Note and the new Record.
+- **`note_graduate`** — promote a Tier-0 Note to a typed Tier-2 Record in one atomic step. A new Record is created from the supplied type and `fieldValues`. Optional `containerId` adds the Record to a container. A `derived-from` relation records the graduation; the Note is preserved, not deleted. Returns both the Note and the new Record.
 - **`container_member_add`** — add an instance to a container's `memberInstanceIds`. Idempotent — adding an already-present member is not an error. Returns the updated `memberInstanceIds` list.
 - **`container_member_remove`** — remove an instance from a container's `memberInstanceIds`. Returns the updated `memberInstanceIds` list. No-op if the instance is not a member.
 
