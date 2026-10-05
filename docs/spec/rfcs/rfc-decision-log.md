@@ -1973,3 +1973,42 @@ This is not the sanctioned two-tier boundary that rfc-decision-43249f53 rejected
 **Review Trigger**: Review if an implementation can legitimately lack or differ in the RFC-029 core package (for example a core package with more than one version in use), or if a second package becomes substrate that every implementation embeds.
 
 
+**Title**: Package upgrade overwrites a clean same-version definition before publication, and refuses it from the first public release
+
+**Status**: Accepted
+
+**Decision Date**: 2026-10-05
+
+**Decision Rationale**: RFC-003 (readers paragraph) calls a definition with the same `id` and `version` but different content a "conflict" and specifies no resolution. muDemocracy's packages develop in place at v1 before publication (essay 1.4.0 and 1.5.0 changed v1 and v2 types in place), so `package upgrade` (srs-rust#1152) needs a rule for that case. The versioning cell prefers increment over edit (rfc-decision-2a1e1590), but at formation (charter axis 2-8, Evolution over Continuity, phase-bound) the same-version edit is the working practice and a refusal would block every upgrade of a package under development. The rule is therefore phase-bound: it overwrites now and sunsets to a refusal at the precommitted Continuity flip. The owner ruled on 2026-10-05.
+
+Mode: complicated. The door is one-way for the CLI/MCP contract (`package upgrade`), so it is recorded as a decision, not an RFC; it adds no new normative meaning to an RFC's own surface.
+
+**Decision**: RULE (phase-bound). When a package bundle carries a definition with the same `id` and the same `version` as an installed definition but different content, `package upgrade` overwrites the installed definition and refreshes the reference copy recorded at install if the installed definition still equals that reference copy; if the installed definition was edited locally (`conflictState: local-ahead`), it is a conflict, and the local edit is kept and the conflict is reported.
+
+SUNSET. At the first full public release (charter axis 2-8, Evolution flipping to Continuity), the overwrite becomes a refusal: increment over edit.
+
+SETTLED BY EXISTING RFCs, no change needed. Upgrade is in place in the same package boundary with the boundary version bumped (RFC-003). New definition versions install alongside old ones and old versions stay resolvable (RFC-014 R6). Records are never rewritten (RFC-014 R3). Definitions absent from the newer bundle are never deleted, only reported.
+
+**Scope**: The behaviour of `package upgrade` (CLI and MCP) for a same-id, same-version definition whose content differs. Does not change RFC-003, RFC-014, the Package Bundle format, any schema under docs/schema/2.0/, or the versioning cell's rule for authored Field definitions outside this upgrade path.
+
+**Governing Values**:
+- shared-coherence
+- practical-expression
+
+**Project Phase**: formation
+
+**Alternatives Considered**: (1) Refuse every same-version difference now (increment over edit). Rejected for formation: packages under development edit v1 in place and every upgrade would fail. (2) Always overwrite, including local edits. Rejected: it destroys a local edit silently. (3) Always keep the local copy. Rejected: a clean copy would never receive its upstream fix.
+
+**Accepted Costs**: Until the sunset, a same-id, same-version definition can change content under an unchanged version, so a reader of the version number alone cannot tell two contents apart. The reference copy recorded at install is what makes the overwrite safe, and the conflict report is the only protection for a local edit.
+
+**Evidence**:
+- the-greenman/srs#890 (owner ruling and the request to record it)
+- the-greenman/srs-rust#1152 (package upgrade, the implementation this decision gates)
+- rfcs/rfc-003.md (readers paragraph: same id and version with different content is a conflict, no resolution specified; package upgrade in place)
+- rfcs/rfc-014-import-tracking-package-binding.md (R3: records are never rewritten; R6: new versions install alongside old, old stay resolvable)
+- rfc-decision-2a1e1590 (versioning cell: increment over edit)
+- docs/charter/decision-compass.md, axis 2-8 (Evolution over Continuity, flips at the first full public release)
+
+**Review Trigger**: Review at the first full public release, when axis 2-8 flips to Continuity and the overwrite becomes a refusal; or earlier if an upgrade overwrites a definition that had been edited without being detected as local-ahead.
+
+
