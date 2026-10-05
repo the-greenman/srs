@@ -1734,12 +1734,14 @@ Payload (`slice export`): `outputPath`, `fileSizeBytes`, `containerId`, `sliceRe
 Refusals:
 
 - `slice-root-identity-invalid` when the container's identity entry is missing, is not at depth 0, or has descendants. A slice root must satisfy RFC-043's root identity rule, and the outline is never rewritten to make it fit.
+- `slice-package-outside-repository` when a local package ref's path resolves outside the repository root. An archive cannot hold it at the same path (RFC-017).
+- `slice-definition-identity-conflict` when two carried packages hold different definitions under the same `id` and `version`. The export cannot choose between them.
 - An unknown container returns `container not found`.
 - A repository whose catalog has errors (for example a dangling container entry) is refused. Repair it first.
 
 `srs repo validate` on a slice reports one info diagnostic with the cut-edge count. It reports an error when `slice.spec.type` is not `container` ([R10]), when `slice.spec.id` is not the root container ([R12]), or when `repositoryId` equals the origin's ([R3]). It warns when `ext:slices` is undeclared ([R4]). A composition section naming a container outside the slice, and an unresolved `rootTypeRefs` entry, are reported as info rather than warnings.
 
-A slice's root container is a repository root, so the RFC-013/RFC-018 root rules apply to it in full ([R12]). Slicing a container whose identity record is not a `purpose` record produces an I-81 warning. A container with sub-containers produces I-82 warnings for members that anchor no container.
+A slice's root container is a repository root, so the RFC-013/RFC-018 root rules apply to it in full ([R12]). Slicing a container whose identity record is not a `purpose` record, as in an essay snapshot, produces an I-81 diagnostic at info, not warning, like the other expected-absence diagnostics in a slice (RFC-026 Revision 9 [R17]). Outside a slice I-81 stays a warning. A container with sub-containers produces I-82 warnings for members that anchor no container.
 
 ---
 
