@@ -1491,6 +1491,7 @@ The reader runs a fixed pipeline: parse, refuse `readme`, refuse a newer revisio
 | `bundle-not-json` | not a JSON object |
 | `bundle-readme-unsupported` | the bundle carries `readme`; refused, not dropped, until srs-rust#1164 ships (remove it by hand only if the user asks; see Bundled readme below) |
 | `bundle-revision-too-new` | `dataModelRevision` is above what this `srs` supports; upgrade `srs` (an absent stamp means 0) |
+| `bundle-migration-step-missing` | the bundle's `dataModelRevision` is below this `srs`'s reader floor: a data-model step between it and the current revision has no bundle-form transformer. Re-export the bundle with a current `srs`; do not hand-edit the stamp |
 | `bundle-migration-refused` | the RFC-043 pre-load transformer refused the bundle; the message keeps the inner code |
 | `bundle-schema-invalid` | fails `package-bundle.json`; for a bundle older than current the message names its revision and says to re-export it |
 | `bundle-definition-invalid` | an inlined definition fails the loader checks (message names `<bundle>/<kind>/<index>`) |
@@ -1504,15 +1505,31 @@ srs package export --repo /path/to/repo \
   --selector packages/ext \          # optional; omit for the primary package
   --output governance.srspkg \
   --published-at 2026-10-03T00:00:00Z \   # optional RFC 3339; default now
-  --publisher "Example Org"            # optional
+  --publisher "Example Org" \            # optional
+  --homepage https://example.org/governance \   # optional
+  --mode bundled                       # bundled (default) | standalone
 ```
 
-- The whole boundary is exported, `mode: "bundled"` only; `packageId` and `packageVersion` are the boundary's `id` and `version`. Definitions from the repository's other package boundaries that the boundary references are inlined (reported in `inlined`).
-- The embedded `com.semanticops.core` definitions are **omitted** from the definition arrays (every repository already has them, ADR-025), as RFC-003 [C1] (Revision 10, accepted) allows; [C1] also requires every reached core definition version to be listed in `dependencyRefs`.
-- **Not yet conformant to RFC-003 Revision 10** (srs-rust#1212): `dependencyRefs` is written as `[]`, `dataModelRevision` is the binary's revision rather than the repository's, `schemaVersion` is the manifest's `srsVersion`, definition arrays are not sorted by `id` then `version`, a duplicate `id` is not refused, and `description` is dropped. Bundles written before srs-rust#1212 lands should be re-exported after it; do not hand-edit a `.srspkg` to compensate.
+- The whole boundary is exported. `packageId` and `packageVersion` are the boundary's `id` and `version`; `description` is copied from the boundary's `package.json` when it is a string; `homepage` and `publisher` are caller-supplied and omitted when not given.
+- `--mode bundled` (default) also inlines every definition the boundary's PINNED and LINEAGE references reach from the repository's other package boundaries (reported in `inlined`). `--mode standalone` carries only the boundary's own definitions. In both modes every reached definition is listed in `dependencyRefs` (`dependencyRefCount` in the payload).
+- A reached `com.semanticops.core` definition is not carried unless the exported package itself lists it (every repository has core, ADR-025); it is listed in `dependencyRefs` only (RFC-003 [C1], Revision 10). The exemption is per `(id, version)`: a non-core version of a core id is carried like any other definition.
+- `dataModelRevision` is the repository's own stamp; `schemaVersion` is `"2.0"`; definition arrays are sorted by `id` then `version`; keys are canonicalized; the boundary's `packageDependencies` are carried through. The bundle is validated against `package-bundle.json` before anything is written.
+- **Standalone install consequence.** A standalone bundle installs, but the destination catalog then holds references that dangle (R13) until the packages providing the `dependencyRefs` are installed (srs#875). Prefer `bundled` unless the destination already has the dependencies.
+- Export refuses (`ok: false`, nothing written) with:
+
+| Code | Meaning |
+|---|---|
+| `bundle-published-at-invalid` | `--published-at` is not RFC 3339 |
+| `bundle-boundary-unreadable` | the target boundary's `package.json` cannot be loaded (no empty bundle is produced); an unknown `--selector` is a package-not-found error |
+| `bundle-identity-conflict` | one `id` and version has two different definitions across the package set; the export cannot choose |
+| `bundle-reference-unresolved` | a followed reference is in neither the repository's package set nor the core package |
+| `bundle-definition-invalid` | a carried definition fails its schema |
+| `bundle-schema-invalid` | the assembled bundle fails `package-bundle.json`; a malformed `packageDependencies` adds the hint to run `srs package dependency add --repair-legacy` |
+
+- **`bundle-below-reader-floor` note.** If the repository's `dataModelRevision` is below the reader floor of the exporting `srs`, the export still succeeds and `payload.notes` carries `bundle-below-reader-floor: ...`: readers at the current revision will refuse the file (`bundle-migration-step-missing`). Migrate the repository first (`srs repo apply-migration`), then re-export. Otherwise `notes` is `[]`.
+- Bundles written before srs-rust#1212 (`dependencyRefs: []`, binary-revision stamp, unsorted arrays) are not conformant; re-export them and do not hand-edit a `.srspkg` to compensate.
 - `publishedAt` is part of the bytes. **Pass a fixed `--published-at` for byte-reproducible output and a stable sha256**; a value that is not RFC 3339 fails with `bundle-published-at-invalid`.
 - Export never emits `readme`.
-- Export fails with `bundle-boundary-unreadable` when the target boundary's `package.json` cannot be loaded (rather than producing an empty bundle).
 
 ```json
 {
@@ -1525,23 +1542,26 @@ srs package export --repo /path/to/repo \
     "packageName": "governance",
     "packageVersion": "2.1.0",
     "dataModelRevision": 9,
+    "mode": "bundled",
     "publishedAt": "2026-10-03T00:00:00Z",
     "sha256": "sha256:<64 lowercase hex>",
     "byteLength": 12345,
     "definitionCount": 14,
+    "dependencyRefCount": 3,
     "inlined": [],
+    "notes": [],
     "kinds": [ { "kind": "field", "count": 8 } ]
   }
 }
 ```
 
-`summary.sha256` (WASM) and `payload.sha256` (CLI) are `sha256:<64 lowercase hex>` of the file bytes, the same convention as attachments. `inlined` is the sorted list of definition ids pulled in from other boundaries; `kinds` lists non-empty kinds only.
+`summary.sha256` (WASM) and `payload.sha256` (CLI) are `sha256:<64 lowercase hex>` of the file bytes, the same convention as attachments. `inlined` is the sorted list of definition ids pulled in from other boundaries (core definitions are never in it); `mode` is `bundled` or `standalone`; `dependencyRefCount` is the length of the bundle's `dependencyRefs`; `notes` is the list of non-fatal export notes; `kinds` lists non-empty kinds only.
 
 ### WASM parity (`SrsRepository`)
 
 The same services are exposed to the browser:
 
-- `export_package_bundle(inputJson)` with `inputJson = {"selector"?, "publishedAt"?, "publisher"?}`; returns `{text, summary}` where `summary` has the export payload's fields. Read-only (the write epoch does not move). It returns the text rather than writing a file; the caller saves it.
+- `export_package_bundle(inputJson)` with `inputJson = {"selector"?, "publishedAt"?, "publisher"?, "homepage"?, "mode"?}` (`mode` is `bundled` or `standalone`); returns `{text, summary}` where `summary` has the export payload's fields. Read-only (the write epoch does not move). It returns the text rather than writing a file; the caller saves it.
 - `install_package_bundle(bundleJson, optionsJson)` with `bundleJson` the file's text and `optionsJson = {"boundaryPath"?, "strict"?}` (`"{}"` for defaults); returns the same fields as the CLI install payload, including `notes`. It advances the write epoch, so the session is dirty. Verify the file's sha256 over its bytes before passing the text, and call `check_package_requirements(bundleJson)` first for RFC-044 requirement outcomes.
 
 ### Package requirements (`packageDependencies`, RFC-044)
