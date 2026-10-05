@@ -1,0 +1,19 @@
+{
+  "instanceId": "47232a20-ec19-4dbf-b6d7-85778b1ef304",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Slice package closure",
+    "content": "A container slice carries every package of the source's package set that it uses, whole and unchanged: the same files at the same path relative to the repository root, with the same `id` and `version`, never pruned, merged or re-identified (RFC-026 [R15]). A package it does not use is not carried.\n\nThe used set is computed in the source's effective package set (the RFC-014 union, with the RFC-029 core package). The source's primary package is always used. The seeds are each included record's Type, and the RelationTypeDefinition each included relation's `relationType` key resolves to. The relation-type key is KEYED, but it is followed here because an unresolved relation type is a validation error (RFC-005). Each seed is followed through the PINNED and LINEAGE reference sites of the Package export reference sites table (RFC-003), transitively, and every package listing a reached definition is used. Then, until nothing is added: every definition of every used package is followed the same way; and for each RFC-044 `packageDependencies` entry of a used package, every source package with that `packageId` whose `version` satisfies the entry is used. A Container's `tags` are KEYED and are not followed.\n\nA used `remote` package reference is carried as the same reference. The core package is never carried (Invariant 85). The slice manifest's `packageRef`/`packageRefs` list exactly the carried packages, unchanged and in the source's order; with none, it carries neither. A requirement the source does not satisfy stays unsatisfied, with the same warning. A reference that resolves in no source package is not an export failure; it stays unresolved, as in the source. The exporter MUST refuse and write nothing, with `slice-root-level-package-unsupported`, when a local package's directory is the repository root. It likewise refuses and writes nothing (RFC-026 [R18]) with `slice-definition-identity-conflict` when two carried source packages hold different definitions under the same `id` and `version` (an identity conflict, fatal under `rfc-decision-cce3c00e`), and with `slice-package-outside-repository` when a carried local package's path resolves outside the repository root, which an archive cannot hold at the same path (RFC-017)."
+  },
+  "tags": [
+    "construct:package",
+    "construct:repository",
+    "topic:distribution"
+  ],
+  "createdAt": "2026-10-04T15:03:11.091672037+00:00",
+  "updatedAt": "2026-10-04T15:59:30.202759305+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

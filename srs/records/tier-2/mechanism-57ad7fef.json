@@ -6,10 +6,10 @@
   "typeName": "mechanism",
   "fieldValues": {
     "title": "Validation relaxations",
-    "content": "An RFC-026-aware validator MUST NOT treat the following as errors when a `slice` block is present: `externalRelationRefs` UUIDs absent from the repository's tree-authoritative instance enumeration (RFC-038 [R1], not a manifest `instanceIndex`, retired per RFC-038 [R2]; I-153); absence of unreferenced type/field definitions; an incomplete container enumeration (not a manifest `containerIndex`, retired per RFC-038 [R2]; I-152); tombstoned source document entries with absent content files. Dangling edges in the relations collection, unresolvable `typeId`/`fieldId` references, and instance schema validation errors remain errors regardless of slice status."
+    "content": "An RFC-026-aware validator MUST NOT treat the following as errors when a `slice` block is present: `externalRelationRefs` UUIDs absent from the repository's tree-authoritative instance enumeration (RFC-038 [R1], not a manifest `instanceIndex`, retired per RFC-038 [R2]; I-153); absence of source packages the slice does not carry (RFC-026 [R15]), which is not reported; an incomplete container enumeration (not a manifest `containerIndex`, retired per RFC-038 [R2]; I-152); tombstoned source document entries with absent content files. Carrying packages whole makes two diagnostic classes expected absences, and a slice's root identity record makes a third: all three MUST be reported at severity info, not warning or error (RFC-026 [R17], Change E item 5). They are a Composition section source naming a Container that is not in the slice, a Composition whose `rootTypeRefs` match no Container anchor in the slice, and Invariant I-81 (the root identity record is not a `purpose` record), because a slice says what it is through its identity record. Every other diagnostic keeps its severity. Dangling edges in the relations collection, unresolvable `typeId`/`fieldId` references, any unresolved reference from one carried definition to another, and instance schema validation errors remain errors regardless of slice status."
   },
   "createdAt": "2026-09-08T20:24:05.514272627+00:00",
-  "updatedAt": "2026-09-08T20:24:05.514279875+00:00",
+  "updatedAt": "2026-10-04T15:59:30.054409827+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "meta": {
     "derivedFrom": "136187cc-8317-4705-91c0-7aaeadaf5998"
