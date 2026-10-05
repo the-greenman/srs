@@ -1491,6 +1491,7 @@ The reader runs a fixed pipeline: parse, refuse `readme`, refuse a newer revisio
 | `bundle-not-json` | not a JSON object |
 | `bundle-readme-unsupported` | the bundle carries `readme`; refused, not dropped, until srs-rust#1164 ships (remove it by hand only if the user asks; see Bundled readme below) |
 | `bundle-revision-too-new` | `dataModelRevision` is above what this `srs` supports; upgrade `srs` (an absent stamp means 0) |
+| `bundle-migration-step-missing` | the bundle's `dataModelRevision` is below this `srs`'s reader floor: a data-model step between it and the current revision has no bundle-form transformer. Re-export the bundle with a current `srs`; do not hand-edit the stamp |
 | `bundle-migration-refused` | the RFC-043 pre-load transformer refused the bundle; the message keeps the inner code |
 | `bundle-schema-invalid` | fails `package-bundle.json`; for a bundle older than current the message names its revision and says to re-export it |
 | `bundle-definition-invalid` | an inlined definition fails the loader checks (message names `<bundle>/<kind>/<index>`) |
@@ -1504,15 +1505,31 @@ srs package export --repo /path/to/repo \
   --selector packages/ext \          # optional; omit for the primary package
   --output governance.srspkg \
   --published-at 2026-10-03T00:00:00Z \   # optional RFC 3339; default now
-  --publisher "Example Org"            # optional
+  --publisher "Example Org" \            # optional
+  --homepage https://example.org/governance \   # optional
+  --mode bundled                       # bundled (default) | standalone
 ```
 
-- The whole boundary is exported, `mode: "bundled"` only; `packageId` and `packageVersion` are the boundary's `id` and `version`. Definitions from the repository's other package boundaries that the boundary references are inlined (reported in `inlined`).
-- The embedded `com.semanticops.core` definitions are **omitted** from the definition arrays (every repository already has them, ADR-025), as RFC-003 [C1] (Revision 10, accepted) allows; [C1] also requires every reached core definition version to be listed in `dependencyRefs`.
-- **Not yet conformant to RFC-003 Revision 10** (srs-rust#1212): `dependencyRefs` is written as `[]`, `dataModelRevision` is the binary's revision rather than the repository's, `schemaVersion` is the manifest's `srsVersion`, definition arrays are not sorted by `id` then `version`, a duplicate `id` is not refused, and `description` is dropped. Bundles written before srs-rust#1212 lands should be re-exported after it; do not hand-edit a `.srspkg` to compensate.
+- The whole boundary is exported. `packageId` and `packageVersion` are the boundary's `id` and `version`; `description` is copied from the boundary's `package.json` when it is a string; `homepage` and `publisher` are caller-supplied and omitted when not given.
+- `--mode bundled` (default) also inlines every definition the boundary's PINNED and LINEAGE references reach from the repository's other package boundaries (reported in `inlined`). `--mode standalone` carries only the boundary's own definitions. In both modes every reached definition is listed in `dependencyRefs` (`dependencyRefCount` in the payload).
+- A reached `com.semanticops.core` definition is not carried unless the exported package itself lists it (every repository has core, ADR-025); it is listed in `dependencyRefs` only (RFC-003 [C1], Revision 10). The exemption is per `(id, version)`: a non-core version of a core id is carried like any other definition.
+- `dataModelRevision` is the repository's own stamp; `schemaVersion` is `"2.0"`; definition arrays are sorted by `id` then `version`; keys are canonicalized; the boundary's `packageDependencies` are carried through. The bundle is validated against `package-bundle.json` before anything is written.
+- **Standalone install consequence.** A standalone bundle installs, but the destination catalog then holds references that dangle (R13) until the packages providing the `dependencyRefs` are installed (srs#875). Prefer `bundled` unless the destination already has the dependencies.
+- Export refuses (`ok: false`, nothing written) with:
+
+| Code | Meaning |
+|---|---|
+| `bundle-published-at-invalid` | `--published-at` is not RFC 3339 |
+| `bundle-boundary-unreadable` | the target boundary's `package.json` cannot be loaded (no empty bundle is produced); an unknown `--selector` is a package-not-found error |
+| `bundle-identity-conflict` | one `id` and version has two different definitions across the package set; the export cannot choose |
+| `bundle-reference-unresolved` | a followed reference is in neither the repository's package set nor the core package |
+| `bundle-definition-invalid` | a carried definition fails its schema |
+| `bundle-schema-invalid` | the assembled bundle fails `package-bundle.json`; a malformed `packageDependencies` adds the hint to run `srs package dependency add --repair-legacy` |
+
+- **`bundle-below-reader-floor` note.** If the repository's `dataModelRevision` is below the reader floor of the exporting `srs`, the export still succeeds and `payload.notes` carries `bundle-below-reader-floor: ...`: readers at the current revision will refuse the file (`bundle-migration-step-missing`). Migrate the repository first (`srs repo apply-migration`), then re-export. Otherwise `notes` is `[]`.
+- Bundles written before srs-rust#1212 (`dependencyRefs: []`, binary-revision stamp, unsorted arrays) are not conformant; re-export them and do not hand-edit a `.srspkg` to compensate.
 - `publishedAt` is part of the bytes. **Pass a fixed `--published-at` for byte-reproducible output and a stable sha256**; a value that is not RFC 3339 fails with `bundle-published-at-invalid`.
 - Export never emits `readme`.
-- Export fails with `bundle-boundary-unreadable` when the target boundary's `package.json` cannot be loaded (rather than producing an empty bundle).
 
 ```json
 {
@@ -1525,23 +1542,26 @@ srs package export --repo /path/to/repo \
     "packageName": "governance",
     "packageVersion": "2.1.0",
     "dataModelRevision": 9,
+    "mode": "bundled",
     "publishedAt": "2026-10-03T00:00:00Z",
     "sha256": "sha256:<64 lowercase hex>",
     "byteLength": 12345,
     "definitionCount": 14,
+    "dependencyRefCount": 3,
     "inlined": [],
+    "notes": [],
     "kinds": [ { "kind": "field", "count": 8 } ]
   }
 }
 ```
 
-`summary.sha256` (WASM) and `payload.sha256` (CLI) are `sha256:<64 lowercase hex>` of the file bytes, the same convention as attachments. `inlined` is the sorted list of definition ids pulled in from other boundaries; `kinds` lists non-empty kinds only.
+`summary.sha256` (WASM) and `payload.sha256` (CLI) are `sha256:<64 lowercase hex>` of the file bytes, the same convention as attachments. `inlined` is the sorted list of definition ids pulled in from other boundaries (core definitions are never in it); `mode` is `bundled` or `standalone`; `dependencyRefCount` is the length of the bundle's `dependencyRefs`; `notes` is the list of non-fatal export notes; `kinds` lists non-empty kinds only.
 
 ### WASM parity (`SrsRepository`)
 
 The same services are exposed to the browser:
 
-- `export_package_bundle(inputJson)` with `inputJson = {"selector"?, "publishedAt"?, "publisher"?}`; returns `{text, summary}` where `summary` has the export payload's fields. Read-only (the write epoch does not move). It returns the text rather than writing a file; the caller saves it.
+- `export_package_bundle(inputJson)` with `inputJson = {"selector"?, "publishedAt"?, "publisher"?, "homepage"?, "mode"?}` (`mode` is `bundled` or `standalone`); returns `{text, summary}` where `summary` has the export payload's fields. Read-only (the write epoch does not move). It returns the text rather than writing a file; the caller saves it.
 - `install_package_bundle(bundleJson, optionsJson)` with `bundleJson` the file's text and `optionsJson = {"boundaryPath"?, "strict"?}` (`"{}"` for defaults); returns the same fields as the CLI install payload, including `notes`. It advances the write epoch, so the session is dirty. Verify the file's sha256 over its bytes before passing the text, and call `check_package_requirements(bundleJson)` first for RFC-044 requirement outcomes.
 
 ### Package requirements (`packageDependencies`, RFC-044)
@@ -1691,9 +1711,35 @@ The following remain errors regardless of slice status: dangling edges in the re
 
 When a relation connects an included instance to an excluded instance, the producer removes it from the relations collection and records it in `slice.externalRelationRefs[]`. This is provenance data, not a defect — a non-empty list means "this slice has N cross-boundary relations to the source repository." The `relationType` values are provenance copies only; they are not subject to RFC-005 definition-lookup in the slice archive.
 
-### CLI commands (pending implementation — srs-rust#631, #633)
+### CLI command: `srs slice export` (srs-rust#631, ADR-051)
 
-Container slice export will be surfaced as `srs archive pack --container <containerId> --output <file>.srs` (tracking issue srs-rust#633), using the slices engine (srs-rust#631). The payload will carry the closure type, included instance count, and dangling-edge count. Until those issues land, no CLI command produces or validates slice archives.
+```bash
+srs slice export --container <containerId> out.srs --repo <path>
+```
+
+Writes the container named by the global `--container` flag as a standalone slice archive. Open or restore it like any `.srs` (`srs archive unpack out.srs --target <dir>`, WASM `loadArchive`); WASM clients produce the same bytes with `SrsRepository.export_slice(containerId)`.
+
+What the slice carries:
+
+- **Records:** the boundary container's entries, which become the slice's root container (`manifest.container`) with the outline unchanged.
+- **Relations:** those whose both endpoints are included. Relations with exactly one endpoint inside go to `slice.externalRelationRefs`; relations with both endpoints outside are omitted.
+- **Sub-containers:** those with at least one entry, every one included. `childContainerIds` are copied as-is.
+- **Source documents:** those cited by included records or included relations, with their content unless tombstoned.
+- **Packages:** every package the slice uses, carried whole and unchanged at its source path. "Uses" means the packages holding the records' Types and the relations' RelationTypes, plus every package those definitions reference or list in `packageDependencies`. The primary `package/` is always carried. `packageRefs` to packages that are not carried are dropped. This follows the owner ruling on srs-rust#631 ahead of RFC-026 Revision 9, which replaces the Types-and-Fields-only rule.
+
+The manifest keeps every source property except a new `repositoryId`, the boundary as `container`, `ext:slices` added to `declaredExtensions`, the `slice` block, and the `packageRefs` filter above.
+
+Payload (`slice export`): `outputPath`, `fileSizeBytes`, `containerId`, `sliceRepositoryId`, `originRepositoryId`, `exportedAt`, `instanceCount`, `relationCount`, `containerCount`, `sourceDocumentCount`, `packageCount`, `externalRelationRefCount`.
+
+Refusals:
+
+- `slice-root-identity-invalid` when the container's identity entry is missing, is not at depth 0, or has descendants. A slice root must satisfy RFC-043's root identity rule, and the outline is never rewritten to make it fit.
+- An unknown container returns `container not found`.
+- A repository whose catalog has errors (for example a dangling container entry) is refused. Repair it first.
+
+`srs repo validate` on a slice reports one info diagnostic with the cut-edge count. It reports an error when `slice.spec.type` is not `container` ([R10]), when `slice.spec.id` is not the root container ([R12]), or when `repositoryId` equals the origin's ([R3]). It warns when `ext:slices` is undeclared ([R4]). A composition section naming a container outside the slice, and an unresolved `rootTypeRefs` entry, are reported as info rather than warnings.
+
+A slice's root container is a repository root, so the RFC-013/RFC-018 root rules apply to it in full ([R12]). Slicing a container whose identity record is not a `purpose` record produces an I-81 warning. A container with sub-containers produces I-82 warnings for members that anchor no container.
 
 ---
 

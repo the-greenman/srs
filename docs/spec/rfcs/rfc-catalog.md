@@ -572,18 +572,29 @@ tooling-only
 
 Revision 7 (srs#766): [R5]/[R6]/[R13] and Change C/E's `containerIndex`/`instanceIndex`/`sourceDocumentIndex` references are amended by RFC-038 [R25] to resolve against the tree-authoritative container set and instance set. Restated as invariants I-152 (container set) and I-153 (instance set); the source-document clauses reuse RFC-017's own existing amendment (I-102/I-112). No conformance behavior changes — vocabulary only.
 
+Revision 9 (srs#886, owner rulings of 2026-10-04 on srs-rust#631): a slice carries every package it uses whole and unchanged ([R15], replacing Change C item 3's merged Types/Fields `package/`); a boundary container whose identity entry is not a depth-0 entry without descendants is refused with `slice-root-identity-invalid` ([R16]); expected-absence diagnostics on a slice are info ([R17]); Change C items 2 and 6 marked as replaced by RFC-034 [R9] (I-151), with the empty-container vacuous-truth finding kept as history (moot under I-151, per the owner ruling of 2026-10-04 that RFC-034 [R9] stands). Folded into the Container-membership closure, Slice package closure (new) and Validation relaxations mechanisms. No schema change.
+
 <!-- srs-integration:v1
 ext:slices
 schema:manifest.json
+I-151
 I-152
 I-153
+mechanism:container-membership-closure
+mechanism:validation-relaxations
+mechanism:slice-package-closure
+cell:portability
+cell:identity
+cell:reference
+cell:containment
+cell:repository
 -->
 
 **Proposal Artifact Path**: rfcs/rfc-026-ext-slices-subset-export.md
 
 **Content**: Defines `ext:slices` — a normative extension for container-membership slice export as a valid `.srs` archive. A container slice carries the records reachable from a container's membership, their type/field definitions, intra-slice relations, and referenced source documents. Dangling cross-boundary relations are preserved in `slice.externalRelationRefs[]` (not silently dropped), following the `ext:federation` graceful-degradation precedent. Schema change: `docs/schema/2.0/manifest.json` gains an optional `slice` property with `$defs.Slice`, `$defs.SliceSpec` (type enum: `["container"]`), and `$defs.SliceExternalRef`. Package export — distributing a package's definitions as a `package-bundle.json` — is explicitly excluded from this RFC's scope (RFC-003). Full text: rfcs/rfc-026-ext-slices-subset-export.md.
 
-Revision 7 (srs#766) folds RFC-038 [R25]'s amendment of [R5]/[R6]/[R13] against the tree-authoritative container set and instance set, restated as invariants I-152 and I-153. RFC-043 Door 3 amendment (Revision 8, 2026-10-01, effective at dataModelRevision 8): slice closure reads entry ids and a slice drops an excluded record's entry by the promoting removal in every container it contains.
+Revision 7 (srs#766) folds RFC-038 [R25]'s amendment of [R5]/[R6]/[R13] against the tree-authoritative container set and instance set, restated as invariants I-152 and I-153. RFC-043 Door 3 amendment (Revision 8, 2026-10-01, effective at dataModelRevision 8): slice closure reads entry ids and a slice drops an excluded record's entry by the promoting removal in every container it contains. Revision 9 (2026-10-04, srs#886, Door 3): a slice carries the packages its content uses whole and unchanged, with their identity and boundaries (the used set starts from included records' Types and included relations' relation types, follows RFC-003's PINNED and LINEAGE reference sites, and closes over every definition of a used package and RFC-044 packageDependencies, transitively); export is refused with slice-root-identity-invalid when the boundary container's identity entry cannot be a root identity (RFC-043 [R2]); two expected-absence diagnostic classes are info; the container closure is RFC-034 [R9]'s declared childContainerIds closure (I-151), never a subset test, which an empty container passes vacuously. Owner ruling of 2026-10-04: I-151 stands, so an undeclared empty container is never carried and a declared child with no entries is carried; srs-rust#631 and srs-rust#1259 conform to it. Owner rulings of 2026-10-04 on the remaining Revision 9 questions: Invariant I-81 on a slice root is reported at info (Change E item 5 class iii, [R17]); Invariant I-82 is unchanged (no warnings under I-151); the exporter refuses with `slice-definition-identity-conflict` and `slice-package-outside-repository` and writes nothing ([R18], srs-rust#1263); Composition carriage for an unused package (Q3) is deferred.
 
 
 **Title**: RFC-027: Per-record relation display in document views (relationsPresentation)
