@@ -1745,7 +1745,7 @@ What the slice carries:
 
 - **Records:** the boundary container's entries, which become the slice's root container (`manifest.container`) with the outline unchanged.
 - **Relations:** those whose both endpoints are included. Relations with exactly one endpoint inside go to `slice.externalRelationRefs`; relations with both endpoints outside are omitted.
-- **Sub-containers:** those with at least one entry, every one included. `childContainerIds` are copied as-is.
+- **Sub-containers:** exactly the boundary's declared `childContainerIds` descendants, transitively, each with its members (RFC-034 [R9], I-151). A declared child with no entries is carried; an undeclared container is never carried, even when all its entries are included. `childContainerIds` are copied as-is.
 - **Source documents:** those cited by included records or included relations, with their content unless tombstoned.
 - **Packages:** every package the slice uses, carried whole and unchanged at its source path. "Uses" means the packages holding the records' Types and the relations' RelationTypes, plus every package those definitions reference or list in `packageDependencies`. The primary `package/` is always carried. `packageRefs` to packages that are not carried are dropped. This follows the owner ruling on srs-rust#631 ahead of RFC-026 Revision 9, which replaces the Types-and-Fields-only rule.
 
@@ -1763,7 +1763,7 @@ Refusals:
 
 `srs repo validate` on a slice reports one info diagnostic with the cut-edge count. It reports an error when `slice.spec.type` is not `container` ([R10]), when `slice.spec.id` is not the root container ([R12]), or when `repositoryId` equals the origin's ([R3]). It warns when `ext:slices` is undeclared ([R4]). A composition section naming a container outside the slice, and an unresolved `rootTypeRefs` entry, are reported as info rather than warnings.
 
-A slice's root container is a repository root, so the RFC-013/RFC-018 root rules apply to it in full ([R12]). Slicing a container whose identity record is not a `purpose` record, as in an essay snapshot, produces an I-81 diagnostic at info, not warning, like the other expected-absence diagnostics in a slice (RFC-026 Revision 9 [R17]). Outside a slice I-81 stays a warning. A container with sub-containers produces I-82 warnings for members that anchor no container.
+A slice's root container is a repository root, so the RFC-013/RFC-018 root rules apply to it in full ([R12]). Inside a slice, an identity record that is not a `purpose` record produces an I-81 diagnostic at info, and a root member that anchors no container (for example a document-state or comment member) produces an I-82 diagnostic at info (RFC-026 Revision 10, owner ruling 2026-10-05); outside a slice both are warnings.
 
 ---
 
