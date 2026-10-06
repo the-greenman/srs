@@ -1,0 +1,36 @@
+# Response headers for Cloudflare Workers static assets. The platform consumes this file; it is
+# not served. These rules make the Worker answer as GitHub Pages does today, so that every
+# https://srs.semanticops.com/schema/2.0/<name>.json $id/$schema identifier keeps resolving with
+# the same body and headers. Verify with scripts/check-hosting-parity.mjs.
+#
+# Production Workers send text types without a charset, while Pages adds utf-8 (measured against
+# the deployed Worker; local wrangler dev adds it, which hid this). The spec markdown carries
+# non-ASCII glyphs, so the charset is named here. Cost: the 404 page returned for a missing .md,
+# .mjs or .css path takes that type too. HTML needs no rule: every page declares
+# <meta charset="utf-8">, and the parity check lists that difference as known.
+
+# Pages sends this on every response; browsers fetch schemas cross-origin.
+/*
+  Access-Control-Allow-Origin: *
+
+# Pages types every .json as application/json with a charset. Workers omits the charset by default.
+/*.json
+  Content-Type: application/json; charset=utf-8
+
+# Pages sends max-age=600. Schemas are identifiers whose content moves with master, so ten minutes
+# stays; the Worker revalidates by ETag after that.
+/schema/*
+  Cache-Control: public, max-age=600
+
+# Pages serves .srsj as application/octet-stream; the file is JSON (srsj-envelope.json).
+/*.srsj
+  Content-Type: application/json
+
+/*.md
+  Content-Type: text/markdown; charset=utf-8
+
+/*.mjs
+  Content-Type: text/javascript; charset=utf-8
+
+/*.css
+  Content-Type: text/css; charset=utf-8
