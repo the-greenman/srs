@@ -6,6 +6,10 @@
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.sh"
+          },
+          {
+            "type": "command",
+            "command": "[ -x \"$CLAUDE_PROJECT_DIR/../srs-context/hooks/session-start.sh\" ] && \"$CLAUDE_PROJECT_DIR/../srs-context/hooks/session-start.sh\" || true"
           }
         ]
       }

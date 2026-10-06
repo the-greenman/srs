@@ -451,6 +451,28 @@ EOF
 
 `record validate` runs **exactly the same validation** that `record create` / `record update` run before they persist — unknown fields, missing required fields, and repeatable/field-group cardinality. A passing `validate` therefore guarantees a passing write. (It does not add stricter checks such as enum or value-type conformance; those are not validated on the write path either.)
 
+### Creating a Composition
+
+`composition create` reads JSON from stdin and validates it against the `composition.json` schema — that schema is the contract; `--help` does not spell out the stdin shape. `$schema` is a required property:
+
+```bash
+srs composition create --repo <path> <<'EOF'
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/composition.json",
+  "id": "<uuid>",
+  "namespace": "<namespace>",
+  "name": "<name>",
+  "version": 1,
+  "sections": [
+    { "sectionId": "<slug>", "order": 0, "source": { "type": "container-subset" }, "ordering": { "source": "arranged" } }
+  ],
+  "createdAt": "<ISO-8601 timestamp>"
+}
+EOF
+```
+
+Omitting `$schema` fails with `"$schema" is a required property` before any other validation runs.
+
 ### Transitioning a Record's Lifecycle State
 
 Use `record transition` to move a record to a new lifecycle state. Inspect the lifecycle first to know valid state names and transition names (`srs lifecycle get --repo <path> <lifecycleId> --pretty`).
@@ -689,11 +711,11 @@ The manifest `declaredExtensions` array records which SRS extensions a repositor
 # List currently declared extensions
 srs repo extensions list --repo <path> --pretty
 
-# Declare that this repo uses an extension
-srs repo extensions enable --repo <path> --extension ext:lifecycle
+# Declare that this repo uses an extension (EXTENSION_ID is positional)
+srs repo extensions enable --repo <path> ext:lifecycle
 
-# Remove a declaration
-srs repo extensions disable --repo <path> --extension ext:lifecycle
+# Remove a declaration (EXTENSION_ID is positional)
+srs repo extensions disable --repo <path> ext:lifecycle
 ```
 
 ### Checking Extension Conformance
@@ -1723,7 +1745,7 @@ What the slice carries:
 
 - **Records:** the boundary container's entries, which become the slice's root container (`manifest.container`) with the outline unchanged.
 - **Relations:** those whose both endpoints are included. Relations with exactly one endpoint inside go to `slice.externalRelationRefs`; relations with both endpoints outside are omitted.
-- **Sub-containers:** those with at least one entry, every one included. `childContainerIds` are copied as-is.
+- **Sub-containers:** exactly the boundary's declared `childContainerIds` descendants, transitively, each with its members (RFC-034 [R9], I-151). A declared child with no entries is carried; an undeclared container is never carried, even when all its entries are included. `childContainerIds` are copied as-is.
 - **Source documents:** those cited by included records or included relations, with their content unless tombstoned.
 - **Packages:** every package the slice uses, carried whole and unchanged at its source path. "Uses" means the packages holding the records' Types and the relations' RelationTypes, plus every package those definitions reference or list in `packageDependencies`. The primary `package/` is always carried. `packageRefs` to packages that are not carried are dropped. This follows the owner ruling on srs-rust#631 ahead of RFC-026 Revision 9, which replaces the Types-and-Fields-only rule.
 
@@ -1741,7 +1763,7 @@ Refusals:
 
 `srs repo validate` on a slice reports one info diagnostic with the cut-edge count. It reports an error when `slice.spec.type` is not `container` ([R10]), when `slice.spec.id` is not the root container ([R12]), or when `repositoryId` equals the origin's ([R3]). It warns when `ext:slices` is undeclared ([R4]). A composition section naming a container outside the slice, and an unresolved `rootTypeRefs` entry, are reported as info rather than warnings.
 
-A slice's root container is a repository root, so the RFC-013/RFC-018 root rules apply to it in full ([R12]). Slicing a container whose identity record is not a `purpose` record, as in an essay snapshot, produces an I-81 diagnostic at info, not warning, like the other expected-absence diagnostics in a slice (RFC-026 Revision 9 [R17]). Outside a slice I-81 stays a warning. A container with sub-containers produces I-82 warnings for members that anchor no container.
+A slice's root container is a repository root, so the RFC-013/RFC-018 root rules apply to it in full ([R12]). Inside a slice, an identity record that is not a `purpose` record produces an I-81 diagnostic at info, and a root member that anchors no container (for example a document-state or comment member) produces an I-82 diagnostic at info (RFC-026 Revision 10, owner ruling 2026-10-05); outside a slice both are warnings.
 
 ---
 
