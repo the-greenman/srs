@@ -451,6 +451,28 @@ EOF
 
 `record validate` runs **exactly the same validation** that `record create` / `record update` run before they persist — unknown fields, missing required fields, and repeatable/field-group cardinality. A passing `validate` therefore guarantees a passing write. (It does not add stricter checks such as enum or value-type conformance; those are not validated on the write path either.)
 
+### Creating a Composition
+
+`composition create` reads JSON from stdin and validates it against the `composition.json` schema — that schema is the contract; `--help` does not spell out the stdin shape. `$schema` is a required property:
+
+```bash
+srs composition create --repo <path> <<'EOF'
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/composition.json",
+  "id": "<uuid>",
+  "namespace": "<namespace>",
+  "name": "<name>",
+  "version": 1,
+  "sections": [
+    { "sectionId": "<slug>", "order": 0, "source": { "type": "container-subset" }, "ordering": { "source": "arranged" } }
+  ],
+  "createdAt": "<ISO-8601 timestamp>"
+}
+EOF
+```
+
+Omitting `$schema` fails with `"$schema" is a required property` before any other validation runs.
+
 ### Transitioning a Record's Lifecycle State
 
 Use `record transition` to move a record to a new lifecycle state. Inspect the lifecycle first to know valid state names and transition names (`srs lifecycle get --repo <path> <lifecycleId> --pretty`).
@@ -689,11 +711,11 @@ The manifest `declaredExtensions` array records which SRS extensions a repositor
 # List currently declared extensions
 srs repo extensions list --repo <path> --pretty
 
-# Declare that this repo uses an extension
-srs repo extensions enable --repo <path> --extension ext:lifecycle
+# Declare that this repo uses an extension (EXTENSION_ID is positional)
+srs repo extensions enable --repo <path> ext:lifecycle
 
-# Remove a declaration
-srs repo extensions disable --repo <path> --extension ext:lifecycle
+# Remove a declaration (EXTENSION_ID is positional)
+srs repo extensions disable --repo <path> ext:lifecycle
 ```
 
 ### Checking Extension Conformance
