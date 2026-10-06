@@ -169,6 +169,12 @@ async function main() {
     await step("publish completeness guard self-test", () =>
       testPublishCompletenessGuard(VIEW_EXPORTS, rawContentsById, exemptCounts)
     );
+    await step("docs/srs-spec.srs archive", async () => {
+      const fresh = join(tempDir, "srs-spec.srs");
+      await run(SRS_CLI, ["--repo", REPO_ROOT, "archive", "pack", "--output", fresh], { silent: true });
+      const [a, b] = await Promise.all([readFile(join(ROOT, "docs", "srs-spec.srs")), readFile(fresh)]);
+      if (!a.equals(b)) throw new Error("archive drift: docs/srs-spec.srs is stale, re-run scripts/publish-spec.mjs");
+    });
   } finally {
     await rm(tempDir, { recursive: true, force: true });
   }

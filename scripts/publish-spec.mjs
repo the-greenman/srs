@@ -121,6 +121,11 @@ async function renderDocumentViews() {
   }
 }
 
+// The spec as a downloadable .srs (deterministic SRSzip; check-release-drift compares bytes).
+async function packSpecArchive() {
+  await run(SRS_CLI, ["--repo", REPO_ROOT, "archive", "pack", "--output", join(ROOT, "docs", "srs-spec.srs")]);
+}
+
 async function main() {
   SRS_CLI = await resolveSrsCli();
   await logSrsCliProvenance(SRS_CLI);
@@ -129,6 +134,7 @@ async function main() {
   await renderDocumentViews();
   await injectInvariants();
   await injectExtensionIndexes();
+  await packSpecArchive();
   await syncSchemas(RUST_SCHEMA_DST);
   await syncSchemas(VSCODE_SCHEMA_DST);
   await writeRustChecksums();

@@ -34,3 +34,7 @@
 
 /*.css
   Content-Type: text/css; charset=utf-8
+
+# The specification as an SRS archive (a zip). Pages has no .srs type and sends octet-stream.
+/*.srs
+  Content-Type: application/zip

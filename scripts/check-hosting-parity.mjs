@@ -36,6 +36,7 @@ const REDIRECTS = new Set([301, 302, 307, 308]);
 // [applies to, field, A value, B value, why]
 const KNOWN = [
   [(t) => t.file?.endsWith(".srsj"), "content-type", "application/octet-stream", "application/json", "Pages has no .srsj type; the file is JSON"],
+  [(t) => t.file?.endsWith(".srs"), "content-type", "application/octet-stream", "application/zip", "Pages has no .srs type; the file is a zip"],
   [(t) => t.file?.endsWith(".zip"), "content-type", "application/x-zip-compressed", "application/zip", "Workers uses the registered zip type"],
   [(t) => t.redirect, "status", "301", "307", "Workers redirects /dir to /dir/ with 307, Pages with 301"],
   [(t) => !t.file || t.file.endsWith(".html"), "content-type", "text/html; charset=utf-8", "text/html", "every HTML page declares <meta charset=\"utf-8\">"],
